@@ -1,0 +1,1074 @@
+import struct
+import FFX_Xbox
+import time
+import FFX_Screen
+FFXC = FFX_Xbox.FFXC
+
+def float_from_integer(integer):
+    return struct.unpack('!f', struct.pack('!I', integer))[0]
+
+def start():
+    global process
+    global xPtr
+    global yPtr
+    global coordsCounter
+    coordsCounter = 0
+    from ReadWriteMemory import ReadWriteMemory
+
+    rwm = ReadWriteMemory()
+    print("Memory module opened:")
+    print(rwm)
+    process = rwm.get_process_by_name('FFX.exe')
+
+    print("Process now captured for FFX (reading memory)")
+    print(process)
+    process.open()
+    print(process.__dict__)
+    print(process.pid)
+    
+    global baseValue
+    try:
+        import FFX_zz_rootMem
+        print("Process Modules:")
+        baseValue = FFX_zz_rootMem.ListProcessModules(process.pid)
+        print("Process Modules complete")
+        #testValue = FFX_zz_rootMem.GetBaseAddr(process.pid,b'FFX.exe')
+        print("Dynamically determined memory address: ",hex(baseValue))
+    except Exception as errCode:
+        print("Could not get memory address dynamically. ", errCode)
+        baseValue = 0x00FF0000
+
+def userControl():
+    global baseValue
+    #Auto updating via reference to the baseValue above
+    global xPtr
+    global yPtr
+    xPtr = baseValue + 0x0084DED0
+    yPtr = baseValue + 0x0084DED8
+    coord1 = process.get_pointer(xPtr)
+    x = float_from_integer(process.read(coord1))
+    coord2 = process.get_pointer(yPtr)
+    y = float_from_integer(process.read(coord2))
+    
+    if [x,y] == [0.0,0.0]:
+        return False
+    else:
+        return True
+
+def awaitControl():
+    waitCounter = 0
+    print("Awaiting control (no clicking)")
+    while not userControl():
+        waitCounter += 1
+        if waitCounter % 100000 == 0:
+            print("Awaiting control - ", waitCounter / 100000)
+    time.sleep(0.05)
+    return True
+
+def clickToControl():
+    waitCounter = 0
+    print("Awaiting control (clicking)")
+    while not userControl():
+        FFXC.set_value('BtnB', 1)
+        time.sleep(0.04)
+        FFXC.set_value('BtnB', 0)
+        time.sleep(0.04)
+        waitCounter += 1
+        if waitCounter % 100 == 0:
+            print("Awaiting control - ", waitCounter / 100)
+    time.sleep(0.05)
+    return True
+
+def clickToControl2():
+    waitCounter = 0
+    print("Awaiting control (clicking)")
+    while not userControl():
+        FFXC.set_value('BtnB', 1)
+        time.sleep(0.04)
+        FFXC.set_value('BtnB', 0)
+        time.sleep(0.04)
+        waitCounter += 1
+        if waitCounter % 100 == 0:
+            print("Awaiting control - ", waitCounter / 100)
+    time.sleep(0.05)
+    return True
+
+def clickToControl3():
+    waitCounter = 0
+    print("Awaiting control (clicking)")
+    while not userControl():
+        if FFX_Screen.BattleScreen():
+            break
+        elif diagSkipPossible():
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.04)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.04)
+        elif menuOpen():
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.04)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.04)
+        else:
+            time.sleep(0.05)
+        waitCounter += 1
+        if waitCounter % 100 == 0:
+            print("Awaiting control - ", waitCounter / 100)
+    time.sleep(0.05)
+    return True
+
+
+def clickToEvent():
+    while userControl():
+        FFXC.set_value('BtnB', 1)
+        time.sleep(0.04)
+        FFXC.set_value('BtnB', 0)
+        time.sleep(0.04)
+
+def awaitEvent():
+    while userControl():
+        time.sleep(0.05)
+
+def getCoords():
+    global process
+    global baseValue
+    #Auto updating via reference to the baseValue above
+    global xPtr
+    global yPtr
+    global coordsCounter
+    coordsCounter += 1
+    xPtr = baseValue + 0x0084DED0
+    yPtr = baseValue + 0x0084DED8
+    #xPtr = 0x012DDED0
+    #yPtr = 0x012DDED8
+    coord1 = process.get_pointer(xPtr)
+    x = float_from_integer(process.read(coord1))
+    coord2 = process.get_pointer(yPtr)
+    y = float_from_integer(process.read(coord2))
+    #if [x,y] != [0.0,0.0]:
+        #if coordsCounter % 1000 == 99:
+            #print("Coordinates check: ")
+            #print(str(x).format(24), " | ",str(y).format(24))
+            #xPtr = baseValue + 0x0084DED0
+    
+    return [x,y]
+
+def getCamera():
+    global baseValue
+    angle = baseValue + 0x008A86B8
+    z = baseValue + 0x008A86FC
+    x = baseValue + 0x008A86F8
+    y = baseValue + 0x008A8700
+    
+    key = process.get_pointer(angle)
+    angleVal = round(float_from_integer(process.read(key)),2)
+    key = process.get_pointer(x)
+    xVal = round(float_from_integer(process.read(key)),2)
+    key = process.get_pointer(y)
+    yVal = round(float_from_integer(process.read(key)),2)
+    key = process.get_pointer(z)
+    zVal = round(float_from_integer(process.read(key)),2)
+    
+    retVal = [angleVal,xVal,yVal,zVal]
+    #print("Camera details: ", retVal)
+    return retVal
+
+def getHP():
+    global baseValue
+    #Out of combat HP only
+    
+    coord = baseValue + 0x00D32078
+    HP_Tidus = process.read(coord)
+    coord = baseValue + 0x00D3210C
+    HP_Yuna = process.read(coord)
+    coord = baseValue + 0x00D3235C
+    HP_Lulu = process.read(coord)
+    coord = baseValue + 0x00D322C8
+    HP_Wakka = process.read(coord)
+    coord = baseValue + 0x00D321A0
+    HP_Auron = process.read(coord)
+    coord = baseValue + 0x00D32234
+    HP_Kimahri = process.read(coord)
+    
+    return [HP_Tidus, HP_Yuna, HP_Lulu, HP_Wakka, HP_Auron, HP_Kimahri]
+
+def getOrder():
+    global baseValue
+    #Out of combat HP only
+    
+    coord = baseValue + 0x00D307E8
+    pos1 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307E9
+    pos2 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EA
+    pos3 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EB
+    pos4 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EC
+    pos5 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307ED
+    pos6 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EE
+    pos7 = process.readBytes(coord,1)
+    
+    formation = [255, pos1, pos2, pos3, pos4, pos5, pos6, pos7]
+    print("Party formation: ", formation)
+    return formation
+
+def getOrderSix():
+    global baseValue
+    #Out of combat HP only
+    
+    coord = baseValue + 0x00D307E8
+    pos1 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307E9
+    pos2 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EA
+    pos3 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EB
+    pos4 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EC
+    pos5 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307ED
+    pos6 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EE
+    pos7 = process.readBytes(coord,1)
+    
+    formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
+    formation.remove(255)
+    print("Party formation: ", formation)
+    return formation
+
+def getPhoenix():
+    global baseValue
+    
+    key = baseValue + 0x00D30B5D
+    pDowns = process.readBytes(key, 1)
+    print("Phoenix Down count: ", pDowns)
+    return pDowns
+
+def getPower():
+    global baseValue
+    
+    key = baseValue + 0x00D30B5E
+    power = process.readBytes(key, 1)
+    print("Power spheres: ", power)
+    return power
+
+def getSpeed():
+    global baseValue
+    
+    key = baseValue + 0x00D30B60
+    speed = process.readBytes(key, 1)
+    print("Speed spheres: ", speed)
+    return speed
+
+def getBattleHP():
+    global baseValue
+    
+    key = baseValue + 0x00F3F7A4
+    hp1 = process.read(key)
+    key = baseValue + 0x00F3F834
+    hp2 = process.read(key)
+    key = baseValue + 0x00F3F8C4
+    hp3 = process.read(key)
+    hpArray = [0, hp1, hp2, hp3]
+    print("HP values: ", hpArray)
+    return hpArray
+
+def getBattleNum():
+    global baseValue
+    
+    key = baseValue + 0x00D2A8EC
+    formation = process.read(key)
+    
+    #print("Battle Number: ", formation)
+    return formation
+
+def getSLVLYuna():
+    global baseValue
+    #Out of combat HP only
+    
+    coord = baseValue + 0x00D32104
+    return process.read(coord)
+
+def getSLVLKim():
+    global baseValue
+    #Out of combat HP only
+    
+    coord = baseValue + 0x00D3222C
+    return process.read(coord)
+
+def getSLVLWakka():
+    global baseValue
+    #Out of combat HP only
+    
+    key = baseValue + 0x00D322E7
+    sLvl = process.readBytes(key,1)
+    print("Wakka current Slvl", sLvl)
+    return sLvl
+
+def itemAddress(num):
+    if num == 1:
+        return 0x00D3095C
+    if num == 2:
+        return 0x00D3095E
+    if num == 3:
+        return 0x00D30960
+    if num == 4:
+        return 0x00D30962
+    if num == 5:
+        return 0x00D30964
+    if num == 6:
+        return 0x00D30966
+    if num == 7:
+        return 0x00D30968
+    if num == 8:
+        return 0x00D3096A
+    if num == 9:
+        return 0x00D3096C
+    if num == 10:
+        return 0x00D3096E
+    if num == 11:
+        return 0x00D30970
+    if num == 12:
+        return 0x00D30972
+    if num == 13:
+        return 0x00D30974
+    if num == 14:
+        return 0x00D30976
+    if num == 15:
+        return 0x00D30978
+    if num == 16:
+        return 0x00D3097A
+    if num == 17:
+        return 0x00D3097C
+    if num == 18:
+        return 0x00D3097E
+    if num == 19:
+        return 0x00D30980
+    if num == 20:
+        return 0x00D30982
+    if num == 21:
+        return 0x00D30984
+    if num == 22:
+        return 0x00D30986
+    if num == 23:
+        return 0x00D30988
+    if num == 24:
+        return 0x00D3098A
+    if num == 25:
+        return 0x00D3098C
+    if num == 26:
+        return 0x00D3098E
+    if num == 27:
+        return 0x00D30990
+    if num == 28:
+        return 0x00D30992
+    if num == 29:
+        return 0x00D30994
+    if num == 30:
+        return 0x00D30996
+
+def getItemsOrder():
+    global baseValue
+    items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    
+    for x in range(30):
+        address = itemAddress(x + 1)
+        key = baseValue + address
+        item = process.readBytes(key,1)
+        items[x + 1] = item
+
+    print(items)
+    return items
+
+def getItemSlot(itemNum):
+    items = getItemsOrder()
+    for x in range(30):
+        #print(items[x + 1], " | ", itemNum)
+        if items[x + 1] == itemNum:
+            return (x + 1)
+    return 255
+
+def checkItemsMacalania():
+    bombCore = 0
+    lMarble = 0
+    fScale = 0
+    aWind = 0
+    grenade = 0
+    lunar = 0
+    light = 0
+    
+    bombCore = getItemSlot(27)
+    lMarble = getItemSlot(30)
+    fScale = getItemSlot(32)
+    aWind = getItemSlot(24)
+    grenade = getItemSlot(35)
+    lunar = getItemSlot(56)
+    light = getItemSlot(57)
+    
+    #Set MaxSpot to one more than the last undesirable item
+    if light - lunar != 1:
+        maxSpot = light
+    elif lunar - grenade != 1:
+        maxSpot = lunar
+    elif grenade - aWind != 1:
+        maxSpot = grenade
+    elif aWind - fScale != 1:
+        maxSpot = aWind
+    elif fScale - lMarble != 1:
+        maxSpot = fScale
+    elif lMarble - bombCore != 1:
+        maxSpot = lMarble
+    else:
+        maxSpot = bombCore
+        
+    retVal = [bombCore, lMarble, fScale, aWind, grenade, lunar, light, maxSpot]
+    print("Returning values: ", retVal)
+    return retVal
+
+def itemCountAddr(num):
+    if num == 1:
+        return 0x00D30B5C
+    if num == 2:
+        return 0x00D30B5D
+    if num == 3:
+        return 0x00D30B5E
+    if num == 4:
+        return 0x00D30B5F
+    if num == 5:
+        return 0x00D30B60
+    if num == 6:
+        return 0x00D30B61
+    if num == 7:
+        return 0x00D30B62
+    if num == 8:
+        return 0x00D30B63
+    if num == 9:
+        return 0x00D30B64
+    if num == 10:
+        return 0x00D30B65
+    if num == 11:
+        return 0x00D30B66
+    if num == 12:
+        return 0x00D30B67
+    if num == 13:
+        return 0x00D30B68
+    if num == 14:
+        return 0x00D30B69
+    if num == 15:
+        return 0x00D30B6A
+    if num == 16:
+        return 0x00D30B6B
+    if num == 17:
+        return 0x00D30B6C
+    if num == 18:
+        return 0x00D30B6D
+    if num == 19:
+        return 0x00D30B6E
+    if num == 20:
+        return 0x00D30B6F
+    if num == 21:
+        return 0x00D30B70
+    if num == 22:
+        return 0x00D30B71
+    if num == 23:
+        return 0x00D30B72
+    if num == 24:
+        return 0x00D30B73
+    if num == 25:
+        return 0x00D30B74
+    if num == 26:
+        return 0x00D30B75
+    if num == 27:
+        return 0x00D30B76
+    if num == 28:
+        return 0x00D30B77
+    if num == 29:
+        return 0x00D30B78
+    if num == 30:
+        return 0x00D30B79
+
+def getItemsCount():
+    global baseValue
+    itemCounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    
+    for x in range(30):
+        address = itemCountAddr(x + 1)
+        key = baseValue + address
+        itemCount = process.readBytes(key,1)
+        itemCounts[x + 1] = itemCount
+
+    print(itemCounts)
+    return itemCounts
+
+def getItemCountSlot(itemSlot):
+    items = getItemsCount()
+    for x in range(30):
+        if itemSlot == x + 1:
+            print("Number of this item: ", items[x + 1])
+            return items[x + 1]
+    return 0
+
+def getGilvalue():
+    global baseValue
+    key = baseValue + 0x00D307D8
+    return process.read(key)
+
+def rikkuODItems(battle):
+    #This function gets the item slots for each item, swaps if they're backwards,
+    # and then moves the cursor to each item and presses B when we reach it.
+    cursor = 1
+    if battle == 'Evrae':
+        item1 = getItemSlot(94)
+        print("Luck sphere in slot: ", item1)
+        item2 = getItemSlot(100)
+        print("Map in slot: ", item2)
+    elif battle == 'Flux':
+        item1 = getItemSlot(35)
+        print("Grenade in slot: ", item1)
+        item2 = getItemSlot(85)
+        print("HP Sphere in slot: ", item2)
+    elif battle == 'trio':
+        item1 = 108
+        item2 = 108
+        print("Wings are in slot: ", item1)
+    elif battle == 'crawler':
+        item1 = getItemSlot(30)
+        print("Lightning Marble in slot: ", item1)
+        item2 = getItemSlot(90)
+        print("Mdef Sphere in slot: ", item2)
+    elif battle == 'spherimorph1':
+        item1 = getItemSlot(24)
+        print("Arctic Wind in slot: ", item1)
+        item2 = getItemSlot(89)
+        print("Mag Sphere in slot: ", item2)
+    elif battle == 'spherimorph2':
+        item1 = getItemSlot(32)
+        print("Fish Scale in slot: ", item1)
+        item2 = getItemSlot(89)
+        print("Mag Sphere in slot: ", item2)
+    elif battle == 'spherimorph3':
+        item1 = getItemSlot(30)
+        print("Lightning Marble in slot: ", item1)
+        item2 = getItemSlot(89)
+        print("Mag Sphere in slot: ", item2)
+    elif battle == 'spherimorph4':
+        item1 = getItemSlot(27)
+        print("Bomb Core in slot: ", item1)
+        item2 = getItemSlot(89)
+        print("Mag Sphere in slot: ", item2)
+
+    if item1 > item2: #Quick bubble sort
+        item3 = item2
+        item2 = item1
+        item1 = item3
+    
+    if item1 % 2 == 0: #First item is in the right-hand column
+        FFX_Xbox.menuRight()
+        cursor += 1
+    
+    while cursor < item1:
+        FFX_Xbox.menuDown()
+        cursor += 2
+    
+    FFX_Xbox.menuB() #We should now have selected the first item.
+    
+    if item1 % 2 != item2 % 2: #First and second items are on different columns
+        print("Items are in opposing columns. Switching columns.")
+        if item1 % 2 == 0:
+            FFX_Xbox.menuLeft()
+            FFX_Xbox.menuDown()
+        else:
+            FFX_Xbox.menuRight()
+        cursor += 1
+    
+    if cursor == item2:
+        FFX_Xbox.menuB() #Cursor starts on item 2. Only occurs if opposite columns.
+    else:
+        while cursor < item2:
+            FFX_Xbox.menuDown()
+            cursor += 2
+        FFX_Xbox.menuB() #Cursor is now on item 2.
+
+def confusedState():
+    global baseValue
+    for character_index in range(17):
+        
+        # ReadProcessMemory(process_name, str(data_type), memory_address, array(offsets))
+
+        status_effect = ReadProcessMemory(FFX_Process, 'byte', baseValue + 0xd334cc + (0xf90 * character_index), [0x607])
+
+        #status_effect returns 0 - 255
+
+        if (status_effect & 1):
+            print("Character is confused")
+        else:
+            print("Character is NOT confused")
+
+def menuOpen():
+    global baseValue
+    
+    key = baseValue + 0x00F407E4
+    menuOpen = process.readBytes(key,1)
+    if menuOpen == 1:
+        return True
+    else:
+        return False
+
+def closeMenu():
+    while menuOpen():
+        FFX_Xbox.menuA()
+
+def openMenu():
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    while not userControl(): #Get out of combat or whatever
+        FFX_Xbox.menuB()
+    while userControl() and not menuOpen():
+        FFXC.set_value('BtnY',1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnY',0)
+        time.sleep(0.035)
+    time.sleep(0.7)
+
+def sGridActive():
+    global baseValue
+    
+    key = baseValue + 0x0085B30C
+    menuOpen = process.readBytes(key,1)
+    print(menuOpen)
+    if menuOpen == 1:
+        return True
+    else:
+        return False
+
+def sGridMenu():
+    global baseValue
+    
+    key = baseValue + 0x0012AD860
+    menuOpen = process.readBytes(key,1)
+    return menuOpen
+
+def sGridChar():
+    global baseValue
+    
+    key = baseValue + 0x0012BEE2C
+    character = process.readBytes(key,1)
+    return character
+
+def cursorLocation():
+    global baseValue
+    
+    key = baseValue + 0x0021D09A4
+    menu1 = process.readBytes(key,1)
+    key = baseValue + 0x0021D09A6
+    menu2 = process.readBytes(key,1)
+    
+    return [menu1,menu2]
+
+def getStoryProgress():
+    global baseValue
+    
+    key = baseValue + 0x00D2D67C
+    progress = process.readBytes(key,2)
+    #print("Story progress: ", progress)
+    return progress
+
+def getMap():
+    global baseValue
+    
+    key = baseValue + 0x00D2CA90
+    progress = process.readBytes(key,2)
+    return progress
+
+def getYunaSlvl():
+    global baseValue
+    
+    key = baseValue + 0x00D3212B
+    sLvl = process.readBytes(key,1)
+    return sLvl
+
+def getTidusSlvl():
+    global baseValue
+    
+    key = baseValue + 0x00D32097
+    sLvl = process.readBytes(key,1)
+    return sLvl
+
+def menuControl():
+    global baseValue
+    
+    key = baseValue + 0x0085A03C
+    control = process.readBytes(key,1)
+    if control == 1:
+        time.sleep(0.5)
+        return True
+    else:
+        return False
+
+def diagSkipPossible():
+    global baseValue
+    
+    key = baseValue + 0x0085A03C
+    control = process.readBytes(key,1)
+    if control == 1:
+        time.sleep(0.5)
+        return True
+    else:
+        return False
+
+def awaitMenuControl():
+    counter = 0
+    while not menuControl():
+        counter += 1
+        if counter % 100000 == 0:
+            print("Waiting for menu control. ", counter)
+
+def clickToStoryProgress(destination):
+    counter = 0
+    currentState = getStoryProgress()
+    print("Story goal: ", destination," | Awaiting progress state: ", currentState)
+    while currentState < destination:
+        if menuControl():
+            FFX_Xbox.menuB()
+        if counter % 10000 == 0:
+            print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 10000)
+        counter += 1
+        currentState = getStoryProgress()
+    print("Story progress has reached destination. Value: ", destination)
+
+def changeStory(newGameState):
+    global baseValue
+    
+    print("Changing story flag to ", newGameState)
+    key = baseValue + 0x00D2D67C
+    progress = process.writeBytes(key,newGameState,2)
+
+def itemHack(ver):
+    global baseValue
+    
+    # I tried giving Rikku extra powerful items, but the game just wasn't having it.
+    #key = baseValue + 0x00D30960 #Item in slot 3
+    #progress = process.writeBytes(key,31,1)
+    #key = baseValue + 0x00D30B5E #Item count in slot 3
+    #progress = process.writeBytes(key,68,1)
+    if ver == 1:
+        #But at least these ones work.
+        key = baseValue + 0x00D3095C #Change potions to Master Sphere
+        progress = process.writeBytes(key,80,1)
+        key = baseValue + 0x00D30B5C #Might as well have a lot of those.
+        progress = process.writeBytes(key,90,1)
+    elif ver == 2:
+        key = baseValue + 0x00D3095C #Purifying Salts (no encounters)
+        progress = process.writeBytes(key,63,1)
+        key = baseValue + 0x00D30B5C
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D3095E #Chocobo Feathers
+        progress = process.writeBytes(key,55,1)
+        key = baseValue + 0x00D30B5D
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D30960 #Return Spheres for First Strike
+        progress = process.writeBytes(key,96,1)
+        key = baseValue + 0x00D30B5E
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D30962 #Lightning Gems
+        progress = process.writeBytes(key,31,1)
+        key = baseValue + 0x00D30B5F
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D30964 #Dark Matter
+        progress = process.writeBytes(key,53,1)
+        key = baseValue + 0x00D30B60
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D30966 #Wings
+        progress = process.writeBytes(key,108,1)
+        key = baseValue + 0x00D30B61
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D30968 #P.down
+        progress = process.writeBytes(key,6,1)
+        key = baseValue + 0x00D30B62
+        progress = process.writeBytes(key,99,1)
+        key = baseValue + 0x00D3240D #Rikku charge value
+        progress = process.writeBytes(key,100,1)
+    
+def changeGold(value):
+    global baseValue
+    key = baseValue + 0x00D307D8
+    progress = process.writeBytes(key,9999999,4)
+
+def blitzOwnScore():
+    global baseValue
+    
+    key = baseValue + 0x0151728C
+    score = process.readBytes(key, 1)
+    return score
+
+def blitzOppScore():
+    global baseValue
+    
+    key = baseValue + 0x0151644C
+    score = process.readBytes(key, 1)
+    return score
+
+def blitzClockMenu():
+    global baseValue
+    
+    key = baseValue + 0x014765FA
+    status = process.readBytes(key, 1)
+    return status
+
+def blitzMenuNum():
+    global baseValue
+    #20 = Movement menu (auto, type A, or type B)
+    #29 = Formation menu
+    #38 = Breakthrough
+    #24 = Pass To menu (other variations are set to 24)
+    #Unsure about other variations, would take more testing.
+    
+    key = baseValue + 0x0146770A
+    status = process.readBytes(key, 1)
+    if status == 17 or status == 27:
+        status = 24
+    return status
+
+def blitzTargetPlayer():
+    global baseValue
+    
+    key = baseValue + 0x00D3761C
+    player = process.readBytes(key, 1)
+    print("Target Player number: ", player)
+    print("12 = Opposing team")
+    print("18 = non-controlled ball (shot or pass)")
+    return player
+
+def blitzCoords():
+    global baseValue
+    
+    key = baseValue + 0x00D37698
+    xVal = process.readBytes(key, 1)
+    xVal = xVal * -1
+    key = baseValue + 0x00D37690
+    yVal = process.readBytes(key, 1)
+    return [xVal,yVal]
+
+def blitzGameActive():
+    if getMap() == 62:
+        return True
+    else:
+        return False
+
+def blitzBallControl():
+    try:
+        if blitzClockMenu() == 24:
+            if blitzCurrPlayer() >= 2 and blitzCurrPlayer <= 6:
+                return True
+            else:
+                return False
+        else:
+            return False
+    except:
+        return False
+
+def blitzClock():
+    global baseValue
+    
+    key = baseValue + 0x012C64B14
+    clock = process.readBytes(key, 1)
+    return clock
+
+def blitzballPatriotsStyle():
+    global baseValue
+    
+    key = baseValue + 0x00D2E0CE
+    progress = process.writeBytes(key,50,1)
+    key = baseValue + 0x00D2E131
+    progress = process.writeBytes(key,50,1)
+
+def desertFormat():
+    order = getOrderSix()
+    if order == [0,3,2,4,6,5]:
+        print("Formation is fine, moving on.")
+    else:
+        openMenu()
+        time.sleep(0.2)
+        order = getOrderSix()
+        FFX_Xbox.menuUp()
+        FFX_Xbox.menuUp()
+        FFX_Xbox.menuUp()
+        FFX_Xbox.menuUp()
+        FFX_Xbox.menuB()
+        
+        if order[0] != 0: #Tidus is not in the first slot
+            print("Looking for Tidus")
+            if order[1] == 0:
+                print("Tidus in Second slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[1] = order[0]
+                order[0] = 0
+            elif order[2] == 0:
+                print("Tidus in Third slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                order[2] = order[0]
+                order[0] = 0
+            elif order[3] == 0:
+                print("Tidus in Fourth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                order[3] = order[0]
+                order[0] = 0
+            elif order[4] == 0:
+                print("Tidus in Fifth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                order[4] = order[0]
+                order[0] = 0
+            elif order[5] == 0:
+                print("Tidus in Sixth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                order[5] = order[0]
+                order[0] = 0
+        else:
+            print("Tidus seems fine.")
+            FFX_Xbox.menuDown()
+        if order[1] != 3: #Kimahri is not in the second slot
+            print("Looking for Kimahri")
+            if order[2] == 3:
+                print("Kimahri in Third slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[2] = order[1]
+                order[1] = 3
+            elif order[3] == 3:
+                print("Kimahri in Fourth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                order[3] = order[1]
+                order[1] = 3
+            elif order[4] == 3:
+                print("Kimahri in Fifth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                order[4] = order[1]
+                order[1] = 3
+            elif order[5] == 3:
+                print("Kimahri in Sixth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                order[5] = order[1]
+                order[1] = 3
+        else:
+            print("Kimahri seems fine.")
+            FFX_Xbox.menuDown()
+        if order[2] != 2: #Auron, 3rd slot
+            print("Looking for Auron")
+            if order[3] == 2:
+                print("Auron in fourth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[3] = order[2]
+                order[2] = 2
+            elif order[4] == 2:
+                print("Auron in fifth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                order[4] = order[2]
+                order[2] = 2
+            elif order[5] == 2:
+                print("Auron in sixth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                order[5] = order[2]
+                order[2] = 2
+            else:
+                print("Something's wrong, can't find Lulu.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+        else:
+            print("Auron seems fine.")
+            FFX_Xbox.menuDown()
+        if order[3] != 4: #Wakka, 4th slot
+            print("Looking for Wakka")
+            if order[4] == 4:
+                print("Wakka in fifth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[4] = order[3]
+                order[3] = 4
+            elif order[5] == 4:
+                print("Wakka in sixth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                order[5] = order[3]
+                order[3] = 4
+        else:
+            print("Wakka seems fine.")
+            FFX_Xbox.menuDown()
+        if order[4] != 6: #Rikku, 5th slot
+            print("Swapping 5th and 6th slots")
+            FFX_Xbox.menuB()
+            FFX_Xbox.menuDown()
+            FFX_Xbox.menuB()
+            order[5] = order[4]
+            order[4] = 6
+        else:
+            print("Lulu and Rikku seem fine.")
+        
+        closeMenu()
+
+def end():
+    global process
+    process.close()
+    print("Memory reading process is now closed.")
