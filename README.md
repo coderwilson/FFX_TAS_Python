@@ -9,3 +9,9 @@ Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from
 3. Is this code licensed? - Nope. You're free to take this sample and do with it what you will. I ask that you do not sell it in this state, but beyond that it's up to you.
 4. So how do I get it to work? - First of all, good luck to you in picking up the project where I have left it here. Second, I expect you to prove your python skills by installing and running all the core files and extended libraries that are referenced within the project. You will want to go through the main file and other core files and remove (preferably via commenting out) the references to files I have not included in the project.
 5. Set-up - Once the code is compile-able and doesn't break on run time, download and install the Steam version of Final Fantasy X. I also recommend the 4gb patch referenced on speedrun.com, but it is not ultimately required. Once game is installed, change the settings to run in full screen mode, 1600x900 resolution, and low video quality mode. The current iteration of the project reads pixel colors off of the screen for various reasons, so the screen size and quality are important. (something I'd like to ultimately remove later). Once this is done... give it a shot and see what happens. Good luck.
+6. Can I contact you directly with questions? - Yes, I am active on Discord, username coderwilson. Feel free to message me directly. Or send an email to coderwilson@gmail.com. No solicitations please.
+
+References:
+twitch.tv/coderwilson
+youtube.com/coderwilson (I don't use this any more, but it has some old stuff that's kinda fun)
+coderwilson@gmail.com - no solicitations please.
