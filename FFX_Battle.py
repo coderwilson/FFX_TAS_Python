@@ -114,10 +114,51 @@ def revive():
             if FFX_Screen.BattleComplete():
                 return
             FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Item menu open.
     time.sleep(0.3)
-    FFX_Xbox.menuRight()
+    cursor = 1
+    itemPos = FFX_memory.getItemSlot(6)
+    if itemPos % 2 == 0:
+        FFX_Xbox.menuRight()
+        cursor += 1
+    if cursor == itemPos: #P.downs are in slot 2
+        FFX_Xbox.menuB()
+    else:
+        while cursor != itemPos: #If not slot 2, scroll down until we find phoenix downs.
+            FFX_Xbox.menuDown()
+            cursor += 2
+        FFX_Xbox.menuB()
     FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+
+def reviveAll():
+    FFX_Logs.writeLog("Using Mega Phoenix Down")
+    print("Using Phoenix Down")
+    if FFX_Screen.PixelTestTol(277,726,(223, 223, 223),5):
+        FFX_Xbox.menuDown()
+    else:
+        while not FFX_Screen.PixelTestTol(276,769,(218, 218, 218),5): # Item option isn't showing up
+            if FFX_Screen.BattleComplete():
+                return
+            FFX_Xbox.menuDown()
+        while not FFX_Screen.PixelTestTol(130,779,(165, 167, 165),5): # Item option isn't selected (it's always last)
+            if FFX_Screen.BattleComplete():
+                return
+            FFX_Xbox.menuDown()
+    FFX_Xbox.menuB() #Item menu open.
+    time.sleep(0.3)
+    cursor = 1
+    itemPos = FFX_memory.getItemSlot(7)
+    if itemPos % 2 == 0:
+        FFX_Xbox.menuRight()
+        cursor += 1
+    if cursor == itemPos: #P.downs are in slot 2
+        FFX_Xbox.menuB()
+    else:
+        while cursor != itemPos: #If not slot 2, scroll down until we find phoenix downs.
+            FFX_Xbox.menuDown()
+            cursor += 2
+        FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
 
@@ -1821,12 +1862,14 @@ def mWoods(woodsVars):
     except:
         print("Could not print woods vars.")
     stealAttempt = False
+    tidusIn = True
     try:
         while not FFX_Screen.BattleComplete():
             if FFX_Screen.BattleScreen():
                 if woodsVars[0] == False: #Rikku needs charging.
                     if FFX_Screen.turnTidus():
                         buddySwap(1)
+                        tidusIn = False
                         if FFX_Screen.checkCharge(1):
                             woodsVars[0] = True
                     if FFX_Screen.turnRikku():
@@ -1846,14 +1889,14 @@ def mWoods(woodsVars):
                                 fleeAll()
                             else:
                                 attack('none')
-                        elif woodsVars[0] == True:
+                        elif woodsVars[0] == True and tidusIn == False:
                             buddySwap(1)
+                            tidusIn == True
                             fleeAll()
                         else:
                             attack('down')
                     else:
-                        buddySwap(1)
-                        fleeAll()
+                        escapeOne()
                 elif stealAttempt == False and (woodsVars[1] == False or woodsVars[2] == False):
                     battleNum = FFX_memory.getBattleNum()
                     if battleNum == 171 and woodsVars[1] == False:
@@ -1881,8 +1924,14 @@ def mWoods(woodsVars):
                             buddySwap(1)
                             fleeAll()
                     else:
+                        if tidusIn == False:
+                            buddySwap(1)
+                            tidusIn = True
                         fleeAll()
                 else:
+                    if tidusIn == False:
+                        buddySwap(1)
+                        tidusIn = True
                     fleeAll()
     except Exception as errMsg:
         print("An error occurred. Error message:")
