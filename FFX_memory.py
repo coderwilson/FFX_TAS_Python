@@ -349,8 +349,19 @@ def getBattleFormation():
     char2 = process.readBytes(key,1)
     key = baseValue + 0x00F3F770
     char3 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A3
+    char4 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A4
+    char5 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A5
+    char6 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A6
+    char7 = process.readBytes(key,1)
     
-    battleForm = [char1, char2, char3]
+    battleForm = [char1, char2, char3, char4, char5, char6, char7]
+    if 255 in battleForm:
+        while 255 in battleForm:
+            battleForm.remove(255)
     return battleForm
 
 def getBattleCharSlot(charNum):
