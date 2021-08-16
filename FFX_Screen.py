@@ -21,7 +21,7 @@ def BattleScreen():
         FFXC.set_value('AxisLy', 0)
         if not PixelTestTol(131,693,(153, 155, 153),5):
             print("It is now someone's turn in battle.")
-            time.sleep(0.65)
+            time.sleep(0.735) #This delay is paramount.
         return True
     else :
         return False
@@ -341,60 +341,108 @@ def MinimapAny():
     return False
     
 def turnRikkuRed() :
-    if PixelTest(1394, 166, (157,60,33)) :
-        FFX_Logs.writeLog("Rikku's turn:")
+    if FFX_memory.getBattleCharTurn() == 6:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1394, 166, (157,60,33)) :
+    #    FFX_Logs.writeLog("Rikku's turn:")
+    #    return True
+    #else :
+    #    return False
     
 def turnRikku() :
-    if PixelTest(1379, 172, (174, 118, 57)) :
-        FFX_Logs.writeLog("Rikku's turn:")
+    if FFX_memory.getBattleCharTurn() == 6:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1379, 172, (174, 118, 57)) :
+    #    FFX_Logs.writeLog("Rikku's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnTidus() :
-    if PixelTest(1394, 166, (246, 203, 146)):
-        FFX_Logs.writeLog("Tidus's turn:")
+    if FFX_memory.getBattleCharTurn() == 0:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1394, 166, (246, 203, 146)):
+    #    FFX_Logs.writeLog("Tidus's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnWakka() :
-    if PixelTest(1394, 166, (182, 135, 83)):
-        FFX_Logs.writeLog("Wakka's turn:")
+    if FFX_memory.getBattleCharTurn() == 4:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1394, 166, (182, 135, 83)):
+    #    FFX_Logs.writeLog("Wakka's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnLulu() :
-    if PixelTest(1432, 193, (255, 36, 100)):
-        FFX_Logs.writeLog("Lulu's turn:")
+    if FFX_memory.getBattleCharTurn() == 5:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1432, 193, (255, 36, 100)):
+    #    FFX_Logs.writeLog("Lulu's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnKimahri() :
-    if PixelTest(1427, 179, (157, 0, 16)):
-        FFX_Logs.writeLog("Kimahri's turn:")
+    if FFX_memory.getBattleCharTurn() == 3:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1427, 179, (157, 0, 16)):
+    #    FFX_Logs.writeLog("Kimahri's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnAuron() :
-    if PixelTest(1427, 179, (130, 80, 46)):
-        FFX_Logs.writeLog("Auron's turn:")
+    if FFX_memory.getBattleCharTurn() == 2:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1427, 179, (130, 80, 46)):
+    #    FFX_Logs.writeLog("Auron's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnYuna() :
-    if PixelTest(1407, 182, (255, 226, 205)):
-        FFX_Logs.writeLog("Yuna's turn:")
+    if FFX_memory.getBattleCharTurn() == 1:
         return True
-    else :
+    else:
         return False
+        
+    #Old logic.
+    #if PixelTest(1407, 182, (255, 226, 205)):
+    #    FFX_Logs.writeLog("Yuna's turn:")
+    #    return True
+    #else :
+    #    return False
 
 def turnSeymour() :
     if PixelTest(1432, 166, (65, 140, 190)):

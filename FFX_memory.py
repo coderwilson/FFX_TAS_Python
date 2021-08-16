@@ -117,6 +117,22 @@ def clickToControl3():
     time.sleep(0.05)
     return True
 
+def clickToControlSpecial():
+    waitCounter = 0
+    print("Awaiting control (clicking)")
+    while not userControl():
+        FFXC.set_value('BtnB', 1)
+        FFXC.set_value('BtnY', 1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnB', 0)
+        FFXC.set_value('BtnY', 0)
+        time.sleep(0.035)
+        waitCounter += 1
+        if waitCounter % 100 == 0:
+            print("Awaiting control - ", waitCounter / 100)
+    time.sleep(0.05)
+    return True
+
 
 def clickToEvent():
     while userControl():
@@ -156,7 +172,7 @@ def getCoords():
 def getCamera():
     global baseValue
     angle = baseValue + 0x008A86B8
-    z = baseValue + 0x008A86FC
+    z = baseValue + 0x008A86F0
     x = baseValue + 0x008A86F8
     y = baseValue + 0x008A8700
     
@@ -235,8 +251,39 @@ def getOrderSix():
     pos7 = process.readBytes(coord,1)
     
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
-    formation.remove(255)
+    while 255 in formation:
+        formation.remove(255)
     print("Party formation: ", formation)
+    return formation
+
+def getOrderSeven():
+    global baseValue
+    #Out of combat HP only
+    
+    coord = baseValue + 0x00D307E8
+    pos1 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307E9
+    pos2 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EA
+    pos3 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EB
+    pos4 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EC
+    pos5 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307ED
+    pos6 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EE
+    pos7 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307EF
+    pos8 = process.readBytes(coord,1)
+    coord = baseValue + 0x00D307F0
+    pos9 = process.readBytes(coord,1)
+    
+    formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
+    print("Party formation, non-clean:", formation)
+    formation.remove(255)
+    formation.remove(255)
+    print("Party formation, cleaned: ", formation)
     return formation
 
 def getPhoenix():
@@ -253,6 +300,14 @@ def getPower():
     key = baseValue + 0x00D30B5E
     power = process.readBytes(key, 1)
     print("Power spheres: ", power)
+    return power
+
+def setPower(qty):
+    global baseValue
+    
+    key = baseValue + 0x00D30B5E
+    power = process.writeBytes(key, qty, 1)
+    print("Power spheres: ", qty)
     return power
 
 def getSpeed():
@@ -284,6 +339,35 @@ def getBattleNum():
     
     #print("Battle Number: ", formation)
     return formation
+
+def getBattleFormation():
+    global baseValue
+    
+    key = baseValue + 0x00F3F76C
+    char1 = process.readBytes(key,1)
+    key = baseValue + 0x00F3F76E
+    char2 = process.readBytes(key,1)
+    key = baseValue + 0x00F3F770
+    char3 = process.readBytes(key,1)
+    
+    battleForm = [char1, char2, char3]
+    return battleForm
+
+def getBattleCharSlot(charNum):
+    battleForm = getBattleFormation()
+    if battleForm[0] == charNum
+        return 1
+    if battleForm[1] == charNum
+        return 2
+    if battleForm[2] == charNum
+        return 3
+
+def getBattleCharTurn():
+    global baseValue
+    
+    key = baseValue + 0x00D36A68
+    battleCharacter = process.read(key)
+    return battleCharacter
 
 def getSLVLYuna():
     global baseValue
@@ -697,6 +781,13 @@ def getTidusSlvl():
     sLvl = process.readBytes(key,1)
     return sLvl
 
+def setTidusSlvl(levels):
+    global baseValue
+    
+    key = baseValue + 0x00D32097
+    sLvl = process.writeBytes(key,levels,1)
+    return sLvl
+
 def menuControl():
     global baseValue
     
@@ -732,7 +823,12 @@ def clickToStoryProgress(destination):
     print("Story goal: ", destination," | Awaiting progress state: ", currentState)
     while currentState < destination:
         if menuControl():
-            FFX_Xbox.menuB()
+            FFXC.set_value('BtnB',1)
+            FFXC.set_value('BtnA',1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB',0)
+            FFXC.set_value('BtnA',0)
+            time.sleep(0.035)
         if counter % 10000 == 0:
             print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 10000)
         counter += 1
@@ -885,190 +981,518 @@ def blitzballPatriotsStyle():
     key = baseValue + 0x00D2E131
     progress = process.writeBytes(key,50,1)
 
-def desertFormat():
+def desertFormat(rikkuCharge):
     order = getOrderSix()
     if order == [0,3,2,4,6,5]:
         print("Formation is fine, moving on.")
+    elif rikkuCharge == False:
+        fullPartyFormat('desert1')
     else:
-        openMenu()
-        time.sleep(0.2)
+        fullPartyFormat('desert2')
+
+def fullPartyFormat(frontLine):
+    partyMembers = 7
+    frontLine = frontLine.lower()
+    if frontLine == 'kimahri':
+        order = getOrderSeven()
+        orderFinal = [0,3,2,6,4,5,1]
+    if frontLine == 'rikku':
+        order = getOrderSeven()
+        orderFinal = [0,6,2,3,4,5,1]
+    if frontLine == 'yuna':
+        order = getOrderSeven()
+        orderFinal = [0,1,2,6,4,5,3]
+    if frontLine == 'gauntlet':
+        order = getOrderSeven()
+        orderFinal = [0,1,3,2,4,5,6]
+    if frontLine == 'macalaniaescape':
+        order = getOrderSeven()
+        orderFinal = [0,1,6,2,4,3,5]
+    if frontLine == 'desert1':
+        partyMembers = 6
         order = getOrderSix()
+        orderFinal = [0,6,2,3,4,5]
+    if frontLine == 'desert2':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0,3,2,6,4,5]
+    if frontLine == 'guards':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0,2,3,6,4,5]
+    if frontLine == 'evrae':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0,6,3,2,4,5]
+    if frontLine == 'crawler':
+        order = getOrderSeven()
+        orderFinal = [0,3,4,6,2,5,1]
+    if frontLine == 'besaid1':
+        order = getOrderSix() #Should work the same way
+        orderFinal = [0,1,5,3,5]
+    if frontLine == 'kilika':
+        order = getOrderSix() #Should work the same way
+        orderFinal = [0,1,4,3,5]
+        partyMembers = 5
+    if order == orderFinal:
+        print("Good to go, no action taken.")
+    else:
+        print("Converting from formation:")
+        print(order)
+        print("Into formation:")
+        print(orderFinal)
+        while not menuOpen():
+            openMenu()
+        
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
         
-        if order[0] != 0: #Tidus is not in the first slot
-            print("Looking for Tidus")
-            if order[1] == 0:
+        if order[0] != orderFinal[0]:
+            print("Looking for ",nameFromNumber(orderFinal[0]))
+            if order[1] == orderFinal[0]:
                 print("Tidus in Second slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 order[1] = order[0]
-                order[0] = 0
-            elif order[2] == 0:
-                print("Tidus in Third slot. Swapping")
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif order[2] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0])," in Third slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
                 order[2] = order[0]
-                order[0] = 0
-            elif order[3] == 0:
-                print("Tidus in Fourth slot. Swapping")
+                order[0] = orderFinal[0]
+                FFX_Xbox.menuUp()
+            elif order[3] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0])," in Fourth slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
                 order[3] = order[0]
-                order[0] = 0
-            elif order[4] == 0:
-                print("Tidus in Fifth slot. Swapping")
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif order[4] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0])," in Fifth slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuUp()
                 FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
                 order[4] = order[0]
-                order[0] = 0
-            elif order[5] == 0:
-                print("Tidus in Sixth slot. Swapping")
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+            elif partyMembers > 5 and order[5] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0])," in Sixth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()
+                order[5] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+            elif partyMembers == 7 and order[6] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0])," in seventh slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuUp()
                 FFX_Xbox.menuB()
+                order[6] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
-                order[5] = order[0]
-                order[0] = 0
         else:
-            print("Tidus seems fine.")
+            print(nameFromNumber(order[0])," seems fine.")
             FFX_Xbox.menuDown()
-        if order[1] != 3: #Kimahri is not in the second slot
-            print("Looking for Kimahri")
-            if order[2] == 3:
-                print("Kimahri in Third slot. Swapping")
+        if order[1] != orderFinal[1]:
+            print("Looking for ",nameFromNumber(orderFinal[1]))
+            if order[2] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1])," in Third slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 order[2] = order[1]
-                order[1] = 3
-            elif order[3] == 3:
-                print("Kimahri in Fourth slot. Swapping")
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif order[3] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1])," in Fourth slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
                 order[3] = order[1]
-                order[1] = 3
-            elif order[4] == 3:
-                print("Kimahri in Fifth slot. Swapping")
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+            elif order[4] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1])," in Fifth slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
                 order[4] = order[1]
-                order[1] = 3
-            elif order[5] == 3:
-                print("Kimahri in Sixth slot. Swapping")
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif partyMembers > 5 and order[5] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1])," in Sixth slot. Swapping")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
                 order[5] = order[1]
-                order[1] = 3
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif partyMembers == 7 and order[6] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1])," in Seventh slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[1]
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
         else:
-            print("Kimahri seems fine.")
+            print(nameFromNumber(order[1])," seems fine.")
             FFX_Xbox.menuDown()
-        if order[2] != 2: #Auron, 3rd slot
-            print("Looking for Auron")
-            if order[3] == 2:
-                print("Auron in fourth slot. Swapping.")
+        if order[2] != orderFinal[2]:
+            print("Looking for ",nameFromNumber(orderFinal[2]))
+            if order[3] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2])," in fourth slot. Swapping.")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 order[3] = order[2]
-                order[2] = 2
-            elif order[4] == 2:
-                print("Auron in fifth slot. Swapping.")
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif order[4] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2])," in fifth slot. Swapping.")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
                 order[4] = order[2]
-                order[2] = 2
-            elif order[5] == 2:
-                print("Auron in sixth slot. Swapping.")
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+            elif partyMembers > 5 and order[5] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2])," in sixth slot. Swapping.")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
                 order[5] = order[2]
-                order[2] = 2
-            else:
-                print("Something's wrong, can't find Lulu.")
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif partyMembers == 7 and order[6] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2])," in seventh slot. Swapping.")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
+                order[6] = order[2]
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
                 FFX_Xbox.menuUp()
         else:
-            print("Auron seems fine.")
+            print(nameFromNumber(order[2])," seems fine.")
             FFX_Xbox.menuDown()
-        if order[3] != 4: #Wakka, 4th slot
-            print("Looking for Wakka")
-            if order[4] == 4:
-                print("Wakka in fifth slot. Swapping.")
+        if order[3] != orderFinal[3]:
+            print("Looking for ",nameFromNumber(orderFinal[3]))
+            if order[4] == orderFinal[3]:
+                print(nameFromNumber(orderFinal[3])," in fifth slot. Swapping.")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 order[4] = order[3]
-                order[3] = 4
-            elif order[5] == 4:
-                print("Wakka in sixth slot. Swapping.")
+                order[3] = orderFinal[3]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif partyMembers > 5 and order[5] == orderFinal[3]:
+                print(nameFromNumber(orderFinal[3])," in sixth slot. Swapping.")
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
                 order[5] = order[3]
-                order[3] = 4
+                order[3] = orderFinal[3]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+            elif partyMembers == 7 and order[6] == orderFinal[3]:
+                print(nameFromNumber(orderFinal[3])," in seventh slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[3]
+                order[3] = orderFinal[3]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
         else:
-            print("Wakka seems fine.")
+            print(nameFromNumber(order[3])," seems fine.")
             FFX_Xbox.menuDown()
-        if order[4] != 6: #Rikku, 5th slot
-            print("Swapping 5th and 6th slots")
+        if partyMembers > 5 and order[4] != orderFinal[4]:
+            print("Looking for ",nameFromNumber(orderFinal[4]))
+            if order[5] == orderFinal[4]:
+                print(nameFromNumber(orderFinal[4])," in Sixth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[5] = order[4]
+                order[4] = orderFinal[4]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif partyMembers == 7 and order[6] == orderFinal[4]:
+                print(nameFromNumber(orderFinal[4])," in Seventh slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[4]
+                order[4] = orderFinal[4]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+        else:
+            print(nameFromNumber(order[4])," seems fine.")
+            FFX_Xbox.menuDown()
+        if partyMembers == 7 and order[5] != orderFinal[5]:
+            print(nameFromNumber(order[5])," and ",nameFromNumber(order[6]), \
+            "are swapped. Flipping them back.")
+            print("Expected order: ", orderFinal[5], " | ", orderFinal[6])
             FFX_Xbox.menuB()
             FFX_Xbox.menuDown()
             FFX_Xbox.menuB()
-            order[5] = order[4]
-            order[4] = 6
-        else:
-            print("Lulu and Rikku seem fine.")
+        elif partyMembers == 7:
+            print(nameFromNumber(orderFinal[5])," and ",nameFromNumber(orderFinal[6])," seem fine.")
         
+        #time.sleep(120) #For testing only. Allows us to see what's going on.
         closeMenu()
+
+def nameFromNumber(charNum):
+    if charNum == 0:
+        return "Tidus"
+    if charNum == 1:
+        return "Yuna"
+    if charNum == 2:
+        return "Auron"
+    if charNum == 3:
+        return "Kimahri"
+    if charNum == 4:
+        return "Wakka"
+    if charNum == 5:
+        return "Lulu"
+    if charNum == 6:
+        return "Rikku"
 
 def end():
     global process
     process.close()
     print("Memory reading process is now closed.")
+
+
+#-------------------------------------------------------
+#Egg hunt section
+
+
+#def isIce(eggNum):
+#    global process
+#    global baseValue
+#    baseOffset = baseValue + 0xEA22A0 + (0x880 * eggNum)
+#    key = baseOffset + 0x180
+#    retVal = process.readBytes(key, 1)
+#    if retVal == 1:
+#        return True
+#    else:
+#        return False
+
+def isIce(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xEA22A0    # equivalent to the pointer FFX.exe+EA22A0
+    basePointerAddress = process.read(basePointer) # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
+    key = basePointerAddress + (0x880 * eggNum) + 0x180
+    retVal = process.readBytes(key,1)
+    #print("Egg ", eggNum," ice value: ", retVal)
+    return retVal
+
+#def eggX(eggNum):
+#    global process
+#    global baseValue
+#    baseOffset = baseValue + 0xEA22A0 + (0x880 * eggNum)
+#    key = baseOffset + 0x0C
+#    retVal = float_from_integer(process.read(key))
+#    print("Egg ", eggNum," X value: ", retVal)
+#    return retVal
+
+def eggX(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xEA22A0    # equivalent to the pointer FFX.exe+EA22A0
+    basePointerAddress = process.read(basePointer)    # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
+    key = basePointerAddress + (0x880 * eggNum) + 0x0C
+    retVal = float_from_integer(process.read(key))
+    #print("Egg ", eggNum," X value: ", retVal)
+    return retVal
+
+#def eggY(eggNum):
+#    global process
+#    global baseValue
+#    baseOffset = baseValue + 0xEA22A0 + (0x880 * eggNum)
+#    key = baseOffset + 0x18
+#    retVal = float_from_integer(process.read(key))
+#    print("Egg ", eggNum," Y value: ", retVal)
+#    return retVal
+
+def eggY(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xEA22A0    # equivalent to the pointer FFX.exe+EA22A0
+    basePointerAddress = process.read(basePointer)    # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
+    key = basePointerAddress + (0x880 * eggNum) + 0x14
+    retVal = float_from_integer(process.read(key))
+    #print("Egg ", eggNum," Y value: ", retVal)
+    return retVal
+
+class egg:
+    def __init__(self, eggnum):
+        self.num = eggnum
+        self.isIce = isIce(self.num)
+        self.x = eggX(self.num)
+        self.y = eggY(self.num)
+        if self.x == 9999:
+            self.isActive = False
+        elif self.x == 0 and self.y == 0:
+            self.isActive = False
+        elif self.isIce == 8:
+            self.isActive = False
+        else:
+            self.isActive = True
+    
+    def reportVars(self):
+        varArray = [self.num, self.isIce, self.isActive, self.x, self.y]
+        print("Egg_num, Is_Ice, Is_Active, X, Y")
+        print(varArray)
+
+def buildEggs():
+    retArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    for x in range(32):
+        retArray[x] = egg(x)
+    return retArray
