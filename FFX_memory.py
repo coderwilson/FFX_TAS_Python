@@ -366,12 +366,23 @@ def getBattleFormation():
 
 def getBattleCharSlot(charNum):
     battleForm = getBattleFormation()
-    if battleForm[0] == charNum
-        return 1
-    if battleForm[1] == charNum
-        return 2
-    if battleForm[2] == charNum
-        return 3
+    try:
+        if battleForm[0] == charNum
+            return 1
+        if battleForm[1] == charNum
+            return 2
+        if battleForm[2] == charNum
+            return 3
+        if battleForm[3] == charNum
+            return 4
+        if battleForm[4] == charNum
+            return 5
+        if battleForm[5] == charNum
+            return 6
+        if battleForm[6] == charNum
+            return 7
+    except:
+        return 0
 
 def getBattleCharTurn():
     global baseValue
