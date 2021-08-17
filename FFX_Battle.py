@@ -2324,75 +2324,213 @@ def seymourGuado():
     time.sleep(2.2)
     FFXC.set_value('BtnB', 0)
 
+def fullheal(healerposition: int, targetposition: int, direction: str):
+
+    if FFX_memory.getItemSlot(2) < 255:
+        itemnum = 2
+        itemname = "X-Potion"
+    elif FFX_memory.getItemSlot(8) < 255:
+        itemnum = 8
+        itemname = "Elixir"
+    elif FFX_memory.getItemSlot(6) < 255:
+        itemnum = 6
+        itemname = "Mega-Potion"
+    else:
+        itemnum = -1
+
+    if itemnum >= 0:
+
+        FFX_Logs.writeLog("Using %s" % itemname)
+        print("Using %s" % itemname)
+        if FFX_Screen.PixelTestTol(277, 726, (223, 223, 223), 5):
+            FFX_Xbox.menuDown()
+        else:
+            while not FFX_Screen.PixelTestTol(276, 769, (218, 218, 218), 5):  # Item option isn't showing up
+                if FFX_Screen.BattleComplete():
+                    return
+                FFX_Xbox.menuDown()
+            while not FFX_Screen.PixelTestTol(130, 779, (165, 167, 165),
+                                              5):  # Item option isn't selected (it's always last)
+                if FFX_Screen.BattleComplete():
+                    return
+                FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()  # Item menu open.
+        time.sleep(0.3)
+        cursor = 1
+        itemPos = FFX_memory.getItemSlot(itemnum)
+        if itemPos % 2 == 0:
+            FFX_Xbox.menuRight()
+            cursor += 1
+        if cursor == itemPos:
+            FFX_Xbox.menuB()
+        else:
+            while cursor != itemPos:
+                FFX_Xbox.menuDown()
+                cursor += 2
+            FFX_Xbox.menuB()
+
+        if (targetposition - healerposition) % 3 == 1:
+            if direction == "Left":
+                FFX_Xbox.menuLeft()
+            elif direction == "Right":
+                FFX_Xbox.menuRight()
+            elif direction == "Up":
+                FFX_Xbox.menuUp()
+            elif direction == "Down":
+                FFX_Xbox.menuDown()
+        elif (targetposition - healerposition) % 3 == 2:
+            if direction == "Left":
+                FFX_Xbox.menuRight()
+            elif direction == "Right":
+                FFX_Xbox.menuLeft()
+            elif direction == "Up":
+                FFX_Xbox.menuDown()
+            elif direction == "Down":
+                FFX_Xbox.menuUp()
+
+        FFX_Xbox.menuB()
+        FFX_Xbox.menuB()
+
+        return 1
+
+    else:
+        return 0
+
+def wendigoresheal(turnchar: int, powerbreak: int, tidusmaxHP: int):
+    partyHP = FFX_memory.getBattleHP()
+    if FFX_Screen.faintCheck() == 2:
+        if FFX_memory.getItemSlot(7) < 255:
+            reviveAll()
+        elif FFX_memory.getItemSlot(6) < 255:
+            revive()  # This should technically target tidus but need to update this logic
+    # If just Tidus is dead revive him
+    elif powerbreak == 1:
+        swapposition = (FFX_memory.getBattleCharSlot(2) - 3) % 4
+        buddySwap(swapposition)
+    elif partyHP[FFX_memory.getBattleCharSlot(0)] == 0:
+        revive()
+    # If tidus is less than max HP heal him
+    elif partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
+        if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
+                    targetposition=FFX_memory.getBattleCharSlot(0),
+                    direction="right") == 0:
+            if FFX_Screen.faintCheck():
+                revive()
+            else:
+                defend()
+    elif FFX_Screen.faintCheck():
+        revive()
+    else:
+        return 0
+
+    return 1
+
 def wendigo():
     phase = 0
     curtain = False
     YunaAP = False
+    guadosteal = False
+    powerbreak = 0
+    tidushealself = False
+    tidusmaxHP = 1520
+    tidusdied = False
+    tidushaste = False
     FFX_Logs.writeLog("Fight start: Wendigo")
-    
+
     while not FFX_Screen.BattleComplete():
         if FFX_Screen.BattleScreen():
-            if FFX_Screen.turnYuna() and phase <= 4:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                buddySwap(1)
-                FFX_Screen.awaitTurn()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                time.sleep(0.6)
-                FFX_Xbox.menuB()
-                time.sleep(0.6)
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuB() #Auron uses Armor Break
-                time.sleep(1)
-            elif FFX_Screen.turnTidus():
-                if phase == 0:
+            partyHP = FFX_memory.getBattleHP()
+            turnchar = FFX_memory.getBattleCharTurn()
+
+            if partyHP[FFX_memory.getBattleCharSlot(0)] == 0:
+                tidushaste = False
+                powerbreak += 1
+
+            if turnchar == 1:
+                # If Yuna still needs AP:
+                if YunaAP == False:
+                    # If both other characters are dead Mega-Phoenix if available, otherwise PD
+                    if wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                        defend()
+                    YunaAP = True
+                # If Yuna has had a turn swap for Lulu
+                else:
+                    if powerbreak == 1:
+                        swapindex = 2
+                    else:
+                        swapindex = 5
+                    swapposition = (FFX_memory.getBattleCharSlot(swapindex)-3) % 4
+                    buddySwap(swapposition)  # Swap for Lulu/Auron
+            elif turnchar == 0:
+                if tidushaste == False:
                     FFX_Xbox.tidusHaste('none')
-                    phase += 1
-                elif phase == 1:
+                    tidushaste = True
+                elif phase == 0:
                     attack('down')
                     phase += 1
-                elif phase <= 3 and FFX_Screen.faintCheck():
-                    revive()
-                else:
-                    partyHP = FFX_memory.getBattleHP()
-                    if partyHP[1] < 1100:
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.SkipDialog(2)
+                elif FFX_Screen.faintCheck() == 2:
+                    tidushealself = True
+                    if FFX_memory.getItemSlot(7) < 255:
+                        reviveAll()
+                    elif FFX_memory.getItemSlot(6) < 255:
+                        revive()
+                elif tidushealself == True:
+                    if partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
+                        if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
+                                    targetposition=FFX_memory.getBattleCharSlot(0),
+                                    direction="right") == 0:
+                            if FFX_Screen.faintCheck():
+                                revive()
+                            else:
+                                defend()
                     else:
                         attack('left')
-            elif FFX_Screen.turnRikku() and phase == 2:
-                phase += 1
-                useItem(2,'left')
-                curtain = 1
-            else:
-                if phase == 3:
-                    YunaAP = True
-                    phase += 1
-                    buddySwap(1) #Yuna back in
-                    if FFX_Screen.faintCheck():
-                        revive()
-                    else:
-                        FFX_Xbox.weapSwap(0)
-                elif phase == 4:
-                    phase += 1
-                    buddySwap(0)
-                    if FFX_Screen.faintCheck():
-                        revive()
-                    else:
-                        FFX_Xbox.weapSwap(0)
-                elif FFX_Screen.turnYuna():
-                    buddySwap(3) #Just so Yuna ends the game alive, we'll swap in Kimahri.
-                elif FFX_Screen.turnLulu():
-                    buddySwap(1)
-                elif FFX_Screen.faintCheck():
-                    revive()
+                    tidushealself = False
                 else:
+                    attack('left')
+            elif turnchar == 6:
+                if phase == 1:
+                    phase += 1
+                    lightcurtainslot = FFX_memory.getItemSlot(57)
+                    if lightcurtainslot < 255:
+                        if (FFX_memory.getBattleCharSlot(0) - FFX_memory.getBattleCharSlot(6)) % 3 == 1:
+                            useItem(lightcurtainslot, 'left')
+                        else:
+                            useItem(lightcurtainslot, 'right')
+                        curtain = True
+                    else:
+                        swapposition = (FFX_memory.getBattleCharSlot(2) - 3) % 4
+                        buddySwap(swapposition)  # Swap for Auron
+                        powerbreak += 1
+                elif wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                    if guadosteal == False:
+                        Steal()
+                        guadosteal = True
+                    else:
+                        defend()
+            elif turnchar == 2:
+                if powerbreak == 1:
+                    FFXC.set_value('AxisLy', 0)
+                    FFXC.set_value('AxisLx', 0)
+                    buddySwap(1)
+                    FFX_Screen.awaitTurn()
+                    FFX_Xbox.menuDown()
+                    FFX_Xbox.menuB()
+                    time.sleep(0.6)
+                    FFX_Xbox.menuB()
+                    time.sleep(0.6)
+                    FFX_Xbox.menuLeft()
+                    FFX_Xbox.menuB()  # Auron uses Armor Break
+                    time.sleep(1)
+                    powerbreak += 1
+                else:
+                    if wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                        defend()
+            else:
+                if wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     defend()
         else:
-            FFX_Xbox.menuB() #Effectively clicking to battle and after battle dialog.
+            FFX_Xbox.menuB()  # Effectively clicking to battle and after battle dialog.
 
 def wendigo_old():
     phase = 0
@@ -2908,108 +3046,70 @@ def Evrae_old():
     time.sleep(5)
     FFX_Xbox.skipSceneSpec()
 
+
 def Evrae():
     FFX_Logs.writeLog("Fight start: Evrae")
     tidusPrep = 0
-    otherTurns = 0
+    tidusAttacks = 0
+    rikkuTurns = 0
+    kimahriTurns = 0
     lunarCurtain = False
-    odComplete = [False,False]
+    odComplete = [False, False]
     itemFinderCounter = 0
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
-    FFX_Screen.clickToBattle() #This gets us past the tutorial and all the dialog.
-    
+    FFX_Screen.clickToBattle()  # This gets us past the tutorial and all the dialog.
+
     while not FFX_Screen.BattleComplete():
         if FFX_Screen.BattleScreen():
+            turnchar = FFX_memory.getBattleCharTurn()
             print("Tidus prep turns: ", tidusPrep)
             print("otherTurns: ", otherTurns)
-            if FFX_Screen.turnTidus():
+            if turnchar == 0:
                 if tidusPrep == 0:
                     tidusPrep = 1
                     FFX_Xbox.tidusHaste('none')
-                elif tidusPrep < 3:
+                elif tidusPrep == 1:
                     tidusPrep += 1
                     cheer()
-                elif tidusPrep == 3:
+                elif tidusPrep == 2 and otherTurns == 0:
                     tidusPrep += 1
-                    FFX_Xbox.weapSwap(0)
+                    FFX_Xbox.armorSwap(0)
+                elif tidusPrep >= 2 and tidusAttacks == 2:
+                    tidusPrep += 1
+                    cheer()
                 else:
+                    tidusAttacks += 1
                     attack('none')
-            else:
-                if otherTurns == 0:
-                    otherTurns += 1
+            elif turnchar == 6:
+                if rikkuTurns == 0:
+                    rikkuTurns += 1
                     print("Rikku overdrive")
-                    while not FFX_Screen.PixelTest(306,683,(223,223,223)):
+                    while not FFX_Screen.PixelTest(306, 683, (223, 223, 223)):
                         FFX_Xbox.menuLeft()
                     time.sleep(0.4)
                     FFX_Xbox.menuB()
                     time.sleep(0.8)
                     FFX_memory.rikkuODItems('Evrae')
-                    
-                    FFX_Xbox.menuB() #Engage overdrive
-                    FFX_Xbox.menuB() #For safety
+
+                    FFX_Xbox.menuB()  # Engage overdrive
+                    FFX_Xbox.menuB()  # For safety
                 else:
-                    if FFX_Screen.PixelTestTol(1049,701,(234, 194, 0),5): #Elixir
-                        print("Tidus is low. Elixir.")
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.menuB()
-                        time.sleep(0.7)
-                        FFX_Xbox.menuDown()
-                        FFX_Xbox.menuB()
-                        time.sleep(0.1)
-                        if FFX_Screen.turnKimahri():
-                            FFX_Xbox.menuUp()
-                        else:
-                            FFX_Xbox.menuDown()
-                        FFX_Xbox.menuB()
-                    elif lunarCurtain == False:
-                        print("We're good on Tidus's HP. Now for a Lunar curtain.")
-                        if FFX_Screen.turnKimahri():
-                            useItem(1, 'up')
-                        else:
-                            useItem(1, 'down')
-                        lunarCurtain = True
-                    else:
-                        defend()
-                #elif FFX_Screen.PixelTestTol(1049,701,(234, 194, 0),5):
-                #    if FFX_Screen.PixelTestTol(1049,701,(234, 194, 0),5):
-                #        print("Tidus is low. Elixir.")
-                #        FFX_Xbox.menuDown()
-                #        FFX_Xbox.menuDown()
-                #        FFX_Xbox.menuDown()
-                #        FFX_Xbox.menuB()
-                #        time.sleep(0.7)
-                #        FFX_Xbox.menuDown()
-                #        if FFX_Screen.PixelTestTol(170,760,(68, 56, 205),5):
-                #            FFX_Xbox.menuB()
-                #        elif FFX_Screen.PixelTestTol(522,762,(63, 50, 202),5):
-                #            FFX_Xbox.menuRight()
-                #            FFX_Xbox.menuB()
-                #        else:
-                #            FFX_Xbox.menuDown()
-                #            FFX_Xbox.menuB()
-                #        time.sleep(0.1)
-                #        if FFX_Screen.turnKimahri():
-                #            FFX_Xbox.menuUp()
-                #        else:
-                #            FFX_Xbox.menuUp()
-                #
-                #FFX_Xbox.menuB()
-                #elif lunarCurtain == False:
-                #    print("We're good on Tidus's HP. Now for a Lunar curtain.")
-                #    if FFX_Screen.turnKimahri():
-                #        useItem(0, 'up')
-                #    else:
-                #        useItem(0, 'down')
-                #    lunarCurtain = True
-                #else:
-                #    defend()
+                    Steal()
+            else:
+                if kimahriTurns == 0:
+                    kimahriTurns += 1
+                    if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
+                                targetposition=FFX_memory.getBattleCharSlot(0),
+                                direction="up") == 0:
+                        Steal()
+                else:
+                    Steal()
+
     FFXC.set_value('BtnB', 1)
     time.sleep(2)
     FFXC.set_value('BtnB', 0)
-    
+
     time.sleep(4)
     FFX_Xbox.skipSceneSpec()
 

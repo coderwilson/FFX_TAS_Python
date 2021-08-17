@@ -292,6 +292,22 @@ def weapSwap(position):
     menuB()
     time.sleep(0.3)
 
+def armorSwap(position):
+    print("Armor swap, armor in position: ", position)
+    menuRight()
+    time.sleep(0.5)
+    menuDown()
+    time.sleep(0.5)
+    menuB()
+    time.sleep(0.7)
+    armor = 0
+    while armor < position :
+        menuDown()
+        weap += 1
+    menuB()
+    menuB()
+    time.sleep(0.3)
+
 def airShipPath(version):
     FFX_memory.clickToControl()
     
