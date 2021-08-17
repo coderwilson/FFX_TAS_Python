@@ -289,33 +289,43 @@ def getOrderSeven():
 def getPhoenix():
     global baseValue
     
-    key = baseValue + 0x00D30B5D
-    pDowns = process.readBytes(key, 1)
+    key = getItemSlot(6)
+    pDowns = getItemCountSlot(key)
     print("Phoenix Down count: ", pDowns)
     return pDowns
 
 def getPower():
     global baseValue
     
-    key = baseValue + 0x00D30B5E
-    power = process.readBytes(key, 1)
+    key = getItemSlot(70)
+    power = getItemCountSlot(key)
     print("Power spheres: ", power)
     return power
 
 def setPower(qty):
     global baseValue
     
-    key = baseValue + 0x00D30B5E
-    power = process.writeBytes(key, qty, 1)
-    print("Power spheres: ", qty)
+    slot = getItemSlot(70)
+    key = baseValue + itemCountAddr(slot)
+    process.writeBytes(key, qty, 1)
+    power = getPower()
     return power
 
 def getSpeed():
     global baseValue
     
-    key = baseValue + 0x00D30B60
-    speed = process.readBytes(key, 1)
+    key = getItemSlot(72)
+    speed = getItemCountSlot(key)
     print("Speed spheres: ", speed)
+    return speed
+
+def setSpeed(qty):
+    global baseValue
+    
+    slot = getItemSlot(72)
+    key = baseValue + itemCountAddr(slot)
+    process.writeBytes(key, qty, 1)
+    speed = getSpeed()
     return speed
 
 def getBattleHP():
@@ -367,19 +377,19 @@ def getBattleFormation():
 def getBattleCharSlot(charNum):
     battleForm = getBattleFormation()
     try:
-        if battleForm[0] == charNum
+        if battleForm[0] == charNum:
             return 1
-        if battleForm[1] == charNum
+        if battleForm[1] == charNum:
             return 2
-        if battleForm[2] == charNum
+        if battleForm[2] == charNum:
             return 3
-        if battleForm[3] == charNum
+        if battleForm[3] == charNum:
             return 4
-        if battleForm[4] == charNum
+        if battleForm[4] == charNum:
             return 5
-        if battleForm[5] == charNum
+        if battleForm[5] == charNum:
             return 6
-        if battleForm[6] == charNum
+        if battleForm[6] == charNum:
             return 7
     except:
         return 0
@@ -488,6 +498,62 @@ def getItemsOrder():
 
     print(items)
     return items
+
+def getUseItemsOrder():
+    itemArray = getItemsOrder()
+    x = 1
+    while x < len(itemArray):
+        try:
+            if itemArray[x] == 20:
+                print("Al Bhed pots, disregard.")
+                x += 1
+            if itemArray[x] > 0 and itemArray[x] < 23:
+                itemArray.remove(itemArray[x])
+            elif itemArray[x] > 69:
+                itemArray.remove(itemArray[x])
+            else:
+                x += 1
+        except:
+            x += 1
+    print("Use command, item order:")
+    print(itemArray)
+    return itemArray
+
+def getUseItemsSlot(itemNum):
+    items = getUseItemsOrder()
+    x = 1
+    while x < len(items):
+        #print(items[x + 1], " | ", itemNum)
+        if items[x] == itemNum:
+            return x
+        x += 1
+    return 255
+
+def getThrowItemsOrder():
+    itemArray = getItemsOrder()
+    x = 1
+    while x < len(itemArray):
+        try:
+            if itemArray[x] > 15:
+                itemArray.remove(itemArray[x])
+            else:
+                x += 1
+        except:
+            x += 1
+    print("Throw Item command, item order:")
+    print(itemArray)
+    return itemArray
+
+def getThrowItemsSlot(itemNum):
+    items = getThrowItemsOrder()
+    x = 1
+    while x < len(items):
+        #print(items[x + 1], " | ", itemNum)
+        if items[x] == itemNum:
+            print("Desired item ", itemNum, " is in slot ", x)
+            return x
+        x += 1
+    return 255
 
 def getItemSlot(itemNum):
     items = getItemsOrder()
@@ -621,6 +687,11 @@ def getGilvalue():
     global baseValue
     key = baseValue + 0x00D307D8
     return process.read(key)
+
+def setGilvalue(newValue):
+    global baseValue
+    key = baseValue + 0x00D307D8
+    return process.write(key, newValue)
 
 def rikkuODItems(battle):
     #This function gets the item slots for each item, swaps if they're backwards,
