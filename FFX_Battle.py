@@ -117,7 +117,7 @@ def revive():
     FFX_Xbox.menuB() #Item menu open.
     time.sleep(0.3)
     cursor = 1
-    itemPos = FFX_memory.getItemSlot(6)
+    itemPos = FFX_memory.getThrowItemsSlot(6)
     if itemPos % 2 == 0:
         FFX_Xbox.menuRight()
         cursor += 1
@@ -148,7 +148,7 @@ def reviveAll():
     FFX_Xbox.menuB() #Item menu open.
     time.sleep(0.3)
     cursor = 1
-    itemPos = FFX_memory.getItemSlot(7)
+    itemPos = FFX_memory.getThrowItemsSlot(7)
     if itemPos % 2 == 0:
         FFX_Xbox.menuRight()
         cursor += 1
@@ -335,7 +335,7 @@ def Tros() :
                 revive()
             elif FFX_Screen.turnRikkuRed() :
                 if battleClock < 3:
-                    grenadeSlot = FFX_memory.getItemSlot(35)
+                    grenadeSlot = FFX_memory.getUseItemsSlot(35)
                     if FFX_memory.getItemCountSlot(grenadeSlot) < 6:
                         print("Rikku's first turn. Steal.")
                         Steal()
@@ -1735,7 +1735,7 @@ def chargeRikku():
 
 def thunderPlains(status, section):
     bNum = FFX_memory.getBattleNum()
-    nadeSlot = FFX_memory.getItemSlot(35)
+    nadeSlot = FFX_memory.getUseItemsSlot(35)
     nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
     if nadeCount > 1:
         throwNades = True
@@ -1949,9 +1949,9 @@ def mWoods(woodsVars):
     if partyHP[0] < 600 or partyHP[4] < 900:
         healUp(3)
     print("And last, we'll update variables.")
-    if FFX_memory.getItemSlot(32) != 255:
+    if FFX_memory.getUseItemsSlot(32) != 255:
         woodsVars[1] = True
-    if FFX_memory.getItemSlot(24) != 255:
+    if FFX_memory.getUseItemsSlot(24) != 255:
         woodsVars[2] = True
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
     print(woodsVars)
@@ -2033,6 +2033,94 @@ def mWoods_old(woodsVars):
             BattleComplete = 1
     healUp(3)
     return woodsVars
+
+
+def spherimorph_new():
+    FFX_Logs.writeLog("Fight start: Spherimorph")
+    FFX_Screen.clickToBattle()
+
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('Dpad', 0)
+
+    spellNum = 0
+    tidusturns = 0
+    rikkuturns = 0
+    if FFX_Screen.BattleComplete():
+        FFXC.set_value('BtnB', 1)
+        time.sleep(2)
+        FFXC.set_value('BtnB', 0)
+    elif FFX_Screen.BattleScreen():
+        turnchar = FFX_memory.getBattleCharTurn()
+        partyHP = FFX_memory.getBattleHP()
+        if turnchar == 0:
+            if tidusturns == 0:
+                FFX_Xbox.armorSwap(1)
+            elif tidusturns == 1:
+                defend()
+            else:
+                rikkuslotnum = FFX_memory.getBattleCharSlot(6)
+                buddySwap_new(rikkuslotnum)
+        elif turnchar == 1:
+            rikkuslotnum = FFX_memory.getBattleCharSlot(6)
+            if rikkuslotnum < 4 and partyHP[rikkuslotnum] == 0:
+                revive()
+            else:
+                defend()
+        elif turnchar == 3:
+            rikkuslotnum = FFX_memory.getBattleCharSlot(6)
+            if rikkuslotnum < 4 and partyHP[rikkuslotnum] == 0:
+                revive()
+            else:
+                defend()
+        elif turnchar == 6:
+            #FFXC.set_value('AxisLx', 0)
+            #FFXC.set_value('AxisLy', 0)
+            #FFXC.set_value('Dpad', 0)
+
+            if rikkuturns == 0:
+                print("Throwing Grenade to check element")
+                grenadeslotnum = FFX_memory.getUseItemsSlot(35)
+                useItem(grenadeslotnum, "none")
+                spellNum = FFX_Screen.spherimorphSpell()
+            else:
+                print("Starting Rikku's overdrive")
+                while not FFX_Screen.PixelTestTol(306, 683, (223, 223, 223), 5):
+                    FFX_Xbox.menuLeft()
+                    rikkuCounter += 1
+                    if rikkuCounter % 100 == 0:
+                        print("Mark: pushing left for Rikku overdrive")
+                print("Mark: Overdrive ready")
+                time.sleep(0.3)
+                FFX_Xbox.menuB()
+                time.sleep(1)
+                FFX_Logs.writeStats("Spherimorph spell used:")
+                FFX_Logs.writeStats(str(spellNum))
+                if spellNum == 1:
+                    FFX_Logs.writeStats("Creating Ice to counter Fire")
+                    FFX_Logs.writeLog("Creating Ice to counter Fire")
+                    print("Creating Ice")
+                    FFX_memory.rikkuODItems('spherimorph1')
+                elif spellNum == 2:
+                    FFX_Logs.writeStats("Creating Thunder to counter Water")
+                    FFX_Logs.writeLog("Creating Thunder to counter Water")
+                    print("Creating Water")
+                    FFX_memory.rikkuODItems('spherimorph2')
+                elif spellNum == 3:
+                    FFX_Logs.writeStats("Creating Water to counter Thunder")
+                    FFX_Logs.writeLog("Creating Water to counter Thunder")
+                    print("Creating Thunder")
+                    FFX_memory.rikkuODItems('spherimorph3')
+                elif spellNum == 4:
+                    FFX_Logs.writeStats("Creating Fire to counter Ice")
+                    FFX_Logs.writeLog("Creating Fire to counter Ice")
+                    print("Creating Fire")
+                    FFX_memory.rikkuODItems('spherimorph4')
+
+            FFX_Xbox.menuB()  # Cast spell on Spherimorph
+            FFX_Xbox.menuB()  # Cast spell on Spherimorph
+            FFX_Xbox.menuB()  # Cast spell on Spherimorph
+        time.sleep(0.5)
 
 def spherimorph():
     FFX_Logs.writeLog("Fight start: Spherimorph")
@@ -2153,6 +2241,75 @@ def spherimorph():
                 FFX_Xbox.menuB() #Cast spell on Spherimorph
             time.sleep(0.5)
 
+
+def negator_new():  # AKA crawler
+    FFX_Logs.writeLog("Fight start: Crawler/Negator")
+    print("Starting battle with Crawler")
+    FFX_Screen.clickToBattle()
+    # FFX_Screen.awaitTurn()
+
+    marblesused = 0
+    tidusturns = 0
+    rikkuturns = 0
+    kimahriturns = 0
+    luluturns = 0
+    yunaturns = 0
+
+    while not FFX_Screen.BattleComplete():
+        FFXC.set_value('AxisLx', 0)
+        FFXC.set_value('AxisLy', 0)
+        FFXC.set_value('Dpad', 0)
+        if FFX_Screen.BattleScreen():
+            turnchar = FFX_memory.getBattleCharTurn()
+            if turnchar == 0:
+                if tidusturns == 0:
+                    print("Swapping Tidus for Rikku")
+                    rikkuslotnum = FFX_memory.getBattleCharSlot(6)
+                    buddySwap_new(rikkuslotnum)
+                else:
+                    defend()
+                tidusturns += 1
+            elif turnchar == 6:
+                if luluturns < 2:
+                    print("Using Lightning Marble")
+                    lightningmarbleslot = FFX_memory.getUseItemsSlot(30)
+                    useItem(lightningmarbleslot, "left")
+                else:
+                    print("Starting Rikku's overdrive")
+                    while not FFX_Screen.PixelTest(306, 683, (223, 223, 223)):
+                        FFX_Xbox.menuLeft()
+                    time.sleep(0.3)
+                    FFX_Xbox.menuB()
+                    time.sleep(1)
+                    FFX_memory.rikkuODItems('crawler')
+                    FFX_Xbox.menuB()
+                    FFX_Xbox.menuB()  # Overdrive on boss, uses HP sphere or M.def sphere
+                rikkuturns += 1
+            elif turnchar == 3:
+                if kimahriturns == 0:
+                    lightningmarbleslot = FFX_memory.getUseItemsSlot(30)
+                    useItem(lightningmarbleslot, "none")
+                else:
+                    yunaslotnum = FFX_memory.getBattleCharSlot(1)
+                    buddySwap_new(yunaslotnum)
+                kimahriturns += 1
+            elif turnchar == 5:
+                revive()
+                luluturns += 1
+            elif turnchar == 1:
+                if yunaturns == 0:
+                    defend()
+                else:
+                    tidusslotnum = FFX_memory.getBattleCharSlot(0)
+                    buddySwap_new(tidusslotnum)
+                yunaturns += 1
+            else:
+                defend()
+
+    FFXC.set_value('BtnB', 1)
+    time.sleep(2)
+    FFXC.set_value('BtnB', 0)
+
 def negator(): #AKA crawler
     FFX_Logs.writeLog("Fight start: Crawler/Negator")
     print("Starting battle with Crawler")
@@ -2177,7 +2334,7 @@ def negator(): #AKA crawler
         FFX_Screen.awaitTurn()
         buddySwap(2) #Rikku back in.
         FFX_Screen.awaitTurn()
-        if FFX_memory.getItemSlot(27) != 255:
+        if FFX_memory.getUseItemsSlot(27) != 255:
             useItem(2,'left') #Throw lightning marble at negator
         else:
             useItem(1,'left') #Throw lightning marble at negator
@@ -2200,7 +2357,7 @@ def negator(): #AKA crawler
         FFX_Screen.awaitTurn()
         buddySwap(2) #Rikku back in.
         FFX_Screen.awaitTurn()
-        if FFX_memory.getItemSlot(27) != 255:
+        if FFX_memory.getUseItemsSlot(27) != 255:
             useItem(2,'left') #Throw lightning marble at negator
         else:
             useItem(1,'left') #Throw lightning marble at negator
@@ -2226,7 +2383,7 @@ def negator(): #AKA crawler
             elif FFX_Screen.turnRikku():
                 time.sleep(0.5)
                 if not FFX_Screen.checkCharge(1):
-                    if FFX_memory.getItemSlot(27) != 255:
+                    if FFX_memory.getUseItemsSlot(27) != 255:
                         useItem(2,'left') #Throw lightning marble at negator
                     else:
                         useItem(1,'left') #Throw lightning marble at negator
@@ -2244,7 +2401,7 @@ def negator(): #AKA crawler
             elif FFX_Screen.turnYuna():
                 print("Swapping Yuna for Kimahri")
                 buddySwap(0)
-                if FFX_memory.getItemSlot(27) != 255:
+                if FFX_memory.getUseItemsSlot(27) != 255:
                     useItem(2,'left') #Throw lightning marble at negator
                 else:
                     useItem(1,'left') #Throw lightning marble at negator
@@ -2344,13 +2501,12 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
     elif FFX_memory.getThrowItemsSlot(8) < 255:
         itemnum = 8
         itemname = "Elixir"
-    elif FFX_memory.getThrowItemsSlot(6) < 255:
-        itemnum = 6
+    elif FFX_memory.getThrowItemsSlot(3) < 255:
+        itemnum = 3
         itemname = "Mega-Potion"
     else:
         itemnum = -1
         itemname = "noitemfound"
-    print(itemname, " | ", itemnum)
     if itemnum >= 0:
 
         FFX_Logs.writeLog("Using %s" % itemname)
@@ -2407,31 +2563,38 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
         return 1
 
     else:
+        print("No restorative items available")
         return 0
 
-def wendigoresheal(turnchar: int, powerbreak: int, tidusmaxHP: int):
+def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     partyHP = FFX_memory.getBattleHP()
     if FFX_Screen.faintCheck() == 2:
-        if FFX_memory.getItemSlot(7) < 255:
+        print("2 Characters are dead")
+        if FFX_memory.getThrowItemsSlot(7) < 255:
             reviveAll()
-        elif FFX_memory.getItemSlot(6) < 255:
+        elif FFX_memory.getThrowItemsSlot(6) < 255:
             revive()  # This should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
-    elif powerbreak == 1:
-        swapposition = (FFX_memory.getBattleCharSlot(2) - 3) % 4
-        buddySwap(swapposition)
     elif partyHP[FFX_memory.getBattleCharSlot(0)] == 0:
+        print("Reviving tidus")
         revive()
+    elif usepowerbreak == True:
+        print("Swapping to Auron to Power Break")
+        swapposition = FFX_memory.getBattleCharSlot(2)
+        buddySwap_new(swapposition)
     # If tidus is less than max HP heal him
     elif partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
+        print("Tidus need healing")
         if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
                     targetposition=FFX_memory.getBattleCharSlot(0),
                     direction="left") == 0:
             if FFX_Screen.faintCheck():
+                print("No healing available so reviving instead")
                 revive()
             else:
                 defend()
     elif FFX_Screen.faintCheck():
+        print("Reviving non-Tidus")
         revive()
     else:
         return 0
@@ -2443,7 +2606,9 @@ def wendigo():
     curtain = False
     YunaAP = False
     guadosteal = False
-    powerbreak = 0
+    powerbreak = False
+    powerbreakused = False
+    usepowerbreak = False
     tidushealself = False
     tidusmaxHP = 1520
     tidusdied = False
@@ -2452,81 +2617,99 @@ def wendigo():
 
     while not FFX_Screen.BattleComplete():
         if FFX_Screen.BattleScreen():
+            print("Test")
             partyHP = FFX_memory.getBattleHP()
             turnchar = FFX_memory.getBattleCharTurn()
 
             if partyHP[FFX_memory.getBattleCharSlot(0)] == 0:
+                print("Tidus is dead")
                 tidushaste = False
-                powerbreak += 1
+                powerbreak = True
+                usepowerbreak = powerbreak and not powerbreakused
 
             if turnchar == 1:
+                print("Yuna's Turn")
                 # If Yuna still needs AP:
                 if YunaAP == False:
+                    print("Yuna still needs AP")
                     # If both other characters are dead Mega-Phoenix if available, otherwise PD
-                    if wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                    if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
                     YunaAP = True
                 # If Yuna has had a turn swap for Lulu
                 else:
-                    if powerbreak == 1:
+                    if usepowerbreak:
+                        print("Swapping to Auron to Power Break")
                         swapindex = 2
                     else:
+                        print("Swapping to Lulu")
                         swapindex = 5
-                    swapposition = (FFX_memory.getBattleCharSlot(swapindex)-3) % 4
-                    buddySwap(swapposition)  # Swap for Lulu/Auron
+                    swapposition = FFX_memory.getBattleCharSlot(swapindex)
+                    buddySwap_new(swapposition)  # Swap for Lulu/Auron
             elif turnchar == 0:
                 if tidushaste == False:
+                    print("Tidus Haste self")
                     FFX_Xbox.tidusHaste('none')
                     tidushaste = True
                 elif phase == 0:
+                    print("Switch to Brotherhood")
+                    FFX_Xbox.weapSwap(0)
+                    phase += 1
+                elif phase == 1:
+                    print("Attack top Guado")
                     attack('down')
                     phase += 1
                 elif FFX_Screen.faintCheck() == 2:
+                    print("2 Characters are dead")
                     tidushealself = True
-                    if FFX_memory.getItemSlot(7) < 255:
+                    if FFX_memory.getThrowItemsSlot(7) < 255:
                         reviveAll()
-                    elif FFX_memory.getItemSlot(6) < 255:
+                    elif FFX_memory.getThrowItemsSlot(6) < 255:
                         revive()
                 elif tidushealself == True:
                     if partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
+                        print("Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
                         if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
                                     targetposition=FFX_memory.getBattleCharSlot(0),
-                                    direction="right") == 0:
+                                    direction="left") == 0:
                             if FFX_Screen.faintCheck():
+                                print("No healing items so revive someone instead")
                                 revive()
                             else:
-                                defend()
+                                print("No healing items so just go face")
+                                attack('left')
                     else:
                         attack('left')
                     tidushealself = False
                 else:
                     attack('left')
             elif turnchar == 6:
-                if phase == 1:
+                if phase == 2:
                     phase += 1
                     lightcurtainslot = FFX_memory.getUseItemsSlot(57)
                     if lightcurtainslot < 255:
+                        print("Using Light Curtain on Tidus")
                         if (FFX_memory.getBattleCharSlot(0) - FFX_memory.getBattleCharSlot(6)) % 3 == 1:
                             useItem(lightcurtainslot, 'left')
                         else:
                             useItem(lightcurtainslot, 'right')
                         curtain = True
                     else:
-                        swapposition = (FFX_memory.getBattleCharSlot(2) - 3) % 4
-                        buddySwap(swapposition)  # Swap for Auron
-                        powerbreak += 1
-                elif wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                        print("No Light Curtain")
+                        print("Swapping to Auron to Power Break")
+                        swapposition = FFX_memory.getBattleCharSlot(2)
+                        buddySwap_new(swapposition)  # Swap for Auron
+                        powerbreak = True
+                        usepowerbreak = True
+                elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     if guadosteal == False:
                         Steal()
                         guadosteal = True
                     else:
                         defend()
             elif turnchar == 2:
-                if powerbreak == 1:
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 0)
-                    buddySwap(1)
-                    FFX_Screen.awaitTurn()
+                if usepowerbreak == True:
+                    print("Using Power Break")
                     FFX_Xbox.menuDown()
                     FFX_Xbox.menuB()
                     time.sleep(0.6)
@@ -2535,12 +2718,13 @@ def wendigo():
                     FFX_Xbox.menuLeft()
                     FFX_Xbox.menuB()  # Auron uses Armor Break
                     time.sleep(1)
-                    powerbreak += 1
+                    powerbreakused = True
+                    usepowerbreak = False
                 else:
-                    if wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                    if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
             else:
-                if wendigoresheal(turnchar=turnchar, powerbreak=powerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     defend()
         else:
             FFX_Xbox.menuB()  # Effectively clicking to battle and after battle dialog.
@@ -2801,7 +2985,7 @@ def desertSpeed(chargeState):
     if battleNum == 199 or battleNum == 200 or \
     battleNum == 208 or battleNum == 209 or \
     battleNum == 221 or battleNum == 222:
-        if FFX_memory.getItemSlot(39) != 255:
+        if FFX_memory.getUseItemsSlot(39) != 255:
             print("Throwing nades if Rikku is in the party.")
             FFX_Screen.awaitTurn()
             buddySwap(1) #Tidus for Rikku
@@ -4420,6 +4604,29 @@ def buddySwap(position):
         FFX_Xbox.menuDown()
         print(position)
     elif position == 3:
+        print(position)
+        FFX_Xbox.menuDown()
+        FFX_Xbox.menuDown()
+    FFX_Xbox.menuB()
+    time.sleep(0.6)
+    FFX_Screen.clickToBattle()
+    FFX_Screen.awaitTurn()
+
+def buddySwap_new(position):
+    FFX_Logs.writeLog("Swapping characters (in battle)")
+    while not FFX_Screen.PixelTestTol(324,92,(223, 223, 223),5):
+        FFX_Xbox.lBumper()
+    time.sleep(0.7)
+    reserveposition = (position - 3) % 4
+    if reserveposition == 1:
+        print(position)
+    elif reserveposition == 0: #Swap with last slot
+        print(position)
+        FFX_Xbox.menuUp()
+    elif reserveposition == 2:
+        FFX_Xbox.menuDown()
+        print(position)
+    elif reserveposition == 3:
         print(position)
         FFX_Xbox.menuDown()
         FFX_Xbox.menuDown()
