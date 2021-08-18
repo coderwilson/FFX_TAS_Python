@@ -2046,81 +2046,90 @@ def spherimorph_new():
     spellNum = 0
     tidusturns = 0
     rikkuturns = 0
-    if FFX_Screen.BattleComplete():
-        FFXC.set_value('BtnB', 1)
-        time.sleep(2)
-        FFXC.set_value('BtnB', 0)
-    elif FFX_Screen.BattleScreen():
-        turnchar = FFX_memory.getBattleCharTurn()
-        partyHP = FFX_memory.getBattleHP()
-        if turnchar == 0:
-            if tidusturns == 0:
-                FFX_Xbox.armorSwap(1)
-            elif tidusturns == 1:
-                defend()
-            else:
+    while not FFX_Screen.BattleComplete():
+        if FFX_Screen.BattleScreen():
+            turnchar = FFX_memory.getBattleCharTurn()
+            partyHP = FFX_memory.getBattleHP()
+            if turnchar == 0:
+                if tidusturns == 0:
+                    FFX_Xbox.armorSwap(1)
+                elif tidusturns == 1:
+                    defend()
+                else:
+                    rikkuslotnum = FFX_memory.getBattleCharSlot(6)
+                    buddySwap_new(rikkuslotnum)
+                tidusturns += 1
+            elif turnchar == 1:
+                if rikkuslotnum < 4:
+                    if partyHP[rikkuslotnum] == 0:
+                        revive()
+                    else:
+                        defend()
+                else:
+                    defend()
+            elif turnchar == 3:
                 rikkuslotnum = FFX_memory.getBattleCharSlot(6)
-                buddySwap_new(rikkuslotnum)
-        elif turnchar == 1:
-            rikkuslotnum = FFX_memory.getBattleCharSlot(6)
-            if rikkuslotnum < 4 and partyHP[rikkuslotnum] == 0:
-                revive()
-            else:
-                defend()
-        elif turnchar == 3:
-            rikkuslotnum = FFX_memory.getBattleCharSlot(6)
-            if rikkuslotnum < 4 and partyHP[rikkuslotnum] == 0:
-                revive()
-            else:
-                defend()
-        elif turnchar == 6:
-            #FFXC.set_value('AxisLx', 0)
-            #FFXC.set_value('AxisLy', 0)
-            #FFXC.set_value('Dpad', 0)
+                if rikkuslotnum < 4:
+                    if partyHP[rikkuslotnum] == 0:
+                        revive()
+                    else:
+                        defend()
+                else:
+                    defend()
+            elif turnchar == 6:
+                #FFXC.set_value('AxisLx', 0)
+                #FFXC.set_value('AxisLy', 0)
+                #FFXC.set_value('Dpad', 0)
 
-            if rikkuturns == 0:
-                print("Throwing Grenade to check element")
-                grenadeslotnum = FFX_memory.getUseItemsSlot(35)
-                useItem(grenadeslotnum, "none")
-                spellNum = FFX_Screen.spherimorphSpell()
-            else:
-                print("Starting Rikku's overdrive")
-                while not FFX_Screen.PixelTestTol(306, 683, (223, 223, 223), 5):
-                    FFX_Xbox.menuLeft()
-                    rikkuCounter += 1
-                    if rikkuCounter % 100 == 0:
-                        print("Mark: pushing left for Rikku overdrive")
-                print("Mark: Overdrive ready")
-                time.sleep(0.3)
-                FFX_Xbox.menuB()
-                time.sleep(1)
-                FFX_Logs.writeStats("Spherimorph spell used:")
-                FFX_Logs.writeStats(str(spellNum))
-                if spellNum == 1:
-                    FFX_Logs.writeStats("Creating Ice to counter Fire")
-                    FFX_Logs.writeLog("Creating Ice to counter Fire")
-                    print("Creating Ice")
-                    FFX_memory.rikkuODItems('spherimorph1')
-                elif spellNum == 2:
-                    FFX_Logs.writeStats("Creating Thunder to counter Water")
-                    FFX_Logs.writeLog("Creating Thunder to counter Water")
-                    print("Creating Water")
-                    FFX_memory.rikkuODItems('spherimorph2')
-                elif spellNum == 3:
-                    FFX_Logs.writeStats("Creating Water to counter Thunder")
-                    FFX_Logs.writeLog("Creating Water to counter Thunder")
-                    print("Creating Thunder")
-                    FFX_memory.rikkuODItems('spherimorph3')
-                elif spellNum == 4:
-                    FFX_Logs.writeStats("Creating Fire to counter Ice")
-                    FFX_Logs.writeLog("Creating Fire to counter Ice")
-                    print("Creating Fire")
-                    FFX_memory.rikkuODItems('spherimorph4')
+                if rikkuturns == 0:
+                    print("Throwing Grenade to check element")
+                    grenadeslotnum = FFX_memory.getUseItemsSlot(35)
+                    useItem(grenadeslotnum, "none")
+                    spellNum = FFX_Screen.spherimorphSpell()
+                else:
+                    print("Starting Rikku's overdrive")
+                    while not FFX_Screen.PixelTestTol(306, 683, (223, 223, 223), 5):
+                        FFX_Xbox.menuLeft()
+                        rikkuCounter += 1
+                        if rikkuCounter % 100 == 0:
+                            print("Mark: pushing left for Rikku overdrive")
+                    print("Mark: Overdrive ready")
+                    time.sleep(0.3)
+                    FFX_Xbox.menuB()
+                    time.sleep(1)
+                    FFX_Logs.writeStats("Spherimorph spell used:")
+                    FFX_Logs.writeStats(str(spellNum))
+                    if spellNum == 1:
+                        FFX_Logs.writeStats("Creating Ice to counter Fire")
+                        FFX_Logs.writeLog("Creating Ice to counter Fire")
+                        print("Creating Ice")
+                        FFX_memory.rikkuODItems('spherimorph1')
+                    elif spellNum == 2:
+                        FFX_Logs.writeStats("Creating Thunder to counter Water")
+                        FFX_Logs.writeLog("Creating Thunder to counter Water")
+                        print("Creating Water")
+                        FFX_memory.rikkuODItems('spherimorph2')
+                    elif spellNum == 3:
+                        FFX_Logs.writeStats("Creating Water to counter Thunder")
+                        FFX_Logs.writeLog("Creating Water to counter Thunder")
+                        print("Creating Thunder")
+                        FFX_memory.rikkuODItems('spherimorph3')
+                    elif spellNum == 4:
+                        FFX_Logs.writeStats("Creating Fire to counter Ice")
+                        FFX_Logs.writeLog("Creating Fire to counter Ice")
+                        print("Creating Fire")
+                        FFX_memory.rikkuODItems('spherimorph4')
 
-            FFX_Xbox.menuB()  # Cast spell on Spherimorph
-            FFX_Xbox.menuB()  # Cast spell on Spherimorph
-            FFX_Xbox.menuB()  # Cast spell on Spherimorph
-        time.sleep(0.5)
+                    FFX_Xbox.menuB()  # Cast spell on Spherimorph
+                    FFX_Xbox.menuB()  # Cast spell on Spherimorph
+                    FFX_Xbox.menuB()  # Cast spell on Spherimorph
+
+                rikkuturns += 1
+            time.sleep(0.5)
+
+    FFXC.set_value('BtnB', 1)
+    time.sleep(2)
+    FFXC.set_value('BtnB', 0)
 
 def spherimorph():
     FFX_Logs.writeLog("Fight start: Spherimorph")
