@@ -22,15 +22,26 @@ def desert1():
     FFXC.set_value('AxisLx', 0)
     time.sleep(4)
     FFXC.set_value('AxisLy', 0)
-    
+
+    tidusturns = 0
     while FFX_Screen.partySize() < 3:
         if FFX_Screen.BattleScreen():
-            FFX_Battle.defend() #Skip turns until Lulu gets here
+            turnchar = FFX_memory.getBattleCharTurn()
+            if turnchar == 0:
+                if tidusturns < 2:
+                    FFX_Battle.attack("none")
+                elif len(FFX_memory.getBattleFormation) > 2:
+                    FFX_Battle.tidusFlee()
+                else:
+                    FFX_Battle.defend()
+            else:
+                FFX_Battle.defend()
         else: FFX_Xbox.menuB() #Skip Dialog
     
     FFX_Screen.clickToBattle()
     FFX_Battle.fleeAll() #Get out of battle.
     FFX_Screen.clickToMap1()
+    FFX_menu.equipSonicSteel()
     FFXC.set_value('AxisLy', 1)
     time.sleep(3)
     FFXC.set_value('AxisLy', 0)

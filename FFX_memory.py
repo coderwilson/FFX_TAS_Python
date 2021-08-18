@@ -714,27 +714,27 @@ def rikkuODItems(battle):
     elif battle == 'crawler':
         item1 = getItemSlot(30)
         print("Lightning Marble in slot: ", item1)
-        item2 = getItemSlot(90)
+        item2 = getItemSlot(85)
         print("Mdef Sphere in slot: ", item2)
     elif battle == 'spherimorph1':
         item1 = getItemSlot(24)
         print("Arctic Wind in slot: ", item1)
-        item2 = getItemSlot(89)
+        item2 = getItemSlot(90)
         print("Mag Sphere in slot: ", item2)
     elif battle == 'spherimorph2':
         item1 = getItemSlot(32)
         print("Fish Scale in slot: ", item1)
-        item2 = getItemSlot(89)
+        item2 = getItemSlot(90)
         print("Mag Sphere in slot: ", item2)
     elif battle == 'spherimorph3':
         item1 = getItemSlot(30)
         print("Lightning Marble in slot: ", item1)
-        item2 = getItemSlot(89)
+        item2 = getItemSlot(90)
         print("Mag Sphere in slot: ", item2)
     elif battle == 'spherimorph4':
         item1 = getItemSlot(27)
         print("Bomb Core in slot: ", item1)
-        item2 = getItemSlot(89)
+        item2 = getItemSlot(90)
         print("Mag Sphere in slot: ", item2)
 
     if item1 > item2: #Quick bubble sort
