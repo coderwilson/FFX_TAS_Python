@@ -507,7 +507,7 @@ def getUseItemsOrder():
             if itemArray[x] == 20:
                 print("Al Bhed pots, disregard.")
                 x += 1
-            if itemArray[x] > 0 and itemArray[x] < 23:
+            if itemArray[x] >= 0 and itemArray[x] < 23:
                 itemArray.remove(itemArray[x])
             elif itemArray[x] > 69:
                 itemArray.remove(itemArray[x])
