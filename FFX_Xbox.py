@@ -303,7 +303,7 @@ def armorSwap(position):
     armor = 0
     while armor < position :
         menuDown()
-        weap += 1
+        armor += 1
     menuB()
     menuB()
     time.sleep(0.3)

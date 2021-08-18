@@ -2034,8 +2034,8 @@ def mWoods_old(woodsVars):
     healUp(3)
     return woodsVars
 
-
-def spherimorph_new():
+# Process written by CrimsonInferno
+def spherimorph():
     FFX_Logs.writeLog("Fight start: Spherimorph")
     FFX_Screen.clickToBattle()
 
@@ -2046,6 +2046,7 @@ def spherimorph_new():
     spellNum = 0
     tidusturns = 0
     rikkuturns = 0
+    rikkuCounter = 0
     while not FFX_Screen.BattleComplete():
         if FFX_Screen.BattleScreen():
             turnchar = FFX_memory.getBattleCharTurn()
@@ -2060,6 +2061,7 @@ def spherimorph_new():
                     buddySwap_new(rikkuslotnum)
                 tidusturns += 1
             elif turnchar == 1:
+                rikkuslotnum = FFX_memory.getBattleCharSlot(6)
                 if rikkuslotnum < 4:
                     if partyHP[rikkuslotnum] == 0:
                         revive()
@@ -2085,6 +2087,7 @@ def spherimorph_new():
                     print("Throwing Grenade to check element")
                     grenadeslotnum = FFX_memory.getUseItemsSlot(35)
                     useItem(grenadeslotnum, "none")
+                    time.sleep(2.5)
                     spellNum = FFX_Screen.spherimorphSpell()
                 else:
                     print("Starting Rikku's overdrive")
@@ -2131,7 +2134,7 @@ def spherimorph_new():
     time.sleep(2)
     FFXC.set_value('BtnB', 0)
 
-def spherimorph():
+def spherimorph_old():
     FFX_Logs.writeLog("Fight start: Spherimorph")
     
     #Gameplan:
@@ -2250,8 +2253,8 @@ def spherimorph():
                 FFX_Xbox.menuB() #Cast spell on Spherimorph
             time.sleep(0.5)
 
-
-def negator_new():  # AKA crawler
+# Process written by CrimsonInferno
+def negator():  # AKA crawler
     FFX_Logs.writeLog("Fight start: Crawler/Negator")
     print("Starting battle with Crawler")
     FFX_Screen.clickToBattle()
@@ -2281,6 +2284,7 @@ def negator_new():  # AKA crawler
             elif turnchar == 6:
                 if luluturns < 2:
                     print("Using Lightning Marble")
+                    time.sleep(0.2)
                     lightningmarbleslot = FFX_memory.getUseItemsSlot(30)
                     useItem(lightningmarbleslot, "left")
                 else:
@@ -2319,7 +2323,7 @@ def negator_new():  # AKA crawler
     time.sleep(2)
     FFXC.set_value('BtnB', 0)
 
-def negator(): #AKA crawler
+def negator_old(): #AKA crawler
     FFX_Logs.writeLog("Fight start: Crawler/Negator")
     print("Starting battle with Crawler")
     FFX_Screen.clickToBattle()
@@ -2502,6 +2506,7 @@ def seymourGuado():
     time.sleep(2.2)
     FFXC.set_value('BtnB', 0)
 
+# Process written by CrimsonInferno
 def fullheal(healerposition: int, targetposition: int, direction: str):
 
     if FFX_memory.getThrowItemsSlot(2) < 255:
@@ -2575,6 +2580,7 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
         print("No restorative items available")
         return 0
 
+# Process written by CrimsonInferno
 def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     partyHP = FFX_memory.getBattleHP()
     if FFX_Screen.faintCheck() == 2:
@@ -2610,6 +2616,7 @@ def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
 
     return 1
 
+# Process written by CrimsonInferno
 def wendigo():
     phase = 0
     curtain = False
@@ -3208,6 +3215,7 @@ def home4():
     time.sleep(2)
     FFXC.set_value('BtnB', 0)
 
+# Process written by CrimsonInferno
 def Evrae():
     FFX_Logs.writeLog("Fight start: Evrae")
     tidusPrep = 0
