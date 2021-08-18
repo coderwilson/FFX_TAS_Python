@@ -335,7 +335,9 @@ def autoSortItems(manual):
         FFX_Xbox.menuLeft()
         FFX_Xbox.menuB()
     elif manual == 'n':
-        FFX_Xbox.menuA()
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.closeMenu()
 
 def Liki():
     FFX_memory.openMenu()
@@ -404,6 +406,13 @@ def LucaOaka():
     FFX_memory.closeMenu()
 
 def LucaWorkers():
+    if FFX_memory.getTidusSlvl() < 5:
+        FFX_memory.setTidusSlvl(5)
+        #There are some consistency errors getting the XP for five sphere levels.
+        #If we don't get there, we will possibly hit Game Over after blitzball.
+        #This makes it so we will always get there, for consistency sake.
+        #Of note, this would invalidate a formal run.
+        print("Intentionally updating Tidus's levels so we don't lose the run.")
     FFX_memory.openMenu()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
@@ -709,48 +718,23 @@ def battleSiteOaka():
     FFX_Xbox.menuRight()
     FFX_Xbox.menuB() #Sell
     
-    itemOrder = FFX_Screen.checkItemsMRR()
-    
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #slot 1 (potions)
-    
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #slot 3
-    
-    FFX_Xbox.menuRight()
-    if itemOrder[0] != 4 and itemOrder[1] > 4:
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #slot 4
-    
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    if itemOrder[0] != 5 and itemOrder[1] > 5:
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #slot 5
-    
-    FFX_Xbox.menuRight()
-    if itemOrder[0] != 6 and itemOrder[1] > 6:
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #slot 6
-    
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuDown()
-    if itemOrder[0] != 7 and itemOrder[1] > 7:
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #slot 7
-    
-    FFX_Xbox.menuRight()
-    if itemOrder[0] != 8 and itemOrder[1] > 8:
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #slot 8
+    itemOrder = FFX_memory.getItemsOrder()
+    itemCursor = 1
+    while itemOrder[itemCursor] != 6: #Don't sell anything Phoenix Down or after.
+        if itemOrder[itemCursor] != 3: #Sell all except for Mega Potions
+            FFX_Xbox.menuB()
+            FFX_Xbox.menuUp()
+            if FFX_memory.getItemCountSlot(itemCursor) > 10:
+                FFX_Xbox.menuUp()
+            FFX_Xbox.menuB() #Sell this item
+        if itemOrder[itemCursor + 1] == 6:
+            print("Done with selling items.")
+        elif itemCursor % 2 == 1:
+            FFX_Xbox.menuRight()
+        else:
+            FFX_Xbox.menuLeft()
+            FFX_Xbox.menuDown()
+        itemCursor += 1
     
     FFX_Xbox.menuA()
     FFX_Xbox.menuA() #Exit items menu
@@ -793,7 +777,7 @@ def battleSiteOaka():
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
     
-    #Re-sort items
+    #Re-sort items - should be Mega Potions first slot, followed by Phoenix Downs
     FFX_memory.openMenu()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
@@ -1013,75 +997,100 @@ def mWoods():
         FFX_Xbox.menuB() #Talking through O'aka's conversation.
     
     FFX_memory.closeMenu()
-    FFX_memory.clickToControl()
+    autoSortItems('n')
     
-    #FFX_Screen.awaitMap1()
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sort items
-    
-    FFX_memory.closeMenu()
-    itemScan = FFX_memory.checkItemsMacalania()
     FFX_Xbox.menuB() #Talk to O'aka again
     time.sleep(0.7)
     FFX_Xbox.menuB() #Talk to O'aka again
     FFX_Screen.awaitPixel(650,466,(154, 154, 154))
     time.sleep(0.1)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Items
-    FFX_Screen.awaitPixel(365,152,(154, 154, 154))
-    time.sleep(0.1)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB() #Items
+    #FFX_Screen.awaitPixel(365,152,(154, 154, 154))
+    #time.sleep(0.1)
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
     
-    pos = 3
-    print("Selling everything short of position ", itemScan[5])
-    while pos < itemScan[7]: #Sell any items not in the list of "need to have" items.
-        if not (pos in itemScan):
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-        if itemScan[7] - pos != 1:
-            if pos % 2 == 1:
-                FFX_Xbox.menuRight()
-            else:
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuDown()
-        pos += 1
+    #pos = 3
+    #print("Selling everything short of position ", itemScan[5])
+    #while pos < itemScan[7]: #Sell any items not in the list of "need to have" items.
+    #    if not (pos in itemScan):
+    #        FFX_Xbox.menuB()
+    #        FFX_Xbox.menuUp()
+    #        FFX_Xbox.menuUp()
+    #        FFX_Xbox.menuB()
+    #    if itemScan[7] - pos != 1:
+    #        if pos % 2 == 1:
+    #            FFX_Xbox.menuRight()
+    #        else:
+    #            FFX_Xbox.menuLeft()
+    #            FFX_Xbox.menuDown()
+    #    pos += 1
     
-    FFX_memory.closeMenu() #Leave the selling items menu
+    #itemOrder = FFX_memory.getItemsOrder()
+    #itemCursor = 1
+    #while itemOrder[itemCursor] != 70: #Don't sell anything Phoenix Down or after.
+    #    if not (itemOrder[itemCursor] in [27,30,32,24,35,56,57,3,6,7,8]): #Sell all except for Mega Potions
+    #        FFX_Xbox.menuB()
+    #        FFX_Xbox.menuUp()
+    #        if FFX_memory.getItemCountSlot(itemCursor) > 11:
+    #            FFX_Xbox.menuUp()
+    #        FFX_Xbox.menuB() #Sell all of this item, up to 21
+    #    if itemOrder[itemCursor + 1] == 6:
+    #        print("Done with selling items.")
+    #    elif itemCursor % 2 == 1:
+    #        FFX_Xbox.menuRight()
+    #    else:
+    #        FFX_Xbox.menuLeft()
+    #        FFX_Xbox.menuDown()
+    #    itemCursor += 1
+    #0
+    #FFX_memory.closeMenu() #Leave the selling items menu
     
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
+    #FFX_memory.openMenu()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    
+    #FFX_Xbox.menuLeft()
+    #FFX_Xbox.menuB()
     
     #Sort red items to the top
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Power Sphere to 3, Bomb Core to 10
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB() #Flip lightning marbles and bomb cores.
     
+    #FFX_memory.closeMenu()
+    
+    #time.sleep(0.5)
+    
+    if FFX_memory.getGilvalue() < 9100:
+        FFX_memory.setGilValue(9999999)
+    FFX_Xbox.menuB() #Talk to O'aka once again
+    while not FFX_memory.menuOpen():
+        FFX_Xbox.menuB()
+    time.sleep(0.2)
+    FFX_Xbox.menuB() #Buy
+    time.sleep(0.2)
+    FFX_Xbox.menuB() #Sonic Steel
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuB() #confirm
+    time.sleep(0.05)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuB() #equip
+    FFX_memory.closeMenu()
+    
+def macManualSort_old():
+    #Manual sorting in Macalania. No longer used here. May refactor later to a different slot.
     FFX_Xbox.menuDown()
     FFX_Xbox.menuLeft()
     FFX_Xbox.menuB()
@@ -1262,9 +1271,9 @@ def mLakeGrid():
     FFX_Xbox.menuB() #Kimahri
     FFX_Xbox.menuB()
     FFX_Xbox.menuDown() #Skip Rikku
-    FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Wakka
     FFX_Xbox.menuB()
+    FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Auron
     FFX_Xbox.menuB() #No need to heal Yuna or Lulu
@@ -1272,25 +1281,25 @@ def mLakeGrid():
     FFX_Xbox.menuA()
     
     #Formation
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Wakka to 3, Rikku to 4
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Wakka to 3, Rikku to 4
     FFX_memory.closeMenu()
 
 def macTemple(blitzWin):
     FFX_memory.openMenu()
     FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Sphere grid Tidus
     
+    FFX_menuGrid.useShiftRight('tidus')
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('Lv2','d','none')
     FFX_menuGrid.useAndMove()
@@ -1423,35 +1432,35 @@ def afterSeymour():
     FFX_memory.openMenu()
     
     #First, fix item order for later.
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuA()
-    time.sleep(0.5)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #time.sleep(0.5)
+    #FFX_Xbox.menuA()
+    #time.sleep(0.5)
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    #time.sleep(0.5)
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
     
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuA()
     
     #Next, sphere grid.
-    FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Sphere grid on Tidus
     FFX_Xbox.menuB() #Sphere grid on Tidus
     
@@ -1471,9 +1480,7 @@ def afterSeymour():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed','d','none')
     FFX_menuGrid.useAndQuit()
-    
-    while not FFX_Screen.Minimap1():
-        FFX_Xbox.menuA()
+    FFX_memory.closeMenu()
 
 def afterSeymour_unused2():
     #Fixing item order
@@ -1563,54 +1570,60 @@ def homeHeal(): #Hi-Potions on front three.
     FFX_memory.closeMenu()
 
 def weddingPrep():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Tidus to 1, Kimahri to 4
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Kimahri to 3, Auron to 4
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Rikku to 2, Wakka to 5
+    itemPos(56, 7) #Make sure Lunar Curtain is in slot 7
+    itemPos(8, 8) #Elixir in slot 8
+    #FFX_memory.openMenu()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Tidus to 1, Kimahri to 4
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Kimahri to 3, Auron to 4
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Rikku to 2, Wakka to 5
     #FFX_Xbox.menuB()
     #FFX_Xbox.menuDown()
     #FFX_Xbox.menuB() #Wakka to 5, Lulu to 6 (maybe remove this if the formation is wrong later)
     
-    FFX_memory.closeMenu()
+    #FFX_memory.closeMenu()
     
-    itemPos(56, 7) #Make sure Lunar Curtain is in slot 7
-    itemPos(8, 8) #Elixir in slot 8
     #Doesn't matter about Rikku's overdrive, that will auto sort.
 
-def bevelleGuards():
+def equipSonicSteel():
+    print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
     FFX_memory.openMenu()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Formation fixed
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Formation fixed
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp() #Formation section is replaced.
+    
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Equip
     time.sleep(0.5)
     FFX_Xbox.menuB() #Tidus
@@ -1712,9 +1725,9 @@ def seymourNatusBlitzWin():
     
     FFX_menuGrid.selSphere('power','u','none') #Str
     useAndUseAgain()
-    FFX_menuGrid.selSphere('power','d','none') #Str
+    FFX_menuGrid.selSphere('power','u','none') #Str
     useAndUseAgain()
-    FFX_menuGrid.selSphere('power','d','none') #Def +3
+    FFX_menuGrid.selSphere('power','u','none') #Def +3
     
     FFX_menuGrid.useAndMove()
     gridUp()
@@ -1868,26 +1881,26 @@ def ItemSellingOakaHighbridge_old():
 
 def prepCalmLands(blitzWin):
     FFX_memory.openMenu()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB() #Auron to 3, Yuna to 7
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Auron to 3, Yuna to 7
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    
+    FFX_menuGrid.useShiftRight('yuna')
     if blitzWin == True:
         FFX_menuGrid.moveFirst()
         gridUp()
@@ -1915,6 +1928,7 @@ def afterRonso(ver, blitzWin):
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
     
+    FFX_menuGrid.moveShiftRight('Lulu')
     FFX_menuGrid.moveFirst()
     gridUp()
     gridUp()
@@ -2001,29 +2015,25 @@ def afterRonso(ver, blitzWin):
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
     
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Formation done
-    time.sleep(0.5)
-    FFX_Xbox.menuA()
-    time.sleep(0.5)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.3)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB() #Formation done
+    #time.sleep(0.5)
+    #FFX_Xbox.menuA()
+    #time.sleep(0.5)
+    #FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     time.sleep(0.3)
     FFX_Xbox.menuDown()
@@ -2031,7 +2041,11 @@ def afterRonso(ver, blitzWin):
     FFX_Xbox.menuB()
     time.sleep(0.3)
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuB() #First strike for Yuna
+    time.sleep(0.3)
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuB() #Confirm first strike on weapon
     time.sleep(0.3)
     FFX_Xbox.menuB()
     FFX_memory.closeMenu()
@@ -2069,14 +2083,14 @@ def beforeFlux():
             
     #Next, fix formation, since it's on the way.
     FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuA()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuA()
     
     #Now to equip the weapon
     FFX_Xbox.menuUp()
@@ -2121,22 +2135,22 @@ def afterFlux():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Swap position 7 and 3
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Swap 7 and 2. This should put Tidus first, Auron third, and Yuna in slot 7.
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Swap position 7 and 3
+    #FFX_Xbox.menuB()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB() #Swap 7 and 2. This should put Tidus first, Auron third, and Yuna in slot 7.
     FFX_memory.closeMenu()
 
 def gagazetCave():
@@ -2303,7 +2317,7 @@ def skReturn():
     #FFX_Xbox.menuA()
     #FFX_Xbox.menuA()
 
-def skMixed(): #incomplete
+def skMixed():
     FFX_memory.openMenu()
     FFX_Xbox.menuB()
     FFX_Xbox.menuUp()
@@ -2323,8 +2337,8 @@ def skMixed(): #incomplete
     FFX_menuGrid.selSphere('fortune','d','none')
     FFX_menuGrid.useAndMove()
     gridRight()
-    gridRight()
     gridDown()
+    gridRight()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndUseAgain()

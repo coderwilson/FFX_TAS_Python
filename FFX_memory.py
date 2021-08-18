@@ -507,7 +507,7 @@ def getUseItemsOrder():
             if itemArray[x] == 20:
                 print("Al Bhed pots, disregard.")
                 x += 1
-            if itemArray[x] >= 0 and itemArray[x] < 23:
+            elif itemArray[x] < 23:
                 itemArray.remove(itemArray[x])
             elif itemArray[x] > 69:
                 itemArray.remove(itemArray[x])
@@ -1117,9 +1117,12 @@ def fullPartyFormat(frontLine):
         partyMembers = 6
         order = getOrderSix()
         orderFinal = [0,6,3,2,4,5]
+    if frontLine == 'spheri':
+        order = getOrderSeven()
+        orderFinal = [0,3,1,4,2,6,5]
     if frontLine == 'crawler':
         order = getOrderSeven()
-        orderFinal = [0,3,4,6,2,5,1]
+        orderFinal = [0,3,5,4,2,6,1]
     if frontLine == 'besaid1':
         order = getOrderSix() #Should work the same way
         orderFinal = [0,1,5,3,5]
