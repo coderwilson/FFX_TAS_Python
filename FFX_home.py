@@ -682,6 +682,7 @@ def oldPathing():
 
 
 def findSummoners(blitzWin):
+    FFX_menu.autoSortItems('n')
     FFX_menu.homeGrid()
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.7)

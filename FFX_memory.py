@@ -133,7 +133,6 @@ def clickToControlSpecial():
     time.sleep(0.05)
     return True
 
-
 def clickToEvent():
     while userControl():
         FFXC.set_value('BtnB', 1)
@@ -769,20 +768,29 @@ def rikkuODItems(battle):
             cursor += 2
         FFX_Xbox.menuB() #Cursor is now on item 2.
 
-def confusedState():
+def confusedState(character):
+    global process
     global baseValue
-    for character_index in range(17):
-        
-        # ReadProcessMemory(process_name, str(data_type), memory_address, array(offsets))
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character)+0x606
+    
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key,1)
+    
+    if retVal % 2 == 1:
+        return True
+    else:
+        return False
 
-        status_effect = ReadProcessMemory(FFX_Process, 'byte', baseValue + 0xd334cc + (0xf90 * character_index), [0x607])
-
-        #status_effect returns 0 - 255
-
-        if (status_effect & 1):
-            print("Character is confused")
+def confusedStateByPos(position):
+    posArray = getBattleFormation()
+    x = 0
+    if position in posArray:
+        if posArray[x] == position:
+            return confusedState(posArray[x])
         else:
-            print("Character is NOT confused")
+            x += 1
 
 def menuOpen():
     global baseValue
