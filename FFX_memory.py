@@ -792,6 +792,24 @@ def confusedStateByPos(position):
         else:
             x += 1
 
+def getEnemyHP():
+    global process
+    global baseValue
+    enemyNum = 20
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    
+    while enemyNum < 25:
+        offset = (0xf90 * enemyNum)+0x594
+        key = basePointerAddress + offset
+        if enemyNum == 20:
+            retVal = [process.readBytes(key,4)]
+        else:
+            retVal.append(process.readBytes(key,4))
+    
+    print(retVal)
+    return retVal
+
 def menuOpen():
     global baseValue
     
