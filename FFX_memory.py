@@ -801,7 +801,7 @@ def confusedStateByPos(position):
         else:
             x += 1
 
-def getEnemyHP():
+def getEnemyCurrentHP():
     global process
     global baseValue
     enemyNum = 20
@@ -809,15 +809,50 @@ def getEnemyHP():
     basePointerAddress = process.read(basePointer)
     
     while enemyNum < 25:
-        offset = (0xf90 * enemyNum)+0x594
-        key = basePointerAddress + offset
+        offset1 = (0xf90 * enemyNum)+0x594
+        key1 = basePointerAddress + offset1
+        offset2 = (0xf90 * enemyNum)+0x5D0
+        key2 = basePointerAddress + offset2
         if enemyNum == 20:
-            retVal = [process.readBytes(key,4)]
+            maxHP = [process.readBytes(key1,4)]
+            currentHP = [process.readBytes(key2,4)]
         else:
-            retVal.append(process.readBytes(key,4))
-    print("Enemy HP values:")
-    print(retVal)
-    return retVal
+            nextHP = process.readBytes(key1,4)
+            if nextHP != 0:
+                maxHP.append(nextHP)
+                currentHP.append(process.readBytes(key2,4))
+        enemyNum += 1
+    print("Enemy HP max values:")
+    print(maxHP)
+    print("Enemy HP current values:")
+    print(currentHP)
+    return currentHP
+
+def getEnemyMaxHP():
+    global process
+    global baseValue
+    enemyNum = 20
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    
+    while enemyNum < 25:
+        offset1 = (0xf90 * enemyNum)+0x594
+        key1 = basePointerAddress + offset1
+        offset2 = (0xf90 * enemyNum)+0x5D0
+        key2 = basePointerAddress + offset2
+        if enemyNum == 20:
+            maxHP = [process.readBytes(key1,4)]
+            currentHP = [process.readBytes(key2,4)]
+        else:
+            if maxHP != 0:
+                maxHP.append(process.readBytes(key1,4))
+                currentHP.append(process.readBytes(key2,4))
+        enemyNum += 1
+    print("Enemy HP max values:")
+    print(maxHP)
+    print("Enemy HP current values:")
+    print(currentHP)
+    return maxHP
 
 def menuOpen():
     global baseValue
