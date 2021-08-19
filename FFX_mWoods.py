@@ -40,7 +40,7 @@ def arrival():
             woodsVars = FFX_Battle.mWoods(woodsVars)
             print("variable check 2: ",woodsVars)
         elif FFX_memory.userControl() == False:
-            if checkpoint < 60 and FFX_Screen.PixelTestTol(923,441,(219, 219, 219),5):
+            if checkpoint == 50 and FFX_Screen.PixelTestTol(923,441,(219, 219, 219),5):
                 print("Chest is opened.")
                 FFX_memory.clickToControl()
                 checkpoint = 60
@@ -274,7 +274,7 @@ def arrival():
 
 def lakeRoad():
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
-    FFX_memory.fullPartyFormat('rikku')
+    FFX_memory.fullPartyFormat('spheri')
     FFX_Screen.awaitMap1()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
@@ -283,7 +283,7 @@ def lakeRoad():
     time.sleep(3)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(3)
@@ -295,12 +295,12 @@ def lakeRoad():
     
     FFX_Battle.spherimorph()
     
-    FFX_Screen.clickToMap1() #Jecht's memories
+    FFX_memory.clickToControl() #Jecht's memories
     FFXC.set_value('AxisLy', -1)
     time.sleep(6)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_Screen.clickToMap1() #Auron's musings.
+    FFX_memory.clickToControl() #Auron's musings.
     FFXC.set_value('AxisLy', -1)
     time.sleep(3.5)
     FFXC.set_value('AxisLx', -1)
@@ -308,7 +308,7 @@ def lakeRoad():
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     
-    FFX_Screen.awaitMap1() #Last map in the woods
+    FFX_memory.clickToControl() #Last map in the woods
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(4)
@@ -317,6 +317,7 @@ def lakeRoad():
 
 def lake():
     print("Now to the frozen lake")
+    FFX_menu.autoSortItems('n')
     FFX_memory.fullPartyFormat('crawler')
     FFX_memory.awaitControl()
     FFX_menu.mLakeGrid()
@@ -367,7 +368,7 @@ def lake():
     FFX_Battle.negator()
 
 def afterCrawler():
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.3)
@@ -375,7 +376,8 @@ def afterCrawler():
     time.sleep(4)
     FFXC.set_value('AxisLy', 0)
 
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
+    FFX_menu.autoSortItems('n')
     
     checkpoint = 0
     lastCP = 0
