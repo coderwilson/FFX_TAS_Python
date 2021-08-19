@@ -19,7 +19,7 @@ def BattleScreen():
     if PixelTest(1464, 181, (229, 189, 96)) :
         FFXC.set_value('AxisLx', 0)
         FFXC.set_value('AxisLy', 0)
-        FFX_memory.getEnemyHP()
+        FFX_memory.getEnemyCurrentHP()
         if not PixelTestTol(131,693,(153, 155, 153),5):
             print("It is now someone's turn in battle.")
             time.sleep(0.735) #This delay is paramount.

@@ -773,7 +773,7 @@ def confusedState(character):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character)+0x606
+    offset = (0xf90 * character)+0x607
 
     print("basePointer: %s" % basePointer)
     print("basePointerAddress: %s" % basePointerAddress)
