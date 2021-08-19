@@ -258,12 +258,12 @@ def agency(blitzWin):
     FFX_Xbox.menuA()
     FFX_Xbox.menuLeft()
     time.sleep(0.4)
-    
     FFX_Xbox.menuB() #Buy
     time.sleep(0.8)
-    FFX_Xbox.menuB()
-    time.sleep(0.8)
+    
     if blitzWin == True:
+        FFX_Xbox.menuB()
+        time.sleep(0.8)
         FFX_Xbox.menuUp() #Baroque sword
         #time.sleep(10) #Testing only
         time.sleep(0.1)
