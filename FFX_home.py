@@ -34,6 +34,7 @@ def desert1():
                     FFX_Battle.tidusFlee()
                 else:
                     FFX_Battle.defend()
+                tidusturns += 1
             else:
                 FFX_Battle.defend()
         else: FFX_Xbox.menuB() #Skip Dialog
