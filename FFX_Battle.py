@@ -100,6 +100,73 @@ def tidusODSeymour():
     time.sleep(0.25)
     FFX_Xbox.menuB()
 
+def remedy(healerposition: int, targetposition: int, direction: str):
+
+    if FFX_memory.getThrowItemsSlot(15) < 255:
+        itemnum = 15
+        itemname = "Remedy"
+    else:
+        itemnum = -1
+        itemname = "noitemfound"
+    if itemnum >= 0:
+
+        FFX_Logs.writeLog("Using %s" % itemname)
+        print("Using %s" % itemname)
+        if FFX_Screen.PixelTestTol(277, 726, (223, 223, 223), 5):
+            FFX_Xbox.menuDown()
+        else:
+            while not FFX_Screen.PixelTestTol(276, 769, (218, 218, 218), 5):  # Item option isn't showing up
+                if FFX_Screen.BattleComplete():
+                    return
+                FFX_Xbox.menuDown()
+            while not FFX_Screen.PixelTestTol(130, 779, (165, 167, 165),5):  # Item option isn't selected (it's always last)
+                if FFX_Screen.BattleComplete():
+                    return
+                FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()  # Item menu open.
+        time.sleep(0.3)
+        cursor = 1
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
+        if itemPos % 2 == 0:
+            FFX_Xbox.menuRight()
+            cursor += 1
+        if cursor == itemPos:
+            FFX_Xbox.menuB()
+        else:
+            while cursor != itemPos:
+                FFX_Xbox.menuDown()
+                cursor += 2
+            FFX_Xbox.menuB()
+        print("Direction: ", direction)
+        direction = direction.lower()
+        if (targetposition - healerposition) % 3 == 1:
+            if direction == "left":
+                FFX_Xbox.menuLeft()
+            elif direction == "right":
+                FFX_Xbox.menuRight()
+            elif direction == "up":
+                FFX_Xbox.menuUp()
+            elif direction == "down":
+                FFX_Xbox.menuDown()
+        elif (targetposition - healerposition) % 3 == 2:
+            if direction == "left":
+                FFX_Xbox.menuRight()
+            elif direction == "right":
+                FFX_Xbox.menuLeft()
+            elif direction == "up":
+                FFX_Xbox.menuDown()
+            elif direction == "down":
+                FFX_Xbox.menuUp()
+
+        FFX_Xbox.menuB()
+        FFX_Xbox.menuB()
+
+        return 1
+
+    else:
+        print("No restorative items available")
+        return 0
+
 def revive():
     FFX_Logs.writeLog("Using Phoenix Down")
     print("Using Phoenix Down")
@@ -2436,7 +2503,138 @@ def negator_old(): #AKA crawler
     time.sleep(2)
     FFXC.set_value('BtnB', 0)
 
+#Process written by CrimsonInferno
 def seymourGuado():
+    FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
+    FFX_Screen.awaitTurn()
+
+    tidusHaste = False
+    kimahriconfused = False
+    tidusturns = 0
+    yunaturns = 0
+    kimahriturns = 0
+    auronturns = 0
+    wakkaturns = 0
+    animahits = 0
+
+    while not FFX_Screen.BattleComplete():
+        if FFX_Screen.BattleScreen():
+            turnchar = FFX_memory.getBattleCharTurn()
+            if turnchar == 0:
+                if tidusturns == 0:
+                    print("Swap to Brotherhood")
+                    FFX_Xbox.weapSwap(0)
+                elif tidusturns == 1:
+                    print("Tidus Haste self")
+                    FFX_Xbox.tidusHaste('none')
+                elif tidusturns == 2:
+                    print("Talk to Seymour")
+                    FFX_Xbox.menuLeft()
+                    time.sleep(1)
+                    FFX_Xbox.menuDown()
+                    FFX_Xbox.menuB()
+                    time.sleep(0.1)
+                    FFX_Xbox.menuLeft()
+                    FFX_Xbox.menuB()  # Tidus talk to Seymour
+                elif tidusturns == 3:
+                    time.sleep(0.5)
+                    tidusODSeymour()
+                elif tidusturns == 4:
+                    wakkaposition = FFX_memory.getBattleCharSlot(4)
+                    buddySwap_new(wakkaposition)
+                elif animahits < 4:
+                    attack('none')
+                    animahits += 1
+                else:
+                    attack('none')
+                tidusturns += 1
+                print("Tidus turns: %d" % tidusturns)
+            elif turnchar == 1:
+                if yunaturns == 0:
+                    FFX_Xbox.weapSwap(0)
+                else:
+                    auronslotnum = FFX_memory.getBattleCharSlot(2)
+                    buddySwap_new(auronslotnum)
+                yunaturns += 1
+            elif turnchar == 3:
+                if kimahriconfused == True:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition > 3:
+                        buddySwap_new(tidusposition)
+                    elif rikkuposition > 3:
+                        buddySwap_new(rikkuposition)
+                elif kimahriturns == 0:
+                    if FFX_memory.confusedState(0) == True:
+                        kimahriposition = FFX_memory.getBattleCharSlot(3)
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        remedy(healerposition=kimahriposition,
+                               targetposition=tidusposition,
+                               direction="left")
+                    elif FFX_memory.confusedState(1) == True:
+                        kimahriposition = FFX_memory.getBattleCharSlot(3)
+                        yunaposition = FFX_memory.getBattleCharSlot(1)
+                        remedy(healerposition=kimahriposition,
+                               targetposition=yunaposition,
+                               direction="left")
+                    else:
+                        defend()
+                elif kimahriturns == 1:
+                    Steal()
+                else:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition > 3:
+                        buddySwap_new(tidusposition)
+                    elif rikkuposition > 3:
+                        buddySwap_new(rikkuposition)
+                kimahriturns += 1
+            elif turnchar == 2:
+                if auronturns == 0:
+                    if FFX_memory.confusedState(3) == True:
+                        auronposition = FFX_memory.getBattleCharSlot(2)
+                        kimahriposition = FFX_memory.getBattleCharSlot(3)
+                        remedy(healerposition=auronposition,
+                               targetposition=kimahriposition,
+                               direction="left")
+                        kimahriconfused = True
+                    else:
+                        defend()
+                elif auronturns == 1:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition > 3:
+                        buddySwap_new(tidusposition)
+                    elif rikkuposition > 3:
+                        buddySwap_new(rikkuposition)
+                auronturns += 1
+            elif turnchar == 4:
+                if wakkaturns == 0:
+                    FFX_Xbox.weapSwap(0)
+                elif wakkaturns == 1:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition > 3:
+                        buddySwap_new(tidusposition)
+                    elif rikkuposition > 3:
+                        buddySwap_new(rikkuposition)
+                wakkaturns += 1
+            elif turnchar == 6:
+                if animahits < 4:
+                    Steal()
+                else:
+                    defend()
+            else:
+                defend()
+        else:
+            # Skips some dialog.
+            FFX_Xbox.menuB()
+    FFXC.set_value('BtnB', 1)
+    time.sleep(2.2)
+    FFXC.set_value('BtnB', 0)
+
+
+def seymourGuado_old():
     FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
     FFX_Screen.awaitTurn()
     FFX_Xbox.menuLeft()
@@ -3596,6 +3794,82 @@ def isaaru():
     confirm -= 1
     return confirm
 
+def altanaheal():
+
+    direction = "up"
+
+    if FFX_memory.getThrowItemsSlot(2) < 255:
+        itemnum = 2
+        itemname = "X-Potion"
+    elif FFX_memory.getThrowItemsSlot(8) < 255:
+        itemnum = 8
+        itemname = "Elixir"
+    elif FFX_memory.getThrowItemsSlot(6) < 255:
+        itemnum = 6
+        itemname = "Phoenix Down"
+    else:
+        itemnum = -1
+        itemname = "noitemfound"
+    if itemnum >= 0:
+
+        FFX_Logs.writeLog("Using %s" % itemname)
+        print("Using %s" % itemname)
+        if FFX_Screen.PixelTestTol(277, 726, (223, 223, 223), 5):
+            FFX_Xbox.menuDown()
+        else:
+            while not FFX_Screen.PixelTestTol(276, 769, (218, 218, 218), 5):  # Item option isn't showing up
+                if FFX_Screen.BattleComplete():
+                    return
+                FFX_Xbox.menuDown()
+            while not FFX_Screen.PixelTestTol(130, 779, (165, 167, 165),5):  # Item option isn't selected (it's always last)
+                if FFX_Screen.BattleComplete():
+                    return
+                FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()  # Item menu open.
+        time.sleep(0.3)
+        cursor = 1
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
+        if itemPos % 2 == 0:
+            FFX_Xbox.menuRight()
+            cursor += 1
+        if cursor == itemPos:
+            FFX_Xbox.menuB()
+        else:
+            while cursor != itemPos:
+                FFX_Xbox.menuDown()
+                cursor += 2
+            FFX_Xbox.menuB()
+        print("Direction: ", direction)
+        direction = direction.lower()
+        if (targetposition - healerposition) % 3 == 1:
+            if direction == "left":
+                FFX_Xbox.menuLeft()
+            elif direction == "right":
+                FFX_Xbox.menuRight()
+            elif direction == "up":
+                FFX_Xbox.menuUp()
+            elif direction == "down":
+                FFX_Xbox.menuDown()
+        elif (targetposition - healerposition) % 3 == 2:
+            if direction == "left":
+                FFX_Xbox.menuRight()
+            elif direction == "right":
+                FFX_Xbox.menuLeft()
+            elif direction == "up":
+                FFX_Xbox.menuDown()
+            elif direction == "down":
+                FFX_Xbox.menuUp()
+
+        FFX_Xbox.menuB()
+        FFX_Xbox.menuB()
+
+        return 1
+
+    else:
+        print("No restorative items available")
+        return 0
+
+
 def evraeAltana():
     FFX_Logs.writeLog("Fight start: Evrae Altana")
     evraeFight = tidusFlee()
@@ -3608,6 +3882,34 @@ def evraeAltana():
     if evraeFight == 2:
         print("Evrae Altana fight start")
         #Start by hasting Rikku.
+        while not FFX_Screen.BattleComplete():
+            if FFX_Screen.BattleScreen():
+                time.sleep(0.2)
+                altanaheal()
+        FFXC.set_value('BtnB', 1)
+        time.sleep(2)
+        FFXC.set_value('BtnB', 0)
+    
+    else: #Just a regular group
+        print("Not Evrae this time.")
+        fleeAll()
+    
+    print("Returning value: " + str(gems))
+    return gems
+
+
+def evraeAltana_old():
+    FFX_Logs.writeLog("Fight start: Evrae Altana")
+    evraeFight = tidusFlee()
+    steal = 0
+    gems = 1
+    time.sleep(0.2)
+    print(FFX_Screen.PixelValue(190, 705))
+    print("(139, 139, 139) expected for Evrae")
+
+    if evraeFight == 2:
+        print("Evrae Altana fight start")
+        # Start by hasting Rikku.
         FFX_Xbox.tidusHaste('left')
         time.sleep(0.5)
         while not FFX_Screen.BattleComplete():
@@ -3618,13 +3920,13 @@ def evraeAltana():
                     time.sleep(2.2)
                     print("Now to see what item is stolen:")
                     while not FFX_Screen.BattleScreen():
-                        if FFX_Screen.PixelTestTol(789, 93, (146, 146, 146),5) and gems == 1:
+                        if FFX_Screen.PixelTestTol(789, 93, (146, 146, 146), 5) and gems == 1:
                             gems = 2
                             print("Stole water gems")
                             FFX_Logs.writeStats("Altana gems:")
                             FFX_Logs.writeStats("Yes")
                             FFX_Logs.writeLog("Altana steal results in gems.")
-                        elif FFX_Screen.PixelTestTol(925, 113, (172, 172, 172),5) and gems == 1:
+                        elif FFX_Screen.PixelTestTol(925, 113, (172, 172, 172), 5) and gems == 1:
                             gems = 0
                             print("Did not steal water gems")
                             FFX_Logs.writeStats("Altana gems:")
@@ -3650,11 +3952,11 @@ def evraeAltana():
         FFXC.set_value('BtnB', 1)
         time.sleep(2)
         FFXC.set_value('BtnB', 0)
-    
-    else: #Just a regular group
+
+    else:  # Just a regular group
         print("Not Evrae this time.")
         fleeAll()
-    
+
     print("Returning value: " + str(gems))
     return gems
 

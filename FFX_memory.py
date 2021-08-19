@@ -774,13 +774,22 @@ def confusedState(character):
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character)+0x606
+
+    print("basePointer: %s" % basePointer)
+    print("basePointerAddress: %s" % basePointerAddress)
+    print("offset: %s" % offset)
     
     key = basePointerAddress + offset
     retVal = process.readBytes(key,1)
-    
+
+    print("key: %s" % key)
+    print("retVal: %s" % retVal)
+
     if retVal % 2 == 1:
+        print("Character %d is confused" % character)
         return True
     else:
+        print("Character %d is not confused" % character)
         return False
 
 def confusedStateByPos(position):
