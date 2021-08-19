@@ -98,6 +98,24 @@ def SkipDialog( Keystrokes ):
         currentTime = time.time()
     print("Mashing B - Complete")
 
+
+def SkipDialogSpecial( Keystrokes ):
+    Keystrokes
+    print("Mashing B")
+    currentTime = time.time()
+    print("Current Time: ", currentTime)
+    clickTimer = currentTime + Keystrokes
+    print("Clicking for number of seconds: ", Keystrokes, " - Special skipping")
+    while currentTime < clickTimer :
+        FFXC.set_value('BtnB', 1)
+        FFXC.set_value('BtnA', 1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnB', 0)
+        FFXC.set_value('BtnA', 0)
+        time.sleep(0.035)
+        currentTime = time.time()
+    print("Mashing B - Complete")
+
 def skipSave():
     print("Skipping save dialog popup")
     time.sleep(0.2)
@@ -282,15 +300,17 @@ def weapSwap(position):
     menuRight()
     time.sleep(0.5)
     menuB()
-    time.sleep(0.7)
-    weap = 0
-    if weap < position :
+    if position == 0:
+        SkipDialog(1)
+    else:
+        time.sleep(0.7)
+        weap = 0
         while weap < position :
             menuDown()
             weap += 1
-    menuB()
-    menuB()
-    time.sleep(0.3)
+        menuB()
+        menuB()
+        time.sleep(0.3)
 
 def armorSwap(position):
     print("Armor swap, armor in position: ", position)
