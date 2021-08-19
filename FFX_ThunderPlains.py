@@ -165,7 +165,7 @@ def southPathing():
             FFXC.set_value('AxisLy', 0)
     return status
     
-def agency():
+def agency(blitzWin):
     #Arrive at the travel agency
     FFX_Screen.clickToPixel(266,251,(64, 193, 64))
     speedCount = FFX_memory.getSpeed()
@@ -223,10 +223,10 @@ def agency():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     time.sleep(0.2)
-    
-    speedNeeded = 15 - speedCount #15 plus one extra grenade for Flux, minus 1 because it starts on 1
-    if speedNeeded > 2:
-        speedNeeded = 2 #Limit so we don't over-spend and run out of money.
+    FFX_Xbox.menuRight()
+    speedNeeded = 15 - speedCount #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
+    if speedNeeded > 1:
+        speedNeeded = 1 #Limit so we don't over-spend and run out of money.
     if speedNeeded > 0:
         while speedNeeded > 0:
             FFX_Xbox.menuRight()
@@ -263,13 +263,14 @@ def agency():
     time.sleep(0.8)
     FFX_Xbox.menuB()
     time.sleep(0.8)
-    FFX_Xbox.menuUp() #Baroque sword
-    #time.sleep(10) #Testing only
-    time.sleep(0.1)
-    FFX_Xbox.menuB() #Weapon for Tidus (for Evrae fight)
-    time.sleep(0.1)
-    FFX_Xbox.menuB() #Do not equip
-    time.sleep(0.1)
+    if blitzWin == True:
+        FFX_Xbox.menuUp() #Baroque sword
+        #time.sleep(10) #Testing only
+        time.sleep(0.1)
+        FFX_Xbox.menuB() #Weapon for Tidus (for Evrae fight)
+        time.sleep(0.1)
+        FFX_Xbox.menuB() #Do not equip
+        time.sleep(0.1)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()

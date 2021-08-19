@@ -408,7 +408,7 @@ def escape():
     FFX_Xbox.touchSaveSphere()
     
     FFX_memory.awaitControl()
-    FFX_memory.fullPartyFormat('macalaniaescape')
+    FFX_memory.fullPartyFormat('kimahri')
     checkpoint = 0
     lastCP = 0
     while checkpoint != 1000:
@@ -420,8 +420,9 @@ def escape():
             if FFX_memory.getBattleNum() == 195:
                 checkpoint = 1000
             else:
-                FFX_Xbox.tidusFlee()
-                FFX_memory.clickToControl()
+                FFX_Battle.fleeAll()
+                while not FFX_memory.userControl():
+                    FFX_Xbox.menuB()
         elif FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             if checkpoint == 0:
@@ -496,6 +497,9 @@ def escape():
             elif checkpoint == 60:
                 if pos[0] < -32:
                     checkpoint = 70
+                    FFXC.set_value('AxisLy', 0)
+                    FFXC.set_value('AxisLx', 0)
+                    FFX_memory.fullPartyFormat('macalaniaescape')
                 else:
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', -1)
