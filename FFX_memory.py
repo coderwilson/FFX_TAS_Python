@@ -806,7 +806,7 @@ def getEnemyHP():
             retVal = [process.readBytes(key,4)]
         else:
             retVal.append(process.readBytes(key,4))
-    
+    print("Enemy HP values:")
     print(retVal)
     return retVal
 
