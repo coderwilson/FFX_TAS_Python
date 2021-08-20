@@ -67,6 +67,7 @@ def faintCheckTwo():
 def BattleComplete():
     if PixelTest(1464, 151, (91, 94, 141)) :
         FFX_Logs.writeLog("Battle is complete.")
+        print("Battle Complete")
         return True
     else :
         return False

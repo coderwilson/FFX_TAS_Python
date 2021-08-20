@@ -1560,7 +1560,7 @@ def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
         FFX_Xbox.menuA
         #closeMenu()
 
-def fullPartyFormat(frontLine, currentmenuposition):
+def fullPartyFormat(frontLine):
     partyMembers = 7
     frontLine = frontLine.lower()
     if frontLine == 'kimahri':
