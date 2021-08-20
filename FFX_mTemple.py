@@ -397,7 +397,7 @@ def trials():
 
 def escape():
     FFX_memory.clickToControl()
-    FFX_menu.autoSortItems('n')
+    #FFX_menu.autoSortItems('n')
     FFX_menu.afterSeymour()
     FFXC.set_value('AxisLy', -1)
     time.sleep(0.5)
@@ -408,7 +408,7 @@ def escape():
     FFX_Xbox.touchSaveSphere()
     
     FFX_memory.awaitControl()
-    FFX_memory.fullPartyFormat('kimahri')
+    #FFX_memory.fullPartyFormat('macalaniaescape')
     checkpoint = 0
     lastCP = 0
     while checkpoint != 1000:
@@ -499,7 +499,7 @@ def escape():
                     checkpoint = 70
                     FFXC.set_value('AxisLy', 0)
                     FFXC.set_value('AxisLx', 0)
-                    FFX_memory.fullPartyFormat('macalaniaescape')
+                    #FFX_memory.fullPartyFormat('macalaniaescape')
                 else:
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', -1)

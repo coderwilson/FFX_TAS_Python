@@ -320,6 +320,39 @@ def moveShiftUse(direction):
     FFX_Xbox.menuB()
     time.sleep(0.1)
 
+def autoSortItems_New(manual, currentmenuposition, menusize):
+    targetmenuposition = 2
+    menudistance = abs(targetmenuposition - currentmenuposition)
+
+    if menudistance < menusize / 2:
+        for i in range(menudistance):
+            FFX_Xbox.menuDown()
+    else:
+        for i in range(11 - menudistance):
+            FFX_Xbox.menuUp()
+
+    FFX_Xbox.menuB()
+    time.sleep(0.4)
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuB()
+    time.sleep(0.4)
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuB()
+    time.sleep(0.4)
+    if manual == 'y':
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuB()
+    elif manual == 'n':
+        FFX_Xbox.menuA()
+        FFX_Xbox.menuA()
+        #FFX_memory.closeMenu()
+    else:
+        FFX_Xbox.menuA()
+        FFX_Xbox.menuA()
+        #FFX_memory.closeMenu()
+    return 2
+
 def autoSortItems(manual):
     FFX_memory.openMenu()
     FFX_Xbox.menuDown()
@@ -1427,8 +1460,37 @@ def afterSeymour_unused3():
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     FFX_memory.openMenu()
-    
+
+
 def afterSeymour():
+    FFX_memory.openMenu()
+    FFX_Xbox.menuB()  # Sphere grid on Tidus
+    FFX_Xbox.menuB()  # Sphere grid on Tidus
+
+    FFX_menuGrid.useShiftRight('Tidus')
+    FFX_menuGrid.moveFirst()
+    gridLeft()
+    gridLeft()
+    gridLeft()
+    gridLeft()
+    FFX_menuGrid.moveAndUse()
+    FFX_menuGrid.selSphere('power', 'd', 'none')
+    FFX_menuGrid.useAndUseAgain()
+    FFX_menuGrid.selSphere('power', 'u', 'none')
+    FFX_menuGrid.useAndMove()
+    gridUp()
+    gridUp()
+    FFX_menuGrid.moveAndUse()
+    FFX_menuGrid.selSphere('speed', 'd', 'none')
+    FFX_menuGrid.useAndQuit()
+    currentmenuposition = 1
+    currentmenuposition = autoSortItems_New('n',currentmenuposition,11)
+    currentmenuposition = equipSonicSteel_New(currentmenuposition, 11)
+    currentmenuposition = FFX_memory.fullPartyFormat_New('macalaniaescape',currentmenuposition,11)
+    FFX_memory.closeMenu()
+
+
+def afterSeymour_Old():
     FFX_memory.openMenu()
     
     #First, fix item order for later.
@@ -1600,6 +1662,39 @@ def weddingPrep():
     
     #Doesn't matter about Rikku's overdrive, that will auto sort.
 
+def equipSonicSteel_New(currentmenuposition, menusize):
+    print("Equipping Sonic Steel")
+    FFX_memory.awaitControl()
+    while not FFX_memory.menuOpen():
+        FFX_memory.openMenu()
+
+    targetmenuposition = 5
+    menudistance = abs(targetmenuposition - currentmenuposition)
+
+    if menudistance < menusize / 2:
+        for i in range(menudistance):
+            FFX_Xbox.menuDown()
+    else:
+        for i in range(11 - menudistance):
+            FFX_Xbox.menuUp()
+
+    FFX_Xbox.menuB()
+    time.sleep(0.5)
+    FFX_Xbox.menuB()  # Tidus
+    time.sleep(0.5)
+    FFX_Xbox.menuB()  # Weapon
+    time.sleep(0.5)
+    FFX_Xbox.menuDown()
+    time.sleep(0.05)
+    while not FFX_Screen.PixelTestTol(1058, 517, (220, 220, 220), 5):
+        FFX_Xbox.menuDown()
+        time.sleep(0.05)
+    FFX_Xbox.menuB()
+    time.sleep(0.1)
+    FFX_Xbox.menuA()
+
+    return 5
+
 def equipSonicSteel():
     print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
@@ -1619,7 +1714,7 @@ def equipSonicSteel():
     #FFX_Xbox.menuUp()
     #FFX_Xbox.menuUp()
     #FFX_Xbox.menuUp() #Formation section is replaced.
-    
+
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
