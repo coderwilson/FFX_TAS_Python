@@ -1153,7 +1153,414 @@ def desertFormat(rikkuCharge):
     else:
         fullPartyFormat('desert2')
 
-def fullPartyFormat(frontLine):
+
+def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
+    partyMembers = 7
+    frontLine = frontLine.lower()
+    if frontLine == 'kimahri':
+        order = getOrderSeven()
+        orderFinal = [0, 3, 2, 6, 4, 5, 1]
+    if frontLine == 'rikku':
+        order = getOrderSeven()
+        orderFinal = [0, 6, 2, 3, 4, 5, 1]
+    if frontLine == 'yuna':
+        order = getOrderSeven()
+        orderFinal = [0, 1, 2, 6, 4, 5, 3]
+    if frontLine == 'gauntlet':
+        order = getOrderSeven()
+        orderFinal = [0, 1, 3, 2, 4, 5, 6]
+    if frontLine == 'macalaniaescape':
+        order = getOrderSeven()
+        orderFinal = [0, 1, 6, 2, 4, 3, 5]
+    if frontLine == 'desert1':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0, 6, 2, 3, 4, 5]
+    if frontLine == 'desert2':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0, 3, 2, 6, 4, 5]
+    if frontLine == 'guards':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0, 2, 3, 6, 4, 5]
+    if frontLine == 'evrae':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0, 6, 3, 2, 4, 5]
+    if frontLine == 'spheri':
+        order = getOrderSeven()
+        orderFinal = [0, 3, 1, 4, 2, 6, 5]
+    if frontLine == 'crawler':
+        order = getOrderSeven()
+        orderFinal = [0, 3, 5, 4, 2, 6, 1]
+    if frontLine == 'besaid1':
+        order = getOrderSix()  # Should work the same way
+        orderFinal = [0, 1, 5, 3, 5]
+    if frontLine == 'kilika':
+        order = getOrderSix()  # Should work the same way
+        orderFinal = [0, 1, 4, 3, 5]
+        partyMembers = 5
+    if order == orderFinal:
+        print("Good to go, no action taken.")
+    else:
+        print("Converting from formation:")
+        print(order)
+        print("Into formation:")
+        print(orderFinal)
+        while not menuOpen():
+            openMenu()
+
+        targetmenuposition = 8
+        menudistance = abs(targetmenuposition - currentmenuposition)
+
+        if menudistance < menusize/2:
+            for i in range(menudistance):
+                FFX_Xbox.menuDown()
+        else:
+            for i in range(11-menudistance):
+                FFX_Xbox.menuUp()
+
+        FFX_Xbox.menuB()
+
+        if order[0] != orderFinal[0]:
+            print("Looking for ", nameFromNumber(orderFinal[0]))
+            if order[1] == orderFinal[0]:
+                print("Tidus in Second slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[1] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif order[2] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0]), " in Third slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                order[2] = order[0]
+                order[0] = orderFinal[0]
+                FFX_Xbox.menuUp()
+            elif order[3] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0]), " in Fourth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[3] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif order[4] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0]), " in Fifth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()
+                order[4] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+            elif partyMembers > 5 and order[5] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0]), " in Sixth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()
+                order[5] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+            elif partyMembers == 7 and order[6] == orderFinal[0]:
+                print(nameFromNumber(orderFinal[0]), " in seventh slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()
+                order[6] = order[0]
+                order[0] = orderFinal[0]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+        else:
+            print(nameFromNumber(order[0]), " seems fine.")
+            FFX_Xbox.menuDown()
+        if order[1] != orderFinal[1]:
+            print("Looking for ", nameFromNumber(orderFinal[1]))
+            if order[2] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1]), " in Third slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[2] = order[1]
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif order[3] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1]), " in Fourth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[3] = order[1]
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+            elif order[4] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1]), " in Fifth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[4] = order[1]
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif partyMembers > 5 and order[5] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1]), " in Sixth slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[5] = order[1]
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif partyMembers == 7 and order[6] == orderFinal[1]:
+                print(nameFromNumber(orderFinal[1]), " in Seventh slot. Swapping")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[1]
+                order[1] = orderFinal[1]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+        else:
+            print(nameFromNumber(order[1]), " seems fine.")
+            FFX_Xbox.menuDown()
+        if order[2] != orderFinal[2]:
+            print("Looking for ", nameFromNumber(orderFinal[2]))
+            if order[3] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2]), " in fourth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[3] = order[2]
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif order[4] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2]), " in fifth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[4] = order[2]
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+            elif partyMembers > 5 and order[5] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2]), " in sixth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[5] = order[2]
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+            elif partyMembers == 7 and order[6] == orderFinal[2]:
+                print(nameFromNumber(orderFinal[2]), " in seventh slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[2]
+                order[2] = orderFinal[2]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+        else:
+            print(nameFromNumber(order[2]), " seems fine.")
+            FFX_Xbox.menuDown()
+        if order[3] != orderFinal[3]:
+            print("Looking for ", nameFromNumber(orderFinal[3]))
+            if order[4] == orderFinal[3]:
+                print(nameFromNumber(orderFinal[3]), " in fifth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[4] = order[3]
+                order[3] = orderFinal[3]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif partyMembers > 5 and order[5] == orderFinal[3]:
+                print(nameFromNumber(orderFinal[3]), " in sixth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[5] = order[3]
+                order[3] = orderFinal[3]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+            elif partyMembers == 7 and order[6] == orderFinal[3]:
+                print(nameFromNumber(orderFinal[3]), " in seventh slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[3]
+                order[3] = orderFinal[3]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuUp()
+        else:
+            print(nameFromNumber(order[3]), " seems fine.")
+            FFX_Xbox.menuDown()
+        if partyMembers > 5 and order[4] != orderFinal[4]:
+            print("Looking for ", nameFromNumber(orderFinal[4]))
+            if order[5] == orderFinal[4]:
+                print(nameFromNumber(orderFinal[4]), " in Sixth slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[5] = order[4]
+                order[4] = orderFinal[4]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+            elif partyMembers == 7 and order[6] == orderFinal[4]:
+                print(nameFromNumber(orderFinal[4]), " in Seventh slot. Swapping.")
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                order[6] = order[4]
+                order[4] = orderFinal[4]
+                print(order)
+                if order == orderFinal:
+                    print("Order is good (early). Return.")
+                    closeMenu()
+                    return
+                FFX_Xbox.menuUp()
+        else:
+            print(nameFromNumber(order[4]), " seems fine.")
+            FFX_Xbox.menuDown()
+        if partyMembers == 7 and order[5] != orderFinal[5]:
+            print(nameFromNumber(order[5]), " and ", nameFromNumber(order[6]), \
+                  "are swapped. Flipping them back.")
+            print("Expected order: ", orderFinal[5], " | ", orderFinal[6])
+            FFX_Xbox.menuB()
+            FFX_Xbox.menuDown()
+            FFX_Xbox.menuB()
+        elif partyMembers == 7:
+            print(nameFromNumber(orderFinal[5]), " and ", nameFromNumber(orderFinal[6]), " seem fine.")
+
+        # time.sleep(120) #For testing only. Allows us to see what's going on.
+        FFX_Xbox.menuA
+        #closeMenu()
+
+def fullPartyFormat(frontLine, currentmenuposition):
     partyMembers = 7
     frontLine = frontLine.lower()
     if frontLine == 'kimahri':

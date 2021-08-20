@@ -2602,11 +2602,6 @@ def seymourGuado():
                 elif tidusturns == 4:
                     wakkaposition = FFX_memory.getBattleCharSlot(4)
                     buddySwap_new(wakkaposition)
-                elif tidusturns == 5:
-                    FFX_Xbox.weapSwap(0)
-                    animamiss += 1
-                elif tidusturns == 6:
-                    defend()
                 elif animahits + animamiss == 3 and animamiss > 0 and missbackup == False:
                     luluposition = FFX_memory.getBattleCharSlot(5)
                     buddySwap_new(luluposition)
