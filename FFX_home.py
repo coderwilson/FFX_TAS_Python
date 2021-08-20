@@ -24,7 +24,7 @@ def desert1():
     FFXC.set_value('AxisLy', 0)
 
     tidusturns = 0
-    while FFX_Screen.partySize() < 3:
+    while not FFX_Screen.BattleComplete():
         if FFX_Screen.BattleScreen():
             turnchar = FFX_memory.getBattleCharTurn()
             if turnchar == 0:
@@ -36,11 +36,12 @@ def desert1():
                     FFX_Battle.defend()
                 tidusturns += 1
             else:
-                FFX_Battle.defend()
+                if len(FFX_memory.getBattleFormation()) > 2:
+                    FFX_Battle.fleeAll()
+                else:
+                    FFX_Battle.defend()
         else: FFX_Xbox.menuB() #Skip Dialog
-    
-    FFX_Screen.clickToBattle()
-    FFX_Battle.fleeAll() #Get out of battle.
+
     FFX_Screen.clickToMap1()
     FFX_menu.equipSonicSteel()
     FFXC.set_value('AxisLy', 1)
