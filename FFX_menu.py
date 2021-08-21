@@ -320,16 +320,29 @@ def moveShiftUse(direction):
     FFX_Xbox.menuB()
     time.sleep(0.1)
 
-def autoSortItems_New(manual, currentmenuposition, menusize):
-    targetmenuposition = 2
+
+def autoSortItems_New(manual, menusize):
+
+    while not menuOpen():
+        openMenu()
+
+    currentmenuposition = getMenuCursorPos()
+
+    targetmenuposition = 1
     menudistance = abs(targetmenuposition - currentmenuposition)
 
-    if menudistance < menusize / 2:
+    if menudistance < (menusize / 2 - 1):
         for i in range(menudistance):
-            FFX_Xbox.menuDown()
+            if targetmenuposition > currentmenuposition:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuUp()
     else:
-        for i in range(11 - menudistance):
-            FFX_Xbox.menuUp()
+        for i in range(menusize - menudistance):
+            if targetmenuposition > currentmenuposition:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuDown()
 
     FFX_Xbox.menuB()
     time.sleep(0.4)
@@ -1484,9 +1497,9 @@ def afterSeymour():
     FFX_menuGrid.selSphere('speed', 'd', 'none')
     FFX_menuGrid.useAndQuit()
     currentmenuposition = 1
-    currentmenuposition = autoSortItems_New('n',currentmenuposition,11)
-    currentmenuposition = equipSonicSteel_New(currentmenuposition, 11)
-    currentmenuposition = FFX_memory.fullPartyFormat_New('macalaniaescape',currentmenuposition,11)
+    currentmenuposition = autoSortItems_New('n', 11)
+    currentmenuposition = equipSonicSteel_New(11)
+    currentmenuposition = FFX_memory.fullPartyFormat_New('macalaniaescape',11)
     FFX_memory.closeMenu()
 
 
@@ -1662,7 +1675,7 @@ def weddingPrep():
     
     #Doesn't matter about Rikku's overdrive, that will auto sort.
 
-def equipSonicSteel_New(currentmenuposition, menusize):
+def equipSonicSteel_New(menusize):
     print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
     while not FFX_memory.menuOpen():
@@ -1673,10 +1686,16 @@ def equipSonicSteel_New(currentmenuposition, menusize):
 
     if menudistance < menusize / 2:
         for i in range(menudistance):
-            FFX_Xbox.menuDown()
+            if targetmenuposition > currentmenuposition:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuUp()
     else:
-        for i in range(11 - menudistance):
-            FFX_Xbox.menuUp()
+        for i in range(menusize - menudistance):
+            if targetmenuposition > currentmenuposition:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuDown()
 
     FFX_Xbox.menuB()
     time.sleep(0.5)

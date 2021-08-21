@@ -7,15 +7,19 @@ import FFX_memory
 
 FFXC = FFX_Xbox.FFXC
  
-def southPathing():
+def southPathing(blitzwin):
     
     print("Start of the Thunder Plains section")
     checkpoint = 0
     stepCount = 0
     stepMax = 500
     complete = 0
-    status = [False,False,False] #Rikku charged, Light Curtain, Lunar Curtain
-    FFX_memory.fullPartyFormat('kimahri')
+    status = [False,False,False,False] #Rikku charged, Light Curtain, Lunar Curtain, Grenade Thrown
+    status[2] = blitzwin
+    speedcount = FFX_memory.getSpeed()
+    if speedcount >= 14:
+        status[3] = True
+    FFX_memory.fullPartyFormat_New('postbunyip', 11)
     while complete == 0:
         if FFX_Screen.dodgeLightning():
             print("Dodge")
@@ -224,7 +228,7 @@ def agency(blitzWin):
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuRight()
-    speedNeeded = 15 - speedCount #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
+    speedNeeded = 14 - speedCount #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     if speedNeeded > 1:
         speedNeeded = 1 #Limit so we don't over-spend and run out of money.
     if speedNeeded > 0:
@@ -474,3 +478,5 @@ def northPathing(status):
     FFX_Xbox.SkipDialog(6)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0) #Approaching the party
+
+    return status

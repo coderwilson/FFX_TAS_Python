@@ -1144,7 +1144,7 @@ def MiihenRoad(selfDestruct):
         FFXC.set_value('BtnB', 0)
 
     hpCheck = FFX_memory.getHP()
-    if hpCheck[0] != 520 or hpCheck[3] != 618 or hpCheck[4] != 1030:
+    if hpCheck[0] < 520 or hpCheck[2] < 600 or hpCheck[4] < 400:
         healUp(3)
     else:
         print("No need to heal up. Moving onward.")
@@ -1594,13 +1594,13 @@ def MRRbattle(status):
     print("HP values: ", hpCheck)
     if hpCheck[1] != 475:  # Yuna is low. Heal all.
         healUp(6)
-    elif hpCheck[5] != 644:  # Kimahri missing HP
+    elif hpCheck[3] != 644:  # Kimahri missing HP
         healUp(5)
-    elif hpCheck[2] != 380:  # Lulu low
+    elif hpCheck[5] != 380:  # Lulu low
         healUp(4)
-    elif hpCheck[4] != 1030:  # Auron missing HP
+    elif hpCheck[2] != 1030:  # Auron missing HP
         healUp(3)
-    elif hpCheck[3] != 818:  # Wakka missing HP
+    elif hpCheck[4] != 818:  # Wakka missing HP
         healUp(2)
     elif hpCheck[0] != 520:  # Tidus
         healUp(1)
@@ -1745,9 +1745,9 @@ def djose(stoneBreath):
 
     partyHP = FFX_memory.getHP()
     print(partyHP)
-    if partyHP[0] < 500 or partyHP[3] < 700:
+    if partyHP[0] < 300 or partyHP[4] < 300:
         print("Djose: recovering HP")
-        healUp(2)
+        healUp(3)
     else:
         print("Djose: No need to heal.")
     return stoneBreath
@@ -1833,8 +1833,185 @@ def chargeRikku():
     FFX_Screen.clickToMap1()
     healUp(3)
 
-
 def thunderPlains(status, section):
+    bNum = FFX_memory.getBattleNum()
+    nadeSlot = FFX_memory.getUseItemsSlot(35)
+    print("Grenade Slot %d" % nadeSlot)
+
+    tidusturns = 0
+    wakkaturns = 0
+    speedcount = FFX_memory.getSpeed()
+    rikkucharge = 0
+
+    while not FFX_Screen.BattleComplete():
+        if FFX_Screen.BattleScreen():
+            turnchar = FFX_memory.getBattleCharTurn()
+            rikkucharge = FFX_memory.getOverdriveValue(6)
+            if bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
+                if status[2] == False:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 6:
+                        Steal()
+                    else:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                elif turnchar == 0:
+                    tidusFlee()
+                else:
+                    fleeAll()
+            elif bNum == 160:
+                if status[1] == False:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            defend()
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 4:
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        buddySwap_new(rikkuposition)
+                    elif turnchar == 6:
+                        Steal()
+                    else:
+                        defend()
+                elif turnchar == 0:
+                    tidusFlee()
+                else:
+                    fleeAll()
+            elif bNum == 161:
+                if status[1] == False and FFX_memory.getStoryProgress == 1375:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 4:
+                        if wakkaturns == 0:
+                            wakkaposition = FFX_memory.getBattleCharSlot(4)
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
+                            rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                            if rikkuHP < wakkaHP and rikkucharge < 100:
+                                defend()
+                            else:
+                                tidusposition = FFX_memory.getBattleCharSlot(0)
+                                buddySwap_new(tidusposition)
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        Steal()
+                        status[1] = True
+                    else:
+                        defend()
+                elif status[3] == False and speedcount < 14 and section == 2:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 4:
+                        wakkaposition = FFX_memory.getBattleCharSlot(4)
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
+                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                        if rikkuHP < wakkaHP and rikkucharge < 100:
+                            defend()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        grenadeslot = FFX_memory.getUseItemsSlot(35)
+                        print("Grenade Slot %d" % grenadeslot)
+                        useItem(grenadeslot,'none')
+                        status[3] = True
+                    else:
+                        defend()
+                elif status[1] == False:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 4:
+                        wakkaposition = FFX_memory.getBattleCharSlot(4)
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
+                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                        if rikkuHP < wakkaHP and rikkucharge < 100:
+                            defend()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        Steal()
+                        status[1] = True
+                    else:
+                        defend()
+                elif turnchar == 0:
+                    tidusFlee()
+                else:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    if tidusposition > 3:
+                        buddySwap_new(tidusposition)
+                    else:
+                        fleeAll()
+            elif bNum == 154 or bNum == 156 or bNum == 164:
+                if status[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 4:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        useItem(nadeSlot, 'none')
+                        status[3] = True
+                    else:
+                        defend()
+                elif tidusturns == 0:
+                    tidusFlee()
+                else:
+                    fleeAll()
+            else:  # Nothing useful this battle. Moving on.
+                fleeAll()
+    FFX_memory.clickToControl()
+    # FFX_Xbox.menuB() #In case lightning is incoming. Happens far too often.
+    if rikkucharge == 100:
+        status[0] = True
+    print("Status array, Rikku charge, Light curtain, and Lunar Curtain:")
+    print(status)
+    print("Checking party format and resolving if needed.")
+    FFX_memory.fullPartyFormat_New('postbunyip',11)
+    while FFX_memory.menuOpen():
+        FFX_Xbox.menuA()
+    print("Party format is good. Now checking health values.")
+    hpValues = FFX_memory.getHP()
+    if hpValues[0] < 400 or hpValues[6] < 180:
+        healUp_New(4, 11)
+    print("Ready to continue onward.")
+    print("Plains variables: Rikku charged, stolen lunar curtain, stolen light curtain")
+    print(status)
+    return status
+
+
+def thunderPlains_Old(status, section):
     bNum = FFX_memory.getBattleNum()
     nadeSlot = FFX_memory.getUseItemsSlot(35)
     nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
@@ -1917,7 +2094,7 @@ def thunderPlains(status, section):
     FFX_memory.fullPartyFormat('kimahri')
     print("Party format is good. Now checking health values.")
     hpValues = FFX_memory.getHP()
-    if hpValues[0] < 700 or hpValues[4] < 1000:
+    if hpValues[0] < 700 or hpValues[2] < 1000:
         healUp(3)
     print("Ready to continue onward.")
     print("Plains variables: Rikku charged, stolen lunar curtain, stolen light curtain")
@@ -1925,7 +2102,7 @@ def thunderPlains(status, section):
     return status
 
 
-def thunderPlains_old(rikkuCharge):
+def thunderPlains_old2(rikkuCharge):
     FFX_Logs.writeLog("Fight start: Thunder Plains")
     print("Rikku steal, Tidus flee, Auron escape if needed")
     BattleComplete = 0
@@ -1957,6 +2134,134 @@ def thunderPlains_old(rikkuCharge):
 
 
 def mWoods(woodsVars):
+    FFX_Logs.writeLog("Fight start: Macalania Woods")
+    print("Logic depends on completion of specific goals. In Order:")
+    print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
+    try:
+        print(woodsVars)
+    except:
+        print("Could not print woods vars.")
+    stealAttempt = False
+    tidusIn = True
+    battleNum = FFX_memory.getBattleNum()
+    tidusturns = 0
+    try:
+        while not FFX_Screen.BattleComplete():
+            if FFX_Screen.BattleScreen():
+                turnchar = FFX_memory.getBattleCharTurn()
+                rikkucharge = FFX_memory.getOverdriveValue(6)
+                if woodsVars[0] == False:  # Rikku needs charging.
+                    if turnchar == 0:
+                        tidusFlee()
+                    elif turnchar == 6:
+                        if battleNum == 175 and woodsVars[2] == False:
+                            Steal()
+                        elif battleNum == 172 and woodsVars[1] == False:
+                            StealDown()
+                        elif battleNum == 171 and woodsVars[1] == False:
+                            StealRight()
+                elif woodsVars[1] == False or woodsVars[2] == False:
+                    if battleNum == 175 and woodsVars[2] == False:
+                        if turnchar == 0:
+                            wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
+                            if tidusturns == 0 and wakkasafe == True:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 4:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                        elif turnchar == 6:
+                            Steal()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            if tidusposition > 3:
+                                buddySwap_new(tidusposition)
+                            else:
+                                fleeAll()
+                    elif battleNum == 172 and woodsVars[1] == False:
+                        if turnchar == 0:
+                            wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
+                                FFX_memory.getBattleCharSlot(4)] > 200
+                            if tidusturns == 0 and wakkasafe == True:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 4:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                        elif turnchar == 6:
+                            StealDown()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            if tidusposition > 3:
+                                buddySwap_new(tidusposition)
+                            else:
+                                fleeAll()
+                    elif battleNum == 171 and woodsVars[1] == False:
+                        if turnchar == 0:
+                            wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
+                                FFX_memory.getBattleCharSlot(4)] > 200
+                            if tidusturns == 0 and wakkasafe == True:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 4:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                        elif turnchar == 6:
+                            StealRight()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            if tidusposition > 3:
+                                buddySwap_new(tidusposition)
+                            else:
+                                fleeAll()
+                    else:
+                        tidusFlee()
+                else:
+                    tidusFlee()
+    except Exception as errMsg:
+        print("An error occurred. Error message:")
+        print(errMsg)
+        fleeAll()
+
+    print("Battle complete, now to deal with the aftermath.")
+    if FFX_Screen.BattleComplete():
+        FFX_memory.clickToControl()
+    if rikkucharge == 100:
+        woodsVars[0] = True
+    if FFX_memory.getUseItemsSlot(32) != 255:
+        woodsVars[1] = True
+    if FFX_memory.getUseItemsSlot(24) != 255:
+        woodsVars[2] = True
+    print("Checking battle formation.")
+    if woodsVars[0] == True:
+        if woodsVars[1] == True and woodsVars[2] == True:
+            FFX_memory.fullPartyFormat_New("mwoodsdone", 11)
+        else:
+            FFX_memory.fullPartyFormat_New("mwoodsgotcharge", 11)
+    else:
+        FFX_memory.fullPartyFormat_New("mwoodsneedcharge", 11)
+    print("Party format is now good. Let's check health.")
+    # Heal logic
+    partyHP = FFX_memory.getHP()
+    if partyHP[0] < 450 or partyHP[6] < 180 or partyHP[2] + partyHP[4] < 500:
+        healUp_New(4,11)
+    print("And last, we'll update variables.")
+    print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
+    print(woodsVars)
+    print("HP is good. Onward!")
+    return woodsVars
+
+
+def mWoods_Old(woodsVars):
     FFX_Logs.writeLog("Fight start: Macalania Woods")
     print("Logic depends on completion of specific goals. In Order:")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
@@ -2049,7 +2354,7 @@ def mWoods(woodsVars):
     print("Party format is now good. Let's check health.")
     # Heal logic
     partyHP = FFX_memory.getHP()
-    if partyHP[0] < 600 or partyHP[4] < 900:
+    if partyHP[0] < 450 or partyHP[6] < 180:
         healUp(3)
     print("And last, we'll update variables.")
     if FFX_memory.getUseItemsSlot(32) != 255:
@@ -2062,7 +2367,7 @@ def mWoods(woodsVars):
     return woodsVars
 
 
-def mWoods_old(woodsVars):
+def mWoods_old2(woodsVars):
     # depreciated, do not use.
     FFX_Logs.writeLog("Fight start: Macalania Woods")
     print("Rikku steal, Tidus flee, Auron escape if needed.")
@@ -4194,7 +4499,7 @@ def calmLands(itemSteal):
     fleeAll()
     FFX_memory.clickToControl()
     hpPool = FFX_memory.getHP()
-    if hpPool[0] != 1520 or hpPool[4] != 1030 or hpPool[5] != 1244:
+    if hpPool[0] != 1520 or hpPool[2] != 1030 or hpPool[3] != 1244:
         healUp(3)
     return steal
 
@@ -4406,7 +4711,7 @@ def useItem(slot, direction):
             while slot > 1:
                 FFX_Xbox.menuDown()
                 slot -= 2
-
+    time.sleep(0.05)
     FFX_Xbox.menuB()
 
     if direction == 'left':
@@ -4786,6 +5091,57 @@ def aeonSpellDirection(position, direction):
     FFX_Xbox.menuB()  # Cast whatever spell is chosen
     print("Aeon casting spell")
     time.sleep(0.2)
+
+def healUp_New(chars, menusize):
+    FFX_Logs.writeLog("Healing characters post-battle")
+    print("Menuing, healing characters: ", chars)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0)
+    if not FFX_memory.menuOpen():
+        FFX_Screen.openMenu()
+
+    currentmenuposition = FFX_memory.getMenuCursorPos()
+
+    targetmenuposition = 2
+    menudistance = abs(targetmenuposition - currentmenuposition)
+
+    if menudistance < (menusize / 2 - 1):
+        for i in range(menudistance):
+            if targetmenuposition > currentmenuposition:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuUp()
+    else:
+        for i in range(menusize - menudistance):
+            if targetmenuposition > currentmenuposition:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuDown()
+
+    FFX_Xbox.menuB()
+    time.sleep(0.2)
+
+    for i in range(len(FFX_memory.getOrderSeven())):
+        currentcharpos = FFX_memory.getCharCursorPos()
+        print("Cursor Pos: %d" % currentcharpos)
+        print("Character Index: %d" % FFX_memory.getOrderSeven()[currentcharpos])
+        if FFX_memory.getOrderSeven()[currentcharpos] == 1:
+            break
+        FFX_Xbox.menuDown()
+    time.sleep(0.2)
+    FFX_Xbox.menuB()
+    time.sleep(0.2)
+    FFX_Xbox.menuB()
+    pos = 1
+    time.sleep(0.2)
+    FFX_Xbox.menuB()
+    while pos < chars:
+        pos += 1
+        FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()
+    print("Healing complete. Exiting menu.")
+    while not FFX_Screen.MinimapAny():
+        FFX_Xbox.menuA()
 
 
 def healUp(chars):

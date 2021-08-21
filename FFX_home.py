@@ -30,7 +30,7 @@ def desert1():
             if turnchar == 0:
                 if tidusturns < 2:
                     FFX_Battle.attack("none")
-                elif len(FFX_memory.getBattleFormation()) > 2:
+                elif FFX_memory.partySize() > 2:
                     FFX_Battle.tidusFlee()
                 else:
                     FFX_Battle.defend()

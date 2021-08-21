@@ -888,7 +888,7 @@ def checkCharge(pos):
             FFX_Logs.writeLog("Character in position 2 is NOT charged.")
             return False
 
-def partySize():
+def partySize_Old():
     if PixelTest(1401,791,(199, 162, 255)):
         return 3
     elif PixelTest(1401,747,(199, 162, 255)):

@@ -7,9 +7,12 @@ import FFX_memory
 
 FFXC = FFX_Xbox.FFXC
  
-def arrival():
+def arrival(rikkucharged):
     FFX_Screen.clickToMap1()
-    FFX_memory.fullPartyFormat('kimahri')
+    if rikkucharged == True:
+        FFX_memory.fullPartyFormat_New("mwoodsgotcharge", 11)
+    else:
+        FFX_memory.fullPartyFormat_New("mwoodsneedcharge", 11)
     #Start by getting away from the save sphere
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
@@ -27,6 +30,7 @@ def arrival():
     lastCP = 0
     complete = 0
     woodsVars = [False, False, False] #Rikku's charge, Fish Scales, and Arctic Winds
+    woodsVars[0] = rikkucharged
     #As a side note, Rikku is always charged in thunder plains.
     while complete == 0:
         if lastCP != checkpoint:

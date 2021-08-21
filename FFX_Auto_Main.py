@@ -9,7 +9,7 @@ FFXC = FFX_Xbox.FFXC
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
-Gamestate = "ThunderPlains"
+Gamestate = "Moonflow"
 StepCounter = 3
 #Gamestate = "Zanarkand"
 #StepCounter = 4
@@ -438,7 +438,7 @@ if Gamestate == "Guadosalam" and StepCounter == 2:
 if Gamestate == "ThunderPlains" and StepCounter == 1:
     status = [False,False,False]
     reportGamestate()
-    status = FFX_ThunderPlains.southPathing()
+    status = FFX_ThunderPlains.southPathing(blitzWin)
     StepCounter = 2
 
 if Gamestate == "ThunderPlains" and StepCounter == 2:
@@ -446,13 +446,14 @@ if Gamestate == "ThunderPlains" and StepCounter == 2:
     StepCounter = 3
 
 if Gamestate == "ThunderPlains" and StepCounter == 3:
-    FFX_ThunderPlains.northPathing(status)
+    status = FFX_ThunderPlains.northPathing(status)
+    rikkucharged = status[0]
     Gamestate = "Macalania"
     StepCounter = 1
 
 if Gamestate == "Macalania" and StepCounter == 1:
     reportGamestate()
-    FFX_mWoods.arrival()
+    FFX_mWoods.arrival(rikkucharged)
     StepCounter = 2
 
 if Gamestate == "Macalania" and StepCounter == 2:
