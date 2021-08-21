@@ -271,7 +271,7 @@ def northBank():
     FFXC.set_value('AxisLy', 0)
     
     FFX_Battle.mixTutorial()
-    FFX_memory.fullPartyFormat('kimahri')
+    FFX_memory.fullPartyFormat_New("postbunyip", 10)
     
     FFXC.set_value('AxisLx', 1)
     FFXC.set_value('AxisLy', 1)

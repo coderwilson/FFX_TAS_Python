@@ -194,18 +194,26 @@ def getHP():
     
     coord = baseValue + 0x00D32078
     HP_Tidus = process.read(coord)
+
     coord = baseValue + 0x00D3210C
     HP_Yuna = process.read(coord)
-    coord = baseValue + 0x00D3235C
-    HP_Lulu = process.read(coord)
-    coord = baseValue + 0x00D322C8
-    HP_Wakka = process.read(coord)
+
     coord = baseValue + 0x00D321A0
     HP_Auron = process.read(coord)
+
     coord = baseValue + 0x00D32234
     HP_Kimahri = process.read(coord)
-    
-    return [HP_Tidus, HP_Yuna, HP_Lulu, HP_Wakka, HP_Auron, HP_Kimahri]
+
+    coord = baseValue + 0x00D322C8
+    HP_Wakka = process.read(coord)
+
+    coord = baseValue + 0x00D3235C
+    HP_Lulu = process.read(coord)
+
+    coord = baseValue + 0x00D323F0
+    HP_Rikku = process.read(coord)
+
+    return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
 def getOrder():
     global baseValue
@@ -502,18 +510,20 @@ def getUseItemsOrder():
     itemArray = getItemsOrder()
     x = 1
     while x < len(itemArray):
+        print("x = %d" % x)
         try:
             if itemArray[x] == 20:
                 print("Al Bhed pots, disregard.")
                 x += 1
             elif itemArray[x] < 23:
-                itemArray.remove(itemArray[x])
+                del itemArray[x]
             elif itemArray[x] > 69:
-                itemArray.remove(itemArray[x])
+                del itemArray[x]
             else:
                 x += 1
         except:
             x += 1
+        print(itemArray)
     print("Use command, item order:")
     print(itemArray)
     return itemArray
@@ -768,6 +778,37 @@ def rikkuODItems(battle):
             cursor += 2
         FFX_Xbox.menuB() #Cursor is now on item 2.
 
+
+def getOverdriveValue(character):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x5BC
+
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key, 1)
+
+    return retVal
+
+
+def petrifiedstate(character):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x606
+
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key, 1)
+
+    if retVal % 8 >= 4:
+        print("Character %d is petrified" % character)
+        return True
+    else:
+        print("Character %d is not petrified" % character)
+        return False
+
 def confusedState(character):
     global process
     global baseValue
@@ -775,15 +816,8 @@ def confusedState(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character)+0x607
 
-    print("basePointer: %s" % basePointer)
-    print("basePointerAddress: %s" % basePointerAddress)
-    print("offset: %s" % offset)
-    
     key = basePointerAddress + offset
     retVal = process.readBytes(key,1)
-
-    print("key: %s" % key)
-    print("retVal: %s" % retVal)
 
     if retVal % 2 == 1:
         print("Character %d is confused" % character)
@@ -914,6 +948,22 @@ def cursorLocation():
     menu2 = process.readBytes(key,1)
     
     return [menu1,menu2]
+
+def getMenuCursorPos():
+    global baseValue
+
+    key = baseValue + 0x01471508
+    pos = process.readBytes(key, 1)
+
+    return pos
+
+def getCharCursorPos():
+    global baseValue
+
+    key = baseValue + 0x01441BE8
+    pos = process.readBytes(key, 1)
+
+    return pos
 
 def getStoryProgress():
     global baseValue
@@ -1153,8 +1203,10 @@ def desertFormat(rikkuCharge):
     else:
         fullPartyFormat('desert2')
 
+def partySize():
+    return len(getBattleFormation())
 
-def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
+def fullPartyFormat_New(frontLine, menusize):
     partyMembers = 7
     frontLine = frontLine.lower()
     if frontLine == 'kimahri':
@@ -1169,6 +1221,18 @@ def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
     if frontLine == 'gauntlet':
         order = getOrderSeven()
         orderFinal = [0, 1, 3, 2, 4, 5, 6]
+    if frontLine == 'postbunyip':
+        order = getOrderSeven()
+        orderFinal = [0, 4, 2, 6, 1, 3, 5]
+    if frontLine == 'mwoodsneedcharge':
+        order = getOrderSeven()
+        orderFinal = [0, 6, 2, 4, 1, 3, 5]
+    if frontLine == 'mwoodsgotcharge':
+        order = getOrderSeven()
+        orderFinal = [0, 4, 2, 6, 1, 3, 5]
+    if frontLine == 'mwoodsdone':
+        order = getOrderSeven()
+        orderFinal = [0, 3, 2, 4, 1, 6, 5]
     if frontLine == 'macalaniaescape':
         order = getOrderSeven()
         orderFinal = [0, 1, 6, 2, 4, 3, 5]
@@ -1211,15 +1275,23 @@ def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
         while not menuOpen():
             openMenu()
 
-        targetmenuposition = 8
+        currentmenuposition = getMenuCursorPos()
+
+        targetmenuposition = 7
         menudistance = abs(targetmenuposition - currentmenuposition)
 
-        if menudistance < menusize/2:
+        if menudistance < (menusize / 2 - 1):
             for i in range(menudistance):
-                FFX_Xbox.menuDown()
+                if targetmenuposition > currentmenuposition:
+                    FFX_Xbox.menuDown()
+                else:
+                    FFX_Xbox.menuUp()
         else:
-            for i in range(11-menudistance):
-                FFX_Xbox.menuUp()
+            for i in range(menusize - menudistance):
+                if targetmenuposition > currentmenuposition:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.menuDown()
 
         FFX_Xbox.menuB()
 
@@ -1547,7 +1619,7 @@ def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
             print(nameFromNumber(order[4]), " seems fine.")
             FFX_Xbox.menuDown()
         if partyMembers == 7 and order[5] != orderFinal[5]:
-            print(nameFromNumber(order[5]), " and ", nameFromNumber(order[6]), \
+            print(nameFromNumber(order[5]), " and ", nameFromNumber(order[6]),
                   "are swapped. Flipping them back.")
             print("Expected order: ", orderFinal[5], " | ", orderFinal[6])
             FFX_Xbox.menuB()
@@ -1557,7 +1629,7 @@ def fullPartyFormat_New(frontLine, currentmenuposition, menusize):
             print(nameFromNumber(orderFinal[5]), " and ", nameFromNumber(orderFinal[6]), " seem fine.")
 
         # time.sleep(120) #For testing only. Allows us to see what's going on.
-        FFX_Xbox.menuA
+        FFX_Xbox.menuA()
         #closeMenu()
 
 def fullPartyFormat(frontLine):
@@ -1566,44 +1638,44 @@ def fullPartyFormat(frontLine):
     if frontLine == 'kimahri':
         order = getOrderSeven()
         orderFinal = [0,3,2,6,4,5,1]
-    if frontLine == 'rikku':
+    elif frontLine == 'rikku':
         order = getOrderSeven()
         orderFinal = [0,6,2,3,4,5,1]
-    if frontLine == 'yuna':
+    elif frontLine == 'yuna':
         order = getOrderSeven()
         orderFinal = [0,1,2,6,4,5,3]
-    if frontLine == 'gauntlet':
+    elif frontLine == 'gauntlet':
         order = getOrderSeven()
         orderFinal = [0,1,3,2,4,5,6]
-    if frontLine == 'macalaniaescape':
+    elif frontLine == 'macalaniaescape':
         order = getOrderSeven()
         orderFinal = [0,1,6,2,4,3,5]
-    if frontLine == 'desert1':
+    elif frontLine == 'desert1':
         partyMembers = 6
         order = getOrderSix()
         orderFinal = [0,6,2,3,4,5]
-    if frontLine == 'desert2':
+    elif frontLine == 'desert2':
         partyMembers = 6
         order = getOrderSix()
         orderFinal = [0,3,2,6,4,5]
-    if frontLine == 'guards':
+    elif frontLine == 'guards':
         partyMembers = 6
         order = getOrderSix()
         orderFinal = [0,2,3,6,4,5]
-    if frontLine == 'evrae':
+    elif frontLine == 'evrae':
         partyMembers = 6
         order = getOrderSix()
         orderFinal = [0,6,3,2,4,5]
-    if frontLine == 'spheri':
+    elif frontLine == 'spheri':
         order = getOrderSeven()
         orderFinal = [0,3,1,4,2,6,5]
-    if frontLine == 'crawler':
+    elif frontLine == 'crawler':
         order = getOrderSeven()
         orderFinal = [0,3,5,4,2,6,1]
-    if frontLine == 'besaid1':
+    elif frontLine == 'besaid1':
         order = getOrderSix() #Should work the same way
         orderFinal = [0,1,5,3,5]
-    if frontLine == 'kilika':
+    elif frontLine == 'kilika':
         order = getOrderSix() #Should work the same way
         orderFinal = [0,1,4,3,5]
         partyMembers = 5
