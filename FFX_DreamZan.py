@@ -276,9 +276,19 @@ def listenStory():
     FFXC.set_value('AxisLx', -1)
     time.sleep(0.1)
     FFXC.set_value('AxisLx', 0)
-    time.sleep(0.2)
-    FFX_Xbox.SkipDialog(3) #Initiate overdrive
-    time.sleep(1) #Static delay, the same every time.
+    time.sleep(0.5)
+    FFXC.set_value('BtnB', 1)
+    time.sleep(0.05)
+    FFXC.set_value('BtnB', 0)
+    time.sleep(0.5)
+    FFXC.set_value('BtnB', 1)
+    time.sleep(0.05)
+    FFXC.set_value('BtnB', 0)
+    time.sleep(0.5)
+    FFXC.set_value('BtnB', 1)
+    time.sleep(0.05)
+    FFXC.set_value('BtnB', 0) #Activate
+    time.sleep(3)
     
     #Doing the actual overdrive
     FFXC.set_value('AxisLy', -1)

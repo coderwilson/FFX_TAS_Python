@@ -27,15 +27,15 @@ def Beach():
     FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', -1)
     time.sleep(1.2)
-    #FFXC.set_value('AxisLy', 0)
-    #FFXC.set_value('AxisLx', 1)
-    #time.sleep(0.8)
-    #FFXC.set_value('AxisLx', 0)
-    #FFXC.set_value('AxisLy', -1)
-    #time.sleep(0.5)
-    #FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 1)
+    time.sleep(0.8)
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', -1)
+    time.sleep(0.5)
+    FFXC.set_value('AxisLy', 0)
     
-    #FFX_Xbox.touchSaveSphere()
+    FFX_Xbox.touchSaveSphere()
     
     FFXC.set_value('AxisLy', -1)
     FFX_memory.awaitEvent()
@@ -66,14 +66,7 @@ def swimming1():
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
         elif FFX_Screen.BattleScreen():
-            battleNum = FFX_memory.getBattleNum()
-            #11 = two pirhanas
-            #12 = three pirhanas with one being a triple formation (takes two hits)
-            #13 = four pirhanas
-            if battleNum == 11:
-                FFX_Battle.attack('none')
-            else:
-                FFX_Battle.escapeAll()
+            FFX_Battle.attack('none')
         elif FFX_Screen.BattleComplete():
             FFXC.set_value('BtnB', 1)
             time.sleep(2)

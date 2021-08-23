@@ -408,7 +408,7 @@ def escape():
     FFX_Xbox.touchSaveSphere()
     
     FFX_memory.awaitControl()
-    FFX_memory.fullPartyFormat('macalaniaescape')
+    #FFX_memory.fullPartyFormat('macalaniaescape')
     checkpoint = 0
     lastCP = 0
     while checkpoint != 1000:

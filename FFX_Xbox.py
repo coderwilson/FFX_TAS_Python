@@ -98,6 +98,7 @@ def SkipDialog( Keystrokes ):
         currentTime = time.time()
     print("Mashing B - Complete")
 
+
 def SkipDialogSpecial( Keystrokes ):
     Keystrokes
     print("Mashing B")
@@ -299,15 +300,17 @@ def weapSwap(position):
     menuRight()
     time.sleep(0.5)
     menuB()
-    time.sleep(0.7)
-    weap = 0
-    if weap < position :
+    if position == 0:
+        SkipDialog(1)
+    else:
+        time.sleep(0.7)
+        weap = 0
         while weap < position :
             menuDown()
             weap += 1
-    menuB()
-    menuB()
-    time.sleep(0.3)
+        menuB()
+        menuB()
+        time.sleep(0.3)
 
 def armorSwap(position):
     print("Armor swap, armor in position: ", position)
@@ -629,6 +632,5 @@ def airShipReturn():
     FFXC.set_value('AxisLx', 0)
 
 def remove():
-    print("Controller may freeze the program here. If so, please restart your PC.")
     time.sleep(2)
     FFXC.UnPlug(FFXC)

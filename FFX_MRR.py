@@ -7,7 +7,7 @@ import FFX_Logs
 import FFX_memory
 
 FFXC = FFX_Xbox.FFXC
-
+ 
 def arrival():
     FFX_memory.clickToControl()
     wakkaLateMenu = FFX_menu.mrrGrid1()
@@ -16,6 +16,14 @@ def arrival():
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 0)
     time.sleep(3.7)
+    #testing -------------------------------------------------
+    #FFXC.set_value('AxisLy', -1)
+    #FFXC.set_value('AxisLx', 0)
+    #time.sleep(1.5)
+    #FFXC.set_value('AxisLy', 1)
+    #FFXC.set_value('AxisLx', 0)
+    #time.sleep(1.5)
+    #end testing -------------------------------------------------
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(0.4)
@@ -53,10 +61,9 @@ def arrival():
     else:
         print("We got in battle before attempting the skip. Going to try one more time.")
         FFX_Battle.fleeAll()
-        while not FFX_memory.userControl():
-            FFX_Xbox.menuB()
+        FFX_memory.awaitControl()
         pos = FFX_memory.getCoords()
-        while pos[1] < -630:
+        while pos[1] < -625:
             FFXC.set_value('AxisLy', 1)
             FFXC.set_value('AxisLx', 0)
             pos = FFX_memory.getCoords()
@@ -77,9 +84,7 @@ def arrival():
             FFX_Xbox.menuB() #Engage skip
             cam = FFX_memory.getCamera()
             startTime = time.time()
-            timeLimit = 30 #Max number of seconds that we will wait for the skip to occur.
-            FFXC.set_value('AxisLy', 1) #Just in case we get stuck somehow.
-            FFXC.set_value('AxisLx', 1)
+            timeLimit = 60 #Max number of seconds that we will wait for the skip to occur.
             maxTime = startTime + timeLimit
             while cam[0] < 0.77:
                 cam = FFX_memory.getCamera()
@@ -104,18 +109,12 @@ def arrival():
         if FFX_Screen.BattleScreen():
             print("Starting battle MRR (preload)")
             FFX_Battle.fleeAll()
-            while not FFX_memory.userControl():
-                FFX_Xbox.menuB()
             hpCheck = FFX_memory.getHP()
             print(hpCheck)
-            if hpCheck[0] != 520 or hpCheck[5] != 644 or hpCheck[4] != 1030:
+            if hpCheck[0] < 520 or hpCheck[3] < 644 or hpCheck[2] < 1030:
                 FFX_Battle.healUp(3)
             else:
                 print("No need to heal up. Moving onward.")
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
         elif FFX_memory.userControl() == False:
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
@@ -180,6 +179,41 @@ def arrival():
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     return wakkaLateMenu
+    
+def arrival_old():
+    stepCount = 0
+    stepMax = 120
+    complete = 0
+    #Just to get us through the first section with flees
+    while complete == 0:
+        if FFX_Screen.BattleScreen():
+            print("Starting battle MRR (preload)")
+            FFX_Battle.fleeAll()
+        elif FFX_Screen.Minimap1():
+            print("MRR Clasko section complete")
+            complete = 1
+        elif FFX_Screen.Minimap4():
+            stepCount += 1
+            print("MRR pathing: ", stepCount)
+            if stepCount < 25:
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 1)
+                time.sleep(0.2)
+                FFXC.set_value('AxisLy', 0)
+            elif stepCount < 40:
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', -1)
+                time.sleep(0.2)
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+            elif stepCount < stepMax:
+                FFXC.set_value('AxisLy', 1)
+                time.sleep(0.2)
+                FFXC.set_value('AxisLy', 0)
+            elif stepCount >= stepMax:
+                time.sleep(1)
+        elif stepCount < 25: #Skip dialog with Clasko
+            FFX_Xbox.menuB()
 
 def mainPath(wakkaLateMenu):
     FFX_memory.awaitControl()
@@ -210,8 +244,6 @@ def mainPath(wakkaLateMenu):
             print("Starting battle MRR (preload)")
             if status[0] == 1 and status[1] == 1 and status[2] == 2:
                 FFX_Battle.fleeAll()
-                while not FFX_memory.userControl():
-                    FFX_Xbox.menuB()
             else:
                 print("Starting battle MRR")
                 status = FFX_Battle.MRRbattle(status)

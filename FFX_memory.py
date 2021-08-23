@@ -2052,9 +2052,40 @@ def end():
     process.close()
     print("Memory reading process is now closed.")
 
+
 #-------------------------------------------------------
 #Egg hunt section
 
+
+#def isIce(eggNum):
+#    global process
+#    global baseValue
+#    baseOffset = baseValue + 0xEA22A0 + (0x880 * eggNum)
+#    key = baseOffset + 0x180
+#    retVal = process.readBytes(key, 1)
+#    if retVal == 1:
+#        return True
+#    else:
+#        return False
+
+def isIce(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xEA22A0    # equivalent to the pointer FFX.exe+EA22A0
+    basePointerAddress = process.read(basePointer) # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
+    key = basePointerAddress + (0x880 * eggNum) + 0x180
+    retVal = process.readBytes(key,1)
+    #print("Egg ", eggNum," ice value: ", retVal)
+    return retVal
+
+#def eggX(eggNum):
+#    global process
+#    global baseValue
+#    baseOffset = baseValue + 0xEA22A0 + (0x880 * eggNum)
+#    key = baseOffset + 0x0C
+#    retVal = float_from_integer(process.read(key))
+#    print("Egg ", eggNum," X value: ", retVal)
+#    return retVal
 
 def eggX(eggNum):
     global process
@@ -2065,6 +2096,15 @@ def eggX(eggNum):
     retVal = float_from_integer(process.read(key))
     #print("Egg ", eggNum," X value: ", retVal)
     return retVal
+
+#def eggY(eggNum):
+#    global process
+#    global baseValue
+#    baseOffset = baseValue + 0xEA22A0 + (0x880 * eggNum)
+#    key = baseOffset + 0x18
+#    retVal = float_from_integer(process.read(key))
+#    print("Egg ", eggNum," Y value: ", retVal)
+#    return retVal
 
 def eggY(eggNum):
     global process
@@ -2079,10 +2119,7 @@ def eggY(eggNum):
 class egg:
     def __init__(self, eggnum):
         self.num = eggnum
-        if self.num < 22:
-            self.isIce = True
-        else:
-            self.isIce = False
+        self.isIce = isIce(self.num)
         self.x = eggX(self.num)
         self.y = eggY(self.num)
         if self.x == 9999:

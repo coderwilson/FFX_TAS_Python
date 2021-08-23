@@ -420,17 +420,6 @@ def waterfalls() :
         else:
             FFX_Xbox.menuB()
     
-    FFX_memory.openMenu() #Quick party reformat
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Tidus for Wakka
-    FFX_memory.closeMenu()
-    
     pos = FFX_memory.getCoords()
     while FFX_memory.userControl():
         FFXC.set_value('AxisLy', 1)
@@ -443,6 +432,14 @@ def waterfalls() :
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     FFX_Screen.clickToBattle()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuB()
+    time.sleep(0.3)
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Dark attack
+    time.sleep(0.5)
     FFX_Battle.escapeAll()
     
     stepCount = 0
