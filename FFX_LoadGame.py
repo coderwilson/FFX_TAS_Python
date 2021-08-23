@@ -242,7 +242,7 @@ def LoadMiihenStart():
     print("Load complete. Now for Mi'ihen area.")
 
 def LoadMRR():
-    loadOffset(1)
+    loadOffset(9)
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(2.5)
@@ -275,8 +275,7 @@ def LoadMRR2():
             FFXC.set_value('AxisLy', 0)
 
 def AfterGui():
-    loadOffset(10)
-    time.sleep(1)
+    loadOffset(25)
     FFXC.set_value('AxisLx', -1)
     time.sleep(2)
     FFXC.set_value('AxisLx', 0)
@@ -351,7 +350,7 @@ def loadGuadoSkip():
     FFXC.set_value('AxisLx', 0)
 
 def loadMacLake():
-    loadOffset(2)
+    loadOffset(5)
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
     FFX_memory.awaitEvent()
@@ -381,7 +380,7 @@ def loadMacTemple2():
 
 def loadWendigo():
     import FFX_Battle
-    loadOffset(3)
+    loadOffset(1)
     FFX_memory.awaitControl()
     while FFX_memory.getBattleNum() < 195:
         if FFX_Screen.BattleScreen():
@@ -412,7 +411,7 @@ def loadRescue():
     FFX_Xbox.airShipPath(6) #The run from cockpit to the deck
 
 def loadBahamut():
-    LoadFirst()
+    loadOffset(1)
     FFX_Screen.awaitMap1()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
@@ -439,7 +438,7 @@ def loadGagaGates():
     FFXC.set_value('AxisLy', 0)
 
 def zanEntrance():
-    loadOffset(1)
+    loadOffset(15)
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLx', -1)
@@ -455,9 +454,6 @@ def zanTrials():
     FFXC.set_value('AxisLx', 0)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
-
-def hymnIsKey():
-    loadOffset(1)
 
 def hymnIsKey_old():
     FFXC.set_value('AxisLy', 1)

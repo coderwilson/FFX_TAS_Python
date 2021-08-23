@@ -409,6 +409,11 @@ def sphereColor(desired):
             if desired == 'red':
                 print("Desired color found.")
                 return 1
+        if color == (68, 69, 69):
+            print("Position 1, black sphere found.")
+            if desired == 'black':
+                print("Desired color found.")
+                return 4
     if position == 2:
         color = FFX_Screen.PixelValue(230,505)
         print("Position 2: ", color)
@@ -671,6 +676,11 @@ def selSphere(sType, direction, shift):
                     FFX_Xbox.menuB() # Lv.1 sphere
                     time.sleep(0.1)
                     found = 1
+                elif position == 1:
+                    print("Found a key sphere in position 1")
+                    FFX_Xbox.menuB() # Lv.1 sphere
+                    time.sleep(0.1)
+                    found = 1
                 elif position == 3: #This is just a placeholder until we feel like coming back to improve this.
                     if (sType == 'lv3' or sType == 'lv4') and FFX_Screen.PixelTestTol(258,583,(220, 220, 220),5):
                         print("Found a Lv.3/4 sphere (these are never side by side)")
@@ -900,8 +910,18 @@ def selSphere(sType, direction, shift):
                 elif direction == 'u' and FFX_Screen.PixelTestTol(680,440,(128, 127, 156),5):
                     #We've hit the top. Resetting.
                     #time.sleep(5)
-                    while not FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
-                        FFX_Xbox.menuDown()
+                    if color != 'red':
+                        print("Item sort issue. Adjusting.")
+                        while not FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
+                            FFX_Xbox.menuDown()
+                    elif sType == 'power':
+                        print("No need to shift. Power spheres are always at the top.")
+                        limit = 1
+                    elif sType == 'ability':
+                        direction = 'd'
+                    else:
+                        while not FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
+                            FFX_Xbox.menuDown()
             elif limit == 0:
                 if direction == 'd' and FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
                     limit = 1

@@ -272,6 +272,7 @@ def northBank():
     
     FFX_Battle.mixTutorial()
     FFX_memory.fullPartyFormat_New("postbunyip", 10)
+    FFX_memory.closeMenu()
     
     FFXC.set_value('AxisLx', 1)
     FFXC.set_value('AxisLy', 1)

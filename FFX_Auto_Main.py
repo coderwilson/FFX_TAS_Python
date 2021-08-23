@@ -9,18 +9,18 @@ FFXC = FFX_Xbox.FFXC
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
-Gamestate = "Moonflow"
+Gamestate = "Sin"
 StepCounter = 3
-#Gamestate = "Zanarkand"
-#StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+Gamestate = "Guadosalam"
+StepCounter = 2
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-gameLength = "short"
-#gameLength = "full"
+#gameLength = "short"
+gameLength = "full"
 forceBlitzWin = True
-autoEggHunt = False
+autoEggHunt = True
 print("Game type will be: ", gameLength)
 
 #Other variables
@@ -114,9 +114,9 @@ if Gamestate != "none" :
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadOffset(5)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(8)
+        FFX_LoadGame.loadOffset(4)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
@@ -124,7 +124,7 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(3)
     if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
@@ -152,9 +152,10 @@ if Gamestate != "none" :
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(1)
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.hymnIsKey()
-    if Gamestate == "Sin" and StepCounter == 3:
-        FFX_LoadGame.LoadNeutral()
+        FFX_LoadGame.loadOffset(22)
+    if Gamestate == "Sin" and StepCounter == 3: #Before egg hunt
+        FFX_LoadGame.loadOffset(46)
+        
 
 #Movement files
 import FFX_DreamZan
@@ -442,7 +443,7 @@ if Gamestate == "ThunderPlains" and StepCounter == 1:
     StepCounter = 2
 
 if Gamestate == "ThunderPlains" and StepCounter == 2:
-    FFX_ThunderPlains.agency()
+    FFX_ThunderPlains.agency(blitzWin)
     StepCounter = 3
 
 if Gamestate == "ThunderPlains" and StepCounter == 3:
@@ -534,7 +535,7 @@ if Gamestate == "rescueYuna" and StepCounter == 5:
 
 if Gamestate == "Gagazet" and StepCounter == 1:
     reportGamestate()
-    FFX_Gagazet.calmLands(gems, blitzWin)
+    FFX_Gagazet.calmLands(blitzWin)
     FFX_Gagazet.defenderX()
     StepCounter = 2
 

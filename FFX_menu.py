@@ -323,10 +323,10 @@ def moveShiftUse(direction):
 
 def autoSortItems_New(manual, menusize):
 
-    while not menuOpen():
+    while not FFX_memory.menuOpen():
         openMenu()
 
-    currentmenuposition = getMenuCursorPos()
+    currentmenuposition = FFX_memory.getMenuCursorPos()
 
     targetmenuposition = 1
     menudistance = abs(targetmenuposition - currentmenuposition)
@@ -1680,8 +1680,8 @@ def equipSonicSteel_New(menusize):
     FFX_memory.awaitControl()
     while not FFX_memory.menuOpen():
         FFX_memory.openMenu()
-
-    targetmenuposition = 5
+    currentmenuposition = FFX_memory.getMenuCursorPos()
+    targetmenuposition = 4
     menudistance = abs(targetmenuposition - currentmenuposition)
 
     if menudistance < menusize / 2:
@@ -2322,27 +2322,7 @@ def endGameSwap2():
 def BFA():
     pattern = 0
     FFX_memory.openMenu()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Yuna to 2
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Auron to 3
-    FFX_Xbox.menuA()
     
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
