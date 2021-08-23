@@ -180,7 +180,7 @@ def forest2():
         elif FFX_memory.userControl() == False:
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
-            if checkpoint == 80:
+            if checkpoint == 80 or checkpoint > 600:
                 FFX_Xbox.menuB()
         else:
             pos = FFX_memory.getCoords()
@@ -435,13 +435,13 @@ def Geneaux():
     FFXC.set_value('AxisLy', 0)
     
     #Approach scene with the Luca Goers
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(4)
     FFXC.set_value('AxisLy', 0)
     
     #Enter the temple
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(5)
     FFXC.set_value('AxisLx', 1)
@@ -785,24 +785,7 @@ def trials():
 def forest3():
     
     #First, re-order the party
-    #FFX_Screen.openMenu()
-    
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
+    FFX_memory.fullPartyFormat('kilika')
     
     speedCount = 0
     checkpoint = 0
@@ -895,24 +878,36 @@ def forest3():
                         FFXC.set_value('AxisLy', 1)
                     else:
                         FFXC.set_value('AxisLy', 0)
-            elif checkpoint == 90:
+            elif checkpoint == 90: #Down to the four-way spot.
                 if pos[1] < -105:
                     checkpoint = 100
                 else:
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 100:
-                if pos[1] < -117:
+            elif checkpoint == 100: #Across the four-way spot
+                if pos[1] < -150:
                     checkpoint = 110
                 else:
                     FFXC.set_value('AxisLy', -1)
-                    FFXC.set_value('AxisLx', -1)
+                    if pos[0] > -242:
+                        FFXC.set_value('AxisLx', -1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
             elif checkpoint == 110:
-                if pos[1] < -420:
-                    checkpoint = 130 #Skip 120, no need to farm Speed Spheres now.
+                if pos[1] < -300:
+                    checkpoint = 115 #Skip 120, no need to farm Speed Spheres now.
                 else:
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', 0)
+            elif checkpoint == 115: #Don't get stuck.
+                if pos[1] < -410:
+                    checkpoint = 130
+                else:
+                    FFXC.set_value('AxisLy', -1)
+                    if pos[0] > -219:
+                        FFXC.set_value('AxisLx', -1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
             elif checkpoint == 120: #Delay for Speed Spheres. Disabled at this time.
                 if FFX_memory.getSpeed() < 16:
                     FFXC.set_value('AxisLx', 0)

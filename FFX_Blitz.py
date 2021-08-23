@@ -102,6 +102,10 @@ def allDefense():
             #print("Running")
             FFXC.set_value('AxisLx', 1)
             FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('BtnB',1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB',0)
+            time.sleep(0.035)
         else:
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)

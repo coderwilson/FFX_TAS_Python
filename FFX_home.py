@@ -11,10 +11,11 @@ def desert1():
     print("Starting Bikanel Island section")
     needSpeed = False
     if FFX_memory.getSpeed() < 9:
-        needSpeed = True
-        nadeSlot = FFX_memory.getItemSlot(39)
-        if nadeSlot != 255:
-            FFX_menu.itemPos(39, 8)
+        FFX_memory.setSpeed(9)
+        #needSpeed = True
+        #nadeSlot = FFX_memory.getItemSlot(39)
+        #if nadeSlot != 255:
+        #    FFX_menu.itemPos(39, 8)
     FFXC.set_value('AxisLx', 1)
     time.sleep(0.4)
     FFXC.set_value('AxisLy', 1)
@@ -22,7 +23,7 @@ def desert1():
     FFXC.set_value('AxisLx', 0)
     time.sleep(4)
     FFXC.set_value('AxisLy', 0)
-
+    
     tidusturns = 0
     while not FFX_Screen.BattleComplete():
         if FFX_Screen.BattleScreen():
@@ -715,7 +716,7 @@ def findSummoners(blitzWin):
     
     FFX_Screen.clickToBattle()
     FFX_Battle.home2() #Second battle
-    FFX_menu.homeHeal() #Healing up
+    #FFX_menu.homeHeal() #Healing up
     FFXC.set_value('AxisLy', -1)
     time.sleep(2.8)
     
