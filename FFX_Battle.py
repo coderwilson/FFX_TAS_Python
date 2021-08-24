@@ -1836,6 +1836,10 @@ def thunderPlains(status, section):
     nadeSlot = FFX_memory.getUseItemsSlot(35)
     print("Grenade Slot %d" % nadeSlot)
 
+    startingstatus = []
+    for i in range(len(status)):
+        startingstatus.append(status[i])
+
     tidusturns = 0
     wakkaturns = 0
     auronturns = 0
@@ -1847,7 +1851,7 @@ def thunderPlains(status, section):
             turnchar = FFX_memory.getBattleCharTurn()
             rikkucharge = FFX_memory.getOverdriveValue(6)
             if bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
-                if status[2] == False:
+                if startingstatus[2] == False:
                     if turnchar == 0:
                         if tidusturns == 0:
                             rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -1857,6 +1861,7 @@ def thunderPlains(status, section):
                         tidusturns += 1
                     elif turnchar == 6:
                         Steal()
+                        status[2] = True
                     else:
                         tidusposition = FFX_memory.getBattleCharSlot(0)
                         buddySwap_new(tidusposition)
@@ -1865,7 +1870,7 @@ def thunderPlains(status, section):
                 else:
                     fleeAll()
             elif bNum == 160:
-                if status[1] == False:
+                if startingstatus[1] == False:
                     if turnchar == 0:
                         if tidusturns == 0:
                             defend()
@@ -1885,7 +1890,7 @@ def thunderPlains(status, section):
                 else:
                     fleeAll()
             elif bNum == 161:
-                if status[1] == False and FFX_memory.getStoryProgress == 1375:
+                if startingstatus[1] == False and FFX_memory.getStoryProgress == 1375:
                     if turnchar == 0:
                         if tidusturns == 0:
                             rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -1907,11 +1912,14 @@ def thunderPlains(status, section):
                         else:
                             tidusposition = FFX_memory.getBattleCharSlot(0)
                             buddySwap_new(tidusposition)
+                        wakkaturns += 1
                     elif turnchar == 6:
                         Steal()
                         status[1] = True
                     elif turnchar == 2:
-                        if auronturns == 0:
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                        if rikkuHP > 0:
                             defend()
                         else:
                             tidusposition = FFX_memory.getBattleCharSlot(0)
@@ -1919,7 +1927,7 @@ def thunderPlains(status, section):
                         auronturns += 1
                     else:
                         fleeAll()
-                elif status[3] == False and speedcount < 14 and section == 2:
+                elif startingstatus[3] == False and speedcount < 14 and section == 2:
                     if turnchar == 0:
                         if tidusturns == 0:
                             rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -1928,22 +1936,29 @@ def thunderPlains(status, section):
                             tidusFlee()
                         tidusturns += 1
                     elif turnchar == 4:
-                        wakkaposition = FFX_memory.getBattleCharSlot(4)
-                        rikkuposition = FFX_memory.getBattleCharSlot(6)
-                        wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
-                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                        if wakkaHP > rikkuHP > 0 and rikkucharge < 100:
-                            defend()
+                        if wakkaturns == 0:
+                            wakkaposition = FFX_memory.getBattleCharSlot(4)
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
+                            rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                            if wakkaHP > rikkuHP > 0 and rikkucharge < 100:
+                                defend()
+                            else:
+                                tidusposition = FFX_memory.getBattleCharSlot(0)
+                                buddySwap_new(tidusposition)
                         else:
                             tidusposition = FFX_memory.getBattleCharSlot(0)
                             buddySwap_new(tidusposition)
+                        wakkaturns += 1
                     elif turnchar == 6:
                         grenadeslot = FFX_memory.getUseItemsSlot(35)
                         print("Grenade Slot %d" % grenadeslot)
                         useItem(grenadeslot,'none')
                         status[3] = True
                     elif turnchar == 2:
-                        if auronturns == 0:
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                        if rikkuHP > 0:
                             defend()
                         else:
                             tidusposition = FFX_memory.getBattleCharSlot(0)
@@ -1951,7 +1966,7 @@ def thunderPlains(status, section):
                         auronturns += 1
                     else:
                         fleeAll()
-                elif status[1] == False:
+                elif startingstatus[1] == False:
                     if turnchar == 0:
                         if tidusturns == 0:
                             rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -1960,20 +1975,27 @@ def thunderPlains(status, section):
                             tidusFlee()
                         tidusturns += 1
                     elif turnchar == 4:
-                        wakkaposition = FFX_memory.getBattleCharSlot(4)
-                        rikkuposition = FFX_memory.getBattleCharSlot(6)
-                        wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
-                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                        if wakkaHP > rikkuHP > 0 and rikkucharge < 100:
-                            defend()
+                        if wakkaturns == 0:
+                            wakkaposition = FFX_memory.getBattleCharSlot(4)
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
+                            rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                            if wakkaHP > rikkuHP > 0 and rikkucharge < 100:
+                                defend()
+                            else:
+                                tidusposition = FFX_memory.getBattleCharSlot(0)
+                                buddySwap_new(tidusposition)
                         else:
                             tidusposition = FFX_memory.getBattleCharSlot(0)
                             buddySwap_new(tidusposition)
+                        wakkaturns += 1
                     elif turnchar == 6:
                         Steal()
                         status[1] = True
                     elif turnchar == 2:
-                        if auronturns == 0:
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                        if rikkuHP > 0:
                             defend()
                         else:
                             tidusposition = FFX_memory.getBattleCharSlot(0)
@@ -1990,7 +2012,7 @@ def thunderPlains(status, section):
                     else:
                         fleeAll()
             elif bNum == 154 or bNum == 156 or bNum == 164:
-                if status[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
+                if startingstatus[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
                     if turnchar == 0:
                         if tidusturns == 0:
                             rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -2180,6 +2202,10 @@ def mWoods(woodsVars):
                             StealDown()
                         elif battleNum == 171 and woodsVars[1] == False:
                             StealRight()
+                        else:
+                            attack('none')
+                    else:
+                        escapeOne()
                 elif woodsVars[1] == False or woodsVars[2] == False:
                     if battleNum == 175 and woodsVars[2] == False:
                         if turnchar == 0:
@@ -4260,7 +4286,6 @@ def isaaru():
 
 
 def altanaheal():
-    direction = "up"
 
     if FFX_memory.getThrowItemsSlot(2) < 255:
         itemnum = 2
@@ -4304,9 +4329,8 @@ def altanaheal():
                 FFX_Xbox.menuDown()
                 cursor += 2
             FFX_Xbox.menuB()
-        print("Direction: ", direction)
-        FFX_Xbox.menuUp()
 
+        FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
         FFX_Xbox.menuB()
 

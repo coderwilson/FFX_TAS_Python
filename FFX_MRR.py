@@ -108,7 +108,7 @@ def arrival():
                 FFX_Xbox.menuB()
             hpCheck = FFX_memory.getHP()
             print(hpCheck)
-            if hpCheck[0] != 520 or hpCheck[5] != 644 or hpCheck[4] != 1030:
+            if hpCheck[0] != 520 or hpCheck[3] != 644 or hpCheck[2] != 1030:
                 FFX_Battle.healUp(3)
             else:
                 print("No need to heal up. Moving onward.")
