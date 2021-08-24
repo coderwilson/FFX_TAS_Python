@@ -437,7 +437,7 @@ if Gamestate == "Guadosalam" and StepCounter == 2:
     FFX_Logs.nextFile()
 
 if Gamestate == "ThunderPlains" and StepCounter == 1:
-    status = [False,False,False]
+    status = [False,False,False,False]
     reportGamestate()
     status = FFX_ThunderPlains.southPathing(blitzWin)
     StepCounter = 2
