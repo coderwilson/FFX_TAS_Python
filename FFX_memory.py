@@ -357,6 +357,22 @@ def getBattleNum():
     #print("Battle Number: ", formation)
     return formation
 
+def getActiveBattleFormation():
+    global baseValue
+
+    key = baseValue + 0x00F3F76C
+    char1 = process.readBytes(key, 1)
+    key = baseValue + 0x00F3F76E
+    char2 = process.readBytes(key, 1)
+    key = baseValue + 0x00F3F770
+    char3 = process.readBytes(key, 1)
+
+    battleForm = [char1, char2, char3]
+    if 255 in battleForm:
+        while 255 in battleForm:
+            battleForm.remove(255)
+    return battleForm
+
 def getBattleFormation():
     global baseValue
     
@@ -1205,6 +1221,9 @@ def desertFormat(rikkuCharge):
 
 def partySize():
     return len(getBattleFormation())
+
+def activepartySize():
+    return len(getActiveBattleFormation())
 
 def fullPartyFormat_New(frontLine, menusize):
     partyMembers = 7
