@@ -19,7 +19,6 @@ def BattleScreen():
     if PixelTest(1464, 181, (229, 189, 96)) :
         FFXC.set_value('AxisLx', 0)
         FFXC.set_value('AxisLy', 0)
-        FFX_memory.getEnemyCurrentHP()
         if not PixelTestTol(131,693,(153, 155, 153),5):
             print("It is now someone's turn in battle.")
             time.sleep(0.735) #This delay is paramount.
@@ -35,9 +34,9 @@ def clickToBattle():
     FFXC.set_value('Dpad', 0)
     complete = 0
     while complete == 0 :
-        if BattleScreen():
-            complete = 1
-        elif BattleComplete():
+        if FFX_memory.battleActive() == False:
+            FFX_Xbox.menuB()
+        elif BattleScreen():
             complete = 1
         else:
             FFX_Xbox.menuB()
@@ -65,7 +64,7 @@ def faintCheckTwo():
     return faints
 
 def BattleComplete():
-    if PixelTest(1464, 151, (91, 94, 141)) :
+    if FFX_memory.battleActive() == False:
         FFX_Logs.writeLog("Battle is complete.")
         print("Battle Complete")
         return True
@@ -164,8 +163,8 @@ def awaitTurn() :
     
     #Now let's do this.
     while not BattleScreen():
-        if BattleComplete():
-            return True
+        if FFX_memory.battleActive() == False:
+            time.sleep(0.01)
         counter += 1;
         if counter % 100 == 0:
             print("Waiting for player turn: ", counter / 100)

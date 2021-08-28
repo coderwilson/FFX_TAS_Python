@@ -38,6 +38,55 @@ def start():
         print("Could not get memory address dynamically. ", errCode)
         baseValue = 0x00FF0000
 
+def battleActive():
+    global baseValue
+    key = baseValue + 0x00F3C908
+    if process.readBytes(key,1) == 1:
+        return True
+    else:
+        return False
+
+def battleMenuCursor():
+    global baseValue
+    key = baseValue + 0x00F3C9EF
+    if process.readBytes(key,1) != 0:
+        key = baseValue + 0x00F3C926
+        return process.readBytes(key,1)
+
+def battleScreen():
+    global baseValue
+    key = baseValue + 0x00F3C9EF
+    if process.readBytes(key,1) == 0:
+        return False
+    if battleMenuCursor() == 255:
+        return False
+    else:
+        time.sleep(0.05)
+        return True
+    
+def battleCursor2():
+    global baseValue
+    key = baseValue + 0x00F3CA01
+    if process.readBytes(key,1) == 4:
+        key = baseValue + 0x00F3CA0E
+        return process.readBytes(key,1)
+
+def mainBattleMenu():
+    global baseValue
+    key = baseValue + 0x00F3C911
+    if process.readBytes(key,1) > 0:
+        return True
+    else:
+        return False
+
+def otherBattleMenu():
+    global baseValue
+    key = baseValue + 0x00F3CA01
+    if process.readBytes(key,1) > 0:
+        return True
+    else:
+        return False
+
 def userControl():
     global baseValue
     #Auto updating via reference to the baseValue above
@@ -97,7 +146,7 @@ def clickToControl3():
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
-        if FFX_Screen.BattleScreen():
+        if battleScreen():
             break
         elif diagSkipPossible():
             FFXC.set_value('BtnB', 1)
@@ -858,7 +907,7 @@ def getEnemyCurrentHP():
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
     
-    while enemyNum < 25:
+    while enemyNum < 27:
         offset1 = (0xf90 * enemyNum)+0x594
         key1 = basePointerAddress + offset1
         offset2 = (0xf90 * enemyNum)+0x5D0
@@ -877,6 +926,24 @@ def getEnemyCurrentHP():
     print("Enemy HP current values:")
     print(currentHP)
     return currentHP
+
+def setEnemyCurrentHP(numToSet, newHP):
+    global process
+    global baseValue
+    numToSet = numToSet + 20
+    enemyNum = 20
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    
+    while enemyNum < 25:
+        offset1 = (0xf90 * enemyNum)+0x594
+        key1 = basePointerAddress + offset1
+        offset2 = (0xf90 * enemyNum)+0x5D0
+        key2 = basePointerAddress + offset2
+        if enemyNum == numToSet:
+            currentHP = [process.writeBytes(key2, newHP,4)]
+            print("HP value has been changed.")
+        enemyNum += 1
 
 def getEnemyMaxHP():
     global process
@@ -1685,6 +1752,10 @@ def fullPartyFormat(frontLine):
         partyMembers = 6
         order = getOrderSix()
         orderFinal = [0,6,3,2,4,5]
+    elif frontLine == 'djose':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0,4,3,6,2,5]
     elif frontLine == 'spheri':
         order = getOrderSeven()
         orderFinal = [0,3,1,4,2,6,5]
@@ -1693,7 +1764,8 @@ def fullPartyFormat(frontLine):
         orderFinal = [0,3,5,4,2,6,1]
     elif frontLine == 'besaid1':
         order = getOrderSix() #Should work the same way
-        orderFinal = [0,1,5,3,5]
+        partyMembers = 5
+        orderFinal = [0,1,5,3,4]
     elif frontLine == 'kilika':
         order = getOrderSix() #Should work the same way
         orderFinal = [0,1,4,3,5]
@@ -2078,7 +2150,8 @@ def end():
 def eggX(eggNum):
     global process
     global baseValue
-    basePointer = baseValue + 0xEA22A0    # equivalent to the pointer FFX.exe+EA22A0
+    eggNum += 23
+    basePointer = baseValue + 0x1FC44E4    # equivalent to the pointer FFX.exe+EA22A0
     basePointerAddress = process.read(basePointer)    # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
     key = basePointerAddress + (0x880 * eggNum) + 0x0C
     retVal = float_from_integer(process.read(key))
@@ -2088,38 +2161,73 @@ def eggX(eggNum):
 def eggY(eggNum):
     global process
     global baseValue
-    basePointer = baseValue + 0xEA22A0    # equivalent to the pointer FFX.exe+EA22A0
+    eggNum += 23
+    basePointer = baseValue + 0x1FC44E4    # equivalent to the pointer FFX.exe+EA22A0
     basePointerAddress = process.read(basePointer)    # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
     key = basePointerAddress + (0x880 * eggNum) + 0x14
     retVal = float_from_integer(process.read(key))
     #print("Egg ", eggNum," Y value: ", retVal)
     return retVal
 
+def getEggDistance(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xF270B8
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + 0x1C4CC + (0x40 * eggNum)
+    retVal = float_from_integer(process.read(key))
+    return retVal
+
+def getEggLife(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xF270B8
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + 0x1C4CC + (0x40 * eggNum) + 4
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def getEggPicked(eggNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xF270B8
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + 0x1C4CC + (0x40 * eggNum) + 5
+    retVal = process.readBytes(key,1)
+    return retVal
+
 class egg:
     def __init__(self, eggnum):
         self.num = eggnum
-        if self.num < 22:
-            self.isIce = True
-        else:
-            self.isIce = False
         self.x = eggX(self.num)
         self.y = eggY(self.num)
-        if self.x == 9999:
-            self.isActive = False
-        elif self.x == 0 and self.y == 0:
-            self.isActive = False
-        elif self.isIce == 8:
-            self.isActive = False
-        else:
+        self.distance = getEggDistance(self.num)
+        self.eggLife = getEggLife(eggnum)
+        self.eggPicked = getEggPicked(eggnum)
+        
+        if self.distance != 0 and self.eggPicked == 0:
             self.isActive = True
+        else:
+            self.isActive = False
+        
+        if self.eggPicked == 1:
+            self.goForEgg = False
+        elif self.eggLife > 100 and self.distance > 100:
+            self.goForEgg = False
+        elif self.distance > 250:
+            self.goForEgg = False
+        elif self.distance == 0:
+            self.goForEgg = False
+        else:
+            self.goForEgg = True
     
     def reportVars(self):
-        varArray = [self.num, self.isIce, self.isActive, self.x, self.y]
-        print("Egg_num, Is_Ice, Is_Active, X, Y")
+        varArray = [self.num, self.isActive, self.x, self.y, 150 - self.eggLife, self.eggPicked, self.distance]
+        print("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
         print(varArray)
 
 def buildEggs():
-    retArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    for x in range(32):
+    retArray = [0,0,0,0,0,0,0,0,0,0]
+    for x in range(10):
         retArray[x] = egg(x)
     return retArray

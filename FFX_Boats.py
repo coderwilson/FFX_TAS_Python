@@ -9,12 +9,13 @@ FFXC = FFX_Xbox.FFXC
  
 def boatDance():
     print("No dancing this time")
+    time.sleep(50)
 
 def ssLiki(earlyTidusGrid):
     print("Boarding SS Liki")
     
     #Save sphere
-    FFX_Screen.awaitMap2()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(0.5)
@@ -45,7 +46,7 @@ def ssLiki(earlyTidusGrid):
     boatDance()
     
     #Wait for the boat scene
-    FFX_Screen.awaitMap2()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLx', -1)
     FFX_Xbox.SkipDialog(4)
     FFXC.set_value('AxisLx', 0)
@@ -61,7 +62,7 @@ def ssLiki(earlyTidusGrid):
     #Menuing before Sinspawn fights
     if earlyTidusGrid == False:
         FFX_menu.Liki()
-    FFX_Screen.awaitMap2()
+    FFX_memory.closeMenu()
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.6)
     FFXC.set_value('AxisLx', -1)

@@ -9,10 +9,10 @@ FFXC = FFX_Xbox.FFXC
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
-Gamestate = "Sin"
+Gamestate = "Besaid"
 StepCounter = 3
-Gamestate = "Guadosalam"
-StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
 #Gamestate = "none"
 #StepCounter = 1
 
@@ -48,7 +48,7 @@ print("FFX automation starting")
 FFX_Logs.nextFile()
 FFX_Logs.nextStats()
 print("Please launch the game now.")
-time.sleep(5)
+#time.sleep(5)
 #print("Now attempting to activate FFX window")
 reportGamestate()
 
@@ -84,7 +84,7 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(25)
     if Gamestate == "Boat1" : #Besaid beach before boarding SS Liki ( nice alliteration :D )
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
@@ -124,7 +124,12 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
-        FFX_LoadGame.loadOffset(3)
+        FFX_LoadGame.loadOffset(10)
+        time.sleep(2)
+        FFXC.set_value('AxisLy', 1)
+        time.sleep(1.5)
+        FFXC.set_value('AxisLy', 0)
+        time.sleep(0.5)
     if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
@@ -228,7 +233,7 @@ if Gamestate == "shortGame" and StepCounter == 1:
     FFX_cheater_cheese.sphereGrid()
     FFX_cheater_cheese.items()
     FFX_cheater_cheese.BackToSin()
-    FFX_Sin.insideSin(gameLength)
+    FFX_Sin.insideSin(gameLength, autoEggHunt)
     FFX_Battle.BFA_TASonly()
     Gamestate = "gameOver"
     stepCounter = 999

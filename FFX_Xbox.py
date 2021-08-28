@@ -296,18 +296,22 @@ def lateHaste(direction):
 
 def weapSwap(position):
     print("Weapon swap, weapon in position: ", position)
-    menuRight()
-    time.sleep(0.5)
-    menuB()
-    time.sleep(0.7)
-    weap = 0
-    if weap < position :
-        while weap < position :
-            menuDown()
+    while FFX_memory.mainBattleMenu():
+        menuRight()
+    if position == 0:
+        SkipDialog(2)
+    else:
+        time.sleep(0.5)
+        menuB()
+        while FFX_memory.battleCursor2() != position :
+            if FFX_memory.battleCursor2() < position:
+                menuDown()
+            elif FFX_memory.battleCursor2() > position:
+                menuUp()
             weap += 1
-    menuB()
-    menuB()
-    time.sleep(0.3)
+        menuB()
+        menuB()
+        time.sleep(0.3)
 
 def armorSwap(position):
     print("Armor swap, armor in position: ", position)

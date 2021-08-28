@@ -367,13 +367,16 @@ def leaving() :
     
     tidusTurn = 0
     while not FFX_memory.userControl():
+        FFXC.set_value('AxisLx', 0)
+        FFXC.set_value('AxisLy', 0)
         if FFX_Screen.BattleScreen():
             battleHP = FFX_memory.getBattleHP()
+            print(FFX_memory.getEnemyCurrentHP())
             if battleHP[1] < 140:
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                FFX_Xbox.SkipDialog(3) #Quick potion
+                FFX_Xbox.SkipDialog(2) #Quick potion
             else:
                 tidusTurn += 1
                 #if tidusTurn == 5:
@@ -394,7 +397,7 @@ def waterfalls() :
     time.sleep(5.5)
     FFXC.set_value('AxisLx', 0)
     
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(1.7)
     FFXC.set_value('AxisLx', -1)
@@ -406,20 +409,21 @@ def waterfalls() :
     
     #Swap Tidus for Yuna
     FFX_Screen.clickToBattle()
-    FFX_Xbox.lBumper()
-    time.sleep(0.6)
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.lBumper()
+    FFX_Xbox.SkipDialog(1.5) #Swap Tidus out for Yuna
     FFX_Screen.clickToBattle()
     FFX_Battle.aeonSummon(0)
     FFX_Screen.clickToBattle()
     
     while not FFX_memory.userControl():
-        if FFX_Screen.BattleScreen():
+        if FFX_memory.battleScreen():
+            time.sleep(0.4)
             FFX_Battle.aeonSpell(0)
-        else:
-            FFX_Xbox.menuB()
-    
+            print("Doing aeon stuff")
+        elif FFX_Screen.BattleComplete():
+            FFX_memory.clickToControl()
+    print("Now to open the menu")
     FFX_memory.openMenu() #Quick party reformat
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
@@ -442,8 +446,13 @@ def waterfalls() :
         pos = FFX_memory.getCoords()
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
+    
     FFX_Screen.clickToBattle()
-    FFX_Battle.escapeAll()
+    while not FFX_memory.userControl():
+        if FFX_memory.battleScreen():
+            FFX_Battle.escapeOne()
+        elif FFX_Screen.BattleComplete():
+            FFX_Xbox.menuB()
     
     stepCount = 0
     checkpoint = 0

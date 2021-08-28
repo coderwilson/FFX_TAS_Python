@@ -2476,7 +2476,6 @@ def skReturn2():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuA()
 
 def itemPos(item, pos):
     counter = 0

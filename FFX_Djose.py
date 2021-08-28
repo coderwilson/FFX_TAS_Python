@@ -10,7 +10,7 @@ FFXC = FFX_Xbox.FFXC
  
 def path():
     FFX_memory.clickToControl()
-    FFX_Screen.mrrFormat()
+    FFX_memory.fullPartyFormat('djose')
     FFX_Xbox.menuA()
     
     countBattles = 0
