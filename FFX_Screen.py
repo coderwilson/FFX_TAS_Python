@@ -34,11 +34,11 @@ def clickToBattle():
     FFXC.set_value('Dpad', 0)
     complete = 0
     while complete == 0 :
-        if FFX_memory.battleActive() == False:
-            FFX_Xbox.menuB()
-        elif BattleScreen():
+        if BattleScreen() or FFX_memory.userControl():
             complete = 1
-        else:
+        elif FFX_memory.battleActive() == False:
+            FFX_Xbox.menuB()
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     
 def faintCheck():
@@ -65,8 +65,8 @@ def faintCheckTwo():
 
 def BattleComplete():
     if FFX_memory.battleActive() == False:
-        FFX_Logs.writeLog("Battle is complete.")
-        print("Battle Complete")
+        #FFX_Logs.writeLog("Battle is complete.")
+        #print("Battle Complete")
         return True
     else :
         return False
@@ -162,7 +162,7 @@ def awaitTurn() :
     FFXC.set_value('Dpad', 0)
     
     #Now let's do this.
-    while not BattleScreen():
+    while not BattleScreen() or FFX_memory.userControl():
         if FFX_memory.battleActive() == False:
             time.sleep(0.01)
         counter += 1;
@@ -256,7 +256,7 @@ def awaitMap2() :
         counter += 1;
         if counter % 100 == 0:
             print("Waiting | ", counter / 100)
-        if BattleComplete():
+        if FFX_memory.menuOpen() and not FFX_memory.userControl():
             FFX_Xbox.menuB()
         if BattleScreen():
             break

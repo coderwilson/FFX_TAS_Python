@@ -30,10 +30,10 @@ def arrival():
     time.sleep(0.035)
     FFXC.set_value('AxisLy', 0) #Positioned and turned
     FFXC.set_value('AxisLx', 0)
-    time.sleep(0.7)
     claskoSkip = True
     if FFX_memory.userControl():
         print("Skip successful.")
+        time.sleep(2)
         FFX_Xbox.menuB() #Engage skip
         cam = FFX_memory.getCamera()
         startTime = time.time()
@@ -53,8 +53,8 @@ def arrival():
     else:
         print("We got in battle before attempting the skip. Going to try one more time.")
         FFX_Battle.fleeAll()
-        while not FFX_memory.userControl():
-            FFX_Xbox.menuB()
+        FFX_memory.clickToControl()
+        
         pos = FFX_memory.getCoords()
         while pos[1] < -630:
             FFXC.set_value('AxisLy', 1)
@@ -101,25 +101,7 @@ def arrival():
         if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
-        if FFX_Screen.BattleScreen():
-            print("Starting battle MRR (preload)")
-            FFX_Battle.fleeAll()
-            while not FFX_memory.userControl():
-                FFX_Xbox.menuB()
-            hpCheck = FFX_memory.getHP()
-            print(hpCheck)
-            if hpCheck[0] != 520 or hpCheck[3] != 644 or hpCheck[2] != 1030:
-                FFX_Battle.healUp(3)
-            else:
-                print("No need to heal up. Moving onward.")
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
-        elif FFX_memory.userControl() == False:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-        else:
+        if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             cam = FFX_memory.getCamera()
             mapVal = FFX_memory.getMap()
@@ -166,7 +148,7 @@ def arrival():
                         FFXC.set_value('AxisLy', 1)
                     FFXC.set_value('AxisLx', -1)
             elif checkpoint == 30:
-                if pos[0] > 1:
+                if FFX_memory.getMap() == 92:
                     checkpoint = 100
                 elif cam[0] > 1:
                     FFXC.set_value('AxisLy', -1)
@@ -177,6 +159,23 @@ def arrival():
                 else:
                     FFXC.set_value('AxisLy', 1)
                     FFXC.set_value('AxisLx', 1)
+        elif FFX_Screen.BattleScreen():
+            print("Starting battle MRR (preload)")
+            FFX_Battle.fleeAll()
+            FFX_memory.clickToControl()
+            hpCheck = FFX_memory.getHP()
+            print(hpCheck)
+            if hpCheck[0] != 520 or hpCheck[3] != 644 or hpCheck[2] != 1030:
+                FFX_Battle.healUp(3)
+            else:
+                print("No need to heal up. Moving onward.")
+        elif FFX_Screen.BattleComplete():
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            FFX_Xbox.menuB()
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     return wakkaLateMenu
@@ -210,8 +209,7 @@ def mainPath(wakkaLateMenu):
             print("Starting battle MRR (preload)")
             if status[0] == 1 and status[1] == 1 and status[2] == 2:
                 FFX_Battle.fleeAll()
-                while not FFX_memory.userControl():
-                    FFX_Xbox.menuB()
+                FFX_memory.clickToControl()
             else:
                 print("Starting battle MRR")
                 status = FFX_Battle.MRRbattle(status)
@@ -505,7 +503,7 @@ def mainPath(wakkaLateMenu):
                     else:
                         FFXC.set_value('AxisLy', 0)
             elif checkpoint == 330:
-                if pos[1] < 170:
+                if pos[1] < 172:
                     checkpoint = 340
                 else:
                     FFXC.set_value('AxisLy', -1)
@@ -520,10 +518,10 @@ def mainPath(wakkaLateMenu):
                     else:
                         FFXC.set_value('AxisLy', 0)
             elif checkpoint == 350:
-                FFX_Xbox.SkipDialog(0.5)
+                FFX_Xbox.SkipDialog(2)
                 FFXC.set_value('AxisLy', 0)
                 FFXC.set_value('AxisLx', 0)
-                FFX_Screen.awaitMap2()
+                FFX_memory.awaitControl()
                 FFXC.set_value('AxisLy', -1)
                 time.sleep(2.5)
                 FFXC.set_value('AxisLy', 0)
@@ -533,356 +531,10 @@ def mainPath(wakkaLateMenu):
     print("End of MRR section. Status:")
     print(status)
 
-def mainPathOld():
-    stepCount = 0
-    stepMax = 500
-    complete = 0
-    kimahriComplete = 0
-    yunaComplete = 0
-    battleCounter = 0
-    #Just to get us through the first section with flees
-    while complete == 0:
-        if FFX_Screen.BattleScreen():
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-            if yunaComplete == 1 and kimahriComplete == 1:
-                FFX_Battle.fleeAll()
-                battleCounter += 1
-            else:
-                print("Starting battle MRR")
-                statusUpdate = FFX_Battle.MRRbattle(yunaComplete, kimahriComplete)
-                print("Status update: ", statusUpdate)
-                if yunaComplete == 0:
-                    yunaComplete = statusUpdate[0]
-                if kimahriComplete == 0:
-                    kimahriComplete = statusUpdate[1]
-                print("Yuna Complete state: ", yunaComplete)
-                print("Kimahri Complete state: ", kimahriComplete)
-                battleCounter += 1
-        elif FFX_Screen.Minimap4():
-            print("MRR main road complete")
-            complete = 1
-            FFX_Logs.writeStats("MRR battles: " + str(battleCounter))
-        elif FFX_Screen.Minimap1():
-            stepCount += 1
-            print("MRR pathing: ", stepCount)
-            if stepCount < 10:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 14:
-                FFXC.set_value('AxisLx', -1)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 20:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 26:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 29:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 46:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 53:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 57:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 66:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 85:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount == 85:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 88: #Grab chest
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', -1)
-                FFX_Xbox.SkipDialog(1)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 93:
-                FFXC.set_value('AxisLy', -1)
-                FFX_Xbox.SkipDialog(0.25)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount < 98:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 100:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 108:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 120:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 145: #Long North section
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 160:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 169:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 173:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 176:
-                FFXC.set_value('AxisLy', -1) #Dodging the chocobo
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 185:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 190: #Past the chocobo
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 210:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 215:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 235:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 265: #Back track before chest
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 270:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 285: #Passing the chest
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 295:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 310:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 320:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 323:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 340:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif yunaComplete == 0 or kimahriComplete == 0:
-                stepCount -= 1
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(1) #Just run into walls until we get the levels we need.
-            elif stepCount < 345:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                FFX_Xbox.SkipDialog(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0) #Up the lift
-            elif stepCount < 353:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 1)
-                FFX_Xbox.SkipDialog(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0) #Up the lift
-            elif stepCount >= 380:
-                time.sleep(0.1)
-                stepCount = 210
-        elif FFX_Screen.Minimap2():
-            if stepCount < 380:
-                stepCount = 380
-            else:
-                stepCount += 1
-            if stepCount == 380: #Custom pathing towards the second lift
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.7)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(4)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(1.5)
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount == 381:
-                while FFX_Screen.Minimap2():
-                    FFXC.set_value('AxisLy', 1)
-                    time.sleep(0.6)
-                    FFXC.set_value('AxisLy', -1)
-                    time.sleep(0.6)
-                    FFXC.set_value('AxisLy', 0)
-            elif stepCount < 390:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.4)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 400:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 401:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.15)
-                FFX_Xbox.SkipDialog(1.5)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 418:
-                FFXC.set_value('AxisLy', 0) #Right from second lift
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 424:
-                FFXC.set_value('AxisLy', -1) #Straight down
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-            elif stepCount < 430:
-                FFXC.set_value('AxisLy', -1) #Down and left
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-            elif stepCount < 437:
-                FFXC.set_value('AxisLy', 1) #Up and left
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-            elif stepCount < 441:
-                FFXC.set_value('AxisLy', 0) #Straight right
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-            elif stepCount == 441:
-                FFXC.set_value('AxisLx', 1)
-                FFX_Xbox.SkipDialog(3)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                FFX_Screen.awaitMap2() #Now to depart the lift
-                FFXC.set_value('AxisLy', -1)
-                time.sleep(2.5)
-                FFXC.set_value('AxisLy', 0)
-            else:
-                if stepCount % 10 == 0:
-                    print("Checking if we hit the lift.")
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                time.sleep(1)
-        else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-    print("MRR pathing is done. Moving onward.")
-
 def battleSite():
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    FFX_Screen.awaitMap4()
+    FFX_memory.awaitControl()
     print("Starting battle site section")
     FFX_menu.battleSiteGrid()
     FFXC.set_value('AxisLy', -1)
@@ -995,7 +647,7 @@ def battleSite():
         
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    FFX_Screen.awaitPixel(680,804,(221,221,221))
+    FFX_Screen.awaitPixel(680,804,(221,221,221)) ### Possible to replace this later?
     time.sleep(1.6)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()

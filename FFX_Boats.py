@@ -86,9 +86,9 @@ def ssLiki(earlyTidusGrid):
     print("Sin's Fin fight complete. Waiting for next fight")
     FFX_Battle.Echuilles()
     print("Sinspawn Echuilles fight complete")
-    time.sleep(3.3)
-    FFX_Xbox.skipScene()
-    FFX_Screen.clickToMap1()
+    #time.sleep(3.3)
+    #FFX_Xbox.skipScene()
+    FFX_memory.clickToControl()
 
 def ssWinno():
     FFX_memory.clickToControl()

@@ -23,28 +23,7 @@ def southPathing(blitzwin):
     while complete == 0:
         if FFX_Screen.dodgeLightning():
             print("Dodge")
-        if FFX_memory.userControl() == False:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-        if FFX_Screen.BattleScreen():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            print("Starting battle")
-            status = FFX_Battle.thunderPlains(status, 1)
-        elif FFX_Screen.BattleComplete():
-            FFX_Xbox.menuB()
-        elif FFX_Screen.PixelTest(293,127,(64, 193, 64)):
-            print("Thunder Plains south complete")
-            FFXC.set_value('AxisLy', 1)
-            FFXC.set_value('AxisLx', -1)
-            FFX_Xbox.SkipDialog(8)
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-            complete = 1
-        elif FFX_Screen.PixelTest(267,254,(64, 193, 64)):
-            print("Thunder Plains south complete")
-            complete = 1
-        elif FFX_Screen.Minimap1():
+        if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             stepCount += 1
             if pos == [0.0,0.0]: #This means we've lost control of the character for any reason.
@@ -164,9 +143,26 @@ def southPathing(blitzwin):
             #    print("Problem with pathing. Resetting.")
             #    stepCount = 369
         else:
-            FFX_Xbox.menuB()
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
+            if FFX_Screen.BattleScreen():
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                print("Starting battle")
+                status = FFX_Battle.thunderPlains(status, 1)
+            elif FFX_Screen.BattleComplete():
+                FFX_Xbox.menuB()
+            elif FFX_Screen.PixelTest(293,127,(64, 193, 64)):
+                print("Thunder Plains south complete")
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', -1)
+                FFX_Xbox.SkipDialog(8)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                complete = 1
+            elif FFX_Screen.PixelTest(267,254,(64, 193, 64)):
+                print("Thunder Plains south complete")
+                complete = 1
     return status
     
 def agency(blitzWin):

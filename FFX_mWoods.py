@@ -36,26 +36,7 @@ def arrival(rikkucharged):
         if lastCP != checkpoint:
             print("Checkpoint: ", checkpoint)
             lastCP = checkpoint
-        if FFX_Screen.BattleScreen():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            print("Starting battle")
-            print("variable check 1: ",woodsVars)
-            woodsVars = FFX_Battle.mWoods(woodsVars)
-            print("variable check 2: ",woodsVars)
-        elif FFX_memory.userControl() == False:
-            if checkpoint == 50 and FFX_Screen.PixelTestTol(923,441,(219, 219, 219),5):
-                print("Chest is opened.")
-                FFX_memory.clickToControl()
-                checkpoint = 60
-            elif checkpoint > 80:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                FFX_Xbox.menuB()
-            else:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-        else:
+        if FFX_memory.userControl():
             #print("Checkpoint: ", checkpoint)
             pos = FFX_memory.getCoords()
             if checkpoint == 0:
@@ -275,6 +256,25 @@ def arrival(rikkucharged):
                 FFXC.set_value('AxisLy', 0)
                 FFX_Xbox.touchSaveSphere()
                 complete = 1
+        elif FFX_Screen.BattleScreen():
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            print("Starting battle")
+            print("variable check 1: ",woodsVars)
+            woodsVars = FFX_Battle.mWoods(woodsVars)
+            print("variable check 2: ",woodsVars)
+        elif FFX_memory.userControl() == False:
+            if checkpoint == 50 and FFX_Screen.PixelTestTol(923,441,(219, 219, 219),5):
+                print("Chest is opened.")
+                FFX_memory.clickToControl()
+                checkpoint = 60
+            elif checkpoint > 80:
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                FFX_Xbox.menuB()
+            else:
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
 
 def lakeRoad():
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
@@ -443,17 +443,3 @@ def afterCrawler():
                     FFXC.set_value('AxisLx', 0)
     print("End of Macalania Woods section. Next is temple section.")
 
-def oldPath():
-    FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(0.5)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(6)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(16)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(16)
-    FFX_Screen.awaitMap1()
-    time.sleep(3)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)

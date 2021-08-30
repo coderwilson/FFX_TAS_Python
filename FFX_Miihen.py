@@ -49,8 +49,12 @@ def arrival():
             print("Starting battle")
             if selfDestruct == 0:
                 selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
+                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
+                    FFX_memory.clickToControl() # After-battle screen is still open.
             else:
                 FFX_Battle.MiihenRoad(selfDestruct)
+                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
+                    FFX_memory.clickToControl() # After-battle screen is still open.
             print("Battle complete")
         elif checkpoint == 10 and FFX_Screen.PixelTestTol(478,768,(222, 222, 222),5):
             print("Talking to the guy for free spear.")
@@ -191,113 +195,6 @@ def arrival():
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     return selfDestruct
-    
-    
-def unused1():
-    stepCount = 0
-    stepMax = 500
-    complete = 0
-    while complete == 0:
-        mapOpen = FFX_Screen.Minimap1()
-        if FFX_Screen.BattleScreen():
-            print("Starting battle")
-            if selfDestruct == 0:
-                selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
-            else:
-                FFX_Battle.MiihenRoad(selfDestruct)
-            print("Battle complete")
-        elif FFX_Screen.PixelTest(323,90,(64, 193, 64)):
-            print("Mi'ihen Highroad pathing complete")
-            complete = 1
-        elif not mapOpen:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-            FFX_Xbox.menuB()
-        elif mapOpen:
-            stepCount += 1
-            print("Mi'ihen pathing: ", stepCount)
-            if stepCount < 7:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-            elif stepCount < 50:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-            elif stepCount < 52:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                FFX_Xbox.SkipDialog(0.1)
-            elif stepCount == 52:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.3)
-                FFXC.set_value('AxisLx', 0) #Turh to face the guy
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.05)
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                time.sleep(0.4)
-            elif stepCount == 53:
-                FFX_Screen.clickToPixel(479,769,(221, 221, 221))
-                time.sleep(1.2)
-                FFX_Xbox.menuB()
-                time.sleep(0.5)
-                FFX_Xbox.menuB()
-            elif stepCount < 114:
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount == 190:
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 210:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 216: #Line up for the long road north
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 280:
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount < 282:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount >= 325 and stepCount <= 329:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount >= 340 and stepCount <= 344:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            #elif stepCount >= 380 and stepCount <= 383:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 1)
-            #    time.sleep(0.2)
-            #    FFXC.set_value('AxisLy', 0)
-            #    FFXC.set_value('AxisLx', 0)
-            elif stepCount < stepMax:
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount >= stepMax:
-                time.sleep(1)
 
 def midPoint():
     #Should now be at the Mi'ihen travel agency.
@@ -481,8 +378,12 @@ def unused2():
             print("Starting battle")
             if selfDestruct == 0:
                 selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
+                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
+                    FFX_memory.clickToControl() # After-battle screen is still open.
             else:
                 FFX_Battle.MiihenRoad(selfDestruct)
+                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
+                    FFX_memory.clickToControl() # After-battle screen is still open.
             print("Battle complete")
         elif FFX_Screen.PixelTestTol(788,325,(255, 253, 99),15):
             complete = 1

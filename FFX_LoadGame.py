@@ -242,7 +242,7 @@ def LoadMiihenStart():
     print("Load complete. Now for Mi'ihen area.")
 
 def LoadMRR():
-    loadOffset(9)
+    loadOffset(13)
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(2.5)

@@ -9,12 +9,12 @@ FFXC = FFX_Xbox.FFXC
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
-Gamestate = "Besaid"
-StepCounter = 3
+#Gamestate = "MRR"
+#StepCounter = 1
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 #gameLength = "short"
@@ -22,6 +22,7 @@ gameLength = "full"
 forceBlitzWin = True
 autoEggHunt = True
 print("Game type will be: ", gameLength)
+tasFinalHit = 0 #TAS-only, final hit will be this character number
 
 #Other variables
 speedCount = 0
@@ -96,7 +97,8 @@ if Gamestate != "none" :
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(9)
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
-        FFX_LoadGame.loadOffsetBattle(9)
+        FFX_LoadGame.loadOffsetBattle(1)
+        earlyHaste = 1
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
@@ -234,7 +236,7 @@ if Gamestate == "shortGame" and StepCounter == 1:
     FFX_cheater_cheese.items()
     FFX_cheater_cheese.BackToSin()
     FFX_Sin.insideSin(gameLength, autoEggHunt)
-    FFX_Battle.BFA_TASonly()
+    FFX_Battle.BFA_TASonly(tasFinalHit)
     Gamestate = "gameOver"
     stepCounter = 999
 

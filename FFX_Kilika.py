@@ -106,6 +106,7 @@ def forest1():
     FFX_Xbox.SkipDialog(10)
     FFX_Screen.clickToBattle()
     FFX_Battle.lancetTutorial()
+    FFX_memory.clickToControl()
     
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)

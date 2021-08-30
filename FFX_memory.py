@@ -928,6 +928,7 @@ def getEnemyCurrentHP():
     return currentHP
 
 def setEnemyCurrentHP(numToSet, newHP):
+    getEnemyCurrentHP()
     global process
     global baseValue
     numToSet = numToSet + 20
@@ -944,6 +945,7 @@ def setEnemyCurrentHP(numToSet, newHP):
             currentHP = [process.writeBytes(key2, newHP,4)]
             print("HP value has been changed.")
         enemyNum += 1
+    getEnemyCurrentHP()
 
 def getEnemyMaxHP():
     global process
@@ -1101,7 +1103,7 @@ def diagSkipPossible():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        time.sleep(0.5)
+        time.sleep(0.035)
         return True
     else:
         return False

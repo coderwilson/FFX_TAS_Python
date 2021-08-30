@@ -89,72 +89,6 @@ def followYuna():
     FFX_Screen.awaitMap1()
     FFXC.set_value('AxisLy', 1)
     time.sleep(1.35)
-    #FFXC.set_value('AxisLx', -1)
-    #FFX_Xbox.SkipDialog(0.45) #Talk to O'akaXXIII
-    #FFXC.set_value('AxisLy', 0)
-    #FFXC.set_value('AxisLx', 0)
-    #FFX_Screen.clickToPixel(676,527,(220, 220, 220))
-    
-    #Menuing with O'akaXXIII
-    #time.sleep(0.2)
-    #FFX_Xbox.menuB()
-    #time.sleep(1)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.05)
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuRight() #Make sure we're not hitting an error message
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    
-    #while not FFX_Screen.PixelTest(799,830,(139, 138, 172)):
-    #    FFX_Xbox.menuDown()
-    #    time.sleep(0.2)
-    #    FFX_Xbox.menuB()
-    #    time.sleep(0.05)
-    #    FFX_Xbox.menuUp()
-    #    FFX_Xbox.menuB()
-    #    FFX_Xbox.menuRight() #Make sure we're not hitting an error message
-    
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    
-    #Talk to O'aka again
-    #FFX_Screen.clickToPixel(676,527,(220, 220, 220))
-    #time.sleep(0.2)
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #time.sleep(1)
-    #FFX_Xbox.menuB() #Skip dialog
-    #time.sleep(1)
-    #FFX_Xbox.menuB() #Yes I have gil
-    #time.sleep(1)
-    #FFX_Xbox.menuDown() #Changing values on the money
-    #FFX_Xbox.menuLeft()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.5)
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Confirm 1001 gil
-    #time.sleep(0.8)
-    #FFX_Xbox.menuB() #Skip dialog
-    #time.sleep(0.8)
-    #FFX_Xbox.menuB() #Skip dialog
-    #FFX_menu.LucaOaka()
     
     #Enter first battle
     FFXC.set_value('AxisLx', 1)
@@ -162,6 +96,7 @@ def followYuna():
     time.sleep(8)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
+    
     FFX_Battle.LucaWorkers()
     
     FFXC.set_value('AxisLx', 1)
@@ -287,19 +222,16 @@ def afterBlitz(earlyHaste):
     #Lots of exposition. Click through it all! Then grab some chests and find the party.
     FFX_memory.clickToControl()
     
-    FFX_menu.afterBlitz()
+    #FFX_menu.afterBlitz()
     if earlyHaste == 0:
         FFX_menu.lateHaste()
     FFXC.set_value('AxisLy', 1)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(0.3)
-    FFXC.set_value('AxisLy', 0)
+    time.sleep(2.2) ### Line up
     FFXC.set_value('AxisLx', 1)
-    time.sleep(1.6)
-    FFXC.set_value('AxisLy', 1)
+    time.sleep(1.2)
+    #FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(1)
+    time.sleep(1.5)
     FFXC.set_value('AxisLy', 0)
     time.sleep(0.5)
     FFXC.set_value('AxisLy', -1)
@@ -318,11 +250,11 @@ def afterBlitz(earlyHaste):
     time.sleep(1.2)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', 1)
-    time.sleep(0.8)
+    time.sleep(0.7)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(1.5)
+    time.sleep(0.7)
     pos = FFX_memory.getCoords()
-    while pos[1] < -200:
+    while pos[1] < -190:
         FFXC.set_value('AxisLy', -1)
         if pos[1] < ((0.76 * pos[0]) + 27.47):
             FFXC.set_value('AxisLx', 1)

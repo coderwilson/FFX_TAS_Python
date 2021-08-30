@@ -10,8 +10,9 @@ FFXC = FFX_Xbox.FFXC
  
 def path():
     FFX_memory.clickToControl()
+    FFX_memory.closeMenu()
     FFX_memory.fullPartyFormat('djose')
-    FFX_Xbox.menuA()
+    FFX_memory.closeMenu()
     
     countBattles = 0
     checkpoint = 0
@@ -24,114 +25,111 @@ def path():
         if lastCP != checkpoint:
             lastCP = checkpoint
             print("Checkpoint reached: ", checkpoint)
-        if FFX_Screen.BattleScreen():
-            print("Starting battle")
-            if stoneBreath == 0:
-                print("Still looking for Stone Breath.")
-            stoneBreath = FFX_Battle.djose(stoneBreath)
-            countBattles += 1
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
-        elif not FFX_memory.userControl():
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-            if checkpoint >= 50:
-                FFX_Xbox.menuB()
-        elif checkpoint == 0: #First section, very long.
-            if pos[1] > 60:
-                checkpoint = 10
-            else:
-                FFXC.set_value('AxisLy', 1)
-                if pos[1] < ((4.07 * pos[0]) + 234.82):
-                    FFXC.set_value('AxisLx', -1)
-                elif pos[1] > ((3.18 * pos[0]) + 281.79):
-                    FFXC.set_value('AxisLx', 1)
+        if FFX_memory.userControl():
+            if checkpoint == 0: #First section, very long.
+                if pos[1] > 60:
+                    checkpoint = 10
                 else:
-                    FFXC.set_value('AxisLx', 0)
-        elif checkpoint == 10: #Camera turns
-            if pos[1] > 330:
-                checkpoint = 20
-            else:
-                FFXC.set_value('AxisLx', 1)
-                if pos[1] < ((1.53 * pos[0]) + 147.43):
                     FFXC.set_value('AxisLy', 1)
+                    if pos[1] < ((4.07 * pos[0]) + 234.82):
+                        FFXC.set_value('AxisLx', -1)
+                    elif pos[1] > ((3.18 * pos[0]) + 281.79):
+                        FFXC.set_value('AxisLx', 1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
+            elif checkpoint == 10: #Camera turns
+                if pos[1] > 330:
+                    checkpoint = 20
                 else:
-                    FFXC.set_value('AxisLy', 0)
-        elif checkpoint == 20: #Past the chest
-            if pos[1] > 600:
-                checkpoint = 30
-            else:
-                FFXC.set_value('AxisLy', 1)
-                if pos[1] > ((1.14 * pos[0]) + 238.11):
                     FFXC.set_value('AxisLx', 1)
+                    if pos[1] < ((1.53 * pos[0]) + 147.43):
+                        FFXC.set_value('AxisLy', 1)
+                    else:
+                        FFXC.set_value('AxisLy', 0)
+            elif checkpoint == 20: #Past the chest
+                if pos[1] > 600:
+                    checkpoint = 30
                 else:
-                    FFXC.set_value('AxisLx', 0)
-        elif checkpoint == 30: #Close to the cutscene
-            if pos[1] > 730:
-                checkpoint = 40
-            else:
-                FFXC.set_value('AxisLx', 1)
-                if pos[1] < ((0.69 * pos[0]) + 368.90):
                     FFXC.set_value('AxisLy', 1)
+                    if pos[1] > ((1.14 * pos[0]) + 238.11):
+                        FFXC.set_value('AxisLx', 1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
+            elif checkpoint == 30: #Close to the cutscene
+                if pos[1] > 730:
+                    checkpoint = 40
                 else:
-                    FFXC.set_value('AxisLy', 0)
-        elif checkpoint == 40:
-            if stoneBreath == 0:
+                    FFXC.set_value('AxisLx', 1)
+                    if pos[1] < ((0.69 * pos[0]) + 368.90):
+                        FFXC.set_value('AxisLy', 1)
+                    else:
+                        FFXC.set_value('AxisLy', 0)
+            elif checkpoint == 40:
+                if stoneBreath == 0:
+                    FFXC.set_value('AxisLx', 0)
+                    FFXC.set_value('AxisLy', -1)
+                    time.sleep(1)
+                    FFXC.set_value('AxisLy', 1)
+                    time.sleep(1)
+                else:
+                    checkpoint = 50
+            elif checkpoint == 50: #Close to the cutscene
+                if pos[1] > 835:
+                    checkpoint = 60
+                else:
+                    FFXC.set_value('AxisLx', 1)
+                    if pos[1] < ((0.69 * pos[0]) + 368.90):
+                        FFXC.set_value('AxisLy', 1)
+                    else:
+                        FFXC.set_value('AxisLy', 0)
+            elif checkpoint == 60: #Start conversation with Auron, then to the temple
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', 1)
+                FFX_Xbox.SkipDialog(0.4)
                 FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', -1)
-                time.sleep(1)
+                FFX_Xbox.SkipDialog(4)
+                FFXC.set_value('AxisLy', 0)
+                FFX_memory.clickToControl()
                 FFXC.set_value('AxisLy', 1)
-                time.sleep(1)
-            else:
-                checkpoint = 50
-        elif checkpoint == 50: #Close to the cutscene
-            if pos[1] > 835:
-                checkpoint = 60
-            else:
-                FFXC.set_value('AxisLx', 1)
-                if pos[1] < ((0.69 * pos[0]) + 368.90):
+                FFX_Xbox.SkipDialog(3)
+                FFXC.set_value('AxisLy', 0)
+                checkpoint = 65
+            elif checkpoint == 65: #Up to chocobo team
+                if pos[1] > 1:
+                    checkpoint = 70
+                else:
                     FFXC.set_value('AxisLy', 1)
+                    if pos[1] > ((4.67 * pos[0]) -289.33):
+                        FFXC.set_value('AxisLx', 1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
+            elif checkpoint == 70: #Past chocobo team
+                if pos[1] < -360:
+                    checkpoint = 80
                 else:
-                    FFXC.set_value('AxisLy', 0)
-        elif checkpoint == 60: #Start conversation with Auron, then to the temple
-            FFXC.set_value('AxisLy', 1)
-            FFXC.set_value('AxisLx', 1)
-            FFX_Xbox.SkipDialog(0.4)
-            FFXC.set_value('AxisLx', 0)
-            FFX_Xbox.SkipDialog(4)
-            FFXC.set_value('AxisLy', 0)
-            FFX_memory.clickToControl()
-            FFXC.set_value('AxisLy', 1)
-            FFX_Xbox.SkipDialog(3)
-            FFXC.set_value('AxisLy', 0)
-            checkpoint = 65
-        elif checkpoint == 65: #Up to chocobo team
-            if pos[1] > 1:
-                checkpoint = 70
-            else:
+                    FFXC.set_value('AxisLy', 1)
+                    if pos[1] < ((-2.67 * pos[0]) + 163.71):
+                        FFXC.set_value('AxisLx', 1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
+            elif checkpoint == 80:
                 FFXC.set_value('AxisLy', 1)
-                if pos[1] > ((4.67 * pos[0]) -289.33):
-                    FFXC.set_value('AxisLx', 1)
-                else:
-                    FFXC.set_value('AxisLx', 0)
-        elif checkpoint == 70: #Past chocobo team
-            if pos[1] < -360:
-                checkpoint = 80
-            else:
-                FFXC.set_value('AxisLy', 1)
-                if pos[1] < ((-2.67 * pos[0]) + 163.71):
-                    FFXC.set_value('AxisLx', 1)
-                else:
-                    FFXC.set_value('AxisLx', 0)
-        elif checkpoint == 80:
-            FFXC.set_value('AxisLy', 1)
-            time.sleep(2)
+                time.sleep(2)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                checkpoint = 100
+                print("Checkpoing reached: ", checkpoint)
+        else:
             FFXC.set_value('AxisLy', 0)
             FFXC.set_value('AxisLx', 0)
-            checkpoint = 100
-            print("Checkpoing reached: ", checkpoint)
+            if FFX_Screen.BattleScreen():
+                print("Starting battle")
+                if stoneBreath == 0:
+                    print("Still looking for Stone Breath.")
+                stoneBreath = FFX_Battle.djose(stoneBreath)
+                countBattles += 1
+            elif FFX_Screen.BattleComplete():
+                FFX_Xbox.menuB()
             
     FFX_Logs.writeStats("Djose battles:")
     FFX_Logs.writeStats(countBattles)

@@ -14,13 +14,7 @@ def arrival():
     
     checkpoint = 0
     while checkpoint != 150:
-        if FFX_Screen.BattleScreen():
-            FFX_Battle.fleeAll()
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
-        else:
+        if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             if pos == [0.0,0.0]: #This means we've lost control of the character for any reason.
                 if FFX_Screen.PixelTestTol(613,446,(208, 208, 208),5):
@@ -107,6 +101,13 @@ def arrival():
                 else:
                     FFXC.set_value('AxisLy', 1)
                     FFXC.set_value('AxisLx', 0)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_Screen.BattleScreen():
+                FFX_Battle.fleeAll()
+            elif FFX_Screen.BattleComplete():
+                FFX_Xbox.menuB()
     
     
     
@@ -284,15 +285,7 @@ def northBank():
     complete = 0
     stepCount = 0
     while complete == 0:
-        if FFX_Screen.PixelTest(657,249,(234, 196, 0)): #Customize tutorial screen
-            complete = 1
-        elif FFX_Screen.BattleScreen():
-            FFX_Battle.fleeAll()
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
-        elif FFX_Screen.Minimap1():
+        if FFX_memory.userControl():
             stepCount += 1
             if stepCount % 20 == 0:
                 FFXC.set_value('AxisLy', 1)
@@ -304,5 +297,13 @@ def northBank():
                 FFXC.set_value('AxisLy', 1)
                 time.sleep(0.2)
                 FFXC.set_value('AxisLy', 0)
+        elif FFX_Screen.PixelTest(657,249,(234, 196, 0)): #Customize tutorial screen
+            complete = 1
+        elif FFX_Screen.BattleScreen():
+            FFX_Battle.fleeAll()
+        elif FFX_Screen.BattleComplete():
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            FFX_Xbox.menuB()
         elif not FFX_Screen.PixelTest(1,1,(0,0,0)):
             FFX_Xbox.menuB()

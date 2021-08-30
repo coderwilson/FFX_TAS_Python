@@ -416,14 +416,7 @@ def escape():
         if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
-        if FFX_Screen.BattleScreen():
-            if FFX_memory.getBattleNum() == 195:
-                checkpoint = 1000
-            else:
-                FFX_Battle.fleeAll()
-                while not FFX_memory.userControl():
-                    FFX_Xbox.menuB()
-        elif FFX_memory.userControl():
+        if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             if checkpoint == 0:
                 #print("Movement ", checkpoint)
@@ -524,6 +517,13 @@ def escape():
             #print("No action ", checkpoint)
             FFXC.set_value('AxisLy', 0)
             FFXC.set_value('AxisLx', 0)
+            if FFX_Screen.BattleScreen():
+                if FFX_memory.getBattleNum() == 195:
+                    checkpoint = 1000
+                else:
+                    FFX_Battle.fleeAll()
+                    while not FFX_memory.userControl():
+                        FFX_Xbox.menuB()
     
     print("Done pathing. Now for the Wendigo fight.")
     FFX_Battle.wendigo()
