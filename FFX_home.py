@@ -89,17 +89,7 @@ def desert1():
             pos = FFX_memory.getCoords()
             cam = FFX_memory.getCamera()
             #if checkpoint > 150: print("Checkpoint: ", checkpoint)
-            if pos == [0.0,0.0]: #This means we've lost control of the character for any reason.
-                if checkpoint == 170 and FFX_Screen.PixelTestTol(601,445,(210, 210, 210),5):
-                    print("Teleport Sphere chest.")
-                    FFX_memory.clickToControl()
-                    checkpoint = 175
-                else:
-                    FFXC.set_value('AxisLx', 0)
-                    FFXC.set_value('AxisLy', 0)
-                    if checkpoint < 40 or checkpoint == 190:
-                        FFX_Xbox.menuB()
-            elif checkpoint == 0:
+            if checkpoint == 0:
                 if FFX_memory.getStoryProgress() == 1718:
                     checkpoint = 5
                 else:
@@ -277,30 +267,13 @@ def desert1():
                     FFXC.set_value('AxisLx', 1)
             elif checkpoint == 155:
                 if chargeState == [True, True]:
-                    checkpoint = 160
+                    checkpoint = 170
                 else:
                     FFXC.set_value('AxisLy', -1) #To the Sandragora zone
                     FFXC.set_value('AxisLx', 0)
                     time.sleep(1)
                     FFXC.set_value('AxisLy', 1)
                     time.sleep(0.8)
-            elif checkpoint == 160:
-                checkpoint = 170
-                #if pos[1] > 300:
-                    #checkpoint = 170
-                #else:
-                #    if pos[1] > 455:
-                #        FFXC.set_value('AxisLy', -1) #Just before first Sandy
-                #        print("Overshot. Backtracking.")
-                #    else:
-                #        FFXC.set_value('AxisLy', 1) #Just before first Sandy
-                #        
-                #    if pos[0] < -45:
-                #        FFXC.set_value('AxisLx', 1)
-                #    elif pos[0] > -25:
-                #        FFXC.set_value('AxisLx', -1)
-                #    else:
-                #        FFXC.set_value('AxisLx', 0)
             elif checkpoint == 170:
                     if pos[1] > 455:
                         FFXC.set_value('AxisLy', -1) #Up to Sandy and chest
@@ -346,6 +319,8 @@ def desert1():
                     else:
                         FFXC.set_value('AxisLx', 0)
         else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
             if FFX_Screen.BattleScreen():
                 if checkpoint == 170 or checkpoint == 190:
                     print("Looking for Sandragoras")
@@ -362,13 +337,20 @@ def desert1():
                     chargeState = FFX_Battle.bikanelCharge(chargeState)
                     FFX_memory.desertFormat(chargeState[0])
                     print("Current state variable: ", chargeState)
-            elif FFX_Screen.BattleComplete():
+            elif FFX_memory.menuOpen():
+                FFXC.set_value('BtnB', 1)
+                time.sleep(0.035)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(0.035)
+            elif checkpoint == 170 and FFX_Screen.PixelTestTol(601,445,(210, 210, 210),5):
+                print("Teleport Sphere chest.")
+                FFX_memory.clickToControl()
+                checkpoint = 175
+            elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
-            elif lastCP != checkpoint:
-                lastCP = checkpoint
-                print("Checkpoint reached: ", lastCP)
 
 def findSummoners(blitzWin):
+    FFX_memory.clickToControl()
     FFX_menu.autoSortItems('n')
     FFX_menu.homeGrid()
     FFXC.set_value('AxisLy', 1)

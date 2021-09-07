@@ -275,7 +275,7 @@ def LoadMRR2():
             FFXC.set_value('AxisLy', 0)
 
 def AfterGui():
-    loadOffset(25)
+    loadOffset(1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(2)
     FFXC.set_value('AxisLx', 0)
@@ -317,7 +317,7 @@ def moonflow2():
     time.sleep(0.5)
 
 def loadGuadoSkip():
-    loadOffset(4)
+    loadOffset(5)
     time.sleep(1)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', 1)
@@ -350,7 +350,7 @@ def loadGuadoSkip():
     FFXC.set_value('AxisLx', 0)
 
 def loadMacLake():
-    loadOffset(5)
+    loadOffset(6)
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
     FFX_memory.awaitEvent()

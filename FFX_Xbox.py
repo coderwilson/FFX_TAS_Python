@@ -60,28 +60,22 @@ def touchSaveSphere():
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     print("Touching the save sphere")
-    complete = False
-    control = True
-    while complete == False:
+    
+    menuB()
+    time.sleep(0.4)
+    
+    while not FFX_memory.touchingSaveSphere():
         if FFX_memory.userControl():
-            if control == True:
-                menuB()
-                control = False
-                time.sleep(0.1)
-            else:
-                complete = 1
-        elif FFX_Screen.PixelTestTol(685,448,(164, 166, 164),5): #Tier 2 save sphere
-            menuA()
             menuB()
-        elif FFX_Screen.PixelTestTol(730,466,(154, 154, 154),5): #Tier 1 save sphere
-            menuA()
+        elif FFX_memory.diagSkipPossible() and not FFX_memory.touchingSaveSphere():
             menuB()
-        elif FFX_Screen.PixelTestTol(1564,25,(68, 74, 122),5): #Save menu has been opened.
-            time.sleep(0.05)
-            menuA()
-            time.sleep(0.05)
-            complete = 1
+    print("Save Mark 1")
+    while not FFX_memory.saveMenuCursor() >= 1:
+        menuUp()
+    print("Save Mark 2")
+    menuB()
     FFX_memory.awaitControl()
+    time.sleep(0.035)
 
 def SkipDialog( Keystrokes ):
     Keystrokes
@@ -231,8 +225,8 @@ def tidusFlee():
 
 def tidusHaste(direction):
     direction = direction.lower()
-    menuDown()
-    menuDown()
+    while FFX_memory.battleMenuCursor() != 22:
+        menuDown()
     menuB()
     time.sleep(0.3)
     menuB()
@@ -251,48 +245,10 @@ def tidusHaste(direction):
     time.sleep(0.8)
 
 def tidusHasteLate(direction):
-    direction = direction.lower()
-    menuDown()
-    menuDown()
-    menuDown()
-    menuB()
-    time.sleep(0.3)
-    menuB()
-    time.sleep(0.3)
-    if direction == 'left':
-        menuLeft()
-    if direction == 'right':
-        menuRight()
-    if direction == 'up':
-        menuUp()
-    if direction == 'down':
-        menuDown()
-    menuB()
-    menuB()
-    menuB()
-    time.sleep(0.8)
+    tidusHaste(direction)
 
 def lateHaste(direction):
-    direction = direction.lower()
-    menuDown()
-    menuDown()
-    menuDown()
-    menuB()
-    time.sleep(0.3)
-    menuB()
-    time.sleep(0.3)
-    if direction == 'left':
-        menuLeft()
-    if direction == 'right':
-        menuRight()
-    if direction == 'up':
-        menuUp()
-    if direction == 'down':
-        menuDown()
-    menuB()
-    menuB()
-    menuB()
-    time.sleep(0.8)
+    tidusHaste(direction)
 
 def weapSwap(position):
     print("Weapon swap, weapon in position: ", position)

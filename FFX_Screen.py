@@ -453,9 +453,9 @@ def turnSeymour() :
         return False
 
 def turnAeon():
-    if PixelTest(1392, 183, (33, 8, 183)):
-        FFX_Logs.writeLog("Aeon's turn:")
-        time.sleep(0.4)
+    turn = FFX_memory.getBattleCharTurn()
+    if turn > 7 and turn <= 12:
+        print("Aeon's turn:")
         return True
     else :
         return False

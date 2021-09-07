@@ -1,12 +1,9 @@
 import pyxinput
 import time
 import FFX_Xbox
-import FFX_core
 
 FFXC = FFX_Xbox.FFXC
 
-
-FFX_core.openFFXwindow()
 time.sleep(0.1)
 
 FFX_Xbox.menuUp()

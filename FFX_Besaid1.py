@@ -65,25 +65,7 @@ def swimming1():
         if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
-        elif FFX_Screen.BattleScreen():
-            battleNum = FFX_memory.getBattleNum()
-            #11 = two pirhanas
-            #12 = three pirhanas with one being a triple formation (takes two hits)
-            #13 = four pirhanas
-            if battleNum == 11:
-                FFX_Battle.attack('none')
-            else:
-                FFX_Battle.escapeAll()
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(2)
-            FFXC.set_value('BtnB', 0)
-        elif not FFX_memory.userControl():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            if checkpoint > 20:
-                FFX_Xbox.menuB()
-        else:
+        if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             if checkpoint == 0:
                 if pos[0] > 250:
@@ -127,6 +109,25 @@ def swimming1():
                         FFXC.set_value('AxisLx', -1)
                     else:
                         FFXC.set_value('AxisLx', 0)
+        elif FFX_Screen.BattleScreen():
+            battleNum = FFX_memory.getBattleNum()
+            #11 = two pirhanas
+            #12 = three pirhanas with one being a triple formation (takes two hits)
+            #13 = four pirhanas
+            if battleNum == 11:
+                FFX_Battle.attack('none')
+            else:
+                FFX_Battle.escapeAll()
+        elif FFX_Screen.BattleComplete():
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.035)
+        elif not FFX_memory.userControl():
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if checkpoint > 20:
+                FFX_Xbox.menuB()
 
 def swimming1_old() :
     Complete = 0
@@ -190,11 +191,11 @@ def enteringVillage():
     FFXC.set_value('AxisLx', -1)
     time.sleep(5)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.SkipDialog(5)
+    FFX_Xbox.SkipDialog(10)
     FFXC.set_value('AxisLy', 0)
     
     #Conversation with Luzzu and Gatta
-    FFX_Xbox.SkipDialog(18)
+    #FFX_Xbox.SkipDialog(18)
     FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)

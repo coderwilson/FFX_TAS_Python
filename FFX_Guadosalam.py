@@ -10,7 +10,7 @@ FFXC = FFX_Xbox.FFXC
  
 def arrival():
     print("Starting Guadosalam section")
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 1)
@@ -23,55 +23,49 @@ def arrival():
     time.sleep(0.6)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl3()
     FFXC.set_value('AxisLy', -1)
     time.sleep(1)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl3()
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0) #Enter the room where we meet Seymour
     
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl3()
     FFXC.set_value('AxisLx', 1)
-    FFX_Xbox.SkipDialog(1.1) #Wakka
+    FFX_memory.clickToEvent() #Talk to Wakka
     FFXC.set_value('AxisLx', 0)
-    time.sleep(1.5)
-    FFX_Xbox.menuB()
+    FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.7)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.SkipDialog(1.5) #Talk to Auron
+    FFX_memory.clickToEvent() #Start conversation with Auron
     FFXC.set_value('AxisLy', 0)
-    FFX_Xbox.SkipDialog(9)
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
     time.sleep(0.5)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.SkipDialog(1)
+    FFX_memory.clickToEvent() #Lulu conversation
     FFXC.set_value('AxisLy', 0)
-    FFX_Xbox.SkipDialog(21) #Lulu's turn
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLx', -1)
     time.sleep(1)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.menuB()
-    time.sleep(2.9) #Yuna dialog (skip one line)
-    print("mark")
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitMap1()
+    FFX_Xbox.menuB() # Yuna's turn
+    FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(0.3)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.SkipDialog(1) #Talk to Rikku
+    FFX_memory.clickToEvent()
     FFXC.set_value('AxisLy', 0)
     FFX_Xbox.SkipDialog(66) #Seymour/Trommell
     FFX_Xbox.skipStoredScene(10)

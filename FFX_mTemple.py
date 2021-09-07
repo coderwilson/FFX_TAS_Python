@@ -26,7 +26,7 @@ def arrival(blitzWin):
     FFXC.set_value('AxisLy', 0)
     FFX_Xbox.touchSaveSphere()
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', -1)
     time.sleep(1.3)
     FFXC.set_value('AxisLx', -1)
@@ -140,11 +140,12 @@ def arrival(blitzWin):
     
     FFX_Battle.seymourGuado()
     
-    time.sleep(2)
+    time.sleep(1)
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Confirm name for Shiva
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(0.4)
@@ -400,9 +401,9 @@ def escape():
     #FFX_menu.autoSortItems('n')
     FFX_menu.afterSeymour()
     FFXC.set_value('AxisLy', -1)
-    time.sleep(0.5)
+    time.sleep(1)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(3)
+    time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     FFX_Xbox.touchSaveSphere()
@@ -420,11 +421,11 @@ def escape():
             pos = FFX_memory.getCoords()
             if checkpoint == 0:
                 #print("Movement ", checkpoint)
-                if pos[1] > 80:
+                if pos[1] > -15:
                     checkpoint = 10
                 else:
                     FFXC.set_value('AxisLy', -1)
-                    if pos[0] > 805:
+                    if pos[0] > 811:
                         FFXC.set_value('AxisLx', 1)
                     elif pos[0] < 800:
                         FFXC.set_value('AxisLx', -1)
@@ -432,28 +433,26 @@ def escape():
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 10:
                 #print("Movement ", checkpoint)
-                if pos[0] < 620:
+                if pos[1] > 390:
                     checkpoint = 20
                 else:
                     FFXC.set_value('AxisLy', -1)
-                    if pos[1] > ((-1.49 * pos[0]) + 1235):
+                    if pos[1] > ((-3.54 * pos[0]) + 2874.51):
                         FFXC.set_value('AxisLx', 1)
-                    elif pos[1] > ((-0.65 * pos[0]) + 700):
+                    elif pos[1] > ((-0.9 * pos[0]) + 854.5):
                         FFXC.set_value('AxisLx', 1)
                     else:
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 20:
                 #print("Movement ", checkpoint)
-                if pos[0] < 430:
+                if pos[0] < 420:
                     checkpoint = 30
                 else:
                     FFXC.set_value('AxisLx', 1)
-                    if pos[1] > 390:
-                        FFXC.set_value('AxisLy', 1)
-                    elif pos[1] > 385:
-                        FFXC.set_value('AxisLy', 0)
-                    elif pos[1] < ((-0.65 * pos[0]) + 700):
+                    if pos[1] < ((-0.78 * pos[0]) + 761):
                         FFXC.set_value('AxisLy', -1)
+                    elif pos[1] > 385:
+                        FFXC.set_value('AxisLy', 1)
                     else:
                         FFXC.set_value('AxisLy', 0)
             elif checkpoint == 30:
@@ -462,22 +461,30 @@ def escape():
                     checkpoint = 40
                 else:
                     FFXC.set_value('AxisLx', 1)
-                    if pos[1] > ((0.37 * pos[0]) + 240):
+                    if pos[1] > 390:
                         FFXC.set_value('AxisLy', 1)
-                    elif pos[1] > ((2.94 * pos[0]) + -56):
+                    elif pos[1] > ((0.39 * pos[0]) + 234):
                         FFXC.set_value('AxisLy', 1)
+                    elif pos[1] > ((1.12 * pos[0]) + 109.69):
+                        FFXC.set_value('AxisLy', 1)
+                    elif pos[1] > ((2.13 * pos[0]) + 15.54):
+                        FFXC.set_value('AxisLy', 1)
+                    elif pos[1] > 385:
+                        FFXC.set_value('AxisLy', 0)
+                    #elif pos[1] < ((-0.65 * pos[0]) + 700):
+                    #    FFXC.set_value('AxisLy', -1)
                     else:
                         FFXC.set_value('AxisLy', 0)
-                    
             elif checkpoint == 40:
                 #Second screen.
-                #print("Movement ", checkpoint)
-                #print("Placeholder - section not yet programmed")
-                if pos[1] < 390:
+                if FFX_memory.userControl() and pos[1] < 385:
                     checkpoint = 50
                 else:
                     FFXC.set_value('AxisLy', -1)
-                    FFXC.set_value('AxisLx', 0)
+                    if pos[1] > ((2.75 * pos[0]) + 431.65):
+                        FFXC.set_value('AxisLx', 1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
             elif checkpoint == 50:
                 if pos[1] < 230:
                     checkpoint = 60
@@ -490,9 +497,6 @@ def escape():
             elif checkpoint == 60:
                 if pos[0] < -32:
                     checkpoint = 70
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 0)
-                    #FFX_memory.fullPartyFormat('macalaniaescape')
                 else:
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', -1)

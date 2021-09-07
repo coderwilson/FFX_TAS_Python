@@ -282,9 +282,12 @@ def ABswimming2() :
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     
+    FFX_Screen.awaitTurn()
     #Final group of Pirhanas
     FFX_Battle.stealAndAttackPreTros()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
+    print("Technical Support Tidus")
     FFX_Xbox.SkipDialog(2)
     FFXC.set_value('AxisLy', -1)
     FFX_Screen.clickToMap1()
@@ -295,8 +298,9 @@ def ABswimming2() :
     FFXC.set_value('AxisLx', 0)
     
     #Tros fight
+    FFX_Screen.clickToBattle()
     FFX_Battle.Tros()
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLx', 1)

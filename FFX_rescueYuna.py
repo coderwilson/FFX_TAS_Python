@@ -87,25 +87,25 @@ def guards():
     FFXC.set_value('AxisLy', 0)
     FFX_Battle.guards(1)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     FFX_Battle.guards(2)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     FFX_Battle.guards(3)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     FFX_Battle.guards(4)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
@@ -119,18 +119,18 @@ def guards():
     
     time.sleep(15.7)
     FFX_Xbox.skipScene()
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     
     FFXC.set_value('AxisLx', -1)
     FFX_Xbox.SkipDialog(3)
     FFXC.set_value('AxisLx', 0)
     
-    FFX_Screen.clickToPixel(297,176,(64,193,64))
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(3)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(1.5)
     FFXC.set_value('AxisLy', 0)
@@ -138,7 +138,7 @@ def guards():
     time.sleep(4)
     FFXC.set_value('AxisLx', 0)
     
-    FFX_Screen.awaitMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(1)

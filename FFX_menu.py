@@ -942,25 +942,18 @@ def djoseTemple():
     FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndUseAgain() #HP +200
     FFX_menuGrid.selSphere('speed','d','none')
-    FFX_menuGrid.useShiftRight('wakka') #Agi +2
-    FFX_menuGrid.moveFirst()
-    
     #Now sphere grid on Wakka
-    gridRight()
-    gridLeft()
-    gridLeft()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','up')
+    
+    if FFX_memory.getSLVLWakka() >= 5:
+        FFX_menuGrid.useShiftRight('wakka') #Agi +2
+        FFX_menuGrid.moveFirst()
+        
+        gridRight()
+        gridLeft()
+        gridLeft()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','u','up')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
     FFX_memory.closeMenu()
 
 def moonflowWakkaWeap():

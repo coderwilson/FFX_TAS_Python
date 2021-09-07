@@ -150,6 +150,8 @@ def arrival():
             elif checkpoint == 30:
                 if FFX_memory.getMap() == 92:
                     checkpoint = 100
+                    FFXC.set_value('AxisLy', 0)
+                    FFXC.set_value('AxisLx', 0)
                 elif cam[0] > 1:
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', 0)
@@ -169,34 +171,26 @@ def arrival():
                 FFX_Battle.healUp(3)
             else:
                 print("No need to heal up. Moving onward.")
-        elif FFX_Screen.BattleComplete():
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
         else:
             FFXC.set_value('AxisLy', 0)
             FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.menuB()
     return wakkaLateMenu
 
 def mainPath(wakkaLateMenu):
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.7)
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2.5)
-    FFX_Xbox.SkipDialog(3) #Up the first lift
-    FFXC.set_value('AxisLx', 0)
+    #FFXC.set_value('AxisLy', 1)
+    #FFXC.set_value('AxisLx', 0)
+    #time.sleep(0.7)
+    #FFXC.set_value('AxisLy', 1)
+    #FFXC.set_value('AxisLx', 1)
+    #time.sleep(2.5)
+    #FFX_Xbox.SkipDialog(3) #Up the first lift
+    #FFXC.set_value('AxisLx', 0)
     
     status = [0, 0, 0, 1, 0]
-    #Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete]
-    #kimahriComplete = 0
-    #yunaComplete = 0
-    #yunaEarlyLevels = 0
-    #battleCounter = 0
+    #{Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete]
     checkpoint = 0
     lastCP = 0
     #valeforDrive = 0
@@ -218,13 +212,13 @@ def mainPath(wakkaLateMenu):
                 #print("Kimahri Complete state: ", status[1])
             status[3] += 1
             
-            if wakkaLateMenu == True and FFX_memory.getSLVLWakka() >= 3:
-                wakkaLateMenu = FFX_menu.mrrGrid2(wakkaLateMenu)
-            elif FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
+            if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
                 print("Yuna has enough levels now. Going to do her grid.")
                 FFX_menu.mrrGridYuna()
                 print("Yuna's gridding is complete for now.")
                 status[4] = 1
+            elif wakkaLateMenu == True and FFX_memory.getSLVLWakka() >= 3:
+                wakkaLateMenu = FFX_menu.mrrGrid2(wakkaLateMenu)
         else:
             #print("Checkpoint: ", checkpoint)
             pos = FFX_memory.getCoords()
@@ -240,6 +234,31 @@ def mainPath(wakkaLateMenu):
                     #if checkpoint == 0:
                     #    FFX_Xbox.menuB()
             elif checkpoint == 0:
+                if pos[0] < -10:
+                    checkpoint = 3
+                else:
+                    FFXC.set_value('AxisLx', 0)
+                    FFXC.set_value('AxisLy', 1)
+            elif checkpoint == 3:
+                if pos[1] > ((-0.94 * pos[0]) -638.53) and pos[1] > ((1.45 * pos[0]) -551.21):
+                    checkpoint = 6
+                else:
+                    if pos[1] < ((-0.94 * pos[0]) -638.53):
+                        FFXC.set_value('AxisLx', 1)
+                    else:
+                        FFXC.set_value('AxisLx', 0)
+                    if pos[1] < ((1.45 * pos[0]) -551.21):
+                        FFXC.set_value('AxisLy', 1)
+                    else:
+                        FFXC.set_value('AxisLy', 0)
+            elif checkpoint == 6:
+                FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 1)
+                FFX_Xbox.SkipDialog(1.5)
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                checkpoint = 9
+            elif checkpoint == 9:
                 if pos[1] > -540:
                     checkpoint = 10
                 else:
@@ -581,7 +600,7 @@ def battleSite():
     time.sleep(1.5)
     
     pos = FFX_memory.getCoords()
-    while pos[1] < 3260: #Towards O'aka
+    while pos[1] < 3265: #Towards O'aka
         FFXC.set_value('AxisLx', 0)
         FFXC.set_value('AxisLy', 1)
         pos = FFX_memory.getCoords()
@@ -612,6 +631,7 @@ def battleSite():
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     FFX_Xbox.touchSaveSphere()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(0.6)
@@ -653,7 +673,7 @@ def battleSite():
     FFX_Xbox.menuB()
     
     status = FFX_Battle.battleGui()
-    FFX_Xbox.SkipDialog(10)
+    FFX_Xbox.SkipDialog(20)
     FFX_Xbox.skipSceneSpec()
     
     FFX_Screen.clickToMap1()

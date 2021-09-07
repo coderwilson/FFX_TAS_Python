@@ -135,11 +135,17 @@ def arrival(rikkucharged):
                     FFXC.set_value('AxisLx', 1)
                     FFXC.set_value('AxisLy', 1)
             elif checkpoint == 110:
-                if pos[1] < 13:
-                    checkpoint = 120
+                if pos[1] < 40:
+                    checkpoint = 115
                 else:
                     FFXC.set_value('AxisLx', -1)
                     FFXC.set_value('AxisLy', 1)
+            elif checkpoint == 115:
+                if pos[1] < -1:
+                    checkpoint = 120
+                else:
+                    FFXC.set_value('AxisLx', -1)
+                    FFXC.set_value('AxisLy', 0)
             elif checkpoint == 120:
                 if pos[0] > 160:
                     checkpoint = 130
@@ -249,12 +255,18 @@ def arrival(rikkucharged):
                     else:
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 250:
+                print("Mark")
                 FFXC.set_value('AxisLx', -1)
                 FFXC.set_value('AxisLy', 0)
                 time.sleep(0.3)
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', 0)
                 FFX_Xbox.touchSaveSphere()
+                FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 1)
+                time.sleep(0.2)
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
                 complete = 1
         elif FFX_Screen.BattleScreen():
             FFXC.set_value('AxisLx', 0)

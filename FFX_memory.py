@@ -87,6 +87,11 @@ def otherBattleMenu():
     else:
         return False
 
+def battleTargetId():
+    global baseValue
+    key = baseValue + 0x00F3D1B4
+    return process.readBytes(key,1)
+
 def userControl():
     global baseValue
     #Auto updating via reference to the baseValue above
@@ -1065,6 +1070,26 @@ def getMap():
     progress = process.readBytes(key,2)
     return progress
 
+def touchingSaveSphere():
+    global baseValue
+    
+    key = baseValue + 0x0021D09A6
+    value = process.readBytes(key,1)
+    if value != 0:
+        return True
+    else:
+        return False
+
+def saveMenuCursor():
+    global baseValue
+    
+    key = baseValue + 0x001467942
+    value = process.readBytes(key,1)
+    if value != 0:
+        return True
+    else:
+        return False
+
 def getYunaSlvl():
     global baseValue
     
@@ -1349,6 +1374,10 @@ def fullPartyFormat_New(frontLine, menusize):
     if frontLine == 'besaid1':
         order = getOrderSix()  # Should work the same way
         orderFinal = [0, 1, 5, 3, 5]
+    if frontLine == 'djose':
+        partyMembers = 6
+        order = getOrderSix()
+        orderFinal = [0,4,2,6,3,5]
     if frontLine == 'kilika':
         order = getOrderSix()  # Should work the same way
         orderFinal = [0, 1, 4, 3, 5]
@@ -1757,7 +1786,7 @@ def fullPartyFormat(frontLine):
     elif frontLine == 'djose':
         partyMembers = 6
         order = getOrderSix()
-        orderFinal = [0,4,3,6,2,5]
+        orderFinal = [0,4,2,6,3,5]
     elif frontLine == 'spheri':
         order = getOrderSeven()
         orderFinal = [0,3,1,4,2,6,5]

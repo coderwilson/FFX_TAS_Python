@@ -26,11 +26,7 @@ def southPathing(blitzwin):
         if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             stepCount += 1
-            if pos == [0.0,0.0]: #This means we've lost control of the character for any reason.
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                FFX_Xbox.menuB()
-            elif checkpoint == 0:
+            if checkpoint == 0:
                 if pos[1] > -800:
                     checkpoint = 1
                 else:
@@ -60,7 +56,7 @@ def southPathing(blitzwin):
                     else:
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 3:
-                if pos[1] < 600:
+                if FFX_memory.getMap() == 256:
                     checkpoint = 4
                     print("End of the southern section.")
                 else:
@@ -72,79 +68,17 @@ def southPathing(blitzwin):
             elif checkpoint == 4:
                 FFXC.set_value('AxisLy', 1)
                 FFX_Xbox.SkipDialog(0.5)
-                FFXC.set_value('AxisLx', 1)
-                FFX_Xbox.SkipDialog(3)
+                FFXC.set_value('AxisLx', -1)
+                FFX_Xbox.SkipDialog(10)
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', 0)
                 complete = 1
             
-            
-            #if stepCount < 20:
-            #    FFXC.set_value('AxisLy', 1)
-            #    time.sleep(0.02)
-            #elif stepCount < 30:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', -1)
-            #    time.sleep(0.02)
-            #elif stepCount < 95:
-            #    FFXC.set_value('AxisLy', 1)
-            #    if stepCount % 20 > 18:
-            #        FFXC.set_value('AxisLx', -1)
-            #    else :
-            #        FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 140:
-            #    FFXC.set_value('AxisLx', 1)
-            #    if stepCount % 10 < 2:
-            #        FFXC.set_value('AxisLy', 0)
-            #    else:
-            #        FFXC.set_value('AxisLy', 1)
-            #    time.sleep(0.02)
-            #elif stepCount < 205:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 215:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 1)
-            #    time.sleep(0.02)
-            #elif stepCount < 225:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 235:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 1)
-            #    time.sleep(0.02)
-            #elif stepCount < 370:
-            #    FFXC.set_value('AxisLy', 1)
-            #    if stepCount % 30 > 27:
-            #        FFXC.set_value('AxisLx', 1)
-            #    else :
-            #        FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 375:
-            #    FFXC.set_value('AxisLy', -1)
-            #    FFXC.set_value('AxisLx', -1)
-            #    time.sleep(0.02)
-            #elif stepCount < 396:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', -1)
-            #    time.sleep(0.02)
-            #elif stepCount > 470:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 1)
-            #    time.sleep(0.02)
-            #elif stepCount < stepMax:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #else:
-            #    print("Problem with pathing. Resetting.")
-            #    stepCount = 369
         else:
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.menuB()
             if FFX_Screen.BattleScreen():
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', 0)
@@ -152,50 +86,12 @@ def southPathing(blitzwin):
                 status = FFX_Battle.thunderPlains(status, 1)
             elif FFX_Screen.BattleComplete():
                 FFX_Xbox.menuB()
-            elif FFX_Screen.PixelTest(293,127,(64, 193, 64)):
-                print("Thunder Plains south complete")
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                FFX_Xbox.SkipDialog(8)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                complete = 1
-            elif FFX_Screen.PixelTest(267,254,(64, 193, 64)):
-                print("Thunder Plains south complete")
-                complete = 1
     return status
     
 def agency(blitzWin):
     #Arrive at the travel agency
-    FFX_Screen.clickToPixel(266,251,(64, 193, 64))
+    FFX_memory.clickToControl3()
     speedCount = FFX_memory.getSpeed()
-    
-    #Sort into a free slot.
-    #FFX_Screen.openMenu()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.6)
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
     
     #Talk to the lady
     FFXC.set_value('AxisLy', 1)
@@ -306,7 +202,7 @@ def agency(blitzWin):
     FFXC.set_value('AxisLy', 0)
     time.sleep(2) #Scene in Yuna's room. Not as exciting as it sounds.
     
-    FFX_Screen.clickToPixel(266,251,(64, 193, 64))
+    FFX_memory.clickToControl3()
     print("Yuna's done talking. Let's keep going.")
     FFXC.set_value('AxisLy', -1)
     time.sleep(1.5)
@@ -316,23 +212,16 @@ def agency(blitzWin):
     FFXC.set_value('AxisLx', 0)
     FFX_Xbox.menuB() #Talk to Rikku
     
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl3()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(1.5)
     FFXC.set_value('AxisLx', 0)
     time.sleep(0.1)
-    #FFXC.set_value('AxisLy', 0)
-    #FFX_Xbox.menuB() #Lightning shield
-    #time.sleep(1)
-    #FFX_Xbox.menuB() #Lightning shield
-    #time.sleep(0.5)
-    #FFX_menu.plainsArmor()
     
-    FFX_Xbox.SkipDialog(3)
-    
-    #FFXC.set_value('AxisLy', 1)
+    FFX_Xbox.SkipDialog(3) #Pick up lightning shield
     time.sleep(2)
+    
     FFXC.set_value('AxisLy', 0)
     FFX_Screen.awaitMap1()
     
@@ -344,15 +233,7 @@ def northPathing(status):
     while checkpoint < 1000:
         if FFX_Screen.dodgeLightning():
             print("Dodge")
-        if FFX_Screen.BattleScreen():
-            print("Starting battle")
-            status = FFX_Battle.thunderPlains(status, 2)
-        elif FFX_Screen.BattleComplete():
-            FFX_Xbox.menuB()
-        elif FFX_Screen.PixelTest(295,235,(64, 193, 64)):
-            print("Thunder Plains North complete")
-            checkpoint = 1000
-        elif FFX_Screen.Minimap1():
+        if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             stepCount += 1
             
@@ -428,57 +309,27 @@ def northPathing(status):
                         FFXC.set_value('AxisLx', 0)
             
             
-            #if stepCount < 180:
-            #    FFXC.set_value('AxisLy', 1)
-            #    if stepCount % 30 > 26:
-            #        FFXC.set_value('AxisLx', 1)
-            #    else :
-            #        FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 190:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', -1)
-            #    time.sleep(0.02)
-            #elif stepCount < 400:
-            #    FFXC.set_value('AxisLy', 1)
-            #    if stepCount % 10 > 7:
-            #        FFXC.set_value('AxisLx', 1)
-            #    else :
-            #        FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 450:
-            #    FFXC.set_value('AxisLy', 1)
-            #    if stepCount % 5 > 2:
-            #        FFXC.set_value('AxisLx', 1)
-            #    else :
-            #        FFXC.set_value('AxisLx', 0)
-            #    time.sleep(0.02)
-            #elif stepCount < 470:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', 1)
-            #    time.sleep(0.02)
-            #elif stepCount < 500:
-            #    FFXC.set_value('AxisLy', 1)
-            #    FFXC.set_value('AxisLx', -1)
-            #    time.sleep(0.02)
-            #else:
-            #    FFXC.set_value('AxisLx', 0)
-            #    FFXC.set_value('AxisLy', 0)
-            #    time.sleep(0.02)
-            #    print("Problem with pathing. Awaiting manual intervention.")
-            #    stepCount = 1
+        elif FFX_Screen.BattleScreen():
+            print("Starting battle")
+            status = FFX_Battle.thunderPlains(status, 2)
+        elif FFX_memory.menuOpen():
+            FFX_Xbox.menuB()
+        elif FFX_memory.getMap() == 110:
+            print("Thunder Plains North complete")
+            checkpoint = 1000
         else:
             FFX_Xbox.menuB()
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
     
+    FFX_memory.awaitControl()
     print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
     FFXC.set_value('AxisLy', 1)
     FFX_Xbox.SkipDialog(6)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     
-    FFX_Screen.clickToMap1() # Conversation with Auron about Yuna being hard to guard.
+    FFX_memory.clickToControl3() # Conversation with Auron about Yuna being hard to guard.
     
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)

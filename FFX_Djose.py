@@ -11,7 +11,8 @@ FFXC = FFX_Xbox.FFXC
 def path():
     FFX_memory.clickToControl()
     FFX_memory.closeMenu()
-    FFX_memory.fullPartyFormat('djose')
+    time.sleep(1)
+    FFX_Screen.mrrFormat()
     FFX_memory.closeMenu()
     
     countBattles = 0
@@ -128,7 +129,7 @@ def path():
                     print("Still looking for Stone Breath.")
                 stoneBreath = FFX_Battle.djose(stoneBreath)
                 countBattles += 1
-            elif FFX_Screen.BattleComplete():
+            elif FFX_memory.menuOpen():
                 FFX_Xbox.menuB()
             
     FFX_Logs.writeStats("Djose battles:")
