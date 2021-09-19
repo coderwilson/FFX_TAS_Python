@@ -40,39 +40,54 @@ def Entrance():
     print("Mark 2")
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
-    FFX_Screen.clickToBattle()
     
-    #Once we lose control, just keep clicking until we regain control.
-    FFX_Battle.attack('none')
-    time.sleep(0.2)
-    FFX_Screen.awaitTurn()
-    FFX_Battle.attack('none')
-    FFX_Screen.clickToBattle()
-    while not FFX_memory.userControl():
+    #Battles
+    while FFX_memory.getStoryProgress() < 48:
         if FFX_Screen.BattleScreen():
-            FFX_Battle.defend()
-        else:
+            if FFX_memory.getStoryProgress() == 44:
+                FFX_Battle.attack('none')
+            else:
+                FFX_Battle.defend()
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     
+    #FFX_Battle.attack('none')
+    #time.sleep(0.2)
+    #FFX_Screen.awaitTurn()
+    #FFX_Battle.attack('none')
+    #FFX_Screen.clickToBattle()
+    #while not FFX_memory.userControl():
+    #    if FFX_Screen.BattleScreen():
+    #        FFX_Battle.defend()
+    #    else:
+    #        FFX_Xbox.menuB()
+    
     #Out of the frying pan, into the furnace
+    FFX_memory.awaitControl()
     pos = FFX_memory.getCoords()
     while FFX_memory.userControl():
         if pos[1] < 85:
+            print("Path 1")
             FFXC.set_value('AxisLx', -1)
             FFXC.set_value('AxisLy', 0)
         elif pos[1] < 130:
+            print("Path 2")
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 1)
         elif pos[1] < 170:
+            print("Path 3")
             FFXC.set_value('AxisLx', -1)
             FFXC.set_value('AxisLy', 1)
-        elif pos[1] < 190:
+        elif pos[1] < 180:
+            print("Path 4")
             FFXC.set_value('AxisLx', 1)
             FFXC.set_value('AxisLy', 1)
-        elif pos[1] < 225:
+        elif pos[1] < 215:
+            print("Path 5")
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 1)
         else:
+            print("Path 6")
             FFXC.set_value('AxisLx', -1)
             FFXC.set_value('AxisLy', 1)
         pos = FFX_memory.getCoords()
@@ -226,22 +241,12 @@ def ABswimming1() :
     complete = 0
     
     print("Swimming towards airship")
-    while complete == 0 :
+    while FFX_memory.getMap() != 64 :
         pos = FFX_memory.getCoords()
-        ffxMap = FFX_memory.getMap()
-        #print(ffxMap)
-        if not FFX_memory.userControl():
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('BtnA', 0)
-            if FFX_Screen.BattleScreen() :
-                FFX_Battle.stealAndAttack()
-        else:
-            if ffxMap == 71:
+        if FFX_memory.userControl():
+            if FFX_memory.getMap() == 71:
                 FFXC.set_value('AxisLy', -1)
                 FFXC.set_value('BtnA', 1)
-            elif ffxMap == 64:
-                complete = 1
             else:
                 checkpoint = 1
                 FFXC.set_value('AxisLy', 1)
@@ -250,6 +255,16 @@ def ABswimming1() :
                     FFXC.set_value('AxisLx', 1)
                 else:
                     FFXC.set_value('AxisLx', 0)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_Screen.BattleScreen() :
+                print("Battle Start (Al Bhed swimming section)")
+                FFX_Battle.stealAndAttack()
+                print("Battle End (Al Bhed swimming section)")
+            elif FFX_memory.menuOpen():
+                print("Battle Complete screen")
+                FFX_Xbox.menuB()
         
 def ABswimming2() :
     #Quick heal-up to make sure we're full HP on Rikku

@@ -289,6 +289,8 @@ def arrival(rikkucharged):
                 FFXC.set_value('AxisLy', 0)
 
 def lakeRoad():
+    if FFX_memory.getSpeed() < 12:
+        FFX_memory.setSpeed(12)
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
     FFX_memory.fullPartyFormat('spheri')
     FFX_Screen.awaitMap1()

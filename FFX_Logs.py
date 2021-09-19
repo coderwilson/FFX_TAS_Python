@@ -4,6 +4,7 @@ game = "FFX_"
 ext = ".txt"
 fileName = "none"
 fileStats = "none"
+filePlot = "none"
 
 
 def writeLog(message):
@@ -59,6 +60,33 @@ def nextStats():
         statsFile.write("\n")
         statsFile.close()
         print("Stats file is ready for writing!\n")
+
+def writePlot(message):
+    global plotFile
+    global filePlot
+    
+    plotFile = open(filePlot, "a")
+    plotFile.write(str(message))
+    plotFile.write("\n")
+    plotFile.close()
+
+def nextPlot():
+    global filePlot
+    global game
+    global ext
+    if filePlot == "none":
+        timeNow = datetime.datetime.now()
+        filePlot = "Logs/" + game + "Plot_ " + str(timeNow.year) + str(timeNow.month) + str(timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
+        
+        global plotFile
+        plotFile = open(filePlot, "x")
+        plotFile.close()
+        
+        plotFile = open(filePlot, "a")
+        plotFile.write("plotting file is ready for writing!\n")
+        plotFile.write("\n")
+        plotFile.close()
+        print("X/Y plotting file is ready for writing!\n")
 
 def timeStamp():
     return datetime.datetime.now()

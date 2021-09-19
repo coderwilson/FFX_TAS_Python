@@ -238,8 +238,10 @@ def afterBlitz(earlyHaste):
     print("Grabbing first chest.")
     FFX_Xbox.SkipDialog(1) #First chest
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.clickToControl2()
-    time.sleep(0.5)
+    FFX_memory.clickToControl()
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', -1)
+    time.sleep(1)
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 1)
     print("Grabbing second chest")

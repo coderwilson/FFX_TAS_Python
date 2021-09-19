@@ -1495,106 +1495,6 @@ def afterSeymour():
     currentmenuposition = FFX_memory.fullPartyFormat_New('macalaniaescape',11)
     FFX_memory.closeMenu()
 
-
-def afterSeymour_Old():
-    FFX_memory.openMenu()
-    
-    #First, fix item order for later.
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.5)
-    #FFX_Xbox.menuA()
-    #time.sleep(0.5)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.5)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    
-    #Next, sphere grid.
-    #FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Sphere grid on Tidus
-    FFX_Xbox.menuB() #Sphere grid on Tidus
-    
-    FFX_menuGrid.useShiftRight('Tidus')
-    FFX_menuGrid.moveFirst()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
-    FFX_menuGrid.useAndMove()
-    gridUp()
-    gridUp()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','d','none')
-    FFX_menuGrid.useAndQuit()
-    FFX_memory.closeMenu()
-
-def afterSeymour_unused2():
-    #Fixing item order
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuA() #Back out of here
-    FFX_Xbox.menuA() #Back out of here
-    FFX_Xbox.menuA() #Back out of here
-    FFX_Xbox.menuA() #Back out of here
-
 def homeGrid():
     FFX_memory.openMenu()
     FFX_Xbox.menuB()
@@ -1621,7 +1521,7 @@ def homeGrid():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Wakka to 2, Kimahri to 4
     FFX_memory.closeMenu()
-    itemPos(20,9)
+    #itemPos(20,9)
 
 def homeHeal(): #Hi-Potions on front three.
     FFX_memory.openMenu()
@@ -1842,11 +1742,11 @@ def seymourNatusBlitzWin():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
-    useAndUseAgain()
-    FFX_menuGrid.selSphere('power','d','none')
-    useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
+    useAndUseAgain()
+    FFX_menuGrid.selSphere('power','u','none')
+    useAndUseAgain()
+    FFX_menuGrid.selSphere('power','u','none')
     
     FFX_menuGrid.useAndMove()
     gridLeft()

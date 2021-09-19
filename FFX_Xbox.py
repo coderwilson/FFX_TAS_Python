@@ -220,13 +220,27 @@ def tidusFlee():
     #This function has primarily moved to the FFX_Battle library. Leaving this version live in case
     #it continues to be used from other files outside of that library.
     print("Character's first ability. This is modeled after Tidus using Flee prior to Gagazet.")
-    menuDown()
-    SkipDialog(2)
+    print("Tidus Flee (or similar command pattern)")
+    while FFX_memory.battleMenuCursor() != 20:
+        if FFX_Screen.turnTidus() == False:
+            break
+        if FFX_memory.battleMenuCursor() == 255:
+            time.sleep(0.01)
+        elif FFX_memory.battleMenuCursor() == 1:
+            FFX_Xbox.menuUp()
+        elif FFX_memory.battleMenuCursor() > 20:
+            FFX_Xbox.menuUp()
+        else:
+            FFX_Xbox.menuDown()
+    FFX_Xbox.SkipDialog(1.5)
 
 def tidusHaste(direction):
     direction = direction.lower()
     while FFX_memory.battleMenuCursor() != 22:
-        menuDown()
+        if FFX_memory.battleMenuCursor() == 1:
+            menuUp()
+        else:
+            menuDown()
     menuB()
     time.sleep(0.3)
     menuB()
@@ -259,12 +273,17 @@ def weapSwap(position):
     else:
         time.sleep(0.5)
         menuB()
-        while FFX_memory.battleCursor2() != position :
-            if FFX_memory.battleCursor2() < position:
-                menuDown()
-            elif FFX_memory.battleCursor2() > position:
-                menuUp()
-            weap += 1
+        time.sleep(0.07)
+        try:
+            while FFX_memory.battleCursor2() != position :
+                if FFX_memory.battleCursor2() < position:
+                    menuDown()
+                elif FFX_memory.battleCursor2() > position:
+                    menuUp()
+        except:
+            print("Something is wrong.")
+            print(FFX_memory.battleCursor2())
+            print(position)
         menuB()
         menuB()
         time.sleep(0.3)
@@ -295,16 +314,7 @@ def airShipPath(version):
             print("Checkpoint: ", checkpoint)
             lastCP = checkpoint
         pos = FFX_memory.getCoords()
-        if pos == [0.0,0.0]:
-            if FFX_Screen.BattleScreen():
-                FFX_Battle.fleeAll()
-            else:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                menuB()
-                if checkpoint == 50:
-                    FFX_memory.clickToControl()
-        else:
+        if FFX_memory.userControl():
             if checkpoint == 0: #First room
                 if pos[1] > 130:
                     checkpoint = 10
@@ -530,6 +540,18 @@ def airShipPath(version):
                 time.sleep(6.5)
                 skipScene()
                 checkpoint = 1000
+        elif FFX_Screen.BattleScreen():
+            FFX_Battle.fleeAll()
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_memory.menuOpen():
+                FFXC.set_value('BtnB', 1)
+                time.sleep(0.035)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(0.035)
+            elif checkpoint == 50:
+                FFX_memory.clickToControl()
 
 def airShipReturn():
     print("Conversation with Yuna/Kimahri.")

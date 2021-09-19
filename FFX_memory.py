@@ -40,7 +40,7 @@ def start():
 
 def battleActive():
     global baseValue
-    key = baseValue + 0x00F3C908
+    key = baseValue + 0x00F3C8FC
     if process.readBytes(key,1) == 1:
         return True
     else:
@@ -48,28 +48,35 @@ def battleActive():
 
 def battleMenuCursor():
     global baseValue
-    key = baseValue + 0x00F3C9EF
-    if process.readBytes(key,1) != 0:
+    key = baseValue + 0x00F3F77B
+    if process.readBytes(key,1) == 0:
+        return 255
+    else:
         key = baseValue + 0x00F3C926
         return process.readBytes(key,1)
 
 def battleScreen():
-    global baseValue
-    key = baseValue + 0x00F3C9EF
-    if process.readBytes(key,1) == 0:
-        return False
-    if battleMenuCursor() == 255:
-        return False
+    if mainBattleMenu():
+        global baseValue
+        #key = baseValue + 0x00F3C9EF
+        #if process.readBytes(key,1) == 0:
+        #    return False
+        if battleMenuCursor() == 255:
+            return False
+        else:
+            time.sleep(0.05)
+            return True
     else:
-        time.sleep(0.05)
-        return True
+        return False
     
 def battleCursor2():
     global baseValue
     key = baseValue + 0x00F3CA01
-    if process.readBytes(key,1) == 4:
+    if process.readBytes(key,1) != 0:
         key = baseValue + 0x00F3CA0E
         return process.readBytes(key,1)
+    else:
+        return 255
 
 def mainBattleMenu():
     global baseValue
@@ -193,6 +200,7 @@ def clickToEvent():
         time.sleep(0.04)
         FFXC.set_value('BtnB', 0)
         time.sleep(0.04)
+    time.sleep(0.2)
 
 def awaitEvent():
     while userControl():
@@ -228,6 +236,7 @@ def getCamera():
     z = baseValue + 0x008A86F0
     x = baseValue + 0x008A86F8
     y = baseValue + 0x008A8700
+    angle2 = baseValue + 0x008A86C0
     
     key = process.get_pointer(angle)
     angleVal = round(float_from_integer(process.read(key)),2)
@@ -237,8 +246,10 @@ def getCamera():
     yVal = round(float_from_integer(process.read(key)),2)
     key = process.get_pointer(z)
     zVal = round(float_from_integer(process.read(key)),2)
+    key = process.get_pointer(angle2)
+    angleVal2 = round(float_from_integer(process.read(key)),2)
     
-    retVal = [angleVal,xVal,yVal,zVal]
+    retVal = [angleVal,xVal,yVal,zVal, angleVal2]
     #print("Camera details: ", retVal)
     return retVal
 
@@ -1132,6 +1143,23 @@ def diagSkipPossible():
         return True
     else:
         return False
+
+def specialTextOpen():
+    global baseValue
+    
+    key = baseValue + 0x01466D30
+    control = process.readBytes(key,1)
+    if control == 1:
+        time.sleep(0.035)
+        return True
+    else:
+        key = baseValue + 0x01476988
+        control = process.readBytes(key,1)
+        if control == 1:
+            time.sleep(0.035)
+            return True
+        else:
+            return False
 
 def awaitMenuControl():
     counter = 0

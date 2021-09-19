@@ -413,15 +413,15 @@ def escape():
     checkpoint = 0
     lastCP = 0
     while checkpoint != 1000:
+        pos = FFX_memory.getCoords()
         #print("Checkpoint: ", checkpoint)
         if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
         if FFX_memory.userControl():
-            pos = FFX_memory.getCoords()
             if checkpoint == 0:
                 #print("Movement ", checkpoint)
-                if pos[1] > -15:
+                if pos[1] > -25:
                     checkpoint = 10
                 else:
                     FFXC.set_value('AxisLy', -1)
@@ -433,23 +433,23 @@ def escape():
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 10:
                 #print("Movement ", checkpoint)
-                if pos[1] > 390:
+                if pos[1] > 130:
                     checkpoint = 20
                 else:
                     FFXC.set_value('AxisLy', -1)
-                    if pos[1] > ((-3.54 * pos[0]) + 2874.51):
+                    if pos[1] > ((-3.54 * pos[0]) + 2877.51):
                         FFXC.set_value('AxisLx', 1)
-                    elif pos[1] > ((-0.9 * pos[0]) + 854.5):
+                    elif pos[1] > ((-0.9 * pos[0]) + 857.5):
                         FFXC.set_value('AxisLx', 1)
                     else:
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 20:
                 #print("Movement ", checkpoint)
-                if pos[0] < 420:
+                if pos[1] > 385:
                     checkpoint = 30
                 else:
                     FFXC.set_value('AxisLx', 1)
-                    if pos[1] < ((-0.78 * pos[0]) + 761):
+                    if pos[1] < ((-0.78 * pos[0]) + 774):
                         FFXC.set_value('AxisLy', -1)
                     elif pos[1] > 385:
                         FFXC.set_value('AxisLy', 1)
@@ -532,84 +532,7 @@ def escape():
     print("Done pathing. Now for the Wendigo fight.")
     FFX_Battle.wendigo()
     print("Wendigo fight over")
-    
 
-def escape_old():
-    FFX_Screen.clickToMap1()
-    FFX_menu.afterSeymour()
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(1.9)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.touchSaveSphere()
-    
-    FFX_memory.awaitControl()
-    
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(8)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(12)
-    FFXC.set_value('AxisLx', 0)
-    FFX_Battle.fleeAll()
-    
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(10)
-    FFXC.set_value('AxisLx', 0)
-    FFX_Battle.fleeAll()
-    
-    FFX_Screen.awaitMap1()
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(5)
-    FFXC.set_value('AxisLx', 0)
-    
-    FFX_Screen.awaitMap1()
-    #return #Testing only
-    
-    complete = 0
-    stepCount = 0
-    stepMax = 500
-    while complete == 0:
-        if FFX_Screen.BattleScreen():
-            if FFX_memory.getBattleNum() == 195:
-                print("Seymour escape complete.")
-                complete = 1
-            else:
-                FFX_Battle.fleeAll()
-        elif FFX_Screen.BattleComplete():
-            FFX_Xbox.menuB()
-        elif not FFX_memory.userControl():
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-        else:
-            stepCount += 1
-            print("Seymour escape pathing: ", stepCount)
-            if stepCount < 13:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-            elif stepCount < 22:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-            elif stepCount == 35:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-            elif stepCount < 300:
-                FFXC.set_value('AxisLy', -1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.2)
-            elif stepCount < stepMax:
-                print("Max step count exceeded. Awaiting user input. ", stepCount)
-                time.sleep(5)
-            else: complete = 1
-    
-    FFX_Battle.wendigo()
-    print("Wendigo fight over")
-    
 def underLake():
     FFX_Screen.clickToMap1()
     FFXC.set_value('AxisLy', 1)

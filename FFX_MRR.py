@@ -97,7 +97,7 @@ def arrival():
     FFX_Logs.writeStats(claskoSkip)
     checkpoint = 0
     lastCP = 0
-    while checkpoint != 100:
+    while FFX_memory.getMap() != 92:
         if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
@@ -163,7 +163,8 @@ def arrival():
                     FFXC.set_value('AxisLx', 1)
         elif FFX_Screen.BattleScreen():
             print("Starting battle MRR (preload)")
-            FFX_Battle.fleeAll()
+            while not FFX_memory.menuOpen():
+                FFX_Battle.fleeAll()
             FFX_memory.clickToControl()
             hpCheck = FFX_memory.getHP()
             print(hpCheck)
@@ -174,20 +175,14 @@ def arrival():
         else:
             FFXC.set_value('AxisLy', 0)
             FFXC.set_value('AxisLx', 0)
-            if FFX_memory.diagSkipPossible():
+            if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.menuB()
     return wakkaLateMenu
 
 def mainPath(wakkaLateMenu):
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
     FFX_memory.awaitControl()
-    #FFXC.set_value('AxisLy', 1)
-    #FFXC.set_value('AxisLx', 0)
-    #time.sleep(0.7)
-    #FFXC.set_value('AxisLy', 1)
-    #FFXC.set_value('AxisLx', 1)
-    #time.sleep(2.5)
-    #FFX_Xbox.SkipDialog(3) #Up the first lift
-    #FFXC.set_value('AxisLx', 0)
     
     status = [0, 0, 0, 1, 0]
     #{Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete]
@@ -196,49 +191,17 @@ def mainPath(wakkaLateMenu):
     #valeforDrive = 0
     
     while checkpoint != 1000:
+        pos = FFX_memory.getCoords()
         if lastCP != checkpoint:
             lastCP = checkpoint
             print("Checkpoint reached: ", checkpoint)
-        if FFX_Screen.BattleScreen():
-            print("Starting battle MRR (preload)")
-            if status[0] == 1 and status[1] == 1 and status[2] == 2:
-                FFX_Battle.fleeAll()
-                FFX_memory.clickToControl()
-            else:
-                print("Starting battle MRR")
-                status = FFX_Battle.MRRbattle(status)
-                print("Status update: ", status)
-                #print("Yuna Complete state: ", status[0])
-                #print("Kimahri Complete state: ", status[1])
-            status[3] += 1
-            
-            if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
-                print("Yuna has enough levels now. Going to do her grid.")
-                FFX_menu.mrrGridYuna()
-                print("Yuna's gridding is complete for now.")
-                status[4] = 1
-            elif wakkaLateMenu == True and FFX_memory.getSLVLWakka() >= 3:
-                wakkaLateMenu = FFX_menu.mrrGrid2(wakkaLateMenu)
-        else:
-            #print("Checkpoint: ", checkpoint)
-            pos = FFX_memory.getCoords()
-            if pos == [0.0,0.0]: #This means we've lost control of the character for any reason.
-                if checkpoint == 80 and FFX_Screen.PixelTestTol(676,444,(212, 212, 212),5):
-                    print("1000 gil chest")
-                    time.sleep(0.6)
-                    FFX_Xbox.menuB()
-                    checkpoint = 90
-                else:
-                    FFXC.set_value('AxisLx', 0)
-                    FFXC.set_value('AxisLy', 0)
-                    #if checkpoint == 0:
-                    #    FFX_Xbox.menuB()
-            elif checkpoint == 0:
+        if FFX_memory.userControl():
+            if checkpoint == 0:
                 if pos[0] < -10:
                     checkpoint = 3
                 else:
-                    FFXC.set_value('AxisLx', 0)
                     FFXC.set_value('AxisLy', 1)
+                    FFXC.set_value('AxisLx', 0)
             elif checkpoint == 3:
                 if pos[1] > ((-0.94 * pos[0]) -638.53) and pos[1] > ((1.45 * pos[0]) -551.21):
                     checkpoint = 6
@@ -547,6 +510,42 @@ def mainPath(wakkaLateMenu):
                 FFXC.set_value('AxisLx', 0)
                 print("End of MRR pathing section.")
                 checkpoint = 1000
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_Screen.BattleScreen():
+                print("Starting battle MRR (preload)")
+                if status[0] == 1 and status[1] == 1 and status[2] == 2:
+                    FFX_Battle.fleeAll()
+                    FFX_memory.clickToControl()
+                else:
+                    print("Starting battle MRR")
+                    status = FFX_Battle.MRRbattle(status)
+                    print("Status update: ", status)
+                    #print("Yuna Complete state: ", status[0])
+                    #print("Kimahri Complete state: ", status[1])
+                status[3] += 1
+                
+                if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
+                    print("Yuna has enough levels now. Going to do her grid.")
+                    FFX_menu.mrrGridYuna()
+                    print("Yuna's gridding is complete for now.")
+                    status[4] = 1
+                elif wakkaLateMenu == True and FFX_memory.getSLVLWakka() >= 3:
+                    wakkaLateMenu = FFX_menu.mrrGrid2(wakkaLateMenu)
+            elif checkpoint == 80 and FFX_Screen.PixelTestTol(676,444,(212, 212, 212),5):
+                print("1000 gil chest")
+                time.sleep(0.6)
+                FFX_memory.clickToControl()
+                checkpoint = 90
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.menuB()
+            elif FFX_memory.menuOpen():
+                FFXC.set_value('BtnB', 1)
+                time.sleep(0.035)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(0.035)
+                
     print("End of MRR section. Status:")
     print(status)
 
@@ -673,7 +672,7 @@ def battleSite():
     FFX_Xbox.menuB()
     
     status = FFX_Battle.battleGui()
-    FFX_Xbox.SkipDialog(20)
+    FFX_Xbox.SkipDialog(22)
     FFX_Xbox.skipSceneSpec()
     
     FFX_Screen.clickToMap1()

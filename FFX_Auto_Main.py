@@ -9,12 +9,12 @@ FFXC = FFX_Xbox.FFXC
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
-Gamestate = "Macalania"
-StepCounter = 2
 #Gamestate = "Sin"
 #StepCounter = 3
-#Gamestate = "none"
+#Gamestate = "Djose"
 #StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 #gameLength = "short"
@@ -100,7 +100,7 @@ if Gamestate != "none" :
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(9)
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
-        FFX_LoadGame.loadOffsetBattle(1)
+        FFX_LoadGame.loadOffsetBattle(7)
         earlyHaste = 1
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
@@ -114,14 +114,14 @@ if Gamestate != "none" :
         FFX_LoadGame.AfterGui()
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()
-    if Gamestate == "Moonflow" and StepCounter == 2:
+    if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(5)
-    if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(6)
+    if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
+        FFX_LoadGame.loadOffset(7)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
@@ -129,8 +129,8 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
-        FFX_LoadGame.loadOffset(10)
-        time.sleep(2)
+        FFX_LoadGame.loadOffset(15)
+        time.sleep(0.5)
         FFXC.set_value('AxisLy', 1)
         time.sleep(1.5)
         FFXC.set_value('AxisLy', 0)
@@ -138,15 +138,15 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(3)
+        FFX_LoadGame.loadOffset(99)
     if Gamestate == "Home" and StepCounter == 2:
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadOffset(4)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
         FFX_LoadGame.loadBahamut()
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadOffset(4)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
@@ -163,8 +163,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(1)
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(22)
-    if Gamestate == "Sin" and StepCounter == 3: #Before egg hunt
-        FFX_LoadGame.loadOffset(46)
+    if Gamestate == "Sin" and StepCounter == 3: #Before "inside sin" pathing
+        FFX_LoadGame.loadOffset(2)
         
 
 #Movement files
@@ -516,13 +516,14 @@ try:
         FFX_rescueYuna.preEvrae()
         StepCounter = 1
         Gamestate = "rescueYuna"
+        #Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "rescueYuna" and StepCounter == 1:
         reportGamestate()
         FFX_rescueYuna.Evrae()
         FFX_rescueYuna.guards()
         StepCounter = 2
-        Gamestate = "manualBreak" # Used for testing only.
+        #Gamestate = "manualBreak" # Used for testing only.
         
     if Gamestate == "rescueYuna" and StepCounter == 2:
         reportGamestate()
@@ -536,7 +537,8 @@ try:
 
     if Gamestate == "rescueYuna" and StepCounter == 4:
         reportGamestate()
-        gems = FFX_rescueYuna.evraeAltana()
+        FFX_rescueYuna.evraeAltana()
+        #Gamestate = "manualBreak" # Used for testing only.
         StepCounter = 5
 
     if Gamestate == "rescueYuna" and StepCounter == 5:
@@ -545,6 +547,7 @@ try:
         StepCounter = 1
         Gamestate = "Gagazet"
         FFX_Logs.nextFile()
+        #Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Gagazet" and StepCounter == 1:
         reportGamestate()
@@ -630,8 +633,10 @@ try:
     print("Time! The game is now over.")
 
 except Exception as errMsg:
+    print("--------------------------------------------------")
     print("Something went wrong during the run. Error:")
     print(errMsg)
+    print("--------------------------------------------------")
     time.sleep(20)
     FFXC.set_value('AxisLx',0)
     FFXC.set_value('AxisLy',0)
@@ -655,6 +660,10 @@ time.sleep(10)
 
 
 FFX_memory.end()
+try:
+    FFX_Screen.clickImage("stop_recording.JPG")
+except:
+    print("Could not stop recording.")
 
 print("Automation complete. Unplugging controller.")
 import Reset_Controller

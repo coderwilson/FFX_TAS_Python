@@ -128,125 +128,15 @@ def path():
                 if stoneBreath == 0:
                     print("Still looking for Stone Breath.")
                 stoneBreath = FFX_Battle.djose(stoneBreath)
+                print("Battles complete.")
                 countBattles += 1
             elif FFX_memory.menuOpen():
+                FFX_Xbox.menuB()
+            elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
             
     FFX_Logs.writeStats("Djose battles:")
     FFX_Logs.writeStats(countBattles)
-    
-def path_old():
-    print("Starting Djose section")
-    stepCount = 0
-    complete = 0
-    stoneBreath = 0
-    countBattles = 0
-    while complete == 0:
-        if FFX_Screen.BattleScreen():
-            print("Starting battle")
-            stoneBreath = FFX_Battle.djose(stoneBreath)
-            countBattles += 1
-        #elif FFX_Screen.Minimap1() and FFX_Screen.PixelTest(344,100,(64, 193, 64)):
-        #    print("Djose main road complete")
-        #    complete = 1
-        elif FFX_Screen.PixelTestTol(370,739,(14, 67, 138),5):
-            print("Made it to the end of the road.")
-            FFXC.set_value('AxisLy', 1)
-            FFXC.set_value('AxisLx', 0)
-            FFX_Xbox.SkipDialog(10)
-            FFX_Screen.clickToMap1()
-            time.sleep(10.5) #Along the bridge towards Lucille/Elma
-            FFXC.set_value('AxisLx', -1)
-            time.sleep(0.2)
-            FFXC.set_value('AxisLx', 0)
-            time.sleep(5)
-            FFX_Xbox.SkipDialog(20)
-            FFXC.set_value('AxisLy', 0)
-            complete = 1
-        elif FFX_Screen.Minimap1() and not FFX_Screen.PixelTest(344,100,(64, 193, 64)):
-            stepCount += 1
-            print("MRR pathing: ", stepCount)
-            if stepCount < 26:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-            elif stepCount < 30:
-                FFXC.set_value('AxisLx', -1)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-            elif stepCount < 75:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-            elif stepCount == 115 and stoneBreath == 0:
-                stepCount -= 1
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 160:
-                FFXC.set_value('AxisLx', 1)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-            elif stepCount < 161:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount == 161:
-                FFXC.set_value('AxisLy', 1)
-                countSteps = 0
-                while countSteps < 15:
-                    #Run forward, partly diagonally to get around Kimahri.
-                    countSteps += 1
-                    FFXC.set_value('AxisLx', 1)
-                    time.sleep(0.5)
-                    FFXC.set_value('AxisLx', 0)
-                    time.sleep(0.5)
-                FFX_Xbox.SkipDialog(20)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                complete = 1
-            else:
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                complete = 1
-        else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            if stepCount > 105:
-                FFX_Xbox.menuB()
-    FFX_Logs.writeStats("Djose battles:")
-    FFX_Logs.writeStats(countBattles)
-    
-def unusedCommands():
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.SkipDialog(5)
-    FFX_Screen.clickToMap1() #Conversation with Auron
-    time.sleep(3)
-    FFXC.set_value('AxisLy', 0)
-    FFX_Screen.awaitMap1()
-    
-    #Bridge
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(3)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(5)
-    FFX_Xbox.SkipDialog(15)
-    FFXC.set_value('AxisLy', 0);
 
 def temple():
     FFX_memory.clickToControl()
@@ -259,6 +149,12 @@ def temple():
     time.sleep(6)
     FFXC.set_value('AxisLy', 0)
     FFX_memory.awaitControl()
+    FFXC.set_value('AxisLy', -1)
+    time.sleep(0.3)
+    FFXC.set_value('AxisLx', -1)
+    FFX_memory.clickToEvent() #Talk to Auron
+    time.sleep(0.2)
+    FFX_memory.clickToControl3() #Done talking
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(2)
@@ -323,6 +219,7 @@ def trials():
     FFXC.set_value('AxisLy', 1)
     time.sleep(4)
     FFXC.set_value('AxisLx', -1)
+    time.sleep(0.3)
     FFX_memory.clickToEvent()
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
@@ -716,16 +613,24 @@ def trials():
     FFXC.set_value('AxisLy', 0)
     time.sleep(2)
     
-    FFX_Screen.awaitPixel(143,182,(64, 193, 64)) #Green minimap door, aeon room before conversation
+    FFX_memory.awaitControl() #Green minimap door, aeon room before conversation
     print("Trials complete. Now waiting on Yuna/Donna")
+    
+    
+    print("Talk to Auron while we wait.")
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', -1)
+    FFX_memory.clickToEvent()
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
-    time.sleep(2)
+    FFX_memory.clickToControl3()
+    time.sleep(1.5)
     FFXC.set_value('AxisLx', 0)
     time.sleep(0.5)
     FFXC.set_value('AxisLy', 0)
+    FFX_Xbox.SkipDialog(20)
     
-    FFX_Screen.clickToPixel(198,185,(64, 193, 64)) #Green minimap door, aeon room after conversation
+    FFX_memory.clickToControl()
     print("Leaving the fayth room")
     FFXC.set_value('AxisLy', 1)
     time.sleep(1.1)
@@ -749,11 +654,16 @@ def leavingDjose():
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
     time.sleep(1.8)
+    FFX_memory.clickToEvent()
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', 1)
+    FFX_memory.clickToControl3()
+    time.sleep(0.4)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 1)
-    time.sleep(4)
+    FFX_memory.clickToEvent()
     FFXC.set_value('AxisLy', 0)
-    FFX_Screen.awaitMap1()
+    FFX_memory.awaitControl()
     
     #inside
     print("Now inside the Djose temple.")
@@ -762,8 +672,12 @@ def leavingDjose():
     time.sleep(1.8)
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 0)
-    time.sleep(3.5)
+    time.sleep(1.5)
+    FFXC.set_value('AxisLx', 1)
+    FFX_memory.awaitEvent()
     FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0)
+    time.sleep(1)
     
     print("Ready for Yuna's room")
     FFX_memory.awaitControl()
@@ -809,7 +723,7 @@ def leavingDjose():
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(5)
+    time.sleep(4)
     FFXC.set_value('AxisLy', 0)
     time.sleep(5)
     FFXC.set_value('AxisLx', 0)

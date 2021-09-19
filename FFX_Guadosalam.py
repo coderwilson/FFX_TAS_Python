@@ -34,38 +34,42 @@ def arrival():
     FFXC.set_value('AxisLy', 0) #Enter the room where we meet Seymour
     
     FFX_memory.clickToControl3()
-    FFXC.set_value('AxisLx', 1)
-    FFX_memory.clickToEvent() #Talk to Wakka
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 1)
+    time.sleep(1)
+    FFX_memory.clickToEvent() #Talk to Auron (first for affection)
+    FFXC.set_value('AxisLy', 0)
     FFX_memory.clickToControl3()
     
-    FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', -1)
     time.sleep(0.7)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.clickToEvent() #Start conversation with Auron
+    FFX_memory.clickToEvent() #Start conversation with Wakka
     FFXC.set_value('AxisLy', 0)
     FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(0.5)
-    FFXC.set_value('AxisLx', 0)
+    time.sleep(0.4)
     FFX_memory.clickToEvent() #Lulu conversation
     FFXC.set_value('AxisLy', 0)
     FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLx', -1)
-    time.sleep(1)
+    time.sleep(0.5)
+    FFXC.set_value('AxisLy', -1)
+    time.sleep(0.25)
+    FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.menuB() # Yuna's turn
+    FFX_memory.clickToEvent() # Yuna's turn
+    time.sleep(0.2)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0)
     FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', 1)
     time.sleep(0.3)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.clickToEvent()
+    FFX_memory.clickToEvent() #Start conversation with Rikku
     FFXC.set_value('AxisLy', 0)
     FFX_Xbox.SkipDialog(66) #Seymour/Trommell
     FFX_Xbox.skipStoredScene(10)

@@ -26,7 +26,7 @@ def desert1():
     
     FFX_Screen.awaitTurn()
     tidusturns = 0
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen():
         if FFX_Screen.BattleScreen():
             turnchar = FFX_memory.getBattleCharTurn()
             if turnchar == 0:
@@ -85,8 +85,8 @@ def desert1():
         if lastCP != checkpoint:
             print("Checkpoint: ", checkpoint)
             lastCP = checkpoint
+        pos = FFX_memory.getCoords()
         if FFX_memory.userControl():
-            pos = FFX_memory.getCoords()
             cam = FFX_memory.getCamera()
             #if checkpoint > 150: print("Checkpoint: ", checkpoint)
             if checkpoint == 0:
@@ -372,7 +372,7 @@ def findSummoners(blitzWin):
     FFXC.set_value('AxisLx', 0)
     
     FFX_Battle.home1() #First battle
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.7)
     FFXC.set_value('AxisLx', 1)
@@ -380,7 +380,6 @@ def findSummoners(blitzWin):
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_Screen.clickToBattle()
     FFX_Battle.home2() #Second battle
     #FFX_menu.homeHeal() #Healing up
     FFXC.set_value('AxisLy', -1)

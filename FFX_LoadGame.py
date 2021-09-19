@@ -275,9 +275,9 @@ def LoadMRR2():
             FFXC.set_value('AxisLy', 0)
 
 def AfterGui():
-    loadOffset(1)
+    loadOffset(6)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(2)
+    time.sleep(2.5)
     FFXC.set_value('AxisLx', 0)
     
     #Same pattern as the actual run.
@@ -307,7 +307,7 @@ def djoseTemple():
     time.sleep(0.5)
     
 def moonflow2():
-    loadOffset(2)
+    loadOffset(18)
     time.sleep(6)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
@@ -317,7 +317,7 @@ def moonflow2():
     time.sleep(0.5)
 
 def loadGuadoSkip():
-    loadOffset(5)
+    loadOffset(1)
     time.sleep(1)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', 1)

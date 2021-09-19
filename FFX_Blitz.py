@@ -112,6 +112,8 @@ def allDefense():
             if FFX_memory.menuControl() == 1 and menu == 0:
                 print("Dialog is open. Probably Goers just scored.")
                 FFX_Xbox.menuB()
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.menuB()
             elif FFX_memory.menuControl() and (menu == 38 or menu == 24 or menu == 102):
                 print("Breakthrough menu.")
                 FFXC.set_value('AxisLx', 0)
@@ -131,6 +133,9 @@ def breakOnePassLast():
     FFX_Xbox.menuB() #Break one
     time.sleep(0.05)
     FFX_memory.awaitMenuControl()
+    FFX_Xbox.menuUp() #Try to continue the Dribble
+    FFX_Xbox.menuB()
+    time.sleep(0.8)
     FFX_Xbox.menuUp() #Try to continue the Dribble
     FFX_Xbox.menuB()
     time.sleep(0.05)

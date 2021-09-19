@@ -42,67 +42,14 @@ def arrival():
     checkpoint = 0
     lastCP = 0
     while checkpoint != 100:
+        pos = FFX_memory.getCoords()
         if lastCP != checkpoint:
             print("Checkpoint: ", checkpoint)
             lastCP = checkpoint
-        if FFX_Screen.BattleScreen():
-            print("Starting battle")
-            if selfDestruct == 0:
-                selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
-                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
-                    FFX_memory.clickToControl() # After-battle screen is still open.
-            else:
-                FFX_Battle.MiihenRoad(selfDestruct)
-                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
-                    FFX_memory.clickToControl() # After-battle screen is still open.
-            print("Battle complete")
-        elif checkpoint == 10 and FFX_Screen.PixelTestTol(478,768,(222, 222, 222),5):
-            print("Talking to the guy for free spear.")
-            time.sleep(1.2)
-            FFX_Xbox.menuB() #Close dialog
-            time.sleep(0.6)
-            FFXC.set_value('BtnB', 1)
-            time.sleep(0.035)
-            FFXC.set_value('BtnB', 0)
-            #while not FFX_memory.menuOpen():
-            #    FFXC.set_value('BtnY', 1)
-            #    time.sleep(0.035)
-            #    FFXC.set_value('BtnY', 0)
-            #    time.sleep(0.035)
-            #time.sleep(2)
-            #FFXC.set_value('BtnA', 1)
-            #time.sleep(0.35)
-            #FFXC.set_value('BtnA', 0)
-            FFXC.set_value('AxisLy', 1)
-            time.sleep(0.4)
-            FFXC.set_value('BtnB', 1)
-            time.sleep(0.05)
-            FFXC.set_value('BtnB', 0)
-            FFXC.set_value('AxisLy', 0)
-            for x in range(50):
-                FFXC.set_value('BtnB', 1)
-                time.sleep(0.035)
-                FFXC.set_value('BtnB', 0)
-                time.sleep(0.035)
-                
-            
-            #Now to try to skip into the next scene
-            checkpoint = 20
-        elif checkpoint == 60 and FFX_Screen.PixelTestTol(528,768,(222, 222, 222),5):
-            print("A wild Shedinja has appeared.")
-            print("She is not super effective.")
-            FFX_Xbox.SkipDialog(28.5)
-            FFXC.set_value('AxisLy', 1)
-            FFX_Screen.awaitMap1()
-            time.sleep(1)
-            checkpoint = 70
-        elif FFX_memory.userControl() == False:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            FFX_Xbox.menuB()
-        else:
+        if FFX_memory.getMap() == 58 or FFX_memory.getStoryProgress() >= 750:
+            checkpoint = 100
+        elif FFX_memory.userControl():
             #print(checkpoint)
-            pos = FFX_memory.getCoords()
             if checkpoint == 0:
                 if pos[1] > 1348:
                     checkpoint = 3
@@ -174,26 +121,75 @@ def arrival():
                     else:
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 60:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
-                FFX_Xbox.menuB()
-            elif checkpoint == 70:
-                if pos[1] < -1:
-                    checkpoint = 100
+                if pos[1] > 2900:
+                    checkpoint = 70
                 else:
                     FFXC.set_value('AxisLy', 1)
-                    if pos[1] < 900:
-                        FFXC.set_value('AxisLx', 1)
-                    elif pos[0] < -30:
-                        FFXC.set_value('AxisLx', 1)
-                    elif pos[0] > 10:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
+                    FFXC.set_value('AxisLx', 0)
+                    FFX_Xbox.menuB()
+            elif checkpoint == 70:
+                FFXC.set_value('AxisLy', 1)
+                if pos[1] < 900:
+                    FFXC.set_value('AxisLx', 1)
+                elif pos[0] < -30:
+                    FFXC.set_value('AxisLx', 1)
+                elif pos[0] > 10:
+                    FFXC.set_value('AxisLx', -1)
+                else:
+                    FFXC.set_value('AxisLx', 0)
+        elif FFX_Screen.BattleScreen():
+            print("Starting battle")
+            if selfDestruct == 0:
+                selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
+                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
+                    FFX_memory.clickToControl() # After-battle screen is still open.
+            else:
+                FFX_Battle.MiihenRoad(selfDestruct)
+                if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
+                    FFX_memory.clickToControl() # After-battle screen is still open.
+            print("Battle complete")
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.menuB()
+        elif checkpoint == 10 and FFX_Screen.PixelTestTol(478,768,(222, 222, 222),5):
+            print("Talking to the guy for free spear.")
+            time.sleep(1.2)
+            FFX_Xbox.menuB() #Close dialog
+            time.sleep(0.6)
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB', 0)
+            #while not FFX_memory.menuOpen():
+            #    FFXC.set_value('BtnY', 1)
+            #    time.sleep(0.035)
+            #    FFXC.set_value('BtnY', 0)
+            #    time.sleep(0.035)
+            #time.sleep(2)
+            #FFXC.set_value('BtnA', 1)
+            #time.sleep(0.35)
+            #FFXC.set_value('BtnA', 0)
+            FFXC.set_value('AxisLy', 1)
+            time.sleep(0.4)
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.05)
+            FFXC.set_value('BtnB', 0)
+            FFXC.set_value('AxisLy', 0)
+            for x in range(50):
+                FFXC.set_value('BtnB', 1)
+                time.sleep(0.035)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(0.035)
+                
+            
+            #Now to try to skip into the next scene
+            checkpoint = 20
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
     print("Travel agency")
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLy', 0)
+    if FFX_memory.getStoryProgress() < 750:
+        FFXC.set_value('AxisLy', 1)
+        FFX_Xbox.SkipDialog(10)
+        FFXC.set_value('AxisLy', 0)
     return selfDestruct
 
 def midPoint():
@@ -201,9 +197,9 @@ def midPoint():
     FFX_memory.clickToControl3()
     
     FFXC.set_value('AxisLy', -1)
-    time.sleep(0.15)
+    time.sleep(0.6)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(3)
+    time.sleep(20)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     
@@ -214,7 +210,7 @@ def midPoint():
     time.sleep(1)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
-    FFX_memory.clickToControl() #Dude gives us some Lv.1 spheres
+    FFX_memory.clickToControl3() #Dude gives us some Lv.1 spheres
     
     print("Let's grab some P.downs")
     FFXC.set_value('AxisLx', -1)

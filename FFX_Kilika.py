@@ -322,95 +322,6 @@ def forest2():
                     else:
                         FFXC.set_value('AxisLx', 0)
 
-def forest2_old() :
-    speedCount = 0
-    stepCount = 0
-    stepMax = 160
-    while stepCount < stepMax :
-        if FFX_Screen.Minimap1() and not FFX_Screen.PixelTest(326,154,(193, 193, 193)) :
-            print("Kilika movement, North, stepCounter: ",stepCount)
-            if stepCount < 4 :
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 10 :
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 20:
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount < 21 : #Align with the narrow path
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 28 : #Align with the narrow path
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 40 :
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount < 54 :
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 58 : #Slightly up to avoid getting stuck
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 76 : #To the far right
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 79 :
-                FFXC.set_value('AxisLx', 1)
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount < 100 :
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            elif stepCount < 110 : #Diagonal, towards the temple
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                FFX_Xbox.SkipDialog(0.3)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            elif stepCount < 120 :
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-            else  :
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-            stepCount += 1
-        elif FFX_Screen.Minimap1() and FFX_Screen.PixelTest(326,154,(193, 193, 193)) :
-            stepCount = stepMax
-        elif FFX_Screen.BattleScreen() :
-            speedCount += FFX_Battle.KilikaWoods()
-        elif stepCount > 100:
-            FFX_Xbox.menuB()
-    print("Speed spheres obtained through Kilika North: ", speedCount)
-    return speedCount
-
 def Geneaux():
     FFX_menu.Geneaux()
     FFXC.set_value('AxisLy', 1)
@@ -425,15 +336,6 @@ def Geneaux():
     FFXC.set_value('AxisLx', 0)
     
     FFX_Battle.Geneaux()
-    
-    #After the battle, head to the temple.
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(1.5)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', 0)
     
     #Approach scene with the Luca Goers
     FFX_memory.clickToControl()

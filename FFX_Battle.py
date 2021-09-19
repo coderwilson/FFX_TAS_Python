@@ -19,11 +19,14 @@ def defend():
     print("Defend command")
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
-    time.sleep(0.8)
+    time.sleep(0.6)
 
 
 def tidusFlee():
     print("Tidus Flee (or similar command pattern)")
+    if FFX_memory.otherBattleMenu():
+        while FFX_memory.otherBattleMenu():
+            FFX_Xbox.menuA()
     while FFX_memory.battleMenuCursor() != 20:
         if FFX_Screen.turnTidus() == False:
             break
@@ -54,6 +57,8 @@ def useSkill(position):
     if position == 0:
         FFX_Xbox.SkipDialog(1.5)
     else:
+        FFX_Xbox.menuB()
+        time.sleep(0.035)
         while FFX_memory.battleCursor2() != position:
             if position % 2 == 0 and FFX_memory.battleCursor2() % 2 == 1:
                 FFX_Xbox.menuLeft()
@@ -72,10 +77,7 @@ def tidusOD():
         FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(2)
     while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
-        if FFX_memory.battleScreen():
-            return
-        elif FFX_Screen.BattleComplete():
-            return
+        doNothing = True
     time.sleep(0.43)  # First try every time?
     FFX_Xbox.menuB()
     time.sleep(0.25)
@@ -100,10 +102,7 @@ def tidusODSeymour():
     FFX_Xbox.menuB()  # Activate overdrive
     time.sleep(0.4)
     while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
-        if FFX_memory.battleScreen():
-            return
-        elif FFX_Screen.BattleComplete():
-            return
+        doNothing = True
     time.sleep(0.43)  # First try every time?
     FFX_Xbox.menuB()
     time.sleep(0.25)
@@ -241,7 +240,7 @@ def FinishWithAttacksOnly():
     countAttacks = 0
     countRevives = 0
 
-    while BattleComplete == 0:
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.faintCheck() > 0:
                 revive()
@@ -275,7 +274,7 @@ def Ammes():
 
     tidusODflag = False
 
-    while BattleComplete == 0:
+    while BattleComplete != 1:
         if FFX_memory.battleScreen():
             if tidusODflag == False and FFX_Screen.turnTidus() and FFX_Screen.checkCharge(1):
                 tidusOD()
@@ -300,7 +299,7 @@ def Tanker():
     auronCount = 0
     FFX_Screen.clickToBattle()
 
-    while not FFX_Screen.BattleComplete():
+    while FFX_memory.getStoryProgress() < 19:
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 tidusCount += 1
@@ -335,7 +334,7 @@ def Tanker():
 
 def Klikk():
     rikkuSteal = 0
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             BattleHP = FFX_memory.getBattleHP()
             if BattleHP[1] == 0 or BattleHP[2] == 0:
@@ -378,7 +377,6 @@ def Klikk():
 
 def Tros():
     FFX_Logs.writeLog("Fight start: Tros")
-    BattleComplete = 0
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     battleClock = 0
@@ -388,8 +386,9 @@ def Tros():
     countSteals = 0
     countDefends = 0
     countHeals = 0
-
-    while BattleComplete == 0:
+    
+    FFX_Screen.clickToBattle()
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
         elif FFX_memory.otherBattleMenu():
@@ -473,21 +472,19 @@ def Tros():
                     print("Something went wrong. Deferring this turn.")
                     battleClock -= 1
 
-        elif FFX_Screen.BattleComplete():
-            FFX_memory.clickToControl()
-            BattleComplete = 1
-            FFX_Logs.writeStats("Tros Attacks:")
-            FFX_Logs.writeStats(str(countAttacks))
-            FFX_Logs.writeStats("Tros Revives:")
-            FFX_Logs.writeStats(str(countRevives))
-            FFX_Logs.writeStats("Tros Grenades:")
-            FFX_Logs.writeStats(str(countGrenades))
-            FFX_Logs.writeStats("Tros Steals:")
-            FFX_Logs.writeStats(str(countSteals))
-            FFX_Logs.writeStats("Tros Turns defending:")
-            FFX_Logs.writeStats(str(countDefends))
-            FFX_Logs.writeStats("Tros Turns healing (potions):")
-            FFX_Logs.writeStats(str(countHeals))
+    FFX_memory.clickToControl()
+    FFX_Logs.writeStats("Tros Attacks:")
+    FFX_Logs.writeStats(str(countAttacks))
+    FFX_Logs.writeStats("Tros Revives:")
+    FFX_Logs.writeStats(str(countRevives))
+    FFX_Logs.writeStats("Tros Grenades:")
+    FFX_Logs.writeStats(str(countGrenades))
+    FFX_Logs.writeStats("Tros Steals:")
+    FFX_Logs.writeStats(str(countSteals))
+    FFX_Logs.writeStats("Tros Turns defending:")
+    FFX_Logs.writeStats(str(countDefends))
+    FFX_Logs.writeStats("Tros Turns healing (potions):")
+    FFX_Logs.writeStats(str(countHeals))
 
 
 def besaid():
@@ -495,7 +492,7 @@ def besaid():
     FFXC.set_value('AxisLy', 0)
     battleFormat = FFX_memory.getBattleNum()
     print("Besaid battle format number: ", battleFormat)
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnYuna():
                 buddySwap(1)
@@ -595,7 +592,7 @@ def Echuilles():
     print("Sinspawn Echuilles fight start")
 
     tidusCounter = 0
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.faintCheck() > 0:
                 revive()
@@ -628,7 +625,7 @@ def Echuilles():
                     print("Wakka attack")
                     attack('none')
     FFXC.set_value('BtnB', 1)
-    time.sleep(17)
+    time.sleep(3.5)
     FFXC.set_value('BtnB', 0)
     FFX_Xbox.skipScene()
 
@@ -639,7 +636,7 @@ def lancetTutorial():
 
     turn1 = 0
     turn2 = 0
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 attack('none')
@@ -682,7 +679,7 @@ def KilikaWoods(valeforCharge):
         skipCharge = True
 
     print("Kilika battle")
-    while BattleComplete == 0:
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if valeforCharge == False and skipCharge == False:  # Still to charge Valefor
             if FFX_memory.battleScreen():
                 print("--------------------------------")
@@ -803,7 +800,7 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             attack('none')
                         else:
-                            FFX_Xbox.tidusFlee()
+                            tidusFlee()
                     else:
                         defend()
                 elif bNum == 32:
@@ -811,7 +808,7 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             attack('none')
                         else:
-                            FFX_Xbox.tidusFlee()
+                            tidusFlee()
                     elif FFX_Screen.turnWakka():
                         attack('right')
                     else:
@@ -821,7 +818,7 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             defend()
                         else:
-                            FFX_Xbox.tidusFlee()
+                            tidusFlee()
                     elif FFX_Screen.turnWakka():
                         attack('right')
                     else:
@@ -831,14 +828,14 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             attack('none')
                         else:
-                            FFX_Xbox.tidusFlee()
+                            tidusFlee()
                     elif FFX_Screen.turnWakka():
                         attack('right')
                     else:
                         defend()
                 elif bNum == 35 or bNum == 36:
                     if FFX_Screen.turnTidus():
-                        FFX_Xbox.tidusFlee()
+                        tidusFlee()
                     else:
                         defend()
                 elif bNum == 37:
@@ -847,18 +844,11 @@ def KilikaWoods(valeforCharge):
                         thunder('left')
                     elif FFX_Screen.turnLulu():
                         buddySwap(2)
-                        FFX_Xbox.tidusFlee()
+                        tidusFlee()
                     elif FFX_Screen.turnWakka():
                         attack('left')
                     else:
                         defend()
-        if FFX_Screen.BattleComplete():
-            # speedSpheres = FFX_Screen.checkSpeed()
-            # print("Speed spheres picked up: ",speedSpheres)
-            # FFXC.set_value('BtnB', 1)
-            # time.sleep(0.5)
-            # FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
 
     FFX_memory.clickToControl()  # Rewards screen
     if currentCharge == True:
@@ -895,27 +885,37 @@ def Geneaux():
 
     valeforOD = 0
     skipCount = 0
-    while not FFX_memory.userControl():
+    while FFX_memory.getMap() != 78: #AKA end of battle screen
+        pos = FFX_memory.getCoords()
         if FFX_memory.battleScreen():
             print("Valefor casting Fire")
             aeonSpell(0)
-        elif FFX_Screen.BattleComplete():
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
+        elif FFX_memory.menuOpen():
+                FFXC.set_value('BtnB', 1)
+                time.sleep(0.035)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(0.035)
+        elif FFX_memory.userControl():
+            FFXC.set_value('AxisLy', 1)
+            if pos[1] > ((-1.25 * pos[0]) + 543.17):
+                FFXC.set_value('AxisLx', -1)
+            else:
+                FFXC.set_value('AxisLx', 0)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
     print("Battle Complete")
 
 
 def LucaWorkers():
     FFX_Logs.writeLog("Fight start: Workers in Luca")
     BattleComplete = 0
-    FFX_Screen.awaitTurn()
+    FFX_Screen.clickToBattle()
 
-    while BattleComplete == 0:
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(2)
-            FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
-        elif FFX_memory.battleScreen():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
+        if FFX_memory.battleScreen():
             if FFX_Screen.turnKimahri() or FFX_Screen.turnTidus():
                 if FFX_Screen.faintCheck() >= 1:
                     revive()
@@ -934,15 +934,10 @@ def LucaWorkers2():
     kimTurn = 0
     tidTurn = 0
     luluTurn = 0
-    FFX_Screen.awaitTurn()
+    FFX_Screen.clickToBattle()
 
-    while BattleComplete == 0:
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(2)
-            FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
-        elif FFX_memory.battleScreen():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
+        if FFX_memory.battleScreen():
             if FFX_Screen.turnKimahri():
                 if FFX_Screen.faintCheck() >= 1:
                     revive()
@@ -992,7 +987,7 @@ def Oblitzerator(earlyHaste):
     #    #First turn is always Tidus. Haste Lulu if we've got the levels.
     #    FFX_Xbox.tidusHaste('left')
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if crane < 3:
                 if FFX_Screen.turnLulu():
@@ -1021,7 +1016,7 @@ def Oblitzerator(earlyHaste):
                     attack('none')
                 else:
                     defend()
-        else:
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     FFX_memory.clickToControl()
 
@@ -1033,7 +1028,7 @@ def afterBlitz():
     FFX_Xbox.tidusHaste('none')
     wakkaTurns = 0
 
-    while not FFX_Screen.BattleComplete():
+    while FFX_memory.getStoryProgress() != 600:
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 attack('none')
@@ -1058,13 +1053,17 @@ def afterBlitz():
                     print("Wakka healing Tidus for safety")
                 else:
                     defend()
-    FFXC.set_value('BtnB', 1)
-    time.sleep(8)
-    FFXC.set_value('BtnB', 0)
-    FFX_Xbox.SkipDialog(8) # Quick dialog, "What's going on?"
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.menuB()
+        elif FFX_memory.menuOpen():
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.035)
+    FFX_Xbox.SkipDialog(5) # Quick dialog, "What's going on?"
     FFX_Xbox.skipScene()
 
-    FFX_Screen.awaitTurn()
+    FFX_Screen.clickToBattle()
     attack('none') #Hardest boss in the game.
     print("Well that boss was difficult.")
 
@@ -1096,7 +1095,7 @@ def afterBlitz():
     else:
         useSkill(0)
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen():
         if FFX_memory.battleScreen():
             if FFX_Screen.faintCheck() > 0:
                 revive()
@@ -1118,7 +1117,7 @@ def MiihenRoad(selfDestruct):
     else:
         ambushed = False
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if ambushed == True:
             print("Looks like we got ambushed. Skipping this battle.")
             fleeAll()
@@ -1157,14 +1156,14 @@ def chocoEater():
     FFX_Screen.awaitTurn()
     FFX_Xbox.tidusHaste('right')  # First turn, haste the chocobo eater
     turns = 0
-    while not FFX_Screen.Minimap2():
+    while not FFX_memory.userControl():
         if FFX_memory.battleScreen():
             turns += 1
             if FFX_Screen.faintCheck() > 0:
                 revive()
             else:
                 defend()
-        else:
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     FFX_Logs.writeStats("Chocobo eater turns:")
     FFX_Logs.writeStats(str(turns))
@@ -1231,7 +1230,7 @@ def MRRbattle(status):
         FFX_Logs.writeLog("MRR battle, formation #" + str(battle))
         print("Battle has been engaged. Enemy formation: ", battle)
         print(status)
-        while not FFX_Screen.BattleComplete():
+        while not FFX_memory.menuOpen():
             if FFX_memory.battleScreen():
                 turnCounter += 1
                 print(turnCounter)
@@ -1555,10 +1554,7 @@ def MRRbattle(status):
                         fleeAll()
                         break
                     time.sleep(0.2)
-    while not FFX_memory.userControl():
-        if FFX_Screen.BattleComplete():
-            FFX_Xbox.menuB()
-
+    FFX_memory.clickToControl()
     if chargePhase == True:
         print("We have charged Valefor back up.")
         status[2] = 2
@@ -1669,19 +1665,24 @@ def battleGui():
         phase = 3
 
     turn = 0
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             turn += 1
             if FFX_Screen.turnSeymour():
                 while FFX_memory.battleMenuCursor() != 21:
-                    FFX_Xbox.menuDown()
+                    if FFX_memory.battleMenuCursor() == 22 or FFX_memory.battleMenuCursor() == 1:
+                        FFX_Xbox.menuUp()
+                    else:
+                        FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                while FFX_memory.battleCursor2() != 4:
+                while FFX_memory.battleCursor2() < 4:
                     FFX_Xbox.menuDown()
                 time.sleep(0.035)
                 FFX_Xbox.menuB()
                 if turn == 1:
+                    time.sleep(0.035)
                     FFX_Xbox.menuLeft()
+                FFX_Xbox.menuB()
                 FFX_Xbox.menuB()
             else:
                 defend()
@@ -1694,36 +1695,31 @@ def battleGui():
 def djose(stoneBreath):
     FFX_Logs.writeLog("Fight start: Djose road")
     complete = 0
-    while complete == 0:
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         battleNum = FFX_memory.getBattleNum()
-        #time.sleep(1)
-        if FFX_Screen.BattleComplete():
-            print("Djose: battle complete")
-            FFX_memory.clickToControl()
-            complete = 1
-        elif FFX_memory.battleScreen():
+        if FFX_memory.battleScreen():
             if stoneBreath == 1:  # Stone Breath already learned
                 print("Djose: Stone breath already learned.")
                 fleeAll()
-                complete = 1
-            if stoneBreath == 0:  # Stone breath not yet learned
+            else:  # Stone breath not yet learned
                 if battleNum == 128 or battleNum == 134 or battleNum == 136:
                     print("Djose: Learning Stone Breath.")
                     lancetSwapDjose('none')
-                    complete = 1
                     stoneBreath = 1
+                    break
                 elif battleNum == 127:
                     print("Djose: Learning Stone Breath")
                     # One basilisk with two wasps
                     lancetSwapDjose('up')
-                    complete = 1
                     stoneBreath = 1
+                    break
                 else:
                     print("Djose: Cannot learn Stone Breath here.")
                     fleeAll()
-                    complete = 1
 
+    print("Mark 2")
     FFX_memory.clickToControl()
+    print("Mark 3")
     partyHP = FFX_memory.getHP()
     print(partyHP)
     if partyHP[0] < 300 or partyHP[4] < 300:
@@ -1737,12 +1733,7 @@ def djose(stoneBreath):
 def fleePathing():
     FFX_Logs.writeLog("Fight start: Flee Pathing? When did I program this?")
     complete = 0
-    while complete == 0:
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(2)
-            FFXC.set_value('BtnB', 0)
-            complete = 1
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 tidusFlee()
@@ -1752,6 +1743,8 @@ def fleePathing():
 
 def extractor():
     FFX_Logs.writeLog("Fight start: Extractor")
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
     FFX_Screen.clickToBattle()
     FFX_Xbox.tidusHaste('none')
     time.sleep(0.2)
@@ -1766,8 +1759,10 @@ def extractor():
 
     tidusCheer = 0
     complete = 0
-    while complete == 0:
-        if FFX_memory.battleScreen():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
+        if FFX_memory.specialTextOpen():
+            FFX_Xbox.menuB()
+        elif FFX_memory.battleScreen():
             if FFX_Screen.faintCheck() > 0:
                 revive()
             elif FFX_Screen.turnTidus() and tidusCheer < 2:
@@ -1778,10 +1773,7 @@ def extractor():
         elif FFX_Screen.BattleComplete():
             complete = 1
         elif FFX_memory.diagSkipPossible():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(0.035)
-            FFXC.set_value('BtnB', 0)
-            time.sleep(0.035)
+            FFX_Xbox.menuB()
     FFX_memory.clickToControl()
 
 
@@ -1801,18 +1793,18 @@ def mixTutorial():
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()  # Throw some ability spheres at it.
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
 
 
 def chargeRikku():
     FFX_Logs.writeLog("Fight start: Charging Rikku (before Guadosalam)")
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnRikku():
                 attack('none')
             else:
                 escapeOne()
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     healUp(3)
 
 def thunderPlains(status, section):
@@ -1830,11 +1822,13 @@ def thunderPlains(status, section):
     speedcount = FFX_memory.getSpeed()
     rikkucharge = 0
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
+            print("Turn start - Thunder Plains")
             turnchar = FFX_memory.getBattleCharTurn()
             rikkucharge = FFX_memory.getOverdriveValue(6)
             if bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
+                print("Battle with Larvae. Battle number: ", bNum)
                 if startingstatus[2] == False:
                     if turnchar == 0:
                         if tidusturns == 0:
@@ -1854,6 +1848,7 @@ def thunderPlains(status, section):
                 else:
                     fleeAll()
             elif bNum == 160:
+                print("Battle with Iron Giant. Battle number: ", bNum)
                 if startingstatus[1] == False:
                     if turnchar == 0:
                         if tidusturns == 0:
@@ -1866,6 +1861,7 @@ def thunderPlains(status, section):
                         buddySwap_new(rikkuposition)
                     elif turnchar == 6:
                         Steal()
+                        print("OMG something's happening!")
                         status[1] = True
                     else:
                         defend()
@@ -1874,6 +1870,7 @@ def thunderPlains(status, section):
                 else:
                     fleeAll()
             elif bNum == 161:
+                print("Battle with Iron Giant. Battle number: ", bNum)
                 if startingstatus[1] == False and FFX_memory.getStoryProgress == 1375:
                     if turnchar == 0:
                         if tidusturns == 0:
@@ -1899,6 +1896,7 @@ def thunderPlains(status, section):
                         wakkaturns += 1
                     elif turnchar == 6:
                         Steal()
+                        print("OMG something's happening!")
                         status[1] = True
                     elif turnchar == 2:
                         rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -1939,6 +1937,7 @@ def thunderPlains(status, section):
                         print("Grenade Slot %d" % grenadeslot)
                         useItem(grenadeslot,'none')
                         status[3] = True
+                        fleeAll()
                     elif turnchar == 2:
                         rikkuposition = FFX_memory.getBattleCharSlot(6)
                         rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
@@ -1996,6 +1995,7 @@ def thunderPlains(status, section):
                     else:
                         fleeAll()
             elif bNum == 154 or bNum == 156 or bNum == 164:
+                print("Battle with random mobs. Battle number: ", bNum)
                 if startingstatus[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
                     if turnchar == 0:
                         if tidusturns == 0:
@@ -2018,6 +2018,7 @@ def thunderPlains(status, section):
                     fleeAll()
             else:  # Nothing useful this battle. Moving on.
                 fleeAll()
+    print("Battle is ended - Thunder Plains")
     FFX_memory.clickToControl()
     # FFX_Xbox.menuB() #In case lightning is incoming. Happens far too often.
     if rikkucharge == 100:
@@ -2037,129 +2038,6 @@ def thunderPlains(status, section):
     print(status)
     return status
 
-def thunderPlains_Old(status, section):
-    bNum = FFX_memory.getBattleNum()
-    nadeSlot = FFX_memory.getUseItemsSlot(35)
-    nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
-    if nadeCount > 1:
-        throwNades = True
-    else:
-        throwNades = False
-
-    while not FFX_Screen.BattleComplete():
-        if FFX_memory.battleScreen():
-            if bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
-                if status[2] == False:
-                    if FFX_Screen.turnTidus():
-                        buddySwap(1)
-                        Steal()
-                        status[2] = True
-                    else:
-                        buddySwap(1)
-                        fleeAll()
-                elif FFX_Screen.turnTidus():
-                    fleeAll()
-                else:
-                    buddySwap(1)
-                    fleeAll()
-            elif bNum == 160:
-                if status[1] == False:
-                    if FFX_Screen.turnTidus():
-                        buddySwap(1)
-                        Steal()
-                        status[1] = True
-                    else:
-                        buddySwap(1)
-                        fleeAll()
-                elif FFX_Screen.turnTidus():
-                    fleeAll()
-                else:
-                    buddySwap(1)
-                    fleeAll()
-            elif bNum == 161:
-                if status[1] == False:
-                    if FFX_Screen.turnTidus():
-                        buddySwap(1)
-                        Steal()
-                        status[1] = True
-                    else:
-                        buddySwap(1)
-                        fleeAll()
-                if throwNades == True and FFX_memory.getSpeed() < 15 and section == 2:
-                    if FFX_Screen.turnTidus():
-                        buddySwap(1)
-                        useItem(1, 'none')
-                    else:
-                        buddySwap(1)
-                        fleeAll()
-                elif FFX_Screen.turnTidus():
-                    fleeAll()
-                else:
-                    buddySwap(1)
-                    fleeAll()
-            elif throwNades == True and (bNum == 154 or bNum == 156 or bNum == 164):
-                if FFX_memory.getSpeed() < 15 and section == 2:
-                    if FFX_Screen.turnTidus():
-                        buddySwap(1)
-                        useItem(1, 'none')
-                    else:
-                        buddySwap(1)
-                        fleeAll()
-                elif FFX_Screen.turnTidus():
-                    fleeAll()
-                else:
-                    buddySwap(1)
-                    fleeAll()
-            else:  # Nothing useful this battle. Moving on.
-                fleeAll()
-    FFX_memory.clickToControl()
-    # FFX_Xbox.menuB() #In case lightning is incoming. Happens far too often.
-    print("Status array, Rikku charge, Light curtain, and Lunar Curtain:")
-    print(status)
-    print("Checking party format and resolving if needed.")
-    FFX_memory.fullPartyFormat('kimahri')
-    print("Party format is good. Now checking health values.")
-    hpValues = FFX_memory.getHP()
-    if hpValues[0] < 700 or hpValues[2] < 1000:
-        healUp(3)
-    print("Ready to continue onward.")
-    print("Plains variables: Rikku charged, stolen lunar curtain, stolen light curtain")
-    print(status)
-    return status
-
-
-def thunderPlains_old2(rikkuCharge):
-    FFX_Logs.writeLog("Fight start: Thunder Plains")
-    print("Rikku steal, Tidus flee, Auron escape if needed")
-    rikkuCharge = 0
-    BattleComplete = 0
-    while BattleComplete == 0:
-        if FFX_memory.battleScreen():
-            if FFX_Screen.turnRikku():
-                Steal()
-            elif FFX_Screen.turnTidus():
-                if rikkuCharge == 1:
-                    tidusFlee()
-                elif FFX_memory.partySize() == 3 and FFX_Screen.checkCharge(2):
-                    print("Rikku is now charged.")
-                    rikkuCharge = 1
-                    tidusFlee()
-                    print("Tidus using Flee. Let's get out of here.")
-                else:
-                    print("Rikku is not yet charged.")
-                    escapeOne()
-            else:
-                escapeOne()
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(1.8)
-            FFXC.set_value('BtnB', 0)
-            time.sleep(0.1)
-            FFX_Xbox.menuB()
-            BattleComplete = 1
-    healUp(3)
-
-
 def mWoods(woodsVars):
     FFX_Logs.writeLog("Fight start: Macalania Woods")
     print("Logic depends on completion of specific goals. In Order:")
@@ -2170,98 +2048,107 @@ def mWoods(woodsVars):
     print("------------- Battle Start - Battle Number: ", battleNum)
     tidusturns = 0
     rikkucharge = 0
+    wakkasafe = True
     FFX_Screen.awaitTurn()
     if FFX_Screen.turnTidus() == False:
         fleeAll()
     else:
-        try:
-            while not FFX_Screen.BattleComplete():
-                if FFX_memory.battleScreen():
-                    turnchar = FFX_memory.getBattleCharTurn()
-                    rikkucharge = FFX_memory.getOverdriveValue(6)
-                    if woodsVars[0] == False:  # Rikku needs charging.
-                        if turnchar == 6:
-                            if battleNum == 175 and woodsVars[2] == False:
-                                Steal()
-                            elif battleNum == 172 and woodsVars[1] == False:
-                                StealDown()
-                            elif battleNum == 171 and woodsVars[1] == False:
-                                StealRight()
-                            else:
-                                attack('none')
-                        else:
-                            escapeOne()
-                    elif woodsVars[1] == False or woodsVars[2] == False:
+        while not FFX_memory.menuOpen(): #AKA end of battle screen
+            if FFX_memory.battleScreen():
+                turnchar = FFX_memory.getBattleCharTurn()
+                rikkucharge = FFX_memory.getOverdriveValue(6)
+                if woodsVars[0] == False:  # Rikku needs charging.
+                    print("Marker 1")
+                    if turnchar == 6:
                         if battleNum == 175 and woodsVars[2] == False:
-                            if turnchar == 0:
-                                wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
-                                if tidusturns == 0 and wakkasafe == True:
-                                    rikkuposition = FFX_memory.getBattleCharSlot(6)
-                                    buddySwap_new(rikkuposition)
-                                else:
-                                    tidusFlee()
-                                tidusturns += 1
-                            elif turnchar == 4:
-                                tidusposition = FFX_memory.getBattleCharSlot(0)
-                                buddySwap_new(tidusposition)
-                            elif turnchar == 6:
-                                Steal()
-                            else:
-                                tidusposition = FFX_memory.getBattleCharSlot(0)
-                                if tidusposition > 3:
-                                    buddySwap_new(tidusposition)
-                                else:
-                                    fleeAll()
+                            Steal()
                         elif battleNum == 172 and woodsVars[1] == False:
-                            if turnchar == 0:
-                                wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
-                                    FFX_memory.getBattleCharSlot(4)] > 200
-                                if tidusturns == 0 and wakkasafe == True:
-                                    rikkuposition = FFX_memory.getBattleCharSlot(6)
-                                    buddySwap_new(rikkuposition)
-                                else:
-                                    tidusFlee()
-                                tidusturns += 1
-                            elif turnchar == 4:
-                                tidusposition = FFX_memory.getBattleCharSlot(0)
-                                buddySwap_new(tidusposition)
-                            elif turnchar == 6:
-                                StealDown()
-                            else:
-                                tidusposition = FFX_memory.getBattleCharSlot(0)
-                                if tidusposition > 3:
-                                    buddySwap_new(tidusposition)
-                                else:
-                                    fleeAll()
+                            StealDown()
                         elif battleNum == 171 and woodsVars[1] == False:
-                            if turnchar == 0:
-                                wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
-                                    FFX_memory.getBattleCharSlot(4)] > 200
-                                if tidusturns == 0 and wakkasafe == True:
-                                    rikkuposition = FFX_memory.getBattleCharSlot(6)
-                                    buddySwap_new(rikkuposition)
-                                else:
-                                    tidusFlee()
-                                tidusturns += 1
-                            elif turnchar == 4:
-                                tidusposition = FFX_memory.getBattleCharSlot(0)
-                                buddySwap_new(tidusposition)
-                            elif turnchar == 6:
-                                StealRight()
-                            else:
-                                tidusposition = FFX_memory.getBattleCharSlot(0)
-                                if tidusposition > 3:
-                                    buddySwap_new(tidusposition)
-                                else:
-                                    fleeAll()
+                            StealRight()
                         else:
-                            tidusFlee()
+                            attack('none')
+                    else:
+                        escapeOne()
+                elif woodsVars[1] == False or woodsVars[2] == False:
+                    if battleNum == 175 and woodsVars[2] == False:
+                        print("Marker 2")
+                        if turnchar == 0:
+                            #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
+                            wakkaSafe = True
+                            if tidusturns == 0 and wakkasafe == True:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 2:
+                            escapeOne()
+                        elif turnchar == 4:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                        elif turnchar == 6:
+                            Steal()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            if tidusposition > 3:
+                                buddySwap_new(tidusposition)
+                            else:
+                                escapeOne()
+                    elif battleNum == 172 and woodsVars[1] == False:
+                        print("Marker 3")
+                        if turnchar == 0:
+                            #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
+                            #    FFX_memory.getBattleCharSlot(4)] > 200
+                            wakkasafe = True #Something wrong with the original logic.
+                            if tidusturns == 0 and wakkasafe == True:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 2:
+                            escapeOne()
+                        elif turnchar == 4:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                        elif turnchar == 6:
+                            StealDown()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            if tidusposition > 3:
+                                buddySwap_new(tidusposition)
+                            else:
+                                escapeOne()
+                    elif battleNum == 171 and woodsVars[1] == False:
+                        print("Marker 4")
+                        if turnchar == 0:
+                            #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
+                            #    FFX_memory.getBattleCharSlot(4)] > 200
+                            wakkasafe = True #Something wrong with the original logic.
+                            if tidusturns == 0 and wakkasafe == True:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 2:
+                            escapeOne()
+                        elif turnchar == 4:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                        elif turnchar == 6:
+                            StealRight()
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            if tidusposition > 3:
+                                buddySwap_new(tidusposition)
+                            else:
+                                escapeOne()
                     else:
                         tidusFlee()
-        except Exception as errMsg:
-            print("An error occurred. Error message:")
-            print(errMsg)
-            fleeAll()
+                else:
+                    tidusFlee()
 
     print("Battle complete, now to deal with the aftermath.")
     FFX_memory.clickToControl3()
@@ -2293,192 +2180,6 @@ def mWoods(woodsVars):
     print("HP is good. Onward!")
     return woodsVars
 
-
-def mWoods_Old(woodsVars):
-    FFX_Logs.writeLog("Fight start: Macalania Woods")
-    print("Logic depends on completion of specific goals. In Order:")
-    print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
-    try:
-        print(woodsVars)
-    except:
-        print("Could not print woods vars.")
-    stealAttempt = False
-    tidusIn = True
-    try:
-        while not FFX_Screen.BattleComplete():
-            if FFX_memory.battleScreen():
-                if woodsVars[0] == False:  # Rikku needs charging.
-                    if FFX_Screen.turnTidus():
-                        buddySwap(1)
-                        tidusIn = False
-                        if FFX_Screen.checkCharge(1):
-                            woodsVars[0] = True
-                    if FFX_Screen.turnRikku():
-                        if stealAttempt == False:
-                            battleNum = FFX_memory.getBattleNum()
-                            if battleNum == 175 and woodsVars[2] == False:
-                                Steal()
-                                stealAttempt = True
-                            elif battleNum == 172 and woodsVars[1] == False:
-                                StealDown()
-                                stealAttempt = True
-                            elif battleNum == 171 and woodsVars[1] == False:
-                                StealRight()
-                                stealAttempt = True
-                            elif woodsVars[0] == True:
-                                buddySwap(1)
-                                fleeAll()
-                            else:
-                                attack('none')
-                        elif woodsVars[0] == True and tidusIn == False:
-                            buddySwap(1)
-                            tidusIn == True
-                            fleeAll()
-                        else:
-                            attack('down')
-                    else:
-                        escapeOne()
-                elif stealAttempt == False and (woodsVars[1] == False or woodsVars[2] == False):
-                    battleNum = FFX_memory.getBattleNum()
-                    if battleNum == 171 and woodsVars[1] == False:
-                        if FFX_Screen.turnTidus():
-                            buddySwap(1)
-                            FFX_Screen.awaitTurn()
-                            StealRight()
-                        else:
-                            buddySwap(1)
-                            fleeAll()
-                    elif battleNum == 172 and woodsVars[1] == False:
-                        if FFX_Screen.turnTidus():
-                            buddySwap(1)
-                            FFX_Screen.awaitTurn()
-                            StealDown()
-                        else:
-                            buddySwap(1)
-                            fleeAll()
-                    elif battleNum == 175 and woodsVars[2] == False:
-                        if FFX_Screen.turnTidus():
-                            buddySwap(1)
-                            FFX_Screen.awaitTurn()
-                            Steal()
-                        else:
-                            buddySwap(1)
-                            fleeAll()
-                    else:
-                        if tidusIn == False:
-                            buddySwap(1)
-                            tidusIn = True
-                        fleeAll()
-                else:
-                    if tidusIn == False:
-                        buddySwap(1)
-                        tidusIn = True
-                    fleeAll()
-    except Exception as errMsg:
-        print("An error occurred. Error message:")
-        print(errMsg)
-        fleeAll()
-
-    print("Battle complete, now to deal with the aftermath.")
-    if FFX_Screen.BattleComplete():
-        FFX_memory.clickToControl()
-    print("Checking battle formation.")
-    FFX_memory.fullPartyFormat('kimahri')
-    print("Party format is now good. Let's check health.")
-    # Heal logic
-    partyHP = FFX_memory.getHP()
-    if partyHP[0] < 450 or partyHP[6] < 180:
-        healUp(3)
-    print("And last, we'll update variables.")
-    if FFX_memory.getUseItemsSlot(32) != 255:
-        woodsVars[1] = True
-    if FFX_memory.getUseItemsSlot(24) != 255:
-        woodsVars[2] = True
-    print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
-    print(woodsVars)
-    print("HP is good. Onward!")
-    return woodsVars
-
-
-def mWoods_old2(woodsVars):
-    # depreciated, do not use.
-    FFX_Logs.writeLog("Fight start: Macalania Woods")
-    print("Rikku steal, Tidus flee, Auron escape if needed.")
-    BattleComplete = 0
-    print("Variable check: ", woodsVars)
-    while BattleComplete == 0:
-        if FFX_memory.battleScreen():
-            if FFX_Screen.turnTidus():
-                time.sleep(0.5)
-                if woodsVars[0] == 1:
-                    print("Tidus using Flee. Let's get out of here.")
-                    tidusFlee()
-                else:
-                    if FFX_memory.partySize() == 3 and FFX_Screen.checkCharge(2):
-                        print("Rikku is now charged.")
-                        woodsVars[0] = 1
-                        tidusFlee()
-                        print("Tidus using Flee. Let's get out of here.")
-                    else:
-                        print("Tidus using escape. Let's get out of here.")
-                        escapeOne()
-            elif FFX_Screen.turnRikku():
-                if woodsVars[0] == 0:
-                    if FFX_memory.partySize() == 3 and FFX_Screen.checkCharge(2):
-                        print("Rikku is now charged.")
-                        woodsVars[0] = 1
-                if woodsVars[1] == 0 or woodsVars[2] == 0:
-                    time.sleep(1)  # Allows us to identify the screen we're on.
-                    print("Rikku still needs something.")
-                    print(woodsVars)
-                    if FFX_Screen.PixelTestTol(1069, 28, (49, 143, 164), 5) and woodsVars[1] == 0:  # Chimera confirmed
-                        print("Chimera")
-                        Steal()
-                        while not FFX_memory.battleScreen():
-                            if FFX_Screen.PixelTest(884, 91, (225, 225, 225)):
-                                woodsVars[1] = 1
-                    elif FFX_Screen.PixelTestTol(649, 10, (32, 85, 109), 5) and woodsVars[
-                        2] == 0:  # One bee, two blue ele's confirmed
-                        print("Double blue elemental")
-                        StealDown()
-                        while not FFX_memory.battleScreen():
-                            if FFX_Screen.PixelTest(934, 94, (219, 219, 219)):
-                                woodsVars[2] = 1
-                    elif FFX_Screen.PixelTestTol(1132, 61, (52, 151, 170), 5) and woodsVars[
-                        2] == 0:  # Blue ele with tanker and raptor confirmed
-                        print("Single blue elemental")
-                        StealRight()
-                        while not FFX_memory.battleScreen():
-                            if FFX_Screen.PixelTest(934, 94, (219, 219, 219)):
-                                woodsVars[2] = 1
-                    else:
-                        print("Eh, nothing useful here.")
-                        if woodsVars[0] == 0:
-                            attack('none')
-                        else:
-                            escapeOne()
-                else:
-                    print("We're done with stealing here.")
-                    print(woodsVars)
-                    if woodsVars[0] == 0:
-                        attack('none')
-                    else:
-                        escapeOne()
-            elif FFX_Screen.turnAuron():
-                if FFX_memory.partySize() == 3 and FFX_Screen.checkCharge(2):
-                    print("Rikku is now charged.")
-                    woodsVars[0] = 1
-                escapeOne()
-            time.sleep(0.1)
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(1.8)
-            FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
-    healUp(3)
-    return woodsVars
-
-
 # Process written by CrimsonInferno
 def spherimorph():
     FFX_Logs.writeLog("Fight start: Spherimorph")
@@ -2492,7 +2193,7 @@ def spherimorph():
     tidusturns = 0
     rikkuturns = 0
     rikkuCounter = 0
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             turnchar = FFX_memory.getBattleCharTurn()
             partyHP = FFX_memory.getBattleHP()
@@ -2579,126 +2280,6 @@ def spherimorph():
     time.sleep(2)
     FFXC.set_value('BtnB', 0)
 
-
-def spherimorph_old():
-    FFX_Logs.writeLog("Fight start: Spherimorph")
-
-    # Gameplan:
-    # Formation starts as Auron Rikku Tidus
-    # Rikku will swap for Kimahri, he lancets until the end of the fight.
-    # Auron does not swap until the others have gone around the loop.
-
-    # Tidus defends and then swaps for Yuna and defends
-    # Yuna swaps for Lulu and defends
-    # Lulu swaps for Tidus who defends
-    # After that is complete, Auron swaps for Rikku who overdrives.
-
-    FFX_Screen.clickToBattle()
-    defend()  # Tidus defend
-    print("Phase 1, setting up for Rikku to overdrive to victory")
-    complete = 0
-    spellNum = 0
-    kimXP = 0
-    luluXP = 0
-    while complete == 0:
-        if FFX_memory.battleScreen():
-            if FFX_Screen.turnTidus():
-                buddySwap(0)  # Tidus swap with Yuna.
-                FFX_Screen.awaitTurn()
-                defend()
-            elif FFX_Screen.turnRikku():
-                buddySwap(1)
-                FFX_Screen.awaitTurn()
-                lancet('none')  # Rikku for Kimahri, attack once
-                kimXP = 1
-            elif FFX_Screen.turnAuron():
-                attack('none')
-                time.sleep(0.8)
-                spellNum = FFX_Screen.spherimorphSpell()
-                print("Spell: ", spellNum)
-            elif FFX_Screen.turnYuna():
-                buddySwap(3)
-                FFX_Screen.awaitTurn()
-                defend()  # Yuna swap out for Lulu, defend
-            elif FFX_Screen.turnLulu():
-                defend()
-        if spellNum != 0 and kimXP == 1:
-            complete = 1
-
-    print("Phase 2, get the last character XP needed and then Rikku overdrive")
-    complete = 0
-    rikkuCounter = 0
-    tidusXP = 0
-    while not complete == 1:
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 0)
-        FFXC.set_value('Dpad', 0)
-        if FFX_Screen.BattleComplete():
-            complete = 1
-            FFXC.set_value('BtnB', 1)
-            time.sleep(2)
-            FFXC.set_value('BtnB', 0)
-        elif FFX_memory.battleScreen():
-            if FFX_Screen.turnKimahri():
-                lancet('none')
-            elif FFX_Screen.turnYuna():
-                buddySwap(3)
-                defend()  # Yuna swap out for Lulu, defend
-            elif FFX_Screen.turnLulu():
-                buddySwap(0)  # Tidus back in.
-                defend()
-                tidusXP = 1
-            elif FFX_Screen.turnAuron():
-                if tidusXP == 1:
-                    buddySwap(1)
-                    print("Swap done")
-                else:
-                    defend()
-            elif FFX_Screen.turnTidus():
-                defend()
-            elif FFX_Screen.turnRikku():
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('Dpad', 0)
-                print("Starting Rikku's overdrive")
-                while not FFX_Screen.PixelTestTol(306, 683, (223, 223, 223), 5):
-                    FFX_Xbox.menuLeft()
-                    rikkuCounter += 1
-                    if rikkuCounter % 100 == 0:
-                        print("Mark: pushing left for Rikku overdrive")
-                print("Mark: Overdrive ready")
-                time.sleep(0.3)
-                FFX_Xbox.menuB()
-                time.sleep(1)
-                FFX_Logs.writeStats("Spherimorph spell used:")
-                FFX_Logs.writeStats(str(spellNum))
-                if spellNum == 1:
-                    FFX_Logs.writeStats("Creating Ice to counter Fire")
-                    FFX_Logs.writeLog("Creating Ice to counter Fire")
-                    print("Creating Ice")
-                    FFX_memory.rikkuODItems('spherimorph1')
-                elif spellNum == 2:
-                    FFX_Logs.writeStats("Creating Thunder to counter Water")
-                    FFX_Logs.writeLog("Creating Thunder to counter Water")
-                    print("Creating Water")
-                    FFX_memory.rikkuODItems('spherimorph2')
-                elif spellNum == 3:
-                    FFX_Logs.writeStats("Creating Water to counter Thunder")
-                    FFX_Logs.writeLog("Creating Water to counter Thunder")
-                    print("Creating Thunder")
-                    FFX_memory.rikkuODItems('spherimorph3')
-                elif spellNum == 4:
-                    FFX_Logs.writeStats("Creating Fire to counter Ice")
-                    FFX_Logs.writeLog("Creating Fire to counter Ice")
-                    print("Creating Fire")
-                    FFX_memory.rikkuODItems('spherimorph4')
-
-                FFX_Xbox.menuB()  # Cast spell on Spherimorph
-                FFX_Xbox.menuB()  # Cast spell on Spherimorph
-                FFX_Xbox.menuB()  # Cast spell on Spherimorph
-            time.sleep(0.5)
-
-
 # Process written by CrimsonInferno
 def negator():  # AKA crawler
     FFX_Logs.writeLog("Fight start: Crawler/Negator")
@@ -2713,7 +2294,7 @@ def negator():  # AKA crawler
     luluturns = 0
     yunaturns = 0
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         FFXC.set_value('AxisLx', 0)
         FFXC.set_value('AxisLy', 0)
         FFXC.set_value('Dpad', 0)
@@ -2791,7 +2372,7 @@ def seymourGuado():
     animahits = 0
     animamiss = 0
 
-    while not FFX_memory.menuOpen():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             turnchar = FFX_memory.getBattleCharTurn()
             for i in range(1, 4):
@@ -3016,18 +2597,8 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
 
         FFX_Logs.writeLog("Using %s" % itemname)
         print("Using %s" % itemname)
-        if FFX_Screen.PixelTestTol(277, 726, (223, 223, 223), 5):
+        while FFX_memory.battleMenuCursor() != 1:
             FFX_Xbox.menuDown()
-        else:
-            while not FFX_Screen.PixelTestTol(276, 769, (218, 218, 218), 5):  # Item option isn't showing up
-                if FFX_Screen.BattleComplete():
-                    return
-                FFX_Xbox.menuDown()
-            while not FFX_Screen.PixelTestTol(130, 779, (165, 167, 165),
-                                              5):  # Item option isn't selected (it's always last)
-                if FFX_Screen.BattleComplete():
-                    return
-                FFX_Xbox.menuDown()
         FFX_Xbox.menuB()  # Item menu open.
         time.sleep(0.3)
         cursor = 1
@@ -3044,6 +2615,8 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
             FFX_Xbox.menuB()
         print("Direction: ", direction)
         direction = direction.lower()
+        print("Target: ", targetposition)
+        print("Healer: ", healerposition)
         if (targetposition - healerposition) % 3 == 1:
             if direction == "left":
                 FFX_Xbox.menuLeft()
@@ -3124,8 +2697,10 @@ def wendigo():
     tidusdied = False
     tidushaste = False
     FFX_Logs.writeLog("Fight start: Wendigo")
+    
+    FFX_Screen.awaitTurn()
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             print("Test")
             partyHP = FFX_memory.getBattleHP()
@@ -3198,6 +2773,7 @@ def wendigo():
                     tidushealself = False
                 else:
                     attack('left')
+                time.sleep(0.2)
             elif turnchar == 6:
                 if phase == 2:
                     phase += 1
@@ -3241,8 +2817,6 @@ def wendigo():
             else:
                 if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     defend()
-        elif FFX_memory.diagSkipPossible():
-            FFX_Xbox.menuB()  # Effectively clicking to battle and after battle dialog.
 
 def bikanelCharge(chargeState):
     FFX_Logs.writeLog("Fight start: Charging Kimahri and Rikku, Bikanel")
@@ -3259,7 +2833,7 @@ def bikanelCharge(chargeState):
         fleeAll()
     else:
         print("Continuing to charge Rikku and Kimahri.")
-        while not FFX_Screen.BattleComplete():
+        while not FFX_memory.menuOpen(): #AKA end of battle screen
             if FFX_memory.battleScreen():
                 print("Battle screen.")
                 turns += 1
@@ -3320,7 +2894,7 @@ def desertSpeed(chargeState):
                 if FFX_memory.battleScreen():
                     buddySwap(1)
                     FFX_Screen.awaitTurn()
-                    FFX_Xbox.tidusFlee()
+                    tidusFlee()
                 else:
                     FFX_Xbox.menuB()
         else:
@@ -3413,35 +2987,35 @@ def home1():
     FFX_Screen.clickToBattle()
     print("Tidus vs Bombs")
     FFX_Xbox.tidusHaste('none')
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.faintCheck() > 0:
                 revive()
             elif FFX_Screen.turnTidus():
-                FFX_Screen.awaitTurn()
                 attack('none')
             else:
                 defend()
+    print("Home 1 shows as fight complete.")
     FFX_memory.clickToControl()
-
 
 def home2():
     FFX_Logs.writeLog("Fight start: Home 2")
     FFX_Screen.clickToBattle()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
 
     print("Kimahri vs dual horns")
-    buddySwap(1)  # Tidus for Kimahri
-    lancetHome('none')
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
+            kimahriposition = FFX_memory.getBattleCharSlot(3)
+            print(kimahriposition)
             if FFX_Screen.turnKimahri():
                 kimahriOD(4)
+            elif kimahriposition > 3:
+                buddySwap_new(kimahriposition)  # Tidus for Kimahri
+                time.sleep(0.2)
+                lancetHome('none')
             else:
                 defend()
+    print("Home 2 shows as fight complete.")
     FFX_memory.clickToControl()
     FFX_Screen.openMenu()
     time.sleep(1)
@@ -3458,17 +3032,17 @@ def home2():
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
 
-
 def home3():
     FFX_Logs.writeLog("Fight start: Home 3")
     FFX_Screen.clickToBattle()
+    time.sleep(1)
     randomFight = tidusFlee()
     complete = 0
     while complete == 0:
         if randomFight == 2:
             complete = 1
         else:
-            FFX_Screen.clickToMap1()
+            FFX_memory.clickToControl()
 
             FFXC.set_value('AxisLy', -1)
             FFXC.set_value('AxisLx', -1)
@@ -3489,7 +3063,7 @@ def home3():
             FFX_Screen.clickToBattle()
     tidusOD()
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 attack('none')
@@ -3499,6 +3073,7 @@ def home3():
                 useItem(3, 'none')
             else:
                 defend()
+    print("Home 3 shows as fight complete.")
     FFX_memory.clickToControl()
 
 
@@ -3507,15 +3082,18 @@ def home4():
     FFX_Screen.clickToBattle()
 
     print("Kimahri vs Chimera")
-    buddySwap(1)  # Tidus for Kimahri
-    time.sleep(0.2)
-    lancetHome('none')
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
+            kimahriposition = FFX_memory.getBattleCharSlot(3)
             if FFX_Screen.turnKimahri():
                 kimahriOD(5)
+            elif kimahriposition > 3:
+                buddySwap_new(kimahriposition)  # Tidus for Kimahri
+                time.sleep(0.2)
+                lancetHome('none')
             else:
                 defend()
+    print("Home 4 shows as fight complete.")
     FFX_memory.clickToControl()
 
 
@@ -3533,7 +3111,7 @@ def Evrae():
     FFXC.set_value('AxisLy', 0)
     FFX_Screen.clickToBattle()  # This gets us past the tutorial and all the dialog.
 
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             turnchar = FFX_memory.getBattleCharTurn()
             print("Tidus prep turns: ", tidusPrep)
@@ -3585,11 +3163,10 @@ def Evrae():
                 else:
                     print("No attempt to heal.")
                     Steal()
-    while not FFX_memory.menuOpen():
-        if FFX_memory.diagSkipPossible():
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     FFXC.set_value('BtnB', 1)
-    time.sleep(3)
+    time.sleep(3.5)
     FFXC.set_value('BtnB', 0)
 
     time.sleep(4)
@@ -3600,8 +3177,8 @@ def guards(groupNum):
     FFX_Logs.writeLog("Fight start: Bevelle Guards")
     rikkuHeal = False
     turnNum = 0
-    FFX_memory.awaitControl()
-    while not FFX_Screen.BattleComplete():
+    FFX_Screen.clickToBattle()
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 turnNum += 1
@@ -3653,33 +3230,31 @@ def isaaru():
         else:
             confirm = 1
 
-    if confirm == 1:
+    if confirm == 1: #Larvae battle
         aeonSummon(2)
+        while FFX_memory.battleActive():
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.035)
         time.sleep(0.5)
-        while not FFX_Screen.BattleComplete():
-            if FFX_memory.battleScreen():
-                attack('none')
-    else:
-        while not FFX_Screen.BattleComplete():
+    else: #Isaaru/aeon battle
+        while not FFX_memory.menuOpen():
             if FFX_memory.battleScreen():
                 if FFX_Screen.turnYuna():
                     if FFX_memory.getBattleNum() == 260:
                         aeonSummon(2)
                     else:
                         aeonSummon(4)
-                elif FFX_Screen.turnAeon():
-                    attack('none')
-                time.sleep(0.2)
-            else:
+                else:
+                    FFX_Xbox.SkipDialog(3)
+                time.sleep(0.5)
+            elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
-
-    while not FFX_memory.menuOpen():
-        if FFX_memory.diagSkipPossible():
-            FFX_Xbox.menuB()
     FFXC.set_value('BtnB', 1)
     time.sleep(2.8)
     FFXC.set_value('BtnB', 0)
-
+    
     confirm -= 1
     return confirm
 
@@ -3741,109 +3316,92 @@ def altanaheal():
 
 
 def evraeAltana():
-    FFX_Logs.writeLog("Fight start: Evrae Altana")
-    evraeFight = tidusFlee()
+    FFX_Logs.writeLog("Fight start: Evrae Altana")    
     steal = 0
     gems = 1
-    time.sleep(0.2)
-    print(FFX_Screen.PixelValue(190, 705))
-    print("(139, 139, 139) expected for Evrae")
-
-    if evraeFight == 2:
+    FFX_Screen.clickToBattle()
+    if FFX_memory.getBattleNum() == 266:
         print("Evrae Altana fight start")
         # Start by hasting Rikku.
-        while not FFX_Screen.BattleComplete():
+        while not FFX_memory.menuOpen(): #AKA end of battle screen
             if FFX_memory.battleScreen():
                 time.sleep(0.2)
                 altanaheal()
-        FFXC.set_value('BtnB', 1)
-        time.sleep(2)
-        FFXC.set_value('BtnB', 0)
 
     else:  # Just a regular group
         print("Not Evrae this time.")
         fleeAll()
-
-    print("Returning value: " + str(gems))
-    return gems
+    
+    FFX_memory.clickToControl()
+    
+    #print("Returning value: " + str(gems))
+    #return gems
 
 def seymourNatus():
     FFX_Logs.writeLog("Fight start: Seymour Natus")
-    complete = 0
     fight = 0
     turn = 0
-    summonDone = 0
-    if FFX_memory.getBattleNum() == 272:  # Seymour Natus
-        print("Seymour Natus engaged")
-        fight = 1
-        while not FFX_Screen.BattleComplete():
-            if FFX_memory.battleScreen():
-                if FFX_Screen.turnYuna() and summonDone == 0:
-                    aeonSummon(4)
-                    summonDone = 1
-                else:
-                    attack('none')
-            else:
-                FFX_Xbox.menuB()  # In case there's any dialog skipping
-    elif FFX_memory.getBattleNum() == 270:  # YAT-63 x2
-        fight = 4
-        while complete == 0:
-            if FFX_memory.battleScreen():
-                if FFX_Screen.turnTidus():
-                    if turn == 0:
-                        turn += 1
-                        attack('r3')
+    while not FFX_memory.userControl():
+        if FFX_memory.getBattleNum() == 272:  # Seymour Natus
+            print("Seymour Natus engaged")
+            fight = 1
+            while not FFX_memory.menuOpen():
+                if FFX_memory.battleScreen():
+                    if FFX_Screen.turnYuna():
+                        aeonSummon(4)
                     else:
-                        tidusFlee()
-                elif FFX_Screen.turnYuna():
-                    attack('r3')
-                else:
-                    defend()
-            elif FFX_Screen.BattleComplete():
-                complete = 1
-    elif FFX_memory.getBattleNum() == 269:  # YAT-63 with two guard guys
-        fight = 3
-        while complete == 0:
-            if FFX_memory.battleScreen():
-                if FFX_Screen.turnTidus():
-                    if turn == 0:
-                        turn += 1
                         attack('none')
-                    else:
-                        tidusFlee()
-                elif FFX_Screen.turnYuna():
-                    attack('none')
-                else:
-                    defend()
-            elif FFX_Screen.BattleComplete():
-                complete = 1
-    elif FFX_memory.getBattleNum() == 271:  # one YAT-63, two YAT-99
-        fight = 2
-        while complete == 0:
-            if FFX_memory.battleScreen():
-                if FFX_Screen.turnTidus():
-                    if turn == 0:
-                        turn += 1
+            return 1
+            #if FFX_memory.diagSkipPossible():
+            #    FFX_Xbox.menuB()  # In case there's any dialog skipping
+        elif FFX_memory.getBattleNum() == 270:  # YAT-63 x2
+            fight = 4
+            while FFX_memory.battleActive():
+                if FFX_memory.battleScreen():
+                    if FFX_Screen.turnTidus():
+                        if turn == 0:
+                            turn += 1
+                            attack('r3')
+                        else:
+                            tidusFlee()
+                    elif FFX_Screen.turnYuna():
+                        attack('r3')
+                    elif FFX_Screen.turnAuron():
+                        defend()
+        elif FFX_memory.getBattleNum() == 269:  # YAT-63 with two guard guys
+            fight = 3
+            while FFX_memory.battleActive():
+                if FFX_memory.battleScreen():
+                    if FFX_Screen.turnTidus():
+                        if turn == 0:
+                            turn += 1
+                            attack('none')
+                        else:
+                            tidusFlee()
+                    elif FFX_Screen.turnYuna():
+                        attack('none')
+                    elif FFX_Screen.turnAuron():
+                        defend()
+        elif FFX_memory.getBattleNum() == 271:  # one YAT-63, two YAT-99
+            fight = 2
+            while FFX_memory.battleActive():
+                if FFX_memory.battleScreen():
+                    if FFX_Screen.turnTidus():
+                        if turn == 0:
+                            turn += 1
+                            attack('r2')
+                        else:
+                            tidusFlee()
+                    elif FFX_Screen.turnYuna():
                         attack('r2')
-                    else:
-                        tidusFlee()
-                elif FFX_Screen.turnYuna():
-                    attack('r2')
-                else:
-                    defend()
-            elif FFX_Screen.BattleComplete():
-                complete = 1
-    while not FFX_memory.menuOpen():
-        if FFX_memory.diagSkipPossible():
-            FFX_Xbox.menuB()
-    FFXC.set_value('BtnB', 1)
-    time.sleep(3)
-    FFXC.set_value('BtnB', 0)
-    if fight == 1:
-        return 1
-    else:
-        return 0
-
+                    elif FFX_Screen.turnAuron():
+                        defend()
+        if FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.035)
+    return 0
 
 def calmLands(itemSteal):
     FFX_Logs.writeLog("Fight start: Calm Lands")
@@ -3930,7 +3488,8 @@ def oldEndGameVersionLogic():
 def seymourFlux():
     stage = 1
     print("Start: Seymour Flux battle")
-    while not FFX_Screen.BattleComplete():
+    FFX_Screen.clickToBattle()
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             if FFX_Screen.turnYuna():
                 print("Yuna's turn. Stage: ", stage)
@@ -3965,72 +3524,15 @@ def seymourFlux():
             else:
                 print("Non-critical turn. Defending.")
                 defend()
-        else:
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     print("Seymour Flux battle complete.")
     FFX_memory.clickToControl()
 
-
-def seymourFlux_old():
-    stage = 0
-    # Two possible orders for the bosses. Either Seymour or the assistant will go first. Pixel is slightly different.
-    FFX_Logs.writeLog("Fight start: Seymour Flux")
-    print("Fight start: Seymour Flux")
-    while not FFX_Screen.BattleComplete():
-        if FFX_memory.battleScreen():
-            if FFX_Screen.turnYuna():
-                if stage == 0:
-                    attack('none')
-                elif stage == 1:
-                    aeonSummon(4)
-                    tidusFlee()  # Bahamut uses Impulse
-                    stage += 1
-                elif stage == 2:
-                    aeonSummon(2)
-                    tidusFlee()  # same pattern as Aerospark
-                    stage += 1
-                else:
-                    attack('none')
-            elif FFX_Screen.turnTidus():
-                if stage == 0:
-                    FFX_Xbox.lateHaste('down')
-                    stage += 1
-                elif stage == 3:
-                    stage += 1
-                    FFX_Xbox.menuDown()
-                    FFX_Xbox.menuDown()
-                    FFX_Xbox.menuDown()
-                    FFX_Xbox.menuB()
-                    time.sleep(0.5)
-                    FFX_Xbox.menuB()
-                    time.sleep(0.5)
-                    FFX_Xbox.menuB()  # Haste self
-                    time.sleep(0.5)
-                elif stage == 4:
-                    stage += 1
-                    tidusOD()
-                else:
-                    attack('none')
-            elif FFX_Screen.turnAuron():
-                attack('none')
-        else:
-            FFX_Xbox.menuB()
-    FFX_Logs.writeStats("Quick Flux")
-    if stage == 1:
-        FFX_Logs.writeStats("Yes")
-        print("Quick Seymour Flux fight achieved. AKA Bahamut crit (end on Bahamut)")
-    elif stage == 1:
-        FFX_Logs.writeStats("Yes")
-        print("Quick Seymour Flux fight achieved. AKA Bahamut crit (end on Ixion)")
-    else:
-        FFX_Logs.writeStats("No")
-        print("No quick Seymour Flux fight this time.")
-    FFX_memory.clickToControl()
-
-
 def sKeeper():
     if FFX_memory.getBattleNum() == 355:
         print("Start of Sanctuary Keeper fight")
+        FFX_Screen.clickToBattle()
         FFX_Xbox.weapSwap(0)
 
         FFX_Screen.awaitTurn()
@@ -4054,21 +3556,6 @@ def sKeeper():
 
 
 def gagazetCave():
-    FFX_Logs.writeLog("Fight start: Gagazet Cave")
-    FFX_Xbox.menuB()
-    time.sleep(1)
-
-    if FFX_Screen.PixelTestTol(1380, 206, (153, 46, 10), 5):  # Ambush
-        print("Ambushed, getting out of this fight")
-        FFX_Xbox.menuA()
-    elif FFX_Screen.PixelTestTol(272, 91, (225, 225, 225), 5):  # E1E1E1
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuB()
-    elif FFX_Screen.PixelTestTol(254, 114, (154, 154, 154), 5):  # E1E1E1
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuB()
-    else:
-        FFX_Xbox.menuA()
     fleeLateGame()
 
 
@@ -4137,7 +3624,7 @@ def attack(direction):
     if not FFX_memory.battleScreen():
         print("Battle menu isn't up.")
         return
-    if FFX_memory.battleMenuCursor() != 0:
+    if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
         while FFX_memory.battleMenuCursor() != 0:
             FFX_Xbox.menuUp()
             if FFX_Screen.BattleComplete():
@@ -4151,6 +3638,7 @@ def attack(direction):
             FFX_Xbox.menuB()
             if FFX_Screen.BattleComplete():
                 return
+        time.sleep(0.1)
         if direction == "left":
             FFX_Xbox.menuLeft()
         if direction == "right":
@@ -4181,6 +3669,9 @@ def attack2():
 def Steal():
     FFX_Logs.writeLog("Basic Steal command")
     print("Steal")
+    if not FFX_memory.battleScreen():
+        while not FFX_memory.battleScreen():
+            time.sleep(0.035)
     while FFX_memory.battleMenuCursor() != 20:
         if FFX_memory.battleMenuCursor() == 255:
             time.sleep(0.01)
@@ -4188,7 +3679,7 @@ def Steal():
             FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuUp()
-    FFX_Xbox.SkipDialog(1.5)
+    FFX_Xbox.SkipDialog(1)
 
 def StealDown():
     FFX_Logs.writeLog("Steal, but press Down")
@@ -4207,8 +3698,7 @@ def StealDown():
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
+    FFX_Xbox.SkipDialog(1)
 
 
 def StealRight():
@@ -4228,8 +3718,7 @@ def StealRight():
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
+    FFX_Xbox.SkipDialog(1)
 
 
 def StealLeft():
@@ -4249,25 +3738,27 @@ def StealLeft():
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
+    FFX_Xbox.SkipDialog(1)
 
 
 def stealAndAttack():
     BattleComplete = 0
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
-    while BattleComplete == 0:
+    while not FFX_memory.menuOpen():
         if FFX_memory.battleScreen():
             if FFX_Screen.turnRikku():
                 Steal()
             if FFX_Screen.turnTidus():
                 attack('none')
-        if FFX_Screen.BattleComplete():
+        elif FFX_memory.menuOpen():
             FFXC.set_value('BtnB', 1)
-            time.sleep(2.1)
+            time.sleep(2.5)
             FFXC.set_value('BtnB', 0)
             BattleComplete = 1
+        elif FFX_memory.otherBattleMenu():
+            FFX_Xbox.menuB()
+    FFX_memory.clickToControl()
 
 
 def stealAndAttackPreTros():
@@ -4275,7 +3766,7 @@ def stealAndAttackPreTros():
     turnCounter = 0
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
-    while BattleComplete == 0:
+    while not FFX_memory.menuOpen():
         if FFX_memory.battleScreen():
             if FFX_Screen.turnRikkuRed():
                 turnCounter += 1
@@ -4287,11 +3778,9 @@ def stealAndAttackPreTros():
                     attack('none')
             if FFX_Screen.turnTidus():
                 attack('none')
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            time.sleep(2.5)
-            FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
+        elif FFX_memory.otherBattleMenu():
+            FFX_Xbox.menuB()
+    FFX_memory.clickToControl()
 
 
 def valeforFire():
@@ -4794,8 +4283,9 @@ def lancetSwapDjose(direction):
 
     # Now to recover the formation
     FFX_memory.fullPartyFormat_New('djose', 10)
+    print("Mark!")
     FFX_memory.closeMenu()
-
+    print("Done with reformatting via Lancet Swap function.")
 
 def lancet(direction):
     print("Casting Lancet with variation: ", direction)
@@ -4836,7 +4326,7 @@ def lancetHome(direction):
 def fleeAll():
     FFX_Logs.writeLog("Fleeing from battle, prior to Mt Gagazet")
     print("Attempting escape (all party members and end screen)")
-    while not FFX_Screen.BattleComplete():
+    while FFX_memory.battleActive():
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 tidusFlee()
@@ -5024,13 +4514,19 @@ def SinArms():
     # Area for improvement later. Multiple skippable FMVs
     FFX_Screen.clickToBattle()
     aeonSummon(4)
-
+    
     FFX_Screen.awaitTurn()
-    tidusFlee()
+    #tidusFlee()
+    ### Make this a custom function later.
+    time.sleep(1)
+    FFX_Xbox.menuDown()
+    FFX_Xbox.SkipDialog(2)
 
-    while not FFX_Screen.BattleComplete():  # Arm 1
+    while not FFX_memory.menuOpen(): #Arm1
         if FFX_memory.battleScreen():
-            tidusFlee()  # Impulse
+            time.sleep(1)
+            FFX_Xbox.menuDown()
+            FFX_Xbox.SkipDialog(2)
             FFX_Xbox.SkipDialog(21)
             FFX_Xbox.skipScene()
         else:
@@ -5040,10 +4536,12 @@ def SinArms():
     FFX_Screen.awaitTurn()
     aeonSummon(4)
 
-    while not FFX_Screen.BattleComplete():  # Arm 2
+    while not FFX_memory.menuOpen(): #Arm2
         if FFX_memory.battleScreen():
-            tidusFlee()  # Impulse
-        else:
+            time.sleep(1)
+            FFX_Xbox.menuDown()
+            FFX_Xbox.SkipDialog(2)
+        elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
 
     # FFX_Xbox.SkipDialog(27) #Skip 1
@@ -5056,6 +4554,7 @@ def SinArms():
     FFX_Screen.clickToBattle()
     aeonSummon(4)
     FFX_Screen.awaitTurn()
+    time.sleep(1)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     time.sleep(0.2)
@@ -5077,7 +4576,9 @@ def SinFace():
             if FFX_Screen.turnYuna():
                 aeonSummon(4)
                 FFX_Screen.awaitTurn()
-                tidusFlee() # Impulse
+                time.sleep(1)
+                FFX_Xbox.menuDown()
+                FFX_Xbox.SkipDialog(2)
             elif FFX_Screen.turnAeon():
                 attack('none')
             else:
@@ -5096,20 +4597,20 @@ def omnis():
 
     FFX_Screen.awaitTurn()
     print("Going for armor break.")
-    useSkill(0)
+    useSkill(1)
 
     FFX_Screen.awaitTurn()
     if FFX_memory.getEnemyMaxHP()[0] == FFX_memory.getEnemyCurrentHP()[0]:
         print("Missing on armor break is stupid. Don't worry, I can 'fix' this.")
         FFX_memory.setEnemyCurrentHP(0,20)
     print("Ready for next step.")
-    while not FFX_Screen.BattleComplete():
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.battleScreen():
             print("Character turn: ",FFX_memory.getBattleCharTurn())
             if FFX_Screen.turnYuna():
                 aeonSummon(4)
             elif FFX_Screen.turnAeon():
-                attack2()
+                attack('none')
             else:
                 defend()
         elif FFX_memory.diagSkipPossible():
@@ -5122,7 +4623,7 @@ def BFA():
     FFX_Logs.writeLog("Fight start: BFA and final boss")
     FFX_Screen.clickToBattle()
     buddySwap(2)
-    tidusFlee()  # Armor break
+    useSkill(0)
 
     FFX_Screen.awaitTurn()
     FFX_Xbox.menuLeft()
@@ -5138,24 +4639,30 @@ def BFA():
     buddySwap(2)
     aeonSummon(4)
 
-    FFX_Screen.awaitTurn()
-    attack('none')
-
-    FFX_Screen.clickToBattle()
-    attack2()  # Finishes off BFA
-    print("This will finish BFA. Next to skip the crying scene.")
-
-    time.sleep(77.7)  # Need to dial in
-    print("Skip, mark!")
-    FFX_Xbox.skipScene()
+    counter = 0
+    while FFX_memory.getStoryProgress() < 3360:
+        if FFX_memory.specialTextOpen():
+            FFX_Xbox.menuB()
+        elif FFX_memory.battleScreen():
+            if counter < 2:
+                attack('none')
+                counter += 1
+            elif counter == 2:
+                attack('none')
+                time.sleep(80)
+                print("Skip, mark!")
+                FFX_Xbox.skipScene()
 
     print("BFA down. Ready for Aeons")
     while FFX_memory.getStoryProgress() < 3380:
         if FFX_memory.battleScreen():
             battleNum = FFX_memory.getBattleNum()
             print("Battle engaged. Battle number: ", battleNum)
-            FFX_Xbox.menuDown()
-            FFX_Xbox.menuDown()
+            while FFX_memory.battleMenuCursor() != 20:
+                if FFX_memory.battleMenuCursor() == 22 or FFX_memory.battleMenuCursor() == 1:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.menuDown()
             FFX_Xbox.menuB()
             time.sleep(0.4)
             FFX_Xbox.menuB()
@@ -5175,7 +4682,7 @@ def BFA():
             FFX_Xbox.menuB()
             FFX_Xbox.menuB()
             time.sleep(0.5)
-        else:
+        elif FFX_memory.battleActive() == False:
             FFXC.set_value('BtnB', 1)
             time.sleep(0.035)
             FFXC.set_value('BtnB', 0)
@@ -5189,39 +4696,37 @@ def BFA():
     while story < 3400:
         if FFX_memory.battleScreen():
             if zombieAttack == 1:
-                pDownSlot = FFX_memory.getThrowItemsSlot(6)
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
+                while FFX_memory.battleMenuCursor() != 1:
+                    FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
-                time.sleep(0.8)
-                if pDownSlot != 1:
-                    while pDownSlot != 1:
-                        if pDownSlot % 2 == 0:
-                            FFX_Xbox.menuRight()
-                            pDownSlot -= 1
-                        else:
-                            FFX_Xbox.menuDown()
-                            pDownSlot -= 2
+                itemPos = FFX_memory.getThrowItemsSlot(6) - 1
+                while FFX_memory.battleCursor2() != itemPos:
+                    print(FFX_memory.battleCursor2()," | ", itemPos)
+                    if FFX_memory.battleCursor2() == 0:
+                        FFX_Xbox.menuDown()
+                    elif itemPos % 2 == 0 and FFX_memory.battleCursor2() % 2 == 1:
+                        FFX_Xbox.menuRight()
+                    elif itemPos % 2 == 1 and FFX_memory.battleCursor2() % 2 == 0:
+                        FFX_Xbox.menuLeft()
+                    elif itemPos > FFX_memory.battleCursor2():
+                        FFX_Xbox.menuDown()
+                    else:
+                        FFX_Xbox.menuUp()
                 FFX_Xbox.menuB()
-                time.sleep(0.1)
+                time.sleep(0.035)
                 FFX_Xbox.menuUp()
                 FFX_Xbox.menuB()
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus():
-                time.sleep(0.3)
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                time.sleep(0.5)
-                FFX_Xbox.menuB()
-                time.sleep(0.5)
-                FFX_Xbox.menuB()
-                time.sleep(0.5)
+                useSkill(0)
                 zombieAttack = 1
             else:
                 defend()
+        elif FFX_memory.battleActive() == False:
+            FFXC.set_value('BtnB', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnB', 0)
+            time.sleep(0.035)
         story = FFX_memory.getStoryProgress()
 
 def BFA_TASonly(finalHit):
@@ -5234,7 +4739,7 @@ def BFA_TASonly(finalHit):
     FFX_memory.setEnemyCurrentHP(0, 10)
     attack('none')
     
-    while FFX_Screen.BattleComplete == False:
+    while FFX_Screen.BattleComplete() == False:
         time.sleep(0.035)
     time.sleep(77.7)
     print("Mark")

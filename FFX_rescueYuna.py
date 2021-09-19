@@ -618,6 +618,8 @@ def evraeAltana():
     
 def seymourNatus(blitzWin):
     FFX_memory.clickToControl()
+    
+    FFX_menu.autoSortItems('n')
     if blitzWin == True:
         FFX_menu.seymourNatusBlitzWin()
     else:
@@ -626,6 +628,7 @@ def seymourNatus(blitzWin):
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
+            #print("Movement")
             FFXC.set_value('AxisLy', 1)
             pos = FFX_memory.getCoords()
             if pos[0] > 0:
@@ -633,8 +636,10 @@ def seymourNatus(blitzWin):
             else:
                 FFXC.set_value('AxisLx', 0)
         elif FFX_Screen.BattleScreen():
+            print("Battle Start")
             complete = FFX_Battle.seymourNatus()
         else:
+            #print("No action")
             FFXC.set_value('AxisLy', 0)
             FFXC.set_value('AxisLx', 0)
     

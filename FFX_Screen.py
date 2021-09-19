@@ -1145,6 +1145,17 @@ def imgSearch(img, conf):
         print(errorMsg)
         return False
 
+def imgSearch2(img, conf):
+    try:
+        imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
+        print("Results for searching '",img,": ", imgTest)
+        if imgTest[1] > 1:
+            return True
+    except Exception as errorMsg:
+        print("Something went wrong. Could not find image.")
+        print(errorMsg)
+        return False
+
 def openMenu():
     print("Opening menu")
     FFXC.set_value('AxisLy', 0)
@@ -1172,3 +1183,12 @@ def desertCharge():
     chargeState[0] = checkCharge(1)
     chargeState[1] = checkCharge(2)
     return chargeState
+
+def clickImage(img):
+    search = imgSearch2(img,0.85)
+    if search != [0,0]:
+        pyautogui.click(x=search[0], y=search[1])
+        time.sleep(1)
+        return True
+    else:
+        return False
