@@ -31,14 +31,14 @@ def engage():
             FFXC.set_value('BtnB',0)
             time.sleep(0.035)
         else:
-            
+
             #Move to first egg, while in control.
             complete = 0
             activeEgg = 99
             target = [10,-10]
             moveVersion = 0
             while complete == 0:
-            
+
                 if activeEgg == 99:
                     if lookingCount % 200 < 100:
                         target = [20,-20]
@@ -77,153 +77,30 @@ def engage():
                     #target = [-70,-70]
                     player = FFX_memory.getCoords()
                     cam = FFX_memory.getCamera()
+
+                    # Calculate forward and right directions relative to camera space
+                    pX = player[0]
+                    pY = player[1]
+                    cX = cam[1]
+                    cY = cam[2]
+                    eX = target[0]
+                    eY = target[1]
+                    forward = (pX - cX)*(eX - pX) + (pY - cY)*(eY-pY)
+                    right = (pY - cY)*(eX-pX) + (cX - pX)*(eY - pY)
+
+                    # Normalize so that the final axis vector has a length of 1
+                    sum = forward+right
+                    FFXC.set_value('AxisLx', right / sum)
+                    FFXC.set_value('AxisLy', forward / sum)
+
+
                     #camCount += 1
                     #print(camCount)
                     #if camCount % 20 == 0:
                     #    FFX_Logs.writePlot("TEST")
-                    
-                    if cam[0] > 1.1:
-                        moveVersion = 1
-                        if player[0] < target[0] - 2:
-                            FFXC.set_value('AxisLy', -1)
-                        elif player[0] > target[0] + 2:
-                            FFXC.set_value('AxisLy', 1)
-                        else:
-                            FFXC.set_value('AxisLy', 0)
-                        
-                        if cam[2] < player[1]:
-                            if player[1] < target[1] - 2:
-                                FFXC.set_value('AxisLx', 1)
-                            elif player[1] + target[1] + 2:
-                                FFXC.set_value('AxisLx', -1)
-                            else:
-                                FFXC.set_value('AxisLx', 0)
-                        else:
-                            if player[1] < target[1] - 2:
-                                FFXC.set_value('AxisLx', -1)
-                            elif player[1] + target[1] + 2:
-                                FFXC.set_value('AxisLx', 1)
-                            else:
-                                FFXC.set_value('AxisLx', 0)
-                    elif cam[0] < -1:
-                        moveVersion = 2
-                        if player[0] < target[0] - 2:
-                            FFXC.set_value('AxisLy', 1)
-                        elif player[0] > target[0] + 2:
-                            FFXC.set_value('AxisLy', -1)
-                        else:
-                            FFXC.set_value('AxisLy', 0)
-                        
-                        if cam[2] < player[1]:
-                            if player[1] < target[1] - 2:
-                                FFXC.set_value('AxisLx', -1)
-                            elif player[1] + target[1] + 2:
-                                FFXC.set_value('AxisLx', 1)
-                            else:
-                                FFXC.set_value('AxisLx', 0)
-                        else:
-                            if player[1] < target[1] - 2:
-                                FFXC.set_value('AxisLx', 1)
-                            elif player[1] + target[1] + 2:
-                                FFXC.set_value('AxisLx', -1)
-                            else:
-                                FFXC.set_value('AxisLx', 0)
-                    elif cam[4] < -0.88:
-                        moveVersion = 3
-                        if player[1] > target[1] + 1.5:
-                            FFXC.set_value('AxisLy', 1)
-                        elif player[1] < target[1] - 1.5:
-                            FFXC.set_value('AxisLy', -1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                        
-                        if player[0] < target[0] - 1.5:
-                            FFXC.set_value('AxisLx', -1)
-                        elif player[0] + target[0] + 1.5:
-                            FFXC.set_value('AxisLx', 1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                    elif cam[4] > 0.9:
-                        moveVersion = 4
-                        if player[1] > target[1] + 1.5:
-                            FFXC.set_value('AxisLy', -1)
-                        elif player[1] < target[1] - 1.5:
-                            FFXC.set_value('AxisLy', 1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                        
-                        if player[0] < target[0] - 1.5:
-                            FFXC.set_value('AxisLx', 1)
-                        elif player[0] + target[0] + 1.5:
-                            FFXC.set_value('AxisLx', -1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                    elif cam[0] > 0.01 and cam[4] > 0.01:
-                        moveVersion = 5
-                        if player[1] - target[1] < player[0] - target[0]:
-                            FFXC.set_value('AxisLy', 1)
-                        elif player[1] - target[1] > player[0] - target[0]:
-                            FFXC.set_value('AxisLy', -1)
-                        else:
-                            FFXC.set_value('AxisLy', 0)
-                        
-                        if player[0] + target[0] < player[1] + target[1]:
-                            FFXC.set_value('AxisLx', -1)
-                        elif player[0] + target[0] + player[1] + target[1]:
-                            FFXC.set_value('AxisLx', 1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                    elif cam[0] < 0.01 and cam[4] < 0.01:
-                        moveVersion = 6
-                        if player[1] - target[1] < player[0] - target[0]:
-                            FFXC.set_value('AxisLy', -1)
-                        elif player[1] - target[1] > player[0] - target[0]:
-                            FFXC.set_value('AxisLy', 1)
-                        else:
-                            FFXC.set_value('AxisLy', 0)
-                        
-                        if player[0] + target[0] < player[1] + target[1]:
-                            FFXC.set_value('AxisLx', 1)
-                        elif player[0] + target[0] + player[1] + target[1]:
-                            FFXC.set_value('AxisLx', -1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                    elif cam[0] > 0.01 and cam[4] < 0.01:
-                        moveVersion = 7
-                        if player[1] - target[1] < player[0] - target[0]:
-                            FFXC.set_value('AxisLx', 1)
-                        elif player[1] - target[1] > player[0] - target[0]:
-                            FFXC.set_value('AxisLx', -1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                        
-                        if player[0] + target[0] < player[1] + target[1]:
-                            FFXC.set_value('AxisLy', -1)
-                        elif player[0] + target[0] + player[1] + target[1]:
-                            FFXC.set_value('AxisLy', 1)
-                        else:
-                            FFXC.set_value('AxisLy', 0)
-                    elif cam[0] < 0.01 and cam[4] > 0.01:
-                        moveVersion = 8
-                        if player[1] - target[1] < player[0] - target[0]:
-                            FFXC.set_value('AxisLx', -1)
-                        elif player[1] - target[1] > player[0] - target[0]:
-                            FFXC.set_value('AxisLx', 1)
-                        else:
-                            FFXC.set_value('AxisLx', 0)
-                        
-                        if player[0] + target[0] < player[1] + target[1]:
-                            FFXC.set_value('AxisLy', 1)
-                        elif player[0] + target[0] + player[1] + target[1]:
-                            FFXC.set_value('AxisLy', -1)
-                        else:
-                            FFXC.set_value('AxisLy', 0)
-                    else:
-                        moveVersion = 0
-                        FFXC.set_value('AxisLx', 0)
-                        FFXC.set_value('AxisLy', 0)
-                        print("In-between.")
-                    
+
+
+
                     #Now if we're close, we want to slow down a bit.
                     if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
                         time.sleep(0.15)
