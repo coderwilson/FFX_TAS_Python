@@ -865,17 +865,20 @@ def KilikaWoods(valeforCharge):
 def Geneaux():
     FFX_Logs.writeLog("Fight start: Sinspawn Geneaux")
     FFX_Screen.awaitTurn()
-    if FFX_Screen.turnYuna():
-        buddySwap(1)
-        defend()
-        FFX_Screen.awaitTurn()
-        attack('none')
-        FFX_Screen.clickToBattle()
-        buddySwap(1)
-    else:
-        attack('none')
-        FFX_Screen.clickToBattle()
-    aeonSummon(0)  # Summon Valefor
+    if not FFX_Screen.turnTidus():
+        while not FFX_Screen.turnTidus():
+            if FFX_Screen.battleScreen():
+                defend()
+    
+    attack('none')
+    
+    FFX_Screen.clickToBattle()
+    if not FFX_Screen.turnYuna():
+        while not FFX_Screen.turnYuna():
+            if FFX_Screen.battleScreen():
+                defend()
+    
+    aeonSummon(0) # Summon Valefor
     FFX_Screen.awaitTurn()
     FFX_Xbox.menuLeft()
     time.sleep(0.8)
@@ -4290,7 +4293,14 @@ def lancetSwapDjose(direction):
 def lancet(direction):
     print("Casting Lancet with variation: ", direction)
     while FFX_memory.battleMenuCursor() != 20:
-        FFX_Xbox.menuDown()
+        if FFX_memory.battleMenuCursor() == 255:
+            time.sleep(0.01)
+        elif FFX_memory.battleMenuCursor() == 1:
+            FFX_Xbox.menuUp()
+        elif FFX_memory.battleMenuCursor() > 20:
+            FFX_Xbox.menuUp()
+        else:
+            FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     time.sleep(0.3)
     FFX_Xbox.menuB()
@@ -4326,7 +4336,7 @@ def lancetHome(direction):
 def fleeAll():
     FFX_Logs.writeLog("Fleeing from battle, prior to Mt Gagazet")
     print("Attempting escape (all party members and end screen)")
-    while FFX_memory.battleActive():
+    while not FFX_memory.menuOpen():
         if FFX_memory.battleScreen():
             if FFX_Screen.turnTidus():
                 tidusFlee()
