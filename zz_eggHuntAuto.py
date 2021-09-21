@@ -76,22 +76,34 @@ def engage():
                     #print("Movement happening.")
                     #target = [-70,-70]
                     player = FFX_memory.getCoords()
-                    cam = FFX_memory.getCamera()
+                    (forward, right) = FFX_memory.getMovementVectors()
 
                     # Calculate forward and right directions relative to camera space
                     pX = player[0]
                     pY = player[1]
-                    cX = cam[1]
-                    cY = cam[2]
                     eX = target[0]
                     eY = target[1]
-                    forward = (pX - cX)*(eX - pX) + (pY - cY)*(eY-pY)
-                    right = (pY - cY)*(eX-pX) + (cX - pX)*(eY - pY)
+                    fX = forward[0]
+                    fY = forward[1]
+                    rX = right[0]
+                    rY = right[1]
 
-                    # Normalize so that the final axis vector has a length of 1
-                    sum = forward+right
-                    FFXC.set_value('AxisLx', right / sum)
-                    FFXC.set_value('AxisLy', forward / sum)
+                    Lx = fX*(eX-pX) + rX*(eY-pY)
+                    Ly = fY*(eX-pX) + rY(eY-pY)
+                    sumsUp = Lx+Ly
+                    if sumsUp == 0:
+                        sumsUp = 0.01
+                    Lx /= sumsUp
+                    Ly /= sumsUp
+                    if Lx > Ly:
+                        Ly = Ly/Lx
+                        Lx = 1
+                    else:
+                        Lx = Lx/Ly
+                        Ly = 1
+
+                    FFXC.set_value('AxisLx', Lx)
+                    FFXC.set_value('AxisLy', Ly)
 
 
                     #camCount += 1

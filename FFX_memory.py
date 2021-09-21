@@ -25,7 +25,7 @@ def start():
     process.open()
     print(process.__dict__)
     print(process.pid)
-    
+
     global baseValue
     try:
         import FFX_zz_rootMem
@@ -68,7 +68,7 @@ def battleScreen():
             return True
     else:
         return False
-    
+
 def battleCursor2():
     global baseValue
     key = baseValue + 0x00F3CA01
@@ -110,7 +110,7 @@ def userControl():
     x = float_from_integer(process.read(coord1))
     coord2 = process.get_pointer(yPtr)
     y = float_from_integer(process.read(coord2))
-    
+
     if [x,y] == [0.0,0.0]:
         return False
     else:
@@ -227,8 +227,18 @@ def getCoords():
             #print("Coordinates check: ")
             #print(str(x).format(24), " | ",str(y).format(24))
             #xPtr = baseValue + 0x0084DED0
-    
+
     return [x,y]
+
+def getMovementVectors():
+    global process
+    global baseValue
+    addr = baseValue + 0x00F00754
+    ptr = process.get_pointer(addr)
+    angle = float_from_integer(process.read(ptr))
+    forward = [cos(angle), sin(angle)]
+    right = [sin(angle), -cos(angle)]
+    return (forward, right)
 
 def getCamera():
     global baseValue
@@ -237,7 +247,7 @@ def getCamera():
     x = baseValue + 0x008A86F8
     y = baseValue + 0x008A8700
     angle2 = baseValue + 0x008A86C0
-    
+
     key = process.get_pointer(angle)
     angleVal = round(float_from_integer(process.read(key)),2)
     key = process.get_pointer(x)
@@ -248,7 +258,7 @@ def getCamera():
     zVal = round(float_from_integer(process.read(key)),2)
     key = process.get_pointer(angle2)
     angleVal2 = round(float_from_integer(process.read(key)),2)
-    
+
     retVal = [angleVal,xVal,yVal,zVal, angleVal2]
     #print("Camera details: ", retVal)
     return retVal
@@ -256,7 +266,7 @@ def getCamera():
 def getHP():
     global baseValue
     #Out of combat HP only
-    
+
     coord = baseValue + 0x00D32078
     HP_Tidus = process.read(coord)
 
@@ -283,7 +293,7 @@ def getHP():
 def getOrder():
     global baseValue
     #Out of combat HP only
-    
+
     coord = baseValue + 0x00D307E8
     pos1 = process.readBytes(coord,1)
     coord = baseValue + 0x00D307E9
@@ -298,7 +308,7 @@ def getOrder():
     pos6 = process.readBytes(coord,1)
     coord = baseValue + 0x00D307EE
     pos7 = process.readBytes(coord,1)
-    
+
     formation = [255, pos1, pos2, pos3, pos4, pos5, pos6, pos7]
     print("Party formation: ", formation)
     return formation
@@ -306,7 +316,7 @@ def getOrder():
 def getOrderSix():
     global baseValue
     #Out of combat HP only
-    
+
     coord = baseValue + 0x00D307E8
     pos1 = process.readBytes(coord,1)
     coord = baseValue + 0x00D307E9
@@ -321,7 +331,7 @@ def getOrderSix():
     pos6 = process.readBytes(coord,1)
     coord = baseValue + 0x00D307EE
     pos7 = process.readBytes(coord,1)
-    
+
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
     while 255 in formation:
         formation.remove(255)
@@ -331,7 +341,7 @@ def getOrderSix():
 def getOrderSeven():
     global baseValue
     #Out of combat HP only
-    
+
     coord = baseValue + 0x00D307E8
     pos1 = process.readBytes(coord,1)
     coord = baseValue + 0x00D307E9
@@ -350,7 +360,7 @@ def getOrderSeven():
     pos8 = process.readBytes(coord,1)
     coord = baseValue + 0x00D307F0
     pos9 = process.readBytes(coord,1)
-    
+
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
     print("Party formation, non-clean:", formation)
     formation.remove(255)
@@ -360,7 +370,7 @@ def getOrderSeven():
 
 def getPhoenix():
     global baseValue
-    
+
     key = getItemSlot(6)
     pDowns = getItemCountSlot(key)
     print("Phoenix Down count: ", pDowns)
@@ -368,7 +378,7 @@ def getPhoenix():
 
 def getPower():
     global baseValue
-    
+
     key = getItemSlot(70)
     power = getItemCountSlot(key)
     print("Power spheres: ", power)
@@ -376,7 +386,7 @@ def getPower():
 
 def setPower(qty):
     global baseValue
-    
+
     slot = getItemSlot(70)
     key = baseValue + itemCountAddr(slot)
     process.writeBytes(key, qty, 1)
@@ -385,7 +395,7 @@ def setPower(qty):
 
 def getSpeed():
     global baseValue
-    
+
     key = getItemSlot(72)
     speed = getItemCountSlot(key)
     print("Speed spheres: ", speed)
@@ -393,7 +403,7 @@ def getSpeed():
 
 def setSpeed(qty):
     global baseValue
-    
+
     slot = getItemSlot(72)
     key = baseValue + itemCountAddr(slot)
     process.writeBytes(key, qty, 1)
@@ -402,7 +412,7 @@ def setSpeed(qty):
 
 def getBattleHP():
     global baseValue
-    
+
     key = baseValue + 0x00F3F7A4
     hp1 = process.read(key)
     key = baseValue + 0x00F3F834
@@ -415,10 +425,10 @@ def getBattleHP():
 
 def getBattleNum():
     global baseValue
-    
+
     key = baseValue + 0x00D2A8EC
     formation = process.read(key)
-    
+
     #print("Battle Number: ", formation)
     return formation
 
@@ -440,7 +450,7 @@ def getActiveBattleFormation():
 
 def getBattleFormation():
     global baseValue
-    
+
     key = baseValue + 0x00F3F76C
     char1 = process.readBytes(key,1)
     key = baseValue + 0x00F3F76E
@@ -455,7 +465,7 @@ def getBattleFormation():
     char6 = process.readBytes(key,1)
     key = baseValue + 0x00D2C8A6
     char7 = process.readBytes(key,1)
-    
+
     battleForm = [char1, char2, char3, char4, char5, char6, char7]
     if 255 in battleForm:
         while 255 in battleForm:
@@ -484,7 +494,7 @@ def getBattleCharSlot(charNum):
 
 def getBattleCharTurn():
     global baseValue
-    
+
     key = baseValue + 0x00D36A68
     battleCharacter = process.read(key)
     return battleCharacter
@@ -492,21 +502,21 @@ def getBattleCharTurn():
 def getSLVLYuna():
     global baseValue
     #Out of combat HP only
-    
+
     coord = baseValue + 0x00D32104
     return process.read(coord)
 
 def getSLVLKim():
     global baseValue
     #Out of combat HP only
-    
+
     coord = baseValue + 0x00D3222C
     return process.read(coord)
 
 def getSLVLWakka():
     global baseValue
     #Out of combat HP only
-    
+
     key = baseValue + 0x00D322E7
     sLvl = process.readBytes(key,1)
     print("Wakka current Slvl", sLvl)
@@ -577,7 +587,7 @@ def itemAddress(num):
 def getItemsOrder():
     global baseValue
     items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    
+
     for x in range(30):
         address = itemAddress(x + 1)
         key = baseValue + address
@@ -661,7 +671,7 @@ def checkItemsMacalania():
     grenade = 0
     lunar = 0
     light = 0
-    
+
     bombCore = getItemSlot(27)
     lMarble = getItemSlot(30)
     fScale = getItemSlot(32)
@@ -669,7 +679,7 @@ def checkItemsMacalania():
     grenade = getItemSlot(35)
     lunar = getItemSlot(56)
     light = getItemSlot(57)
-    
+
     #Set MaxSpot to one more than the last undesirable item
     if light - lunar != 1:
         maxSpot = light
@@ -685,7 +695,7 @@ def checkItemsMacalania():
         maxSpot = lMarble
     else:
         maxSpot = bombCore
-        
+
     retVal = [bombCore, lMarble, fScale, aWind, grenade, lunar, light, maxSpot]
     print("Returning values: ", retVal)
     return retVal
@@ -755,7 +765,7 @@ def itemCountAddr(num):
 def getItemsCount():
     global baseValue
     itemCounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    
+
     for x in range(30):
         address = itemCountAddr(x + 1)
         key = baseValue + address
@@ -831,17 +841,17 @@ def rikkuODItems(battle):
         item3 = item2
         item2 = item1
         item1 = item3
-    
+
     if item1 % 2 == 0: #First item is in the right-hand column
         FFX_Xbox.menuRight()
         cursor += 1
-    
+
     while cursor < item1:
         FFX_Xbox.menuDown()
         cursor += 2
-    
+
     FFX_Xbox.menuB() #We should now have selected the first item.
-    
+
     if item1 % 2 != item2 % 2: #First and second items are on different columns
         print("Items are in opposing columns. Switching columns.")
         if item1 % 2 == 0:
@@ -850,7 +860,7 @@ def rikkuODItems(battle):
         else:
             FFX_Xbox.menuRight()
         cursor += 1
-    
+
     if cursor == item2:
         FFX_Xbox.menuB() #Cursor starts on item 2. Only occurs if opposite columns.
     else:
@@ -922,7 +932,7 @@ def getEnemyCurrentHP():
     enemyNum = 20
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    
+
     while enemyNum < 27:
         offset1 = (0xf90 * enemyNum)+0x594
         key1 = basePointerAddress + offset1
@@ -951,7 +961,7 @@ def setEnemyCurrentHP(numToSet, newHP):
     enemyNum = 20
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    
+
     while enemyNum < 25:
         offset1 = (0xf90 * enemyNum)+0x594
         key1 = basePointerAddress + offset1
@@ -969,7 +979,7 @@ def getEnemyMaxHP():
     enemyNum = 20
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    
+
     while enemyNum < 25:
         offset1 = (0xf90 * enemyNum)+0x594
         key1 = basePointerAddress + offset1
@@ -991,7 +1001,7 @@ def getEnemyMaxHP():
 
 def menuOpen():
     global baseValue
-    
+
     key = baseValue + 0x00F407E4
     menuOpen = process.readBytes(key,1)
     if menuOpen == 1:
@@ -1017,7 +1027,7 @@ def openMenu():
 
 def sGridActive():
     global baseValue
-    
+
     key = baseValue + 0x0085B30C
     menuOpen = process.readBytes(key,1)
     print(menuOpen)
@@ -1028,26 +1038,26 @@ def sGridActive():
 
 def sGridMenu():
     global baseValue
-    
+
     key = baseValue + 0x0012AD860
     menuOpen = process.readBytes(key,1)
     return menuOpen
 
 def sGridChar():
     global baseValue
-    
+
     key = baseValue + 0x0012BEE2C
     character = process.readBytes(key,1)
     return character
 
 def cursorLocation():
     global baseValue
-    
+
     key = baseValue + 0x0021D09A4
     menu1 = process.readBytes(key,1)
     key = baseValue + 0x0021D09A6
     menu2 = process.readBytes(key,1)
-    
+
     return [menu1,menu2]
 
 def getMenuCursorPos():
@@ -1068,7 +1078,7 @@ def getCharCursorPos():
 
 def getStoryProgress():
     global baseValue
-    
+
     key = baseValue + 0x00D2D67C
     progress = process.readBytes(key,2)
     #print("Story progress: ", progress)
@@ -1076,14 +1086,14 @@ def getStoryProgress():
 
 def getMap():
     global baseValue
-    
+
     key = baseValue + 0x00D2CA90
     progress = process.readBytes(key,2)
     return progress
 
 def touchingSaveSphere():
     global baseValue
-    
+
     key = baseValue + 0x0021D09A6
     value = process.readBytes(key,1)
     if value != 0:
@@ -1093,7 +1103,7 @@ def touchingSaveSphere():
 
 def saveMenuCursor():
     global baseValue
-    
+
     key = baseValue + 0x001467942
     value = process.readBytes(key,1)
     if value != 0:
@@ -1103,28 +1113,28 @@ def saveMenuCursor():
 
 def getYunaSlvl():
     global baseValue
-    
+
     key = baseValue + 0x00D3212B
     sLvl = process.readBytes(key,1)
     return sLvl
 
 def getTidusSlvl():
     global baseValue
-    
+
     key = baseValue + 0x00D32097
     sLvl = process.readBytes(key,1)
     return sLvl
 
 def setTidusSlvl(levels):
     global baseValue
-    
+
     key = baseValue + 0x00D32097
     sLvl = process.writeBytes(key,levels,1)
     return sLvl
 
 def menuControl():
     global baseValue
-    
+
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
@@ -1135,7 +1145,7 @@ def menuControl():
 
 def diagSkipPossible():
     global baseValue
-    
+
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
@@ -1146,7 +1156,7 @@ def diagSkipPossible():
 
 def specialTextOpen():
     global baseValue
-    
+
     key = baseValue + 0x01466D30
     control = process.readBytes(key,1)
     if control == 1:
@@ -1188,14 +1198,14 @@ def clickToStoryProgress(destination):
 
 def changeStory(newGameState):
     global baseValue
-    
+
     print("Changing story flag to ", newGameState)
     key = baseValue + 0x00D2D67C
     progress = process.writeBytes(key,newGameState,2)
 
 def itemHack(ver):
     global baseValue
-    
+
     # I tried giving Rikku extra powerful items, but the game just wasn't having it.
     #key = baseValue + 0x00D30960 #Item in slot 3
     #progress = process.writeBytes(key,31,1)
@@ -1238,7 +1248,7 @@ def itemHack(ver):
         progress = process.writeBytes(key,99,1)
         key = baseValue + 0x00D3240D #Rikku charge value
         progress = process.writeBytes(key,100,1)
-    
+
 def changeGold(value):
     global baseValue
     key = baseValue + 0x00D307D8
@@ -1246,21 +1256,21 @@ def changeGold(value):
 
 def blitzOwnScore():
     global baseValue
-    
+
     key = baseValue + 0x0151728C
     score = process.readBytes(key, 1)
     return score
 
 def blitzOppScore():
     global baseValue
-    
+
     key = baseValue + 0x0151644C
     score = process.readBytes(key, 1)
     return score
 
 def blitzClockMenu():
     global baseValue
-    
+
     key = baseValue + 0x014765FA
     status = process.readBytes(key, 1)
     return status
@@ -1272,7 +1282,7 @@ def blitzMenuNum():
     #38 = Breakthrough
     #24 = Pass To menu (other variations are set to 24)
     #Unsure about other variations, would take more testing.
-    
+
     key = baseValue + 0x0146770A
     status = process.readBytes(key, 1)
     if status == 17 or status == 27:
@@ -1281,7 +1291,7 @@ def blitzMenuNum():
 
 def blitzTargetPlayer():
     global baseValue
-    
+
     key = baseValue + 0x00D3761C
     player = process.readBytes(key, 1)
     print("Target Player number: ", player)
@@ -1291,7 +1301,7 @@ def blitzTargetPlayer():
 
 def blitzCoords():
     global baseValue
-    
+
     key = baseValue + 0x00D37698
     xVal = process.readBytes(key, 1)
     xVal = xVal * -1
@@ -1319,14 +1329,14 @@ def blitzBallControl():
 
 def blitzClock():
     global baseValue
-    
+
     key = baseValue + 0x012C64B14
     clock = process.readBytes(key, 1)
     return clock
 
 def blitzballPatriotsStyle():
     global baseValue
-    
+
     key = baseValue + 0x00D2E0CE
     progress = process.writeBytes(key,50,1)
     key = baseValue + 0x00D2E131
@@ -1838,13 +1848,13 @@ def fullPartyFormat(frontLine):
         print(orderFinal)
         while not menuOpen():
             openMenu()
-        
+
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
-        
+
         if order[0] != orderFinal[0]:
             print("Looking for ",nameFromNumber(orderFinal[0]))
             if order[1] == orderFinal[0]:
@@ -2177,7 +2187,7 @@ def fullPartyFormat(frontLine):
             FFX_Xbox.menuB()
         elif partyMembers == 7:
             print(nameFromNumber(orderFinal[5])," and ",nameFromNumber(orderFinal[6])," seem fine.")
-        
+
         #time.sleep(120) #For testing only. Allows us to see what's going on.
         closeMenu()
 
@@ -2263,12 +2273,12 @@ class egg:
         self.distance = getEggDistance(self.num)
         self.eggLife = getEggLife(eggnum)
         self.eggPicked = getEggPicked(eggnum)
-        
+
         if self.distance != 0 and self.eggPicked == 0:
             self.isActive = True
         else:
             self.isActive = False
-        
+
         if self.eggPicked == 1:
             self.goForEgg = False
         elif self.eggLife > 100 and self.distance > 100:
@@ -2279,7 +2289,7 @@ class egg:
             self.goForEgg = False
         else:
             self.goForEgg = True
-    
+
     def reportVars(self):
         varArray = [self.num, self.isActive, self.x, self.y, 150 - self.eggLife, self.eggPicked, self.distance]
         print("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
