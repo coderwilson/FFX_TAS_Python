@@ -867,7 +867,7 @@ def Geneaux():
     FFX_Screen.awaitTurn()
     if not FFX_Screen.turnTidus():
         while not FFX_Screen.turnTidus():
-            if FFX_Screen.battleScreen():
+            if FFX_memory.battleScreen():
                 defend()
     
     attack('none')
@@ -875,7 +875,7 @@ def Geneaux():
     FFX_Screen.clickToBattle()
     if not FFX_Screen.turnYuna():
         while not FFX_Screen.turnYuna():
-            if FFX_Screen.battleScreen():
+            if FFX_memory.battleScreen():
                 defend()
     
     aeonSummon(0) # Summon Valefor

@@ -3,6 +3,7 @@ import FFX_Xbox
 import time
 import FFX_Screen
 FFXC = FFX_Xbox.FFXC
+from math import cos, sin
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
@@ -2220,8 +2221,8 @@ def eggX(eggNum):
     global process
     global baseValue
     eggNum += 23
-    basePointer = baseValue + 0x1FC44E4    # equivalent to the pointer FFX.exe+EA22A0
-    basePointerAddress = process.read(basePointer)    # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
+    basePointer = baseValue + 0x1FC44E4
+    basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x0C
     retVal = float_from_integer(process.read(key))
     #print("Egg ", eggNum," X value: ", retVal)
@@ -2231,8 +2232,8 @@ def eggY(eggNum):
     global process
     global baseValue
     eggNum += 23
-    basePointer = baseValue + 0x1FC44E4    # equivalent to the pointer FFX.exe+EA22A0
-    basePointerAddress = process.read(basePointer)    # pseudocode function to get the hex value from basePointer to figure out the address of the start of the actor array
+    basePointer = baseValue + 0x1FC44E4
+    basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x14
     retVal = float_from_integer(process.read(key))
     #print("Egg ", eggNum," Y value: ", retVal)
@@ -2299,4 +2300,72 @@ def buildEggs():
     retArray = [0,0,0,0,0,0,0,0,0,0]
     for x in range(10):
         retArray[x] = egg(x)
+    return retArray
+
+def iceX(actor):
+    global process
+    global baseValue
+    offset = actor + 7 #Icicle 0 is actor 7 in the array, incremented for each additional icicle.
+    
+    basePointer = baseValue + 0x1fc44e4
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + (0x880 * offset) + 0x0C
+    retVal = float_from_integer(process.read(key))
+    return retVal
+
+
+def iceY(actor):
+    global process
+    global baseValue
+    offset = actor + 7 #Icicle 0 is actor 7 in the array, incremented for each additional icicle.
+    
+    basePointer = baseValue + 0x1fc44e4
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + (0x880 * offset) + 0x14
+    retVal = float_from_integer(process.read(key))
+    return retVal
+
+def getIceDistance(iceNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xF270B8
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + 0x1C0CC + (0x40 * iceNum)
+    retVal = float_from_integer(process.read(key))
+    return retVal
+
+def getIceLife(iceNum):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xF270B8
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + 0x1C0CC + (0x40 * iceNum) + 4
+    retVal = process.readBytes(key,1)
+    return retVal
+
+
+class icicle:
+    def __init__(self, icenum):
+        self.num = icenum
+        self.x = iceX(self.num)
+        self.y = iceY(self.num)
+        #self.distance = getIceDistance(self.num)
+        #self.iceLife = getEggLife(icenum)
+        #self.eggPicked = getEggPicked(icenum)
+        
+        #if self.distance != 0: #Either we're in battle or the icicle is not active.
+        #    self.isActive = True
+        #else:
+        #    self.isActive = False
+        self.isActive = True
+
+    def reportVars(self):
+        varArray = [self.num, self.x, self.y]
+        print("Ice_num, X, Y")
+        print(varArray)
+
+def buildIcicles():
+    retArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    for x in range(16):
+        retArray[x] = icicle(x)
     return retArray

@@ -6,6 +6,7 @@ import FFX_Screen
 import FFX_core
 import FFX_memory
 import FFX_Logs
+from math import copysign
 
 FFXC = FFX_Xbox.FFXC
 
@@ -46,6 +47,7 @@ def engage():
                         target = [-20,20]
                 #print("Building egg array")
                 eggArray = FFX_memory.buildEggs()
+                iceArray = FFX_memory.buildIcicles() #Added for additional pathing needs
                 currentTime = time.time()
                 if activeEgg == 99:
                     for marker in range(10): #Only print active eggs/icicles
@@ -88,19 +90,19 @@ def engage():
                     rX = right[0]
                     rY = right[1]
 
-                    Lx = fX*(eX-pX) + rX*(eY-pY)
-                    Ly = fY*(eX-pX) + rY(eY-pY)
-                    sumsUp = Lx+Ly
+                    Ly = fX * (eX-pX) + rX * (eY-pY)
+                    Lx = fY * (eX-pX) + rY * (eY-pY)
+                    sumsUp = abs(Lx)+abs(Ly)
                     if sumsUp == 0:
                         sumsUp = 0.01
                     Lx /= sumsUp
                     Ly /= sumsUp
-                    if Lx > Ly:
-                        Ly = Ly/Lx
-                        Lx = 1
-                    else:
-                        Lx = Lx/Ly
-                        Ly = 1
+                    if abs(Lx) > abs(Ly):
+                        Ly = copysign(Ly/Lx if Lx else 0, Ly)
+                        Lx = copysign(1, Lx)
+                    elif abs(Ly) > abs(Lx):
+                        Lx = copysign(Lx/Ly if Ly else 0, Lx)
+                        Ly = copysign(1, Ly)
 
                     FFXC.set_value('AxisLx', Lx)
                     FFXC.set_value('AxisLy', Ly)
