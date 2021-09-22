@@ -7,8 +7,51 @@ import FFX_core
 import FFX_memory
 import FFX_Logs
 from math import copysign
+import numpy as np
 
 FFXC = FFX_Xbox.FFXC
+
+def lineSphereIntersect(start, end, circle, radius=11):
+    numHits = 0
+    hits = []
+
+    direction = end - start
+    sphereToStart = start - circle
+    a = np.dot(direction, direction)
+    b = 2 * np.dot(sphereToStart, direction)
+    c = np.dot(sphereToStart, sphereToStart) - radius**2
+    d = b**2 - 4*a*c
+    if d < 0: # no intersection
+        return (numHits, hits)
+
+    d = np.sqrt(d)
+    # Solve quadratic equation
+    t1 = (-b -d)/(2*a)
+    t2 = (-b +d)/(2*a)
+
+    if t1 >= 0 and t1 <= 1:
+        numHits += 1
+        hits.append(start + direction * t1)
+    if t2 >= 0 and t2 <= 1:
+        numHits += 1
+        hits.append(start + direction * t2)
+    return (numHits, hits)
+
+def pathAround(player, circle, target, radius = 11):
+    line = player - circle
+    line /= np.linalg.norm(line) # normalize to length 1
+    angle = np.arctan2(line[1],line[0])
+    newAngle1 = angle + 0.5 * np.pi
+    newAngle2 = angle - 0.5 * np.pi
+    p1 = circle +  [radius * np.cos(newAngle1), radius * np.sin(newAngle1)]
+    p2 = circle +  [radius * np.cos(newAngle2), radius * np.sin(newAngle2)]
+    print(circle, p1, p2)
+    # Find which of two possible points gives shortest path
+    p1length = np.linalg.norm(p1 - player) + np.linalg.norm(target - p1)
+    p2length = np.linalg.norm(p2 - player) + np.linalg.norm(target - p2)
+    if p1length < p2length:
+        return p1
+    return p2
 
 def engage():
     print("Start egg hunt")
@@ -77,8 +120,26 @@ def engage():
                 else:
                     #print("Movement happening.")
                     #target = [-70,-70]
+                    oldTarget = target
                     player = FFX_memory.getCoords()
+                    iceArray = FFX_memory.buildIcicles()
                     (forward, right) = FFX_memory.getMovementVectors()
+
+                    targetPos = np.array([target[0], target[1]])
+                    playerPos = np.array(player)
+
+                    closestIntersect = 9999
+                    intersectPoint = []
+                    for icicle in iceArray:
+                        numIntersect, hits = lineSphereIntersect(playerPos, targetPos, np.array([icicle.x, icicle.y]))
+                        if numIntersect > 0:
+                            intersectDistance = (player[0] - hits[0][0])**2 + (player[1] - hits[0][1])**2
+                            if intersectDistance < closestIntersect:
+                                closestIntersect = intersectDistance
+                                intersectPoint = hits[0]
+
+                    if closestIntersect < 9999:
+                        target = pathAround(playerPos, np.array(intersectPoint), targetPos)
 
                     # Calculate forward and right directions relative to camera space
                     pX = player[0]
@@ -106,13 +167,12 @@ def engage():
 
                     FFXC.set_value('AxisLx', Lx)
                     FFXC.set_value('AxisLy', Ly)
-
+                    target = oldTarget
 
                     #camCount += 1
                     #print(camCount)
                     #if camCount % 20 == 0:
                     #    FFX_Logs.writePlot("TEST")
-
 
 
                     #Now if we're close, we want to slow down a bit.
