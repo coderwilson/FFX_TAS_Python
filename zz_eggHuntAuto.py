@@ -41,11 +41,12 @@ def pathAround(player, circle, target, radius = 11):
     line = player - circle
     line /= np.linalg.norm(line) # normalize to length 1
     angle = np.arctan2(line[1],line[0])
+
+    # Create two points rotated 90 degrees from player -> circle intersection
     newAngle1 = angle + 0.5 * np.pi
     newAngle2 = angle - 0.5 * np.pi
     p1 = circle +  [radius * np.cos(newAngle1), radius * np.sin(newAngle1)]
     p2 = circle +  [radius * np.cos(newAngle2), radius * np.sin(newAngle2)]
-    print(circle, p1, p2)
     # Find which of two possible points gives shortest path
     p1length = np.linalg.norm(p1 - player) + np.linalg.norm(target - p1)
     p2length = np.linalg.norm(p2 - player) + np.linalg.norm(target - p2)
@@ -139,7 +140,7 @@ def engage():
                                 intersectPoint = hits[0]
 
                     if closestIntersect < 9999:
-                        target = pathAround(playerPos, np.array(intersectPoint), targetPos)
+                        target = pathAround(playerPos, np.array(intersectPoint), targetPos) # Move around icicle instead
 
                     # Calculate forward and right directions relative to camera space
                     pX = player[0]
