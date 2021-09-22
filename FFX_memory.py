@@ -2365,7 +2365,7 @@ class icicle:
         print(varArray)
 
 def buildIcicles():
-    retArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    retArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     for x in range(16):
         retArray[x] = icicle(x)
     return retArray
