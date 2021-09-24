@@ -416,14 +416,12 @@ def waterfalls() :
     FFX_Battle.aeonSummon(0)
     FFX_Screen.clickToBattle()
     
-    while not FFX_memory.userControl():
+    while not FFX_memory.menuOpen():
         if FFX_memory.battleScreen():
-            time.sleep(0.4)
             FFX_Battle.aeonSpell(0)
-            print("Doing aeon stuff")
-        elif FFX_Screen.BattleComplete():
-            FFX_memory.clickToControl()
+            time.sleep(0.4)
     print("Now to open the menu")
+    FFX_memory.clickToControl()
     FFX_memory.openMenu() #Quick party reformat
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()

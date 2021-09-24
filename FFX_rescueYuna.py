@@ -619,7 +619,6 @@ def evraeAltana():
 def seymourNatus(blitzWin):
     FFX_memory.clickToControl()
     
-    FFX_menu.autoSortItems('n')
     if blitzWin == True:
         FFX_menu.seymourNatusBlitzWin()
     else:

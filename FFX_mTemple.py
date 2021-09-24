@@ -133,7 +133,8 @@ def arrival(blitzWin):
         FFX_Logs.writeStats("Yes")
     elif reportSkip == 2:
         FFX_Logs.writeStats("No")
-    
+
+def seymourFight():
     FFXC.set_value('AxisLy', 1)
     time.sleep(20)
     FFXC.set_value('AxisLy', 1)
@@ -398,7 +399,6 @@ def trials():
 
 def escape():
     FFX_memory.clickToControl()
-    #FFX_menu.autoSortItems('n')
     FFX_menu.afterSeymour()
     FFXC.set_value('AxisLy', -1)
     time.sleep(1)
@@ -455,10 +455,10 @@ def escape():
                         FFXC.set_value('AxisLy', 1)
                     else:
                         FFXC.set_value('AxisLy', 0)
-            elif checkpoint == 30:
+            elif checkpoint == 30: #End of first screen
                 #print("Movement ", checkpoint)
                 if FFX_memory.getMap() == 192:
-                    checkpoint = 40
+                    checkpoint = 1000
                 else:
                     FFXC.set_value('AxisLx', 1)
                     if pos[1] > 390:
@@ -475,9 +475,27 @@ def escape():
                     #    FFXC.set_value('AxisLy', -1)
                     else:
                         FFXC.set_value('AxisLy', 0)
-            elif checkpoint == 40:
+        else:
+            #print("No action ", checkpoint)
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_Screen.BattleScreen():
+                FFX_Battle.fleeAll()
+                while not FFX_memory.userControl():
+                    FFX_Xbox.menuB()
+    
+def wendigoFight():
+    checkpoint = 40
+    lastCP = 0
+    while checkpoint != 1000:
+        pos = FFX_memory.getCoords()
+        #print("Checkpoint: ", checkpoint)
+        if lastCP != checkpoint:
+            print("Checkpoint reached: ", checkpoint)
+            lastCP = checkpoint
+            if checkpoint == 40: #Start of second screen
                 #Second screen.
-                if FFX_memory.userControl() and pos[1] < 385:
+                if pos[1] < ((-0.72 * pos[0]) + 357.78):
                     checkpoint = 50
                 else:
                     FFXC.set_value('AxisLy', -1)
@@ -528,13 +546,12 @@ def escape():
                     FFX_Battle.fleeAll()
                     while not FFX_memory.userControl():
                         FFX_Xbox.menuB()
-    
     print("Done pathing. Now for the Wendigo fight.")
     FFX_Battle.wendigo()
     print("Wendigo fight over")
 
 def underLake():
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(1)
     FFXC.set_value('AxisLx', -1)

@@ -64,7 +64,7 @@ def NewGame(gameLength):
     print("This will be a ", gameLength, " run.")
     #Options selected (all standard for the remake)
 
-def listenStory():
+def listenStory(gameLength):
     #Skip cutscene (multiple presses)
     time.sleep(9)
     FFXC.set_value('BtnBack', 1)
@@ -260,13 +260,79 @@ def listenStory():
     #Just to make sure...
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    
+
+def ammesBattle():
     FFX_Screen.clickToBattle()
     FFX_Battle.defend()
     
     #Auron overdrive tutorial
     FFX_Screen.clickToPixel(724,314,(234, 196, 0))
     time.sleep(0.2)
+    FFX_Screen.awaitPixel(1072,526,(234, 175, 0))
+    time.sleep(0.2)
+    FFXC.set_value('BtnB', 1)
+    time.sleep(0.05)
+    FFXC.set_value('BtnB', 0)
+    
+    time.sleep(1)
+    FFXC.set_value('AxisLx', -1)
+    time.sleep(0.1)
+    FFXC.set_value('AxisLx', 0)
+    time.sleep(0.2)
+    FFX_Xbox.SkipDialog(3) #Initiate overdrive
+    time.sleep(1) #Static delay, the same every time.
+    
+    #Doing the actual overdrive
+    FFXC.set_value('AxisLy', -1)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLy', 0)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLx', -1)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLx', 0)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLy', 1)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLy', 0)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLx', 1)
+    time.sleep(0.04)
+    FFXC.set_value('AxisLx', 0)
+    time.sleep(0.04)
+    FFXC.set_value('BtnShoulderL', 1)
+    time.sleep(0.04)
+    FFXC.set_value('BtnShoulderL', 0)
+    time.sleep(0.04)
+    FFXC.set_value('BtnShoulderR', 1)
+    time.sleep(0.04)
+    FFXC.set_value('BtnShoulderR', 0)
+    time.sleep(0.04)
+    FFXC.set_value('BtnA', 1)
+    time.sleep(0.04)
+    FFXC.set_value('BtnA', 0)
+    time.sleep(0.04)
+    FFXC.set_value('BtnB', 1)
+    time.sleep(0.04)
+    FFXC.set_value('BtnB', 0)
+    time.sleep(2)
+    
+def ammesBattleShort():
+    FFX_Screen.clickToBattle()
+    FFX_memory.setEnemyCurrentHP(0, 20)
+    FFX_memory.setEnemyCurrentHP(1, 0)
+    FFX_memory.setEnemyCurrentHP(2, 0)
+    
+    FFX_Battle.attack('none')
+    time.sleep(0.5)
+    FFX_Screen.clickToBattle()
+    FFX_memory.setEnemyCurrentHP(0, 0)
+    FFX_memory.setEnemyCurrentHP(1, 0)
+    FFX_memory.setEnemyCurrentHP(2, 0)
+    
+    #Now to wait for the Auron overdrive
+    FFX_Screen.clickToPixel(724,314,(234, 196, 0))
+    time.sleep(0.2)
+    FFX_memory.setEnemyCurrentHP(0, 20)
     FFX_Screen.awaitPixel(1072,526,(234, 175, 0))
     time.sleep(0.2)
     FFXC.set_value('BtnB', 1)
@@ -348,10 +414,6 @@ def AfterAmmes():
     time.sleep(3.5)
     
     #Finally, finish with the Tanker fight.
-    FFX_Battle.Tanker()
-    #time.sleep(40)
-    #print("Skipping Auron scene")
-    #FFX_Xbox.skipStoredScene(15)
     
 def SwimToJecht() :
     #FFX_memory.awaitControl()

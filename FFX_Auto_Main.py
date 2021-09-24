@@ -9,8 +9,8 @@ FFXC = FFX_Xbox.FFXC
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
-#Gamestate = "Sin"
-#StepCounter = 3
+#Gamestate = "MRR"
+#StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 Gamestate = "none"
@@ -22,10 +22,6 @@ gameLength = "full"
 forceBlitzWin = True
 autoEggHunt = True
 print("Game type will be: ", gameLength)
-
-#--------------------------------------------------------------------------------------
-tasFinalHit = 0 #TAS-only, final hit will be this character number
-#--------------------------------------------------------------------------------------
 
 #Other variables
 speedCount = 0
@@ -107,6 +103,7 @@ if Gamestate != "none" :
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
         FFX_LoadGame.LoadMiihenStart()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
+        FFX_LoadGame.loadOffset(17)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.LoadMRR2()
@@ -117,6 +114,7 @@ if Gamestate != "none" :
     if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
+        loadOffset(1)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(6)
@@ -203,9 +201,14 @@ try:
         FFX_Logs.writeStats("Start time:")
         FFX_Logs.writeStats(str(startTime))
         print("Timer starts now.")
-        FFX_DreamZan.listenStory()
+        FFX_DreamZan.listenStory(gameLength)
         #Start of the game, up through Sinspawn Ammes fight
         StepCounter = 2
+        #if gameLength == "short":
+        #    FFX_DreamZan.ammesBattleShort()
+        #else:
+        FFX_DreamZan.ammesBattle()
+            
 
     if Gamestate == "DreamZan" and StepCounter == 2:
         reportGamestate()
@@ -217,6 +220,11 @@ try:
 
     if Gamestate == "DreamZan" and StepCounter == 3:
         FFX_DreamZan.AfterAmmes()
+        
+        #if gameLength == "short":
+        #    FFX_Battle.TankerShort()
+        #else:
+        FFX_Battle.Tanker()
         
         #Sin drops us near Baaj temple.
         StepCounter = 4
@@ -241,7 +249,7 @@ try:
         FFX_cheater_cheese.items()
         FFX_cheater_cheese.BackToSin()
         FFX_Sin.insideSin(gameLength, autoEggHunt)
-        FFX_Battle.BFA_TASonly(tasFinalHit)
+        FFX_Battle.BFA_TASonly()
         Gamestate = "gameOver"
         stepCounter = 999
 
@@ -472,6 +480,7 @@ try:
     if Gamestate == "Macalania" and StepCounter == 2:
         reportGamestate()
         FFX_mWoods.lakeRoad()
+        FFX_mWoods.lakeRoad2()
         StepCounter = 3
 
     if Gamestate == "Macalania" and StepCounter == 3:
@@ -484,6 +493,7 @@ try:
     if Gamestate == "Macalania" and StepCounter == 4:
         reportGamestate()
         FFX_mTemple.arrival(blitzWin)
+        FFX_mTemple.seymourFight()
         StepCounter = 5
 
     if Gamestate == "Macalania" and StepCounter == 5:
@@ -495,6 +505,7 @@ try:
     if Gamestate == "Macalania" and StepCounter == 6:
         reportGamestate()
         FFX_mTemple.escape()
+        FFX_mTemple.wendigoFight()
         StepCounter = 7
         #Gamestate = "manualBreak" # Used for testing only.
         
@@ -553,6 +564,7 @@ try:
         reportGamestate()
         FFX_Gagazet.calmLands(blitzWin)
         FFX_Gagazet.defenderX()
+        FFX_Gagazet.toTheRonso()
         StepCounter = 2
 
     if Gamestate == "Gagazet" and StepCounter == 2:

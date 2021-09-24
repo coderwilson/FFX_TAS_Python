@@ -289,6 +289,48 @@ def Ammes():
             FFX_Logs.writeStats("Sinspawn Ammes. Attacks:")
             FFX_Logs.writeStats(str(countAttacks))
 
+def TankerShort():
+    FFX_Logs.writeLog("Fight start: Tanker")
+    BattleComplete = 0
+    countAttacks = 0
+    countRevives = 0
+    tidusCount = 0
+    auronCount = 0
+    FFX_Screen.clickToBattle()
+
+    while FFX_memory.getStoryProgress() < 19:
+        if FFX_memory.battleScreen():
+            FFX_memory.setEnemyCurrentHP(0, 20)
+            if FFX_Screen.turnTidus():
+                tidusCount += 1
+                if tidusCount < 4:
+                    FFX_Xbox.weapSwap(0)
+                    time.sleep(0.5)
+                else:
+                    attack('none')
+            elif FFX_Screen.turnAuron():
+                auronCount += 1
+                if auronCount < 2:
+                    time.sleep(0.5)
+                    FFX_Xbox.menuB()
+                    time.sleep(0.1)
+                    FFX_Xbox.menuDown()
+                    FFX_Xbox.menuLeft()
+                    FFX_Xbox.menuB()
+                else:
+                    attack('none')
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.menuB()
+    while not FFX_memory.userControl():
+        #print("Skip cutscene")
+        FFXC.set_value('BtnX', 1)
+        FFXC.set_value('BtnB', 1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnX', 0)
+        FFXC.set_value('BtnB', 0)
+        time.sleep(0.035)
+    FFX_Logs.writeStats("Tanker. Attacks:")
+    FFX_Logs.writeStats(str(countAttacks))
 
 def Tanker():
     FFX_Logs.writeLog("Fight start: Tanker")
@@ -1221,11 +1263,21 @@ def MRRbattle(status):
     kimTurn = False
     yunaTurn = False
     chargePhase = False
+    petrifiedstate = False
+    
+    for iterVar in range(7):
+        if FFX_memory.petrifiedstate(iterVar):
+            petrifiedstate = True
 
     FFX_Logs.writeLog("Fight start: Mushroom Rock Road")
     if FFX_Screen.faintCheck() >= 1:
         print("Don't even bother checking which battle this is.")
         print("We got ambushed and are getting out of here.")
+        fleeAll()
+        getOut = 1
+    elif petrifiedstate == True:
+        print("Someone got petrified before our first turn.")
+        print("We got wrecked and are getting out of here.")
         fleeAll()
         getOut = 1
     else:
@@ -2053,105 +2105,112 @@ def mWoods(woodsVars):
     rikkucharge = 0
     wakkasafe = True
     FFX_Screen.awaitTurn()
-    if FFX_Screen.turnTidus() == False:
-        fleeAll()
-    else:
-        while not FFX_memory.menuOpen(): #AKA end of battle screen
-            if FFX_memory.battleScreen():
-                turnchar = FFX_memory.getBattleCharTurn()
-                rikkucharge = FFX_memory.getOverdriveValue(6)
-                if woodsVars[0] == False:  # Rikku needs charging.
-                    print("Marker 1")
-                    if turnchar == 6:
-                        if battleNum == 175 and woodsVars[2] == False:
-                            Steal()
-                        elif battleNum == 172 and woodsVars[1] == False:
-                            StealDown()
-                        elif battleNum == 171 and woodsVars[1] == False:
-                            StealRight()
-                        else:
-                            attack('none')
-                    else:
-                        escapeOne()
-                elif woodsVars[1] == False or woodsVars[2] == False:
+    while not FFX_memory.menuOpen(): #AKA end of battle screen
+        if FFX_memory.battleScreen():
+            turnchar = FFX_memory.getBattleCharTurn()
+            rikkucharge = FFX_memory.getOverdriveValue(6)
+            if woodsVars[0] == False:  # Rikku needs charging.
+                print("Marker 1")
+                if turnchar == 6:
                     if battleNum == 175 and woodsVars[2] == False:
                         print("Marker 2")
-                        if turnchar == 0:
-                            #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
-                            wakkaSafe = True
-                            if tidusturns == 0 and wakkasafe == True:
-                                rikkuposition = FFX_memory.getBattleCharSlot(6)
-                                buddySwap_new(rikkuposition)
-                            else:
-                                tidusFlee()
-                            tidusturns += 1
-                        elif turnchar == 2:
-                            escapeOne()
-                        elif turnchar == 4:
-                            tidusposition = FFX_memory.getBattleCharSlot(0)
-                            buddySwap_new(tidusposition)
-                        elif turnchar == 6:
-                            Steal()
-                        else:
-                            tidusposition = FFX_memory.getBattleCharSlot(0)
-                            if tidusposition > 3:
-                                buddySwap_new(tidusposition)
-                            else:
-                                escapeOne()
+                        Steal()
                     elif battleNum == 172 and woodsVars[1] == False:
                         print("Marker 3")
-                        if turnchar == 0:
-                            #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
-                            #    FFX_memory.getBattleCharSlot(4)] > 200
-                            wakkasafe = True #Something wrong with the original logic.
-                            if tidusturns == 0 and wakkasafe == True:
-                                rikkuposition = FFX_memory.getBattleCharSlot(6)
-                                buddySwap_new(rikkuposition)
-                            else:
-                                tidusFlee()
-                            tidusturns += 1
-                        elif turnchar == 2:
-                            escapeOne()
-                        elif turnchar == 4:
-                            tidusposition = FFX_memory.getBattleCharSlot(0)
-                            buddySwap_new(tidusposition)
-                        elif turnchar == 6:
-                            StealDown()
-                        else:
-                            tidusposition = FFX_memory.getBattleCharSlot(0)
-                            if tidusposition > 3:
-                                buddySwap_new(tidusposition)
-                            else:
-                                escapeOne()
+                        StealDown()
                     elif battleNum == 171 and woodsVars[1] == False:
                         print("Marker 4")
-                        if turnchar == 0:
-                            #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
-                            #    FFX_memory.getBattleCharSlot(4)] > 200
-                            wakkasafe = True #Something wrong with the original logic.
-                            if tidusturns == 0 and wakkasafe == True:
-                                rikkuposition = FFX_memory.getBattleCharSlot(6)
-                                buddySwap_new(rikkuposition)
-                            else:
-                                tidusFlee()
-                            tidusturns += 1
-                        elif turnchar == 2:
-                            escapeOne()
-                        elif turnchar == 4:
-                            tidusposition = FFX_memory.getBattleCharSlot(0)
-                            buddySwap_new(tidusposition)
-                        elif turnchar == 6:
-                            StealRight()
-                        else:
-                            tidusposition = FFX_memory.getBattleCharSlot(0)
-                            if tidusposition > 3:
-                                buddySwap_new(tidusposition)
-                            else:
-                                escapeOne()
+                        StealRight()
                     else:
-                        tidusFlee()
+                        print("Marker 5")
+                        attack('none')
                 else:
+                    print("Marker 6")
+                    escapeOne()
+            elif woodsVars[1] == False or woodsVars[2] == False:
+                if battleNum == 175 and woodsVars[2] == False:
+                    print("Marker 7")
+                    if turnchar == 0:
+                        #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
+                        wakkaSafe = True
+                        if tidusturns == 0 and wakkasafe == True:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 2:
+                        escapeOne()
+                    elif turnchar == 4:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        Steal()
+                    else:
+                        print("Marker 8")
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        if tidusposition > 3:
+                            buddySwap_new(tidusposition)
+                        else:
+                            escapeOne()
+                elif battleNum == 172 and woodsVars[1] == False:
+                    print("Marker 9")
+                    if turnchar == 0:
+                        #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
+                        #    FFX_memory.getBattleCharSlot(4)] > 200
+                        wakkasafe = True #Something wrong with the original logic.
+                        if tidusturns == 0 and wakkasafe == True:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 2:
+                        escapeOne()
+                    elif turnchar == 4:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        StealDown()
+                    else:
+                        print("Marker 10")
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        if tidusposition > 3:
+                            buddySwap_new(tidusposition)
+                        else:
+                            escapeOne()
+                elif battleNum == 171 and woodsVars[1] == False:
+                    print("Marker 11")
+                    if turnchar == 0:
+                        #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
+                        #    FFX_memory.getBattleCharSlot(4)] > 200
+                        wakkasafe = True #Something wrong with the original logic.
+                        if tidusturns == 0 and wakkasafe == True:
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
+                            buddySwap_new(rikkuposition)
+                        else:
+                            tidusFlee()
+                        tidusturns += 1
+                    elif turnchar == 2:
+                        escapeOne()
+                    elif turnchar == 4:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                    elif turnchar == 6:
+                        StealRight()
+                    else:
+                        print("Marker 12")
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        if tidusposition > 3:
+                            buddySwap_new(tidusposition)
+                        else:
+                            escapeOne()
+                else:
+                    print("Marker 13")
                     tidusFlee()
+            else:
+                print("Marker 14")
+                tidusFlee()
 
     print("Battle complete, now to deal with the aftermath.")
     FFX_memory.clickToControl3()
@@ -4739,46 +4798,76 @@ def BFA():
             time.sleep(0.035)
         story = FFX_memory.getStoryProgress()
 
-def BFA_TASonly(finalHit):
+def BFA_TASonly():
     FFX_Logs.writeLog("Fight start: BFA and final boss")
     FFX_Screen.clickToBattle()
-    FFX_memory.setEnemyCurrentHP(0, 10)
-    attack('none')
-    
-    FFX_Screen.awaitTurn()
-    FFX_memory.setEnemyCurrentHP(0, 10)
-    attack('none')
-    
-    while FFX_Screen.BattleComplete() == False:
-        time.sleep(0.035)
-    time.sleep(77.7)
-    print("Mark")
-    FFX_Xbox.skipScene()
-    
+    FFX_Xbox.menuDown()
+    useItem(4, 'none')
+
+    # Clear out the pagodas
     FFX_Screen.clickToBattle()
-    print("The final hit will be performed by ", FFX_memory.nameFromNumber(finalHit))
-    print("The final hit will be performed by ", FFX_memory.nameFromNumber(finalHit))
-    print("The final hit will be performed by ", FFX_memory.nameFromNumber(finalHit))
-    if finalHit != 0: #Tidus
-        if finalHit == 1: #Yuna
-            while not FFX_Screen.turnYuna():
+    buddySwap(0)
+    time.sleep(0.5)
+    FFX_Xbox.menuLeft()
+    time.sleep(1)
+    FFX_Xbox.menuB()
+
+    # Trio of Rikku's Broken Overdrive
+    time.sleep(1)
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuRight()
+    FFX_Xbox.SkipDialog(3)
+
+    # Then Tidus talk so we get a free Jecht turn
+    FFX_Screen.clickToBattle()
+    time.sleep(0.5)
+    FFX_Xbox.menuLeft()
+    time.sleep(1)
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuB()
+    FFX_Xbox.SkipDialog(2)
+
+    while FFX_memory.getBattleNum() < 397:
+        if FFX_Screen.BattleScreen():
+            if FFX_Screen.turnYuna():
                 defend()
-        elif finalHit == 2: #Auron
-            while not FFX_Screen.turnAuron():
-                defend()
-        elif finalHit == 3: #Kimahri
-            buddySwap(2)
-        elif finalHit == 4: #Wakka
-            buddySwap(1)
-        elif finalHit == 5: #Lulu
-            buddySwap(3)
-        elif finalHit == 6: #Mystery Girl
-            buddySwap(0)
-        time.sleep(0.5)
-    FFX_Screen.awaitTurn()
-    FFX_memory.setEnemyCurrentHP(0, 3)
-    attack('none')
-    
+            else:
+                if FFX_Screen.turnTidus():
+                    FFX_Xbox.menuDown()
+                useItem(3, 'none')
+        else:
+            FFX_Xbox.menuB()
+
+    # Yu Yevon
+    story = FFX_memory.getStoryProgress()
+    while story < 3400:
+        if FFX_Screen.BattleScreen():
+            if FFX_Screen.turnTidus():
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                time.sleep(0.5)
+                FFX_Xbox.menuB()
+                time.sleep(0.5)
+                FFX_Xbox.menuB()
+                time.sleep(0.5)  # Zombiestrike
+                FFX_Xbox.menuB()
+                time.sleep(0.5)
+            else:
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
+                time.sleep(0.5)
+                FFX_Xbox.menuB()  # Phoenix Down
+                time.sleep(0.5)
+                FFX_Xbox.menuUp()
+                FFX_Xbox.menuB()  # Target Yu Yevon
+                time.sleep(0.5)
+        story = FFX_memory.getStoryProgress()
+
+
 def oldYYTasLogic():
     # Yu Yevon
     story = FFX_memory.getStoryProgress()

@@ -39,6 +39,19 @@ def start():
         print("Could not get memory address dynamically. ", errCode)
         baseValue = 0x00FF0000
 
+def gameOver():
+    global baseValue
+    key = baseValue + 0x00D2C9F1
+    if process.readBytes(key,1) > 0:
+        return True
+    else:
+        return False
+
+def gameOverReset():
+    global baseValue
+    key = baseValue + 0x00D2C9F1
+    process.writeBytes(key,0,1)
+
 def battleActive():
     global baseValue
     key = baseValue + 0x00F3C8FC
@@ -656,6 +669,37 @@ def getThrowItemsSlot(itemNum):
         x += 1
     return 255
 
+def getGridItemsOrder():
+    itemArray = getItemsOrder()
+    x = 0
+    while x < len(itemArray):
+        try:
+            if itemArray[x] < 70 or itemArray[x] > 99:
+                itemArray.remove(itemArray[x])
+            else:
+                x += 1
+        except:
+            x += 1
+    print("Sphere grid, item order:")
+    print(itemArray)
+    return itemArray
+
+def getGridItemsSlot(itemNum) -> int:
+    items = getGridItemsOrder()
+    x = 0
+    while x < len(items):
+        #print(items[x + 1], " | ", itemNum)
+        if items[x] == itemNum:
+            print("Desired item ", itemNum, " is in slot ", x)
+            return x
+        x += 1
+    return 255
+
+def getGridCursorPos():
+    global baseValue
+    key = baseValue + 0x012ACB78
+    return process.readBytes(key,1)
+
 def getItemSlot(itemNum):
     items = getItemsOrder()
     for x in range(30):
@@ -1238,7 +1282,7 @@ def itemHack(ver):
         key = baseValue + 0x00D30964 #Dark Matter
         progress = process.writeBytes(key,53,1)
         key = baseValue + 0x00D30B60
-        progress = process.writeBytes(key,99,1)
+        progress = process.writeBytes(key,2,1)
         key = baseValue + 0x00D30966 #Wings
         progress = process.writeBytes(key,108,1)
         key = baseValue + 0x00D30B61

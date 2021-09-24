@@ -1185,9 +1185,10 @@ def desertCharge():
     return chargeState
 
 def clickImage(img):
-    search = imgSearch2(img,0.85)
+    search = pyautogui.center(pyautogui.locateOnScreenCenter(img,0.85))
+    print('Search values: ', search)
     if search != [0,0]:
-        pyautogui.click(x=search[0], y=search[1])
+        pyautogui.click(search[0], search[1])
         time.sleep(1)
         return True
     else:

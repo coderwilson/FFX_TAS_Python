@@ -175,7 +175,7 @@ def arrival():
         else:
             FFXC.set_value('AxisLy', 0)
             FFXC.set_value('AxisLx', 0)
-            if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+            if FFX_memory.menuOpen():
                 FFX_Xbox.menuB()
     return wakkaLateMenu
 

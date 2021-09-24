@@ -91,7 +91,7 @@ def arrival():
 
 
 def forest1():
-    FFX_Screen.awaitMap1()
+    FFX_memory.awaitControl()
     FFX_menu.autoSortItems('n')
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()

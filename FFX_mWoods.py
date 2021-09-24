@@ -8,11 +8,12 @@ import FFX_memory
 FFXC = FFX_Xbox.FFXC
  
 def arrival(rikkucharged):
-    FFX_Screen.clickToMap1()
+    FFX_memory.clickToControl()
     if rikkucharged == True:
         FFX_memory.fullPartyFormat_New("mwoodsgotcharge", 11)
     else:
         FFX_memory.fullPartyFormat_New("mwoodsneedcharge", 11)
+    FFX_memory.closeMenu()
     #Start by getting away from the save sphere
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
@@ -312,17 +313,20 @@ def lakeRoad():
     FFXC.set_value('AxisLy', 0) #Engage Spherimorph
     
     FFX_Battle.spherimorph()
-    
+    print("Battle is over.")
+    FFX_Xbox.SkipDialog(3)
     FFX_memory.clickToControl() #Jecht's memories
+    
+def lakeRoad2():
     FFXC.set_value('AxisLy', -1)
     time.sleep(6)
     FFXC.set_value('AxisLy', 0)
     
     FFX_memory.clickToControl() #Auron's musings.
     FFXC.set_value('AxisLy', -1)
-    time.sleep(3.5)
+    FFX_Xbox.SkipDialog(3.5)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(3.5)
+    FFX_memory.clickToEvent(3.5)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     
@@ -335,7 +339,6 @@ def lakeRoad():
 
 def lake():
     print("Now to the frozen lake")
-    FFX_menu.autoSortItems('n')
     FFX_memory.fullPartyFormat('crawler')
     FFX_memory.awaitControl()
     FFX_menu.mLakeGrid()
@@ -395,7 +398,6 @@ def afterCrawler():
     FFXC.set_value('AxisLy', 0)
 
     FFX_memory.clickToControl()
-    FFX_menu.autoSortItems('n')
     
     checkpoint = 0
     lastCP = 0

@@ -8,7 +8,7 @@ import FFX_memory
 FFXC = FFX_Xbox.FFXC
  
 def southPathing(blitzwin):
-    
+    FFX_memory.clickToControl()
     print("Start of the Thunder Plains section")
     checkpoint = 0
     stepCount = 0

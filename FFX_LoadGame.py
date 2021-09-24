@@ -242,7 +242,6 @@ def LoadMiihenStart():
     print("Load complete. Now for Mi'ihen area.")
 
 def LoadMRR():
-    loadOffset(13)
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(2.5)
@@ -317,33 +316,31 @@ def moonflow2():
     time.sleep(0.5)
 
 def loadGuadoSkip():
-    loadOffset(1)
     time.sleep(1)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(1)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    FFX_Screen.awaitMap1()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLx', -1)
     time.sleep(0.6)
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 0)
     time.sleep(1.5)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(2)
+    time.sleep(1.5)
     FFXC.set_value('AxisLy', -1)
-    time.sleep(4)
+    time.sleep(3)
     FFXC.set_value('AxisLx', 1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(2)
     FFXC.set_value('AxisLx', 1)
-    time.sleep(4.5)
+    FFX_memory.awaitEvent()
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    FFX_Screen.awaitMap1()
+    time.sleep(0.2)
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', -1)
     time.sleep(1)
     FFXC.set_value('AxisLy', 0)
@@ -358,7 +355,6 @@ def loadMacLake():
     FFX_memory.awaitControl()
 
 def loadMacTemple():
-    loadOffset(1)
     FFXC.set_value('AxisLx', -1)
     time.sleep(3)
     FFXC.set_value('AxisLx', 0)
@@ -421,7 +417,6 @@ def loadBahamut():
     FFXC.set_value('AxisLy', 0)
     
 def loadCalm():
-    loadOffset(1)
     FFXC.set_value('AxisLx', 1)
     FFXC.set_value('AxisLy', 1)
     time.sleep(1)

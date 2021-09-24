@@ -470,7 +470,153 @@ def sphereColor(desired):
                 return 4
     return 0
 
+def sphereNum(sType) -> int:
+    sType = sType.lower()
+    if sType == 'power':
+        return 70
+    elif sType == 'mana':
+        return 71
+    elif sType == 'speed':
+        return 72
+    elif sType == 'ability':
+        return 73
+    elif sType == 'fortune':
+        return 74
+    elif sType == 'attribute':
+        return 75
+    elif sType == 'special':
+        return 76
+    elif sType == 'skill':
+        return 77
+    elif sType == 'wmag':
+        return 78
+    elif sType == 'bmag':
+        return 79
+    elif sType == 'master':
+        return 80
+    elif sType == 'lv1':
+        return 81
+    elif sType == 'lv2':
+        return 82
+    elif sType == 'lv3':
+        return 83
+    elif sType == 'lv4':
+        return 84
+    elif sType == 'hp':
+        return 85
+    elif sType == 'mp':
+        return 86
+    elif sType == 'strength':
+        return 87
+    elif sType == 'defense':
+        return 88
+    elif sType == 'magic':
+        return 89
+    elif sType == 'mdef':
+        return 90
+    elif sType == 'agility':
+        return 91
+    elif sType == 'evasion':
+        return 92
+    elif sType == 'accuracy':
+        return 93
+    elif sType == 'luck':
+        return 94
+    elif sType == 'clear':
+        return 95
+    elif sType == 'ret':
+        return 96
+    elif sType == 'friend':
+        return 97
+    elif sType == 'tele':
+        return 98
+    elif sType == 'warp':
+        return 99
+    return 255
+
 def selSphere(sType, direction, shift):
+    #The direction variable is no longer used.
+    sNum = 255
+    menuPos = 0
+    print("-----------------------------------")
+    print("-----------------------------------")
+    print(sType)
+    sNum = sphereNum(sType)
+    print(sNum)
+    menuPos = FFX_memory.getGridItemsSlot(sNum)
+    print(menuPos)
+    print("-----------------------------------")
+    print("-----------------------------------")
+    if menuPos == 255:
+        print("Sphere ", sType, "is not in inventory.")
+        return
+    complete = False
+    while complete == False:
+        if menuPos > FFX_memory.getGridCursorPos():
+            FFX_Xbox.menuDown()
+        elif menuPos < FFX_memory.getGridCursorPos():
+            FFX_Xbox.menuUp()
+        
+        if menuPos == FFX_memory.getGridCursorPos():
+            time.sleep(0.1)
+            if menuPos == FFX_memory.getGridCursorPos():
+                FFX_Xbox.menuB()
+                complete = True
+    if shift == 'none':
+        FFX_Xbox.SkipDialog(0.7)
+    else:
+        time.sleep(0.2)
+        if shift == 'up':
+            gridUp()
+        if shift == 'left':
+            gridLeft()
+        if shift == 'l5':
+            gridLeft()
+            gridLeft()
+            gridLeft()
+            gridLeft()
+            gridLeft()
+        if shift == 'right':
+            gridRight()
+        if shift == 'r2':
+            gridRight()
+            gridRight()
+        if shift == 'down':
+            gridDown()
+        if shift == 'd2':
+            gridDown()
+            gridDown()
+        if shift == 'd5':
+            gridDown()
+            gridDown()
+            gridDown()
+            gridDown()
+            gridDown()
+        if shift == 'aftersk':
+            gridUp()
+            gridRight()
+            gridDown()
+            #gridDown()
+        if shift == 'aftersk2':
+            gridRight()
+            gridRight()
+            time.sleep(0.1)
+            gridLeft()
+        if shift == 'torikku':
+            gridDown()
+            gridDown()
+            gridLeft()
+            gridLeft()
+        if shift == 'yunaspec':
+            #Yuna Special
+            gridDown()
+            gridRight()
+            gridRight()
+            gridDown()
+            gridDown()
+        FFX_Xbox.SkipDialog(0.7)
+
+def selSphere_old(sType, direction, shift):
     sType = sType.lower()
     shift = shift.lower()
     found = 0
