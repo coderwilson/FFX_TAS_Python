@@ -5,6 +5,7 @@ import FFX_Battle
 import FFX_menu
 import FFX_Logs
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
  
@@ -180,6 +181,232 @@ def temple():
     FFXC.set_value('AxisLy', 0)
 
 def trials():
+    print("Starting Trials section.")
+    FFX_memory.clickToControl()
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 90:
+        if FFX_memory.userControl():
+            if checkpoint == 1: #First sphere
+                print("First sphere")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 3: #Sphere door
+                print("Sphere door")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 5: #Second sphere
+                print("Second sphere")
+                FFX_memory.clickToEventTemple(3)
+                checkpoint += 1
+            elif checkpoint == 7: #Sphere door opens
+                print("Sphere door opens")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 13: #Left Sphere
+                print("Left sphere")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 16: #Insert Left Sphere
+                print("Insert left sphere")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 19: #Right Sphere
+                print("Right sphere")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 22:
+                print("Pushing pedestol")
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 1)
+                FFX_memory.awaitEvent()
+                time.sleep(6.4) #Push timer, super critical
+                print("Push complete.")
+                checkpoint += 1
+                print("Insert right sphere")
+                FFX_memory.clickToEventTemple(0)
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', -1)
+                time.sleep(0.2)
+                checkpoint += 1
+            elif checkpoint == 24: #Insert Right Sphere
+                print("Insert right sphere")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint = 27
+            elif checkpoint == 28:
+                print("Left sphere")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 31 or checkpoint == 56: #Reset switch event
+                print("Reset switch")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 34:
+                print("Insert left sphere")
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 38:
+                print("Powered sphere")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 40:
+                print("Insert powered sphere")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 43:
+                print("Right sphere")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 45:
+                print("Insert right sphere")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 48: #All of the hidden room stuff at once
+                print("Pushing pedestol")
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', 0)
+                FFX_memory.awaitEvent()
+                time.sleep(9)
+                print("Push complete.")
+                FFX_memory.awaitControl()
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', 0)
+                time.sleep(0.4)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                time.sleep(0.5)
+                FFX_memory.awaitControl()
+                print("Extra pedestol")
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', 0)
+                FFX_Xbox.SkipDialog(2)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                FFX_memory.awaitControl()
+                FFXC.set_value('AxisLy', -1)
+                FFXC.set_value('AxisLx', 0)
+                time.sleep(0.8)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                time.sleep(0.5)
+                checkpoint += 1
+            elif checkpoint == 51:
+                print("Powered sphere")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 53:
+                print("Insert powered sphere")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 58:
+                print("Left sphere")
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 63:
+                print("Final insert Left sphere")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 68:
+                print("Right sphere")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 73:
+                print("Final insert Right sphere")
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 80:
+                print("Destruction Glyph")
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', 0)
+                FFX_Xbox.SkipDialog(0.4)
+                FFXC.set_value('AxisLy', 1)
+                FFXC.set_value('AxisLx', 1)
+                FFX_Xbox.SkipDialog(0.8)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 82:
+                print("Destruction sphere")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 85: #Lift
+                if FFX_targetPathing.setMovement([0,30]) == True:
+                    FFXC.set_value('AxisLy', 0)
+                    FFXC.set_value('AxisLx', 0)
+                    time.sleep(0.2)
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+            elif checkpoint == 88:
+                print("Pedestol 1")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 90:
+                print("Pedestol 2")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 92:
+                print("Pedestol 3")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 94:
+                print("Pedestol 4")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 96:
+                print("Pedestol 5")
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 100:
+                print("Insert Destruction sphere")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 102:
+                print("Destro chest")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 104:
+                print("End of Trials")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseTrials(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+    
+    print("Talk to Auron while we wait.")
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', -1)
+    FFX_memory.clickToEvent()
+    FFXC.set_value('AxisLx', -1)
+    FFXC.set_value('AxisLy', -1)
+    FFX_memory.clickToControl3()
+    time.sleep(1.5)
+    FFXC.set_value('AxisLx', 0)
+    time.sleep(0.5)
+    FFXC.set_value('AxisLy', 0)
+    FFX_Xbox.SkipDialog(20)
+    
+    
+    FFX_memory.clickToControl()
+    print("Leaving the fayth room")
+    FFXC.set_value('AxisLy', 1)
+    time.sleep(1.1)
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', 0)
+    time.sleep(1.5)
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    
+    FFX_Xbox.SkipDialog(34)
+    
+    FFX_Screen.awaitPixel(352,233,(145, 141, 220)) #naming Ixion
+    time.sleep(0.1)
+    FFX_Xbox.menuB()
+    time.sleep(0.1)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuB()
+
+def trials_old():
     FFX_memory.clickToControl3()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
@@ -650,7 +877,7 @@ def trials():
     FFX_Xbox.menuB()
 
 def leavingDjose():
-    FFX_Screen.awaitMap1()
+    FFX_memory.awaitControl()
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
     time.sleep(1.8)
@@ -697,7 +924,8 @@ def leavingDjose():
     FFXC.set_value('AxisLy', -1)
     time.sleep(1.5)
     FFXC.set_value('AxisLy', 0)
-    
+
+def oldMovementPath():
     FFX_memory.clickToControl() #Finally back in control
     while FFX_memory.userControl():
         pos = FFX_memory.getCoords()

@@ -119,8 +119,6 @@ def engage():
                     print("Story progress trigger. Moving on. (loop break)")
                     complete = 1
                 else:
-                    #print("Movement happening.")
-                    #target = [-70,-70]
                     oldTarget = target
                     player = FFX_memory.getCoords()
                     iceArray = FFX_memory.buildIcicles()
@@ -183,10 +181,10 @@ def engage():
                         FFXC.set_value('AxisLy', 0)
                         time.sleep(0.15)
                     elif activeEgg == 99:
-                        print("Looking for a new egg. Move version: ", moveVersion," | ",lookingCount)
+                        print("Looking for a new egg. | ",lookingCount)
                         lookingCount += 1
                     else:
-                        print("Targetting egg: ", moveVersion," | ",target)
+                        print("Targetting egg: | ",target)
                 if FFX_memory.userControl() == False:
                     if FFX_Screen.Minimap2():
                         FFX_Xbox.menuB()

@@ -5,6 +5,7 @@ import FFX_Battle
 import FFX_menu
 import FFX_Logs
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
  
@@ -144,6 +145,9 @@ def afterSpeech():
 
 def guadoSkip():
     FFX_Screen.clickToMap1()
+    print("Prepping for Guado skip")
+    print("Affection array:")
+    print(FFX_memory.affectionArray())
     FFXC.set_value('AxisLy', -1)
     time.sleep(0.8)
     FFXC.set_value('AxisLx', -1)
@@ -157,14 +161,16 @@ def guadoSkip():
     time.sleep(1)
     FFXC.set_value('AxisLx', 0) #Approach the party
     
-    FFX_Screen.awaitPixel(888,802,(224, 224, 224))
-    time.sleep(0.3)
-    FFX_Xbox.menuB()
-    time.sleep(2.1)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Syopa Cusatyo
+    #FFX_Screen.awaitPixel(888,802,(224, 224, 224))
+    #time.sleep(0.3)
+    #FFX_Xbox.menuB()
+    #time.sleep(2.1)
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB() #Syopa Cusatyo
+    #Removing this, it messes with the affection minigame.
     
-    FFX_Screen.awaitMap1()
+    time.sleep(0.5)
+    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
     pos = FFX_memory.getCoords()
@@ -207,54 +213,70 @@ def guadoSkip():
         time.sleep(0.07)
         pos = FFX_memory.getCoords()
     
-    #FFXC.set_value('AxisLx', 0)
-    #time.sleep(1.1)
-    #FFX_memory.getCoords()
-    #FFXC.set_value('AxisLy', 0)
-    #FFXC.set_value('AxisLx', 0) #In the corner
-    #time.sleep(0.5)
-    #FFX_memory.getCoords()
-    #FFXC.set_value('AxisLx', 1) #Face right
-    #time.sleep(0.05)
-    #FFX_memory.getCoords()
-    #FFXC.set_value('AxisLx', 0) #Face right
-    #time.sleep(0.4)
-    #FFX_memory.getCoords()
-    #FFXC.set_value('AxisLx', 1)
-    #time.sleep(0.43)
-    #FFXC.set_value('AxisLx', 0)
-    #FFXC.set_value('AxisLy', -1)
-    #time.sleep(0.15)
-    #FFX_memory.getCoords()
-    #FFXC.set_value('AxisLy', 0) #In position
     time.sleep(0.15)
-    #FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
     time.sleep(0.04)
-    #FFX_memory.getCoords()
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0) #Face downward
     FFX_memory.getCoords()
     time.sleep(0.3)
     val = FFX_Screen.PixelValue(951,568)
     while FFX_Screen.PixelTestTol(951,568,val,10): #Pixel on the door behind us. If it changes, the guado is here.
-        pos = FFX_memory.getCoords()
+        doNothing = True
     print("MARK")
     time.sleep(0.26)
-    FFXC.set_value('BtnB', 1)
-    time.sleep(0.45)
-    FFXC.set_value('BtnB', 0)
-    time.sleep(0.4)
+    #time.sleep(0.4)
+    FFX_Xbox.SkipDialog(0.5)
     
     while not FFX_Screen.PixelTest(995,768,(222, 222, 222)): #Dialog with the running guado
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.4)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.4)
-    time.sleep(2.5)
-    FFX_Xbox.menuB() #Guado potions good!
-    FFX_memory.getCoords()
+        FFX_Xbox.tapB()
+        
+    #Time limit for safety
+    startTime = time.time()
+    timeLimit = 6 #Max number of seconds that we will wait for the skip to occur.
+    maxTime = startTime + timeLimit
     
+    
+    while FFX_memory.getCamera()[0] < 0.6: #Waiting for walking guado to push us into the door
+        currentTime = time.time()
+        if currentTime > maxTime:
+            print("Skip failed for some reason. Moving on without skip.")
+            break
+    time.sleep(0.035) #Guado potions good!
+    FFX_Xbox.tapB()
+    
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 140:
+        if FFX_memory.userControl():
+            if checkpoint == 5:
+                if FFX_memory.getCamera()[0] > 0.6:
+                    print("Guado skip success.")
+                    checkpoint += 1
+                else:
+                    print("Guado skip fail. Back-up strats.")
+                    checkpoint = 18
+            elif checkpoint == 21: #Shelinda conversation
+                print("Shelinda")
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 24: #Back to party
+                print("Back to party")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            
+            #General pathing
+            elif FFX_memory.userControl():
+                if FFX_targetPathing.setMovement(FFX_targetPathing.guadoSkip(checkpoint)) == True:
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    
+def oldSkipPathing():
     #Run for the Thunder Plains!
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)

@@ -10,25 +10,27 @@ import FFX_Battle
 def skipScene():
     print("Skip cutscene")
     FFXC.set_value('BtnStart', 1) #Generate button to skip
-    time.sleep(0.1)
+    time.sleep(0.035)
     FFXC.set_value('BtnStart', 0)
-    time.sleep(0.05)
+    time.sleep(0.035)
     FFXC.set_value('BtnX', 1) #Perform the skip
-    time.sleep(0.04)
+    time.sleep(0.035)
     FFXC.set_value('BtnX', 0)
+    time.sleep(0.2)
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value('BtnStart', 1) #Generate button to skip
-    time.sleep(0.05)
+    time.sleep(0.07)
     FFXC.set_value('BtnStart', 0)
-    time.sleep(0.05)
+    time.sleep(0.105)
     FFXC.set_value('BtnX', 1) #Perform the skip
-    time.sleep(0.04)
+    time.sleep(0.035)
     FFXC.set_value('BtnX', 0)
     FFXC.set_value('BtnStart', 1) #Before despawn, regenerate the button for use in a future scene.
-    time.sleep(0.05)
+    time.sleep(0.035)
     FFXC.set_value('BtnStart', 0)
+    time.sleep(0.2)
     
 def skipStoredScene(skipTimer):
     print("Mashing skip button")
@@ -39,9 +41,9 @@ def skipStoredScene(skipTimer):
     while currentTime < clickTimer :
         
         FFXC.set_value('BtnX', 1) #Perform the skip
-        time.sleep(0.04)
+        time.sleep(0.035)
         FFXC.set_value('BtnX', 0)
-        time.sleep(0.04)
+        time.sleep(0.035)
         currentTime = time.time()
     print("Mashing skip button - Complete")
 
@@ -163,7 +165,13 @@ def menuB():
     time.sleep(0.06)
     FFXC.set_value('BtnB', 0)
     time.sleep(0.07)
-    
+
+def tapB():
+    FFXC.set_value('BtnB', 1)
+    time.sleep(0.035)
+    FFXC.set_value('BtnB', 0)
+    time.sleep(0.035)
+
 def menuX():
     FFXC.set_value('BtnX', 1)
     time.sleep(0.08)

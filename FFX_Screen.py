@@ -156,7 +156,6 @@ def awaitTurn() :
     counter = 0
     print("Waiting for next turn in combat.")
     #Just to make sure there's no overlap from the previous character's turn
-    time.sleep(0.5) 
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('Dpad', 0)
@@ -168,6 +167,8 @@ def awaitTurn() :
         counter += 1;
         if counter % 100 == 0:
             print("Waiting for player turn: ", counter / 100)
+        if FFX_memory.gameOver():
+            return False
     return True
 
 def awaitSave() :

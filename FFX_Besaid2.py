@@ -361,8 +361,10 @@ def leaving() :
     
     #Kimahri fight
     FFXC.set_value('AxisLy', 1)
-    time.sleep(4.5)
+    time.sleep(1)
+    FFX_memory.awaitEvent()
     FFXC.set_value('AxisLy', 0)
+    time.sleep(1)
     FFX_Xbox.skipScene()
     
     tidusTurn = 0
@@ -372,17 +374,13 @@ def leaving() :
         if FFX_Screen.BattleScreen():
             battleHP = FFX_memory.getBattleHP()
             print(FFX_memory.getEnemyCurrentHP())
-            if battleHP[1] < 140:
+            enemyHP = FFX_memory.getEnemyCurrentHP()
+            if battleHP[1] < 140 and enemyHP[0] > 110:
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
                 FFX_Xbox.SkipDialog(2) #Quick potion
             else:
                 tidusTurn += 1
-                #if tidusTurn == 5:
-                #    FFX_Xbox.tidusOD()
-                #else:
-                #    FFX_Battle.attack('none')
                 FFX_Battle.attack('none')
         else:
             FFX_Xbox.menuB()

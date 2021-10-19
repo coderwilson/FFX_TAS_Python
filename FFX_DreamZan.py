@@ -4,6 +4,7 @@ import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
 
@@ -37,7 +38,7 @@ def NamingTidus():
     FFX_Xbox.menuB() # Confirm
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() # Confirm again
-    
+
 def NewGame(gameLength):
     FFX_Screen.awaitPixel(1076,552,(157, 159, 157))
     print("Starting the game")
@@ -65,6 +66,72 @@ def NewGame(gameLength):
     #Options selected (all standard for the remake)
 
 def listenStory(gameLength):
+    time.sleep(5)
+    x = 0
+    print("Skipping intro scene, we'll watch this properly in about 8 hours.")
+    for x in range(100):
+        FFXC.set_value('BtnBack', 1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnBack', 0)
+        time.sleep(0.035)
+    print("End skip mashing")
+    FFX_memory.awaitControl()
+    
+    skips = 0
+    checkpoint = 0
+    while FFX_memory.getBattleNum() != 414: #Sinspawn Ammes
+        if FFX_memory.userControl():
+            #Events
+            if checkpoint == 2:
+                while FFX_memory.userControl():
+                    FFXC.set_value('AxisLy', -1)
+                    FFXC.set_value('AxisLx', 0)
+                    FFX_Xbox.tapB()
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                
+                #Name Tidus (custom function in this library. Can be changed later.
+                FFX_Screen.awaitPixel(316,374,(224, 182, 138))
+                NamingTidus()
+                checkpoint += 1
+            elif checkpoint == 4:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint < 6 and FFX_memory.getStoryProgress() >= 5:
+                checkpoint = 6
+            elif checkpoint < 11 and FFX_memory.getMap() == 371:
+                checkpoint = 11
+            elif checkpoint < 15 and FFX_memory.getMap() == 370:
+                checkpoint = 15
+            elif checkpoint == 17: #Don't cry.
+                while FFX_memory.userControl():
+                    FFXC.set_value('AxisLy', -1)
+                    FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                checkpoint += 1
+        
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.tidusHome(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                skips += 1
+                if skips == 3:
+                    time.sleep(5)
+                    FFXC.set_value('BtnStart', 1) #Generate button to skip later
+                    time.sleep(0.35)
+                    FFXC.set_value('BtnStart', 0)
+                    time.sleep(5)
+                else:
+                    FFX_Xbox.skipScene()
+
+def listenStory_old(gameLength):
     #Skip cutscene (multiple presses)
     time.sleep(9)
     FFXC.set_value('BtnBack', 1)
@@ -267,83 +334,10 @@ def ammesBattle():
     
     #Auron overdrive tutorial
     FFX_Screen.clickToPixel(724,314,(234, 196, 0))
-    time.sleep(0.2)
-    FFX_Screen.awaitPixel(1072,526,(234, 175, 0))
-    time.sleep(0.2)
-    FFXC.set_value('BtnB', 1)
-    time.sleep(0.05)
-    FFXC.set_value('BtnB', 0)
-    
-    time.sleep(1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(0.1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.2)
-    FFX_Xbox.SkipDialog(3) #Initiate overdrive
-    time.sleep(1) #Static delay, the same every time.
-    
-    #Doing the actual overdrive
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(0.04)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.04)
-    FFXC.set_value('BtnShoulderL', 1)
-    time.sleep(0.04)
-    FFXC.set_value('BtnShoulderL', 0)
-    time.sleep(0.04)
-    FFXC.set_value('BtnShoulderR', 1)
-    time.sleep(0.04)
-    FFXC.set_value('BtnShoulderR', 0)
-    time.sleep(0.04)
-    FFXC.set_value('BtnA', 1)
-    time.sleep(0.04)
-    FFXC.set_value('BtnA', 0)
-    time.sleep(0.04)
-    FFXC.set_value('BtnB', 1)
-    time.sleep(0.04)
-    FFXC.set_value('BtnB', 0)
-    time.sleep(2)
-    
-def ammesBattleShort():
     FFX_Screen.clickToBattle()
-    FFX_memory.setEnemyCurrentHP(0, 20)
-    FFX_memory.setEnemyCurrentHP(1, 0)
-    FFX_memory.setEnemyCurrentHP(2, 0)
     
-    FFX_Battle.attack('none')
-    time.sleep(0.5)
-    FFX_Screen.clickToBattle()
-    FFX_memory.setEnemyCurrentHP(0, 0)
-    FFX_memory.setEnemyCurrentHP(1, 0)
-    FFX_memory.setEnemyCurrentHP(2, 0)
-    
-    #Now to wait for the Auron overdrive
-    FFX_Screen.clickToPixel(724,314,(234, 196, 0))
-    time.sleep(0.2)
-    FFX_memory.setEnemyCurrentHP(0, 20)
-    FFX_Screen.awaitPixel(1072,526,(234, 175, 0))
-    time.sleep(0.2)
-    FFXC.set_value('BtnB', 1)
-    time.sleep(0.05)
-    FFXC.set_value('BtnB', 0)
-    
-    time.sleep(1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(0.1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.2)
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(3) #Initiate overdrive
     time.sleep(1) #Static delay, the same every time.
     
@@ -382,6 +376,42 @@ def ammesBattleShort():
     time.sleep(2)
 
 def AfterAmmes():
+    FFX_memory.clickToControl()
+    checkpoint = 0
+    
+    while FFX_memory.getMap() != 49:
+        if FFX_memory.userControl():
+            #Map changes and events
+            if checkpoint == 6:
+                time.sleep(0.2)
+                FFX_Xbox.menuB()
+                time.sleep(0.8)
+                FFX_Xbox.menuB()
+                time.sleep(0.8)
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuB()
+                checkpoint += 1
+            elif checkpoint < 9 and FFX_memory.getStoryProgress() >= 20: #Swim to Jecht
+                checkpoint = 9
+            elif checkpoint < 11 and FFX_memory.getStoryProgress() >= 30: #Towards Baaj temple
+                checkpoint = 11
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.allStartsHere(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.battleScreen():
+                FFX_Battle.Tanker()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipStoredScene(3)
+            
+
+def AfterAmmes_old():
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.45)

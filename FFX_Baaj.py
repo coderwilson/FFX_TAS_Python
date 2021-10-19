@@ -4,6 +4,7 @@ import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
  
@@ -14,7 +15,7 @@ def Entrance():
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     
-    #First, we need to change aeon summons ### MOVE THIS TO LATER
+    #First, we need to change aeon summons
     FFX_Xbox.menuY()
     time.sleep(0.6)
     FFX_Xbox.menuUp()
@@ -63,7 +64,23 @@ def Entrance():
     #        FFX_Xbox.menuB()
     
     #Out of the frying pan, into the furnace
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
+    checkpoint = 0
+    while FFX_memory.getMap() != 63:
+        if FFX_memory.userControl():
+            if checkpoint == 9:
+                FFX_memory.clickToEventTemple(7)
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajHallway(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+
+def oldHallwayMovement():
     pos = FFX_memory.getCoords()
     while FFX_memory.userControl():
         if pos[1] < 85:
@@ -92,8 +109,49 @@ def Entrance():
             FFXC.set_value('AxisLy', 1)
         pos = FFX_memory.getCoords()
     
-
 def Baaj_puzzle():
+    FFX_memory.clickToControl()
+    checkpoint = 0
+    while FFX_memory.battleActive() == False:
+        if FFX_memory.userControl():
+            #Events
+            if checkpoint == 3:
+                time.sleep(0.2)
+                FFX_Xbox.touchSaveSphere()
+                checkpoint += 1
+            elif checkpoint == 5: #Flint room
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 6: #Obtain Flint
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 7: #Exit Flint room
+                FFX_memory.clickToEventTemple(4)
+                checkpoint += 1
+            elif checkpoint == 12: #Bouquet hallway
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 21: #Withered bouquet
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 32: #Back to main room
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 33: #To the fireplace
+                FFX_targetPathing.setMovement([1,1])
+                FFX_Xbox.menuB()
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajPuzzle(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+
+def Baaj_puzzle_old():
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     FFX_memory.clickToControl()
@@ -212,7 +270,7 @@ def Klikk_fight() :
     #Before Rikku shows up, we're just going to spam the click button. Simple.
     print("Waiting on Use tutorial")
     FFX_Screen.clickToPixel(897,295,(234, 199, 0))
-        
+    
     print("Doing Use tutorial")
     FFX_Screen.clickToBattle()
     FFX_Battle.useItem(1,'none')

@@ -43,7 +43,7 @@ def resetToMainMenu(mapValue):
             FFX_Xbox.menuB()
     time.sleep(4)
     FFX_memory.gameOverReset()
-    FFX_Xbox.SkipDialog(4)
+    FFX_Xbox.SkipDialog(2)
 
 def resetToMainMenu_hardReset():
     #Hard reset method

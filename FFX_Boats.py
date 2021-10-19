@@ -4,6 +4,7 @@ import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
  
@@ -12,6 +13,44 @@ def boatDance():
     time.sleep(50)
 
 def ssLiki(earlyTidusGrid):
+    checkpoint = 0
+    while FFX_memory.getMap() != 43:
+        if FFX_memory.userControl():
+            #events
+            if checkpoint == 1: #Group surrounding Yuna
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 3: #Talk to Wakka
+                FFX_memory.clickToEventTemple(3)
+                if earlyTidusGrid == False:
+                    FFX_menu.Liki()
+                    FFX_memory.closeMenu()
+                checkpoint += 1
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.liki(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+                
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene()
+            elif FFX_memory.battleActive():            
+                print("Ready to start fight with Sin's Fin")
+                FFX_Battle.SinFin()
+                print("Sin's Fin fight complete. Waiting for next fight")
+                FFX_Battle.Echuilles()
+                print("Sinspawn Echuilles fight complete")
+                while FFX_memory.cutsceneSkipPossible() == False:
+                    time.sleep(0.035)
+                FFX_Xbox.skipScene()
+                FFX_Xbox.SkipDialog(20) #Avoids repeated pressing of the Start button
+
+def ssLiki_old(earlyTidusGrid):
     print("Boarding SS Liki")
     
     #Save sphere
@@ -48,6 +87,7 @@ def ssLiki(earlyTidusGrid):
     #Wait for the boat scene
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLx', -1)
+    FFXC.set_value('AxisLy', 0)
     FFX_Xbox.SkipDialog(4)
     FFXC.set_value('AxisLx', 0)
     FFX_memory.clickToControl()
@@ -86,8 +126,6 @@ def ssLiki(earlyTidusGrid):
     print("Sin's Fin fight complete. Waiting for next fight")
     FFX_Battle.Echuilles()
     print("Sinspawn Echuilles fight complete")
-    #time.sleep(3.3)
-    #FFX_Xbox.skipScene()
     FFX_memory.clickToControl()
 
 def ssWinno():

@@ -5,10 +5,54 @@ import FFX_Battle
 import FFX_menu
 import FFX_menuGrid
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
 
 def arrival():
+    print("Arrived at Kilika docks.")
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 18:
+        if FFX_memory.userControl():
+            #events
+            if checkpoint == 4: #Move into Yuna's dance
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            if checkpoint == 6: #Move into Yuna's dance
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 8: #Exit the inn
+                FFX_memory.clickToEventTemple(5)
+                checkpoint += 1
+            elif checkpoint == 12: #Back to first map
+                FFX_memory.clickToEventTemple(3)
+                checkpoint += 1
+            elif checkpoint == 16: #Talking to Wakka
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+            elif checkpoint == 18: #Back to the map with the inn
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika1(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+                
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipSceneSpec()
+                
+            #Map changes
+            elif checkpoint < 7 and FFX_memory.getMap() == 152:
+                checkpoint = 7
+
+def arrival_old():
     print("Arrived at Kilika docks.")
     
     #Save sphere

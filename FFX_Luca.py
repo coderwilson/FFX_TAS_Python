@@ -265,11 +265,16 @@ def afterBlitz(earlyHaste):
         pos = FFX_memory.getCoords()
     while FFX_memory.userControl():
         FFXC.set_value('AxisLy', -1)
-        if pos[0] > -270:
+        if pos[1] > ((-4.06 * pos[0]) -1320):
             FFXC.set_value('AxisLx', 1)
+        elif pos[1] < ((-4.06 * pos[0]) -1370): #1350 was slightly too high
+            FFXC.set_value('AxisLx', -1)
         else:
             FFXC.set_value('AxisLx', 0)
-        FFX_Xbox.menuB() #Just in case we can try to talk to Auron here.
+        FFXC.set_value('BtnB', 1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnB', 0)
+        time.sleep(0.035)
         pos = FFX_memory.getCoords()
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)

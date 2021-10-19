@@ -4,10 +4,58 @@ import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
- 
-def southPathing(blitzwin):
+
+def southPathing(blitzWin):
+    FFX_memory.clickToControl()
+    
+    status = [False,False,False,False] #Rikku charged, Light Curtain, Lunar Curtain, Speed sphere recovery done
+    status[2] = blitzWin
+    speedcount = FFX_memory.getSpeed()
+    if speedcount >= 14:
+        status[3] = True
+    
+    FFX_memory.fullPartyFormat_New('postbunyip', 11)
+    FFX_memory.closeMenu()
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 256:
+        if FFX_memory.userControl():
+            #Lightning dodging
+            if FFX_Screen.dodgeLightning():
+                FFX_Xbox.tapB()
+            
+            #General pathing
+            elif FFX_memory.userControl():
+                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsSouth(checkpoint)) == True:
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
+                FFX_Xbox.menuB()
+            if FFX_Screen.BattleScreen():
+                status = FFX_Battle.thunderPlains(status, 1)
+            elif FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
+    
+    FFX_memory.awaitControl()
+    FFXC.set_value('AxisLy', 1)
+    time.sleep(0.5)
+    FFXC.set_value('AxisLx', -1)
+    while not FFX_memory.getMap() == 263:
+        if FFX_memory.diagSkipPossible():
+            FFX_Xbox.menuB()
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    complete = 1
+
+    return status
+
+def southPathing_old(blitzWin):
     FFX_memory.clickToControl()
     print("Start of the Thunder Plains section")
     checkpoint = 0
@@ -15,7 +63,7 @@ def southPathing(blitzwin):
     stepMax = 500
     complete = 0
     status = [False,False,False,False] #Rikku charged, Light Curtain, Lunar Curtain, Grenade Thrown
-    status[2] = blitzwin
+    status[2] = blitzWin
     speedcount = FFX_memory.getSpeed()
     if speedcount >= 14:
         status[3] = True
@@ -67,9 +115,11 @@ def southPathing(blitzwin):
                         FFXC.set_value('AxisLx', 0)
             elif checkpoint == 4:
                 FFXC.set_value('AxisLy', 1)
-                FFX_Xbox.SkipDialog(0.5)
+                time.sleep(0.5)
                 FFXC.set_value('AxisLx', -1)
-                FFX_Xbox.SkipDialog(10)
+                while not FFX_memory.getMap() == 263:
+                    if FFX_memory.diagSkipPossible():
+                        FFX_Xbox.menuB()
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', 0)
                 complete = 1
@@ -195,9 +245,10 @@ def agency(blitzWin):
     
     #Now for Yuna's scene
     FFXC.set_value('AxisLx', 1)
-    time.sleep(1.2)
-    FFXC.set_value('AxisLx', 0)
+    time.sleep(0.5)
     FFXC.set_value('AxisLy', 1)
+    time.sleep(0.6)
+    FFXC.set_value('AxisLx', 0)
     time.sleep(1.5)
     FFXC.set_value('AxisLy', 0)
     time.sleep(2) #Scene in Yuna's room. Not as exciting as it sounds.
@@ -205,12 +256,24 @@ def agency(blitzWin):
     FFX_memory.clickToControl3()
     print("Yuna's done talking. Let's keep going.")
     FFXC.set_value('AxisLy', -1)
-    time.sleep(1.5)
-    FFXC.set_value('AxisLy', 0)
+    time.sleep(0.3)
     FFXC.set_value('AxisLx', -1)
     time.sleep(0.2)
     FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.menuB() #Talk to Rikku
+    time.sleep(0.5)
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', 0)
+    FFX_Xbox.SkipDialog(0.4)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', -1)
+    time.sleep(0.3)
+    FFX_Xbox.SkipDialog(2) #Talk to Rikku
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    
+    print("------------------------------------------Affection array:")
+    print(FFX_memory.affectionArray())
+    print("------------------------------------------")
     
     FFX_memory.clickToControl3()
     FFXC.set_value('AxisLy', 1)
@@ -226,6 +289,48 @@ def agency(blitzWin):
     FFX_Screen.awaitMap1()
     
 def northPathing(status):
+    FFX_memory.clickToControl()
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 110:
+        if FFX_memory.userControl():
+            #Lightning dodging
+            if FFX_Screen.dodgeLightning():
+                FFX_Xbox.tapB()
+            
+            #General pathing
+            elif FFX_memory.userControl():
+                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsNorth(checkpoint)) == True:
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
+                FFX_Xbox.menuB()
+            if FFX_Screen.BattleScreen():
+                status = FFX_Battle.thunderPlains(status, 1)
+            elif FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
+                
+    FFX_memory.awaitControl()
+    print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
+    FFXC.set_value('AxisLy', 1)
+    FFX_Xbox.SkipDialog(6)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0)
+    
+    FFX_memory.clickToControl3() # Conversation with Auron about Yuna being hard to guard.
+    
+    FFXC.set_value('AxisLy', 1)
+    FFXC.set_value('AxisLx', 1)
+    FFX_Xbox.SkipDialog(6)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0) #Approaching the party
+
+    return status
+
+def northPathing_old(status):
     #Start of northern section
     checkpoint = 0
     stepCount = 0

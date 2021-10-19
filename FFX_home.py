@@ -4,9 +4,156 @@ import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
- 
+
+def desert():
+    FFX_memory.clickToControl()
+    
+    #Speed sphere stuff. Improve this later.
+    needSpeed = False
+    if FFX_memory.getSpeed() < 9:
+        needSpeed = True
+        #FFX_memory.setSpeed(9)
+        #Reprogram battle logic to throw some kind of grenades.
+    
+    #Same for Power spheres
+    if FFX_memory.getPower() < 23:
+        needPower = True
+    
+    #Logic for finding Teleport Spheres x2 (only chest in this area)
+    teleSlot = FFX_memory.getItemSlot(98)
+    if teleSlot == 255:
+        teleCount = 0
+    else:
+        teleCount = FFX_memory.getItemCountSlot(teleSlot)
+    
+    
+    chargeState = False #Rikku charge, speed spheres
+    #Bomb cores, sleeping powders, smoke bombs, silence grenades
+    stealItems = [0,0,0,0]
+    itemsNeeded = 0
+    
+    #Now to figure out how many items we need.
+    stealItems = FFX_Battle.updateStealItemsDesert()
+    if stealItems[0] == 2:
+        itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
+    else:
+        itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
+    
+    FFX_menu.equipSonicSteel()
+    
+    checkpoint = 0
+    firstFormat = False
+    while FFX_memory.getMap() != 130:
+        if FFX_memory.userControl():
+            #Map changes
+            if checkpoint == 9:
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint < 39 and FFX_memory.getMap() == 137:
+                checkpoint = 39
+            elif checkpoint < 50 and FFX_memory.getMap() == 138:
+                checkpoint = 50
+            
+            #Other events
+            elif checkpoint == 2 or checkpoint == 24: #Save sphere
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                time.sleep(0.2)
+                FFX_Xbox.touchSaveSphere()
+                checkpoint += 1
+            elif checkpoint == 53:
+                print("Going for first Sandragora and chest")
+                teleSlot = FFX_memory.getItemSlot(98)
+                if teleSlot == 255:
+                    FFX_targetPathing.setMovement([-44,446])
+                    FFX_Xbox.tapB()
+                elif teleCount == FFX_memory.getItemCountSlot(teleSlot):
+                    FFX_targetPathing.setMovement([-44,446])
+                    FFX_Xbox.tapB()
+                else:
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+            elif checkpoint == 12 and firstFormat == False:
+                firstFormat = True
+                FFX_memory.fullPartyFormat('desert9')
+            elif checkpoint == 59:
+                if itemsNeeded >= 1: #Cannot move on if we're short on throwable items
+                    checkpoint -= 2
+                elif needSpeed == True: #Cannot move on if we're short on speed spheres
+                    checkpoint -= 2
+                else:
+                    checkpoint += 1
+            
+            #General pathing
+            elif FFX_memory.userControl():
+                if FFX_targetPathing.setMovement(FFX_targetPathing.desert(checkpoint)) == True:
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
+                FFX_Xbox.menuB()
+            if FFX_memory.battleActive(): #Lots of battle logic here.
+                FFX_Screen.clickToBattle()
+                if checkpoint < 7 and FFX_memory.getBattleNum() == 197: #First battle in desert
+                    FFX_Battle.zu()
+                elif FFX_memory.getBattleNum() == 234: #Sandragora logic
+                    print("Sandragora fight")
+                    if checkpoint < 55:
+                        FFX_Battle.sandragora(1)
+                    else:
+                        FFX_Battle.sandragora(2)
+                else:
+                    FFX_Battle.bikanelBattleLogic([chargeState, needSpeed, needPower, itemsNeeded])
+                
+                #After-battle logic
+                FFX_memory.clickToControl()
+                
+                #First, check and update party format.
+                if checkpoint > 10:
+                    if checkpoint < 23 and checkpoint > 10:
+                        FFX_memory.fullPartyFormat('desert9')
+                    elif chargeState == False:
+                        FFX_memory.fullPartyFormat('desert1')
+                    elif needPower == True:
+                        FFX_memory.fullPartyFormat('desert1')
+                    elif needSpeed == True:
+                        FFX_memory.fullPartyFormat('desert1')
+                    elif itemsNeeded >= 1:
+                        FFX_memory.fullPartyFormat('desert1')
+                    else: #Catchall
+                        FFX_memory.fullPartyFormat('desert1')
+                        #formerly desert2, but it works out better to have Kimahri in the fourth slot
+                
+                #Next, figure out how many items we need.
+                stealItems = FFX_Battle.updateStealItemsDesert()
+                print("-----------------------------")
+                print("Items status: ", stealItems)
+                print("-----------------------------")
+                itemsNeeded = 7 - (stealItems[0] + stealItems[1] + stealItems[2] + stealItems[3])
+                if itemsNeeded < 1 and stealItems[1] < 2:
+                    itemsNeeded = 2 - stealItems[1]
+                
+                #Finally, check for other factors and report to console.
+                if FFX_memory.overdriveState()[6] == 100:
+                    chargeState = True
+                if FFX_memory.getSpeed() >= 9:
+                    needSpeed = False
+                if FFX_memory.getPower() >= 23:
+                    needPower = False
+                print("-----------------------------Flag statuses")
+                print("Rikku is charged up: ", chargeState)
+                print("Need more Speed spheres: ", needSpeed)
+                print("Need more Power spheres: ", needPower)
+                print("Number of additional items needed before Home: ", itemsNeeded)
+                print("-----------------------------Flag statuses (end)")
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+
 def desert1():
     print("Starting Bikanel Island section")
     needSpeed = False
@@ -38,10 +185,21 @@ def desert1():
                     FFX_Battle.defend()
                 tidusturns += 1
             else:
-                if len(FFX_memory.getBattleFormation()) > 2:
+                if checkpoint == 170 or checkpoint == 190:
+                    print("Looking for Sandragoras")
+                    battleId = FFX_Battle.desertFights(battleId)
+                elif rikkuFound == False:
                     FFX_Battle.fleeAll()
+                elif chargeState == [True,True]:
+                    if needSpeed == True:
+                        needSpeed = FFX_Battle.desertSpeed(chargeState)
+                    else:
+                        print("Don't need anything else. Moving on.")
+                        FFX_Battle.fleeAll()
                 else:
-                    FFX_Battle.defend()
+                    chargeState = FFX_Battle.bikanelCharge(chargeState)
+                    FFX_memory.desertFormat(chargeState[0])
+                    print("Current state variable: ", chargeState)
         else: FFX_Xbox.menuB() #Skip Dialog
 
     FFX_Screen.clickToMap1()
@@ -351,7 +509,6 @@ def desert1():
 
 def findSummoners(blitzWin):
     FFX_memory.clickToControl()
-    FFX_menu.autoSortItems('n')
     FFX_menu.homeGrid()
     FFXC.set_value('AxisLy', 1)
     time.sleep(0.7)

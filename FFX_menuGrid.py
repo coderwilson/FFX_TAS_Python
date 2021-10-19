@@ -85,7 +85,10 @@ def moveUseMenu():
 
 def moveReady():
     if moveUseMenu():
-        return FFX_Screen.PixelTestTol(181,459,(179, 181, 179),5)
+        if FFX_memory.getGridMoveUsePos() == 0:
+            return True
+        else:
+            return False
     else: return False
 
 def moveActive():
@@ -103,7 +106,10 @@ def moveComplete():
     
 def useReady():
     if moveUseMenu():
-        return FFX_Screen.PixelTestTol(181,502,(195, 197, 195),5)
+        if FFX_memory.getGridMoveUsePos() == 1:
+            return True
+        else:
+            return False
     else: return False
 
 def readySelectSphere():
@@ -140,7 +146,7 @@ def useFirst():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    time.sleep(0.4)
+    #time.sleep(0.4)
     return True
 
 def moveFirst():
@@ -152,13 +158,14 @@ def moveFirst():
             FFX_Xbox.menuB()
         elif useReady():
             FFX_Xbox.menuUp()
-    time.sleep(0.2)
+    #time.sleep(0.2)
     return True
 
 def moveAndUse():
     print("move and use")
-    time.sleep(0.1)
+    time.sleep(0.035)
     FFX_Xbox.menuB()
+    time.sleep(0.035)
     while not readySelectSphere():
         if moveComplete() or firstPosition():
             FFX_Xbox.menuB()
@@ -166,13 +173,14 @@ def moveAndUse():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    time.sleep(0.2)
+    #time.sleep(0.2)
     return True
 
 def useAndMove():
     print("use and move")
-    time.sleep(0.1)
+    time.sleep(0.035)
     FFX_Xbox.menuB()
+    time.sleep(0.035)
     while not moveActive():
         if readyUseSphere() or firstPosition():
             FFX_Xbox.menuB()
@@ -182,13 +190,14 @@ def useAndMove():
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuB()
-    time.sleep(0.2)
+    #time.sleep(0.2)
     return True
 
 def useAndUseAgain():
     print("use and use again")
-    time.sleep(0.1)
+    time.sleep(0.035)
     FFX_Xbox.menuB()
+    time.sleep(0.035)
     while not readySelectSphere():
         if readyUseSphere() or firstPosition():
             FFX_Xbox.menuB()
@@ -196,12 +205,12 @@ def useAndUseAgain():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    time.sleep(0.2)
+    #time.sleep(0.2)
     return True
 
 def useShiftLeft(toon):
     print("use and shift")
-    time.sleep(0.1)
+    #time.sleep(0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
     if toon == 'yuna':
@@ -264,7 +273,7 @@ def useShiftLeft(toon):
 
 def useShiftRight(toon):
     print("use and shift")
-    time.sleep(0.1)
+    #time.sleep(0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
     if toon == 'yuna':
@@ -383,7 +392,7 @@ def useAndQuit():
         elif quitGridReady():
             print("quitting sphere grid")
             FFX_Xbox.menuB()
-    time.sleep(0.6)
+    time.sleep(0.3)
     return True
 
 def cursorPos():
@@ -586,6 +595,9 @@ def selSphere(sType, direction, shift):
         if shift == 'd2':
             gridDown()
             gridDown()
+        if shift == 'up2':
+            gridUp()
+            gridUp()
         if shift == 'd5':
             gridDown()
             gridDown()
@@ -603,6 +615,7 @@ def selSphere(sType, direction, shift):
             time.sleep(0.1)
             gridLeft()
         if shift == 'torikku':
+            time.sleep(0.2)
             gridDown()
             gridDown()
             gridLeft()

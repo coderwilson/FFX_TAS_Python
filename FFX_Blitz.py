@@ -109,10 +109,10 @@ def allDefense():
         else:
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
-            if FFX_memory.menuControl() == 1 and menu == 0:
-                print("Dialog is open. Probably Goers just scored.")
+            if FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
-            elif FFX_memory.diagSkipPossible():
+            elif FFX_memory.menuControl() == 1 and menu == 0:
+                print("Dialog is open. Probably Goers just scored.")
                 FFX_Xbox.menuB()
             elif FFX_memory.menuControl() and (menu == 38 or menu == 24 or menu == 102):
                 print("Breakthrough menu.")

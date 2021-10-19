@@ -4,6 +4,7 @@ import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
  
@@ -14,6 +15,67 @@ def arrival(rikkucharged):
     else:
         FFX_memory.fullPartyFormat_New("mwoodsneedcharge", 11)
     FFX_memory.closeMenu()
+    
+    woodsVars = [False, False, False] #Rikku's charge, Fish Scales, and Arctic Winds
+    woodsVars[0] = rikkucharged
+    
+    lastGil = 0 #for first chest
+    checkpoint = 0
+    while FFX_memory.getMap() != 221: #All the way to O'aka
+        if FFX_memory.userControl():
+            #Events
+            if checkpoint == 14: #First chest
+                if lastGil != FFX_memory.getGilvalue():
+                    if lastGil == FFX_memory.getGilvalue() - 2000:
+                        checkpoint += 1
+                        print("Chest obtained. Updating checkpoint: ", checkpoint)
+                    else:
+                        lastGil = FFX_memory.getGilvalue()
+                else:
+                    FFXC.set_value('AxisLy', 1)
+                    FFXC.set_value('AxisLx', 1)
+                    FFX_Xbox.tapB()
+            elif checkpoint == 59:
+                if woodsVars[0] == False or woodsVars[1] == False or woodsVars[2] == False:
+                    checkpoint = 57
+                else: #All good to proceed
+                    checkpoint += 1
+            
+            #Map changes
+            elif checkpoint < 18 and FFX_memory.getMap() == 241:
+                checkpoint = 18
+            elif checkpoint < 40 and FFX_memory.getMap() == 242:
+                checkpoint = 40
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mWoods(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
+            if FFX_Screen.BattleScreen():
+                print("variable check 1: ",woodsVars)
+                woodsVars = FFX_Battle.mWoods(woodsVars)
+                print("variable check 2: ",woodsVars)
+            elif FFX_memory.battleActive() == False and FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    
+    #Save sphere
+    FFX_memory.awaitControl()
+    FFXC.set_value('AxisLx', -1)
+    FFXC.set_value('AxisLy', 0)
+    time.sleep(0.3)
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    FFX_Xbox.touchSaveSphere()
+    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('AxisLy', 1)
+    time.sleep(0.4)
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+
+def arrival_Path_Old(rikkucharged):
     #Start by getting away from the save sphere
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
@@ -32,7 +94,7 @@ def arrival(rikkucharged):
     complete = 0
     woodsVars = [False, False, False] #Rikku's charge, Fish Scales, and Arctic Winds
     woodsVars[0] = rikkucharged
-    #As a side note, Rikku is always charged in thunder plains.
+    
     while complete == 0:
         if lastCP != checkpoint:
             print("Checkpoint: ", checkpoint)
@@ -307,9 +369,9 @@ def lakeRoad():
     FFXC.set_value('AxisLx', 1)
     time.sleep(3)
     FFXC.set_value('AxisLx', 0)
-    time.sleep(4)
+    time.sleep(3)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(4)
+    time.sleep(5)
     FFXC.set_value('AxisLy', 0) #Engage Spherimorph
     
     FFX_Battle.spherimorph()
@@ -318,15 +380,22 @@ def lakeRoad():
     FFX_memory.clickToControl() #Jecht's memories
     
 def lakeRoad2():
+    
     FFXC.set_value('AxisLy', -1)
     time.sleep(6)
-    FFXC.set_value('AxisLy', 0)
     
     FFX_memory.clickToControl() #Auron's musings.
-    FFXC.set_value('AxisLy', -1)
-    FFX_Xbox.SkipDialog(3.5)
-    FFXC.set_value('AxisLx', -1)
-    FFX_memory.clickToEvent(3.5)
+    time.sleep(0.2)
+    while FFX_memory.userControl():
+        pos = FFX_memory.getCoords()
+        FFXC.set_value('AxisLy', -1)
+        if pos[1] < ((0.63 * pos[0]) -250): #Running past Auron
+            FFXC.set_value('AxisLx', -1)
+        elif pos[1] < ((1.73 * pos[0]) -129.11):
+            FFXC.set_value('AxisLx', -1)
+        else:
+            FFXC.set_value('AxisLx', 0)
+        FFX_Xbox.tapB()
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     
@@ -342,6 +411,10 @@ def lake():
     FFX_memory.fullPartyFormat('crawler')
     FFX_memory.awaitControl()
     FFX_menu.mLakeGrid()
+    
+    print("------------------------------------------Affection array:")
+    print(FFX_memory.affectionArray())
+    print("------------------------------------------")
     
     complete = 0
     checkpoint = 0
@@ -389,13 +462,23 @@ def lake():
     FFX_Battle.negator()
 
 def afterCrawler():
+    print("------------------------------------------Affection array:")
+    print(FFX_memory.affectionArray())
+    print("------------------------------------------")
     FFX_memory.clickToControl()
-    FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(0.3)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(4)
-    FFXC.set_value('AxisLy', 0)
+    while FFX_memory.getMap() != 153:
+        pos = FFX_memory.getCoords()
+        if FFX_memory.userControl():
+            FFXC.set_value('AxisLy', 1)
+            if pos[1] > ((2.94 * pos[0]) + 505.21):
+                FFXC.set_value('AxisLx', 1)
+            elif pos[1] < ((2.59 * pos[0]) + 469.19):
+                FFXC.set_value('AxisLx', -1)
+            else:
+                FFXC.set_value('AxisLx', 0)
+        else:
+            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value('AxisLy', 0)
 
     FFX_memory.clickToControl()
     
