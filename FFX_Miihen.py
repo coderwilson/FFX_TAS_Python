@@ -4,23 +4,21 @@ import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
+import FFX_Logs
 import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
  
 def arrival():
     print("Waiting for Yuna/Tidus to stop laughing.")
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
-    #FFXC.set_value('AxisLy', 1)
-    #FFXC.set_value('AxisLx', 0)
-    #time.sleep(10)
-    #FFX_Xbox.SkipDialog(7) #No save sphere touched
-    #FFXC.set_value('AxisLy', 0)
-    #FFX_memory.clickToControl() #Auron piercing tutorial
     
     FFX_memory.fullPartyFormat('miihen')
     selfDestruct = 0
+    miihenSkip = False
+    battleCount = 0
+    SDbattleNum = 0
     
     checkpoint = 0
     while FFX_memory.getMap() != 120:
@@ -33,36 +31,74 @@ def arrival():
                 time.sleep(0.3)
                 checkpoint += 1
             elif checkpoint == 7:
-                if FFX_memory.getCoords()[1] > 1358: #Into position - Inching forward. Stop at this point.
+                if FFX_memory.getCoords()[1] > 1354: #Into position
                     checkpoint += 1
+                    print("Close to the spot")
+                    print(FFX_memory.getCoords())
+                elif FFX_memory.getCoords()[0] < -44.5: #Into position
+                    FFXC.set_value('AxisLx', 1)
+                    FFXC.set_value('AxisLy', 1)
+                    time.sleep(0.07)
                     FFXC.set_value('AxisLx', 0)
                     FFXC.set_value('AxisLy', 0)
-                    print("Stopped and ready for the skip.")
+                    time.sleep(0.15)
                 else:
                     FFXC.set_value('AxisLy', 1)
-                    time.sleep(0.1)
+                    time.sleep(0.07)
                     FFXC.set_value('AxisLy', 0)
-                    time.sleep(0.135)
+                    time.sleep(0.15)
             elif checkpoint == 8:
+                if FFX_memory.getCoords()[0] > -44.5: #Into position
+                    checkpoint += 1
+                    print("Adjusting for horizontal position - complete")
+                    print(FFX_memory.getCoords())
+                else:
+                    FFXC.set_value('AxisLx', 1)
+                    time.sleep(0.07)
+                    FFXC.set_value('AxisLx', 0)
+                    time.sleep(0.15)
+            elif checkpoint == 9:
+                if FFX_memory.getCoords()[1] > 1357.5: #Into position
+                    checkpoint += 1
+                    print("Stopped and ready for the skip.")
+                    print(FFX_memory.getCoords())
+                else:
+                    FFXC.set_value('AxisLy', 1)
+                    time.sleep(0.07)
+                    FFXC.set_value('AxisLy', 0)
+                    time.sleep(0.2)
+            elif checkpoint == 10:
                 if FFX_memory.miihenGuyCoords()[1] < 1380: #Spear guy's position when we start moving. 
                     print("Skip engaging!!! Good luck!")
                     #Greater number for spear guy's position means we will start moving faster.
                     #Smaller number means moving later.
                     FFXC.set_value('AxisLy', 1)
-                    time.sleep(0.19)
-                    FFX_Xbox.SkipDialog(1) #Walk into the guy mashing B (or X, or whatever the key is)
+                    time.sleep(0.2)
+                    FFX_Xbox.SkipDialog(0.5) #Walk into the guy mashing B (or X, or whatever the key is)
                     FFXC.set_value('AxisLy', 0)
                     FFXC.set_value('AxisLx', 0) #Stop trying to move. (recommended by Crimson)
                     print("Starting special skipping.")
                     FFX_Xbox.SkipDialogSpecial(3) #Mash two buttons
                     print("End special skipping.")
-                    FFX_memory.clickToControl3()
-                    checkpoint += 1
                     print("Should now be able to see if it worked.")
+                    time.sleep(3.5) #Don't move, avoiding a possible extra battle
+                    FFX_memory.clickToControl3()
+                    print("Mark 1")
+                    time.sleep(1)
+                    print("Mark 2")
+                    try:
+                        if FFX_memory.lucilleMiihenCoords()[1] > 1400 and FFX_memory.userControl():
+                            miihenSkip = True
+                        else:
+                            FFX_memory.clickToControl3()
+                    except:
+                        miihenSkip = False
+                    print("Skip successful: ", miihenSkip)
+                    checkpoint += 1
             
             #Map changes
-            elif checkpoint < 13 and FFX_memory.getMap() == 120:
-                checkpoint = 13
+            elif checkpoint < 15 and FFX_memory.getMap() == 120:
+                checkpoint = 15
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
                 checkpoint += 1
@@ -77,26 +113,29 @@ def arrival():
                     FFX_Xbox.tapB()
                 else:
                     print("Starting battle")
+                    battleCount += 1
                     if selfDestruct == 0:
                         selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
+                        if selfDestruct != 0:
+                            SDbattleNum = battleCount
                     else:
                         FFX_Battle.MiihenRoad(selfDestruct)
                     print("Battle complete")
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-            elif FFX_memory.diagSkipPossible(): #Exclude during the Miihen skip.
-                if checkpoint < 6 or checkpoint > 12:
-                    FFX_Xbox.tapB()
-    return selfDestruct
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    print("Miihen skip status: ", miihenSkip)
+    return [selfDestruct, battleCount, SDbattleNum]
 
-def arrival2(selfDestruct):
+def arrival2(selfDestruct, battleCount, SDbattleNum):
     print("Start of the second map")
-    checkpoint = 13
+    checkpoint = 15
     while FFX_memory.getMap() != 171:
         if FFX_memory.userControl():
             
             #Map changes
-            if checkpoint == 25:
+            if checkpoint == 27:
                 if FFX_memory.getCoords()[1] > 2810:
                     checkpoint += 1
                 else:
@@ -115,14 +154,15 @@ def arrival2(selfDestruct):
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
             if FFX_Screen.BattleScreen():
-                if checkpoint < 4: #Tutorial battle with Auron
-                    FFX_memory.clickToControl()
-                elif checkpoint == 25 and FFX_memory.battleActive() == False: #Shelinda dialog
+                battleCount += 1
+                if checkpoint == 27 and FFX_memory.battleActive() == False: #Shelinda dialog
                     FFX_Xbox.tapB()
                 else:
                     print("Starting battle")
                     if selfDestruct == 0:
                         selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
+                        if selfDestruct != 0:
+                            SDbattleNum = battleCount
                     else:
                         FFX_Battle.MiihenRoad(selfDestruct)
                     print("Battle complete")
@@ -135,11 +175,11 @@ def arrival2(selfDestruct):
             #Map changes
             elif checkpoint < 13 and FFX_memory.getMap() == 120:
                 checkpoint = 13
-            elif checkpoint < 18 and FFX_memory.getMap() == 127:
-                checkpoint = 18
-            elif checkpoint < 29 and FFX_memory.getMap() == 58:
-                checkpoint = 29
-    return selfDestruct
+            elif checkpoint < 20 and FFX_memory.getMap() == 127:
+                checkpoint = 20
+            elif checkpoint < 31 and FFX_memory.getMap() == 58:
+                checkpoint = 31
+    return [selfDestruct, battleCount, SDbattleNum]
 
 def miihenPath_Old():
     checkpoint = 0
@@ -361,7 +401,7 @@ def midPoint():
     FFXC.set_value('AxisLy', 0)
     FFX_Battle.chocoEater()
 
-def lowRoad(selfDestruct): #Starts just after the save sphere.
+def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save sphere.
 
     checkpoint = 0
     while FFX_memory.getMap() != 79:
@@ -372,6 +412,8 @@ def lowRoad(selfDestruct): #Starts just after the save sphere.
                 FFXC.set_value('AxisLx', 1)
                 time.sleep(0.2)
                 FFX_Xbox.menuB()
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
                 time.sleep(0.8)
                 FFX_Xbox.menuB()
                 time.sleep(0.8)
@@ -414,9 +456,12 @@ def lowRoad(selfDestruct): #Starts just after the save sphere.
             FFXC.set_value('AxisLx', 0)
             FFXC.set_value('AxisLy', 0)
             if FFX_Screen.BattleScreen():
+                battleCount += 1
                 print("Starting battle")
                 if selfDestruct == 0:
                     selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
+                    if selfDestruct != 0:
+                        SDbattleNum = battleCount
                     if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
                         FFX_memory.clickToControl() # After-battle screen is still open.
                 else:
@@ -429,6 +474,10 @@ def lowRoad(selfDestruct): #Starts just after the save sphere.
             elif FFX_memory.diagSkipPossible():
                 if checkpoint < 6 or checkpoint > 12:
                     FFX_Xbox.tapB()
+    FFX_Logs.writeStats('Miihen encounters:')
+    FFX_Logs.writeStats(battleCount)
+    FFX_Logs.writeStats('SelfDestruct Learned:')
+    FFX_Logs.writeStats(SDbattleNum)
 
 def lowRoad_old(selfDestruct): #Starts just after the save sphere.
     print("Starting low road section.")

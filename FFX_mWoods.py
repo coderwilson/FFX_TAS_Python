@@ -62,6 +62,7 @@ def arrival(rikkucharged):
                 FFX_Xbox.tapB()
     
     #Save sphere
+    time.sleep(0.1)
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 0)
@@ -352,11 +353,10 @@ def arrival_Path_Old(rikkucharged):
                 FFXC.set_value('AxisLy', 0)
 
 def lakeRoad():
-    if FFX_memory.getSpeed() < 12:
-        FFX_memory.setSpeed(12)
+    #if FFX_memory.getSpeed() < 12:
+    #    FFX_memory.setSpeed(12)
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
     FFX_memory.fullPartyFormat('spheri')
-    FFX_Screen.awaitMap1()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
     time.sleep(0.5)
@@ -385,17 +385,17 @@ def lakeRoad2():
     time.sleep(6)
     
     FFX_memory.clickToControl() #Auron's musings.
+    print("Affection (before): ", FFX_memory.affectionArray())
     time.sleep(0.2)
-    while FFX_memory.userControl():
-        pos = FFX_memory.getCoords()
-        FFXC.set_value('AxisLy', -1)
-        if pos[1] < ((0.63 * pos[0]) -250): #Running past Auron
-            FFXC.set_value('AxisLx', -1)
-        elif pos[1] < ((1.73 * pos[0]) -129.11):
-            FFXC.set_value('AxisLx', -1)
-        else:
-            FFXC.set_value('AxisLx', 0)
+    auronAffection = FFX_memory.affectionArray()[2]
+    while FFX_memory.affectionArray()[2] == auronAffection: #Make sure we get Auron affection
+        auronCoords = FFX_memory.getActorCoords(3)
+        FFX_targetPathing.setMovement(auronCoords)
         FFX_Xbox.tapB()
+    print("Affection (after): ", FFX_memory.affectionArray())
+    while FFX_memory.userControl():
+        FFXC.set_value('AxisLy', -1)
+        FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     

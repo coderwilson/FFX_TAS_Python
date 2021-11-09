@@ -39,6 +39,16 @@ def start():
         print("Could not get memory address dynamically. ", errCode)
         baseValue = 0x00FF0000
 
+def rngSeed():
+    global baseValue
+    key = baseValue + 0x003988a5
+    return process.readBytes(key,1)
+
+def setRngSeed(value):
+    global baseValue
+    key = baseValue + 0x003988a5
+    return process.writeBytes(key,value,1)
+
 def gameOver():
     global baseValue
     key = baseValue + 0x00D2C9F1
@@ -182,7 +192,7 @@ def clickToControl2():
 
 def clickToControl3():
     waitCounter = 0
-    print("Awaiting control (clicking)")
+    print("Awaiting control (clicking only when appropriate - dialog)")
     while not userControl():
         if battleScreen():
             break
@@ -967,18 +977,19 @@ def rikkuODItems(battle):
             cursor += 2
         FFX_Xbox.menuB() #Cursor is now on item 2.
 
-
-def getOverdriveValue(character):
+def getOverdriveBattle(character):
     global process
     global baseValue
-    basePointer = baseValue + 0xD334CC
+    
+    basePointer = baseValue + 0x00d334cc
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x5BC
-
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
-
+    offset = (0x94 * character) + 0x5bc
+    retVal = process.readBytes(basePointerAddress + offset, 1)
+    print("In-Battle Overdrive values: ", retVal)
     return retVal
+
+def getOverdriveValue(character): #Older function, I think Crimson wrote this one.
+    return getOverdriveBattle(character)
 
 def petrifiedstate(character):
     global process
@@ -1147,6 +1158,15 @@ def sGridChar():
     character = process.readBytes(key,1)
     return character
 
+def sGridNodeSelected():
+    global baseValue
+    
+    key = baseValue + 0x0012BEB7E
+    nodeNumber = process.readBytes(key,1)
+    key = baseValue + 0x0012BEB7F
+    nodeRegion = process.readBytes(key,1)
+    return [nodeNumber, nodeRegion]
+
 def cursorLocation():
     global baseValue
 
@@ -1222,6 +1242,13 @@ def getTidusSlvl():
     sLvl = process.readBytes(key,1)
     return sLvl
 
+def getTidusXP():
+    global baseValue
+
+    key = baseValue + 0x00D32070
+    Lvl = process.read(key)
+    return Lvl
+
 def setTidusSlvl(levels):
     global baseValue
 
@@ -1240,7 +1267,7 @@ def menuControl():
     else:
         return False
 
-def diagSkipPossible():
+def diagSkipPossible_old():
     global baseValue
 
     key = baseValue + 0x0085A03C
@@ -1250,6 +1277,23 @@ def diagSkipPossible():
         return True
     else:
         return False
+
+def diagSkipPossible():
+    global baseValue
+
+    key = baseValue + 0x00F2FED0
+    control = process.readBytes(key,1)
+    if control == 1:
+        time.sleep(0.035)
+        return True
+    else:
+        key = baseValue + 0x0085A03C
+        control = process.readBytes(key,1)
+        if control == 1:
+            time.sleep(0.035)
+            return True
+        else:
+            return False
 
 def cutsceneSkipPossible():
     global baseValue
@@ -2380,6 +2424,23 @@ def nameFromNumber(charNum):
     if charNum == 6:
         return "Rikku"
 
+def getActorCoords(actorNumber):
+    global process
+    global baseValue
+    retVal = [0,0]
+    
+    basePointer = baseValue + 0x01fc44e4
+    basePointerAddress = process.read(basePointer)
+    offsetX = (0x880 * actorNumber) + 0x0c
+    offsetY = (0x880 * actorNumber) + 0x14
+
+    keyX = basePointerAddress + offsetX
+    retVal[0] = float_from_integer(process.read(keyX))
+    keyY = basePointerAddress + offsetY
+    retVal[1] = float_from_integer(process.read(keyY))
+
+    return retVal
+
 def miihenGuyCoords():
     global process
     global baseValue
@@ -2389,6 +2450,23 @@ def miihenGuyCoords():
     basePointerAddress = process.read(basePointer)
     offsetX = 0x330c
     offsetY = 0x3314
+
+    keyX = basePointerAddress + offsetX
+    retVal[0] = float_from_integer(process.read(keyX))
+    keyY = basePointerAddress + offsetY
+    retVal[1] = float_from_integer(process.read(keyY))
+
+    return retVal
+
+def lucilleMiihenCoords():
+    global process
+    global baseValue
+    retVal = [0,0]
+    
+    basePointer = baseValue + 0x01fc44e4
+    basePointerAddress = process.read(basePointer)
+    offsetX = 0x440C
+    offsetY = 0x4414
 
     keyX = basePointerAddress + offsetX
     retVal[0] = float_from_integer(process.read(keyX))
@@ -2454,12 +2532,12 @@ def affectionArray():
 def overdriveState():
     global process
     global baseValue
-    retVal = [0,0,0,0,0,0,0]
+    retVal = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     x = 0
     
     basePointer = baseValue + 0x00386DD4
     basePointerAddress = process.read(basePointer)
-    for x in range(7):
+    for x in range(20):
         offset = (0x94 * x) + 0x39
         retVal[x] = process.readBytes(basePointerAddress + offset, 1)
     print("Overdrive values: ", retVal)

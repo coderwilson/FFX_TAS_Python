@@ -62,9 +62,9 @@ def touchSaveSphere():
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     print("Touching the save sphere")
-    
-    menuB()
-    time.sleep(0.4)
+    while FFX_memory.userControl():
+        menuB()
+        time.sleep(0.2)
     
     while not FFX_memory.touchingSaveSphere():
         if FFX_memory.userControl():
@@ -72,6 +72,7 @@ def touchSaveSphere():
         elif FFX_memory.diagSkipPossible() and not FFX_memory.touchingSaveSphere():
             menuB()
     print("Save Mark 1")
+    
     while not FFX_memory.saveMenuCursor() >= 1:
         menuUp()
     print("Save Mark 2")
@@ -245,6 +246,11 @@ def tidusFlee():
 def tidusHaste(direction):
     direction = direction.lower()
     while FFX_memory.battleMenuCursor() != 22:
+        if FFX_Screen.turnTidus() == False:
+            print("Attempting Haste, but it's not Tidus's turn")
+            menuUp()
+            menuUp()
+            return
         if FFX_memory.battleMenuCursor() == 1:
             menuUp()
         else:
@@ -282,16 +288,9 @@ def weapSwap(position):
         time.sleep(0.5)
         menuB()
         time.sleep(0.07)
-        try:
-            while FFX_memory.battleCursor2() != position :
-                if FFX_memory.battleCursor2() < position:
-                    menuDown()
-                elif FFX_memory.battleCursor2() > position:
-                    menuUp()
-        except:
-            print("Something is wrong.")
-            print(FFX_memory.battleCursor2())
-            print(position)
+        while position > 0:
+            menuDown()
+            position -= 1
         menuB()
         menuB()
         time.sleep(0.3)

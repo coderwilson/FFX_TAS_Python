@@ -7,7 +7,7 @@ import FFX_memory
 import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
- 
+
 def boatDance():
     print("No dancing this time")
     time.sleep(50)
@@ -143,7 +143,7 @@ def ssWinno():
     FFX_Xbox.SkipDialog(1)
     FFXC.set_value('AxisLy', 0)
     FFX_Screen.clickToPixel(579,336,(220, 220, 220)) #Lending gil
-    time.sleep(1)
+    time.sleep(0.8)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuLeft()
     FFX_Xbox.menuUp()
@@ -152,7 +152,7 @@ def ssWinno():
     FFX_Xbox.menuRight()
     FFX_Xbox.menuUp() #1001
     FFX_Xbox.menuB()
-    time.sleep(1)
+    time.sleep(0.8)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #No Sweat
     time.sleep(0.5)

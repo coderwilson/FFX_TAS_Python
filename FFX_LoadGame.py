@@ -4,6 +4,7 @@ import FFX_Xbox
 import FFX_Screen
 import FFX_memory
 import FFX_menu
+import FFX_menuGrid
 import pyautogui
 
 #This file is intended to load the game to a saved file.
@@ -27,7 +28,7 @@ def loadOffset(offset):
     FFX_Xbox.menuB()
     time.sleep(2.5)
     while offset > 0:
-        FFX_Xbox.menuDown()
+        FFX_menuGrid.gridDown()
         offset -= 1
     time.sleep(0.1)
     FFX_Xbox.menuB()
@@ -165,69 +166,54 @@ def KilikaTrials():
     FFXC.set_value('AxisLy', 0)
 
 def LoadMiihenStart():
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(5)
-    FFXC.set_value('AxisLy', 0)
+    import FFX_targetPathing
+    while not FFX_targetPathing.setMovement([-440,0]):
+        doNothing = True
+    FFX_memory.clickToEventTemple(4)
     
     #Reverse T screen
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(4.5)
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(1)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(5)
-    FFXC.set_value('AxisLx', 0)
+    while not FFX_targetPathing.setMovement([-39,18]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([3,31]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([64,15]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([163,0]):
+        doNothing = True
+    FFX_memory.clickToEventTemple(2)
     
     #Carnival vendor screen
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(1.5)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(3)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(3)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    while not FFX_targetPathing.setMovement([30,-86]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([60,-24]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([101,72]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([129,101]):
+        doNothing = True
+    FFX_memory.clickToEventTemple(1)
     
-    FFX_memory.clickToControl()
     
     #-----Use this if you've already done the laughing scene.
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(5)
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(2)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(4)
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(2)
-    FFX_memory.awaitEvent()
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.2)
-    #FFX_memory.awaitControl()
-    #FFXC.set_value('AxisLy', 1)
-    #time.sleep(1)
-    #FFXC.set_value('AxisLx', 1)
-    #time.sleep(0.4)
-    #FFXC.set_value('AxisLy', 1)
-    #FFXC.set_value('AxisLx', 0)
-    #time.sleep(3)
+    FFX_memory.clickToControl()
+    while not FFX_targetPathing.setMovement([2,57]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([108,59]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([108,26]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([78,-3]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([-68,-7]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([-99,24]):
+        doNothing = True
+    while not FFX_targetPathing.setMovement([-126,117]):
+        doNothing = True
+    FFX_memory.clickToEventTemple(1)
+    
     print("Load complete. Now for Mi'ihen area.")
 
 def LoadMRR():

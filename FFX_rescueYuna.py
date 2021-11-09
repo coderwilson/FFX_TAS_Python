@@ -11,7 +11,7 @@ import FFX_targetPathing
 FFXC = FFX_Xbox.FFXC
 
 def preEvrae():
-    FFX_Screen.clickToMap3()
+    FFX_memory.clickToControl()
     print("Starting first Airship section")
     
     #FFXC.set_value('AxisLy', -1)
@@ -27,14 +27,15 @@ def preEvrae():
     
     #FFXC.set_value('AxisLx', 1)
     #time.sleep(0.9)
-    #FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', -1)
     print("Exit cockpit")
-    time.sleep(5.5)
+    FFX_memory.awaitEvent()
     
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', -1)
-    time.sleep(5)
+    FFX_memory.awaitControl()
+    time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
     print("Back in cockpit. Auron/Cid arguing")
@@ -115,40 +116,54 @@ def guards():
     
     FFX_Xbox.SkipDialog(126)
     FFX_Xbox.skipStoredScene(10)
+    FFX_Xbox.SkipDialog(2)
     
-    FFX_Screen.clickToPixel(1591,759,(165, 88, 88))
-    print("Yuna can fly")
+    while not FFX_memory.userControl():
+        if FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
+        elif FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.skipScene()
     
-    time.sleep(15.7)
-    FFX_Xbox.skipScene()
-    FFX_memory.clickToControl()
+    FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
-    FFXC.set_value('AxisLx', -1)
-    FFX_Xbox.SkipDialog(3)
-    FFXC.set_value('AxisLx', 0)
-    
-    FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', 1)
     time.sleep(3)
     FFXC.set_value('AxisLy', 0)
     
-    FFX_memory.clickToControl()
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(1.5)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(4)
-    FFXC.set_value('AxisLx', 0)
+    checkpoint = 0
+    while checkpoint < 8:
+        if FFX_memory.userControl():
+            #General pathing
+            if FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            
+            #Map changes
+            elif checkpoint < 2 and FFX_memory.getMap() == 182:
+                checkpoint = 2
     
-    FFX_memory.clickToControl()
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(3.5)
-    FFXC.set_value('AxisLy', 0)
-    FFX_Xbox.touchSaveSphere()
-    time.sleep(0.5)
+    #FFX_memory.clickToControl()
+    #FFXC.set_value('AxisLy', 1)
+    #time.sleep(1.5)
+    #FFXC.set_value('AxisLy', 0)
+    #FFXC.set_value('AxisLx', 1)
+    #time.sleep(4)
+    #FFXC.set_value('AxisLx', 0)
+    
+    #FFX_memory.clickToControl()
+    #FFXC.set_value('AxisLy', 1)
+    #FFXC.set_value('AxisLx', 1)
+    #time.sleep(1)
+    #FFXC.set_value('AxisLx', 0)
+    #time.sleep(3.5)
+    #FFXC.set_value('AxisLy', 0)
+    #FFX_Xbox.touchSaveSphere()
+    #time.sleep(0.5)
 
 def trials():
     print("Starting Bevelle trials section.")
@@ -309,12 +324,20 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 44: #Insert Bevelle sphere, and back on the track.
                 FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 1)
+                time.sleep(0.4)
+                FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', -1)
+                time.sleep(0.07)
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
                 time.sleep(0.2)
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', -1)
+                FFX_Xbox.SkipDialog(0.3)
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', 0)
                 time.sleep(0.07)
-                FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', -1)
@@ -759,7 +782,7 @@ def ViaPurifico():
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
-            if FFX_memory.getSLVLYuna() < 14 and FFX_memory.getCoords()[1] > 1460:
+            if FFX_memory.getSLVLYuna() < 15 and FFX_memory.getCoords()[1] > 1460:
                 FFXC.set_value('AxisLy', -1)
                 FFXC.set_value('AxisLx', 0)
                 time.sleep(2)
@@ -889,6 +912,47 @@ def seymourNatus(blitzWin):
                 print("Battle Start")
                 complete = FFX_Battle.seymourNatus()
     
+    #Movement for make-out scene
+    FFX_memory.clickToControl()
+    
+    checkpoint = 0
+    while checkpoint < 13:
+        if FFX_memory.userControl():
+            #Events and map changes
+            if checkpoint == 1 or checkpoint == 3:
+                FFX_memory.clickToEventTemple(4)
+                checkpoint += 1
+            elif checkpoint == 5:
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', -1)
+                FFX_memory.awaitEvent()
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
+                time.sleep(1)
+                checkpoint += 1
+            elif checkpoint == 6:
+                FFX_memory.clickToEventTemple(3)
+                checkpoint += 1
+            elif checkpoint == 8:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 12:
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.sutekiDaNe(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene()
+            
+    
+def oldMovementForMakeoutScene():
     FFX_memory.clickToControl()
     FFXC.set_value('AxisLy', -1)
     time.sleep(0.2)

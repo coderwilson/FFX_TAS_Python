@@ -54,10 +54,13 @@ def calmLands(blitzWin):
 def defenderX():
     time.sleep(0.5)
     FFX_memory.awaitControl()
+    while FFX_targetPathing.setMovement([67,-255]) == False:
+        doNothing = True
     FFXC.set_value('AxisLy', 1)
-    time.sleep(0.5)
+    FFXC.set_value('AxisLx', 0)
     FFX_memory.awaitEvent()
     FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0)
     
     FFX_Screen.clickToBattle()
     FFX_Battle.buddySwap(0)
@@ -368,7 +371,9 @@ def Flux():
                 FFX_Battle.seymourFlux()
                 FFX_menu.afterFlux()
                 FFX_memory.fullPartyFormat('kimahri')
-    time.sleep(3.2)
+    while not FFX_memory.cutsceneSkipPossible():
+        if FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
     FFX_Xbox.skipScene()
     
 def Flux_movement_old():

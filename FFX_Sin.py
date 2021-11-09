@@ -168,7 +168,7 @@ def facingSin():
     FFX_Battle.SinFace()
     print("End of battle with Sin's face.")
 
-def insideSin(length, autoEggHunt):
+def insideSin(length, autoEggHunt, seed):
     print("Sea of Sorrow section")
     if autoEggHunt == True:
         import zz_eggHuntAuto
@@ -373,7 +373,8 @@ def insideSin(length, autoEggHunt):
                 FFXC.set_value('AxisLy', 1)
                 time.sleep(5)
                 FFXC.set_value('AxisLy', 0)
-                FFX_Battle.omnis()
+                FFX_Battle.omnis(seed)
+                FFX_memory.clickToControl()
                 FFX_menu.endGameSwap()
                 checkpoint = 170
             elif checkpoint == 170: #Start, City of Dying Dreams
@@ -523,7 +524,6 @@ def insideSin(length, autoEggHunt):
     if length == 'short':
         print("Short game, no menuing.")
     else:
-        FFX_menu.autoSortItems('n')
         FFX_memory.fullPartyFormat('yuna')
         FFX_menu.BFA()
     FFXC.set_value('AxisLx', 1)

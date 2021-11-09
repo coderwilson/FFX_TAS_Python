@@ -856,6 +856,721 @@ def Kilika1(checkpoint):
         y = 350
     return [x,y]
 
+def Kilika2(checkpoint):
+    if checkpoint == 0:
+        x = -79
+        y = -413
+    if checkpoint == 1:
+        x = -177
+        y = -424
+    if checkpoint == 2:
+        x = -211
+        y = -411
+    if checkpoint == 3:
+        x = -220
+        y = -399
+    if checkpoint == 4:
+        x = -230
+        y = -354
+    if checkpoint == 5:
+        x = -222
+        y = -336
+    if checkpoint == 6:
+        print("Chest with Wakka's weapon Scout")
+    if checkpoint == 7:
+        x = -214
+        y = -323
+    if checkpoint == 8:
+        x = -208
+        y = -289
+    if checkpoint == 9:
+        x = -237
+        y = -233
+    if checkpoint == 10:
+        x = -244
+        y = -202
+    if checkpoint == 11:
+        x = -243
+        y = -120
+    if checkpoint == 12:
+        x = -249
+        y = -102
+    if checkpoint == 13:
+        x = -244
+        y = -92
+    if checkpoint == 14:
+        x = -240
+        y = -58
+    if checkpoint == 15:
+        x = -246
+        y = -16
+    if checkpoint == 16:
+        x = -256
+        y = 12
+    if checkpoint == 17:
+        x = -259
+        y = 35
+    if checkpoint == 18:
+        x = -241
+        y = 60
+    if checkpoint == 19:
+        x = -207
+        y = 67
+    if checkpoint == 20:
+        x = -182
+        y = 70
+    if checkpoint == 21:
+        x = -170
+        y = 59
+    if checkpoint == 22:
+        x = -103
+        y = 69
+    if checkpoint == 23:
+        x = -89
+        y = 90
+    if checkpoint == 24:
+        x = -88
+        y = 129
+    if checkpoint == 25:
+        x = -91
+        y = 144
+    if checkpoint == 26:
+        x = -117
+        y = 207
+    if checkpoint == 27:
+        x = -162
+        y = 208
+    if checkpoint == 28:
+        x = -179
+        y = 201
+    if checkpoint == 29:
+        x = -194
+        y = 212
+    if checkpoint == 30:
+        x = -245
+        y = 207
+    if checkpoint == 31: #Chest
+        print("Picking up chest")
+    if checkpoint == 32:
+        x = -196
+        y = 212
+    if checkpoint == 33:
+        x = -171
+        y = 204
+    if checkpoint == 34:
+        x = -158
+        y = 210
+    if checkpoint == 35:
+        x = -125
+        y = 205
+    if checkpoint == 36:
+        x = -82
+        y = 141
+    if checkpoint == 37:
+        x = -52
+        y = 86
+    if checkpoint == 38:
+        x = -28
+        y = 76
+    if checkpoint == 39:
+        x = 31
+        y = 71
+    if checkpoint == 40:
+        x = 91
+        y = 76
+    if checkpoint == 41:
+        x = 143
+        y = 79
+    if checkpoint == 42:
+        x = 156
+        y = 102
+    if checkpoint == 43:
+        x = 136
+        y = 164
+    if checkpoint == 44:
+        x = 90
+        y = 223
+    if checkpoint == 45:
+        x = 36
+        y = 282
+    if checkpoint == 46:
+        x = -30
+        y = 289
+    if checkpoint == 47:
+        x = -68
+        y = 300
+    if checkpoint == 48:
+        x = -67
+        y = 408
+    if checkpoint == 49:
+        x = -95
+        y = 408
+    if checkpoint == 50: # #Map change, towards stairs
+        x = -80
+        y = 500
+    if checkpoint == 51:
+        x = -10
+        y = 178
+    if checkpoint == 52: #Save sphere
+        print("Touch save sphere")
+    if checkpoint == 53:
+        x = -5
+        y = 193
+    if checkpoint == 54: #Just before Geneaux battle
+        x = 15
+        y = 264
+    if checkpoint == 55:
+        x = -11
+        y = 541
+    if checkpoint == 56:
+        x = -57
+        y = 617
+    if checkpoint == 57:
+        x = -121
+        y = 685
+    if checkpoint == 58: #To the temple
+        x = -180
+        y = 770
+    if checkpoint == 59:
+        x = 2
+        y = 256
+    if checkpoint == 60: #Into the temple
+        x = 2
+        y = 400
+    if checkpoint == 61:
+        x = -27
+        y = 16
+    if checkpoint == 62:
+        x = -29
+        y = 34
+    if checkpoint == 63: #Wakka praying
+        print("Lord O'halland")
+    if checkpoint == 64:
+        x = -5
+        y = 58
+    if checkpoint == 65:
+        x = 2
+        y = 93
+    if checkpoint == 66: #Door to the cloyster lift
+        x = 0
+        y = 234
+    return [x,y]
+
+def KilikaTrials(checkpoint):
+    if checkpoint == 0:
+        x = -6
+        y = -247
+    if checkpoint == 1:
+        x = -17
+        y = -215
+    if checkpoint == 2:
+        print("Pick up Kilika sphere")
+    if checkpoint == 3:
+        x = -10
+        y = -205
+    if checkpoint == 4:
+        x = 8
+        y = -188
+    if checkpoint == 5:
+        print("Insert and remove, opens door")
+    if checkpoint == 6:
+        x = 5
+        y = -181
+    if checkpoint == 7:
+        x = 1
+        y = -176
+    if checkpoint == 8:
+        x = 0
+        y = 11
+    if checkpoint == 9:
+        print("Insert and remove, generate glyph")
+    if checkpoint == 10:
+        x = 37
+        y = -18
+    if checkpoint == 11:
+        print("Insert, out of the way")
+    if checkpoint == 12:
+        x = 1
+        y = 11
+    if checkpoint == 13:
+        print("Touch glyph")
+    if checkpoint == 14:
+        x = 1
+        y = 34
+    if checkpoint == 15:
+        x = 8
+        y = 133
+    if checkpoint == 16:
+        x = 30
+        y = 165
+    if checkpoint == 17:
+        x = 52
+        y = 167
+    if checkpoint == 18:
+        print("Remove Kilika sphere")
+    if checkpoint == 19:
+        x = 52
+        y = 167
+    if checkpoint == 20:
+        x = 30
+        y = 165
+    if checkpoint == 21:
+        x = 8
+        y = 133
+    if checkpoint == 22:
+        x = 1
+        y = 34
+    if checkpoint == 23:
+        x = -2
+        y = 15
+    if checkpoint == 24:
+        x = -35
+        y = -19
+    if checkpoint == 25:
+        print("Insert Kilika sphere")
+    if checkpoint == 26:
+        x = -22
+        y = -23
+    if checkpoint == 27:
+        print("Pick up Glyph sphere")
+    if checkpoint == 28:
+        x = -2
+        y = 15
+    if checkpoint == 29:
+        x = 1
+        y = 34
+    if checkpoint == 30:
+        x = 8
+        y = 133
+    if checkpoint == 31:
+        x = 30
+        y = 165
+    if checkpoint == 32:
+        x = 52
+        y = 167
+    if checkpoint == 33:
+        print("Insert Glyph sphere")
+    if checkpoint == 34:
+        x = 30
+        y = 165
+    if checkpoint == 35:
+        x = 8
+        y = 133
+    if checkpoint == 36:
+        x = 1
+        y = 34
+    if checkpoint == 37:
+        x = 1
+        y = 15
+    if checkpoint == 38:
+        x = 36
+        y = -18
+    if checkpoint == 39:
+        print("Pick up last Kilika sphere")
+    if checkpoint == 40:
+        x = 1
+        y = 15
+    if checkpoint == 41:
+        x = 1
+        y = 34
+    if checkpoint == 42:
+        x = -9
+        y = 133
+    if checkpoint == 43:
+        x = -29
+        y = 163
+    if checkpoint == 44:
+        x = -36
+        y = 177
+    if checkpoint == 45:
+        x = -38
+        y = 207
+    if checkpoint == 46:
+        x = 31
+        y = 225
+    if checkpoint == 47:
+        x = 37
+        y = 232
+    if checkpoint == 48:
+        x = 35
+        y = 270
+    if checkpoint == 49:
+        x = 17
+        y = 275
+    if checkpoint == 50:
+        print("Insert and remove, opens door")
+    if checkpoint == 51:
+        x = 5
+        y = 278
+    if checkpoint == 52:
+        x = 0
+        y = 400
+    if checkpoint == 53: #Inner sanctum
+        x = -13
+        y = -10
+    if checkpoint == 54: #Talk to Wakka
+        print("Talk to Wakka")
+    if checkpoint == 55:
+        x = -6
+        y = -20
+    return [x,y]
+
+def Kilika3(checkpoint):
+    if checkpoint == 0:
+        x = -63
+        y = 301
+    if checkpoint == 1:
+        x = -30
+        y = 293
+    if checkpoint == 2:
+        x = 37
+        y = 280
+    if checkpoint == 3:
+        x = 76
+        y = 251
+    if checkpoint == 4:
+        x = 100
+        y = 203
+    if checkpoint == 5:
+        x = 133
+        y = 176
+    if checkpoint == 6:
+        x = 152
+        y = 100
+    if checkpoint == 7:
+        x = 141
+        y = 75
+    if checkpoint == 8:
+        x = 90
+        y = 76
+    if checkpoint == 9:
+        x = 25
+        y = 69
+    if checkpoint == 10:
+        x = -108
+        y = 67
+    if checkpoint == 11:
+        x = -168
+        y = 56
+    if checkpoint == 12:
+        x = -211
+        y = 69
+    if checkpoint == 13:
+        x = -247
+        y = 56
+    if checkpoint == 14:
+        x = -269
+        y = 32
+    if checkpoint == 15:
+        x = -243
+        y = -19
+    if checkpoint == 16:
+        x = -244
+        y = -88
+    if checkpoint == 17:
+        x = -242
+        y = -135
+    if checkpoint == 18:
+        x = -244
+        y = -205
+    if checkpoint == 19:
+        x = -221
+        y = -251
+    if checkpoint == 20:
+        x = -203
+        y = -288
+    if checkpoint == 21:
+        x = -215
+        y = -321
+    if checkpoint == 22:
+        x = -230
+        y = -350
+    if checkpoint == 23:
+        x = -219
+        y = -409
+    if checkpoint == 24:
+        x = -201
+        y = -419
+    if checkpoint == 25:
+        x = -134
+        y = -422
+    if checkpoint == 26:
+        x = -90
+        y = -425
+    if checkpoint == 27:
+        x = -80
+        y = -445
+    if checkpoint == 28:
+        x = -85
+        y = -504
+    if checkpoint == 29: #Exit woods
+        x = -85
+        y = -600
+    if checkpoint == 30:
+        x = -148
+        y = 202
+    if checkpoint == 31:
+        x = -124
+        y = 142
+    if checkpoint == 32:
+        x = -113
+        y = 113
+    if checkpoint == 33:
+        x = 0
+        y = 114
+    if checkpoint == 34:
+        x = 82
+        y = 104
+    if checkpoint == 35:
+        x = 88
+        y = 50
+    if checkpoint == 36:
+        x = 88
+        y = -50
+    if checkpoint == 37:
+        x = -52
+        y = -191
+    if checkpoint == 38:
+        x = -154
+        y = -235
+    return [x,y]
+
+def Luca1(checkpoint):
+    if checkpoint == 0:
+        x = 143
+        y = 329
+    if checkpoint == 1:
+        x = 173
+        y = 290
+    if checkpoint == 2:
+        x = 250
+        y = 200
+    if checkpoint == 3:
+        x = 346
+        y = 63
+    if checkpoint == 4: #Seymour intro scene
+        print("Seymour intro scene")
+    if checkpoint == 5:
+        x = 0
+        y = -200
+    if checkpoint == 6: #Luca stadium front
+        x = -256
+        y = -76
+    if checkpoint == 7:
+        x = -448
+        y = -19
+    if checkpoint == 8:
+        print("Upside down T section")
+    if checkpoint == 9:
+        x = 203
+        y = 23
+    if checkpoint == 10:
+        x = 250
+        y = 23
+    if checkpoint == 11:
+        x = 51
+        y = -49
+    if checkpoint == 12:
+        x = 60
+        y = -4
+    if checkpoint == 13:
+        x = 59
+        y = 41
+    if checkpoint == 14:
+        x = 23
+        y = 91
+    if checkpoint == 15:
+        x = 1
+        y = 124
+    if checkpoint == 16:
+        x = 1
+        y = 188
+    if checkpoint == 17: #Into the bar
+        print("Into the bar")
+    if checkpoint == 18:
+        x = 37
+        y = -26
+    if checkpoint == 19:
+        x = -4
+        y = -30
+    if checkpoint == 20:
+        x = -60
+        y = -19
+    if checkpoint == 21:
+        x = -149
+        y = -12
+    if checkpoint == 22:
+        x = -257
+        y = 10
+    if checkpoint == 23:
+        print("Back to the front of the Blitz dome")
+    if checkpoint == 24:
+        x = -384
+        y = 37
+    if checkpoint == 25:
+        x = -338
+        y = 84
+    if checkpoint == 26:
+        print("To the docks")
+    if checkpoint == 27:
+        x = -239
+        y = 160
+    if checkpoint == 28:
+        x = -224
+        y = 178
+    if checkpoint == 29:
+        x = -195
+        y = 203
+    if checkpoint == 30: #First battle
+        print("First battle")
+    if checkpoint == 31:
+        x = 185
+        y = 240
+    if checkpoint == 32: #Second battle
+        print("Second battle")
+    if checkpoint == 33:
+        x = 281
+        y = -75
+    if checkpoint == 34: #Third battle
+        print("Third battle")
+    if checkpoint == 35:
+        x = 167
+        y = -312
+    if checkpoint == 36:
+        print("Touch save sphere")
+    if checkpoint == 37:
+        x = 150
+        y = -337
+    if checkpoint == 38: #Start of Oblitzerator fight
+        print("Start of Oblitzerator fight")
+    if checkpoint == 39:
+        x = -8
+        y = -311
+    if checkpoint == 40:
+        print("Screen change")
+    if checkpoint == 41:
+        x = -304
+        y = -53
+    if checkpoint == 42:
+        print("Screen change")
+    if checkpoint == 43:
+        x = -293
+        y = -87
+    if checkpoint == 44:
+        x = -275
+        y = -50
+    if checkpoint == 45: #Save sphere and end of section
+        print("Save sphere and end of section")
+    return [x,y]
+
+def Luca3(checkpoint):
+    if checkpoint == 0:
+        x = -549
+        y = -373
+    if checkpoint == 1:
+        x = -573
+        y = -384
+    if checkpoint == 2:
+        x = -582
+        y = -378
+    if checkpoint == 3:
+        x = -596
+        y = -361
+    if checkpoint == 4:
+        x = -612
+        y = -363
+    if checkpoint == 5:
+        x = -636
+        y = -381
+    if checkpoint == 6:
+        x = -638
+        y = -397
+    if checkpoint == 7:
+        x = -632
+        y = -403
+    if checkpoint == 8: #First chest
+        print("First chest")
+    if checkpoint == 9:
+        x = -621
+        y = -417
+    if checkpoint == 10: #Second chest
+        print("Second chest")
+    if checkpoint == 11:
+        x = -627
+        y = -404
+    if checkpoint == 12:
+        x = -637
+        y = -397
+    if checkpoint == 13:
+        x = -640
+        y = -382
+    if checkpoint == 14:
+        x = -602
+        y = -362
+    if checkpoint == 15:
+        x = -591
+        y = -364
+    if checkpoint == 16:
+        x = -577
+        y = -382
+    if checkpoint == 17:
+        x = -563
+        y = -380
+    if checkpoint == 18:
+        x = -431
+        y = -275
+    if checkpoint == 19:
+        x = -316
+        y = -144
+    if checkpoint == 20: #Target Auron
+        print("Target Auron")
+    if checkpoint == 21:
+        x = -294
+        y = -42
+    if checkpoint == 22: #Into registration map
+        x = -220
+        y = -10
+    if checkpoint == 23:
+        x = -347
+        y = -63
+    if checkpoint == 24:
+        x = -407
+        y = -32
+    if checkpoint == 25:
+        x = -500
+        y = -32
+    if checkpoint == 26: #Upside down T map
+        x = -63
+        y = -18
+    if checkpoint == 27:
+        x = -1
+        y = -32
+    if checkpoint == 28:
+        x = 38
+        y = -22
+    if checkpoint == 29:
+        x = 164
+        y = -4
+    if checkpoint == 30:
+        x = 300
+        y = 0
+    if checkpoint == 31: #Carnival screen
+        x = 29
+        y = -87
+    if checkpoint == 32:
+        x = 65
+        y = -32
+    if checkpoint == 33:
+        x = 90
+        y = 61
+    if checkpoint == 34:
+        x = 140
+        y = 92
+    if checkpoint == 35: #Bring the party together
+        print("Bring the party together")
+    return [x,y]
+
+
 def miihen(checkpoint):
     if checkpoint == 0:
         x = -15
@@ -873,70 +1588,70 @@ def miihen(checkpoint):
         x = -10
         y = 1000
     if checkpoint == 5:
-        x = -44
-        y = 1344
-    if checkpoint == 6 or checkpoint == 7 or checkpoint == 8:
+        x = -46
+        y = 1348
+    if checkpoint in [6,7,8,9,10]:
         print("Attempting Miihen skip")
-    if checkpoint == 9:
+    if checkpoint == 11:
         x = 17
         y = 1536
-    if checkpoint == 10:
+    if checkpoint == 12:
         x = 24
         y = 1601
-    if checkpoint == 11:
+    if checkpoint == 13:
         x = 0
         y = 1796
-    if checkpoint == 12:
-        x = 0
-        y = 2200
-    if checkpoint == 13:
-        x = -12
-        y = 629
     if checkpoint == 14:
         x = 0
-        y = 895
+        y = 2200
     if checkpoint == 15:
-        x = -9
-        y = 1222
+        x = -12
+        y = 629
     if checkpoint == 16:
         x = 0
-        y = 1417
+        y = 895
     if checkpoint == 17:
+        x = -9
+        y = 1222
+    if checkpoint == 18:
+        x = 0
+        y = 1417
+    if checkpoint == 19:
         x = 0
         y = 2000
-    if checkpoint == 18:
+    if checkpoint == 20:
         x = -22
         y = 774
-    if checkpoint == 19:
+    if checkpoint == 21:
         x = -3
         y = 1155
-    if checkpoint == 20:
+    if checkpoint == 22:
         x = -11
         y = 1621
-    if checkpoint == 21:
+    if checkpoint == 23:
         x = -8
         y = 2078
-    if checkpoint == 22:
+    if checkpoint == 24:
         x = 5
         y = 2369
-    if checkpoint == 23:
+    if checkpoint == 25:
         x = 0
         y = 2682
-    if checkpoint == 24:
+    if checkpoint == 26:
         x = -22
         y = 2783
-    if checkpoint == 25: #Shelinda
+    if checkpoint == 27: #Shelinda
         print("Shelinda")
-    if checkpoint == 26:
+    if checkpoint == 28:
         x = 5
         y = 2982
-    if checkpoint == 27:
+    if checkpoint == 29:
         x = 2
         y = 3088
-    if checkpoint == 28:
+    if checkpoint == 30:
         x = 0
         y = 3500
-    if checkpoint == 29:
+    if checkpoint == 31:
         x = 0
         y = -227
     return [x,y]
@@ -1682,6 +2397,33 @@ def djoseTrials(checkpoint):
         y = 37
     if checkpoint == 104:
         print("End of Trials")
+    return [x,y]
+
+def djoseDance(checkpoint):
+    if checkpoint == 0:
+        x = 0
+        y = -9
+    if checkpoint == 1:
+        x = 3
+        y = 17
+    if checkpoint == 2:
+        x = 16
+        y = 24
+    if checkpoint == 3:
+        x = 30
+        y = 12
+    if checkpoint == 4:
+        x = 16
+        y = 1
+    if checkpoint == 5:
+        x = -17
+        y = 3
+    if checkpoint == 6:
+        x = -26
+        y = -13
+    if checkpoint == 7:
+        x = -8
+        y = -16
     return [x,y]
 
 def moonflow(checkpoint):
@@ -2795,7 +3537,7 @@ def desert(checkpoint):
         y = 850
     if checkpoint == 50: #Final map before Home
         x = -252
-        y = -91
+        y = -101
     if checkpoint == 51:
         x = -192
         y = 45
@@ -2824,6 +3566,33 @@ def desert(checkpoint):
     if checkpoint == 60:
         x = -300
         y = 1000
+    return [x,y]
+
+def bevellePreTrials(checkpoint):
+    if checkpoint == 0:
+        x = -97
+        y = -1
+    if checkpoint == 1:
+        x = -200
+        y = -3
+    if checkpoint == 2:
+        x = 4
+        y = -44
+    if checkpoint == 3:
+        x = 26
+        y = -18
+    if checkpoint == 4:
+        x = 71
+        y = -16
+    if checkpoint == 5:
+        x = 80
+        y = 4
+    if checkpoint == 6:
+        x = 85
+        y = 115
+    if checkpoint == 7:
+        x = 71
+        y = 150
     return [x,y]
 
 def bevelleTrials(checkpoint):
@@ -2940,12 +3709,12 @@ def bevelleTrials(checkpoint):
     if checkpoint == 41:
         print("Remove Bevelle sphere")
     if checkpoint == 42:
-        x = 370
-        y = 526
+        x = 369
+        y = 529
     if checkpoint == 43:
-        x = 366
-        y = 524
-    if checkpoint == 44:
+        x = 369
+        y = 529
+    if checkpoint == 44: #Third alcove, Insert Bevelle sphere, and back on the track.
         print("Insert Bevelle sphere, and back on the track.")
     if checkpoint == 45:
         x = 392
@@ -2996,6 +3765,79 @@ def bevelleTrials(checkpoint):
 def seymourNatus():
     x = 15
     y = 150
+    return [x,y]
+
+def sutekiDaNe(checkpoint):
+    if checkpoint == 0:
+        x = -3
+        y = 17
+    if checkpoint == 1:
+        mapChange = True
+    if checkpoint == 2:
+        x = 42
+        y = -55
+    if checkpoint == 3:
+        mapChange = True
+    if checkpoint == 4:
+        x = 208
+        y = 51
+    if checkpoint == 5: #Enjoy scene
+        print("Enjoy this very long scene")
+    if checkpoint == 6:
+        mapChange = True
+    if checkpoint == 7:
+        x = 93
+        y = -9
+    if checkpoint == 8:
+        mapChange = True
+    if checkpoint == 9:
+        x = -55
+        y = -29
+    if checkpoint == 10:
+        x = -20
+        y = 4
+    if checkpoint == 11:
+        x = 6
+        y = 50
+    if checkpoint == 12:
+        x = 0
+        y = 0
+    if checkpoint == 13:
+        x = 0
+        y = 0
+    if checkpoint == 14:
+        x = 0
+        y = 0
+    if checkpoint == 15:
+        x = 0
+        y = 0
+    if checkpoint == 16:
+        x = 0
+        y = 0
+    if checkpoint == 17:
+        x = 0
+        y = 0
+    if checkpoint == 18:
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
     return [x,y]
 
 def calmLands(checkpoint):

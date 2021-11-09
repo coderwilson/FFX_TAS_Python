@@ -382,12 +382,14 @@ def AfterAmmes():
     while FFX_memory.getMap() != 49:
         if FFX_memory.userControl():
             #Map changes and events
-            if checkpoint == 6:
+            if checkpoint == 6: #Save sphere
+                FFXC.set_value('AxisLy', 0)
+                FFXC.set_value('AxisLx', 0)
                 time.sleep(0.2)
                 FFX_Xbox.menuB()
-                time.sleep(0.8)
+                time.sleep(1)
                 FFX_Xbox.menuB()
-                time.sleep(0.8)
+                time.sleep(1)
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuB()
                 checkpoint += 1

@@ -37,10 +37,11 @@ def desert():
     
     #Now to figure out how many items we need.
     stealItems = FFX_Battle.updateStealItemsDesert()
-    if stealItems[0] == 2:
-        itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
-    else:
-        itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
+    #if stealItems[0] == 2: #Bomb Cores aren't working right.
+    #    itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
+    #else:
+    #    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
+    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
     
     FFX_menu.equipSonicSteel()
     
@@ -134,9 +135,11 @@ def desert():
                 print("-----------------------------")
                 print("Items status: ", stealItems)
                 print("-----------------------------")
-                itemsNeeded = 7 - (stealItems[0] + stealItems[1] + stealItems[2] + stealItems[3])
-                if itemsNeeded < 1 and stealItems[1] < 2:
-                    itemsNeeded = 2 - stealItems[1]
+                #if stealItems[0] == 2: #Bomb Cores aren't working right.
+                #    itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
+                #else:
+                #    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
+                itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
                 
                 #Finally, check for other factors and report to console.
                 if FFX_memory.overdriveState()[6] == 100:
@@ -672,10 +675,14 @@ def findSummoners(blitzWin):
     time.sleep(3)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
+    while not FFX_memory.cutsceneSkipPossible():
+        FFX_Xbox.tapB()
+    FFX_Xbox.skipScene()
+    FFX_Xbox.SkipDialog(8.2) #For some reason, it thinks there's a cutscene to skip this whole time.
+    FFX_Xbox.skipScene()
     
-    FFX_Xbox.SkipDialog(92)
-    FFX_Xbox.skipScene()
-    FFX_Xbox.SkipDialog(9)
-    FFX_Xbox.skipScene()
-    FFX_Xbox.SkipDialog(53)
-    FFX_Xbox.skipScene()
+    while not FFX_memory.userControl():
+        if FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
+        elif FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.skipScene()

@@ -437,7 +437,7 @@ def Geneaux():
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
-def LucaOaka():
+def LucaOaka(): #unused
     FFX_memory.openMenu()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
@@ -452,28 +452,12 @@ def LucaOaka():
     FFX_memory.closeMenu()
 
 def LucaWorkers():
-    if FFX_memory.getTidusSlvl() < 5:
-        FFX_memory.setTidusSlvl(5)
-        #There are some consistency errors getting the XP for five sphere levels.
-        #If we don't get there, we will possibly hit Game Over after blitzball.
-        #This makes it so we will always get there, for consistency sake.
-        #Of note, this would invalidate a formal run.
-        print("Intentionally updating Tidus's levels so we don't lose the run.")
     FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuB() #Heal on Lulu, just in case.
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Sphere grid on Tidus
     
+    FFX_menuGrid.useShiftRight('Tidus')
     FFX_menuGrid.moveFirst()
     gridRight()
     gridRight()
@@ -481,25 +465,27 @@ def LucaWorkers():
     gridDown()
     gridDown()
     gridRight()
+    time.sleep(0.1)
+    if FFX_memory.sGridNodeSelected()[0] == 2:
+        print("No early haste")
+        earlyHaste = 0
+    else:
+        print("Early haste, can haste for Oblitzerator")
+        earlyHaste = 1
     
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
     useAndUseAgain()
     FFX_menuGrid.selSphere('mana','d','none')
-    useAndUseAgain()
-    
-    earlyHaste = 0
-    if FFX_Screen.PixelTestTol(264,582,(138, 138, 138),5):
-        FFX_Logs.writeLog("No early haste.")
-        FFX_Xbox.menuA()
-    else:
+    if earlyHaste == 1:
+        useAndUseAgain()
         FFX_menuGrid.selSphere('ability','d','none') # Haste
-        earlyHaste = 1
+        
     useAndQuit()
     FFX_memory.closeMenu()
     return earlyHaste
 
-def lateHaste():
+def lateHaste(): #Now unused
     FFX_memory.openMenu()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
@@ -1695,8 +1681,11 @@ def viaPurifico():
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
-    gridUp()
-    gridLeft()
+    time.sleep(0.3)
+    gridLocation = FFX_memory.sGridNodeSelected()
+    if gridLocation[0] != 242: #We have extra levels, changes the path slightly.
+        gridUp()
+        gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('mana','u','none')
     

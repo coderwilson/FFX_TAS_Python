@@ -5,10 +5,143 @@ import FFX_Battle
 import FFX_menu
 import FFX_Logs
 import FFX_memory
+import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
- 
+
 def arrival():
+    FFX_Xbox.skipStoredScene(7)
+    print("Starting Luca section")
+    FFX_memory.clickToControl()
+    
+    earlyHaste = 0
+    checkpoint = 0
+    while checkpoint < 46:
+        if FFX_memory.userControl():
+            #events
+            if checkpoint == 4: #Seymour intro scene
+                print("Event: Seymour intro scene")
+                FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 0)
+                FFX_memory.awaitEvent()
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                FFX_Screen.awaitSave()
+                time.sleep(0.07)
+                FFX_Xbox.skipSave()
+                
+                FFX_Xbox.SkipDialog(26)
+                FFX_Screen.awaitPixel(664,200,(234, 189, 0))
+                time.sleep(0.6)
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuB()
+                FFX_Xbox.SkipDialogSpecial(45) #Skip the Wakka Face scene
+                FFX_memory.clickToControl()
+                checkpoint += 1
+            elif checkpoint == 8: #Upside down T section
+                print("Event: Upside down T section")
+                FFX_memory.clickToEventTemple(4)
+                checkpoint += 1
+            elif checkpoint == 17: #Into the bar
+                print("Event: Into the bar looking for Auron")
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 1)
+                FFX_memory.awaitEvent()
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                checkpoint += 1
+            elif checkpoint == 23: #Back to the front of the Blitz dome
+                print("Event: Back to Blitz dome entrance")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 26: #To the docks
+                print("Event: Towards the docks")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 30 or checkpoint == 32: #First and second battles
+                print("Event: First/Second battle")
+                FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 1)
+                FFX_memory.awaitEvent()
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                FFX_Battle.LucaWorkers()
+                checkpoint += 1
+            elif checkpoint == 34: #Third battle
+                print("Tidus's XP: ", FFX_memory.getTidusXP())
+                if FFX_memory.getTidusXP() >= 312:
+                    FFXC.set_value('AxisLx', 0)
+                    FFXC.set_value('AxisLy', 0)
+                    earlyHaste = FFX_menu.LucaWorkers()
+                    if earlyHaste != 0:
+                        earlyHaste = 2
+                print("Event: Third battle")
+                FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 0)
+                FFX_memory.awaitEvent()
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                FFX_Battle.LucaWorkers2(earlyHaste)
+                print("Tidus's XP: ", FFX_memory.getTidusXP())
+                FFX_memory.clickToControl()
+                if earlyHaste == 0 and FFX_memory.getTidusXP() >= 312:
+                    earlyHaste = FFX_menu.LucaWorkers()
+                        
+                checkpoint += 1
+            elif checkpoint == 36 or checkpoint == 45:
+                print("Event: Touch Save Sphere")
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                time.sleep(0.02)
+                FFX_Xbox.touchSaveSphere()
+                checkpoint += 1
+            elif checkpoint == 38: #Oblitzerator
+                print("Event: Oblitzerator fight")
+                FFXC.set_value('AxisLx', 1)
+                FFXC.set_value('AxisLy', 0)
+                #time.sleep(2)
+                FFX_memory.awaitEvent()
+                FFXC.set_value('AxisLx', 0)
+                FFXC.set_value('AxisLy', 0)
+                FFX_Battle.Oblitzerator(earlyHaste)
+                checkpoint += 1
+            elif checkpoint == 40:
+                FFX_memory.clickToEventTemple(4)
+                
+                if earlyHaste == 0:
+                    earlyHaste = FFX_menu.LucaWorkers() - 1
+                checkpoint += 1
+            elif checkpoint == 42:
+                FFX_memory.clickToEventTemple(5)
+                checkpoint += 1
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca1(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene()
+                
+            #Map changes
+            elif checkpoint < 3 and FFX_memory.getMap() == 268:
+                checkpoint = 3
+                print("Map change: ", checkpoint)
+            elif checkpoint < 6 and FFX_memory.getMap() == 123: #Front of the Blitz dome
+                print("Map change: ", checkpoint)
+                checkpoint = 6
+            elif checkpoint < 11 and FFX_memory.getMap() == 104:
+                print("Map change: ", checkpoint)
+                checkpoint = 11
+    FFX_Logs.writeStats("Early Haste:")
+    FFX_Logs.writeStats(earlyHaste)
+    return earlyHaste
+
+def arrival_old():
     FFX_Xbox.skipStoredScene(7)
     print("Starting Luca section")
     FFX_memory.clickToControl()
@@ -78,6 +211,9 @@ def arrival():
     FFXC.set_value('AxisLx', 0)
 
 def followYuna():
+    print("followYuna function no longer used")
+
+def followYuna_old():
     print("On hold")
     FFX_Screen.awaitMap4()
     FFXC.set_value('AxisLx', -1)
@@ -148,8 +284,10 @@ def followYuna():
     #else:
     #    FFX_Logs.writeStats("Yes")
     
-
 def preBlitz():
+    print("preBlitz function is no longer used.")
+
+def preBlitz_old():
     FFXC.set_value('AxisLy', -1)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
@@ -211,6 +349,79 @@ def blitzStart():
     FFXC.set_value('AxisLx', 0)
 
 def afterBlitz(earlyHaste):
+    FFX_Screen.clickToBattle()
+    battleNum = 0
+    checkpoint = 0
+    while checkpoint < 36:
+        if FFX_memory.userControl():
+            #Events
+            if checkpoint == 8: #First chest
+                if earlyHaste == -1:
+                    FFX_menu.lateHaste()
+                    FFX_memory.closeMenu()
+                print("First chest")
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 10: #Second chest
+                print("Second chest")
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 20: #Target Auron
+                while FFX_memory.affectionArray()[2] == 0: #First Auron affection, always zero
+                    auronCoords = FFX_memory.getActorCoords(3)
+                    FFX_targetPathing.setMovement(auronCoords)
+                    FFX_Xbox.tapB()
+                checkpoint += 1 #After affection changes
+            elif checkpoint == 35: #Bring the party together
+                print("Bring the party together")
+                FFX_memory.clickToEventTemple(1)
+                checkpoint += 1
+                
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca3(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+            
+        else:
+            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value('AxisLx', 0)
+            if FFX_memory.battleActive():
+                battleNum += 1
+                print("After-Blitz Battle Number: ", battleNum)
+                if battleNum == 1:
+                    FFX_Battle.afterBlitz1(earlyHaste)
+                elif battleNum == 2:
+                    FFX_Screen.clickToBattle()
+                    FFX_Battle.attack('none') #Hardest boss in the game.
+                    print("Well that boss was difficult.")
+                    time.sleep(6)
+                elif battleNum == 3:
+                    FFX_Battle.afterBlitz3(earlyHaste)
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene()
+            elif FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
+                
+            #Map changes
+            elif checkpoint < 23 and FFX_memory.getMap() == 123:
+                checkpoint = 23
+                print("Map change: ", checkpoint)
+            elif checkpoint < 26 and FFX_memory.getMap() == 77:
+                checkpoint = 26
+                print("Map change: ", checkpoint)
+            elif checkpoint < 31 and FFX_memory.getMap() == 104:
+                checkpoint = 31
+                print("Map change: ", checkpoint)
+    FFXC.set_value('AxisLy', -1)
+    FFXC.set_value('AxisLx', -1)
+    time.sleep(2)
+    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('AxisLx', 0)
+
+def afterBlitz_old(earlyHaste):
     print("Blitz is complete. Now for the battles.")
     FFX_Battle.afterBlitz()
     

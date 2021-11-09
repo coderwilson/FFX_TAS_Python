@@ -373,6 +373,10 @@ def trials():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
     
+    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('AxisLy', 0)
+    FFX_memory.awaitControl()
+    time.sleep(0.3)
     print("Talk to Auron while we wait.")
     FFXC.set_value('AxisLx', 1)
     FFXC.set_value('AxisLy', -1)
@@ -380,24 +384,32 @@ def trials():
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
     FFX_memory.clickToControl3()
-    time.sleep(1.5)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.5)
-    FFXC.set_value('AxisLy', 0)
-    FFX_Xbox.SkipDialog(20)
+    time.sleep(0.07)
+    
+    #Dance
+    checkpoint = 0
+    while FFX_memory.userControl():
+        if FFX_targetPathing.setMovement(FFX_targetPathing.djoseDance(checkpoint)) == True:
+            checkpoint += 1
+            print("Checkpoint reached: ", checkpoint)
+        
+        if checkpoint == 8:
+            checkpoint = 0
     
     
     FFX_memory.clickToControl()
     print("Leaving the fayth room")
+    
+    while FFX_targetPathing.setMovement([-1,-60]) == False:
+        movingToExit = True
     FFXC.set_value('AxisLy', 1)
-    time.sleep(1.1)
     FFXC.set_value('AxisLx', 1)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(1.5)
+    FFX_memory.awaitEvent()
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     
     FFX_Xbox.SkipDialog(34)
+    print("Mark")
     
     FFX_Screen.awaitPixel(352,233,(145, 141, 220)) #naming Ixion
     time.sleep(0.1)

@@ -3,6 +3,7 @@ import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
 import FFX_memory
+import FFX_Logs
 import FFX_targetPathing
 
 FFXC = FFX_Xbox.FFXC
@@ -15,6 +16,8 @@ def Beach():
     FFXC.set_value('AxisLy', 0)
     
     #Pathing, lots of pathing.
+    besaidBattles = 0
+    goodBattles = 0
     checkpoint = 0
     while FFX_memory.getMap() != 122:
         if FFX_memory.userControl():
@@ -48,6 +51,9 @@ def Beach():
             FFXC.set_value('AxisLx', 0)
             if FFX_Screen.BattleScreen():
                 FFX_Battle.pirhanas()
+                besaidBattles += 1
+                if FFX_memory.getBattleNum() == 11:
+                    goodBattles += 1
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             
@@ -65,6 +71,10 @@ def Beach():
                 checkpoint = 29
             elif checkpoint == 36 and FFX_memory.getMap() == 17:
                 checkpoint = 37
+    FFX_Logs.writeStats("Pirhanas battles:")
+    FFX_Logs.writeStats(str(besaidBattles))
+    FFX_Logs.writeStats("Optimal pirhana battles:")
+    FFX_Logs.writeStats(str(goodBattles))
 
 def Beach_old():
     print("Starting Besaid section. Beach")
@@ -395,6 +405,7 @@ def waterfalls():
 def leaving():
     FFX_memory.clickToControl()
     checkpoint = 0
+    escapeAttempts = 0
     
     while FFX_memory.getMap() != 301:
         if FFX_memory.userControl():
@@ -454,6 +465,7 @@ def leaving():
                 FFX_memory.clickToEventTemple(2)
                 earlyTidusGrid = False
                 if FFX_memory.getTidusSlvl() >= 3:
+                    import FFX_menu
                     FFX_menu.Liki()
                     earlyTidusGrid = True
                 checkpoint += 1
@@ -483,6 +495,7 @@ def leaving():
             elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri
                 FFXC.set_value('AxisLx', 0)
                 FFXC.set_value('AxisLy', 0)
+                healCount = 0
                 while not FFX_memory.menuOpen():
                     if FFX_Screen.BattleScreen():
                         battleHP = FFX_memory.getBattleHP()
@@ -491,10 +504,13 @@ def leaving():
                             FFX_Xbox.menuDown()
                             FFX_Xbox.menuDown()
                             FFX_Xbox.SkipDialog(2) #Quick potion
+                            healCount += 1
                         else:
                             FFX_Battle.attack('none')
                     elif FFX_memory.diagSkipPossible():
                         FFX_Xbox.tapB()
+                FFX_Logs.writeStats("Kimahri heal count:")
+                FFX_Logs.writeStats(healCount)
                 FFX_memory.clickToControl()
             elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
                 while not FFX_Screen.PixelTestTol(324, 92, (223, 223, 223), 5):
@@ -520,8 +536,15 @@ def leaving():
                 FFX_memory.closeMenu()
                 checkpoint += 1
             elif checkpoint == 39 and FFX_Screen.BattleScreen(): #Dark Attack tutorial
-                FFX_Battle.escapeAll()
+                escapeAttempts = 0
+                while FFX_memory.battleComplete() == False:
+                    if FFX_Screen.BattleScreen():
+                        FFX_Battle.escapeOne()
+                        escapeAttempts += 1
+                        time.sleep(0.2)
                 FFX_memory.clickToControl()
+                FFX_Logs.writeStats("Besaid escape attempts:")
+                FFX_Logs.writeStats(str(escapeAttempts))
                 checkpoint += 1
             elif checkpoint > 39 and FFX_Screen.BattleScreen(): #One forced battle on the way out of Besaid
                 FFX_Battle.besaid()
@@ -536,6 +559,6 @@ def leaving():
             elif checkpoint < 51 and FFX_memory.getMap() == 20:
                 checkpoint = 51
             elif checkpoint < 59 and FFX_memory.getMap() == 19:
-                checkpoint = 59
+                checkpoint = 59    
     
     return earlyTidusGrid
