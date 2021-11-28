@@ -61,18 +61,19 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Home"
 #StepCounter = 1
-#Gamestate = "rescueYuna"
+Gamestate = "rescueYuna"
 #StepCounter = 1
-#StepCounter = 2
+StepCounter = 2
 #Gamestate = "Gagazet"
 #StepCounter = 1
+#StepCounter = 4
 #Gamestate = "Zanarkand"
 #StepCounter = 4
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 #gameLength = "short"
@@ -85,8 +86,8 @@ autoEggHunt = True
 #rngSeedNum = 31 #Potential
 #rngSeedNum = 45 #Potential
 #rngSeedNum = 49 #Favorite one so far, but problem on Chocobo Eater
-rngSeedNum = 56
-rngReviewOnly = True
+rngSeedNum = 58
+rngReviewOnly = False
 print("Game type will be: ", gameLength)
 ####################################################################################################
 
@@ -671,6 +672,7 @@ while Gamestate != "End":
     if Gamestate == "rescueYuna" and StepCounter == 2:
         reportGamestate()
         FFX_rescueYuna.trials()
+        FFX_rescueYuna.trialsEnd()
         StepCounter = 3
 
     if Gamestate == "rescueYuna" and StepCounter == 3:

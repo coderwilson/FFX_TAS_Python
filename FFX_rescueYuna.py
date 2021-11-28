@@ -132,7 +132,8 @@ def trials():
     print("Starting Bevelle trials section.")
     
     checkpoint = 0
-    while FFX_memory.getMap() != 226:
+    testCounter = 0
+    while checkpoint < 53:
         if FFX_memory.userControl():
             #Map changes
             if checkpoint < 2 and FFX_memory.getMap() == 306:
@@ -143,16 +144,30 @@ def trials():
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent() #Pedestol - START!!!
                 FFXC.set_neutral()
-                time.sleep(21.5)
-                FFX_Xbox.SkipDialog(1)
-                print("Mark - start moving")
-                FFX_Xbox.menuB() #Start moving
-                
-                #Timing for the first alcove
-                time.sleep(9)
+                cam = FFX_memory.getCamera()
+                while cam[3] < 330.0:
+                    cam = FFX_memory.getCamera()
+                    #print(cam, " | ", testCounter)
+                    #testCounter += 1
+                print("Ready to move")
+                time.sleep(0.1)
+                cam = FFX_memory.getCamera()
+                while cam[2] < -450: #Holding down B until we start moving
+                    FFX_Xbox.tapB()
+                    cam = FFX_memory.getCamera()
+                    #print(cam, " | ", testCounter)
+                    #testCounter += 1
+                print("Should now be moving.")
+                FFXC.set_value('BtnB', 0)
+                cam = FFX_memory.getCamera()
+                while cam[2] < 2: #Ready for first alcove
+                    cam = FFX_memory.getCamera()
+                    #print(cam, " | ", testCounter)
+                    #testCounter += 1
+                print("Attempting to enter alcove")
                 FFXC.set_value('BtnB', 1)
-                time.sleep(3)
-                FFXC.set_value('BtnB', 1)
+                FFX_memory.awaitControl()
+                FFXC.set_value('BtnB', 0)
                 
                 #Now did we go into the correct alcove?
                 FFX_memory.awaitControl()
@@ -170,28 +185,27 @@ def trials():
                 FFXC.set_neutral()
                 time.sleep(10.5)
                 
-                print("Mark1")
                 FFX_Xbox.SkipDialog(2)
-                time.sleep(6.4)
-                print("Mark2")
-                FFX_Xbox.SkipDialog(1)
+                time.sleep(3)
+                cam = FFX_memory.getCamera()
+                while cam[2] < -69:
+                    cam = FFX_memory.getCamera()
+                FFX_Xbox.SkipDialog(2)
                 FFX_memory.awaitControl()
-                #time.sleep(12)
-                #FFXC.set_movement(0, 1)
-                #time.sleep(2)
-                #FFXC.set_neutral()
-                #FFX_Xbox.menuB()
-                #time.sleep(0.5)
-                
+                if FFX_memory.getCoords()[0] < -10:
+                    print("Correct alcove. Moving on with swiftness.")
+                    checkpoint += 1
+                else:
+                    print("Incorrect alcove. Recovering.")
             elif checkpoint == 7: #First Bevelle sphere, and then more gliding.
                 print("Bevelle sphere")
                 FFX_memory.clickToEventTemple(7)
                 FFXC.set_movement(0, -1)
                 time.sleep(1.5)
                 FFXC.set_neutral()
-                time.sleep(10)
+                time.sleep(9.5)
                 FFXC.set_value('BtnB', 1)
-                time.sleep(15)
+                FFX_memory.awaitControl()
                 FFXC.set_value('BtnB', 0)
                 checkpoint += 1
             elif checkpoint == 10: #Insert Bevelle sphere. Activate lower areas.
@@ -206,20 +220,29 @@ def trials():
                 FFXC.set_value('BtnB', 1)
                 time.sleep(2)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(7)
-                FFXC.set_value('BtnB', 1) #Down to lower section.
+                time.sleep(4)
+                
+                cam = FFX_memory.getCamera()
+                while cam[2] < 10: #Waiting for the right spot to go down to second section
+                    cam = FFX_memory.getCamera()
+                FFXC.set_value('BtnB', 1)
                 time.sleep(2)
                 FFXC.set_value('BtnB', 0)
                 
-                time.sleep(11) #Lining up at the lower T
+                time.sleep(9.5) #Lining up at the lower T
                 
-                while not FFX_Screen.PixelTestTol(360,50,(29, 146, 244),5):
+                while not FFX_memory.userControl():
                     if FFX_Screen.PixelTestTol(477,370,(131, 174, 255),5): #Coming from top side
                         print("Entered T from upper area")
                         while not FFX_Screen.PixelTestTol(449,802,(255, 255, 255),5):
                             time.sleep(0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(9)
+                        time.sleep(5)
+                        
+                        cam = FFX_memory.getCamera()
+                        while cam[2] < 320:
+                            print(cam[2])
+                            cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
                         time.sleep(2)
                         FFXC.set_value('BtnB', 0)
@@ -228,7 +251,11 @@ def trials():
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
                             time.sleep(0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(9)
+                        time.sleep(5)
+                        cam = FFX_memory.getCamera()
+                        while cam[2] < 320:
+                            print(cam[2])
+                            cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
                         time.sleep(2)
                         FFXC.set_value('BtnB', 0)
@@ -241,9 +268,12 @@ def trials():
                 FFXC.set_movement(1, -1)
                 time.sleep(2)
                 FFXC.set_neutral()
-                time.sleep(10)
-                FFXC.set_value('BtnB', 1) #Third alcove
                 time.sleep(8)
+                cam = FFX_memory.getCamera()
+                while cam[2] < 500:
+                    cam = FFX_memory.getCamera()
+                FFXC.set_value('BtnB', 1) #Third alcove
+                time.sleep(4)
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.awaitControl()
                 FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
@@ -269,51 +299,310 @@ def trials():
             elif checkpoint == 34: #Take Destro sphere
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 39: #Insert Destro sphere
+            elif checkpoint == 37: #Insert Destro sphere
+                FFXC.set_neutral()
+                time.sleep(0.1)
+                FFXC.set_movement(0, 1)
+                time.sleep(0.07)
+                FFXC.set_neutral()
+                FFX_Xbox.SkipDialog(1)
+                FFX_memory.clickToControl3()
+                checkpoint += 1
+            elif checkpoint == 39: #Take Bevelle sphere
+                FFX_memory.clickToEventTemple(5)
+                checkpoint += 1
+            elif checkpoint == 41: #back on the track.
+                FFXC.set_movement(0, -1)
+                time.sleep(3)
+                FFXC.set_neutral()
+                
+                
+                time.sleep(10)
+                while not FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5):
+                    time.sleep(0.035)
+                time.sleep(0.5)
+                while not FFX_memory.userControl():
+                    if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
+                        print("Entered T from loop")
+                        while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
+                            time.sleep(0.05)
+                        FFX_Xbox.menuB()
+                        time.sleep(4)
+                        cam = FFX_memory.getCamera()
+                        while cam[2] < 320:
+                            cam = FFX_memory.getCamera()
+                        FFXC.set_value('BtnB', 1) #Second alcove
+                        time.sleep(4)
+                        FFXC.set_value('BtnB', 0)
+                print("Arriving in the second alcove again.")
+                checkpoint += 1
+            elif checkpoint == 43: #Place Bevelle sphere (second alcove)
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 47: #Take Destro sphere
+                FFXC.set_movement(1, -1)
+                time.sleep(0.1)
+                FFXC.set_neutral()
+                FFX_Xbox.SkipDialog(1)
+                FFX_memory.clickToControl3()
+                checkpoint += 1
+            elif checkpoint == 50: #Insert Destro sphere
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 52: #Back on track, to the exit
+                FFXC.set_movement(1, -1)
+                time.sleep(2)
+                FFXC.set_neutral()
+                time.sleep(19)
+                while not FFX_Screen.PixelTestTol(381,673,(255, 184, 255),5):
+                    if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
+                        print("Entered T from loop")
+                        while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
+                            time.sleep(0.05)
+                        FFX_Xbox.menuB()
+                        time.sleep(5)
+                        FFXC.set_value('BtnB', 1) #First alcove
+                        time.sleep(7)
+                        FFXC.set_value('BtnB', 0)
+                FFX_memory.awaitControl()
+                FFXC.set_movement(0, -1)
+                time.sleep(2)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 58:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+                
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            #print("No control")
+            #FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            if checkpoint < 3:
+                FFXC.set_neutral()
+
+    FFXC.set_neutral()
+
+def trialsEnd():
+    
+    checkpoint = 53
+    testCounter = 0
+    while FFX_memory.getMap() != 226:
+        if FFX_memory.userControl():
+            #Map changes
+            if checkpoint < 2 and FFX_memory.getMap() == 306:
+                checkpoint = 2
+            
+            #Spheres, Pedestols, and gliding across glowing paths.
+            elif checkpoint == 3: #Pedestol that starts it all.
+                FFXC.set_movement(0, 1)
+                FFX_memory.awaitEvent() #Pedestol - START!!!
+                FFXC.set_neutral()
+                cam = FFX_memory.getCamera()
+                while cam[3] < 330.0:
+                    cam = FFX_memory.getCamera()
+                    #print(cam, " | ", testCounter)
+                    #testCounter += 1
+                print("Ready to move")
+                time.sleep(0.1)
+                cam = FFX_memory.getCamera()
+                while cam[2] < -450: #Holding down B until we start moving
+                    FFX_Xbox.tapB()
+                    cam = FFX_memory.getCamera()
+                    #print(cam, " | ", testCounter)
+                    #testCounter += 1
+                print("Should now be moving.")
+                FFXC.set_value('BtnB', 0)
+                cam = FFX_memory.getCamera()
+                while cam[2] < 2: #Ready for first alcove
+                    cam = FFX_memory.getCamera()
+                    #print(cam, " | ", testCounter)
+                    #testCounter += 1
+                print("Attempting to enter alcove")
+                FFXC.set_value('BtnB', 1)
+                FFX_memory.awaitControl()
+                FFXC.set_value('BtnB', 0)
+                
+                #Now did we go into the correct alcove?
+                FFX_memory.awaitControl()
+                if FFX_memory.getCoords()[0] < -10:
+                    print("Correct alcove. Moving on with swiftness.")
+                    checkpoint += 2
+                else:
+                    print("Incorrect alcove. Recovering.")
+                    checkpoint += 1
+            elif checkpoint == 4: #Recovery
+                FFXC.set_movement(1, 0)
+                time.sleep(1.5)
+                FFXC.set_movement(-1, 0)
+                time.sleep(1.5)
+                FFXC.set_neutral()
+                time.sleep(10.5)
+                
+                FFX_Xbox.SkipDialog(2)
+                time.sleep(3)
+                cam = FFX_memory.getCamera()
+                while cam[2] < -69:
+                    cam = FFX_memory.getCamera()
+                FFX_Xbox.SkipDialog(2)
+                FFX_memory.awaitControl()
+                if FFX_memory.getCoords()[0] < -10:
+                    print("Correct alcove. Moving on with swiftness.")
+                    checkpoint += 1
+                else:
+                    print("Incorrect alcove. Recovering.")
+            elif checkpoint == 7: #First Bevelle sphere, and then more gliding.
+                print("Bevelle sphere")
+                FFX_memory.clickToEventTemple(7)
+                FFXC.set_movement(0, -1)
+                time.sleep(1.5)
+                FFXC.set_neutral()
+                time.sleep(9.5)
+                FFXC.set_value('BtnB', 1)
+                FFX_memory.awaitControl()
+                FFXC.set_value('BtnB', 0)
+                checkpoint += 1
+            elif checkpoint == 10: #Insert Bevelle sphere. Activate lower areas.
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 13: #Down to the lower areas.
+                FFXC.set_movement(-1, 0)
+                time.sleep(2)
+                FFXC.set_neutral()
+                
+                time.sleep(10)
+                FFXC.set_value('BtnB', 1)
+                time.sleep(2)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(4)
+                
+                cam = FFX_memory.getCamera()
+                while cam[2] < 10: #Waiting for the right spot to go down to second section
+                    cam = FFX_memory.getCamera()
+                FFXC.set_value('BtnB', 1)
+                time.sleep(2)
+                FFXC.set_value('BtnB', 0)
+                
+                time.sleep(9.5) #Lining up at the lower T
+                
+                while not FFX_memory.userControl():
+                    if FFX_Screen.PixelTestTol(477,370,(131, 174, 255),5): #Coming from top side
+                        print("Entered T from upper area")
+                        while not FFX_Screen.PixelTestTol(449,802,(255, 255, 255),5):
+                            time.sleep(0.05)
+                        FFX_Xbox.menuB()
+                        time.sleep(5)
+                        
+                        cam = FFX_memory.getCamera()
+                        while cam[2] < 320:
+                            print(cam[2])
+                            cam = FFX_memory.getCamera()
+                        FFXC.set_value('BtnB', 1) #Second alcove
+                        time.sleep(2)
+                        FFXC.set_value('BtnB', 0)
+                    elif FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
+                        print("Entered T from loop")
+                        while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
+                            time.sleep(0.05)
+                        FFX_Xbox.menuB()
+                        time.sleep(5)
+                        cam = FFX_memory.getCamera()
+                        while cam[2] < 320:
+                            print(cam[2])
+                            cam = FFX_memory.getCamera()
+                        FFXC.set_value('BtnB', 1) #Second alcove
+                        time.sleep(2)
+                        FFXC.set_value('BtnB', 0)
+                
+                checkpoint += 1
+            elif checkpoint == 16: #Take Glyph sphere from second alcove
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 18: #To third alcove
+                FFXC.set_movement(1, -1)
+                time.sleep(2)
+                FFXC.set_neutral()
+                time.sleep(8)
+                cam = FFX_memory.getCamera()
+                while cam[2] < 500:
+                    cam = FFX_memory.getCamera()
+                FFXC.set_value('BtnB', 1) #Third alcove
+                time.sleep(4)
+                FFXC.set_value('BtnB', 0)
+                FFX_memory.awaitControl()
+                FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
+                checkpoint += 1
+            elif checkpoint == 22: #Remove Bevelle sphere
+                FFX_memory.clickToEventTemple(4)
+                checkpoint += 1
+            elif checkpoint == 24: #Insert Bevelle sphere
+                FFX_memory.clickToEventTemple(5)
+                checkpoint += 1
+            elif checkpoint == 28: #Take Glyph sphere
                 FFXC.set_neutral()
                 time.sleep(0.07)
                 FFX_memory.clickToEvent()
                 time.sleep(0.035)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 41: #Take Bevelle sphere
-                FFX_memory.clickToEventTemple(6)
+            elif checkpoint == 32: #Insert Glyph sphere
+                FFX_memory.clickToEventTemple(0)
+                FFXC.set_movement(0, 1)
+                time.sleep(0.07)
                 checkpoint += 1
-            elif checkpoint == 44: #Insert Bevelle sphere, and back on the track.
-                FFXC.set_movement(0, 1)
-                time.sleep(0.4)
+            elif checkpoint == 34: #Take Destro sphere
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 37: #Insert Destro sphere
                 FFXC.set_neutral()
-                time.sleep(0.5)
+                time.sleep(0.1)
                 FFXC.set_movement(0, 1)
-                time.sleep(0.4)
-                FFXC.set_movement(0, -1)
                 time.sleep(0.07)
                 FFXC.set_neutral()
-                time.sleep(0.2)
-                FFXC.set_movement(0, -1)
-                FFX_Xbox.SkipDialog(0.3)
-                FFXC.set_neutral()
-                time.sleep(0.07)
+                FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
+                checkpoint += 1
+            elif checkpoint == 39: #Take Bevelle sphere
+                FFX_memory.clickToEventTemple(5)
+                checkpoint += 1
+            elif checkpoint == 41: #back on the track.
                 FFXC.set_movement(0, -1)
-                time.sleep(2)
+                time.sleep(3)
                 FFXC.set_neutral()
                 
-                time.sleep(16)
-                while not FFX_Screen.PixelTestTol(360,50,(29, 146, 244),5):
+                
+                time.sleep(10)
+                while not FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5):
+                    time.sleep(0.035)
+                time.sleep(0.5)
+                while not FFX_memory.userControl():
                     if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
                             time.sleep(0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(9)
+                        time.sleep(4)
+                        cam = FFX_memory.getCamera()
+                        while cam[2] < 320:
+                            cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
                         time.sleep(4)
                         FFXC.set_value('BtnB', 0)
                 print("Arriving in the second alcove again.")
                 checkpoint += 1
-            elif checkpoint == 46: #Take Destro sphere
+            elif checkpoint == 43: #Place Bevelle sphere (second alcove)
                 FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 47: #Take Destro sphere
+                FFXC.set_movement(1, -1)
+                time.sleep(0.1)
+                FFXC.set_neutral()
+                FFX_Xbox.SkipDialog(1)
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 50: #Insert Destro sphere
                 FFX_memory.clickToEventTemple(0)

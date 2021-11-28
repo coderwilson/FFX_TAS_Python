@@ -318,9 +318,9 @@ def getMovementVectors():
 def getCamera():
     global baseValue
     angle = baseValue + 0x008A86B8
-    z = baseValue + 0x008A86F0
     x = baseValue + 0x008A86F8
     y = baseValue + 0x008A8700
+    z = baseValue + 0x008A86FC
     angle2 = baseValue + 0x008A86C0
 
     key = process.get_pointer(angle)

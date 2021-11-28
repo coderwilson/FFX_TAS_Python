@@ -29,14 +29,27 @@ def Entrance():
     FFX_memory.closeMenu()
     
     #Now back into the water
-    FFXC.set_movement(0, 1)
-    time.sleep(1)
-    FFXC.set_movement(1, 1)
-    time.sleep(0.3)
-    FFXC.set_movement(0, 1)
-    print("Mark 1")
-    time.sleep(35)
-    print("Mark 2")
+    checkpoint = 0
+    while not FFX_memory.battleActive():
+        if FFX_memory.userControl():
+            print("Baaj movement: ", checkpoint)
+            if checkpoint == 6:
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajRamp(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+    
+    #FFXC.set_movement(0, 1)
+    #time.sleep(1)
+    #FFXC.set_movement(1, 1)
+    #time.sleep(0.3)
+    #FFXC.set_movement(0, 1)
+    #print("Mark 1")
+    #time.sleep(35)
+    #print("Mark 2")
     FFXC.set_neutral()
     
     #Battles
@@ -149,12 +162,27 @@ def ABboat1() :
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()
     
-    time.sleep(12)
-    FFXC.set_neutral()
+    time.sleep(2)
 
 def ABswimming1() :
     complete = 0
     
+    print("Swimming down from the boat")
+    while FFX_memory.getMap() != 288:
+        if FFX_memory.userControl():
+            FFX_targetPathing.setMovement([-300,-300])
+            FFXC.set_value('BtnA', 1)
+        else:
+            FFXC.set_neutral()
+            if FFX_Screen.BattleScreen() :
+                print("Battle Start (Al Bhed swimming section)")
+                FFX_Battle.stealAndAttack()
+                print("Battle End (Al Bhed swimming section)")
+            elif FFX_memory.menuOpen():
+                print("Battle Complete screen")
+                FFX_Xbox.menuB()
+    
+    FFXC.set_neutral()
     print("Swimming towards airship")
     while FFX_memory.getMap() != 64 :
         pos = FFX_memory.getCoords()

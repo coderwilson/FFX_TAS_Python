@@ -170,6 +170,33 @@ def allStartsHere(checkpoint):
         y = 680
     return [x,y]
 
+def baajRamp(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 224
+        y = -177
+    if checkpoint == 1:
+        x = 156
+        y = -119
+    if checkpoint == 2:
+        x = 115
+        y = -84
+    if checkpoint == 3:
+        x = 77
+        y = -59
+    if checkpoint == 4:
+        x = -2
+        y = -2
+    if checkpoint == 5:
+        x = -28
+        y = 17
+    #Checkpoint == 6: transition
+    if checkpoint == 7:
+        x = 300
+        y = 300
+    return [x,y]
+
 def baajHallway(checkpoint):
     x = 999
     y = 999
@@ -3765,46 +3792,45 @@ def bevelleTrials(checkpoint):
     if checkpoint == 34:
         print("Take Destro sphere")
     if checkpoint == 35:
+        x = 374
+        y = 524
+    if checkpoint == 36:
+        x = 366
+        y = 524
+    if checkpoint == 37:
+        print("Insert Destro sphere")
+    if checkpoint == 38:
         x = 367
         y = 532
-    if checkpoint == 36:
-        x = 353
-        y = 531
-    if checkpoint == 37:
-        x = 342
-        y = 525
-    if checkpoint == 38:
-        x = 352
-        y = 525
     if checkpoint == 39:
-        print("Insert Destro sphere")
+        print("Remove Bevelle sphere")
     if checkpoint == 40:
-        x = 349
+        x = 369
         y = 526
     if checkpoint == 41:
-        print("Remove Bevelle sphere")
+        print("Back on track")
     if checkpoint == 42:
-        x = 369
-        y = 529
-    if checkpoint == 43:
-        x = 369
-        y = 529
-    if checkpoint == 44: #Third alcove, Insert Bevelle sphere, and back on the track.
-        print("Insert Bevelle sphere, and back on the track.")
-    if checkpoint == 45:
         x = 392
-        y = 367
+        y = 366
+    if checkpoint == 43:
+        print("Insert Bevelle sphere (back in second alcove)")
+    if checkpoint == 44:
+        x = 395
+        y = 372
+    if checkpoint == 45:
+        x = 407
+        y = 370
     if checkpoint == 46:
-        print("Take Destro sphere")
-    if checkpoint == 47:
-        x = 393
-        y = 356
-    if checkpoint == 48:
-        x = 397
-        y = 357
-    if checkpoint == 49:
-        x = 501
+        x = 406
         y = 363
+    if checkpoint == 47:
+        print("Take Destro sphere")
+    if checkpoint == 48:
+        x = 493
+        y = 371
+    if checkpoint == 49:
+        x = 493
+        y = 371
     if checkpoint == 50:
         print("Insert Destro sphere")
     if checkpoint == 51:
@@ -4173,8 +4199,8 @@ def gagazetCave(checkpoint):
         x = 25
         y = -552
     if checkpoint == 6:
-        x = 107
-        y = -439
+        x = 161
+        y = -376
     if checkpoint == 7:
         print("Map change, no target from this function.")
     if checkpoint == 8:

@@ -281,7 +281,7 @@ def cave():
                 FFXC.set_neutral()
                 
                 print("Now the trial has started.")
-                FFX_Xbox.SkipDialog(4)
+                FFX_Xbox.SkipDialog(2.8)
                 FFX_Screen.awaitPixel(1184,226,(255,255,255))
                 time.sleep(1.2)
                 FFX_Xbox.menuB() #Attempting for first shot
