@@ -6,7 +6,8 @@ import FFX_menu
 import FFX_memory
 import FFX_targetPathing
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
 
 def southPathing(blitzWin):
     FFX_memory.clickToControl()
@@ -19,13 +20,15 @@ def southPathing(blitzWin):
     
     FFX_memory.fullPartyFormat_New('postbunyip', 11)
     FFX_memory.closeMenu()
+    lStrikeCount = FFX_memory.lStrikeCount()
     
     checkpoint = 0
     while FFX_memory.getMap() != 256:
         if FFX_memory.userControl():
             #Lightning dodging
-            if FFX_Screen.dodgeLightning():
-                FFX_Xbox.tapB()
+            if FFX_memory.dodgeLightning(lStrikeCount):
+                print("Dodge")
+                lStrikeCount = FFX_memory.lStrikeCount()
             
             #General pathing
             elif FFX_memory.userControl():
@@ -33,8 +36,7 @@ def southPathing(blitzWin):
                     checkpoint += 1
                     print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_neutral()
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.menuB()
             if FFX_Screen.BattleScreen():
@@ -43,113 +45,28 @@ def southPathing(blitzWin):
                 FFX_Xbox.tapB()
     
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     time.sleep(0.5)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 1)
     while not FFX_memory.getMap() == 263:
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     complete = 1
 
     return status
 
-def southPathing_old(blitzWin):
-    FFX_memory.clickToControl()
-    print("Start of the Thunder Plains section")
-    checkpoint = 0
-    stepCount = 0
-    stepMax = 500
-    complete = 0
-    status = [False,False,False,False] #Rikku charged, Light Curtain, Lunar Curtain, Grenade Thrown
-    status[2] = blitzWin
-    speedcount = FFX_memory.getSpeed()
-    if speedcount >= 14:
-        status[3] = True
-    FFX_memory.fullPartyFormat_New('postbunyip', 11)
-    while complete == 0:
-        if FFX_Screen.dodgeLightning():
-            print("Dodge")
-        if FFX_memory.userControl():
-            pos = FFX_memory.getCoords()
-            stepCount += 1
-            if checkpoint == 0:
-                if pos[1] > -800:
-                    checkpoint = 1
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] > 15:
-                        FFXC.set_value('AxisLx', 0)
-                    else:
-                        FFXC.set_value('AxisLx', 1)
-            elif checkpoint == 1:
-                if pos[1] > -600:
-                    checkpoint = 2
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] > 0:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 2:
-                if pos[1] > 700:
-                    checkpoint = 3
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < -30:
-                        FFXC.set_value('AxisLx', 1)
-                    elif pos[0] > 12:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 3:
-                if FFX_memory.getMap() == 256:
-                    checkpoint = 4
-                    print("End of the southern section.")
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < 70:
-                        FFXC.set_value('AxisLx', 1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 4:
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', -1)
-                while not FFX_memory.getMap() == 263:
-                    if FFX_memory.diagSkipPossible():
-                        FFX_Xbox.menuB()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                complete = 1
-            
-        else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            if FFX_memory.diagSkipPossible():
-                FFX_Xbox.menuB()
-            if FFX_Screen.BattleScreen():
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                print("Starting battle")
-                status = FFX_Battle.thunderPlains(status, 1)
-            elif FFX_Screen.BattleComplete():
-                FFX_Xbox.menuB()
-    return status
-    
 def agency(blitzWin):
     #Arrive at the travel agency
     FFX_memory.clickToControl3()
     speedCount = FFX_memory.getSpeed()
     
     #Talk to the lady
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     time.sleep(0.3)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1, 0)
     FFX_Xbox.SkipDialog(0.15)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     
     time.sleep(0.6)
     FFX_Xbox.menuB()
@@ -244,59 +161,58 @@ def agency(blitzWin):
     FFX_Xbox.menuA()
     
     #Now for Yuna's scene
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1, 0)
     time.sleep(0.5)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(1, 1)
     time.sleep(0.6)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     time.sleep(1.5)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral
     time.sleep(2) #Scene in Yuna's room. Not as exciting as it sounds.
     
     FFX_memory.clickToControl3()
     print("Yuna's done talking. Let's keep going.")
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_movement(0, -1)
     time.sleep(0.3)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, -1)
     time.sleep(0.2)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, -1)
     time.sleep(0.5)
-    FFXC.set_value('AxisLx', 1)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_movement(1, 0)
     FFX_Xbox.SkipDialog(0.4)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 0)
     time.sleep(0.3)
     FFX_Xbox.SkipDialog(2) #Talk to Rikku
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     
     print("------------------------------------------Affection array:")
     print(FFX_memory.affectionArray())
     print("------------------------------------------")
     
     FFX_memory.clickToControl3()
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1, 1)
     time.sleep(1.5)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     time.sleep(0.1)
     
     FFX_Xbox.SkipDialog(3) #Pick up lightning shield
     time.sleep(2)
     
-    FFXC.set_value('AxisLy', 0)
-    FFX_Screen.awaitMap1()
+    FFXC.set_neutral()
+    FFX_memory.awaitControl()
     
 def northPathing(status):
     FFX_memory.clickToControl()
+    
+    lStrikeCount = FFX_memory.lStrikeCount()
     
     checkpoint = 0
     while FFX_memory.getMap() != 110:
         if FFX_memory.userControl():
             #Lightning dodging
-            if FFX_Screen.dodgeLightning():
-                FFX_Xbox.tapB()
+            if FFX_memory.dodgeLightning(lStrikeCount):
+                print("Dodge")
+                lStrikeCount = FFX_memory.lStrikeCount()
             
             #General pathing
             elif FFX_memory.userControl():
@@ -304,142 +220,27 @@ def northPathing(status):
                     checkpoint += 1
                     print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_neutral()
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.menuB()
             if FFX_Screen.BattleScreen():
                 status = FFX_Battle.thunderPlains(status, 1)
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-                
+    
+    FFXC.set_neutral()
     FFX_memory.awaitControl()
     print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(6)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     
     FFX_memory.clickToControl3() # Conversation with Auron about Yuna being hard to guard.
     
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1, 1)
+    time.sleep(2)
+    FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(6)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0) #Approaching the party
-
-    return status
-
-def northPathing_old(status):
-    #Start of northern section
-    checkpoint = 0
-    stepCount = 0
-    stepMax = 500
-    while checkpoint < 1000:
-        if FFX_Screen.dodgeLightning():
-            print("Dodge")
-        if FFX_memory.userControl():
-            pos = FFX_memory.getCoords()
-            stepCount += 1
-            
-            if pos == [0.0,0.0]: #This means we've lost control of the character for any reason.
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                FFX_Xbox.menuB()
-            elif checkpoint == 0:
-                if pos[1] > -900:
-                    checkpoint = 10
-                else:
-                    FFXC.set_value('AxisLy', 1)
-            elif checkpoint == 10:
-                if pos[1] > -700:
-                    checkpoint = 20
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < 10:
-                        FFXC.set_value('AxisLx', 1)
-                    elif pos[0] > 50:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 20:
-                if pos[1] > -20:
-                    checkpoint = 30
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < 50:
-                        FFXC.set_value('AxisLx', 1)
-                    elif pos[0] > 85:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 30:
-                if pos[1] > -100:
-                    checkpoint = 40
-                    #complete = 1
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] > 50:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 40:
-                if pos[1] > 190:
-                    checkpoint = 50
-                    #complete = 1
-                else:
-                    if pos[0] > 90:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLy', 1)
-            elif checkpoint == 50:
-                if status[2] == True:
-                    checkpoint = 60
-                else:
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 1)
-                    time.sleep(1)
-                    FFXC.set_value('AxisLx', -1)
-                    time.sleep(1)
-            elif checkpoint == 60:
-                if pos[1] > 1 and pos[1] < 150:
-                    checkpoint = 1000
-                else:
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < 70:
-                        FFXC.set_value('AxisLx', 1)
-                    elif pos[0] > 90:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            
-            
-        elif FFX_Screen.BattleScreen():
-            print("Starting battle")
-            status = FFX_Battle.thunderPlains(status, 2)
-        elif FFX_memory.menuOpen():
-            FFX_Xbox.menuB()
-        elif FFX_memory.getMap() == 110:
-            print("Thunder Plains North complete")
-            checkpoint = 1000
-        else:
-            FFX_Xbox.menuB()
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-    
-    FFX_memory.awaitControl()
-    print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
-    FFXC.set_value('AxisLy', 1)
-    FFX_Xbox.SkipDialog(6)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    
-    FFX_memory.clickToControl3() # Conversation with Auron about Yuna being hard to guard.
-    
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
-    FFX_Xbox.SkipDialog(6)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0) #Approaching the party
+    FFXC.set_neutral() #Approaching the party
 
     return status

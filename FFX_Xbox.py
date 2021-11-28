@@ -1,11 +1,110 @@
-import pyxinput
+#import pyxinput
+import vgamepad as vg
 import time
-FFXC = pyxinput.vController()
-
 import FFX_memory
 import FFX_Screen
-import FFX_Battle
+import pyautogui
+
+#import FFX_memory
+#import FFX_Battle
+#import FFX_Screen
+
+#FFXC = pyxinput.vController()
+#FFXC = pyxinput.rController(0)
 #FFXCread = pyxinput.rController(0)
+
+class vgTranslator:
+    def __init__(self):
+        self.gamepad = vg.VX360Gamepad()
+        
+    def set_value(self, xKey, value):
+        #Buttons, pressing
+        if xKey == "BtnBack" and value == 1:
+            self.gamepad.press_button(button=0x0020)
+        elif xKey == "BtnStart" and value == 1:
+            self.gamepad.press_button(button=0x0010)
+        elif xKey == "BtnA" and value == 1:
+            self.gamepad.press_button(button=0x1000)
+        elif xKey == "BtnB" and value == 1:
+            self.gamepad.press_button(button=0x2000)
+        elif xKey == "BtnX" and value == 1:
+            self.gamepad.press_button(button=0x4000)
+        elif xKey == "BtnY" and value == 1:
+            self.gamepad.press_button(button=0x8000)
+        elif xKey == "BtnShoulderL" and value == 1:
+            self.gamepad.press_button(button=0x0100)
+        elif xKey == "BtnShoulderR" and value == 1:
+            self.gamepad.press_button(button=0x0200)
+        elif xKey == "Dpad" and value == 1: #Dpad up
+            self.gamepad.press_button(button=0x0001)
+        elif xKey == "Dpad" and value == 2: #Dpad down
+            self.gamepad.press_button(button=0x0002)
+        elif xKey == "Dpad" and value == 4: #Dpad left
+            self.gamepad.press_button(button=0x0004)
+        elif xKey == "Dpad" and value == 8: #Dpad right
+            self.gamepad.press_button(button=0x0008)
+        
+        #Buttons, releasing
+        elif xKey == "BtnBack" and value == 0:
+            self.gamepad.release_button(button=0x0020)
+        elif xKey == "BtnStart" and value == 0:
+            self.gamepad.release_button(button=0x0010)
+        elif xKey == "BtnA" and value == 0:
+            self.gamepad.release_button(button=0x1000)
+        elif xKey == "BtnB" and value == 0:
+            self.gamepad.release_button(button=0x2000)
+        elif xKey == "BtnX" and value == 0:
+            self.gamepad.release_button(button=0x4000)
+        elif xKey == "BtnY" and value == 0:
+            self.gamepad.release_button(button=0x8000)
+        elif xKey == "BtnShoulderL" and value == 0:
+            self.gamepad.release_button(button=0x0100)
+        elif xKey == "BtnShoulderR" and value == 0:
+            self.gamepad.release_button(button=0x0200)
+        elif xKey == "Dpad" and value == 0:
+            self.gamepad.release_button(button=0x0001)
+            self.gamepad.release_button(button=0x0002)
+            self.gamepad.release_button(button=0x0004)
+            self.gamepad.release_button(button=0x0008)
+        
+        #Error states
+        elif xKey == "AxisLx" or xKey == "AxisLy":
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - ", xKey)
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            self.set_neutral()
+        
+        self.gamepad.update()
+        #For additional details, review this website:
+        #https://pypi.org/project/vgamepad/
+    
+    def set_movement(self, x, y):
+        if x > 1:
+            x = 1
+        if x < -1:
+            x = -1
+        if y > 1:
+            y = 1
+        if y < -1:
+            y = -1
+        
+        self.gamepad.left_joystick_float(x_value_float = x, y_value_float = y)
+        self.gamepad.update()
+    
+    def set_neutral(self):
+        self.gamepad.reset()
+        self.gamepad.update()
+
+FFXC = vgTranslator()
+
+def controllerHandle():
+    return FFXC
 
 def skipScene():
     print("Skip cutscene")
@@ -16,7 +115,8 @@ def skipScene():
     FFXC.set_value('BtnX', 1) #Perform the skip
     time.sleep(0.035)
     FFXC.set_value('BtnX', 0)
-    time.sleep(0.2)
+    time.sleep(0.07)
+    SkipDialog(2)
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
@@ -59,25 +159,30 @@ def Attack():
     time.sleep(0.5)
     
 def touchSaveSphere():
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     print("Touching the save sphere")
     while FFX_memory.userControl():
-        menuB()
+        tapB()
         time.sleep(0.2)
+    time.sleep(0.5)
+    tapA()
+    time.sleep(0.07)
+    tapB()
+    #while not FFX_memory.touchingSaveSphere():
+    #    if FFX_memory.userControl():
+    #        menuB()
+    #    elif FFX_memory.diagSkipPossible() and not FFX_memory.touchingSaveSphere():
+    #        menuB()
+    #print("Save Mark 1")
     
-    while not FFX_memory.touchingSaveSphere():
-        if FFX_memory.userControl():
-            menuB()
-        elif FFX_memory.diagSkipPossible() and not FFX_memory.touchingSaveSphere():
-            menuB()
-    print("Save Mark 1")
-    
-    while not FFX_memory.saveMenuCursor() >= 1:
-        menuUp()
-    print("Save Mark 2")
-    menuB()
-    FFX_memory.awaitControl()
+    #while not FFX_memory.saveMenuCursor() >= 1:
+    #    menuDown()
+    #print("Save Mark 2")
+    #while not FFX_memory.userControl():
+    #    tapB()
+    #    time.sleep(0.7)
+    #FFX_memory.awaitControl()
+    FFXC.set_neutral()
     time.sleep(0.035)
 
 def SkipDialog( Keystrokes ):
@@ -167,6 +272,12 @@ def menuB():
     FFXC.set_value('BtnB', 0)
     time.sleep(0.07)
 
+def tapA():
+    FFXC.set_value('BtnA', 1)
+    time.sleep(0.035)
+    FFXC.set_value('BtnA', 0)
+    time.sleep(0.035)
+
 def tapB():
     FFXC.set_value('BtnB', 1)
     time.sleep(0.035)
@@ -225,59 +336,6 @@ def tidusOD():
     time.sleep(0.2)
     menuB()
 
-def tidusFlee():
-    #This function has primarily moved to the FFX_Battle library. Leaving this version live in case
-    #it continues to be used from other files outside of that library.
-    print("Character's first ability. This is modeled after Tidus using Flee prior to Gagazet.")
-    print("Tidus Flee (or similar command pattern)")
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnTidus() == False:
-            break
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.SkipDialog(1.5)
-
-def tidusHaste(direction):
-    direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 22:
-        if FFX_Screen.turnTidus() == False:
-            print("Attempting Haste, but it's not Tidus's turn")
-            menuUp()
-            menuUp()
-            return
-        if FFX_memory.battleMenuCursor() == 1:
-            menuUp()
-        else:
-            menuDown()
-    menuB()
-    time.sleep(0.3)
-    menuB()
-    time.sleep(0.3)
-    if direction == 'left':
-        menuLeft()
-    if direction == 'right':
-        menuRight()
-    if direction == 'up':
-        menuUp()
-    if direction == 'down':
-        menuDown()
-    menuB()
-    menuB()
-    menuB()
-    time.sleep(0.8)
-
-def tidusHasteLate(direction):
-    tidusHaste(direction)
-
-def lateHaste(direction):
-    tidusHaste(direction)
-
 def weapSwap(position):
     print("Weapon swap, weapon in position: ", position)
     while FFX_memory.mainBattleMenu():
@@ -311,313 +369,123 @@ def armorSwap(position):
     menuB()
     time.sleep(0.3)
 
-def airShipPath(version):
-    FFX_memory.clickToControl()
-    
-    checkpoint = 0
-    lastCP = 0
-    while checkpoint != 1000:
-        if lastCP != checkpoint:
-            print("Checkpoint: ", checkpoint)
-            lastCP = checkpoint
-        pos = FFX_memory.getCoords()
-        if FFX_memory.userControl():
-            if checkpoint == 0: #First room
-                if pos[1] > 130:
-                    checkpoint = 10
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLx', 1)
-                    FFXC.set_value('AxisLy', -1)
-            elif checkpoint == 10: #Rin's room
-                if pos[0] > 60:
-                    checkpoint = 20
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLy', -1)
-                    if pos[1] > 80:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 20: #Isaaru's room
-                if pos[0] < 1:
-                    checkpoint = 30
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLy', -1)
-                    if pos[1] < 70:
-                        FFXC.set_value('AxisLx', 1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 30:
-                if pos[1] < -90:
-                    checkpoint = 40
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLy', -1)
-                    FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 40:
-                if pos[0] < -30:
-                    checkpoint = 50
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', -1)
-            elif checkpoint == 50:
-                if pos[1] > -15:
-                    if version == 1:
-                        print("Pre-Evrae pathing")
-                        checkpoint = 60
-                    elif version == 2:
-                        print("Talking to Yuna/Kimahri in the gallery")
-                        checkpoint = 120
-                    elif version == 3:
-                        print("Straight to the deck, three skips.")
-                        checkpoint = 150
-                    elif version == 4:
-                        print("Straight to the deck, talking to Yuna.")
-                        checkpoint = 180
-                    elif version == 5:
-                        print("Final pathing. Sin's face.")
-                        checkpoint = 200
-                    elif version == 6:
-                        print("Final pathing. Sin's face.")
-                        checkpoint = 70
-                    else:
-                        print("Something maybe went wrong?")
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 0)
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLy', 1)
-                    FFXC.set_value('AxisLx', 0)
-            
-            elif checkpoint == 60: #Pre-Evrae with items
-                if pos[1] < -10:
-                    checkpoint = 65
-                else:
-                    time.sleep(0.05)
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < -5:
-                        FFXC.set_value('AxisLx', 1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            
-             #Pre-Evrae with items
-            elif checkpoint == 65:
-                FFX_memory.awaitControl()
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.15)
-                FFXC.set_value('AxisLy', 0)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-                FFX_Xbox.SkipDialog(2.5) #Talk to Rin
-                FFX_Screen.awaitPixel(600,408,(151, 151, 151))
-                FFX_Xbox.menuB()
-                time.sleep(1)
-                FFX_Xbox.menuRight()
-                time.sleep(0.5)
-                FFX_Xbox.menuB()
-                time.sleep(0.2)
-                FFX_Xbox.menuB()
-                time.sleep(0.2)
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB() #Sell old Tidus armor
-                FFX_Xbox.menuA()
-                time.sleep(0.1)
-                FFX_Xbox.menuLeft()
-                time.sleep(0.5)
-                FFX_Xbox.menuB()
-                time.sleep(0.2)
-                FFX_Xbox.menuB()
-                time.sleep(0.2)
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB() #Purchase Baroque sword
-                time.sleep(0.1)
-                FFX_Xbox.menuB() #Do not equip yet.
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                
-                FFX_memory.clickToControl()
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(0.2)
-                FFXC.set_value('AxisLx', 0)
-                FFX_Xbox.SkipDialog(3)
-                FFX_memory.awaitControl()
-                FFX_Xbox.SkipDialog(5)
-                FFXC.set_value('AxisLy', 0)
-                checkpoint = 1000
-                
-            #Pre-Evrae, no items
-            elif checkpoint == 70:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(5)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(2)
-                FFXC.set_value('AxisLy', 0)
-                
-                checkpoint = 1000
-            
-            #Yuna/Kimahri in the gallery
-            elif checkpoint == 120:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                SkipDialog(2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                if FFX_memory.userControl():
-                    print("Something went wrong. Trying the other way.")
-                    FFXC.set_value('AxisLy', 1)
-                    FFXC.set_value('AxisLx', -1)
-                    SkipDialog(4)
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 0)
-                else:
-                    checkpoint = 1000
-                    FFX_memory.clickToControl()
-            
-            #Sin's arms
-            elif checkpoint == 150:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(4)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(2)
-                FFXC.set_value('AxisLy', 0)
-                
-                SkipDialog(64)
-                skipScene()
-                SkipDialog(6)
-                skipScene()
-                SkipDialog(26)
-                skipScene()
-                checkpoint = 1000
-                
-            #Yuna reflecting
-            elif checkpoint == 180:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(4)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(2)
-                FFXC.set_value('AxisLy', 0)
-                
-                FFX_memory.awaitControl()
-                FFXC.set_value('AxisLx', -1)
-                time.sleep(2.4)
-                FFXC.set_value('AxisLy', 1)
-                SkipDialog(0.5) #Hi Yuna. Let's have a quick chat.
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                SkipDialog(126)
-                skipScene()
-                checkpoint = 1000
-                
-            #Sin's face
-            elif checkpoint == 200:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                time.sleep(0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(4)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                time.sleep(2)
-                FFXC.set_value('AxisLy', 0)
-                time.sleep(6.5)
-                skipScene()
-                checkpoint = 1000
-        elif FFX_Screen.BattleScreen():
-            FFX_Battle.fleeAll()
+def awaitSave() :
+    #FFX_Logs.writeLog("Awaiting save dialog to pop up")
+    counter = 0
+    complete = 0
+    while complete == 0:
+        counter += 1;
+        if counter % 100 == 0:
+            print("Waiting for Save dialog: ", counter / 100)
+        savePopup = FFX_Screen.PixelTest(630,422,(70,53,124))
+        saveScreen = FFX_Screen.PixelTest(1,1,(87, 85, 122))
+        if FFX_Screen.PixelTestTol(591,769,(221, 221, 221),5): #Skips specific dialog, SS Winno
+            menuB()
+        elif FFX_Screen.PixelTestTol(580,768,(222, 222, 222),5): #Skips specific dialog, SS Winno
+            menuB()
+        elif FFX_Screen.PixelTestTol(493,735,(220, 220, 220),5): #Skips specific dialog, SS Winno
+            menuB()
+        elif FFX_Screen.PixelTestTol(482,738,(215, 215, 215),5): #Skips specific dialog, SS Winno
+            menuB()
+        elif savePopup == True:
+            menuA()
+            complete = 1
+        elif saveScreen == True:
+            tapA()
+            tapA()
+            tapA()
+            time.sleep(0.07)
+            #tapB()
+            complete = 1
         else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            if FFX_memory.menuOpen():
-                FFXC.set_value('BtnB', 1)
-                time.sleep(0.035)
-                FFXC.set_value('BtnB', 0)
-                time.sleep(0.035)
-            elif checkpoint == 50:
-                FFX_memory.clickToControl()
-
-def airShipReturn():
-    print("Conversation with Yuna/Kimahri.")
-    FFX_memory.clickToControl()
-    
-    pos = FFX_memory.getCoords()
-    print("Ready to run back to the cockpit.")
-    while pos[1] > -90: #Leaving Yuna/Kimahri, heading back down.
-        FFXC.set_value('AxisLy', -1)
-        FFXC.set_value('AxisLx', 0)
-        pos = FFX_memory.getCoords()
-    print("Turn East")
-    while pos[0] < -1:
-        FFXC.set_value('AxisLx', 1)
-        FFXC.set_value('AxisLy', 0)
-        pos = FFX_memory.getCoords()
-    print("Turn North")
-    while FFX_memory.userControl():
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 1)
-        pos = FFX_memory.getCoords()
-        
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    FFX_memory.awaitControl()
-    
-    while FFX_memory.userControl():
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 1)
-        
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    FFX_memory.awaitControl()
-    
-    while FFX_memory.userControl():
-        pos = FFX_memory.getCoords()
-        time.sleep(0.05)
-        FFXC.set_value('AxisLy', 1)
-        if pos[0] < -1:
-            FFXC.set_value('AxisLx', 1)
-        else:
-            FFXC.set_value('AxisLx', 0)
-            
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(1.2)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(0.5)
-    
-    while FFX_memory.userControl():
-        FFXC.set_value('AxisLy', 1)
-        FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+            if not FFX_Screen.PixelTestTol(1,1,(0,0,0),5):
+                menuB()
+    print("Save dialog achieved")
+    #FFX_Logs.writeLog("Save dialog on screen.")
+    complete = 0
+    while complete == 0:
+        savePopup = FFX_Screen.PixelTestTol(630,422,(0,0,0),5)
+        #if savePopup == True:
+        #    complete = 1
+        if FFX_Screen.PixelTestTol(752,484,(149, 149, 149),5):
+            tapA()
+            time.sleep(0.07)
+        elif FFX_Screen.PixelTestTol(752,518,(149, 149, 149),5):
+            menuB()
+            complete = 1
+    print("Save dialog cleared. Moving on.")
+    #FFX_Logs.writeLog("Save dialog cleared. Moving on.")
 
 def remove():
     print("Controller may freeze the program here. If so, please restart your PC.")
-    time.sleep(2)
-    FFXC.UnPlug(FFXC)
+    #time.sleep(2)
+    #FFXC.UnPlug(FFXC)
+
+def gridUp():
+    FFXC.set_value('Dpad', 1)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
+
+def gridDown():
+    FFXC.set_value('Dpad', 2)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
+
+def gridLeft():
+    FFXC.set_value('Dpad', 4)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
+
+def gridRight():
+    FFXC.set_value('Dpad', 8)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
+
+def clickToPixel(x,y,rgb):
+    counter = 0
+    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
+    while not FFX_Screen.PixelTestTol(x,y,rgb,5):
+        counter += 1;
+        if counter % 100 == 0:
+            print("awaiting pixel (clicking): ", counter)
+            print("Pixel being tested: (",x,",",y,")")
+            print("Test state: ",rgb)
+            try:
+                print("Current State: ", pyautogui.pixel(x, y))
+            except:
+                print("Cannot get current state.")
+        menuB()
+    print("Trigger pixel achieved. Waiting is complete.")
+    
+def clickToPixelTol(x,y,rgb,tol):
+    counter = 0
+    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
+    while not FFX_Screen.PixelTestTol(x,y,rgb, tol):
+        counter += 1;
+        if counter % 100 == 0:
+            print("awaiting pixel (clicking): ", counter)
+            print("Pixel being tested: (",x,",",y,")")
+            print("Test state: ",rgb)
+            try:
+                print("Current State: ", pyautogui.pixel(x, y))
+            except:
+                print("Cannot get current state.")
+        menuB()
+    print("Trigger pixel achieved. Waiting is complete.")
+    
+def clickToBattle():
+    #FFX_Logs.writeLog("Clicking until it's someone's turn in battle")
+    print("Clicking until it's someone's turn in battle")
+    FFXC.set_neutral()
+    complete = 0
+    while not FFX_memory.turnReady():
+        if FFX_memory.userControl():
+            break
+        elif not FFX_memory.battleActive():
+            menuB()
+        elif FFX_memory.diagSkipPossible():
+            menuB()

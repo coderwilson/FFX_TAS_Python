@@ -7,7 +7,8 @@ import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
  
 def arrival():
     FFX_memory.awaitControl()
@@ -29,23 +30,20 @@ def arrival():
                 fortuneSlot = FFX_memory.getItemSlot(74)
                 if fortuneSlot == 255:
                     fortuneCount = 0
-                    FFXC.set_value('AxisLx', -1)
-                    FFXC.set_value('AxisLy', 1)
+                    FFXC.set_movement(-1, 1)
                     FFX_Xbox.tapB()
                 else:
                     if FFX_memory.getItemCountSlot(fortuneSlot) > fortuneCount:
                         checkpoint += 1
                         FFX_memory.clickToControl()
                     else:
-                        FFXC.set_value('AxisLx', -1)
-                        FFXC.set_value('AxisLy', 1)
+                        FFXC.set_movement(-1, 1)
                         FFX_Xbox.tapB()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandOutdoors(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
@@ -58,8 +56,7 @@ def arrival():
     print("Close observation will reveal this is the same blitz dome")
     print("as the one from the opening of the game.")
     while FFX_memory.getMap() != 222:
-        FFXC.set_value('AxisLy', 1)
-        FFXC.set_value('AxisLx', 0)
+        FFXC.set_movement(0, 1)
         FFX_Xbox.tapB()
     
     print("Start of Zanarkand Dome section")
@@ -82,46 +79,39 @@ def arrival():
                 friendSlot = FFX_memory.getItemSlot(97)
                 if friendSlot == 255:
                     friendCount = 0
-                    FFXC.set_value('AxisLx', -1)
-                    FFXC.set_value('AxisLy', 1)
+                    FFXC.set_movement(-1, 1)
                     FFX_Xbox.tapB()
                 else:
                     if FFX_memory.getItemCountSlot(friendSlot) > friendCount:
                         checkpoint += 1
                         FFX_memory.clickToControl()
                     else:
-                        FFXC.set_value('AxisLx', 1)
-                        FFXC.set_value('AxisLy', 1)
+                        FFXC.set_movement(1, 1)
                         FFX_Xbox.tapB()
             elif checkpoint == 24: #Third chest
                 luckSlot = FFX_memory.getItemSlot(94)
                 if luckSlot == 255:
                     luckCount = 0
-                    FFXC.set_value('AxisLx', -1)
-                    FFXC.set_value('AxisLy', 1)
+                    FFXC.set_movement(-1, 1)
                     FFX_Xbox.tapB()
                 else:
                     if FFX_memory.getItemCountSlot(luckSlot) > luckCount:
                         checkpoint += 1
                         FFX_memory.clickToControl()
                     else:
-                        FFXC.set_value('AxisLx', 1)
-                        FFXC.set_value('AxisLy', 1)
+                        FFXC.set_movement(1, 1)
                         FFX_Xbox.tapB()
             elif checkpoint == 29: #Save sphere
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
                 time.sleep(0.2)
                 FFX_Xbox.tapB()
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_neutral()
                 time.sleep(1)
                 FFX_Xbox.menuA()
                 FFX_Xbox.tapB()
                 #FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
-                FFXC.set_value('AxisLx', 1)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_movement(1, 0)
                 time.sleep(0.6)
             elif FFX_memory.getMap() == 316 and checkpoint < 21: #Final room before trials
                 print("Final room before trials")
@@ -130,8 +120,7 @@ def arrival():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
@@ -156,17 +145,14 @@ def trials0(checkpoint):
     while checkpoint < 9:
         if FFX_memory.userControl():
             if checkpoint == 8:
-                FFXC.set_value('AxisLx', -1)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_movement(-1, 0)
                 while FFX_memory.userControl():
                     FFX_Xbox.tapB()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 1)
+                FFXC.set_movement(0, 1)
                 time.sleep(0.2)
                 FFX_memory.awaitControl()
                 time.sleep(1.3)
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 1)
+                FFXC.set_movement(0, 1)
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
@@ -179,30 +165,24 @@ def trials1(checkpoint):
     while checkpoint < 31:
         if FFX_memory.userControl():
             if checkpoint == 20:
-                FFXC.set_value('AxisLx', -1)
-                FFXC.set_value('AxisLy', 1)
+                FFXC.set_movement(-1, 1)
                 FFX_memory.clickToEvent()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.5)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 26 or checkpoint == 28:
-                FFXC.set_value('AxisLx', -1)
-                FFXC.set_value('AxisLy', -1)
+                FFXC.set_movement(-1, -1)
                 FFX_memory.clickToEvent()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.5)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 30:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
@@ -215,21 +195,17 @@ def trials2(checkpoint):
     while checkpoint < 49:
         if FFX_memory.userControl():
             if checkpoint == 46:
-                FFXC.set_value('AxisLx', 1)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.5)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 48:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
+                FFXC.set_movement(-1, 1)
                 FFX_memory.awaitEvent()
                 time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
@@ -242,21 +218,17 @@ def trials3(checkpoint):
     while checkpoint < 69:
         if FFX_memory.userControl():
             if checkpoint == 66:
-                FFXC.set_value('AxisLx', -1)
-                FFXC.set_value('AxisLy', -1)
+                FFXC.set_movement(-1, 0)
                 FFX_memory.clickToEvent()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                FFX_Xbox.SkipDialog(0.5)
+                FFXC.set_neutral()
+                FFX_Xbox.SkipDialog(0.7)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 68:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
+                FFXC.set_movement(-1, 1)
                 FFX_memory.awaitEvent()
                 time.sleep(0.2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
@@ -269,28 +241,23 @@ def trials4(checkpoint):
     while checkpoint < 89:
         if FFX_memory.userControl():
             if checkpoint == 81:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 1)
+                FFXC.set_movement(0, 1)
                 FFX_memory.clickToEvent()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.5)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 87:
-                FFXC.set_value('AxisLx', 1)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.5)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     return checkpoint
 
 def sanctuaryKeeper(ver):
@@ -312,25 +279,22 @@ def sanctuaryKeeper(ver):
     FFX_memory.fullPartyFormat('yuna')
     #FFX_menu.endGameSwap2()
     
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 1)
     time.sleep(4)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    FFX_Screen.clickToBattle()
+    FFXC.set_neutral()
+    FFX_Xbox.clickToBattle()
     if FFX_Screen.turnTidus():
         FFX_Battle.defend()
-        FFX_Screen.clickToBattle()
+        FFX_Xbox.clickToBattle()
     FFX_Battle.aeonSummon(4) #This is the whole fight. Kinda sad.
     FFX_memory.clickToControl()
 
 def yunalesca(ver):
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 0)
     time.sleep(0.5)
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     time.sleep(0.1)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     FFX_Xbox.touchSaveSphere()
     
     if ver == 4:
@@ -342,10 +306,10 @@ def yunalesca(ver):
     
     FFX_memory.awaitControl()
     print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     time.sleep(0.3)
     FFX_memory.awaitEvent()
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     time.sleep(0.2) #Starts the first lower room conversation. "Kimahri go first. Yuna is safe."
     FFX_memory.clickToControlSpecial()
     
@@ -354,25 +318,23 @@ def yunalesca(ver):
             FFX_memory.closeMenu()
         elif FFX_memory.userControl():
             zanMap = FFX_memory.getMap()
-            FFXC.set_value('AxisLy', 1)
             if zanMap == 224:
                 pos = FFX_memory.getCoords()
                 if pos[0] < -3:
-                    FFXC.set_value('AxisLx', 1)
+                    FFXC.set_movement(1, 1)
                 else:
-                    FFXC.set_value('AxisLx', 0)
+                    FFXC.set_movement(0, 1)
             else:
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
         else:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
             FFXC.set_value('BtnB',1)
             FFXC.set_value('BtnA',1)
             time.sleep(0.035)
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
             time.sleep(0.035)
-    FFX_Screen.clickToBattle()
+    FFX_Xbox.clickToBattle()
     FFX_Battle.aeonSummon(4) #Summon Bahamut and attack.
     FFX_memory.clickToControl() #This does all the attacking and dialog skipping
     
@@ -398,8 +360,7 @@ def yunalesca(ver):
                 checkpoint = 24
                 print("Checkpoint reached: ", checkpoint)
             elif checkpoint == 25:
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
+                FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(17)
                 FFX_Xbox.skipScene()
                 FFX_memory.clickToControl()
@@ -407,52 +368,9 @@ def yunalesca(ver):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
-        
 
-def backToAirship_oldPath():
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(1.5)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(0.6)
-    FFXC.set_value('AxisLx', 0)
-    FFX_memory.awaitEvent()
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(0.2)
-    FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(1.2)
-    FFXC.set_value('AxisLx', -1)
-    FFX_memory.awaitEvent()
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    
-    FFX_memory.clickToControl()
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(11)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(0.7)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(4.5)
-    FFXC.set_value('AxisLx', 0)
-    while FFX_memory.getMap() != 315:
-        FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLy', 0) #Airship pick-up spot
-    
-    while not FFX_memory.userControl():
-        time.sleep(0.01)
-    
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(3) #Trigger airship
-    FFXC.set_value('AxisLy', 0)
-    #FFX_Screen.awaitPixel(604,803,(222, 222, 222))
-    FFX_Xbox.SkipDialog(17)
-    FFX_Xbox.skipScene()

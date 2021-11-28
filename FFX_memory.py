@@ -2,7 +2,7 @@ import struct
 import FFX_Xbox
 import time
 import FFX_Screen
-FFXC = FFX_Xbox.FFXC
+
 from math import cos, sin
 
 def float_from_integer(integer):
@@ -80,14 +80,18 @@ def battleActive():
     else:
         return False
 
+def getNextTurn():
+    global baseValue
+    key = baseValue + 0x00D2AA04
+    return process.readBytes(key,1)
+
 def battleMenuCursor():
     global baseValue
     key = baseValue + 0x00F3F77B
-    if process.readBytes(key,1) == 0:
-        return 255
-    else:
-        key = baseValue + 0x00F3C926
-        return process.readBytes(key,1)
+    while process.readBytes(key,1) == 0:
+        time.sleep(0.035)
+    key2 = baseValue + 0x00F3C926
+    return process.readBytes(key2,1)
 
 def battleScreen():
     if mainBattleMenu():
@@ -102,6 +106,15 @@ def battleScreen():
             return True
     else:
         return False
+
+def turnReady():
+    global baseValue
+    key = baseValue + 0x00F3F77B
+    if process.readBytes(key,1) == 0:
+        return False
+    else:
+        time.sleep(0.2)
+        return True
 
 def battleCursor2():
     global baseValue
@@ -166,6 +179,7 @@ def awaitControl():
     return True
 
 def clickToControl():
+    FFXC = FFX_Xbox.controllerHandle()
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
@@ -193,22 +207,28 @@ def clickToControl2():
 def clickToControl3():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
+    time.sleep(0.02)
     while not userControl():
-        if battleScreen():
-            break
-        elif diagSkipPossible():
+        if battleActive():
+            while battleActive():
+                FFX_Xbox.tapB()
+        if diagSkipPossible():
+            print("Skip dialog")
             FFX_Xbox.tapB()
         elif menuOpen():
+            print("Menu open (after battle)")
             FFX_Xbox.tapB()
         else:
-            time.sleep(0.05)
+            time.sleep(0.035)
         waitCounter += 1
         if waitCounter % 100 == 0:
             print("Awaiting control - ", waitCounter / 100)
     time.sleep(0.05)
+    print("User control restored.")
     return True
 
 def clickToControlSpecial():
+    FFXC = FFX_Xbox.controllerHandle()
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
@@ -230,36 +250,30 @@ def clickToEvent():
     time.sleep(0.2)
 
 def clickToEventTemple(direction):
+    FFXC = FFX_Xbox.controllerHandle()
     if direction == 0:
-        FFXC.set_value('AxisLy', 1)
-        FFXC.set_value('AxisLx', 0)
+        FFXC.set_movement(0, 1)
     if direction == 1:
-        FFXC.set_value('AxisLy', 1)
-        FFXC.set_value('AxisLx', 1)
+        FFXC.set_movement(1, 1)
     if direction == 2:
-        FFXC.set_value('AxisLy', 0)
-        FFXC.set_value('AxisLx', 1)
+        FFXC.set_movement(1, 0)
     if direction == 3:
-        FFXC.set_value('AxisLy', -1)
-        FFXC.set_value('AxisLx', 1)
+        FFXC.set_movement(1, -1)
     if direction == 4:
-        FFXC.set_value('AxisLy', -1)
-        FFXC.set_value('AxisLx', 0)
+        FFXC.set_movement(0, -1)
     if direction == 5:
-        FFXC.set_value('AxisLy', -1)
-        FFXC.set_value('AxisLx', -1)
+        FFXC.set_movement(-1, -1)
     if direction == 6:
-        FFXC.set_value('AxisLy', 0)
-        FFXC.set_value('AxisLx', -1)
+        FFXC.set_movement(-1, 0)
     if direction == 7:
-        FFXC.set_value('AxisLy', 1)
-        FFXC.set_value('AxisLx', -1)
+        FFXC.set_movement(-1, 1)
     while userControl():
         FFX_Xbox.tapB()
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     time.sleep(0.2)
-    clickToControl3()
+    while not userControl():
+        clickToControl3()
+        time.sleep(0.035)
 
 def awaitEvent():
     time.sleep(0.035)
@@ -983,7 +997,7 @@ def getOverdriveBattle(character):
     
     basePointer = baseValue + 0x00d334cc
     basePointerAddress = process.read(basePointer)
-    offset = (0x94 * character) + 0x5bc
+    offset = (0xf90 * character) + 0x5bc
     retVal = process.readBytes(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values: ", retVal)
     return retVal
@@ -1122,8 +1136,8 @@ def closeMenu():
         FFX_Xbox.menuA()
 
 def openMenu():
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC = FFX_Xbox.controllerHandle()
+    FFXC.set_neutral()
     while not userControl(): #Get out of combat or whatever
         FFX_Xbox.menuB()
     while userControl() and not menuOpen():
@@ -1262,7 +1276,7 @@ def menuControl():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        time.sleep(0.5)
+        time.sleep(0.035)
         return True
     else:
         return False
@@ -1330,6 +1344,7 @@ def awaitMenuControl():
             print("Waiting for menu control. ", counter)
 
 def clickToStoryProgress(destination):
+    FFXC = FFX_Xbox.controllerHandle()
     counter = 0
     currentState = getStoryProgress()
     print("Story goal: ", destination," | Awaiting progress state: ", currentState)
@@ -1341,8 +1356,8 @@ def clickToStoryProgress(destination):
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
             time.sleep(0.035)
-        if counter % 10000 == 0:
-            print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 10000)
+        if counter % 100000 == 0:
+            print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 100000)
         counter += 1
         currentState = getStoryProgress()
     print("Story progress has reached destination. Value: ", destination)
@@ -1490,8 +1505,8 @@ def blitzballPatriotsStyle():
 
     key = baseValue + 0x00D2E0CE
     progress = process.writeBytes(key,50,1)
-    key = baseValue + 0x00D2E131
-    progress = process.writeBytes(key,50,1)
+    #key = baseValue + 0x00D2E131
+    #progress = process.writeBytes(key,50,1)
 
 def desertFormat(rikkuCharge):
     order = getOrderSix()
@@ -2017,349 +2032,8 @@ def partyFormatCursor2():
     #print("cursor identify: ", retVal)
     return retVal
 
-def fullPartyFormat_oldLogic():
-        if order[0] != orderFinal[0]:
-            print("Looking for ",nameFromNumber(orderFinal[0]))
-            if order[1] == orderFinal[0]:
-                print(nameFromNumber(orderFinal[0]), " in Second slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[1] = order[0]
-                order[0] = orderFinal[0]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-            elif order[2] == orderFinal[0]:
-                print(nameFromNumber(orderFinal[0])," in Third slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                order[2] = order[0]
-                order[0] = orderFinal[0]
-                FFX_Xbox.menuUp()
-            elif order[3] == orderFinal[0]:
-                print(nameFromNumber(orderFinal[0])," in Fourth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[3] = order[0]
-                order[0] = orderFinal[0]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-            elif order[4] == orderFinal[0]:
-                print(nameFromNumber(orderFinal[0])," in Fifth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[4] = order[0]
-                order[0] = orderFinal[0]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-            elif partyMembers > 5 and order[5] == orderFinal[0]:
-                print(nameFromNumber(orderFinal[0])," in Sixth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
-                order[5] = order[0]
-                order[0] = orderFinal[0]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-            elif partyMembers == 7 and order[6] == orderFinal[0]:
-                print(nameFromNumber(orderFinal[0])," in seventh slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
-                order[6] = order[0]
-                order[0] = orderFinal[0]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-        else:
-            print(nameFromNumber(order[0])," seems fine.")
-            FFX_Xbox.menuDown()
-        if order[1] != orderFinal[1]:
-            print("Looking for ",nameFromNumber(orderFinal[1]))
-            if order[2] == orderFinal[1]:
-                print(nameFromNumber(orderFinal[1])," in Third slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[2] = order[1]
-                order[1] = orderFinal[1]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-            elif order[3] == orderFinal[1]:
-                print(nameFromNumber(orderFinal[1])," in Fourth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[3] = order[1]
-                order[1] = orderFinal[1]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-            elif order[4] == orderFinal[1]:
-                print(nameFromNumber(orderFinal[1])," in Fifth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[4] = order[1]
-                order[1] = orderFinal[1]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-            elif partyMembers > 5 and order[5] == orderFinal[1]:
-                print(nameFromNumber(orderFinal[1])," in Sixth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[5] = order[1]
-                order[1] = orderFinal[1]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-            elif partyMembers == 7 and order[6] == orderFinal[1]:
-                print(nameFromNumber(orderFinal[1])," in Seventh slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[6] = order[1]
-                order[1] = orderFinal[1]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-        else:
-            print(nameFromNumber(order[1])," seems fine.")
-            FFX_Xbox.menuDown()
-        if order[2] != orderFinal[2]:
-            print("Looking for ",nameFromNumber(orderFinal[2]))
-            if order[3] == orderFinal[2]:
-                print(nameFromNumber(orderFinal[2])," in fourth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[3] = order[2]
-                order[2] = orderFinal[2]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-            elif order[4] == orderFinal[2]:
-                print(nameFromNumber(orderFinal[2])," in fifth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[4] = order[2]
-                order[2] = orderFinal[2]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-            elif partyMembers >= 6 and order[5] == orderFinal[2]:
-                print(nameFromNumber(orderFinal[2])," in sixth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[5] = order[2]
-                order[2] = orderFinal[2]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-            elif partyMembers == 7 and order[6] == orderFinal[2]:
-                print(nameFromNumber(orderFinal[2])," in seventh slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[6] = order[2]
-                order[2] = orderFinal[2]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-            else:
-                print("Something is amiss.")
-                print("Third slot: ", order[2])
-                print("Sixth slot: ", order[5])
-                print("Party size", partyMembers)
-        else:
-            print(nameFromNumber(order[2])," seems fine.")
-            FFX_Xbox.menuDown()
-        if order[3] != orderFinal[3]:
-            print("Looking for ",nameFromNumber(orderFinal[3]))
-            if order[4] == orderFinal[3]:
-                print(nameFromNumber(orderFinal[3])," in fifth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[4] = order[3]
-                order[3] = orderFinal[3]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-            elif partyMembers > 5 and order[5] == orderFinal[3]:
-                print(nameFromNumber(orderFinal[3])," in sixth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[5] = order[3]
-                order[3] = orderFinal[3]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-            elif partyMembers == 7 and order[6] == orderFinal[3]:
-                print(nameFromNumber(orderFinal[3])," in seventh slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[6] = order[3]
-                order[3] = orderFinal[3]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-        else:
-            print(nameFromNumber(order[3])," seems fine.")
-            FFX_Xbox.menuDown()
-        if partyMembers > 5 and order[4] != orderFinal[4]:
-            print("Looking for ",nameFromNumber(orderFinal[4]))
-            if order[5] == orderFinal[4]:
-                print(nameFromNumber(orderFinal[4])," in Sixth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[5] = order[4]
-                order[4] = orderFinal[4]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-            elif partyMembers == 7 and order[6] == orderFinal[4]:
-                print(nameFromNumber(orderFinal[4])," in Seventh slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[6] = order[4]
-                order[4] = orderFinal[4]
-                print(order)
-                if order == orderFinal:
-                    print("Order is good (early). Return.")
-                    closeMenu()
-                    return
-                FFX_Xbox.menuUp()
-        else:
-            print(nameFromNumber(order[4])," seems fine.")
-            FFX_Xbox.menuDown()
-        if partyMembers == 7 and order[5] != orderFinal[5]:
-            print(nameFromNumber(order[5])," and ",nameFromNumber(order[6]), \
-            "are swapped. Flipping them back.")
-            print("Expected order: ", orderFinal[5], " | ", orderFinal[6])
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuDown()
-            FFX_Xbox.menuB()
-        elif partyMembers == 7:
-            print(nameFromNumber(orderFinal[5])," and ",nameFromNumber(orderFinal[6])," seem fine.")
-
-        #time.sleep(120) #For testing only. Allows us to see what's going on.
-        closeMenu()
-
 def getPartyFormatFromText(frontLine):
+    print("||||||||||||| FRONT LINE VARIABLE: ", frontLine)
     if frontLine == 'kimahri':
         orderFinal = [0,3,2,6,4,5,1]
     elif frontLine == 'rikku':
@@ -2383,7 +2057,7 @@ def getPartyFormatFromText(frontLine):
     elif frontLine == 'evrae':
         orderFinal = [0,6,3,2,4,5]
     elif frontLine == 'djose':
-        orderFinal = [0,4,2,6,3,5]
+        orderFinal = [0,4,2,3,1,5]
     elif frontLine == 'spheri':
         orderFinal = [0,3,1,4,2,6,5]
     elif frontLine == 'crawler':
@@ -2393,9 +2067,11 @@ def getPartyFormatFromText(frontLine):
     elif frontLine == 'kilika':
         orderFinal = [0,1,4,3,5]
     elif frontLine == 'mrr1':
-        orderFinal = [0,4,2,5,3,1]
+        orderFinal = [0,4,2,3,5,1]
     elif frontLine == 'mrr2':
         orderFinal = [1,4,3,5,2,0]
+    elif frontLine == 'battlesite':
+        orderFinal = [0,1,4,5,2,3]
     elif frontLine == 'postbunyip':
         orderFinal = [0, 4, 2, 6, 1, 3, 5]
     elif frontLine == 'mwoodsneedcharge':
@@ -2405,7 +2081,7 @@ def getPartyFormatFromText(frontLine):
     elif frontLine == 'mwoodsdone':
         orderFinal = [0, 3, 2, 4, 1, 6, 5]
     else:
-        orderFinal = [0,1,2,3,4,5,6]
+        orderFinal = [6,5,4,3,2,1,0]
     return orderFinal
 
 def nameFromNumber(charNum):
@@ -2557,15 +2233,45 @@ def overdriveState2():
     print("Overdrive values: ", retVal)
     return retVal
 
-def dodgeLightning(): #Not working yet
+def dodgeLightning(lDodgeNum): #Not working yet
     global baseValue
-
-    coord = baseValue + 0x01F05864
-    retVal = process.readBytes(coord, 1)
-    if retVal >= 1:
+    
+    if lStrikeCount() != lDodgeNum:
+        time.sleep(0.07)
+        FFX_Xbox.menuB()
+        time.sleep(0.07)
         return True
     else:
         return False
+
+def lStrikeCount():
+    global baseValue
+
+    key = baseValue + 0x00D2CE8C
+    return process.readBytes(key, 2)
+
+def lDodgeCount():
+    global baseValue
+
+    key = baseValue + 0x00D2CE8E
+    return process.readBytes(key, 2)
+
+def setEncounterRate(setVal):
+    global baseValue
+
+    key = baseValue + 0x008421C8
+    process.writeBytes(key, setVal, 1)
+
+def printRNG36():
+    global baseValue
+
+    coord = baseValue + 0x00D35F68
+    retVal = process.readBytes(coord, 1)
+    print("--------------------------------------------")
+    print("--------------------------------------------")
+    print("RNG36 value: ",retVal)
+    print("--------------------------------------------")
+    print("--------------------------------------------")
 
 def end():
     global process
@@ -2728,3 +2434,40 @@ def buildIcicles():
     for x in range(16):
         retArray[x] = icicle(x)
     return retArray
+
+
+#-------------------------------------------------------
+#Soft reset section
+
+def setMapReset():
+    global baseValue
+
+    key = baseValue + 0x00D2CA90
+    process.writeBytes(key, 23, 2)
+
+def forceMapLoad():
+    global baseValue
+
+    key = baseValue + 0x00F3080C
+    process.writeBytes(key, 1, 1)
+
+def resetBattleEnd():
+    global baseValue
+    key = baseValue + 0x00D2C9F1
+    process.writeBytes(key,3,1)
+
+#-------------------------------------------------------
+#Testing
+
+def memTestVal0():
+    key = baseValue + 0x00D35EE0
+    return process.readBytes(key, 1)
+def memTestVal1():
+    key = baseValue + 0x00D35EE1
+    return process.readBytes(key, 1)
+def memTestVal2():
+    key = baseValue + 0x00D35EE2
+    return process.readBytes(key, 1)
+def memTestVal3():
+    key = baseValue + 0x00D35EE3
+    return process.readBytes(key, 1)

@@ -3,7 +3,8 @@ import time
 import FFX_Logs
 import FFX_memory
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
 
 def blitzMain(forceBlitzWin):
     aurochsFirst = blitzStart()

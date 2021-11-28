@@ -1,27 +1,59 @@
 # Libraries and Core Files
 import time
 import FFX_Logs
-#import FFX_core
+import FFX_core
 import FFX_Screen
 import FFX_Battle
+import FFX_memory
+
+#Plug in controller
 import FFX_Xbox
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+
+#Speed run sectional files
+import FFX_DreamZan
+import FFX_Baaj
+import FFX_Besaid1
+#import FFX_Besaid2
+import FFX_Boats
+import FFX_Kilika
+import FFX_Luca
+import FFX_Blitz
+import FFX_Miihen
+import FFX_MRR
+import FFX_Djose
+import FFX_Moonflow
+import FFX_Guadosalam
+import FFX_ThunderPlains
+import FFX_mWoods
+import FFX_mTemple
+import FFX_home
+import FFX_rescueYuna
+import FFX_Gagazet
+import FFX_Zanarkand
+import FFX_Sin
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
 #These are the popular ones. New Game ('none') is the last one.
+#Gamestate = "Baaj"
+#StepCounter = 1
 #Gamestate = "Besaid"
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
-#Gamestate = "Luca"
+#StepCounter = 3
 #StepCounter = 5
+#Gamestate = "Miihen"
+#StepCounter = 1
 #Gamestate = "MRR"
 #StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
+#Gamestate = "Moonflow"
+#StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
 #Gamestate = "Macalania"
@@ -30,9 +62,15 @@ FFXC = FFX_Xbox.FFXC
 #Gamestate = "Home"
 #StepCounter = 1
 #Gamestate = "rescueYuna"
+#StepCounter = 1
 #StepCounter = 2
 #Gamestate = "Gagazet"
 #StepCounter = 1
+#Gamestate = "Zanarkand"
+#StepCounter = 4
+#Gamestate = "Sin"
+#StepCounter = 2
+#StepCounter = 4
 Gamestate = "none"
 StepCounter = 1
 
@@ -44,9 +82,10 @@ autoEggHunt = True
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-#rngSeedNum = 31 #Favorite one so far
-#rngSeedNum = 45 #Another good possibility
-rngSeedNum = 46
+#rngSeedNum = 31 #Potential
+#rngSeedNum = 45 #Potential
+#rngSeedNum = 49 #Favorite one so far, but problem on Chocobo Eater
+rngSeedNum = 56
 rngReviewOnly = True
 print("Game type will be: ", gameLength)
 ####################################################################################################
@@ -57,6 +96,7 @@ speedCount = 0
 strengthCount = 0
 endGameVersion = 0
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
+earlyHaste = 0
 earlyTidusGrid = False
 if forceBlitzWin == True:
     blitzWin = True
@@ -92,7 +132,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 #Initiate memory reading, after we know the game is open.
-import FFX_memory
+#import FFX_memory
 FFX_memory.start()
 FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
@@ -110,7 +150,8 @@ if Gamestate != "none" :
     import FFX_LoadGame
     
     if Gamestate == "Baaj" and StepCounter == 1:
-        FFX_LoadGame.LoadBaaj()
+        FFX_LoadGame.loadOffset(21)
+        #FFX_LoadGame.LoadBaaj()
     if Gamestate == "Baaj" and StepCounter == 5:
         FFX_LoadGame.LoadFirst()
     if Gamestate == "Besaid" and StepCounter == 1 : #Save pop-up after falling off of Rikku's boat
@@ -120,37 +161,31 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
         FFX_LoadGame.loadOffset(29)
         while FFX_memory.userControl():
-            FFXC.set_value('AxisLy', 1)
             if FFX_memory.getCoords()[0] > 0.5:
-                FFXC.set_value('AxisLx', 1)
+                FFXC.set_movement(1, 1)
             else:
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
     if Gamestate == "Boat1" : #Besaid beach before boarding SS Liki ( nice alliteration :D )
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
         FFX_LoadGame.loadOffset(32)
-        FFXC.set_value('AxisLy', 1)
+        FFXC.set_movement(0, 1)
         time.sleep(5)
-        FFXC.set_value('AxisLx', -1)
-        FFXC.set_value('AxisLy', 0)
-        time.sleep(5)
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 0)
-    if Gamestate == "Kilika" and StepCounter == 3: #Temple save sphere before scene with Donna
-        FFX_LoadGame.KilikaTrials()
+        FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
         FFX_LoadGame.loadOffset(46)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
-        FFX_LoadGame.loadOffset(9)
+        FFX_LoadGame.loadOffset(25)
+        earlyHaste = 3
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
         FFX_LoadGame.loadOffsetBattle(8)
-        earlyHaste = 1
+        earlyHaste = 3
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
-        FFX_LoadGame.loadOffset(20)
-        FFX_LoadGame.LoadMiihenStart()
+        FFX_LoadGame.loadOffset(33)
+        FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.LoadMRR()
@@ -162,6 +197,7 @@ if Gamestate != "none" :
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()
     if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
         FFX_LoadGame.loadOffset(3)
@@ -181,9 +217,9 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
         FFX_LoadGame.loadOffset(15)
         time.sleep(0.5)
-        FFXC.set_value('AxisLy', 1)
+        FFXC.set_movement(0, 1)
         time.sleep(1.5)
-        FFXC.set_value('AxisLy', 0)
+        FFXC.set_neutral()
         time.sleep(0.5)
     if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
         FFX_LoadGame.loadWendigo()
@@ -192,6 +228,7 @@ if Gamestate != "none" :
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadOffset(4)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
+        FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
         FFX_LoadGame.loadOffset(42)
@@ -214,36 +251,15 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(35)
         FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(9)
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.loadOffset(22)
-    if Gamestate == "Sin" and StepCounter == 3: #Before "inside sin" pathing
+        FFX_LoadGame.loadOffset(27)
+    if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
         FFX_LoadGame.loadOffset(2)
-        
+        FFX_LoadGame.loadEggHunt()
 
-#Movement files
-import FFX_DreamZan
-if gameLength != "short":
-    import FFX_Baaj
-    import FFX_Besaid1
-    import FFX_Besaid2
-    import FFX_Boats
-    import FFX_Kilika
-    import FFX_Luca
-    import FFX_Blitz
-    import FFX_Miihen
-    import FFX_MRR
-    import FFX_Djose
-    import FFX_Moonflow
-    import FFX_Guadosalam
-    import FFX_ThunderPlains
-    import FFX_mWoods
-    import FFX_mTemple
-    import FFX_home
-    import FFX_rescueYuna
-    import FFX_Gagazet
-    import FFX_Zanarkand
-import FFX_Sin
+
+#Movement files - moved to FFX_compileAll.py
 
 #try:
 rikkucharged = 0
@@ -255,6 +271,7 @@ while Gamestate != "End":
         Gamestate = "DreamZan"
         time.sleep(0.5)
         FFX_DreamZan.NewGame(gameLength)
+        FFX_DreamZan.NewGame2()
         startTime = FFX_Logs.timeStamp()
         FFX_Logs.writeStats("Start time:")
         FFX_Logs.writeStats(str(startTime))
@@ -409,32 +426,31 @@ while Gamestate != "End":
     if Gamestate == "Luca" and StepCounter == 2:
         reportGamestate()
         FFX_Luca.preBlitz()
+        endTime = FFX_Logs.timeStamp()
+        totalTime = endTime - startTime
+        print("Pre-Blitz time: ", str(totalTime))
+        FFX_Logs.writeStats("Pre Blitz time:")
+        FFX_Logs.writeStats(totalTime)
         if rngReviewOnly == True and earlyHaste == -1: # Used to run multiple tests via a single execution
             Gamestate = "none"
             StepCounter = 1
-            FFXC.set_value('AxisLy', -1) #Step away from the save sphere
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_movement(0, -1) #Step away from the save sphere
             time.sleep(2)
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
             import FFX_Reset
             print("------------------------------------------")
             print("------------------------------------------")
             print("Resetting")
             print("------------------------------------------")
             print("------------------------------------------")
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
             FFX_memory.clickToControl()
-            endTime = FFX_Logs.timeStamp()
-
-            totalTime = endTime - startTime
-            print("The game duration (real time) was: ", str(totalTime))
+            
+            
             #FFX_Logs.writeStats("Test duration:")
             #FFX_Logs.writeStats(totalTime)
             time.sleep(2)
 
-            FFX_Reset.resetToMainMenu(FFX_memory.getMap())
+            FFX_Reset.resetToMainMenu()
             StepCounter = 1
             rngSeedNum += 1
             FFX_Logs.nextStats(rngSeedNum) #Start next stats file
@@ -454,7 +470,7 @@ while Gamestate != "End":
     if Gamestate == "Luca" and StepCounter == 4:
         reportGamestate()
         blitzWin = FFX_Blitz.blitzMain(forceBlitzWin)
-        FFX_Screen.awaitSave()
+        FFX_Xbox.awaitSave()
         StepCounter = 5
         
 
@@ -476,7 +492,14 @@ while Gamestate != "End":
 
     if Gamestate == "Miihen" and StepCounter == 2:
         reportGamestate()
-        #FFX_Miihen.wrapUp()
+        
+        #Report duration at the end of Mi'ihen section for all runs.
+        endTime = FFX_Logs.timeStamp()
+        totalTime = endTime - startTime
+        print("Mi'ihen End timer is: ", str(totalTime))
+        FFX_Logs.writeStats("Miihen End time:")
+        FFX_Logs.writeStats(totalTime)
+        
         if rngReviewOnly == True and rngSeedNum - rngSeedOrig < 5: # Used to run multiple tests via a single execution
             Gamestate = "none"
             StepCounter = 1
@@ -486,18 +509,12 @@ while Gamestate != "End":
             print("Resetting")
             print("------------------------------------------")
             print("------------------------------------------")
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_neutral()
             FFX_memory.clickToControl()
-            endTime = FFX_Logs.timeStamp()
 
-            totalTime = endTime - startTime
-            print("The game duration (real time) was: ", str(totalTime))
-            FFX_Logs.writeStats("Test duration:")
-            FFX_Logs.writeStats(totalTime)
             time.sleep(2)
 
-            FFX_Reset.resetToMainMenu(FFX_memory.getMap())
+            FFX_Reset.resetToMainMenu()
             StepCounter = 1
             rngSeedNum += 1 #Start next stats file
             FFX_Logs.nextStats(rngSeedNum)
@@ -513,7 +530,7 @@ while Gamestate != "End":
     if Gamestate == "MRR" and StepCounter == 1:
         reportGamestate()
         wakkaLateMenu = FFX_MRR.arrival()
-        FFX_MRR.mainPath(wakkaLateMenu)
+        FFX_MRR.mainPath(wakkaLateMenu[0])
         if FFX_memory.gameOver():
             Gamestate = "gameOverError"
         StepCounter = 2
@@ -684,7 +701,7 @@ while Gamestate != "End":
 
     #In case we're loading mid game...
     if endGameVersion == 0:
-        endGameVersion = 4
+        endGameVersion = 1
         # 1 = two Return spheres, two Friend spheres
         # 2 = two Return spheres, two Friend spheres
         # 3 = Game over (four Friend spheres)
@@ -748,9 +765,12 @@ while Gamestate != "End":
 
     if Gamestate == "Sin" and StepCounter == 3:
         reportGamestate()
-        FFX_Sin.insideSin(gameLength, autoEggHunt, rngSeedNum)
-        FFX_Battle.BFA()
+        FFX_Sin.insideSin()
         StepCounter = 4
+    
+    if Gamestate == "Sin" and StepCounter == 4:
+        FFX_Sin.eggHunt(autoEggHunt)
+        FFX_Battle.BFA()
         Gamestate = "End"
 
 #print("Waiting for Yu Yevon to die.")

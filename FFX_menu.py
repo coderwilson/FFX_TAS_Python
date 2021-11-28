@@ -5,7 +5,8 @@ import FFX_menuGrid
 import FFX_Logs
 import FFX_memory
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
 
 def gridUp():
     FFX_menuGrid.gridUp()
@@ -548,37 +549,8 @@ def mrrGrid1():
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('power','d','none')
     print("Wakka late menu: ", wakkaLateMenu)
-    #time.sleep(60) #Use for testing only!
-    #FFX_menuGrid.useShiftRight('lulu') #Switch to Lulu
-    #FFX_menuGrid.moveFirst()
-    #gridLeft()
-    #gridDown()
-    #gridLeft()
-    #gridDown()
-    #FFX_menuGrid.moveAndUse()
-    #FFX_menuGrid.selSphere('mana','d','none')
-    #gridLeft()
-    #FFX_menuGrid.useAndMove()
-    #gridUp()
-    #FFX_menuGrid.moveAndUse()
-    #FFX_menuGrid.selSphere('mana','d','none')
     
     FFX_menuGrid.useAndQuit()
-    
-    #Formation change
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Kimahri to 2, Lulu to 4, Wakka to 5
     
     FFX_memory.closeMenu()
     
@@ -684,29 +656,10 @@ def battleSiteGrid():
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
     
-    #Formation stuff
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Yuna to 5, Kimahri to 6
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Yuna to 3, Auron to 5
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Formation should now be T Y W L A K
-    FFX_Xbox.menuA()
-    
     #Wakka's weapon
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Equip
     wakkaPos = FFX_memory.getCharFormationSlot(4)
     if FFX_memory.getCharCursorPos() != wakkaPos:
@@ -719,6 +672,7 @@ def battleSiteGrid():
     FFX_Xbox.menuB() #Back to default.
     
     FFX_memory.closeMenu()
+    FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1_old():
     print("Not yet thanks")
@@ -788,7 +742,7 @@ def battleSiteOaka1():
     FFX_memory.closeMenu()
 
 def battleSiteOaka2():
-    FFX_Screen.clickToPixel(676,520,(196,196,196))
+    FFX_Xbox.clickToPixel(676,520,(196,196,196))
     time.sleep(0.2)
     FFX_Xbox.menuB()
     time.sleep(1)
@@ -1028,13 +982,13 @@ def plainsArmor():
 
 def mWoods():
     FFX_Screen.awaitMap1()
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     time.sleep(0.8)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 1)
     time.sleep(0.5)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     FFX_memory.clickToEvent()
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     while not FFX_memory.menuOpen():
         FFX_Xbox.menuB() #Talking through O'aka's conversation.
     
@@ -1387,87 +1341,6 @@ def macTemple(blitzWin):
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
-
-def afterSeymour_unused3():
-    print("Menuing, after Seymour Guado fight in Macalania.")
-    #Selling items to O'aka
-    FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', -1)
-    time.sleep(0.9)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(0.25)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(0.8)
-    FFXC.set_value('AxisLy', 0)
-    FFX_Xbox.SkipDialog(0.5) #Talk to O'aka
-    while not FFX_Screen.PixelTestTol(713,466,(154, 154, 154),5):
-        if FFX_Screen.PixelTestTol(713,466,(0,0,0),5): #Dialog is open
-            FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitPixel(367,152,(154, 154, 154))
-    time.sleep(0.1)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sell
-    time.sleep(0.2)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    time.sleep(0.1)
-    if FFX_Screen.PixelTestTol(349,405,(196, 198, 209),5) or FFX_Screen.PixelTestTol(340,420,(0, 123, 243),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.1)
-        FFX_Xbox.menuUp()
-        time.sleep(0.1)
-        FFX_Xbox.menuB()
-        time.sleep(0.1)
-    FFX_Xbox.menuRight()
-    time.sleep(0.1)
-    if FFX_Screen.PixelTestTol(989,406,(219, 233, 245),5) or FFX_Screen.PixelTestTol(980,420,(0, 123, 243),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.1)
-        FFX_Xbox.menuUp()
-        time.sleep(0.1)
-        FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuDown()
-    time.sleep(0.1)
-    if FFX_Screen.PixelTestTol(990,468,(196, 198, 206),5) or FFX_Screen.PixelTestTol(983,485,(0, 122, 240),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.1)
-        FFX_Xbox.menuUp()
-        time.sleep(0.1)
-        FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuLeft()
-    time.sleep(0.1)
-    if FFX_Screen.PixelTestTol(350,468,(196, 198, 206),5) or FFX_Screen.PixelTestTol(342,482,(0, 125, 248),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.1)
-        FFX_Xbox.menuUp()
-        time.sleep(0.1)
-        FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuA()
-    
-    #Extra P.downs
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
-    FFX_memory.openMenu()
-
 
 def afterSeymour():
     FFX_memory.openMenu()
@@ -1841,84 +1714,8 @@ def seymourNatusBlitzLoss():
     FFX_Xbox.menuB()
     FFX_memory.closeMenu()
 
-def ItemSellingOakaHighbridge_old():
-    #Now for O'aka
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLx', 0)
-    FFX_Xbox.menuB()
-    time.sleep(1.2)
-    FFX_Xbox.menuB()
-    time.sleep(1.2)
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitPixel(700,467,(147, 147, 147))
-    time.sleep(0.2)
-    FFX_Xbox.menuB()
-    time.sleep(2)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    if FFX_Screen.PixelTestTol(348,411,(171, 173, 210),5) or FFX_Screen.PixelTestTol(337,422,(60, 73, 185),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-    FFX_Xbox.menuRight()
-    if FFX_Screen.PixelTestTol(989,410,(171, 171, 212),5) or FFX_Screen.PixelTestTol(981,421,(58, 72, 191),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-    FFX_Xbox.menuDown()
-    if FFX_Screen.PixelTestTol(987,473,(170, 169, 214),5) or FFX_Screen.PixelTestTol(979,488,(52, 68, 193),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-    FFX_Xbox.menuLeft()
-    if FFX_Screen.PixelTestTol(345,473,(169, 168, 216),5) or FFX_Screen.PixelTestTol(340,491,(51, 68, 198),5):
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        time.sleep(0.2)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    time.sleep(2)
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitMap1()
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLx', 0)
-
 def prepCalmLands(blitzWin):
     FFX_memory.openMenu()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Auron to 3, Yuna to 7
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()

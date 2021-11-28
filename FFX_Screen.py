@@ -1,10 +1,11 @@
 import time
 import pyautogui
-import FFX_Xbox
+#import FFX_Xbox
 import FFX_Logs
 import FFX_memory
 
-FFXC = FFX_Xbox.FFXC
+#FFXC = FFX_Xbox.FFXC
+#FFXC = FFX_Xbox.FFXC
 
 def clearMouse(counter):
     try:
@@ -17,30 +18,16 @@ def clearMouse(counter):
 
 def BattleScreen():
     if PixelTest(1464, 181, (229, 189, 96)) :
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 0)
         if not PixelTestTol(131,693,(153, 155, 153),5):
             print("It is now someone's turn in battle.")
             time.sleep(0.735) #This delay is paramount.
         return True
     else :
         return False
-    
+
 def clickToBattle():
-    FFX_Logs.writeLog("Clicking until it's someone's turn in battle")
-    print("Clicking until it's someone's turn in battle")
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('Dpad', 0)
-    complete = 0
-    while complete == 0 :
-        if BattleScreen() or FFX_memory.userControl():
-            complete = 1
-        elif FFX_memory.battleActive() == False:
-            FFX_Xbox.menuB()
-        elif FFX_memory.diagSkipPossible():
-            FFX_Xbox.menuB()
-    
+    print("Fix this later.")
+
 def faintCheck():
     faints = 0
     if PixelTest(1347,701,(223, 55, 27)):
@@ -109,56 +96,48 @@ def awaitPixel(x,y,rgb):
         time.sleep(0.05)
     print("Trigger pixel achieved. Waiting is complete.")
 
+#def clickToPixel(x,y,rgb):
+#    counter = 0
+#    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
+#    while not PixelTestTol(x,y,rgb,5):
+#        counter += 1;
+#        if counter % 100 == 0:
+#            print("awaiting pixel (clicking): ", counter)
+#            print("Pixel being tested: (",x,",",y,")")
+#            print("Test state: ",rgb)
+#            try:
+#                print("Current State: ", pyautogui.pixel(x, y))
+#            except:
+#                print("Cannot get current state.")
+#        FFX_Xbox.menuB()
+#    print("Trigger pixel achieved. Waiting is complete.")
+
 def clickToPixel(x,y,rgb):
-    counter = 0
-    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
-    while not PixelTestTol(x,y,rgb,5):
-        counter += 1;
-        if counter % 100 == 0:
-            print("awaiting pixel (clicking): ", counter)
-            print("Pixel being tested: (",x,",",y,")")
-            print("Test state: ",rgb)
-            try:
-                print("Current State: ", pyautogui.pixel(x, y))
-            except:
-                print("Cannot get current state.")
-        FFX_Xbox.menuB()
-    print("Trigger pixel achieved. Waiting is complete.")
+    print("Fix this later.")
 
 def clickToPixelTol(x,y,rgb,tol):
-    counter = 0
-    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
-    while not PixelTestTol(x,y,rgb, tol):
-        counter += 1;
-        if counter % 100 == 0:
-            print("awaiting pixel (clicking): ", counter)
-            print("Pixel being tested: (",x,",",y,")")
-            print("Test state: ",rgb)
-            try:
-                print("Current State: ", pyautogui.pixel(x, y))
-            except:
-                print("Cannot get current state.")
-        FFX_Xbox.menuB()
-    print("Trigger pixel achieved. Waiting is complete.")
+    print("Fix this later.")
 
-def dodgeLightning():
-    try:
-        pix = pyautogui.pixel(1500,800)
-        if pix[0] > 200 or pix[1] > 200 or pix[2] > 200 :
-            FFX_Xbox.menuB()
-            return 1
-        else :
-            return 0
-    except:
-        return False
+#def clickToPixelTol(x,y,rgb,tol):
+#    counter = 0
+#    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
+#    while not PixelTestTol(x,y,rgb, tol):
+#        counter += 1;
+#        if counter % 100 == 0:
+#            print("awaiting pixel (clicking): ", counter)
+#            print("Pixel being tested: (",x,",",y,")")
+#            print("Test state: ",rgb)
+#            try:
+#                print("Current State: ", pyautogui.pixel(x, y))
+#            except:
+#                print("Cannot get current state.")
+#        FFX_Xbox.menuB()
+#    print("Trigger pixel achieved. Waiting is complete.")
 
 def awaitTurn() :
     counter = 0
     print("Waiting for next turn in combat.")
     #Just to make sure there's no overlap from the previous character's turn
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('Dpad', 0)
     
     #Now let's do this.
     while not BattleScreen() or FFX_memory.userControl():
@@ -172,176 +151,95 @@ def awaitTurn() :
     return True
 
 def awaitSave() :
-    FFX_Logs.writeLog("Awaiting save dialog to pop up")
-    counter = 0
-    complete = 0
-    while complete == 0:
-        counter += 1;
-        if counter % 100 == 0:
-            print("Waiting for Save dialog: ", counter / 100)
-        savePopup = PixelTest(630,422,(70,53,124))
-        saveScreen = PixelTest(1,1,(87, 85, 122))
-        if PixelTestTol(591,769,(221, 221, 221),5): #Skips specific dialog, SS Winno
-            FFX_Xbox.menuB()
-        elif PixelTestTol(580,768,(222, 222, 222),5): #Skips specific dialog, SS Winno
-            FFX_Xbox.menuB()
-        elif PixelTestTol(493,735,(220, 220, 220),5): #Skips specific dialog, SS Winno
-            FFX_Xbox.menuB()
-        elif PixelTestTol(482,738,(215, 215, 215),5): #Skips specific dialog, SS Winno
-            FFX_Xbox.menuB()
-        elif savePopup == True:
-            FFX_Xbox.menuA()
-            complete = 1
-        elif saveScreen == True:
-            FFX_Xbox.menuA()
-            FFX_Xbox.menuA()
-            FFX_Xbox.menuA()
-            FFX_Xbox.menuB()
-            complete = 1
-        else:
-            if not PixelTestTol(1,1,(0,0,0),5):
-                FFX_Xbox.menuB()
-    print("Save dialog achieved")
-    FFX_Logs.writeLog("Save dialog on screen.")
-    complete = 0
-    while complete == 0:
-        savePopup = PixelTestTol(630,422,(0,0,0),5)
-        if savePopup == True:
-            complete = 1
-        elif PixelTestTol(752,484,(149, 149, 149),5):
-            FFX_Xbox.menuA()
-        elif PixelTestTol(752,518,(149, 149, 149),5):
-            FFX_Xbox.menuB()
-    print("Save dialog cleared. Moving on.")
-    FFX_Logs.writeLog("Save dialog cleared. Moving on.")
-        
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - FFX_Xbox.awaitSave")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+
 def Minimap1() :
-    try:
-        return pyautogui.pixelMatchesColor(271, 181, (158,158,53), tolerance=5)
-    except:
-        return False
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - FFX_Screen.Minimap1")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
 
 def awaitMap1() :
-    print("Waiting for the minimap to come up in the top left corner")
-    counter = 0
-    while not Minimap1() :
-        counter += 1;
-        if counter % 100 == 0:
-            print("Waiting | ", counter / 100)
-        if BattleComplete():
-            FFX_Xbox.menuB()
-        if BattleScreen():
-            break
-        time.sleep(0.05)
-    print("Resuming control")
+    print("Fix this later.")
 
 def clickToMap1() :
-    print("Clicking until top-left map appears")
-    while not Minimap1() :
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
-    print("Map trigger achieved")
+    print("Fix this later.")
 
 def Minimap2() :
-    try:
-        return pyautogui.pixelMatchesColor(1328, 181, (158,158,53), tolerance=5)
-    except:
-        return False
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - FFX_Screen.Minimap2")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
 
 def awaitMap2() :
-    print("Waiting for the minimap to come up in the top right corner")
-    counter = 0
-    while not Minimap2() :
-        counter += 1;
-        if counter % 100 == 0:
-            print("Waiting | ", counter / 100)
-        if FFX_memory.menuOpen() and not FFX_memory.userControl():
-            FFX_Xbox.menuB()
-        if BattleScreen():
-            break
-        time.sleep(0.05)
-    print("Resuming control")
+    print("Fix this later.")
 
 def clickToMap2() :
-    print("Clicking until top-right map appears")
-    while not Minimap2() :
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
-    print("Map trigger achieved")
+    print("Fix this later.")
 
 def Minimap3() :
-    try:
-        return pyautogui.pixelMatchesColor(271, 718, (158,158,53), tolerance=5)
-    except:
-        return False
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - FFX_Screen.Minimap3")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
 
 def awaitMap3() :
-    print("Waiting for the minimap to come up in the bottom left corner")
-    counter = 0
-    while not Minimap3() :
-        counter += 1;
-        if counter % 100 == 0:
-            print("Waiting | ", counter / 100)
-        if BattleComplete():
-            FFX_Xbox.menuB()
-        if BattleScreen():
-            break
-        time.sleep(0.05)
-    print("Resuming control")
+    print("Fix this later.")
 
 def clickToMap3() :
-    print("Clicking until bottom-left map appears")
-    while not Minimap3() :
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
-    print("Map trigger achieved")
+    print("Fix this later.")
 
 def Minimap4() :
-    try:
-        return pyautogui.pixelMatchesColor(1328, 718, (160, 160, 53), tolerance=5)
-    except:
-        return False
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - FFX_Screen.Minimap4")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
 
 def awaitMap4() :
-    print("Waiting for the minimap to come up in the bottom right corner")
-    counter = 0
-    while not Minimap4() :
-        counter += 1;
-        if counter % 100 == 0:
-            print("Waiting | ", counter / 100)
-        if BattleComplete():
-            FFX_Xbox.menuB()
-        if BattleScreen():
-            break
-        time.sleep(0.05)
-    print("Resuming control")
+    print("Fix this later.")
 
 def clickToMap4() :
-    print("Clicking until bottom-right map appears")
-    while not Minimap4() :
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
-    print("Map trigger achieved")
+    print("Fix this later.")
     
 def MinimapAny():
-    if Minimap1(): #Top left is the most common minimap.
-        return True
-    if Minimap2():
-        return True
-    if Minimap3():
-        return True
-    if Minimap4():
-        return True
-    return False
-    
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - FFX_Screen.MinimapAny")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+    print("ERROR - OLD MOVEMENT COMMAND FOUND")
+
 def turnRikkuRed() :
     if FFX_memory.getBattleCharTurn() == 6:
         return True
@@ -447,7 +345,7 @@ def turnYuna() :
     #    return False
 
 def turnSeymour() :
-    if PixelTest(1432, 166, (65, 140, 190)):
+    if FFX_memory.getBattleCharTurn() == 7:
         FFX_Logs.writeLog("Seymour's turn:")
         return True
     else :
@@ -460,40 +358,6 @@ def turnAeon():
         return True
     else :
         return False
-
-def countItems(slot) :
-    width = 70
-    height = 70
-    x = 667
-    if slot == 1:
-        y = 223
-    elif slot == 2:
-        y = 295
-    elif slot == 3:
-        y = 365
-    
-    print("Checking for number of items")
-    try :
-        
-        loc = pyautogui.locateOnScreen('Images\count1.PNG', region=(x,y,width,height))
-        print("1 - ",loc)
-        time.sleep(10)
-        return 1
-    except :
-        try :
-            loc = pyautogui.locateOnScreen('Images\count1.PNG', region=(x,y,width,height))
-            print("2 - ",loc)
-            time.sleep(10)
-            return 2
-        except :
-            try :
-                loc = pyautogui.locateOnScreen('Images\count1.PNG', region=(x,y,width,height))
-                print("3 - ",loc)
-                time.sleep(10)
-                return 3
-            except :
-                print("0 - no item found")
-                return 0
 
 def awaitSwimToJecht():
     counter = 0
@@ -578,257 +442,6 @@ def mrrCompletion(status):
     #time.sleep(10) #Temporary during testing
     #print("End - Extra pause during testing")
     return status
-
-def mrrFormat():
-    FFX_Logs.writeLog("Reformatting party")
-    openMenu()
-    time.sleep(0.2)
-    if checkMRRForm() == 0:
-        order = FFX_memory.getOrderSix()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        
-        if order[0] != 0: #Tidus is not in the first slot
-            print("Looking for Tidus")
-            if order[1] == 0:
-                print("Tidus in Second slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[1] = order[0]
-                order[0] = 0
-            elif order[2] == 0:
-                print("Tidus in Third slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                order[2] = order[0]
-                order[0] = 0
-            elif order[3] == 0:
-                print("Tidus in Fourth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                order[3] = order[0]
-                order[0] = 0
-            elif order[4] == 0:
-                print("Tidus in Fifth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                order[4] = order[0]
-                order[0] = 0
-            elif order[5] == 0:
-                print("Tidus in Sixth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                order[5] = order[0]
-                order[0] = 0
-        else:
-            print("Tidus seems fine.")
-            FFX_Xbox.menuDown()
-        if order[1] != 4: #Wakka is not in the second slot
-            print("Looking for Wakka")
-            if order[2] == 4:
-                print("Wakka in Third slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[2] = order[1]
-                order[1] = 4
-            elif order[3] == 4:
-                print("Wakkain Fourth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                order[3] = order[1]
-                order[1] = 4
-            elif order[4] == 4:
-                print("Wakka in Fifth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                order[4] = order[1]
-                order[1] = 4
-            elif order[5] == 4:
-                print("Wakka in Sixth slot. Swapping")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                order[5] = order[1]
-                order[1] = 4
-        else:
-            print("Wakka seems fine.")
-            FFX_Xbox.menuDown()
-        if order[2] != 2: #Auron, 3rd slot
-            print("Looking for Auron")
-            if order[3] == 2:
-                print("Auron in fourth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[3] = order[2]
-                order[2] = 2
-            elif order[4] == 2:
-                print("Auron in fifth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                order[4] = order[2]
-                order[2] = 2
-            elif order[5] == 2:
-                print("Auron in sixth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                order[5] = order[2]
-                order[2] = 2
-            else:
-                print("Something's wrong, can't find Lulu.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-        else:
-            print("Auron seems fine.")
-            FFX_Xbox.menuDown()
-        if order[3] != 5: #Lulu, 4th slot
-            print("Looking for Lulu")
-            if order[4] == 5:
-                print("Lulu in fifth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                order[4] = order[3]
-                order[3] = 5
-            elif order[5] == 5:
-                print("Lulu in sixth slot. Swapping.")
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                order[5] = order[3]
-                order[3] = 5
-        else:
-            print("Lulu seems fine.")
-            FFX_Xbox.menuDown()
-        if order[4] != 3: #Kimahri, 5th slot
-            print("Swapping 5th and 6th slots")
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuDown()
-            FFX_Xbox.menuB()
-            order[5] = order[4]
-            order[4] = 3
-        else:
-            print("Lulu and Yuna seem fine.")
-            
-        
-        FFX_Xbox.menuA()
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuDown()
-    return checkMRRForm()
-
-def checkMRRForm():
-    success = 1
-    order = FFX_memory.getOrderSix()
-    if order[0] != 0:
-        print("Tidus is NOT first")
-        success = 0
-    else:
-        print("Tidus is first")
-    if order[1] != 4:
-        print("Wakka is NOT second")
-        success = 0
-    else:
-        print("Wakka is second")
-    if order[2] != 2:
-        print("Auron is not third.")
-        success = 0
-    else:
-        print("Auron is third")
-    if order[3] != 5:
-        print("Lulu is not fourth.")
-        success = 0
-    else:
-        print("Lulu is fourth")
-    if order[4] != 3:
-        print("Kimahri is not fifth.")
-        success = 0
-    else:
-        print("Kimahri is fifth")
-    if order[5] != 1:
-        print("Yuna is not last.")
-        success = 0
-    else:
-        print("Yuna is last")
-    return success
-    
-def checkMMRForm_old():
-    success = 1
-    if PixelTest(307,181,(22,22,22)):
-        print("Tidus is first")
-    else:
-        print("Tidus is NOT first")
-        success = 0
-    if PixelTest(311,255,(22,22,22)):
-        print("Kimahri is second")
-    else:
-        print("Kimahri is NOT second")
-        success = 0
-    if PixelTest(348,480,(22,22,22)):
-        print("Wakka is fifth")
-    else:
-        print("Wakka is NOT fifth")
-        success = 0
-    if PixelTest(288,405,(22,22,22)):
-        print("Lulu is fourth")
-    else:
-        print("Lulu is NOT fourth")
-        success = 0
-    if success == 0:
-        print("Doesn't matter between Auron and Yuna")
-    elif PixelTest(270,556,(22,22,22)):
-        print("Yuna is sixth, we're good.")
-    else:
-        print("Yuna/Auron backwards")
-        success = 0
-    return success
 
 def checkItemsMRR():
     pDown = 0
@@ -1078,61 +691,7 @@ def spherimorphSpell():
     return spell
 
 def abPotPos(count):
-    position = 1
-    count += 1
-    if count > 100: #Prevent infinite loop
-        return 0
-    try:
-        potTest = pyautogui.locateOnScreen('img\\ABpotion.JPG', confidence=0.8)
-        print("Details for Al Bhed potion: ", potTest)
-        if potTest[0] > 467:
-            position += 1
-            FFX_Xbox.menuRight()
-        if potTest[1] > 734:
-            position += 2
-            FFX_Xbox.menuDown()
-        if potTest[1] > 779:
-            position += 2
-            FFX_Xbox.menuDown()
-        print("Now hovering position: ", position)
-        #time.sleep(20)
-        return position
-    except Exception as errorMsg:
-        print("Something went wrong. Could not find item.")
-        print(errorMsg)
-        return abPotPos(count)
-
-def RikkuODMap():
-    position = 1
-    try:
-        mapTest = pyautogui.locateOnScreen('img\\Map_R_OD.JPG', confidence=0.75)
-        print("Details for Map: ", mapTest)
-        print("mapTest[1]: ", mapTest[1])
-        if mapTest[1] > 785:
-            if mapTest[0] > 467:
-                print("Map on right side.")
-                FFX_Xbox.menuRight()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuLeft()
-                return True
-            elif mapTest[0] > 50:
-                print("Map on left side.")
-                FFX_Xbox.menuB()
-                return True
-    except Exception as errorMsg:
-        print("Something went wrong. Could not find item.")
-        print(errorMsg)
-        return False
-
-def RikkuODLuck():
-    if PixelTestTol(174,802,(100, 16, 190),5) and PixelTestTol(279,812,(172, 172, 172),5):
-        FFX_Xbox.menuB()
-        return True
-    if PixelTestTol(524,801,(60, 3, 141),5) and PixelTestTol(629,812,(172, 172, 172),5):
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuLeft()
-        return True
+    print("Fix this later.")
 
 def imgSearch(img, conf):
     img = 'img\\' + str(img)
@@ -1156,28 +715,6 @@ def imgSearch2(img, conf):
         print("Something went wrong. Could not find image.")
         print(errorMsg)
         return False
-
-def openMenu():
-    print("Opening menu")
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    complete = 0
-    while complete == 0:
-        if PixelTestTol(1583,32,(79, 86, 133),5):
-            if PixelTestTol(1466,735,(32, 43, 81),5):
-                if PixelTestTol(1155,184,(153, 153, 153),5):
-                    time.sleep(0.2)
-                    complete = 1
-                else:
-                    FFX_Xbox.menuA()
-            else:
-                FFX_Xbox.menuA()
-        else:
-            FFXC.set_value('BtnY', 1)
-            time.sleep(0.35)
-            FFXC.set_value('BtnY', 0)
-            time.sleep(0.35)
-    return 1
 
 def desertCharge():
     chargeState = [False,False]

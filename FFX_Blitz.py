@@ -3,7 +3,8 @@ import time
 import FFX_Logs
 import FFX_memory
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
 
 def blitzMain(forceBlitzWin):
     aurochsFirst = blitzStart()
@@ -15,8 +16,7 @@ def blitzMain(forceBlitzWin):
     allDefense() #First half actions here.
     
     print("Start of halftime")
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     halfTimeXP()
     if forceBlitzWin == True:
         FFX_memory.blitzballPatriotsStyle()
@@ -73,13 +73,11 @@ def allDefense():
             #print("Running")
             player = FFX_memory.blitzTargetPlayer()
             clock = FFX_memory.blitzClockMenu()
-            FFXC.set_value('AxisLx', 1)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_movement(1, 0)
             #if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_neutral()
             menu = FFX_memory.blitzMenuNum()
             if FFX_memory.menuControl() == 1 and menu == 0:
                 print("Dialog is open. Probably Goers just scored.")
@@ -147,6 +145,8 @@ def manualMovement():
             if player == 12 or player == 18:
                 print("Opposing team has the ball.")
                 time.sleep(0.5)
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
             else:
                 FFX_Xbox.menuY()
                 print("Attempting to open menu.")

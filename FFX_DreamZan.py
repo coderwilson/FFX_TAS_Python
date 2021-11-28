@@ -6,7 +6,8 @@ import FFX_Battle
 import FFX_memory
 import FFX_targetPathing
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
 
 def NamingTidus_slow():
     #Clear Tidus
@@ -42,15 +43,17 @@ def NamingTidus():
 def NewGame(gameLength):
     FFX_Screen.awaitPixel(1076,552,(157, 159, 157))
     print("Starting the game")
-    FFXC.set_value('AxisLy', 1)
+    print("This will be a ", gameLength, " run.")
+    FFXC.set_movement(0, 1)
     time.sleep(0.1)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     FFXC.set_value('BtnB', 1)
     time.sleep(0.1)
     FFXC.set_value('BtnB', 0)
     
+def NewGame2():
     #New game selected. Next, select options.
-    time.sleep(3)
+    time.sleep(4)
     print("Default Sphere Grid")
     FFX_Xbox.menuB()
     time.sleep(1)
@@ -62,8 +65,6 @@ def NewGame(gameLength):
     time.sleep(1)
     print("Confirm Orchestrated soundtrack.")
     FFX_Xbox.menuB()
-    print("This will be a ", gameLength, " run.")
-    #Options selected (all standard for the remake)
 
 def listenStory(gameLength):
     time.sleep(5)
@@ -84,18 +85,24 @@ def listenStory(gameLength):
             #Events
             if checkpoint == 2:
                 while FFX_memory.userControl():
-                    FFXC.set_value('AxisLy', -1)
-                    FFXC.set_value('AxisLx', 0)
+                    FFXC.set_movement(0, -1)
                     FFX_Xbox.tapB()
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_neutral()
                 
                 #Name Tidus (custom function in this library. Can be changed later.
                 FFX_Screen.awaitPixel(316,374,(224, 182, 138))
                 NamingTidus()
                 checkpoint += 1
             elif checkpoint == 4:
-                FFX_memory.clickToEventTemple(2)
+                while FFX_memory.userControl():
+                    FFXC.set_movement(0, -1)
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                time.sleep(0.2)
+                while not FFX_memory.userControl():
+                    if FFX_memory.diagSkipPossible():
+                        FFX_Xbox.tapB()
+                print("Done clicking")
                 checkpoint += 1
             elif checkpoint < 6 and FFX_memory.getStoryProgress() >= 5:
                 checkpoint = 6
@@ -105,10 +112,8 @@ def listenStory(gameLength):
                 checkpoint = 15
             elif checkpoint == 17: #Don't cry.
                 while FFX_memory.userControl():
-                    FFXC.set_value('AxisLy', -1)
-                    FFXC.set_value('AxisLx', 1)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                    FFXC.set_movement(1, -1)
+                FFXC.set_neutral()
                 checkpoint += 1
         
             #General pathing
@@ -116,8 +121,7 @@ def listenStory(gameLength):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
@@ -221,17 +225,16 @@ def listenStory_old(gameLength):
     
     #Talk to kids
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_movement(0, -1)
     while FFX_memory.userControl():
         pos = FFX_memory.getCoords()
         if pos[0] > 45 and pos[1] > 2:
-            FFXC.set_value('AxisLx', 1)
+            FFXC.set_movement(1, 0)
         else:
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_neutral()
         if pos[0] < 35:
             FFX_Xbox.menuB()
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     
     #Name Tidus (custom function in this library. Can be changed later.
     FFX_Screen.awaitPixel(316,374,(224, 182, 138))
@@ -240,46 +243,43 @@ def listenStory_old(gameLength):
     #Now to talk to the ladies.
     #FFX_Screen.awaitPixel(1554,657,(255, 192, 210))
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1, 0)
     time.sleep(0.5)
     FFX_Xbox.SkipDialog( 2 )
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     
     #Leave house area
     FFX_memory.awaitControl()
     #time.sleep(30)
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_movement(0, -1)
     time.sleep(6)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     
     #Zanar talks to himself.
     FFX_memory.awaitControl()
     #time.sleep(74)
-    FFXC.set_value('AxisLx', 1)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(1, 1)
     time.sleep(0.4)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     while FFX_memory.getMap() != 371:
         time.sleep(0.05)
     
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     #Front of the Blitz dome
     FFX_memory.clickToControl()
     time.sleep(0.15)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(0.3)
     while FFX_memory.getStoryProgress() < 6:
         if FFX_memory.userControl():
-            FFXC.set_value('AxisLy', 1)
             if FFX_memory.getCoords()[0] > 2:
-                FFXC.set_value('AxisLx', 1)
+                FFXC.set_movement(1, 1)
             elif FFX_memory.getCoords()[0] < -10:
-                FFXC.set_value('AxisLx', -1)
+                FFXC.set_movement(-1, 1)
             else:
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
         else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_neutral()
             FFX_Xbox.menuB()
     
     #Skip blitball scene
@@ -288,26 +288,25 @@ def listenStory_old(gameLength):
     
     #Run to Auron
     FFX_memory.awaitControl()
-    #FFX_Screen.awaitMap1()
-    FFXC.set_value('AxisLx', 1)
-    FFXC.set_value('AxisLy', -1)
+    #FFX_memory.awaitControl()
+    FFXC.set_movement(1, -1)
     time.sleep(0.4)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, -1)
     time.sleep(0.3)
     while FFX_memory.getStoryProgress() < 10:
         if FFX_memory.userControl():
             pos = FFX_memory.getCoords()
             if pos[1] < ((8.43 * pos[0]) + 805.14):
-                FFXC.set_value('AxisLx', 1)
+                FFXC.set_movement(1, -1)
             elif pos[1] > ((8.43 * pos[0]) + 835):
-                FFXC.set_value('AxisLx', -1)
+                FFXC.set_movement(-1, -1)
             else:
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, -1)
         else:
+            FFXC.set_neutral()
             FFX_Xbox.menuB()
     
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     
     #Two possible cutscene skips, possible to save 8~10 seconds
     waitCounter = 0
@@ -325,16 +324,16 @@ def listenStory_old(gameLength):
     FFXC.set_value('BtnStart', 0)
     
     #Just to make sure...
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
 
 def ammesBattle():
-    FFX_Screen.clickToBattle()
+    FFX_Xbox.clickToBattle()
     FFX_Battle.defend()
     
     #Auron overdrive tutorial
-    FFX_Screen.clickToPixel(724,314,(234, 196, 0))
-    FFX_Screen.clickToBattle()
+    while not FFX_Screen.PixelTest(724,314,(234, 196, 0)):
+        FFX_Xbox.tapB()
+    FFX_Xbox.clickToBattle()
     
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
@@ -342,21 +341,21 @@ def ammesBattle():
     time.sleep(1) #Static delay, the same every time.
     
     #Doing the actual overdrive
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_value('Dpad', 2)
     time.sleep(0.04)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('Dpad', 0)
     time.sleep(0.04)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_value('Dpad', 4)
     time.sleep(0.04)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('Dpad', 0)
     time.sleep(0.04)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_value('Dpad', 1)
     time.sleep(0.04)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value('Dpad', 0)
     time.sleep(0.04)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value('Dpad', 8)
     time.sleep(0.04)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value('Dpad', 0)
     time.sleep(0.04)
     FFXC.set_value('BtnShoulderL', 1)
     time.sleep(0.04)
@@ -383,8 +382,7 @@ def AfterAmmes():
         if FFX_memory.userControl():
             #Map changes and events
             if checkpoint == 6: #Save sphere
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_neutral()
                 time.sleep(0.2)
                 FFX_Xbox.menuB()
                 time.sleep(1)
@@ -403,50 +401,14 @@ def AfterAmmes():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_value('AxisLy', 0)
-            FFXC.set_value('AxisLx', 0)
-            if FFX_memory.battleScreen():
+            FFXC.set_neutral()
+            if FFX_memory.turnReady():
                 FFX_Battle.Tanker()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 FFX_Xbox.skipStoredScene(3)
-            
 
-def AfterAmmes_old():
-    FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(0.45)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(3)
-    FFXC.set_value('AxisLx', 1)
-    FFXC.set_value('AxisLy', 0)
-    FFX_memory.clickToEvent()
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    
-    #Touch the save sphere
-    time.sleep(0.4)
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuB()
-    
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2.5)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(3.5)
-    
-    #Finally, finish with the Tanker fight.
-    
 def SwimToJecht() :
     #FFX_memory.awaitControl()
     
@@ -454,123 +416,49 @@ def SwimToJecht() :
     print("Swimming to Jecht")
     
     FFXC.set_value('BtnA', 1)
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, -1)
     time.sleep(8)
     while FFX_memory.userControl():
-        FFXC.set_value('AxisLy', 1)
+        FFXC.set_movement(-1, 1)
     
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
     FFXC.set_value('BtnA', 0)
     print("We've now reached Jecht.")
     FFX_Xbox.SkipDialog(5)
     
     #Next, swim to Baaj temple
-    FFX_Screen.clickToMap1()
-    FFXC.set_value('AxisLx', 1)
+    FFX_memory.clickToControl()
+    FFXC.set_movement(1, 0)
     time.sleep(1)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(1, 1)
     time.sleep(0.6)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     time.sleep(5)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 1)
     time.sleep(1)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     time.sleep(14)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(-1, 1)
     time.sleep(1.5) # Line up with stairs
     
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_movement(0, 1)
     #time.sleep(600)
     time.sleep(3)
     
     while FFX_memory.getMap() == 48:
         pos = FFX_memory.getCoords()
         if pos[1] < 550:
-            FFXC.set_value('AxisLy', 1)
             if pos[0] < -5:
-                FFXC.set_value('AxisLx', 1)
+                FFXC.set_movement(1, 1)
             elif pos[0] > 5:
-                FFXC.set_value('AxisLx', -1)
+                FFXC.set_movement(-1, 1)
             else:
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
         else:
-            #print("How is this position?")
-            #FFXC.set_value('AxisLx', 0)
-            #FFXC.set_value('AxisLy', 0)
-            #time.sleep(10)
-            FFXC.set_value('AxisLy', 1)
             if pos[1] > ((-1.00 * pos[0]) + 577.00):
-                FFXC.set_value('AxisLx', -1)
+                FFXC.set_movement(-1, 1)
             else:
-                FFXC.set_value('AxisLx', 0)
+                FFXC.set_movement(0, 1)
     
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
-    time.sleep(0.3)
-
-def SwimToJecht_shortGame():
-    #FFX_memory.awaitControl()
-    
-    #time.sleep(1.5)
-    print("Swimming to Jecht")
-    
-    FFXC.set_value('BtnA', 1)
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(8)
-    while FFX_memory.userControl():
-        FFXC.set_value('AxisLy', 1)
-    
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('BtnA', 0)
-    print("We've now reached Jecht.")
-    FFX_Xbox.SkipDialog(5)
-    
-    #Next, swim to Baaj temple
-    FFX_Screen.clickToMap1()
-    FFX_memory.itemHack(1)
-    FFX_memory.changeGold(9999999) #Obviously, we gotta be rich.
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(1)
-    FFXC.set_value('AxisLy', 1)
-    time.sleep(0.6)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(5)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(1)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(14)
-    FFXC.set_value('AxisLx', -1)
-    time.sleep(1.5) # Line up with stairs
-    FFX_memory.changeStory(3210) #Jump to game state, point of no return
-    FFXC.set_value('AxisLx', 0)
-    #time.sleep(600)
-    time.sleep(3)
-    
-    while FFX_memory.getMap() == 48:
-        pos = FFX_memory.getCoords()
-        if pos[1] < 550:
-            FFXC.set_value('AxisLy', 1)
-            if pos[0] < -5:
-                FFXC.set_value('AxisLx', 1)
-            elif pos[0] > 5:
-                FFXC.set_value('AxisLx', -1)
-            else:
-                FFXC.set_value('AxisLx', 0)
-        else:
-            #print("How is this position?")
-            #FFXC.set_value('AxisLx', 0)
-            #FFXC.set_value('AxisLy', 0)
-            #time.sleep(10)
-            FFXC.set_value('AxisLy', 1)
-            if pos[1] > ((-1.00 * pos[0]) + 577.00):
-                FFXC.set_value('AxisLx', -1)
-            else:
-                FFXC.set_value('AxisLx', 0)
-    
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     time.sleep(0.3)

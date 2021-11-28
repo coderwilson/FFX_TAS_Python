@@ -4,7 +4,8 @@ import time
 import FFX_Logs
 import FFX_memory
 
-FFXC = FFX_Xbox.FFXC
+FFXC = FFX_Xbox.controllerHandle()
+#FFXC = FFX_Xbox.FFXC
 
 def breakthrough(action):
     #Action == 1, pass.
@@ -80,7 +81,7 @@ def startHalf():
 def blitzMain():
     half = 1
     print("Clicking until Blitzball game starts")
-    FFX_Screen.clickToPixel(1204,764,(0, 95, 134))
+    FFX_Xbox.clickToPixel(1204,764,(0, 95, 134))
     
     
     #First half
@@ -95,7 +96,7 @@ def blitzMain():
     halfOver()
     print("Skipping dialog, Wakka pumping up the team")
     FFX_Xbox.SkipDialog(10)
-    FFX_Screen.clickToPixel(730,590,(0, 0, 0))
+    FFX_Xbox.clickToPixel(730,590,(0, 0, 0))
     
     #Second half (and overtime if needed)
     while not half == 0:
