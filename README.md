@@ -17,5 +17,5 @@ https://pypi.org/project/vgamepad/ (new virtual game pad to be plugged in)
 
 References:
 twitch.tv/coderwilson
-youtube.com/coderwilson (I don't use this any more, but it has some old stuff that's kinda fun)
+youtube.com/coderwilson (I don't use this too much any more, but it has some old stuff that's kinda fun)
 coderwilson@gmail.com - no solicitations please.
