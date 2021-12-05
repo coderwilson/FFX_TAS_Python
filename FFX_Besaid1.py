@@ -241,9 +241,9 @@ def leaving():
                 while not FFX_memory.userControl():
                     FFX_Xbox.tapB()
             elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri
-                FFXC.set_neutral()
+                FFXC.set_neutral() 
                 healCount = 0
-                while not FFX_memory.menuOpen():
+                while FFX_memory.battleActive():
                     if FFX_Screen.BattleScreen():
                         battleHP = FFX_memory.getBattleHP()
                         enemyHP = FFX_memory.getEnemyCurrentHP()

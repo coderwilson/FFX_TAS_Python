@@ -54,6 +54,26 @@ def loadOffsetBattle(offset):
     FFX_Xbox.menuB()
     time.sleep(3)
 
+def loadMemCursor():
+    FFX_memory.awaitControl()
+    FFX_memory.openMenu()
+    time.sleep(1)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    if FFX_memory.getStoryProgress() > 3000:
+        FFX_Xbox.menuUp()
+    FFX_Xbox.menuB()
+    time.sleep(1)
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
+
 def loadPostBlitz():
     print("Loading to first save file")
     loadOffset(1)

@@ -219,7 +219,7 @@ def SkipDialogSpecial( Keystrokes ):
 
 def skipSave():
     print("Skipping save dialog popup")
-    time.sleep(0.2)
+    time.sleep(0.4)
     menuA()
     time.sleep(0.1)
     menuB()
@@ -388,6 +388,7 @@ def awaitSave() :
         elif FFX_Screen.PixelTestTol(482,738,(215, 215, 215),5): #Skips specific dialog, SS Winno
             menuB()
         elif savePopup == True:
+            time.sleep(0.8)
             menuA()
             complete = 1
         elif saveScreen == True:
@@ -408,6 +409,7 @@ def awaitSave() :
         #if savePopup == True:
         #    complete = 1
         if FFX_Screen.PixelTestTol(752,484,(149, 149, 149),5):
+            time.sleep(0.6)
             tapA()
             time.sleep(0.07)
         elif FFX_Screen.PixelTestTol(752,518,(149, 149, 149),5):

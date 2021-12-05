@@ -12,7 +12,7 @@ FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def arrival():
-    FFX_Xbox.skipStoredScene(7)
+    FFX_Xbox.skipStoredScene(2)
     print("Starting Luca section")
     FFX_memory.clickToControl()
     

@@ -1909,9 +1909,13 @@ def fullPartyFormat(frontLine):
         print(order)
         print("Into formation:")
         print(orderFinal)
-        while menuOpen() == False:
-            openMenu()
-
+        if menuOpen() == False:
+            while menuOpen() == False:
+                openMenu()
+        else:
+            #Sometimes needs delay if menu was opened via other means.
+            time.sleep(0.4)
+        
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
@@ -1968,6 +1972,7 @@ def fullPartyFormat(frontLine):
             order = getOrderSeven()
             #time.sleep(30)
     print("Party format is good now.")
+    #if frontLine != 'miihen':
     closeMenu()
 
 def menuDirection_oldAttempt(currentmenuposition, targetmenuposition, menusize):

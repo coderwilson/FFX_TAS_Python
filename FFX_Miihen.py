@@ -12,10 +12,11 @@ FFXC = FFX_Xbox.controllerHandle()
  
 def arrival():
     print("Waiting for Yuna/Tidus to stop laughing.")
+    FFXC.set_movement(0, 1)
     FFX_memory.clickToControl()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
     
-    FFX_memory.fullPartyFormat('miihen')
+    #FFX_memory.fullPartyFormat('miihen')
     selfDestruct = 0
     miihenSkip = False
     battleCount = 0
@@ -107,13 +108,21 @@ def arrival():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 if checkpoint < 4: #Tutorial battle with Auron
+                    FFXC.set_movement(0, 1)
                     FFX_memory.clickToControl()
+                    
+                    FFXC.set_neutral()
+                    FFXC.set_value('BtnY',1)
+                    time.sleep(0.035)
+                    FFXC.set_neutral()
+                    FFX_memory.fullPartyFormat('miihen')
                 elif checkpoint == 25 and FFX_memory.battleActive() == False: #Shelinda dialog
+                    FFXC.set_neutral()
                     FFX_Xbox.tapB()
                 else:
+                    FFXC.set_neutral()
                     print("Starting battle")
                     battleCount += 1
                     if selfDestruct == 0:
@@ -123,10 +132,12 @@ def arrival():
                     else:
                         FFX_Battle.MiihenRoad(selfDestruct)
                     print("Battle complete")
-            elif FFX_memory.menuOpen():
-                FFX_Xbox.tapB()
-            elif FFX_memory.diagSkipPossible():
-                FFX_Xbox.tapB()
+            else:
+                FFXC.set_movement(1, 1)
+                if FFX_memory.menuOpen():
+                    FFX_Xbox.tapB()
+                elif FFX_memory.diagSkipPossible():
+                    FFX_Xbox.tapB()
     print("Miihen skip status: ", miihenSkip)
     return [selfDestruct, battleCount, SDbattleNum, miihenSkip]
 

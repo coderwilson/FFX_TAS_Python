@@ -26,6 +26,9 @@ def Entrance():
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuRight()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuRight()
     FFX_memory.closeMenu()
     
     #Now back into the water

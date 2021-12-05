@@ -56,14 +56,14 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-#Gamestate = "Macalania"
-#StepCounter = 1
-#StepCounter = 2
-#Gamestate = "Home"
-#StepCounter = 1
-Gamestate = "rescueYuna"
+Gamestate = "Macalania"
 #StepCounter = 1
 StepCounter = 2
+#Gamestate = "Home"
+#StepCounter = 1
+#Gamestate = "rescueYuna"
+#StepCounter = 1
+#StepCounter = 2
 #Gamestate = "Gagazet"
 #StepCounter = 1
 #StepCounter = 4
@@ -85,8 +85,9 @@ autoEggHunt = True
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 #rngSeedNum = 31 #Potential
 #rngSeedNum = 45 #Potential
-#rngSeedNum = 49 #Favorite one so far, but problem on Chocobo Eater
-rngSeedNum = 58
+#rngSeedNum = 49 #Favorite one so far
+#rngSeedNum = 59 #Potential
+rngSeedNum = 81
 rngReviewOnly = False
 print("Game type will be: ", gameLength)
 ####################################################################################################
@@ -258,6 +259,7 @@ if Gamestate != "none" :
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
         FFX_LoadGame.loadOffset(2)
         FFX_LoadGame.loadEggHunt()
+    FFX_LoadGame.loadMemCursor()
 
 
 #Movement files - moved to FFX_compileAll.py
@@ -432,7 +434,7 @@ while Gamestate != "End":
         print("Pre-Blitz time: ", str(totalTime))
         FFX_Logs.writeStats("Pre Blitz time:")
         FFX_Logs.writeStats(totalTime)
-        if rngReviewOnly == True and earlyHaste == -1: # Used to run multiple tests via a single execution
+        if rngReviewOnly == True:# and earlyHaste == -1: # Used to run multiple tests via a single execution
             Gamestate = "none"
             StepCounter = 1
             FFXC.set_movement(0, -1) #Step away from the save sphere

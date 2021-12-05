@@ -48,6 +48,7 @@ def desert():
     
     checkpoint = 0
     firstFormat = False
+    sandy1 = False
     while FFX_memory.getMap() != 130:
         if FFX_memory.userControl():
             #Map changes
@@ -104,7 +105,11 @@ def desert():
                 elif FFX_memory.getBattleNum() == 234: #Sandragora logic
                     print("Sandragora fight")
                     if checkpoint < 55:
-                        FFX_Battle.sandragora(1)
+                        if sandy1 == False:
+                            FFX_Battle.sandragora(1)
+                            sandy1 = True
+                        else:
+                            FFX_Battle.fleeAll()
                     else:
                         FFX_Battle.sandragora(2)
                 else:

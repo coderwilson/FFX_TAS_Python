@@ -65,8 +65,12 @@ def engage():
     activeEgg = 99
     target = [10,-10]
     moveVersion = 0
+    checkpoint = 0
     print("Ready for movement.")
     while FFX_memory.getStoryProgress() < 3251:
+        lookingCount += 1
+        if lookingCount % 40 == 0:
+            checkpoint += 1
         if Minimap2(): #User control is different for this section.
             #print("Building egg array")
             eggArray = FFX_memory.buildEggs()
@@ -78,18 +82,24 @@ def engage():
                         activeEgg = marker
                         target = [eggArray[marker].x, eggArray[marker].y]
                         clickTimer = currentTime + 8 #We will hunt for this egg for this many seconds.
-                        print("New target egg: ", target)
+                        #print("New target egg: ", target)
             elif eggArray[activeEgg].goForEgg == False:
                 activeEgg = 99
             elif eggArray[activeEgg].eggLife == 150:
                 activeEgg = 99
             
-            if activeEgg == 99:
-                if lookingCount % 200 < 100:
-                    target = [25,-25]
-                else:
-                    target = [-25,25]
-                lookingCount += 1
+            if activeEgg == 99: #Positions to go to if we are stalling.
+                if checkpoint == 0:
+                    target = [-20, -20]
+                elif checkpoint == 1:
+                    target = [20, -20]
+                elif checkpoint == 2:
+                    target = [20, 20]
+                elif checkpoint >= 3:
+                    target = [-20, 20]
+                elif checkpoint >= 4:
+                    checkpoint = 0
+                #print(lookingCount, " | ", target)
             
             #And now the code to move to the target.
             oldTarget = target
@@ -150,11 +160,14 @@ def engage():
             if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
                 time.sleep(0.15)
                 FFXC.set_neutral()
-                print("Studder-step to egg. | ",lookingCount)
+                #print("Studder-step to egg. | ",lookingCount)
+                print("Studder-step to egg. | ",checkpoint)
             elif activeEgg == 99:
-                print("Looking for a new egg. | ",lookingCount)
+                #print("Looking for a new egg. | ",lookingCount)
+                print("Looking for a new egg. | ",checkpoint)
             else:
-                print("Targetting egg: | ",target)
+                #print("Targetting egg: | ",target)
+                print("Targetting egg: | ",checkpoint)
             FFX_Xbox.tapB()
         else:
             print("No user control.")

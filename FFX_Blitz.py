@@ -126,9 +126,7 @@ def manualMovement():
         elif menuNum == 20:
             print("Movement menu has been opened.")
             FFX_memory.awaitMenuControl()
-            #time.sleep(180) #Testing only
             FFX_Xbox.menuDown()
-            #time.sleep(600) #Testing only
             FFX_Xbox.menuB()
             time.sleep(0.3)
             FFX_memory.awaitMenuControl()
