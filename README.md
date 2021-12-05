@@ -21,6 +21,10 @@ youtube.com/coderwilson (I don't use this too much any more, but it has some old
 coderwilson@gmail.com - no solicitations please.
 
 -------------------------------------------------------------------
+Also, this may be helpful:
+https://github.com/shauleiz/ScpVBus/releases/tag/v1.7.1.2
+
+-------------------------------------------------------------------
 Notes concerning readBytes and writeBytes
 Make sure to instal (via pip) the library ReadWriteMemory.
 The file to fix is located in the python base folder, in this location.
