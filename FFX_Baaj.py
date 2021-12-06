@@ -140,11 +140,11 @@ def Baaj_puzzle():
 
 def Klikk_fight() :
     #Before Rikku shows up, we're just going to spam the click button. Simple.
-    print("Waiting on Use tutorial")
-    while not FFX_Screen.PixelTest(897,295,(234, 199, 0)):
-        FFX_Xbox.tapB()
+    #print("Waiting on Use tutorial")
+    #while not FFX_Screen.PixelTest(897,295,(234, 199, 0)):
+    #    FFX_Xbox.tapB()
     
-    print("Doing Use tutorial")
+    #print("Doing Use tutorial")
     FFX_Xbox.clickToBattle()
     FFX_Battle.useItem(1,'none')
     

@@ -27,8 +27,8 @@ def LoadFirst():
 
 def loadOffset(offset):
     print("Loading to save file in position ", offset)
-    time.sleep(0.2)
-    FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuB()
     time.sleep(2.5)
     while offset > 0:
         FFX_menuGrid.gridDown()

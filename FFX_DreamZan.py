@@ -41,15 +41,16 @@ def NamingTidus():
     FFX_Xbox.menuB() # Confirm again
 
 def NewGame(gameLength):
-    FFX_Screen.awaitPixel(1076,552,(157, 159, 157))
+    #FFX_Screen.awaitPixel(1076,552,(157, 159, 157))
     print("Starting the game")
     print("This will be a ", gameLength, " run.")
-    FFXC.set_movement(0, 1)
-    time.sleep(0.1)
-    FFXC.set_neutral()
-    FFXC.set_value('BtnB', 1)
-    time.sleep(0.1)
-    FFXC.set_value('BtnB', 0)
+    #FFXC.set_movement(0, 1)
+    #time.sleep(0.1)
+    #FFXC.set_neutral()
+    #FFXC.set_value('BtnB', 1)
+    #time.sleep(0.1)
+    #FFXC.set_value('BtnB', 0)
+    # - This piece replaced in Auto_Main
     
 def NewGame2():
     #New game selected. Next, select options.
@@ -330,10 +331,15 @@ def ammesBattle():
     FFX_Xbox.clickToBattle()
     FFX_Battle.defend()
     
-    #Auron overdrive tutorial
-    while not FFX_Screen.PixelTest(724,314,(234, 196, 0)):
+    while FFX_memory.battleActive():
         FFX_Xbox.tapB()
+    time.sleep(0.5) #Just for no overlap
     FFX_Xbox.clickToBattle()
+    
+    #Auron overdrive tutorial
+    #while not FFX_Screen.PixelTest(724,314,(234, 196, 0)):
+    #    FFX_Xbox.tapB()
+    #FFX_Xbox.clickToBattle()
     
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()

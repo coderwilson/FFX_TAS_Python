@@ -125,19 +125,40 @@ print("Please launch the game now.")
 #print("Now attempting to activate FFX window")
 reportGamestate()
 
+#Initiate memory reading, after we know the game is open.
+#import FFX_memory
+FFX_memory.start()
+
 #Press Start until the main menu comes up
 #---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-while not FFX_Screen.PixelTest(1076,552,(157, 159, 157)):
-    FFXC.set_value('BtnStart', 1)
-    time.sleep(0.1)
-    FFXC.set_value('BtnStart', 0)
+gameModeSelected = False
+while gameModeSelected == False:
+    if FFX_memory.getMap() != 23:
+        FFXC.set_value('BtnStart', 1)
+        time.sleep(0.035)
+        FFXC.set_value('BtnStart', 0)
+        time.sleep(0.035)
+    elif Gamestate != 'none':
+        if FFX_memory.cursorLocation()[1] == 176:
+            if FFX_memory.NewGameCursor() == 0:
+                FFX_Xbox.menuDown()
+            else:
+                time.sleep(2)
+                FFX_Xbox.menuB()
+                gameModeSelected = True
+    else:
+        if FFX_memory.cursorLocation()[1] == 176:
+            if FFX_memory.NewGameCursor() == 1:
+                FFX_Xbox.menuUp()
+            else:
+                time.sleep(2)
+                FFX_Xbox.menuB()
+                gameModeSelected = True
 
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-#Initiate memory reading, after we know the game is open.
-#import FFX_memory
-FFX_memory.start()
+
 FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("-------------This game will be using RNG seed: ", rngSeed)
@@ -803,10 +824,6 @@ time.sleep(10)
 
 
 FFX_memory.end()
-try:
-    FFX_Screen.clickImage("stop_recording.JPG")
-except:
-    print("Could not stop recording.")
 
 print("Automation complete. Unplugging controller.")
 import Reset_Controller

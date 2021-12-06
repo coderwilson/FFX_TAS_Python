@@ -1244,6 +1244,13 @@ def saveMenuCursor():
     else:
         return False
 
+def NewGameCursor():
+    global baseValue
+
+    key = baseValue + 0x001467942
+    value = process.readBytes(key,1)
+    return value
+
 def getYunaSlvl():
     global baseValue
 

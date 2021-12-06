@@ -126,9 +126,11 @@ def tidusOD():
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(2)
-    while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
-        doNothing = True
-    time.sleep(0.43)  # First try every time?
+    #while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
+    #    doNothing = True
+    #time.sleep(0.43)  # First try every time?
+    
+    time.sleep(3) #Replace with memory reading later.
     FFX_Xbox.menuB()
     time.sleep(0.25)
     FFX_Xbox.menuB()
@@ -151,9 +153,11 @@ def tidusODSeymour():
     FFX_Xbox.menuLeft()
     FFX_Xbox.menuB()  # Activate overdrive
     time.sleep(0.4)
-    while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
-        doNothing = True
-    time.sleep(0.43)  # First try every time?
+    #while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
+    #    doNothing = True
+    #time.sleep(0.43)  # First try every time?
+    
+    time.sleep(3) #Replace with memory reading later.
     FFX_Xbox.menuB()
     time.sleep(0.25)
     FFX_Xbox.menuB()
@@ -302,31 +306,6 @@ def reviveAll():
                     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
-
-
-def FinishWithAttacksOnly():
-    print("Finish with attacks only")
-    BattleComplete = 0
-    countAttacks = 0
-    countRevives = 0
-
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
-        if FFX_memory.turnReady():
-            if FFX_Screen.faintCheck() > 0:
-                revive()
-                countRevives += 1
-            else:
-                attack('none')
-                countAttacks += 1
-        if FFX_Screen.BattleComplete():
-            print("Victory Screen")
-            FFXC.set_value("BtnB", 1)
-            time.sleep(2.4)
-            FFXC.set_value("BtnB", 0)
-            BattleComplete = 1
-            FFX_Logs.writeStats("Attack-only battle. Attacks: " + str(countAttacks))
-            FFX_Logs.writeStats("Attack-only battle. Revives: " + str(countRevives))
-
 
 def selfPot():
     print("Self potion")
