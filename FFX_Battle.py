@@ -126,9 +126,6 @@ def tidusOD():
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(2)
-    #while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
-    #    doNothing = True
-    #time.sleep(0.43)  # First try every time?
     
     time.sleep(3) #Replace with memory reading later.
     FFX_Xbox.menuB()
@@ -153,9 +150,6 @@ def tidusODSeymour():
     FFX_Xbox.menuLeft()
     FFX_Xbox.menuB()  # Activate overdrive
     time.sleep(0.4)
-    #while not FFX_Screen.PixelTestTol(1239, 436, (191, 186, 208), 10):
-    #    doNothing = True
-    #time.sleep(0.43)  # First try every time?
     
     time.sleep(3) #Replace with memory reading later.
     FFX_Xbox.menuB()

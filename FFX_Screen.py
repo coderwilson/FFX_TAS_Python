@@ -17,6 +17,14 @@ def clearMouse(counter):
             clearMouse(counter + 1)
 
 def BattleScreen():
+    if FFX_memory.turnReady():
+        time.sleep(0.2)
+        return True
+    else:
+        return False
+
+    
+def BattleScreen_old():
     if PixelTest(1464, 181, (229, 189, 96)) :
         if not PixelTestTol(131,693,(153, 155, 153),5):
             print("It is now someone's turn in battle.")
