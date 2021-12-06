@@ -34,7 +34,7 @@ def loadOffset(offset):
         FFX_menuGrid.gridDown()
         offset -= 1
     time.sleep(0.2)
-    FFX_Xbox.tapB()
+    FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuB()
     FFX_memory.awaitControl()
@@ -398,16 +398,15 @@ def loadMacTemple2():
 
 def loadWendigo():
     import FFX_Battle
-    loadOffset(1)
-    FFX_memory.awaitControl()
-    while FFX_memory.getBattleNum() < 195:
-        if FFX_Screen.BattleScreen():
-            FFXC.set_value('AxisLy', 0)
-            FFX_Battle.fleeAll()
-        elif FFX_memory.userControl():
-            FFXC.set_value('AxisLy', -1)
-        else:
-            FFXC.set_value('AxisLy', 0)
+    #FFX_memory.awaitControl()
+    #while FFX_memory.getBattleNum() < 195:
+    #    if FFX_Screen.BattleScreen():
+    #        FFXC.set_neutral()
+    #        FFX_Battle.fleeAll()
+    #    elif FFX_memory.userControl():
+    #        set_movement(0, -1)
+    #    else:
+    #        FFXC.set_neutral()
     
     FFX_Battle.wendigo()
     print("Wendigo fight over - end of loading game to Wendigo fight")

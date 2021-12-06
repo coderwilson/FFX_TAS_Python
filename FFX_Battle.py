@@ -251,17 +251,24 @@ def revive():
     time.sleep(0.035)
     FFX_Xbox.menuB()  # Item menu open.
     time.sleep(0.035)
+    FFX_Xbox.menuDown()
     itemPos = FFX_memory.getThrowItemsSlot(6) - 1
-    while FFX_memory.battleCursor2() != itemPos:
-        print(FFX_memory.battleCursor2()," | ", itemPos)
-        if itemPos % 2 == 0 and FFX_memory.battleCursor2() % 2 == 1:
-            FFX_Xbox.menuRight()
-        elif itemPos % 2 == 1 and FFX_memory.battleCursor2() % 2 == 0:
-            FFX_Xbox.menuLeft()
-        elif itemPos > FFX_memory.battleCursor2():
-            FFX_Xbox.menuDown()
+    if FFX_memory.battleCursor2() == 0:
+        if itemPos == 0:
+            FFX_Xbox.menuB()
         else:
-            FFX_Xbox.menuUp()
+            if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuRight()
+            while FFX_memory.battleCursor2() != itemPos:
+                print(FFX_memory.battleCursor2()," | ", itemPos)
+                if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                    FFX_Xbox.menuRight()
+                elif itemPos > FFX_memory.battleCursor2():
+                    FFX_Xbox.menuDown()
+                else:
+                    FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
@@ -275,17 +282,24 @@ def reviveAll():
     FFX_Xbox.menuB()  # Item menu open.
     time.sleep(0.3)
     cursor = 1
-    itemPos = FFX_memory.getThrowItemsSlot(7)
-    if itemPos % 2 == 0:
-        FFX_Xbox.menuRight()
-        cursor += 1
-    if cursor == itemPos:  # P.downs are in slot 2
-        FFX_Xbox.menuB()
-    else:
-        while cursor != itemPos:  # If not slot 2, scroll down until we find phoenix downs.
-            FFX_Xbox.menuDown()
-            cursor += 2
-        FFX_Xbox.menuB()
+    itemPos = FFX_memory.getThrowItemsSlot(7) - 1
+    
+    if FFX_memory.battleCursor2() == 0:
+        if itemPos == 0:
+            FFX_Xbox.menuB()
+        else:
+            if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuRight()
+            while FFX_memory.battleCursor2() != itemPos:
+                print(FFX_memory.battleCursor2()," | ", itemPos)
+                if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                    FFX_Xbox.menuRight()
+                elif itemPos > FFX_memory.battleCursor2():
+                    FFX_Xbox.menuDown()
+                else:
+                    FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
 
@@ -2728,28 +2742,34 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
         itemnum = -1
         itemname = "noitemfound"
     if itemnum >= 0:
-
+        
         FFX_Logs.writeLog("Using %s" % itemname)
         print("Using %s" % itemname)
         while FFX_memory.battleMenuCursor() != 1:
             FFX_Xbox.menuDown()
         FFX_Xbox.menuB()  # Item menu open.
         time.sleep(0.3)
-        cursor = 1
-        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
-        if itemPos % 2 == 0:
-            FFX_Xbox.menuRight()
-            cursor += 1
-        if cursor == itemPos:
-            FFX_Xbox.menuB()
-        else:
-            while cursor != itemPos:
-                FFX_Xbox.menuDown()
-                cursor += 2
-            FFX_Xbox.menuB()
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
+        if FFX_memory.battleCursor2() == 0 and itemPos != 2:
+            FFX_Xbox.menuDown()
+        if FFX_memory.battleCursor2() != itemPos:
+            while FFX_memory.battleCursor2() != itemPos:
+                print("Moving position ", FFX_memory.battleCursor2(), " to position ", itemPos)
+                if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                    if FFX_memory.battleCursor2() % 2 == 0:
+                        FFX_Xbox.menuLeft()
+                    else:
+                        FFX_Xbox.menuRight()
+                elif FFX_memory.battleCursor2() >= itemPos:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()
+        time.sleep(0.07)
         print("Direction: ", direction)
         direction = direction.lower()
         print("Target: ", targetposition)
+        healerposition = FFX_memory.getBattleCharSlot(FFX_memory.battleTargetId())
         print("Healer: ", healerposition)
         if (targetposition - healerposition) % 3 == 1:
             if direction == "left":
@@ -2783,6 +2803,7 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
 # Process written by CrimsonInferno
 def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     print("Wendigo Res/Heal function")
+    healCount = 0
     partyHP = FFX_memory.getBattleHP()
     if FFX_Screen.faintCheck() == 2:
         print("2 Characters are dead")
@@ -2837,7 +2858,7 @@ def wendigo():
 
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
-            print("Test")
+            time.sleep(0.4)
             partyHP = FFX_memory.getBattleHP()
             turnchar = FFX_memory.getBattleCharTurn()
 
@@ -2867,6 +2888,7 @@ def wendigo():
                     swapposition = FFX_memory.getBattleCharSlot(swapindex)
                     buddySwap_new(swapposition)  # Swap for Lulu/Auron
             elif turnchar == 0:
+                print("Test 1")
                 if tidushaste == False:
                     print("Tidus Haste self")
                     tidusHaste('none')
@@ -2877,12 +2899,7 @@ def wendigo():
                     phase += 1
                 elif phase == 1:
                     print("Attack top Guado")
-                    while not FFX_memory.otherBattleMenu():
-                        FFX_Xbox.menuB()
-                    while FFX_memory.battleTargetId() != 22:
-                        FFX_Xbox.menuDown()
-                    FFX_Xbox.menuB()
-                    FFX_Xbox.menuB()
+                    attack('down')
                     phase += 1
                 elif FFX_Screen.faintCheck() == 2:
                     print("2 Characters are dead")
@@ -2902,12 +2919,14 @@ def wendigo():
                                 revive()
                             else:
                                 print("No healing items so just go face")
-                                attack('left')
+                                attackByNum(21, 'l')
                     else:
-                        attack('left')
+                        print("No need to heal. Ver 1")
+                        attackByNum(21, 'l')
                     tidushealself = False
                 else:
-                    attack('left')
+                    print("No need to heal. Ver 2")
+                    attackByNum(21, 'l')
                 time.sleep(0.2)
             elif turnchar == 6:
                 if phase == 2:
@@ -3708,20 +3727,24 @@ def altanaheal():
                 FFX_Xbox.menuDown()
         FFX_Xbox.menuB()  # Item menu open.
         time.sleep(0.3)
-        cursor = 1
-        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
-        if itemPos % 2 == 0:
-            FFX_Xbox.menuRight()
-            cursor += 1
-        if cursor == itemPos:
-            FFX_Xbox.menuB()
-        else:
-            while cursor != itemPos:
+    itemPos = FFX_memory.getThrowItemsSlot(6) - 1
+    if itemPos != 255:
+        if FFX_memory.battleCursor2() == 0 and itemPos != 0:
+            FFX_Xbox.menuDown()
+        while itemPos != FFX_memory.battleCursor2():
+            if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                FFX_Xbox.menuRight()
+            elif itemPos > FFX_memory.battleCursor2():
                 FFX_Xbox.menuDown()
-                cursor += 2
-            FFX_Xbox.menuB()
-
-        FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuUp()
+        FFX_Xbox.menuB()
+        
+        time.sleep(0.07)
+        if FFX_memory.battleTargetId() < 20:
+            FFX_Xbox.menuUp()
+        
+        FFX_Xbox.menuB()
         FFX_Xbox.menuB()
         FFX_Xbox.menuB()
 
@@ -3773,6 +3796,7 @@ def seymourNatus():
                         swapSlot = FFX_memory.getBattleCharSlot(0)
                         buddySwap_new(swapSlot)
                         FFX_Screen.awaitTurn()
+                        FFX_Xbox.menuUp()
                         attack('none')
                     elif FFX_Screen.turnYuna():
                         aeonSummon(4)
@@ -4020,7 +4044,7 @@ def useItem(slot: int, direction):
         else:
             FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    time.sleep(0.2)
+    time.sleep(0.3)
     while FFX_memory.battleCursor2() != 1:
         if FFX_memory.battleCursor2() == 0:
             FFX_Xbox.menuRight()
@@ -4126,6 +4150,42 @@ def cheer():
     FFX_Xbox.SkipDialog(2)
 
 
+def attackByNum(num, direction):
+    print("Attacking specific character, ", num)
+    direction = direction.lower()
+    if not FFX_memory.turnReady():
+        print("Battle menu isn't up.")
+        while not FFX_memory.turnReady():
+            #Waiting for battle menu to come up.
+            time.sleep(0.035)
+        time.sleep(0.07) #Make sure we actually have control
+    if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
+        while FFX_memory.battleMenuCursor() != 0:
+            FFX_Xbox.menuUp()
+            if FFX_Screen.BattleComplete():
+                return #Safety
+    FFX_Xbox.menuB()
+    time.sleep(0.07)
+    
+    if FFX_memory.getEnemyCurrentHP()[num - 20] != 0:
+        if direction == 'l':
+            while FFX_memory.battleTargetId() != num:
+                FFX_Xbox.menuLeft()
+        elif direction == 'r':
+            while FFX_memory.battleTargetId() != num:
+                FFX_Xbox.menuRight()
+        elif direction == 'u':
+            while FFX_memory.battleTargetId() != num:
+                FFX_Xbox.menuUp()
+        elif direction == 'd':
+            while FFX_memory.battleTargetId() != num:
+                FFX_Xbox.menuDown()
+        
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    time.sleep(0.5)
+
 def attack(direction):
     FFX_Logs.writeLog("Basic Attack")
     print("Attack")
@@ -4137,7 +4197,7 @@ def attack(direction):
             time.sleep(0.035)
         time.sleep(0.2) #Make sure we actually have control
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
-        while FFX_memory.battleMenuCursor() != 0:
+        while not FFX_memory.battleMenuCursor() in [0, 216]:
             FFX_Xbox.menuUp()
             if FFX_Screen.BattleComplete():
                 return
@@ -4393,7 +4453,7 @@ def valeforFire():
 def thunder(direction):
     FFX_Logs.writeLog("Lulu cast Thunder")
     print("Black magic - Thunder")
-    time.sleep(0.2)
+    time.sleep(0.4)
     if FFX_Screen.turnLulu() == False:
         print("Lulu is not the current person. Deferring turn.")
         return
@@ -4576,20 +4636,17 @@ def aeonSummon(position):
         else:
             FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    if position == 0:
-        FFX_Xbox.SkipDialog(2)
-    else:
-        time.sleep(0.5)
-        if position > 0:
-            while position > 0:
-                position -= 1
-                FFX_Xbox.menuDown()
-                # time.sleep(0.05)
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuB()
-        time.sleep(1)
-        FFX_Screen.awaitTurn()
+    time.sleep(0.4)
+    while position != FFX_memory.battleCursor2():
+        if FFX_memory.battleCursor2() < position:
+            FFX_Xbox.menuDown()
+        else:
+            FFX_Xbox.menuUp()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    time.sleep(1)
+    FFX_Screen.awaitTurn()
 
 
 def aeonSpell(position):
@@ -4958,12 +5015,22 @@ def lancet(direction):
 
 def lancetHome(direction):
     print("Lancet (home) function")
-    FFX_Xbox.menuDown()
+    time.sleep(0.4)
+    while FFX_memory.battleMenuCursor() != 20:
+        if FFX_memory.battleMenuCursor() == 255:
+            time.sleep(0.01)
+        elif FFX_memory.battleMenuCursor() == 1:
+            FFX_Xbox.menuUp()
+        elif FFX_memory.battleMenuCursor() > 20:
+            FFX_Xbox.menuUp()
+        else:
+            FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     time.sleep(0.4)
-    FFX_Xbox.menuDown()
+    while FFX_memory.battleCursor2() != 2:
+        FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    time.sleep(0.3)
+    time.sleep(0.07)
     if direction == 'left':
         FFX_Xbox.menuLeft()
     if direction == 'right':
@@ -5182,7 +5249,8 @@ def SinArms():
 
     while FFX_memory.battleActive(): #Arm1
         if FFX_memory.turnReady():
-            FFX_Xbox.menuDown()
+            if FFX_memory.battleMenuCursor() == 0:
+                FFX_Xbox.menuDown()
             FFX_Xbox.SkipDialog(2)
         else:
             FFX_Xbox.menuB()
@@ -5199,7 +5267,8 @@ def SinArms():
 
     while not FFX_memory.battleComplete(): #Arm2
         if FFX_memory.turnReady():
-            FFX_Xbox.menuDown()
+            if FFX_memory.battleMenuCursor() == 0:
+                FFX_Xbox.menuDown()
             FFX_Xbox.SkipDialog(2)
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
@@ -5214,8 +5283,9 @@ def SinArms():
     FFX_Xbox.clickToBattle() #Start of Sin Core
     aeonSummon(4)
     FFX_Screen.awaitTurn()
-    time.sleep(1)
-    FFX_Xbox.menuDown()
+    time.sleep(0.5)
+    if FFX_memory.battleMenuCursor() == 0:
+        FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuLeft()
@@ -5241,7 +5311,8 @@ def SinFace():
                 aeonSummon(4)
                 FFX_Screen.awaitTurn()
                 time.sleep(1)
-                FFX_Xbox.menuDown()
+                if FFX_memory.battleMenuCursor() == 0:
+                    FFX_Xbox.menuDown()
                 FFX_Xbox.SkipDialog(2)
             elif FFX_Screen.turnAeon():
                 attack('none')

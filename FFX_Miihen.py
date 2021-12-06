@@ -108,7 +108,7 @@ def arrival():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
-            if FFX_Screen.BattleScreen():
+            if FFX_memory.battleActive():
                 if checkpoint < 4: #Tutorial battle with Auron
                     FFXC.set_movement(0, 1)
                     FFX_memory.clickToControl()

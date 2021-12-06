@@ -56,14 +56,16 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
+#Gamestate = "Macalania"
 #StepCounter = 1
-StepCounter = 2
+#StepCounter = 2
+#StepCounter = 7
 #Gamestate = "Home"
 #StepCounter = 1
 #Gamestate = "rescueYuna"
 #StepCounter = 1
 #StepCounter = 2
+#StepCounter = 5
 #Gamestate = "Gagazet"
 #StepCounter = 1
 #StepCounter = 4
@@ -72,8 +74,8 @@ StepCounter = 2
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 #gameLength = "short"
@@ -85,10 +87,10 @@ autoEggHunt = True
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 #rngSeedNum = 31 #Potential
 #rngSeedNum = 45 #Potential
-#rngSeedNum = 49 #Favorite one so far
+rngSeedNum = 49 #Favorite one so far
 #rngSeedNum = 59 #Potential
-rngSeedNum = 81
-rngReviewOnly = False
+#rngSeedNum = 90
+rngReviewOnly = True
 print("Game type will be: ", gameLength)
 ####################################################################################################
 
@@ -224,6 +226,7 @@ if Gamestate != "none" :
         FFXC.set_neutral()
         time.sleep(0.5)
     if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
+        FFX_LoadGame.loadOffsetBattle(0)
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadOffset(15)

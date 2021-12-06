@@ -149,7 +149,9 @@ def otherBattleMenu():
 def battleTargetId():
     global baseValue
     key = baseValue + 0x00F3D1B4
-    return process.readBytes(key,1)
+    retVal = process.readBytes(key,1)
+    print("Battle Target ID: ", retVal)
+    return retVal
 
 def userControl():
     global baseValue
