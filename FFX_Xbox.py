@@ -491,3 +491,24 @@ def clickToBattle():
             menuB()
         elif FFX_memory.diagSkipPossible():
             menuB()
+
+def nameAeon():
+    print("Waiting for aeon naming screen to come up")
+    
+    while not FFX_memory.nameAeonReady():
+        if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+            tapB()
+    
+    print("Naming screen is up.")
+    time.sleep(0.3)
+    tapB()
+    time.sleep(0.035)
+    FFXC.set_value('Dpad', 1)
+    time.sleep(0.035)
+    FFXC.set_neutral()
+    time.sleep(0.035)
+    tapB()
+    time.sleep(0.3)
+    
+    print("Now clearing the value so we're ready for the next aeon later.")
+    FFX_memory.clearNameAeonReady()

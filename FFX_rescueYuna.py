@@ -644,14 +644,18 @@ def trialsEnd():
                 FFXC.set_neutral()
 
     FFXC.set_neutral()
-    FFX_Xbox.SkipDialog(108)
-    print("Mark")
-    FFX_Screen.awaitPixel(371,250,(111, 125, 179))
-    time.sleep(0.2)
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
+    
+    #Name for Bahamut
+    FFX_Xbox.nameAeon()
+    
+    #FFX_Xbox.SkipDialog(108)
+    #print("Mark")
+    #FFX_Screen.awaitPixel(371,250,(111, 125, 179))
+    #time.sleep(0.2)
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
     FFX_Xbox.awaitSave()
 
 def ViaPurifico():

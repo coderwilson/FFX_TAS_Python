@@ -105,15 +105,15 @@ def ssWinno():
     
     FFXC.set_value('Dpad', 1) #Up
     FFXC.set_value('Dpad', 8) #Right
-    FFX_Xbox.SkipDialog(1)
+    FFX_Xbox.SkipDialog(0.4)
     FFXC.set_neutral()
     FFXC.set_value('Dpad', 4) #Left
-    FFX_Xbox.SkipDialog(1)
+    FFX_Xbox.SkipDialog(0.4)
     FFXC.set_neutral() #Neutral
-    FFX_Xbox.SkipDialog(1)
+    FFX_Xbox.SkipDialog(0.4)
     FFXC.set_value('Dpad', 2) #Down
     FFXC.set_value('Dpad', 8) #Right
-    FFX_Xbox.SkipDialog(1)
+    FFX_Xbox.SkipDialog(0.4)
     FFXC.set_neutral()
     FFX_Xbox.SkipDialog(2)
     

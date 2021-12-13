@@ -371,15 +371,16 @@ def trials():
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
     
-    FFX_Xbox.SkipDialog(34)
-    print("Mark")
+    FFX_Xbox.nameAeon()
     
-    FFX_Screen.awaitPixel(352,233,(145, 141, 220)) #naming Ixion
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
+    #FFX_Xbox.SkipDialog(34)
+    #print("Mark")
+    #FFX_Screen.awaitPixel(352,233,(145, 141, 220)) #naming Ixion
+    #time.sleep(0.1)
+    #FFX_Xbox.menuB()
+    #time.sleep(0.1)
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
 
 def leavingDjose():
     FFX_memory.awaitControl()

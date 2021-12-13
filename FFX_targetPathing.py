@@ -5133,8 +5133,8 @@ def insideSin(checkpoint):
         x = -33
         y = -525
     if checkpoint == 69:
-        x = -20
-        y = -504
+        x = -2
+        y = -480
     if checkpoint == 70:
         x = 0
         y = 10

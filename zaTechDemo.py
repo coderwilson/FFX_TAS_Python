@@ -7,6 +7,7 @@ import FFX_Screen
 import FFX_Reset
 import FFX_Battle
 
+import FFX_DreamZan
 import FFX_Miihen
 import FFX_MRR
 import FFX_Guadosalam
@@ -40,21 +41,17 @@ SkipCount = 0
 SkipAttempts = 0
 
 
-attempts = 0 #Determines where in the showcase we start
+attempts = 4 #Determines where in the showcase we start
 cycles = 0
 jyscalRetry = False
-while attempts < 20 and cycles < 20:
-    attempts += 1
+while attempts < 20 and cycles < 50:
+    #attempts += 1
     cycles += 1
     print("Cycle number: ", cycles)
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     #---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    while not FFX_Screen.PixelTest(1076,552,(157, 159, 157)):
-        FFXC.set_value('BtnStart', 1)
-        time.sleep(0.1)
-        FFXC.set_value('BtnStart', 0)
-        time.sleep(0.3)
+    FFX_DreamZan.NewGame('techdemo')
 
     print("Game start screen")
     FFX_Screen.clearMouse(0)
@@ -62,10 +59,10 @@ while attempts < 20 and cycles < 20:
     #Now to run the appropriate section depending on attempt number.
     if attempts == 1:
         print("Demo - Mi'ihen skip")
-        #FFX_LoadGame.loadOffset(20) #Donation incentive not met
-        #FFX_LoadGame.LoadMiihenStart()
-        FFX_LoadGame.loadOffset(33) #Donation incentive met
-        FFX_LoadGame.LoadMiihenStart_Laugh()
+        FFX_LoadGame.loadOffset(21) #Donation incentive not met
+        FFX_LoadGame.LoadMiihenStart()
+        #FFX_LoadGame.loadOffset(34) #Donation incentive met
+        #FFX_LoadGame.LoadMiihenStart_Laugh()
         FFXC.set_neutral()
         FFX_memory.setEncounterRate(0)
         FFX_memory.awaitControl()
@@ -82,7 +79,7 @@ while attempts < 20 and cycles < 20:
         print("-----------------------------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
-        FFX_LoadGame.loadOffset(18)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR()
         wakkaLateMenu = FFX_MRR.arrival()
         FFX_MRR.mainPath(wakkaLateMenu[0])
@@ -97,7 +94,7 @@ while attempts < 20 and cycles < 20:
         print("-----------------------------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
-        FFX_LoadGame.loadOffset(3)
+        FFX_LoadGame.loadOffset(4)
         FFX_LoadGame.loadGuadoSkip()
         time.sleep(3)
         SkipAttempts += 1
@@ -112,15 +109,15 @@ while attempts < 20 and cycles < 20:
         print("-----------------------------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
-        FFX_LoadGame.loadOffset(23)
+        FFX_LoadGame.loadOffset(24)
         FFX_LoadGame.loadMacTemple()
         SkipAttempts += 1
         jyscalSkipStatus = FFX_mTemple.arrival(True)
         if jyscalSkipStatus == True:
             SkipCount += 1
-        elif jyscalRetry == False:
-            attempts -= 1
-            jyscalRetry = True
+        #elif jyscalRetry == False:
+            #attempts -= 1
+            #jyscalRetry = True
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
         print("Attempts: ", SkipAttempts)
@@ -129,13 +126,13 @@ while attempts < 20 and cycles < 20:
         print("-----------------------------------------------------")
     elif attempts == 5:
         print("Demo - Gagazet Cave")
-        FFX_LoadGame.loadOffset(5)
+        FFX_LoadGame.loadOffset(6)
         FFX_LoadGame.loadGagazetDream()
         #FFX_memory.setEncounterRate(0)
         FFX_Gagazet.cave()
     elif attempts == 6:
         print("Demo - Egg Hunt")
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadOffset(3)
 
         FFXC.set_movement(1, 1)
         time.sleep(0.7)

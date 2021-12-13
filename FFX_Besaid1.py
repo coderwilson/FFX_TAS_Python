@@ -138,11 +138,14 @@ def trials():
                 FFX_Xbox.tapB()
             
             elif checkpoint == 32 and FFX_memory.menuOpen():
-                time.sleep(0.2)
-                FFX_Xbox.menuB()
-                time.sleep(0.2)
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
+                #Name for Valefor
+                FFX_Xbox.nameAeon()
+                
+                #time.sleep(0.2)
+                #FFX_Xbox.menuB()
+                #time.sleep(0.2)
+                #FFX_Xbox.menuUp()
+                #FFX_Xbox.menuB()
                 checkpoint += 1 #To the night scene
                 
             
@@ -241,7 +244,7 @@ def leaving():
                 while not FFX_memory.userControl():
                     FFX_Xbox.tapB()
             elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri
-                FFXC.set_neutral() 
+                FFXC.set_neutral()
                 healCount = 0
                 while FFX_memory.battleActive():
                     if FFX_Screen.BattleScreen():
@@ -258,11 +261,12 @@ def leaving():
                         FFX_Xbox.tapB()
                 FFX_Logs.writeStats("Kimahri heal count:")
                 FFX_Logs.writeStats(healCount)
+                FFX_Xbox.SkipDialog(1.5)
                 FFX_memory.clickToControl()
             elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
-                while not FFX_Screen.PixelTestTol(324, 92, (223, 223, 223), 5):
-                    FFX_Xbox.lBumper()
-                FFX_Xbox.SkipDialog(2) #Yuna to the party
+                FFX_Xbox.clickToBattle()
+                time.sleep(0.2)
+                FFX_Battle.buddySwap(0)
                 FFX_Xbox.clickToBattle()
                 FFX_Battle.aeonSummon(0)
                 while not FFX_memory.menuOpen():

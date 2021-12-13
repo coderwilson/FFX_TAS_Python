@@ -40,17 +40,47 @@ def NamingTidus():
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() # Confirm again
 
-def NewGame(gameLength):
-    #FFX_Screen.awaitPixel(1076,552,(157, 159, 157))
+def NewGame(Gamestate):
     print("Starting the game")
-    print("This will be a ", gameLength, " run.")
+    print("Gamestate: ", Gamestate)
+    #time.sleep(20)
+    
+    #Old version
     #FFXC.set_movement(0, 1)
     #time.sleep(0.1)
     #FFXC.set_neutral()
     #FFXC.set_value('BtnB', 1)
     #time.sleep(0.1)
     #FFXC.set_value('BtnB', 0)
-    # - This piece replaced in Auto_Main
+    
+    #New version
+    gameModeSelected = False
+    while gameModeSelected == False:
+        if FFX_memory.getMap() != 23:
+            FFXC.set_value('BtnStart', 1)
+            time.sleep(0.035)
+            FFXC.set_value('BtnStart', 0)
+            time.sleep(0.035)
+        elif Gamestate != 'none':
+            time.sleep(3)
+            if FFX_memory.cursorLocation()[1] == 176:
+                if FFX_memory.NewGameCursor() == 0:
+                    FFX_Xbox.menuDown()
+                else:
+                    time.sleep(0.07)
+                    FFX_Xbox.menuB()
+                    gameModeSelected = True
+        else:
+            time.sleep(3)
+            if FFX_memory.cursorLocation()[1] == 176:
+                if FFX_memory.NewGameCursor() == 1:
+                    FFX_Xbox.menuUp()
+                else:
+                    #time.sleep(2)
+                    FFX_Xbox.menuB()
+                    gameModeSelected = True
+            else:
+                FFX_Xbox.menuB()
     
 def NewGame2():
     #New game selected. Next, select options.
@@ -90,9 +120,9 @@ def listenStory(gameLength):
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 
-                #Name Tidus (custom function in this library. Can be changed later.
-                FFX_Screen.awaitPixel(316,374,(224, 182, 138))
-                NamingTidus()
+                #Name Tidus
+                FFX_Xbox.nameAeon()
+                
                 checkpoint += 1
             elif checkpoint == 4:
                 while FFX_memory.userControl():
@@ -327,6 +357,88 @@ def listenStory_old(gameLength):
     #Just to make sure...
     FFXC.set_neutral()
 
+def ammesBattle_testing():
+    FFX_Xbox.clickToBattle()
+    FFX_Battle.defend()
+    
+    #Auron overdrive tutorial
+    while not FFX_Screen.PixelTest(724,314,(234, 196, 0)):
+        FFX_Xbox.tapB()
+    FFX_Xbox.clickToBattle()
+    
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuLeft()
+    FFX_Xbox.SkipDialog(3) #Initiate overdrive
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(1) #Static delay, the same every time.
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    
+    #Doing the actual overdrive
+    FFXC.set_value('Dpad', 2)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 4)
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 1)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 8)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('Dpad', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnShoulderL', 1)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnShoulderL', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnShoulderR', 1)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnShoulderR', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnA', 1)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnA', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnB', 1)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(0.04)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    FFXC.set_value('BtnB', 0)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(2)
+    print("Frame Counter: ", FFX_memory.getFrameCount())
+    time.sleep(90)
+
+
 def ammesBattle():
     FFX_Xbox.clickToBattle()
     FFX_Battle.defend()
@@ -337,10 +449,6 @@ def ammesBattle():
     FFX_Xbox.clickToBattle()
     
     #Auron overdrive tutorial
-    #while not FFX_Screen.PixelTest(724,314,(234, 196, 0)):
-    #    FFX_Xbox.tapB()
-    #FFX_Xbox.clickToBattle()
-    
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(3) #Initiate overdrive

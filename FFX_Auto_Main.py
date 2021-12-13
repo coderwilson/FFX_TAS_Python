@@ -38,6 +38,7 @@ import FFX_Sin
 #These are the popular ones. New Game ('none') is the last one.
 #Gamestate = "Baaj"
 #StepCounter = 1
+#StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
 #Gamestate = "Kilika"
@@ -50,6 +51,7 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "MRR"
 #StepCounter = 1
+#StepCounter = 2 # DO NOT USE, THERE IS NO SAVE FOR THIS ONE
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -59,6 +61,7 @@ import FFX_Sin
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
+#StepCounter = 4
 #StepCounter = 7
 #Gamestate = "Home"
 #StepCounter = 1
@@ -85,13 +88,14 @@ autoEggHunt = True
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-#rngSeedNum = 31 #Potential
-#rngSeedNum = 45 #Potential
-rngSeedNum = 49 #Favorite one so far
+#rngSeedNum = 31 #Pretty good
+rngSeedNum = 49 #PB, top 5
 #rngSeedNum = 59 #Potential
-#rngSeedNum = 90
-rngReviewOnly = True
+#rngSeedNum = 104 #top 5
+#rngSeedNum = 107
+rngReviewOnly = False
 print("Game type will be: ", gameLength)
+maxLoops = 25
 ####################################################################################################
 
 #Other variables
@@ -129,32 +133,6 @@ reportGamestate()
 #import FFX_memory
 FFX_memory.start()
 
-#Press Start until the main menu comes up
-#---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-gameModeSelected = False
-while gameModeSelected == False:
-    if FFX_memory.getMap() != 23:
-        FFXC.set_value('BtnStart', 1)
-        time.sleep(0.035)
-        FFXC.set_value('BtnStart', 0)
-        time.sleep(0.035)
-    elif Gamestate != 'none':
-        if FFX_memory.cursorLocation()[1] == 176:
-            if FFX_memory.NewGameCursor() == 0:
-                FFX_Xbox.menuDown()
-            else:
-                time.sleep(2)
-                FFX_Xbox.menuB()
-                gameModeSelected = True
-    else:
-        if FFX_memory.cursorLocation()[1] == 176:
-            if FFX_memory.NewGameCursor() == 1:
-                FFX_Xbox.menuUp()
-            else:
-                time.sleep(2)
-                FFX_Xbox.menuB()
-                gameModeSelected = True
-
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
@@ -167,6 +145,7 @@ FFX_Logs.writeStats(rngSeed)
 
 #Next, check if we are loading to a save file
 if Gamestate != "none" :
+    FFX_DreamZan.NewGame(Gamestate)
     FFX_Logs.writeLog("Loading to a specific gamestate.\n")
     startTime = FFX_Logs.timeStamp()
     #FFX_Logs.writeStats("Start time:")
@@ -179,12 +158,14 @@ if Gamestate != "none" :
         #FFX_LoadGame.LoadBaaj()
     if Gamestate == "Baaj" and StepCounter == 5:
         FFX_LoadGame.LoadFirst()
+    if Gamestate == "Baaj" and StepCounter == 6:
+        FFX_LoadGame.loadOffset(1)
     if Gamestate == "Besaid" and StepCounter == 1 : #Save pop-up after falling off of Rikku's boat
         FFX_LoadGame.loadOffset(48)
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadOffset(30)
         while FFX_memory.userControl():
             if FFX_memory.getCoords()[0] > 0.5:
                 FFXC.set_movement(1, 1)
@@ -204,8 +185,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(25)
         earlyHaste = 3
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
-        FFX_LoadGame.loadOffsetBattle(8)
-        earlyHaste = 3
+        FFX_LoadGame.loadOffsetBattle(9)
+        earlyHaste = -1
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
@@ -215,6 +196,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
+        FFX_LoadGame.loadOffset(38)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(7)
@@ -235,7 +217,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(7)
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
-        FFX_LoadGame.loadOffset(23) #No remedy in inventory, likely game over.
+        FFX_LoadGame.loadOffset(24) #No remedy in inventory, likely game over.
         FFX_LoadGame.loadMacTemple()
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
@@ -283,7 +265,10 @@ if Gamestate != "none" :
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
         FFX_LoadGame.loadOffset(2)
         FFX_LoadGame.loadEggHunt()
-    FFX_LoadGame.loadMemCursor()
+    
+    if FFX_memory.getStoryProgress() >= 80:
+        if not (Gamestate == "Luca" and StepCounter == 5):
+            FFX_LoadGame.loadMemCursor()
 
 
 #Movement files - moved to FFX_compileAll.py
@@ -292,12 +277,16 @@ if Gamestate != "none" :
 rikkucharged = 0
 
 while Gamestate != "End":
+
+    if rngSeedNum >= 256:
+        Gamestate = "End"
+
     #Start of the game, start of Dream Zanarkand section
     if Gamestate == "none" and StepCounter == 1:
         reportGamestate()
+        FFX_DreamZan.NewGame(Gamestate)
         Gamestate = "DreamZan"
         time.sleep(0.5)
-        FFX_DreamZan.NewGame(gameLength)
         FFX_DreamZan.NewGame2()
         startTime = FFX_Logs.timeStamp()
         FFX_Logs.writeStats("Start time:")
@@ -458,8 +447,8 @@ while Gamestate != "End":
         print("Pre-Blitz time: ", str(totalTime))
         FFX_Logs.writeStats("Pre Blitz time:")
         FFX_Logs.writeStats(totalTime)
-        if rngReviewOnly == True:# and earlyHaste == -1: # Used to run multiple tests via a single execution
-            Gamestate = "none"
+        if rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops: # Used to run multiple tests via a single execution
+            Gamestate = 'none'
             StepCounter = 1
             FFXC.set_movement(0, -1) #Step away from the save sphere
             time.sleep(2)
@@ -470,7 +459,7 @@ while Gamestate != "End":
             print("Resetting")
             print("------------------------------------------")
             print("------------------------------------------")
-            FFX_memory.clickToControl()
+            #FFX_memory.clickToControl()
             
             
             #FFX_Logs.writeStats("Test duration:")
@@ -527,7 +516,7 @@ while Gamestate != "End":
         FFX_Logs.writeStats("Miihen End time:")
         FFX_Logs.writeStats(totalTime)
         
-        if rngReviewOnly == True and rngSeedNum - rngSeedOrig < 5: # Used to run multiple tests via a single execution
+        if rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops: # Used to run multiple tests via a single execution
             Gamestate = "none"
             StepCounter = 1
             import FFX_Reset
@@ -644,7 +633,7 @@ while Gamestate != "End":
         reportGamestate()
         FFX_mWoods.lake()
         #FFX_mWoods.afterCrawler()
-        FFX_mTemple.approach()
+        FFX_mTemple.approach(blitzWin)
         StepCounter = 4
         #Gamestate = "manualBreak" # Used for testing only.
 

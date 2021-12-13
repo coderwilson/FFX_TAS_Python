@@ -115,7 +115,7 @@ def awaitTurn() :
         if FFX_memory.battleActive() == False:
             time.sleep(0.01)
         counter += 1;
-        if counter % 100 == 0:
+        if counter % 10000 == 0:
             print("Waiting for player turn: ", counter / 100)
         if FFX_memory.gameOver():
             return False

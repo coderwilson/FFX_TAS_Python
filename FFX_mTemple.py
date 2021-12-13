@@ -10,7 +10,7 @@ import FFX_targetPathing
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def approach():
+def approach(blitzWin):
     print("------------------------------------------Affection array:")
     print(FFX_memory.affectionArray())
     print("------------------------------------------")
@@ -33,13 +33,13 @@ def approach():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
+    FFX_menu.macTemple(blitzWin)
 
 def arrival(blitzWin):
     print("Starting Macalania Temple section")
     FFX_memory.awaitControl()
     #if FFX_memory.getPower() < 26:
     #    FFX_memory.setPower(26) #Need 34 total from here forward. 2 from Wendigo and 6 from bombs. 26 needed here.
-    FFX_menu.macTemple(blitzWin)
     
     #Movement:
     jyscalSkipStatus = False
@@ -62,7 +62,36 @@ def arrival(blitzWin):
                     FFXC.set_neutral()
                     time.sleep(0.4)
                 checkpoint += 1
-            elif checkpoint == 5: #Skip
+            elif checkpoint == 5: #Skip (new)
+                print("Lining up for skip.")
+                FFXC.set_movement(0, -1)
+                time.sleep(0.2)
+                FFXC.set_neutral()
+                while FFX_memory.getCoords()[1] < -101.5:
+                    FFXC.set_value('Dpad', 8)
+                    time.sleep(0.035)
+                    FFXC.set_value('Dpad', 0)
+                    time.sleep(0.09)
+                
+                print("Turning back")
+                time.sleep(0.4)
+                FFXC.set_movement(-1, 0)
+                time.sleep(0.035)
+                FFXC.set_neutral()
+                time.sleep(0.4)
+                
+                print("Now lined up. Here we go.")
+                FFXC.set_movement(1, 0)
+                time.sleep(0.08)
+                FFXC.set_value('BtnB', 1)
+                time.sleep(0.1)
+                FFXC.set_value('BtnB', 0)
+                time.sleep(1.5)
+                FFXC.set_neutral()
+                checkpoint += 1
+                FFX_memory.clickToControl3()
+            
+            elif checkpoint == 5: #Skip (old, disabled)
                 print("Lining up for skip.")
                 FFXC.set_movement(-1, -1)
                 time.sleep(0.25)
@@ -71,11 +100,11 @@ def arrival(blitzWin):
                 FFXC.set_movement(1, 0)
                 time.sleep(0.085) #Shifting right
                 FFXC.set_neutral()
-                time.sleep(0.2)
+                time.sleep(0.4)
                 FFXC.set_movement(-1, 0)
-                time.sleep(0.04)
+                time.sleep(0.035)
                 FFXC.set_neutral()
-                time.sleep(0.3)
+                time.sleep(0.4)
                 
                 print("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
@@ -101,10 +130,12 @@ def arrival(blitzWin):
                     jyscalSkipStatus = False
                     checkpoint = 20
                     skipStatus = False
+                print("Jyscal Skip results: ", skipStatus)
             elif checkpoint == 14: #Pause so we don't mess up the skip
                 if skipStatus == True:
                     FFXC.set_neutral()
-                    FFX_Xbox.SkipDialog(1.5)
+                    while FFX_memory.getCamera()[3] > -20:
+                        FFX_Xbox.tapB()
                 checkpoint += 1
             elif checkpoint < 16 and FFX_memory.getMap() == 239:
                 checkpoint = 16
@@ -142,11 +173,15 @@ def seymourFight():
     
     FFX_Battle.seymourGuado()
     
-    time.sleep(1)
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Confirm name for Shiva
+    #Name for Shiva
+    FFX_Xbox.nameAeon()
+    
+    #time.sleep(1)
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuUp()
+    #FFX_Xbox.menuB()
+    
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)
     time.sleep(0.4)

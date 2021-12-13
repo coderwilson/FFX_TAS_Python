@@ -1371,64 +1371,6 @@ def clickToStoryProgress(destination):
         currentState = getStoryProgress()
     print("Story progress has reached destination. Value: ", destination)
 
-def changeStory(newGameState):
-    global baseValue
-
-    print("Changing story flag to ", newGameState)
-    key = baseValue + 0x00D2D67C
-    progress = process.writeBytes(key,newGameState,2)
-
-def itemHack(ver):
-    global baseValue
-
-    # I tried giving Rikku extra powerful items, but the game just wasn't having it.
-    #key = baseValue + 0x00D30960 #Item in slot 3
-    #progress = process.writeBytes(key,31,1)
-    #key = baseValue + 0x00D30B5E #Item count in slot 3
-    #progress = process.writeBytes(key,68,1)
-    if ver == 1:
-        #But at least these ones work.
-        key = baseValue + 0x00D3095C #Change potions to Master Sphere
-        progress = process.writeBytes(key,80,1)
-        key = baseValue + 0x00D30B5C #Might as well have a lot of those.
-        progress = process.writeBytes(key,90,1)
-    elif ver == 2:
-        key = baseValue + 0x00D3095C #Purifying Salts (no encounters)
-        progress = process.writeBytes(key,63,1)
-        key = baseValue + 0x00D30B5C
-        progress = process.writeBytes(key,99,1)
-        key = baseValue + 0x00D3095E #Chocobo Feathers
-        progress = process.writeBytes(key,55,1)
-        key = baseValue + 0x00D30B5D
-        progress = process.writeBytes(key,99,1)
-        key = baseValue + 0x00D30960 #Return Spheres for First Strike
-        progress = process.writeBytes(key,96,1)
-        key = baseValue + 0x00D30B5E
-        progress = process.writeBytes(key,99,1)
-        key = baseValue + 0x00D30962 #Lightning Gems
-        progress = process.writeBytes(key,31,1)
-        key = baseValue + 0x00D30B5F
-        progress = process.writeBytes(key,99,1)
-        key = baseValue + 0x00D30964 #Dark Matter
-        progress = process.writeBytes(key,53,1)
-        key = baseValue + 0x00D30B60
-        progress = process.writeBytes(key,2,1)
-        key = baseValue + 0x00D30966 #Wings
-        progress = process.writeBytes(key,108,1)
-        key = baseValue + 0x00D30B61
-        progress = process.writeBytes(key,99,1)
-        key = baseValue + 0x00D30968 #P.down
-        progress = process.writeBytes(key,6,1)
-        key = baseValue + 0x00D30B62
-        progress = process.writeBytes(key,99,1)
-        key = baseValue + 0x00D3240D #Rikku charge value
-        progress = process.writeBytes(key,100,1)
-
-def changeGold(value):
-    global baseValue
-    key = baseValue + 0x00D307D8
-    progress = process.writeBytes(key,9999999,4)
-
 def blitzOwnScore():
     global baseValue
 
@@ -2291,6 +2233,22 @@ def end():
     global process
     process.close()
     print("Memory reading process is now closed.")
+
+def getFrameCount():
+    global baseValue
+    key = baseValue + 0x00F25D54
+    return process.readBytes(key, 4)
+
+def nameAeonReady():
+    global baseValue
+    key = baseValue + 0x0146A22C
+    return process.readBytes(key, 1)
+
+def clearNameAeonReady():
+    global baseValue
+    key = baseValue + 0x0146A22C
+    process.writeBytes(key, 0, 1)
+    
 
 #-------------------------------------------------------
 #Egg hunt section

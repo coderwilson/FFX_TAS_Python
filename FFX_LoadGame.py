@@ -39,7 +39,7 @@ def loadOffset(offset):
     FFX_Xbox.menuB()
     FFX_memory.awaitControl()
     time.sleep(0.5)
-    FFX_memory.resetBattleEnd()
+    FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
 
 def loadOffsetBattle(offset):
     print("Loading to save file in position ", offset)
@@ -285,27 +285,20 @@ def LoadMRR():
     time.sleep(2)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
+    FFX_memory.clickToControl()
 
 def LoadMRR2():
-    loadOffset(27)
-    FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     time.sleep(0.3)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1, 1)
     time.sleep(1)
     FFX_Xbox.SkipDialog(2)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     FFX_Xbox.menuB()
     time.sleep(2)
     FFX_memory.awaitControl()
-    while not FFX_Screen.Minimap4():
-        if FFX_Screen.Minimap2():
-            FFXC.set_value('AxisLy', -1)
-            FFXC.set_value('AxisLx', -1)
-            time.sleep(0.5)
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
+    while FFX_Screen.getMap() != 79:
+        FFXC.set_movement(-1, -1)
 
 def AfterGui():
     FFX_memory.awaitControl()

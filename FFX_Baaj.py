@@ -35,7 +35,7 @@ def Entrance():
     checkpoint = 0
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
-            print("Baaj movement: ", checkpoint)
+            #print("Baaj movement: ", checkpoint)
             if checkpoint == 6:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1

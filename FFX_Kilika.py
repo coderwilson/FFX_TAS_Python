@@ -229,13 +229,14 @@ def trials():
                 FFXC.set_movement(0, -1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_Xbox.clickToPixel(270,348,(0,0,0))
-                FFX_Screen.awaitPixel(270,348,(246, 211, 161))
-                time.sleep(0.15)
-                FFX_Xbox.menuB()
-                time.sleep(0.1)
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
+                FFX_Xbox.nameAeon() #Set Ifrit name
+                #FFX_Xbox.clickToPixel(270,348,(0,0,0))
+                #FFX_Screen.awaitPixel(270,348,(246, 211, 161))
+                #time.sleep(0.15)
+                #FFX_Xbox.menuB()
+                #time.sleep(0.1)
+                #FFX_Xbox.menuUp()
+                #FFX_Xbox.menuB()
                 checkpoint += 1
             elif checkpoint == 57: #Leaving the temple
                 FFX_memory.clickToEventTemple(4)
