@@ -202,7 +202,6 @@ def useShiftLeft(toon): -> None:
     _useShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderLeft)
 
 def _moveShiftDirection(*, toon: str, direction_func):
-    print("Move and shift, left")
     FFX_Xbox.menuB()
     toon = toon.lower()
     while not char_grid_functions[toon]():
@@ -215,9 +214,11 @@ def _moveShiftDirection(*, toon: str, direction_func):
     print("Ready for grid: " + toon)
 
 def moveShiftLeft(toon):
+    print("Move and shift, left")
     _moveShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderLeft)
     
 def moveShiftRight(toon):
+    print("Move and shift, right")
     _moveShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderRight)
 
 
