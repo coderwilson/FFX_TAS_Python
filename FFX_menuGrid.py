@@ -34,47 +34,29 @@ def gridRight():
 def gridOpen():
     return FFX_memory.sGridActive()
     
+def _gridChar(*, char_id: int) -> bool:
+    return FFX_memory.sGridChar() == char_id
+    
 def gridTidus():
-    if FFX_memory.sGridChar() == 0:
-        return True
-    else:
-        return False
-    
-def gridKimahri():
-    if FFX_memory.sGridChar() == 3:
-        return True
-    else:
-        return False
-    
-def gridAuron():
-    if FFX_memory.sGridChar() == 2:
-        return True
-    else:
-        return False
-    
-def gridLulu():
-    if FFX_memory.sGridChar() == 5:
-        return True
-    else:
-        return False
-    
-def gridWakka():
-    if FFX_memory.sGridChar() == 4:
-        return True
-    else:
-        return False
+    return _gridChar(char_id=0)
     
 def gridYuna():
-    if FFX_memory.sGridChar() == 1:
-        return True
-    else:
-        return False
+    return _gridChar(char_id=1)
+    
+def gridAuron():
+    return _gridChar(char_id=2)
+    
+def gridKimahri():
+    return _gridChar(char_id=3)  
+    
+def gridWakka():
+    return _gridChar(char_id=4)
+    
+def gridLulu():
+    return _gridChar(char_id=5)
 
 def gridRikku():
-    if FFX_memory.sGridChar() == 6:
-        return True
-    else:
-        return False
+    return _gridChar(char_id=6)
 
 def firstPosition():
     if FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5) and not FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5):
