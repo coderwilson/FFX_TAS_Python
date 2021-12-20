@@ -7,6 +7,26 @@ from math import cos, sin
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
+    
+    
+def waitFrames(frames: int):
+    frames = max(int(frames), 1)
+    global baseValue
+    # 0x0088FDD8 is the framecounter offset when in the Menu, 0x00F25D54 is the framecount offset when in the overworld.
+    mem_address = 0x0088FDD8 if menuOpen() else 0x00F25D54
+    key = baseValue + mem_address
+    final = process.readBytes(key, 4) + frames
+    current = process.readBytes(key, 4)
+    print(f"Starting memory read, current frame {current}, target frame {final}")
+    previous = current-1
+    while current < final:
+        if current == 0:
+            # Framecounter resets when changing maps.
+            print("Crossed a trigger that reset frame count, recalculating target frame.")
+            final = final - previous
+        previous = current
+        current = process.readBytes(key, 4)
+    return
 
 def start():
     global process
