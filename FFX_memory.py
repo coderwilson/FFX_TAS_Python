@@ -15,8 +15,8 @@ def waitFrames(frames: int):
     # 0x0088FDD8 is the framecounter offset when in the Menu, 0x00F25D54 is the framecount offset when in the overworld.
     mem_address = 0x0088FDD8 if menuOpen() else 0x00F25D54
     key = baseValue + mem_address
-    final = process.readBytes(key, 4) + frames
     current = process.readBytes(key, 4)
+    final = current + frames
     print(f"Starting memory read, current frame {current}, target frame {final}")
     previous = current-1
     while current < final:
