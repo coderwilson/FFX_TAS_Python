@@ -1351,7 +1351,7 @@ def MRRbattle(status):
                             aeonTurn = 1
                         elif aeonTurn < 2:
                             aeonBoost()
-                            FFX_memory.awaitTurn()
+                            FFX_Screen.awaitTurn()
                             attack('none')
                             aeonTurn = 2
                         else:
@@ -2685,7 +2685,7 @@ def seymourGuado():
     FFXC.set_value('BtnB', 0)
 
 # Process written by CrimsonInferno
-def fullheal(healerposition: int, targetposition: int, direction: str):
+def fullheal_old(healerposition: int, targetposition: int, direction: str):
     print("Full Heal function")
     if FFX_memory.getThrowItemsSlot(2) < 255:
         itemnum = 2
@@ -2757,6 +2757,87 @@ def fullheal(healerposition: int, targetposition: int, direction: str):
         print("No restorative items available")
         return 0
 
+def fullheal(target: int, direction: str):
+    print("Full Heal function")
+    if FFX_memory.getThrowItemsSlot(2) < 255:
+        itemnum = 2
+        itemname = "X-Potion"
+    elif FFX_memory.getThrowItemsSlot(8) < 255:
+        itemnum = 8
+        itemname = "Elixir"
+    elif FFX_memory.getThrowItemsSlot(3) < 255:
+        itemnum = 3
+        itemname = "Mega-Potion"
+    else:
+        itemnum = -1
+        itemname = "noitemfound"
+    if itemnum >= 0:
+        
+        FFX_Logs.writeLog("Using %s" % itemname)
+        print("Using %s" % itemname)
+        while FFX_memory.battleMenuCursor() != 1:
+            FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()  # Item menu open.
+        time.sleep(0.3)
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
+        if FFX_memory.battleCursor2() == 0 and itemPos != 2:
+            FFX_Xbox.menuDown()
+        if FFX_memory.battleCursor2() != itemPos:
+            while FFX_memory.battleCursor2() != itemPos:
+                print("Moving position ", FFX_memory.battleCursor2(), " to position ", itemPos)
+                if itemPos % 2 != FFX_memory.battleCursor2() % 2:
+                    if FFX_memory.battleCursor2() % 2 == 0:
+                        FFX_Xbox.menuLeft()
+                    else:
+                        FFX_Xbox.menuRight()
+                elif FFX_memory.battleCursor2() >= itemPos:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()
+        time.sleep(0.07)
+        print("Direction: ", direction)
+        direction = direction.lower()
+        
+        while FFX_memory.battleTargetId() != target:
+            if direction == 'l':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong battle line targetted.")
+                    FFX_Xbox.menuRight()
+                    direction = 'u'
+                else:
+                    FFX_Xbox.menuLeft()
+            elif direction == 'r':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong character targetted.")
+                    FFX_Xbox.menuLeft()
+                    direction = 'd'
+                else:
+                    FFX_Xbox.menuRight()
+            elif direction == 'u':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong character targetted.")
+                    FFX_Xbox.menuDown()
+                    direction = 'l'
+                else:
+                    FFX_Xbox.menuUp()
+            elif direction == 'd':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong character targetted.")
+                    FFX_Xbox.menuUp()
+                    direction = 'r'
+                else:
+                    FFX_Xbox.menuDown()
+
+        FFX_Xbox.menuB()
+        FFX_Xbox.menuB()
+
+        return 1
+
+    else:
+        print("No restorative items available")
+        return 0
+
 
 # Process written by CrimsonInferno
 def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
@@ -2780,9 +2861,8 @@ def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     # If tidus is less than max HP heal him
     elif partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
         print("Tidus need healing")
-        if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
-                    targetposition=FFX_memory.getBattleCharSlot(0),
-                    direction="left") == 0:
+        if fullheal(target = 0,
+                    direction="l") == 0:
             if FFX_Screen.faintCheck():
                 print("No healing available so reviving instead")
                 revive()
@@ -2869,9 +2949,8 @@ def wendigo():
                 elif tidushealself == True:
                     if partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
                         print("Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
-                        if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
-                                    targetposition=FFX_memory.getBattleCharSlot(0),
-                                    direction="left") == 0:
+                        if fullheal(target = 0,
+                                    direction="l") == 0:
                             if FFX_Screen.faintCheck():
                                 print("No healing items so revive someone instead")
                                 revive()
@@ -3472,9 +3551,8 @@ def Evrae():
                 if FFX_memory.getBattleHP()[1] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
-                    if fullheal(healerposition=FFX_memory.getBattleCharSlot(turnchar),
-                                targetposition=FFX_memory.getBattleCharSlot(0),
-                                direction="up") == 0:
+                    if fullheal(target = 0,
+                                direction="u") == 0:
                         print("Restorative item not found.")
                         Steal()
                     else:
@@ -3986,22 +4064,24 @@ def useItem(slot: int, direction):
     print("Using items via the Use command")
     print("Item slot: ", slot)
     print("Direction: ", direction)
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnRikku() == True or FFX_Screen.turnKimahri() == True:
-            doNothing = True
+    if not FFX_memory.mainBattleMenu():
+        while not FFX_memory.mainBattleMenu():
+            FFX_memory.waitFrames(1)
+    while FFX_memory.mainBattleMenu():
+        if FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
+                return
+            
+            if FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            else:
+                FFX_Xbox.menuDown()
         else:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-            time.sleep(0.1)
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
-            time.sleep(0.1)
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+            FFX_Xbox.menuB()
     time.sleep(0.3)
     while FFX_memory.battleCursor2() != 1:
         if FFX_memory.battleCursor2() == 0:
@@ -4163,8 +4243,6 @@ def usePotionCharacter(num, direction):
             else:
                 FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    #print("TEST -PLEASE CHECK GAME STATE HERE") #Testing only
-    #time.sleep(100) #Testing only
     time.sleep(0.07)
     
     while FFX_memory.battleTargetId() != num:
@@ -4294,22 +4372,25 @@ def attack2():
 def Steal():
     FFX_Logs.writeLog("Basic Steal command")
     print("Steal")
-    if not FFX_memory.turnReady():
-        while not FFX_memory.turnReady():
-            time.sleep(0.035)
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnRikku() == True or FFX_Screen.turnKimahri() == True:
-            doNothing = True
+    if not FFX_memory.mainBattleMenu():
+        while not FFX_memory.mainBattleMenu():
+            FFX_memory.waitFrames(1)
+    while FFX_memory.mainBattleMenu():
+        if FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
+                return
+            
+            if FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            else:
+                FFX_Xbox.menuDown()
         else:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    time.sleep(0.07)
+            FFX_Xbox.menuB()
+    time.sleep(0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
@@ -4321,22 +4402,25 @@ def Steal():
 def StealDown():
     FFX_Logs.writeLog("Steal, but press Down")
     print("Steal Down")
-    time.sleep(0.4)
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnRikku() == True or FFX_Screen.turnKimahri() == True:
-            doNothing = True
+    if not FFX_memory.mainBattleMenu():
+        while not FFX_memory.mainBattleMenu():
+            FFX_memory.waitFrames(1)
+    while FFX_memory.mainBattleMenu():
+        if FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
+                return
+            
+            if FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            else:
+                FFX_Xbox.menuDown()
         else:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
+            FFX_Xbox.menuB()
+    time.sleep(0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
@@ -4349,23 +4433,26 @@ def StealDown():
 
 def StealUp():
     FFX_Logs.writeLog("Steal, but press Up")
-    print("Steal Down")
-    time.sleep(0.4)
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnRikku() == True or FFX_Screen.turnKimahri() == True:
-            doNothing = True
+    print("Steal Up")
+    if not FFX_memory.mainBattleMenu():
+        while not FFX_memory.mainBattleMenu():
+            FFX_memory.waitFrames(1)
+    while FFX_memory.mainBattleMenu():
+        if FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
+                return
+            
+            if FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            else:
+                FFX_Xbox.menuDown()
         else:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
+            FFX_Xbox.menuB()
+    time.sleep(0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
@@ -4380,22 +4467,25 @@ def StealUp():
 def StealRight():
     FFX_Logs.writeLog("Steal, but press Right")
     print("Steal Right")
-    time.sleep(0.4)
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnRikku() == True or FFX_Screen.turnKimahri() == True:
-            doNothing = True
+    if not FFX_memory.mainBattleMenu():
+        while not FFX_memory.mainBattleMenu():
+            FFX_memory.waitFrames(1)
+    while FFX_memory.mainBattleMenu():
+        if FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
+                return
+            
+            if FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            else:
+                FFX_Xbox.menuDown()
         else:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
+            FFX_Xbox.menuB()
+    time.sleep(0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
@@ -4410,22 +4500,25 @@ def StealRight():
 def StealLeft():
     FFX_Logs.writeLog("Steal, but press Left")
     print("Steal Left")
-    time.sleep(0.4)
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnRikku() == True or FFX_Screen.turnKimahri() == True:
-            doNothing = True
+    if not FFX_memory.mainBattleMenu():
+        while not FFX_memory.mainBattleMenu():
+            FFX_memory.waitFrames(1)
+    while FFX_memory.mainBattleMenu():
+        if FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
+                return
+            
+            if FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+                time.sleep(0.1)
+            else:
+                FFX_Xbox.menuDown()
         else:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
+            FFX_Xbox.menuB()
+    time.sleep(0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()

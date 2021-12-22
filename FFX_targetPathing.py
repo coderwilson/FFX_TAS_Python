@@ -43,6 +43,7 @@ def setMovement(target) -> bool:
     
     
     FFXC.set_movement(Lx, Ly)
+    FFX_memory.waitFrames(frames=1)
     
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
         return True #Checkpoint reached

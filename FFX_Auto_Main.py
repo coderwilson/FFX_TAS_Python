@@ -1,5 +1,6 @@
 # Libraries and Core Files
 import time
+import random
 import FFX_Logs
 import FFX_core
 import FFX_Screen
@@ -81,22 +82,27 @@ Gamestate = "none"
 StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-#gameLength = "short"
-gameLength = "full"
 forceBlitzWin = True
 autoEggHunt = True
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-#rngSeedNum = 31 #Pretty good
-rngSeedNum = 49 #PB, top 5
-#rngSeedNum = 59 #Potential
-#rngSeedNum = 104 #top 5
-#rngSeedNum = 107
-rngReviewOnly = False
+
+newSeed = True #Update this to decide new seed or known seed
+rngSeedNum = 200 #New seed number, only used if newSeed == True
+####################################################################################################
+
+
+rngReviewOnly = True
+gameLength = "NewSeed"
+if newSeed == False:
+    rngSelectArray = [31,49,59,104, 200]
+    rngSeedNum = random.choice(rngSelectArray)
+    rngReviewOnly = False
+    gameLength = "Full Run"
+
 print("Game type will be: ", gameLength)
 maxLoops = 25
-####################################################################################################
 
 #Other variables
 rngSeedOrig = rngSeedNum
@@ -154,7 +160,7 @@ if Gamestate != "none" :
     import FFX_LoadGame
     
     if Gamestate == "Baaj" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(21)
+        FFX_LoadGame.loadOffset(22)
         #FFX_LoadGame.LoadBaaj()
     if Gamestate == "Baaj" and StepCounter == 5:
         FFX_LoadGame.LoadFirst()

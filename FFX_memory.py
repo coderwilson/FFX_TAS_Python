@@ -19,16 +19,16 @@ def getKey():
 def waitFrames(frames: int):
     frames = max(int(frames), 1)
     # 0x0088FDD8 is the framecounter offset when in the Menu, 0x00F25D54 is the framecount offset when in the overworld.
-    current = process.readBytes(getKey(), 4)
+    current, previous_state = getKey()
     final = current + frames
-    print(f"Starting memory read, current frame {current}, target frame {final}")
+    #print(f"Starting memory read, current frame {current}, target frame {final}")
     previous = current-1
     previous_state = menuOpen()
     while current < final:
         address, state = getKey()
-        if current == 0 or state != previous_state:
+        if current != previous or current != previous+1: 
             # Framecounter resets when changing maps.
-            print("Crossed a trigger that reset frame count, or changed from in to out of menu, recalculating target frame.")
+            #print("Crossed a trigger that reset frame count, or changed from in to out of menu, recalculating target frame.")
             final = final - previous
         previous_state = state
         previous = current

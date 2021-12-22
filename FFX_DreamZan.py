@@ -71,7 +71,7 @@ def NewGame(Gamestate):
                     FFX_Xbox.menuB()
                     gameModeSelected = True
         else:
-            time.sleep(3)
+            time.sleep(0.2)
             if FFX_memory.cursorLocation()[1] == 176:
                 if FFX_memory.NewGameCursor() == 1:
                     FFX_Xbox.menuUp()

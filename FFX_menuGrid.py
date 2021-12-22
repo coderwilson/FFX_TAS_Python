@@ -7,74 +7,90 @@ import FFX_memory
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def _gridDirection(*, direction: int, num: int = 1):
-    for _ in range(num):
-        FFXC.set_value('Dpad', direction)
-        time.sleep(0.04)
-        FFXC.set_value('Dpad', 0)
-        time.sleep(0.12)
-        
+def gridUp():
+    FFXC.set_value('Dpad', 1)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
 
-def gridUp(num: int = 1):
-    _gridDirection(direction=1, num=num)
+def gridDown():
+    FFXC.set_value('Dpad', 2)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
 
-def gridDown(num: int = 1):
-    _gridDirection(direction=2, num=num)
+def gridLeft():
+    FFXC.set_value('Dpad', 4)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
 
-def gridLeft(num: int = 1):
-    _gridDirection(direction=4, num=num)
-
-def gridRight(num: int = 1):
-    _gridDirection(direction=8, num=num)
+def gridRight():
+    FFXC.set_value('Dpad', 8)
+    time.sleep(0.04)
+    FFXC.set_value('Dpad', 0)
+    time.sleep(0.12)
 
 def gridOpen():
     return FFX_memory.sGridActive()
     
-def _gridChar(*, char_id: int) -> bool:
-    return FFX_memory.sGridChar() == char_id
-    
 def gridTidus():
-    return _gridChar(char_id=0)
-    
-def gridYuna():
-    return _gridChar(char_id=1)
-    
-def gridAuron():
-    return _gridChar(char_id=2)
+    if FFX_memory.sGridChar() == 0:
+        return True
+    else:
+        return False
     
 def gridKimahri():
-    return _gridChar(char_id=3)  
+    if FFX_memory.sGridChar() == 3:
+        return True
+    else:
+        return False
     
-def gridWakka():
-    return _gridChar(char_id=4)
+def gridAuron():
+    if FFX_memory.sGridChar() == 2:
+        return True
+    else:
+        return False
     
 def gridLulu():
-    return _gridChar(char_id=5)
+    if FFX_memory.sGridChar() == 5:
+        return True
+    else:
+        return False
+    
+def gridWakka():
+    if FFX_memory.sGridChar() == 4:
+        return True
+    else:
+        return False
+    
+def gridYuna():
+    if FFX_memory.sGridChar() == 1:
+        return True
+    else:
+        return False
 
 def gridRikku():
-    return _gridChar(char_id=6)
-    
-
-char_grid_functions = {
-    'yuna': gridYuna,
-    'lulu': gridLulu,
-    'auron': gridAuron,
-    'wakka': gridWakka,
-    'tidus': gridTidus,
-    'kimahri': gridKimahri,
-    'rikku': gridRikku
-}
+    if FFX_memory.sGridChar() == 6:
+        return True
+    else:
+        return False
 
 def firstPosition():
-    return FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5) and not FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5):
+    if FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5) and not FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5):
+        return True
+    else: return False
 
 def moveUseMenu():
     return FFX_Screen.PixelTestTol(347,526,(255, 255, 255),5)
 
 def moveReady():
-    if moveUseMenu() and FFX_memory.getGridMoveUsePos() == 0:
+    if moveUseMenu():
+        if FFX_memory.getGridMoveUsePos() == 0:
             return True
-    return False
+        else:
+            return False
+    else: return False
 
 def moveActive():
     if readyUseSphere():
@@ -83,10 +99,19 @@ def moveActive():
         return FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5)
 
 def moveComplete():
-    return FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5) and FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5)
+    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5):
+        if FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5):
+            return True
+        else: return False
+    else: return False
     
 def useReady():
-    if moveUseMenu() and FFX_memory.getGridMoveUsePos() == 1
+    if moveUseMenu():
+        if FFX_memory.getGridMoveUsePos() == 1:
+            return True
+        else:
+            return False
+    else: return False
 
 def readySelectSphere():
     return FFX_Screen.PixelTestTol(636,438,(255, 255, 255),5)
@@ -104,7 +129,11 @@ def readyUseSphere():
     else: return False
     
 def quitGridReady():
-    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5) and FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5)
+    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5):
+        if FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5):
+            return True
+        else: return False
+    else: return False
     
 def mainMenu():
     return FFX_Screen.PixelTestTol(1575,20,(67, 70, 117),5)
@@ -180,47 +209,176 @@ def useAndUseAgain():
     #time.sleep(0.2)
     return True
 
-def _useShiftDirection(*, toon: str, direction_func):
+def useShiftLeft(toon):
     print("use and shift")
+    #time.sleep(0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
-    while not char_grid_functions[toon]():
-        if readyUseSphere():
-            FFX_Xbox.menuB()
-        elif moveUseMenu():
-            FFX_Xbox.menuBack()
-        elif firstPosition():
-            direction_func()
+    if toon == 'yuna':
+        while not gridYuna():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'lulu':
+        while not gridLulu():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'auron':
+        while not gridAuron():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'wakka':
+        while not gridWakka():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'tidus':
+        while not gridTidus():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'kimahri':
+        while not gridKimahri():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'rikku':
+        while not gridRikku():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
     print("Ready for grid: " + toon)
 
-
-def useShiftRight(toon) -> None:
-    _useShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderRight)
-
-
-def useShiftLeft(toon): -> None:
-    _useShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderLeft)
-
-def _moveShiftDirection(*, toon: str, direction_func):
+def useShiftRight(toon):
+    print("use and shift")
+    #time.sleep(0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
-    while not char_grid_functions[toon]():
-        if moveReady() or moveActive() or moveComplete():
-            FFX_Xbox.menuB()
-        elif moveUseMenu():
-            FFX_Xbox.menuBack()
-        elif firstPosition():
-            direction_func()
+    if toon == 'yuna':
+        while not gridYuna():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'lulu':
+        while not gridLulu():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+                time.sleep(0.3)
+    if toon == 'auron':
+        while not gridAuron():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'wakka':
+        while not gridWakka():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'tidus':
+        while not gridTidus():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'kimahri':
+        while not gridKimahri():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'rikku':
+        while not gridRikku():
+            if readyUseSphere():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
     print("Ready for grid: " + toon)
 
 def moveShiftLeft(toon):
     print("Move and shift, left")
-    _moveShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderLeft)
-    
+    FFX_Xbox.menuB()
+    toon = toon.lower()
+    if toon == 'yuna':
+        while not gridYuna():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'lulu':
+        while not gridLulu():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    print("Ready for grid: " + toon)
+
 def moveShiftRight(toon):
     print("Move and shift, right")
-    _moveShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderRight)
-
+    FFX_Xbox.menuB()
+    toon = toon.lower()
+    if toon == 'yuna':
+        while not gridYuna():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'lulu':
+        while not gridLulu():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    print("Ready for grid: " + toon)
 
 def useAndQuit():
     time.sleep(0.1)
@@ -324,40 +482,66 @@ def sphereColor(desired):
 
 def sphereNum(sType) -> int:
     sType = sType.lower()
-    sphere_type_dicts = {
-        'power':70,
-        'mana':71,
-        'speed':72,
-        'ability':73,
-        'fortune':74,
-        'attribute':75,
-        'special':76,
-        'skill':77,
-        'wmag':78,
-        'bmag':79,
-        'master':80,
-        'lv1':81,
-        'lv2':82,
-        'lv3':83,
-        'lv4':84,
-        'hp':85,
-        'mp':86,
-        'strength':87,
-        'defense':88,
-        'magic':89,
-        'mdef':90,
-        'agility':91,
-        'evasion':92,
-        'accuracy':93,
-        'luck':94,
-        'clear':95,
-        'ret':96,
-        'friend':97,
-        'tele':98,
-        'warp':99,
-    }
-    if sType in sphere_type_dicts:
-        return sphere_type_dicts[sType]
+    if sType == 'power':
+        return 70
+    elif sType == 'mana':
+        return 71
+    elif sType == 'speed':
+        return 72
+    elif sType == 'ability':
+        return 73
+    elif sType == 'fortune':
+        return 74
+    elif sType == 'attribute':
+        return 75
+    elif sType == 'special':
+        return 76
+    elif sType == 'skill':
+        return 77
+    elif sType == 'wmag':
+        return 78
+    elif sType == 'bmag':
+        return 79
+    elif sType == 'master':
+        return 80
+    elif sType == 'lv1':
+        return 81
+    elif sType == 'lv2':
+        return 82
+    elif sType == 'lv3':
+        return 83
+    elif sType == 'lv4':
+        return 84
+    elif sType == 'hp':
+        return 85
+    elif sType == 'mp':
+        return 86
+    elif sType == 'strength':
+        return 87
+    elif sType == 'defense':
+        return 88
+    elif sType == 'magic':
+        return 89
+    elif sType == 'mdef':
+        return 90
+    elif sType == 'agility':
+        return 91
+    elif sType == 'evasion':
+        return 92
+    elif sType == 'accuracy':
+        return 93
+    elif sType == 'luck':
+        return 94
+    elif sType == 'clear':
+        return 95
+    elif sType == 'ret':
+        return 96
+    elif sType == 'friend':
+        return 97
+    elif sType == 'tele':
+        return 98
+    elif sType == 'warp':
+        return 99
     return 255
 
 def selSphere(sType, direction, shift):
@@ -397,36 +581,51 @@ def selSphere(sType, direction, shift):
         if shift == 'left':
             gridLeft()
         if shift == 'l5':
-            gridLeft(5)
+            gridLeft()
+            gridLeft()
+            gridLeft()
+            gridLeft()
+            gridLeft()
         if shift == 'right':
             gridRight()
         if shift == 'r2':
-            gridRight(2)
+            gridRight()
+            gridRight()
         if shift == 'down':
             gridDown()
         if shift == 'd2':
-            gridDown(2)
+            gridDown()
+            gridDown()
         if shift == 'up2':
-            gridUp(2)
+            gridUp()
+            gridUp()
         if shift == 'd5':
-            gridDown(5)
+            gridDown()
+            gridDown()
+            gridDown()
+            gridDown()
+            gridDown()
         if shift == 'aftersk':
             gridUp()
             gridRight()
             gridDown()
             #gridDown()
         if shift == 'aftersk2':
-            gridRight(2)
+            gridRight()
+            gridRight()
             time.sleep(0.1)
             gridLeft()
         if shift == 'torikku':
             time.sleep(0.2)
-            gridDown(2)
-            gridLeft(2)
+            gridDown()
+            gridDown()
+            gridLeft()
+            gridLeft()
         if shift == 'yunaspec':
             #Yuna Special
             gridDown()
-            gridRight(2)
-            gridDown(2)
+            gridRight()
+            gridRight()
+            gridDown()
+            gridDown()
         FFX_Xbox.SkipDialog(0.7)
-
