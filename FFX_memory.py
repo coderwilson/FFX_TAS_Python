@@ -7,6 +7,33 @@ from math import cos, sin
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
+    
+    
+def getKey():
+    global baseValue
+    state = menuOpen()
+    mem_address = 0x0088FDD8 if state else 0x00F25D54
+    key = baseValue + mem_address
+    return key, state
+    
+def waitFrames(frames: int):
+    frames = max(int(frames), 1)
+    # 0x0088FDD8 is the framecounter offset when in the Menu, 0x00F25D54 is the framecount offset when in the overworld.
+    current = process.readBytes(getKey(), 4)
+    final = current + frames
+    print(f"Starting memory read, current frame {current}, target frame {final}")
+    previous = current-1
+    previous_state = menuOpen()
+    while current < final:
+        address, state = getKey()
+        if current == 0 or state != previous_state:
+            # Framecounter resets when changing maps.
+            print("Crossed a trigger that reset frame count, or changed from in to out of menu, recalculating target frame.")
+            final = final - previous
+        previous_state = state
+        previous = current
+        current = process.readBytes(address, 4)
+    return
 
 def start():
     global process
@@ -89,7 +116,7 @@ def battleMenuCursor():
     global baseValue
     key = baseValue + 0x00F3F77B
     while process.readBytes(key,1) == 0:
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
     key2 = baseValue + 0x00F3C926
     return process.readBytes(key2,1)
 
@@ -102,7 +129,7 @@ def battleScreen():
         if battleMenuCursor() == 255:
             return False
         else:
-            time.sleep(0.05)
+            waitFrames(30 * 0.05)
             return True
     else:
         return False
@@ -113,7 +140,7 @@ def turnReady():
     if process.readBytes(key,1) == 0:
         return False
     else:
-        time.sleep(0.2)
+        waitFrames(30 * 0.2)
         return True
 
 def battleCursor2():
@@ -177,7 +204,7 @@ def awaitControl():
         waitCounter += 1
         if waitCounter % 100000 == 0:
             print("Awaiting control - ", waitCounter / 100000)
-    time.sleep(0.05)
+    waitFrames(30 * 0.05)
     return True
 
 def clickToControl():
@@ -189,7 +216,7 @@ def clickToControl():
         waitCounter += 1
         if waitCounter % 100 == 0:
             print("Awaiting control - ", waitCounter / 100)
-    time.sleep(0.05)
+    waitFrames(30 * 0.05)
     return True
 
 def clickToControl2():
@@ -197,19 +224,19 @@ def clickToControl2():
     print("Awaiting control (clicking)")
     while not userControl():
         FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
+        waitFrames(30 * 0.04)
         FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
+        waitFrames(30 * 0.04)
         waitCounter += 1
         if waitCounter % 100 == 0:
             print("Awaiting control - ", waitCounter / 100)
-    time.sleep(0.05)
+    waitFrames(30 * 0.05)
     return True
 
 def clickToControl3():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
-    time.sleep(0.02)
+    waitFrames(30 * 0.02)
     while not userControl():
         if battleActive():
             while battleActive():
@@ -221,11 +248,11 @@ def clickToControl3():
             print("Menu open (after battle)")
             FFX_Xbox.tapB()
         else:
-            time.sleep(0.035)
+            waitFrames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 100 == 0:
             print("Awaiting control - ", waitCounter / 100)
-    time.sleep(0.05)
+    waitFrames(30 * 0.05)
     print("User control restored.")
     return True
 
@@ -236,20 +263,20 @@ def clickToControlSpecial():
     while not userControl():
         FFXC.set_value('BtnB', 1)
         FFXC.set_value('BtnY', 1)
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         FFXC.set_value('BtnB', 0)
         FFXC.set_value('BtnY', 0)
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 100 == 0:
             print("Awaiting control - ", waitCounter / 100)
-    time.sleep(0.05)
+    waitFrames(30 * 0.05)
     return True
 
 def clickToEvent():
     while userControl():
         FFX_Xbox.tapB()
-    time.sleep(0.2)
+    waitFrames(30 * 0.2)
 
 def clickToEventTemple(direction):
     FFXC = FFX_Xbox.controllerHandle()
@@ -272,15 +299,15 @@ def clickToEventTemple(direction):
     while userControl():
         FFX_Xbox.tapB()
     FFXC.set_neutral()
-    time.sleep(0.2)
+    waitFrames(30 * 0.2)
     while not userControl():
         clickToControl3()
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
 
 def awaitEvent():
-    time.sleep(0.035)
+    waitFrames(30 * 0.035)
     while userControl():
-        time.sleep(0.05)
+        waitFrames(30 * 0.05)
 
 def getCoords():
     global process
@@ -1144,10 +1171,10 @@ def openMenu():
         FFX_Xbox.menuB()
     while userControl() and not menuOpen():
         FFXC.set_value('BtnY',1)
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         FFXC.set_value('BtnY',0)
-        time.sleep(0.035)
-    time.sleep(0.7)
+        waitFrames(30 * 0.035)
+    waitFrames(30 * 0.7)
 
 def sGridActive():
     global baseValue
@@ -1285,7 +1312,7 @@ def menuControl():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         return True
     else:
         return False
@@ -1296,7 +1323,7 @@ def diagSkipPossible_old():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         return True
     else:
         return False
@@ -1307,13 +1334,13 @@ def diagSkipPossible():
     key = baseValue + 0x00F2FED0
     control = process.readBytes(key,1)
     if control == 1:
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         return True
     else:
         key = baseValue + 0x0085A03C
         control = process.readBytes(key,1)
         if control == 1:
-            time.sleep(0.035)
+            waitFrames(30 * 0.035)
             return True
         else:
             return False
@@ -1334,13 +1361,13 @@ def specialTextOpen():
     key = baseValue + 0x01466D30
     control = process.readBytes(key,1)
     if control == 1:
-        time.sleep(0.035)
+        waitFrames(30 * 0.035)
         return True
     else:
         key = baseValue + 0x01476988
         control = process.readBytes(key,1)
         if control == 1:
-            time.sleep(0.035)
+            waitFrames(30 * 0.035)
             return True
         else:
             return False
@@ -1361,10 +1388,10 @@ def clickToStoryProgress(destination):
         if menuControl():
             FFXC.set_value('BtnB',1)
             FFXC.set_value('BtnA',1)
-            time.sleep(0.035)
+            waitFrames(30 * 0.035)
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
-            time.sleep(0.035)
+            waitFrames(30 * 0.035)
         if counter % 100000 == 0:
             print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 100000)
         counter += 1
@@ -1844,7 +1871,7 @@ def fullPartyFormat_New(frontLine, menusize):
         elif partyMembers == 7:
             print(nameFromNumber(orderFinal[5]), " and ", nameFromNumber(orderFinal[6]), " seem fine.")
 
-        # time.sleep(120) #For testing only. Allows us to see what's going on.
+        # waitFrames(30 * 120) #For testing only. Allows us to see what's going on.
         FFX_Xbox.menuA()
         #closeMenu()
 
@@ -1865,7 +1892,7 @@ def fullPartyFormat(frontLine):
                 openMenu()
         else:
             #Sometimes needs delay if menu was opened via other means.
-            time.sleep(0.4)
+            waitFrames(30 * 0.4)
         
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
@@ -1921,7 +1948,7 @@ def fullPartyFormat(frontLine):
             print("Into formation:")
             print(orderFinal)
             order = getOrderSeven()
-            #time.sleep(30)
+            #waitFrames(30 * 30)
     print("Party format is good now.")
     #if frontLine != 'miihen':
     closeMenu()
@@ -2193,9 +2220,9 @@ def dodgeLightning(lDodgeNum): #Not working yet
     global baseValue
     
     if lStrikeCount() != lDodgeNum:
-        time.sleep(0.07)
+        waitFrames(30 * 0.07)
         FFX_Xbox.menuB()
-        time.sleep(0.07)
+        waitFrames(30 * 0.07)
         return True
     else:
         return False
