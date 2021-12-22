@@ -7,90 +7,74 @@ import FFX_memory
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def gridUp():
-    FFXC.set_value('Dpad', 1)
-    time.sleep(0.04)
-    FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+def _gridDirection(*, direction: int, num: int = 1):
+    for _ in range(num):
+        FFXC.set_value('Dpad', direction)
+        time.sleep(0.04)
+        FFXC.set_value('Dpad', 0)
+        time.sleep(0.12)
+        
 
-def gridDown():
-    FFXC.set_value('Dpad', 2)
-    time.sleep(0.04)
-    FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+def gridUp(num: int = 1):
+    _gridDirection(direction=1, num=num)
 
-def gridLeft():
-    FFXC.set_value('Dpad', 4)
-    time.sleep(0.04)
-    FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+def gridDown(num: int = 1):
+    _gridDirection(direction=2, num=num)
 
-def gridRight():
-    FFXC.set_value('Dpad', 8)
-    time.sleep(0.04)
-    FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+def gridLeft(num: int = 1):
+    _gridDirection(direction=4, num=num)
+
+def gridRight(num: int = 1):
+    _gridDirection(direction=8, num=num)
 
 def gridOpen():
     return FFX_memory.sGridActive()
     
+def _gridChar(*, char_id: int) -> bool:
+    return FFX_memory.sGridChar() == char_id
+    
 def gridTidus():
-    if FFX_memory.sGridChar() == 0:
-        return True
-    else:
-        return False
-    
-def gridKimahri():
-    if FFX_memory.sGridChar() == 3:
-        return True
-    else:
-        return False
-    
-def gridAuron():
-    if FFX_memory.sGridChar() == 2:
-        return True
-    else:
-        return False
-    
-def gridLulu():
-    if FFX_memory.sGridChar() == 5:
-        return True
-    else:
-        return False
-    
-def gridWakka():
-    if FFX_memory.sGridChar() == 4:
-        return True
-    else:
-        return False
+    return _gridChar(char_id=0)
     
 def gridYuna():
-    if FFX_memory.sGridChar() == 1:
-        return True
-    else:
-        return False
+    return _gridChar(char_id=1)
+    
+def gridAuron():
+    return _gridChar(char_id=2)
+    
+def gridKimahri():
+    return _gridChar(char_id=3)  
+    
+def gridWakka():
+    return _gridChar(char_id=4)
+    
+def gridLulu():
+    return _gridChar(char_id=5)
 
 def gridRikku():
-    if FFX_memory.sGridChar() == 6:
-        return True
-    else:
-        return False
+    return _gridChar(char_id=6)
+    
+
+char_grid_functions = {
+    'yuna': gridYuna,
+    'lulu': gridLulu,
+    'auron': gridAuron,
+    'wakka': gridWakka,
+    'tidus': gridTidus,
+    'kimahri': gridKimahri,
+    'rikku': gridRikku
+}
 
 def firstPosition():
-    if FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5) and not FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5):
-        return True
-    else: return False
+    return FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5) and not FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5):
 
 def moveUseMenu():
     return FFX_Screen.PixelTestTol(347,526,(255, 255, 255),5)
 
 def moveReady():
-    if moveUseMenu():
-        if FFX_memory.getGridMoveUsePos() == 0:
+    if moveUseMenu() and FFX_memory.getGridMoveUsePos() == 0:
             return True
-        else:
-            return False
-    else: return False
+    return False
 
 def moveActive():
     if readyUseSphere():
@@ -99,19 +83,10 @@ def moveActive():
         return FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5)
 
 def moveComplete():
-    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5):
-        if FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5):
-            return True
-        else: return False
-    else: return False
+    return FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5) and FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5)
     
 def useReady():
-    if moveUseMenu():
-        if FFX_memory.getGridMoveUsePos() == 1:
-            return True
-        else:
-            return False
-    else: return False
+    if moveUseMenu() and FFX_memory.getGridMoveUsePos() == 1
 
 def readySelectSphere():
     return FFX_Screen.PixelTestTol(636,438,(255, 255, 255),5)
@@ -129,11 +104,7 @@ def readyUseSphere():
     else: return False
     
 def quitGridReady():
-    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5):
-        if FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5):
-            return True
-        else: return False
-    else: return False
+    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5) and FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5)
     
 def mainMenu():
     return FFX_Screen.PixelTestTol(1575,20,(67, 70, 117),5)
@@ -209,176 +180,47 @@ def useAndUseAgain():
     #time.sleep(0.2)
     return True
 
-def useShiftLeft(toon):
+def _useShiftDirection(*, toon: str, direction_func):
     print("use and shift")
-    #time.sleep(0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
-    if toon == 'yuna':
-        while not gridYuna():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'lulu':
-        while not gridLulu():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'auron':
-        while not gridAuron():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'wakka':
-        while not gridWakka():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'tidus':
-        while not gridTidus():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'kimahri':
-        while not gridKimahri():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'rikku':
-        while not gridRikku():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
+    while not char_grid_functions[toon]():
+        if readyUseSphere():
+            FFX_Xbox.menuB()
+        elif moveUseMenu():
+            FFX_Xbox.menuBack()
+        elif firstPosition():
+            direction_func()
     print("Ready for grid: " + toon)
 
-def useShiftRight(toon):
-    print("use and shift")
-    #time.sleep(0.1)
+
+def useShiftRight(toon) -> None:
+    _useShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderRight)
+
+
+def useShiftLeft(toon): -> None:
+    _useShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderLeft)
+
+def _moveShiftDirection(*, toon: str, direction_func):
     FFX_Xbox.menuB()
     toon = toon.lower()
-    if toon == 'yuna':
-        while not gridYuna():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    if toon == 'lulu':
-        while not gridLulu():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-                time.sleep(0.3)
-    if toon == 'auron':
-        while not gridAuron():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    if toon == 'wakka':
-        while not gridWakka():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    if toon == 'tidus':
-        while not gridTidus():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    if toon == 'kimahri':
-        while not gridKimahri():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    if toon == 'rikku':
-        while not gridRikku():
-            if readyUseSphere():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
+    while not char_grid_functions[toon]():
+        if moveReady() or moveActive() or moveComplete():
+            FFX_Xbox.menuB()
+        elif moveUseMenu():
+            FFX_Xbox.menuBack()
+        elif firstPosition():
+            direction_func()
     print("Ready for grid: " + toon)
 
 def moveShiftLeft(toon):
     print("Move and shift, left")
-    FFX_Xbox.menuB()
-    toon = toon.lower()
-    if toon == 'yuna':
-        while not gridYuna():
-            if moveReady() or moveActive() or moveComplete():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    if toon == 'lulu':
-        while not gridLulu():
-            if moveReady() or moveActive() or moveComplete():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderLeft()
-    print("Ready for grid: " + toon)
-
+    _moveShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderLeft)
+    
 def moveShiftRight(toon):
     print("Move and shift, right")
-    FFX_Xbox.menuB()
-    toon = toon.lower()
-    if toon == 'yuna':
-        while not gridYuna():
-            if moveReady() or moveActive() or moveComplete():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    if toon == 'lulu':
-        while not gridLulu():
-            if moveReady() or moveActive() or moveComplete():
-                FFX_Xbox.menuB()
-            elif moveUseMenu():
-                FFX_Xbox.menuBack()
-            elif firstPosition():
-                FFX_Xbox.shoulderRight()
-    print("Ready for grid: " + toon)
+    _moveShiftDirection(toon=toon, direction_func=FFX_Xbox.shoulderRight)
+
 
 def useAndQuit():
     time.sleep(0.1)
@@ -482,66 +324,40 @@ def sphereColor(desired):
 
 def sphereNum(sType) -> int:
     sType = sType.lower()
-    if sType == 'power':
-        return 70
-    elif sType == 'mana':
-        return 71
-    elif sType == 'speed':
-        return 72
-    elif sType == 'ability':
-        return 73
-    elif sType == 'fortune':
-        return 74
-    elif sType == 'attribute':
-        return 75
-    elif sType == 'special':
-        return 76
-    elif sType == 'skill':
-        return 77
-    elif sType == 'wmag':
-        return 78
-    elif sType == 'bmag':
-        return 79
-    elif sType == 'master':
-        return 80
-    elif sType == 'lv1':
-        return 81
-    elif sType == 'lv2':
-        return 82
-    elif sType == 'lv3':
-        return 83
-    elif sType == 'lv4':
-        return 84
-    elif sType == 'hp':
-        return 85
-    elif sType == 'mp':
-        return 86
-    elif sType == 'strength':
-        return 87
-    elif sType == 'defense':
-        return 88
-    elif sType == 'magic':
-        return 89
-    elif sType == 'mdef':
-        return 90
-    elif sType == 'agility':
-        return 91
-    elif sType == 'evasion':
-        return 92
-    elif sType == 'accuracy':
-        return 93
-    elif sType == 'luck':
-        return 94
-    elif sType == 'clear':
-        return 95
-    elif sType == 'ret':
-        return 96
-    elif sType == 'friend':
-        return 97
-    elif sType == 'tele':
-        return 98
-    elif sType == 'warp':
-        return 99
+    sphere_type_dicts = {
+        'power':70,
+        'mana':71,
+        'speed':72,
+        'ability':73,
+        'fortune':74,
+        'attribute':75,
+        'special':76,
+        'skill':77,
+        'wmag':78,
+        'bmag':79,
+        'master':80,
+        'lv1':81,
+        'lv2':82,
+        'lv3':83,
+        'lv4':84,
+        'hp':85,
+        'mp':86,
+        'strength':87,
+        'defense':88,
+        'magic':89,
+        'mdef':90,
+        'agility':91,
+        'evasion':92,
+        'accuracy':93,
+        'luck':94,
+        'clear':95,
+        'ret':96,
+        'friend':97,
+        'tele':98,
+        'warp':99,
+    }
+    if sType in sphere_type_dicts:
+        return sphere_type_dicts[sType]
     return 255
 
 def selSphere(sType, direction, shift):
@@ -581,509 +397,36 @@ def selSphere(sType, direction, shift):
         if shift == 'left':
             gridLeft()
         if shift == 'l5':
-            gridLeft()
-            gridLeft()
-            gridLeft()
-            gridLeft()
-            gridLeft()
+            gridLeft(5)
         if shift == 'right':
             gridRight()
         if shift == 'r2':
-            gridRight()
-            gridRight()
+            gridRight(2)
         if shift == 'down':
             gridDown()
         if shift == 'd2':
-            gridDown()
-            gridDown()
+            gridDown(2)
         if shift == 'up2':
-            gridUp()
-            gridUp()
+            gridUp(2)
         if shift == 'd5':
-            gridDown()
-            gridDown()
-            gridDown()
-            gridDown()
-            gridDown()
+            gridDown(5)
         if shift == 'aftersk':
             gridUp()
             gridRight()
             gridDown()
             #gridDown()
         if shift == 'aftersk2':
-            gridRight()
-            gridRight()
+            gridRight(2)
             time.sleep(0.1)
             gridLeft()
         if shift == 'torikku':
             time.sleep(0.2)
-            gridDown()
-            gridDown()
-            gridLeft()
-            gridLeft()
+            gridDown(2)
+            gridLeft(2)
         if shift == 'yunaspec':
             #Yuna Special
             gridDown()
-            gridRight()
-            gridRight()
-            gridDown()
-            gridDown()
+            gridRight(2)
+            gridDown(2)
         FFX_Xbox.SkipDialog(0.7)
 
-def selSphere_old(sType, direction, shift):
-    sType = sType.lower()
-    shift = shift.lower()
-    found = 0
-    limit = 0
-    speed = 0.05
-    position = 0
-    color = 'none'
-    print("Looking for sphere: '",sType,"'")
-    if sType == 'power' or sType == 'speed' or sType == 'mana' or sType == 'ability' or sType == 'fortune':
-        color = 'red'
-    if sType == 'tele' or sType == 'ret' or sType == 'friend':
-        color = 'white'
-    if sType == 'magic' or sType == 'luck' or sType == 'strength' or sType == 'purpAny':
-        color = 'purple'
-    if sType == 'lv1' or sType == 'lv2' or sType == 'lv3' or sType == 'lv4':
-        color = 'black'
-    if sType == 'skill' or sType == 'att':
-        color = 'yellow'
-    
-    
-    while not readyUseSphere():
-        print(color)
-        position = sphereColor(color)
-        if position != 0:
-            if sType == 'power':
-                if position == 1:
-                    if FFX_Screen.PixelTestTol(370,473,(171, 171, 171),5):
-                        FFX_Xbox.menuB() #Found a power sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 2:
-                    if FFX_Screen.PixelTestTol(389,495,(22, 22, 22),5):
-                        FFX_Xbox.menuB() #Found a power sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'mana':
-                if position == 1:
-                    if FFX_Screen.PixelTestTol(357,473,(171, 171, 171),5):
-                        FFX_Xbox.menuB() #Found mana sphere
-                        time.sleep(0.1)
-                        found = 1
-                if position == 2:
-                    if FFX_Screen.PixelTestTol(356,516,(172, 172, 172),5):
-                        FFX_Xbox.menuB() #Found mana sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'speed':
-                if position == 1:
-                    if FFX_Screen.PixelTestTol(275,472,(174, 174, 174),5):
-                        FFX_Xbox.menuB() #Found a speed sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 2:
-                    if FFX_Screen.PixelTestTol(275,516,(172, 172, 172),5):
-                        FFX_Xbox.menuB() #Found a speed sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 3:
-                    print("Ping")
-                    if FFX_Screen.PixelTestTol(275,560,(170, 170, 170),5):
-                        print("Ping 2")
-                        FFX_Xbox.menuB() #Found a speed sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 4 and direction == 'd':
-                    direction = 'u'
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'ability':
-                if position == 1:
-                    if FFX_Screen.PixelTestTol(300,452,(222, 222, 222),5):
-                        FFX_Xbox.menuB() #Found ability sphere
-                        time.sleep(0.1)
-                        found = 1
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(300,582,(222, 222, 222),5):
-                        FFX_Xbox.menuB() #Found ability sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'fortune':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(391,602,(172, 172, 172),5):
-                        FFX_Xbox.menuB() #Found ability sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'tele':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(316,603,(169, 169, 169),5):
-                        FFX_Xbox.menuB() #Found a teleport sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'friend':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(331,581,(223, 223, 223),5):
-                        FFX_Xbox.menuB() #Found a friend sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'ret':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(295,582,(222, 222, 222),5):
-                        print("Found Return sphere")
-                        FFX_Xbox.menuB() #Found a return sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'lv1' or sType == 'lv2' or sType == 'lv3' or sType == 'lv4':
-                pixel2 = FFX_Screen.PixelValue(307,598)
-                print(pixel2)
-                if position == 4 and FFX_Screen.PixelTestTol(258,583,(220, 220, 220),5):
-                    #Should be more specific. Just getting tired of finding the right level.
-                    FFX_Xbox.menuB() # Lv.1 sphere
-                    time.sleep(0.1)
-                    found = 1
-                elif position == 1:
-                    print("Found a key sphere in position 1")
-                    FFX_Xbox.menuB() # Lv.1 sphere
-                    time.sleep(0.1)
-                    found = 1
-                elif position == 3: #This is just a placeholder until we feel like coming back to improve this.
-                    if (sType == 'lv3' or sType == 'lv4') and FFX_Screen.PixelTestTol(258,583,(220, 220, 220),5):
-                        print("Found a Lv.3/4 sphere (these are never side by side)")
-                        FFX_Xbox.menuB() # Lv.1 sphere
-                        time.sleep(0.1)
-                        found = 1
-                    elif FFX_Screen.PixelTestTol(317,581,(137, 132, 160),5): # Top corner of the 1 in Lv.1
-                        print("Found a Lv.1 unlock sphere.")
-                        if sType == 'lv1':
-                            FFX_Xbox.menuB() # Lv.1 sphere
-                            time.sleep(0.1)
-                            found = 1
-                        else:
-                            print("Wrong sphere.")
-                            if direction == 'd':
-                                FFX_Xbox.menuDown()
-                            if direction == 'u':
-                                FFX_Xbox.menuUp()
-                    elif pixel2 == (184, 184, 184): #Bottom left of the 2 in Lv.2
-                        print("Found a Lv.2 unlock sphere.")
-                        if sType == 'lv2':
-                            FFX_Xbox.menuB() # Lv.2 sphere
-                            time.sleep(0.1)
-                            found = 1
-                        else:
-                            print("Wrong sphere.")
-                            if direction == 'd':
-                                FFX_Xbox.menuDown()
-                            if direction == 'u':
-                                FFX_Xbox.menuUp()
-                    else:
-                        print("Could not identify sphere.")
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'magic':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(301,602,(172, 172, 172),5):
-                        FFX_Xbox.menuB() #Found a magic sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'luck':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(303,580,(225, 225, 225),5):
-                        FFX_Xbox.menuB() #Found a Luck sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'strength':
-                if position == 4:
-                    if FFX_Screen.PixelTestTol(421,581,(223, 223, 223),5):
-                        FFX_Xbox.menuB() #Found a Strength sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'skill':
-                if position == 2:
-                    if FFX_Screen.PixelTestTol(306,494,(224, 224, 224),5) and FFX_Screen.PixelTestTol(343,516,(172, 172, 172),5):
-                        FFX_Xbox.menuB() #Found a Skill sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 3:
-                    if FFX_Screen.PixelTestTol(306,538,(223, 223, 223),5) and FFX_Screen.PixelTestTol(343,560,(170, 170, 170),5):
-                        FFX_Xbox.menuB() #Found a Skill sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 4:
-                    if FFX_Screen.PixelTestTol(306,585,(216, 216, 216),5) and FFX_Screen.PixelTestTol(343,601,(175, 175, 175),5):
-                        FFX_Xbox.menuB() #Found a Skill sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-            elif sType == 'att':
-                if position == 2:
-                    if FFX_Screen.PixelTestTol(412,516,(172, 172, 172),5):
-                        FFX_Xbox.menuB() #Found an Attribute sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 3:
-                    if FFX_Screen.PixelTestTol(412,559,(173, 173, 173),5):
-                        FFX_Xbox.menuB() #Found an Attribute sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                elif position == 4:
-                    if FFX_Screen.PixelTestTol(412,603,(169, 169, 169),5):
-                        FFX_Xbox.menuB() #Found an Attribute sphere
-                        time.sleep(0.1)
-                        found = 1
-                    else:
-                        if direction == 'd':
-                            FFX_Xbox.menuDown()
-                        if direction == 'u':
-                            FFX_Xbox.menuUp()
-                else:
-                    if direction == 'd':
-                        FFX_Xbox.menuDown()
-                    if direction == 'u':
-                        FFX_Xbox.menuUp()
-        else:
-            if direction == 'd':
-                FFX_Xbox.menuDown()
-            if direction == 'u':
-                FFX_Xbox.menuUp()
-        if found == 1:
-            if shift == 'up':
-                gridUp()
-            if shift == 'left':
-                gridLeft()
-            if shift == 'l5':
-                gridLeft()
-                gridLeft()
-                gridLeft()
-                gridLeft()
-                gridLeft()
-            if shift == 'right':
-                gridRight()
-            if shift == 'r2':
-                gridRight()
-                gridRight()
-            if shift == 'down':
-                gridDown()
-            if shift == 'd2':
-                gridDown()
-                gridDown()
-            if shift == 'd5':
-                gridDown()
-                gridDown()
-                gridDown()
-                gridDown()
-                gridDown()
-            if shift == 'aftersk':
-                gridUp()
-                gridRight()
-                gridDown()
-                #gridDown()
-            if shift == 'aftersk2':
-                gridRight()
-                gridRight()
-                time.sleep(0.1)
-                gridLeft()
-            if shift == 'torikku':
-                gridDown()
-                gridDown()
-                gridLeft()
-                gridLeft()
-            if shift == 'yunaspec':
-                #Yuna Special
-                gridDown()
-                gridRight()
-                gridRight()
-                gridDown()
-                gridDown()
-                
-        if found == 0:
-            if limit == 1:
-                limit = 0
-                print("Limit reached without success. Resetting.")
-                print("Reminder, sphere type: ", sType)
-                if direction == 'd' and FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
-                    #We've hit the bottom. Resetting.
-                    #time.sleep(5)
-                    while not FFX_Screen.PixelTestTol(680,440,(128, 127, 156),5):
-                        FFX_Xbox.menuUp()
-                elif direction == 'u' and FFX_Screen.PixelTestTol(680,440,(128, 127, 156),5):
-                    #We've hit the top. Resetting.
-                    #time.sleep(5)
-                    if color != 'red':
-                        print("Item sort issue. Adjusting.")
-                        while not FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
-                            FFX_Xbox.menuDown()
-                    elif sType == 'power':
-                        print("No need to shift. Power spheres are always at the top.")
-                        limit = 1
-                    elif sType == 'ability':
-                        direction = 'd'
-                    else:
-                        while not FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
-                            FFX_Xbox.menuDown()
-            elif limit == 0:
-                if direction == 'd' and FFX_Screen.PixelTestTol(681,611,(112, 111, 138),5):
-                    limit = 1
-                elif direction == 'u' and FFX_Screen.PixelTestTol(680,440,(128, 127, 156),5):
-                    limit = 1
