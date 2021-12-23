@@ -320,7 +320,9 @@ def Ammes():
 
     while BattleComplete != 1:
         if FFX_memory.turnReady():
-            if tidusODflag == False and FFX_Screen.turnTidus() and FFX_Screen.checkCharge(1):
+            print(FFX_memory.getOverdriveBattle(0)) #Testing only
+            time.sleep(20) #Testing only
+            if tidusODflag == False and FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0) == 100:
                 tidusOD()
                 tidusODflag = True
             else:
@@ -581,11 +583,11 @@ def SinFin():
             elif FFX_Screen.turnAeon():
                 while FFX_memory.mainBattleMenu():
                     FFX_Xbox.menuLeft()
-                FFX_memory.waitFrames(30)
+                time.sleep(1)
                 FFX_Xbox.menuB()  # Energy Blast
                 # while not FFX_Screen.PixelTestTol(1366, 340, (101, 101, 101), 3):
                 # print("Attempting to target boss")
-                FFX_memory.waitFrames(20)
+                time.sleep(1)
                 FFX_Xbox.menuRight()
                 FFX_Xbox.menuUp()
                 # time.sleep(0.05)
@@ -5283,23 +5285,20 @@ def escapeOne():
 def buddySwap(position):
     FFX_Logs.writeLog("Swapping characters (in battle)")
     print("Swapping characters (in battle)")
-    while not FFX_Screen.PixelTestTol(324, 92, (223, 223, 223), 5):
+    if position == 0:
+        position += FFX_memory.partySize() - 3
+    position -= 1
+    print("Position: ", position)
+    
+    while FFX_memory.mainBattleMenu():
         FFX_Xbox.lBumper()
-    time.sleep(0.7)
-    if position == 1:
-        print(position)
-    elif position == 0:  # Swap with last slot
-        print(position)
-        FFX_Xbox.menuUp()
-    elif position == 2:
+    FFX_memory.waitFrames(30)
+    while position != FFX_memory.battleCursor2():
         FFX_Xbox.menuDown()
-        print(position)
-    elif position == 3:
-        print(position)
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.6)
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(30)
     FFX_Xbox.clickToBattle()
     FFX_Screen.awaitTurn()
 

@@ -3,6 +3,7 @@ import pyautogui
 #import FFX_Xbox
 import FFX_Logs
 import FFX_memory
+#from playsound import playsound
 
 #FFXC = FFX_Xbox.FFXC
 #FFXC = FFX_Xbox.FFXC
@@ -67,6 +68,7 @@ def PixelValue(x, y):
     print("READING PIXEL VALUE, FIX THIS LATER")
     print("########################################")
     print("########################################")
+    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     try:
         value = pyautogui.pixel(x, y)
     except:
@@ -79,6 +81,7 @@ def PixelTest( x, y, rgb ):
     print("READING PIXEL VALUE, FIX THIS LATER")
     print("########################################")
     print("########################################")
+    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     try:
         return pyautogui.pixelMatchesColor(x, y, rgb)
     except:
@@ -90,6 +93,7 @@ def PixelTestTol( x, y, rgb, tol ):
     print("READING PIXEL VALUE, FIX THIS LATER")
     print("########################################")
     print("########################################")
+    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     try:
         return pyautogui.pixelMatchesColor(x, y, rgb, tolerance = tol)
     except:
@@ -284,6 +288,7 @@ def imgSearch(img, conf):
     print("IMAGE SEARCH, FIX THIS LATER")
     print("########################################")
     print("########################################")
+    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     img = 'img\\' + str(img)
     try:
         imgTest = pyautogui.locateOnScreen(img, confidence=conf)
@@ -301,6 +306,7 @@ def imgSearch2(img, conf):
     print("IMAGE SEARCH, FIX THIS LATER")
     print("########################################")
     print("########################################")
+    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     try:
         imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
         print("Results for searching '",img,": ", imgTest)

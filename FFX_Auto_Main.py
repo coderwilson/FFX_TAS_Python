@@ -37,11 +37,11 @@ import FFX_Sin
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
 #These are the popular ones. New Game ('none') is the last one.
-Gamestate = "Baaj"
+#Gamestate = "Baaj"
 #StepCounter = 1
-StepCounter = 6
-#Gamestate = "Besaid"
-#StepCounter = 3
+#StepCounter = 6
+Gamestate = "Besaid"
+StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"

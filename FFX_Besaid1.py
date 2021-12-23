@@ -65,7 +65,7 @@ def Beach():
                 checkpoint = 22
             elif checkpoint < 29 and FFX_memory.getMap() == 133:
                 FFX_memory.clickToDiagProgress(9) #You do remember the prayer?
-                FFX_Xbox.waitFrames(20)
+                FFX_memory.waitFrames(20)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 checkpoint = 29
@@ -118,7 +118,7 @@ def trials():
                 FFXC.set_neutral()
                 
                 FFX_memory.clickToDiagProgress(47) #Wakka, "She's cute, ya?"
-                FFX_Xbox.waitFrames(20)
+                FFX_memory.waitFrames(20)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 checkpoint += 1

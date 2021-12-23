@@ -389,7 +389,7 @@ def autoSortItems(manual):
 def Liki():
     print("Menu - SS Liki")
     FFX_memory.openMenu()
-    FFX_memory.waitFrames(30)
+    time.sleep(2)
     #FFX_Xbox.menuDown()
     #FFX_Xbox.menuB()
     #time.sleep(0.2)
@@ -404,7 +404,7 @@ def Liki():
     #FFX_Xbox.menuA()
     #FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(10)
+    time.sleep(1)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Sphere grid with Tidus
