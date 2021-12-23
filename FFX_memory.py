@@ -116,7 +116,7 @@ def battleMenuCursor():
     global baseValue
     key = baseValue + 0x00F3F77B
     while process.readBytes(key,1) == 0:
-        waitFrames(30 * 0.035)
+        waitFrames(1)
     key2 = baseValue + 0x00F3C926
     return process.readBytes(key2,1)
 
@@ -129,7 +129,7 @@ def battleScreen():
         if battleMenuCursor() == 255:
             return False
         else:
-            waitFrames(30 * 0.05)
+            waitFrames(10)
             return True
     else:
         return False
@@ -140,7 +140,7 @@ def turnReady():
     if process.readBytes(key,1) == 0:
         return False
     else:
-        waitFrames(30 * 0.2)
+        waitFrames(15)
         return True
 
 def battleCursor2():
@@ -1171,10 +1171,10 @@ def openMenu():
         FFX_Xbox.menuB()
     while userControl() and not menuOpen():
         FFXC.set_value('BtnY',1)
-        waitFrames(30 * 0.035)
+        waitFrames(1)
         FFXC.set_value('BtnY',0)
-        waitFrames(30 * 0.035)
-    waitFrames(30 * 0.7)
+        waitFrames(1)
+    waitFrames(20)
 
 def sGridActive():
     global baseValue
@@ -1893,7 +1893,7 @@ def fullPartyFormat(frontLine):
         else:
             #Sometimes needs delay if menu was opened via other means.
             waitFrames(30 * 0.4)
-        
+        time.sleep(0.5)
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
@@ -2063,6 +2063,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0, 4, 2, 6, 1, 3, 5]
     elif frontLine == 'mwoodsdone':
         orderFinal = [0, 3, 2, 4, 1, 6, 5]
+    elif frontLine == 'besaid':
+        orderFinal = [5,1,0,4]
     else:
         orderFinal = [6,5,4,3,2,1,0]
     return orderFinal
@@ -2238,6 +2240,31 @@ def lDodgeCount():
 
     key = baseValue + 0x00D2CE8E
     return process.readBytes(key, 2)
+
+def savePopupCursor():
+    global baseValue
+
+    key = baseValue + 0x0146780A
+    return process.readBytes(key, 1)
+
+def diagProgressFlag():
+    global baseValue
+
+    key = baseValue + 0x00F25A80
+    return process.readBytes(key, 4)
+
+def clickToDiagProgress(num):
+    print("Clicking to dialog progress: ", num)
+    lastNum = diagProgressFlag()
+    while diagProgressFlag() != num:
+        if userControl():
+            return False
+        else:
+            FFX_Xbox.tapB()
+            if diagProgressFlag() != lastNum:
+                lastNum = diagProgressFlag()
+                print("Dialog change: ", diagProgressFlag(), " - clicking to ", num)
+    return True
 
 def setEncounterRate(setVal):
     global baseValue

@@ -492,6 +492,16 @@ def clickToBattle():
         elif FFX_memory.diagSkipPossible():
             menuB()
 
+def clearSavePopup(clickToDiagNum):
+    FFXC = controllerHandle()
+    FFXC.set_neutral()
+    FFX_memory.clickToDiagProgress(0)
+    FFX_memory.waitFrames(100)
+    while FFX_memory.savePopupCursor() != 1:
+        menuDown()
+    menuB()
+    FFX_memory.waitFrames(5)
+
 def nameAeon():
     print("Waiting for aeon naming screen to come up")
     

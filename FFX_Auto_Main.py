@@ -37,9 +37,9 @@ import FFX_Sin
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
 #These are the popular ones. New Game ('none') is the last one.
-#Gamestate = "Baaj"
+Gamestate = "Baaj"
 #StepCounter = 1
-#StepCounter = 6
+StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
 #Gamestate = "Kilika"
@@ -78,8 +78,8 @@ import FFX_Sin
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True
@@ -95,9 +95,10 @@ rngSeedNum = 200 #New seed number, only used if newSeed == True
 
 rngReviewOnly = True
 gameLength = "NewSeed"
-if newSeed == False:
+if newSeed == False: #Below logic for full runs only.
     rngSelectArray = [31,49,59,104, 200]
-    rngSeedNum = random.choice(rngSelectArray)
+    rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
+    rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 

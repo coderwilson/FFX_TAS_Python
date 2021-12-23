@@ -579,16 +579,17 @@ def SinFin():
                     buddySwap(2)
                     aeonSummon(0)
             elif FFX_Screen.turnAeon():
-                FFX_Xbox.menuLeft()
-                time.sleep(0.8)
+                while FFX_memory.mainBattleMenu():
+                    FFX_Xbox.menuLeft()
+                FFX_memory.waitFrames(30)
                 FFX_Xbox.menuB()  # Energy Blast
                 # while not FFX_Screen.PixelTestTol(1366, 340, (101, 101, 101), 3):
                 # print("Attempting to target boss")
-                time.sleep(0.1)
+                FFX_memory.waitFrames(20)
                 FFX_Xbox.menuRight()
                 FFX_Xbox.menuUp()
                 # time.sleep(0.05)
-                time.sleep(0.15)
+                FFX_memory.waitFrames(4)
                 FFX_Xbox.menuB()
                 print("Valefor energy blast")
                 complete = True
@@ -4322,10 +4323,7 @@ def attack(direction):
     direction = direction.lower()
     if not FFX_memory.turnReady():
         print("Battle menu isn't up.")
-        while not FFX_memory.turnReady():
-            #Waiting for battle menu to come up.
-            time.sleep(0.035)
-        time.sleep(0.2) #Make sure we actually have control
+        return
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
         while not FFX_memory.battleMenuCursor() in [0, 216]:
             FFX_Xbox.menuUp()

@@ -273,10 +273,12 @@ def ABswimming2() :
     
     #Back onto the ship
     FFX_memory.clickToControl()
-    FFXC.set_movement(1, 0)
-    time.sleep(0.35)
+    while not FFX_targetPathing.setMovement([-17,-24]):
+        moving = True
     FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(1)
     FFXC.set_neutral()
     
-    FFX_Xbox.awaitSave()
+    #Save dialog
+    FFX_Xbox.clearSavePopup(0)
+    

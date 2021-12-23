@@ -64,7 +64,8 @@ def Beach():
             elif checkpoint < 22 and FFX_memory.getMap() == 69:
                 checkpoint = 22
             elif checkpoint < 29 and FFX_memory.getMap() == 133:
-                FFX_Screen.awaitPixel(973,506,(187, 187, 187)) #You do remember the prayer?
+                FFX_memory.clickToDiagProgress(9) #You do remember the prayer?
+                FFX_Xbox.waitFrames(20)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 checkpoint = 29
@@ -116,8 +117,8 @@ def trials():
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 
-                FFX_Xbox.clickToPixel(673,494,(216, 216, 216)) #Wakka, "She's cute, ya?"
-                time.sleep(0.5)
+                FFX_memory.clickToDiagProgress(47) #Wakka, "She's cute, ya?"
+                FFX_Xbox.waitFrames(20)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB()
                 checkpoint += 1
@@ -243,7 +244,7 @@ def leaving():
             elif checkpoint < 20 and FFX_Screen.BattleScreen(): #Attacking tutorial
                 while not FFX_memory.userControl():
                     FFX_Xbox.tapB()
-            elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri
+            elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri fight
                 FFXC.set_neutral()
                 healCount = 0
                 while FFX_memory.battleActive():
@@ -275,16 +276,7 @@ def leaving():
                         time.sleep(0.4)
                 print("Now to open the menu")
                 FFX_memory.clickToControl()
-                FFX_memory.openMenu() #Quick party reformat
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB() #Tidus for Wakka
-                FFX_memory.closeMenu()
+                FFX_memory.fullPartyFormat('Besaid')
                 checkpoint += 1
             elif checkpoint == 39 and FFX_Screen.BattleScreen(): #Dark Attack tutorial
                 escapeAttempts = 0

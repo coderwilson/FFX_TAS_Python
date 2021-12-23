@@ -33,9 +33,6 @@ def BattleScreen_old():
     else :
         return False
 
-def clickToBattle():
-    print("Fix this later.")
-
 def faintCheck():
     faints = 0
     if PixelTest(1347,701,(223, 55, 27)):
@@ -65,6 +62,11 @@ def BattleComplete():
         return False
 
 def PixelValue(x, y):
+    print("########################################")
+    print("########################################")
+    print("READING PIXEL VALUE, FIX THIS LATER")
+    print("########################################")
+    print("########################################")
     try:
         value = pyautogui.pixel(x, y)
     except:
@@ -72,12 +74,22 @@ def PixelValue(x, y):
     return value
 
 def PixelTest( x, y, rgb ):
+    print("########################################")
+    print("########################################")
+    print("READING PIXEL VALUE, FIX THIS LATER")
+    print("########################################")
+    print("########################################")
     try:
         return pyautogui.pixelMatchesColor(x, y, rgb)
     except:
         return False
 
 def PixelTestTol( x, y, rgb, tol ):
+    print("########################################")
+    print("########################################")
+    print("READING PIXEL VALUE, FIX THIS LATER")
+    print("########################################")
+    print("########################################")
     try:
         return pyautogui.pixelMatchesColor(x, y, rgb, tolerance = tol)
     except:
@@ -116,100 +128,10 @@ def awaitTurn() :
             time.sleep(0.01)
         counter += 1;
         if counter % 10000 == 0:
-            print("Waiting for player turn: ", counter / 100)
+            print("Waiting for player turn: ", counter / 1000)
         if FFX_memory.gameOver():
             return False
     return True
-
-def awaitSave() :
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - FFX_Xbox.awaitSave")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-
-def Minimap1() :
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - FFX_Screen.Minimap1")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-
-def awaitMap1() :
-    print("Fix this later.")
-
-def clickToMap1() :
-    print("Fix this later.")
-
-def Minimap2() :
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - FFX_Screen.Minimap2")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-
-def awaitMap2() :
-    print("Fix this later.")
-
-def clickToMap2() :
-    print("Fix this later.")
-
-def Minimap3() :
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - FFX_Screen.Minimap3")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-
-def awaitMap3() :
-    print("Fix this later.")
-
-def clickToMap3() :
-    print("Fix this later.")
-
-def Minimap4() :
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - FFX_Screen.Minimap4")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-
-def awaitMap4() :
-    print("Fix this later.")
-
-def clickToMap4() :
-    print("Fix this later.")
-    
-def MinimapAny():
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - FFX_Screen.MinimapAny")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
-    print("ERROR - OLD MOVEMENT COMMAND FOUND")
 
 def turnRikkuRed() :
     return turnRikku()
@@ -357,6 +279,11 @@ def spherimorphSpell():
     return spell
 
 def imgSearch(img, conf):
+    print("########################################")
+    print("########################################")
+    print("IMAGE SEARCH, FIX THIS LATER")
+    print("########################################")
+    print("########################################")
     img = 'img\\' + str(img)
     try:
         imgTest = pyautogui.locateOnScreen(img, confidence=conf)
@@ -369,6 +296,11 @@ def imgSearch(img, conf):
         return False
 
 def imgSearch2(img, conf):
+    print("########################################")
+    print("########################################")
+    print("IMAGE SEARCH, FIX THIS LATER")
+    print("########################################")
+    print("########################################")
     try:
         imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
         print("Results for searching '",img,": ", imgTest)

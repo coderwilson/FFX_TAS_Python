@@ -387,23 +387,28 @@ def autoSortItems(manual):
         FFX_memory.closeMenu()
 
 def Liki():
+    print("Menu - SS Liki")
     FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Autosort items
+    FFX_memory.waitFrames(30)
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    #time.sleep(0.2)
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB() #Autosort items
     
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuUp()
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
+    FFX_memory.waitFrames(10)
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Sphere grid with Tidus
+    FFX_memory.waitFrames(10)
     
     #Move to the Def node just to the left
     print("Sphere grid on Tidus, learn Cheer and Str +1")
