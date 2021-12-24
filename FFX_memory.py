@@ -202,7 +202,7 @@ def awaitControl():
     print("Awaiting control (no clicking)")
     while not userControl():
         waitCounter += 1
-        if waitCounter % 100000 == 0:
+        if waitCounter % 10000000 == 0:
             print("Awaiting control - ", waitCounter / 100000)
     waitFrames(30 * 0.05)
     return True
@@ -214,8 +214,8 @@ def clickToControl():
     while not userControl():
         FFX_Xbox.tapB()
         waitCounter += 1
-        if waitCounter % 100 == 0:
-            print("Awaiting control - ", waitCounter / 100)
+        if waitCounter % 1000 == 0:
+            print("Awaiting control - ", waitCounter / 1000)
     waitFrames(30 * 0.05)
     return True
 
@@ -228,8 +228,8 @@ def clickToControl2():
         FFXC.set_value('BtnB', 0)
         waitFrames(30 * 0.04)
         waitCounter += 1
-        if waitCounter % 100 == 0:
-            print("Awaiting control - ", waitCounter / 100)
+        if waitCounter % 1000 == 0:
+            print("Awaiting control - ", waitCounter / 1000)
     waitFrames(30 * 0.05)
     return True
 
@@ -250,8 +250,8 @@ def clickToControl3():
         else:
             waitFrames(30 * 0.035)
         waitCounter += 1
-        if waitCounter % 100 == 0:
-            print("Awaiting control - ", waitCounter / 100)
+        if waitCounter % 1000 == 0:
+            print("Awaiting control - ", waitCounter / 1000)
     waitFrames(30 * 0.05)
     print("User control restored.")
     return True
@@ -305,9 +305,9 @@ def clickToEventTemple(direction):
         waitFrames(30 * 0.035)
 
 def awaitEvent():
-    waitFrames(30 * 0.035)
+    waitFrames(1)
     while userControl():
-        waitFrames(30 * 0.05)
+        waitFrames(1)
 
 def getCoords():
     global process
@@ -1174,7 +1174,7 @@ def openMenu():
         waitFrames(1)
         FFXC.set_value('BtnY',0)
         waitFrames(1)
-    waitFrames(20)
+    time.sleep(0.8)
 
 def sGridActive():
     global baseValue

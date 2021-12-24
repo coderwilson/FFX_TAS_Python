@@ -19,7 +19,7 @@ def clearMouse(counter):
 
 def BattleScreen():
     if FFX_memory.turnReady():
-        time.sleep(0.2)
+        time.sleep(0.4)
         return True
     else:
         return False

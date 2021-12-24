@@ -4782,17 +4782,18 @@ def ice(direction):
 def aeonSummon(position):
     FFX_Logs.writeLog("Aeon is being summoned. " + str(position) + "")
     print("Aeon is being summoned. " + str(position) + "")
-    while FFX_memory.battleMenuCursor() != 23:
-        if FFX_Screen.turnYuna() == False:
-            return
-        if FFX_memory.battleMenuCursor() == 255:
-            time.sleep(0.01)
-        elif FFX_memory.battleMenuCursor() >= 1 and FFX_memory.battleMenuCursor() < 23:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
+    while FFX_memory.mainBattleMenu():
+        while FFX_memory.battleMenuCursor() != 23:
+            if FFX_Screen.turnYuna() == False:
+                return
+            if FFX_memory.battleMenuCursor() == 255:
+                time.sleep(0.01)
+            elif FFX_memory.battleMenuCursor() >= 1 and FFX_memory.battleMenuCursor() < 23:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuDown()
+        FFX_Xbox.menuB()
+        time.sleep(0.4)
     while position != FFX_memory.battleCursor2():
         print(FFX_memory.battleCursor2())
         if FFX_memory.battleCursor2() < position:
@@ -4817,7 +4818,8 @@ def aeonSpell(position):
     if FFX_memory.battleMenuCursor() != 21:
         while FFX_memory.battleMenuCursor() != 21:
             FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Black magic
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.menuB()  # Black magic
     time.sleep(0.4)
     print("Aeon spell number (by position): ", position)
     print(FFX_memory.battleCursor2())
@@ -4837,6 +4839,7 @@ def aeonSpell(position):
     FFX_Xbox.menuB()  # Cast whatever spell is chosen
     FFX_Xbox.menuB()  # Cast whatever spell is chosen
     time.sleep(0.2)
+    FFXC.set_neutral()
 
 
 def aeonSpell2(position, direction):
@@ -4845,7 +4848,8 @@ def aeonSpell2(position, direction):
     if FFX_memory.battleMenuCursor() != 21:
         while FFX_memory.battleMenuCursor() != 21:
             FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Black magic
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.menuB()  # Black magic
     time.sleep(0.4)
     print("Aeon spell number (by position): ", position)
     print(FFX_memory.battleCursor2())
@@ -4881,7 +4885,8 @@ def aeonSpellDirection(position, direction):
     if FFX_memory.battleMenuCursor() != 21:
         while FFX_memory.battleMenuCursor() != 21:
             FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Black magic
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.menuB()  # Black magic
     time.sleep(0.4)
     print("Aeon spell number (by position): ", position)
     print(FFX_memory.battleCursor2())
@@ -5189,6 +5194,8 @@ def lancet(direction):
         FFX_Xbox.menuUp()
     if direction == 'down':
         FFX_Xbox.menuDown()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     time.sleep(1) #To make sure we don't overlap turns
 

@@ -242,8 +242,7 @@ def leaving():
             elif FFX_memory.cutsceneSkipPossible():
                 FFX_Xbox.skipScene()
             elif checkpoint < 20 and FFX_Screen.BattleScreen(): #Attacking tutorial
-                while not FFX_memory.userControl():
-                    FFX_Xbox.tapB()
+                FFX_Battle.attack('none')
             elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri fight
                 FFXC.set_neutral()
                 healCount = 0

@@ -26,7 +26,10 @@ def arrival():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 8: #Exit the inn
-                FFX_memory.clickToEventTemple(5)
+                FFXC.set_movement(0, -1)
+                FFX_memory.awaitEvent()
+                FFX_memory.waitFrames(5)
+                FFX_memory.awaitControl()
                 checkpoint += 1
             elif checkpoint == 12: #Back to first map
                 FFX_memory.clickToEventTemple(3)
