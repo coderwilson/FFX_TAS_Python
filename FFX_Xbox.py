@@ -495,7 +495,7 @@ def clickToBattle():
 def clearSavePopup(clickToDiagNum):
     FFXC = controllerHandle()
     FFXC.set_neutral()
-    FFX_memory.clickToDiagProgress(0)
+    FFX_memory.clickToDiagProgress(clickToDiagNum)
     FFX_memory.waitFrames(100)
     while FFX_memory.savePopupCursor() != 1:
         menuDown()

@@ -34,13 +34,31 @@ def BattleScreen_old():
     else :
         return False
 
-def faintCheck():
+def faintCheck_old():
     faints = 0
+    charHP = FFX_memory.getBattleHP()
+    chars = FFX_memory.partySize()
     if PixelTest(1347,701,(223, 55, 27)):
         faints += 1
     if PixelTest(1347,745,(221, 54, 26)):
         faints += 1
     if PixelTest(1347,788,(222, 54, 27)):
+        faints += 1
+    if faints > 0:
+        FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))
+    return faints
+
+def faintCheck():
+    faints = 0
+    charHP = FFX_memory.getBattleHP()
+    partySize = FFX_memory.partySize()
+    if turnAeon():
+        return 0
+    if charHP[1] == 0:
+        faints += 1
+    if charHP[2] == 0 and partySize >= 2:
+        faints += 1
+    if charHP[3] == 0 and partySize >= 3:
         faints += 1
     if faints > 0:
         FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))

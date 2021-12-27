@@ -26,13 +26,19 @@ def arrival():
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_Xbox.awaitSave()
-                time.sleep(0.07)
-                FFX_Xbox.skipSave()
+                FFX_memory.clickToDiagProgress(18) #Seymour scene
+                while not FFX_memory.diagProgressFlag() in [0,2]:
+                    FFX_Xbox.tapB()
+                time.sleep(1)
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuB()
                 
-                FFX_Xbox.SkipDialog(26)
-                FFX_Screen.awaitPixel(664,200,(234, 189, 0))
-                time.sleep(0.6)
+                FFX_memory.clickToDiagProgress(82) #Let's go over the basics
+                FFX_memory.clickToDiagProgress(39)
+                #while FFX_memory.diagProgressFlag() != 39:
+                #    if FFX_memory.diagSkipPossible():
+                #        FFX_Xbox.tapB()
+                time.sleep(3)
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuB()
                 FFX_Xbox.SkipDialogSpecial(45) #Skip the Wakka Face scene

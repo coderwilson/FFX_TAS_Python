@@ -40,8 +40,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-Gamestate = "Besaid"
-StepCounter = 3
+#Gamestate = "Besaid"
+#StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -50,8 +50,8 @@ StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 1
+Gamestate = "MRR"
+StepCounter = 1
 #StepCounter = 2 # DO NOT USE, THERE IS NO SAVE FOR THIS ONE
 #Gamestate = "Djose"
 #StepCounter = 1
@@ -78,8 +78,8 @@ StepCounter = 3
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True
@@ -88,7 +88,7 @@ autoEggHunt = True
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-newSeed = True #Update this to decide new seed or known seed
+newSeed = False #Update this to decide new seed or known seed
 rngSeedNum = 200 #New seed number, only used if newSeed == True
 ####################################################################################################
 
@@ -146,7 +146,7 @@ FFX_Screen.clearMouse(0)
 
 FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
-print("-------------This game will be using RNG seed: ", rngSeed)
+print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
 FFX_Logs.writeStats(rngSeed)
 
@@ -182,12 +182,12 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(32)
+        FFX_LoadGame.loadOffset(33)
         FFXC.set_movement(0, 1)
         time.sleep(5)
         FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
-        FFX_LoadGame.loadOffset(46)
+        FFX_LoadGame.loadOffset(47)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(25)
         earlyHaste = 3
@@ -200,7 +200,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(33)
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(18)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.loadOffset(38)

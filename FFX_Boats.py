@@ -55,13 +55,20 @@ def ssWinno():
     
     #Talk to O'akaXXIII
     FFX_memory.clickToControl()
+    FFXC.set_neutral() #Use target pathing later
+    while not FFX_targetPathing.setMovement([-17, 32]):
+        movingToOaka = True #AKA keep moving
     FFXC.set_movement(1, -1)
-    time.sleep(0.6)
-    FFXC.set_movement(0, -1)
-    FFX_Xbox.SkipDialog(1)
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
     FFXC.set_neutral()
-    FFX_Xbox.clickToPixel(579,336,(220, 220, 220)) #Lending gil
-    time.sleep(0.8)
+    FFX_memory.clickToDiagProgress(21)
+    time.sleep(2)
+    FFX_Xbox.tapB()
+    time.sleep(1)
+    FFX_Xbox.tapB()
+    time.sleep(1)
     FFX_Xbox.gridDown()
     FFX_Xbox.gridLeft()
     FFX_Xbox.gridUp()
@@ -70,11 +77,10 @@ def ssWinno():
     FFX_Xbox.gridRight()
     FFX_Xbox.gridUp() #1001
     FFX_Xbox.tapB()
-    time.sleep(0.5)
+    time.sleep(1)
     FFX_Xbox.gridDown()
     FFX_Xbox.menuB() #No Sweat
-    time.sleep(0.3)
-    FFX_Xbox.menuB() #dialog
+    FFX_memory.clickToControl3()
     
     #To the deck
     FFX_memory.awaitControl()
@@ -101,24 +107,25 @@ def ssWinno():
     FFXC.set_neutral()
     
     #Jecht shot tutorial
-    FFX_Xbox.clickToPixelTol(956,404,(234, 152, 0),5) #First tutorial box
-    FFX_Xbox.clickToPixelTol(1410,238,(222, 222, 222),5) #Upper right box.
-    
-    FFXC.set_value('Dpad', 1) #Up
-    FFXC.set_value('Dpad', 8) #Right
-    FFX_Xbox.SkipDialog(0.4)
-    FFXC.set_neutral()
-    FFXC.set_value('Dpad', 4) #Left
-    FFX_Xbox.SkipDialog(0.4)
-    FFXC.set_neutral() #Neutral
-    FFX_Xbox.SkipDialog(0.4)
-    FFXC.set_value('Dpad', 2) #Down
-    FFXC.set_value('Dpad', 8) #Right
-    FFX_Xbox.SkipDialog(0.4)
-    FFXC.set_neutral()
-    FFX_Xbox.SkipDialog(2)
+    FFX_memory.clickToDiagProgress(96)
+    while FFX_memory.diagProgressFlag() != 100:
+        if FFX_memory.diagProgressFlag() == 97:
+            FFXC.set_value('Dpad', 1) #Up
+            FFXC.set_value('Dpad', 8) #Right
+            FFX_Xbox.tapB()
+        elif FFX_memory.diagProgressFlag() == 98:
+            FFXC.set_value('Dpad', 4) #Left
+            FFX_Xbox.tapB()
+        elif FFX_memory.diagProgressFlag() == 99:
+            FFXC.set_value('Dpad', 2) #Down
+            FFXC.set_value('Dpad', 8) #Right
+            FFX_Xbox.tapB()
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
+        FFXC.set_neutral()
     
     #Let's attempt the jecht shot!
+    FFX_Xbox.SkipDialog(2)
     print("Start Jecht Shot")
     jechtShot()
     print("End Jecht Shot")
@@ -128,7 +135,8 @@ def ssWinno():
     time.sleep(3)
     FFXC.set_neutral()
     
-    FFX_Xbox.awaitSave()
+    FFX_memory.clickToDiagProgress(142)
+    FFX_Xbox.clearSavePopup(0)
 
 def jechtShot():
     print("We are intentionally failing the Jecht shot. Save the frames!")

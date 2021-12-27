@@ -320,8 +320,8 @@ def Ammes():
 
     while BattleComplete != 1:
         if FFX_memory.turnReady():
-            print(FFX_memory.getOverdriveBattle(0)) #Testing only
-            time.sleep(20) #Testing only
+            #print(FFX_memory.getOverdriveBattle(0)) #Testing only
+            #time.sleep(20) #Testing only
             if tidusODflag == False and FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0) == 100:
                 tidusOD()
                 tidusODflag = True
@@ -671,8 +671,8 @@ def KilikaWoods(valeforCharge):
     print("Charge values:")
     print(FFX_memory.overdriveState())
     FFX_Screen.awaitTurn()
-    preEmpt = FFX_Screen.PixelTestTol(1378, 271, (50, 52, 50), 5)
-
+    #preEmpt = FFX_Screen.PixelTestTol(1378, 271, (50, 52, 50), 5)
+    
     FFXC.set_neutral()
 
     # if bNum == 31: #Lizard and Elemental, side
@@ -688,6 +688,7 @@ def KilikaWoods(valeforCharge):
         skipCharge = True
 
     print("Kilika battle")
+    aeonTurn = False
     while FFX_memory.battleActive(): #AKA end of battle screen
         if valeforCharge == False and skipCharge == False:  # Still to charge Valefor
             if FFX_memory.turnReady():
@@ -714,10 +715,12 @@ def KilikaWoods(valeforCharge):
                     elif FFX_Screen.turnYuna():
                         aeonSummon(0)
                         FFX_Screen.awaitTurn()
-                        if preEmpt == True:
-                            FFX_Xbox.menuRight()
-                            FFX_Xbox.SkipDialog(2)
-                            FFX_Screen.awaitTurn()
+                        if aeonTurn == False:
+                            aeonTurn = True
+                            if FFX_memory.getNextTurn() < 20:
+                                FFX_Xbox.menuRight()
+                                FFX_Xbox.SkipDialog(2)
+                                FFX_Screen.awaitTurn()
                         aeonBoost()
                         FFX_Screen.awaitTurn()
                         aeonBoost()
@@ -736,10 +739,12 @@ def KilikaWoods(valeforCharge):
                         time.sleep(0.2)
                         aeonSummon(0)
                         FFX_Screen.awaitTurn()
-                        if preEmpt == True:
-                            FFX_Xbox.menuRight()
-                            FFX_Xbox.SkipDialog(2)
-                            FFX_Screen.awaitTurn()
+                        if aeonTurn == False:
+                            aeonTurn = True
+                            if FFX_memory.getNextTurn() < 20:
+                                FFX_Xbox.menuRight()
+                                FFX_Xbox.SkipDialog(2)
+                                FFX_Screen.awaitTurn()
                         aeonBoost()
                         FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'left')
@@ -757,10 +762,12 @@ def KilikaWoods(valeforCharge):
                     elif FFX_Screen.turnYuna():
                         aeonSummon(0)
                         FFX_Screen.awaitTurn()
-                        if preEmpt == True:
-                            FFX_Xbox.menuRight()
-                            FFX_Xbox.SkipDialog(2)
-                            FFX_Screen.awaitTurn()
+                        if aeonTurn == False:
+                            aeonTurn = True
+                            if FFX_memory.getNextTurn() < 20:
+                                FFX_Xbox.menuRight()
+                                FFX_Xbox.SkipDialog(2)
+                                FFX_Screen.awaitTurn()
                         aeonBoost()
                         FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'right')
@@ -778,10 +785,12 @@ def KilikaWoods(valeforCharge):
                     elif FFX_Screen.turnYuna():
                         aeonSummon(0)
                         FFX_Screen.awaitTurn()
-                        if preEmpt == True:
-                            FFX_Xbox.menuRight()
-                            FFX_Xbox.SkipDialog(2)
-                            FFX_Screen.awaitTurn()
+                        if aeonTurn == False:
+                            aeonTurn = True
+                            if FFX_memory.getNextTurn() < 20:
+                                FFX_Xbox.menuRight()
+                                FFX_Xbox.SkipDialog(2)
+                                FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'right')
                         FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'right')
@@ -910,19 +919,11 @@ def Geneaux():
     valeforOD = 0
     skipCount = 0
     while FFX_memory.battleComplete() == False: #AKA end of battle screen
-        pos = FFX_memory.getCoords()
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         elif FFX_memory.turnReady():
             print("Valefor casting Fire")
             aeonSpell(0)
-        elif FFX_memory.menuOpen():
-                FFX_Xbox.tapB()
-        elif FFX_memory.userControl():
-            if pos[1] > ((-1.25 * pos[0]) + 543.17):
-                FFXC.set_movement(-1, 1)
-            else:
-                FFXC.set_movement(0, 1)
         else:
             FFXC.set_neutral()
     print("Battle Complete")
@@ -4320,14 +4321,14 @@ def attackByNum(num, direction):
     time.sleep(0.5)
 
 def attack(direction):
-    FFX_Logs.writeLog("Basic Attack")
     print("Attack")
     direction = direction.lower()
     if not FFX_memory.turnReady():
         print("Battle menu isn't up.")
         return
-    if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
-        while not FFX_memory.battleMenuCursor() in [0, 216]:
+    if not FFX_memory.battleMenuCursor() in [0, 203, 216]:
+        while not FFX_memory.battleMenuCursor() in [0, 203, 216]:
+            print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
             FFX_Xbox.menuUp()
             if FFX_Screen.BattleComplete():
                 return
@@ -4337,6 +4338,7 @@ def attack(direction):
     else:
         print("Directional pattern.")
         while not FFX_memory.otherBattleMenu():
+            print("Waiting on other battle menu")
             FFX_Xbox.menuB()
             if FFX_Screen.BattleComplete():
                 return
