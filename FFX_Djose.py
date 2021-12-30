@@ -289,11 +289,11 @@ def trials():
             elif checkpoint == 80:
                 print("Destruction Glyph")
                 FFXC.set_movement(0, 1)
-                FFX_Xbox.SkipDialog(0.4)
+                FFX_memory.waitFrames(12)
                 FFXC.set_movement(1, 1)
-                FFX_Xbox.SkipDialog(0.8)
+                FFX_memory.clickToEvent()
                 FFXC.set_neutral()
-                FFX_memory.clickToEventTemple(1)
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 82:
                 print("Destruction sphere")
@@ -372,15 +372,6 @@ def trials():
     FFXC.set_neutral()
     
     FFX_Xbox.nameAeon()
-    
-    #FFX_Xbox.SkipDialog(34)
-    #print("Mark")
-    #FFX_Screen.awaitPixel(352,233,(145, 141, 220)) #naming Ixion
-    #time.sleep(0.1)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
 
 def leavingDjose():
     FFX_memory.awaitControl()

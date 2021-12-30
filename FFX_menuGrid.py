@@ -9,31 +9,28 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def gridUp():
     FFXC.set_value('Dpad', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(4)
 
 def gridDown():
     FFXC.set_value('Dpad', 2)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(4)
 
 def gridLeft():
     FFXC.set_value('Dpad', 4)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(4)
 
 def gridRight():
     FFXC.set_value('Dpad', 8)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(4)
 
-def gridOpen():
-    return FFX_memory.sGridActive()
-    
 def gridTidus():
     if FFX_memory.sGridChar() == 0:
         return True
@@ -77,12 +74,18 @@ def gridRikku():
         return False
 
 def firstPosition():
-    if FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5) and not FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5):
-        return True
+    if FFX_memory.sGridMenu() == 255:
+        if FFX_memory.getGridMoveActive():
+            return False
+        else:
+            return True
     else: return False
 
 def moveUseMenu():
-    return FFX_Screen.PixelTestTol(347,526,(255, 255, 255),5)
+    if FFX_memory.sGridMenu() == 7:
+        return True
+    else:
+        return False
 
 def moveReady():
     if moveUseMenu():
@@ -93,17 +96,17 @@ def moveReady():
     else: return False
 
 def moveActive():
-    if readyUseSphere():
-        return False
+    if FFX_memory.getGridMoveActive() and FFX_memory.sGridMenu() == 255:
+        return True
     else:
-        return FFX_Screen.PixelTestTol(178,786,(159, 161, 159),5)
+        return False
 
 def moveComplete():
-    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5):
-        if FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5):
-            return True
-        else: return False
-    else: return False
+    if FFX_memory.getGridMoveActive() and FFX_memory.sGridMenu() == 11:
+        return True
+    else:
+        return False
+
     
 def useReady():
     if moveUseMenu():
@@ -114,30 +117,27 @@ def useReady():
     else: return False
 
 def readySelectSphere():
-    return FFX_Screen.PixelTestTol(636,438,(255, 255, 255),5)
+    if FFX_memory.sGridMenu() == 8:
+        return True
+    else:
+        return False
 
 def readyUseSphere():
-    if FFX_Screen.PixelTestTol(619,765,(255, 255, 255),5):
-        if FFX_Screen.PixelTestTol(176,786,(159, 161, 159),5):
-            return True
-        elif FFX_Screen.PixelTestTol(225,785,(232, 13, 13),5):
-            return True
-        else:
-            return False
-    elif FFX_Screen.PixelTestTol(225,785,(232, 13, 13),5):
+    if FFX_memory.getGridUseActive():
         return True
-    else: return False
+    else:
+        return False
     
 def quitGridReady():
-    if FFX_Screen.PixelTestTol(252,584,(218, 218, 218),5):
-        if FFX_Screen.PixelTestTol(182,546,(156, 158, 156),5):
+    if FFX_memory.sGridMenu() == 11:
+        if useReady():
+            return False
+        elif moveComplete():
+            return False
+        else:
             return True
-        else: return False
     else: return False
-    
-def mainMenu():
-    return FFX_Screen.PixelTestTol(1575,20,(67, 70, 117),5)
-    
+
 def useFirst():
     print("use first")
     while not readySelectSphere():
@@ -157,6 +157,7 @@ def moveFirst():
             FFX_Xbox.menuB()
         elif moveReady():
             FFX_Xbox.menuB()
+            FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
     #time.sleep(0.2)
@@ -164,9 +165,9 @@ def moveFirst():
 
 def moveAndUse():
     print("move and use")
-    time.sleep(0.035)
+    FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     while not readySelectSphere():
         if moveComplete() or firstPosition():
             FFX_Xbox.menuB()
@@ -179,14 +180,15 @@ def moveAndUse():
 
 def useAndMove():
     print("use and move")
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     FFX_Xbox.menuB()
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     while not moveActive():
         if readyUseSphere() or firstPosition():
             FFX_Xbox.menuB()
         elif moveReady():
             FFX_Xbox.menuB()
+            FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
         else:
@@ -196,9 +198,9 @@ def useAndMove():
 
 def useAndUseAgain():
     print("use and use again")
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     FFX_Xbox.menuB()
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     while not readySelectSphere():
         if readyUseSphere() or firstPosition():
             FFX_Xbox.menuB()
@@ -211,7 +213,7 @@ def useAndUseAgain():
 
 def useShiftLeft(toon):
     print("use and shift")
-    #time.sleep(0.1)
+    FFX_memory.waitFrames(1)
     FFX_Xbox.menuB()
     toon = toon.lower()
     if toon == 'yuna':
@@ -383,7 +385,7 @@ def moveShiftRight(toon):
 def useAndQuit():
     time.sleep(0.1)
     FFX_Xbox.menuB()
-    while not mainMenu():
+    while FFX_memory.sGridActive():
         if readyUseSphere():
             print("Using the current item.")
             FFX_Xbox.menuB()
@@ -393,92 +395,8 @@ def useAndQuit():
         elif quitGridReady():
             print("quitting sphere grid")
             FFX_Xbox.menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(20)
     return True
-
-def cursorPos():
-    if FFX_Screen.PixelTestTol(180,459,(179, 181, 179),5):
-        return 1
-    elif FFX_Screen.PixelTestTol(176,504,(147, 148, 147),5):
-        return 2
-    elif FFX_Screen.PixelTestTol(176,547,(148, 150, 148),5):
-        return 3
-    elif FFX_Screen.PixelTestTol(176,591,(145, 145, 145),5):
-        return 4
-    else: return cursorPos()
-
-def sphereColor(desired):
-    print("Desired color: ", desired)
-    position = cursorPos()
-    print("Testing position: ", position)
-    if position == 1:
-        color = FFX_Screen.PixelValue(230,460)
-        print("Position 1: ", color)
-        if color == (220, 9, 9):
-            print("Position 1, red sphere found.")
-            if desired == 'red':
-                print("Desired color found.")
-                return 1
-        if color == (68, 69, 69):
-            print("Position 1, black sphere found.")
-            if desired == 'black':
-                print("Desired color found.")
-                return 4
-    if position == 2:
-        color = FFX_Screen.PixelValue(230,505)
-        print("Position 2: ", color)
-        if color == (222, 1, 1):
-            print("Position 2, red sphere found.")
-            if desired == 'red':
-                print("Desired color found.")
-                return 2
-        if color == (182, 143, 2):
-            print("Position 2, yellow sphere found.")
-            if desired == 'yellow':
-                print("Desired color found.")
-                return 2
-    if position == 3:
-        color = FFX_Screen.PixelValue(230,550)
-        print("Position 3: ", color)
-        if color == (147, 0, 0):
-            print("Position 3, red sphere found.")
-            if desired == 'red':
-                print("Desired color found.")
-                return 3
-        if color == (141, 123, 0):
-            print("Position 3, yellow sphere found.")
-            if desired == 'yellow':
-                print("Desired color found.")
-                return 3
-    if position == 4:
-        color = FFX_Screen.PixelValue(230,590)
-        print("Position 4: ", color)
-        if color == (215, 7, 7):
-            print("Position 4, red sphere found.")
-            if desired == 'red':
-                print("Desired color found.")
-                return 4
-        if color == (193, 223, 231):
-            print("Position 4, white sphere found.")
-            if desired == 'white':
-                print("Desired color found.")
-                return 4
-        if color == (114, 18, 210):
-            print("Position 4, purple sphere found.")
-            if desired == 'purple':
-                print("Desired color found.")
-                return 4
-        if color == (49, 50, 50):
-            print("Position 4, black sphere found.")
-            if desired == 'black':
-                print("Desired color found.")
-                return 4
-        if color == (198, 167, 6):
-            print("Position 4, yellow sphere found.")
-            if desired == 'yellow':
-                print("Desired color found.")
-                return 4
-    return 0
 
 def sphereNum(sType) -> int:
     sType = sType.lower()

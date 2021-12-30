@@ -174,16 +174,16 @@ def guadoSkip():
     pos = FFX_memory.getCoords()
     
     while pos[0] > 8:
-        FFXC.set_value('Dpad', 8)
-        time.sleep(0.07)
+        FFXC.set_value('Dpad', 4)
+        FFX_memory.waitFrames(2)
         FFXC.set_value('Dpad', 0)
-        time.sleep(0.105)
+        FFX_memory.waitFrames(4)
         pos = FFX_memory.getCoords()
     while pos[1] < -8.5:
         FFXC.set_value('Dpad', 1)
-        time.sleep(0.06)
+        FFX_memory.waitFrames(2)
         FFXC.set_value('Dpad', 0)
-        time.sleep(0.09)
+        FFX_memory.waitFrames(4)
         pos = FFX_memory.getCoords()
     
     time.sleep(0.15)

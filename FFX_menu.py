@@ -39,31 +39,6 @@ def awaitMove():
             time.sleep(0.25)
     print("Move command highlighted. Good to go.")
 
-def awaitMove_old():
-    print("Sphere Grid: Waiting for Move command to be highlighted")
-    complete = 0
-    count = 1
-    time.sleep(0.2)
-    while complete == 0:
-        time.sleep(0.1)
-        count += 1
-        if FFX_Screen.PixelTest(246,385,(255, 213, 0)):
-            if count % 100 == 0:
-                print("Confirm, sphere grid is open.")
-            if FFX_Screen.PixelTest(177,505,(141, 141, 141)): #Use is highlighted
-                FFX_Xbox.menuUp()
-            elif FFX_Screen.PixelTestTol(373,765,(255, 255, 255),5): #Menu isn't open
-                FFX_Xbox.menuB()
-            elif FFX_Screen.PixelTestTol(503,457,(212, 212, 212),5): #Never finished moving
-                FFX_Xbox.menuB()
-            elif FFX_Screen.PixelTestTol(177,460,(153, 153, 153),2): #Move is highlighted
-                complete = 1
-        else:
-            if count % 100 == 0:
-                print("await Move")
-                print("You're on the wrong screen for some reason.")
-    print("Moving in the sphere grid")
-
 def awaitUse():
     print("Sphere Grid: Waiting for Use command to be highlighted")
     while FFX_memory.sGridActive() == False:
@@ -84,30 +59,6 @@ def awaitUse():
             FFX_Xbox.menuB()
     print("Use command highlighted. Good to go.")
 
-def awaitUse_old():
-    complete = 0
-    count = 1
-    print("Sphere Grid: Waiting for Use command to be highlighted")
-    time.sleep(0.2)
-    while complete == 0:
-        count += 1
-        if FFX_Screen.PixelTest(246,385,(255, 213, 0)):
-            if count % 100 == 0:
-                print("Confirm, sphere grid is open.")
-            if FFX_Screen.PixelTest(177,505,(141, 141, 141)): #Use is highlighted
-                complete = 1
-            elif FFX_Screen.PixelTestTol(373,765,(255, 255, 255),5): #Menu isn't open
-                FFX_Xbox.menuB()
-            elif FFX_Screen.PixelTestTol(177,460,(153, 153, 153),5): #Move is highlighted
-                FFX_Xbox.menuDown()
-            elif FFX_Screen.PixelTestTol(503,457,(212, 212, 212),5): #Never finished moving
-                FFX_Xbox.menuB()
-        else:
-            if count % 100 == 0:
-                print("await use")
-                print("You're on the wrong screen for some reason.")
-    print("Using items, sphere grid")
-
 def awaitQuitSG():
     print("Sphere Grid: attempting to quit")
     while FFX_memory.sGridActive():
@@ -119,208 +70,6 @@ def awaitQuitSG():
         else:
             FFX_Xbox.menuA()
     print("Back to the main menu")
-
-def awaitQuitSG_old():
-    complete = 0
-    count = 1
-    print("Sphere Grid: attempting to quit the grid")
-    time.sleep(0.2)
-    while complete == 0:
-        count += 1
-        if FFX_Screen.PixelTest(246,385,(255, 213, 0)):
-            if count % 100 == 0:
-                print("Confirm, sphere grid is open.")
-            if FFX_Screen.PixelTest(177,505,(141, 141, 141)): #Use is highlighted
-                FFX_Xbox.menuA()
-            elif FFX_Screen.PixelTestTol(373,765,(255, 255, 255),5): #Menu isn't open
-                FFX_Xbox.menuA()
-            elif FFX_Screen.PixelTestTol(177,460,(153, 153, 153),5): #Move is highlighted
-                FFX_Xbox.menuA()
-            elif FFX_Screen.PixelTestTol(489,457,(212, 212, 212),5): #Ready to quit
-                FFX_Xbox.menuB()
-                complete = 1
-        else:
-            if count % 100 == 0:
-                print("Quitting Grid")
-                print("You aren't even in the grid for some reason.")
-    print("Quitting sphere grid is complete.")
-
-def moveFirst():
-    print("First - moving")
-    #time.sleep(0.8)
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    awaitMove()
-    #time.sleep(0.5)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-
-def useFirst():
-    print("First - using sphere")
-    #time.sleep(0.8)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.05)
-    #FFX_Xbox.menuDown()
-    #time.sleep(0.05)
-    awaitUse()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-
-def moveAndUse():
-    FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    awaitUse()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-
-def useAndUseAgain():
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    #time.sleep(2.4)
-    #FFX_Xbox.menuB()
-    awaitUse()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-
-def teleportAndUse():
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    #time.sleep(6)
-    #FFX_Xbox.menuB()
-    awaitUse()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-
-def teleportAndMove():
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    #time.sleep(6)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuUp()
-    #time.sleep(0.1)
-    awaitMove()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.1)
-
-def useAndMove():
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    #time.sleep(2.4)
-    #FFX_Xbox.menuB()
-    awaitUse()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuUp()
-    #time.sleep(0.1)
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-
-def useAndQuit():
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    awaitQuitSG()
-    time.sleep(0.3)
-
-def useShiftMove(direction):
-    direction = direction.lower()
-    time.sleep(0.4)
-    FFX_Xbox.menuB()
-    time.sleep(2.4)
-    if direction == 'left':
-        FFX_Xbox.shoulderLeft()
-    if direction == 'l2':
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-    if direction == 'l3':
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-    if direction == 'right':
-        FFX_Xbox.shoulderRight()
-    if direction == 'r2':
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-    if direction == 'r3':
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.4)
-    FFX_Xbox.menuUp()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.1)
-
-def useShiftUse(direction):
-    direction = direction.lower()
-    time.sleep(0.4)
-    FFX_Xbox.menuB()
-    time.sleep(2.4)
-    if direction == 'left':
-        FFX_Xbox.shoulderLeft()
-    if direction == 'l2':
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-    if direction == 'l3':
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-    if direction == 'right':
-        FFX_Xbox.shoulderRight()
-    if direction == 'r2':
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-    if direction == 'r3':
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuDown()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.1)
-
-def moveShiftUse(direction):
-    direction = direction.lower()
-    time.sleep(0.4)
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitPixel(178,548,(143, 143, 143))
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    if direction == 'left':
-        FFX_Xbox.shoulderLeft()
-    if direction == 'l2':
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-    if direction == 'l3':
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-        FFX_Xbox.shoulderLeft()
-    if direction == 'right':
-        FFX_Xbox.shoulderRight()
-    if direction == 'r2':
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-    if direction == 'r3':
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-        FFX_Xbox.shoulderRight()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuDown()
-    time.sleep(0.1)
-    FFX_Xbox.menuB()
-    time.sleep(0.1)
-
 
 def autoSortItems_New(manual, menusize):
 
@@ -388,31 +137,11 @@ def autoSortItems(manual):
 
 def Liki():
     print("Menu - SS Liki")
-    FFX_memory.openMenu()
-    time.sleep(2)
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB() #Autosort items
-    
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    time.sleep(1)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid with Tidus
+    openGrid(character=0)
     FFX_memory.waitFrames(10)
     
     #Move to the Def node just to the left
     print("Sphere grid on Tidus, learn Cheer and Str +1")
-    FFX_menuGrid.useShiftRight('tidus') #Shift to Rikku
     FFX_menuGrid.moveFirst()
     gridUp()
     gridUp()
@@ -421,49 +150,25 @@ def Liki():
     
     #Activate Str and Cheeer nodes
     FFX_menuGrid.selSphere('power','d','left')
-    useAndUseAgain() #Str +1 node
+    FFX_menuGrid.useAndUseAgain() #Str +1 node
     FFX_menuGrid.selSphere('ability','d','none') # Cheer
     FFX_Xbox.menuB()
-    useAndQuit()
+    FFX_menuGrid.useAndQuit()
     FFX_Xbox.menuA()
 
 def Geneaux():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
+    openGrid(character=0)
     
     FFX_menuGrid.moveFirst()
     gridLeft()
-    #gridLeft()
-    #gridRight()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed','d','none')
-    #FFX_menuGrid.useAndUseAgain()
-    #FFX_menuGrid.selSphere('ability','d','none') #Flee
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
-def LucaOaka(): #unused
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    time.sleep(0.3)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    time.sleep(0.3)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.closeMenu()
-
 def LucaWorkers():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid on Tidus
+    openGrid(character=0)
     
-    FFX_menuGrid.useShiftRight('Tidus')
     FFX_menuGrid.moveFirst()
     gridRight()
     gridRight()
@@ -481,21 +186,18 @@ def LucaWorkers():
     
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
-    useAndUseAgain()
+    FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('mana','d','none')
     if earlyHaste == 1:
-        useAndUseAgain()
+        FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('ability','d','none') # Haste
         
-    useAndQuit()
+    FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
     return earlyHaste
 
-def lateHaste(): #Now unused
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_menuGrid.useShiftRight('tidus')
+def lateHaste():
+    openGrid(character=0)
     FFX_menuGrid.moveFirst()
     gridDown()
     FFX_menuGrid.moveAndUse()
@@ -527,11 +229,7 @@ def afterBlitz():
 
 def mrrGrid1():
     print("Menuing: start of MRR ")
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid on Wakka
-    FFX_menuGrid.useShiftRight('wakka')
+    openGrid(character=4)
     FFX_menuGrid.moveFirst()
     gridRight()
     gridDown()
@@ -565,12 +263,8 @@ def mrrGrid2(wakkaLateMenu):
     if wakkaLateMenu != False:
         if FFX_memory.getSLVLWakka() >= 3:
             print("Catching up Wakka's sphere grid.")
-            FFX_memory.openMenu()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuDown()
-            FFX_Xbox.menuB()
+            openGrid(character=0)
             
-            FFX_menuGrid.useShiftRight('wakka')
             FFX_menuGrid.moveFirst()
             gridDown()
             gridDown()
@@ -586,11 +280,7 @@ def mrrGrid2(wakkaLateMenu):
 
 def mrrGridYuna():
     print("Yuna levels good to level up.")
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_menuGrid.useShiftRight('yuna')
+    openGrid(character=1)
     FFX_menuGrid.useFirst() #Sphere grid on Yuna first
     FFX_menuGrid.selSphere('magic','d','none')
     FFX_menuGrid.useAndUseAgain()
@@ -611,12 +301,7 @@ def mrrGridYuna():
 
 def battleSiteGrid():
     print("Doing the menu stuff")
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    
-    FFX_menuGrid.useShiftRight('Yuna')
+    openGrid(character=1)
     FFX_menuGrid.moveFirst()
     gridLeft()
     gridDown()
@@ -678,38 +363,6 @@ def battleSiteGrid():
     
     FFX_memory.closeMenu()
     FFX_memory.fullPartyFormat('battleSite')
-
-def battleSiteOaka1_old():
-    print("Not yet thanks")
-    FFX_Xbox.menuB()
-    time.sleep(10) #Dial this in later
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Items
-    time.sleep(1)
-    
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sell
-    
-    itemOrder = FFX_memory.getItemsOrder()
-    itemCursor = 1
-    while itemOrder[itemCursor] != 6: #Don't sell anything Phoenix Down or after.
-        if itemOrder[itemCursor] != 3: #Sell all except for Mega Potions
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuUp()
-            if FFX_memory.getItemCountSlot(itemCursor) > 10:
-                FFX_Xbox.menuUp()
-            FFX_Xbox.menuB() #Sell this item
-        if itemOrder[itemCursor + 1] == 6:
-            print("Done with selling items.")
-        elif itemCursor % 2 == 1:
-            FFX_Xbox.menuRight()
-        else:
-            FFX_Xbox.menuLeft()
-            FFX_Xbox.menuDown()
-        itemCursor += 1
-    
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA() #Exit items menu
 
 def battleSiteOaka1():
     print("Not yet thanks")
@@ -888,12 +541,9 @@ def djoseFormation():
         FFX_memory.closeMenu()
 
 def djoseTemple():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
+    openGrid(character=0)
     
     #Sphere grid Tidus
-    
     FFX_menuGrid.moveFirst()
     gridUp()
     gridUp()
@@ -986,7 +636,7 @@ def plainsArmor():
     FFX_memory.closeMenu()
 
 def mWoods():
-    FFX_Screen.awaitMap1()
+    FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)
     time.sleep(0.8)
     FFXC.set_movement(-1, 1)
@@ -998,180 +648,16 @@ def mWoods():
         FFX_Xbox.menuB() #Talking through O'aka's conversation.
     
     FFX_memory.closeMenu()
-    autoSortItems('n')
+    #autoSortItems('n')
     
+    FFXC.set_movement(0, 1)
+    FFX_memory.clickToEvent()
+    FFXC.set_neutral()
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuB() #Talk to O'aka again
-    time.sleep(0.7)
-    FFX_Xbox.menuB() #Talk to O'aka again
-    FFX_Screen.awaitPixel(650,466,(154, 154, 154))
-    time.sleep(0.1)
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Items
-    #FFX_Screen.awaitPixel(365,152,(154, 154, 154))
-    #time.sleep(0.1)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    
-    #pos = 3
-    #print("Selling everything short of position ", itemScan[5])
-    #while pos < itemScan[7]: #Sell any items not in the list of "need to have" items.
-    #    if not (pos in itemScan):
-    #        FFX_Xbox.menuB()
-    #        FFX_Xbox.menuUp()
-    #        FFX_Xbox.menuUp()
-    #        FFX_Xbox.menuB()
-    #    if itemScan[7] - pos != 1:
-    #        if pos % 2 == 1:
-    #            FFX_Xbox.menuRight()
-    #        else:
-    #            FFX_Xbox.menuLeft()
-    #            FFX_Xbox.menuDown()
-    #    pos += 1
-    
-    #itemOrder = FFX_memory.getItemsOrder()
-    #itemCursor = 1
-    #while itemOrder[itemCursor] != 70: #Don't sell anything Phoenix Down or after.
-    #    if not (itemOrder[itemCursor] in [27,30,32,24,35,56,57,3,6,7,8]): #Sell all except for Mega Potions
-    #        FFX_Xbox.menuB()
-    #        FFX_Xbox.menuUp()
-    #        if FFX_memory.getItemCountSlot(itemCursor) > 11:
-    #            FFX_Xbox.menuUp()
-    #        FFX_Xbox.menuB() #Sell all of this item, up to 21
-    #    if itemOrder[itemCursor + 1] == 6:
-    #        print("Done with selling items.")
-    #    elif itemCursor % 2 == 1:
-    #        FFX_Xbox.menuRight()
-    #    else:
-    #        FFX_Xbox.menuLeft()
-    #        FFX_Xbox.menuDown()
-    #    itemCursor += 1
-    #0
-    #FFX_memory.closeMenu() #Leave the selling items menu
-    
-    #FFX_memory.openMenu()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #time.sleep(0.2)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    
-    #FFX_Xbox.menuLeft()
-    #FFX_Xbox.menuB()
-    
-    #Sort red items to the top
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB() #Flip lightning marbles and bomb cores.
-    
-    #FFX_memory.closeMenu()
-    
-    #time.sleep(0.5)
-    
-    if FFX_memory.getGilvalue() < 9100:
+    FFX_memory.waitFrames(30)
+    if FFX_memory.getGilvalue() < 9100: #Memory hack, we must fix this later.
         FFX_memory.setGilValue(9999999)
-    FFX_Xbox.menuB() #Talk to O'aka once again
-    while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB()
-    time.sleep(0.2)
-    FFX_Xbox.menuB() #Buy
-    time.sleep(0.2)
-    FFX_Xbox.menuB() #Sonic Steel
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #confirm
-    time.sleep(0.05)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #equip
-    FFX_memory.closeMenu()
-    
-def macManualSort_old():
-    #Manual sorting in Macalania. No longer used here. May refactor later to a different slot.
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Mana Sphere to 4, Lightning Marble to 11
-    
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Speed sphere to 5, Fish Scale to 12
-    
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Ability Sphere to 6, Arctic Wind to 13
-    
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB() #Fix Lunar and Light.
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB() #Fix Bomb Core and Lightning Marble
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB() #Fix Fish Scale and Arctic Wind
-    
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Lunar to bottom
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Light to bottom
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    
-    FFX_memory.closeMenu()
-    
-    #time.sleep(0.5)
     FFX_Xbox.menuB() #Talk to O'aka once again
     while not FFX_memory.menuOpen():
         FFX_Xbox.menuB()
@@ -1187,11 +673,7 @@ def macManualSort_old():
     FFX_memory.closeMenu()
 
 def mLakeGrid():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid Kimahri
-    FFX_menuGrid.useShiftRight('kimahri')
+    openGrid(character=3) #Kimahri
     FFX_menuGrid.moveFirst()
     gridDown()
     gridDown()
@@ -1296,11 +778,8 @@ def mLakeGrid():
     FFX_memory.closeMenu()
 
 def macTemple(blitzWin):
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB() #Sphere grid Tidus
+    openGrid(character=0)
     
-    FFX_menuGrid.useShiftRight('tidus')
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('Lv2','d','none')
     FFX_menuGrid.useAndMove()
@@ -1348,11 +827,7 @@ def macTemple(blitzWin):
     FFX_memory.closeMenu()
 
 def afterSeymour():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()  # Sphere grid on Tidus
-    FFX_Xbox.menuB()  # Sphere grid on Tidus
-
-    FFX_menuGrid.useShiftRight('Tidus')
+    openGrid(character=0)
     FFX_menuGrid.moveFirst()
     gridLeft()
     gridLeft()
@@ -1375,10 +850,7 @@ def afterSeymour():
     FFX_memory.closeMenu()
 
 def homeGrid():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_menuGrid.useShiftRight('Tidus')
+    openGrid(character=0)
     FFX_menuGrid.moveFirst()
     gridDown()
     gridDown()
@@ -1503,22 +975,6 @@ def equipSonicSteel():
     print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
     FFX_memory.openMenu()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Formation fixed
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp() #Formation section is replaced.
-
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
@@ -1538,10 +994,7 @@ def equipSonicSteel():
     FFX_memory.closeMenu()
 
 def viaPurifico():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid on Auron
+    openGrid(character=2) #Auron
     
     FFX_menuGrid.moveFirst()
     gridRight()
@@ -1614,19 +1067,16 @@ def viaPurifico():
     FFX_memory.closeMenu()
 
 def seymourNatusBlitzWin():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid on Yuna
+    openGrid(character=1)
     
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('tele','d','up2')
     FFX_menuGrid.useAndUseAgain()
     
     FFX_menuGrid.selSphere('power','u','none') #Str
-    useAndUseAgain()
+    FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','u','none') #Str
-    useAndUseAgain()
+    FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','u','none') #Def +3
     
     FFX_menuGrid.useAndMove()
@@ -1636,9 +1086,9 @@ def seymourNatusBlitzWin():
     gridDown()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed','d','none')
-    useAndUseAgain()
+    FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','u','none')
-    useAndUseAgain()
+    FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','u','none')
     
     FFX_menuGrid.useAndMove()
@@ -1667,10 +1117,7 @@ def seymourNatusBlitzWin():
     FFX_memory.closeMenu()
 
 def seymourNatusBlitzLoss():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Sphere grid on Yuna
+    openGrid(character=1)
     
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('tele','d','none')
@@ -1678,7 +1125,7 @@ def seymourNatusBlitzLoss():
     FFX_menuGrid.useAndUseAgain()
     
     FFX_menuGrid.selSphere('power','u','none')
-    useAndUseAgain()
+    FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','d','none')
     
     FFX_menuGrid.useAndUseAgain()
@@ -1720,11 +1167,7 @@ def seymourNatusBlitzLoss():
     FFX_memory.closeMenu()
 
 def prepCalmLands(blitzWin):
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_menuGrid.useShiftRight('yuna')
+    openGrid(character=1)
     if blitzWin == True:
         FFX_menuGrid.moveFirst()
         gridUp()
@@ -1745,14 +1188,7 @@ def prepCalmLands(blitzWin):
     FFX_memory.closeMenu()
 
 def afterRonso(ver, blitzWin):
-    FFX_memory.openMenu()
-    time.sleep(0.2)
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    
-    FFX_menuGrid.moveShiftRight('Lulu')
+    openGrid(character=5)
     FFX_menuGrid.moveFirst()
     gridUp()
     gridUp()
@@ -1932,9 +1368,7 @@ def beforeFlux():
     FFX_memory.closeMenu()
 
 def afterFlux():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
+    openGrid(character=0)
     
     #Sphere grid on Tidus
     FFX_menuGrid.moveFirst()
@@ -2028,12 +1462,7 @@ def endGameSwap2():
         FFX_memory.closeMenu()
 
 def BFA():
-    pattern = 0
-    FFX_memory.openMenu()
-    
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    openGrid(character=1) #Yuna final grid
     
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('attribute','d','l5')
@@ -2065,11 +1494,7 @@ def BFA():
     FFX_memory.closeMenu()
 
 def skReturn():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_menuGrid.useShiftLeft('Yuna')
+    openGrid(character=1)
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('friend','d','d2')
     FFX_menuGrid.useAndUseAgain() #Friend sphere to Lulu
@@ -2095,11 +1520,7 @@ def skReturn():
     FFX_Xbox.menuA()
 
 def skMixed():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_menuGrid.useShiftLeft('Yuna')
+    openGrid(character=1)
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('ret','d','r2')
     FFX_menuGrid.useAndMove() #Return to Wakka's grid
@@ -2139,11 +1560,7 @@ def skFriend(): #incomplete / game over
     print("Not yet programmed")
 
 def skReturn2():
-    print("Sphere grid after Sanctuary Keeper fight")
-    FFX_memory.openMenu()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    openGrid(character=1)
     
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('ret','d','aftersk')
@@ -2234,3 +1651,25 @@ def itemPos(item, pos):
 
 
 
+
+
+def openGrid(character):
+    while not FFX_memory.sGridActive():
+        #print("Attempting to open Sphere Grid")
+        if FFX_memory.userControl() and not FFX_memory.menuOpen():
+            #print("Menu is not open at all")
+            FFX_Xbox.tapY()
+        elif FFX_memory.menuNumber() == 5: #Cursor on main menu
+            #print("Main menu cursor")
+            if FFX_memory.getMenuCursorPos() != 0:
+                while FFX_memory.getMenuCursorPos() != 0:
+                    FFX_Xbox.menuUp()
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(1)
+        elif FFX_memory.menuNumber() == 7: #Cursor selecting party member
+            #print("Selecting party member")
+            if FFX_memory.getMenu2CharNum() != character:
+                while FFX_memory.getMenu2CharNum() != character:
+                    FFX_Xbox.menuDown()
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(3)

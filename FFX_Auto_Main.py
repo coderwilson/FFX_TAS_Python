@@ -42,16 +42,16 @@ import FFX_Sin
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-#Gamestate = "Kilika"
+#Gamestate = "Boat3"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-Gamestate = "MRR"
-StepCounter = 1
+#Gamestate = "MRR"
+#StepCounter = 1
 #StepCounter = 2 # DO NOT USE, THERE IS NO SAVE FOR THIS ONE
 #Gamestate = "Djose"
 #StepCounter = 1
@@ -62,7 +62,8 @@ StepCounter = 1
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
-#StepCounter = 4
+#StepCounter = 3
+#StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 7
 #Gamestate = "Home"
 #StepCounter = 1
@@ -78,8 +79,8 @@ StepCounter = 1
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True
@@ -88,19 +89,22 @@ autoEggHunt = True
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-newSeed = False #Update this to decide new seed or known seed
-rngSeedNum = 200 #New seed number, only used if newSeed == True
+seedHunt = False #Update this to decide new seed or known seed
+rngSeedNum = 204 #New seed number, only used if newSeed == True
 ####################################################################################################
 
 
-rngReviewOnly = True
-gameLength = "NewSeed"
-if newSeed == False: #Below logic for full runs only.
+if seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [31,49,59,104, 200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
+else: #Just to make sure we're running from new game for seed finding.
+    Gamestate = "none"
+    StepCounter = 1
+    rngReviewOnly = True
+    gameLength = "Seed Hunt"
 
 print("Game type will be: ", gameLength)
 maxLoops = 25
@@ -129,7 +133,6 @@ def reportGamestate():
 
 #Main
 print("FFX automation starting")
-FFX_Logs.nextFile()
 FFX_Logs.nextStats(rngSeedNum)
 print("Please launch the game now.")
 #time.sleep(5)
@@ -173,11 +176,13 @@ if Gamestate != "none" :
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
         FFX_LoadGame.loadOffset(30)
+        print("Load complete")
         while FFX_memory.userControl():
             if FFX_memory.getCoords()[0] > 0.5:
                 FFXC.set_movement(1, 1)
             else:
                 FFXC.set_movement(0, 1)
+        print("Ready for regular path")
     if Gamestate == "Boat1" : #Besaid beach before boarding SS Liki ( nice alliteration :D )
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
@@ -186,10 +191,15 @@ if Gamestate != "none" :
         FFXC.set_movement(0, 1)
         time.sleep(5)
         FFXC.set_neutral()
+    if Gamestate == "Boat3":
+        FFX_LoadGame.loadOffset(1)
+        FFXC.set_movement(0, 1)
+        time.sleep(1)
+        FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
         FFX_LoadGame.loadOffset(47)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
-        FFX_LoadGame.loadOffset(25)
+        FFX_LoadGame.loadOffset(26)
         earlyHaste = 3
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
         FFX_LoadGame.loadOffsetBattle(9)
@@ -206,7 +216,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(38)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
-        FFX_LoadGame.loadOffset(7)
+        FFX_LoadGame.loadOffset(8)
         FFX_LoadGame.AfterGui()
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()
@@ -217,11 +227,11 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(3)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(12)
+        FFX_LoadGame.loadOffset(13)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(11)
+        FFX_LoadGame.loadOffset(12)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
-        FFX_LoadGame.loadOffset(7)
+        FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
         FFX_LoadGame.loadOffset(24) #No remedy in inventory, likely game over.
@@ -274,8 +284,16 @@ if Gamestate != "none" :
         FFX_LoadGame.loadEggHunt()
     
     if FFX_memory.getStoryProgress() >= 80:
-        if not (Gamestate == "Luca" and StepCounter == 5):
+        if Gamestate == "Luca" and StepCounter == 5:
+            noMemCursor = True
+        elif Gamestate == "Besaid" and StepCounter == 3:
+            noMemCursor = True
+        elif Gamestate == "Boat3":
+            noMemCursor = True
+        else:
+            print("Setting memory cursor")
             FFX_LoadGame.loadMemCursor()
+        print("Done with memory cursor")
 
 
 #Movement files - moved to FFX_compileAll.py
@@ -438,6 +456,14 @@ while Gamestate != "End":
     if Gamestate == "Boat2" :
         reportGamestate()
         FFX_Boats.ssWinno()
+        
+        Gamestate = "Boat3"
+    
+    
+    if Gamestate == "Boat3":
+        reportGamestate()
+        FFX_Boats.ssWinno2()
+        
         Gamestate = "Luca"
 
     if Gamestate == "Luca" and StepCounter == 1:

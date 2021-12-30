@@ -234,7 +234,7 @@ def airShipPath_old(version):
                     else:
                         FFXC.set_value('AxisLx', 0)
             
-             #Pre-Evrae with items
+            #Pre-Evrae with items
             elif checkpoint == 65:
                 FFX_memory.awaitControl()
                 FFXC.set_value('AxisLy', 0)
@@ -244,7 +244,7 @@ def airShipPath_old(version):
                 time.sleep(0.5)
                 FFXC.set_value('AxisLx', 0)
                 FFX_Xbox.SkipDialog(2.5) #Talk to Rin
-                FFX_Screen.awaitPixel(600,408,(151, 151, 151))
+                FFX_memory.waitFrames(1000) #Maybe we never do this anyway?
                 FFX_Xbox.menuB()
                 time.sleep(1)
                 FFX_Xbox.menuRight()

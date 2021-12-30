@@ -161,6 +161,7 @@ def waterfalls():
     print("Function no longer used.")
 
 def leaving():
+    print("Ready to leave Besaid")
     FFX_memory.clickToControl()
     checkpoint = 0
     escapeAttempts = 0
@@ -265,8 +266,8 @@ def leaving():
                 FFX_memory.clickToControl()
             elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
                 FFX_Xbox.clickToBattle()
-                time.sleep(0.2)
-                FFX_Battle.buddySwap(0)
+                FFX_memory.waitFrames(2)
+                FFX_Battle.buddySwapYuna()
                 FFX_Xbox.clickToBattle()
                 FFX_Battle.aeonSummon(0)
                 while not FFX_memory.menuOpen():

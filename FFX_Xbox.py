@@ -163,11 +163,15 @@ def touchSaveSphere():
     print("Touching the save sphere")
     while FFX_memory.userControl():
         tapB()
-        time.sleep(0.2)
-    time.sleep(0.5)
-    tapA()
-    time.sleep(0.07)
-    tapB()
+        FFX_memory.waitFrames(3)
+    FFX_memory.waitFrames(30)
+    while not FFX_memory.userControl():
+        if FFX_memory.menuControl():
+            if not FFX_memory.saveMenuCursor():
+                menuA()
+                FFX_memory.waitFrames(1)
+            else:
+                tapB()
     #while not FFX_memory.touchingSaveSphere():
     #    if FFX_memory.userControl():
     #        menuB()
@@ -226,87 +230,123 @@ def skipSave():
 
 def menuUp():
     FFXC.set_value('Dpad', 1)
-    time.sleep(0.05)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.06)
+    FFX_memory.waitFrames(2)
     
 def menuDown():
     FFXC.set_value('Dpad', 2)
-    time.sleep(0.05)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.06)
+    FFX_memory.waitFrames(2)
     
 def menuLeft():
     FFXC.set_value('Dpad', 4)
-    time.sleep(0.05)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.06)
+    FFX_memory.waitFrames(2)
     
 def menuRight():
     FFXC.set_value('Dpad', 8)
-    time.sleep(0.05)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.06)
+    FFX_memory.waitFrames(2)
+    
+def tapUp():
+    FFXC.set_value('Dpad', 1)
+    FFX_memory.waitFrames(1)
+    FFXC.set_value('Dpad', 0)
+    FFX_memory.waitFrames(1)
+    
+def tapDown():
+    FFXC.set_value('Dpad', 2)
+    FFX_memory.waitFrames(1)
+    FFXC.set_value('Dpad', 0)
+    FFX_memory.waitFrames(1)
+    
+def tapLeft():
+    FFXC.set_value('Dpad', 4)
+    FFX_memory.waitFrames(1)
+    FFXC.set_value('Dpad', 0)
+    FFX_memory.waitFrames(1)
+    
+def tapRight():
+    FFXC.set_value('Dpad', 8)
+    FFX_memory.waitFrames(1)
+    FFXC.set_value('Dpad', 0)
+    FFX_memory.waitFrames(1)
     
 def shoulderLeft():
     FFXC.set_value('BtnShoulderL', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnShoulderL', 0)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     
 def shoulderRight():
     FFXC.set_value('BtnShoulderR', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnShoulderR', 0)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     
 def menuA():
     FFXC.set_value('BtnA', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnA', 0)
-    time.sleep(0.15)
+    FFX_memory.waitFrames(4)
     
 def menuB():
     FFXC.set_value('BtnB', 1)
-    time.sleep(0.06)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnB', 0)
-    time.sleep(0.07)
+    FFX_memory.waitFrames(2)
 
 def tapA():
     FFXC.set_value('BtnA', 1)
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnA', 0)
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
 
 def tapB():
     FFXC.set_value('BtnB', 1)
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnB', 0)
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
 
 def menuX():
     FFXC.set_value('BtnX', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnX', 0)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(1)
     
 def menuY():
     FFXC.set_value('BtnY', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnY', 0)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
+    
+def tapX():
+    FFXC.set_value('BtnX', 1)
+    FFX_memory.waitFrames(2)
+    FFXC.set_value('BtnX', 0)
+    FFX_memory.waitFrames(1)
+    
+def tapY():
+    FFXC.set_value('BtnY', 1)
+    FFX_memory.waitFrames(1)
+    FFXC.set_value('BtnY', 0)
+    FFX_memory.waitFrames(1)
     
 def menuBack():
     FFXC.set_value('BtnBack', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnBack', 0)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     
 def lBumper() :
     FFXC.set_value('BtnShoulderL', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnShoulderL', 0)
-    time.sleep(0.05)
+    FFX_memory.waitFrames(2)
 
 def tidusOD():
     #This function has primarily moved to the FFX_Battle library. Leaving this version live in case
@@ -369,7 +409,32 @@ def armorSwap(position):
     menuB()
     time.sleep(0.3)
 
-def awaitSave() :
+def clearSavePopup(clickToDiagNum=0):
+    FFXC = controllerHandle()
+    FFXC.set_neutral()
+    FFX_memory.clickToDiagProgress(clickToDiagNum)
+    complete = 0
+    counter = 0
+    while complete == 0:
+        counter += 1;
+        if counter % 100 == 0:
+            print("Waiting for Save dialog: ", counter / 100)
+        
+        if FFX_memory.diagProgressFlag() != clickToDiagNum and FFX_memory.diagSkipPossible():
+            tapB()
+        
+        elif FFX_memory.diagSkipPossible():
+            if FFX_memory.savePopupCursor() == 0:
+                menuUp()
+            else:
+                menuB()
+                complete = 1
+    FFX_memory.waitFrames(5)
+
+def awaitSave(index=0):
+    clearSavePopup(index)
+
+def awaitSave_old() :
     #FFX_Logs.writeLog("Awaiting save dialog to pop up")
     counter = 0
     complete = 0
@@ -377,46 +442,16 @@ def awaitSave() :
         counter += 1;
         if counter % 100 == 0:
             print("Waiting for Save dialog: ", counter / 100)
-        savePopup = FFX_Screen.PixelTest(630,422,(70,53,124))
-        saveScreen = FFX_Screen.PixelTest(1,1,(87, 85, 122))
-        if FFX_Screen.PixelTestTol(591,769,(221, 221, 221),5): #Skips specific dialog, SS Winno
-            menuB()
-        elif FFX_Screen.PixelTestTol(580,768,(222, 222, 222),5): #Skips specific dialog, SS Winno
-            menuB()
-        elif FFX_Screen.PixelTestTol(493,735,(220, 220, 220),5): #Skips specific dialog, SS Winno
-            menuB()
-        elif FFX_Screen.PixelTestTol(482,738,(215, 215, 215),5): #Skips specific dialog, SS Winno
-            menuB()
-        elif savePopup == True:
-            time.sleep(0.8)
-            menuA()
-            complete = 1
-        elif saveScreen == True:
-            tapA()
-            tapA()
-            tapA()
-            time.sleep(0.07)
-            #tapB()
-            complete = 1
-        else:
-            if not FFX_Screen.PixelTestTol(1,1,(0,0,0),5):
+        
+        if FFX_memory.diagProgressFlag() != 0 and FFX_memory.diagSkipPossible():
+            tapB()
+        
+        elif diagSkipPossible():
+            if FFX_memory.savePopupCursor() == 0:
+                menuUp()
+            else:
                 menuB()
-    print("Save dialog achieved")
-    #FFX_Logs.writeLog("Save dialog on screen.")
-    complete = 0
-    while complete == 0:
-        savePopup = FFX_Screen.PixelTestTol(630,422,(0,0,0),5)
-        #if savePopup == True:
-        #    complete = 1
-        if FFX_Screen.PixelTestTol(752,484,(149, 149, 149),5):
-            time.sleep(0.6)
-            tapA()
-            time.sleep(0.07)
-        elif FFX_Screen.PixelTestTol(752,518,(149, 149, 149),5):
-            menuB()
-            complete = 1
-    print("Save dialog cleared. Moving on.")
-    #FFX_Logs.writeLog("Save dialog cleared. Moving on.")
+                complete = 1
 
 def remove():
     print("Controller may freeze the program here. If so, please restart your PC.")
@@ -492,16 +527,6 @@ def clickToBattle():
         elif FFX_memory.diagSkipPossible():
             menuB()
 
-def clearSavePopup(clickToDiagNum):
-    FFXC = controllerHandle()
-    FFXC.set_neutral()
-    FFX_memory.clickToDiagProgress(clickToDiagNum)
-    FFX_memory.waitFrames(100)
-    while FFX_memory.savePopupCursor() != 1:
-        menuDown()
-    menuB()
-    FFX_memory.waitFrames(5)
-
 def nameAeon():
     print("Waiting for aeon naming screen to come up")
     
@@ -510,15 +535,15 @@ def nameAeon():
             tapB()
     
     print("Naming screen is up.")
-    time.sleep(0.3)
+    FFX_memory.waitFrames(3)
     tapB()
-    time.sleep(0.035)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 1)
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     FFXC.set_neutral()
-    time.sleep(0.035)
+    FFX_memory.waitFrames(2)
     tapB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(9)
     
     print("Now clearing the value so we're ready for the next aeon later.")
     FFX_memory.clearNameAeonReady()

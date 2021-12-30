@@ -5,9 +5,6 @@ import FFX_Logs
 import FFX_memory
 #from playsound import playsound
 
-#FFXC = FFX_Xbox.FFXC
-#FFXC = FFX_Xbox.FFXC
-
 def clearMouse(counter):
     try:
         pyautogui.moveTo(1598,898)
@@ -24,30 +21,6 @@ def BattleScreen():
     else:
         return False
 
-    
-def BattleScreen_old():
-    if PixelTest(1464, 181, (229, 189, 96)) :
-        if not PixelTestTol(131,693,(153, 155, 153),5):
-            print("It is now someone's turn in battle.")
-            time.sleep(0.735) #This delay is paramount.
-        return True
-    else :
-        return False
-
-def faintCheck_old():
-    faints = 0
-    charHP = FFX_memory.getBattleHP()
-    chars = FFX_memory.partySize()
-    if PixelTest(1347,701,(223, 55, 27)):
-        faints += 1
-    if PixelTest(1347,745,(221, 54, 26)):
-        faints += 1
-    if PixelTest(1347,788,(222, 54, 27)):
-        faints += 1
-    if faints > 0:
-        FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))
-    return faints
-
 def faintCheck():
     faints = 0
     charHP = FFX_memory.getBattleHP()
@@ -58,17 +31,7 @@ def faintCheck():
         faints += 1
     if charHP[2] == 0 and partySize >= 2:
         faints += 1
-    if charHP[3] == 0 and partySize >= 3:
-        faints += 1
-    if faints > 0:
-        FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))
-    return faints
-
-def faintCheckTwo():
-    faints = 0
-    if PixelTest(1347,701,(223, 55, 27)):
-        faints += 1
-    elif PixelTest(1347,745,(221, 54, 26)):
+    if charHP[3] == 0 and partySize >= 3 and FFX_memory.getBattleNum() != 145:
         faints += 1
     if faints > 0:
         FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))

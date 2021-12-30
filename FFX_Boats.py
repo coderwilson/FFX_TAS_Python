@@ -64,24 +64,28 @@ def ssWinno():
     FFX_Xbox.tapB()
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(21)
-    time.sleep(2)
+    FFX_memory.waitFrames(60)
+    #time.sleep(2)
     FFX_Xbox.tapB()
-    time.sleep(1)
+    FFX_memory.waitFrames(30)
+    #time.sleep(1)
     FFX_Xbox.tapB()
-    time.sleep(1)
-    FFX_Xbox.gridDown()
-    FFX_Xbox.gridLeft()
-    FFX_Xbox.gridUp()
-    FFX_Xbox.gridRight()
-    FFX_Xbox.gridRight()
-    FFX_Xbox.gridRight()
-    FFX_Xbox.gridUp() #1001
+    FFX_memory.waitFrames(30)
+    #time.sleep(1)
+    FFX_Xbox.tapDown()
+    FFX_Xbox.tapLeft()
+    FFX_Xbox.tapUp()
+    FFX_Xbox.tapRight()
+    FFX_Xbox.tapRight()
+    FFX_Xbox.tapRight()
+    FFX_Xbox.tapUp() #1001
     FFX_Xbox.tapB()
-    time.sleep(1)
-    FFX_Xbox.gridDown()
-    FFX_Xbox.menuB() #No Sweat
+    FFX_memory.waitFrames(30)
+    FFX_Xbox.tapDown()
+    FFX_Xbox.tapB() #No Sweat
     FFX_memory.clickToControl3()
     
+def ssWinno2():
     #To the deck
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)

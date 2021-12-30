@@ -58,8 +58,6 @@ def arrival():
                 checkpoint = 7
 
 def forest1():
-    #FFX_menu.autoSortItems('n')
-    #FFX_memory.closeMenu()
     kilikaBattles = 0
     optimalBattles = 0
     
@@ -88,7 +86,11 @@ def forest1():
                     checkpoint += 1
             elif checkpoint == 52:
                 FFXC.set_neutral()
-                time.sleep(0.2)
+                FFX_memory.waitFrames(5)
+                FFXC.set_movement(1, 0)
+                FFX_memory.waitFrames(2)
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(4)
                 FFX_Xbox.touchSaveSphere()
                 FFX_menu.Geneaux()
                 checkpoint += 1
@@ -136,7 +138,7 @@ def forest1():
 
 def woodsMenuing():
     #Tidus learning Flee
-    FFX_memory.openMenu()
+    FFX_menu.openGrid(character=0)
     FFX_Xbox.menuB()
     FFX_Xbox.menuB() #Sphere grid on Tidus
     FFX_menuGrid.moveFirst()
@@ -233,13 +235,6 @@ def trials():
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Xbox.nameAeon() #Set Ifrit name
-                #FFX_Xbox.clickToPixel(270,348,(0,0,0))
-                #FFX_Screen.awaitPixel(270,348,(246, 211, 161))
-                #time.sleep(0.15)
-                #FFX_Xbox.menuB()
-                #time.sleep(0.1)
-                #FFX_Xbox.menuUp()
-                #FFX_Xbox.menuB()
                 checkpoint += 1
             elif checkpoint == 57: #Leaving the temple
                 FFX_memory.clickToEventTemple(4)

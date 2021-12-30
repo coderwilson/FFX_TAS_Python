@@ -7,32 +7,19 @@ from math import cos, sin
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
-    
-    
-def getKey():
-    global baseValue
-    state = menuOpen()
-    mem_address = 0x0088FDD8 if state else 0x00F25D54
-    key = baseValue + mem_address
-    return key, state
-    
+
 def waitFrames(frames: int):
-    frames = max(int(frames), 1)
-    # 0x0088FDD8 is the framecounter offset when in the Menu, 0x00F25D54 is the framecount offset when in the overworld.
-    current, previous_state = getKey()
+    frames = max(round(frames), 1)
+    global baseValue
+    key = baseValue + 0x0088FDD8
+    current = process.readBytes(key, 4)
     final = current + frames
-    #print(f"Starting memory read, current frame {current}, target frame {final}")
     previous = current-1
-    previous_state = menuOpen()
     while current < final:
-        address, state = getKey()
-        if current != previous or current != previous+1: 
-            # Framecounter resets when changing maps.
-            #print("Crossed a trigger that reset frame count, or changed from in to out of menu, recalculating target frame.")
+        if not (current == previous or current == previous + 1): 
             final = final - previous
-        previous_state = state
         previous = current
-        current = process.readBytes(address, 4)
+        current = process.readBytes(key, 4)
     return
 
 def start():
@@ -140,7 +127,7 @@ def turnReady():
     if process.readBytes(key,1) == 0:
         return False
     else:
-        waitFrames(15)
+        waitFrames(4) #Can be dialed in from 15
         return True
 
 def battleCursor2():
@@ -324,6 +311,15 @@ def getCoords():
     y = float_from_integer(process.read(coord2))
 
     return [x,y]
+
+def extractorHeight():
+    global process
+    global baseValue
+    global zPtr
+    key = baseValue + 0x01fc44e4
+    height = float_from_integer(process.read(key + 0x1990))
+    print("^^Extractor Height: ", height)
+    return height
 
 def getHeight():
     global process
@@ -580,11 +576,15 @@ def getBattleFormation():
     char6 = process.readBytes(key,1)
     key = baseValue + 0x00D2C8A6
     char7 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A7
+    char8 = process.readBytes(key,1)
 
-    battleForm = [char1, char2, char3, char4, char5, char6, char7]
+    battleForm = [char1, char2, char3, char4, char5, char6, char7, char8]
+    print(battleForm)
     if 255 in battleForm:
         while 255 in battleForm:
             battleForm.remove(255)
+    print(battleForm)
     return battleForm
 
 def getBattleCharSlot(charNum):
@@ -805,6 +805,22 @@ def getGridMoveUsePos():
     global baseValue
     key = baseValue + 0x012AC838
     return process.readBytes(key,1)
+
+def getGridMoveActive():
+    global baseValue
+    key = baseValue + 0x012AC82B
+    if process.readBytes(key,1):
+        return True
+    else:
+        return False
+
+def getGridUseActive():
+    global baseValue
+    key = baseValue + 0x012ACB6B
+    if process.readBytes(key,1):
+        return True
+    else:
+        return False
 
 def getItemSlot(itemNum):
     items = getItemsOrder()
@@ -1174,7 +1190,11 @@ def openMenu():
         waitFrames(1)
         FFXC.set_value('BtnY',0)
         waitFrames(1)
-    time.sleep(0.8)
+    waitFrames(15)
+
+def menuNumber():
+    global baseValue
+    return process.readBytes(baseValue + 0x85B2CC, 1)
 
 def sGridActive():
     global baseValue
@@ -1224,6 +1244,14 @@ def getMenuCursorPos():
     global baseValue
 
     key = baseValue + 0x01471508
+    pos = process.readBytes(key, 1)
+
+    return pos
+
+def getMenu2CharNum():
+    global baseValue
+
+    key = baseValue + 0x0147150C
     pos = process.readBytes(key, 1)
 
     return pos
@@ -1312,7 +1340,7 @@ def menuControl():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(30 * 0.035)
+        waitFrames(1)
         return True
     else:
         return False
@@ -1340,7 +1368,7 @@ def diagSkipPossible():
         key = baseValue + 0x0085A03C
         control = process.readBytes(key,1)
         if control == 1:
-            waitFrames(30 * 0.035)
+            waitFrames(1)
             return True
         else:
             return False

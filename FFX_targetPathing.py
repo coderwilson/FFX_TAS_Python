@@ -43,7 +43,7 @@ def setMovement(target) -> bool:
     
     
     FFXC.set_movement(Lx, Ly)
-    FFX_memory.waitFrames(frames=1)
+    #FFX_memory.waitFrames(frames=1)
     
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
         return True #Checkpoint reached
@@ -2291,7 +2291,7 @@ def djoseTrials(checkpoint):
         y = 15
     if checkpoint == 37:
         x = 8
-        y = 24
+        y = 23
     if checkpoint == 38:
         print("Powered sphere")
     if checkpoint == 39:
@@ -2304,7 +2304,7 @@ def djoseTrials(checkpoint):
         y = 31
     if checkpoint == 42:
         x = 66
-        y = 29
+        y = 28
     if checkpoint == 43:
         print("Right sphere")
     if checkpoint == 44:
@@ -2371,7 +2371,7 @@ def djoseTrials(checkpoint):
         y = 5
     if checkpoint == 67:
         x = 9
-        y = 26
+        y = 24 #Dial in
     if checkpoint == 68:
         print("Right sphere")
     if checkpoint == 69:
@@ -3281,7 +3281,7 @@ def mTempleTrials(checkpoint):
         y = 44
     if checkpoint == 23:
         x = 41
-        y = 49
+        y = 47
     if checkpoint == 24:
         print("Push pedestol")
     if checkpoint == 25: #Spot next to the ramp-sphere

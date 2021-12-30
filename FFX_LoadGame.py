@@ -31,7 +31,11 @@ def loadOffset(offset):
     #FFX_Xbox.menuB()
     time.sleep(2.5)
     while offset > 0:
-        FFX_menuGrid.gridDown()
+        FFXC.set_value('Dpad', 2)
+        FFX_memory.waitFrames(2)
+        FFXC.set_value('Dpad', 0)
+        FFX_memory.waitFrames(4)
+
         offset -= 1
     time.sleep(0.2)
     FFX_Xbox.menuB()
@@ -362,11 +366,10 @@ def loadGuadoSkip():
     FFXC.set_neutral()
 
 def loadMacLake():
-    loadOffset(6)
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
     FFX_memory.awaitControl()
 
 def loadMacTemple():
@@ -461,25 +464,6 @@ def zanTrials():
     FFXC.set_value('AxisLx', 0)
     time.sleep(2)
     FFXC.set_value('AxisLy', 0)
-
-def hymnIsKey_old():
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
-    time.sleep(2)
-    FFXC.set_value('AxisLx', 0)
-    time.sleep(3)
-    FFXC.set_value('AxisLy', 0)
-    FFX_Xbox.SkipDialog(155)
-    FFX_Xbox.clickToPixel(545,218,(62, 51, 20))
-    time.sleep(1)
-    FFX_Xbox.menuB() #Skip dialog
-    
-    while not FFX_Screen.PixelTestTol(610,483,(156, 157, 156),5):
-        if FFX_Screen.PixelTestTol(704,466,(154, 154, 154),5):
-            FFX_Xbox.menuB()
-        if FFX_Screen.PixelTestTol(612,449,(152, 152, 152),5):
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #We fight Yu Yevon.
 
 def loadGagazetDream():
     FFXC.set_movement(1, 1)

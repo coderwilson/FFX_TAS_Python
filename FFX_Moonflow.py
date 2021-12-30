@@ -81,9 +81,9 @@ def southBank():
             if checkpoint == 4:
                 FFXC.set_neutral()
                 FFX_memory.clickToEvent()
-                time.sleep(0.6)
+                FFX_memory.waitFrames(18)
                 FFX_Xbox.menuB() #Ride ze Shoopuff?
-                time.sleep(0.6)
+                FFX_memory.waitFrames(18)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB() #All aboardz!
                 FFX_Xbox.SkipDialog(3) #Just to clear some dialog
