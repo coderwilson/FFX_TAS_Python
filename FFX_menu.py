@@ -312,12 +312,8 @@ def battleSiteGrid():
     FFX_menuGrid.selSphere('speed','d','none')
     
     FFX_menuGrid.useShiftLeft('Kimahri') #Sphere grid on Kimahri
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    while FFX_Screen.PixelTestTol(804,296,(94, 23, 68),5):
-        FFX_menuGrid.gridRight()
+    FFX_menuGrid.moveFirst()
+    gridRight()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndMove()
@@ -1672,4 +1668,9 @@ def openGrid(character):
                 while FFX_memory.getMenu2CharNum() != character:
                     FFX_Xbox.menuDown()
             FFX_Xbox.menuB()
+            try:
+                FFXC.set_neutral()
+            except:
+                FFXC = FFX_Xbox.controllerHandle()
+                FFXC.set_neutral()
             FFX_memory.waitFrames(3)

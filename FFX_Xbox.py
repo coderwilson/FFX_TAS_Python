@@ -232,25 +232,25 @@ def menuUp():
     FFXC.set_value('Dpad', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(3)
     
 def menuDown():
     FFXC.set_value('Dpad', 2)
     FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(3)
     
 def menuLeft():
     FFXC.set_value('Dpad', 4)
     FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(3)
     
 def menuRight():
     FFXC.set_value('Dpad', 8)
     FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(3)
     
 def tapUp():
     FFXC.set_value('Dpad', 1)
@@ -298,7 +298,7 @@ def menuB():
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('BtnB', 0)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(4)
 
 def tapA():
     FFXC.set_value('BtnA', 1)
@@ -316,13 +316,13 @@ def menuX():
     FFXC.set_value('BtnX', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('BtnX', 0)
-    FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(4)
     
 def menuY():
     FFXC.set_value('BtnY', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('BtnY', 0)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(4)
     
 def tapX():
     FFXC.set_value('BtnX', 1)
@@ -535,11 +535,11 @@ def nameAeon():
             tapB()
     
     print("Naming screen is up.")
-    FFX_memory.waitFrames(3)
-    tapB()
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(20)
+    menuB()
+    FFX_memory.waitFrames(4)
     FFXC.set_value('Dpad', 1)
-    FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(2)
     FFXC.set_neutral()
     FFX_memory.waitFrames(2)
     tapB()

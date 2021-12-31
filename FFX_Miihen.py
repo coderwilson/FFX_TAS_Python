@@ -229,6 +229,8 @@ def midPoint():
     FFX_Xbox.menuB() #Extra P.downs
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
     
     #Start conversation with Rin
     FFXC.set_movement(0, -1)

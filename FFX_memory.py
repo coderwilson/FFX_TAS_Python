@@ -1426,94 +1426,6 @@ def clickToStoryProgress(destination):
         currentState = getStoryProgress()
     print("Story progress has reached destination. Value: ", destination)
 
-def blitzOwnScore():
-    global baseValue
-
-    key = baseValue + 0x0151728C
-    score = process.readBytes(key, 1)
-    return score
-
-def blitzOppScore():
-    global baseValue
-
-    key = baseValue + 0x0151644C
-    score = process.readBytes(key, 1)
-    return score
-
-def blitzClockMenu():
-    global baseValue
-
-    key = baseValue + 0x014765FA
-    status = process.readBytes(key, 1)
-    return status
-
-def blitzMenuNum():
-    global baseValue
-    #20 = Movement menu (auto, type A, or type B)
-    #29 = Formation menu
-    #38 = Breakthrough
-    #24 = Pass To menu (other variations are set to 24)
-    #Unsure about other variations, would take more testing.
-
-    key = baseValue + 0x0146770A
-    status = process.readBytes(key, 1)
-    if status == 17 or status == 27:
-        status = 24
-    return status
-
-def blitzTargetPlayer():
-    global baseValue
-
-    key = baseValue + 0x00D3761C
-    player = process.readBytes(key, 1)
-    print("Target Player number: ", player)
-    print("12 = Opposing team")
-    print("18 = non-controlled ball (shot or pass)")
-    return player
-
-def blitzCoords():
-    global baseValue
-
-    key = baseValue + 0x00D37698
-    xVal = process.readBytes(key, 1)
-    xVal = xVal * -1
-    key = baseValue + 0x00D37690
-    yVal = process.readBytes(key, 1)
-    return [xVal,yVal]
-
-def blitzGameActive():
-    if getMap() == 62:
-        return True
-    else:
-        return False
-
-def blitzBallControl():
-    try:
-        if blitzClockMenu() == 24:
-            if blitzCurrPlayer() >= 2 and blitzCurrPlayer <= 6:
-                return True
-            else:
-                return False
-        else:
-            return False
-    except:
-        return False
-
-def blitzClock():
-    global baseValue
-
-    key = baseValue + 0x012C64B14
-    clock = process.readBytes(key, 1)
-    return clock
-
-def blitzballPatriotsStyle():
-    global baseValue
-
-    key = baseValue + 0x00D2E0CE
-    progress = process.writeBytes(key,50,1)
-    #key = baseValue + 0x00D2E131
-    #progress = process.writeBytes(key,50,1)
-
 def desertFormat(rikkuCharge):
     order = getOrderSix()
     if order == [0,3,2,4,6,5]:
@@ -1530,6 +1442,7 @@ def activepartySize():
     return len(getActiveBattleFormation())
 
 def fullPartyFormat_New(frontLine, menusize):
+    print("==Full Party Format function, revamped 1")
     frontLine = frontLine.lower()
     order = getOrderSeven()
     partyMembers = len(order)
@@ -1920,8 +1833,8 @@ def fullPartyFormat(frontLine):
                 openMenu()
         else:
             #Sometimes needs delay if menu was opened via other means.
-            waitFrames(30 * 0.4)
-        time.sleep(0.5)
+            waitFrames(12)
+        waitFrames(10)
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuUp()
@@ -1932,6 +1845,7 @@ def fullPartyFormat(frontLine):
         startPos = 0
         targetPos = 1
         while order != orderFinal:
+            print("==Full Party Format function, original")
             #Select target in the wrong spot.
             print("Selecting start position")
             if order[startPos] == orderFinal[startPos]:
@@ -1948,7 +1862,9 @@ def fullPartyFormat(frontLine):
                 #print("Cursor not in right spot")
                 while partyFormatCursor1() != startPos:
                     menuDirection(partyFormatCursor1(), startPos, partyMembers)
+            waitFrames(5)
             FFX_Xbox.menuB() #Click on Start location
+            waitFrames(5)
             
             #Set target, end position
             print("Selecting destination position.")
@@ -1963,8 +1879,8 @@ def fullPartyFormat(frontLine):
             print("Moving to destination position.")
             while partyFormatCursor2() != endPos:
                 menuDirection(partyFormatCursor2(), endPos, partyMembers)
-            
-            FFX_Xbox.menuB() #Click on End location, performs swap.
+            waitFrames(1)
+            FFX_Xbox.tapB() #Click on End location, performs swap.
             print("Start and destination positions have been swapped.")
             startPos += 1
             if startPos == partyMembers:
@@ -2509,6 +2425,118 @@ def resetBattleEnd():
     global baseValue
     key = baseValue + 0x00D2C9F1
     process.writeBytes(key,3,1)
+
+
+#---------------------------------------------
+#Blitzball!
+
+def blitzOwnScore():
+    global baseValue
+
+    key = baseValue + 0x0151728C
+    score = process.readBytes(key, 1)
+    return score
+
+def blitzOppScore():
+    global baseValue
+
+    key = baseValue + 0x0151644C
+    score = process.readBytes(key, 1)
+    return score
+
+def blitzballPatriotsStyle():
+    global baseValue
+
+    key = baseValue + 0x00D2E0CE
+    progress = process.writeBytes(key,50,1)
+
+def blitzClockMenu():
+    global baseValue
+
+    key = baseValue + 0x014765FA
+    status = process.readBytes(key, 1)
+    return status
+
+def blitzClockPause():
+    global baseValue
+
+    key = baseValue + 0x014663B0
+    status = process.readBytes(key, 1)
+    return status
+
+def blitzMenuNum():
+    global baseValue
+    #20 = Movement menu (auto, type A, or type B)
+    #29 = Formation menu
+    #38 = Breakthrough
+    #24 = Pass To menu (other variations are set to 24)
+    #Unsure about other variations, would take more testing.
+
+    key = baseValue + 0x0146770A
+    status = process.readBytes(key, 1)
+    if status == 17 or status == 27:
+        status = 24
+    return status
+
+def blitzTargetPlayer():
+    global baseValue
+
+    key = baseValue + 0x00D3761C
+    player = process.readBytes(key, 1)
+    print("Target Player number: ", player)
+    print("12 = Opposing team")
+    print("18 = non-controlled ball (shot or pass)")
+    return player
+
+def blitzCoords():
+    global baseValue
+
+    key = baseValue + 0x00D37698
+    xVal = process.readBytes(key, 1)
+    xVal = xVal * -1
+    key = baseValue + 0x00D37690
+    yVal = process.readBytes(key, 1)
+    return [xVal,yVal]
+
+def blitzGameActive():
+    if getMap() == 62:
+        return True
+    else:
+        return False
+
+def blitzBallControl():
+    try:
+        if blitzClockMenu() == 24:
+            if blitzCurrPlayer() >= 2 and blitzCurrPlayer <= 6:
+                return True
+            else:
+                return False
+        else:
+            return False
+    except:
+        return False
+
+def blitzClock():
+    global baseValue
+
+    key = baseValue + 0x012C64B14
+    clock = process.readBytes(key, 1)
+    return clock
+
+def blitzCharSelectCursor():
+    global baseValue
+
+    key = baseValue + 0x0146780A
+    cursor = process.readBytes(key, 1)
+    return cursor
+
+def blitzProceedCursor():
+    global baseValue
+
+    key = baseValue + 0x01467CEA
+    cursor = process.readBytes(key, 1)
+    return cursor
+
 
 #-------------------------------------------------------
 #Testing

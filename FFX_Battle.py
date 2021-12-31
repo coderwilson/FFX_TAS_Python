@@ -1236,7 +1236,6 @@ def MRRbattle(status):
     print("---------------------------------------------------------")
     print("---------------------------------------------------------")
     print("Fight start: MRR")
-    time.sleep (0.5)
     battle = FFX_memory.getBattleNum()
     print("Battle number: ", battle)
     
@@ -4793,6 +4792,9 @@ def aeonSpellDirection(position, direction):
     time.sleep(0.2)
 
 def healUp_New(chars, menusize):
+    healUp(chars)
+
+def healUp_New2(chars, menusize):
     FFX_Logs.writeLog("Healing characters post-battle")
     print("Menuing, healing characters: ", chars)
     FFXC.set_neutral()
@@ -4846,12 +4848,15 @@ def healUp(chars):
     FFX_Logs.writeLog("Healing characters post-battle")
     FFXC.set_neutral()
     print("Menuing, healing characters: ", chars)
+    #FFX_memory.waitFrames(30)
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
+    #FFX_memory.waitFrames(30)
     pos = 1
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
+    while FFX_memory.getMenuCursorPos() != 2:
+        FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
+    FFX_memory.waitFrames(1)
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
     order = FFX_memory.getOrderSeven()
@@ -4860,6 +4865,7 @@ def healUp(chars):
         while FFX_memory.getCharCursorPos() != yunaPos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
     print("Mark 2")
+    FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
     time.sleep(0.2)
     FFX_Xbox.menuB()
@@ -4873,6 +4879,10 @@ def healUp(chars):
     FFX_memory.closeMenu()
 
 def healUpMiihen(chars):
+    healUp(chars)
+
+def healUpMiihen_old(chars):
+
     FFX_Logs.writeLog("Healing characters post-battle")
     FFXC.set_neutral()
     print("Menuing, healing characters: ", chars)

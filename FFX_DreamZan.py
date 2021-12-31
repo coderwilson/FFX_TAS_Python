@@ -74,6 +74,7 @@ def NewGame(Gamestate):
             FFX_memory.waitFrames(1)
             FFXC.set_value('BtnStart', 0)
             FFX_memory.waitFrames(1)
+    FFX_memory.clearNameAeonReady()
     
 def NewGame2():
     #New game selected. Next, select options.

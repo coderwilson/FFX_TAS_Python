@@ -44,9 +44,9 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Boat3"
 #StepCounter = 1
-Gamestate = "Luca"
+#Gamestate = "Luca"
 #StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -79,8 +79,8 @@ StepCounter = 3
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True
@@ -89,15 +89,15 @@ autoEggHunt = True
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 204 #New seed number, only used if newSeed == True
+seedHunt = True #Update this to decide new seed or known seed
+rngSeedNum = 123 #New seed number, only used if newSeed == True
 ####################################################################################################
 
 
 if seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [31,49,59,104, 200]
+    rngSelectArray = [31,49,59,90,91,96,98,104,108,121,200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 200 #Select a specific seed.
+    #rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -207,7 +207,7 @@ if Gamestate != "none" :
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
-        FFX_LoadGame.loadOffset(33)
+        FFX_LoadGame.loadOffset(34)
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadOffset(19)

@@ -93,6 +93,8 @@ def moveReady():
             return True
         else:
             return False
+    elif readyUseSphere() or moveActive():
+        FFX_Xbox.menuA()
     else: return False
 
 def moveActive():
@@ -114,6 +116,8 @@ def useReady():
             return True
         else:
             return False
+    elif readyUseSphere() or moveActive():
+        FFX_Xbox.menuA()
     else: return False
 
 def readySelectSphere():
