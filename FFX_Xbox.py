@@ -113,6 +113,7 @@ def skipScene():
     FFXC.set_value('BtnStart', 1) #Generate button to skip
     FFX_memory.waitFrames(1)
     FFXC.set_value('BtnStart', 0)
+
     FFX_memory.waitFrames(2)
     tapX()
     #FFX_memory.waitFrames(2)
@@ -214,14 +215,7 @@ def SkipDialogSpecial( Keystrokes ):
         FFXC.set_value('BtnA', 0)
         FFX_memory.waitFrames(1)
     print("Mashing A and B - Complete")
-
-def skipSave():
-    print("Skipping save dialog popup")
-    FFX_memory.waitFrames(30 * 0.4)
-    menuA()
-    FFX_memory.waitFrames(30 * 0.1)
-    menuB()
-
+    
 def menuUp():
     FFXC.set_value('Dpad', 1)
     FFX_memory.waitFrames(2)
@@ -426,7 +420,7 @@ def clearSavePopup(clickToDiagNum=0):
     FFX_memory.waitFrames(5)
 
 def awaitSave(index=0):
-    clearSavePopup(index)
+    clearSavePopup(clickToDiagNum = index)
 
 def awaitSave_old() :
     #FFX_Logs.writeLog("Awaiting save dialog to pop up")

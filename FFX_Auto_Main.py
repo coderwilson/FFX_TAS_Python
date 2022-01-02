@@ -44,9 +44,9 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Boat3"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -79,11 +79,11 @@ import FFX_Sin
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-forceBlitzWin = True
+forceBlitzWin = False
 autoEggHunt = True
 
 ####################################################################################################

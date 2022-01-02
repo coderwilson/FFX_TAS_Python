@@ -2032,19 +2032,24 @@ def nameFromNumber(charNum):
 def getActorCoords(actorNumber):
     global process
     global baseValue
-    retVal = [0,0]
-    
-    basePointer = baseValue + 0x01fc44e4
-    basePointerAddress = process.read(basePointer)
-    offsetX = (0x880 * actorNumber) + 0x0c
-    offsetY = (0x880 * actorNumber) + 0x14
+    retVal = [0,0,0]
+    try:
+        basePointer = baseValue + 0x01fc44e4
+        basePointerAddress = process.read(basePointer)
+        offsetX = (0x880 * actorNumber) + 0x0c
+        offsetY = (0x880 * actorNumber) + 0x14
+        offsetZ = (0x880 * actorNumber) + 0x10
 
-    keyX = basePointerAddress + offsetX
-    retVal[0] = float_from_integer(process.read(keyX))
-    keyY = basePointerAddress + offsetY
-    retVal[1] = float_from_integer(process.read(keyY))
+        keyX = basePointerAddress + offsetX
+        retVal[0] = float_from_integer(process.read(keyX))
+        keyY = basePointerAddress + offsetY
+        retVal[1] = float_from_integer(process.read(keyY))
+        keyZ = basePointerAddress + offsetY
+        retVal[2] = float_from_integer(process.read(keyZ))
 
-    return retVal
+        return retVal
+    except:
+        doNothing = True
 
 def miihenGuyCoords():
     global process
@@ -2426,9 +2431,29 @@ def resetBattleEnd():
     key = baseValue + 0x00D2C9F1
     process.writeBytes(key,3,1)
 
-
 #---------------------------------------------
 #Blitzball!
+
+class blitzActor:
+    def __init__(self, playerNum):
+        self.num = playerNum + 2
+        self.position = getActorCoords(self.num - 2)
+        #print(self.position)
+        self.distance = 0
+    
+    def updateCoords(self, activePlayer=12):
+        self.position = getActorCoords(self.num)
+        #if activePlayer != 12 and activePlayer != self.num:
+            #actPos = getActorCoords(activePlayer-2)
+            #self.distance = abs(self.position[0] - actPos[0]) + abs(self.position[1] - actPos[1])
+        #else:
+        self.distance = 100
+    
+    def getCoords(self):
+        #print(self.num - 2)
+        coords = getActorCoords(self.num - 2)
+        #print(coords)
+        return coords
 
 def blitzOwnScore():
     global baseValue
@@ -2472,20 +2497,30 @@ def blitzMenuNum():
     #24 = Pass To menu (other variations are set to 24)
     #Unsure about other variations, would take more testing.
 
-    key = baseValue + 0x0146770A
+    key = baseValue + 0x014765DA
     status = process.readBytes(key, 1)
     if status == 17 or status == 27:
         status = 24
     return status
+
+def blitzCurrentPlayer():
+    global baseValue
+
+    key = baseValue + 0x00F25B6A
+    player = process.readBytes(key, 1)
+    #print("Target Player number: ", player)
+    #print("12 = Opposing team")
+    #print("18 = non-controlled ball (shot or pass)")
+    return player
 
 def blitzTargetPlayer():
     global baseValue
 
     key = baseValue + 0x00D3761C
     player = process.readBytes(key, 1)
-    print("Target Player number: ", player)
-    print("12 = Opposing team")
-    print("18 = non-controlled ball (shot or pass)")
+    #print("Target Player number: ", player)
+    #print("12 = Opposing team")
+    #print("18 = non-controlled ball (shot or pass)")
     return player
 
 def blitzCoords():
@@ -2518,10 +2553,12 @@ def blitzBallControl():
 
 def blitzClock():
     global baseValue
-
-    key = baseValue + 0x012C64B14
-    clock = process.readBytes(key, 1)
-    return clock
+    
+    basePointer = baseValue + 0x00F2FF14
+    basePointerAddress = process.read(basePointer)
+    key = basePointerAddress + 0x24C
+    clockValue = process.read(key)
+    return clockValue
 
 def blitzCharSelectCursor():
     global baseValue
@@ -2537,6 +2574,14 @@ def blitzProceedCursor():
     cursor = process.readBytes(key, 1)
     return cursor
 
+def blitzCursor():
+    global baseValue
+
+    key = baseValue + 0x014676D2
+    cursor = process.readBytes(key, 1)
+    return cursor
+
+    
 
 #-------------------------------------------------------
 #Testing
