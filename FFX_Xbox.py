@@ -4,6 +4,7 @@ import time
 import FFX_memory
 import FFX_Screen
 import pyautogui
+import math
 
 #import FFX_memory
 #import FFX_Battle
@@ -116,7 +117,7 @@ def skipScene():
     time.sleep(0.035)
     FFXC.set_value('BtnX', 0)
     time.sleep(0.07)
-    SkipDialog(2)
+    SkipDialog(0.4)
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
@@ -190,43 +191,24 @@ def touchSaveSphere():
     time.sleep(0.035)
 
 def SkipDialog( Keystrokes ):
-    Keystrokes
-    print("Mashing B")
-    currentTime = time.time()
-    print("Current Time: ", currentTime)
-    clickTimer = currentTime + Keystrokes
-    print("Clicking for number of seconds: ", Keystrokes)
-    while currentTime < clickTimer :
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
-        currentTime = time.time()
+    # 2 frames per button mash
+    num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
+    print(f"Mashing B {num_repetitions} number of times.")
+    for _ in range(num_repetitions):
+        tapB()
     print("Mashing B - Complete")
 
 def SkipDialogSpecial( Keystrokes ):
-    Keystrokes
-    print("Mashing B")
-    currentTime = time.time()
-    print("Current Time: ", currentTime)
-    clickTimer = currentTime + Keystrokes
-    print("Clicking for number of seconds: ", Keystrokes, " - Special skipping")
-    while currentTime < clickTimer :
+    num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
+    print(f"Mashing A and B {num_repetitions} number of times.")
+    for _ in range(num_repetitions) :
         FFXC.set_value('BtnB', 1)
         FFXC.set_value('BtnA', 1)
-        time.sleep(0.035)
+        FFX_memory.waitFrames(1)
         FFXC.set_value('BtnB', 0)
         FFXC.set_value('BtnA', 0)
-        time.sleep(0.035)
-        currentTime = time.time()
-    print("Mashing B - Complete")
-
-def skipSave():
-    print("Skipping save dialog popup")
-    time.sleep(0.4)
-    menuA()
-    time.sleep(0.1)
-    menuB()
+        FFX_memory.waitFrames(1)
+    print("Mashing A and B - Complete")
 
 def menuUp():
     FFXC.set_value('Dpad', 1)
@@ -432,7 +414,7 @@ def clearSavePopup(clickToDiagNum=0):
     FFX_memory.waitFrames(5)
 
 def awaitSave(index=0):
-    clearSavePopup(index)
+    clearSavePopup(clickToDiagNum = index)
 
 def awaitSave_old() :
     #FFX_Logs.writeLog("Awaiting save dialog to pop up")

@@ -212,6 +212,7 @@ def afterBlitz(earlyHaste):
                     time.sleep(6)
                 elif battleNum == 3:
                     FFX_Battle.afterBlitz3(earlyHaste)
+                    print("Battles are done. Now waiting for storyline to wrap up.")
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():

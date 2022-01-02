@@ -2,167 +2,455 @@ import FFX_Xbox
 import time
 import FFX_Logs
 import FFX_memory
+import FFX_blitzPathing
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def blitzMain(forceBlitzWin):
-    aurochsFirst = blitzStart()
-    
-    ballControl = 0
-    manualMovement()
-    
-    print("Ready to continue onward.")
-    allDefense() #First half actions here.
-    
-    print("Start of halftime")
-    FFXC.set_neutral()
-    halfTimeXP()
-    if forceBlitzWin == True:
-        FFX_memory.blitzballPatriotsStyle()
-        #Why not cheat a bit? Works for Bill Belichick. Darth Hoodie anyone?
-    
-    secondHalfPrep()
-    print("End of halftime")
-    
-    while FFX_memory.getStoryProgress() < 583:    
-        if FFX_memory.getMap() != 62: #Wakka scene
-            FFXC.set_value('BtnB', 1)
-            time.sleep(0.04)
-            FFXC.set_value('BtnB', 0)
-            time.sleep(0.04)
-        else:
-            allDefense() #Now with Wakka in the game
-    
-    print("Game over. Thanks for playing!")
-    return True
+playerArray = [0,0,0,0,0,0,0,0,0,0,0,0]
 
-def blitzStart():
-    counter = 0
-    ready = 0
-    skipCount = 0
-    print("Ready to start Blitz match. Just going to do some clicking...")
-    while FFX_memory.blitzGameActive() == False:
-        if FFX_memory.menuControl():
-            skipCount += 1
-            print("Dialog skip ", skipCount)
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuB()
-    
-    aurochsFirst = True
-    time.sleep(12) #Delay so that the coords have time to commit.
-    blitzCoords = FFX_memory.blitzCoords()
-    print("Coords: ", blitzCoords)
-    if blitzCoords[0] > 10:
-        print("Aurochs get the ball to start.")
-        aurochsFirst = True
-    elif blitzCoords[0] < -10:
-        print("Opposing team gets the ball to start.")
-        aurochsFirst = False
+#Initialize the player array
+for i in range(12):
+    playerArray[i] = FFX_memory.blitzActor(playerNum = i)
+
+
+def goersScoreFirst():
+    return FFX_memory.diagProgressFlag() in [47, 48, 49]
+
+def halftimeDialog():
+    return FFX_memory.diagProgressFlag() in [45,46]
+
+def selectMovement():
+    return FFX_memory.blitzMenuNum() == 146
+
+def selectFormation():
+    return FFX_memory.blitzMenuNum() == 133
+
+def selectBreakthrough():
+    return FFX_memory.blitzMenuNum() in [12, 16, 18, 23, 28]
+
+def selectAction():
+    return FFX_memory.blitzMenuNum() == 52
+
+def selectPassTarget():
+    return FFX_memory.blitzMenuNum() == 226
+
+def selectShotType():
+    return FFX_memory.blitzMenuNum() == 117
+
+def targettedPlayer():
+    return FFX_memory.blitzTargetPlayer()
+
+def activeClock():
+    return not FFX_memory.blitzClockPause()
+
+def aurochsControl():
+    return FFX_memory.blitzTargetPlayer() < 8
+
+def controllingPlayer():
+    return FFX_memory.blitzCurrentPlayer()
+
+def halfSummaryScreen():
+    return FFX_memory.getMap() == 212
+
+def newHalf():
+    return FFX_memory.getMap() == 347
+
+def halftimeSpam():
+    FFX_memory.clickToDiagProgress(20)
+
+def gameClock():
+    return FFX_memory.blitzClock()
+
+def prepHalf():
+    #Map = 347, Dialog = 20
+    print("Prepping for second half.")
+    while FFX_memory.getMap() != 62:
+        if FFX_memory.diagProgressFlag() in [20,134]:
+            if FFX_memory.blitzCharSelectCursor() != 6:
+                FFX_Xbox.tapA()
+            else:
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(5)
+        elif FFX_memory.diagProgressFlag() == 40:
+            if FFX_memory.blitzProceedCursor() == 1:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuB()
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
+    print("Prep complete.")
+
+def Storyline(forceBlitzWin):
+    current = FFX_memory.getStoryProgress()
+    if current == 540:
+        if forceBlitzWin:
+            FFX_memory.blitzballPatriotsStyle()
+        print("Halftime hype")
+        FFX_memory.clickToDiagProgress(164)
+        FFX_memory.clickToDiagProgress(20)
+    elif current == 560 and FFX_memory.diagProgressFlag() > 1:
+        print("Wakka story happening.")
+        FFX_memory.clickToDiagProgress(11)
+    #First half is 535
+    #Hype halftime is 540
+    #Second half starts on 560
+    #575 - 9
+
+def cursor1():
+    return FFX_memory.blitzCursor()
+
+def gameStage():
+    #Stage 0: Killing time
+    #Stage 1: Positioning Defender so Tidus can shoot/score
+    #Stage 2: Pass to Tidus
+    #Stage 3: Shoot for goal
+    currentStage = 0
+    if FFX_memory.getStoryProgress() < 560: #First half
+        stages = [0, 60, 300, 300, 300]
+    elif FFX_memory.getStoryProgress() == 560: #Second half, before Tidus/Wakka swap
+        stages = [0, 50, 120, 145, 163]
     else:
-        print("Could not determine who gets the ball first.")
-        aurochsFirst = False
-    print("Aurochs got the ball first? ", aurochsFirst)
-    return aurochsFirst
+        stages = [0, 180, 240, 265, 283]
+    if abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 1:
+        currentStage = 0
+    else:
+        for i in range(5):
+            if stages[i] < gameClock():
+                currentStage = i
+    #print("Stage: ", currentStage, " - Clock", gameClock())
+    return currentStage
+    
 
-def allDefense():
-    complete = False
-    while complete == False:
-        if FFX_memory.userControl():
-            #print("Running")
-            player = FFX_memory.blitzTargetPlayer()
-            clock = FFX_memory.blitzClockMenu()
+def blitzMovement():
+    FFXC = FFX_Xbox.controllerHandle()
+    currentStage = gameStage()
+    updatePlayerArray()
+    
+    #Now to determine what we want to do with the stage.
+    if currentStage == 0:
+        #print("Pass to player 3, then hide in goal. ", controllingPlayer())
+        if gameClock() < 1:
             FFXC.set_movement(1, 0)
-            #if FFX_memory.diagSkipPossible():
+        elif controllingPlayer() != 5:
+            try:
+                if playerArray[controllingPlayer() - 2].getCoords()[1] > -450:
+                    FFXC.set_movement(1, 0)
+                else:
+                    plannedAction = 'pass'
+                    updatePlayerArray()
+                    if plannedAction == 'pass':
+                        FFX_Xbox.tapX()
+                    else:
+                        targetCoords = [playerArray[7].getCoords()[0], playerArray[7].getCoords()[1] - 360]
+                        FFX_blitzPathing.setMovement(targetCoords)
+            except Exception as e:
+                doNothing = True
+        else:
+            FFX_blitzPathing.setMovement([0, -600])
+    elif currentStage == 1: #Still hide unless the defender comes out
+        if controllingPlayer() == 2:
+            #Tidus has the ball behind enemy lines
+            if FFX_blitzPathing.setMovement([-40, 562]):
+                FFX_Xbox.tapX()
+        elif controllingPlayer() != 5:
+            try:
+                if playerArray[controllingPlayer() - 2].getCoords()[1] > -450:
+                    FFXC.set_movement(1, 0)
+                else:
+                    FFX_Xbox.tapX()
+            except Exception as e:
+                doNothing = True
+        elif playerArray[10].getCoords()[1] < -100:
+            if playerArray[0].getCoords()[1] - playerArray[10].getCoords()[1] > 250:
+                FFX_Xbox.tapX()
+            else:
+                if playerArray[10].getCoords()[0] < -350:
+                    targetCoords = [playerArray[10].getCoords()[0] + 80, playerArray[10].getCoords()[1] - 180]
+                else:
+                    targetCoords = [playerArray[10].getCoords()[0], playerArray[10].getCoords()[1] - 250]
+                FFX_blitzPathing.setMovement(targetCoords)
+        else:
+            if playerArray[7].getCoords()[1] < playerArray[8].getCoords()[1]:
+                if playerArray[7].getCoords()[1] < -160:
+                    FFX_blitzPathing.setMovement([0, -600])
+                else:
+                    targetCoords = [playerArray[7].getCoords()[0], playerArray[7].getCoords()[1] - 360]
+                    FFX_blitzPathing.setMovement(targetCoords)
+            else:
+                if playerArray[8].getCoords()[1] < -160:
+                    FFX_blitzPathing.setMovement([0, -600])
+                else:
+                    targetCoords = [playerArray[8].getCoords()[0], playerArray[8].getCoords()[1] - 360]
+                    FFX_blitzPathing.setMovement(targetCoords)
+    elif currentStage == 2: #Start moving forward. Pass if defender is deep.
+        if controllingPlayer() == 2:
+            #Tidus has the ball behind enemy lines
+            if FFX_blitzPathing.setMovement([-40, 552]):
+                FFX_Xbox.tapX()
+        elif controllingPlayer() != 5:
+            FFX_Xbox.tapX()
+        elif playerArray[0].getCoords()[1] - playerArray[10].getCoords()[1] > 100 \
+            or playerArray[10].getCoords()[1] < 200:
+            if playerArray[0].getCoords()[1] - playerArray[10].getCoords()[1] > 250:
+                FFX_Xbox.tapX()
+            else:
+                targetCoords = [playerArray[10].getCoords()[0] - 80, playerArray[10].getCoords()[1] - 250]
+                FFX_blitzPathing.setMovement(targetCoords)
+        else:
+            updatePlayerArray()
+            #print("Test - ", playerArray[3].getCoords())
+            if playerArray[3].getCoords()[1] < -250:
+                if playerArray[3].getCoords()[1] < -481:
+                    FFX_blitzPathing.setMovement([-206, -480])
+                elif playerArray[3].getCoords()[1] < -394:
+                    FFX_blitzPathing.setMovement([-434, -390])
+                else:
+                    FFX_blitzPathing.setMovement([-586, 0])
+            else:
+                targetCoords = [playerArray[8].getCoords()[0] - 250, playerArray[8].getCoords()[1] - 200]
+                FFX_blitzPathing.setMovement(targetCoords)
+    elif currentStage == 3: #Pass to Tidus
+        if controllingPlayer() != 2:
+            FFX_Xbox.tapX()
+        else:
+            if FFX_blitzPathing.setMovement([-197, 552]):
+                FFX_Xbox.tapX()
+    else: #Shoot the ball
+        FFX_Xbox.tapX()
+
+def decideAction():
+    FFXC = FFX_Xbox.controllerHandle()
+    currentStage = gameStage()
+    
+    #Now to determine what we want to do with the stage.
+    if selectShotType():
+        if cursor1() == 1:
             FFX_Xbox.tapB()
         else:
-            FFXC.set_neutral()
-            menu = FFX_memory.blitzMenuNum()
-            if FFX_memory.menuControl() == 1 and menu == 0:
-                print("Dialog is open. Probably Goers just scored.")
-                FFX_Xbox.menuB()
-            elif FFX_memory.menuControl() and (menu == 38 or menu == 24 or menu == 102):
-                print("Breakthrough menu.")
-                breakOnePassLast()
-            elif FFX_memory.getMap() != 62:
-                print("Story progressing")
-                complete = True
-            elif FFX_memory.diagSkipPossible():
-                FFX_Xbox.menuB()
-            #else:
-                #print("Nothingness")
-
-def breakOnePassLast():
-    FFX_memory.awaitMenuControl()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Break all
-    time.sleep(0.05)
-    FFX_memory.awaitMenuControl()
-    FFX_Xbox.menuUp() #Try to continue the Dribble
-    FFX_Xbox.menuB()
-    time.sleep(0.8)
-    FFX_Xbox.menuUp() #Try to continue the Dribble
-    FFX_Xbox.menuB()
-    time.sleep(0.05)
-
-def manualMovement():
-    print("Attempting to take manual control.")
-    
-    #breakOnePassLast()
-    #time.sleep(2)
-    complete = False
-    while complete == False:
-        menuNum = FFX_memory.blitzMenuNum()
-        if FFX_memory.getStoryProgress() > 535:
-            print("Could not open the menu.")
-            break
-        if menuNum == 39 or menuNum == 29:
-            print("Formation menu, not quite right.")
-            FFX_memory.awaitMenuControl()
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            time.sleep(0.3)
-        elif menuNum == 20:
-            print("Movement menu has been opened.")
-            FFX_memory.awaitMenuControl()
             FFX_Xbox.menuDown()
-            FFX_Xbox.menuB()
-            time.sleep(0.3)
-            FFX_memory.awaitMenuControl()
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            time.sleep(0.3)
-            complete = True
-        elif menuNum == 38:
-            print("Something is wrong. Break-through menu is open.")
-            FFX_Xbox.menuB()
-            time.sleep(5)
+            FFX_memory.waitFrames(3)
+    elif currentStage == 0:
+        if controllingPlayer() != 5:
+            if selectBreakthrough():
+                if cursor1() == 0:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.tapB()
+            elif selectAction():
+                if cursor1() != 0:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.tapB()
+            elif selectPassTarget():
+                if targettedPlayer() != 5:
+                    FFX_Xbox.menuUp()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
         else:
-            player = FFX_memory.blitzTargetPlayer()
-            if player == 12 or player == 18:
-                print("Opposing team has the ball.")
-                time.sleep(0.5)
-            elif FFX_memory.diagSkipPossible():
-                FFX_Xbox.tapB()
+            if cursor1() == 0:
+                FFX_Xbox.menuUp()
             else:
-                FFX_Xbox.menuY()
-                print("Attempting to open menu.")
+                FFX_Xbox.tapB()
+    elif currentStage in [1, 2]:
+        if controllingPlayer() == 2:
+            if selectBreakthrough():
+                if cursor1() == 0:
+                    FFX_Xbox.menuUp()
+                    FFX_memory.waitFrames(1)
+                else:
+                    FFX_Xbox.tapB()
+            elif selectAction():
+                if cursor1() != 1:
+                    FFX_Xbox.menuDown()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
+        elif controllingPlayer() != 5:
+            if selectBreakthrough():
+                if cursor1() == 0:
+                    FFX_Xbox.menuUp()
+                else:
+                    FFX_Xbox.tapB()
+            elif selectAction():
+                if cursor1() != 0:
+                    FFX_Xbox.menuUp()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
+            elif selectPassTarget():
+                if targettedPlayer() != 5:
+                    FFX_Xbox.menuDown()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
+        else:
+            if playerArray[0].getCoords()[1] - playerArray[10].getCoords()[1] > 150:
+                if selectBreakthrough():
+                    if cursor1() == 0:
+                        FFX_Xbox.menuUp()
+                        FFX_memory.waitFrames(3)
+                    else:
+                        FFX_Xbox.tapB()
+                elif selectAction():
+                    if cursor1() != 0:
+                        FFX_Xbox.menuUp()
+                        FFX_memory.waitFrames(3)
+                    else:
+                        FFX_Xbox.tapB()
+                elif selectPassTarget():
+                    if targettedPlayer() != 2:
+                        FFX_Xbox.menuDown()
+                        FFX_memory.waitFrames(3)
+                    else:
+                        FFX_Xbox.tapB()
+            elif cursor1() == 0:
+                FFX_Xbox.menuUp()
+                FFX_memory.waitFrames(3)
+            else:
+                FFX_Xbox.tapB()
+    elif currentStage == 3: #Pass to Tidus
+        if controllingPlayer() != 2:
+            if selectBreakthrough():
+                if cursor1() == 0:
+                    FFX_Xbox.menuUp()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
+            elif selectAction():
+                if cursor1() != 0:
+                    FFX_Xbox.menuUp()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
+            elif selectPassTarget():
+                if targettedPlayer() != 2:
+                    FFX_Xbox.menuDown()
+                    FFX_memory.waitFrames(3)
+                else:
+                    FFX_Xbox.tapB()
+        else:
+            if cursor1() == 0:
+                FFX_Xbox.menuUp()
+                FFX_memory.waitFrames(3)
+            else:
+                FFX_Xbox.tapB()
+    else: #Shoot the ball
+        if selectBreakthrough():
+            if cursor1() == 0:
+                FFX_Xbox.menuUp()
+                FFX_memory.waitFrames(3)
+            else:
+                FFX_Xbox.tapB()
+        elif selectAction():
+            if cursor1() != 1:
+                FFX_Xbox.menuDown()
+                FFX_memory.waitFrames(3)
+            else:
+                FFX_Xbox.tapB()
 
-def halfTimeXP():
-    print("Now it's halftime.")
-    while FFX_memory.getStoryProgress() < 560:
-        FFX_Xbox.menuB()
+def updatePlayerArray():
+    for i in range(12):
+        playerArray[i].updateCoords()
 
-def secondHalfPrep():
-    print("Setting up for second half.")
-    while FFX_memory.blitzClockMenu() != 187:
-        time.sleep(0.02)
-    time.sleep(5)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuB()
-    time.sleep(0.8)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuB()
-    FFX_Xbox.SkipDialog(3)
-    print("Ready to go.")
+def blitzMain(forceBlitzWin):
+    print("-Start of Blitzball program")
+    print("-First, clicking to the start of the match.")
+    FFX_memory.clickToStoryProgress(535)
+    print("-Match is now starting.")
+    
+    FFXC = FFX_Xbox.controllerHandle()
+    movementSetFlag = False
+    lastState = 0
+    lastMenu = 0
+    lastPhase = 99
+    while FFX_memory.getStoryProgress() < 582: #End of Blitz
+        if lastPhase != gameStage() and gameClock() > 0 and gameClock() < 301:
+            lastPhase = gameStage()
+            print("--------------------------------------")
+            print("--------------------------------------")
+            print("New phase reached. ", lastPhase)
+            print("--------------------------------------")
+            print("--------------------------------------")
+        if goersScoreFirst() or halftimeDialog():
+            if lastMenu != 3:
+                print("Dialog on-screen")
+                lastMenu = 3
+            FFXC.set_neutral()
+            FFX_Xbox.tapB()
+        if FFX_memory.getMap() == 62:
+            if activeClock():
+                if lastState != 1:
+                    print("Clock running.")
+                    lastState = 1
+                if aurochsControl():
+                    if lastMenu != 2:
+                        print("Aurochs are in control of the ball.")
+                        lastMenu = 2
+                    if movementSetFlag == False:
+                        FFX_Xbox.tapY()
+                    else:
+                        blitzMovement()
+                else:
+                    if lastMenu != 8:
+                        print("Opponent in control")
+                        lastMenu = 8
+            else:
+                FFXC.set_neutral()
+                if lastState != 2:
+                    print("Menu should be coming up")
+                    lastState = 2
+                #FFX_memory.menuControl() # Could use this too
+                #print(FFX_memory.blitzMenuNum())
+                if selectMovement():
+                    if lastMenu != 4:
+                        print("Selecting movement method")
+                        lastMenu = 4
+                    if cursor1() == 1:
+                        FFX_Xbox.tapB()
+                        movementSetFlag = True
+                    else:
+                        FFX_Xbox.menuDown()
+                        print(cursor1())
+                elif selectFormation():
+                    if lastMenu != 5:
+                        print("Selecting Formation")
+                        lastMenu = 5
+                    if cursor1() == 0:
+                        FFX_Xbox.tapB()
+                    else:
+                        FFX_Xbox.menuUp()
+                elif selectBreakthrough():
+                    if lastMenu != 6:
+                        print("Selecting Break-through")
+                        lastMenu = 6
+                    decideAction()
+                elif selectPassTarget():
+                    if lastMenu != 11:
+                        print("Selecting pass target.")
+                        lastMenu = 11
+                    decideAction()
+                elif selectShotType():
+                    if lastMenu != 12:
+                        print("Selecting shot type")
+                        lastMenu = 12
+                    decideAction()
+                elif selectAction():
+                    if lastMenu != 7:
+                        print("Selecting action (Shoot/Pass/Dribble)")
+                        lastMenu = 7
+                    decideAction()
+        else:
+            if lastState != 3:
+                print("Screen outside the Blitz sphere")
+                lastState = 3
+            if halfSummaryScreen():
+                FFX_Xbox.tapB()
+            elif newHalf():
+                prepHalf()
+            else:
+                Storyline(forceBlitzWin)
+    
+    print("Blitz game has completed.")
+    #FFX_Xbox.clearSavePopup()

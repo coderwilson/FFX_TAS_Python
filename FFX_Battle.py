@@ -1087,7 +1087,7 @@ def afterBlitz1(earlyHaste):
                 hpValues = FFX_memory.getBattleHP()
                 cam = FFX_memory.getCamera()
                 if wakkaTurns < 3:
-                    attack('up')
+                    attackByNum(22, 'l')
                 elif hpValues[2] < 200: #Tidus HP
                     usePotionCharacter(0, 'u')
                 elif hpValues[1] < 100: #Wakka HP
