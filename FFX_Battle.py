@@ -4111,17 +4111,22 @@ def attackByNum(num, direction):
     time.sleep(0.07)
     
     if FFX_memory.getEnemyCurrentHP()[num - 20] != 0:
-        if direction == 'l':
-            while FFX_memory.battleTargetId() != num:
+        while FFX_memory.battleTargetId() != num:
+            if direction == 'l':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'u'
                 FFX_Xbox.menuLeft()
-        elif direction == 'r':
-            while FFX_memory.battleTargetId() != num:
+            elif direction == 'r':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'd'
                 FFX_Xbox.menuRight()
-        elif direction == 'u':
-            while FFX_memory.battleTargetId() != num:
+            elif direction == 'u':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'l'
                 FFX_Xbox.menuUp()
-        elif direction == 'd':
-            while FFX_memory.battleTargetId() != num:
+            elif direction == 'd':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'r'
                 FFX_Xbox.menuDown()
         
     FFX_Xbox.menuB()
