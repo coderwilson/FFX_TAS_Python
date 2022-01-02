@@ -4,6 +4,7 @@ import time
 import FFX_memory
 import FFX_Screen
 import pyautogui
+import math
 
 #import FFX_memory
 #import FFX_Battle
@@ -108,29 +109,28 @@ def controllerHandle():
 
 def skipScene():
     print("Skip cutscene")
+    FFX_memory.waitFrames(2)
     FFXC.set_value('BtnStart', 1) #Generate button to skip
-    time.sleep(0.035)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnStart', 0)
-    time.sleep(0.035)
-    FFXC.set_value('BtnX', 1) #Perform the skip
-    time.sleep(0.035)
-    FFXC.set_value('BtnX', 0)
-    time.sleep(0.07)
+    FFX_memory.waitFrames(2)
+    tapX()
+    #FFX_memory.waitFrames(2)
     SkipDialog(2)
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value('BtnStart', 1) #Generate button to skip
-    time.sleep(0.07)
+    FFX_memory.waitFrames(30 * 0.07)
     FFXC.set_value('BtnStart', 0)
-    time.sleep(0.105)
+    FFX_memory.waitFrames(30 * 0.105)
     FFXC.set_value('BtnX', 1) #Perform the skip
-    time.sleep(0.035)
+    FFX_memory.waitFrames(30 * 0.035)
     FFXC.set_value('BtnX', 0)
     FFXC.set_value('BtnStart', 1) #Before despawn, regenerate the button for use in a future scene.
-    time.sleep(0.035)
+    FFX_memory.waitFrames(30 * 0.035)
     FFXC.set_value('BtnStart', 0)
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
     
 def skipStoredScene(skipTimer):
     print("Mashing skip button")
@@ -141,22 +141,22 @@ def skipStoredScene(skipTimer):
     while currentTime < clickTimer :
         
         FFXC.set_value('BtnX', 1) #Perform the skip
-        time.sleep(0.035)
+        FFX_memory.waitFrames(30 * 0.035)
         FFXC.set_value('BtnX', 0)
-        time.sleep(0.035)
+        FFX_memory.waitFrames(30 * 0.035)
         currentTime = time.time()
     print("Mashing skip button - Complete")
 
 def Attack():
     print("Basic attack")
     FFXC.set_value('BtnB', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(30 * 0.08)
     FFXC.set_value('BtnB', 0)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(30 * 0.08)
     FFXC.set_value('BtnB', 1)
-    time.sleep(0.08)
+    FFX_memory.waitFrames(30 * 0.08)
     FFXC.set_value('BtnB', 0)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     
 def touchSaveSphere():
     FFXC.set_neutral()
@@ -164,7 +164,7 @@ def touchSaveSphere():
     while FFX_memory.userControl():
         tapB()
         FFX_memory.waitFrames(3)
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(15)
     while not FFX_memory.userControl():
         if FFX_memory.menuControl():
             if not FFX_memory.saveMenuCursor():
@@ -184,24 +184,23 @@ def touchSaveSphere():
     #print("Save Mark 2")
     #while not FFX_memory.userControl():
     #    tapB()
-    #    time.sleep(0.7)
+    #    FFX_memory.waitFrames(30 * 0.7)
     #FFX_memory.awaitControl()
     FFXC.set_neutral()
-    time.sleep(0.035)
+    FFX_memory.waitFrames(30 * 0.035)
 
 def SkipDialog( Keystrokes ):
-    Keystrokes
-    print("Mashing B")
-    currentTime = time.time()
-    print("Current Time: ", currentTime)
-    clickTimer = currentTime + Keystrokes
-    print("Clicking for number of seconds: ", Keystrokes)
-    while currentTime < clickTimer :
-        FFXC.set_value('BtnB', 1)
-        time.sleep(0.04)
-        FFXC.set_value('BtnB', 0)
-        time.sleep(0.04)
-        currentTime = time.time()
+    # 2 frames per button mash
+    num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
+    print(f"Mashing B {num_repetitions} number of times.")
+    for _ in range(num_repetitions):
+        tapB()
+    print("Mashing B - Complete")
+    
+def MashNTimes( num_repetitions ):
+    print(f"Mashing B {num_repetitions} number of times.")
+    for _ in range(num_repetitions):
+        tapB()
     print("Mashing B - Complete")
 
 def SkipDialogSpecial( Keystrokes ):
@@ -214,18 +213,18 @@ def SkipDialogSpecial( Keystrokes ):
     while currentTime < clickTimer :
         FFXC.set_value('BtnB', 1)
         FFXC.set_value('BtnA', 1)
-        time.sleep(0.035)
+        FFX_memory.waitFrames(30 * 0.035)
         FFXC.set_value('BtnB', 0)
         FFXC.set_value('BtnA', 0)
-        time.sleep(0.035)
+        FFX_memory.waitFrames(30 * 0.035)
         currentTime = time.time()
     print("Mashing B - Complete")
 
 def skipSave():
     print("Skipping save dialog popup")
-    time.sleep(0.4)
+    FFX_memory.waitFrames(30 * 0.4)
     menuA()
-    time.sleep(0.1)
+    FFX_memory.waitFrames(30 * 0.1)
     menuB()
 
 def menuUp():
@@ -353,27 +352,27 @@ def tidusOD():
     #it continues to be used from other files outside of that library.
     print("Tidus overdrive activating")
     menuLeft()
-    time.sleep(0.8)
+    FFX_memory.waitFrames(30 * 0.8)
     menuB()
-    time.sleep(0.4)
+    FFX_memory.waitFrames(30 * 0.4)
     menuB()
-    time.sleep(0.4)
+    FFX_memory.waitFrames(30 * 0.4)
     menuB() #Activate overdrive
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     menuB()
-    time.sleep(0.25)
+    FFX_memory.waitFrames(30 * 0.25)
     menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     menuB()
-    time.sleep(0.35)
+    FFX_memory.waitFrames(30 * 0.35)
     menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     menuB()
-    time.sleep(0.25)
+    FFX_memory.waitFrames(30 * 0.25)
     menuB()
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
     menuB()
 
 def weapSwap(position):
@@ -383,31 +382,31 @@ def weapSwap(position):
     if position == 0:
         SkipDialog(2)
     else:
-        time.sleep(0.5)
+        FFX_memory.waitFrames(30 * 0.5)
         menuB()
-        time.sleep(0.07)
+        FFX_memory.waitFrames(30 * 0.07)
         while position > 0:
             menuDown()
             position -= 1
         menuB()
         menuB()
-        time.sleep(0.3)
+        FFX_memory.waitFrames(30 * 0.3)
 
 def armorSwap(position):
     print("Armor swap, armor in position: ", position)
     menuRight()
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     menuDown()
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     menuB()
-    time.sleep(0.7)
+    FFX_memory.waitFrames(30 * 0.7)
     armor = 0
     while armor < position :
         menuDown()
         armor += 1
     menuB()
     menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
 
 def clearSavePopup(clickToDiagNum=0):
     FFXC = controllerHandle()
@@ -455,32 +454,32 @@ def awaitSave_old() :
 
 def remove():
     print("Controller may freeze the program here. If so, please restart your PC.")
-    #time.sleep(2)
+    #FFX_memory.waitFrames(30 * 2)
     #FFXC.UnPlug(FFXC)
 
 def gridUp():
     FFXC.set_value('Dpad', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(30 * 0.12)
 
 def gridDown():
     FFXC.set_value('Dpad', 2)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(30 * 0.12)
 
 def gridLeft():
     FFXC.set_value('Dpad', 4)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(30 * 0.12)
 
 def gridRight():
     FFXC.set_value('Dpad', 8)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.12)
+    FFX_memory.waitFrames(30 * 0.12)
 
 def clickToPixel(x,y,rgb):
     counter = 0

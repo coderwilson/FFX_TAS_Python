@@ -11,7 +11,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def NamingTidus_slow():
     #Clear Tidus
-    time.sleep(0.1)
+    FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
@@ -43,14 +43,14 @@ def NamingTidus():
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate: ", Gamestate)
-    #time.sleep(20)
+    #FFX_memory.waitFrames(30 * 20)
     
     #Old version
     #FFXC.set_movement(0, 1)
-    #time.sleep(0.1)
+    #FFX_memory.waitFrames(30 * 0.1)
     #FFXC.set_neutral()
     #FFXC.set_value('BtnB', 1)
-    #time.sleep(0.1)
+    #FFX_memory.waitFrames(30 * 0.1)
     #FFXC.set_value('BtnB', 0)
     
     #New version
@@ -123,7 +123,7 @@ def listenStory(gameLength):
                     FFXC.set_movement(0, -1)
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
-                time.sleep(0.2)
+                FFX_memory.waitFrames(6)
                 while not FFX_memory.userControl():
                     if FFX_memory.diagSkipPossible():
                         FFX_Xbox.tapB()
@@ -152,11 +152,12 @@ def listenStory(gameLength):
             elif FFX_memory.cutsceneSkipPossible():
                 skips += 1
                 if skips == 3:
-                    time.sleep(5)
+                    print("Special Skip")
+                    FFX_memory.waitFrames(130)
                     FFXC.set_value('BtnStart', 1) #Generate button to skip later
-                    time.sleep(0.35)
+                    FFX_memory.waitFrames(1)
                     FFXC.set_value('BtnStart', 0)
-                    time.sleep(5)
+                    FFX_memory.waitFrames(120)
                 else:
                     FFX_Xbox.skipScene()
 
@@ -166,48 +167,48 @@ def ammesBattle():
     
     while FFX_memory.battleActive():
         FFX_Xbox.tapB()
-    time.sleep(0.5) #Just for no overlap
+    FFX_memory.waitFrames(30 * 0.5) #Just for no overlap
     FFX_Xbox.clickToBattle()
     
     #Auron overdrive tutorial
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(3) #Initiate overdrive
-    time.sleep(1) #Static delay, the same every time.
+    FFX_memory.waitFrames(30 * 1) #Static delay, the same every time.
     
     #Doing the actual overdrive
     FFXC.set_value('Dpad', 2)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 4)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 8)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnShoulderL', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnShoulderL', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnShoulderR', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnShoulderR', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnA', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnA', 0)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnB', 1)
-    time.sleep(0.04)
+    FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_value('BtnB', 0)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
 
 def AfterAmmes():
     FFX_memory.clickToControl()
@@ -218,11 +219,11 @@ def AfterAmmes():
             #Map changes and events
             if checkpoint == 6: #Save sphere
                 FFXC.set_neutral()
-                time.sleep(0.2)
+                FFX_memory.waitFrames(30 * 0.2)
                 FFX_Xbox.menuB()
-                time.sleep(1)
+                FFX_memory.waitFrames(30 * 1)
                 FFX_Xbox.menuB()
-                time.sleep(1)
+                FFX_memory.waitFrames(30 * 1)
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuB()
                 checkpoint += 1
@@ -247,12 +248,12 @@ def AfterAmmes():
 def SwimToJecht() :
     #FFX_memory.awaitControl()
     
-    #time.sleep(1.5)
+    #FFX_memory.waitFrames(30 * 1.5)
     print("Swimming to Jecht")
     
     FFXC.set_value('BtnA', 1)
     FFXC.set_movement(-1, -1)
-    time.sleep(8)
+    FFX_memory.waitFrames(30 * 8)
     while FFX_memory.userControl():
         FFXC.set_movement(-1, 1)
     
@@ -264,21 +265,21 @@ def SwimToJecht() :
     #Next, swim to Baaj temple
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 0)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_movement(1, 1)
-    time.sleep(0.6)
+    FFX_memory.waitFrames(30 * 0.6)
     FFXC.set_movement(0, 1)
-    time.sleep(5)
+    FFX_memory.waitFrames(30 * 5)
     FFXC.set_movement(-1, 1)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_movement(0, 1)
-    time.sleep(14)
+    FFX_memory.waitFrames(30 * 14)
     FFXC.set_movement(-1, 1)
-    time.sleep(1.5) # Line up with stairs
+    FFX_memory.waitFrames(30 * 1.5) # Line up with stairs
     
     FFXC.set_movement(0, 1)
-    #time.sleep(600)
-    time.sleep(3)
+    #FFX_memory.waitFrames(30 * 600)
+    FFX_memory.waitFrames(30 * 3)
     
     while FFX_memory.getMap() == 48:
         pos = FFX_memory.getCoords()
@@ -296,4 +297,4 @@ def SwimToJecht() :
                 FFXC.set_movement(0, 1)
     
     FFXC.set_neutral()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)

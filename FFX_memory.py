@@ -223,7 +223,7 @@ def clickToControl2():
 def clickToControl3():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
-    waitFrames(30 * 0.02)
+    waitFrames(6)
     while not userControl():
         if battleActive():
             while battleActive():
@@ -1351,7 +1351,7 @@ def diagSkipPossible_old():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(30 * 0.035)
+        waitFrames(1)
         return True
     else:
         return False
@@ -1362,7 +1362,7 @@ def diagSkipPossible():
     key = baseValue + 0x00F2FED0
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(30 * 0.035)
+        waitFrames(1)
         return True
     else:
         key = baseValue + 0x0085A03C
@@ -2234,7 +2234,7 @@ def end():
 
 def getFrameCount():
     global baseValue
-    key = baseValue + 0x00F25D54
+    key = baseValue + 0x0088FDD8
     return process.readBytes(key, 4)
 
 def nameAeonReady():

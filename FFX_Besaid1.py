@@ -13,7 +13,7 @@ def Beach():
     print("Starting Besaid section. Beach")
     FFXC.set_movement(0, -1)
     FFX_memory.awaitControl()
-    time.sleep(4.5)
+    FFX_memory.waitFrames(30 * 4.5)
     FFXC.set_neutral()
     
     #Pathing, lots of pathing.
@@ -109,7 +109,7 @@ def trials():
             elif checkpoint == 26: #Insert Besaid sphere, and push to completion
                 FFX_memory.clickToEventTemple(6)
                 FFXC.set_movement(0, 1)
-                time.sleep(10)
+                FFX_memory.waitFrames(30 * 10)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 34: #Night, talk to Yuna and Wakka
@@ -142,9 +142,9 @@ def trials():
                 #Name for Valefor
                 FFX_Xbox.nameAeon()
                 
-                #time.sleep(0.2)
+                #FFX_memory.waitFrames(30 * 0.2)
                 #FFX_Xbox.menuB()
-                #time.sleep(0.2)
+                #FFX_memory.waitFrames(30 * 0.2)
                 #FFX_Xbox.menuUp()
                 #FFX_Xbox.menuB()
                 checkpoint += 1 #To the night scene
@@ -177,11 +177,11 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 5: #Shopkeeper
                 FFXC.set_movement(-1, -1)
-                time.sleep(0.2)
+                FFX_memory.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
-                time.sleep(0.5)
+                FFX_memory.waitFrames(30 * 0.5)
                 FFX_Xbox.tapB()
-                time.sleep(0.5)
+                FFX_memory.waitFrames(30 * 0.5)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.tapB()
                 FFX_memory.clickToControl3()
@@ -226,7 +226,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 60: #Beach, save sphere
                 FFXC.set_neutral()
-                time.sleep(0.2)
+                FFX_memory.waitFrames(30 * 0.2)
                 FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
@@ -273,7 +273,7 @@ def leaving():
                 while not FFX_memory.menuOpen():
                     if FFX_Screen.BattleScreen():
                         FFX_Battle.aeonSpell(0)
-                        time.sleep(0.4)
+                        FFX_memory.waitFrames(30 * 0.4)
                 print("Now to open the menu")
                 FFX_memory.clickToControl()
                 FFX_memory.fullPartyFormat('Besaid')
@@ -284,7 +284,7 @@ def leaving():
                     if FFX_Screen.BattleScreen():
                         FFX_Battle.escapeOne()
                         escapeAttempts += 1
-                        time.sleep(0.2)
+                        FFX_memory.waitFrames(30 * 0.2)
                 FFX_memory.clickToControl()
                 FFX_Logs.writeStats("Besaid escape attempts:")
                 FFX_Logs.writeStats(str(escapeAttempts))

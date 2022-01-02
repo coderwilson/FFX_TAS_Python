@@ -89,7 +89,7 @@ autoEggHunt = True
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-seedHunt = True #Update this to decide new seed or known seed
+seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 123 #New seed number, only used if newSeed == True
 ####################################################################################################
 
@@ -147,7 +147,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")

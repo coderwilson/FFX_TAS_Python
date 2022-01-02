@@ -17,11 +17,11 @@ def Entrance():
     
     #First, we need to change aeon summons
     FFX_memory.openMenu()
-    time.sleep(0.6)
+    FFX_memory.waitFrames(30 * 0.6)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
@@ -46,12 +46,12 @@ def Entrance():
                 print("Checkpoint reached: ", checkpoint)
     
     #FFXC.set_movement(0, 1)
-    #time.sleep(1)
+    #FFX_memory.waitFrames(30 * 1)
     #FFXC.set_movement(1, 1)
-    #time.sleep(0.3)
+    #FFX_memory.waitFrames(30 * 0.3)
     #FFXC.set_movement(0, 1)
     #print("Mark 1")
-    #time.sleep(35)
+    #FFX_memory.waitFrames(30 * 35)
     #print("Mark 2")
     FFXC.set_neutral()
     
@@ -66,7 +66,7 @@ def Entrance():
             FFX_Xbox.menuB()
     
     #FFX_Battle.attack('none')
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     #FFX_Screen.awaitTurn()
     #FFX_Battle.attack('none')
     #FFX_Xbox.clickToBattle()
@@ -103,7 +103,7 @@ def Baaj_puzzle():
         if FFX_memory.userControl():
             #Events
             if checkpoint == 3:
-                time.sleep(0.4)
+                FFX_memory.waitFrames(30 * 0.4)
                 FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 5: #Flint room
@@ -154,7 +154,7 @@ def Klikk_fight() :
     
 def ABboat1() :
     FFXC.set_movement(0, -1)
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     FFX_Xbox.SkipDialog(4) #Start Sphere Grid tutorial
     FFXC.set_neutral()
     FFX_memory.clickToControl()
@@ -165,7 +165,7 @@ def ABboat1() :
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()
     
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
 
 def ABswimming1() :
     complete = 0
@@ -215,17 +215,17 @@ def ABswimming2() :
     FFX_memory.awaitControl()
     FFXC.set_movement(1, -1)
     FFXC.set_value('BtnA', 1)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFXC.set_neutral()
     FFXC.set_value('BtnA', 0)
-    time.sleep(0.035)
+    FFX_memory.waitFrames(30 * 0.035)
     FFX_Xbox.touchSaveSphere()
 
     #Now to get to it
     FFXC.set_movement(0, 1)
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     FFX_memory.clickToEvent()
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
     FFX_memory.awaitControl()
     
     pos = FFX_memory.getCoords()
@@ -257,18 +257,18 @@ def ABswimming2() :
     FFX_Battle.Tros()
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_movement(1, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_movement(1, 0)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_movement(1, 1)
-    time.sleep(5)
+    FFX_memory.waitFrames(30 * 5)
     FFXC.set_neutral()
     FFX_memory.awaitControl()
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_movement(1, 0)
-    time.sleep(30)
+    FFX_memory.waitFrames(30 * 30)
     FFXC.set_neutral()
     
     #Back onto the ship
