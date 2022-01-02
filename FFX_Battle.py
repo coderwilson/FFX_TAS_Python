@@ -877,7 +877,7 @@ def KilikaWoods(valeforCharge):
     FFX_memory.clickToControl()  # Rewards screen
     hpCheck = FFX_memory.getHP()
     if hpCheck[0] < 250 or hpCheck[1] < 250 or hpCheck[4] < 250:
-        healUp2(3)
+        healUp(3)
     else:
         print("No need to heal up. Moving onward.")
     if valeforCharge == False and FFX_memory.overdriveState()[8] == 20:
@@ -4863,9 +4863,9 @@ def healUp(chars):
     print("Mark 2")
     FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuB()
     while pos < chars:
         pos += 1

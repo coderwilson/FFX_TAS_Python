@@ -204,21 +204,16 @@ def MashNTimes( num_repetitions ):
     print("Mashing B - Complete")
 
 def SkipDialogSpecial( Keystrokes ):
-    Keystrokes
-    print("Mashing B")
-    currentTime = time.time()
-    print("Current Time: ", currentTime)
-    clickTimer = currentTime + Keystrokes
-    print("Clicking for number of seconds: ", Keystrokes, " - Special skipping")
-    while currentTime < clickTimer :
+    num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
+    print(f"Mashing A and B {num_repetitions} number of times.")
+    for _ in range(num_repetitions) :
         FFXC.set_value('BtnB', 1)
         FFXC.set_value('BtnA', 1)
-        FFX_memory.waitFrames(30 * 0.035)
+        FFX_memory.waitFrames(1)
         FFXC.set_value('BtnB', 0)
         FFXC.set_value('BtnA', 0)
-        FFX_memory.waitFrames(30 * 0.035)
-        currentTime = time.time()
-    print("Mashing B - Complete")
+        FFX_memory.waitFrames(1)
+    print("Mashing A and B - Complete")
 
 def skipSave():
     print("Skipping save dialog popup")
