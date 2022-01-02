@@ -158,7 +158,7 @@ def woodsMenuing():
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
     FFX_Xbox.menuA()
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
     
     #Now for Wakka's weapon, Scout with icestrike
     FFX_Xbox.menuUp()
@@ -168,7 +168,7 @@ def woodsMenuing():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Wakka
-    time.sleep(0.4)
+    FFX_memory.waitFrames(30 * 0.4)
     FFX_Xbox.menuB()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
@@ -193,12 +193,12 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 5: #Insert and remove, opens door
                 FFX_memory.clickToEventTemple(0)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 9: #Insert and remove, generate glyph
                 FFX_memory.clickToEventTemple(0)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 11: #Put the sphere out of the way
@@ -224,7 +224,7 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 50: #Insert and remove, opens door
                 FFX_memory.clickToEventTemple(0)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 54: #Talk to Wakka

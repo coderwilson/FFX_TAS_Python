@@ -151,7 +151,7 @@ def useFirst():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #time.sleep(0.4)
+    #FFX_memory.waitFrames(30 * 0.4)
     return True
 
 def moveFirst():
@@ -164,7 +164,7 @@ def moveFirst():
             FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     return True
 
 def moveAndUse():
@@ -179,7 +179,7 @@ def moveAndUse():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     return True
 
 def useAndMove():
@@ -197,7 +197,7 @@ def useAndMove():
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuB()
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     return True
 
 def useAndUseAgain():
@@ -212,7 +212,7 @@ def useAndUseAgain():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     return True
 
 def useShiftLeft(toon):
@@ -280,7 +280,7 @@ def useShiftLeft(toon):
 
 def useShiftRight(toon):
     print("use and shift")
-    #time.sleep(0.1)
+    #FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
     if toon == 'yuna':
@@ -299,7 +299,7 @@ def useShiftRight(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderRight()
-                time.sleep(0.3)
+                FFX_memory.waitFrames(30 * 0.3)
     if toon == 'auron':
         while not gridAuron():
             if readyUseSphere():
@@ -387,7 +387,7 @@ def moveShiftRight(toon):
     print("Ready for grid: " + toon)
 
 def useAndQuit():
-    time.sleep(0.1)
+    FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuB()
     while FFX_memory.sGridActive():
         if readyUseSphere():
@@ -490,14 +490,14 @@ def selSphere(sType, direction, shift):
             FFX_Xbox.menuUp()
         
         if menuPos == FFX_memory.getGridCursorPos():
-            time.sleep(0.1)
+            FFX_memory.waitFrames(30 * 0.1)
             if menuPos == FFX_memory.getGridCursorPos():
                 FFX_Xbox.menuB()
                 complete = True
     if shift == 'none':
         FFX_Xbox.SkipDialog(0.7)
     else:
-        time.sleep(0.2)
+        FFX_memory.waitFrames(30 * 0.2)
         if shift == 'up':
             gridUp()
         if shift == 'left':
@@ -535,10 +535,10 @@ def selSphere(sType, direction, shift):
         if shift == 'aftersk2':
             gridRight()
             gridRight()
-            time.sleep(0.1)
+            FFX_memory.waitFrames(30 * 0.1)
             gridLeft()
         if shift == 'torikku':
-            time.sleep(0.2)
+            FFX_memory.waitFrames(30 * 0.2)
             gridDown()
             gridDown()
             gridLeft()
