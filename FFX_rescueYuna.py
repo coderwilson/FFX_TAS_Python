@@ -22,20 +22,20 @@ def preEvrae():
     
     FFXC.set_movement(-1, 1)
     FFX_memory.awaitControl()
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     print("Back in cockpit. Auron/Cid arguing")
     
     FFX_memory.clickToControl()
     print("Let's go talk to Brother")
     FFXC.set_movement(0, 1)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFXC.set_movement(1, 1)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFXC.set_movement(0, 1)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFXC.set_movement(-1, 1)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(1)
     FFXC.set_neutral()
@@ -45,15 +45,15 @@ def preEvrae():
     #FFX_menu.weddingPrep()
     FFX_memory.fullPartyFormat('evrae')
     FFXC.set_movement(-1, -1)
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_movement(0, -1)
-    time.sleep(0.1)
+    FFX_memory.waitFrames(30 * 0.1)
     FFXC.set_neutral()
     FFX_Xbox.touchSaveSphere()
     FFXC.set_movement(1, 0)
-    time.sleep(0.7)
+    FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_movement(0, -1)
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_neutral()
     
     FFX_zzairShipPath.airShipPath(1)
@@ -68,31 +68,31 @@ def guards():
     
     FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     FFX_Battle.guards(1)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     FFX_Battle.guards(2)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     FFX_Battle.guards(3)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     FFX_Battle.guards(4)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     FFX_Battle.guards(5)
     
@@ -109,7 +109,7 @@ def guards():
     FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
     FFXC.set_movement(0, 1)
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_neutral()
     
     checkpoint = 0
@@ -150,7 +150,7 @@ def trials():
                     #print(cam, " | ", testCounter)
                     #testCounter += 1
                 print("Ready to move")
-                time.sleep(0.1)
+                FFX_memory.waitFrames(30 * 0.1)
                 cam = FFX_memory.getCamera()
                 while cam[2] < -450: #Holding down B until we start moving
                     FFX_Xbox.tapB()
@@ -179,14 +179,14 @@ def trials():
                     checkpoint += 1
             elif checkpoint == 4: #Recovery
                 FFXC.set_movement(1, 0)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_movement(-1, 0)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_neutral()
-                time.sleep(10.5)
+                FFX_memory.waitFrames(30 * 10.5)
                 
                 FFX_Xbox.SkipDialog(2)
-                time.sleep(3)
+                FFX_memory.waitFrames(30 * 3)
                 cam = FFX_memory.getCamera()
                 while cam[2] < -69:
                     cam = FFX_memory.getCamera()
@@ -201,9 +201,9 @@ def trials():
                 print("Bevelle sphere")
                 FFX_memory.clickToEventTemple(7)
                 FFXC.set_movement(0, -1)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_neutral()
-                time.sleep(9.5)
+                FFX_memory.waitFrames(30 * 9.5)
                 FFXC.set_value('BtnB', 1)
                 FFX_memory.awaitControl()
                 FFXC.set_value('BtnB', 0)
@@ -213,51 +213,51 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 13: #Down to the lower areas.
                 FFXC.set_movement(-1, 0)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
                 
-                time.sleep(10)
+                FFX_memory.waitFrames(30 * 10)
                 FFXC.set_value('BtnB', 1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(4)
+                FFX_memory.waitFrames(30 * 4)
                 
                 cam = FFX_memory.getCamera()
                 while cam[2] < 10: #Waiting for the right spot to go down to second section
                     cam = FFX_memory.getCamera()
                 FFXC.set_value('BtnB', 1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_value('BtnB', 0)
                 
-                time.sleep(9.5) #Lining up at the lower T
+                FFX_memory.waitFrames(30 * 9.5) #Lining up at the lower T
                 
                 while not FFX_memory.userControl():
                     if FFX_Screen.PixelTestTol(477,370,(131, 174, 255),5): #Coming from top side
                         print("Entered T from upper area")
                         while not FFX_Screen.PixelTestTol(449,802,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(5)
+                        FFX_memory.waitFrames(30 * 5)
                         
                         cam = FFX_memory.getCamera()
                         while cam[2] < 320:
                             print(cam[2])
                             cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
-                        time.sleep(2)
+                        FFX_memory.waitFrames(30 * 2)
                         FFXC.set_value('BtnB', 0)
                     elif FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(5)
+                        FFX_memory.waitFrames(30 * 5)
                         cam = FFX_memory.getCamera()
                         while cam[2] < 320:
                             print(cam[2])
                             cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
-                        time.sleep(2)
+                        FFX_memory.waitFrames(30 * 2)
                         FFXC.set_value('BtnB', 0)
                 
                 checkpoint += 1
@@ -266,14 +266,14 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 18: #To third alcove
                 FFXC.set_movement(1, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
-                time.sleep(8)
+                FFX_memory.waitFrames(30 * 8)
                 cam = FFX_memory.getCamera()
                 while cam[2] < 500:
                     cam = FFX_memory.getCamera()
                 FFXC.set_value('BtnB', 1) #Third alcove
-                time.sleep(4)
+                FFX_memory.waitFrames(30 * 4)
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.awaitControl()
                 FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
@@ -286,24 +286,24 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 28: #Take Glyph sphere
                 FFXC.set_neutral()
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEvent()
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 32: #Insert Glyph sphere
                 FFX_memory.clickToEventTemple(0)
                 FFXC.set_movement(0, 1)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 checkpoint += 1
             elif checkpoint == 34: #Take Destro sphere
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
             elif checkpoint == 37: #Insert Destro sphere
                 FFXC.set_neutral()
-                time.sleep(0.1)
+                FFX_memory.waitFrames(30 * 0.1)
                 FFXC.set_movement(0, 1)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
@@ -313,26 +313,26 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 41: #back on the track.
                 FFXC.set_movement(0, -1)
-                time.sleep(3)
+                FFX_memory.waitFrames(30 * 3)
                 FFXC.set_neutral()
                 
                 
-                time.sleep(10)
+                FFX_memory.waitFrames(30 * 10)
                 while not FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5):
-                    time.sleep(0.035)
-                time.sleep(0.5)
+                    FFX_memory.waitFrames(30 * 0.035)
+                FFX_memory.waitFrames(30 * 0.5)
                 while not FFX_memory.userControl():
                     if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(4)
+                        FFX_memory.waitFrames(30 * 4)
                         cam = FFX_memory.getCamera()
                         while cam[2] < 320:
                             cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
-                        time.sleep(4)
+                        FFX_memory.waitFrames(30 * 4)
                         FFXC.set_value('BtnB', 0)
                 print("Arriving in the second alcove again.")
                 checkpoint += 1
@@ -341,7 +341,7 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 47: #Take Destro sphere
                 FFXC.set_movement(1, -1)
-                time.sleep(0.1)
+                FFX_memory.waitFrames(30 * 0.1)
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
@@ -351,22 +351,22 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 52: #Back on track, to the exit
                 FFXC.set_movement(1, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
-                time.sleep(19)
+                FFX_memory.waitFrames(30 * 19)
                 while not FFX_Screen.PixelTestTol(381,673,(255, 184, 255),5):
                     if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(5)
+                        FFX_memory.waitFrames(30 * 5)
                         FFXC.set_value('BtnB', 1) #First alcove
-                        time.sleep(7)
+                        FFX_memory.waitFrames(30 * 7)
                         FFXC.set_value('BtnB', 0)
                 FFX_memory.awaitControl()
                 FFXC.set_movement(0, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 58:
@@ -408,7 +408,7 @@ def trialsEnd():
                     #print(cam, " | ", testCounter)
                     #testCounter += 1
                 print("Ready to move")
-                time.sleep(0.1)
+                FFX_memory.waitFrames(30 * 0.1)
                 cam = FFX_memory.getCamera()
                 while cam[2] < -450: #Holding down B until we start moving
                     FFX_Xbox.tapB()
@@ -437,14 +437,14 @@ def trialsEnd():
                     checkpoint += 1
             elif checkpoint == 4: #Recovery
                 FFXC.set_movement(1, 0)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_movement(-1, 0)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_neutral()
-                time.sleep(10.5)
+                FFX_memory.waitFrames(30 * 10.5)
                 
                 FFX_Xbox.SkipDialog(2)
-                time.sleep(3)
+                FFX_memory.waitFrames(30 * 3)
                 cam = FFX_memory.getCamera()
                 while cam[2] < -69:
                     cam = FFX_memory.getCamera()
@@ -459,9 +459,9 @@ def trialsEnd():
                 print("Bevelle sphere")
                 FFX_memory.clickToEventTemple(7)
                 FFXC.set_movement(0, -1)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_neutral()
-                time.sleep(9.5)
+                FFX_memory.waitFrames(30 * 9.5)
                 FFXC.set_value('BtnB', 1)
                 FFX_memory.awaitControl()
                 FFXC.set_value('BtnB', 0)
@@ -471,51 +471,51 @@ def trialsEnd():
                 checkpoint += 1
             elif checkpoint == 13: #Down to the lower areas.
                 FFXC.set_movement(-1, 0)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
                 
-                time.sleep(10)
+                FFX_memory.waitFrames(30 * 10)
                 FFXC.set_value('BtnB', 1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(4)
+                FFX_memory.waitFrames(30 * 4)
                 
                 cam = FFX_memory.getCamera()
                 while cam[2] < 10: #Waiting for the right spot to go down to second section
                     cam = FFX_memory.getCamera()
                 FFXC.set_value('BtnB', 1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_value('BtnB', 0)
                 
-                time.sleep(9.5) #Lining up at the lower T
+                FFX_memory.waitFrames(30 * 9.5) #Lining up at the lower T
                 
                 while not FFX_memory.userControl():
                     if FFX_Screen.PixelTestTol(477,370,(131, 174, 255),5): #Coming from top side
                         print("Entered T from upper area")
                         while not FFX_Screen.PixelTestTol(449,802,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(5)
+                        FFX_memory.waitFrames(30 * 5)
                         
                         cam = FFX_memory.getCamera()
                         while cam[2] < 320:
                             print(cam[2])
                             cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
-                        time.sleep(2)
+                        FFX_memory.waitFrames(30 * 2)
                         FFXC.set_value('BtnB', 0)
                     elif FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(5)
+                        FFX_memory.waitFrames(30 * 5)
                         cam = FFX_memory.getCamera()
                         while cam[2] < 320:
                             print(cam[2])
                             cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
-                        time.sleep(2)
+                        FFX_memory.waitFrames(30 * 2)
                         FFXC.set_value('BtnB', 0)
                 
                 checkpoint += 1
@@ -524,14 +524,14 @@ def trialsEnd():
                 checkpoint += 1
             elif checkpoint == 18: #To third alcove
                 FFXC.set_movement(1, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
-                time.sleep(8)
+                FFX_memory.waitFrames(30 * 8)
                 cam = FFX_memory.getCamera()
                 while cam[2] < 500:
                     cam = FFX_memory.getCamera()
                 FFXC.set_value('BtnB', 1) #Third alcove
-                time.sleep(4)
+                FFX_memory.waitFrames(30 * 4)
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.awaitControl()
                 FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
@@ -544,24 +544,24 @@ def trialsEnd():
                 checkpoint += 1
             elif checkpoint == 28: #Take Glyph sphere
                 FFXC.set_neutral()
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEvent()
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 32: #Insert Glyph sphere
                 FFX_memory.clickToEventTemple(0)
                 FFXC.set_movement(0, 1)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 checkpoint += 1
             elif checkpoint == 34: #Take Destro sphere
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
             elif checkpoint == 37: #Insert Destro sphere
                 FFXC.set_neutral()
-                time.sleep(0.1)
+                FFX_memory.waitFrames(30 * 0.1)
                 FFXC.set_movement(0, 1)
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
@@ -571,26 +571,26 @@ def trialsEnd():
                 checkpoint += 1
             elif checkpoint == 41: #back on the track.
                 FFXC.set_movement(0, -1)
-                time.sleep(3)
+                FFX_memory.waitFrames(30 * 3)
                 FFXC.set_neutral()
                 
                 
-                time.sleep(10)
+                FFX_memory.waitFrames(30 * 10)
                 while not FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5):
-                    time.sleep(0.035)
-                time.sleep(0.5)
+                    FFX_memory.waitFrames(30 * 0.035)
+                FFX_memory.waitFrames(30 * 0.5)
                 while not FFX_memory.userControl():
                     if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(4)
+                        FFX_memory.waitFrames(30 * 4)
                         cam = FFX_memory.getCamera()
                         while cam[2] < 320:
                             cam = FFX_memory.getCamera()
                         FFXC.set_value('BtnB', 1) #Second alcove
-                        time.sleep(4)
+                        FFX_memory.waitFrames(30 * 4)
                         FFXC.set_value('BtnB', 0)
                 print("Arriving in the second alcove again.")
                 checkpoint += 1
@@ -599,7 +599,7 @@ def trialsEnd():
                 checkpoint += 1
             elif checkpoint == 47: #Take Destro sphere
                 FFXC.set_movement(1, -1)
-                time.sleep(0.1)
+                FFX_memory.waitFrames(30 * 0.1)
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
@@ -609,22 +609,22 @@ def trialsEnd():
                 checkpoint += 1
             elif checkpoint == 52: #Back on track, to the exit
                 FFXC.set_movement(1, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
-                time.sleep(19)
+                FFX_memory.waitFrames(30 * 19)
                 while not FFX_Screen.PixelTestTol(381,673,(255, 184, 255),5):
                     if FFX_Screen.PixelTestTol(4,3,(167, 166, 246),5): #Looping around
                         print("Entered T from loop")
                         while not FFX_Screen.PixelTestTol(782,691,(255, 255, 255),5):
-                            time.sleep(0.05)
+                            FFX_memory.waitFrames(30 * 0.05)
                         FFX_Xbox.menuB()
-                        time.sleep(5)
+                        FFX_memory.waitFrames(30 * 5)
                         FFXC.set_value('BtnB', 1) #First alcove
-                        time.sleep(7)
+                        FFX_memory.waitFrames(30 * 7)
                         FFXC.set_value('BtnB', 0)
                 FFX_memory.awaitControl()
                 FFXC.set_movement(0, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 58:
@@ -651,9 +651,9 @@ def trialsEnd():
     #FFX_Xbox.SkipDialog(108)
     #print("Mark")
     #FFX_Screen.awaitPixel(371,250,(111, 125, 179))
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     #FFX_Xbox.menuB()
-    #time.sleep(0.2)
+    #FFX_memory.waitFrames(30 * 0.2)
     #FFX_Xbox.menuUp()
     #FFX_Xbox.menuB()
     FFX_Xbox.awaitSave()
@@ -661,16 +661,16 @@ def trialsEnd():
 def ViaPurifico():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_movement(1, 1)
-    time.sleep(0.15)
+    FFX_memory.waitFrames(30 * 0.15)
     FFXC.set_movement(0, 1)
-    time.sleep(5)
+    FFX_memory.waitFrames(30 * 5)
     FFXC.set_neutral()
     
-    time.sleep(5.7) #Wait for the right direction
+    FFX_memory.waitFrames(30 * 5.7) #Wait for the right direction
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
@@ -681,7 +681,7 @@ def ViaPurifico():
         if FFX_memory.userControl():
             if FFX_memory.getSLVLYuna() < 15 and FFX_memory.getCoords()[1] > 1460:
                 FFXC.set_movement(0, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
             else:
                 FFXC.set_movement(0, 1)
         elif FFX_Screen.BattleScreen():
@@ -689,14 +689,14 @@ def ViaPurifico():
         else:
             FFXC.set_neutral()
             FFXC.set_value('BtnB',1) #Skipping dialog for Isaaru
-            time.sleep(0.035)
+            FFX_memory.waitFrames(30 * 0.035)
             FFXC.set_value('BtnB',0)
-            time.sleep(0.035)
+            FFX_memory.waitFrames(30 * 0.035)
 
 def evraeAltana():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2)
+    FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
     
     checkpoint = 0
@@ -797,7 +797,7 @@ def seymourNatus(blitzWin):
                 FFXC.set_movement(-1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                time.sleep(1)
+                FFX_memory.waitFrames(30 * 1)
                 checkpoint += 1
             elif checkpoint == 6:
                 FFX_memory.clickToEventTemple(3)

@@ -64,7 +64,7 @@ def southBank():
     
     FFX_memory.clickToControl3() # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl3()
@@ -99,18 +99,18 @@ def northBank():
     FFX_memory.clickToControl3()
     FFXC.set_movement(-1, 0)
     FFX_memory.awaitEvent()
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFX_memory.awaitControl()
-    time.sleep(1.5)
+    FFX_memory.waitFrames(30 * 1.5)
     FFX_memory.clickToEvent() #Talk to Auron
     FFXC.set_neutral()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     FFX_memory.clickToControl3()
     FFXC.set_movement(-1, 0)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     
     checkpoint = 0
     print("Miihen North Bank pattern. Starts after talking to Auron.")

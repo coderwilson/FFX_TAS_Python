@@ -630,7 +630,7 @@ def Echuilles():
     print("Battle is complete. Now awaiting control.")
     while not FFX_memory.userControl():
         if FFX_memory.cutsceneSkipPossible():
-            FFX_Xbox.skipScene()
+            FFX_Xbox.skipScene(fast_mode=True)
         elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
 
@@ -1137,7 +1137,8 @@ def afterBlitz3(earlyHaste):
     #Get to control
     while not FFX_memory.userControl():
         if FFX_memory.cutsceneSkipPossible():
-            FFX_Xbox.skipScene()
+            while FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene(fast_mode=True)
             FFX_Xbox.awaitSave(index=1)
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
@@ -4901,10 +4902,11 @@ def healUpMiihen_old(chars):
         while FFX_memory.getCharCursorPos() != yunaPos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
     print("Mark 2")
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuB()
     while pos < chars:
         pos += 1
@@ -4912,33 +4914,6 @@ def healUpMiihen_old(chars):
         FFX_Xbox.menuB()
     print("Healing complete. Exiting menu.")
     FFXC.set_movement(0, 1)
-    FFX_memory.closeMenu()
-
-def healUp2(chars):
-    FFX_Logs.writeLog("Healing characters post-battle")
-    print("Menuing, healing characters in 2: ", chars)
-    if not FFX_memory.menuOpen():
-        FFX_memory.openMenu()
-    pos = 1
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuB()
-    while pos < chars:
-        pos += 1
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuB()
-    print("Healing complete. Exiting menu.")
     FFX_memory.closeMenu()
 
 def healUpNoCombat(chars):

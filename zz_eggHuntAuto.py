@@ -158,7 +158,7 @@ def engage():
 
             #Now if we're close, we want to slow down a bit.
             if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
-                time.sleep(0.15)
+                FFX_memory.waitFrames(30 * 0.15)
                 FFXC.set_neutral()
                 #print("Studder-step to egg. | ",lookingCount)
                 print("Studder-step to egg. | ",checkpoint)
