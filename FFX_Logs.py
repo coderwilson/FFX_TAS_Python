@@ -1,7 +1,10 @@
 import datetime
 import time
 import FFX_memory
-from FFX_memory import baseValue
+try:
+    from FFX_memory import baseValue
+except:
+    baseValue = 0x0
 from ReadWriteMemory import ReadWriteMemory
 game = "FFX_"
 ext = ".txt"
@@ -175,6 +178,11 @@ class memChangeMonitor:
             writeMemChange("Previous value: " + self. lastValue)
             writeMemChange("Updated value: " + self.getNewValue())
             writeMemChange("Time of change: " + timeStamp())
+            writeMemChange("?? Game state ??")
+            writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
+            writeMemChange("Current map: " + str(FFX_memory.getMap()))
+            writeMemChange("Battle Active: " + str(battleActive()))
+            
             writeMemChange("----------------------------")
             if self.reportOnChild:
                 self.childHandle.forceReportChild()
@@ -190,6 +198,10 @@ class memChangeMonitor:
         writeMemChange("Previous value: " + self. lastValue)
         writeMemChange("Updated value: " + self.getNewValue())
         writeMemChange("Time of change: " + timeStamp())
+        writeMemChange("?? Game state ??")
+        writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
+        writeMemChange("Current map: " + str(FFX_memory.getMap()))
+        writeMemChange("Battle Active: " + str(battleActive()))
         writeMemChange("----------------------------")
         self.setLastValue()
     
@@ -203,6 +215,10 @@ class memChangeMonitor:
         writeMemChange("Previous value: " + self. lastValue)
         writeMemChange("Updated value: " + self.getNewValue())
         writeMemChange("Time of change: " + timeStamp())
+        writeMemChange("?? Game state ??")
+        writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
+        writeMemChange("Current map: " + str(FFX_memory.getMap()))
+        writeMemChange("Battle Active: " + str(battleActive()))
         writeMemChange("----------------------------")
         self.setLastValue()
     
