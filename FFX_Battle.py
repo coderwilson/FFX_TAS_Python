@@ -1610,7 +1610,7 @@ def battleGui():
             nextHP = FFX_memory.getBattleHP()[1]
             lastTurn = nextTurn
             nextTurn = FFX_memory.getNextTurn()
-            if FFX_Screen.checkCharge(1):
+            if FFX_memory.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
                 valeforOD()
                 FFX_memory.waitFrames(30)
@@ -1759,11 +1759,11 @@ def extractor():
                 tidusCheer += 1
                 cheer()
             elif FFX_memory.extractorHeight() < -180: #Readying depth charges
-                if FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0):
+                if FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0) == 100:
                     tidusOD()
                     FFX_memory.waitFrames(20)
                     FFX_Screen.awaitTurn()
-                elif FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4):
+                elif FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4) == 100:
                     wakkaOD()
                     FFX_memory.waitFrames(20)
                     FFX_Screen.awaitTurn()
@@ -1783,16 +1783,12 @@ def mixTutorial():
     Steal()
     FFX_memory.waitFrames(30 * 1)
     FFX_Xbox.clickToBattle()
-    FFX_Xbox.menuLeft()
-    FFX_memory.waitFrames(30 * 0.8)
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuLeft()
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()  # Throw some ability spheres at it.
+    FFX_memory.waitFrames(30)
+    FFX_memory.rikkuODItems('tutorial')
     FFX_memory.clickToControl()
 
 
@@ -3981,14 +3977,15 @@ def useItem(slot: int, direction):
 def cheer():
     FFX_Logs.writeLog("Cheer command")
     print("Cheer command")
-    while FFX_memory.battleMenuCursor() != 20:
-        if FFX_Screen.turnTidus() == False:
-            return
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
+    while not FFX_memory.otherBattleMenu():
+        while FFX_memory.battleMenuCursor() != 20:
+            if FFX_Screen.turnTidus() == False:
+                return
+            if FFX_memory.battleMenuCursor() == 0:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuUp()
+        FFX_Xbox.menuB()
     while FFX_memory.battleCursor2() != 1:
         if FFX_memory.battleCursor2() == 0:
             FFX_Xbox.menuRight()
@@ -4866,11 +4863,11 @@ def healUp(chars):
         while FFX_memory.getCharCursorPos() != yunaPos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
     print("Mark 2")
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuB()
     while pos < chars:
         pos += 1
@@ -5060,7 +5057,7 @@ def lancetSwapDjose(direction):
     FFX_memory.clickToControl()
 
     # Now to recover the formation
-    FFX_memory.fullPartyFormat_New('djose', 10)
+    FFX_memory.fullPartyFormat('djose')
     print("Mark!")
     FFX_memory.closeMenu()
     print("Done with reformatting via Lancet Swap function.")

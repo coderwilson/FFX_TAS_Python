@@ -27,7 +27,14 @@ def arrival():
         if FFX_memory.userControl():
         
             #Miihen skip attempt
-            if checkpoint == 6:
+            if checkpoint in [4,5,6,7,8,9] and FFX_memory.miihenGuyCoords()[1] < 1380:
+                print("**Late for Mi'ihen skip, forcing recovery.")
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([FFX_memory.miihenGuyCoords()[0], FFX_memory.miihenGuyCoords()[1]])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                checkpoint = 11
+            elif checkpoint == 6:
                 FFXC.set_neutral()
                 time.sleep(0.3)
                 checkpoint += 1
@@ -69,16 +76,16 @@ def arrival():
                     print(FFX_memory.getCoords())
                 else:
                     FFXC.set_movement(0, 1)
-                    time.sleep(0.06)
+                    FFX_memory.waitFrames(2)
                     FFXC.set_neutral()
-                    time.sleep(0.09)
+                    FFX_memory.waitFrames(4)
             elif checkpoint == 10:
                 if FFX_memory.miihenGuyCoords()[1] < 1380: #Spear guy's position when we start moving. 
                     print("Skip engaging!!! Good luck!")
                     #Greater number for spear guy's position means we will start moving faster.
                     #Smaller number means moving later.
                     FFXC.set_movement(0, 1)
-                    time.sleep(0.2)
+                    FFX_memory.waitFrames(5)
                     FFX_Xbox.SkipDialog(0.3) #Walk into the guy mashing B (or X, or whatever the key is)
                     FFXC.set_neutral() #Stop trying to move. (recommended by Crimson)
                     print("Starting special skipping.")

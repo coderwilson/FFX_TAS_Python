@@ -44,21 +44,20 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Boat3"
 #StepCounter = 1
-Gamestate = "Luca"
+#Gamestate = "Luca"
 #StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
 #Gamestate = "MRR"
 #StepCounter = 1
-#StepCounter = 2 # DO NOT USE, THERE IS NO SAVE FOR THIS ONE
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-#Gamestate = "Guadosalam"
-#StepCounter = 2
+Gamestate = "Guadosalam"
+StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -93,15 +92,17 @@ seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 123 #New seed number, only used if newSeed == True
 ####################################################################################################
 
-
-if seedHunt == False: #Below logic for full runs only.
+if Gamestate != "none":
+    rngSeedNum = 200 #Select a specific seed.
+    rngReviewOnly = False
+    gameLength = "Loading mid point for testing."
+elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [31,49,59,90,91,96,98,104,108,121,200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     #rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
-    Gamestate = "none"
     StepCounter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"
@@ -117,10 +118,11 @@ endGameVersion = 0
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
 earlyHaste = 0
 earlyTidusGrid = False
-if forceBlitzWin == True:
-    blitzWin = True
-else:
-    blitzWin = False
+#if forceBlitzWin == True:
+#    blitzWin = True
+#else:
+#    blitzWin = False
+blitzWin = True
 
 #Main functions
 def reportGamestate():
@@ -207,8 +209,8 @@ if Gamestate != "none" :
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
-        FFX_LoadGame.loadOffset(34)
-        FFX_LoadGame.LoadMiihenStart_Laugh()
+        FFX_LoadGame.loadOffset(21)
+        FFX_LoadGame.LoadMiihenStart()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR()
@@ -224,7 +226,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
-        FFX_LoadGame.loadOffset(3)
+        FFX_LoadGame.loadOffset(4)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(13)

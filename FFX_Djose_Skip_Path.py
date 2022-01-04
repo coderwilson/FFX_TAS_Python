@@ -8,10 +8,6 @@ def toCoords(items):
 #     return sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
 
 
-FFX_memory.start()
-player = FFX_memory.getCoords()
-lucille = FFX_memory.lucilleDjoseCoords()
-
 checkpoints = [[467,-122],[500,64],[860,19],[1015,54], # Move into next area
 # First half of area
 [-243, -739],
@@ -55,13 +51,16 @@ checkpoints = [[467,-122],[500,64],[860,19],[1015,54], # Move into next area
 #[552.0641479492188, 751.1195068359375],
 #[542.6076049804688, 742.5446166992188],
 ]  # [431.89208984375, 656.8260498046875], [639.948486328125, 829.5191040039062]]
-target = checkpoints.pop(0)
-delta = [0, 0]
-lucille = [0, 0]
-lucilleCheckpoints = [[0, 0]]
-buttonPressed = False
-while True:
+
+def lucillePush():
+    buttonPressed = False
+    delta = [0, 0]
+    lucille = [0, 0]
+    target = checkpoints.pop(0)
+    print("Target: ", target)
     player = FFX_memory.getCoords()
+    lucille = FFX_memory.lucilleDjoseCoords()
+    lucilleCheckpoints = [[0, 0]]
     newLucille = FFX_memory.lucilleDjoseCoords()
     if newLucille[0] != 0 and lucille[0] != 0:
         newDelta = [newLucille[0] - lucille[0], newLucille[1] - lucille[1]]

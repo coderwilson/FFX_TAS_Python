@@ -42,7 +42,7 @@ def loadOffset(offset):
     time.sleep(0.2)
     FFX_Xbox.menuB()
     FFX_memory.awaitControl()
-    time.sleep(0.5)
+    #time.sleep(0.5)
     FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
 
 def loadOffsetBattle(offset):
@@ -72,11 +72,7 @@ def loadMemCursor():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuRight()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
+    FFX_memory.closeMenu()
 
 def loadPostBlitz():
     print("Loading to first save file")
