@@ -194,6 +194,19 @@ class memChangeMonitor:
         writeMemChange("----------------------------")
         self.setLastValue()
     
+    def forceReport(self):
+        writeMemChange("Value force-reported")
+        writeMemChange("Base offset: " + str(self.baseOffset))
+        writeMemChange("Pointer value: " + str(self.isPointer))
+        if self.isPointer:
+            writeMemChange("Pointer offset: " + str(self.pointerOffset))
+        writeMemChange("Type of variable: " + str(self.varType))
+        writeMemChange("Previous value: " + self. lastValue)
+        writeMemChange("Updated value: " + self.getNewValue())
+        writeMemChange("Time of change: " + timeStamp()
+        writeMemChange("----------------------------")
+        self.setLastValue()
+    
     def checkChange(self):
         if self.isPointer:
             ptrRef = process.readBytes(key,4)
