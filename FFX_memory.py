@@ -1839,14 +1839,14 @@ def fullPartyFormat(frontLine):
             #Sometimes needs delay if menu was opened via other means.
             waitFrames(12)
         waitFrames(10)
-        if getStoryProgress() >= 1120: #Before vs after the Customize option is on the menu
-            while getMenuCursorPos() != 8:
-                print(getMenuCursorPos())
-                FFX_Xbox.menuUp()
-        else:
-            while getMenuCursorPos() != 7:
-                print(getMenuCursorPos())
-                FFX_Xbox.menuUp()
+        #if getStoryProgress() >= 1120: #Before vs after the Customize option is on the menu
+        #    while getMenuCursorPos() != 8:
+        #    print(getMenuCursorPos())
+        #    FFX_Xbox.menuUp()
+        #else:
+        while getMenuCursorPos() != 7:
+            print(getMenuCursorPos())
+            FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
         waitFrames(1)
         
