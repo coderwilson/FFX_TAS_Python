@@ -137,7 +137,7 @@ def guadoSkip():
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.8)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 3.5)
+    FFX_memory.waitFrames(30 * 3.7)
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 1.7)
     FFXC.set_movement(1, 1)
@@ -160,52 +160,65 @@ def guadoSkip():
     FFX_Xbox.menuB() #Close dialog
     FFX_memory.waitFrames(30 * 0.2)
     FFXC.set_movement(0, 1)
+    print("Past walking guado")
     while pos[1] < 50:
         pos = FFX_memory.getCoords()
     FFXC.set_movement(1, 0)
+    print("Angle right")
     while pos[0] < -44:
         pos = FFX_memory.getCoords()
-    
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1.48)
+    print("Towards position")
+    while pos[0] < 9:
+        pos = FFX_memory.getCoords()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.1)
+    print("Adjustment 1")
+    while pos[1] > -7.5:
+        pos = FFX_memory.getCoords()
     FFXC.set_neutral()
-    pos = FFX_memory.getCoords()
+    FFX_memory.waitFrames(5)
     
+    pos = FFX_memory.getCoords()
+    print("Adjustment 2")
     while pos[0] > 8:
         FFXC.set_value('Dpad', 4)
-        FFX_memory.waitFrames(2)
+        FFX_memory.waitFrames(3)
         FFXC.set_value('Dpad', 0)
-        FFX_memory.waitFrames(4)
+        FFX_memory.waitFrames(5)
         pos = FFX_memory.getCoords()
+    print("Adjustment 3")
     while pos[1] < -8.5:
         FFXC.set_value('Dpad', 1)
-        FFX_memory.waitFrames(2)
+        FFX_memory.waitFrames(3)
         FFXC.set_value('Dpad', 0)
-        FFX_memory.waitFrames(4)
+        FFX_memory.waitFrames(5)
         pos = FFX_memory.getCoords()
     
     FFX_memory.waitFrames(30 * 0.15)
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_neutral() #Face downward
+    while pos[1] > -9:
+        FFXC.set_value('Dpad', 2)
+        FFX_memory.waitFrames(2)
+        FFXC.set_value('Dpad', 0)
+        FFX_memory.waitFrames(5)
+        pos = FFX_memory.getCoords()
     FFX_memory.getCoords()
-    FFX_memory.waitFrames(30 * 0.3)
-    val = FFX_Screen.PixelValue(951,568)
-    while FFX_Screen.PixelTestTol(951,568,val,10): #Pixel on the door behind us. If it changes, the guado is here.
-        doNothing = True
-    print("MARK")
-    FFX_memory.waitFrames(30 * 0.26)
-    #FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.SkipDialog(0.5)
+    time.sleep(0.3)
+    skipActivate = False
+    while not skipActivate:
+        tidusPos = FFX_memory.getCoords()
+        guadoPos = FFX_memory.getActorCoords(17)
+        if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
+            if guadoPos[0] < 10:
+                skipActivate = True
+                print("MARK")
+                FFX_Xbox.SkipDialog(0.5)
     
-    while not FFX_Screen.PixelTest(995,768,(222, 222, 222)): #Dialog with the running guado
-        FFX_Xbox.tapB()
-        
     #Time limit for safety
     startTime = time.time()
-    timeLimit = 6 #Max number of seconds that we will wait for the skip to occur.
+    timeLimit = 8 #Max number of seconds that we will wait for the skip to occur.
     maxTime = startTime + timeLimit
     
     
@@ -222,7 +235,8 @@ def guadoSkip():
     while FFX_memory.getMap() != 140:
         if FFX_memory.userControl():
             if checkpoint == 5:
-                if FFX_memory.getCamera()[0] > 0.6:
+                print(FFX_memory.getCamera())
+                if FFX_memory.getCamera()[1] < -10:
                     print("Guado skip success.")
                     guadoSkipStatus = True
                     checkpoint += 1

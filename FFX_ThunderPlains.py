@@ -68,16 +68,14 @@ def agency(blitzWin):
     FFX_Xbox.SkipDialog(0.15)
     FFXC.set_neutral()
     
-    FFX_memory.waitFrames(30 * 0.6)
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitPixel(888,470,(191, 191, 191))
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.clickToDiagProgress(92)
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.6)
+    FFX_memory.waitFrames(60)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
@@ -85,7 +83,7 @@ def agency(blitzWin):
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuRight()
     speedNeeded = 14 - speedCount #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     if speedNeeded > 1:
@@ -96,16 +94,20 @@ def agency(blitzWin):
             speedNeeded -= 1
     
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
-    FFX_Xbox.SkipDialog(0.3)
+    FFX_memory.waitFrames(6)
     
     #Next, Grab Auron's weapon
-    FFX_memory.waitFrames(30 * 0.5)
-    FFX_Xbox.menuB()
-    FFX_Screen.awaitPixel(888,470,(191, 191, 191))
-    FFX_memory.waitFrames(30 * 0.2)
+    FFXC.set_movement(0, 1)
+    FFX_Xbox.SkipDialog(0.3)
+    FFXC.set_neutral()
+    FFX_memory.clickToDiagProgress(90)
+    FFX_memory.clickToDiagProgress(92)
+    FFXC.set_neutral()
+    FFX_memory.waitFrames(60)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Got any weapons?
     FFX_memory.waitFrames(30 * 1.6)
@@ -114,37 +116,38 @@ def agency(blitzWin):
     FFX_Xbox.menuB() #Sell
     FFX_memory.waitFrames(30 * 0.4)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
+    FFX_memory.waitFrames(3)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Sell Tidus' longsword
-    FFX_memory.waitFrames(30 * 0.1)
+    FFX_memory.waitFrames(3)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
+    FFX_memory.waitFrames(3)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Sell Auron Katana
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_memory.waitFrames(30 * 0.1)
+    FFX_memory.waitFrames(3)
+    FFX_memory.waitFrames(3)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuLeft()
-    FFX_memory.waitFrames(30 * 0.4)
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuB() #Buy
-    FFX_memory.waitFrames(30 * 0.8)
-    #FFX_memory.waitFrames(30 * 30) #Testing only
+    FFX_memory.waitFrames(24)
+    #time.sleep(30) #Testing only
     
     if blitzWin == False:
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 0.8)
+        FFX_memory.waitFrames(24)
         FFX_Xbox.menuUp() #Baroque sword
-        #FFX_memory.waitFrames(30 * 10) #Testing only
-        FFX_memory.waitFrames(30 * 0.1)
+        #time.sleep(10) #Testing only
+        FFX_memory.waitFrames(3)
         FFX_Xbox.menuB() #Weapon for Tidus (for Evrae fight)
-        FFX_memory.waitFrames(30 * 0.1)
+        FFX_memory.waitFrames(3)
         FFX_Xbox.menuB() #Do not equip
-        FFX_memory.waitFrames(30 * 0.1)
+        FFX_memory.waitFrames(3)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
@@ -158,7 +161,9 @@ def agency(blitzWin):
     FFX_Xbox.menuB() #Do not equip
     FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(6)
     
     #Now for Yuna's scene
     FFXC.set_movement(1, 0)

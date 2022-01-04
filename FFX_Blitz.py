@@ -107,9 +107,9 @@ def gameStage():
     #Stage 3: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 560: #First half
-        stages = [0, 60, 300, 300, 300]
+        stages = [0, 30, 300, 300, 300]
     elif FFX_memory.getStoryProgress() == 560: #Second half, before Tidus/Wakka swap
-        stages = [0, 50, 120, 145, 163]
+        stages = [0, 30, 120, 145, 163]
     else:
         stages = [0, 180, 240, 265, 283]
     if abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 1:

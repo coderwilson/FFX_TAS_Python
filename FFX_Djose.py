@@ -6,14 +6,88 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+#import FFX_Djose_Skip_Path
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
- 
+
 def path():
     FFX_memory.clickToControl()
     FFX_memory.closeMenu()
     FFX_memory.waitFrames(30 * 1)
+    FFX_memory.fullPartyFormat('djose')
+    FFX_memory.closeMenu()
+    
+    countBattles = 0
+    checkpoint = 0
+    lastCP = 0
+    stoneBreath = 0
+    print("Starting Djose pathing section")
+    #FFX_memory.setEncounterRate(0) #TESTING ONLY!!! MAKE SURE TO COMMENT OUT THIS COMMAND!!!
+    
+    while FFX_memory.getMap() != 81: #All the way into the temple
+        if lastCP != checkpoint:
+            print("Checkpoint reached: ", checkpoint)
+            lastCP = checkpoint
+        
+        if FFX_memory.userControl():
+            if checkpoint in [35, 36, 37] and stoneBreath == 1:
+                checkpoint = 38
+            elif checkpoint == 38 and stoneBreath == 0:
+                checkpoint = 36
+            
+            #This is for the attempted Djose skip. It is not viable. Feel free to re-try this.
+            #elif checkpoint == 33:# and stoneBreath == 0: #Turn/talk
+            #    FFXC.set_movement(-1, 1)
+            #    FFX_memory.waitFrames(4)
+            #    while FFX_memory.userControl() and FFX_memory.getActorCoords(11)[1] < 790:
+            #        FFX_Xbox.tapB()
+            #    FFXC.set_neutral()
+            #    checkpoint += 1
+            #elif checkpoint == 34:# and stoneBreath == 0:
+            #    while FFX_memory.getActorCoords(0)[1] < 790 and \
+            #        FFX_memory.getActorCoords(11)[1] < 790:
+            #        
+            #        FFX_memory.waitFrames(1)
+            #    FFX_memory.clickToControl3()
+            #    checkpoint += 1
+            
+            else:
+                #Map changes
+                if checkpoint in [39, 44, 46]:
+                    FFX_memory.clickToEventTemple(0)
+                    checkpoint += 1
+                elif FFX_targetPathing.djosePath(checkpoint)[0] < FFX_memory.getActorCoords(0)[0] \
+                    and checkpoint < 36 and checkpoint > 18:
+                    checkpoint += 1
+                elif FFX_targetPathing.djosePath(checkpoint)[1] < FFX_memory.getActorCoords(0)[1] \
+                    and checkpoint < 36 and checkpoint > 18:
+                    checkpoint += 1
+                #General pathing
+                elif FFX_targetPathing.setMovement(FFX_targetPathing.djosePath(checkpoint)) == True:
+                    checkpoint += 1
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.battleActive():
+                print("Starting battle")
+                if stoneBreath == 0:
+                    print("Still looking for Stone Breath.")
+                stoneBreath = FFX_Battle.djose(stoneBreath)
+                print("Battles complete.")
+                countBattles += 1
+            elif FFX_memory.menuOpen():
+                FFX_Xbox.menuB()
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.menuB()
+        
+    
+    FFX_Logs.writeStats("Djose battles:")
+    FFX_Logs.writeStats(countBattles)
+    
+def path_old():
+    FFX_memory.clickToControl()
+    FFX_memory.closeMenu()
+    time.sleep(1)
     FFX_memory.fullPartyFormat('djose')
     FFX_memory.closeMenu()
     
@@ -132,13 +206,6 @@ def path():
 def temple():
     FFX_memory.clickToControl()
     FFX_menu.djoseTemple()
-    
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.2)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 6)
-    FFXC.set_neutral()
-    FFX_memory.awaitControl()
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.3)
     FFXC.set_movement(-1, -1)

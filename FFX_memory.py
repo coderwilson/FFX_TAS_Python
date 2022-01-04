@@ -972,7 +972,11 @@ def rikkuODItems(battle):
     #This function gets the item slots for each item, swaps if they're backwards,
     # and then moves the cursor to each item and presses B when we reach it.
     cursor = 1
-    if battle == 'Evrae':
+    if battle == 'tutorial':
+        item1 = getItemSlot(73)
+        print("Ability sphere in slot: ", item1)
+        item2 = item1
+    elif battle == 'Evrae':
         item1 = getItemSlot(94)
         print("Luck sphere in slot: ", item1)
         item2 = getItemSlot(100)
@@ -1843,12 +1847,16 @@ def fullPartyFormat(frontLine):
             #Sometimes needs delay if menu was opened via other means.
             waitFrames(12)
         waitFrames(10)
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        if getStoryProgress() >= 1120: #Before vs after the Customize option is on the menu
+        #if getStoryProgress() >= 1120: #Before vs after the Customize option is on the menu
+        #    while getMenuCursorPos() != 8:
+        #    print(getMenuCursorPos())
+        #    FFX_Xbox.menuUp()
+        #else:
+        while getMenuCursorPos() != 7:
+            print(getMenuCursorPos())
             FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
+        waitFrames(1)
         
         startPos = 0
         targetPos = 1
@@ -1870,9 +1878,9 @@ def fullPartyFormat(frontLine):
                 #print("Cursor not in right spot")
                 while partyFormatCursor1() != startPos:
                     menuDirection(partyFormatCursor1(), startPos, partyMembers)
-            waitFrames(5)
+            waitFrames(2)
             FFX_Xbox.menuB() #Click on Start location
-            waitFrames(5)
+            waitFrames(2)
             
             #Set target, end position
             print("Selecting destination position.")
@@ -1887,8 +1895,9 @@ def fullPartyFormat(frontLine):
             print("Moving to destination position.")
             while partyFormatCursor2() != endPos:
                 menuDirection(partyFormatCursor2(), endPos, partyMembers)
-            waitFrames(1)
-            FFX_Xbox.tapB() #Click on End location, performs swap.
+            waitFrames(2)
+            FFX_Xbox.menuB() #Click on End location, performs swap.
+            waitFrames(2)
             print("Start and destination positions have been swapped.")
             startPos += 1
             if startPos == partyMembers:
@@ -2077,38 +2086,10 @@ def miihenGuyCoords():
     return retVal
 
 def lucilleMiihenCoords():
-    global process
-    global baseValue
-    retVal = [0,0]
-    
-    basePointer = baseValue + 0x01fc44e4
-    basePointerAddress = process.read(basePointer)
-    offsetX = 0x440C
-    offsetY = 0x4414
-
-    keyX = basePointerAddress + offsetX
-    retVal[0] = float_from_integer(process.read(keyX))
-    keyY = basePointerAddress + offsetY
-    retVal[1] = float_from_integer(process.read(keyY))
-
-    return retVal
+    return getActorCoords(8)
 
 def lucilleDjoseCoords():
-    global process
-    global baseValue
-    retVal = [0,0]
-    
-    basePointer = baseValue + 0x01fc44e4
-    basePointerAddress = process.read(basePointer)
-    offsetX = 0x5D8C
-    offsetY = 0x5D94
-
-    keyX = basePointerAddress + offsetX
-    retVal[0] = float_from_integer(process.read(keyX))
-    keyY = basePointerAddress + offsetY
-    retVal[1] = float_from_integer(process.read(keyY))
-
-    return retVal
+    return getActorCoords(11)
 
 def lucilleDjoseAngle():
     global process

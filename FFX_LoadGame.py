@@ -72,11 +72,7 @@ def loadMemCursor():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuRight()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
+    FFX_memory.closeMenu()
 
 def loadPostBlitz():
     print("Loading to first save file")

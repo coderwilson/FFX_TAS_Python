@@ -263,7 +263,7 @@ def mrrGrid2(wakkaLateMenu):
     if wakkaLateMenu != False:
         if FFX_memory.getSLVLWakka() >= 3:
             print("Catching up Wakka's sphere grid.")
-            openGrid(character=0)
+            openGrid(character=4)
             
             FFX_menuGrid.moveFirst()
             gridDown()
@@ -330,17 +330,19 @@ def battleSiteGrid():
     #Sort items
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(15)
     FFX_Xbox.menuA()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(15)
     FFX_Xbox.menuRight()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(15)
     FFX_Xbox.menuRight()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(15)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(15)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(15)
     
     #Wakka's weapon
     FFX_Xbox.menuDown()
@@ -351,23 +353,24 @@ def battleSiteGrid():
     if FFX_memory.getCharCursorPos() != wakkaPos:
         while FFX_memory.getCharCursorPos() != wakkaPos:
             FFX_Xbox.menuDown()
+            FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuB() #Wakka
-    FFX_memory.waitFrames(30 * 0.3)
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuB() #Weapon
-    FFX_memory.waitFrames(30 * 0.15)
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuB() #Back to default.
+    FFX_memory.waitFrames(30)
     
     FFX_memory.closeMenu()
     FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1():
-    print("Not yet thanks")
-    FFX_memory.waitFrames(30 * 1.7)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 4)
+    FFX_memory.clickToDiagProgress(96)
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Items
-    FFX_memory.waitFrames(30 * 1)
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuRight()
     FFX_Xbox.menuB() #Sell
     
@@ -396,11 +399,12 @@ def battleSiteOaka1():
     FFX_memory.closeMenu()
 
 def battleSiteOaka2():
-    FFX_Xbox.clickToPixel(676,520,(196,196,196))
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1)
-    
+    FFX_memory.clickToDiagProgress(74)
+    FFX_memory.clickToDiagProgress(96)
+    while not FFX_memory.menuOpen():
+        FFX_Xbox.menuB()
+        FFX_memory.waitFrames(20)
+    FFX_memory.waitFrames(20)
     FFX_Xbox.menuRight()
     FFX_Xbox.menuB() #Sell
     FFX_Xbox.menuDown()
@@ -414,9 +418,9 @@ def battleSiteOaka2():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     
-    while not ( FFX_Screen.PixelTest(800,830,(132, 130, 167)) and FFX_Screen.PixelTest(256,803,(154, 154, 154))):
+    while FFX_memory.getGilvalue() < 10890:
         FFX_Xbox.menuDown()
-        FFX_memory.waitFrames(30 * 0.2)
+        FFX_memory.waitFrames(6)
         FFX_Xbox.menuB()
         FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
@@ -431,20 +435,20 @@ def battleSiteOaka2():
     FFX_Xbox.menuB() #Purchase Sentry
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Equip Sentry
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuA()
     
     #Re-sort items - should be Mega Potions first slot, followed by Phoenix Downs
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
+    #FFX_memory.openMenu()
+    #FFX_Xbox.menuDown()
+    #FFX_Xbox.menuB()
+    #FFX_memory.waitFrames(6)
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
+    #FFX_memory.waitFrames(6)
+    #FFX_Xbox.menuRight()
+    #FFX_Xbox.menuB()
     
     FFX_memory.closeMenu()
 

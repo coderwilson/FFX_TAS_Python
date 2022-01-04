@@ -2189,6 +2189,146 @@ def battleSiteAftermath(checkpoint):
         print("Towards Djose section.")
     return [x,y]
 
+def djosePath(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -209
+        y = -377
+    if checkpoint == 1:
+        x = -190
+        y = -300
+    if checkpoint == 2:
+        x = -155
+        y = -173
+    if checkpoint == 3:
+        x = -155
+        y = -160
+    if checkpoint == 4:
+        x = -123
+        y = -99
+    if checkpoint == 5:
+        x = -117
+        y = -85
+    if checkpoint == 6:
+        x = -110
+        y = -68
+    if checkpoint == 7:
+        x = -95
+        y = -35
+    if checkpoint == 8:
+        x = -92
+        y = -26
+    if checkpoint == 9:
+        x = -82
+        y = 10
+    if checkpoint == 10:
+        x = -80
+        y = 22
+    if checkpoint == 11:
+        x = -75
+        y = 37
+    if checkpoint == 12:
+        x = -64
+        y = 66
+    if checkpoint == 13:
+        x = -59
+        y = 75
+    if checkpoint == 14:
+        x = -33
+        y = 118
+    if checkpoint == 15:
+        x = 27
+        y = 215
+    if checkpoint == 16:
+        x = 38
+        y = 232
+    if checkpoint == 17:
+        x = 56
+        y = 260
+    if checkpoint == 18:
+        x = 94
+        y = 321
+    if checkpoint == 19:
+        x = 111
+        y = 349
+    if checkpoint == 20:
+        x = 123
+        y = 368
+    if checkpoint == 21:
+        x = 137
+        y = 390
+    if checkpoint == 22:
+        x = 157
+        y = 422
+    if checkpoint == 23:
+        x = 177
+        y = 453
+    if checkpoint == 24:
+        x = 213
+        y = 506
+    if checkpoint == 25:
+        x = 234
+        y = 521
+    if checkpoint == 26:
+        x = 266
+        y = 543
+    if checkpoint == 27:
+        x = 329
+        y = 587
+    if checkpoint == 28:
+        x = 337
+        y = 593
+    if checkpoint == 29:
+        x = 375
+        y = 619
+    if checkpoint == 30:
+        x = 440
+        y = 650
+    if checkpoint in [31,32,33]:
+        x = 449
+        y = 652
+    if checkpoint == 34:
+        x = 495
+        y = 700
+    if checkpoint == 35: #Point of deferral 1
+        x = 550
+        y = 730
+    if checkpoint == 36: #Point of deferral 2
+        x = 489
+        y = 730
+    if checkpoint == 37: #Point of continuation
+        x = 604
+        y = 836
+    if checkpoint == 38:
+        x = 734
+        y = 859
+    if checkpoint == 39: #Transition to next map
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 27
+        y = -231
+    if checkpoint == 41:
+        x = 59
+        y = -14
+    if checkpoint == 42:
+        x = 51
+        y = 0
+    if checkpoint == 43:
+        x = 9
+        y = 151
+    if checkpoint == 44: #Transition to temple map
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = -4
+        y = -87
+    if checkpoint == 46: #Transition into temple
+        x = 0
+        y = 0
+    return [x,y]
+
 def djoseTrials(checkpoint):
     x = 999
     y = 999
