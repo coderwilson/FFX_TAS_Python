@@ -107,17 +107,22 @@ FFXC = vgTranslator()
 def controllerHandle():
     return FFXC
 
-def skipScene():
-    print("Skip cutscene")
-    FFX_memory.waitFrames(2)
-    FFXC.set_value('BtnStart', 1) #Generate button to skip
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnStart', 0)
+processed_cutscenes = set()
 
-    FFX_memory.waitFrames(2)
-    tapX()
-    #FFX_memory.waitFrames(2)
-    SkipDialog(2)
+def skipScene(fast_mode: bool = False):
+    cutsceneID = FFX_memory.getCutsceneID()
+    print(cutsceneID)
+    if cutsceneID not in processed_cutscenes:
+        print("Skip cutscene")
+        FFX_memory.waitFrames(2)
+        FFXC.set_value('BtnStart', 1) #Generate button to skip
+        FFX_memory.waitFrames(1)
+        FFXC.set_value('BtnStart', 0)
+        FFX_memory.waitFrames(2)
+        tapX()
+        processed_cutscenes.add(cutsceneID)
+    if not fast_mode: FFX_memory.waitFrames(60)
+    #SkipDialog(2)
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
@@ -126,26 +131,19 @@ def skipSceneSpec():
     FFXC.set_value('BtnStart', 0)
     FFX_memory.waitFrames(30 * 0.105)
     FFXC.set_value('BtnX', 1) #Perform the skip
-    FFX_memory.waitFrames(30 * 0.035)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnX', 0)
     FFXC.set_value('BtnStart', 1) #Before despawn, regenerate the button for use in a future scene.
-    FFX_memory.waitFrames(30 * 0.035)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnStart', 0)
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     
 def skipStoredScene(skipTimer):
-    print("Mashing skip button")
-    currentTime = time.time()
-    print("Current Time: ", currentTime)
-    clickTimer = currentTime + skipTimer
-    print("Click Until: ", clickTimer)
-    while currentTime < clickTimer :
-        
-        FFXC.set_value('BtnX', 1) #Perform the skip
-        FFX_memory.waitFrames(30 * 0.035)
-        FFXC.set_value('BtnX', 0)
-        FFX_memory.waitFrames(30 * 0.035)
-        currentTime = time.time()
+
+    num_repetitions = math.ceil(round(skipTimer * 30) / 2)
+    print(f"Mashing skip button {num_repetitions} times.")
+    for _ in range(num_repetitions):
+        tapX()
     print("Mashing skip button - Complete")
 
 def Attack():
@@ -173,22 +171,8 @@ def touchSaveSphere():
                 FFX_memory.waitFrames(1)
             else:
                 tapB()
-    #while not FFX_memory.touchingSaveSphere():
-    #    if FFX_memory.userControl():
-    #        menuB()
-    #    elif FFX_memory.diagSkipPossible() and not FFX_memory.touchingSaveSphere():
-    #        menuB()
-    #print("Save Mark 1")
-    
-    #while not FFX_memory.saveMenuCursor() >= 1:
-    #    menuDown()
-    #print("Save Mark 2")
-    #while not FFX_memory.userControl():
-    #    tapB()
-    #    FFX_memory.waitFrames(30 * 0.7)
-    #FFX_memory.awaitControl()
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.035)
+    FFX_memory.waitFrames(1)
 
 def SkipDialog( Keystrokes ):
     # 2 frames per button mash
@@ -314,7 +298,7 @@ def menuY():
     
 def tapX():
     FFXC.set_value('BtnX', 1)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnX', 0)
     FFX_memory.waitFrames(1)
     
@@ -349,7 +333,7 @@ def tidusOD():
     menuB() #Activate overdrive
     FFX_memory.waitFrames(30 * 3)
     menuB()
-    FFX_memory.waitFrames(30 * 0.25)
+    FFX_memory.waitFrames(65)
     menuB()
     FFX_memory.waitFrames(30 * 0.3)
     menuB()
@@ -359,9 +343,9 @@ def tidusOD():
     menuB()
     FFX_memory.waitFrames(30 * 0.3)
     menuB()
-    FFX_memory.waitFrames(30 * 0.25)
+    FFX_memory.waitFrames(65)
     menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(6)
     menuB()
 
 def weapSwap(position):

@@ -21,7 +21,7 @@ while attempts < 10:
         #---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
         while not FFX_Screen.PixelTest(1076,552,(157, 159, 157)):
             FFXC.set_value('BtnStart', 1)
-            time.sleep(0.1)
+            FFX_memory.waitFrames(30 * 0.1)
             FFXC.set_value('BtnStart', 0)
 
         print("Game start screen")
@@ -35,9 +35,9 @@ while attempts < 10:
 
         FFXC.set_value('AxisLy',1)
         FFXC.set_value('AxisLx',1)
-        time.sleep(0.7)
+        FFX_memory.waitFrames(30 * 0.7)
         FFXC.set_value('AxisLx',0)
-        time.sleep(34)
+        FFX_memory.waitFrames(30 * 34)
         FFXC.set_value('AxisLy',0)
 
         print("Start egg hunt only program")
@@ -66,12 +66,12 @@ while attempts < 10:
                     cam = FFX_memory.getCamera()
                     FFX_Logs.writePlot(str(cam[0]) + "," + str(cam[4]))
                 else:
-                    time.sleep(0.035)
+                    FFX_memory.waitFrames(30 * 0.035)
                 if waitCount > 10000:
                     break
 
     print("Allowing time for review.")
-    time.sleep(35)
+    FFX_memory.waitFrames(30 * 35)
     print("Resetting.")
     FFX_memory.end()
 

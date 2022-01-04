@@ -8,6 +8,14 @@ from math import cos, sin
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
 
+def getCutsceneID():
+    global baseValue
+    key = baseValue + 0xD27C88
+    cutscene_alt = process.readBytes(key, 4)
+    key = baseValue + 0xD2D67C
+    storyline_prog = process.readBytes(key, 4)
+    return (cutscene_alt, storyline_prog)
+
 def waitFrames(frames: int):
     frames = max(round(frames), 1)
     global baseValue
