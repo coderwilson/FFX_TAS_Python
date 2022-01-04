@@ -2,7 +2,6 @@ import datetime
 import time
 import FFX_memory
 from FFX_memory import baseValue
-from FFX_memory import process
 from ReadWriteMemory import ReadWriteMemory
 game = "FFX_"
 ext = ".txt"
@@ -134,7 +133,7 @@ class memChangeMonitor:
         
         self.setLastValue()
         
-        if childReport != 0
+        if childReport != 0:
             self.reportOnChild = False
         else:
             self.reportOnChild = True
@@ -142,25 +141,25 @@ class memChangeMonitor:
     
     def setLastValue(self):
         if self.isPointer:
-            ptrRef = process.readBytes(key,4)
+            ptrRef = FFX_memory.readBytes(key,4)
             
             if self.varType == 'byte':
-                self.lastValue = process.readBytes(ptrRef + self.ptrOffset,1)
+                self.lastValue = FFX_memory.readBytes(ptrRef + self.ptrOffset,1)
             elif self.varType == '2byte':
-                self.lastValue = process.readBytes(ptrRef + self.ptrOffset,2)
+                self.lastValue = FFX_memory.readBytes(ptrRef + self.ptrOffset,2)
             elif self.varType == '4byte':
-                self.lastValue = process.readBytes(ptrRef + self.ptrOffset,4)
+                self.lastValue = FFX_memory.readBytes(ptrRef + self.ptrOffset,4)
             elif self.varType == 'float':
-                self.lastValue = FFX_memory.float_from_integer(process.readBytes(ptrRef + self.ptrOffset,4))
+                self.lastValue = FFX_memory.float_from_integer(FFX_memory.readBytes(ptrRef + self.ptrOffset,4))
         else:
             if self.varType == 'byte':
-                self.lastValue = process.readBytes(key,1)
+                self.lastValue = FFX_memory.readBytes(key,1)
             elif self.varType == '2byte':
-                self.lastValue = process.readBytes(key,2)
+                self.lastValue = FFX_memory.readBytes(key,2)
             elif self.varType == '4byte':
-                self.lastValue = process.readBytes(key,4)
+                self.lastValue = FFX_memory.readBytes(key,4)
             elif self.varType == 'float':
-                self.lastValue = FFX_memory.float_from_integer(process.readBytes(key,4))
+                self.lastValue = FFX_memory.float_from_integer(FFX_memory.readBytes(key,4))
     
     def reportIfChange(self):
         if self.checkChange():
@@ -175,7 +174,7 @@ class memChangeMonitor:
             writeMemChange("Type of variable: " + str(self.varType))
             writeMemChange("Previous value: " + self. lastValue)
             writeMemChange("Updated value: " + self.getNewValue())
-            writeMemChange("Time of change: " + timeStamp()
+            writeMemChange("Time of change: " + timeStamp())
             writeMemChange("----------------------------")
             if self.reportOnChild:
                 self.childHandle.forceReportChild()
@@ -190,7 +189,7 @@ class memChangeMonitor:
         writeMemChange("Type of variable: " + str(self.varType))
         writeMemChange("Previous value: " + self. lastValue)
         writeMemChange("Updated value: " + self.getNewValue())
-        writeMemChange("Time of change: " + timeStamp()
+        writeMemChange("Time of change: " + timeStamp())
         writeMemChange("----------------------------")
         self.setLastValue()
     
@@ -203,39 +202,39 @@ class memChangeMonitor:
         writeMemChange("Type of variable: " + str(self.varType))
         writeMemChange("Previous value: " + self. lastValue)
         writeMemChange("Updated value: " + self.getNewValue())
-        writeMemChange("Time of change: " + timeStamp()
+        writeMemChange("Time of change: " + timeStamp())
         writeMemChange("----------------------------")
         self.setLastValue()
     
     def checkChange(self):
         if self.isPointer:
-            ptrRef = process.readBytes(key,4)
+            ptrRef = FFX_memory.readBytes(key,4)
             
             if self.varType == 'byte':
-                if self.lastValue != process.readBytes(ptrRef + self.ptrOffset,1):
+                if self.lastValue != FFX_memory.readBytes(ptrRef + self.ptrOffset,1):
                     return True
             elif self.varType == '2byte':
-                if self.lastValue != process.readBytes(ptrRef + self.ptrOffset,2):
+                if self.lastValue != FFX_memory.readBytes(ptrRef + self.ptrOffset,2):
                     return True
             elif self.varType == '4byte':
-                if self.lastValue != process.readBytes(ptrRef + self.ptrOffset,4):
+                if self.lastValue != FFX_memory.readBytes(ptrRef + self.ptrOffset,4):
                     return True
             elif self.varType == 'float':
-                if self.lastValue != FFX_memory.float_from_integer(process.readBytes(ptrRef + self.ptrOffset,4)):
+                if self.lastValue != FFX_memory.float_from_integer(FFX_memory.readBytes(ptrRef + self.ptrOffset,4)):
                     return True
             return False
         else:
             if self.varType == 'byte':
-                if self.lastValue != process.readBytes(key,1):
+                if self.lastValue != FFX_memory.readBytes(key,1):
                     return True
             elif self.varType == '2byte':
-                if self.lastValue != process.readBytes(key,2):
+                if self.lastValue != FFX_memory.readBytes(key,2):
                     return True
             elif self.varType == '4byte':
-                if self.lastValue != process.readBytes(key,4):
+                if self.lastValue != FFX_memory.readBytes(key,4):
                     return True
             elif self.varType == 'float':
-                if self.lastValue != FFX_memory.float_from_integer(process.readBytes(key,4)):
+                if self.lastValue != FFX_memory.float_from_integer(FFX_memory.readBytes(key,4)):
                     return True
             return False
 
@@ -260,11 +259,11 @@ def memChangeHandle():
         if firstEle:
             firstEle = False
             variables = memRefList.pop()
-            retArray[0] = memChangeMonitor(baseOffsetRef = variables[0], isPointerRef = variables[1] \
+            retArray[0] = memChangeMonitor(baseOffsetRef = variables[0], isPointerRef = variables[1], \
                 ptrOffsetRef = variables[2], typeRef = variables[3], childReport = variables[4])
         else:
             variables = memRefList.pop()
-            retArray.append(memChangeMonitor(baseOffsetRef = variables[0], isPointerRef = variables[1] \
+            retArray.append(memChangeMonitor(baseOffsetRef = variables[0], isPointerRef = variables[1], \
                 ptrOffsetRef = variables[2], typeRef = variables[3], childReport = variables[4]))
     return retArray
 

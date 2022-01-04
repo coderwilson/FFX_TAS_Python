@@ -4,17 +4,10 @@ import time
 import FFX_Screen
 
 from math import cos, sin
+baseValue = 0
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
-
-def getCutsceneID():
-    global baseValue
-    key = baseValue + 0xD27C88
-    cutscene_alt = process.readBytes(key, 4)
-    key = baseValue + 0xD2D67C
-    storyline_prog = process.readBytes(key, 4)
-    return (cutscene_alt, storyline_prog)
 
 def waitFrames(frames: int):
     frames = max(round(frames), 1)
@@ -1055,6 +1048,17 @@ def getOverdriveBattle(character):
     basePointer = baseValue + 0x00d334cc
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5bc
+    retVal = process.readBytes(basePointerAddress + offset, 1)
+    print("In-Battle Overdrive values: ", retVal)
+    return retVal
+
+def getCharWeakness(character):
+    global process
+    global baseValue
+    
+    basePointer = baseValue + 0x00d334cc
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x5dd
     retVal = process.readBytes(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values: ", retVal)
     return retVal
@@ -2570,6 +2574,10 @@ def blitzCursor():
     cursor = process.readBytes(key, 1)
     return cursor
 
+#-------------------------------------------------------
+#Function for logging
+def readBytes(key,size):
+    return process.readBytes(key,size)
     
 
 #-------------------------------------------------------
