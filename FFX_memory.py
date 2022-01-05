@@ -1062,6 +1062,40 @@ def getOverdriveBattle(character):
 def getOverdriveValue(character): #Older function, I think Crimson wrote this one.
     return getOverdriveBattle(character)
 
+def deadstate(character):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x606
+
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key, 1)
+
+    if retVal % 2 == 1:
+        #print("Character %d is dead" % character)
+        return True
+    else:
+        #print("Character %d is not dead" % character)
+        return False
+        
+def berserkstate(character):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x607
+
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key, 1)
+
+    if retVal % 4 >= 2:
+        #print("Character %d is berserked" % character)
+        return True
+    else:
+        #print("Character %d is not berserked" % character)
+        return False        
+
 def petrifiedstate(character):
     global process
     global baseValue

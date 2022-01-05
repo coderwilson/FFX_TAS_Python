@@ -112,7 +112,7 @@ processed_cutscenes = set()
 def skipScene(fast_mode: bool = False):
     cutsceneID = FFX_memory.getCutsceneID()
     print(cutsceneID)
-    if cutsceneID not in processed_cutscenes:
+    if not fast_mode or cutsceneID not in processed_cutscenes:
         print("Skip cutscene")
         FFX_memory.waitFrames(2)
         FFXC.set_value('BtnStart', 1) #Generate button to skip

@@ -57,7 +57,7 @@ def arrival(rikkucharged):
                 print("variable check 1: ",woodsVars)
                 woodsVars = FFX_Battle.mWoods(woodsVars)
                 print("variable check 2: ",woodsVars)
-            elif FFX_memory.battleActive() == False and FFX_memory.diagSkipPossible():
+            elif not FFX_memory.battleActive() and FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     
     #Save sphere

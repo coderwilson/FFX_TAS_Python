@@ -297,8 +297,9 @@ def LoadMRR2():
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 2)
     FFX_memory.awaitControl()
-    while FFX_Screen.getMap() != 79:
-        FFXC.set_movement(-1, -1)
+    for i in range(20):
+        print(f"Sleeping for {20-i} more seconds...")
+        time.sleep(1)
 
 def AfterGui():
     FFX_memory.awaitControl()
