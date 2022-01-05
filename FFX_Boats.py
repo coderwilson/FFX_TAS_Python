@@ -11,7 +11,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def boatDance():
     print("No dancing this time")
-    FFX_memory.waitFrames(30 * 50)
+    time.sleep(50)
 
 def ssLiki(earlyTidusGrid):
     checkpoint = 0
@@ -50,7 +50,7 @@ def ssLiki(earlyTidusGrid):
 def ssWinno():
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_neutral()
     
     #Talk to O'akaXXIII
@@ -65,13 +65,13 @@ def ssWinno():
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(21)
     FFX_memory.waitFrames(60)
-    #FFX_memory.waitFrames(30 * 2)
+    #time.sleep(2)
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(30)
-    #FFX_memory.waitFrames(30 * 1)
+    #time.sleep(1)
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(30)
-    #FFX_memory.waitFrames(30 * 1)
+    #time.sleep(1)
     FFX_Xbox.tapDown()
     FFX_Xbox.tapLeft()
     FFX_Xbox.tapUp()
@@ -89,25 +89,25 @@ def ssWinno2():
     #To the deck
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
     
     #Lulu/Wakka talking
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.6)
+    time.sleep(0.6)
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
     
     #Let's go dream of Jecht
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3.5)
+    time.sleep(3.5)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_neutral()
     
     #Jecht shot tutorial
@@ -136,7 +136,7 @@ def ssWinno2():
     
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     
     FFX_memory.clickToDiagProgress(142)

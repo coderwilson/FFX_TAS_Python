@@ -112,7 +112,10 @@ def gameStage():
         stages = [0, 30, 120, 145, 163]
     else:
         stages = [0, 180, 240, 265, 283]
-    if abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 1:
+    if abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 1 \
+        and FFX_memory.getStoryProgress() > 560:
+        currentStage = 0
+    elif abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 2:
         currentStage = 0
     else:
         for i in range(5):

@@ -50,73 +50,47 @@ def arrival(blitzWin):
             #Main events
             if checkpoint == 1:
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 4: #Talking to Trommell
                 FFX_memory.clickToEventTemple(6)
                 if FFX_memory.getCoords()[0] < 23.5:
-                    FFX_memory.waitFrames(30 * 0.07)
+                    time.sleep(0.07)
                     FFXC.set_movement(1, 0)
-                    FFX_memory.waitFrames(30 * 0.035)
+                    time.sleep(0.035)
                     FFXC.set_neutral()
-                    FFX_memory.waitFrames(30 * 0.4)
+                    time.sleep(0.4)
                 checkpoint += 1
             elif checkpoint == 5: #Skip (new)
                 print("Lining up for skip.")
                 FFXC.set_movement(0, -1)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFXC.set_neutral()
                 while FFX_memory.getCoords()[1] < -101.5:
                     FFXC.set_value('Dpad', 8)
-                    FFX_memory.waitFrames(30 * 0.035)
+                    time.sleep(0.035)
                     FFXC.set_value('Dpad', 0)
-                    FFX_memory.waitFrames(30 * 0.09)
+                    time.sleep(0.09)
                 
                 print("Turning back")
-                FFX_memory.waitFrames(30 * 0.4)
+                time.sleep(0.4)
                 FFXC.set_movement(-1, 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                time.sleep(0.035)
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.4)
+                time.sleep(0.4)
                 
                 print("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
-                FFX_memory.waitFrames(30 * 0.08)
+                time.sleep(0.08)
                 FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.1)
+                time.sleep(0.1)
                 FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 1.5)
+                time.sleep(1.5)
                 FFXC.set_neutral()
                 checkpoint += 1
                 FFX_memory.clickToControl3()
             
-            elif checkpoint == 5: #Skip (old, disabled)
-                print("Lining up for skip.")
-                FFXC.set_movement(-1, -1)
-                FFX_memory.waitFrames(30 * 0.25)
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.3)
-                FFXC.set_movement(1, 0)
-                FFX_memory.waitFrames(30 * 0.085) #Shifting right
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.4)
-                FFXC.set_movement(-1, 0)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.4)
-                
-                print("Now lined up. Here we go.")
-                FFXC.set_movement(1, 0)
-                FFX_memory.waitFrames(30 * 0.08)
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.1)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 1.5)
-                FFXC.set_neutral()
-                print("Did it work? You decide!!!")
-                checkpoint += 1
-                FFX_memory.clickToControl3()
             elif checkpoint == 8: #Open chest
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
@@ -134,8 +108,12 @@ def arrival(blitzWin):
             elif checkpoint == 14: #Pause so we don't mess up the skip
                 if skipStatus == True:
                     FFXC.set_neutral()
-                    while FFX_memory.getCamera()[3] > -20:
-                        FFX_Xbox.tapB()
+                    #while FFX_memory.getCamera()[3] > -20:
+                    #    FFX_Xbox.tapB()
+                    FFX_Xbox.SkipDialog(5)
+                    FFXC.set_movement(0, -1)
+                    FFX_memory.awaitEvent()
+                    FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint < 16 and FFX_memory.getMap() == 239:
                 checkpoint = 16
@@ -176,17 +154,17 @@ def seymourFight():
     #Name for Shiva
     FFX_Xbox.nameAeon()
     
-    #FFX_memory.waitFrames(30 * 1)
+    #time.sleep(1)
     #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.2)
+    #time.sleep(0.2)
     #FFX_Xbox.menuUp()
     #FFX_Xbox.menuB()
     
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 4.5)
+    time.sleep(4.5)
     FFXC.set_neutral()
 
 def trials():
@@ -209,7 +187,7 @@ def trials():
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1)
+                time.sleep(1)
                 checkpoint += 1
             elif checkpoint == 13: # Grab first Mac Sphere
                 FFX_memory.clickToEventTemple(1)
@@ -227,7 +205,7 @@ def trials():
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1)
+                time.sleep(1)
                 checkpoint += 1
             elif checkpoint == 32: # Place Glyph sphere
                 FFX_memory.clickToEventTemple(7)
@@ -305,18 +283,18 @@ def wendigoFight():
 def underLake():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.8)
+    time.sleep(0.8)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(0, 1)
     FFX_memory.clickToEvent()
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1.5) #Approach Yuna
+    time.sleep(1.5) #Approach Yuna
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
@@ -335,11 +313,11 @@ def underLake():
     FFX_Xbox.SkipDialog(0.2)
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.25)
+    time.sleep(0.25)
     while FFX_memory.getCoords()[0] < -5:
         FFXC.set_movement(-1, 1)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1) #To Auron
+    time.sleep(1) #To Auron
     FFX_Xbox.SkipDialog(1.5)
     FFXC.set_movement(1, 0)
     FFX_Xbox.SkipDialog(0.4)
@@ -349,7 +327,7 @@ def underLake():
     FFX_memory.clickToControl()
     
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 10)
+    time.sleep(10)
     FFX_Xbox.skipScene()

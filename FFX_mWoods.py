@@ -61,14 +61,14 @@ def arrival(rikkucharged):
                 FFX_Xbox.tapB()
     
     #Save sphere
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     FFXC.set_neutral()
     FFX_Xbox.touchSaveSphere()
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFXC.set_neutral()
 
 def lakeRoad():
@@ -77,18 +77,18 @@ def lakeRoad():
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
     FFX_memory.fullPartyFormat('spheri')
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 5)
+    time.sleep(5)
     FFXC.set_neutral() #Engage Spherimorph
     
     FFX_Battle.spherimorph()
@@ -98,12 +98,12 @@ def lakeRoad():
     
 def lakeRoad2():
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 6)
+    time.sleep(6)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl() #Auron's musings.
     print("Affection (before): ", FFX_memory.affectionArray())
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     auronAffection = FFX_memory.affectionArray()[2]
     while FFX_memory.affectionArray()[2] == auronAffection: #Make sure we get Auron affection
         auronCoords = FFX_memory.getActorCoords(3)
@@ -116,7 +116,7 @@ def lakeRoad2():
     
     FFX_memory.clickToControl() #Last map in the woods
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 4)
+    time.sleep(4)
     FFXC.set_neutral()
 
 def lake():

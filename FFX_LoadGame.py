@@ -17,19 +17,19 @@ FFXC = FFX_Xbox.controllerHandle()
 def LoadFirst():
     print("Loading to first save file")
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuB()
     FFX_memory.awaitControl()
 
 def loadOffset(offset):
     print("Loading to save file in position ", offset)
-    #FFX_memory.waitFrames(30 * 0.2)
+    #time.sleep(0.2)
     #FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     while offset > 0:
         FFXC.set_value('Dpad', 2)
         FFX_memory.waitFrames(2)
@@ -37,37 +37,37 @@ def loadOffset(offset):
         FFX_memory.waitFrames(4)
 
         offset -= 1
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFX_Xbox.menuB()
     FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 0.5)
+    #time.sleep(0.5)
     FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
 
 def loadOffsetBattle(offset):
     print("Loading to save file in position ", offset)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     while offset > 0:
         FFX_Xbox.menuDown()
         offset -= 1
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
 
 def loadMemCursor():
     FFX_memory.awaitControl()
     FFX_memory.openMenu()
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     if FFX_memory.getStoryProgress() > 3000:
         FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
@@ -82,32 +82,32 @@ def loadPostBlitz():
         if FFX_Screen.Minimap4():
             FFXC.set_value('AxisLx', -1)
             FFXC.set_value('AxisLy', -1)
-            FFX_memory.waitFrames(30 * 0.5)
+            time.sleep(0.5)
             FFXC.set_value('AxisLx', 0)
-            FFX_memory.waitFrames(30 * 1)
+            time.sleep(1)
             FFXC.set_value('AxisLy', 0)
         else:
             FFX_Xbox.menuB()
     
     #Reverse T screen
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 4.5)
+    time.sleep(4.5)
     FFXC.set_value('AxisLy', -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLy', 0)
-    FFX_memory.waitFrames(30 * 5)
+    time.sleep(5)
     FFXC.set_value('AxisLx', 0)
     
     #Carnival vendor screen
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
     
@@ -116,7 +116,7 @@ def loadPostBlitz():
     print("Walking up to Yuna.")
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0) #Enters laughing scene, ends Luca section.
     print("End of loading section.")
@@ -126,65 +126,65 @@ def LoadNeutral():
     
 def LoadBaaj():
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.04)
+    time.sleep(0.04)
 
 def BesaidTrials() :
     loadOffset(29)
     #Exit Tent
     FFXC.set_value('AxisLy', -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLy', 0)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 4)
+    time.sleep(4)
     
     #To the temple
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 12)
+    time.sleep(12)
     FFXC.set_value('AxisLy', 0)
 
 def Boat1() :
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     #To the junction screen, then back.
     FFXC.set_value('AxisLy', -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLy', 0)
-    FFX_memory.waitFrames(30 * 6)
+    time.sleep(6)
     FFXC.set_value('AxisLy', -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLy', 0)
 
 def Kilika():
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuDown()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 4)
+    time.sleep(4)
     FFX_memory.awaitControl()
 
 def KilikaTrials():
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
 
 def LoadMiihenStart_Laugh():
@@ -216,10 +216,10 @@ def LoadMiihenStart_Laugh():
     while not FFX_targetPathing.setMovement([129,101]):
         doNothing = True
     FFX_memory.clickToEventTemple(1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
 
@@ -276,26 +276,26 @@ def LoadMiihenStart():
 
 def LoadMRR():
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
     FFX_memory.clickToControl()
 
 def LoadMRR2():
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_Xbox.SkipDialog(2)
     FFXC.set_neutral()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFX_memory.awaitControl()
     while FFX_Screen.getMap() != 79:
         FFXC.set_movement(-1, -1)
@@ -303,62 +303,62 @@ def LoadMRR2():
 def AfterGui():
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     FFXC.set_neutral()
     
     #Same pattern as the actual run.
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 6)
+    time.sleep(6)
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     pos = FFX_memory.getCoords()
     while pos[0] < ((0.05 * pos[1]) + 942.12):
         FFXC.set_movement(1, 0)
         pos = FFX_memory.getCoords()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 5.5)
+    time.sleep(5.5)
     FFXC.set_neutral()
     
 def djoseTemple():
     loadOffset(19)
-    FFX_memory.waitFrames(30 * 6)
+    time.sleep(6)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
-    FFX_memory.waitFrames(30 * 1.7)
+    time.sleep(1.7)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     
 def moonflow2():
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.7)
+    time.sleep(0.7)
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
 
 def loadGuadoSkip():
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.6)
+    time.sleep(0.6)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.9)
+    time.sleep(0.9)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 2.2)
+    time.sleep(2.2)
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_movement(1, 1)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFX_memory.awaitControl()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
 
 def loadMacLake():
@@ -370,11 +370,11 @@ def loadMacLake():
 
 def loadMacTemple():
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     
 def loadMacTemple2():
@@ -382,9 +382,9 @@ def loadMacTemple2():
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLx', -1)
     FFXC.set_value('AxisLy', -1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
 
@@ -406,12 +406,12 @@ def loadWendigo():
 def loadRescue():
     FFX_memory.awaitControl()
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.7)
+    time.sleep(0.7)
     FFXC.set_movement(0, -1)
     while FFX_memory.userControl():
         doNothing = True
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_memory.awaitControl()
     FFX_memory.fullPartyFormat('evrae')
     #FFX_menu.weddingPrep()
@@ -423,17 +423,17 @@ def loadBahamut():
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     
 def loadCalm():
     FFXC.set_value('AxisLx', 1)
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_value('AxisLy', 0)
     FFX_memory.awaitControl()
     
@@ -441,37 +441,37 @@ def loadGagaGates():
     loadOffset(1)
     FFXC.set_value('AxisLx', 1)
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
 
 def zanEntrance():
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_value('AxisLx', -1)
-    FFX_memory.waitFrames(30 * 2.5)
+    time.sleep(2.5)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
 
 def zanTrials():
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_value('AxisLy', 0)
 
 def loadGagazetDream():
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
     FFX_memory.awaitControl()
 
 def loadEggHunt():
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_movement(0, 1)
     while FFX_memory.getMap() == 327:
         keepMoving = True
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)

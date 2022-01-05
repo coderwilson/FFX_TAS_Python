@@ -28,9 +28,9 @@ def blitzMain(forceBlitzWin):
     while FFX_memory.getStoryProgress() < 583:    
         if FFX_memory.getMap() != 62: #Wakka scene
             FFXC.set_value('BtnB', 1)
-            FFX_memory.waitFrames(30 * 0.04)
+            time.sleep(0.04)
             FFXC.set_value('BtnB', 0)
-            FFX_memory.waitFrames(30 * 0.04)
+            time.sleep(0.04)
         else:
             allDefense() #Now with Wakka in the game
     
@@ -51,7 +51,7 @@ def blitzStart():
             FFX_Xbox.menuB()
     
     aurochsFirst = True
-    FFX_memory.waitFrames(30 * 12) #Delay so that the coords have time to commit.
+    time.sleep(12) #Delay so that the coords have time to commit.
     blitzCoords = FFX_memory.blitzCoords()
     print("Coords: ", blitzCoords)
     if blitzCoords[0] > 10:
@@ -97,20 +97,20 @@ def breakOnePassLast():
     FFX_memory.awaitMenuControl()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Break all
-    FFX_memory.waitFrames(30 * 0.05)
+    time.sleep(0.05)
     FFX_memory.awaitMenuControl()
     FFX_Xbox.menuUp() #Try to continue the Dribble
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.8)
+    time.sleep(0.8)
     FFX_Xbox.menuUp() #Try to continue the Dribble
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.05)
+    time.sleep(0.05)
 
 def manualMovement():
     print("Attempting to take manual control.")
     
     #breakOnePassLast()
-    #FFX_memory.waitFrames(30 * 2)
+    #time.sleep(2)
     complete = False
     while complete == False:
         menuNum = FFX_memory.blitzMenuNum()
@@ -122,27 +122,27 @@ def manualMovement():
             FFX_memory.awaitMenuControl()
             FFX_Xbox.menuUp()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(30 * 0.3)
+            time.sleep(0.3)
         elif menuNum == 20:
             print("Movement menu has been opened.")
             FFX_memory.awaitMenuControl()
             FFX_Xbox.menuDown()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(30 * 0.3)
+            time.sleep(0.3)
             FFX_memory.awaitMenuControl()
             FFX_Xbox.menuUp()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(30 * 0.3)
+            time.sleep(0.3)
             complete = True
         elif menuNum == 38:
             print("Something is wrong. Break-through menu is open.")
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(30 * 5)
+            time.sleep(5)
         else:
             player = FFX_memory.blitzTargetPlayer()
             if player == 12 or player == 18:
                 print("Opposing team has the ball.")
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             else:
@@ -157,11 +157,11 @@ def halfTimeXP():
 def secondHalfPrep():
     print("Setting up for second half.")
     while FFX_memory.blitzClockMenu() != 187:
-        FFX_memory.waitFrames(30 * 0.02)
-    FFX_memory.waitFrames(30 * 5)
+        time.sleep(0.02)
+    time.sleep(5)
     FFX_Xbox.menuA()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.8)
+    time.sleep(0.8)
     FFX_Xbox.menuA()
     FFX_Xbox.menuB()
     FFX_Xbox.SkipDialog(3)

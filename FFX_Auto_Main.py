@@ -59,10 +59,10 @@ import FFX_Sin
 #StepCounter = 2
 Gamestate = "Macalania"
 #StepCounter = 1
-StepCounter = 2
+#StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
-#StepCounter = 7
+StepCounter = 6
 #Gamestate = "Home"
 #StepCounter = 1
 #Gamestate = "rescueYuna"
@@ -241,9 +241,9 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
-        FFX_LoadGame.loadOffset(15)
+        FFX_LoadGame.loadOffset(17)
         time.sleep(0.5)
-        FFXC.set_movement(0, 1)
+        FFXC.set_movement(1, 1)
         time.sleep(1.5)
         FFXC.set_neutral()
         time.sleep(0.5)

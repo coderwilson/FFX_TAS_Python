@@ -15,57 +15,57 @@ def arrival():
     FFX_memory.clickToControl()
     
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3.5)
+    time.sleep(3.5)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.6)
+    time.sleep(0.6)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl3()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl3()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral() #Enter the room where we meet Seymour
     
     FFX_memory.clickToControl3()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_memory.clickToEvent() #Talk to Auron (first for affection)
     FFXC.set_neutral()
     FFX_memory.clickToControl3()
     
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.7)
+    time.sleep(0.7)
     FFXC.set_movement(0, -1)
     FFX_memory.clickToEvent() #Start conversation with Wakka
     FFXC.set_neutral()
     FFX_memory.clickToControl3()
     
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFX_memory.clickToEvent() #Lulu conversation
     FFXC.set_neutral()
     FFX_memory.clickToControl3()
     
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.25)
+    time.sleep(0.25)
     FFXC.set_movement(0, 1)
     FFX_memory.clickToEvent() # Yuna's turn
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_neutral()
     FFX_memory.clickToControl3()
     
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     FFX_memory.clickToEvent() #Start conversation with Rikku
     FFXC.set_neutral()
     FFX_Xbox.SkipDialog(66) #Seymour/Trommell
@@ -75,58 +75,58 @@ def afterSpeech():
     FFX_memory.clickToControl() #Skips through the long cutscene
     FFX_menu.guadoRikku()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 8) #Out of the room and to the party
+    time.sleep(8) #Out of the room and to the party
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 1.25)
+    time.sleep(1.25)
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 0.7)
+    time.sleep(0.7)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 5)
+    time.sleep(5)
     FFXC.set_neutral()
     
     FFX_memory.awaitControl() #Doorway to the Farplane
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_neutral()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFX_Xbox.menuB() #Open the chest
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 4)
+    time.sleep(4)
     FFXC.set_neutral()
     
     FFX_memory.awaitControl() #Approach party
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl() #Enter discussion farplane with Auron and Rikku
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl() #Finish with Auron/Rikku, and head to farplane
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl() # Farplane, green square
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl() # Farplane, green square
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
 
 def guadoSkip():
@@ -135,18 +135,18 @@ def guadoSkip():
     print("Affection array:")
     print(FFX_memory.affectionArray())
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.8)
+    time.sleep(0.8)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 3.7)
+    time.sleep(3.7)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1.7)
+    time.sleep(1.7)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral() #Approach the party
     
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, -1)
     pos = FFX_memory.getCoords()
@@ -156,9 +156,9 @@ def guadoSkip():
     FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(0.8) #Talk to the walking guado
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 2.6)
+    time.sleep(2.6)
     FFX_Xbox.menuB() #Close dialog
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_movement(0, 1)
     print("Past walking guado")
     while pos[1] < 50:
@@ -194,9 +194,9 @@ def guadoSkip():
         FFX_memory.waitFrames(5)
         pos = FFX_memory.getCoords()
     
-    FFX_memory.waitFrames(30 * 0.15)
+    time.sleep(0.15)
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.04)
+    time.sleep(0.04)
     FFXC.set_neutral() #Face downward
     while pos[1] > -9:
         FFXC.set_value('Dpad', 2)
@@ -227,7 +227,7 @@ def guadoSkip():
         if currentTime > maxTime:
             print("Skip failed for some reason. Moving on without skip.")
             break
-    FFX_memory.waitFrames(30 * 0.035) #Guado potions good!
+    time.sleep(0.035) #Guado potions good!
     FFX_Xbox.tapB()
     
     guadoSkipStatus = False
