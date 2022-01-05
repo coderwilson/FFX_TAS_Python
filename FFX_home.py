@@ -45,6 +45,7 @@ def desert():
     itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
     
     FFX_menu.equipSonicSteel()
+    FFX_memory.closeMenu()
     
     checkpoint = 0
     firstFormat = False

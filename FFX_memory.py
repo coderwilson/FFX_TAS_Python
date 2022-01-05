@@ -571,6 +571,13 @@ def getBattleNum():
     #print("Battle Number: ", formation)
     return formation
 
+def clearBattleNum():
+    global baseValue
+
+    key = baseValue + 0x00D2A8EC
+    process.write(key, 0)
+
+
 def getActiveBattleFormation():
     global baseValue
 
@@ -2690,6 +2697,7 @@ def getEquipAbilities(equipNum):
     retVal[2] = process.readBytes(key,2)
     key = basePointer + (0x16 * equipNum) +0x14
     retVal[3] = process.readBytes(key,2)
+    #print(retVal)
     return retVal
 
 def getEquipExists(equipNum):
@@ -2718,9 +2726,9 @@ class equipment:
         return self.equipAbilities
     
     def hasAbility(self, abilityNum):
-        for i in range(4):
-            if self.equipAbilities[i] == abilityNum:
-                return True
+        #print(self.equipAbilities)
+        if abilityNum in self.equipAbilities:
+            return True
         return False
         
     def isEquipped(self):
@@ -2740,17 +2748,18 @@ def allEquipment():
 
 def weaponArrayCharacter(charNum):
     equipHandles = allEquipment()
-    print("####")
-    print(equipHandles)
-    print("####")
+    #print("####")
+    #print(equipHandles)
+    #print("####")
     firstEquipment = True
     while len(equipHandles) > 0:
-        print(len(equipHandles))
+        #print(len(equipHandles))
         currentHandle = equipHandles.pop(0)
-        print("Owner: ", currentHandle.owner())
+        #print("Owner: ", currentHandle.owner())
         if currentHandle.owner() == charNum and currentHandle.equipmentType() == 0:
             if firstEquipment:
                 charWeaps = [currentHandle]
+                firstEquipment = False
             else:
                 charWeaps.append(currentHandle)
     return charWeaps
@@ -2762,6 +2771,7 @@ def armorArrayCharacter(charNum):
         if equipHandles[i].owner() == charNum and equipHandles[i].equipmentType() == 1:
             if firstEquipment:
                 charWeaps = [equipHandles[i]]
+                firstEquipment = False
             else:
                 charWeaps.append(equipHandles[i])
     return charWeaps

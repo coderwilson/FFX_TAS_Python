@@ -57,14 +57,14 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
+#Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
-StepCounter = 6
-#Gamestate = "Home"
-#StepCounter = 1
+#StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
+Gamestate = "Home"
+StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
 #StepCounter = 2
@@ -242,18 +242,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
         FFX_LoadGame.loadOffset(17)
-        time.sleep(0.5)
-        FFXC.set_movement(1, 1)
-        time.sleep(1.5)
-        FFXC.set_neutral()
-        time.sleep(0.5)
+        FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
         FFX_LoadGame.loadOffsetBattle(0)
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadOffset(15)
     if Gamestate == "Home" and StepCounter == 2:
-        FFX_LoadGame.loadOffset(4)
+        FFX_LoadGame.loadOffset(7)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
         FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()

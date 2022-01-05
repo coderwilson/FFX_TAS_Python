@@ -54,21 +54,31 @@ def tidusFlee():
     if FFX_memory.otherBattleMenu():
         while FFX_memory.otherBattleMenu():
             FFX_Xbox.menuA()
-    while FFX_memory.battleMenuCursor() != 20:
-        print(FFX_memory.battleMenuCursor()) #Testing only
-        if FFX_Screen.turnTidus() == False:
-            break
-        if FFX_memory.battleMenuCursor() == 255:
-            FFX_memory.waitFrames(30 * 0.01)
-        elif FFX_memory.battleMenuCursor() == 1:
-            FFX_Xbox.menuUp()
-        elif FFX_memory.battleMenuCursor() > 20:
-            FFX_Xbox.menuUp()
+    while FFX_memory.mainBattleMenu():
+        while FFX_memory.battleMenuCursor() != 20:
+            print(FFX_memory.battleMenuCursor()) #Testing only
+            if FFX_Screen.turnTidus() == False:
+                break
+            if FFX_memory.battleMenuCursor() == 255:
+                FFX_memory.waitFrames(30 * 0.01)
+            elif FFX_memory.battleMenuCursor() == 1:
+                FFX_Xbox.menuUp()
+            elif FFX_memory.battleMenuCursor() > 20:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuDown()
+            FFXC.set_neutral()
+            FFX_memory.waitFrames(1)
+        FFX_memory.waitFrames(2)
+        FFX_Xbox.menuB()
+        FFX_memory.waitFrames(2)
+    while FFX_memory.battleCursor2() != 0:
+        if FFX_memory.battleCursor2() % 2 == 1:
+            FFX_Xbox.menuLeft()
         else:
-            FFX_Xbox.menuDown()
-        FFXC.set_neutral()
-        FFX_memory.waitFrames(30 * 0.035)
-    FFX_Xbox.SkipDialog(1.5)
+            FFX_Xbox.menuUp()
+    
+    FFX_Xbox.SkipDialog(1)
 
 def tidusHaste(direction):
     direction = direction.lower()
@@ -2702,36 +2712,36 @@ def fullheal(target: int, direction: str):
         FFX_memory.waitFrames(30 * 0.07)
         print("Direction: ", direction)
         direction = direction.lower()
-        
-        while FFX_memory.battleTargetId() != target:
-            if direction == 'l':
-                if FFX_memory.battleTargetId() >= 20:
-                    print("Wrong battle line targetted.")
-                    FFX_Xbox.menuRight()
-                    direction = 'u'
-                else:
-                    FFX_Xbox.menuLeft()
-            elif direction == 'r':
-                if FFX_memory.battleTargetId() >= 20:
-                    print("Wrong character targetted.")
-                    FFX_Xbox.menuLeft()
-                    direction = 'd'
-                else:
-                    FFX_Xbox.menuRight()
-            elif direction == 'u':
-                if FFX_memory.battleTargetId() >= 20:
-                    print("Wrong character targetted.")
-                    FFX_Xbox.menuDown()
-                    direction = 'l'
-                else:
-                    FFX_Xbox.menuUp()
-            elif direction == 'd':
-                if FFX_memory.battleTargetId() >= 20:
-                    print("Wrong character targetted.")
-                    FFX_Xbox.menuUp()
-                    direction = 'r'
-                else:
-                    FFX_Xbox.menuDown()
+        if itemnum != 3:
+            while FFX_memory.battleTargetId() != target:
+                if direction == 'l':
+                    if FFX_memory.battleTargetId() >= 20:
+                        print("Wrong battle line targetted.")
+                        FFX_Xbox.menuRight()
+                        direction = 'u'
+                    else:
+                        FFX_Xbox.menuLeft()
+                elif direction == 'r':
+                    if FFX_memory.battleTargetId() >= 20:
+                        print("Wrong character targetted.")
+                        FFX_Xbox.menuLeft()
+                        direction = 'd'
+                    else:
+                        FFX_Xbox.menuRight()
+                elif direction == 'u':
+                    if FFX_memory.battleTargetId() >= 20:
+                        print("Wrong character targetted.")
+                        FFX_Xbox.menuDown()
+                        direction = 'l'
+                    else:
+                        FFX_Xbox.menuUp()
+                elif direction == 'd':
+                    if FFX_memory.battleTargetId() >= 20:
+                        print("Wrong character targetted.")
+                        FFX_Xbox.menuUp()
+                        direction = 'r'
+                    else:
+                        FFX_Xbox.menuDown()
 
         FFX_Xbox.menuB()
         FFX_Xbox.menuB()
@@ -3114,7 +3124,7 @@ def sandragora(version):
         FFX_Xbox.menuRight()
         FFX_Xbox.menuB()
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 2)
+        FFX_memory.waitFrames(90)
         # Overdrive pattern
         print("Auron Overdrive")
         FFX_Xbox.tapY()
@@ -3363,15 +3373,7 @@ def Evrae():
                 if rikkuTurns == 0:
                     rikkuTurns += 1
                     print("Rikku overdrive")
-                    while not FFX_memory.otherBattleMenu():
-                        FFX_Xbox.menuLeft()
-                    FFX_memory.waitFrames(30 * 0.4)
-                    FFX_Xbox.menuB()
-                    FFX_memory.waitFrames(30 * 0.8)
                     rikkuFullOD('Evrae')
-
-                    FFX_Xbox.menuB()  # Engage overdrive
-                    FFX_Xbox.menuB()  # For safety
                 else:
                     Steal()
             else:
@@ -5381,9 +5383,9 @@ def kimahriOD(pos):
     print("Kimahri using Overdrive")
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
-    FFX_memory.waitFrames(30 * 0.3)
+    FFX_memory.waitFrames(30)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
+    FFX_memory.waitFrames(30)
 
     if pos % 2 == 0:
         FFX_Xbox.menuRight()

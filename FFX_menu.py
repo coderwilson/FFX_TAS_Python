@@ -843,9 +843,9 @@ def afterSeymour():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed', 'd', 'none')
     FFX_menuGrid.useAndQuit()
-    currentmenuposition = 1
+    #currentmenuposition = 1
     #currentmenuposition = autoSortItems_New('n', 11)
-    currentmenuposition = equipSonicSteel()
+    equipSonicSteel()
     #currentmenuposition = FFX_memory.fullPartyFormat_New('macalaniaescape',11)
     FFX_memory.closeMenu()
 
@@ -857,20 +857,8 @@ def homeGrid():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Formation
-    #FFX_Xbox.menuB() #Tidus
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Tidus to slot 1, Auron to 3
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Wakka to 2, Kimahri to 4
+    
+    FFX_memory.fullPartyFormat('desert1')
     FFX_memory.closeMenu()
     #itemPos(20,9)
 
@@ -932,45 +920,6 @@ def beforeGuards(): #Incomplete
     time.sleep(0.4)
     FFX_Xbox.menuB()
 
-def equipSonicSteel_Old(menusize):
-    print("Equipping Sonic Steel")
-    FFX_memory.awaitControl()
-    while not FFX_memory.menuOpen():
-        FFX_memory.openMenu()
-    currentmenuposition = FFX_memory.getMenuCursorPos()
-    targetmenuposition = 4
-    menudistance = abs(targetmenuposition - currentmenuposition)
-
-    if menudistance < menusize / 2:
-        for i in range(menudistance):
-            if targetmenuposition > currentmenuposition:
-                FFX_Xbox.menuDown()
-            else:
-                FFX_Xbox.menuUp()
-    else:
-        for i in range(menusize - menudistance):
-            if targetmenuposition > currentmenuposition:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-
-    FFX_Xbox.menuB()
-    time.sleep(0.5)
-    FFX_Xbox.menuB()  # Tidus
-    time.sleep(0.5)
-    FFX_Xbox.menuB()  # Weapon
-    time.sleep(0.5)
-    FFX_Xbox.menuDown()
-    time.sleep(0.05)
-    #while not FFX_Screen.PixelTestTol(1058, 517, (220, 220, 220), 5):
-    #    FFX_Xbox.menuDown()
-    #    time.sleep(0.05)
-    FFX_Xbox.menuB()
-    time.sleep(0.1)
-    FFX_Xbox.menuA()
-
-    return 5
-
 def equipSonicSteel():
     print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
@@ -985,15 +934,21 @@ def equipSonicSteel():
     FFX_Xbox.menuB()  # Tidus
     FFX_memory.waitFrames(15)
     FFX_Xbox.menuB()  # Weapon
-    FFX_memory.waitFrames(15)
+    FFX_memory.waitFrames(15) #Allow cursor to set
     
     weaponHandles = FFX_memory.weaponArrayCharacter(0)
+    print("@@@@@")
+    print(len(weaponHandles))
+    print("@@@@@")
     weaponNum = 255
+    i = 0
     while len(weaponHandles) > 0:
         currentHandle = weaponHandles.pop(0)
         if currentHandle.hasAbility(32769): #First Strike
-            weaponNum = id
+            weaponNum = i
+        i += 1
     
+    print("Sonic Steel is in slot ", weaponNum)
     if weaponNum == 255:
         return False #Item is no in inventory.
     
@@ -1004,8 +959,10 @@ def equipSonicSteel():
             FFX_Xbox.tapUp()
         FFX_memory.waitFrames(1)
     
-    FFX_memory.waitFrames(1)
-    FFX_memory.waitFrames(1)
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(3)
+    FFX_Xbox.menuA()
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuA()
     FFX_memory.waitFrames(12)
 
