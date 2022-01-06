@@ -299,7 +299,7 @@ def LoadMRR2():
     FFX_memory.awaitControl()
     for i in range(20):
         print(f"Sleeping for {20-i} more seconds...")
-        time.sleep(1)
+        FFX_memory.waitFrames(30 * 1)
 
 def AfterGui():
     FFX_memory.awaitControl()

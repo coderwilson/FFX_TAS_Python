@@ -64,8 +64,8 @@ StepCounter = 1
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-Gamestate = "Home"
-StepCounter = 2
+#Gamestate = "Home"
+#StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
 #StepCounter = 2
@@ -142,7 +142,7 @@ import FFX_Logs
 print("FFX automation starting")
 FFX_Logs.nextStats(rngSeedNum)
 print("Please launch the game now.")
-#time.sleep(5)
+#FFX_memory.waitFrames(30 * 5)
 #print("Now attempting to activate FFX window")
 reportGamestate()
 
@@ -192,13 +192,14 @@ if Gamestate != "none" :
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
         FFX_LoadGame.loadOffset(33)
         FFXC.set_movement(0, 1)
-        time.sleep(5)
+        FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
     if Gamestate == "Boat3":
         FFX_LoadGame.loadOffset(1)
         FFXC.set_movement(0, 1)
-        time.sleep(1)
+        FFX_memory.waitFrames(30 * 1)
         FFXC.set_neutral()
+        FFX_memory.waitFrames(30 * 2)
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
         FFX_LoadGame.loadOffset(47)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
@@ -213,7 +214,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(21)
         FFX_LoadGame.LoadMiihenStart()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(38)
+        FFX_LoadGame.loadOffset(29)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.loadOffset(19)
@@ -310,7 +311,7 @@ while Gamestate != "End":
         reportGamestate()
         FFX_DreamZan.NewGame(Gamestate)
         Gamestate = "DreamZan"
-        time.sleep(0.5)
+        FFX_memory.waitFrames(30 * 0.5)
         FFX_DreamZan.NewGame2()
         startTime = FFX_Logs.timeStamp()
         FFX_Logs.writeStats("Start time:")
@@ -483,7 +484,7 @@ while Gamestate != "End":
             Gamestate = 'none'
             StepCounter = 1
             FFXC.set_movement(0, -1) #Step away from the save sphere
-            time.sleep(2)
+            FFX_memory.waitFrames(30 * 2)
             FFXC.set_neutral()
             import FFX_Reset
             print("------------------------------------------")
@@ -496,7 +497,7 @@ while Gamestate != "End":
             
             #FFX_Logs.writeStats("Test duration:")
             #FFX_Logs.writeStats(totalTime)
-            time.sleep(2)
+            FFX_memory.waitFrames(30 * 2)
 
             FFX_Reset.resetToMainMenu()
             StepCounter = 1
@@ -560,7 +561,7 @@ while Gamestate != "End":
             FFXC.set_neutral()
             FFX_memory.clickToControl()
 
-            time.sleep(2)
+            FFX_memory.waitFrames(30 * 2)
 
             FFX_Reset.resetToMainMenu()
             StepCounter = 1
@@ -823,7 +824,7 @@ while Gamestate != "End":
         Gamestate = "End"
 
 #print("Waiting for Yu Yevon to die.")
-#time.sleep(6)
+#FFX_memory.waitFrames(30 * 6)
 print("Time! The game is now over.")
 
 #except Exception as errMsg:
@@ -831,7 +832,7 @@ print("Time! The game is now over.")
 #    print("Something went wrong during the run. Error:")
 #    print(errMsg)
 #    print("--------------------------------------------------")
-#    time.sleep(20)
+#    FFX_memory.waitFrames(30 * 20)
 
 endTime = FFX_Logs.timeStamp()
 FFX_Logs.writeStats("End time:")
@@ -841,7 +842,7 @@ totalTime = endTime - startTime
 FFX_Logs.writeStats("Total time:")
 FFX_Logs.writeStats(str(totalTime))
 print("The game duration was: ", str(totalTime))
-time.sleep(10)
+FFX_memory.waitFrames(30 * 10)
 
 
 FFX_memory.end()
