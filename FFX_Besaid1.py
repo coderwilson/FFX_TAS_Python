@@ -241,7 +241,7 @@ def leaving():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
-                FFX_Xbox.skipScene()
+                FFX_Xbox.skipScene(fast_mode=True)
             elif checkpoint < 20 and FFX_Screen.BattleScreen(): #Attacking tutorial
                 FFX_Battle.attack('none')
             elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri fight

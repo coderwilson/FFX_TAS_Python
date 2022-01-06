@@ -49,7 +49,8 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
+Gamestate = "MRR"
+StepCounter = 1
 #StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
@@ -81,7 +82,7 @@ StepCounter = 2
 #StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-forceBlitzWin = False
+forceBlitzWin = True
 autoEggHunt = True
 
 ####################################################################################################
@@ -212,10 +213,10 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(21)
         FFX_LoadGame.LoadMiihenStart()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(38)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(38)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(8)

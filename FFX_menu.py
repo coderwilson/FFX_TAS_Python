@@ -1675,3 +1675,4 @@ def openGrid(character):
                 FFXC = FFX_Xbox.controllerHandle()
                 FFXC.set_neutral()
             FFX_memory.waitFrames(3)
+

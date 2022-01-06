@@ -2060,19 +2060,19 @@ def mWoods(woodsVars):
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
             turnchar = FFX_memory.getBattleCharTurn()
-            if checkPetrifyTidus() == True:
+            if checkPetrifyTidus():
                 fleeAll()
                 break
-            if woodsVars[0] == False:  # Rikku needs charging.
+            if not woodsVars[0]:  # Rikku needs charging.
                 print("Marker 1")
                 if turnchar == 6:
-                    if battleNum == 175 and woodsVars[2] == False:
+                    if battleNum == 175 and not woodsVars[2]:
                         print("Marker 2")
                         Steal()
-                    elif battleNum == 172 and woodsVars[1] == False:
+                    elif battleNum == 172 and not woodsVars[1]:
                         print("Marker 3")
                         StealDown()
-                    elif battleNum == 171 and woodsVars[1] == False:
+                    elif battleNum == 171 and not woodsVars[1]:
                         print("Marker 4")
                         StealRight()
                     else:
@@ -2081,13 +2081,13 @@ def mWoods(woodsVars):
                 else:
                     print("Marker 6")
                     escapeOne()
-            elif woodsVars[1] == False or woodsVars[2] == False:
-                if battleNum == 175 and woodsVars[2] == False:
+            elif not woodsVars[1] or not woodsVars[2]:
+                if battleNum == 175 and not woodsVars[2]:
                     print("Marker 7")
                     if turnchar == 0:
                         #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
                         wakkaSafe = True
-                        if tidusturns == 0 and wakkasafe == True:
+                        if tidusturns == 0 and wakkasafe:
                             rikkuposition = FFX_memory.getBattleCharSlot(6)
                             buddySwap_new(rikkuposition)
                         else:
@@ -2095,7 +2095,7 @@ def mWoods(woodsVars):
                         tidusturns += 1
                     elif turnchar == 2:
                         tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition > 2:
+                        if tidusposition > 3:
                             buddySwapTidus()
                         else:
                             escapeOne()
@@ -2125,7 +2125,7 @@ def mWoods(woodsVars):
                         tidusturns += 1
                     elif turnchar == 2:
                         tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition > 2:
+                        if tidusposition > 3:
                             buddySwapTidus()
                         else:
                             escapeOne()
@@ -2155,7 +2155,7 @@ def mWoods(woodsVars):
                         tidusturns += 1
                     elif turnchar == 2:
                         tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition > 2:
+                        if tidusposition > 3:
                             buddySwapTidus()
                         else:
                             escapeOne()
@@ -2187,8 +2187,8 @@ def mWoods(woodsVars):
     if FFX_memory.getUseItemsSlot(24) != 255:
         woodsVars[2] = True
     print("Checking battle formation.")
-    if woodsVars[0] == True:
-        if woodsVars[1] == True and woodsVars[2] == True:
+    if woodsVars[0]:
+        if woodsVars[1] and woodsVars[2]:
             print("Party format: mwoodsdone")
             FFX_memory.fullPartyFormat("mwoodsdone")
         else:
@@ -5253,8 +5253,10 @@ def fleeLateGame():
                     else:
                         FFX_Xbox.menuDown()
                 FFX_Xbox.SkipDialog(1.5)
-            else:
+            elif not checkTidusOk():
                 escapeOne()
+            else:
+                defend()
         FFX_memory.waitFrames(30 * 0.4)
         if FFX_Screen.BattleComplete():
             FFXC.set_value('BtnB', 1)
@@ -5817,3 +5819,4 @@ def rikkuFullOD(battle):
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
+    return not any(func(0) for func in [FFX_memory.petrifiedstate, FFX_memory.confusedState, FFX_memory.deadstate, FFX_memory.berserkstate])

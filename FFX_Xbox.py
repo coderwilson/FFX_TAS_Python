@@ -107,17 +107,20 @@ FFXC = vgTranslator()
 def controllerHandle():
     return FFXC
 
-def skipScene():
-    print("Skip cutscene")
-    FFX_memory.waitFrames(2)
-    FFXC.set_value('BtnStart', 1) #Generate button to skip
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnStart', 0)
-
-    FFX_memory.waitFrames(2)
-    tapX()
-    #FFX_memory.waitFrames(2)
-    SkipDialog(2)
+def skipScene(fast_mode: bool = False):
+    cutsceneID = FFX_memory.getCutsceneID()
+    print(cutsceneID)
+    if not fast_mode or cutsceneID not in processed_cutscenes:
+        print("Skip cutscene")
+        FFX_memory.waitFrames(2)
+        FFXC.set_value('BtnStart', 1) #Generate button to skip
+        FFX_memory.waitFrames(1)
+        FFXC.set_value('BtnStart', 0)
+        FFX_memory.waitFrames(2)
+        tapX()
+        processed_cutscenes.add(cutsceneID)
+    if not fast_mode: FFX_memory.waitFrames(60)
+    #SkipDialog(2)
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
