@@ -23,24 +23,24 @@ def arrival():
         if FFX_memory.userControl():
             if checkpoint == 3:
                 FFXC.set_movement(-1, 0)
-                time.sleep(0.7)
+                FFX_memory.waitFrames(30 * 0.7)
                 FFXC.set_neutral()
-                time.sleep(0.4)
+                FFX_memory.waitFrames(30 * 0.4)
                 FFXC.set_movement(1, -1)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_neutral()
-                time.sleep(2.3)
+                FFX_memory.waitFrames(30 * 2.3)
                 if FFX_memory.userControl() == False:
                     FFX_Battle.fleeAll()
                     FFX_Battle.wrapUp()
                     FFXC.set_movement(-1, 0)
-                    time.sleep(0.7)
+                    FFX_memory.waitFrames(30 * 0.7)
                     FFXC.set_neutral()
-                    time.sleep(0.4)
+                    FFX_memory.waitFrames(30 * 0.4)
                     FFXC.set_movement(1, -1)
-                    time.sleep(0.035)
+                    FFX_memory.waitFrames(30 * 0.035)
                     FFXC.set_neutral()
-                    time.sleep(0.3)
+                    FFX_memory.waitFrames(30 * 0.3)
                 print("Attempting skip.")
                 FFX_Xbox.menuB()
                 
@@ -191,14 +191,14 @@ def battleSite():
                 checkpoint += 1
             elif checkpoint == 12:
                 FFXC.set_movement(0, 1)
-                time.sleep(1)
+                FFX_memory.waitFrames(30 * 1)
                 checkpoint += 1
             elif checkpoint == 14:
                 FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
                 FFX_Xbox.tapB() #Tell me when you're ready.
                 FFXC.set_neutral()
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.tapB()
                 checkpoint = 100

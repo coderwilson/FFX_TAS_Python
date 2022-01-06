@@ -18,19 +18,19 @@ def makingPlans():
     
     #Start by touching the save sphere
     FFXC.set_movement(-1, -1)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_neutral()
     FFX_Xbox.menuB()
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFX_Xbox.menuB()
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFX_Xbox.menuA()
     FFX_Xbox.menuB()
     
     FFXC.set_movement(1, -1)
-    time.sleep(0.8)
+    FFX_memory.waitFrames(30 * 0.8)
     FFXC.set_movement(0, -1)
-    time.sleep(4.5)
+    FFX_memory.waitFrames(30 * 4.5)
     FFXC.set_neutral()
     
     FFX_memory.awaitControl()
@@ -39,21 +39,21 @@ def makingPlans():
     
     FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)
-    time.sleep(2.5)
+    FFX_memory.waitFrames(30 * 2.5)
     FFXC.set_neutral()
     
     print("The hymn is the key")
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 1)
-    time.sleep(0.25)
+    FFX_memory.waitFrames(30 * 0.25)
     FFXC.set_movement(0, 1)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFX_Xbox.SkipDialog(2)
     FFXC.set_neutral()
     FFX_Screen.awaitPixel(984,788,(247, 162, 74)) #To the Highbridge
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFX_Xbox.menuB()
-    time.sleep(0.3)
+    FFX_memory.waitFrames(30 * 0.3)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
@@ -66,9 +66,9 @@ def Shedinja():
     FFX_memory.awaitControl()
     print("Moving to Shedinja")
     FFXC.set_movement(1, 1)
-    time.sleep(0.25)
+    FFX_memory.waitFrames(30 * 0.25)
     FFXC.set_movement(0, 1)
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_neutral()
     FFX_memory.clickToStoryProgress(2945) #Click until we're in Bahamut's room.
     FFX_Xbox.SkipDialog(12) #Skip dialog before "We fight Yu Yevon".
@@ -83,14 +83,14 @@ def Shedinja():
 
 def economy():
     FFX_Screen.awaitPixel(597,407,(157, 159, 157))
-    time.sleep(0.05)
+    FFX_memory.waitFrames(30 * 0.05)
     FFX_Xbox.menuB()
-    time.sleep(1.2)
+    FFX_memory.waitFrames(30 * 1.2)
     FFX_Xbox.menuRight()
-    time.sleep(0.05)
+    FFX_memory.waitFrames(30 * 0.05)
     FFX_Xbox.menuB()
     
-    time.sleep(0.05)
+    FFX_memory.waitFrames(30 * 0.05)
     FFX_Xbox.menuB()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
@@ -119,29 +119,29 @@ def economy():
             FFX_Xbox.menuB()
             FFX_Xbox.menuRight()
         FFX_Xbox.menuDown()
-        time.sleep(0.05)
+        FFX_memory.waitFrames(30 * 0.05)
         
-    time.sleep(0.05)
+    FFX_memory.waitFrames(30 * 0.05)
     FFX_Xbox.menuB()
-    time.sleep(0.1)
+    FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    time.sleep(0.1)
+    FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
     print("Sold number of equipments: ", equipSaleCount)
     FFX_Xbox.SkipDialog(3) #Adjust to whichever vendor we're talking to.
-    time.sleep(10)
+    FFX_memory.waitFrames(30 * 10)
 
 def facingSin():
     FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_movement(-1, 1)
     FFX_Xbox.SkipDialog(0.3)
     FFXC.set_neutral()
-    #time.sleep(1.5)
+    #FFX_memory.waitFrames(30 * 1.5)
     #FFX_Xbox.menuB() #Open the airship travelling menu
     
     #FFX_Screen.awaitPixel(984,789,(250, 163, 79))
@@ -160,7 +160,7 @@ def facingSin():
     while FFX_memory.userControl(): #Back into the hallway
         FFXC.set_movement(0, -1)
     FFXC.set_neutral()
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
     
     FFX_zzairShipPath.airShipPath(4)
     FFX_zzairShipPath.airShipPath(5)
@@ -183,7 +183,7 @@ def insideSin():
                 FFX_memory.fullPartyFormat('yuna')
                 #FFX_menu.endGameSwap2()
                 FFXC.set_movement(0, 1)
-                time.sleep(5)
+                FFX_memory.waitFrames(30 * 5)
                 FFXC.set_neutral()
                 FFX_Battle.omnis()
                 FFX_memory.clickToControl()
@@ -209,14 +209,14 @@ def eggHunt(autoEggHunt):
     eggStart = FFX_Logs.timeStamp()
     while not FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     if autoEggHunt == True:
         zz_eggHuntAuto.engage()
     else:
         print("Start of egg hunt. User control expected.")
         waitCount = 0
         while FFX_memory.getMap() != 325:
-            time.sleep(1)
+            FFX_memory.waitFrames(30 * 1)
             waitCount += 1
             if waitCount % 10 == 0:
                 print("Still waiting on user to do this section. ", waitCount / 10)

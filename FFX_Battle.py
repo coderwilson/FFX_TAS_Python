@@ -4906,16 +4906,32 @@ def healUp(chars):
         while FFX_memory.getCharCursorPos() != yunaPos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
     print("Mark 2")
+    
     FFX_memory.waitFrames(12)
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(12)
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(12)
-    FFX_Xbox.menuB()
-    while pos < chars:
-        pos += 1
+    
+    character_positions = {
+        0 : FFX_memory.getCharFormationSlot(0), # Tidus
+        1 : FFX_memory.getCharFormationSlot(1), # Yuna
+        2 : FFX_memory.getCharFormationSlot(2), # Auron
+        3 : FFX_memory.getCharFormationSlot(3), # Kimahri
+        4 : FFX_memory.getCharFormationSlot(4), # Wakka
+        5 : FFX_memory.getCharFormationSlot(5), # Lulu
+        6 : FFX_memory.getCharFormationSlot(6) # Rikku
+    }
+    print(character_positions)
+    positions_to_characters = { val : key for key, val in character_positions.items() if val != 255 }
+    print(positions_to_characters)
+    
+    for cur_position in range(len(positions_to_characters)):
+        while FFX_memory.getHP()[positions_to_characters[cur_position]] < FFX_memory.getMaxHP()[positions_to_characters[cur_position]]:
+            print(FFX_memory.getHP())
+            print(FFX_memory.getMaxHP())
+            FFX_Xbox.menuB()
         FFX_Xbox.menuDown()
-        FFX_Xbox.menuB()
     print("Healing complete. Exiting menu.")
     FFX_memory.closeMenu()
 
@@ -5819,4 +5835,6 @@ def rikkuFullOD(battle):
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
+    
+def checkTidusOk():
     return not any(func(0) for func in [FFX_memory.petrifiedstate, FFX_memory.confusedState, FFX_memory.deadstate, FFX_memory.berserkstate])

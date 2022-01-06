@@ -17,7 +17,7 @@ def calmLands(blitzWin):
     FFX_memory.fullPartyFormat('kimahri')
     
     FFXC.set_movement(0, 1)
-    time.sleep(4)
+    FFX_memory.waitFrames(30 * 4)
     FFXC.set_neutral()
     FFX_memory.clickToControl()
     
@@ -34,7 +34,7 @@ def calmLands(blitzWin):
             if checkpoint == 9 and itemSteal < 2:
                 checkpoint = 8
                 FFXC.set_movement(0, -1)
-                time.sleep(2)
+                FFX_memory.waitFrames(30 * 2)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.calmLands(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
@@ -48,7 +48,7 @@ def calmLands(blitzWin):
                 FFX_Xbox.menuB()
 
 def defenderX():
-    time.sleep(0.5)
+    FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.awaitControl()
     while FFX_targetPathing.setMovement([67,-255]) == False:
         doNothing = True
@@ -72,9 +72,9 @@ def toTheRonso():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFXC.set_value('BtnB', 1)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
     
     #Now in screen with Ronso
     checkpoint = 0
@@ -89,9 +89,9 @@ def toTheRonso():
                 endGameVersion = FFX_Battle.biranYenke()
             elif FFX_memory.diagSkipPossible():
                 FFXC.set_value('BtnB', 1)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
     
     return endGameVersion
     
@@ -118,9 +118,9 @@ def gagazetGates(blitzWin, endGameVersion):
             FFXC.set_neutral()
             if FFX_memory.menuOpen():
                 FFXC.set_value('BtnB', 1)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
             elif FFX_memory.turnReady():
                 #Charge Rikku until full, otherwise flee all
                 if FFX_memory.overdriveState()[6] == 100:
@@ -135,9 +135,9 @@ def gagazetGates(blitzWin, endGameVersion):
                         FFX_memory.fullPartyFormat('rikku')
             elif FFX_memory.diagSkipPossible():
                 FFXC.set_value('BtnB', 1)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_value('BtnB', 0)
-                time.sleep(0.035)
+                FFX_memory.waitFrames(30 * 0.035)
     #Should now be on the map with Seymour Flux. Moving to next section
 
 def Flux():
@@ -149,7 +149,7 @@ def Flux():
         if FFX_memory.userControl():
             if checkpoint == 7:
                 FFXC.set_movement(0, 1)
-                time.sleep(0.5)
+                FFX_memory.waitFrames(30 * 0.5)
                 FFXC.set_neutral()
                 
                 FFX_Xbox.touchSaveSphere()
@@ -181,7 +181,7 @@ def dream():
     print("*********")
     print("Dream sequence")
     print("*********")
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
     pos = FFX_memory.getCoords()
     while pos[1] > 180:
         FFXC.set_movement(1, 1)
@@ -209,19 +209,19 @@ def dream():
     
     FFX_memory.awaitControl()
     FFXC.set_movement(1, 0)
-    time.sleep(0.7)
+    FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_movement(0, 1)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_neutral() #Start convo with Bahamut child
     print("First talk with Bahamut child")
     FFX_memory.clickToControl()
     
     FFXC.set_movement(0, -1) #End of conversation
-    time.sleep(0.7)
+    FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_movement(-1, 0)
-    time.sleep(0.7)
+    FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_movement(0, -1)
-    time.sleep(0.7)
+    FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
@@ -273,7 +273,7 @@ def cave():
                 else:
                     print("Into swimming map, first trial.")
                     FFXC.set_movement(0, 1)
-                    time.sleep(0.5)
+                    FFX_memory.waitFrames(30 * 0.5)
             elif checkpoint == 12:
                 print("Trial 1 - Let's Go!!!")
                 while FFX_memory.userControl():
@@ -283,23 +283,23 @@ def cave():
                 print("Now the trial has started.")
                 FFX_Xbox.SkipDialog(2.8)
                 FFX_Screen.awaitPixel(1184,226,(255,255,255))
-                time.sleep(1.2)
+                FFX_memory.waitFrames(30 * 1.2)
                 FFX_Xbox.menuB() #Attempting for first shot
                 print("First attempt.")
-                time.sleep(3)
+                FFX_memory.waitFrames(30 * 3)
                 complete = False
                 while complete == False:
                     if FFX_memory.userControl():
                         complete = True
                     elif FFX_Screen.PixelTestTol(1184,226,(255,255,255),5):
-                        time.sleep(5.1)
+                        FFX_memory.waitFrames(30 * 5.1)
                         FFX_Xbox.menuB() #Subsequent attempts
                         print("Additional attempt.")
-                        time.sleep(4.4)
+                        FFX_memory.waitFrames(30 * 4.4)
                         if FFX_memory.userControl():
                             complete = True
                         else:
-                            time.sleep(1.6) #Timing to re-try
+                            FFX_memory.waitFrames(30 * 1.6) #Timing to re-try
                 print("First trial complete")
                 checkpoint += 1
             elif checkpoint == 17:
@@ -309,7 +309,7 @@ def cave():
                 else:
                     print("Back to main map after first trial.")
                     FFXC.set_movement(0, -1)
-                    time.sleep(0.5)
+                    FFX_memory.waitFrames(30 * 0.5)
             elif checkpoint == 29:
                 if FFX_memory.getMap() == 310:
                     print("Now in the trials map.")
@@ -317,7 +317,7 @@ def cave():
                 else:
                     print("Into swimming map, second trial.")
                     FFXC.set_movement(0, 1)
-                    time.sleep(0.5)
+                    FFX_memory.waitFrames(30 * 0.5)
             elif checkpoint == 35:
                 if FFX_memory.userControl():
                     FFXC.set_movement(-1, 1)
@@ -331,7 +331,7 @@ def cave():
                     checkpoint += 1
                 else:
                     FFXC.set_movement(0, -1)
-                    time.sleep(0.5)
+                    FFX_memory.waitFrames(30 * 0.5)
             elif checkpoint == 59: #Just before sanctuary keeper
                 FFXC.set_neutral()
                 print("Prepping for Sanctuary Keeper")
@@ -344,11 +344,11 @@ def cave():
             FFXC.set_neutral()
             if checkpoint == 35 and (FFX_Screen.PixelTestTol(495,440,(234, 195, 0),5)):
                 print("Second trial start")
-                time.sleep(0.07)
+                FFX_memory.waitFrames(30 * 0.07)
                 FFX_Xbox.menuB()
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_value('Dpad', 8)
-                time.sleep(1.5)
+                FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
                 checkpoint += 1
@@ -397,9 +397,9 @@ def wrapUp():
                 else: #2635 before agency scene, 2650 during the agency scene
                     FFXC.set_movement(-1, 1)
                     FFXC.set_value('BtnB', 1)
-                    time.sleep(0.035)
+                    FFX_memory.waitFrames(30 * 0.035)
                     FFXC.set_value('BtnB', 0)
-                    time.sleep(0.035)
+                    FFX_memory.waitFrames(30 * 0.035)
             elif checkpoint == 6:
                 if FFX_memory.getMap() == 312:
                     print("Final path before making camp.")
@@ -419,66 +419,66 @@ def wrapUp():
     #Resting point before Zanarkand
     FFXC.set_neutral()
     FFX_memory.awaitControl()
-    time.sleep(0.07)
+    FFX_memory.waitFrames(30 * 0.07)
     FFXC.set_movement(0, 1) #Start of the sadness cutscene.
-    time.sleep(3)
+    FFX_memory.waitFrames(30 * 3)
     FFXC.set_neutral()
     
     sleepTime = 4
     print("Sadness cutscene")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("This is gunna be a while.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Maybe you should go get a drink or something.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Like... what even is this???")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("I just")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("I just can't")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Do you realize that some poor soul")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("not only wrote the entire program for this by himself")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("And then wasted ten minutes to put in this ridiculous dialog?")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Talk about not having a life.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Ah well, still have some time. Might as well shout out a few people.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("First and most importantly, my wife for putting up with me for two years through this project.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("My wife is the best!")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Next, DwangoAC. He encouraged me to write my own code to do this.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("And he put together the TASbot community which has been hugely helpful.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("You will see Inverted's work right before the final bosses.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Next, some people from the FFX speed-running community.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("CrimsonInferno, current world record holder for this category. Dude knows everything about this run!")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("He also taught me a number of things about memory scans, pointers, etc. Dude is super smart.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     print("OK I'll catch you when it's done.")
-    time.sleep(sleepTime)
+    FFX_memory.waitFrames(30 * sleepTime)
     
     FFX_memory.clickToControl()
     print("OMG finally! Let's get to it! (Do kids say that any more?)")
     FFXC.set_movement(0, 1)
-    time.sleep(1)
+    FFX_memory.waitFrames(30 * 1)
     FFXC.set_movement(-1, 1)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    time.sleep(0.2)
+    FFX_memory.waitFrames(30 * 0.2)
