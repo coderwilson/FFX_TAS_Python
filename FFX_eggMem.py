@@ -27,13 +27,13 @@ def clickToControl():
     print("Awaiting control (clicking)")
     while not userControl():
         FFXC.set_value('BtnB', 1)
-        FFX_memory.waitFrames(30 * 0.04)
+        time.sleep(0.04)
         FFXC.set_value('BtnB', 0)
-        FFX_memory.waitFrames(30 * 0.04)
+        time.sleep(0.04)
         waitCounter += 1
         if waitCounter % 100 == 0:
             print("Awaiting control - ", waitCounter / 100)
-    FFX_memory.waitFrames(30 * 0.05)
+    time.sleep(0.05)
     return True
 
 def getCoords():
@@ -101,7 +101,7 @@ def openMenu():
         FFX_Xbox.menuB()
     while userControl() and not menuOpen():
         FFXC.set_value('BtnY',1)
-        FFX_memory.waitFrames(30 * 0.035)
+        time.sleep(0.035)
         FFXC.set_value('BtnY',0)
-        FFX_memory.waitFrames(30 * 0.035)
-    FFX_memory.waitFrames(30 * 0.7)
+        time.sleep(0.035)
+    time.sleep(0.7)

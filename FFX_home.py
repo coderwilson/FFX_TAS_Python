@@ -45,6 +45,7 @@ def desert():
     itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
     
     FFX_menu.equipSonicSteel()
+    FFX_memory.closeMenu()
     
     checkpoint = 0
     firstFormat = False
@@ -63,7 +64,7 @@ def desert():
             #Other events
             elif checkpoint == 2 or checkpoint == 24: #Save sphere
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 53:
@@ -168,73 +169,73 @@ def findSummoners(blitzWin):
     FFX_memory.clickToControl()
     FFX_menu.homeGrid()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.7)
+    time.sleep(0.7)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2.9)
+    time.sleep(2.9)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
     FFX_Xbox.touchSaveSphere()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 3) #Enter Home
+    time.sleep(3) #Enter Home
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 6)
+    time.sleep(6)
     FFXC.set_neutral()
     
     FFX_Battle.home1() #First battle
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.7)
+    time.sleep(0.7)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3.5)
+    time.sleep(3.5)
     FFXC.set_neutral()
     
     FFX_Battle.home2() #Second battle
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 2.8)
+    time.sleep(2.8)
     
     #Big back track if we lost Blitz
     if blitzWin == False:
         FFXC.set_neutral()
-        FFX_memory.waitFrames(30 * 0.3)
+        time.sleep(0.3)
         FFXC.set_movement(0, -1)
-        FFX_memory.waitFrames(30 * 3)
+        time.sleep(3)
         FFXC.set_movement(-1, -1)
-        FFX_memory.waitFrames(30 * 2.5)
+        time.sleep(2.5)
         FFXC.set_neutral()
         
         FFX_Battle.home3() #Third battle (the spare room)
-        FFX_memory.waitFrames(30 * 0.5)
+        time.sleep(0.5)
         FFXC.set_movement(1, 1)
-        FFX_memory.waitFrames(30 * 0.3)
+        time.sleep(0.3)
         FFXC.set_movement(0, 1)
-        FFX_memory.waitFrames(30 * 0.7)
+        time.sleep(0.7)
         FFX_Xbox.menuB()
         FFXC.set_neutral()
-        FFX_memory.waitFrames(30 * 1)
+        time.sleep(1)
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuLeft()
+        time.sleep(1)
         FFX_Xbox.menuLeft()
         FFX_Xbox.menuLeft()
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 1)
+        time.sleep(1)
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuB()
+        time.sleep(1)
         FFX_Xbox.menuRight()
         FFX_Xbox.menuRight()
         FFX_Xbox.menuRight()
         FFX_Xbox.menuRight()
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 3)
+        time.sleep(3)
         FFX_Xbox.menuB()
         FFXC.set_movement(1, -1)
-        FFX_memory.waitFrames(30 * 1.5)
+        time.sleep(1.5)
         FFXC.set_neutral()
         
         FFX_memory.awaitControl()
@@ -255,9 +256,9 @@ def findSummoners(blitzWin):
                 FFXC.set_movement(-1, 1)
             else:
                 FFXC.set_movement(-1, 0)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFXC.set_movement(-1, 1)
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
     
     
     FFXC.set_movement(-1, 0)
@@ -268,40 +269,40 @@ def findSummoners(blitzWin):
     
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(1, 0)
     FFX_Xbox.SkipDialog(2) #Pick up chest.
     FFXC.set_movement(-1, 1)
     FFX_Xbox.SkipDialog(3)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 8)
+    time.sleep(8)
     FFXC.set_neutral()
     
     FFX_Xbox.SkipDialog(90) #Start of the "Yuna will die" scene.
     FFX_memory.awaitControl()
     
     FFXC.set_movement(0, -1) #Now to the airship.
-    FFX_memory.waitFrames(30 * 2.6)
+    time.sleep(2.6)
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_neutral()
     
     FFX_memory.awaitControl()
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     while not FFX_memory.cutsceneSkipPossible():
         FFX_Xbox.tapB()

@@ -86,13 +86,13 @@ def arrival():
             elif checkpoint == 36 or checkpoint == 45:
                 print("Event: Touch Save Sphere")
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.02)
+                time.sleep(0.02)
                 FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 38: #Oblitzerator
                 print("Event: Oblitzerator fight")
                 FFXC.set_movement(1, 0)
-                #FFX_memory.waitFrames(30 * 2)
+                #time.sleep(2)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Battle.Oblitzerator(earlyHaste)
@@ -116,7 +116,7 @@ def arrival():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
-                FFX_Xbox.skipScene(fast_mode=True)
+                FFX_Xbox.skipScene()
                 
             #Map changes
             elif checkpoint < 3 and FFX_memory.getMap() == 268:
@@ -140,25 +140,25 @@ def preBlitz():
 
 def blitzStart():
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     #Just outside the locker room
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.8)
+    time.sleep(0.8)
     FFXC.set_neutral()
     
     #Inside locker room
     FFX_memory.clickToControl()
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.8)
+    time.sleep(0.8)
     FFXC.set_movement(0, -1)
     
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFXC.set_movement(1, 0)
     FFX_Xbox.SkipDialog(2) #Talk to Wakka, starts the Blitzball game
     FFXC.set_neutral()
@@ -209,14 +209,14 @@ def afterBlitz(earlyHaste):
                     FFX_Xbox.clickToBattle()
                     FFX_Battle.attack('none') #Hardest boss in the game.
                     print("Well that boss was difficult.")
-                    FFX_memory.waitFrames(30 * 6)
+                    time.sleep(6)
                 elif battleNum == 3:
                     FFX_Battle.afterBlitz3(earlyHaste)
                     print("Battles are done. Now waiting for storyline to wrap up.")
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
-                FFX_Xbox.skipScene(fast_mode=True)
+                FFX_Xbox.skipScene()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
                 
@@ -231,6 +231,6 @@ def afterBlitz(earlyHaste):
                 checkpoint = 31
                 print("Map change: ", checkpoint)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
 

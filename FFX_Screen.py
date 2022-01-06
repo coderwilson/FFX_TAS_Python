@@ -16,7 +16,7 @@ def clearMouse(counter):
 
 def BattleScreen():
     if FFX_memory.turnReady():
-        FFX_memory.waitFrames(30 * 0.4)
+        time.sleep(0.4)
         return True
     else:
         return False
@@ -93,7 +93,7 @@ def awaitPixel(x,y,rgb):
                 print("Current State: ", pyautogui.pixel(x, y))
             except:
                 print("Cannot get current state.")
-        FFX_memory.waitFrames(30 * 0.05)
+        time.sleep(0.05)
     print("Trigger pixel achieved. Waiting is complete.")
 
 def clickToPixel(x,y,rgb):
@@ -110,7 +110,7 @@ def awaitTurn() :
     #Now let's do this.
     while not BattleScreen() or FFX_memory.userControl():
         if FFX_memory.battleActive() == False:
-            FFX_memory.waitFrames(30 * 0.01)
+            time.sleep(0.01)
         counter += 1;
         if counter % 10000 == 0:
             print("Waiting for player turn: ", counter / 1000)
@@ -184,7 +184,7 @@ def awaitSwimToJecht():
         counter += 1
         if counter % 100 == 0:
             print("Waiting for the Jecht screen: ", counter / 100)
-        FFX_memory.waitFrames(30 * 0.1)
+        time.sleep(0.1)
     print("Ready to go swimming")
 
 def MRRbattle():

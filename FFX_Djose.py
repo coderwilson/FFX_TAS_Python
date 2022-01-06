@@ -14,7 +14,7 @@ FFXC = FFX_Xbox.controllerHandle()
 def path():
     FFX_memory.clickToControl()
     FFX_memory.closeMenu()
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_memory.fullPartyFormat('djose')
     FFX_memory.closeMenu()
     
@@ -140,9 +140,9 @@ def path_old():
             elif checkpoint == 40:
                 if stoneBreath == 0:
                     FFXC.set_movement(0, -1)
-                    FFX_memory.waitFrames(30 * 1)
+                    time.sleep(1)
                     FFXC.set_movement(0, 1)
-                    FFX_memory.waitFrames(30 * 1)
+                    time.sleep(1)
                 else:
                     checkpoint = 50
             elif checkpoint == 50: #Close to the cutscene
@@ -182,7 +182,7 @@ def path_old():
                         FFXC.set_movement(0, 1)
             elif checkpoint == 80:
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 2)
+                time.sleep(2)
                 FFXC.set_neutral()
                 checkpoint = 100
                 print("Checkpoing reached: ", checkpoint)
@@ -207,13 +207,13 @@ def temple():
     FFX_memory.clickToControl()
     FFX_menu.djoseTemple()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     FFXC.set_movement(-1, -1)
     FFX_memory.clickToEvent() #Talk to Auron
-    FFX_memory.waitFrames(30 * 0.2)
+    time.sleep(0.2)
     FFX_memory.clickToControl3() #Done talking
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral()
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 1)
@@ -221,11 +221,11 @@ def temple():
     FFXC.set_neutral()
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_neutral()
     FFX_memory.clickToControl()
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5) #Into the trials
+    time.sleep(1.5) #Into the trials
     FFXC.set_neutral()
 
 def trials():
@@ -267,13 +267,13 @@ def trials():
                 print("Pushing pedestol")
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
-                FFX_memory.waitFrames(30 * 6.4) #Push timer, super critical
+                time.sleep(6.4) #Push timer, super critical
                 print("Push complete.")
                 checkpoint += 1
                 print("Insert right sphere")
                 FFX_memory.clickToEventTemple(0)
                 FFXC.set_movement(-1, 1)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 checkpoint += 1
             elif checkpoint == 24: #Insert Right Sphere
                 print("Insert right sphere")
@@ -311,13 +311,13 @@ def trials():
                 print("Pushing pedestol")
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
-                FFX_memory.waitFrames(30 * 9)
+                time.sleep(9)
                 print("Push complete.")
                 FFX_memory.awaitControl()
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 0.4)
+                time.sleep(0.4)
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFX_memory.awaitControl()
                 print("Extra pedestol")
                 FFXC.set_movement(0, 1)
@@ -325,9 +325,9 @@ def trials():
                 FFXC.set_neutral()
                 FFX_memory.awaitControl()
                 FFXC.set_movement(0, -1)
-                FFX_memory.waitFrames(30 * 0.8)
+                time.sleep(0.8)
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 checkpoint += 1
             elif checkpoint == 51:
                 print("Powered sphere")
@@ -369,7 +369,7 @@ def trials():
             elif checkpoint == 85: #Lift
                 if FFX_targetPathing.setMovement([0,30]) == True:
                     FFXC.set_neutral()
-                    FFX_memory.waitFrames(30 * 0.2)
+                    time.sleep(0.2)
                     checkpoint += 1
                     print("Checkpoint reached: ", checkpoint)
             elif checkpoint == 88:
@@ -410,13 +410,13 @@ def trials():
     
     FFXC.set_neutral()
     FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     print("Talk to Auron while we wait.")
     FFXC.set_movement(1, -1)
     FFX_memory.clickToEvent()
     FFXC.set_movement(-1, -1)
     FFX_memory.clickToControl3()
-    FFX_memory.waitFrames(30 * 0.07)
+    time.sleep(0.07)
     
     #Dance
     checkpoint = 0
@@ -443,11 +443,11 @@ def trials():
 def leavingDjose():
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 1.8)
+    time.sleep(1.8)
     FFX_memory.clickToEvent()
     FFXC.set_movement(1, 1)
     FFX_memory.clickToControl3()
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFXC.set_movement(0, 1)
     FFX_memory.clickToEvent()
     FFXC.set_neutral()
@@ -456,19 +456,19 @@ def leavingDjose():
     #inside
     print("Now inside the Djose temple.")
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1.8)
+    time.sleep(1.8)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_movement(1, 1)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     
     print("Ready for Yuna's room")
     FFX_memory.awaitControl()
     print("Inside Yuna's room.")
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFX_Xbox.SkipDialog(0.5)
     FFXC.set_movement(-1, 0)
     FFX_Xbox.SkipDialog(0.5)
@@ -478,6 +478,6 @@ def leavingDjose():
     
     FFX_memory.clickToControl() #We meet Tidus back outside.
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFXC.set_neutral()
 

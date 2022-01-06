@@ -4,17 +4,10 @@ import time
 import FFX_Screen
 
 from math import cos, sin
+baseValue = 0
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
-
-def getCutsceneID():
-    global baseValue
-    key = baseValue + 0xD27C88
-    cutscene_alt = process.readBytes(key, 4)
-    key = baseValue + 0xD2D67C
-    storyline_prog = process.readBytes(key, 4)
-    return (cutscene_alt, storyline_prog)
 
 def waitFrames(frames: int):
     frames = max(round(frames), 1)
@@ -398,6 +391,33 @@ def getHP():
 
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
+def getMaxHP():
+    global baseValue
+    #Out of combat HP only
+
+    coord = baseValue + 0x00D32080
+    HP_Tidus = process.read(coord)
+
+    coord = baseValue + 0x00D32114
+    HP_Yuna = process.read(coord)
+
+    coord = baseValue + 0x00D321A8
+    HP_Auron = process.read(coord)
+
+    coord = baseValue + 0x00D3223C
+    HP_Kimahri = process.read(coord)
+
+    coord = baseValue + 0x00D322D0
+    HP_Wakka = process.read(coord)
+
+    coord = baseValue + 0x00D32364
+    HP_Lulu = process.read(coord)
+
+    coord = baseValue + 0x00D323F8
+    HP_Rikku = process.read(coord)
+
+    return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
+
 def getOrder():
     global baseValue
     #Out of combat HP only
@@ -550,6 +570,13 @@ def getBattleNum():
 
     #print("Battle Number: ", formation)
     return formation
+
+def clearBattleNum():
+    global baseValue
+
+    key = baseValue + 0x00D2A8EC
+    process.write(key, 0)
+
 
 def getActiveBattleFormation():
     global baseValue
@@ -968,59 +995,35 @@ def setGilvalue(newValue):
     key = baseValue + 0x00D307D8
     return process.write(key, newValue)
 
-def rikkuODItems(battle):
+def rikkuODItems(slot):
     #This function gets the item slots for each item, swaps if they're backwards,
     # and then moves the cursor to each item and presses B when we reach it.
-    cursor = 1
-    if battle == 'tutorial':
-        item1 = getItemSlot(73)
-        print("Ability sphere in slot: ", item1)
-        item2 = item1
-    elif battle == 'Evrae':
-        item1 = getItemSlot(94)
-        print("Luck sphere in slot: ", item1)
-        item2 = getItemSlot(100)
-        print("Map in slot: ", item2)
-    elif battle == 'Flux':
-        item1 = getItemSlot(35)
-        print("Grenade in slot: ", item1)
-        item2 = getItemSlot(85)
-        print("HP Sphere in slot: ", item2)
-    elif battle == 'trio':
-        item1 = 108
-        item2 = 108
-        print("Wings are in slot: ", item1)
-    elif battle == 'crawler':
-        item1 = getItemSlot(30)
-        print("Lightning Marble in slot: ", item1)
-        item2 = getItemSlot(85)
-        print("Mdef Sphere in slot: ", item2)
-    elif battle == 'spherimorph1':
-        item1 = getItemSlot(24)
-        print("Arctic Wind in slot: ", item1)
-        item2 = getItemSlot(90)
-        print("Mag Sphere in slot: ", item2)
-    elif battle == 'spherimorph2':
-        item1 = getItemSlot(32)
-        print("Fish Scale in slot: ", item1)
-        item2 = getItemSlot(90)
-        print("Mag Sphere in slot: ", item2)
-    elif battle == 'spherimorph3':
-        item1 = getItemSlot(30)
-        print("Lightning Marble in slot: ", item1)
-        item2 = getItemSlot(90)
-        print("Mag Sphere in slot: ", item2)
-    elif battle == 'spherimorph4':
-        item1 = getItemSlot(27)
-        print("Bomb Core in slot: ", item1)
-        item2 = getItemSlot(90)
-        print("Mag Sphere in slot: ", item2)
+    
+    if slot == 0:
+        while RikkuODCursor1() >= 1:
+            print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
+            if RikkuODCursor1() % 2 != slot % 2:
+                FFX_Xbox.tapRight()
+            elif RikkuODCursor1() > slot:
+                FFX_Xbox.tapUp()
+            else:
+                FFX_Xbox.tapDown()
+            waitFrames(2)
+    else:
+        while RikkuODCursor1() != slot:
+            print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
+            if RikkuODCursor1() % 2 != slot % 2:
+                FFX_Xbox.tapRight()
+            elif RikkuODCursor1() > slot:
+                FFX_Xbox.tapUp()
+            else:
+                FFX_Xbox.tapDown()
+            waitFrames(2)
+    waitFrames(2)
+    FFX_Xbox.tapB()
+    waitFrames(2)
 
-    if item1 > item2: #Quick bubble sort
-        item3 = item2
-        item2 = item1
-        item1 = item3
-
+def oldODLogic():
     if item1 % 2 == 0: #First item is in the right-hand column
         FFX_Xbox.menuRight()
         cursor += 1
@@ -1048,6 +1051,16 @@ def rikkuODItems(battle):
             cursor += 2
         FFX_Xbox.menuB() #Cursor is now on item 2.
 
+def RikkuODCursor1():
+    global baseValue
+    key = baseValue + 0x00F3CB32
+    return process.readBytes(key,1)
+
+
+def RikkuODCursor2():
+    return RikkuODCursor1()
+
+
 def getOverdriveBattle(character):
     global process
     global baseValue
@@ -1055,6 +1068,17 @@ def getOverdriveBattle(character):
     basePointer = baseValue + 0x00d334cc
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5bc
+    retVal = process.readBytes(basePointerAddress + offset, 1)
+    print("In-Battle Overdrive values: ", retVal)
+    return retVal
+
+def getCharWeakness(character):
+    global process
+    global baseValue
+    
+    basePointer = baseValue + 0x00d334cc
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x5dd
     retVal = process.readBytes(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values: ", retVal)
     return retVal
@@ -1094,7 +1118,7 @@ def berserkstate(character):
         return True
     else:
         #print("Character %d is not berserked" % character)
-        return False        
+        return False
 
 def petrifiedstate(character):
     global process
@@ -2604,7 +2628,160 @@ def blitzCursor():
     cursor = process.readBytes(key, 1)
     return cursor
 
+#-------------------------------------------------------
+#Function for logging
+def readBytes(key,size):
+    return process.readBytes(key,size)
     
+
+#-------------------------------------------------------
+#Equipment array
+
+#0x0 - ushort - name/group (?)
+#0x3 - byte - wpn./arm. state
+#0x4 - byte - owner char (basis for field below)
+#0x5 - byte - equip type idx. (0 = cur. chara wpn., 1 = cur. chara arm., 2 = next chara wpn., etc.)
+#0x6 - byte - equip icon shown? (purely visual- a character will still keep it equipped if his stat struct says so)
+#0x8 - byte - atk. type
+#0x9 - byte - dmg. constant
+#0xA - byte - base crit rate (armor has one too!!!)
+#0xB - byte - slot count (cannot be < abi count, game won't let you)
+#0xC - ushort - wpn./arm. model (?)
+#0xE - ushort - auto-ability 1
+#0x10 - ushort - auto-ability 2
+#0x12 - ushort - auto-ability 3
+#0x14 - ushort - auto-ability 4
+
+def getEquipType(equipNum):
+    global baseValue
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x05
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def getEquipOwner(equipNum):
+    global baseValue
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x04
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def getEquipSlotCount(equipNum):
+    global baseValue
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x0B
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def getEquipCurrentlyEquipped(equipNum):
+    global baseValue
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x06
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def getEquipAbilities(equipNum):
+    global baseValue
+    retVal = [255,255,255,255]
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x0E
+    retVal[0] = process.readBytes(key,2)
+    key = basePointer + (0x16 * equipNum) +0x10
+    retVal[1] = process.readBytes(key,2)
+    key = basePointer + (0x16 * equipNum) +0x12
+    retVal[2] = process.readBytes(key,2)
+    key = basePointer + (0x16 * equipNum) +0x14
+    retVal[3] = process.readBytes(key,2)
+    #print(retVal)
+    return retVal
+
+def getEquipExists(equipNum):
+    global baseValue
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x0B
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+class equipment:
+    def __init__(self, equipNum):
+        self.num = equipNum
+        self.equipType = getEquipType(equipNum)
+        self.equipOwner = getEquipOwner(equipNum)
+        self.equipAbilities = getEquipAbilities(equipNum)
+        self.isEquipped = getEquipCurrentlyEquipped(equipNum)
+    
+    def equipmentType(self):
+        return self.equipType
+    
+    def owner(self):
+        return self.equipOwner
+    
+    def abilities(self):
+        return self.equipAbilities
+    
+    def hasAbility(self, abilityNum):
+        #print(self.equipAbilities)
+        if abilityNum in self.equipAbilities:
+            return True
+        return False
+        
+    def isEquipped(self):
+        return self.isEquipped
+
+def allEquipment():
+    firstEquipment = True
+    for i in range(200):
+        if getEquipExists(i):
+            if firstEquipment:
+                equipHandleArray = [equipment(i)]
+                firstEquipment = False
+            else:
+                equipHandleArray.append(equipment(i))
+    
+    return equipHandleArray
+
+def weaponArrayCharacter(charNum):
+    equipHandles = allEquipment()
+    #print("####")
+    #print(equipHandles)
+    #print("####")
+    firstEquipment = True
+    while len(equipHandles) > 0:
+        #print(len(equipHandles))
+        currentHandle = equipHandles.pop(0)
+        #print("Owner: ", currentHandle.owner())
+        if currentHandle.owner() == charNum and currentHandle.equipmentType() == 0:
+            if firstEquipment:
+                charWeaps = [currentHandle]
+                firstEquipment = False
+            else:
+                charWeaps.append(currentHandle)
+    return charWeaps
+
+def armorArrayCharacter(charNum):
+    equipHandles = allEquipment()
+    firstEquipment = True
+    for i in len(equipHandles):
+        if equipHandles[i].owner() == charNum and equipHandles[i].equipmentType() == 1:
+            if firstEquipment:
+                charWeaps = [equipHandles[i]]
+                firstEquipment = False
+            else:
+                charWeaps.append(equipHandles[i])
+    return charWeaps
+
+def equipWeapCursor():
+    global baseValue
+    
+    key = baseValue + 0x01440A38
+    retVal = process.readBytes(key,1)
+    return retVal
 
 #-------------------------------------------------------
 #Testing

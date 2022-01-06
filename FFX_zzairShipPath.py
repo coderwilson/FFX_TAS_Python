@@ -56,13 +56,13 @@ def airShipPath(version):
             elif checkpoint == 19 and version == 1:
                 print("Pre-Evrae pathing")
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 3)
+                time.sleep(3)
                 FFXC.set_neutral()
                 complete = True
             elif checkpoint == 19 and version == 3:
                 print("Sin's Arms")
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 3)
+                time.sleep(3)
                 FFXC.set_neutral()
                 while not FFX_memory.battleActive():
                     if FFX_memory.diagSkipPossible():
@@ -73,11 +73,11 @@ def airShipPath(version):
             elif checkpoint == 19 and version == 4:
                 print("Straight to the deck, talking to Yuna.")
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 3)
+                time.sleep(3)
                 FFXC.set_neutral()
                 FFX_memory.awaitControl()
                 FFX_targetPathing.setMovement([-2,-15])
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-2,-15])
                     FFX_Xbox.tapB()
@@ -91,7 +91,7 @@ def airShipPath(version):
             elif checkpoint == 19 and version == 5:
                 print("Again to the deck, three skips.")
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 3)
+                time.sleep(3)
                 FFXC.set_neutral()
                 while not FFX_memory.battleActive():
                     if FFX_memory.diagSkipPossible():
@@ -102,7 +102,7 @@ def airShipPath(version):
             elif checkpoint == 19 and version == 6:
                 print("Sin's Face")
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 3)
+                time.sleep(3)
                 FFXC.set_neutral()
                 complete = True
             
@@ -157,14 +157,14 @@ def airShipPath_old(version):
                 if pos[1] > 130:
                     checkpoint = 10
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLx', 1)
                     FFXC.set_value('AxisLy', -1)
             elif checkpoint == 10: #Rin's room
                 if pos[0] > 60:
                     checkpoint = 20
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLy', -1)
                     if pos[1] > 80:
                         FFXC.set_value('AxisLx', -1)
@@ -174,7 +174,7 @@ def airShipPath_old(version):
                 if pos[0] < 1:
                     checkpoint = 30
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLy', -1)
                     if pos[1] < 70:
                         FFXC.set_value('AxisLx', 1)
@@ -184,14 +184,14 @@ def airShipPath_old(version):
                 if pos[1] < -90:
                     checkpoint = 40
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLy', -1)
                     FFXC.set_value('AxisLx', 0)
             elif checkpoint == 40:
                 if pos[0] < -30:
                     checkpoint = 50
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLy', 0)
                     FFXC.set_value('AxisLx', -1)
             elif checkpoint == 50:
@@ -219,7 +219,7 @@ def airShipPath_old(version):
                     FFXC.set_value('AxisLy', 0)
                     FFXC.set_value('AxisLx', 0)
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLy', 1)
                     FFXC.set_value('AxisLx', 0)
             
@@ -227,7 +227,7 @@ def airShipPath_old(version):
                 if pos[1] < -10:
                     checkpoint = 65
                 else:
-                    FFX_memory.waitFrames(30 * 0.05)
+                    time.sleep(0.05)
                     FFXC.set_value('AxisLy', 1)
                     if pos[0] < -5:
                         FFXC.set_value('AxisLx', 1)
@@ -239,33 +239,33 @@ def airShipPath_old(version):
                 FFX_memory.awaitControl()
                 FFXC.set_value('AxisLy', 0)
                 FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.15)
+                time.sleep(0.15)
                 FFXC.set_value('AxisLy', 0)
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFXC.set_value('AxisLx', 0)
                 FFX_Xbox.SkipDialog(2.5) #Talk to Rin
                 FFX_memory.waitFrames(1000) #Maybe we never do this anyway?
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
+                time.sleep(1)
                 FFX_Xbox.menuRight()
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.menuUp()
                 FFX_Xbox.menuB() #Sell old Tidus armor
                 FFX_Xbox.menuA()
-                FFX_memory.waitFrames(30 * 0.1)
+                time.sleep(0.1)
                 FFX_Xbox.menuLeft()
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.menuUp()
                 FFX_Xbox.menuB() #Purchase Baroque sword
-                FFX_memory.waitFrames(30 * 0.1)
+                time.sleep(0.1)
                 FFX_Xbox.menuB() #Do not equip yet.
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuA()
@@ -273,7 +273,7 @@ def airShipPath_old(version):
                 FFX_memory.clickToControl()
                 FFXC.set_value('AxisLy', 1)
                 FFXC.set_value('AxisLx', -1)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFXC.set_value('AxisLx', 0)
                 FFX_Xbox.SkipDialog(3)
                 FFX_memory.awaitControl()
@@ -285,14 +285,14 @@ def airShipPath_old(version):
             elif checkpoint == 70:
                 FFXC.set_value('AxisLy', 1)
                 FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFXC.set_value('AxisLx', 0)
                 SkipDialog(5)
                 FFXC.set_value('AxisLy', 0)
                 FFX_memory.awaitControl()
                 
                 FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
+                time.sleep(2)
                 FFXC.set_value('AxisLy', 0)
                 
                 checkpoint = 1000
@@ -319,14 +319,14 @@ def airShipPath_old(version):
             elif checkpoint == 150:
                 FFXC.set_value('AxisLy', 1)
                 FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFXC.set_value('AxisLx', 0)
                 SkipDialog(4)
                 FFXC.set_value('AxisLy', 0)
                 FFX_memory.awaitControl()
                 
                 FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
+                time.sleep(2)
                 FFXC.set_value('AxisLy', 0)
                 
                 SkipDialog(64)
@@ -341,19 +341,19 @@ def airShipPath_old(version):
             elif checkpoint == 180:
                 FFXC.set_value('AxisLy', 1)
                 FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFXC.set_value('AxisLx', 0)
                 SkipDialog(4)
                 FFXC.set_value('AxisLy', 0)
                 FFX_memory.awaitControl()
                 
                 FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
+                time.sleep(2)
                 FFXC.set_value('AxisLy', 0)
                 
                 FFX_memory.awaitControl()
                 FFXC.set_value('AxisLx', -1)
-                FFX_memory.waitFrames(30 * 2.4)
+                time.sleep(2.4)
                 FFXC.set_value('AxisLy', 1)
                 SkipDialog(0.5) #Hi Yuna. Let's have a quick chat.
                 FFXC.set_value('AxisLx', 0)
@@ -366,16 +366,16 @@ def airShipPath_old(version):
             elif checkpoint == 200:
                 FFXC.set_value('AxisLy', 1)
                 FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
+                time.sleep(0.5)
                 FFXC.set_value('AxisLx', 0)
                 SkipDialog(4)
                 FFXC.set_value('AxisLy', 0)
                 FFX_memory.awaitControl()
                 
                 FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
+                time.sleep(2)
                 FFXC.set_value('AxisLy', 0)
-                FFX_memory.waitFrames(30 * 6.5)
+                time.sleep(6.5)
                 skipScene()
                 checkpoint = 1000
         elif FFX_Screen.BattleScreen():
@@ -385,9 +385,9 @@ def airShipPath_old(version):
             FFXC.set_value('AxisLy', 0)
             if FFX_memory.menuOpen():
                 FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
+                time.sleep(0.035)
                 FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                time.sleep(0.035)
             elif checkpoint == 50:
                 FFX_memory.clickToControl()
 
@@ -426,7 +426,7 @@ def airShipReturn():
     
     while FFX_memory.userControl():
         pos = FFX_memory.getCoords()
-        FFX_memory.waitFrames(30 * 0.05)
+        time.sleep(0.05)
         FFXC.set_value('AxisLy', 1)
         if pos[0] < -1:
             FFXC.set_value('AxisLx', 1)
@@ -437,10 +437,10 @@ def airShipReturn():
     FFXC.set_value('AxisLx', 0)
     FFX_memory.awaitControl()
     FFXC.set_value('AxisLy', 1)
-    FFX_memory.waitFrames(30 * 1.2)
+    time.sleep(1.2)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', -1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     
     while FFX_memory.userControl():
         FFXC.set_value('AxisLy', 1)

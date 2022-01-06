@@ -103,8 +103,8 @@ def listenStory(gameLength):
     print("End skip mashing")
     FFX_memory.awaitControl()
     
-    checkpoint = 0
     skips = 0
+    checkpoint = 0
     while FFX_memory.getBattleNum() != 414: #Sinspawn Ammes
         if FFX_memory.userControl():
             #Events
@@ -151,9 +151,7 @@ def listenStory(gameLength):
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 skips += 1
-                cutsceneID = FFX_memory.getCutsceneID()
-                print("Identifier: ", cutsceneID)
-                if skips == 3:                   
+                if skips == 3:
                     print("Special Skip")
                     FFX_memory.waitFrames(130)
                     FFXC.set_value('BtnStart', 1) #Generate button to skip later

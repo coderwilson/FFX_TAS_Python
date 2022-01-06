@@ -36,29 +36,29 @@ def arrival():
                 checkpoint = 11
             elif checkpoint == 6:
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.3)
+                time.sleep(0.3)
                 checkpoint += 1
             elif checkpoint == 7:
                 if FFX_memory.getCoords()[1] > 1356.5: #Into position
                     if FFX_memory.getCoords()[0] < -44:
                         FFXC.set_movement(1, 0)
-                        FFX_memory.waitFrames(30 * 0.06)
+                        time.sleep(0.06)
                         FFXC.set_neutral()
-                        FFX_memory.waitFrames(30 * 0.09)
+                        time.sleep(0.09)
                     else:
                         checkpoint += 1
                         print("Close to the spot")
                     print(FFX_memory.getCoords())
                 elif FFX_memory.getCoords()[0] < -43.5: #Into position
                     FFXC.set_movement(1, 1)
-                    FFX_memory.waitFrames(30 * 0.06)
+                    time.sleep(0.06)
                     FFXC.set_neutral()
-                    FFX_memory.waitFrames(30 * 0.09)
+                    time.sleep(0.09)
                 else:
                     FFXC.set_movement(0, 1)
-                    FFX_memory.waitFrames(30 * 0.06)
+                    time.sleep(0.06)
                     FFXC.set_neutral()
-                    FFX_memory.waitFrames(30 * 0.09)
+                    time.sleep(0.09)
             elif checkpoint == 8:
                 if FFX_memory.getCoords()[0] > -43.5: #Into position
                     checkpoint += 1
@@ -66,9 +66,9 @@ def arrival():
                     print(FFX_memory.getCoords())
                 else:
                     FFXC.set_movement(1, 0)
-                    FFX_memory.waitFrames(30 * 0.06)
+                    time.sleep(0.06)
                     FFXC.set_neutral()
-                    FFX_memory.waitFrames(30 * 0.09)
+                    time.sleep(0.09)
             elif checkpoint == 9:
                 if FFX_memory.getCoords()[1] > 1358.5: #Into position
                     checkpoint += 1
@@ -92,10 +92,10 @@ def arrival():
                     FFX_Xbox.SkipDialogSpecial(3) #Mash two buttons
                     print("End special skipping.")
                     print("Should now be able to see if it worked.")
-                    FFX_memory.waitFrames(30 * 3.5) #Don't move, avoiding a possible extra battle
+                    time.sleep(3.5) #Don't move, avoiding a possible extra battle
                     FFX_memory.clickToControl3()
                     print("Mark 1")
-                    FFX_memory.waitFrames(30 * 1)
+                    time.sleep(1)
                     print("Mark 2")
                     try:
                         if FFX_memory.lucilleMiihenCoords()[1] > 1400 and FFX_memory.userControl():
@@ -122,7 +122,7 @@ def arrival():
                     
                     FFXC.set_neutral()
                     FFXC.set_value('BtnY',1)
-                    FFX_memory.waitFrames(30 * 0.035)
+                    time.sleep(0.035)
                     FFXC.set_neutral()
                     FFX_memory.fullPartyFormat('miihen')
                 elif checkpoint == 25 and FFX_memory.battleActive() == False: #Shelinda dialog
@@ -204,31 +204,31 @@ def midPoint():
     FFX_memory.clickToControl3()
     
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.6)
+    time.sleep(0.6)
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 20)
+    time.sleep(20)
     FFXC.set_neutral()
     
     print("Evening scene")
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 1)
+    time.sleep(1)
     FFXC.set_neutral()
     FFX_memory.clickToControl3() #Dude gives us some Lv.1 spheres
     
     print("Let's grab some P.downs")
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.4)
+    time.sleep(0.4)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     FFXC.set_neutral()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.5)
+    time.sleep(1.5)
     FFX_Xbox.menuB()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
@@ -241,19 +241,19 @@ def midPoint():
     
     #Start conversation with Rin
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     print("Conversation with Rin")
     FFX_memory.clickToControl()
     FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 2)
+    time.sleep(2)
     FFXC.set_neutral() #Leave the shop
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
+    time.sleep(3)
     FFXC.set_neutral()
     print("Miihen - ready for Chocobo Eater")
     FFX_Battle.chocoEater()
@@ -266,17 +266,17 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
             #Utility stuff
             if checkpoint == 2:
                 FFXC.set_movement(1, 1)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.menuB()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.8)
+                time.sleep(0.8)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.8)
+                time.sleep(0.8)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.8)
+                time.sleep(0.8)
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.8)
+                time.sleep(0.8)
                 checkpoint += 1
             elif checkpoint == 26 and selfDestruct == 0:
                 checkpoint = 24
@@ -284,10 +284,10 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_memory.clickToControl()
                 FFXC.set_movement(0, -1)
-                FFX_memory.waitFrames(30 * 4)
+                time.sleep(4)
                 FFXC.set_neutral()
                 checkpoint += 1
             
@@ -332,7 +332,7 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
 def wrapUp():
     print("Now ready to meet Seymour")
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 5)
+    time.sleep(5)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl()
@@ -345,5 +345,5 @@ def wrapUp():
     FFXC.set_neutral()
     FFX_memory.clickToControl() #Seymour scene
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 12)
+    time.sleep(12)
     FFXC.set_neutral()

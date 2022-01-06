@@ -103,16 +103,16 @@ def arrival():
                         FFX_Xbox.tapB()
             elif checkpoint == 29: #Save sphere
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_Xbox.tapB()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1)
+                time.sleep(1)
                 FFX_Xbox.menuA()
                 FFX_Xbox.tapB()
                 #FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
                 FFXC.set_movement(1, 0)
-                FFX_memory.waitFrames(30 * 0.6)
+                time.sleep(0.6)
             elif FFX_memory.getMap() == 316 and checkpoint < 21: #Final room before trials
                 print("Final room before trials")
                 checkpoint = 21
@@ -149,9 +149,9 @@ def trials0(checkpoint):
                 while FFX_memory.userControl():
                     FFX_Xbox.tapB()
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFX_memory.awaitControl()
-                FFX_memory.waitFrames(30 * 1.3)
+                time.sleep(1.3)
                 FFXC.set_movement(0, 1)
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
@@ -181,7 +181,7 @@ def trials1(checkpoint):
             elif checkpoint == 30:
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
@@ -204,7 +204,7 @@ def trials2(checkpoint):
             elif checkpoint == 48:
                 FFXC.set_movement(-1, 1)
                 FFX_memory.awaitEvent()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
@@ -227,7 +227,7 @@ def trials3(checkpoint):
             elif checkpoint == 68:
                 FFXC.set_movement(-1, 1)
                 FFX_memory.awaitEvent()
-                FFX_memory.waitFrames(30 * 0.2)
+                time.sleep(0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
@@ -280,7 +280,7 @@ def sanctuaryKeeper(ver):
     #FFX_menu.endGameSwap2()
     
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 4)
+    time.sleep(4)
     FFXC.set_neutral()
     FFX_Xbox.clickToBattle()
     if FFX_Screen.turnTidus():
@@ -291,9 +291,9 @@ def sanctuaryKeeper(ver):
 
 def yunalesca(ver):
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.5)
+    time.sleep(0.5)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.1)
+    time.sleep(0.1)
     FFXC.set_neutral()
     FFX_Xbox.touchSaveSphere()
     
@@ -307,10 +307,10 @@ def yunalesca(ver):
     FFX_memory.awaitControl()
     print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
+    time.sleep(0.3)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.2) #Starts the first lower room conversation. "Kimahri go first. Yuna is safe."
+    time.sleep(0.2) #Starts the first lower room conversation. "Kimahri go first. Yuna is safe."
     FFX_memory.clickToControlSpecial()
     
     while not FFX_memory.battleActive(): #Gets us to Yunalesca battle through multiple rooms.
@@ -330,10 +330,10 @@ def yunalesca(ver):
             FFXC.set_neutral()
             FFXC.set_value('BtnB',1)
             FFXC.set_value('BtnA',1)
-            FFX_memory.waitFrames(30 * 0.035)
+            time.sleep(0.035)
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
-            FFX_memory.waitFrames(30 * 0.035)
+            time.sleep(0.035)
     FFX_Xbox.clickToBattle()
     FFX_Battle.aeonSummon(4) #Summon Bahamut and attack.
     FFX_memory.clickToControl() #This does all the attacking and dialog skipping
