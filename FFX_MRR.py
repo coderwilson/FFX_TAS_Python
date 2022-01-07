@@ -49,8 +49,7 @@ def arrival():
                 timeLimit = 60 #Max number of seconds that we will wait for the skip to occur.
                 maxTime = startTime + timeLimit
                 cam = FFX_memory.getCamera()
-                while cam[0] < 0.77:
-                    cam = FFX_memory.getCamera()
+                while FFX_memory.getActorCoords(6)[0] < -50:
                     currentTime = time.time()
                     if currentTime > maxTime:
                         print("Skip failed for some reason. Moving on without skip.")
@@ -66,7 +65,7 @@ def arrival():
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
-            elif FFX_memory.menuOpen():
+            elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
     print("Done with perlim MRR area, now for the real deal.")
