@@ -70,9 +70,10 @@ import FFX_Sin
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
+Gamestate = "Gagazet"
 #StepCounter = 1
-#StepCounter = 4
+#StepCounter = 2 #Temp, do not use going forward
+StepCounter = 4
 #Gamestate = "Zanarkand"
 #StepCounter = 4
 #Gamestate = "Sin"
@@ -256,31 +257,32 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadOffset(42)
+        FFX_LoadGame.loadOffset(43)
         #FFX_LoadGame.loadBahamut()
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(2)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
-        FFX_LoadGame.loadOffset(10)
+        FFX_LoadGame.loadOffset(11)
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
+        FFX_LoadGame.loadOffset(1)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 3: # Just before Seymour Flux
         FFX_LoadGame.LoadNeutral()
     if Gamestate == "Gagazet" and StepCounter == 4: # After the dream
-        FFX_LoadGame.loadOffset(5)
+        FFX_LoadGame.loadOffset(6)
         FFX_LoadGame.loadGagazetDream()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
         FFX_LoadGame.zanEntrance()
     if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
-        FFX_LoadGame.loadOffset(35)
+        FFX_LoadGame.loadOffset(36)
         FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
-        FFX_LoadGame.loadOffset(9)
+        FFX_LoadGame.loadOffset(10)
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.loadOffset(27)
+        FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadOffset(3)
         FFX_LoadGame.loadEggHunt()
     
     if FFX_memory.getStoryProgress() >= 80:
@@ -751,7 +753,7 @@ while Gamestate != "End":
 
     #In case we're loading mid game...
     if endGameVersion == 0:
-        endGameVersion = 1
+        endGameVersion = 4
         # 1 = two Return spheres, two Friend spheres
         # 2 = two Return spheres, two Friend spheres
         # 3 = Game over (four Friend spheres)

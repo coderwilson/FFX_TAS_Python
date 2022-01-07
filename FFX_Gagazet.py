@@ -282,24 +282,23 @@ def cave():
                 
                 print("Now the trial has started.")
                 FFX_Xbox.SkipDialog(2.8)
-                FFX_Screen.awaitPixel(1184,226,(255,255,255))
-                FFX_memory.waitFrames(30 * 1.2)
-                FFX_Xbox.menuB() #Attempting for first shot
-                print("First attempt.")
-                FFX_memory.waitFrames(30 * 3)
-                complete = False
-                while complete == False:
-                    if FFX_memory.userControl():
-                        complete = True
-                    elif FFX_Screen.PixelTestTol(1184,226,(255,255,255),5):
-                        FFX_memory.waitFrames(30 * 5.1)
-                        FFX_Xbox.menuB() #Subsequent attempts
-                        print("Additional attempt.")
-                        FFX_memory.waitFrames(30 * 4.4)
-                        if FFX_memory.userControl():
-                            complete = True
-                        else:
-                            FFX_memory.waitFrames(30 * 1.6) #Timing to re-try
+                
+                #Need logic here for when to start the trial
+                
+                FFXC.set_neutral()
+                while not FFX_memory.userControl():
+                    if FFX_memory.GTouterRing() < 2.3 and FFX_memory.GTouterRing() > 2.05:
+                        if FFX_memory.GTinnerRing() < 2.9 and FFX_memory.GTinnerRing() > 1.3:
+                            FFX_Xbox.tapB()
+                        elif FFX_memory.GTinnerRing() < 0.1 and FFX_memory.GTinnerRing() > -1.6:
+                            FFX_Xbox.tapB()
+                    elif FFX_memory.GTouterRing() < -0.7 and FFX_memory.GTouterRing() > -1.1:
+                        if FFX_memory.GTinnerRing() < 2.9 and FFX_memory.GTinnerRing() > 1.3:
+                            FFX_Xbox.tapB()
+                        elif FFX_memory.GTinnerRing() < 0.1 and FFX_memory.GTinnerRing() > -1.6:
+                            FFX_Xbox.tapB()
+                    
+                    
                 print("First trial complete")
                 checkpoint += 1
             elif checkpoint == 17:
@@ -342,13 +341,13 @@ def cave():
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if checkpoint == 35 and (FFX_Screen.PixelTestTol(495,440,(234, 195, 0),5)):
+            if checkpoint == 35 and FFX_memory.diagProgressFlag() == 2:
                 print("Second trial start")
-                FFX_memory.waitFrames(30 * 0.07)
+                FFX_memory.waitFrames(90)
                 FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1.5)
+                FFX_memory.waitFrames(45)
                 FFXC.set_value('Dpad', 8)
-                FFX_memory.waitFrames(30 * 1.5)
+                FFX_memory.waitFrames(45)
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
                 checkpoint += 1

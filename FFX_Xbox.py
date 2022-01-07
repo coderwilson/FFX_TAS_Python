@@ -475,38 +475,6 @@ def gridRight():
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(30 * 0.12)
 
-def clickToPixel(x,y,rgb):
-    counter = 0
-    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
-    while not FFX_Screen.PixelTestTol(x,y,rgb,5):
-        counter += 1;
-        if counter % 100 == 0:
-            print("awaiting pixel (clicking): ", counter)
-            print("Pixel being tested: (",x,",",y,")")
-            print("Test state: ",rgb)
-            try:
-                print("Current State: ", pyautogui.pixel(x, y))
-            except:
-                print("Cannot get current state.")
-        menuB()
-    print("Trigger pixel achieved. Waiting is complete.")
-    
-def clickToPixelTol(x,y,rgb,tol):
-    counter = 0
-    print("Clicking to pixel: (", x, ", ", y, ") color: ", rgb)
-    while not FFX_Screen.PixelTestTol(x,y,rgb, tol):
-        counter += 1;
-        if counter % 100 == 0:
-            print("awaiting pixel (clicking): ", counter)
-            print("Pixel being tested: (",x,",",y,")")
-            print("Test state: ",rgb)
-            try:
-                print("Current State: ", pyautogui.pixel(x, y))
-            except:
-                print("Cannot get current state.")
-        menuB()
-    print("Trigger pixel achieved. Waiting is complete.")
-    
 def clickToBattle():
     #FFX_Logs.writeLog("Clicking until it's someone's turn in battle")
     print("Clicking until it's someone's turn in battle")
@@ -528,7 +496,7 @@ def nameAeon():
             tapB()
     
     print("Naming screen is up.")
-    FFX_memory.waitFrames(20)
+    FFX_memory.waitFrames(15)
     menuB()
     FFX_memory.waitFrames(4)
     FFXC.set_value('Dpad', 1)

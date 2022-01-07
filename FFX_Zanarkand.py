@@ -92,11 +92,12 @@ def arrival():
                 luckSlot = FFX_memory.getItemSlot(94)
                 if luckSlot == 255:
                     luckCount = 0
-                    FFXC.set_movement(-1, 1)
+                    FFXC.set_movement(1, 1)
                     FFX_Xbox.tapB()
                 else:
                     if FFX_memory.getItemCountSlot(luckSlot) > luckCount:
                         checkpoint += 1
+                        print("Updating checkpoint: ", checkpoint)
                         FFX_memory.clickToControl()
                     else:
                         FFXC.set_movement(1, 1)

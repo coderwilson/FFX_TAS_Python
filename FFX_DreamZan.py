@@ -165,6 +165,7 @@ def ammesBattle():
     print("Starting ammes")
     FFX_Xbox.clickToBattle()
     FFX_Battle.defend()
+    
     print("Killing Sinspawn")
     while FFX_memory.battleActive():
         FFX_Xbox.tapB()
