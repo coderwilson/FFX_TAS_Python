@@ -366,7 +366,9 @@ def moveShiftLeft(toon):
 
 def moveShiftRight(toon):
     print("Move and shift, right")
+    FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
+    FFX_memory.waitFrames(2)
     toon = toon.lower()
     if toon == 'yuna':
         while not gridYuna():
@@ -376,7 +378,7 @@ def moveShiftRight(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderRight()
-    if toon == 'lulu':
+    elif toon == 'lulu':
         while not gridLulu():
             if moveReady() or moveActive() or moveComplete():
                 FFX_Xbox.menuB()

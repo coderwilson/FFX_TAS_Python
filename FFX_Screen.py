@@ -46,61 +46,30 @@ def BattleComplete():
 def PixelValue(x, y):
     print("########################################")
     print("########################################")
-    print("READING PIXEL VALUE, FIX THIS LATER")
+    print("READING SCREEN VALUE, FIX THIS LATER")
     print("########################################")
     print("########################################")
-    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    try:
-        value = pyautogui.pixel(x, y)
-    except:
-        value = PixelValue(x, y)
-    return value
-
+    
 def PixelTest( x, y, rgb ):
     print("########################################")
     print("########################################")
-    print("READING PIXEL VALUE, FIX THIS LATER")
+    print("READING SCREEN VALUE, FIX THIS LATER")
     print("########################################")
     print("########################################")
-    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    try:
-        return pyautogui.pixelMatchesColor(x, y, rgb)
-    except:
-        return False
 
 def PixelTestTol( x, y, rgb, tol ):
     print("########################################")
     print("########################################")
-    print("READING PIXEL VALUE, FIX THIS LATER")
+    print("READING SCREEN VALUE, FIX THIS LATER")
     print("########################################")
     print("########################################")
-    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    try:
-        return pyautogui.pixelMatchesColor(x, y, rgb, tolerance = tol)
-    except:
-        return False
 
 def awaitPixel(x,y,rgb):
-    counter = 0
-    print("Awaiting pixel: (", x, ", ", y, ") color: ", rgb)
-    while not PixelTestTol(x,y,rgb,5):
-        counter += 1;
-        if counter % 100 == 0:
-            print("awaiting pixel: ", counter / 100)
-            print("Pixel being tested: (",x,",",y,")")
-            print("Test state: ",rgb)
-            try:
-                print("Current State: ", pyautogui.pixel(x, y))
-            except:
-                print("Cannot get current state.")
-        FFX_memory.waitFrames(30 * 0.05)
-    print("Trigger pixel achieved. Waiting is complete.")
-
-def clickToPixel(x,y,rgb):
-    print("Fix this later.")
-
-def clickToPixelTol(x,y,rgb,tol):
-    print("Fix this later.")
+    print("########################################")
+    print("########################################")
+    print("READING SCREEN VALUE, FIX THIS LATER")
+    print("########################################")
+    print("########################################")
 
 def awaitTurn() :
     counter = 0
@@ -178,15 +147,6 @@ def turnAeon():
     else :
         return False
 
-def awaitSwimToJecht():
-    counter = 0
-    while not ( PixelTest(1217,803,(222,222,222)) and PixelTest(1092,813,(64,64,64)) ):
-        counter += 1
-        if counter % 100 == 0:
-            print("Waiting for the Jecht screen: ", counter / 100)
-        FFX_memory.waitFrames(30 * 0.1)
-    print("Ready to go swimming")
-
 def MRRbattle():
     bNum = FFX_memory.getBattleNum()
     if bNum == 96:
@@ -224,44 +184,6 @@ def mrrCompletion(status):
             status[1] = 1
     
     return status
-
-def checkCharge(pos):
-    if pos == 1:
-        if PixelTest(1471,728,(255, 83, 0)) == True:
-            FFX_Logs.writeLog("Character in position 1 is charged.")
-            return True
-        else:
-            FFX_Logs.writeLog("Character in position 1 is NOT charged.")
-            return False
-    if pos == 2:
-        if PixelTest(1471,770,(255, 83, 0)) == True:
-            FFX_Logs.writeLog("Character in position 2 is charged.")
-            return True
-        else:
-            FFX_Logs.writeLog("Character in position 2 is NOT charged.")
-            return False
-
-def spherimorphSpell():
-    complete = 0
-    spell = 0
-    while complete == 0:
-        if PixelTestTol(793,93,(221,221,221), 5):
-            FFX_Logs.writeLog("Spherimorph cast Fire")
-            complete = 1
-            spell = 1 #Fire
-        elif PixelTestTol(749,94,(219,219,219), 5):
-            FFX_Logs.writeLog("Spherimorph cast Thunder")
-            complete = 1
-            spell = 2 #Thunder
-        elif PixelTestTol(848,92,(223, 223, 223), 5):
-            FFX_Logs.writeLog("Spherimorph cast Blizzard")
-            complete = 1
-            spell = 4 #Ice
-        elif PixelTestTol(807,93,(221, 221, 221), 5):
-            FFX_Logs.writeLog("Spherimorph cast Water")
-            complete = 1
-            spell = 3 #Water
-    return spell
 
 def imgSearch(img, conf):
     print("########################################")

@@ -165,11 +165,9 @@ def ammesBattle():
     FFX_Xbox.clickToBattle()
     FFX_Battle.defend()
     
-    while FFX_memory.battleActive():
+    while not FFX_Screen.turnAuron():
         FFX_Xbox.tapB()
-    FFX_memory.waitFrames(30 * 0.5) #Just for no overlap
-    FFX_Xbox.clickToBattle()
-    
+
     #Auron overdrive tutorial
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()

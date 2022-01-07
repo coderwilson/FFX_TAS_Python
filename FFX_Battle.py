@@ -336,7 +336,7 @@ def Ammes():
     BattleComplete = 0
     countAttacks = 0
     countRevives = 0
-
+    
     tidusODflag = False
 
     while BattleComplete != 1:
@@ -3137,99 +3137,6 @@ def sandragora(version):
         print("Overdrive done")
         FFX_memory.clickToControl()
 
-def bikanelCharge_old(chargeState):
-    FFX_Logs.writeLog("Fight start: Charging Kimahri and Rikku, Bikanel")
-
-    # chargeState = [False,False,tidusSwap]
-    # test = FFX_Screen.desertCharge()
-    # print(test)
-    # chargeState[0] = test[0]
-    # chargeState[1] = test[1]
-    print("Starting battle with vars: ", chargeState)
-    turns = 0
-    if chargeState == [True, True]:
-        print("Just flee the whole fight.")
-        fleeAll()
-    else:
-        print("Continuing to charge Rikku and Kimahri.")
-        while not FFX_memory.menuOpen(): #AKA end of battle screen
-            if FFX_memory.turnReady():
-                print("Battle screen.")
-                turns += 1
-                if FFX_Screen.turnLulu():
-                    escapeOne()
-                elif FFX_Screen.faintCheck() and not FFX_Screen.turnLulu():
-                    revive()
-                    print("Reviving character")
-                elif FFX_Screen.turnTidus():
-                    print("Turn Tidus")
-                    escapeOne()
-                    print("Attempting Escape")
-                elif FFX_Screen.turnKimahri():
-                    print("Kimahri's turn")
-                    chargeState[1] = FFX_Screen.checkCharge(1)
-                    if chargeState[1]:
-                        escapeOne()
-                        print("Attempting Escape")
-                    else:
-                        getHP = FFX_memory.getBattleHP()
-                        if getHP[1] != 1244:
-                            useItem(20, 'none')
-                            print("Using an Al Bhed potion")
-                        else:
-                            print("No need to heal. Attacking to kill a turn.")
-                            attack('none')
-                elif FFX_Screen.turnRikku():
-                    print("Turn Rikku")
-                    chargeState[0] = FFX_Screen.checkCharge(1)
-                    if chargeState[0]:
-                        escapeOne()
-                    else:
-                        getHP = FFX_memory.getBattleHP()
-                        if getHP[1] != 360:
-                            useItem(20, 'none')
-                            print("Using an Al Bhed potion")
-                        else:
-                            print("No need to heal. Attacking to kill a turn.")
-                            attack('none')
-                elif FFX_Screen.turnAuron():
-                    escapeOne()
-    FFX_memory.clickToControl()
-    return chargeState
-
-def desertSpeed_old(chargeState):
-    battleNum = FFX_memory.getBattleNum()
-    if battleNum == 199 or battleNum == 200 or \
-            battleNum == 208 or battleNum == 209 or \
-            battleNum == 221 or battleNum == 222:
-        if FFX_memory.getUseItemsSlot(39) != 255:
-            print("Throwing nades if Rikku is in the party.")
-            FFX_Screen.awaitTurn()
-            buddySwap(1)  # Tidus for Rikku
-            FFX_Screen.awaitTurn()
-            useItem(FFX_memory.getUseItemsSlot(39), 'none')
-
-            while not FFX_memory.userControl():
-                if FFX_memory.turnReady():
-                    buddySwap(1)
-                    FFX_Screen.awaitTurn()
-                    tidusFlee()
-                else:
-                    FFX_Xbox.menuB()
-        else:
-            print("No grenades for picking up speed spheres. Resorting to memory 'fixing'")
-            speed = FFX_memory.setSpeed(20)
-            print("New speed value: ", speed)
-    else:
-        fleeAll()
-
-    FFX_memory.desertFormat(chargeState[0])
-    speedCount = FFX_memory.getSpeed()
-    if speedCount >= 10:
-        return False  # Speed spheres no longer needed.
-    else:
-        return True  # Still need speed spheres.
-
 def home1():
     FFX_Logs.writeLog("Fight start: Home 1")
     FFXC.set_neutral()
@@ -3562,7 +3469,7 @@ def isaaru():
 
 
 def altanaheal():
-
+    direction = 'd'
     if FFX_memory.getThrowItemsSlot(2) < 255:
         itemnum = 2
         itemname = "X-Potion"
@@ -3580,12 +3487,13 @@ def altanaheal():
         print("Using %s" % itemname)
         while not FFX_memory.turnReady():
             FFX_memory.waitFrames(1)
-        while battleMenuCursor() != 1:
+        while FFX_memory.battleMenuCursor() != 1:
             FFX_Xbox.tapDown()
         FFX_Xbox.tapB()
         FFX_memory.waitFrames(3)
         
-        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
+        print("Position: ", itemPos)
         while FFX_memory.battleCursor2() != itemPos:
             if itemPos % 2 != FFX_memory.battleCursor2():
                 FFX_Xbox.menuRight()
@@ -3593,11 +3501,12 @@ def altanaheal():
                 FFX_Xbox.menuDown()
             else:
                 FFX_Xbox.menuUp()
+        FFX_memory.waitFrames(3)
         FFX_Xbox.menuB()
         FFX_memory.waitFrames(3)
         print("Direction: ", direction)
         
-        while FFX_memory.battleTargetId() != num:
+        while FFX_memory.battleTargetId() != 20:
             if direction == 'l':
                 FFX_Xbox.menuLeft()
                 FFX_memory.waitFrames(1)

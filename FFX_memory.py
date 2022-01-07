@@ -9,6 +9,14 @@ baseValue = 0
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
 
+def getCutsceneID():
+    global baseValue
+    key = baseValue + 0xD27C88
+    cutscene_alt = process.readBytes(key, 4)
+    key = baseValue + 0xD2D67C
+    storyline_prog = process.readBytes(key, 4)
+    return (cutscene_alt, storyline_prog)
+
 def waitFrames(frames: int):
     frames = max(round(frames), 1)
     global baseValue
@@ -2285,6 +2293,17 @@ def getEquipType(equipNum):
     retVal = process.readBytes(key,1)
     return retVal
 
+def getEquipLegit(equipNum):
+    global baseValue
+    
+    basePointer = baseValue + 0x00d30f2c
+    key = basePointer + (0x16 * equipNum) +0x03
+    retVal = process.readBytes(key,1)
+    if retVal == 0:
+        return True
+    else:
+        return False
+
 def getEquipOwner(equipNum):
     global baseValue
     
@@ -2340,6 +2359,7 @@ class equipment:
         self.equipOwner = getEquipOwner(equipNum)
         self.equipAbilities = getEquipAbilities(equipNum)
         self.isEquipped = getEquipCurrentlyEquipped(equipNum)
+        self.slots = getEquipSlotCount(equipNum)
     
     def equipmentType(self):
         return self.equipType
@@ -2358,11 +2378,14 @@ class equipment:
         
     def isEquipped(self):
         return self.isEquipped
+    
+    def slotCount(self):
+        return self.slots
 
 def allEquipment():
     firstEquipment = True
     for i in range(200):
-        if getEquipExists(i):
+        if getEquipExists(i) and getEquipLegit(i):
             if firstEquipment:
                 equipHandleArray = [equipment(i)]
                 firstEquipment = False
@@ -2407,6 +2430,41 @@ def equipWeapCursor():
     key = baseValue + 0x01440A38
     retVal = process.readBytes(key,1)
     return retVal
+
+def assignAbilityToEquipCursor():
+    global baseValue
+    
+    key = baseValue + 0x01440AD0
+    retVal = process.readBytes(key,1)
+    return retVal
+
+
+#-------------------------------------------------------
+#Bevelle Trials indicators
+def btBiDirection():
+    key = baseValue + 0x0092DEED
+    return process.readBytes(key, 1)
+
+def btTriDirectionMain():
+    key = baseValue + 0x0092E1ED
+    return process.readBytes(key, 1)
+
+#-------------------------------------------------------
+#Gagazet trials
+
+def GTouterRing():
+    global baseValue
+    key = baseValue + 0x014DFC34
+    height = float_from_integer(process.read(key))
+    return height
+
+
+def GTinnerRing():
+    global baseValue
+    key = baseValue + 0x014DFDA0
+    height = float_from_integer(process.read(key))
+    return height
+
 
 #-------------------------------------------------------
 #Testing
