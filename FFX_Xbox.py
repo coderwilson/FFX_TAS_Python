@@ -107,6 +107,8 @@ FFXC = vgTranslator()
 def controllerHandle():
     return FFXC
 
+processed_cutscenes = set()
+
 def skipScene(fast_mode: bool = False):
     cutsceneID = FFX_memory.getCutsceneID()
     print(cutsceneID)
@@ -510,7 +512,7 @@ def clickToBattle():
     print("Clicking until it's someone's turn in battle")
     FFXC.set_neutral()
     complete = 0
-    while not FFX_memory.battleActive() and FFX_memory.turnReady():
+    while not (FFX_memory.battleActive() and FFX_memory.turnReady()):
         if FFX_memory.userControl():
             break
         elif not FFX_memory.battleActive():

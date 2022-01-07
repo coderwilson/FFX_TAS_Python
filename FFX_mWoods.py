@@ -12,9 +12,9 @@ FFXC = FFX_Xbox.controllerHandle()
 def arrival(rikkucharged):
     FFX_memory.clickToControl()
     if rikkucharged == True:
-        FFX_memory.fullPartyFormat_New("mwoodsgotcharge", 11)
+        FFX_memory.fullPartyFormat("mwoodsgotcharge")
     else:
-        FFX_memory.fullPartyFormat_New("mwoodsneedcharge", 11)
+        FFX_memory.fullPartyFormat("mwoodsneedcharge")
     FFX_memory.closeMenu()
     
     woodsVars = [False, False, False] #Rikku's charge, Fish Scales, and Arctic Winds

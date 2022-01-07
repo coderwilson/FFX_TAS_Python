@@ -18,7 +18,7 @@ def southPathing(blitzWin):
     if speedcount >= 14:
         status[3] = True
     
-    FFX_memory.fullPartyFormat_New('postbunyip')
+    FFX_memory.fullPartyFormat('postbunyip')
     FFX_memory.closeMenu()
     lStrikeCount = FFX_memory.lStrikeCount()
     

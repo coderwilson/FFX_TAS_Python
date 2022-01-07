@@ -49,8 +49,8 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-Gamestate = "MRR"
-StepCounter = 1
+#Gamestate = "MRR"
+#StepCounter = 1
 #StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
@@ -78,8 +78,8 @@ StepCounter = 1
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True

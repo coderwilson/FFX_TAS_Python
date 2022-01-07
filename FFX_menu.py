@@ -847,7 +847,7 @@ def afterSeymour():
     #currentmenuposition = 1
     #currentmenuposition = autoSortItems_New('n', 11)
     equipSonicSteel()
-    #currentmenuposition = FFX_memory.fullPartyFormat_New('macalaniaescape',11)
+    #currentmenuposition = FFX_memory.fullPartyFormat('macalaniaescape')
     FFX_memory.closeMenu()
 
 def homeGrid():

@@ -1343,7 +1343,7 @@ def MRRbattle(status):
                         buddySwap(0)
                         aeonSummon(0)
                         if FFX_memory.getEnemyCurrentHP()[1] == 0:
-                            FFX_Xbox.SkipDialog(2)
+                            FFX_memory.waitFrames(60)
                     elif FFX_Screen.turnAeon():
                         if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
                             aeonBoost()
