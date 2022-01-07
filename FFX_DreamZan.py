@@ -162,18 +162,25 @@ def listenStory(gameLength):
                     FFX_Xbox.skipScene()
 
 def ammesBattle():
+    print("Starting ammes")
     FFX_Xbox.clickToBattle()
     FFX_Battle.defend()
     
-    while not FFX_Screen.turnAuron():
+    print("Killing Sinspawn")
+    while FFX_memory.battleActive():
         FFX_Xbox.tapB()
-
+    print("Done Killing Sinspawn")
+    FFX_memory.waitFrames(6) #Just for no overlap
+    print("Clicking to battle.")
+    FFX_Xbox.clickToBattle()
+    print("Waiting for Auron's Turn")
+    print("At Overdrive")
     #Auron overdrive tutorial
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(3) #Initiate overdrive
     FFX_memory.waitFrames(30 * 1) #Static delay, the same every time.
-    
+    print("Starting Overdrive")
     #Doing the actual overdrive
     FFXC.set_value('Dpad', 2)
     FFX_memory.waitFrames(30 * 0.04)
