@@ -3950,7 +3950,7 @@ def seymourSpell():
     num = 21 #Should be the enemy number for the head
     if not FFX_memory.turnReady():
         print("Battle menu isn't up.")
-        FFX_memory.awaitTurn()
+        FFX_Screen.awaitTurn()
     
     while FFX_memory.battleMenuCursor() != 21:
         print(FFX_memory.battleMenuCursor())
