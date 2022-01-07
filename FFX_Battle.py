@@ -4834,12 +4834,13 @@ def healUp(chars):
     print(character_positions)
     positions_to_characters = { val : key for key, val in character_positions.items() if val != 255 }
     print(positions_to_characters)
-    
+        
     for cur_position in range(len(positions_to_characters)):
         while FFX_memory.getHP()[positions_to_characters[cur_position]] < FFX_memory.getMaxHP()[positions_to_characters[cur_position]]:
             print(FFX_memory.getHP())
             print(FFX_memory.getMaxHP())
             FFX_Xbox.menuB()
+        if FFX_memory.getHP() == FFX_memory.getMaxHP(): break
         FFX_Xbox.menuDown()
     print("Healing complete. Exiting menu.")
     FFX_memory.closeMenu()
@@ -5153,9 +5154,12 @@ def fleeAll():
     print("Attempting escape (all party members and end screen)")
     while not FFX_memory.menuOpen():
         if FFX_memory.turnReady():
+            tidus_position =  FFX_memory.getCharFormationSlot(0)
             if FFX_Screen.turnTidus():
                 tidusFlee()
-            elif not checkTidusOk():
+            elif checkTidusOk() and tidus_position >= 3 and tidus_position != 255:
+                buddySwapTidus()
+            elif not checkTidusOk() or tidus_position == 255:
                 escapeOne()
             else:
                 defend()                
