@@ -5509,10 +5509,11 @@ def BFA():
                     FFX_Xbox.menuUp()
                 else:
                     FFX_Xbox.menuDown()
+            FFX_memory.waitFrames(2)
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(30 * 0.4)
+            FFX_memory.waitFrames(30)
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(30 * 0.4)
+            FFX_memory.waitFrames(30)
             FFX_Xbox.menuRight()
             if FFX_memory.getGilvalue() > 99999:
                 FFX_Xbox.menuRight()

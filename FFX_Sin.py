@@ -50,7 +50,7 @@ def makingPlans():
     FFX_memory.waitFrames(30 * 0.5)
     FFX_Xbox.SkipDialog(2)
     FFXC.set_neutral()
-    FFX_Screen.awaitPixel(984,788,(247, 162, 74)) #To the Highbridge
+    FFX_memory.waitFrames(120)
     FFX_memory.waitFrames(30 * 0.5)
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 0.3)
@@ -68,83 +68,27 @@ def Shedinja():
     FFXC.set_movement(1, 1)
     FFX_memory.waitFrames(30 * 0.25)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
+    FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    FFX_memory.clickToStoryProgress(2945) #Click until we're in Bahamut's room.
-    FFX_Xbox.SkipDialog(12) #Skip dialog before "We fight Yu Yevon".
-    
-    while not FFX_Screen.PixelTestTol(610,483,(156, 157, 156),5):
-        if FFX_Screen.PixelTestTol(704,466,(154, 154, 154),5):
-            FFX_Xbox.menuB()
-        elif FFX_Screen.PixelTestTol(612,449,(152, 152, 152),5):
-            FFX_Xbox.menuDown()
+    FFX_memory.clickToDiagProgress(100)
+    FFX_memory.clickToDiagProgress(76) #Have you found a way? Well?
+    FFX_memory.waitFrames(20)
+    FFX_Xbox.tapDown()
     FFX_Xbox.menuB() #We fight Yu Yevon.
-    FFX_memory.clickToStoryProgress(2970)
-
-def economy():
-    FFX_Screen.awaitPixel(597,407,(157, 159, 157))
-    FFX_memory.waitFrames(30 * 0.05)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.2)
-    FFX_Xbox.menuRight()
-    FFX_memory.waitFrames(30 * 0.05)
-    FFX_Xbox.menuB()
     
-    FFX_memory.waitFrames(30 * 0.05)
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    
-    equipSaleCount = 2
-    while not FFX_Screen.PixelTestTol(800,830,(132, 131, 167),5):
-        if FFX_Screen.PixelTestTol(287,786,(151, 4, 238),5):
-            print("Equipped item, no sale.")
-        else:
-            print("Sell this item.")
-            equipSaleCount += 1
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuRight()
-        FFX_Xbox.menuDown()
-        FFX_memory.waitFrames(30 * 0.05)
-        
-    FFX_memory.waitFrames(30 * 0.05)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    print("Sold number of equipments: ", equipSaleCount)
-    FFX_Xbox.SkipDialog(3) #Adjust to whichever vendor we're talking to.
-    FFX_memory.waitFrames(30 * 10)
+    FFX_memory.clickToDiagProgress(74)
+    FFX_memory.clickToDiagProgress(28)
 
 def facingSin():
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
+    FFX_memory.waitFrames(85)
     FFXC.set_movement(-1, 1)
     FFX_Xbox.SkipDialog(0.3)
     FFXC.set_neutral()
     #FFX_memory.waitFrames(30 * 1.5)
     #FFX_Xbox.menuB() #Open the airship travelling menu
     
-    #FFX_Screen.awaitPixel(984,789,(250, 163, 79))
     FFX_Xbox.SkipDialog(10)
     
     while not FFX_memory.userControl():

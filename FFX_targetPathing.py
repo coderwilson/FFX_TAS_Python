@@ -4953,8 +4953,8 @@ def zanarkandTrials(checkpoint):
     if checkpoint == 87:
         print("Placing Besaid sphere")
     if checkpoint == 88:
-        x = 90
-        y = 40
+        x = 110
+        y = 20
     return [x,y]
 
 def yunalescaToAirship(checkpoint):
