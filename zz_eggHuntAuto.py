@@ -71,7 +71,12 @@ def engage():
         lookingCount += 1
         if lookingCount % 40 == 0:
             checkpoint += 1
-        if Minimap2(): #User control is different for this section.
+        if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+            FFX_Xbox.tapB()
+        elif FFX_memory.battleActive():
+                print("Battle engaged - using flee.")
+                FFX_Battle.fleeAll()
+        else: #User control is different for this section.
             #print("Building egg array")
             eggArray = FFX_memory.buildEggs()
             iceArray = FFX_memory.buildIcicles() #Added for additional pathing needs
@@ -158,7 +163,7 @@ def engage():
 
             #Now if we're close, we want to slow down a bit.
             if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
-                FFX_memory.waitFrames(30 * 0.15)
+                time.sleep(0.15)
                 FFXC.set_neutral()
                 #print("Studder-step to egg. | ",lookingCount)
                 print("Studder-step to egg. | ",checkpoint)
@@ -169,15 +174,6 @@ def engage():
                 #print("Targetting egg: | ",target)
                 print("Targetting egg: | ",checkpoint)
             FFX_Xbox.tapB()
-        else:
-            print("No user control.")
-            FFXC.set_neutral()
-            
-            if FFX_memory.battleActive():
-                print("Battle engaged - using flee.")
-                FFX_Battle.fleeAll()
-            else:
-                FFX_Xbox.menuB()
     endTime = time.time()
     print("End egg hunt")
     FFXC.set_neutral()
@@ -191,9 +187,3 @@ def engage():
         FFX_Logs.writeStats(str(battleCount))
     except:
         print("No log file.")
-
-def Minimap2() :
-    try:
-        return pyautogui.pixelMatchesColor(1328, 181, (158,158,53), tolerance=5)
-    except:
-        return False

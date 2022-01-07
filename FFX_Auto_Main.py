@@ -70,17 +70,17 @@ import FFX_Sin
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
+#Gamestate = "Gagazet"
 #StepCounter = 1
 #StepCounter = 2 #Temp, do not use going forward
-StepCounter = 4
+#StepCounter = 4
 #Gamestate = "Zanarkand"
 #StepCounter = 4
-#Gamestate = "Sin"
+Gamestate = "Sin"
 #StepCounter = 2
-#StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+StepCounter = 4
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True
@@ -291,6 +291,8 @@ if Gamestate != "none" :
         elif Gamestate == "Besaid" and StepCounter == 3:
             noMemCursor = True
         elif Gamestate == "Boat3":
+            noMemCursor = True
+        elif Gamestate == "Sin" and StepCounter == 4:
             noMemCursor = True
         else:
             print("Setting memory cursor")

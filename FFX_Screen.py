@@ -43,34 +43,6 @@ def BattleComplete():
     else :
         return False
 
-def PixelValue(x, y):
-    print("########################################")
-    print("########################################")
-    print("READING SCREEN VALUE, FIX THIS LATER")
-    print("########################################")
-    print("########################################")
-    
-def PixelTest( x, y, rgb ):
-    print("########################################")
-    print("########################################")
-    print("READING SCREEN VALUE, FIX THIS LATER")
-    print("########################################")
-    print("########################################")
-
-def PixelTestTol( x, y, rgb, tol ):
-    print("########################################")
-    print("########################################")
-    print("READING SCREEN VALUE, FIX THIS LATER")
-    print("########################################")
-    print("########################################")
-
-def awaitPixel(x,y,rgb):
-    print("########################################")
-    print("########################################")
-    print("READING SCREEN VALUE, FIX THIS LATER")
-    print("########################################")
-    print("########################################")
-
 def awaitTurn() :
     counter = 0
     print("Waiting for next turn in combat.")

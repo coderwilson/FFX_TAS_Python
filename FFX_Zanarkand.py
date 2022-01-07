@@ -277,6 +277,7 @@ def sanctuaryKeeper(ver):
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
     
+    FFX_memory.openMenu()
     FFX_memory.fullPartyFormat('yuna')
     #FFX_menu.endGameSwap2()
     
