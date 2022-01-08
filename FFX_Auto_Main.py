@@ -51,16 +51,15 @@ StepCounter = 3
 #StepCounter = 1
 #Gamestate = "MRR"
 #StepCounter = 1
-#StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-#Gamestate = "Macalania"
+Gamestate = "Macalania"
 #StepCounter = 1
-#StepCounter = 2
+StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
@@ -83,7 +82,7 @@ StepCounter = 3
 #StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-forceBlitzWin = True
+forceBlitzWin = False
 autoEggHunt = True
 
 ####################################################################################################
@@ -123,7 +122,8 @@ earlyTidusGrid = False
 #    blitzWin = True
 #else:
 #    blitzWin = False
-blitzWin = True
+blitzWin = False #For testing
+
 
 #Main functions
 def reportGamestate():
@@ -215,7 +215,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(21)
         FFX_LoadGame.LoadMiihenStart()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.loadOffset(19)
