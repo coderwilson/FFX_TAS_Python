@@ -212,24 +212,33 @@ def remedy(character: int, direction: str):
         print("Using %s" % itemname)
         while not FFX_memory.turnReady():
             FFX_memory.waitFrames(1)
-        while battleMenuCursor() != 1:
+        while FFX_memory.battleMenuCursor() != 1:
             FFX_Xbox.tapDown()
         FFX_Xbox.tapB()
         FFX_memory.waitFrames(3)
         
-        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
-        while FFX_memory.battleCursor2() != itemPos:
-            if itemPos % 2 != FFX_memory.battleCursor2():
-                FFX_Xbox.menuRight()
-            elif FFX_memory.battleCursor2() < itemPos:
-                FFX_Xbox.menuDown()
-            else:
-                FFX_Xbox.menuUp()
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
+        if itemPos != 0:
+            while FFX_memory.battleCursor2() != itemPos:
+                if itemPos % 2 != FFX_memory.battleCursor2():
+                    FFX_Xbox.menuRight()
+                elif FFX_memory.battleCursor2() < itemPos:
+                    FFX_Xbox.menuDown()
+                else:
+                    FFX_Xbox.menuUp()
+        else:
+            while FFX_memory.battleCursor2() != itemPos:
+                if itemPos % 2 != FFX_memory.battleCursor2():
+                    FFX_Xbox.menuRight()
+                elif FFX_memory.battleCursor2() < itemPos:
+                    FFX_Xbox.menuDown()
+                else:
+                    FFX_Xbox.menuUp()
         FFX_Xbox.menuB()
         FFX_memory.waitFrames(3)
         print("Direction: ", direction)
         
-        while FFX_memory.battleTargetId() != num:
+        while FFX_memory.battleTargetId() != character:
             if direction == 'l':
                 if FFX_memory.battleTargetId() >= 20:
                     print("Wrong battle line targetted.")
@@ -262,7 +271,7 @@ def remedy(character: int, direction: str):
         FFX_Xbox.menuB()
         FFX_Xbox.menuB()
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 0.5)
+        FFX_memory.waitFrames(15)
 
         return 1
 

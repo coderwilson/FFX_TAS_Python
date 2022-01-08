@@ -82,7 +82,7 @@ def Shedinja():
 def facingSin():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(85)
+    FFX_memory.waitFrames(87)
     FFXC.set_movement(-1, 1)
     FFX_Xbox.SkipDialog(0.3)
     FFXC.set_neutral()

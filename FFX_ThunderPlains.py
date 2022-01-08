@@ -143,11 +143,11 @@ def agency(blitzWin):
         FFX_memory.waitFrames(24)
         FFX_Xbox.menuUp() #Baroque sword
         #FFX_memory.waitFrames(30 * 10) #Testing only
-        FFX_memory.waitFrames(3)
+        FFX_memory.waitFrames(10)
         FFX_Xbox.menuB() #Weapon for Tidus (for Evrae fight)
-        FFX_memory.waitFrames(3)
+        FFX_memory.waitFrames(10)
         FFX_Xbox.menuB() #Do not equip
-        FFX_memory.waitFrames(3)
+        FFX_memory.waitFrames(24)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()

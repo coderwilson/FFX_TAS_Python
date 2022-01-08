@@ -1,6 +1,7 @@
 import pyxinput
 import time
 import FFX_Xbox
+import FFX_DreamZan
 import FFX_Battle
 import FFX_Screen
 import FFX_core
@@ -14,13 +15,9 @@ FFXC = FFX_Xbox.controllerHandle()
 
 selfAuto = True
 print("Looping section: Bevelle Trials")
-while not FFX_Screen.PixelTest(1076,552,(157, 159, 157)):
-    FFXC.set_value('BtnStart', 1)
-    FFX_memory.waitFrames(30 * 0.1)
-    FFXC.set_value('BtnStart', 0)
-    FFX_memory.waitFrames(30 * 0.3)
 
 FFX_memory.start()
+
 #miihenSkipCount = 0
 #miihenSkipAttempts = 0
 #rngSeedNum = 6
@@ -31,14 +28,8 @@ while attempts < 20:
     #print("RNG seed for this attempt: ", rngSeed)
     attempts += 1
     
-    print("Waiting to initialize - waiting on New Game screen")
-    #---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    while not FFX_Screen.PixelTest(1076,552,(157, 159, 157)):
-        FFXC.set_value('BtnStart', 1)
-        FFX_memory.waitFrames(30 * 0.1)
-        FFXC.set_value('BtnStart', 0)
-        FFX_memory.waitFrames(30 * 0.3)
-
+    FFX_DreamZan.NewGame('rescueYuna')
+    
     print("Game start screen")
     FFX_Screen.clearMouse(0)
     
@@ -59,7 +50,7 @@ while attempts < 20:
         print("Clicking to control so we can reset. ", attempts)
         FFXC.set_neutral()
         FFX_memory.clickToControl()
-        FFX_memory.waitFrames(30 * 2)
+        time.sleep(2)
         
         print("Resetting.")
         #FFX_memory.end()
@@ -76,13 +67,13 @@ while attempts < 20:
     
     #rngSeedNum += 1
 
-FFX_memory.waitFrames(30 * 5)
+time.sleep(5)
 
 #print("Skip attempts: ", miihenSkipAttempts)
 #print("Successful skips: ", miihenSkipCount)
 FFX_memory.end()
 
-FFX_memory.waitFrames(30 * 5)
+time.sleep(5)
 print("--------------------------")
 print("Program - end")
 print("--------------------------")
