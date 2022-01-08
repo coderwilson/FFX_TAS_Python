@@ -3805,7 +3805,6 @@ def useItem(slot: int, direction = 'none', target = 255):
     if not FFX_memory.mainBattleMenu():
         while not FFX_memory.mainBattleMenu():
             FFX_memory.waitFrames(1)
-    FFX_memory.waitFrames(1)
     print("Mark 1")
     while FFX_memory.mainBattleMenu():
         if FFX_memory.battleMenuCursor() != 20:
@@ -3814,24 +3813,19 @@ def useItem(slot: int, direction = 'none', target = 255):
             
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             elif FFX_memory.battleMenuCursor() > 20:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             else:
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(15)
     print("Mark 2")
     while FFX_memory.battleCursor2() != 1:
         if FFX_memory.battleCursor2() == 0:
             FFX_Xbox.menuRight()
         else:
             FFX_Xbox.menuLeft()
-        FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(10)
     print("Mark 3")
     if slot == 0:
         while FFX_memory.battleCursor3() >= 1:
@@ -3852,7 +3846,6 @@ def useItem(slot: int, direction = 'none', target = 255):
                 FFX_Xbox.menuDown()
             else:
                 FFX_Xbox.menuUp()
-            FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(6)
     if target != 255:
@@ -3868,7 +3861,6 @@ def useItem(slot: int, direction = 'none', target = 255):
                         FFX_Xbox.tapUp()
                     else:
                         FFX_Xbox.tapLeft()
-                    FFX_memory.waitFrames(1)
             elif target < 20 and target != 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != target:
@@ -3879,7 +3871,6 @@ def useItem(slot: int, direction = 'none', target = 255):
                         FFX_Xbox.tapUp()
                     else:
                         FFX_Xbox.tapLeft()
-                    FFX_memory.waitFrames(1)
             elif target < 20 and target == 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != 0:
@@ -3907,23 +3898,16 @@ def useItem(slot: int, direction = 'none', target = 255):
         FFX_Xbox.SkipDialog(0.5)
     else:
         print("Direction variation: ", direction)
-        FFX_memory.waitFrames(6)
         if direction == 'left':
             FFX_Xbox.menuLeft()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuB()
         elif direction == 'right':
             FFX_Xbox.menuRight()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuB()
         elif direction == 'up':
             FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuB()
         elif direction == 'down':
             FFX_Xbox.menuDown()
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuB()
+        FFX_Xbox.menuB()
+        FFX_Xbox.menuB()
 
 def cheer():
     FFX_Logs.writeLog("Cheer command")
@@ -4143,15 +4127,12 @@ def Steal():
             
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             elif FFX_memory.battleMenuCursor() > 20:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             else:
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
@@ -4173,22 +4154,18 @@ def StealDown():
             
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             elif FFX_memory.battleMenuCursor() > 20:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             else:
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
         else:
             FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
     FFX_Xbox.menuDown()
     FFX_Xbox.SkipDialog(1)
 
@@ -4205,22 +4182,18 @@ def StealUp():
             
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             elif FFX_memory.battleMenuCursor() > 20:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             else:
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
         else:
             FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
     FFX_Xbox.menuUp()
     FFX_Xbox.SkipDialog(1)
 
@@ -4238,22 +4211,18 @@ def StealRight():
             
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             elif FFX_memory.battleMenuCursor() > 20:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             else:
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
         else:
             FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
     FFX_Xbox.menuRight()
     FFX_Xbox.SkipDialog(1)
 
@@ -4271,22 +4240,18 @@ def StealLeft():
             
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             elif FFX_memory.battleMenuCursor() > 20:
                 FFX_Xbox.menuUp()
-                FFX_memory.waitFrames(30 * 0.1)
             else:
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
     while FFX_memory.battleCursor2() != 0:
         if FFX_memory.battleCursor2() % 2 == 1:
             FFX_Xbox.menuLeft()
         else:
             FFX_Xbox.menuUp()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
     
     FFX_Xbox.menuLeft()
     FFX_Xbox.SkipDialog(1)
@@ -4294,19 +4259,13 @@ def StealLeft():
 
 def stealAndAttack():
     print("Steal/Attack function")
-    BattleComplete = 0
     FFXC.set_neutral()
-    while not FFX_memory.menuOpen():
+    while FFX_memory.battleActive(): 
         if FFX_memory.turnReady():
             if FFX_Screen.turnRikku():
                 Steal()
             if FFX_Screen.turnTidus():
                 attack('none')
-        elif FFX_memory.menuOpen():
-            FFXC.set_value('BtnB', 1)
-            FFX_memory.waitFrames(30 * 2.5)
-            FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
         elif FFX_memory.otherBattleMenu():
             FFX_Xbox.menuB()
     FFX_memory.clickToControl()
