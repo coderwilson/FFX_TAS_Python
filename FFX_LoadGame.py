@@ -44,6 +44,7 @@ def loadOffset(offset):
     FFX_memory.awaitControl()
     FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
+    FFXC.set_neutral()
 
 def loadOffsetBattle(offset):
     print("Loading to save file in position ", offset)

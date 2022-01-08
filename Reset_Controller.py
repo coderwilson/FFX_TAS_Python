@@ -12,4 +12,4 @@ print("Values are now clear.")
 #FFXC.UnPlug(FFXC)
 #print("Controller is now unplugged")
 
-FFX_memory.waitFrames(30 * 2)
+time.sleep(2)
