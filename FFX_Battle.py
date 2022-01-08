@@ -212,7 +212,7 @@ def remedy(character: int, direction: str):
         print("Using %s" % itemname)
         while not FFX_memory.turnReady():
             FFX_memory.waitFrames(1)
-        while battleMenuCursor() != 1:
+        while FFX_memory.battleMenuCursor() != 1:
             FFX_Xbox.tapDown()
         FFX_Xbox.tapB()
         FFX_memory.waitFrames(3)
