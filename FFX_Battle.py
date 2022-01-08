@@ -5171,6 +5171,7 @@ def fleeLateGame():
     BattleComplete = 0
     while BattleComplete == 0:
         if FFX_memory.turnReady():
+            tidus_position =  FFX_memory.getCharFormationSlot(0)
             if FFX_Screen.turnTidus():
                 while FFX_memory.battleMenuCursor() != 20:
                     if FFX_memory.battleMenuCursor() == 255:
@@ -5182,7 +5183,9 @@ def fleeLateGame():
                     else:
                         FFX_Xbox.menuDown()
                 FFX_Xbox.SkipDialog(1.5)
-            elif not checkTidusOk():
+            elif checkTidusOk() and tidus_position >= 3 and tidus_position != 255:
+                buddySwapTidus()
+            elif not checkTidusOk() or tidus_position == 255:
                 escapeOne()
             else:
                 defend()
