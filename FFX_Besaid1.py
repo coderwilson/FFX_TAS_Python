@@ -272,7 +272,7 @@ def leaving():
                 FFX_Battle.aeonSummon(0)
                 while not FFX_memory.menuOpen():
                     if FFX_Screen.BattleScreen():
-                        FFX_Battle.aeonSpell(0)
+                        FFX_Battle.aeonSpell(1)
                         FFX_memory.waitFrames(30 * 0.4)
                 print("Now to open the menu")
                 FFX_memory.clickToControl()

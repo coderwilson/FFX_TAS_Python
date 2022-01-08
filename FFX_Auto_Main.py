@@ -39,8 +39,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-#Gamestate = "Besaid"
-#StepCounter = 3
+Gamestate = "Besaid"
+StepCounter = 3
 #Gamestate = "Boat3"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -79,8 +79,8 @@ import FFX_Sin
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 forceBlitzWin = True
@@ -179,7 +179,7 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(30)
+        FFX_LoadGame.loadOffset(39)
         print("Load complete")
         while FFX_memory.userControl():
             if FFX_memory.getCoords()[0] > 0.5:
