@@ -1016,7 +1016,6 @@ def rikkuODItems(slot):
                 FFX_Xbox.tapUp()
             else:
                 FFX_Xbox.tapDown()
-            waitFrames(2)
     else:
         while RikkuODCursor1() != slot:
             print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
@@ -1026,7 +1025,6 @@ def rikkuODItems(slot):
                 FFX_Xbox.tapUp()
             else:
                 FFX_Xbox.tapDown()
-            waitFrames(2)
     waitFrames(2)
     FFX_Xbox.tapB()
     waitFrames(2)

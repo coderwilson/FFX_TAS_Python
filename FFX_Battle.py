@@ -120,20 +120,17 @@ def useSkill(position):
     while FFX_memory.battleMenuCursor() != 19:
         print(FFX_memory.battleMenuCursor())
         if FFX_memory.battleMenuCursor() == 255:
-            FFX_memory.waitFrames(30 * 0.01)
+            pass
         elif FFX_memory.battleMenuCursor() == 1:
             FFX_Xbox.menuUp()
-            FFX_memory.waitFrames(30 * 0.1)
         elif FFX_memory.battleMenuCursor() > 19:
             FFX_Xbox.menuUp()
-            FFX_memory.waitFrames(30 * 0.1)
         else:
             FFX_Xbox.menuDown()
     if position == 0:
         FFX_Xbox.SkipDialog(1.5)
     else:
         FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 0.035)
         while FFX_memory.battleCursor2() != position:
             if position % 2 == 0 and FFX_memory.battleCursor2() % 2 == 1:
                 FFX_Xbox.menuLeft()
@@ -3805,6 +3802,23 @@ def gagazetCave(direction):
     
     fleeAll()
 
+def _navigate_to_position(position, battleCursor = FFX_memory.battleCursor2):
+    while battleCursor() == 255:
+        pass
+    if battleCursor() != position:
+        print("Wrong position targetted", battleCursor() % 2, position % 2)
+        while battleCursor() % 2 != position % 2:
+            if battleCursor() % 2 == 0:
+                FFX_Xbox.menuRight()
+            else:
+                FFX_Xbox.menuLeft()
+        while battleCursor() != position:
+            print(battleCursor())
+            if battleCursor() > position:
+                FFX_Xbox.menuUp()
+            else:
+                FFX_Xbox.menuDown()
+
 def useItem(slot: int, direction = 'none', target = 255):
     slot -= 1 #This allows us to index at 1 instead of 0 for the programmer's sake.
     FFX_Logs.writeLog("Using items via the Use command")
@@ -3819,7 +3833,6 @@ def useItem(slot: int, direction = 'none', target = 255):
         if FFX_memory.battleMenuCursor() != 20:
             if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
                 return
-            
             if FFX_memory.battleMenuCursor() == 1:
                 FFX_Xbox.menuUp()
             elif FFX_memory.battleMenuCursor() > 20:
@@ -3829,34 +3842,11 @@ def useItem(slot: int, direction = 'none', target = 255):
         else:
             FFX_Xbox.menuB()
     print("Mark 2")
-    while FFX_memory.battleCursor2() != 1:
-        if FFX_memory.battleCursor2() == 0:
-            FFX_Xbox.menuRight()
-        else:
-            FFX_Xbox.menuLeft()
+    _navigate_to_position(1)
     FFX_Xbox.menuB()
     print("Mark 3")
-    if slot == 0:
-        while FFX_memory.battleCursor3() >= 1:
-            print("Cursor: ", FFX_memory.battleCursor3(), " || Moving to slot: ", slot)
-            if FFX_memory.battleCursor3() % 2 != slot % 2:
-                FFX_Xbox.menuRight()
-            elif FFX_memory.battleCursor3() < slot:
-                FFX_Xbox.menuDown()
-            else:
-                FFX_Xbox.menuUp()
-            FFX_memory.waitFrames(2)
-    else:
-        while FFX_memory.battleCursor3() != slot:
-            print("Cursor: ", FFX_memory.battleCursor3(), " || Moving to slot: ", slot)
-            if FFX_memory.battleCursor3() % 2 != slot % 2:
-                FFX_Xbox.menuRight()
-            elif FFX_memory.battleCursor3() < slot:
-                FFX_Xbox.menuDown()
-            else:
-                FFX_Xbox.menuUp()
+    _navigate_to_position(slot, FFX_memory.battleCursor3)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
     if target != 255:
         try:
             print("Targetting based on character number")
@@ -3974,26 +3964,20 @@ def seymourSpell():
 def usePotionCharacter(num, direction):
     print("Healing character, ", num)
     direction = direction.lower()
-    if not FFX_memory.turnReady():
+    while not FFX_memory.turnReady():
         print("Battle menu isn't up.")
-        while not FFX_memory.turnReady():
-            #Waiting for battle menu to come up.
-            FFX_memory.waitFrames(30 * 0.035)
-        FFX_memory.waitFrames(30 * 0.07) #Make sure we actually have control
-    if FFX_memory.battleMenuCursor() != 1:
-        while FFX_memory.battleMenuCursor() != 1:
-            FFX_Xbox.menuDown()
+        pass
+    while not FFX_memory.mainBattleMenu():
+        pass
+    while FFX_memory.battleMenuCursor() != 1:
+        FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
+    while not FFX_memory.otherBattleMenu():
+        pass
     print(FFX_memory.battleCursor2())
-    if FFX_memory.battleCursor2() > 0:
-        while FFX_memory.battleCursor2() > 0:
-            if FFX_memory.battleCursor2() % 2 == 1:
-                FFX_Xbox.menuLeft()
-            else:
-                FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.07)
+    _navigate_to_position(getThrowItemsSlot()-1)
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuB()
 
     while FFX_memory.battleTargetId() != num:
         if direction == 'l':
@@ -4028,7 +4012,6 @@ def usePotionCharacter(num, direction):
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.5)
 
 def attackByNum(num, direction):
     print("Attacking specific character, ", num)
@@ -4123,9 +4106,7 @@ def attack2():
         FFXC.set_value('BtnB', 0)
         FFX_memory.waitFrames(30 * 0.035)
 
-def Steal():
-    FFX_Logs.writeLog("Basic Steal command")
-    print("Steal")
+def _steal(direction=None):
     if not FFX_memory.mainBattleMenu():
         while not FFX_memory.mainBattleMenu():
             FFX_memory.waitFrames(1)
@@ -4142,128 +4123,48 @@ def Steal():
                 FFX_Xbox.menuDown()
         else:
             FFX_Xbox.menuB()
-    while FFX_memory.battleCursor2() != 0:
-        if FFX_memory.battleCursor2() % 2 == 1:
-            FFX_Xbox.menuLeft()
-        else:
-            FFX_Xbox.menuUp()
-    
-    FFX_Xbox.SkipDialog(1)
+    _navigate_to_position(0)
+    print(FFX_memory.otherBattleMenu())
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuB()  # Use the Steal
+    print(FFX_memory.otherBattleMenu())
+    if direction == 'down':
+        FFX_Xbox.menuDown()
+    elif direction == 'up':
+        FFX_Xbox.menuUp()
+    elif direction == 'right':
+        FFX_Xbox.menuRight()
+    elif direction == 'left':
+        FFX_Xbox.menuLeft()    
+    print("Firing steal")
+    FFX_Xbox.tapB()
+
+def Steal():
+    FFX_Logs.writeLog("Basic Steal command")
+    print("Steal")
+    _steal()
 
 def StealDown():
     FFX_Logs.writeLog("Steal, but press Down")
     print("Steal Down")
-    if not FFX_memory.mainBattleMenu():
-        while not FFX_memory.mainBattleMenu():
-            FFX_memory.waitFrames(1)
-    while FFX_memory.mainBattleMenu():
-        if FFX_memory.battleMenuCursor() != 20:
-            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
-                return
-            
-            if FFX_memory.battleMenuCursor() == 1:
-                FFX_Xbox.menuUp()
-            elif FFX_memory.battleMenuCursor() > 20:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuB()
-    while FFX_memory.battleCursor2() != 0:
-        if FFX_memory.battleCursor2() % 2 == 1:
-            FFX_Xbox.menuLeft()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.SkipDialog(1)
+    _steal('down')
 
 def StealUp():
     FFX_Logs.writeLog("Steal, but press Up")
     print("Steal Up")
-    if not FFX_memory.mainBattleMenu():
-        while not FFX_memory.mainBattleMenu():
-            FFX_memory.waitFrames(1)
-    while FFX_memory.mainBattleMenu():
-        if FFX_memory.battleMenuCursor() != 20:
-            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
-                return
-            
-            if FFX_memory.battleMenuCursor() == 1:
-                FFX_Xbox.menuUp()
-            elif FFX_memory.battleMenuCursor() > 20:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuB()
-    while FFX_memory.battleCursor2() != 0:
-        if FFX_memory.battleCursor2() % 2 == 1:
-            FFX_Xbox.menuLeft()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.SkipDialog(1)
+    _steal('up')
 
 
 def StealRight():
     FFX_Logs.writeLog("Steal, but press Right")
     print("Steal Right")
-    if not FFX_memory.mainBattleMenu():
-        while not FFX_memory.mainBattleMenu():
-            FFX_memory.waitFrames(1)
-    while FFX_memory.mainBattleMenu():
-        if FFX_memory.battleMenuCursor() != 20:
-            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
-                return
-            
-            if FFX_memory.battleMenuCursor() == 1:
-                FFX_Xbox.menuUp()
-            elif FFX_memory.battleMenuCursor() > 20:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuB()
-    while FFX_memory.battleCursor2() != 0:
-        if FFX_memory.battleCursor2() % 2 == 1:
-            FFX_Xbox.menuLeft()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.SkipDialog(1)
+    _steal('right')
 
 
 def StealLeft():
     FFX_Logs.writeLog("Steal, but press Left")
     print("Steal Left")
-    if not FFX_memory.mainBattleMenu():
-        while not FFX_memory.mainBattleMenu():
-            FFX_memory.waitFrames(1)
-    while FFX_memory.mainBattleMenu():
-        if FFX_memory.battleMenuCursor() != 20:
-            if FFX_Screen.turnRikku() == False and FFX_Screen.turnKimahri() == False:
-                return
-            
-            if FFX_memory.battleMenuCursor() == 1:
-                FFX_Xbox.menuUp()
-            elif FFX_memory.battleMenuCursor() > 20:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuB()
-    while FFX_memory.battleCursor2() != 0:
-        if FFX_memory.battleCursor2() % 2 == 1:
-            FFX_Xbox.menuLeft()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.SkipDialog(1)
+    _steal('left')
 
 
 def stealAndAttack():
@@ -4324,45 +4225,77 @@ def valeforFire():
             BattleComplete = 1
 
 
-def thunder(direction):
-    FFX_Logs.writeLog("Lulu cast Thunder")
-    print("Black magic - Thunder")
+def castSpell(direction, spellID):
     if FFX_Screen.turnLulu() == False:
         print("Lulu is not the current person. Deferring turn.")
         return
-    direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()  # Black magic
-    print(FFX_memory.battleCursor2())
-    if FFX_memory.battleCursor2() != 1:
-        print("Wrong spell targetted")
-        while FFX_memory.battleCursor2() != 1:
-            print(FFX_memory.battleCursor2())
-            if FFX_memory.battleCursor2() % 2 == 0:
-                FFX_Xbox.menuRight()
-            elif FFX_memory.battleCursor2() > 1:
-                FFX_Xbox.menuUp()
-            else:
+    while not FFX_memory.otherBattleMenu():
+        while FFX_memory.battleMenuCursor() != 21:
+            print(FFX_memory.battleMenuCursor())
+            if FFX_memory.battleMenuCursor() == 0:
                 FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Thunder
+            else:
+                FFX_Xbox.menuUp()
+        FFX_Xbox.menuB()  # Black magic
+    _navigate_to_position(spellID)
+    print(FFX_memory.otherBattleMenu())
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuB()  # Cast the Spell
+    print(FFX_memory.otherBattleMenu())
+    direction = direction.lower()
     if direction == "right":
         FFX_Xbox.menuRight()
     elif direction == "left":
-        FFX_Xbox.menuLeft()
-    elif direction == "l2":
-        FFX_Xbox.menuLeft()
         FFX_Xbox.menuLeft()
     elif direction == "up":
         FFX_Xbox.menuUp()
     elif direction == "down":
         FFX_Xbox.menuDown()
+    elif direction == "l2":
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuLeft()
+    elif direction == "rd":
+        FFX_Xbox.menuRight()
+        FFX_Xbox.menuDown()
+    elif direction == "right2" or direction == "r2":
+        FFX_Xbox.menuRight()
+        FFX_Xbox.menuRight()
+        FFX_Xbox.menuDown()
+    elif direction == "d2":
+        FFX_Xbox.menuDown()
+        FFX_Xbox.menuDown()
+    elif not direction or direction == 'none':
+        pass
+    else:
+        print("UNSURE DIRECTION: ", direction)
+        raise ValueError("Unsure direction")
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
+
+    
+
+def thunder(direction):
+    FFX_Logs.writeLog("Lulu cast Thunder")
+    print("Black magic - Thunder")
+    castSpell(direction, 1)
+
+
+def fire(direction):
+    FFX_Logs.writeLog("Lulu cast Fire")
+    print("Black magic - Fire")
+    castSpell(direction, 0)
+ 
+
+def water(direction):
+    FFX_Logs.writeLog("Lulu cast Water")
+    print("Black magic - Water")
+    castSpell(direction, 2)
+
+
+def ice(direction):
+    FFX_Logs.writeLog("Lulu cast Ice")
+    print("Black magic - Ice")
+    castSpell(direction, 3)
 
 def thunderTarget(target, direction):
     FFX_Logs.writeLog("Lulu cast Thunder")
@@ -4371,13 +4304,15 @@ def thunderTarget(target, direction):
         print("Lulu is not the current person. Deferring turn.")
         return
     direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()  # Black magic
+    
+    while not FFX_memory.otherBattleMenu():
+        while FFX_memory.battleMenuCursor() != 21:
+            print(FFX_memory.battleMenuCursor())
+            if FFX_memory.battleMenuCursor() == 0:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuUp()
+        FFX_Xbox.menuB()  # Black magic
     print(FFX_memory.battleCursor2())
     if FFX_memory.battleCursor2() != 1:
         print("Wrong spell targetted")
@@ -4422,132 +4357,6 @@ def thunderTarget(target, direction):
                 FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-
-def fire(direction):
-    FFX_Logs.writeLog("Lulu cast Fire")
-    print("Black magic - Fire")
-    if FFX_Screen.turnLulu() == False:
-        print("Lulu is not the current person. Deferring turn.")
-        return
-    direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()  # Black magic
-    #FFX_memory.waitFrames(30 * 0.3)
-    if FFX_memory.battleCursor2() != 0:
-        print("Wrong spell targetted")
-        while FFX_memory.battleCursor2() != 0:
-            print(FFX_memory.battleCursor2())
-            if FFX_memory.battleCursor2() % 2 == 1:
-                FFX_Xbox.menuLeft()
-            elif FFX_memory.battleCursor2() > 0:
-                FFX_Xbox.menuUp()
-    print("Correct spell targetted.")
-    FFX_Xbox.menuB()  # Fire
-    FFX_memory.waitFrames(2)
-    if direction == "right":
-        FFX_Xbox.menuRight()
-    elif direction == "left":
-        FFX_Xbox.menuLeft()
-    elif direction == "up":
-        FFX_Xbox.menuUp()
-    elif direction == "down":
-        FFX_Xbox.menuDown()
-    elif direction == "rd":
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Cast Fire
-    FFX_Xbox.menuB()
-    
-
-
-def water(direction):
-    FFX_Logs.writeLog("Lulu cast Water")
-    print("Black magic - Water")
-    if FFX_Screen.turnLulu() == False:
-        print("Lulu is not the current person. Deferring turn.")
-        return
-    direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()  # Black magic
-    print(FFX_memory.battleCursor2())
-    if FFX_memory.battleCursor2() != 2:
-        print("Wrong spell targetted")
-        while FFX_memory.battleCursor2() != 2:
-            print(FFX_memory.battleCursor2())
-            if FFX_memory.battleCursor2() % 2 == 1:
-                FFX_Xbox.menuLeft()
-            elif FFX_memory.battleCursor2() > 2:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Water
-    if direction == "right":
-        FFX_Xbox.menuRight()
-    elif direction == "right2":
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuRight()
-    elif direction == "left":
-        FFX_Xbox.menuLeft()
-    elif direction == "up":
-        FFX_Xbox.menuUp()
-    elif direction == "down":
-        FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Cast Water
-    FFX_Xbox.menuB()
-
-
-def ice(direction):
-    FFX_Logs.writeLog("Lulu cast Ice")
-    print("Black magic - Ice")
-    if FFX_Screen.turnLulu() == False:
-        print("Lulu is not the current person. Deferring turn.")
-        return
-    direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()  # Black magic
-    print(FFX_memory.battleCursor2())
-    if FFX_memory.battleCursor2() != 3:
-        print("Wrong spell targetted")
-        while FFX_memory.battleCursor2() != 3:
-            print(FFX_memory.battleCursor2())
-            if FFX_memory.battleCursor2() % 2 == 0:
-                FFX_Xbox.menuRight()
-            elif FFX_memory.battleCursor2() > 3:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Ice
-    if direction == "right":
-        FFX_Xbox.menuRight()
-    elif direction == "r2":
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuRight()
-    elif direction == "left":
-        FFX_Xbox.menuLeft()
-    elif direction == "up":
-        FFX_Xbox.menuUp()
-    elif direction == "down":
-        FFX_Xbox.menuDown()
-    elif direction == "d2":
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Cast Ice
     FFX_Xbox.menuB()
 
 
@@ -4595,24 +4404,17 @@ def aeonSpell2(position, direction):
 def aeonSpellDirection(position, direction):
     FFX_Logs.writeLog("Aeon casting a spell. Special direction: " + str(direction))
     print("Aeon casting a spell. Special direction: ", direction)
-    if FFX_memory.battleMenuCursor() != 21:
+    while not FFX_memory.otherBattleMenu():
         while FFX_memory.battleMenuCursor() != 21:
+            print(FFX_memory.battleMenuCursor())
             FFX_Xbox.menuDown()
-    while FFX_memory.mainBattleMenu():
         FFX_Xbox.menuB()  # Black magic
-    print("Aeon spell number (by position): ", position)
-    print(FFX_memory.battleCursor2())
-    while FFX_memory.battleCursor2() != position:
-        if FFX_memory.battleCursor2() % 2 == 0 and position % 2 != 0:
-            FFX_Xbox.menuRight()
-        elif FFX_memory.battleCursor2() % 2 != 0 and position % 2 == 0:
-            FFX_Xbox.menuLeft()
-        elif FFX_memory.battleCursor2() > position:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()  # Spell of choice
-    FFX_memory.waitFrames(30 * 0.07)
+    print("In Black Magic")
+    _navigate_to_position(position)
+    print(FFX_memory.otherBattleMenu())
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuB()  # Cast the Spell
+    print(FFX_memory.otherBattleMenu())
     if direction == 'left':
         FFX_Xbox.menuLeft()
     elif direction == 'right':
@@ -4788,10 +4590,10 @@ def lancet(direction):
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.menuB()
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuB()
     if direction == 'left':
         FFX_Xbox.menuLeft()
     if direction == 'right':
@@ -4803,7 +4605,6 @@ def lancet(direction):
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1) #To make sure we don't overlap turns
 
 def lancetTarget(target, direction):
     print("Casting Lancet with variation: ", direction)
@@ -4816,10 +4617,10 @@ def lancetTarget(target, direction):
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.menuB()
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.menuB()
     retry = 0
     while FFX_memory.battleTargetId() != target:
         if direction == 'l':
@@ -4860,7 +4661,6 @@ def lancetTarget(target, direction):
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1)
 
 def lancetHome(direction):
     print("Lancet (home) function")
