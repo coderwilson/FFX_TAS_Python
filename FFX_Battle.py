@@ -1841,26 +1841,28 @@ def thunderPlains(status, section):
                 print("------------Someone has been petrified which messes up the battle logic. Escaping.")
                 fleeAll()
             elif bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
-                fleeAll() #No longer need Lunar Curtain for Evrae fight.
-                #print("Battle with Larvae. Battle number: ", bNum)
-                #if startingstatus[2] == False:
-                #    if turnchar == 0:
-                #        if tidusturns == 0:
-                #            rikkuposition = FFX_memory.getBattleCharSlot(6)
-                #            buddySwap_new(rikkuposition)
-                #        else:
-                #            tidusFlee()
-                #        tidusturns += 1
-                #    elif turnchar == 6:
-                #        Steal()
-                #        status[2] = True
-                #    else:
-                #        tidusposition = FFX_memory.getBattleCharSlot(0)
-                #        buddySwap_new(tidusposition)
-                #elif turnchar == 0:
-                #    tidusFlee()
-                #else:
-                #    fleeAll()
+                if status[4]:
+                    fleeAll() #No longer need Lunar Curtain for Evrae fight.
+                else: #Blitz loss strat
+                    print("Battle with Larvae. Battle number: ", bNum)
+                    if startingstatus[2] == False:
+                        if turnchar == 0:
+                            if tidusturns == 0:
+                                rikkuposition = FFX_memory.getBattleCharSlot(6)
+                                buddySwap_new(rikkuposition)
+                            else:
+                                tidusFlee()
+                            tidusturns += 1
+                        elif turnchar == 6:
+                            Steal()
+                            status[2] = True
+                        else:
+                            tidusposition = FFX_memory.getBattleCharSlot(0)
+                            buddySwap_new(tidusposition)
+                    elif turnchar == 0:
+                        tidusFlee()
+                    else:
+                        fleeAll()
             elif bNum == 160:
                 print("Battle with Iron Giant. Battle number: ", bNum)
                 if startingstatus[1] == False:
@@ -2048,7 +2050,8 @@ def thunderPlains(status, section):
     if hpValues[0] < 400 or hpValues[2] < 400 or hpValues[4] < 400 or hpValues[6] < 180:
         healUp_New(4, 11)
     print("Ready to continue onward.")
-    print("Plains variables: Rikku charged, stolen lunar curtain, stolen light curtain")
+    print("**Plains variables: Rikku charged, stolen light curtain, stolen lunar curtain, ")
+    print("**speed spheres done, Blitz Win")
     print(status)
     return status
 
