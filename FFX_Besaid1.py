@@ -77,10 +77,12 @@ def Beach():
     FFX_Logs.writeStats(str(goodBattles))
 
 def swimming1():
-    print("Function no longer used")
+    # print("Function no longer used")
+    return
 
 def enteringVillage():
-    print("Function no longer used")
+    # print("Function no longer used")
+    return
 
 def trials():
     checkpoint = 0
@@ -156,9 +158,11 @@ def trials():
 
 def aeonAndSleep():
     print("Function no longer used.")
+    return
 
 def waterfalls():
     print("Function no longer used.")
+    return
 
 def leaving():
     print("Ready to leave Besaid")

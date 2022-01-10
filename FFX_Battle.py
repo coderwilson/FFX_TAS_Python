@@ -3975,7 +3975,7 @@ def usePotionCharacter(num, direction):
     while not FFX_memory.otherBattleMenu():
         pass
     print(FFX_memory.battleCursor2())
-    _navigate_to_position(getThrowItemsSlot()-1)
+    _navigate_to_position(FFX_memory.getThrowItemsSlot(0)-1)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.menuB()
 
@@ -4472,14 +4472,20 @@ def healUp(chars):
     print(character_positions)
     positions_to_characters = { val : key for key, val in character_positions.items() if val != 255 }
     print(positions_to_characters)
-        
+    maximal_hp = FFX_memory.getMaxHP()
+    print("Max HP: ", maximal_hp)
+    current_hp = FFX_memory.getHP()
     for cur_position in range(len(positions_to_characters)):
-        while FFX_memory.getHP()[positions_to_characters[cur_position]] < FFX_memory.getMaxHP()[positions_to_characters[cur_position]]:
-            print(FFX_memory.getHP())
-            print(FFX_memory.getMaxHP())
+        while current_hp[positions_to_characters[cur_position]] < maximal_hp[positions_to_characters[cur_position]]:
+            print(current_hp)
+            prev_hp = current_hp[positions_to_characters[cur_position]]
             FFX_Xbox.menuB()
-        if FFX_memory.getHP() == FFX_memory.getMaxHP(): break
-        FFX_Xbox.menuDown()
+            current_hp = FFX_memory.getHP()
+            if prev_hp == current_hp[positions_to_characters[cur_position]]:
+                break
+        if current_hp == maximal_hp: break
+        while FFX_memory.assignAbilityToEquipCursor() < cur_position + 1:
+            FFX_Xbox.menuDown()
     print("Healing complete. Exiting menu.")
     FFX_memory.closeMenu()
 
