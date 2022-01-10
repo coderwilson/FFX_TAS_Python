@@ -39,8 +39,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-#Gamestate = "Besaid"
-#StepCounter = 3
+Gamestate = "Besaid"
+StepCounter = 3
 #Gamestate = "Boat3"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -55,8 +55,8 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-Gamestate = "Guadosalam"
-StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -81,6 +81,8 @@ StepCounter = 2
 #Gamestate = "none"
 #StepCounter = 1
 
+#Game length. Full is the same as any%, short is about 35 minutes with memory manip.
+forceBlitzWin = False
 autoEggHunt = True
 
 ####################################################################################################
@@ -117,11 +119,11 @@ endGameVersion = 0
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
 earlyHaste = 0
 earlyTidusGrid = False
-#if forceBlitzWin == True:
-#    blitzWin = True
+if forceBlitzWin == True:
+    blitzWin = True
 #else:
 #    blitzWin = False
-blitzWin = False #For testing
+#blitzWin = False #For testing
 
 
 #Main functions
@@ -178,8 +180,9 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(30)
+        FFX_LoadGame.loadOffset(39)
         print("Load complete")
+        FFX_LoadGame.loadMemCursor()
         while FFX_memory.userControl():
             if FFX_memory.getCoords()[0] > 0.5:
                 FFXC.set_movement(1, 1)

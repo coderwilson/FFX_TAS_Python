@@ -15,7 +15,7 @@ fileMemChange = "none"
 
 
 def writeLog(message):
-    print("Function no longer used")
+    # print("Function no longer used")
     #global logFile
     #global fileName
     
@@ -23,9 +23,10 @@ def writeLog(message):
     #logFile.write(message)
     #logFile.write("\n")
     #logFile.close()
+    return
 
 def nextFile():
-    print("Function no longer used")
+    # print("Function no longer used")
     #global fileName
     #global game
     #global ext
@@ -42,6 +43,7 @@ def nextFile():
     #    logFile.write("\n")
     #    logFile.close()
     #    print("New file is ready for writing!\n")
+    return
 
 def writeStats(message):
     global statsFile
