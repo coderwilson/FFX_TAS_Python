@@ -3125,8 +3125,8 @@ def mWoods(checkpoint):
         x = -49
         y = 76
     if checkpoint == 31:
-        x = 161
-        y = 24
+        x = 160
+        y = 6
     if checkpoint == 32: #Bartello
         x = 178
         y = -46

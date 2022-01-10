@@ -9,11 +9,9 @@ import FFX_targetPathing
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def southPathing(blitzWin):
+def southPathing(status):
     FFX_memory.clickToControl()
     
-    status = [False,False,False,False] #Rikku charged, Light Curtain, Lunar Curtain, Speed sphere recovery done
-    status[2] = blitzWin
     speedcount = FFX_memory.getSpeed()
     if speedcount >= 14:
         status[3] = True
