@@ -244,6 +244,8 @@ def northPathing(status):
             if FFX_memory.dodgeLightning(lStrikeCount):
                 print("Dodge")
                 lStrikeCount = FFX_memory.lStrikeCount()
+            elif checkpoint == 12 and status[4] == False and status[2] == False:
+                checkpoint = 10
             
             #General pathing
             elif FFX_memory.userControl():
