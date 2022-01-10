@@ -2235,7 +2235,7 @@ def spherimorph():
             if turnchar == 0:
                 if tidusturns == 0:
                     FFX_memory.waitFrames(2)
-                    FFX_Xbox.armorSwap(1)
+                    equipInBattle(equipType = 'armor', abilityNum = 0x8028)
                 elif tidusturns == 1:
                     FFX_memory.waitFrames(2)
                     defend()
@@ -2420,7 +2420,7 @@ def seymourGuado():
             elif turnchar == 0:
                 if tidusturns == 0:
                     print("Swap to Brotherhood")
-                    FFX_Xbox.weapSwap(0)
+                    equipInBattle(special = 'brotherhood')
                     FFX_memory.waitFrames(30 * 0.5)
                 elif tidusturns == 1:
                     print("Tidus Haste self")
@@ -2856,11 +2856,11 @@ def wendigo():
                     tidushaste = True
                 elif phase == 0:
                     print("Switch to Brotherhood")
-                    FFX_Xbox.weapSwap(0)
+                    equipInBattle(special = 'brotherhood')
                     phase += 1
                 elif phase == 1:
                     print("Attack top Guado")
-                    attack('down')
+                    attackByNum(22, 'd')
                     phase += 1
                 elif FFX_Screen.faintCheck() == 2:
                     print("2 Characters are dead")
@@ -3190,45 +3190,42 @@ def home2():
 def home3():
     FFX_Logs.writeLog("Fight start: Home 3")
     FFX_Xbox.clickToBattle()
-    FFX_memory.waitFrames(30 * 1)
-    randomFight = tidusFlee()
-    complete = 0
-    while complete == 0:
-        if randomFight == 2:
-            complete = 1
-        else:
-            FFX_memory.clickToControl()
-
-            FFXC.set_movement(-1, -1)
-            FFX_memory.waitFrames(30 * 6)
-            FFXC.set_neutral()
-            FFX_Xbox.clickToBattle()
-            randomFight = tidusFlee()
-
-    print("Tidus vs dual horns")
-    tidusHaste('none')
-
-    FFX_Xbox.clickToBattle()
     if not FFX_Screen.turnTidus():
         while not FFX_Screen.turnTidus():
             defend()
             FFX_memory.waitFrames(30 * 0.2)
             FFX_Xbox.clickToBattle()
-    tidusOD()
-
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    tidusHaste('none')
+    
+    rikkuItemThrown = False
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnTidus():
                 attack('none')
+            elif FFX_Screen.turnRikku() and rikkuItemThrown == False:
+                useItemSlot = home3item()
+                useItem(useItemSlot, 'none')
+                rikkuItemThrown = True
             elif FFX_Screen.faintCheck() > 0:
                 revive()
-            elif FFX_Screen.turnKimahri():
-                useItem(3, 'none')
             else:
                 defend()
     print("Home 3 shows as fight complete.")
-    FFX_memory.clickToControl()
+    #FFX_memory.clickToControl()
 
+def home3item():
+    throwSlot = FFX_memory.getUseItemsSlot(49) #Petrify Grenade
+    if throwSlot != 255:
+        return throwSlot
+    throwSlot = FFX_memory.getUseItemsSlot(40) #Smoke Bomb
+    if throwSlot != 255:
+        return throwSlot
+    throwSlot = FFX_memory.getUseItemsSlot(39) #Silence Grenade
+    if throwSlot != 255:
+        return throwSlot
+    throwSlot = FFX_memory.getUseItemsSlot(37) #Sleeping Powder
+    if throwSlot != 255:
+        return throwSlot
 
 def home4():
     FFX_Logs.writeLog("Fight start: Home 4")
@@ -3251,7 +3248,7 @@ def home4():
 
 
 # Process written by CrimsonInferno
-def Evrae():
+def Evrae(blitzWin):
     FFX_Logs.writeLog("Fight start: Evrae")
     tidusPrep = 0
     tidusAttacks = 0
@@ -3270,26 +3267,44 @@ def Evrae():
             # print("otherTurns: ", otherTurns)
             if turnchar == 0:
                 print("Registering Tidus's turn")
-                if tidusPrep == 0:
-                    tidusPrep = 1
-                    tidusHaste('none')
-                elif tidusPrep == 1:
-                    tidusPrep += 1
-                    cheer()
-                elif tidusPrep == 2 and rikkuTurns == 0:
-                    FFX_Xbox.armorSwap(0)
-                elif tidusPrep == 2 and tidusAttacks == 2:
-                    tidusPrep += 1
-                    cheer()
-                else:
-                    tidusAttacks += 1
-                    attack('none')
+                if blitzWin: #Blitz win logic
+                    if tidusPrep == 0:
+                        tidusPrep = 1
+                        tidusHaste('none')
+                    elif tidusPrep == 1:
+                        tidusPrep += 1
+                        cheer()
+                    elif tidusPrep == 2 and rikkuTurns == 0:
+                        FFX_Xbox.armorSwap(0)
+                    elif tidusPrep == 2 and tidusAttacks == 2:
+                        tidusPrep += 1
+                        cheer()
+                    else:
+                        tidusAttacks += 1
+                        attack('none')
+                else: #Blitz loss logic
+                    if tidusPrep == 0:
+                        tidusPrep = 1
+                        tidusHaste('none')
+                    elif tidusPrep <= 2:
+                        tidusPrep += 1
+                        cheer()
+                    elif tidusPrep == 3:
+                        print("Equip Baroque Sword.")
+                        equipInBattle(special = 'baroque')
+                        tidusPrep += 1
+                    else:
+                        tidusAttacks += 1
+                        attack('none')
             elif turnchar == 6:
                 print("Registering Rikku's turn")
                 if rikkuTurns == 0:
                     rikkuTurns += 1
                     print("Rikku overdrive")
                     rikkuFullOD('Evrae')
+                elif not blitzWin and not lunarCurtain:
+                    print("Use Lunar Curtain")
+                    lunarCurtain = True
                 else:
                     Steal()
             else:
@@ -3300,12 +3315,19 @@ def Evrae():
                     if fullheal(target = 0,
                                 direction="u") == 0:
                         print("Restorative item not found.")
-                        Steal()
+                        if not blitzWin and not lunarCurtain:
+                            print("Use Lunar Curtain")
+                            lunarCurtain = True
+                        else:
+                            Steal()
                     else:
                         print("Heal should be successful.")
                 else:
-                    print("No attempt to heal.")
-                    Steal()
+                    if not blitzWin and not lunarCurtain:
+                        print("Use Lunar Curtain")
+                        lunarCurtain = True
+                    else:
+                        Steal()
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     FFXC.set_value('BtnB', 1)
@@ -4046,7 +4068,7 @@ def usePotionCharacter(num, direction):
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 0.5)
 
-def attackByNum(num, direction):
+def attackByNum(num, direction='u'):
     print("Attacking specific character, ", num)
     direction = direction.lower()
     if not FFX_memory.turnReady():
@@ -5739,6 +5761,11 @@ def rikkuFullOD(battle):
     item1 -= 1
     item2 -= 1
     
+    if item1 > item2:
+        item3 = item1
+        item1 = item2
+        item2 = item3
+    
     #Now to enter commands
     
     while not FFX_memory.otherBattleMenu():
@@ -5754,6 +5781,51 @@ def rikkuFullOD(battle):
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
+
+def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = 'none'):
+    equipType = equipType.lower()
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.menuRight()
+    FFX_memory.waitFrames(15)
+    if equipType == 'weap':
+        equipHandles = FFX_memory.weaponArrayCharacter(character)
+    else:
+        FFX_Xbox.menuDown()
+        equipHandles = FFX_memory.armorArrayCharacter(character)
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(15)
     
+    
+    print("@@@@@")
+    print("Character ", character)
+    print("Equipment type: ", equipType)
+    print("Number of items: ", len(equipHandles))
+    print("@@@@@")
+    equipNum = 255
+    i = 0
+    while len(equipHandles) > 0:
+        currentHandle = equipHandles.pop(0)
+        if special == 'baroque':
+            if currentHandle.abilities() == [0x8063,255,255,255]:
+                equipNum = i
+        elif special == 'brotherhood':
+            if currentHandle.abilities() == [0x8063,0x8064,0x802A,0x8000]:
+                equipNum = i
+        elif abilityNum == 0:
+            print("Equipping just the first available equipment.")
+            equipNum = 0
+        elif currentHandle.hasAbility(abilityNum): #First Strike for example
+            equipNum = i
+        i += 1
+    position = 0
+    while position != equipNum:
+        FFX_Xbox.menuDown()
+        position += 1
+        FFX_memory.waitFrames(1)
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    
+    print("Desired equipment is in slot ", equipNum)
+
 def checkTidusOk():
     return not any(func(0) for func in [FFX_memory.petrifiedstate, FFX_memory.confusedState, FFX_memory.deadstate, FFX_memory.berserkstate])

@@ -128,8 +128,34 @@ def agency(blitzWin):
     FFX_memory.waitFrames(3)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Sell Auron Katana
-    FFX_memory.waitFrames(3)
-    FFX_memory.waitFrames(3)
+    FFX_memory.waitFrames(6)
+    if blitzWin == False and FFX_memory.getGilvalue() < 9550:
+        for j in range(11):
+            FFX_Xbox.menuDown()
+        while FFX_memory.getGilvalue() < 9550:
+            FFX_memory.waitFrames(3)
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(6)
+            FFX_Xbox.menuUp()
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(6)
+            FFX_Xbox.menuRight()
+            FFX_Xbox.menuDown()
+        FFX_memory.waitFrames(6)
+    elif blitzWin == True and FFX_memory.getGilvalue() < 8725:
+        for j in range(11):
+            FFX_Xbox.menuDown()
+        while FFX_memory.getGilvalue() < 8725:
+            FFX_memory.waitFrames(3)
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(6)
+            FFX_Xbox.menuUp()
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(6)
+            FFX_Xbox.menuRight()
+            FFX_Xbox.menuDown()
+        FFX_memory.waitFrames(6)
+    FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuLeft()

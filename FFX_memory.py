@@ -238,7 +238,7 @@ def clickToControl3():
             while battleActive():
                 FFX_Xbox.tapB()
         if diagSkipPossible():
-            print("Skip dialog")
+            #print("Skip dialog")
             FFX_Xbox.tapB()
         elif menuOpen():
             print("Menu open (after battle)")
@@ -2299,7 +2299,7 @@ def getEquipLegit(equipNum):
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) +0x03
     retVal = process.readBytes(key,1)
-    if retVal == 0:
+    if retVal in [0,8]:
         return True
     else:
         return False
@@ -2385,7 +2385,7 @@ class equipment:
 def allEquipment():
     firstEquipment = True
     for i in range(200):
-        if getEquipExists(i) and getEquipLegit(i):
+        if getEquipLegit(i):
             if firstEquipment:
                 equipHandleArray = [equipment(i)]
                 firstEquipment = False
@@ -2415,13 +2415,16 @@ def weaponArrayCharacter(charNum):
 def armorArrayCharacter(charNum):
     equipHandles = allEquipment()
     firstEquipment = True
-    for i in len(equipHandles):
-        if equipHandles[i].owner() == charNum and equipHandles[i].equipmentType() == 1:
+    while len(equipHandles) > 0:
+        #print(len(equipHandles))
+        currentHandle = equipHandles.pop(0)
+        #print("Owner: ", currentHandle.owner())
+        if currentHandle.owner() == charNum and currentHandle.equipmentType() == 1:
             if firstEquipment:
-                charWeaps = [equipHandles[i]]
+                charWeaps = [currentHandle]
                 firstEquipment = False
             else:
-                charWeaps.append(equipHandles[i])
+                charWeaps.append(currentHandle)
     return charWeaps
 
 def equipWeapCursor():

@@ -657,8 +657,6 @@ def mWoods():
     FFX_memory.waitFrames(30)
     FFX_Xbox.menuB() #Talk to O'aka again
     FFX_memory.waitFrames(30)
-    if FFX_memory.getGilvalue() < 9100: #Memory hack, we must fix this later.
-        FFX_memory.setGilValue(9999999)
     FFX_Xbox.menuB() #Talk to O'aka once again
     while not FFX_memory.menuOpen():
         FFX_Xbox.menuB()
