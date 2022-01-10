@@ -78,16 +78,17 @@ StepCounter = 3
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-forceBlitzWin = True
+forceBlitzWin = False
 autoEggHunt = True
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 123 #New seed number, only used if newSeed == True
 ####################################################################################################
@@ -717,8 +718,8 @@ while Gamestate != "End":
 
     if Gamestate == "rescueYuna" and StepCounter == 1:
         reportGamestate()
-        FFX_rescueYuna.Evrae()
-        FFX_rescueYuna.guards()
+        FFX_Battle.Evrae(blitzWin)
+        FFX_rescueYuna.guards(blitzWin)
         StepCounter = 2
         #Gamestate = "manualBreak" # Used for testing only.
         

@@ -3807,6 +3807,186 @@ def desert(checkpoint):
         y = 1000
     return [x,y]
 
+def Home(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 5
+        y = -35
+    if checkpoint == 1:
+        x = 46
+        y = 21
+    if checkpoint == 2:
+        x = 70
+        y = 69
+    if checkpoint == 3:
+        x = 70
+        y = 82
+    if checkpoint == 4:
+        x = 67
+        y = 89
+    if checkpoint == 5: #Extra in case we need refactoring later.
+        x = 67
+        y = 89
+    if checkpoint == 6: #Extra in case we need refactoring later.
+        x = 67
+        y = 89
+    if checkpoint == 7: #Touch save sphere
+        x = 0
+        y = 0
+    if checkpoint == 8:
+        x = 71
+        y = 68
+    if checkpoint == 9:
+        x = 55
+        y = 52
+    if checkpoint == 10:
+        x = 3
+        y = 82
+    if checkpoint == 11:
+        x = 0
+        y = 120
+    if checkpoint == 12:
+        x = 0
+        y = 0
+    if checkpoint == 13:
+        x = 0
+        y = -5
+    if checkpoint == 14: #First battle
+        x = 0
+        y = -5
+    if checkpoint == 15:
+        x = 41
+        y = 35
+    if checkpoint == 16:
+        x = 81
+        y = 65
+    if checkpoint == 17:
+        x = 161
+        y = 125
+    if checkpoint == 18: #Into second battle and new map
+        x = 0
+        y = 220
+    if checkpoint == 19:
+        x = 0
+        y = 220
+    if checkpoint == 20: #Branch based on blitz win
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = -2
+        y = 236
+    if checkpoint == 22:
+        x = -5
+        y = 310
+    if checkpoint == 23:
+        x = -13
+        y = 330
+    if checkpoint == 24: #Right next to door
+        x = -70
+        y = 359
+    if checkpoint == 25:
+        x = -168
+        y = 275
+    if checkpoint == 26:
+        x = -184
+        y = 253
+    if checkpoint == 27: #Screen change before next battle
+        x = -184
+        y = 253
+    if checkpoint == 28:
+        x = -174
+        y = 223
+    if checkpoint == 29:
+        x = -184
+        y = 210
+    if checkpoint == 30:
+        x = -184
+        y = 210
+    if checkpoint == 31: #Down the stairs, storyline.
+        x = -256
+        y = 180
+    if checkpoint == 32:
+        x = -296
+        y = 217
+    if checkpoint == 33:
+        x = -315
+        y = 217
+    if checkpoint == 34:
+        x = -343
+        y = 189
+    if checkpoint == 35:
+        x = -354
+        y = 182
+    if checkpoint == 36:
+        x = -367
+        y = 193
+    if checkpoint == 37:
+        x = -360
+        y = 231
+    if checkpoint == 38:
+        x = -352
+        y = 265
+    if checkpoint == 39: #Open chest
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = -398
+        y = 219
+    if checkpoint == 41:
+        x = -414
+        y = 211
+    if checkpoint == 42: #Big Reveal room
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 91
+        y = -25
+    if checkpoint == 44:
+        x = 130
+        y = -45
+    if checkpoint == 45: ##Stairs to airship
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 188
+        y = 58
+    if checkpoint == 47:
+        x = 101
+        y = 59
+    if checkpoint == 48:
+        x = 0
+        y = 60
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    if checkpoint == 81:
+        x = 0
+        y = 97
+    if checkpoint == 82:
+        x = -6
+        y = 29
+    if checkpoint == 83:
+        x = -20
+        y = 15
+    if checkpoint == 84:
+        x = -2
+        y = 39
+    if checkpoint == 85:
+        x = 6
+        y = 44
+    if checkpoint == 86: #Open chest
+        x = 0
+        y = 0
+    if checkpoint == 87:
+        x = 1
+        y = 157
+    return [x,y]
+
+
 def bevellePreTrials(checkpoint):
     x = 999
     y = 999

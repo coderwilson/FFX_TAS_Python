@@ -166,152 +166,107 @@ def desert1():
     print("desert1 function no longer used.")
 
 def findSummoners(blitzWin):
-    FFX_memory.clickToControl()
+    print("Desert complete. Starting Home section")
     FFX_menu.homeGrid()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2.9)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_neutral()
-    FFX_Xbox.touchSaveSphere()
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 3) #Enter Home
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 6)
-    FFXC.set_neutral()
     
-    FFX_Battle.home1() #First battle
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3.5)
-    FFXC.set_neutral()
-    
-    FFX_Battle.home2() #Second battle
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 2.8)
-    
-    #Big back track if we lost Blitz
-    if blitzWin == False:
-        FFXC.set_neutral()
-        FFX_memory.waitFrames(30 * 0.3)
-        FFXC.set_movement(0, -1)
-        FFX_memory.waitFrames(30 * 3)
-        FFXC.set_movement(-1, -1)
-        FFX_memory.waitFrames(30 * 2.5)
-        FFXC.set_neutral()
-        
-        FFX_Battle.home3() #Third battle (the spare room)
-        FFX_memory.waitFrames(30 * 0.5)
-        FFXC.set_movement(1, 1)
-        FFX_memory.waitFrames(30 * 0.3)
-        FFXC.set_movement(0, 1)
-        FFX_memory.waitFrames(30 * 0.7)
-        FFX_Xbox.menuB()
-        FFXC.set_neutral()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuRight()
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(30 * 3)
-        FFX_Xbox.menuB()
-        FFXC.set_movement(1, -1)
-        FFX_memory.waitFrames(30 * 1.5)
-        FFXC.set_neutral()
-        
-        FFX_memory.awaitControl()
-    
-    pos = FFX_memory.getCoords()
-    while pos[0] > -150:
-        if not FFX_memory.userControl():
-            if FFX_Screen.BattleScreen():
-                FFX_Battle.fleeAll()
-            else:
+    checkpoint = 0
+    while FFX_memory.getMap() != 261:
+        if FFX_memory.userControl():
+            #events
+            if checkpoint == 7:
                 FFXC.set_neutral()
-                FFX_Xbox.tapB()
-        else:
-            pos = FFX_memory.getCoords()
-            if pos[1] < 300:
+                FFX_Xbox.touchSaveSphere()
+                
+                checkpoint += 1
+            elif checkpoint < 12 and FFX_memory.getMap() == 276:
+                checkpoint = 12
+            elif checkpoint < 18 and FFX_memory.getMap() == 280:
+                checkpoint = 19
+            elif checkpoint in [81,82,83] and FFX_memory.getMap() == 286: #Bonus room, blitzLoss only
+                checkpoint = 84
+            elif checkpoint == 86:
                 FFXC.set_movement(0, 1)
-            elif pos[1] < 360:
-                FFXC.set_movement(-1, 1)
-            else:
-                FFXC.set_movement(-1, 0)
-                FFX_memory.waitFrames(30 * 0.2)
-                FFXC.set_movement(-1, 1)
-                FFX_memory.waitFrames(30 * 0.5)
-    
-    
-    FFXC.set_movement(-1, 0)
-    FFX_memory.clickToEvent()
-    FFXC.set_neutral()
-    
-    FFX_Battle.home4()
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(1, 0)
-    FFX_Xbox.SkipDialog(2) #Pick up chest.
-    FFXC.set_movement(-1, 1)
-    FFX_Xbox.SkipDialog(3)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 8)
-    FFXC.set_neutral()
-    
-    FFX_Xbox.SkipDialog(90) #Start of the "Yuna will die" scene.
-    FFX_memory.awaitControl()
-    
-    FFXC.set_movement(0, -1) #Now to the airship.
-    FFX_memory.waitFrames(30 * 2.6)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_neutral()
-    
-    FFX_memory.awaitControl()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    while not FFX_memory.cutsceneSkipPossible():
-        FFX_Xbox.tapB()
-    FFX_Xbox.skipScene()
-    FFX_Xbox.SkipDialog(8.2) #For some reason, it thinks there's a cutscene to skip this whole time.
-    FFX_Xbox.skipScene()
-    
+                FFX_memory.clickToEvent()
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(30 * 1)
+                FFX_Xbox.menuB()
+                FFX_memory.waitFrames(30 * 1)
+                FFX_Xbox.menuLeft()
+                FFX_Xbox.menuLeft()
+                FFX_Xbox.menuB()
+                FFX_memory.waitFrames(30 * 1)
+                FFX_Xbox.menuLeft()
+                FFX_Xbox.menuLeft()
+                FFX_Xbox.menuLeft()
+                FFX_Xbox.menuLeft()
+                FFX_Xbox.menuB()
+                FFX_memory.waitFrames(30 * 1)
+                FFX_Xbox.menuRight()
+                FFX_Xbox.menuRight()
+                FFX_Xbox.menuRight()
+                FFX_Xbox.menuRight()
+                FFX_Xbox.menuB()
+                FFX_memory.clickToControl()
+                FFXC.set_movement(1, -1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 88:
+                checkpoint = 21
+            elif checkpoint == 20:
+                if blitzWin:
+                    checkpoint = 21
+                else:
+                    checkpoint = 81
+            #elif checkpoint < 27 and FFX_memory.getMap() == 280:
+            #    checkpoint = 27
+            elif checkpoint == 31:
+                FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint == 39:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 42:
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 45:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Home(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.battleActive():
+                if FFX_memory.getBattleNum() == 417:
+                    print("Home, battle 1")
+                    FFX_Battle.home1()
+                elif FFX_memory.getBattleNum() == 419:
+                    if FFX_memory.diagProgressFlag() == 8:
+                        print("Home, battle 2")
+                        FFX_Battle.home2()
+                        while not FFX_memory.userControl():
+                            if FFX_memory.menuOpen():
+                                FFX_Xbox.tapB()
+                        FFX_memory.fullPartyFormat('desert1')
+                    else:
+                        print("Home, bonus battle for Blitz loss")
+                        FFX_Battle.home3()
+                elif FFX_memory.getMap() == 286:
+                    print("Home, bonus battle for Blitz loss")
+                    FFX_Battle.home3()
+                elif FFX_memory.getBattleNum() == 420:
+                    print("Home, final battle")
+                    FFX_Battle.home4()
+                else:
+                    FFX_Battle.fleeAll()
+            elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    print("Let's go get that airship!")
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         elif FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.skipScene()
+            FFX_Xbox.SkipDialog(3)
+    print("Airship is good to go. Now for Yuna.")

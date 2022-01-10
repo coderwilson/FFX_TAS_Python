@@ -326,8 +326,11 @@ def underLake():
     FFXC.set_neutral()
     FFX_memory.clickToControl()
     
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
+    while FFX_memory.getMap() != 129:
+        FFXC.set_movement(0, -1)
+        if FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
+        elif FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.skipScene()
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 10)
-    FFX_Xbox.skipScene()
+    FFX_memory.clickToControl()

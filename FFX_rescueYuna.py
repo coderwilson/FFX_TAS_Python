@@ -58,15 +58,15 @@ def preEvrae():
     
     FFX_zzairShipPath.airShipPath(1)
     # 6 - Path to deck, no item purchasing
-    
-def Evrae():
-    FFX_Battle.Evrae()
-    
-def guards():
+
+def guards(blitzWin):
     #FFX_memory.fullPartyFormat('rikku')
     #FFX_menu.bevelleGuards()
     
     FFX_memory.awaitControl()
+    if not blitzWin:
+        FFX_menu.equipSonicSteel()
+    
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
