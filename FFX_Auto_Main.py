@@ -39,8 +39,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-Gamestate = "Besaid"
-StepCounter = 3
+#Gamestate = "Besaid"
+#StepCounter = 3
 #Gamestate = "Boat3"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -55,8 +55,8 @@ StepCounter = 3
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-#Gamestate = "Guadosalam"
-#StepCounter = 2
+Gamestate = "Guadosalam"
+StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -82,7 +82,6 @@ StepCounter = 3
 #StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-forceBlitzWin = False
 autoEggHunt = True
 
 ####################################################################################################
@@ -119,11 +118,11 @@ endGameVersion = 0
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
 earlyHaste = 0
 earlyTidusGrid = False
-if forceBlitzWin == True:
-    blitzWin = True
+#if forceBlitzWin == True:
+#    blitzWin = True
 #else:
 #    blitzWin = False
-#blitzWin = False #For testing
+blitzWin = False #For testing
 
 
 #Main functions
@@ -180,7 +179,7 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(39)
+        FFX_LoadGame.loadOffset(30)
         print("Load complete")
         FFX_LoadGame.loadMemCursor()
         while FFX_memory.userControl():
@@ -254,7 +253,7 @@ if Gamestate != "none" :
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadOffset(15)
     if Gamestate == "Home" and StepCounter == 2:
-        FFX_LoadGame.loadOffset(7)
+        FFX_LoadGame.loadOffset(1)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
         FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
@@ -642,9 +641,9 @@ while Gamestate != "End":
         FFX_Logs.nextFile()
 
     if Gamestate == "ThunderPlains" and StepCounter == 1:
-        status = [False,False,False,False]
+        status = [False,False,False,False,blitzWin]
         reportGamestate()
-        status = FFX_ThunderPlains.southPathing(blitzWin)
+        status = FFX_ThunderPlains.southPathing(status)
         StepCounter = 2
 
     if Gamestate == "ThunderPlains" and StepCounter == 2:

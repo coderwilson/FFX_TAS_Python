@@ -3996,7 +3996,7 @@ def bevellePreTrials(checkpoint):
     if checkpoint == 1:
         x = -200
         y = -3
-    if checkpoint == 2:
+    if checkpoint <= 2:
         x = 4
         y = -44
     if checkpoint == 3:

@@ -179,35 +179,60 @@ def guadoSkip():
     FFX_memory.waitFrames(5)
     
     pos = FFX_memory.getCoords()
+    recovery = False
     print("Adjustment 2")
-    while pos[0] > 8:
-        FFXC.set_value('Dpad', 4)
-        FFX_memory.waitFrames(3)
-        FFXC.set_value('Dpad', 0)
-        FFX_memory.waitFrames(5)
-        pos = FFX_memory.getCoords()
+    while pos[0] > 8 and recovery == False:
+        tidusPos = FFX_memory.getCoords()
+        guadoPos = FFX_memory.getActorCoords(17)
+        if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
+            while FFX_memory.userControl():
+                FFX_targetPathing.setMovement(guadoPos[0], guadoPos[1])
+                FFX_Xbox.tapB()
+            recovery = True
+        else:
+            FFXC.set_value('Dpad', 4)
+            FFX_memory.waitFrames(3)
+            FFXC.set_value('Dpad', 0)
+            FFX_memory.waitFrames(5)
+            pos = FFX_memory.getCoords()
     print("Adjustment 3")
-    while pos[1] < -8.5:
-        FFXC.set_value('Dpad', 1)
-        FFX_memory.waitFrames(3)
-        FFXC.set_value('Dpad', 0)
-        FFX_memory.waitFrames(5)
-        pos = FFX_memory.getCoords()
+    while pos[1] < -8.5 and recovery == False:
+        tidusPos = FFX_memory.getCoords()
+        guadoPos = FFX_memory.getActorCoords(17)
+        if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
+            while FFX_memory.userControl():
+                FFX_targetPathing.setMovement(guadoPos[0], guadoPos[1])
+                FFX_Xbox.tapB()
+            recovery = True
+        else:
+            FFXC.set_value('Dpad', 1)
+            FFX_memory.waitFrames(3)
+            FFXC.set_value('Dpad', 0)
+            FFX_memory.waitFrames(5)
+            pos = FFX_memory.getCoords()
     
     FFX_memory.waitFrames(30 * 0.15)
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_neutral() #Face downward
-    while pos[1] > -9:
-        FFXC.set_value('Dpad', 2)
-        FFX_memory.waitFrames(2)
-        FFXC.set_value('Dpad', 0)
-        FFX_memory.waitFrames(5)
-        pos = FFX_memory.getCoords()
+    while pos[1] > -9 and recovery == False:
+        tidusPos = FFX_memory.getCoords()
+        guadoPos = FFX_memory.getActorCoords(17)
+        if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
+            while FFX_memory.userControl():
+                FFX_targetPathing.setMovement(guadoPos[0], guadoPos[1])
+                FFX_Xbox.tapB()
+            recovery = True
+        else:
+            FFXC.set_value('Dpad', 2)
+            FFX_memory.waitFrames(2)
+            FFXC.set_value('Dpad', 0)
+            FFX_memory.waitFrames(5)
+            pos = FFX_memory.getCoords()
     FFX_memory.getCoords()
     FFX_memory.waitFrames(30 * 0.3)
     skipActivate = False
-    while not skipActivate:
+    while not skipActivate and recovery == False:
         tidusPos = FFX_memory.getCoords()
         guadoPos = FFX_memory.getActorCoords(17)
         if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
@@ -216,19 +241,19 @@ def guadoSkip():
                 print("MARK")
                 FFX_Xbox.SkipDialog(0.5)
     
-    #Time limit for safety
-    startTime = time.time()
-    timeLimit = 8 #Max number of seconds that we will wait for the skip to occur.
-    maxTime = startTime + timeLimit
+    if recovery == False:
+        #Time limit for safety
+        startTime = time.time()
+        timeLimit = 8 #Max number of seconds that we will wait for the skip to occur.
+        maxTime = startTime + timeLimit
     
-    
-    while FFX_memory.getCamera()[0] < 0.6: #Waiting for walking guado to push us into the door
-        currentTime = time.time()
-        if currentTime > maxTime:
-            print("Skip failed for some reason. Moving on without skip.")
-            break
-    FFX_memory.waitFrames(30 * 0.035) #Guado potions good!
-    FFX_Xbox.tapB()
+        while FFX_memory.getCamera()[0] < 0.6: #Waiting for walking guado to push us into the door
+            currentTime = time.time()
+            if currentTime > maxTime:
+                print("Skip failed for some reason. Moving on without skip.")
+                break
+        FFX_memory.waitFrames(30 * 0.035) #Guado potions good!
+        FFX_Xbox.tapB()
     
     guadoSkipStatus = False
     checkpoint = 0
