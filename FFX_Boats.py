@@ -88,29 +88,35 @@ def ssWinno():
 def ssWinno2():
     #To the deck
     FFX_memory.awaitControl()
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
+    checkpoint = 0
     
-    #Lulu/Wakka talking
-    FFX_memory.awaitControl()
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.6)
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_neutral()
+    while FFX_memory.getStoryProgress() < 395:
+        if FFX_memory.userControl():
+            if checkpoint < 2 and FFX_memory.getMap() == 94:
+                checkpoint = 2
+            elif checkpoint == 6:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint < 11 and FFX_memory.getStoryProgress() == 385:
+                checkpoint = 11
+            elif checkpoint == 11:
+                jechtShot()
+                checkpoint += 1
+            
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.winno(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
     
-    #Let's go dream of Jecht
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3.5)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_neutral()
-    
+    FFX_memory.clickToDiagProgress(142)
+    FFX_Xbox.clearSavePopup(0)
+
+def jechtShot():
     #Jecht shot tutorial
+    print("Ready for Jecht Shot")
     FFX_memory.clickToDiagProgress(96)
     while FFX_memory.diagProgressFlag() != 100:
         if FFX_memory.diagProgressFlag() == 97:
@@ -130,19 +136,5 @@ def ssWinno2():
     
     #Let's attempt the jecht shot!
     FFX_Xbox.SkipDialog(2)
-    print("Start Jecht Shot")
-    jechtShot()
     print("End Jecht Shot")
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToDiagProgress(142)
-    FFX_Xbox.clearSavePopup(0)
-
-def jechtShot():
     print("We are intentionally failing the Jecht shot. Save the frames!")
-    #for x in range(20):
-    #    FFX_Xbox.SkipDialog(1)

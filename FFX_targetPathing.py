@@ -1388,6 +1388,50 @@ def Kilika3(checkpoint):
         y = -235
     return [x,y]
 
+def winno(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 11
+        y = 61
+    if checkpoint == 1:
+        x = 11
+        y = 150
+    if checkpoint == 2:
+        x = -34
+        y = -50
+    if checkpoint == 3:
+        x = -42
+        y = -59
+    if checkpoint == 4:
+        x = -35
+        y = -66
+    if checkpoint == 5:
+        x = -26
+        y = -67
+    if checkpoint == 6: #Start Lulu/Wakka conversation
+        x = 0
+        y = 0
+    if checkpoint == 7:
+        x = -43
+        y = -17
+    if checkpoint == 8:
+        x = -34
+        y = 12
+    if checkpoint == 9:
+        x = -23
+        y = 85
+    if checkpoint == 10:
+        x = 0
+        y = 152
+    if checkpoint == 11:
+        x = 0
+        y = 152
+    if checkpoint == 12:
+        x = 22
+        y = 104
+    return [x,y]
+
 def Luca1(checkpoint):
     x = 999
     y = 999
