@@ -3125,8 +3125,8 @@ def mWoods(checkpoint):
         x = -49
         y = 76
     if checkpoint == 31:
-        x = 161
-        y = 24
+        x = 160
+        y = 6
     if checkpoint == 32: #Bartello
         x = 178
         y = -46
@@ -3996,7 +3996,7 @@ def bevellePreTrials(checkpoint):
     if checkpoint == 1:
         x = -200
         y = -3
-    if checkpoint == 2:
+    if checkpoint <= 2:
         x = 4
         y = -44
     if checkpoint == 3:

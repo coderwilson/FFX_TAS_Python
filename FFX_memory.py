@@ -1715,6 +1715,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0, 3, 2, 4, 1, 6, 5]
     elif frontLine == 'besaid':
         orderFinal = [5,1,0,4]
+    elif frontLine == 'highbridge':
+        orderFinal = [0,1,2,6,4,5]
     else:
         orderFinal = [6,5,4,3,2,1,0]
     return orderFinal

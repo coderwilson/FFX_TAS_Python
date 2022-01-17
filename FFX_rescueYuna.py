@@ -70,7 +70,7 @@ def guards(blitzWin):
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
-    FFX_Battle.guards(1)
+    FFX_Battle.guards(1, blitzWin)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
@@ -115,6 +115,7 @@ def guards(blitzWin):
     checkpoint = 0
     while checkpoint < 8:
         if FFX_memory.userControl():
+            #print("Checkpoint: ", checkpoint)
             #General pathing
             if FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
                 checkpoint += 1
