@@ -255,6 +255,28 @@ def ABswimming2() :
     #Tros fight
     FFX_Xbox.clickToBattle()
     FFX_Battle.Tros()
+    
+    while FFX_memory.getStoryProgress() < 111:
+        if FFX_memory.userControl():
+            if FFX_memory.getMap() == 64:
+                if FFX_memory.getCoords()[0] < -4:
+                    FFX_targetPathing.setMovement([-2,47])
+                else:
+                    FFX_targetPathing.setMovement([73,1])
+            elif FFX_memory.getMap() == 380:
+                FFX_targetPathing.setMovement([700,300])
+            elif FFX_memory.getMap() == 71:
+                FFX_targetPathing.setMovement([-14,-19])
+                FFX_Xbox.tapB()
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
+    
+    
+    FFX_Xbox.clearSavePopup(0)
+
+def oldMovement():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)

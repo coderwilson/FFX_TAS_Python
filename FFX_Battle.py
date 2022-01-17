@@ -162,6 +162,12 @@ def tidusOD():
     FFX_memory.waitFrames(12)
     print("Hit Overdrive")
     FFX_Xbox.tapB()
+    FFX_memory.waitFrames(12)
+    
+    while not FFX_memory.turnReady():
+        FFX_Xbox.tapB()
+        randFrames = 12#random.choice([11,12,13])
+        FFX_memory.waitFrames(randFrames)
 
 
 def tidusODSeymour():
@@ -177,23 +183,16 @@ def tidusODSeymour():
     FFX_Xbox.menuLeft()
     FFX_Xbox.menuB()  # Activate overdrive
     FFX_memory.waitFrames(30 * 0.4)
+    FFX_memory.waitFrames(12)
+    print("Hit Overdrive")
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(12)
     
-    FFX_memory.waitFrames(30 * 1) #Replace with memory reading later.
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.25)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.35)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.35)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.25)
-    FFX_Xbox.menuB()
+    while not FFX_memory.turnReady():
+        FFX_Xbox.tapB()
+        randFrames = random.choice([11,12,13])
+        FFX_memory.waitFrames(randFrames)
+
 
 
 def remedy(character: int, direction: str):
@@ -5366,9 +5365,9 @@ def rikkuFullOD(battle):
     
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapLeft()
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(15)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(15)
     
     FFX_memory.rikkuODItems(item1)
     FFX_memory.rikkuODItems(item2)

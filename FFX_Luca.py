@@ -139,29 +139,29 @@ def preBlitz():
     print("preBlitz function is no longer used.")
 
 def blitzStart():
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    #Just outside the locker room
-    FFX_memory.clickToControl()
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.2)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.8)
-    FFXC.set_neutral()
-    
-    #Inside locker room
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.8)
-    FFXC.set_movement(0, -1)
-    
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFXC.set_movement(1, 0)
-    FFX_Xbox.SkipDialog(2) #Talk to Wakka, starts the Blitzball game
-    FFXC.set_neutral()
+    checkpoint = 0
+    print("Starting the Blitzball game via lots of storyline.")
+    while FFX_memory.getStoryProgress() < 519:
+        #print(checkpoint)
+        if FFX_memory.userControl():
+            if FFX_memory.getMap() == 72 and checkpoint < 3:
+                checkpoint = 3
+            elif FFX_memory.getMap() == 72 and FFX_memory.getCoords()[0] < -18 \
+                and checkpoint < 5:
+                checkpoint = 5
+            elif FFX_memory.getMap() == 72 and FFX_memory.getCoords()[0] > -15 \
+                and checkpoint >= 5:
+                checkpoint = 4
+            elif checkpoint == 8:
+                FFX_targetPathing.setMovement([-103, -4])
+                FFX_Xbox.tapB()
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
 
 def afterBlitz(earlyHaste):
     FFX_Xbox.clickToBattle()

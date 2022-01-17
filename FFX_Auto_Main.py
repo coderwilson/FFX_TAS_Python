@@ -55,8 +55,8 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-Gamestate = "Guadosalam"
-StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -82,11 +82,12 @@ Gamestate = "none"
 StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
+autoEggHunt = True
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 123 #New seed number, only used if newSeed == True
 ####################################################################################################
@@ -221,7 +222,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
-        FFX_LoadGame.loadOffset(8)
+        FFX_LoadGame.loadOffset(9)
         FFX_LoadGame.AfterGui()
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()

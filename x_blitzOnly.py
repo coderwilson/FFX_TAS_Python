@@ -13,9 +13,6 @@ import FFX_Logs
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-selfAuto = True
-print("Looping section: Bevelle Trials")
-
 FFX_memory.start()
 
 #miihenSkipCount = 0
@@ -24,23 +21,23 @@ FFX_memory.start()
 
 attempts = 0
 success = 0
-while attempts < 20:
+while attempts < 200:
     #print("RNG seed for this attempt: ", rngSeed)
     attempts += 1
     
-    FFX_DreamZan.NewGame('Luca')
-    FFX_LoadGame.loadOffset(1)
+    #FFX_DreamZan.NewGame('Luca')
+    #FFX_LoadGame.loadOffset(1)
     
-    print("Game start screen")
+    #print("Game start screen")
     FFX_Screen.clearMouse(0)
     
     startTime = FFX_Logs.timeStamp()
     print("Timer starts now.")
     #---------This is the actual movement/code/logic/etc---------------
-    import FFX_Luca
+    #import FFX_Luca
     import FFX_Blitz
     
-    FFX_Luca.blitzStart()
+    #FFX_Luca.blitzStart()
     blitzWin = FFX_Blitz.blitzMain(False)
     if blitzWin == True:
         success += 1

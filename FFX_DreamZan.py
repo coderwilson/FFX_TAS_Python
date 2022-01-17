@@ -151,6 +151,11 @@ def listenStory(gameLength):
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 skips += 1
+                print("-------------------------")
+                print("-------------------------")
+                print("Skip number: ", skips) #Something not working here.
+                print("-------------------------")
+                print("-------------------------")
                 if skips == 3:
                     print("Special Skip")
                     FFX_memory.waitFrames(130)
@@ -160,6 +165,7 @@ def listenStory(gameLength):
                     FFX_memory.waitFrames(120)
                 else:
                     FFX_Xbox.skipScene()
+                    FFX_Xbox.SkipDialog(2) #Maybe this fixes it?
 
 def ammesBattle():
     print("Starting ammes")

@@ -83,125 +83,6 @@ def path():
     
     FFX_Logs.writeStats("Djose battles:")
     FFX_Logs.writeStats(countBattles)
-    
-def path_old():
-    FFX_memory.clickToControl()
-    FFX_memory.closeMenu()
-    FFX_memory.waitFrames(30 * 1)
-    FFX_memory.fullPartyFormat('djose')
-    FFX_memory.closeMenu()
-    
-    countBattles = 0
-    checkpoint = 0
-    lastCP = 0
-    stoneBreath = 0
-    print("Starting Djose pathing section")
-    
-    while checkpoint != 100:
-        pos = FFX_memory.getCoords()
-        if lastCP != checkpoint:
-            lastCP = checkpoint
-            print("Checkpoint reached: ", checkpoint)
-        if FFX_memory.userControl():
-            if checkpoint == 0: #First section, very long.
-                if pos[1] > 60:
-                    checkpoint = 10
-                else:
-                    if pos[1] < ((4.07 * pos[0]) + 234.82):
-                        FFXC.set_movement(-1, 1)
-                    elif pos[1] > ((3.18 * pos[0]) + 281.79):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(0, 1)
-            elif checkpoint == 10: #Camera turns
-                if pos[1] > 330:
-                    checkpoint = 20
-                else:
-                    if pos[1] < ((1.53 * pos[0]) + 147.43):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(1, 0)
-            elif checkpoint == 20: #Past the chest
-                if pos[1] > 600:
-                    checkpoint = 30
-                else:
-                    if pos[1] > ((1.14 * pos[0]) + 238.11):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(0, 1)
-            elif checkpoint == 30: #Close to the cutscene
-                if pos[1] > 730:
-                    checkpoint = 40
-                else:
-                    if pos[1] < ((0.69 * pos[0]) + 368.90):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(0, 1)
-            elif checkpoint == 40:
-                if stoneBreath == 0:
-                    FFXC.set_movement(0, -1)
-                    FFX_memory.waitFrames(30 * 1)
-                    FFXC.set_movement(0, 1)
-                    FFX_memory.waitFrames(30 * 1)
-                else:
-                    checkpoint = 50
-            elif checkpoint == 50: #Close to the cutscene
-                if pos[1] > 835:
-                    checkpoint = 60
-                else:
-                    if pos[1] < ((0.69 * pos[0]) + 368.90):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(1, 0)
-            elif checkpoint == 60: #Start conversation with Auron, then to the temple
-                FFXC.set_movement(1, 1)
-                FFX_Xbox.SkipDialog(0.4)
-                FFXC.set_movement(0, 1)
-                FFX_Xbox.SkipDialog(4)
-                FFXC.set_neutral()
-                FFX_memory.clickToControl()
-                FFXC.set_movement(0, 1)
-                FFX_Xbox.SkipDialog(3)
-                FFXC.set_neutral()
-                checkpoint = 65
-            elif checkpoint == 65: #Up to chocobo team
-                if pos[1] > 1:
-                    checkpoint = 70
-                else:
-                    if pos[1] > ((4.67 * pos[0]) -289.33):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(0, 1)
-            elif checkpoint == 70: #Past chocobo team
-                if pos[1] < -360:
-                    checkpoint = 80
-                else:
-                    if pos[1] < ((-2.67 * pos[0]) + 163.71):
-                        FFXC.set_movement(1, 1)
-                    else:
-                        FFXC.set_movement(0, 1)
-            elif checkpoint == 80:
-                FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 2)
-                FFXC.set_neutral()
-                checkpoint = 100
-                print("Checkpoing reached: ", checkpoint)
-        else:
-            FFXC.set_neutral()
-            if FFX_Screen.BattleScreen():
-                print("Starting battle")
-                if stoneBreath == 0:
-                    print("Still looking for Stone Breath.")
-                stoneBreath = FFX_Battle.djose(stoneBreath)
-                print("Battles complete.")
-                countBattles += 1
-            elif FFX_memory.menuOpen():
-                FFX_Xbox.menuB()
-            elif FFX_memory.diagSkipPossible():
-                FFX_Xbox.menuB()
-            
-    FFX_Logs.writeStats("Djose battles:")
-    FFX_Logs.writeStats(countBattles)
 
 def temple():
     FFX_memory.clickToControl()
@@ -267,7 +148,10 @@ def trials():
                 print("Pushing pedestol")
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
-                FFX_memory.waitFrames(30 * 6.4) #Push timer, super critical
+                while FFX_memory.getActorCoords(0)[0] < 62:
+                    FFXC.set_movement(1, 0)
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(15)
                 print("Push complete.")
                 checkpoint += 1
                 print("Insert right sphere")

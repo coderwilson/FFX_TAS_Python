@@ -12,8 +12,7 @@ def resetToMainMenu():
     FFXC.set_neutral()
     if FFX_memory.battleActive():
         print("Battle is active. Forcing battle to end so we can soft reset.")
-        FFX_memory.resetBattleEnd()
-        FFX_memory.clickToControl()
+        FFX_Screen.awaitTurn()
     print("Resetting")
     FFX_memory.waitFrames(30 * 0.07)
     while not FFX_memory.getMap() in [23,348,349]:
