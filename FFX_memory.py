@@ -1016,6 +1016,7 @@ def rikkuODItems(slot):
                 FFX_Xbox.tapUp()
             else:
                 FFX_Xbox.tapDown()
+            waitFrames(2)
     else:
         while RikkuODCursor1() != slot:
             print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
@@ -1025,37 +1026,10 @@ def rikkuODItems(slot):
                 FFX_Xbox.tapUp()
             else:
                 FFX_Xbox.tapDown()
+            waitFrames(2)
     waitFrames(2)
     FFX_Xbox.tapB()
     waitFrames(2)
-
-def oldODLogic():
-    if item1 % 2 == 0: #First item is in the right-hand column
-        FFX_Xbox.menuRight()
-        cursor += 1
-
-    while cursor < item1:
-        FFX_Xbox.menuDown()
-        cursor += 2
-
-    FFX_Xbox.menuB() #We should now have selected the first item.
-
-    if item1 % 2 != item2 % 2: #First and second items are on different columns
-        print("Items are in opposing columns. Switching columns.")
-        if item1 % 2 == 0:
-            FFX_Xbox.menuLeft()
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuRight()
-        cursor += 1
-
-    if cursor == item2:
-        FFX_Xbox.menuB() #Cursor starts on item 2. Only occurs if opposite columns.
-    else:
-        while cursor < item2:
-            FFX_Xbox.menuDown()
-            cursor += 2
-        FFX_Xbox.menuB() #Cursor is now on item 2.
 
 def RikkuODCursor1():
     global baseValue
@@ -2138,14 +2112,14 @@ class blitzActor:
 def blitzOwnScore():
     global baseValue
 
-    key = baseValue + 0x0151728C
+    key = baseValue + 0x00D2E0CE
     score = process.readBytes(key, 1)
     return score
 
 def blitzOppScore():
     global baseValue
 
-    key = baseValue + 0x0151644C
+    key = baseValue + 0x00D2E0CF
     score = process.readBytes(key, 1)
     return score
 
