@@ -155,8 +155,13 @@ def battleCursor3():
     
 def overdriveMenuActive():
     global baseValue
-    key = baseValue + 0x008CB9C1
-    return process.readBytes(key, 1)
+    key = baseValue + 0x00F3D6F4
+    return process.readBytes(key, 1) == 4
+    
+def auronOverdriveActive():
+    global baseValue
+    key = baseValue + 0x00F3D6B4
+    return process.readBytes(key, 1) == 4
 
 def mainBattleMenu():
     global baseValue
@@ -178,7 +183,12 @@ def interiorBattleMenu():
     global baseValue
     key = baseValue + 0x00F3CAF1
     return process.readBytes(key,1)
-
+    
+def superInteriorBattleMenu():
+    global baseValue
+    key = baseValue + 0x00F3CBE1
+    return process.readBytes(key,1)
+    
 def battleTargetId():
     global baseValue
     key = baseValue + 0x00F3D1B4
@@ -190,8 +200,8 @@ def battleTargetActive():
     global baseValue
     key = baseValue + 0x00F3D1B4
     retVal = process.readBytes(key,1)
+    print("Battle Target ID: ", retVal)
     return retVal != 255
-
 
 def userControl():
     global baseValue

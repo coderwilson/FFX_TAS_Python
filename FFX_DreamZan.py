@@ -187,13 +187,12 @@ def ammesBattle():
     print("In other menu")
     print(FFX_memory.interiorBattleMenu())
     while not FFX_memory.interiorBattleMenu():
-        print(FFX_memory.interiorBattleMenu())
+        FFX_Xbox.tapB()
+    while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
     print("Out of interior")
-    while not FFX_memory.overdriveMenuActive():
+    while not FFX_memory.auronOverdriveActive():
         FFX_Xbox.tapB()
-    print("Starting Overdrive after 30 frames")
-    FFX_memory.waitFrames(30)
     print("Starting")
     #Doing the actual overdrive
     FFXC.set_value('Dpad', 2)
