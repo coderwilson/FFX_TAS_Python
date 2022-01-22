@@ -29,7 +29,7 @@ def valeforOD(sinFin = 0, version = 0):
 
 def defend():
     print("Defend command")
-    while (not FFX_memory.mainBattleMenu()) and FFX_memory.battleActive():
+    while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapY()
 
 
@@ -4217,7 +4217,6 @@ def healUp(chars):
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(12)
     FFX_Xbox.tapB()
-    FFX_memory.waitFrames(12)
     
     character_positions = {
         0 : FFX_memory.getCharFormationSlot(0), # Tidus
