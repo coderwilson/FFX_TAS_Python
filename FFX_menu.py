@@ -203,7 +203,6 @@ def lateHaste():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','d','none') # Haste
     FFX_menuGrid.useAndQuit()
-    FFX_memory.closeMenu()
 
 def afterBlitz():
     FFX_memory.openMenu()
@@ -1656,9 +1655,12 @@ def itemPos(item, pos):
 
 
 
-
-
 def openGrid(character):
+    try:
+        FFXC.set_neutral()
+    except:
+        FFXC = FFX_Xbox.controllerHandle()
+        FFXC.set_neutral()
     while not FFX_memory.sGridActive():
         #print("Attempting to open Sphere Grid")
         if FFX_memory.userControl() and not FFX_memory.menuOpen():
@@ -1676,6 +1678,7 @@ def openGrid(character):
             if FFX_memory.getMenu2CharNum() != character:
                 while FFX_memory.getMenu2CharNum() != character:
                     FFX_Xbox.menuDown()
+                    FFX_memory.waitFrames(2)
             FFX_Xbox.menuB()
             try:
                 FFXC.set_neutral()
@@ -1683,4 +1686,9 @@ def openGrid(character):
                 FFXC = FFX_Xbox.controllerHandle()
                 FFXC.set_neutral()
             FFX_memory.waitFrames(3)
+    try:
+        FFXC.set_neutral()
+    except:
+        FFXC = FFX_Xbox.controllerHandle()
+        FFXC.set_neutral()
 

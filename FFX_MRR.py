@@ -12,7 +12,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def arrival():
     FFX_memory.clickToControl()
-    wakkaLateMenu = FFX_menu.mrrGrid1()
+    #wakkaLateMenu = FFX_menu.mrrGrid1()
     FFX_memory.closeMenu()
     FFX_memory.fullPartyFormat('mrr1')
     FFX_memory.closeMenu()
@@ -69,7 +69,7 @@ def arrival():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
     print("Done with perlim MRR area, now for the real deal.")
-    return [wakkaLateMenu,claskoSkip]
+    return claskoSkip
 
 def mainPath(wakkaLateMenu):
     FFX_memory.awaitControl()

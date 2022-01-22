@@ -31,10 +31,10 @@ def path():
             lastCP = checkpoint
         
         if FFX_memory.userControl():
-            if checkpoint in [35, 36, 37] and stoneBreath == 1:
-                checkpoint = 38
-            elif checkpoint == 38 and stoneBreath == 0:
-                checkpoint = 36
+            if checkpoint in [35, 36] and stoneBreath == 1:
+                checkpoint = 37
+            elif checkpoint == 37 and stoneBreath == 0:
+                checkpoint = 35
             
             #This is for the attempted Djose skip. It is not viable. Feel free to re-try this.
             #elif checkpoint == 33:# and stoneBreath == 0: #Turn/talk

@@ -167,11 +167,13 @@ def afterBlitz(earlyHaste):
     checkpoint = 0
     while checkpoint < 36:
         if FFX_memory.userControl():
+            print("Checkpoint: ", checkpoint)
             #Events
             if checkpoint == 8: #First chest
                 if earlyHaste == -1:
                     FFX_menu.lateHaste()
-                    FFX_memory.closeMenu()
+                wakkaLateMenu = FFX_menu.mrrGrid1()
+                FFX_memory.closeMenu()
                 print("First chest")
                 FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
@@ -210,10 +212,14 @@ def afterBlitz(earlyHaste):
                     FFX_memory.waitFrames(30 * 6)
                 elif battleNum == 3:
                     FFX_Battle.afterBlitz3(earlyHaste)
-                    print("Battles are done. Now waiting for storyline to wrap up.")
+                    FFX_memory.clickToControl()
+                    FFX_memory.waitFrames(4)
+                    FFXC.set_neutral()
+                    checkpoint = 0
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
+                FFX_memory.waitFrames(2)
                 FFX_Xbox.skipScene()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
@@ -232,3 +238,4 @@ def afterBlitz(earlyHaste):
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
 
+    return wakkaLateMenu

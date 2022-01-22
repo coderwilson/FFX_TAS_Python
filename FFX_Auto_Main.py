@@ -41,7 +41,7 @@ import FFX_Sin
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-#Gamestate = "Boat3"
+#Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
@@ -89,7 +89,7 @@ autoEggHunt = True
 
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 123 #New seed number, only used if newSeed == True
+rngSeedNum = 40 #New seed number, only used if doing seed hunt.
 ####################################################################################################
 
 if Gamestate != "none":
@@ -97,9 +97,9 @@ if Gamestate != "none":
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [31,49,59,90,91,96,98,104,108,121,200]
+    rngSelectArray = [31,40,49,59,90,91,98,104,108,121,200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 200 #Select a specific seed.
+    rngSeedNum = 40 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -151,7 +151,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -192,7 +192,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(33)
+        FFX_LoadGame.loadOffset(32)
         FFXC.set_movement(0, 1)
         FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
@@ -209,7 +209,7 @@ if Gamestate != "none" :
         earlyHaste = 3
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
         FFX_LoadGame.loadOffsetBattle(9)
-        earlyHaste = -1
+        earlyHaste = 0
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
@@ -222,7 +222,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
-        FFX_LoadGame.loadOffset(9)
+        FFX_LoadGame.loadOffset(8)
         FFX_LoadGame.AfterGui()
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()
@@ -530,7 +530,7 @@ while Gamestate != "End":
 
     if Gamestate == "Luca" and StepCounter == 5:
         reportGamestate()
-        FFX_Luca.afterBlitz(earlyHaste)
+        wakkaLateMenu = FFX_Luca.afterBlitz(earlyHaste)
         StepCounter = 1
         Gamestate = "Miihen"
         #Gamestate = "manualBreak" # Used for testing only.
@@ -583,8 +583,9 @@ while Gamestate != "End":
         
     if Gamestate == "MRR" and StepCounter == 1:
         reportGamestate()
-        wakkaLateMenu = FFX_MRR.arrival()
-        FFX_MRR.mainPath(wakkaLateMenu[0])
+        #wakkaLateMenu = FFX_MRR.arrival()
+        FFX_MRR.arrival()
+        FFX_MRR.mainPath(wakkaLateMenu)
         if FFX_memory.gameOver():
             Gamestate = "gameOverError"
         StepCounter = 2

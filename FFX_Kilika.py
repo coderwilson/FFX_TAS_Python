@@ -26,7 +26,7 @@ def arrival():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 8: #Exit the inn
-                FFXC.set_movement(0, -1) #Can be improved, there's a tiny ledge to get stuck on.
+                FFXC.set_movement(-1, -1) #Can be improved, there's a tiny ledge to get stuck on.
                 FFX_memory.awaitEvent()
                 FFX_memory.waitFrames(5)
                 FFX_memory.awaitControl()
