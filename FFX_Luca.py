@@ -30,12 +30,10 @@ def arrival():
                 FFX_Xbox.awaitSave(index=2)
                 
                 FFX_memory.clickToDiagProgress(82) #Let's go over the basics
-                FFX_memory.clickToDiagProgress(39)
-                #while FFX_memory.diagProgressFlag() != 39:
-                #    if FFX_memory.diagSkipPossible():
-                #        FFX_Xbox.tapB()
-                FFX_memory.waitFrames(10)
-                FFX_Xbox.tapA()
+                #FFX_memory.clickToDiagProgress(39)
+                FFX_Xbox.SkipDialog(1.5)
+                while FFX_memory.blitzCursor() != 12:
+                    FFX_Xbox.tapA()
                 FFX_Xbox.menuB()
                 FFX_Xbox.SkipDialogSpecial(45) #Skip the Wakka Face scene
                 FFX_memory.clickToControl()
