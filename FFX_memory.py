@@ -130,7 +130,12 @@ def battleScreen():
 def turnReady():
     global baseValue
     key = baseValue + 0x00F3F77B
-    return process.readBytes(key,1) == 0
+    if process.readBytes(key,1) == 0:
+        return False
+    else:
+        while not mainBattleMenu():
+            pass
+        return True
 
 def battleCursor2():
     global baseValue
@@ -1021,34 +1026,6 @@ def setGilvalue(newValue):
     global baseValue
     key = baseValue + 0x00D307D8
     return process.write(key, newValue)
-
-def rikkuODItems(slot):
-    #This function gets the item slots for each item, swaps if they're backwards,
-    # and then moves the cursor to each item and presses B when we reach it.
-    
-    if slot == 0:
-        while RikkuODCursor1() >= 1:
-            print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
-            if RikkuODCursor1() % 2 != slot % 2:
-                FFX_Xbox.tapRight()
-            elif RikkuODCursor1() > slot:
-                FFX_Xbox.tapUp()
-            else:
-                FFX_Xbox.tapDown()
-            waitFrames(2)
-    else:
-        while RikkuODCursor1() != slot:
-            print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
-            if RikkuODCursor1() % 2 != slot % 2:
-                FFX_Xbox.tapRight()
-            elif RikkuODCursor1() > slot:
-                FFX_Xbox.tapUp()
-            else:
-                FFX_Xbox.tapDown()
-            waitFrames(2)
-    waitFrames(2)
-    FFX_Xbox.tapB()
-    waitFrames(2)
 
 def RikkuODCursor1():
     global baseValue
