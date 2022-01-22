@@ -124,7 +124,6 @@ earlyTidusGrid = False
 #    blitzWin = False
 blitzWin = False #For testing
 
-
 #Main functions
 def reportGamestate():
     
@@ -179,7 +178,7 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(30)
+        FFX_LoadGame.loadOffset(29)
         print("Load complete")
         FFX_LoadGame.loadMemCursor()
         while FFX_memory.userControl():
@@ -227,13 +226,13 @@ if Gamestate != "none" :
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()
     if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
         FFX_LoadGame.loadOffset(4)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(9)
+        FFX_LoadGame.loadOffset(13)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(12)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
