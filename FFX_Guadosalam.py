@@ -215,22 +215,23 @@ def guadoSkip():
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.04)
     FFXC.set_neutral() #Face downward
-    while pos[1] > -9 and recovery == False:
-        tidusPos = FFX_memory.getCoords()
-        guadoPos = FFX_memory.getActorCoords(17)
-        if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
-            while FFX_memory.userControl():
-                FFX_targetPathing.setMovement(guadoPos[0], guadoPos[1])
-                FFX_Xbox.tapB()
-            recovery = True
-        else:
-            FFXC.set_value('Dpad', 2)
-            FFX_memory.waitFrames(2)
-            FFXC.set_value('Dpad', 0)
-            FFX_memory.waitFrames(5)
-            pos = FFX_memory.getCoords()
-    FFX_memory.getCoords()
-    FFX_memory.waitFrames(30 * 0.3)
+    FFX_memory.waitFrames(4)
+    #while pos[1] > -9 and recovery == False:
+    #    tidusPos = FFX_memory.getCoords()
+    #    guadoPos = FFX_memory.getActorCoords(17)
+    #    if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
+    #        while FFX_memory.userControl():
+    #            if guadoPos[0] < 10:
+    #                FFX_targetPathing.setMovement([guadoPos[0], guadoPos[1]])
+    #                FFX_Xbox.tapB()
+    #                guadoPos = FFX_memory.getActorCoords(17)
+    #        recovery = True
+    #    else:
+    #        FFXC.set_value('Dpad', 2)
+    #        FFX_memory.waitFrames(2)
+    #        FFXC.set_value('Dpad', 0)
+    #        FFX_memory.waitFrames(5)
+    #        pos = FFX_memory.getCoords()
     skipActivate = False
     while not skipActivate and recovery == False:
         tidusPos = FFX_memory.getCoords()
@@ -240,6 +241,13 @@ def guadoSkip():
                 skipActivate = True
                 print("MARK")
                 FFX_Xbox.SkipDialog(0.5)
+        elif pos[1] > -9:
+            FFXC.set_value('Dpad', 2)
+            FFX_memory.waitFrames(2)
+            FFXC.set_value('Dpad', 0)
+            FFX_memory.waitFrames(5)
+            pos = FFX_memory.getCoords()
+            
     
     if recovery == False:
         #Time limit for safety
