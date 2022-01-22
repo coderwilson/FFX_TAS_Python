@@ -1013,33 +1013,6 @@ def setGilvalue(newValue):
     key = baseValue + 0x00D307D8
     return process.write(key, newValue)
 
-def oldODLogic():
-    if item1 % 2 == 0: #First item is in the right-hand column
-        FFX_Xbox.menuRight()
-        cursor += 1
-
-    while cursor < item1:
-        FFX_Xbox.menuDown()
-        cursor += 2
-
-    FFX_Xbox.menuB() #We should now have selected the first item.
-
-    if item1 % 2 != item2 % 2: #First and second items are on different columns
-        print("Items are in opposing columns. Switching columns.")
-        if item1 % 2 == 0:
-            FFX_Xbox.menuLeft()
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuRight()
-        cursor += 1
-
-    if cursor == item2:
-        FFX_Xbox.menuB() #Cursor starts on item 2. Only occurs if opposite columns.
-    else:
-        while cursor < item2:
-            FFX_Xbox.menuDown()
-            cursor += 2
-        FFX_Xbox.menuB() #Cursor is now on item 2.
 
 def RikkuODCursor1():
     global baseValue
@@ -1699,6 +1672,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0, 3, 2, 4, 1, 6, 5]
     elif frontLine == 'besaid':
         orderFinal = [5,1,0,4]
+    elif frontLine == 'highbridge':
+        orderFinal = [0,1,2,6,4,5]
     else:
         orderFinal = [6,5,4,3,2,1,0]
     return orderFinal
@@ -2120,14 +2095,14 @@ class blitzActor:
 def blitzOwnScore():
     global baseValue
 
-    key = baseValue + 0x0151728C
+    key = baseValue + 0x00D2E0CE
     score = process.readBytes(key, 1)
     return score
 
 def blitzOppScore():
     global baseValue
 
-    key = baseValue + 0x0151644C
+    key = baseValue + 0x00D2E0CF
     score = process.readBytes(key, 1)
     return score
 

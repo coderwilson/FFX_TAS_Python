@@ -152,6 +152,12 @@ def tidusOD():
     FFX_memory.waitFrames(12)
     print("Hit Overdrive")
     FFX_Xbox.tapB()
+    FFX_memory.waitFrames(12)
+    
+    while not FFX_memory.turnReady():
+        FFX_Xbox.tapB()
+        randFrames = 12#random.choice([11,12,13])
+        FFX_memory.waitFrames(randFrames)
 
 
 def tidusODSeymour():
@@ -183,6 +189,12 @@ def tidusODSeymour():
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(30 * 0.25)
     FFX_Xbox.tapB()
+    
+    while not FFX_memory.turnReady():
+        FFX_Xbox.tapB()
+        randFrames = random.choice([11,12,13])
+        FFX_memory.waitFrames(randFrames)
+
 
 
 def remedy(character: int, direction: str):
@@ -1767,7 +1779,7 @@ def thunderPlains(status, section):
                 fleeAll()
             elif bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
                 if status[4]:
-                    fleeAll() #No longer need Lunar Curtain for Evrae fight.
+                    fleeAll() #No longer need Lunar Curtain for Evrae fight, Blitz win logic.
                 else: #Blitz loss strat
                     print("Battle with Larvae. Battle number: ", bNum)
                     if startingstatus[2] == False:
@@ -1935,6 +1947,30 @@ def thunderPlains(status, section):
                         buddySwap_new(tidusposition)
                     else:
                         fleeAll()
+            elif status[4] == False and FFX_memory.getItemSlot(49) > 200 and bNum in [153, 154, 163]:
+                print("Grabbing petrify grenade. Blitz Loss only strat.")
+                if bNum in [153,163]:
+                    if turnchar == 0:
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        buddySwap_new(rikkuposition)
+                        FFX_Screen.awaitTurn()
+                        Steal()
+                    else:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                        FFX_Screen.awaitTurn()
+                        fleeAll()
+                else:
+                    if turnchar == 0:
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        buddySwap_new(rikkuposition)
+                        FFX_Screen.awaitTurn()
+                        StealRight()
+                    else:
+                        tidusposition = FFX_memory.getBattleCharSlot(0)
+                        buddySwap_new(tidusposition)
+                        FFX_Screen.awaitTurn()
+                        fleeAll()
             elif bNum == 154 or bNum == 156 or bNum == 164:
                 print("Battle with random mobs. Battle number: ", bNum)
                 if startingstatus[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
@@ -1976,7 +2012,7 @@ def thunderPlains(status, section):
         healUp_New(4, 11)
     print("Ready to continue onward.")
     print("**Plains variables: Rikku charged, stolen light curtain, stolen lunar curtain, ")
-    print("**speed spheres done, Blitz Win")
+    print("**speed spheres done, Blitz Win state, and petrify grenade (if needed)")
     print(status)
     return status
 
@@ -2858,7 +2894,9 @@ def wendigo():
                     defend()
 
 def zu():
-    while not FFX_memory.menuOpen():
+    FFX_Screen.awaitTurn()
+    attack('none')
+    while not FFX_memory.battleComplete():
         if FFX_Screen.BattleScreen():
             if FFX_memory.partySize() <= 2:
                 defend()
@@ -3120,17 +3158,21 @@ def home3():
             defend()
             FFX_memory.waitFrames(30 * 0.2)
             FFX_Xbox.clickToBattle()
-    tidusHaste('none')
+    if FFX_memory.getUseItemsSlot(49) != 255:
+        tidusHaste('none')
     
-    rikkuItemThrown = False
+    rikkuItemThrown = 0
     while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnTidus():
-                attack('none')
-            elif FFX_Screen.turnRikku() and rikkuItemThrown == False:
+                if FFX_memory.getUseItemsSlot(49) != 255:
+                    defend()
+                else:
+                    attack('none')
+            elif FFX_Screen.turnRikku() and rikkuItemThrown < 2:
                 useItemSlot = home3item()
                 useItem(useItemSlot, 'none')
-                rikkuItemThrown = True
+                rikkuItemThrown += 1
             elif FFX_Screen.faintCheck() > 0:
                 revive()
             else:
@@ -3185,7 +3227,7 @@ def Evrae(blitzWin):
     FFXC.set_neutral()
     FFX_Xbox.clickToBattle()  # This gets us past the tutorial and all the dialog.
 
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while FFX_memory.battleActive(): #AKA end of battle screen
         if FFX_memory.turnReady():
             turnchar = FFX_memory.getBattleCharTurn()
             print("Tidus prep turns: ", tidusPrep)
@@ -3217,6 +3259,7 @@ def Evrae(blitzWin):
                     elif tidusPrep == 3:
                         print("Equip Baroque Sword.")
                         equipInBattle(special = 'baroque')
+                        FFX_memory.waitFrames(15)
                         tidusPrep += 1
                     else:
                         tidusAttacks += 1
@@ -3229,42 +3272,38 @@ def Evrae(blitzWin):
                     rikkuFullOD('Evrae')
                 elif not blitzWin and not lunarCurtain:
                     print("Use Lunar Curtain")
+                    lunarSlot = FFX_memory.getUseItemsSlot(56)
+                    useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
                 else:
                     Steal()
-            else:
+            elif turnchar == 3:
                 print("Registering Kimahri's turn")
-                if FFX_memory.getBattleHP()[1] < 1520:
+                if not blitzWin and not lunarCurtain:
+                    print("Use Lunar Curtain")
+                    lunarSlot = FFX_memory.getUseItemsSlot(56)
+                    useItem(lunarSlot, direction='l', target=0)
+                    lunarCurtain = True
+                elif FFX_memory.getBattleHP()[1] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
                                 direction="u") == 0:
                         print("Restorative item not found.")
-                        if not blitzWin and not lunarCurtain:
-                            print("Use Lunar Curtain")
-                            lunarCurtain = True
-                        else:
-                            Steal()
+                        Steal()
                     else:
                         print("Heal should be successful.")
                 else:
-                    if not blitzWin and not lunarCurtain:
-                        print("Use Lunar Curtain")
-                        lunarCurtain = True
-                    else:
-                        Steal()
+                    Steal()
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
-    FFXC.set_value('BtnB', 1)
-    FFX_memory.waitFrames(30 * 3.5)
-    FFXC.set_value('BtnB', 0)
-
     while not FFX_memory.cutsceneSkipPossible():
-        FFX_memory.waitFrames(30 * 0.035)
+        if FFX_memory.menuOpen():
+            FFX_Xbox.tapB()
     FFX_Xbox.skipSceneSpec()
 
 
-def guards(groupNum):
+def guards(groupNum, blitzWin=False):
     FFX_Logs.writeLog("Fight start: Bevelle Guards")
     rikkuHeal = False
     turnNum = 0
@@ -3294,16 +3333,23 @@ def guards(groupNum):
                         itemToUse = 39
                     else:
                         itemToUse = 37
-                    useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
+                        
+                    if FFX_memory.getUseItemsSlot(itemToUse) < 200:
+                        useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
+                    else:
+                        defend
                 else:
                     defend()
             elif FFX_Screen.turnRikku():
                 rikkuTurns += 1
                 if groupNum == 1:
-                    defend()
+                    if blitzWin == False and rikkuTurns == 1:
+                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
+                    else:
+                        defend()
                 elif groupNum == 3:
                     if rikkuTurns == 1:
-                        if FFX_memory.getUseItemsSlot(20) != 255:
+                        if FFX_memory.getUseItemsSlot(20) < 200:
                             useItem(FFX_memory.getUseItemsSlot(20), 'none')
                         else:
                             defend()
@@ -3325,7 +3371,12 @@ def guards(groupNum):
                             itemToUse = 39
                         elif items[1] >= 1:
                             itemToUse = 37
-                        useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
+                        else:
+                            itemToUse = 255
+                        if itemToUse != 255:
+                            useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
+                        else:
+                            defend()
                     else:
                         defend()
                 
@@ -3791,6 +3842,7 @@ def useItem(slot: int, direction = 'none', target = 255):
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     print("Mark 2")
+    FFX_memory.waitFrames(6)
     _navigate_to_position(1)
     while not FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
@@ -3811,6 +3863,7 @@ def useItem(slot: int, direction = 'none', target = 255):
                         FFX_Xbox.tapUp()
                     else:
                         FFX_Xbox.tapLeft()
+                    FFX_memory.waitFrames(1)
             elif target < 20 and target != 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != target:
@@ -3821,7 +3874,8 @@ def useItem(slot: int, direction = 'none', target = 255):
                         FFX_Xbox.tapUp()
                     else:
                         FFX_Xbox.tapLeft()
-            elif target < 20 and target == 0:
+                    FFX_memory.waitFrames(1)
+            elif target == 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != 0:
                     if FFX_memory.battleTargetId() >= 20:
@@ -5230,9 +5284,10 @@ def rikkuFullOD(battle):
     
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapLeft()
+        
     while not FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
-    
+
     rikkuODItems(item1)
     rikkuODItems(item2)
     FFX_Xbox.tapB()

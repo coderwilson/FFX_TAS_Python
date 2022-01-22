@@ -1518,6 +1518,35 @@ def Luca1(checkpoint):
         print("Save sphere and end of section")
     return [x,y]
 
+def LucaPreBlitz(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -270
+        y = -56
+    if checkpoint == 1:
+        x = -173
+        y = -67
+    if checkpoint == 2:
+        x = 20
+        y = -67
+    if checkpoint == 3:
+        x = -4
+        y = -11
+    if checkpoint == 4:
+        x = -16
+        y = -1
+    if checkpoint == 5:
+        x = -61
+        y = -9
+    if checkpoint == 6:
+        x = -75
+        y = -19
+    if checkpoint == 7:
+        x = -97
+        y = -9
+    return [x,y]
+
 def Luca3(checkpoint):
     x = 999
     y = 999
@@ -3125,8 +3154,8 @@ def mWoods(checkpoint):
         x = -49
         y = 76
     if checkpoint == 31:
-        x = 161
-        y = 24
+        x = 160
+        y = 6
     if checkpoint == 32: #Bartello
         x = 178
         y = -46
@@ -3996,7 +4025,7 @@ def bevellePreTrials(checkpoint):
     if checkpoint == 1:
         x = -200
         y = -3
-    if checkpoint == 2:
+    if checkpoint <= 2:
         x = 4
         y = -44
     if checkpoint == 3:

@@ -1094,8 +1094,7 @@ def seymourNatusBlitzLoss():
     openGrid(character=1)
     
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('tele','d','none')
-    gridLeft()
+    FFX_menuGrid.selSphere('tele','d','left')
     FFX_menuGrid.useAndUseAgain()
     
     FFX_menuGrid.selSphere('power','u','none')
@@ -1103,8 +1102,7 @@ def seymourNatusBlitzLoss():
     FFX_menuGrid.selSphere('power','d','none')
     
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('friend','d','none')
-    gridUp()
+    FFX_menuGrid.selSphere('friend','d','left')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','u','none')
     FFX_menuGrid.useAndUseAgain()
@@ -1128,16 +1126,7 @@ def seymourNatusBlitzLoss():
     FFX_menuGrid.selSphere('power','d','left')
     FFX_menuGrid.useAndQuit()
     
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    FFX_memory.fullPartyFormat('highbridge')
     FFX_memory.closeMenu()
 
 def prepCalmLands(blitzWin):
