@@ -8,6 +8,11 @@ import random
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
+def tapTargeting():
+    while not FFX_memory.turnReady() and FFX_memory.battleActive():
+        FFX_Xbox.tapB()
+
 def valeforOD(sinFin = 0, version = 0):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
@@ -21,7 +26,7 @@ def valeforOD(sinFin = 0, version = 0):
     if sinFin == 1:
         FFX_Xbox.tapDown()
         FFX_Xbox.tapLeft()
-    FFX_Xbox.tapB()
+    tapTargeting()
 
 def defend():
     print("Defend command")
@@ -72,7 +77,7 @@ def tidusFlee():
     _navigate_to_position(0)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
+    tapTargeting()
 
 def tidusHaste(direction):
     direction = direction.lower()
@@ -99,7 +104,7 @@ def tidusHaste(direction):
         FFX_Xbox.tapUp()
     if direction == 'down':
         FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()
+    tapTargeting()
 
 def tidusHasteLate(direction):
     tidusHaste(direction)
@@ -124,7 +129,7 @@ def useSkill(position):
     _navigate_to_position(position)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
+    tapTargeting()
 
 def wakkaOD():
     print("Wakka overdrive activating")
@@ -198,7 +203,7 @@ def revive():
     _navigate_to_position(itemPos)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
+    tapTargeting()
 
 
 def reviveAll():
@@ -3838,14 +3843,14 @@ def attackByNum(num, direction='u'):
         print("Battle menu isn't up.")
         while not FFX_memory.turnReady():
             #Waiting for battle menu to come up.
-            FFX_memory.waitFrames(1)
+            pass
         FFX_memory.waitFrames(2) #Make sure we actually have control
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
-        while not FFX_memory.battleMenuCursor() in [0, 216]:
+        while not FFX_memory.battleMenuCursor() in [0, 203, 216]:
             FFX_Xbox.tapUp()
             if FFX_Screen.BattleComplete():
                 return #Safety
-    while FFX_memory.otherBattleMenu():
+    while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     
     if FFX_memory.getEnemyCurrentHP()[num - 20] != 0:

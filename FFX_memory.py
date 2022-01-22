@@ -98,10 +98,7 @@ def gameOverReset():
 def battleActive():
     global baseValue
     key = baseValue + 0x00D2C9F1
-    if process.readBytes(key,1) == 0:
-        return True
-    else:
-        return False
+    return process.readBytes(key,1) == 0
 
 def getNextTurn():
     global baseValue
@@ -133,11 +130,7 @@ def battleScreen():
 def turnReady():
     global baseValue
     key = baseValue + 0x00F3F77B
-    if process.readBytes(key,1) == 0:
-        return False
-    else:
-        waitFrames(4) #Can be dialed in from 15
-        return True
+    return process.readBytes(key,1) == 0
 
 def battleCursor2():
     global baseValue
