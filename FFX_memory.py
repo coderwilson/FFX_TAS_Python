@@ -566,7 +566,7 @@ def getBattleHP():
     hp2 = process.read(key)
     key = baseValue + 0x00F3F8C4
     hp3 = process.read(key)
-    hpArray = [0, hp1, hp2, hp3]
+    hpArray = [hp1, hp2, hp3]
     print("HP values: ", hpArray)
     return hpArray
 

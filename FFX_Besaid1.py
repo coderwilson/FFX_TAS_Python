@@ -255,7 +255,7 @@ def leaving():
                     if FFX_Screen.BattleScreen():
                         battleHP = FFX_memory.getBattleHP()
                         enemyHP = FFX_memory.getEnemyCurrentHP()
-                        if battleHP[1] < 140 and enemyHP[0] > 110:
+                        if battleHP[0] < 140 and enemyHP[0] > 110:
                             FFX_Xbox.menuDown()
                             FFX_Xbox.menuDown()
                             FFX_Xbox.SkipDialog(2) #Quick potion

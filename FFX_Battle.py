@@ -407,7 +407,7 @@ def Klikk():
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
             BattleHP = FFX_memory.getBattleHP()
-            if BattleHP[1] == 0 or BattleHP[2] == 0:
+            if BattleHP[0] == 0 or BattleHP[1] == 0:
                 revive()
                 klikkRevives += 1
             elif FFX_Screen.turnTidus():
@@ -418,10 +418,10 @@ def Klikk():
                     print("Attempting to steal from Klikk")
                     Steal()
                     rikkuSteal = 1
-                elif BattleHP[1] < 120:
+                elif BattleHP[0] < 120:
                     usePotionCharacter(0, 'l')
                     klikkRevives += 1
-                elif BattleHP[2] < 110:
+                elif BattleHP[1] < 110:
                     usePotionCharacter(6, 'l')
                     klikkRevives += 1
                 else:
@@ -468,7 +468,7 @@ def Tros():
                     trosPos = 0  # One for "Close range, can be attacked.
                     print("Tros is short-range.")
             partyHP = FFX_memory.getBattleHP()
-            if partyHP[1] == 0 or partyHP[2] == 0:  # Someone requires reviving.
+            if partyHP[0] == 0 or partyHP[1] == 0:  # Someone requires reviving.
                 print("Tros: Someone fainted.")
                 revive()
                 Revives += 1
@@ -500,7 +500,7 @@ def Tros():
                     Grenades += 1
             elif FFX_Screen.turnTidus():
                 print("Tidus turn")
-                if trosPos == 1 and FFX_memory.getBattleHP()[2] < 200 and FFX_memory.getEnemyCurrentHP()[0] > 800:
+                if trosPos == 1 and FFX_memory.getBattleHP()[1] < 200 and FFX_memory.getEnemyCurrentHP()[0] > 800:
                     usePotionCharacter(6, 'l')
                 elif trosPos == 1:
                     defend()
@@ -639,7 +639,7 @@ def Echuilles():
                 if tidusCounter == 1 or tidusCounter == 5:
                     print("Dark Attack")
                     useSkill(0)  #Dark Attack
-                elif tidusCounter >= 5 and FFX_memory.getBattleHP()[1] < 180:
+                elif tidusCounter >= 5 and FFX_memory.getBattleHP()[0] < 180:
                     print("Heal Tidus for safety")
                     usePotionCharacter(0, 'l')
                 else:
@@ -1102,9 +1102,9 @@ def afterBlitz1(earlyHaste):
                 cam = FFX_memory.getCamera()
                 if wakkaTurns < 3:
                     attackByNum(22, 'l')
-                elif hpValues[2] < 200: #Tidus HP
+                elif hpValues[1] < 200: #Tidus HP
                     usePotionCharacter(0, 'u')
-                elif hpValues[1] < 100: #Wakka HP
+                elif hpValues[0] < 100: #Wakka HP
                     usePotionCharacter(4, 'u')
                 else:
                     defend()
@@ -1168,7 +1168,7 @@ def MiihenRoad(selfDestruct):
     battle = FFX_memory.getBattleNum()
 
     hpArray = FFX_memory.getBattleHP()
-    hpTotal = hpArray[1] + hpArray[2] + hpArray[3]
+    hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
     if hpTotal < 1800:
         ambushed = True
     else:
@@ -1273,7 +1273,7 @@ def MRRbattle(status):
     
     #If we're ambushed and take too much damage, this will trigger first.
     hpArray = FFX_memory.getBattleHP()
-    hpTotal = hpArray[1] + hpArray[2] + hpArray[3]
+    hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
     if hpTotal < 1800 and status[5] != 2: #Final charging for Yuna is a lower overall party HP
         print("------------We got ambushed. Not going to attempt to recover.")
         fleeAll()
@@ -1617,17 +1617,17 @@ def battleGui():
         valeforOD()
         FFX_memory.waitFrames(30)
         turns += 1
-        lastHP = FFX_memory.getBattleHP()[1]
+        lastHP = FFX_memory.getBattleHP()[0]
     
     FFX_Screen.awaitTurn()
-    nextHP = FFX_memory.getBattleHP()[1]
+    nextHP = FFX_memory.getBattleHP()[0]
     lastHP = nextHP
     turn1 = False
     nextTurn = 20
     lastTurn = 20
     while FFX_memory.battleActive():
         if FFX_memory.turnReady() and FFX_memory.getBattleCharTurn() == 8:
-            nextHP = FFX_memory.getBattleHP()[1]
+            nextHP = FFX_memory.getBattleHP()[0]
             lastTurn = nextTurn
             nextTurn = FFX_memory.getNextTurn()
             if FFX_memory.getOverdriveBattle(8) == 20:
@@ -1896,8 +1896,8 @@ def thunderPlains(status, section):
                         tidusturns += 1
                     elif turnchar == 4:
                         if wakkaturns == 0:
-                            wakkaposition = FFX_memory.getBattleCharSlot(4) + 1
-                            rikkuposition = FFX_memory.getBattleCharSlot(6) + 1
+                            wakkaposition = FFX_memory.getBattleCharSlot(4)
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
                             wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
                             rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
                             if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
@@ -1914,7 +1914,7 @@ def thunderPlains(status, section):
                         status[3] = True
                         fleeAll()
                     elif turnchar == 2:
-                        rikkuposition = FFX_memory.getBattleCharSlot(6) + 1
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
                         rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
                         if rikkuHP > 0:
                             defend()
@@ -1932,8 +1932,8 @@ def thunderPlains(status, section):
                         tidusturns += 1
                     elif turnchar == 4:
                         if wakkaturns == 0:
-                            wakkaposition = FFX_memory.getBattleCharSlot(4) + 1
-                            rikkuposition = FFX_memory.getBattleCharSlot(6) + 1
+                            wakkaposition = FFX_memory.getBattleCharSlot(4)
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
                             wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
                             rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
                             if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
@@ -1948,7 +1948,7 @@ def thunderPlains(status, section):
                         print("OMG something's happening!")
                         status[1] = True
                     elif turnchar == 2:
-                        rikkuposition = FFX_memory.getBattleCharSlot(6) + 1
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
                         rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
                         if rikkuHP > 0:
                             defend()
@@ -1966,8 +1966,8 @@ def thunderPlains(status, section):
                         tidusturns += 1
                     elif turnchar == 4:
                         if wakkaturns == 0:
-                            wakkaposition = FFX_memory.getBattleCharSlot(4) + 1
-                            rikkuposition = FFX_memory.getBattleCharSlot(6) + 1
+                            wakkaposition = FFX_memory.getBattleCharSlot(4)
+                            rikkuposition = FFX_memory.getBattleCharSlot(6)
                             wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
                             rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
                             if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
@@ -1981,7 +1981,7 @@ def thunderPlains(status, section):
                         Steal()
                         status[1] = True
                     elif turnchar == 2:
-                        rikkuposition = FFX_memory.getBattleCharSlot(6) + 1
+                        rikkuposition = FFX_memory.getBattleCharSlot(6)
                         rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
                         if rikkuHP > 0:
                             defend()
@@ -2395,7 +2395,7 @@ def seymourGuado():
     animahits = 0
     animamiss = 0
 
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             turnchar = FFX_memory.getBattleCharTurn()
             for i in range(0, 3):
@@ -2692,14 +2692,14 @@ def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
         elif FFX_memory.getThrowItemsSlot(6) < 255:
             revive()  # This should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
-    elif partyHP[FFX_memory.getBattleCharSlot(0) +1] == 0:
+    elif partyHP[FFX_memory.getBattleCharSlot(0)] == 0:
         print("Reviving tidus")
         revive()
     elif usepowerbreak == True:
         print("Swapping to Auron to Power Break")
         buddySwapAuron()
     # If tidus is less than max HP heal him
-    elif partyHP[FFX_memory.getBattleCharSlot(0) +1] < tidusmaxHP:
+    elif partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
         print("Tidus need healing")
         if fullheal(target = 0,
                     direction="l") == 0:
@@ -2740,7 +2740,7 @@ def wendigo():
             partyHP = FFX_memory.getBattleHP()
             turnchar = FFX_memory.getBattleCharTurn()
 
-            if partyHP[FFX_memory.getBattleCharSlot(0) +1] == 0:
+            if partyHP[FFX_memory.getBattleCharSlot(0)] == 0:
                 print("Tidus is dead")
                 tidushaste = False
                 powerbreak = True
@@ -2785,7 +2785,7 @@ def wendigo():
                     elif FFX_memory.getThrowItemsSlot(6) < 255:
                         revive()
                 elif tidushealself == True:
-                    if partyHP[FFX_memory.getBattleCharSlot(0) +1] < tidusmaxHP:
+                    if partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
                         print("Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
                         if fullheal(target = 0,
                                     direction="l") == 0:
@@ -3231,7 +3231,7 @@ def Evrae(blitzWin):
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[1] < 1520:
+                elif FFX_memory.getBattleHP()[0] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
