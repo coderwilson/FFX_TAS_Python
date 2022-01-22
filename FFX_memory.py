@@ -152,6 +152,11 @@ def battleCursor3():
     global baseValue
     key = baseValue + 0x00F3CAFE
     return process.readBytes(key,1)
+    
+def overdriveMenuActive():
+    global baseValue
+    key = baseValue + 0x008CB9C1
+    return process.readBytes(key, 1)
 
 def mainBattleMenu():
     global baseValue
@@ -168,6 +173,11 @@ def otherBattleMenu():
         return True
     else:
         return False
+        
+def interiorBattleMenu():
+    global baseValue
+    key = baseValue + 0x00F3CAF1
+    return process.readBytes(key,1)
 
 def battleTargetId():
     global baseValue
@@ -1002,32 +1012,6 @@ def setGilvalue(newValue):
     global baseValue
     key = baseValue + 0x00D307D8
     return process.write(key, newValue)
-
-def rikkuODItems(slot):
-    #This function gets the item slots for each item, swaps if they're backwards,
-    # and then moves the cursor to each item and presses B when we reach it.
-    
-    if slot == 0:
-        while RikkuODCursor1() >= 1:
-            print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
-            if RikkuODCursor1() % 2 != slot % 2:
-                FFX_Xbox.tapRight()
-            elif RikkuODCursor1() > slot:
-                FFX_Xbox.tapUp()
-            else:
-                FFX_Xbox.tapDown()
-    else:
-        while RikkuODCursor1() != slot:
-            print("Cursor1: ", RikkuODCursor1(), " || Moving to slot: ", slot)
-            if RikkuODCursor1() % 2 != slot % 2:
-                FFX_Xbox.tapRight()
-            elif RikkuODCursor1() > slot:
-                FFX_Xbox.tapUp()
-            else:
-                FFX_Xbox.tapDown()
-    waitFrames(2)
-    FFX_Xbox.tapB()
-    waitFrames(2)
 
 def oldODLogic():
     if item1 % 2 == 0: #First item is in the right-hand column
