@@ -184,9 +184,17 @@ def ammesBattle():
     #Auron overdrive tutorial
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
-    FFX_Xbox.SkipDialog(3) #Initiate overdrive
-    FFX_memory.waitFrames(30 * 1) #Static delay, the same every time.
-    print("Starting Overdrive")
+    print("In other menu")
+    print(FFX_memory.interiorBattleMenu())
+    while not FFX_memory.interiorBattleMenu():
+        print(FFX_memory.interiorBattleMenu())
+        FFX_Xbox.tapB()
+    print("Out of interior")
+    while not FFX_memory.overdriveMenuActive():
+        FFX_Xbox.tapB()
+    print("Starting Overdrive after 30 frames")
+    FFX_memory.waitFrames(30)
+    print("Starting")
     #Doing the actual overdrive
     FFXC.set_value('Dpad', 2)
     FFX_memory.waitFrames(30 * 0.04)
