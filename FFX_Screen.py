@@ -51,12 +51,14 @@ def awaitTurn() :
     #Now let's do this.
     while not BattleScreen() or FFX_memory.userControl():
         if FFX_memory.battleActive() == False:
-            FFX_memory.waitFrames(30 * 0.01)
+            pass
         counter += 1;
-        if counter % 10000 == 0:
-            print("Waiting for player turn: ", counter / 1000)
+        if counter % 100000 == 0:
+            print("Waiting for player turn: ", counter / 10000)
         if FFX_memory.gameOver():
             return False
+    while not FFX_memory.mainBattleMenu():
+        pass
     return True
 
 def turnRikkuRed() :
