@@ -5,6 +5,7 @@ import FFX_Screen
 import FFX_Battle
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -92,16 +93,21 @@ def NewGame2():
     FFX_Xbox.menuB()
 
 def listenStory(gameLength):
-    FFX_memory.waitFrames(150)
-    x = 0
+    FFX_memory.waitFrames(120)
     print("Skipping intro scene, we'll watch this properly in about 8 hours.")
-    for x in range(100):
-        FFXC.set_value('BtnBack', 1)
-        FFX_memory.waitFrames(1)
-        FFXC.set_value('BtnBack', 0)
-        FFX_memory.waitFrames(1)
-    print("End skip mashing")
-    FFX_memory.awaitControl()
+    FFX_vars.initVars()
+    x = 0
+    while not FFX_memory.userControl():
+        if FFX_memory.getMap() == 132:
+            if FFX_memory.diagProgressFlag() == 1:
+                csModVar = FFX_vars.varsHandle()
+                #print("Cutscene Remover: ", csModVar.csr())
+                csModVar.SETcsr(False)
+                #print("Cutscene Remover: ", csModVar.csr())
+            FFXC.set_value('BtnBack', 1)
+            FFX_memory.waitFrames(1)
+            FFXC.set_value('BtnBack', 0)
+            FFX_memory.waitFrames(1)
     
     skips = 0
     checkpoint = 0
@@ -184,17 +190,9 @@ def ammesBattle():
     #Auron overdrive tutorial
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.menuLeft()
-    print("In other menu")
-    print(FFX_memory.interiorBattleMenu())
-    while not FFX_memory.interiorBattleMenu():
-        print(FFX_memory.interiorBattleMenu())
-        FFX_Xbox.tapB()
-    print("Out of interior")
-    while not FFX_memory.overdriveMenuActive():
-        FFX_Xbox.tapB()
-    print("Starting Overdrive after 30 frames")
-    FFX_memory.waitFrames(30)
-    print("Starting")
+    FFX_Xbox.SkipDialog(3) #Initiate overdrive
+    FFX_memory.waitFrames(30 * 1) #Static delay, the same every time.
+    print("Starting Overdrive")
     #Doing the actual overdrive
     FFXC.set_value('Dpad', 2)
     FFX_memory.waitFrames(30 * 0.04)
