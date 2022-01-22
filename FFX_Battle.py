@@ -8,11 +8,6 @@ import random
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-
-def tapTargeting():
-    while not FFX_memory.turnReady() and FFX_memory.battleActive():
-        FFX_Xbox.tapB()
-
 def valeforOD(sinFin = 0, version = 0):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
@@ -26,7 +21,7 @@ def valeforOD(sinFin = 0, version = 0):
     if sinFin == 1:
         FFX_Xbox.tapDown()
         FFX_Xbox.tapLeft()
-    tapTargeting()
+    FFX_Xbox.tapB()
 
 def defend():
     print("Defend command")
@@ -77,7 +72,7 @@ def tidusFlee():
     _navigate_to_position(0)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    tapTargeting()
+    FFX_Xbox.tapB()
 
 def tidusHaste(direction):
     direction = direction.lower()
@@ -104,7 +99,7 @@ def tidusHaste(direction):
         FFX_Xbox.tapUp()
     if direction == 'down':
         FFX_Xbox.tapDown()
-    tapTargeting()
+    FFX_Xbox.tapB()
 
 def tidusHasteLate(direction):
     tidusHaste(direction)
@@ -129,7 +124,7 @@ def useSkill(position):
     _navigate_to_position(position)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    tapTargeting()
+    FFX_Xbox.tapB()
 
 def wakkaOD():
     print("Wakka overdrive activating")
@@ -203,7 +198,7 @@ def revive():
     _navigate_to_position(itemPos)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    tapTargeting()
+    FFX_Xbox.tapB()
 
 
 def reviveAll():
@@ -3843,14 +3838,14 @@ def attackByNum(num, direction='u'):
         print("Battle menu isn't up.")
         while not FFX_memory.turnReady():
             #Waiting for battle menu to come up.
-            pass
+            FFX_memory.waitFrames(1)
         FFX_memory.waitFrames(2) #Make sure we actually have control
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
-        while not FFX_memory.battleMenuCursor() in [0, 203, 216]:
+        while not FFX_memory.battleMenuCursor() in [0, 216]:
             FFX_Xbox.tapUp()
             if FFX_Screen.BattleComplete():
                 return #Safety
-    while not FFX_memory.otherBattleMenu():
+    while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     
     if FFX_memory.getEnemyCurrentHP()[num - 20] != 0:
@@ -4130,9 +4125,18 @@ def thunderTarget(target, direction):
                 FFX_Xbox.tapUp()
         FFX_Xbox.tapB()  # Black magic
     print(FFX_memory.battleCursor2())
-    _navigate_to_position(1)
-    while FFX_memory.otherBattleMenu():
-        FFX_Xbox.tapB()  # Thunder
+    if FFX_memory.battleCursor2() != 1:
+        print("Wrong spell targetted")
+        while FFX_memory.battleCursor2() != 1:
+            print(FFX_memory.battleCursor2())
+            if FFX_memory.battleCursor2() % 2 == 0:
+                FFX_Xbox.tapRight()
+            elif FFX_memory.battleCursor2() > 1:
+                FFX_Xbox.tapUp()
+            else:
+                FFX_Xbox.tapDown()
+
+    FFX_Xbox.tapB()  # Thunder
     
     while FFX_memory.battleTargetId() != target:
         if direction == 'l':
