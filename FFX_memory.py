@@ -186,6 +186,13 @@ def battleTargetId():
     print("Battle Target ID: ", retVal)
     return retVal
 
+def battleTargetActive():
+    global baseValue
+    key = baseValue + 0x00F3D1B4
+    retVal = process.readBytes(key,1)
+    return retVal != 255
+
+
 def userControl():
     global baseValue
     #Auto updating via reference to the baseValue above
