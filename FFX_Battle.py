@@ -29,8 +29,28 @@ def valeforOD(sinFin = 0, version = 0):
 
 def defend():
     print("Defend command")
-    while FFX_memory.mainBattleMenu():
-        FFX_Xbox.tapY()
+    FFXC.set_value('BtnY', 1)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 0)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 1)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 0)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 1)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 0)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 1)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 0)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 1)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFXC.set_value('BtnY', 0)
+    FFX_memory.waitFrames(30 * 0.035)
+    FFX_Xbox.menuA()
+    FFX_Xbox.menuA()
 
 
 def tidusFlee():
@@ -161,7 +181,7 @@ def remedy(character: int, direction: str):
         return 0
 
 
-def revive(itemNum = 5):
+def revive(itemNum = 6):
     FFX_Logs.writeLog("Using Phoenix Down")
     print("Using Phoenix Down")
     if FFX_memory.getThrowItemsSlot(itemNum) > 250:
@@ -170,10 +190,7 @@ def revive(itemNum = 5):
     while not FFX_memory.mainBattleMenu():
         pass
     while FFX_memory.battleMenuCursor() != 1:
-        if FFX_memory.battleMenuCursor() < 1:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
+        FFX_Xbox.tapDown()
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     itemPos = FFX_memory.getThrowItemsSlot(itemNum) - 1
@@ -3751,10 +3768,7 @@ def _useHealingItem(num, direction, itemID):
     while not FFX_memory.mainBattleMenu():
         pass
     while FFX_memory.battleMenuCursor() != 1:
-        if FFX_memory.battleMenuCursor() < 1:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
+        FFX_Xbox.tapDown()
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     while not FFX_memory.otherBattleMenu():
@@ -4164,7 +4178,7 @@ def aeonSpellDirection(position, direction):
     print("Aeon casting a spell. Special direction: ", direction)
     while FFX_memory.battleMenuCursor() != 21:
         print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() < 21:
+        if FFX_memory.battleMenuCursor() == 0:
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
