@@ -109,7 +109,7 @@ def battleMenuCursor():
     global baseValue
     key = baseValue + 0x00F3F77B
     while process.readBytes(key,1) == 0:
-        waitFrames(1)
+        pass
     key2 = baseValue + 0x00F3C926
     return process.readBytes(key2,1)
 
