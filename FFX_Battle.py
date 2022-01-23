@@ -2890,7 +2890,7 @@ def sandragora(version):
             buddySwapKimahri()
             FFX_Screen.awaitTurn()
         print("Now Kimahri will use his overdrive.")
-        kimahriOD(4)
+        kimahriOD(3)
         FFX_memory.clickToControl()
     else: #Auron's turn
         tidusHaste('down')
@@ -2949,7 +2949,7 @@ def home2():
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnKimahri():
-                kimahriOD(4)
+                kimahriOD(3)
             elif kimahriposition > 3:
                 buddySwapKimahri()  # Tidus for Kimahri
                 FFX_memory.waitFrames(30 * 0.2)
@@ -3012,7 +3012,7 @@ def home4():
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnKimahri():
-                kimahriOD(5)
+                kimahriOD(4)
             elif kimahriposition > 3:
                 buddySwapKimahri()  # Tidus for Kimahri
                 FFX_memory.waitFrames(30 * 0.2)
