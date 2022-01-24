@@ -83,9 +83,7 @@ def arrival():
                 checkpoint += 1
             elif checkpoint == 36 or checkpoint == 45:
                 print("Event: Touch Save Sphere")
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.02)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 38: #Oblitzerator
                 print("Event: Oblitzerator fight")

@@ -2,6 +2,7 @@ import struct
 import FFX_Xbox
 import time
 import FFX_Screen
+import FFX_targetPathing
 
 from math import cos, sin
 baseValue = 0
@@ -109,7 +110,7 @@ def battleMenuCursor():
     global baseValue
     key = baseValue + 0x00F3F77B
     while process.readBytes(key,1) == 0:
-        pass
+        waitFrames(1)
     key2 = baseValue + 0x00F3C926
     return process.readBytes(key2,1)
 
@@ -2438,6 +2439,151 @@ def GTinnerRing():
     height = float_from_integer(process.read(key))
     return height
 
+#-------------------------------------------------------
+#Save spheres
+def getSaveSphereDetails():
+    mapVal = getMap()
+    storyVal = getStoryProgress()
+    print("Map and story: ", mapVal, " | ", storyVal)
+    x = 0
+    y = 0
+    diag = 0
+    if mapVal == 389:
+        #Ammes
+        x = 994
+        y = -263
+        diag = 9
+    if mapVal == 49:
+        #Baaj
+        x = 230
+        y = -215
+        diag = 17
+    if mapVal == 63:
+        #Before Klikk
+        x = -100
+        y = 143
+        diag = 29
+    if mapVal == 64:
+        #Before Tros
+        x = 5
+        y = -170
+        diag = 3
+    if mapVal == 19:
+        #Besaid beach
+        x = -310
+        y = -475
+        diag = 48
+    if mapVal == 65:
+        #Kilika - before Geneaux
+        x = -3
+        y = 175
+        diag = 46
+    if mapVal == 88:
+        #Luca before Oblitzerator
+        x = 175
+        y = -310
+        diag = 62
+    if mapVal == 123:
+        #Luca after Oblitzerator
+        x = -270
+        y = -45
+        diag = 46
+    if mapVal == 171:
+        #Mi'ihen agency
+        x = 35
+        y = -10
+        diag = 85
+    if mapVal == 115:
+        #Old Road
+        x = 48
+        y = -910
+        diag = 40
+    if mapVal == 92:
+        #MRR
+        x = 5
+        y = -740
+        diag = 39
+    if mapVal == 119:
+        #Battle Site
+        x = -80
+        y = 3335
+        diag = 115
+    if mapVal == 110:
+        #Mac woods start
+        x = 255
+        y = -15
+        diag = 84
+    if mapVal == 221:
+        #Mac woods before Spherimorph
+        x = 195
+        y = -123
+        diag = 19
+    if mapVal == 106:
+        #Mac Temple entrance
+        x = -22
+        y = -127
+        diag = 66
+    if mapVal == 153:
+        #Mac Temple exit
+        x = 820
+        y = -235
+        diag = 44
+    if mapVal == 129:
+        #Bikanel start
+        x = 19
+        y = -60
+        diag = 35
+    if mapVal == 130:
+        #Home entrance screen
+        x = 61
+        y = 92
+        diag = 25
+    if mapVal == 194:
+        #Airship while rescuing Yuna, cockpit
+        x = -275
+        y = 344
+        diag = 217
+    if mapVal == 285:
+        #After Flux
+        x = 140
+        y = -640
+        diag = 84
+    if mapVal == 318:
+        #Before Yunalesca
+        x = -5
+        y = -170
+        diag = 26
+    
+    print("Values: [", x, ",", y, "] - ", diag)
+    return [x,y,diag]
+
+def touchSaveSphere():
+    print("MEM - Touch Save Sphere")
+    
+    ssDetails = getSaveSphereDetails()
+    
+    while userControl():
+        FFX_targetPathing.setMovement([ssDetails[0], ssDetails[1]])
+        FFX_Xbox.tapB()
+        waitFrames(2)
+    try:
+        FFXC.set_neutral()
+    except:
+        FFXC = FFX_Xbox.controllerHandle()
+        FFXC.set_neutral()
+    waitFrames(1)
+    
+    complete = False
+    while not complete:
+        if diagProgressFlag() == ssDetails[2]:
+            if saveMenuCursor() == 0:
+                FFX_Xbox.tapA()
+            else:
+                FFX_Xbox.tapB()
+                complete = 1
+        else:
+            FFX_Xbox.tapB()
+            waitFrames(1)
 
 #-------------------------------------------------------
 #Testing

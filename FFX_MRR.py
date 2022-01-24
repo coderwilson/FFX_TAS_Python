@@ -65,6 +65,8 @@ def arrival():
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
+                FFX_memory.clickToControl3()
+                FFX_Battle.healUp()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
@@ -85,7 +87,7 @@ def mainPath(wakkaLateMenu):
             status[5] = 3 #All pieces are complete. Move phase to final phase.
         if FFX_memory.userControl():
             if checkpoint == 1:
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 4:
                 print("Up the first lift")
@@ -143,8 +145,6 @@ def mainPath(wakkaLateMenu):
                 print("Starting battle MRR")
                 status = FFX_Battle.MRRbattle(status)
                 print("Status update: ", status)
-                    #print("Yuna Complete state: ", status[0])
-                    #print("Kimahri Complete state: ", status[1])
                 status[3] += 1
                 
                 if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
@@ -186,7 +186,7 @@ def battleSite():
                 FFX_menu.battleSiteOaka2()
                 checkpoint += 1
             elif checkpoint == 8:
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 12:
                 FFXC.set_movement(0, 1)

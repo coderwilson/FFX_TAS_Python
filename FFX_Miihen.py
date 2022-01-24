@@ -265,18 +265,7 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
         if FFX_memory.userControl():
             #Utility stuff
             if checkpoint == 2:
-                FFXC.set_movement(1, 1)
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuB()
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.8)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.8)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.8)
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.8)
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 26 and selfDestruct == 0:
                 checkpoint = 24

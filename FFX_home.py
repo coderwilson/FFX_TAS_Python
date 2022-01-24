@@ -65,7 +65,7 @@ def desert():
             elif checkpoint == 2 or checkpoint == 24: #Save sphere
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 53:
                 print("Going for first Sandragora and chest")
@@ -175,7 +175,7 @@ def findSummoners(blitzWin):
             #events
             if checkpoint == 7:
                 FFXC.set_neutral()
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 
                 checkpoint += 1
             elif checkpoint < 12 and FFX_memory.getMap() == 276:

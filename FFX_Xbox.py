@@ -372,19 +372,13 @@ def tidusOD():
 def weapSwap(position):
     print("Weapon swap, weapon in position: ", position)
     while FFX_memory.mainBattleMenu():
-        menuRight()
-    if position == 0:
-        SkipDialog(2)
-    else:
-        FFX_memory.waitFrames(30 * 0.5)
-        menuB()
-        FFX_memory.waitFrames(30 * 0.07)
-        while position > 0:
-            menuDown()
-            position -= 1
-        menuB()
-        menuB()
-        FFX_memory.waitFrames(30 * 0.3)
+        tapRight()
+    while FFX_memory.otherBattleMenu():
+        tapB()
+    while FFX_memory.battleCursor3() != position:
+        tapDown()
+    while FFX_memory.interiorBattleMenu():
+        tapB()
 
 def armorSwap(position):
     print("Armor swap, armor in position: ", position)

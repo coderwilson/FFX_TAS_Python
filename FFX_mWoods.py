@@ -66,7 +66,7 @@ def arrival(rikkucharged):
     FFXC.set_movement(-1, 0)
     FFX_memory.waitFrames(30 * 0.3)
     FFXC.set_neutral()
-    FFX_Xbox.touchSaveSphere()
+    FFX_memory.touchSaveSphere()
     FFXC.set_movement(1, 1)
     FFX_memory.waitFrames(30 * 0.4)
     FFXC.set_neutral()

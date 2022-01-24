@@ -231,7 +231,7 @@ def leaving():
             elif checkpoint == 60: #Beach, save sphere
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
                 checkpoint -= 2

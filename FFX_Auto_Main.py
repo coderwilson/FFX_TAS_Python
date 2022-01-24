@@ -57,8 +57,8 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
@@ -78,8 +78,8 @@ StepCounter = 1
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
@@ -89,7 +89,7 @@ autoEggHunt = True
 
 forceBlitzWin = True
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 40 #New seed number, only used if doing seed hunt.
+rngSeedNum = 130 #New seed number, only used if doing seed hunt.
 ####################################################################################################
 
 if Gamestate != "none":
@@ -99,7 +99,7 @@ if Gamestate != "none":
 elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [31,40,49,59,90,91,98,104,108,121,200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 40 #Select a specific seed.
+    #rngSeedNum = 40 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -122,7 +122,7 @@ earlyTidusGrid = False
 #    blitzWin = True
 #else:
 #    blitzWin = False
-blitzWin = False #For testing
+blitzWin = True #For testing
 
 #Main functions
 def reportGamestate():
@@ -150,7 +150,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -202,7 +202,7 @@ if Gamestate != "none" :
         FFXC.set_neutral()
         FFX_memory.waitFrames(30 * 2)
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
-        FFX_LoadGame.loadOffset(47)
+        FFX_LoadGame.loadOffset(46)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(26)
         earlyHaste = 3
@@ -212,8 +212,8 @@ if Gamestate != "none" :
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
-        FFX_LoadGame.loadOffset(21)
-        FFX_LoadGame.LoadMiihenStart()
+        FFX_LoadGame.loadOffset(33)
+        FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR()
@@ -232,14 +232,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(4)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(9)
+        FFX_LoadGame.loadOffset(13)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(8)
+        FFX_LoadGame.loadOffset(12)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
         FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
-        FFX_LoadGame.loadOffset(10) #No remedy in inventory, likely game over.
+        FFX_LoadGame.loadOffset(24) #No remedy in inventory, likely game over.
         FFX_LoadGame.loadMacTemple()
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
@@ -252,7 +252,7 @@ if Gamestate != "none" :
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadOffset(15)
     if Gamestate == "Home" and StepCounter == 2:
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(7)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
         FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
@@ -533,7 +533,13 @@ while Gamestate != "End":
         StepCounter = 1
         Gamestate = "Miihen"
         #Gamestate = "manualBreak" # Used for testing only.
-
+    
+    #Just to make sure we set this variable somewhere.
+    try:
+        print(wakkaLateMenu)
+    except:
+        wakkaLateMenu = False
+    
     if Gamestate == "Miihen" and StepCounter == 1:
         reportGamestate()
         returnArray = FFX_Miihen.arrival()

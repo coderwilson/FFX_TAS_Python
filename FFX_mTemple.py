@@ -51,7 +51,7 @@ def arrival(blitzWin):
             if checkpoint == 1:
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 4: #Talking to Trommell
                 FFX_memory.clickToEventTemple(6)
@@ -247,7 +247,7 @@ def escape():
         if FFX_memory.userControl():
             #Events
             if checkpoint == 2:
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
                 print("Touching save sphere. Update checkpoint: ", checkpoint)
             

@@ -110,7 +110,6 @@ def arrival():
                 FFX_memory.waitFrames(30 * 1)
                 FFX_Xbox.menuA()
                 FFX_Xbox.tapB()
-                #FFX_Xbox.touchSaveSphere()
                 checkpoint += 1
                 FFXC.set_movement(1, 0)
                 FFX_memory.waitFrames(30 * 0.6)
@@ -297,7 +296,7 @@ def yunalesca(ver):
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 0.1)
     FFXC.set_neutral()
-    FFX_Xbox.touchSaveSphere()
+    FFX_memory.touchSaveSphere()
     
     if ver == 4:
         print("Final pattern for four return spheres off of the B&Y fight")

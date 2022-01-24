@@ -242,14 +242,7 @@ def AfterAmmes():
         if FFX_memory.userControl():
             #Map changes and events
             if checkpoint == 6: #Save sphere
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuB()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint < 9 and FFX_memory.getStoryProgress() >= 20: #Swim to Jecht
                 checkpoint = 9

@@ -104,7 +104,7 @@ def Baaj_puzzle():
             #Events
             if checkpoint == 3:
                 FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 5: #Flint room
                 FFX_memory.clickToEventTemple(0)
@@ -215,11 +215,7 @@ def ABswimming2() :
     FFX_memory.awaitControl()
     FFXC.set_movement(1, -1)
     FFXC.set_value('BtnA', 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_neutral()
-    FFXC.set_value('BtnA', 0)
-    FFX_memory.waitFrames(30 * 0.035)
-    FFX_Xbox.touchSaveSphere()
+    FFX_memory.touchSaveSphere()
 
     #Now to get to it
     FFXC.set_movement(0, 1)
