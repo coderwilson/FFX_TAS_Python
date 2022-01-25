@@ -49,8 +49,8 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 1
+Gamestate = "MRR"
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -215,7 +215,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(33)
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(29)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.loadOffset(19)

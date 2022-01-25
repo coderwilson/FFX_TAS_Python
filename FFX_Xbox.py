@@ -379,23 +379,7 @@ def weapSwap(position):
         tapDown()
     while FFX_memory.interiorBattleMenu():
         tapB()
-
-def armorSwap(position):
-    print("Armor swap, armor in position: ", position)
-    menuRight()
-    FFX_memory.waitFrames(30 * 0.5)
-    menuDown()
-    FFX_memory.waitFrames(30 * 0.5)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.7)
-    armor = 0
-    while armor < position :
-        menuDown()
-        armor += 1
-    menuB()
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-
+        
 def clearSavePopup(clickToDiagNum=0):
     FFXC = controllerHandle()
     FFXC.set_neutral()

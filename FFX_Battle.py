@@ -19,11 +19,11 @@ def tapTargeting():
 def valeforOD(sinFin = 0, version = 0):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
-    FFX_memory.waitFrames(30)
     if version == 1:
-        FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()  # Energy Blast
-    FFX_memory.waitFrames(5)
+        while FFX_memory.battleCursor2() != 1:
+            FFX_Xbox.tapDown()
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()  # Energy Blast
     if sinFin == 1:
         FFX_Xbox.tapDown()
         FFX_Xbox.tapLeft()
@@ -3780,7 +3780,7 @@ def seymourSpell():
         FFX_Xbox.tapB()  # Black magic
     print(FFX_memory.battleCursor2())
     _navigate_to_position(5)
-    while FFX_Xbox.otherBattleMenu():
+    while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     
     if FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
@@ -4172,7 +4172,7 @@ def aeonSummon(position):
         if FFX_Screen.turnYuna() == False:
             return
         if FFX_memory.battleMenuCursor() == 255:
-            FFX_memory.waitFrames(30 * 0.01)
+            pass
         elif FFX_memory.battleMenuCursor() >= 1 and FFX_memory.battleMenuCursor() < 23:
             FFX_Xbox.tapUp()
         else:
@@ -4193,9 +4193,9 @@ def aeonSummon(position):
         FFX_Xbox.tapB()
     aeonWaitTimer = 0
     while not FFX_memory.turnReady():
-        if aeonWaitTimer % 100 == 0:
-            print("Waiting for Aeon's turn. ", aeonWaitTimer % 100)
-        FFX_memory.waitFrames(1)
+        if aeonWaitTimer % 1000 == 0:
+            print("Waiting for Aeon's turn. ", aeonWaitTimer % 1000)
+        pass
         aeonWaitTimer += 1
 
 
