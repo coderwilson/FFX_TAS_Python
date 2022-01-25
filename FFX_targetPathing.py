@@ -54,11 +54,11 @@ def tidusHome(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = 117
-        y = 3
+        x = 150
+        y = -4
     if checkpoint == 1:
-        x = 28
-        y = 8
+        x = 58
+        y = 0
     if checkpoint == 2:
         print("Talk to the kids")
     if checkpoint == 3:
@@ -852,8 +852,8 @@ def Kilika1(checkpoint):
     if checkpoint == 6:
         print("Yuna dancing, ends in the inn")
     if checkpoint == 7:
-        x = 32
-        y = 0
+        x = 41
+        y = 2
     if checkpoint == 8:
         print("Exit the inn")
     if checkpoint == 9:

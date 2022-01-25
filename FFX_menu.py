@@ -135,6 +135,22 @@ def autoSortItems(manual):
     else:
         FFX_memory.closeMenu()
 
+def shortAeons():
+    FFX_memory.openMenu()
+    FFX_memory.waitFrames(30 * 0.6)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(30 * 0.3)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuRight()
+    FFX_memory.closeMenu()
+
 def Liki():
     print("Menu - SS Liki")
     openGrid(character=0)

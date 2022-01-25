@@ -99,7 +99,7 @@ if Gamestate != "none":
 elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [31,40,49,59,90,91,98,104,108,121,200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 40 #Select a specific seed.
+    rngSeedNum = 40 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.

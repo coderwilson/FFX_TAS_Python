@@ -302,7 +302,7 @@ def Tros():
     Grenades = 0
     Steals = 0
     
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while FFX_memory.battleActive(): #AKA end of battle screen
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         elif FFX_memory.turnReady():
@@ -310,7 +310,8 @@ def Tros():
             print("Battle clock:", battleClock)
             trosPos = 2
             print("Determining Tros position")
-            while trosPos == 2:  # Two for "not yet determined". Maybe can be HP-based instead?
+            while trosPos == 2 and not FFX_memory.battleComplete():
+                # Two for "not yet determined". Maybe can be HP-based instead?
                 camera = FFX_memory.getCamera()
                 # First, determine position of Tros
                 if camera[0] > 2:
@@ -322,48 +323,52 @@ def Tros():
                 else:
                     trosPos = 0  # One for "Close range, can be attacked.
                     print("Tros is short-range.")
-            partyHP = FFX_memory.getBattleHP()
-            if partyHP[0] == 0 or partyHP[1] == 0:  # Someone requires reviving.
-                print("Tros: Someone fainted.")
-                revive()
-                Revives += 1
-            elif FFX_Screen.turnRikku():
-                print("Rikku turn")
-                grenadeSlot = FFX_memory.getItemSlot(35)
-                grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
-                print("------------------------------------------------")
-                print("Current grenade count: ", grenadeCount)
-                print("Grenades used: ", Grenades)
-                print("------------------------------------------------")
-                totalNades = grenadeCount + Grenades
-                if totalNades < 6:
-                    if trosPos == 1:
+            
+            #Assuming battle is not complete:
+            if FFX_memory.battleActive():
+                partyHP = FFX_memory.getBattleHP()
+                if partyHP[0] == 0 or partyHP[1] == 0:  # Someone requires reviving.
+                    print("Tros: Someone fainted.")
+                    revive()
+                    Revives += 1
+                elif FFX_Screen.turnRikku():
+                    print("Rikku turn")
+                    grenadeSlot = FFX_memory.getItemSlot(35)
+                    grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
+                    print("------------------------------------------------")
+                    print("Current grenade count: ", grenadeCount)
+                    print("Grenades used: ", Grenades)
+                    print("------------------------------------------------")
+                    totalNades = grenadeCount + Grenades
+                    if totalNades < 6:
+                        if trosPos == 1:
+                            defend()
+                        else:
+                            Steal()
+                            Steals += 1
+                    elif grenadeCount == 0:
+                        if trosPos == 1:
+                            defend()
+                        else:
+                            Steal()
+                            Steals += 1
+                    else:
+                        print("MARK USE ITEM")
+                        grenadeSlot = FFX_memory.getUseItemsSlot(35)
+                        useItem(grenadeSlot,'none')
+                        Grenades += 1
+                elif FFX_Screen.turnTidus():
+                    print("Tidus turn")
+                    if trosPos == 1 and FFX_memory.getBattleHP()[1] < 200 and FFX_memory.getEnemyCurrentHP()[0] > 800:
+                        usePotionCharacter(6, 'l')
+                    elif trosPos == 1:
                         defend()
                     else:
-                        Steal()
-                        Steals += 1
-                elif grenadeCount == 0:
-                    if trosPos == 1:
-                        defend()
-                    else:
-                        Steal()
-                        Steals += 1
-                else:
-                    print("MARK USE ITEM")
-                    grenadeSlot = FFX_memory.getUseItemsSlot(35)
-                    useItem(grenadeSlot,'none')
-                    Grenades += 1
-            elif FFX_Screen.turnTidus():
-                print("Tidus turn")
-                if trosPos == 1 and FFX_memory.getBattleHP()[1] < 200 and FFX_memory.getEnemyCurrentHP()[0] > 800:
-                    usePotionCharacter(6, 'l')
-                elif trosPos == 1:
-                    defend()
-                else:
-                    attack('none')
-                    Attacks += 1
-                
-    FFX_memory.clickToControl()
+                        attack('none')
+                        Attacks += 1
+    
+    print("Tros battle complete.")
+    FFX_memory.clickToControl3()
     FFX_Logs.writeStats("Tros Attacks:")
     FFX_Logs.writeStats(str(Attacks))
     FFX_Logs.writeStats("Tros Revives:")
