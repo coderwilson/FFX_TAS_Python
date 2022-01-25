@@ -158,7 +158,7 @@ def listenStory(gameLength):
                 else:
                     if csModVar.usePause():
                         FFX_memory.waitFrames(1)
-                    FFX_Xbox.skipScene()
+                    FFX_Xbox.skipScene(fast_mode=True)
                     FFX_Xbox.SkipDialog(3)
 
 def ammesBattle():

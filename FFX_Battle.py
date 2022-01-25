@@ -19,9 +19,13 @@ def tapTargeting():
 def valeforOD(sinFin = 0, version = 0):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
+    print("Overdrive: ", version) 
     if version == 1:
+        print("Start ", FFX_memory.battleCursor2())
         while FFX_memory.battleCursor2() != 1:
             FFX_Xbox.tapDown()
+            print(FFX_memory.battleCursor2())
+        print("End ", FFX_memory.battleCursor2())
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()  # Energy Blast
     if sinFin == 1:
@@ -31,8 +35,7 @@ def valeforOD(sinFin = 0, version = 0):
 
 def defend():
     print("Defend command")
-    FFX_Xbox.tapY()
-    while FFX_memory.turnReady():
+    for _ in range(5):
         FFX_Xbox.tapY()
 
 
@@ -1165,7 +1168,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                             FFX_Screen.awaitTurn()
-                            valeforOD(version = 1)
+                            valeforOD(version=1)
                             status[2] = 1
                             status[5] = 1
             else:
@@ -1181,13 +1184,7 @@ def MRRbattle(status):
                         buddySwapYuna()
                         aeonSummon(0)
                         FFX_Screen.awaitTurn()
-                        while not FFX_memory.otherBattleMenu():
-                            FFX_Xbox.tapLeft()
-                        FFX_memory.waitFrames(30 * 0.4)
-                        FFX_Xbox.tapDown()
-                        FFX_Xbox.tapB()
-                        FFX_Xbox.tapB()
-                        FFX_Xbox.tapB()
+                        valeforOD(version=1)
                         status[2] = 1
                         status[5] = 1
     elif status[5] == 1: #Next need to recharge Valefor
@@ -1218,8 +1215,6 @@ def MRRbattle(status):
                     elif FFX_Screen.turnKimahri():
                         buddySwapYuna()
                         aeonSummon(0)
-                        if FFX_memory.getEnemyCurrentHP()[1] == 0:
-                            FFX_memory.waitFrames(60)
                     elif FFX_Screen.turnAeon():
                         if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
                             aeonBoost()
@@ -3214,51 +3209,6 @@ def guards(groupNum, blitzWin=False):
     FFXC.set_value('BtnB', 0)
 
 
-def guards_old(groupNum):
-    FFX_Logs.writeLog("Fight start: Bevelle Guards")
-    rikkuHeal = False
-    turnNum = 0
-    FFX_Xbox.clickToBattle()
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
-        if FFX_memory.turnReady():
-            if FFX_Screen.turnTidus():
-                turnNum += 1
-                if turnNum == 1 and groupNum == 1:
-                    attack('left')
-                elif turnNum == 1 and groupNum == 3:
-                    attack('down')
-                elif turnNum == 1 and groupNum == 5:
-                    attack('right')
-                elif turnNum == 1 and (groupNum == 2 or groupNum == 4):
-                    tidusHaste('none')
-                elif turnNum == 2 and groupNum == 2:
-                    attack('left')
-                elif turnNum == 2 and groupNum == 4:
-                    attack('up')
-                else:
-                    attack('none')
-            elif groupNum == 5 and FFX_Screen.faintCheck() > 0:
-                revive()
-            elif FFX_Screen.turnRikku():
-                if groupNum < 5 and rikkuHeal == False:
-                    potSlot = FFX_memory.getUseItemsSlot(20)
-                    useItem(potSlot, 'none')
-                    rikkuHeal = True
-                else:
-                    defend()
-            elif FFX_Screen.turnAuron():
-                if groupNum == 5:
-                    attack('none')
-                else:
-                    defend()
-
-    while not FFX_memory.menuOpen():
-        if FFX_memory.diagSkipPossible():
-            FFX_Xbox.tapB()
-    FFXC.set_value('BtnB', 1)
-    FFX_memory.waitFrames(30 * 2.8)
-    FFXC.set_value('BtnB', 0)
-
 
 def isaaru():
     FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")
@@ -3275,11 +3225,7 @@ def isaaru():
     if confirm == 1: #Larvae battle
         aeonSummon(2)
         while FFX_memory.battleActive():
-            FFXC.set_value('BtnB', 1)
-            FFX_memory.waitFrames(30 * 0.035)
-            FFXC.set_value('BtnB', 0)
-            FFX_memory.waitFrames(30 * 0.035)
-        FFX_memory.waitFrames(30 * 0.5)
+            tapB()
     else: #Isaaru/aeon battle
         while not FFX_memory.menuOpen():
             if FFX_memory.turnReady():
@@ -3394,7 +3340,6 @@ def evraeAltana():
         # Start by hasting Rikku.
         while not FFX_memory.menuOpen(): #AKA end of battle screen
             if FFX_memory.turnReady():
-                FFX_memory.waitFrames(30 * 0.2)
                 altanaheal()
 
     else:  # Just a regular group
@@ -3475,10 +3420,7 @@ def seymourNatus():
                     elif FFX_Screen.turnAuron():
                         defend()
         if FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
-            FFXC.set_value('BtnB', 1)
-            FFX_memory.waitFrames(30 * 0.035)
-            FFXC.set_value('BtnB', 0)
-            FFX_memory.waitFrames(30 * 0.035)
+            FFX_Xbox.tapB()            
     return 0
 
 def calmLands(itemSteal):
@@ -3488,14 +3430,12 @@ def calmLands(itemSteal):
         if FFX_memory.getBattleNum() == 273:  # Red element in center slot, with machina and dog
             print("Grabbing a gem here. This is gem number ", itemSteal + 1)
             tidusHaste('left')
-            FFX_memory.waitFrames(30 * 3)
             FFX_Screen.awaitTurn()
             StealLeft()
             steal += 1
         elif FFX_memory.getBattleNum() == 275:  # Red element in top slot, with bee and tank
             print("Grabbing a gem here. This is gem number ", itemSteal + 1)
             tidusHaste('up')
-            FFX_memory.waitFrames(30 * 3)
             FFX_Screen.awaitTurn()
             StealDown()
             steal += 1
@@ -3535,10 +3475,7 @@ def biranYenke():
     useItem(gemSlot, 'none')
 
     while not FFX_memory.userControl():
-        FFXC.set_value('BtnB', 1)
-        FFX_memory.waitFrames(30 * 0.035)
-        FFXC.set_value('BtnB', 0)
-        FFX_memory.waitFrames(30 * 0.035)
+        tapB()
     
     retSlot = FFX_memory.getItemSlot(96) #Return sphere
     friendSlot = FFX_memory.getItemSlot(97) #Friend sphere
@@ -3604,7 +3541,6 @@ def sKeeper():
         print("Start of Sanctuary Keeper fight")
         FFX_Xbox.clickToBattle()
         FFX_Xbox.weapSwap(0)
-
         FFX_Screen.awaitTurn()
         FFX_Xbox.tapDown()
         FFX_Xbox.tapB()
@@ -3628,7 +3564,6 @@ def sKeeper():
 def gagazetCave(direction):
     FFX_Screen.awaitTurn()
     attack(direction)
-    
     fleeAll()
 
 def _navigate_to_position(position, battleCursor = FFX_memory.battleCursor2):
@@ -3892,37 +3827,27 @@ def attack(direction):
             FFX_Xbox.tapUp()
             if FFX_Screen.BattleComplete():
                 return
-    if direction == 'none':
-        print("Diag skipping to success.")
-        FFX_Xbox.SkipDialog(0.7)
-    else:
-        print("Directional pattern.")
-        while FFX_memory.mainBattleMenu():
-            FFX_Xbox.tapB()
-            if FFX_Screen.BattleComplete():
-                return
-        if direction == "left":
-            FFX_Xbox.tapLeft()
-        if direction == "right":
-            FFX_Xbox.tapRight()
-        if direction == "r2":
-            FFX_Xbox.tapRight()
-            FFX_Xbox.tapRight()
-        if direction == "r3":
-            FFX_Xbox.tapRight()
-            FFX_Xbox.tapRight()
-            FFX_Xbox.tapRight()
-        if direction == "up":
-            FFX_Xbox.tapUp()
-        if direction == "down":
-            FFX_Xbox.tapDown()
-        tapTargeting()
-
-def attack2():
-    FFX_Logs.writeLog("Special Attack")
-    print("Special Attack")
-    while not FFX_memory.menuOpen():
+    while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
+        if FFX_Screen.BattleComplete():
+            return
+    if direction == "left":
+        FFX_Xbox.tapLeft()
+    if direction == "right":
+        FFX_Xbox.tapRight()
+    if direction == "r2":
+        FFX_Xbox.tapRight()
+        FFX_Xbox.tapRight()
+    if direction == "r3":
+        FFX_Xbox.tapRight()
+        FFX_Xbox.tapRight()
+        FFX_Xbox.tapRight()
+    if direction == "up":
+        FFX_Xbox.tapUp()
+    if direction == "down":
+        FFX_Xbox.tapDown()
+    tapTargeting()
+
 
 def _steal(direction=None):
     if not FFX_memory.mainBattleMenu():
@@ -4019,28 +3944,6 @@ def stealAndAttackPreTros():
     FFX_memory.clickToControl()
 
 
-def valeforFire():
-    print("Valefor Fire function")
-    BattleComplete = 0
-    while BattleComplete == 0:
-        if FFX_memory.turnReady():
-            print("Valefor casting fire")
-            FFX_Xbox.tapDown()
-            FFX_Xbox.tapDown()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()  # Make sure we press the button
-        if FFX_Screen.BattleComplete():
-            FFXC.set_value('BtnB', 1)
-            FFX_memory.waitFrames(30 * 2.5)
-            FFXC.set_value('BtnB', 0)
-            BattleComplete = 1
-
-
 def castSpell(direction, spellID):
     if FFX_Screen.turnLulu() == False:
         print("Lulu is not the current person. Deferring turn.")
@@ -4054,10 +3957,8 @@ def castSpell(direction, spellID):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()  # Black magic
     _navigate_to_position(spellID)
-    print(FFX_memory.otherBattleMenu())
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()  # Cast the Spell
-    print(FFX_memory.otherBattleMenu())
     direction = direction.lower()
     if direction == "right":
         FFX_Xbox.tapRight()
@@ -4237,7 +4138,7 @@ def healUp_New(chars, menusize):
     healUp(chars)
 
 
-def healUp(chars):
+def healUp(chars=0):
     FFX_Logs.writeLog("Healing characters post-battle")
     FFXC.set_neutral()
     print("Menuing, healing characters: ", chars)

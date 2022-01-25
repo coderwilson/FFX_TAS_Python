@@ -14,9 +14,9 @@ def getCutsceneID():
     global baseValue
     key = baseValue + 0xD27C88
     cutscene_alt = process.readBytes(key, 4)
-    key = baseValue + 0xD2D67C
-    storyline_prog = process.readBytes(key, 4)
-    return (cutscene_alt, storyline_prog)
+    storyline_prog = getStoryProgress()
+    dialogue = diagProgressFlag()
+    return (cutscene_alt, storyline_prog, dialogue)
 
 def waitFrames(frames: int):
     frames = max(round(frames), 1)
@@ -2487,7 +2487,7 @@ def getSaveSphereDetails():
         #Luca after Oblitzerator
         x = -270
         y = -45
-        diag = 46
+        diag = 90
     if mapVal == 171:
         #Mi'ihen agency
         x = 35

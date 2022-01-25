@@ -1,9 +1,9 @@
 
 class allVars:
     def __init__(self):
-        self.csrValue = True
-        self.blitzWinValue = False
-        self.artificialPauses = True
+        self.csrValue = False
+        self.blitzWinValue = True
+        self.artificialPauses = False
     
     def csr(self):
         return self.csrValue
