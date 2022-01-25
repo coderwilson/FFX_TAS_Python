@@ -44,15 +44,6 @@ def NamingTidus():
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate: ", Gamestate)
-    #FFX_memory.waitFrames(30 * 20)
-    
-    #Old version
-    #FFXC.set_movement(0, 1)
-    #FFX_memory.waitFrames(30 * 0.1)
-    #FFXC.set_neutral()
-    #FFXC.set_value('BtnB', 1)
-    #FFX_memory.waitFrames(30 * 0.1)
-    #FFXC.set_value('BtnB', 0)
     
     #New version
     while FFX_memory.getMap() != 0:
@@ -93,14 +84,14 @@ def NewGame2():
     FFX_Xbox.menuB()
 
 def listenStory(gameLength):
-    FFX_memory.waitFrames(120)
+    FFX_memory.waitFrames(10)
     print("Skipping intro scene, we'll watch this properly in about 8 hours.")
     FFX_vars.initVars()
+    csModVar = FFX_vars.varsHandle()
     x = 0
     while not FFX_memory.userControl():
         if FFX_memory.getMap() == 132:
             if FFX_memory.diagProgressFlag() == 1:
-                csModVar = FFX_vars.varsHandle()
                 #print("Cutscene Remover: ", csModVar.csr())
                 csModVar.SETcsr(False)
                 #print("Cutscene Remover: ", csModVar.csr())
@@ -125,15 +116,16 @@ def listenStory(gameLength):
                 
                 checkpoint += 1
             elif checkpoint == 4:
-                while FFX_memory.userControl():
-                    FFXC.set_movement(0, -1)
-                    FFX_Xbox.tapB()
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(6)
-                while not FFX_memory.userControl():
-                    if FFX_memory.diagSkipPossible():
+                if not csModVar.csr():
+                    while FFX_memory.userControl():
+                        FFXC.set_movement(1, -1)
                         FFX_Xbox.tapB()
-                print("Done clicking")
+                    FFXC.set_neutral()
+                    FFX_memory.waitFrames(6)
+                    while not FFX_memory.userControl():
+                        if FFX_memory.diagSkipPossible():
+                            FFX_Xbox.tapB()
+                    print("Done clicking")
                 checkpoint += 1
             elif checkpoint < 6 and FFX_memory.getStoryProgress() >= 5:
                 checkpoint = 6
@@ -156,22 +148,18 @@ def listenStory(gameLength):
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
-                skips += 1
-                print("-------------------------")
-                print("-------------------------")
-                print("Skip number: ", skips) #Something not working here.
-                print("-------------------------")
-                print("-------------------------")
-                if skips == 3:
+                if FFX_memory.getStoryProgress() == 10 and FFX_memory.diagProgressFlag() == 2:
                     print("Special Skip")
                     FFX_memory.waitFrames(130)
                     FFXC.set_value('BtnStart', 1) #Generate button to skip later
                     FFX_memory.waitFrames(1)
                     FFXC.set_value('BtnStart', 0)
-                    FFX_memory.waitFrames(120)
+                    FFX_Xbox.SkipDialog(10)
                 else:
+                    if csModVar.usePause():
+                        FFX_memory.waitFrames(1)
                     FFX_Xbox.skipScene()
-                    FFX_Xbox.SkipDialog(2) #Maybe this fixes it?
+                    FFX_Xbox.SkipDialog(3)
 
 def ammesBattle():
     print("Starting ammes")
@@ -242,14 +230,7 @@ def AfterAmmes():
         if FFX_memory.userControl():
             #Map changes and events
             if checkpoint == 6: #Save sphere
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuB()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint < 9 and FFX_memory.getStoryProgress() >= 20: #Swim to Jecht
                 checkpoint = 9

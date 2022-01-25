@@ -152,7 +152,7 @@ def Flux():
                 FFX_memory.waitFrames(30 * 0.5)
                 FFXC.set_neutral()
                 
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 8:
                 while FFX_memory.userControl():

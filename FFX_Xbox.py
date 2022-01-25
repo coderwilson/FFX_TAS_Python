@@ -379,7 +379,7 @@ def weapSwap(position):
         tapDown()
     while FFX_memory.interiorBattleMenu():
         tapB()
-
+        
 def clearSavePopup(clickToDiagNum=0):
     FFXC = controllerHandle()
     FFXC.set_neutral()

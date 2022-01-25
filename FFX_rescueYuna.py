@@ -13,51 +13,35 @@ FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def preEvrae():
+    FFXC.set_neutral()
     FFX_memory.clickToControl()
     print("Starting first Airship section")
-    
-    FFXC.set_movement(0, -1)
-    print("Exit cockpit")
-    FFX_memory.awaitEvent()
-    
-    FFXC.set_movement(-1, 1)
-    FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    print("Back in cockpit. Auron/Cid arguing")
-    
-    FFX_memory.clickToControl()
-    print("Let's go talk to Brother")
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(0, 1)
-    FFX_Xbox.SkipDialog(1)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl()
-    
-    print("Heading to the deck via Guado attack conversation")
-    #FFX_menu.weddingPrep()
-    FFX_memory.fullPartyFormat('evrae')
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.1)
-    FFXC.set_neutral()
-    FFX_Xbox.touchSaveSphere()
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    
+    checkpoint = 0
+    while checkpoint < 19:
+        if FFX_memory.userControl():
+            if checkpoint < 4 and FFX_memory.getMap() == 265:
+                FFX_memory.awaitControl()
+                FFX_memory.clickToEventTemple(7)
+                checkpoint = 4
+            elif checkpoint == 9:
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 13:
+                FFX_memory.touchSaveSphere()
+                checkpoint += 1
+            elif checkpoint == 18:
+                FFX_memory.clickToEventTemple(4)
+                checkpoint += 1
+            
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.rescueAirship(checkpoint)) == True:
+                    checkpoint += 1
+                    print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+
     FFX_zzairShipPath.airShipPath(1)
-    # 6 - Path to deck, no item purchasing
 
 def guards(blitzWin):
     #FFX_memory.fullPartyFormat('rikku')
@@ -66,6 +50,8 @@ def guards(blitzWin):
     FFX_memory.awaitControl()
     if not blitzWin:
         FFX_menu.equipSonicSteel()
+    FFX_menu.beforeGuards()
+    #Need to add here, use Mega Potion
     
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)

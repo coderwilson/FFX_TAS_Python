@@ -54,11 +54,11 @@ def tidusHome(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = 117
-        y = 3
+        x = 150
+        y = -4
     if checkpoint == 1:
-        x = 28
-        y = 8
+        x = 58
+        y = 0
     if checkpoint == 2:
         print("Talk to the kids")
     if checkpoint == 3:
@@ -852,8 +852,8 @@ def Kilika1(checkpoint):
     if checkpoint == 6:
         print("Yuna dancing, ends in the inn")
     if checkpoint == 7:
-        x = 32
-        y = 0
+        x = 41
+        y = 2
     if checkpoint == 8:
         print("Exit the inn")
     if checkpoint == 9:
@@ -4057,6 +4057,164 @@ def Home(checkpoint):
     if checkpoint == 87:
         x = 1
         y = 157
+    return [x,y]
+
+def rescueAirship(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -232
+        y = 332
+    if checkpoint == 1:
+        x = -242
+        y = 308
+    if checkpoint == 2:
+        x = -241
+        y = 215
+    if checkpoint == 3:
+        x = -240
+        y = 80
+    if checkpoint == 4: #After leaving and re-entering the cockpit
+        x = -240
+        y = 324
+    if checkpoint == 5:
+        x = -226
+        y = 352
+    if checkpoint == 6:
+        x = -223
+        y = 366
+    if checkpoint == 7:
+        x = -243
+        y = 384
+    if checkpoint == 8:
+        x = -242
+        y = 407
+    if checkpoint == 9: #Talk to Brother
+        x = 0
+        y = 0
+    if checkpoint == 10:
+        x = -244
+        y = 383
+    if checkpoint == 11:
+        x = -257
+        y = 375
+    if checkpoint == 12:
+        x = -269
+        y = 353
+    if checkpoint == 13: #Touch save sphere
+        x = 0
+        y = 0
+    if checkpoint == 14:
+        x = -260
+        y = 343
+    if checkpoint == 15:
+        x = -257
+        y = 325
+    if checkpoint == 16:
+        x = -244
+        y = 314
+    if checkpoint == 17:
+        x = -244
+        y = 314
+    if checkpoint == 18:
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
+    if checkpoint == 25:
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
     return [x,y]
 
 

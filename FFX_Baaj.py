@@ -5,8 +5,11 @@ import FFX_Screen
 import FFX_Battle
 import FFX_memory
 import FFX_targetPathing
+import FFX_menu
+import FFX_vars
 
 FFXC = FFX_Xbox.controllerHandle()
+gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
  
  
@@ -14,22 +17,8 @@ def Entrance():
     FFX_memory.awaitControl()
     print("Starting Baaj exterior area")
     FFXC.set_neutral()
-    
-    #First, we need to change aeon summons
-    FFX_memory.openMenu()
-    FFX_memory.waitFrames(30 * 0.6)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_memory.closeMenu()
+    if not gameVars.csr():
+        FFX_menu.shortAeons()
     
     #Now back into the water
     checkpoint = 0
@@ -104,7 +93,7 @@ def Baaj_puzzle():
             #Events
             if checkpoint == 3:
                 FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 5: #Flint room
                 FFX_memory.clickToEventTemple(0)
@@ -153,19 +142,29 @@ def Klikk_fight() :
     FFX_Battle.Klikk()
     
 def ABboat1() :
+    print("Start of Al Bhed boat section.")
+    FFXC.set_neutral()
+    FFX_memory.awaitControl()
+    if FFX_memory.menuOpen():
+        FFX_memory.closeMenu()
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.SkipDialog(4) #Start Sphere Grid tutorial
-    FFXC.set_neutral()
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, -1)
-    FFX_Xbox.SkipDialog(1) #Talk to Rikku a second time.
+    if FFX_memory.menuOpen():
+        FFX_memory.closeMenu()
+    
+    if not gameVars.csr():
+        FFX_Xbox.SkipDialog(4) #Start Sphere Grid tutorial
+        FFXC.set_neutral()
+        FFX_memory.clickToControl()
+        FFXC.set_movement(0, -1)
+    FFX_memory.waitFrames(2)
+    FFX_memory.clickToEvent() #Talk to Rikku a second time.
     
     FFXC.set_movement(0, -1)
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()
     
-    FFX_memory.waitFrames(30 * 2)
+    FFX_memory.waitFrames(60)
 
 def ABswimming1() :
     complete = 0
@@ -215,15 +214,11 @@ def ABswimming2() :
     FFX_memory.awaitControl()
     FFXC.set_movement(1, -1)
     FFXC.set_value('BtnA', 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_neutral()
-    FFXC.set_value('BtnA', 0)
-    FFX_memory.waitFrames(30 * 0.035)
-    FFX_Xbox.touchSaveSphere()
+    FFX_memory.touchSaveSphere()
 
     #Now to get to it
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
+    FFX_memory.waitFrames(30 * 1)
     FFX_memory.clickToEvent()
     FFX_memory.waitFrames(30 * 0.2)
     FFX_memory.awaitControl()
@@ -258,7 +253,9 @@ def ABswimming2() :
     
     while FFX_memory.getStoryProgress() < 111:
         if FFX_memory.userControl():
-            if FFX_memory.getMap() == 64:
+            if FFX_memory.menuOpen():
+                FFX_Xbox.tapA()
+            elif FFX_memory.getMap() == 64:
                 if FFX_memory.getCoords()[0] < -4:
                     FFX_targetPathing.setMovement([-2,47])
                 else:
@@ -270,37 +267,11 @@ def ABswimming2() :
                 FFX_Xbox.tapB()
         else:
             FFXC.set_neutral()
-            if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+            if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
+            elif FFX_memory.menuOpen():
+                FFX_Xbox.tapA()
     
     
-    FFX_Xbox.clearSavePopup(0)
-
-def oldMovement():
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 5)
-    FFXC.set_neutral()
-    FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 30)
-    FFXC.set_neutral()
-    
-    #Back onto the ship
-    FFX_memory.clickToControl()
-    while not FFX_targetPathing.setMovement([-17,-24]):
-        moving = True
-    FFXC.set_movement(0, 1)
-    FFX_Xbox.SkipDialog(1)
-    FFXC.set_neutral()
-    
-    #Save dialog
-    FFX_Xbox.clearSavePopup(0)
-    
+    if not gameVars.csr():
+        FFX_Xbox.clearSavePopup(0)

@@ -135,6 +135,22 @@ def autoSortItems(manual):
     else:
         FFX_memory.closeMenu()
 
+def shortAeons():
+    FFX_memory.openMenu()
+    FFX_memory.waitFrames(30 * 0.6)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(30 * 0.3)
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuUp()
+    FFX_Xbox.menuRight()
+    FFX_memory.closeMenu()
+
 def Liki():
     print("Menu - SS Liki")
     openGrid(character=0)
@@ -860,63 +876,30 @@ def homeGrid():
     FFX_memory.closeMenu()
     #itemPos(20,9)
 
-def homeHeal(): #Hi-Potions on front three.
+def beforeGuards():
     FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
+    while not FFX_memory.menuNumber() == 26:
+        while FFX_memory.getMenuCursorPos() != 1:
+            if FFX_memory.getMenuCursorPos() < 1:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+            FFX_memory.waitFrames(1)
+        FFX_Xbox.tapB()
+    
+    megaPotSlot = FFX_memory.getItemSlot(3) - 1
+    itemCursor = 0
+    FFX_memory.waitFrames(15)
+    if megaPotSlot % 2 == 1:
+        FFX_Xbox.tapRight()
+        itemCursor += 1
+    while megaPotSlot != itemCursor:
+        itemCursor += 2
+        FFX_Xbox.tapDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
+    FFX_memory.waitFrames(20)
     FFX_Xbox.menuB()
     FFX_memory.closeMenu()
-
-def weddingPrep():
-    #itemPos(56, 7) #Make sure Lunar Curtain is in slot 7
-    #itemPos(8, 8) #Elixir in slot 8
-    #FFX_memory.openMenu()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Tidus to 1, Kimahri to 4
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Kimahri to 3, Auron to 4
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Rikku to 2, Wakka to 5
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Wakka to 5, Lulu to 6 (maybe remove this if the formation is wrong later)
-    
-    #FFX_memory.closeMenu()
-    
-    #Doesn't matter about Rikku's overdrive, that will auto sort.
-    print("Wedding prep function is no longer used.")
-
-def beforeGuards(): #Incomplete
-    FFX_memory.clickToControl()
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Items
-    FFX_memory.waitFrames(30 * 0.8)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuB()
 
 def equipSonicSteel():
     print("Equipping Sonic Steel")

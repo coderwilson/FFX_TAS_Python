@@ -5,16 +5,23 @@ import FFX_Battle
 import FFX_memory
 import FFX_Logs
 import FFX_targetPathing
+import FFX_vars
+import FFX_menu
 
 FFXC = FFX_Xbox.controllerHandle()
+gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def Beach():
     print("Starting Besaid section. Beach")
-    FFXC.set_movement(0, -1)
-    FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 4.5)
-    FFXC.set_neutral()
+    if gameVars.csr():
+        FFXC.set_neutral()
+        FFX_memory.awaitControl()
+    else:
+        FFXC.set_movement(0, -1)
+        FFX_memory.awaitControl()
+        FFX_memory.waitFrames(30 * 4.5)
+        FFXC.set_neutral()
     
     #Pathing, lots of pathing.
     besaidBattles = 0
@@ -25,6 +32,9 @@ def Beach():
             #print("Checkpoint (testing): ", checkpoint)
             #Events
             if checkpoint == 33: #Into the temple for the first time
+                if gameVars.csr():
+                    FFXC.set_neutral()
+                    FFX_menu.shortAeons()
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 42: #Wakka tent
@@ -127,6 +137,8 @@ def trials():
             elif checkpoint == 36: #Sleep tight
                 FFX_memory.clickToEventTemple(3)
                 checkpoint += 1
+            elif checkpoint > 15 and checkpoint < 37 and FFX_memory.getMap() == 252:
+                checkpoint = 37
             elif checkpoint == 39: #Dream about girls
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
@@ -231,7 +243,7 @@ def leaving():
             elif checkpoint == 60: #Beach, save sphere
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
                 checkpoint -= 2

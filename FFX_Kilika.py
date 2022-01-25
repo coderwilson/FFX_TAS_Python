@@ -91,7 +91,7 @@ def forest1():
                 FFX_memory.waitFrames(2)
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(4)
-                FFX_Xbox.touchSaveSphere()
+                FFX_memory.touchSaveSphere()
                 FFX_menu.Geneaux()
                 checkpoint += 1
             elif checkpoint == 63: #Lord O'holland
