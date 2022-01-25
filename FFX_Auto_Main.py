@@ -49,16 +49,16 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 1
+Gamestate = "MRR"
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
@@ -215,7 +215,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(21)
         FFX_LoadGame.LoadMiihenStart()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(29)
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.loadOffset(19)

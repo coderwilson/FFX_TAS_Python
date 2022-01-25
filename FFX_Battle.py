@@ -17,11 +17,11 @@ def tapTargeting():
 def valeforOD(sinFin = 0, version = 0):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
-    FFX_memory.waitFrames(30)
     if version == 1:
-        FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()  # Energy Blast
-    FFX_memory.waitFrames(5)
+        while FFX_memory.battleCursor2() != 1:
+            FFX_Xbox.tapDown()
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()  # Energy Blast
     if sinFin == 1:
         FFX_Xbox.tapDown()
         FFX_Xbox.tapLeft()
@@ -923,7 +923,6 @@ def Oblitzerator(earlyHaste):
             if crane < 3:
                 if FFX_Screen.turnLulu():
                     crane += 1
-                    FFX_memory.waitFrames(30 * 0.5)
                     if crane == 1:
                         thunder('right')
                     else:
@@ -933,20 +932,19 @@ def Oblitzerator(earlyHaste):
             elif crane == 3:
                 if FFX_Screen.turnTidus():
                     crane += 1
-                    FFX_memory.waitFrames(30 * 0.2)
-                    FFX_Xbox.tapLeft()
-                    FFX_memory.waitFrames(30 * 0.8)
-                    FFX_Xbox.tapDown()
-                    FFX_Xbox.tapB()
-                    FFX_Xbox.tapB()
-                    FFX_Xbox.tapB()
+                    while FFX_memory.mainBattleMenu():
+                        FFX_Xbox.tapLeft()
+                    while FFX_memory.battleCursor2() != 1:
+                        FFX_Xbox.tapDown()
+                    while FFX_memory.otherBattleMenu():
+                        FFX_Xbox.tapB()
+                    tapTargeting()
                 elif FFX_Screen.turnLulu():
                     thunder('none')
                 else:
                     defend()
             else:
                 if FFX_Screen.turnLulu():
-                    FFX_memory.waitFrames(30 * 1)
                     thunder('none')
                 elif FFX_Screen.turnTidus():
                     attack('none')
@@ -1123,9 +1121,9 @@ def aeonBoost():
         FFX_Xbox.tapRight()
     while FFX_memory.battleCursor2() != 1:
         if FFX_memory.battleCursor2() < 1:
-            FFX_memory.tapDown()
+            FFX_Xbox.tapDown()
         else:
-            FFX_memory.tapUp()
+            FFX_Xbox.tapUp()
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     tapTargeting()
@@ -3051,7 +3049,7 @@ def Evrae(blitzWin):
                         tidusPrep += 1
                         cheer()
                     elif tidusPrep == 2 and rikkuTurns == 0:
-                        FFX_Xbox.armorSwap(0)
+                        equipInBattle(equipType = 'armor', abilityNum = 0x8028)
                     elif tidusPrep == 2 and tidusAttacks == 2:
                         tidusPrep += 1
                         cheer()
@@ -3750,7 +3748,7 @@ def seymourSpell():
         FFX_Xbox.tapB()  # Black magic
     print(FFX_memory.battleCursor2())
     _navigate_to_position(5)
-    while FFX_Xbox.otherBattleMenu():
+    while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     
     if FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
@@ -4142,7 +4140,7 @@ def aeonSummon(position):
         if FFX_Screen.turnYuna() == False:
             return
         if FFX_memory.battleMenuCursor() == 255:
-            FFX_memory.waitFrames(30 * 0.01)
+            pass
         elif FFX_memory.battleMenuCursor() >= 1 and FFX_memory.battleMenuCursor() < 23:
             FFX_Xbox.tapUp()
         else:
@@ -4159,9 +4157,9 @@ def aeonSummon(position):
         FFX_Xbox.tapB()
     aeonWaitTimer = 0
     while not FFX_memory.turnReady():
-        if aeonWaitTimer % 100 == 0:
-            print("Waiting for Aeon's turn. ", aeonWaitTimer % 100)
-        FFX_memory.waitFrames(1)
+        if aeonWaitTimer % 1000 == 0:
+            print("Waiting for Aeon's turn. ", aeonWaitTimer % 1000)
+        pass
         aeonWaitTimer += 1
 
 
@@ -4177,11 +4175,7 @@ def aeonSpellDirection(position, direction):
     FFX_Logs.writeLog("Aeon casting a spell. Special direction: " + str(direction))
     print("Aeon casting a spell. Special direction: ", direction)
     while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
             FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()  # Black magic
     print("In Black Magic")
