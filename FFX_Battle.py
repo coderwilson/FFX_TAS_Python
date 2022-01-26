@@ -1453,7 +1453,6 @@ def battleGui():
             if FFX_Screen.turnYuna():
                 buddySwapAuron()  # Auron in
                 useSkill(0)  # Performs power break
-            FFX_memory.waitFrames(30 * 0.5)  # Avoids doubling up on any pattern
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
     if turns == 3:
@@ -1462,14 +1461,12 @@ def battleGui():
         buddySwapKimahri()  # Switch Wakka for Kimahri
         kimahriOD(2)
         phase = 2
-        FFX_memory.waitFrames(30 * 1)
     if turns == 4:
         FFX_Xbox.clickToBattle()
         buddySwapYuna()  # Tidus swap out for Yuna
         aeonSummon(0)  # summon Valefor
         FFX_Screen.awaitTurn()
         valeforOD()
-        FFX_memory.waitFrames(30)
         turns += 1
         lastHP = FFX_memory.getBattleHP()[0]
     
