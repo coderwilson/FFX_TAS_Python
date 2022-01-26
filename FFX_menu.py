@@ -1607,30 +1607,30 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
     while not FFX_memory.sGridActive():
-        #print("Attempting to open Sphere Grid")
+        print("Attempting to open Sphere Grid")
         if FFX_memory.userControl() and not FFX_memory.menuOpen():
-            #print("Menu is not open at all")
+            print("Menu is not open at all")
             FFX_Xbox.tapY()
         elif FFX_memory.menuNumber() == 5: #Cursor on main menu
-            #print("Main menu cursor")
+            print("Main menu cursor")
             if FFX_memory.getMenuCursorPos() != 0:
                 while FFX_memory.getMenuCursorPos() != 0:
-                    FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(1)
+                    FFX_Xbox.tapUp()
+            print("Done with menu cursor")
+            while FFX_memory.menuNumber() == 5:
+                FFX_Xbox.tapB()
         elif FFX_memory.menuNumber() == 7: #Cursor selecting party member
-            #print("Selecting party member")
+            print("Selecting party member")
             if FFX_memory.getMenu2CharNum() != character:
                 while FFX_memory.getMenu2CharNum() != character:
-                    FFX_Xbox.menuDown()
-                    FFX_memory.waitFrames(2)
-            FFX_Xbox.menuB()
+                    FFX_Xbox.tapDown()
+            while FFX_memory.menuNumber() == 7:
+                FFX_Xbox.menuB()
             try:
                 FFXC.set_neutral()
             except:
                 FFXC = FFX_Xbox.controllerHandle()
                 FFXC.set_neutral()
-            FFX_memory.waitFrames(3)
     try:
         FFXC.set_neutral()
     except:
