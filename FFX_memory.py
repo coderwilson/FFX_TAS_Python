@@ -1496,8 +1496,10 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
         while not menuOpen():
             openMenu()
         while getMenuCursorPos() != 7:
-            print(getMenuCursorPos())
-            FFX_Xbox.tapUp()
+            if getMenuCursorPos() > 1 and getMenuCursorPos() < 7:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
         while menuNumber() != 14:
             FFX_Xbox.tapB()
         startPos = 0
