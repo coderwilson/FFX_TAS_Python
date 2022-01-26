@@ -7,12 +7,15 @@ import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
 import FFX_Xbox
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def arrival():
-    FFX_Xbox.skipStoredScene(2)
+    if not gameVars.csr():
+        FFX_Xbox.skipStoredScene(2)
     print("Starting Luca section")
     FFX_memory.clickToControl()
     
@@ -26,16 +29,18 @@ def arrival():
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_memory.clickToDiagProgress(18) #Seymour scene
-                FFX_Xbox.awaitSave(index=2)
-                
-                FFX_memory.clickToDiagProgress(82) #Let's go over the basics
-                #FFX_memory.clickToDiagProgress(39)
-                FFX_Xbox.SkipDialog(1.5)
+                if not gameVars.csr():
+                    FFX_memory.clickToDiagProgress(18) #Seymour scene
+                    FFX_Xbox.awaitSave(index=2)
+                    
+                    FFX_memory.clickToDiagProgress(82) #Let's go over the basics
+                    #FFX_memory.clickToDiagProgress(39)
+                    FFX_Xbox.SkipDialog(1.5)
                 while FFX_memory.blitzCursor() != 12:
                     FFX_Xbox.tapA()
                 FFX_Xbox.menuB()
-                FFX_Xbox.SkipDialogSpecial(45) #Skip the Wakka Face scene
+                if not gameVars.csr():
+                    FFX_Xbox.SkipDialogSpecial(45) #Skip the Wakka Face scene
                 FFX_memory.clickToControl()
                 checkpoint += 1
             elif checkpoint == 8: #Upside down T section
@@ -180,10 +185,11 @@ def afterBlitz(earlyHaste):
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
             elif checkpoint == 20: #Target Auron
-                while FFX_memory.affectionArray()[2] == 0: #First Auron affection, always zero
-                    auronCoords = FFX_memory.getActorCoords(3)
-                    FFX_targetPathing.setMovement(auronCoords)
-                    FFX_Xbox.tapB()
+                if not gameVars.csr():
+                    while FFX_memory.affectionArray()[2] == 0: #First Auron affection, always zero
+                        auronCoords = FFX_memory.getActorCoords(3)
+                        FFX_targetPathing.setMovement(auronCoords)
+                        FFX_Xbox.tapB()
                 checkpoint += 1 #After affection changes
             elif checkpoint == 35: #Bring the party together
                 print("Bring the party together")

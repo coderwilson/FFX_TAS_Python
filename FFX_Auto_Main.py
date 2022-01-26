@@ -8,6 +8,8 @@ import FFX_memory
 
 #Plug in controller
 import FFX_Xbox
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 
 #Speed run sectional files
@@ -51,8 +53,8 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "MRR"
 #StepCounter = 1
-#Gamestate = "Djose"
-#StepCounter = 1
+Gamestate = "Djose"
+StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
 #Gamestate = "Guadosalam"
@@ -213,9 +215,13 @@ if Gamestate != "none" :
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
         FFX_LoadGame.loadOffset(33)
+        import FFX_menu
+        FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadOffset(19)
+        import FFX_menu
+        FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
         FFX_LoadGame.loadOffset(19)
@@ -523,7 +529,8 @@ while Gamestate != "End":
     if Gamestate == "Luca" and StepCounter == 4:
         reportGamestate()
         blitzWin = FFX_Blitz.blitzMain(forceBlitzWin)
-        FFX_Xbox.awaitSave()
+        if not gameVars.csr():
+            FFX_Xbox.awaitSave()
         StepCounter = 5
         
 
@@ -538,7 +545,7 @@ while Gamestate != "End":
     try:
         print(wakkaLateMenu)
     except:
-        wakkaLateMenu = False
+        wakkaLateMenu = True
     
     if Gamestate == "Miihen" and StepCounter == 1:
         reportGamestate()

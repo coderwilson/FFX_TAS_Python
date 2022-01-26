@@ -2339,6 +2339,17 @@ def weaponArrayCharacter(charNum):
                 charWeaps.append(currentHandle)
     return charWeaps
 
+def hunterSpear():
+    kimWeapHandles = weaponArrayCharacter(3)
+    if len(kimWeapHandles) == 1:
+        return False
+    else:
+        while len(kimWeapHandles) > 0:
+            currentHandle = kimWeapHandles.pop(0)
+            if currentHandle.abilities() == [0x800b,0x8000, 0x8064, 0x00ff]:
+                return True
+    return False
+
 def armorArrayCharacter(charNum):
     equipHandles = allEquipment()
     firstEquipment = True
@@ -2483,7 +2494,7 @@ def getSaveSphereDetails():
         diag = 39
     if mapVal == 119:
         #Battle Site
-        x = -80
+        x = -55
         y = 3335
         diag = 115
     if mapVal == 110:

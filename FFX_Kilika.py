@@ -7,8 +7,10 @@ import FFX_menuGrid
 import FFX_memory
 import FFX_Logs
 import FFX_targetPathing
+import FFX_vars
 
 FFXC = FFX_Xbox.controllerHandle()
+gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def arrival():
@@ -94,8 +96,11 @@ def forest1():
                 FFX_memory.touchSaveSphere()
                 FFX_menu.Geneaux()
                 checkpoint += 1
-            elif checkpoint == 63: #Lord O'holland
+            elif checkpoint == 63 and not gameVars.csr(): #Lord O'holland
                 FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 63 and gameVars.csr():
+                #FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 67: #Into the trials
                 FFXC.set_movement(0, 1)
@@ -227,7 +232,15 @@ def trials():
                 FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 54: #Talk to Wakka
+            elif checkpoint == 53 and gameVars.csr():
+                FFX_memory.awaitControl()
+                FFXC.set_movement(0, 1)
+                FFX_memory.waitFrames(2)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                FFX_Xbox.nameAeon() #Set Ifrit name
+                checkpoint = 55
+            elif checkpoint == 54 and not gameVars.csr(): #Talk to Wakka
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
             elif checkpoint == 56: #Leave inner sanctum
@@ -259,14 +272,15 @@ def forest3():
     kilikaBattles = 0
     optimalBattles = 0
     checkpoint = 0
-    while checkpoint < 40: #All the way into the trials
+    while checkpoint < 40: #All the way to the boats
         if FFX_memory.userControl():
             #Events
             if checkpoint == 39:
                 FFXC.set_movement(0, -1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_Xbox.SkipDialog(20)
+                FFX_Xbox.SkipDialog(0.3)
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             
             #General pathing

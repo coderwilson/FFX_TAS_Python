@@ -5,6 +5,8 @@ import FFX_Battle
 import FFX_menu
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -62,6 +64,7 @@ def southBank():
     #Arrive at the south bank of the moonflow.
     print("South bank, Save sphere screen")
     
+    checkpoint = 0
     FFX_memory.clickToControl3() # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
     FFX_memory.waitFrames(30 * 1)
@@ -75,8 +78,7 @@ def southBank():
         FFX_Battle.healUp(1)
     FFX_memory.closeMenu()
     
-    checkpoint = 0
-    while FFX_memory.getMap() != 291:
+    while not FFX_memory.battleActive():
         if FFX_memory.userControl():
             if checkpoint == 4:
                 FFXC.set_neutral()
@@ -91,6 +93,8 @@ def southBank():
             elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankSouth(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
     
     
     FFX_Battle.extractor()
@@ -102,10 +106,14 @@ def northBank():
     FFX_memory.waitFrames(30 * 1)
     FFX_memory.awaitControl()
     FFX_memory.waitFrames(30 * 1.5)
-    FFX_memory.clickToEvent() #Talk to Auron
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_memory.clickToControl3()
+    if gameVars.csr():
+        FFXC.set_movement(-1, 1)
+        FFX_memory.waitFrames(4)
+    else:
+        FFX_memory.clickToEvent() #Talk to Auron
+        FFXC.set_neutral()
+        FFX_memory.waitFrames(30 * 0.3)
+        FFX_memory.clickToControl3()
     FFXC.set_movement(-1, 0)
     FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.awaitEvent()

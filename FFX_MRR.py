@@ -6,6 +6,8 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -21,7 +23,9 @@ def arrival():
     checkpoint = 0
     while FFX_memory.getMap() != 92:
         if FFX_memory.userControl():
-            if checkpoint == 3:
+            if gameVars.csr() and checkpoint == 2:
+                checkpoint = 4
+            elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 FFX_memory.waitFrames(30 * 0.7)
                 FFXC.set_neutral()
@@ -66,7 +70,7 @@ def arrival():
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
                 FFX_memory.clickToControl3()
-                FFX_Battle.healUp()
+                FFX_Battle.healUp(3)
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
@@ -220,7 +224,9 @@ def guiAndAftermath():
     checkpoint = 0
     while FFX_memory.getMap() != 93:
         if FFX_memory.userControl():
-            if checkpoint == 3:
+            if FFX_memory.getMap() == 131 and checkpoint < 4:
+                checkpoint = 4
+            elif checkpoint == 3:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 7:
