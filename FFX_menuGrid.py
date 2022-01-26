@@ -151,7 +151,6 @@ def useFirst():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.4)
     return True
 
 def moveFirst():
@@ -169,15 +168,14 @@ def moveFirst():
 
 def moveAndUse():
     print("move and use")
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(1)
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(1)
     while not readySelectSphere():
         if moveComplete() or firstPosition():
             FFX_Xbox.menuB()
         elif moveReady():
             FFX_Xbox.menuDown()
-            FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuB()
     #FFX_memory.waitFrames(30 * 0.2)
@@ -193,7 +191,6 @@ def useAndMove():
             FFX_Xbox.menuB()
         elif moveReady():
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
         else:
@@ -485,72 +482,64 @@ def selSphere(sType, direction, shift):
     if menuPos == 255:
         print("Sphere ", sType, "is not in inventory.")
         return
-    complete = False
-    while complete == False:
+    while menuPos != FFX_memory.getGridCursorPos():
         if menuPos > FFX_memory.getGridCursorPos():
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapDown()
         elif menuPos < FFX_memory.getGridCursorPos():
-            FFX_Xbox.menuUp()
-        
-        if menuPos == FFX_memory.getGridCursorPos():
-            FFX_memory.waitFrames(30 * 0.1)
-            if menuPos == FFX_memory.getGridCursorPos():
-                FFX_Xbox.menuB()
-                complete = True
-    if shift == 'none':
-        FFX_Xbox.SkipDialog(0.7)
-    else:
+            FFX_Xbox.tapUp()
+    while not FFX_memory.sphereGridPlacementOpen():
+        FFX_Xbox.menuB()
+    if shift == 'up':
+        gridUp()
+    if shift == 'left':
+        gridLeft()
+    if shift == 'l5':
+        gridLeft()
+        gridLeft()
+        gridLeft()
+        gridLeft()
+        gridLeft()
+    if shift == 'right':
+        gridRight()
+    if shift == 'r2':
+        gridRight()
+        gridRight()
+    if shift == 'down':
+        gridDown()
+    if shift == 'd2':
+        gridDown()
+        gridDown()
+    if shift == 'up2':
+        gridUp()
+        gridUp()
+    if shift == 'd5':
+        gridDown()
+        gridDown()
+        gridDown()
+        gridDown()
+        gridDown()
+    if shift == 'aftersk':
+        gridUp()
+        gridRight()
+        gridDown()
+        #gridDown()
+    if shift == 'aftersk2':
+        gridRight()
+        gridRight()
+        FFX_memory.waitFrames(30 * 0.1)
+        gridLeft()
+    if shift == 'torikku':
         FFX_memory.waitFrames(30 * 0.2)
-        if shift == 'up':
-            gridUp()
-        if shift == 'left':
-            gridLeft()
-        if shift == 'l5':
-            gridLeft()
-            gridLeft()
-            gridLeft()
-            gridLeft()
-            gridLeft()
-        if shift == 'right':
-            gridRight()
-        if shift == 'r2':
-            gridRight()
-            gridRight()
-        if shift == 'down':
-            gridDown()
-        if shift == 'd2':
-            gridDown()
-            gridDown()
-        if shift == 'up2':
-            gridUp()
-            gridUp()
-        if shift == 'd5':
-            gridDown()
-            gridDown()
-            gridDown()
-            gridDown()
-            gridDown()
-        if shift == 'aftersk':
-            gridUp()
-            gridRight()
-            gridDown()
-            #gridDown()
-        if shift == 'aftersk2':
-            gridRight()
-            gridRight()
-            FFX_memory.waitFrames(30 * 0.1)
-            gridLeft()
-        if shift == 'torikku':
-            FFX_memory.waitFrames(30 * 0.2)
-            gridDown()
-            gridDown()
-            gridLeft()
-            gridLeft()
-        if shift == 'yunaspec':
-            #Yuna Special
-            gridDown()
-            gridRight()
-            gridRight()
-            gridDown()
-            gridDown()
-        FFX_Xbox.SkipDialog(0.7)
+        gridDown()
+        gridDown()
+        gridLeft()
+        gridLeft()
+    if shift == 'yunaspec':
+        #Yuna Special
+        gridDown()
+        gridRight()
+        gridRight()
+        gridDown()
+        gridDown()
+    while FFX_memory.sphereGridPlacementOpen():
+        FFX_Xbox.menuB()

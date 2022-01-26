@@ -3519,11 +3519,6 @@ def seymourFlux():
                 print("Auron's turn. Swap for Rikku and overdrive.")
                 buddySwapRikku()
                 print("Rikku overdrive")
-                while not FFX_memory.otherBattleMenu():
-                    FFX_Xbox.tapLeft()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30 * 0.5)
                 rikkuFullOD('Flux')
 
                 FFX_Xbox.tapB()  # Engage overdrive
@@ -3542,14 +3537,7 @@ def sKeeper():
         FFX_Xbox.clickToBattle()
         FFX_Xbox.weapSwap(0)
         FFX_Screen.awaitTurn()
-        FFX_Xbox.tapDown()
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(30 * 0.6)
-        FFX_Xbox.tapRight()
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapB()  # Perform armor break
-
+        useSkill(0)
         FFX_Screen.awaitTurn()
         defend()  # Auron defends
         FFX_Screen.awaitTurn()

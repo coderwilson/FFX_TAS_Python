@@ -1383,7 +1383,6 @@ def menuControl():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(1)
         return True
     else:
         return False
@@ -1405,13 +1404,11 @@ def diagSkipPossible():
     key = baseValue + 0x00F2FED0
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(1)
         return True
     else:
         key = baseValue + 0x0085A03C
         control = process.readBytes(key,1)
         if control == 1:
-            waitFrames(1)
             return True
         else:
             return False
@@ -1432,13 +1429,11 @@ def specialTextOpen():
     key = baseValue + 0x01466D30
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(30 * 0.035)
         return True
     else:
         key = baseValue + 0x01476988
         control = process.readBytes(key,1)
         if control == 1:
-            waitFrames(30 * 0.035)
             return True
         else:
             return False
@@ -1459,10 +1454,10 @@ def clickToStoryProgress(destination):
         if menuControl():
             FFXC.set_value('BtnB',1)
             FFXC.set_value('BtnA',1)
-            waitFrames(30 * 0.035)
+            waitFrames(1)
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
-            waitFrames(30 * 0.035)
+            waitFrames(1)
         if counter % 100000 == 0:
             print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 100000)
         counter += 1
@@ -2368,7 +2363,6 @@ def equipWeapCursor():
 
 def assignAbilityToEquipCursor():
     global baseValue
-    
     key = baseValue + 0x01440AD0
     retVal = process.readBytes(key,1)
     return retVal
@@ -2382,6 +2376,18 @@ def cureMenuOpen():
 def rikkuOverdriveItemSelectedNumber():
     global baseValue
     key = baseValue + 0x00D2C948
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def sphereGridPlacementOpen():
+    global baseValue
+    key = baseValue + 0x012ACB6B
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def movingPromptOpen():
+    global baseValue
+    key = baseValue + 0x012AD543
     retVal = process.readBytes(key,1)
     return retVal
 

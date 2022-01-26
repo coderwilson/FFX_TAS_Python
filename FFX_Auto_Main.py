@@ -58,10 +58,10 @@ import FFX_Sin
 #Gamestate = "Guadosalam"
 #StepCounter = 2
 Gamestate = "Macalania"
-StepCounter = 1
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
-#StepCounter = 4 #Not working on Seymour fight
+StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
 #Gamestate = "Home"
 #StepCounter = 2
@@ -239,7 +239,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
-        FFX_LoadGame.loadOffset(24) #No remedy in inventory, likely game over.
+        FFX_LoadGame.loadOffset(10) #No remedy in inventory, likely game over.
         FFX_LoadGame.loadMacTemple()
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()

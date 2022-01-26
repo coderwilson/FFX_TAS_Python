@@ -33,11 +33,11 @@ def approach(blitzWin):
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
-    FFX_menu.macTemple(blitzWin)
 
 def arrival(blitzWin):
     print("Starting Macalania Temple section")
     FFX_memory.awaitControl()
+    FFX_menu.macTemple(blitzWin)
     #if FFX_memory.getPower() < 26:
     #    FFX_memory.setPower(26) #Need 34 total from here forward. 2 from Wendigo and 6 from bombs. 26 needed here.
     
