@@ -343,6 +343,12 @@ def menuBack():
     FFXC.set_value('BtnBack', 0)
     FFX_memory.waitFrames(2)
     
+def lBumper() :
+    FFXC.set_value('BtnShoulderL', 1)
+    FFX_memory.waitFrames(1)
+    FFXC.set_value('BtnShoulderL', 0)
+    FFX_memory.waitFrames(1)
+
 def TriggerL() :
     FFXC.set_value('TriggerL', 1)
     FFX_memory.waitFrames(2)
