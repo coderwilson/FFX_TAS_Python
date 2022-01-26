@@ -751,44 +751,6 @@ def mLakeGrid():
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('ability','u','none') #Use
     FFX_menuGrid.useAndQuit()
-    
-    #Heal up
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.6)
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.6)
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.6)
-    #FFX_Xbox.menuB() #Tidus
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Kimahri
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown() #Skip Rikku
-    #FFX_Xbox.menuB() #Wakka
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Auron
-    #FFX_Xbox.menuB() #No need to heal Yuna or Lulu
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    
-    #Formation
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Wakka to 3, Rikku to 4
     FFX_memory.closeMenu()
 
 def macTemple(blitzWin):

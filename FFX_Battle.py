@@ -4142,15 +4142,13 @@ def healUp(chars=0):
     FFX_Logs.writeLog("Healing characters post-battle")
     FFXC.set_neutral()
     print("Menuing, healing characters: ", chars)
-    #FFX_memory.waitFrames(30)
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
-    #FFX_memory.waitFrames(30)
     pos = 1
     while FFX_memory.getMenuCursorPos() != 2:
         FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(1)
+    while FFX_memory.menuNumber() != 7:
+        FFX_Xbox.tapB()
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
     order = FFX_memory.getOrderSeven()
@@ -4159,12 +4157,10 @@ def healUp(chars=0):
         while FFX_memory.getCharCursorPos() != yunaPos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
     print("Mark 2")
-    
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.tapB()
-    
+    while FFX_memory.menuNumber() != 26:
+        FFX_Xbox.tapB()
+    while not FFX_memory.cureMenuOpen():
+        FFX_Xbox.tapB()
     character_positions = {
         0 : FFX_memory.getCharFormationSlot(0), # Tidus
         1 : FFX_memory.getCharFormationSlot(1), # Yuna
@@ -4708,7 +4704,6 @@ def checkPetrifyTidus():
 
 def rikkuODItems(slot):
     _navigate_to_position(slot, battleCursor=FFX_memory.RikkuODCursor1)
-    FFX_Xbox.tapB()
 
 def rikkuFullOD(battle):
     #First, determine which items we are using
@@ -4771,10 +4766,9 @@ def rikkuFullOD(battle):
         
     while not FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
-    
-    if item1 == 0:
-        FFX_memory.waitFrames(30)
     rikkuODItems(item1)
+    while not FFX_memory.rikkuOverdriveItemSelectedNumber():
+        FFX_Xbox.tapB()
     rikkuODItems(item2)
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()

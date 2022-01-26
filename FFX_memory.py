@@ -1225,7 +1225,7 @@ def menuOpen():
 
 def closeMenu():
     while menuOpen():
-        FFX_Xbox.menuA()
+        FFX_Xbox.tapA()
 
 def openMenu():
     FFXC = FFX_Xbox.controllerHandle()
@@ -1233,11 +1233,7 @@ def openMenu():
     while not userControl(): #Get out of combat or whatever
         FFX_Xbox.menuB()
     while userControl() and not menuOpen():
-        FFXC.set_value('BtnY',1)
-        waitFrames(1)
-        FFXC.set_value('BtnY',0)
-        waitFrames(1)
-    waitFrames(15)
+        FFX_Xbox.tapY()
 
 def menuNumber():
     global baseValue
@@ -1500,24 +1496,13 @@ def fullPartyFormat(frontLine):
         print(order)
         print("Into formation:")
         print(orderFinal)
-        if menuOpen() == False:
-            while menuOpen() == False:
-                openMenu()
-        else:
-            #Sometimes needs delay if menu was opened via other means.
-            waitFrames(12)
-        waitFrames(10)
-        #if getStoryProgress() >= 1120: #Before vs after the Customize option is on the menu
-        #    while getMenuCursorPos() != 8:
-        #    print(getMenuCursorPos())
-        #    FFX_Xbox.menuUp()
-        #else:
+        while not menuOpen():
+            openMenu()
         while getMenuCursorPos() != 7:
             print(getMenuCursorPos())
-            FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        waitFrames(1)
-        
+            FFX_Xbox.tapUp()
+        while menuNumber() != 14:
+            FFX_Xbox.tapB()
         startPos = 0
         targetPos = 1
         while order != orderFinal:
@@ -1538,9 +1523,9 @@ def fullPartyFormat(frontLine):
                 #print("Cursor not in right spot")
                 while partyFormatCursor1() != startPos:
                     menuDirection(partyFormatCursor1(), startPos, partyMembers)
-            waitFrames(2)
-            FFX_Xbox.menuB() #Click on Start location
-            waitFrames(2)
+                    
+            while menuNumber() != 20:
+                FFX_Xbox.menuB() #Click on Start location
             
             #Set target, end position
             print("Selecting destination position.")
@@ -1555,9 +1540,8 @@ def fullPartyFormat(frontLine):
             print("Moving to destination position.")
             while partyFormatCursor2() != endPos:
                 menuDirection(partyFormatCursor2(), endPos, partyMembers)
-            waitFrames(2)
-            FFX_Xbox.menuB() #Click on End location, performs swap.
-            waitFrames(2)
+            while menuNumber() != 14:
+                FFX_Xbox.menuB() #Click on End location, performs swap.
             print("Start and destination positions have been swapped.")
             startPos += 1
             if startPos == partyMembers:
@@ -1569,33 +1553,10 @@ def fullPartyFormat(frontLine):
             print("Into formation:")
             print(orderFinal)
             order = getOrderSeven()
-            #waitFrames(30 * 30)
     print("Party format is good now.")
-    #if frontLine != 'miihen':
     closeMenu()
 
-def menuDirection_oldAttempt(currentmenuposition, targetmenuposition, menusize):
-    print("Menu move") #could be improved further, for now this is good.
-    
-    if targetmenuposition > currentmenuposition:
-        distanceDown = targetmenuposition - currentmenuposition
-        print("Distance Down: ", distanceDown)
-        distanceUp = currentmenuposition + menusize - targetmenuposition
-        print("Distance Up: ", distanceUp)
-        if distanceUp < distanceDown:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-    else:
-        distanceUp = currentmenuposition - targetmenuposition
-        print("Distance Up: ", distanceUp)
-        distanceDown = targetmenuposition + menusize - currentmenuposition
-        print("Distance Down: ", distanceDown)
-        if distanceUp < distanceDown:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-            
+           
 def menuDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
@@ -1604,20 +1565,20 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
     halfmenusize = menusize / 2
     if distance == halfmenusize:
         #print("Marker 1")
-        FFX_Xbox.menuUp()
+        FFX_Xbox.tapUp()
     elif distance < halfmenusize:
         if distanceUnsigned > 0:
             #print("Marker 2")
-            FFX_Xbox.menuUp()
+            FFX_Xbox.tapUp()
         else:
             #print("Marker 3")
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapDown()
     else:
         if distanceUnsigned > 0:
             #print("Marker 4")
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapDown()
         else:
-            FFX_Xbox.menuUp()
+            FFX_Xbox.tapUp()
             #print("Marker 5")
 
 def partyFormatCursor1():
@@ -2411,7 +2372,18 @@ def assignAbilityToEquipCursor():
     key = baseValue + 0x01440AD0
     retVal = process.readBytes(key,1)
     return retVal
-
+    
+def cureMenuOpen():
+    global baseValue
+    key = baseValue + 0x01440A35
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def rikkuOverdriveItemSelectedNumber():
+    global baseValue
+    key = baseValue + 0x00D2C948
+    retVal = process.readBytes(key,1)
+    return retVal
 
 #-------------------------------------------------------
 #Bevelle Trials indicators
