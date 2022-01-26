@@ -399,7 +399,8 @@ def useAndQuit():
         elif quitGridReady():
             print("quitting sphere grid")
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(20)
+    while FFX_memory.menuNumber() != 5:
+        pass
     return True
 
 def sphereNum(sType) -> int:
@@ -484,9 +485,15 @@ def selSphere(sType, direction, shift):
         return
     while menuPos != FFX_memory.getGridCursorPos():
         if menuPos > FFX_memory.getGridCursorPos():
-            FFX_Xbox.tapDown()
+            if menuPos - FFX_memory.getGridCursorPos() >=3:
+                FFX_Xbox.TriggerR()
+            else:
+                FFX_Xbox.tapDown()
         elif menuPos < FFX_memory.getGridCursorPos():
-            FFX_Xbox.tapUp()
+            if FFX_memory.getGridCursorPos() - menuPos >=3:
+                FFX_Xbox.TriggerL()
+            else:
+                FFX_Xbox.tapUp()
     while not FFX_memory.sphereGridPlacementOpen():
         FFX_Xbox.menuB()
     if shift == 'up':
