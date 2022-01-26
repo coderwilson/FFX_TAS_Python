@@ -6,6 +6,8 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 #import FFX_Djose_Skip_Path
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -54,6 +56,8 @@ def path():
             
             else:
                 #Map changes
+                if FFX_memory.getMap() == 76 and checkpoint < 39:
+                    checkpoint = 40
                 if checkpoint in [39, 44, 46]:
                     FFX_memory.clickToEventTemple(0)
                     checkpoint += 1
@@ -87,27 +91,27 @@ def path():
 def temple():
     FFX_memory.clickToControl()
     FFX_menu.djoseTemple()
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFXC.set_movement(-1, -1)
-    FFX_memory.clickToEvent() #Talk to Auron
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_memory.clickToControl3() #Done talking
-    FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, 1)
-    FFX_Xbox.SkipDialog(5)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5) #Into the trials
-    FFXC.set_neutral()
+    if not gameVars.csr():
+        FFXC.set_movement(0, -1)
+        FFX_memory.waitFrames(30 * 0.3)
+        FFXC.set_movement(-1, -1)
+        FFX_memory.clickToEvent() #Talk to Auron
+        FFX_memory.waitFrames(30 * 0.2)
+        FFX_memory.clickToControl3() #Done talking
+        
+    checkpoint = 0
+    while not FFX_memory.getMap() == 214:
+        target = [[-1,32],[-1,111],[-1,111],[-1,200]]
+        if checkpoint == 2:
+            FFX_memory.clickToEventTemple(0)
+            checkpoint += 1
+        elif FFX_memory.userControl():
+            if FFX_targetPathing.setMovement(target[checkpoint]) == True:
+                checkpoint += 1
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
 
 def trials():
     print("Starting Trials section.")
@@ -286,82 +290,80 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 104:
                 print("End of Trials")
-                FFX_memory.clickToEventTemple(7)
+                if gameVars.csr():
+                    FFXC.set_movement(-1,1)
+                    FFX_memory.awaitEvent()
+                    FFXC.set_neutral()
+                    break
+                else:
+                    FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseTrials(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
+        elif FFX_memory.nameAeonReady():
+            break
     
     FFXC.set_neutral()
-    FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 0.3)
-    print("Talk to Auron while we wait.")
-    FFXC.set_movement(1, -1)
-    FFX_memory.clickToEvent()
-    FFXC.set_movement(-1, -1)
-    FFX_memory.clickToControl3()
-    FFX_memory.waitFrames(30 * 0.07)
+    if not gameVars.csr():
+        FFX_memory.awaitControl()
+        FFX_memory.waitFrames(30 * 0.3)
+        print("Talk to Auron while we wait.")
+        FFXC.set_movement(1, -1)
+        FFX_memory.clickToEvent()
+        FFXC.set_movement(-1, -1)
+        FFX_memory.clickToControl3()
+        FFX_memory.waitFrames(30 * 0.07)
     
-    #Dance
-    checkpoint = 0
-    while FFX_memory.userControl():
-        if FFX_targetPathing.setMovement(FFX_targetPathing.djoseDance(checkpoint)) == True:
-            checkpoint += 1
-            print("Checkpoint reached: ", checkpoint)
+        #Dance
+        checkpoint = 0
+        while FFX_memory.userControl():
+            if FFX_targetPathing.setMovement(FFX_targetPathing.djoseDance(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+            
+            if checkpoint == 8:
+                checkpoint = 0
         
-        if checkpoint == 8:
-            checkpoint = 0
-    
-    
-    FFX_memory.clickToControl()
-    print("Leaving the fayth room")
-    
-    while FFX_targetPathing.setMovement([-1,-60]) == False:
-        movingToExit = True
-    FFXC.set_movement(1, 1)
-    FFX_memory.awaitEvent()
-    FFXC.set_neutral()
+        
+        FFX_memory.clickToControl()
+        print("Leaving the fayth room")
+        
+        while FFX_targetPathing.setMovement([-1,-60]) == False:
+            movingToExit = True
+        FFXC.set_movement(1, 1)
+        FFX_memory.awaitEvent()
+        FFXC.set_neutral()
     
     FFX_Xbox.nameAeon()
 
 def leavingDjose():
     FFX_memory.awaitControl()
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 1.8)
-    FFX_memory.clickToEvent()
-    FFXC.set_movement(1, 1)
-    FFX_memory.clickToControl3()
-    FFX_memory.waitFrames(30 * 0.4)
-    FFXC.set_movement(0, 1)
-    FFX_memory.clickToEvent()
-    FFXC.set_neutral()
-    FFX_memory.awaitControl()
     
-    #inside
-    print("Now inside the Djose temple.")
-    FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1.8)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_movement(1, 1)
-    FFX_memory.awaitEvent()
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 1)
-    
-    print("Ready for Yuna's room")
-    FFX_memory.awaitControl()
-    print("Inside Yuna's room.")
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFX_Xbox.SkipDialog(0.5)
-    FFXC.set_movement(-1, 0)
-    FFX_Xbox.SkipDialog(0.5)
-    FFXC.set_movement(1, 0)
-    FFX_Xbox.SkipDialog(5) #Starts the Yuna conversation.
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl() #We meet Tidus back outside.
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 1.5)
+    checkpoint = 0
+    while FFX_memory.getMap() != 75:
+        if FFX_memory.userControl():
+            if checkpoint == 1:
+                if not gameVars.csr():
+                    FFXC.set_movement(1, 0)
+                    FFX_memory.clickToEventTemple(6)
+                checkpoint += 1
+            elif checkpoint in [3,9,12]:
+                FFX_memory.clickToEventTemple(0)
+                checkpoint += 1
+            elif checkpoint == 14:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 18:
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint in [22,29]:
+                FFX_memory.clickToEventTemple(4)
+                checkpoint += 1
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseExit(checkpoint)) == True:
+                checkpoint += 1
+        else:
+            FFXC.set_neutral()
+        
     FFXC.set_neutral()
 

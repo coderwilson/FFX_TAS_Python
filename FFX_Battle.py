@@ -19,11 +19,11 @@ def tapTargeting():
 def valeforOD(sinFin = 0, version = 0):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
+    FFX_memory.waitFrames(30)
     if version == 1:
-        while FFX_memory.battleCursor2() != 1:
-            FFX_Xbox.tapDown()
-    while FFX_memory.otherBattleMenu():
-        FFX_Xbox.tapB()  # Energy Blast
+        FFX_Xbox.tapDown()
+    FFX_Xbox.tapB()  # Energy Blast
+    FFX_memory.waitFrames(5)
     if sinFin == 1:
         FFX_Xbox.tapDown()
         FFX_Xbox.tapLeft()
@@ -73,6 +73,8 @@ def tidusHaste(direction):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     _navigate_to_position(0)
@@ -1003,7 +1005,7 @@ def afterBlitz3(earlyHaste):
     else:
         useSkill(0)
 
-    while not FFX_memory.battleComplete():
+    while FFX_memory.battleActive():
         if FFX_memory.turnReady():
             if FFX_Screen.faintCheck() > 0:
                 revive()
@@ -1019,7 +1021,10 @@ def afterBlitz3(earlyHaste):
             while not FFX_memory.diagProgressFlag() == 1:
                 if FFX_memory.cutsceneSkipPossible():
                     FFX_Xbox.skipScene()
-            FFX_Xbox.awaitSave(index=1)
+            if gameVars.csr():
+                FFX_memory.waitFrames(60)
+            else:
+                FFX_Xbox.awaitSave(index=1)
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
 
@@ -1027,7 +1032,8 @@ def MiihenRoad(selfDestruct):
     FFX_Logs.writeLog("Fight start: Mi'ihen Road")
     print("Fight start: Mi'ihen Road")
     battle = FFX_memory.getBattleNum()
-
+    
+    FFX_Screen.awaitTurn()
     hpArray = FFX_memory.getBattleHP()
     hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
     if hpTotal < 1800:
@@ -1529,15 +1535,18 @@ def battleGui():
     FFX_memory.waitFrames(30 * 1)
     
     #In between battles
-    FFX_memory.clickToStoryProgress(865)
-    print("Ready to skip cutscene")
+    if gameVars.csr():
+        FFX_Screen.awaitTurn()
+    else:
+        FFX_memory.clickToStoryProgress(865)
+        print("Ready to skip cutscene")
     
-    while not FFX_memory.battleActive():
-        if FFX_memory.cutsceneSkipPossible():
-            FFX_Xbox.skipScene()
-            print("Skipping scene")
-        if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
-            FFX_Xbox.tapB()
+        while not FFX_memory.battleActive():
+            if FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene()
+                print("Skipping scene")
+            if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
     
     #Second Gui battle
     FFX_Xbox.clickToBattle()
@@ -1611,7 +1620,7 @@ def fleePathing():
 def extractor():
     print("Fight start: Extractor")
     FFXC.set_neutral()
-    FFX_Xbox.clickToBattle()
+    FFX_Screen.awaitTurn()
     tidusHaste('none')
     FFX_memory.waitFrames(30 * 0.2)
 
@@ -4172,7 +4181,7 @@ def aeonSummon(position):
         if FFX_Screen.turnYuna() == False:
             return
         if FFX_memory.battleMenuCursor() == 255:
-            pass
+            FFX_memory.waitFrames(30 * 0.01)
         elif FFX_memory.battleMenuCursor() >= 1 and FFX_memory.battleMenuCursor() < 23:
             FFX_Xbox.tapUp()
         else:
@@ -4193,9 +4202,9 @@ def aeonSummon(position):
         FFX_Xbox.tapB()
     aeonWaitTimer = 0
     while not FFX_memory.turnReady():
-        if aeonWaitTimer % 1000 == 0:
-            print("Waiting for Aeon's turn. ", aeonWaitTimer % 1000)
-        pass
+        if aeonWaitTimer % 100 == 0:
+            print("Waiting for Aeon's turn. ", aeonWaitTimer % 100)
+        FFX_memory.waitFrames(1)
         aeonWaitTimer += 1
 
 
@@ -4248,7 +4257,11 @@ def healUp(chars):
     pos = 1
     while FFX_memory.getMenuCursorPos() != 2:
         FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
+    
+    FFX_memory.waitFrames(2)
+    FFX_Xbox.menuB()
     FFX_memory.waitFrames(1)
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
@@ -4257,12 +4270,14 @@ def healUp(chars):
     if FFX_memory.getCharCursorPos() != yunaPos:
         while FFX_memory.getCharCursorPos() != yunaPos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
+            if gameVars.usePause():
+                FFX_memory.waitFrames(1)
     print("Mark 2")
     
     FFX_memory.waitFrames(12)
-    FFX_Xbox.tapB()
+    FFX_Xbox.menuB()
     FFX_memory.waitFrames(12)
-    FFX_Xbox.tapB()
+    FFX_Xbox.menuB()
     
     character_positions = {
         0 : FFX_memory.getCharFormationSlot(0), # Tidus

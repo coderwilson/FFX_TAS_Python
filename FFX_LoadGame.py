@@ -7,6 +7,7 @@ import FFX_menu
 import FFX_menuGrid
 import FFX_zzairShipPath
 import pyautogui
+import FFX_targetPathing
 
 #This file is intended to load the game to a saved file.
 #This assumes that the save is the first non-auto-save in the list of saves.
@@ -308,17 +309,15 @@ def AfterGui():
     FFX_memory.waitFrames(30 * 2.5)
     FFXC.set_neutral()
     
-    #Same pattern as the actual run.
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 6)
-    FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1.5)
-    pos = FFX_memory.getCoords()
-    while pos[0] < ((0.05 * pos[1]) + 942.12):
-        FFXC.set_movement(1, 0)
-        pos = FFX_memory.getCoords()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 5.5)
+    target = [[463,-163],[498,77],[615,-39],[935,12],[1200,200]]
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 93:
+        if FFX_memory.userControl():
+            if FFX_targetPathing.setMovement(target[checkpoint]):
+                checkpoint += 1
+        else:
+            FFXC.set_neutral()
     FFXC.set_neutral()
     
 def djoseTemple():

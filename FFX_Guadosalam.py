@@ -6,6 +6,8 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -35,41 +37,42 @@ def arrival():
     FFXC.set_neutral() #Enter the room where we meet Seymour
     
     FFX_memory.clickToControl3()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFX_memory.clickToEvent() #Talk to Auron (first for affection)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl3()
-    
-    FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(0, -1)
-    FFX_memory.clickToEvent() #Start conversation with Wakka
-    FFXC.set_neutral()
-    FFX_memory.clickToControl3()
-    
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_memory.clickToEvent() #Lulu conversation
-    FFXC.set_neutral()
-    FFX_memory.clickToControl3()
-    
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.25)
-    FFXC.set_movement(0, 1)
-    FFX_memory.clickToEvent() # Yuna's turn
-    FFX_memory.waitFrames(30 * 0.2)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl3()
-    
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_memory.clickToEvent() #Start conversation with Rikku
-    FFXC.set_neutral()
-    FFX_Xbox.SkipDialog(66) #Seymour/Trommell
-    FFX_Xbox.skipStoredScene(10)
+    if not gameVars.csr():
+        FFXC.set_movement(0, 1)
+        FFX_memory.waitFrames(30 * 1)
+        FFX_memory.clickToEvent() #Talk to Auron (first for affection)
+        FFXC.set_neutral()
+        FFX_memory.clickToControl3()
+        
+        FFXC.set_movement(1, -1)
+        FFX_memory.waitFrames(30 * 0.7)
+        FFXC.set_movement(0, -1)
+        FFX_memory.clickToEvent() #Start conversation with Wakka
+        FFXC.set_neutral()
+        FFX_memory.clickToControl3()
+        
+        FFXC.set_movement(-1, 0)
+        FFX_memory.waitFrames(30 * 0.4)
+        FFX_memory.clickToEvent() #Lulu conversation
+        FFXC.set_neutral()
+        FFX_memory.clickToControl3()
+        
+        FFXC.set_movement(-1, 0)
+        FFX_memory.waitFrames(30 * 0.5)
+        FFXC.set_movement(-1, -1)
+        FFX_memory.waitFrames(30 * 0.25)
+        FFXC.set_movement(0, 1)
+        FFX_memory.clickToEvent() # Yuna's turn
+        FFX_memory.waitFrames(30 * 0.2)
+        FFXC.set_neutral()
+        FFX_memory.clickToControl3()
+        
+        FFXC.set_movement(0, -1)
+        FFX_memory.waitFrames(30 * 0.3)
+        FFX_memory.clickToEvent() #Start conversation with Rikku
+        FFXC.set_neutral()
+        FFX_Xbox.SkipDialog(66) #Seymour/Trommell
+        FFX_Xbox.skipStoredScene(10)
 
 def afterSpeech():
     FFX_memory.clickToControl() #Skips through the long cutscene

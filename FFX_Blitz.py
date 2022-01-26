@@ -3,6 +3,8 @@ import time
 import FFX_Logs
 import FFX_memory
 import FFX_blitzPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -127,19 +129,20 @@ def prepHalf():
 
 def Storyline(forceBlitzWin):
     current = FFX_memory.getStoryProgress()
-    if current == 540:
-        if forceBlitzWin:
-            FFX_memory.blitzballPatriotsStyle()
-        print("Halftime hype")
-        FFX_memory.clickToDiagProgress(164)
-        FFX_memory.clickToDiagProgress(20)
-    elif current == 560 and FFX_memory.diagProgressFlag() > 1:
-        print("Wakka story happening.")
-        FFX_memory.clickToDiagProgress(11)
-    #First half is 535
-    #Hype halftime is 540
-    #Second half starts on 560
-    #575 - 9
+    if not gameVars.csr():
+        if current == 540:
+            if forceBlitzWin:
+                FFX_memory.blitzballPatriotsStyle()
+            print("Halftime hype")
+            FFX_memory.clickToDiagProgress(164)
+            FFX_memory.clickToDiagProgress(20)
+        elif current == 560 and FFX_memory.diagProgressFlag() > 1:
+            print("Wakka story happening.")
+            FFX_memory.clickToDiagProgress(11)
+        #First half is 535
+        #Hype halftime is 540
+        #Second half starts on 560
+        #575 - 9
 
 def cursor1():
     return FFX_memory.blitzCursor()
@@ -182,8 +185,8 @@ def gameStage():
             currentStage = 0
         
         #Logic for first period, only want to shoot once for Tidus XP
-        if FFX_memory.getStoryProgress() < 560 and currentStage < 3:
-            currentStage = 0
+        #if FFX_memory.getStoryProgress() < 560 and currentStage < 3:
+        #    currentStage = 0
     
     return currentStage
 

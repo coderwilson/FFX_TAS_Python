@@ -5,6 +5,8 @@ import FFX_Battle
 import FFX_menu
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -55,23 +57,19 @@ def ssWinno():
     
     #Talk to O'akaXXIII
     FFX_memory.clickToControl()
-    FFXC.set_neutral() #Use target pathing later
-    while not FFX_targetPathing.setMovement([-17, 32]):
-        movingToOaka = True #AKA keep moving
-    FFXC.set_movement(1, -1)
-    FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
+    oakaCoords = [FFX_memory.getActorCoords(1)[0],FFX_memory.getActorCoords(1)[1]]
+    while FFX_memory.userControl():
+        FFX_targetPathing.setMovement(oakaCoords)
+        FFX_Xbox.tapB()
+        FFX_memory.waitFrames(3)
+        oakaCoords = [FFX_memory.getActorCoords(1)[0],FFX_memory.getActorCoords(1)[1]]
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(21)
     FFX_memory.waitFrames(60)
-    #FFX_memory.waitFrames(30 * 2)
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(30)
-    #FFX_memory.waitFrames(30 * 1)
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(30)
-    #FFX_memory.waitFrames(30 * 1)
     FFX_Xbox.tapDown()
     FFX_Xbox.tapLeft()
     FFX_Xbox.tapUp()
@@ -111,8 +109,9 @@ def ssWinno2():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     
-    FFX_memory.clickToDiagProgress(142)
-    FFX_Xbox.clearSavePopup(0)
+    if not gameVars.csr():
+        FFX_memory.clickToDiagProgress(142)
+        FFX_Xbox.clearSavePopup(0)
 
 def jechtShot():
     #Jecht shot tutorial

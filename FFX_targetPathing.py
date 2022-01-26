@@ -1787,6 +1787,29 @@ def miihen(checkpoint):
         y = -227
     return [x,y]
 
+def miihenAgency(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 26
+        y = -23
+    if checkpoint == 1:
+        x = 15
+        y = -30
+    if checkpoint == 2: #Go for P.downs if less than 10.
+        x = -2
+        y = -27
+    if checkpoint == 3: #Talk to lady and purchase downs.
+        x = -2
+        y = -27
+    if checkpoint == 4:
+        x = -7
+        y = -56
+    if checkpoint == 5:
+        x = -15
+        y = -90
+    return [x,y]
+
 def lowRoad(checkpoint):
     x = 999
     y = 999
@@ -2712,6 +2735,164 @@ def djoseDance(checkpoint):
     if checkpoint == 7:
         x = -8
         y = -16
+    return [x,y]
+
+def djoseExit(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 11
+        y = -149
+    if checkpoint == 1: #Talk to Auron
+        x = 0
+        y = 0
+    if checkpoint == 2:
+        x = -1
+        y = -88
+    if checkpoint == 3: #Enter temple
+        x = 0
+        y = 0
+    if checkpoint == 4:
+        x = -18
+        y = 6
+    if checkpoint == 5:
+        x = -41
+        y = 56
+    if checkpoint == 6:
+        x = -41
+        y = 56
+    if checkpoint == 7:
+        x = -41
+        y = 56
+    if checkpoint == 8:
+        x = -52
+        y = 94
+    if checkpoint == 9: #Enter room where Yuna is resting
+        x = 0
+        y = 0
+    if checkpoint == 10:
+        x = -13
+        y = -4
+    if checkpoint == 11:
+        x = -9
+        y = 13
+    if checkpoint == 12: #Remedy
+        x = 0
+        y = 0
+    if checkpoint == 13:
+        x = 11
+        y = 28
+    if checkpoint == 14: #Wake up Yuna
+        x = 0
+        y = 0
+    if checkpoint == 15:
+        x = -31
+        y = -211
+    if checkpoint == 16:
+        x = -129
+        y = -253
+    if checkpoint == 17:
+        x = -172
+        y = -261
+    if checkpoint == 18: #4k gold chest
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = -131
+        y = -287
+    if checkpoint == 20:
+        x = -93
+        y = -311
+    if checkpoint == 21:
+        x = -40
+        y = -360
+    if checkpoint == 22: #Switch maps, to Bridge
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 26
+        y = 50
+    if checkpoint == 24:
+        x = 53
+        y = -17
+    if checkpoint == 25:
+        x = 58
+        y = -52
+    if checkpoint == 26:
+        x = 37
+        y = -113
+    if checkpoint == 27:
+        x = 4
+        y = -236
+    if checkpoint == 28:
+        x = -9
+        y = -333
+    if checkpoint == 29: #Switch map, to Djose road
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 626
+        y = 858
+    if checkpoint == 31:
+        x = 591
+        y = 985
+    if checkpoint == 32:
+        x = 550
+        y = 1100
+    if checkpoint == 33:
+        x = 500
+        y = 1200
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
     return [x,y]
 
 def moonflow(checkpoint):
