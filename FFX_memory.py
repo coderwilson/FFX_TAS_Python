@@ -1486,6 +1486,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
     partyMembers = len(order)
     frontLine = frontLine.lower()
     orderFinal = getPartyFormatFromText(frontLine)
+    orderFinal.extend(x for x in order if x not in orderFinal)
     if order == orderFinal:
         print("Good to go, no action taken.")
     else:
