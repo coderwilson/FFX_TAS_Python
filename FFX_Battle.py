@@ -1073,8 +1073,8 @@ def MiihenRoad(selfDestruct):
     hpCheck = FFX_memory.getHP()
     print("------------------ HP check: ", hpCheck)
     if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
-        FFX_memory.fullPartyFormat('miihen')
-        healUpMiihen(3)
+        FFX_memory.fullPartyFormat('miihen', fullMenuClose=False)
+        healUp()
     else:
         print("No need to heal up. Moving onward.")
         FFX_memory.fullPartyFormat('miihen')
@@ -1385,10 +1385,8 @@ def MRRbattle(status):
                             attack('none')
                         else:
                             buddySwapTidus()
-                        FFX_memory.waitFrames(30 * 0.2)
                     else: #Should not occur, but you never know.
                         buddySwapTidus()
-                    FFX_memory.waitFrames(30 * 0.5)
     else: #Everything is done.
         fleeAll()
     
@@ -1407,13 +1405,12 @@ def MRRbattle(status):
             status[5] = 3
     
     if status[5] == 3:
-        FFX_memory.fullPartyFormat('mrr1')
+        FFX_memory.fullPartyFormat('mrr1', fullMenuClose=False)
     elif status[5] == 2: #Still levelling Yuna or Kimahri
-        FFX_memory.fullPartyFormat('mrr2')
+        FFX_memory.fullPartyFormat('mrr2', fullMenuClose=False)
         print("Yuna in front party, trying to get some more experience.")
     else:
-        FFX_memory.fullPartyFormat('mrr1')
-    FFX_memory.closeMenu()
+        FFX_memory.fullPartyFormat('mrr1', fullMenuClose=False)
     
     #Now checking health values
     hpCheck = FFX_memory.getHP()
@@ -1908,13 +1905,12 @@ def thunderPlains(status, section):
     print("Status array, Rikku charge, Light curtain, and Lunar Curtain:")
     print(status)
     print("Checking party format and resolving if needed.")
-    FFX_memory.fullPartyFormat('postbunyip')
-    while FFX_memory.menuOpen():
-        FFX_Xbox.tapA()
+    FFX_memory.fullPartyFormat('postbunyip', fullMenuClose=False)
     print("Party format is good. Now checking health values.")
     hpValues = FFX_memory.getHP()
     if hpValues[0] < 400 or hpValues[2] < 400 or hpValues[4] < 400 or hpValues[6] < 180:
-        healUp_New(4, 11)
+        healUp()
+    FFX_memory.closeMenu()
     print("Ready to continue onward.")
     print("**Plains variables: Rikku charged, stolen light curtain, stolen lunar curtain, ")
     print("**speed spheres done, Blitz Win state, and petrify grenade (if needed)")
@@ -2059,18 +2055,19 @@ def mWoods(woodsVars):
     if woodsVars[0]:
         if woodsVars[1] and woodsVars[2]:
             print("Party format: mwoodsdone")
-            FFX_memory.fullPartyFormat("mwoodsdone")
+            FFX_memory.fullPartyFormat("mwoodsdone", fullMenuClose=False)
         else:
-            FFX_memory.fullPartyFormat("mwoodsgotcharge")
+            FFX_memory.fullPartyFormat("mwoodsgotcharge", fullMenuClose=False)
             print("Party format: mwoodsgotcharge")
     else:
         print("Party format: mwoodsneedcharge")
-        FFX_memory.fullPartyFormat("mwoodsneedcharge")
+        FFX_memory.fullPartyFormat("mwoodsneedcharge", fullMenuClose=False)
     print("Party format is now good. Let's check health.")
     # Heal logic
     partyHP = FFX_memory.getHP()
     if partyHP[0] < 450 or partyHP[6] < 180 or partyHP[2] + partyHP[4] < 500:
-        healUp_New(4,11)
+        healUp()
+    FFX_memory.closeMenu()
     print("And last, we'll update variables.")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
     print(woodsVars)
@@ -4135,15 +4132,17 @@ def healUp_New(chars, menusize):
     healUp(chars)
 
 
-def healUp(chars=0):
+def healUp(chars=0, *, fullMenuClose=True):
     FFX_Logs.writeLog("Healing characters post-battle")
     FFXC.set_neutral()
     print("Menuing, healing characters: ", chars)
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
-    pos = 1
     while FFX_memory.getMenuCursorPos() != 2:
-        FFX_Xbox.tapDown()
+        if FFX_memory.getMenuCursorPos() < 2 or FFX_memory.getMenuCursorPos() > 7:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
     while FFX_memory.menuNumber() != 7:
         FFX_Xbox.tapB()
     print("Mark 1")
@@ -4188,7 +4187,10 @@ def healUp(chars=0):
             current_hp = FFX_memory.getHP()
         if current_hp == maximal_hp: break
     print("Healing complete. Exiting menu.")
-    FFX_memory.closeMenu()
+    if fullMenuClose:
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.backToMainMenu()
 
 def healUpMiihen(chars):
     healUp(chars)
@@ -4216,7 +4218,6 @@ def lancetSwapDjose(direction):
     # Now to recover the formation
     FFX_memory.fullPartyFormat('djose')
     print("Mark!")
-    FFX_memory.closeMenu()
     print("Done with reformatting via Lancet Swap function.")
 
 def lancet(direction):

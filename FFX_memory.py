@@ -237,7 +237,6 @@ def clickToControl():
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
-    waitFrames(30 * 0.05)
     return True
 
 def clickToControl2():
@@ -251,7 +250,6 @@ def clickToControl2():
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
-    waitFrames(30 * 0.05)
     return True
 
 def clickToControl3():
@@ -269,11 +267,10 @@ def clickToControl3():
             print("Menu open (after battle)")
             FFX_Xbox.tapB()
         else:
-            waitFrames(30 * 0.035)
+            pass
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
-    waitFrames(30 * 0.05)
     print("User control restored.")
     return True
 
@@ -1227,6 +1224,11 @@ def closeMenu():
     while menuOpen():
         FFX_Xbox.tapA()
 
+def backToMainMenu():
+    if menuOpen():
+        while menuNumber() != 5:
+            FFX_Xbox.tapA()
+
 def openMenu():
     FFXC = FFX_Xbox.controllerHandle()
     FFXC.set_neutral()
@@ -1479,7 +1481,7 @@ def partySize():
 def activepartySize():
     return len(getActiveBattleFormation())
 
-def fullPartyFormat(frontLine):
+def fullPartyFormat(frontLine, *, fullMenuClose=True):
     order = getOrderSeven()
     partyMembers = len(order)
     frontLine = frontLine.lower()
@@ -1549,7 +1551,10 @@ def fullPartyFormat(frontLine):
             print(orderFinal)
             order = getOrderSeven()
     print("Party format is good now.")
-    closeMenu()
+    if fullMenuClose:
+        closeMenu()
+    else:
+        backToMainMenu()
 
            
 def menuDirection(currentmenuposition, targetmenuposition, menusize):
