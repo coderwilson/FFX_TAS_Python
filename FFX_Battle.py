@@ -1611,15 +1611,12 @@ def extractor():
     FFXC.set_neutral()
     FFX_Screen.awaitTurn()
     tidusHaste('none')
-    FFX_memory.waitFrames(30 * 0.2)
 
     FFX_Screen.awaitTurn()
     attack('none') #Wakka attack
-    FFX_memory.waitFrames(30 * 0.2)
 
     FFX_Screen.awaitTurn()
     tidusHaste('left')
-    FFX_memory.waitFrames(30 * 0.2)
 
     tidusCheer = 0
     complete = 0
@@ -1635,11 +1632,9 @@ def extractor():
             elif FFX_memory.extractorHeight() < -180: #Readying depth charges
                 if FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0) == 100:
                     tidusOD()
-                    FFX_memory.waitFrames(20)
                     FFX_Screen.awaitTurn()
                 elif FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4) == 100:
                     wakkaOD()
-                    FFX_memory.waitFrames(20)
                     FFX_Screen.awaitTurn()
                 attack('none')
             else:
@@ -1655,7 +1650,6 @@ def mixTutorial():
     FFX_Logs.writeLog("Fight start: Mix Tutorial")
     FFX_Xbox.clickToBattle()
     Steal()
-    FFX_memory.waitFrames(30 * 1)
     FFX_Xbox.clickToBattle()
     rikkuFullOD('tutorial')
     FFX_memory.clickToControl()
@@ -2088,10 +2082,8 @@ def spherimorph():
             partyHP = FFX_memory.getBattleHP()
             if turnchar == 0:
                 if tidusturns == 0:
-                    FFX_memory.waitFrames(2)
                     equipInBattle(equipType = 'armor', abilityNum = 0x8028)
                 elif tidusturns == 1:
-                    FFX_memory.waitFrames(2)
                     defend()
                 else:
                     buddySwapRikku()
@@ -2157,7 +2149,6 @@ def spherimorph():
 
 
                 rikkuturns += 1
-            FFX_memory.waitFrames(30 * 0.5)
 
     FFX_Xbox.SkipDialog(5)
 
@@ -2257,13 +2248,11 @@ def seymourGuado():
                         wakkadead = True
             if FFX_memory.getEnemyCurrentHP()[1] < 2999:
                 attack('none')
-                FFX_memory.waitFrames(30 * 5)
                 print("Should be last attack of the fight.")
             elif turnchar == 0:
                 if tidusturns == 0:
                     print("Swap to Brotherhood")
                     equipInBattle(special = 'brotherhood')
-                    FFX_memory.waitFrames(30 * 0.5)
                 elif tidusturns == 1:
                     print("Tidus Haste self")
                     tidusHaste('none')
@@ -2274,13 +2263,11 @@ def seymourGuado():
                         FFX_Xbox.tapLeft()
                     while FFX_memory.battleCursor2() != 1:
                         FFX_Xbox.tapDown()
-                    FFX_Xbox.tapB()
-                    FFX_memory.waitFrames(30 * 0.1)
+                    while FFX_memory.otherBattleMenu():
+                        FFX_Xbox.tapB()
                     FFX_Xbox.tapLeft()
-                    FFX_Xbox.tapB()  # Tidus talk to Seymour
-                    FFX_Xbox.SkipDialog(5.8)
+                    tapTargeting()
                 elif tidusturns == 3:
-                    #FFX_memory.waitFrames(30 * 0.5)
                     tidusODSeymour()
                 elif tidusturns == 4:
                     buddySwapWakka()
@@ -2293,7 +2280,6 @@ def seymourGuado():
                 elif animahits < 4:
                     oldHP = FFX_memory.getEnemyCurrentHP()[3]
                     attack('none')
-                    FFX_memory.waitFrames(30 * 1)
                     newHP = FFX_memory.getEnemyCurrentHP()[3]
                     if newHP < oldHP:
                         print("Hit Anima")
@@ -2453,70 +2439,14 @@ def fullheal(target: int, direction: str):
     elif FFX_memory.getThrowItemsSlot(3) < 255:
         itemnum = 3
         itemname = "Mega-Potion"
+        target=255
     else:
         itemnum = -1
         itemname = "noitemfound"
     if itemnum >= 0:
-        
         FFX_Logs.writeLog("Using %s" % itemname)
         print("Using %s" % itemname)
-        while FFX_memory.battleMenuCursor() != 1:
-            FFX_Xbox.tapDown()
-        FFX_Xbox.tapB()  # Item menu open.
-        FFX_memory.waitFrames(30 * 0.3)
-        itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
-        if FFX_memory.battleCursor2() == 0 and itemPos != 2:
-            FFX_Xbox.tapDown()
-        if FFX_memory.battleCursor2() != itemPos:
-            while FFX_memory.battleCursor2() != itemPos:
-                print("Moving position ", FFX_memory.battleCursor2(), " to position ", itemPos)
-                if itemPos % 2 != FFX_memory.battleCursor2() % 2:
-                    if FFX_memory.battleCursor2() % 2 == 0:
-                        FFX_Xbox.tapLeft()
-                    else:
-                        FFX_Xbox.tapRight()
-                elif FFX_memory.battleCursor2() >= itemPos:
-                    FFX_Xbox.tapUp()
-                else:
-                    FFX_Xbox.tapDown()
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(30 * 0.07)
-        print("Direction: ", direction)
-        direction = direction.lower()
-        if itemnum != 3:
-            while FFX_memory.battleTargetId() != target:
-                if direction == 'l':
-                    if FFX_memory.battleTargetId() >= 20:
-                        print("Wrong battle line targetted.")
-                        FFX_Xbox.tapRight()
-                        direction = 'u'
-                    else:
-                        FFX_Xbox.tapLeft()
-                elif direction == 'r':
-                    if FFX_memory.battleTargetId() >= 20:
-                        print("Wrong character targetted.")
-                        FFX_Xbox.tapLeft()
-                        direction = 'd'
-                    else:
-                        FFX_Xbox.tapRight()
-                elif direction == 'u':
-                    if FFX_memory.battleTargetId() >= 20:
-                        print("Wrong character targetted.")
-                        FFX_Xbox.tapDown()
-                        direction = 'l'
-                    else:
-                        FFX_Xbox.tapUp()
-                elif direction == 'd':
-                    if FFX_memory.battleTargetId() >= 20:
-                        print("Wrong character targetted.")
-                        FFX_Xbox.tapUp()
-                        direction = 'r'
-                    else:
-                        FFX_Xbox.tapDown()
-
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapB()
-
+        _useHealingItem(target, direction, itemnum)
         return 1
 
     else:
@@ -2580,7 +2510,6 @@ def wendigo():
 
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
-            FFX_memory.waitFrames(30 * 0.4)
             partyHP = FFX_memory.getBattleHP()
             turnchar = FFX_memory.getBattleCharTurn()
 
