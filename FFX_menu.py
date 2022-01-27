@@ -137,18 +137,21 @@ def autoSortItems(manual):
 
 def shortAeons():
     FFX_memory.openMenu()
-    FFX_memory.waitFrames(30 * 0.6)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
+    cursorTarget = 4
+    print("Aiming at ", cursorTarget)
+    while FFX_memory.getMenuCursorPos() != cursorTarget:
+        print(FFX_memory.getMenuCursorPos())
+        FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() == 5:
+        FFX_Xbox.tapB()
+    while FFX_memory.configCursor() != 5:
+        FFX_Xbox.tapUp()
+    while FFX_memory.configCursorColumn() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.configCursor() != 3:
+        FFX_Xbox.tapUp()
+    while FFX_memory.configCursorColumn() != 1:
+        FFX_Xbox.tapRight()
     FFX_memory.closeMenu()
 
 def Liki():
