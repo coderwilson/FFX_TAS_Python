@@ -1922,11 +1922,12 @@ def mWoods(woodsVars):
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
             turnchar = FFX_memory.getBattleCharTurn()
-            if checkPetrifyTidus():
+            if checkPetrifyTidus() or not checkRikkuOk():
+                print("Tidus or Rikku incapacitated, fleeing")
                 fleeAll()
                 break
             if not woodsVars[0]:  # Rikku needs charging.
-                print("Marker 1")
+                print("Charing Rikku")
                 if turnchar == 6:
                     if battleNum == 175 and not woodsVars[2]:
                         print("Marker 2")
@@ -1941,8 +1942,13 @@ def mWoods(woodsVars):
                         print("Marker 5")
                         attack('none')
                 else:
-                    print("Marker 6")
-                    escapeOne()
+                    print("Marker 6: ", FFX_memory.getOverdriveBattle(6))
+                    if FFX_memory.getOverdriveBattle(6) == 100:
+                        print("Rikku done charging, fleeing.")
+                        fleeAll()
+                    else:
+                        print("Rikku still charging, escaping.")
+                        escapeOne()
             elif not woodsVars[1] or not woodsVars[2]:
                 if battleNum == 175 and not woodsVars[2]:
                     print("Marker 7")
@@ -4262,11 +4268,12 @@ def fleeAll():
     while not FFX_memory.menuOpen():
         if FFX_memory.turnReady():
             tidus_position =  FFX_memory.getBattleCharSlot(0)
+            print("Tidus Position: ", tidus_position)
             if FFX_Screen.turnTidus():
                 tidusFlee()
             elif checkTidusOk() and tidus_position >= 3 and tidus_position != 255:
                 buddySwapTidus()
-            elif not checkTidusOk() or tidus_position == 255:
+            elif not checkTidusOk() or tidus_position == 255 or FFX_memory.tidusEscapedState():
                 escapeOne()
             else:
                 defend()                
@@ -4750,5 +4757,11 @@ def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = '
     
     print("Desired equipment is in slot ", equipNum)
 
+def checkCharacterOk(charNum):
+    return not any(func(charNum) for func in [FFX_memory.petrifiedstate, FFX_memory.confusedState, FFX_memory.deadstate, FFX_memory.berserkstate])
+    
 def checkTidusOk():
-    return not any(func(0) for func in [FFX_memory.petrifiedstate, FFX_memory.confusedState, FFX_memory.deadstate, FFX_memory.berserkstate])
+    return checkCharacterOk(0)
+    
+def checkRikkuOk():
+    return checkCharacterOk(6)

@@ -1060,6 +1060,16 @@ def getCharWeakness(character):
 def getOverdriveValue(character): #Older function, I think Crimson wrote this one.
     return getOverdriveBattle(character)
 
+def tidusEscapedState():
+    global baseValue
+
+    key = baseValue + 0x0D334CC
+    pos = process.readBytes(key, 1)
+    offset = 0xDC8
+    retVal = not process.readBytes(baseValue + offset, 4)
+    print("Tidus Escaped State: ", retVal)
+    return retVal
+
 def deadstate(character):
     global process
     global baseValue
@@ -2391,6 +2401,25 @@ def cureMenuOpen():
     key = baseValue + 0x01440A35
     retVal = process.readBytes(key,1)
     return retVal
+    
+def configCursor():
+    global baseValue
+    key = baseValue + 0x0146A404
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
+def configCursorColumn():
+    global baseValue
+    key = baseValue + 0x0085A3FC
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
+def loadMenuCursor():
+    global baseValue
+    key = baseValue + 0x008E72E0
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
     
 def rikkuOverdriveItemSelectedNumber():
     global baseValue
