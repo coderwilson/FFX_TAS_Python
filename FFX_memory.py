@@ -2414,6 +2414,12 @@ def configCursorColumn():
     retVal = process.readBytes(key,1)
     return retVal    
     
+def configAeonCursorColumn():
+    global baseValue
+    key = baseValue + 0x0085A454
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
 def loadMenuCursor():
     global baseValue
     key = baseValue + 0x008E72E0

@@ -146,7 +146,7 @@ def shortAeons():
         FFX_Xbox.tapB()
     while FFX_memory.configCursor() != 5:
         FFX_Xbox.tapUp()
-    while FFX_memory.configCursorColumn() != 1:
+    while FFX_memory.configAeonCursorColumn() != 1:
         FFX_Xbox.tapRight()
     while FFX_memory.configCursor() != 3:
         FFX_Xbox.tapUp()
