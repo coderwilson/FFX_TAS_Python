@@ -121,9 +121,9 @@ def lakeRoad2():
 
 def lake():
     print("Now to the frozen lake")
-    FFX_memory.fullPartyFormat('crawler')
-    FFX_memory.awaitControl()
+    FFX_memory.fullPartyFormat('crawler', fullMenuClose=False)
     FFX_menu.mLakeGrid()
+    FFX_memory.awaitControl()
     
     print("------------------------------------------Affection array:")
     print(FFX_memory.affectionArray())
