@@ -59,8 +59,8 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
@@ -76,8 +76,8 @@ StepCounter = 1
 #StepCounter = 1
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4
-Gamestate = "Zanarkand"
-StepCounter = 4
+#Gamestate = "Zanarkand"
+#StepCounter = 4
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
@@ -90,7 +90,7 @@ autoEggHunt = True
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 130 #New seed number, only used if doing seed hunt.
 ####################################################################################################

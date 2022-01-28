@@ -204,16 +204,10 @@ def battleTargetActive():
 def userControl():
     global baseValue
     #Auto updating via reference to the baseValue above
-    global xPtr
-    global yPtr
-    xPtr = baseValue + 0x0084DED0
-    yPtr = baseValue + 0x0084DED8
-    coord1 = process.get_pointer(xPtr)
-    x = float_from_integer(process.read(coord1))
-    coord2 = process.get_pointer(yPtr)
-    y = float_from_integer(process.read(coord2))
+    controlStruct = baseValue + 0x00f00740
+    inControl = process.read(controlStruct)
 
-    if [x,y] == [0.0,0.0]:
+    if inControl == 0:
         return False
     else:
         return True
@@ -1234,6 +1228,17 @@ def closeMenu():
     while menuOpen():
         FFX_Xbox.tapA()
 
+def saveMenuOpen():
+    global baseValue
+
+    key = baseValue + 0x008E7300
+    menuOpen = process.readBytes(key,1)
+    if menuOpen == 1:
+        return True
+    else:
+        return False
+
+
 def backToMainMenu():
     if menuOpen():
         while menuNumber() != 5:
@@ -1348,11 +1353,25 @@ def saveMenuCursor():
     global baseValue
 
     key = baseValue + 0x001467942
-    value = process.readBytes(key,1)
-    if value != 0:
-        return True
-    else:
-        return False
+    return process.readBytes(key,1)
+
+def clearSaveMenuCursor():
+    global baseValue
+
+    key = baseValue + 0x001467942
+    return process.writeBytes(key,0,1)
+
+def clearSaveMenuCursor2():
+    global baseValue
+
+    key = baseValue + 0x001468302
+    return process.writeBytes(key,0,1)
+
+def saveMenuCursor2():
+    global baseValue
+
+    key = baseValue + 0x001468302
+    return process.readBytes(key,1)
 
 def NewGameCursor():
     global baseValue
@@ -2601,31 +2620,59 @@ def touchSaveSphere():
     print("MEM - Touch Save Sphere")
     
     ssDetails = getSaveSphereDetails()
-    FFXC.set_neutral()
     
-    while userControl():
-        FFX_targetPathing.setMovement([ssDetails[0], ssDetails[1]])
-        FFX_Xbox.tapB()
-        waitFrames(2)
+    if userControl():
+        while userControl():
+            FFX_targetPathing.setMovement([ssDetails[0], ssDetails[1]])
+            FFX_Xbox.tapB()
+            waitFrames(1)
     try:
         FFXC.set_neutral()
     except:
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
-    waitFrames(1)
+    #waitFrames(5)
+    FFXC.set_neutral()
     
-    complete = False
-    while not complete:
-        if diagProgressFlag() == ssDetails[2]:
+    while not userControl():
+        if saveMenuOpen():
+            FFX_Xbox.tapA()
+        elif diagProgressFlag() == ssDetails[2]:
             print("Cursor test: ", saveMenuCursor())
-            if saveMenuCursor() == 0 or saveMenuCursor == False:
+            if saveMenuCursor() == 0 and saveMenuCursor2() == 0:
                 FFX_Xbox.tapA()
+                #waitFrames(80)
             else:
                 FFX_Xbox.menuB()
-                complete = 1
+                #waitFrames(4)
         else:
             FFX_Xbox.tapB()
-            waitFrames(1)
+            #waitFrames(4)
+    clearSaveMenuCursor()
+    clearSaveMenuCursor2()
+
+def csrBaajSaveClear():
+    if userControl():
+        print("No need to clear. User is in control.")
+    else:
+        print("Save dialog has popped up for some reason. Attempting clear.")
+        try:
+            FFXC.set_neutral()
+        except:
+            FFXC = FFX_Xbox.controllerHandle()
+            FFXC.set_neutral()
+        while not userControl():
+            if saveMenuOpen():
+                FFX_Xbox.tapA()
+            elif diagProgressFlag() == 109:
+                if saveMenuCursor2() == 0:
+                    FFX_Xbox.tapA()
+                else:
+                    FFX_Xbox.tapB()
+                waitFrames(4)
+                
+    clearSaveMenuCursor()
+    clearSaveMenuCursor2()
 
 #-------------------------------------------------------
 #Testing

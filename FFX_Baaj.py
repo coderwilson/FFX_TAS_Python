@@ -142,15 +142,19 @@ def Klikk_fight() :
     
 def ABboat1() :
     print("Start of Al Bhed boat section.")
+    FFX_memory.clearSaveMenuCursor2()
     FFXC.set_neutral()
-    FFX_memory.awaitControl()
-    if FFX_memory.menuOpen():
-        FFX_memory.closeMenu()
+    if gameVars.csr():
+        FFX_memory.waitFrames(30)
+    #FFX_memory.csrBaajSaveClear()
+    print("Control restored.")
+    FFXC.set_neutral()
+    FFX_memory.waitFrames(4)
+    #FFX_memory.csrBaajSaveClear()
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.3)
-    if FFX_memory.menuOpen():
-        FFX_memory.closeMenu()
-    
+    #FFX_memory.csrBaajSaveClear()
+    FFXC.set_movement(0, -1)
     if not gameVars.csr():
         FFX_Xbox.SkipDialog(4) #Start Sphere Grid tutorial
         FFXC.set_neutral()
@@ -159,6 +163,7 @@ def ABboat1() :
     FFX_memory.waitFrames(2)
     FFX_memory.clickToEvent() #Talk to Rikku a second time.
     
+    FFX_memory.clearSaveMenuCursor2()
     FFXC.set_movement(0, -1)
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()
@@ -215,6 +220,7 @@ def ABswimming2() :
     FFXC.set_value('BtnA', 1)
     FFX_memory.touchSaveSphere()
 
+    FFX_memory.clearSaveMenuCursor2()
     #Now to get to it
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 1)
@@ -250,10 +256,16 @@ def ABswimming2() :
     FFX_Xbox.clickToBattle()
     FFX_Battle.Tros()
     
+    FFXC.set_neutral()
     while FFX_memory.getStoryProgress() < 111:
         if FFX_memory.userControl():
-            if FFX_memory.menuOpen():
-                FFX_Xbox.tapA()
+            if FFX_memory.diagProgressFlag() == 109:
+                FFXC.set_neutral()
+                if FFX_memory.saveMenuCursor2() == 0:
+                    FFX_Xbox.tapA()
+                else:
+                    FFX_Xbox.tapB()
+                FFX_memory.waitFrames(4)
             elif FFX_memory.getMap() == 64:
                 if FFX_memory.getCoords()[0] < -4:
                     FFX_targetPathing.setMovement([-2,47])
@@ -262,14 +274,18 @@ def ABswimming2() :
             elif FFX_memory.getMap() == 380:
                 FFX_targetPathing.setMovement([700,300])
             elif FFX_memory.getMap() == 71:
+                rikkuPos = FFX_memory.getActorCoords(3)
+                tidusPos = FFX_memory.getCoords()
+                distance = abs(tidusPos[1] - rikkuPos[1]) + abs(tidusPos[0] - rikkuPos[0])
                 FFX_targetPathing.setMovement([-14,-19])
-                FFX_Xbox.tapB()
+                if distance < 30:
+                    FFX_Xbox.tapB()
         else:
             FFXC.set_neutral()
-            if FFX_memory.diagSkipPossible():
+            if FFX_memory.diagProgressFlag() == 109:
+                FFX_memory.csrBaajSaveClear()
+            elif FFX_memory.diagSkipPossible() and not gameVars.csr():
                 FFX_Xbox.tapB()
-            elif FFX_memory.menuOpen():
-                FFX_Xbox.tapA()
     
     
     if not gameVars.csr():

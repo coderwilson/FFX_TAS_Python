@@ -268,7 +268,7 @@ def Klikk():
     rikkuSteal = 0
     klikkAttacks = 0
     klikkRevives = 0
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             BattleHP = FFX_memory.getBattleHP()
             if BattleHP[0] == 0 or BattleHP[1] == 0:
@@ -299,9 +299,18 @@ def Klikk():
     FFX_Logs.writeStats(str(klikkAttacks))
     FFX_Logs.writeStats("Klikk items used:")
     FFX_Logs.writeStats(str(klikkRevives))
-    FFX_memory.clickToControl()  # Maybe not skippable dialog, but whatever.
+    FFXC = FFX_Xbox.controllerHandle()
+    if gameVars.csr():
+        while not FFX_memory.userControl():
+            if FFX_memory.menuOpen():
+                FFXC.set_value('BtnB', 1)
+                FFX_memory.waitFrames(120)
+                FFXC.set_neutral()
+    else:
+        FFX_memory.clickToControl()  # Maybe not skippable dialog, but whatever.
 
 def Tros():
+    FFXC = FFX_Xbox.controllerHandle()
     FFX_Logs.writeLog("Fight start: Tros")
     print("Fight start: Tros")
     FFXC.set_neutral()
@@ -377,7 +386,15 @@ def Tros():
                         Attacks += 1
     
     print("Tros battle complete.")
-    FFX_memory.clickToControl3()
+    if gameVars.csr():
+        FFXC = FFX_Xbox.controllerHandle()
+        while not FFX_memory.menuOpen():
+            pass
+        FFXC.set_value('BtnB', 1)
+        FFX_memory.waitFrames(120)
+        FFXC.set_neutral()
+    else:
+        FFX_memory.clickToControl()  # Maybe not skippable dialog, but whatever.
     FFX_Logs.writeStats("Tros Attacks:")
     FFX_Logs.writeStats(str(Attacks))
     FFX_Logs.writeStats("Tros Revives:")
@@ -4083,8 +4100,12 @@ def healUp(chars=0, *, fullMenuClose=True):
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.menuNumber() != 7:
         FFX_Xbox.tapB()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
     order = FFX_memory.getOrderSeven()
@@ -4618,7 +4639,7 @@ def BFA():
                 while FFX_memory.battleMenuCursor() != 1:
                     FFX_Xbox.tapDown()
                     FFX_memory.waitFrames(2)
-                FFX_Xbox.tapB()
+                FFX_Xbox.menuB()
                 itemPos = FFX_memory.getThrowItemsSlot(6) - 1
                 while FFX_memory.battleCursor2() != itemPos:
                     print(FFX_memory.battleCursor2()," | ", itemPos)
@@ -4633,9 +4654,12 @@ def BFA():
                     else:
                         FFX_Xbox.tapUp()
                     FFX_memory.waitFrames(2)
+                FFX_memory.waitFrames(12)
                 FFX_Xbox.tapB()
                 FFX_memory.waitFrames(12)
-                FFX_Xbox.menuUp()
+                while FFX_memory.battleTargetId() < 20:
+                    FFX_memory.menuUp()
+                    FFX_memory.waitFrames(2)
                 FFX_Xbox.tapB()
                 FFX_Xbox.SkipDialog(2)
                 print("Phoenix Down on Yu Yevon. Good game.")

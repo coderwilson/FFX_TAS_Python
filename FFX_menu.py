@@ -4,6 +4,8 @@ import FFX_Screen
 import FFX_menuGrid
 import FFX_Logs
 import FFX_memory
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -137,7 +139,10 @@ def autoSortItems(manual):
 
 def shortAeons():
     FFX_memory.openMenu()
-    cursorTarget = 4
+    if gameVars.csr():
+        cursorTarget = 5
+    else:
+        cursorTarget = 4
     print("Aiming at ", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())

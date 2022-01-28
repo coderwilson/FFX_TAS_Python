@@ -3,6 +3,8 @@ import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_memory
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -485,18 +487,24 @@ def selSphere(sType, direction, shift):
         return
     while menuPos != FFX_memory.getGridCursorPos():
         if menuPos > FFX_memory.getGridCursorPos():
-            if menuPos - FFX_memory.getGridCursorPos() >=3:
-                FFX_Xbox.TriggerR()
-            else:
+            if gameVars.usePause():
                 FFX_Xbox.tapDown()
-        elif menuPos < FFX_memory.getGridCursorPos():
-            if FFX_memory.getGridCursorPos() - menuPos >=3:
-                if menuPos == 0 and FFX_memory.getGridCursorPos() - menuPos == 3:
-                    FFX_Xbox.tapUp()
-                else:
-                    FFX_Xbox.TriggerL()
             else:
+                if menuPos - FFX_memory.getGridCursorPos() >=3:
+                    FFX_Xbox.TriggerR()
+                else:
+                    FFX_Xbox.tapDown()
+        elif menuPos < FFX_memory.getGridCursorPos():
+            if gameVars.usePause():
                 FFX_Xbox.tapUp()
+            else:
+                if FFX_memory.getGridCursorPos() - menuPos >=3:
+                    if menuPos == 0 and FFX_memory.getGridCursorPos() - menuPos == 3:
+                        FFX_Xbox.tapUp()
+                    else:
+                        FFX_Xbox.TriggerL()
+                else:
+                    FFX_Xbox.tapUp()
     while not FFX_memory.sphereGridPlacementOpen():
         FFX_Xbox.menuB()
     if shift == 'up':
