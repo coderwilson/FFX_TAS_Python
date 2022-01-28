@@ -5,6 +5,8 @@ import FFX_Battle
 import FFX_menu
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -78,45 +80,78 @@ def lakeRoad():
     FFX_memory.fullPartyFormat('spheri')
     FFXC.set_movement(1, 1)
     FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2.5)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 5)
+    while not FFX_memory.battleActive():
+        if FFX_memory.userControl():
+            mapVal = FFX_memory.getMap()
+            tidusPos = FFX_memory.getCoords()
+            if mapVal == 221:
+                if tidusPos[0] > 35:
+                    FFX_targetPathing.setMovement([33,-35])
+                else:
+                    FFX_targetPathing.setMovement([-4,15])
+            elif mapVal == 248:
+                if tidusPos[0] < -131:
+                    FFX_targetPathing.setMovement([-129,-343])
+                elif tidusPos[1] < -235:
+                    FFX_targetPathing.setMovement([-49,-233])
+                elif tidusPos[1] < -95:
+                    FFX_targetPathing.setMovement([-1,-93])
+                else:
+                    FFX_targetPathing.setMovement([-1,100])
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            
     FFXC.set_neutral() #Engage Spherimorph
     
     FFX_Battle.spherimorph()
     print("Battle is over.")
-    FFX_Xbox.SkipDialog(3)
     FFX_memory.clickToControl() #Jecht's memories
     
 def lakeRoad2():
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 6)
-    FFXC.set_neutral()
+    if gameVars.csr():
+        checkpoint = 0
+        tidusPos = FFX_memory.getCoords()
+        while checkpoint < 5:
+            if checkpoint == 0:
+                if FFX_targetPathing.setMovement([-6,25]):
+                    checkpoint += 1
+            elif checkpoint == 1:
+                if FFX_targetPathing.setMovement([-4,-50]):
+                    checkpoint += 1
+            elif checkpoint == 2:
+                if FFX_targetPathing.setMovement([-45,-212]):
+                    checkpoint += 1
+            elif checkpoint == 3:
+                if FFX_targetPathing.setMovement([-49,-245]):
+                    checkpoint += 1
+            else:
+                if FFX_targetPathing.setMovement([-145,-358]):
+                    checkpoint += 1
     
-    FFX_memory.clickToControl() #Auron's musings.
-    print("Affection (before): ", FFX_memory.affectionArray())
-    FFX_memory.waitFrames(30 * 0.2)
-    auronAffection = FFX_memory.affectionArray()[2]
-    while FFX_memory.affectionArray()[2] == auronAffection: #Make sure we get Auron affection
-        auronCoords = FFX_memory.getActorCoords(3)
-        FFX_targetPathing.setMovement(auronCoords)
-        FFX_Xbox.tapB()
-    print("Affection (after): ", FFX_memory.affectionArray())
+    else:
+        FFX_memory.waitFrames(30 * 6)
+        FFXC.set_neutral()
+        
+        FFX_memory.clickToControl() #Auron's musings.
+        print("Affection (before): ", FFX_memory.affectionArray())
+        FFX_memory.waitFrames(30 * 0.2)
+        auronAffection = FFX_memory.affectionArray()[2]
+        while FFX_memory.affectionArray()[2] == auronAffection: #Make sure we get Auron affection
+            auronCoords = FFX_memory.getActorCoords(3)
+            FFX_targetPathing.setMovement(auronCoords)
+            FFX_Xbox.tapB()
+        print("Affection (after): ", FFX_memory.affectionArray())
     while FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
     FFXC.set_neutral()
     
     FFX_memory.clickToControl() #Last map in the woods
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 4)
+    FFX_memory.waitFrames(2)
+    FFX_memory.awaitEvent()
     FFXC.set_neutral()
 
 def lake():

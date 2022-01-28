@@ -8,6 +8,8 @@ import FFX_memory
 import FFX_menu
 import FFX_targetPathing
 import FFX_zzairShipPath
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -44,10 +46,7 @@ def preEvrae():
     FFX_zzairShipPath.airShipPath(1)
 
 def guards(blitzWin):
-    #FFX_memory.fullPartyFormat('rikku')
-    #FFX_menu.bevelleGuards()
-    
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
     if not blitzWin:
         FFX_menu.equipSonicSteel()
     FFX_menu.beforeGuards()
@@ -82,19 +81,20 @@ def guards(blitzWin):
     FFXC.set_neutral()
     FFX_Battle.guards(5)
     
-    FFX_Xbox.SkipDialog(126)
-    FFX_Xbox.skipStoredScene(10)
-    FFX_Xbox.SkipDialog(2)
+    if not gameVars.csr():
+        FFX_Xbox.SkipDialog(126)
+        FFX_Xbox.skipStoredScene(10)
+        FFX_Xbox.SkipDialog(2)
     
     while not FFX_memory.userControl():
-        if FFX_memory.diagSkipPossible():
+        if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
         elif FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.skipScene()
     
     FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
-    FFXC.set_movement(0, 1)
+    FFXC.set_movement(1, 1)
     FFX_memory.waitFrames(30 * 3)
     FFXC.set_neutral()
     
@@ -367,7 +367,8 @@ def trialsEnd():
     
     #Name for Bahamut
     FFX_Xbox.nameAeon()
-    FFX_Xbox.awaitSave(index=29)
+    if not gameVars.csr():
+        FFX_Xbox.awaitSave(index=29)
 
 def ViaPurifico():
     FFX_memory.clickToControl()
@@ -379,7 +380,8 @@ def ViaPurifico():
     FFX_memory.waitFrames(30 * 5)
     FFXC.set_neutral()
     
-    FFX_memory.waitFrames(30 * 5.7) #Wait for the right direction
+    if not gameVars.csr():
+        FFX_memory.waitFrames(30 * 5.7) #Wait for the right direction
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
@@ -505,18 +507,23 @@ def seymourNatus(blitzWin):
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
             elif checkpoint == 5:
+                print("Checkpoint 5")
                 FFXC.set_movement(-1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1)
+                FFX_memory.waitFrames(3)
                 checkpoint += 1
             elif checkpoint == 6:
-                FFX_memory.clickToEventTemple(3)
+                print("Checkpoint 6")
+                if not gameVars.csr():
+                    FFX_memory.clickToEventTemple(3)
                 checkpoint += 1
             elif checkpoint == 8:
+                print("Checkpoint 8")
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 12:
+                print("Checkpoint 12")
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             

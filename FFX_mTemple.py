@@ -6,6 +6,8 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -53,6 +55,8 @@ def arrival(blitzWin):
                 FFX_memory.waitFrames(30 * 0.2)
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
+            elif checkpoint == 2 and gameVars.csr():
+                checkpoint = 6
             elif checkpoint == 4: #Talking to Trommell
                 FFX_memory.clickToEventTemple(6)
                 if FFX_memory.getCoords()[0] < 23.5:
@@ -97,7 +101,10 @@ def arrival(blitzWin):
                 
             elif checkpoint == 11:
                 print("Check if skip is online")
-                if FFX_memory.getStoryProgress() < 1505:
+                if gameVars.csr():
+                    jyscalSkipStatus = True
+                    checkpoint += 1
+                elif FFX_memory.getStoryProgress() < 1505:
                     jyscalSkipStatus = True
                     checkpoint += 1
                 else:
@@ -105,6 +112,11 @@ def arrival(blitzWin):
                     checkpoint = 20
                     skipStatus = False
                 print("Jyscal Skip results: ", skipStatus)
+            elif checkpoint == 14 and gameVars.csr():
+                FFXC.set_movement(0, 1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                checkpoint += 1
             elif checkpoint == 14: #Pause so we don't mess up the skip
                 if skipStatus == True:
                     FFXC.set_neutral()
@@ -164,7 +176,7 @@ def seymourFight():
     FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 0.4)
     FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 4.5)
+    FFX_memory.awaitEvent()
     FFXC.set_neutral()
 
 def trials():
@@ -173,8 +185,12 @@ def trials():
     checkpoint = 0
     while FFX_memory.getMap() != 153:
         if FFX_memory.userControl():
+            #CSR start point
+            if checkpoint < 3 and gameVars.csr():
+                checkpoint = 3
+            
             #Map changes
-            if checkpoint < 2 and FFX_memory.getMap() == 239:
+            elif checkpoint < 2 and FFX_memory.getMap() == 239:
                 checkpoint = 2
             
             #Spheres and Pedestols
@@ -281,6 +297,44 @@ def wendigoFight():
     print("wendigoFight function is no longer used.")
 
 def underLake():
+    FFX_memory.clickToControl()
+    checkpoint = 0
+    while FFX_memory.getMap() != 129:
+        if FFX_memory.userControl():
+            if checkpoint == 4:
+                FFXC.set_movement(0, 1)
+                FFX_memory.clickToEvent()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
+                FFXC.set_movement(0, 1)
+                FFX_memory.waitFrames(2)
+                FFX_memory.clickToEvent()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
+                checkpoint += 1
+            elif checkpoint == 11:
+                FFX_memory.clickToEventTemple(2)
+                checkpoint += 1
+            elif checkpoint == 15:
+                FFXC.set_movement(0, 1)
+                FFX_memory.clickToEvent()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
+            
+            #General pathing
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.underMacTemple(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+            #elif FFX_memory.cutsceneSkipPossible():
+            #    FFX_Xbox.skipScene()
+    FFXC.set_neutral()
+    FFX_memory.clickToControl()
+
+def underLake_old():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 1)

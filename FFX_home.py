@@ -5,6 +5,8 @@ import FFX_Battle
 import FFX_menu
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -170,6 +172,7 @@ def findSummoners(blitzWin):
     FFX_menu.homeGrid()
     
     checkpoint = 0
+    dhBattleCount = 0
     while FFX_memory.getMap() != 261:
         if FFX_memory.userControl():
             #events
@@ -220,7 +223,7 @@ def findSummoners(blitzWin):
                     checkpoint = 81
             #elif checkpoint < 27 and FFX_memory.getMap() == 280:
             #    checkpoint = 27
-            elif checkpoint == 31:
+            elif checkpoint == 31 and not gameVars.csr():
                 FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
             elif checkpoint == 39:
@@ -230,7 +233,7 @@ def findSummoners(blitzWin):
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 45:
-                FFX_memory.clickToEventTemple(2)
+                FFX_memory.clickToEventTemple(1)
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Home(checkpoint)) == True:
                 checkpoint += 1
@@ -242,7 +245,8 @@ def findSummoners(blitzWin):
                     print("Home, battle 1")
                     FFX_Battle.home1()
                 elif FFX_memory.getBattleNum() == 419:
-                    if FFX_memory.diagProgressFlag() == 8:
+                    dhBattleCount += 1
+                    if dhBattleCount == 1:
                         print("Home, battle 2")
                         FFX_Battle.home2()
                         while not FFX_memory.userControl():
@@ -258,6 +262,7 @@ def findSummoners(blitzWin):
                 elif FFX_memory.getBattleNum() == 420:
                     print("Home, final battle")
                     FFX_Battle.home4()
+                    FFX_memory.fullPartyFormat('evrae')
                 else:
                     FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():

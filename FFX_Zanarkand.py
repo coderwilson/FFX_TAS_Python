@@ -291,11 +291,7 @@ def sanctuaryKeeper(ver):
     FFX_memory.clickToControl()
 
 def yunalesca(ver):
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.1)
-    FFXC.set_neutral()
+    FFX_memory.clickToControl()
     FFX_memory.touchSaveSphere()
     
     if ver == 4:
@@ -305,36 +301,29 @@ def yunalesca(ver):
     else:
         print("No further sphere gridding needed at this time.")
     
-    FFX_memory.awaitControl()
     print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_memory.awaitEvent()
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.2) #Starts the first lower room conversation. "Kimahri go first. Yuna is safe."
-    FFX_memory.clickToControlSpecial()
     
+    checkpoint = 0
     while not FFX_memory.battleActive(): #Gets us to Yunalesca battle through multiple rooms.
         if FFX_memory.menuOpen():
             FFX_memory.closeMenu()
         elif FFX_memory.userControl():
-            zanMap = FFX_memory.getMap()
-            if zanMap == 224:
-                pos = FFX_memory.getCoords()
-                if pos[0] < -3:
-                    FFXC.set_movement(1, 1)
-                else:
-                    FFXC.set_movement(0, 1)
-            else:
+            if checkpoint in [2,4]:
                 FFXC.set_movement(0, 1)
+                FFX_memory.awaitEvent()
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalesca(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             FFXC.set_value('BtnB',1)
             FFXC.set_value('BtnA',1)
-            FFX_memory.waitFrames(30 * 0.035)
+            FFX_memory.waitFrames(1)
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
-            FFX_memory.waitFrames(30 * 0.035)
+            FFX_memory.waitFrames(1)
     FFX_Xbox.clickToBattle()
     FFX_Battle.aeonSummon(4) #Summon Bahamut and attack.
     FFX_memory.clickToControl() #This does all the attacking and dialog skipping
@@ -342,6 +331,8 @@ def yunalesca(ver):
     #return #used for testing only
     
     print("Heading back outside.")
+    FFXC.set_neutral()
+    FFX_memory.waitFrames(2)
     checkpoint = 0
     while FFX_memory.getMap() != 194:
         if FFX_memory.userControl():

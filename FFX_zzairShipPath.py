@@ -37,12 +37,12 @@ def airShipPath(version):
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.awaitControl()
                 checkpoint += 1
+            elif checkpoint == 24:
+                FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
             
             #Return trip map changes
-            elif checkpoint == 24:
-                FFX_memory.clickToEventTemple(0)
-                checkpoint += 1
-            elif checkpoint in [31,34]:
+            elif checkpoint in [13,32,34]:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 37:
@@ -50,6 +50,12 @@ def airShipPath(version):
                 checkpoint += 1
             elif checkpoint == 40:
                 FFX_memory.clickToEventTemple(7)
+                checkpoint += 1
+            elif checkpoint == 44: #Talk to Cid
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-250,339])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
                 complete = True
             
             #Complete states
@@ -141,255 +147,6 @@ def notes():
         checkpoint = 70
     else:
         print("Something maybe went wrong?")
-
-def airShipPath_old(version):
-    FFX_memory.clickToControl()
-    
-    checkpoint = 0
-    lastCP = 0
-    while checkpoint != 1000:
-        if lastCP != checkpoint:
-            print("Checkpoint: ", checkpoint)
-            lastCP = checkpoint
-        pos = FFX_memory.getCoords()
-        if FFX_memory.userControl():
-            if checkpoint == 0: #First room
-                if pos[1] > 130:
-                    checkpoint = 10
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLx', 1)
-                    FFXC.set_value('AxisLy', -1)
-            elif checkpoint == 10: #Rin's room
-                if pos[0] > 60:
-                    checkpoint = 20
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLy', -1)
-                    if pos[1] > 80:
-                        FFXC.set_value('AxisLx', -1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 20: #Isaaru's room
-                if pos[0] < 1:
-                    checkpoint = 30
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLy', -1)
-                    if pos[1] < 70:
-                        FFXC.set_value('AxisLx', 1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 30:
-                if pos[1] < -90:
-                    checkpoint = 40
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLy', -1)
-                    FFXC.set_value('AxisLx', 0)
-            elif checkpoint == 40:
-                if pos[0] < -30:
-                    checkpoint = 50
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', -1)
-            elif checkpoint == 50:
-                if pos[1] > -15:
-                    if version == 1:
-                        print("Pre-Evrae pathing")
-                        checkpoint = 60
-                    elif version == 2:
-                        print("Talking to Yuna/Kimahri in the gallery")
-                        checkpoint = 120
-                    elif version == 3:
-                        print("Straight to the deck, three skips.")
-                        checkpoint = 150
-                    elif version == 4:
-                        print("Straight to the deck, talking to Yuna.")
-                        checkpoint = 180
-                    elif version == 5:
-                        print("Final pathing. Sin's face.")
-                        checkpoint = 200
-                    elif version == 6:
-                        print("Final pathing. Sin's face.")
-                        checkpoint = 70
-                    else:
-                        print("Something maybe went wrong?")
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 0)
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLy', 1)
-                    FFXC.set_value('AxisLx', 0)
-            
-            elif checkpoint == 60: #Pre-Evrae with items
-                if pos[1] < -10:
-                    checkpoint = 65
-                else:
-                    FFX_memory.waitFrames(30 * 0.05)
-                    FFXC.set_value('AxisLy', 1)
-                    if pos[0] < -5:
-                        FFXC.set_value('AxisLx', 1)
-                    else:
-                        FFXC.set_value('AxisLx', 0)
-            
-            #Pre-Evrae with items
-            elif checkpoint == 65:
-                FFX_memory.awaitControl()
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.15)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.waitFrames(30 * 0.5)
-                FFXC.set_value('AxisLx', 0)
-                FFX_Xbox.SkipDialog(2.5) #Talk to Rin
-                FFX_memory.waitFrames(1000) #Maybe we never do this anyway?
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuRight()
-                FFX_memory.waitFrames(30 * 0.5)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB() #Sell old Tidus armor
-                FFX_Xbox.menuA()
-                FFX_memory.waitFrames(30 * 0.1)
-                FFX_Xbox.menuLeft()
-                FFX_memory.waitFrames(30 * 0.5)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB() #Purchase Baroque sword
-                FFX_memory.waitFrames(30 * 0.1)
-                FFX_Xbox.menuB() #Do not equip yet.
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                
-                FFX_memory.clickToControl()
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                FFX_memory.waitFrames(30 * 0.2)
-                FFXC.set_value('AxisLx', 0)
-                FFX_Xbox.SkipDialog(3)
-                FFX_memory.awaitControl()
-                FFX_Xbox.SkipDialog(5)
-                FFXC.set_value('AxisLy', 0)
-                checkpoint = 1000
-                
-            #Pre-Evrae, no items
-            elif checkpoint == 70:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(5)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
-                FFXC.set_value('AxisLy', 0)
-                
-                checkpoint = 1000
-            
-            #Yuna/Kimahri in the gallery
-            elif checkpoint == 120:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', -1)
-                SkipDialog(2)
-                FFXC.set_value('AxisLy', 0)
-                FFXC.set_value('AxisLx', 0)
-                if FFX_memory.userControl():
-                    print("Something went wrong. Trying the other way.")
-                    FFXC.set_value('AxisLy', 1)
-                    FFXC.set_value('AxisLx', -1)
-                    SkipDialog(4)
-                    FFXC.set_value('AxisLy', 0)
-                    FFXC.set_value('AxisLx', 0)
-                else:
-                    checkpoint = 1000
-                    FFX_memory.clickToControl()
-            
-            #Sin's arms
-            elif checkpoint == 150:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(4)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
-                FFXC.set_value('AxisLy', 0)
-                
-                SkipDialog(64)
-                skipScene()
-                SkipDialog(6)
-                skipScene()
-                SkipDialog(26)
-                skipScene()
-                checkpoint = 1000
-                
-            #Yuna reflecting
-            elif checkpoint == 180:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(4)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
-                FFXC.set_value('AxisLy', 0)
-                
-                FFX_memory.awaitControl()
-                FFXC.set_value('AxisLx', -1)
-                FFX_memory.waitFrames(30 * 2.4)
-                FFXC.set_value('AxisLy', 1)
-                SkipDialog(0.5) #Hi Yuna. Let's have a quick chat.
-                FFXC.set_value('AxisLx', 0)
-                FFXC.set_value('AxisLy', 0)
-                SkipDialog(126)
-                skipScene()
-                checkpoint = 1000
-                
-            #Sin's face
-            elif checkpoint == 200:
-                FFXC.set_value('AxisLy', 1)
-                FFXC.set_value('AxisLx', 1)
-                FFX_memory.waitFrames(30 * 0.5)
-                FFXC.set_value('AxisLx', 0)
-                SkipDialog(4)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.awaitControl()
-                
-                FFXC.set_value('AxisLy', 1)
-                FFX_memory.waitFrames(30 * 2)
-                FFXC.set_value('AxisLy', 0)
-                FFX_memory.waitFrames(30 * 6.5)
-                skipScene()
-                checkpoint = 1000
-        elif FFX_Screen.BattleScreen():
-            FFX_Battle.fleeAll()
-        else:
-            FFXC.set_value('AxisLx', 0)
-            FFXC.set_value('AxisLy', 0)
-            if FFX_memory.menuOpen():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
-            elif checkpoint == 50:
-                FFX_memory.clickToControl()
 
 def airShipReturn():
     print("Conversation with Yuna/Kimahri.")

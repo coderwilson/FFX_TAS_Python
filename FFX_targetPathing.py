@@ -3114,6 +3114,164 @@ def moonflowBankNorth(checkpoint):
         y = 200
     return [x,y]
 
+def guadoStoryline(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -8
+        y = 109
+    if checkpoint == 1: #Dialog with party
+        x = 0
+        y = 0
+    if checkpoint == 2:
+        x = -56
+        y = 110
+    if checkpoint == 3:
+        x = -56
+        y = 110
+    if checkpoint == 4:
+        x = -56
+        y = 110
+    if checkpoint == 5:
+        x = -56
+        y = 110
+    if checkpoint == 6:
+        x = -82
+        y = 51
+    if checkpoint == 7:
+        x = -84
+        y = -3
+    if checkpoint == 8:
+        x = -50
+        y = -11
+    if checkpoint == 9:
+        x = -3
+        y = 9
+    if checkpoint == 10:
+        x = 46
+        y = 34
+    if checkpoint == 11:
+        x = 120
+        y = 92
+    if checkpoint == 12: #Towards the farplane
+        x = 0
+        y = 0
+    if checkpoint == 13:
+        x = -9
+        y = 11
+    if checkpoint == 14: #Chest
+        x = 0
+        y = 0
+    if checkpoint == 15:
+        x = -5
+        y = 101
+    if checkpoint == 16: #Screen to screen
+        x = 0
+        y = 0
+    if checkpoint == 17: #Approach party
+        x = 0
+        y = 0
+    if checkpoint == 18:
+        x = -1
+        y = 35
+    if checkpoint == 19:
+        x = -1
+        y = 88
+    if checkpoint == 20:
+        x = -4
+        y = 152
+    if checkpoint == 21: #Into the farplane
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = -44
+        y = 0
+    if checkpoint == 23: #Wakka convo
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = -26
+        y = -65
+    if checkpoint == 25: #Yuna convo
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 64
+        y = 41
+    if checkpoint == 27:
+        x = 31
+        y = 30
+    if checkpoint == 28:
+        x = -12
+        y = 9
+    if checkpoint == 29:
+        x = -54
+        y = -9
+    if checkpoint == 30:
+        x = -85
+        y = 0
+    if checkpoint == 31:
+        x = -66
+        y = 84
+    if checkpoint == 32:
+        x = -33
+        y = 115
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x,y]
+
 def guadoSkip(checkpoint):
     x = 999
     y = 999
@@ -3165,8 +3323,8 @@ def guadoSkip(checkpoint):
     if checkpoint == 21:
         print("Shelinda scene")
     if checkpoint == 22:
-        x = -27
-        y = 87
+        x = -18
+        y = 96
     if checkpoint == 23:
         x = -25
         y = 144
@@ -3878,6 +4036,165 @@ def mTempleEscape(checkpoint):
         y = -700
     return [x,y]
 
+def underMacTemple(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 1
+        y = 146
+    if checkpoint == 1:
+        x = 34
+        y = 116
+    if checkpoint == 2:
+        x = 29
+        y = 98
+    if checkpoint == 3:
+        x = 0
+        y = 80
+    if checkpoint == 4: #Talk to Rikku then Yuna
+        x = 0
+        y = 0
+    if checkpoint == 5:
+        x = 1
+        y = 146
+    if checkpoint == 6:
+        x = 34
+        y = 116
+    if checkpoint == 7:
+        x = 29
+        y = 98
+    if checkpoint == 8:
+        x = 10
+        y = 86
+    if checkpoint == 9:
+        x = -24
+        y = 103
+    if checkpoint == 10:
+        x = -41
+        y = 95
+    if checkpoint == 11: #Open chest
+        x = 0
+        y = 0
+    if checkpoint == 12:
+        x = -21
+        y = 103
+    if checkpoint == 13:
+        x = 0
+        y = 73
+    if checkpoint == 14:
+        x = -5
+        y = 13
+    if checkpoint == 15: #Talk to Auron
+        x = 0
+        y = 0
+    if checkpoint == 16: #Back down to next scene
+        x = 0
+        y = 73
+    if checkpoint == 17:
+        x = 0
+        y = 0
+    if checkpoint == 18:
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
+    if checkpoint == 25:
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x,y]
+
+
 def desert(checkpoint):
     x = 999
     y = 999
@@ -4158,8 +4475,8 @@ def Home(checkpoint):
         x = -184
         y = 210
     if checkpoint == 31: #Down the stairs, storyline.
-        x = -256
-        y = 180
+        x = -234
+        y = 162
     if checkpoint == 32:
         x = -296
         y = 217
@@ -4197,8 +4514,8 @@ def Home(checkpoint):
         x = 91
         y = -25
     if checkpoint == 44:
-        x = 130
-        y = -45
+        x = 124
+        y = -50
     if checkpoint == 45: ##Stairs to airship
         x = 0
         y = 0
@@ -5549,6 +5866,164 @@ def zanarkandTrials(checkpoint):
         y = 20
     return [x,y]
 
+def yunalesca(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 3
+        y = 8
+    if checkpoint == 1:
+        x = 5
+        y = 35
+    if checkpoint == 2:
+        x = 0
+        y = 0
+    if checkpoint == 3:
+        x = 0
+        y = 80
+    if checkpoint == 4:
+        x = 0
+        y = 0
+    if checkpoint == 5:
+        x = 0
+        y = 0
+    if checkpoint == 6:
+        x = 0
+        y = 0
+    if checkpoint == 7:
+        x = 0
+        y = 0
+    if checkpoint == 8:
+        x = 0
+        y = 0
+    if checkpoint == 9:
+        x = 0
+        y = 0
+    if checkpoint == 10:
+        x = 0
+        y = 0
+    if checkpoint == 11:
+        x = 0
+        y = 0
+    if checkpoint == 12:
+        x = 0
+        y = 0
+    if checkpoint == 13:
+        x = 0
+        y = 0
+    if checkpoint == 14:
+        x = 0
+        y = 0
+    if checkpoint == 15:
+        x = 0
+        y = 0
+    if checkpoint == 16:
+        x = 0
+        y = 0
+    if checkpoint == 17:
+        x = 0
+        y = 0
+    if checkpoint == 18:
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
+    if checkpoint == 25:
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x,y]
+
 def yunalescaToAirship(checkpoint):
     x = 999
     y = 999
@@ -5874,7 +6349,7 @@ def insideSin(checkpoint):
     return [x,y]
 
 def airShip(checkpoint):
-    print("Airship pathing checkpoint: ", checkpoint)
+    #print("Airship pathing checkpoint: ", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5938,8 +6413,8 @@ def airShip(checkpoint):
         x = 999
         y = 999
     if checkpoint == 23:
-        x = -33
-        y = -9
+        x = -29
+        y = -6
     if checkpoint == 25:
         x = -32
         y = -7
@@ -5986,6 +6461,18 @@ def airShip(checkpoint):
         x = 52
         y = 113
     if checkpoint == 40: #Back into cockpit
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = -241
+        y = 195
+    if checkpoint == 42:
+        x = -242
+        y = 311
+    if checkpoint == 43:
+        x = -245
+        y = 327
+    if checkpoint == 44: #Cid
         x = 0
         y = 0
     return [x,y]

@@ -53,8 +53,8 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "MRR"
 #StepCounter = 1
-Gamestate = "Djose"
-StepCounter = 1
+#Gamestate = "Djose"
+#StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
 #Gamestate = "Guadosalam"
@@ -66,6 +66,7 @@ StepCounter = 1
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
 #Gamestate = "Home"
+#StepCounter = 1
 #StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
@@ -75,8 +76,8 @@ StepCounter = 1
 #StepCounter = 1
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4
-#Gamestate = "Zanarkand"
-#StepCounter = 4
+Gamestate = "Zanarkand"
+StepCounter = 4
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
@@ -116,7 +117,7 @@ maxLoops = 25
 rngSeedOrig = rngSeedNum
 speedCount = 0
 strengthCount = 0
-endGameVersion = 0
+endGameVersion = 1
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
 earlyHaste = 0
 earlyTidusGrid = False
@@ -232,7 +233,7 @@ if Gamestate != "none" :
     if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
         FFX_LoadGame.djoseTemple()
     if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(20)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
         FFX_LoadGame.loadOffset(4)
@@ -256,7 +257,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffsetBattle(0)
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(15)
+        FFX_LoadGame.loadOffset(16)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadOffset(7)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
@@ -285,6 +286,8 @@ if Gamestate != "none" :
         FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(10)
+        import FFX_menu
+        FFX_menu.zombieStrkeBackup()
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
@@ -805,7 +808,7 @@ while Gamestate != "End":
     if Gamestate == "Zanarkand" and StepCounter == 3:
         reportGamestate()
         if endGameVersion == 0:
-            endGameVersion = 4 #Used during segmented testing.
+            endGameVersion = 1 #Used during segmented testing.
             # 4 == four Return spheres
             # 3 == four Friend spheres
             # 1 or 2 == two of each.

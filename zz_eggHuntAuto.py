@@ -74,8 +74,9 @@ def engage():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
         elif FFX_memory.battleActive():
-                print("Battle engaged - using flee.")
-                FFX_Battle.fleeAll()
+            print("Battle engaged - using flee.")
+            FFXC.set_neutral()
+            FFX_Battle.fleeAll()
         else: #User control is different for this section.
             #print("Building egg array")
             eggArray = FFX_memory.buildEggs()

@@ -1336,9 +1336,9 @@ def auronFirstStrike():
             FFX_Xbox.tapDown()
             FFX_memory.waitFrames(1)
         FFX_memory.waitFrames(15)
-        FFX_Xbox.tapB()
+        FFX_Xbox.menuB()
         FFX_memory.waitFrames(15)
-        FFX_Xbox.tapB()
+        FFX_Xbox.menuB()
         FFX_memory.waitFrames(15)
         
         weaponNum = 255
@@ -1357,9 +1357,9 @@ def auronFirstStrike():
                     FFX_Xbox.tapDown()
                 else:
                     FFX_Xbox.tapUp()
-                FFX_memory.waitFrames(2)
+                FFX_memory.waitFrames(1)
             FFX_memory.waitFrames(15)
-            FFX_Xbox.tapB()
+            FFX_Xbox.menuB()
             FFX_memory.waitFrames(15)
             FFX_Xbox.menuA()
     #Return to main menu, this does not close menu.
@@ -1415,6 +1415,25 @@ def gagazetCave():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB() #Auron to slot 3
     FFX_memory.closeMenu()
+
+def zombieStrkeBackup():
+    openGrid(character=0)
+    
+    FFX_menuGrid.moveFirst()
+    gridUp()
+    gridUp()
+    gridUp()
+    gridUp()
+    gridUp()
+    FFX_menuGrid.moveAndUse()
+    FFX_menuGrid.selSphere('lv4','d','none')
+    FFX_menuGrid.useAndMove()
+    gridUp()
+    FFX_menuGrid.moveAndUse()
+    FFX_menuGrid.selSphere('ability','u','none')
+    FFX_menuGrid.useAndQuit()
+    FFX_memory.closeMenu()
+
 
 def endGameSwap():
     formation = FFX_memory.getOrder()

@@ -4,6 +4,10 @@ class allVars:
         self.csrValue = True
         self.blitzWinValue = False
         self.artificialPauses = True
+        
+        
+        self.zombieWeaponVal = 255
+        self.lStrikeCount = 0
     
     def csr(self):
         return self.csrValue
@@ -13,6 +17,21 @@ class allVars:
     
     def usePause(self):
         return self.artificialPauses
+    
+    def setBlitzWin(self, value):
+        self.blitzWinValue = value
+    
+    def getBlitzWin(self):
+        return self.blitzWinValue
+    
+    def setLStrike(self, value):
+        self.lStrikeCount = value
+    
+    def getLStrike(self):
+        return self.lStrikeCount
+    
+    def zombieWeapon(self):
+        return self.zombieWeaponVal
 
 def initVars():
     mainVars = allVars()

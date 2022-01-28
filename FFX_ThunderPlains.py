@@ -5,12 +5,16 @@ import FFX_Battle
 import FFX_menu
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def southPathing(status):
     FFX_memory.clickToControl()
+    
+    gameVars.setLStrike(FFX_memory.lStrikeCount())
     
     speedcount = FFX_memory.getSpeed()
     if speedcount >= 14:
@@ -24,9 +28,9 @@ def southPathing(status):
     while FFX_memory.getMap() != 256:
         if FFX_memory.userControl():
             #Lightning dodging
-            if FFX_memory.dodgeLightning(lStrikeCount):
+            if FFX_memory.dodgeLightning(gameVars.getLStrike()):
                 print("Dodge")
-                lStrikeCount = FFX_memory.lStrikeCount()
+                gameVars.setLStrike(FFX_memory.lStrikeCount())
             
             #General pathing
             elif FFX_memory.userControl():
@@ -195,9 +199,8 @@ def agency(blitzWin):
     FFXC.set_movement(1, 1)
     FFX_memory.waitFrames(30 * 0.6)
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_neutral
-    FFX_memory.waitFrames(30 * 2) #Scene in Yuna's room. Not as exciting as it sounds.
+    FFX_memory.awaitEvent()
+    FFXC.set_neutral()
     
     FFX_memory.clickToControl3()
     print("Yuna's done talking. Let's keep going.")
@@ -211,7 +214,7 @@ def agency(blitzWin):
     FFX_Xbox.SkipDialog(0.4)
     FFXC.set_movement(-1, 0)
     FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.SkipDialog(2) #Talk to Rikku
+    FFX_memory.clickToEvent()
     FFXC.set_neutral()
     
     print("------------------------------------------Affection array:")
@@ -225,10 +228,9 @@ def agency(blitzWin):
     FFX_memory.waitFrames(30 * 0.1)
     
     FFX_Xbox.SkipDialog(3) #Pick up lightning shield
-    FFX_memory.waitFrames(30 * 2)
+    FFX_memory.awaitEvent()
     
     FFXC.set_neutral()
-    FFX_memory.awaitControl()
     
 def northPathing(status):
     FFX_memory.clickToControl()
@@ -262,16 +264,21 @@ def northPathing(status):
     FFXC.set_neutral()
     FFX_memory.awaitControl()
     print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
-    FFXC.set_movement(0, 1)
-    FFX_Xbox.SkipDialog(6)
-    FFXC.set_neutral()
+    if not gameVars.csr():
+        FFXC.set_movement(0, 1)
+        FFX_Xbox.SkipDialog(6)
+        FFXC.set_neutral()
+        
+        FFX_memory.clickToControl3() # Conversation with Auron about Yuna being hard to guard.
+        
+        FFXC.set_movement(1, 1)
+        FFX_memory.waitFrames(30 * 2)
+        FFXC.set_movement(0, 1)
+        FFX_Xbox.SkipDialog(6)
+        FFXC.set_neutral() #Approaching the party
     
-    FFX_memory.clickToControl3() # Conversation with Auron about Yuna being hard to guard.
-    
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_movement(0, 1)
-    FFX_Xbox.SkipDialog(6)
-    FFXC.set_neutral() #Approaching the party
+    else:
+        while not FFX_targetPathing.setMovement([258,-7]):
+            pass
 
     return status
