@@ -2601,6 +2601,7 @@ def touchSaveSphere():
     print("MEM - Touch Save Sphere")
     
     ssDetails = getSaveSphereDetails()
+    FFXC.set_neutral()
     
     while userControl():
         FFX_targetPathing.setMovement([ssDetails[0], ssDetails[1]])
@@ -2620,7 +2621,7 @@ def touchSaveSphere():
             if saveMenuCursor() == 0 or saveMenuCursor == False:
                 FFX_Xbox.tapA()
             else:
-                FFX_Xbox.tapB()
+                FFX_Xbox.menuB()
                 complete = 1
         else:
             FFX_Xbox.tapB()
