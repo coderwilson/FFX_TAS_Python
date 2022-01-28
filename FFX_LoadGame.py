@@ -31,17 +31,10 @@ def loadOffset(offset):
     #FFX_memory.waitFrames(30 * 0.2)
     #FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 2.5)
-    while offset > 0:
-        FFXC.set_value('Dpad', 2)
-        FFX_memory.waitFrames(2)
-        FFXC.set_value('Dpad', 0)
-        FFX_memory.waitFrames(4)
-
-        offset -= 1
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB()
+    for _ in range(offset):
+        FFX_Xbox.tapDown()
+    for _ in range(15):
+        FFX_Xbox.tapB()
     FFX_memory.awaitControl()
     FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
@@ -63,17 +56,17 @@ def loadOffsetBattle(offset):
 def loadMemCursor():
     FFX_memory.awaitControl()
     FFX_memory.openMenu()
-    FFX_memory.waitFrames(30 * 1)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    if FFX_memory.getStoryProgress() > 3000:
-        FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuRight()
+    cursorTarget = 8 if FFX_memory.getStoryProgress() > 3000 else 9
+    print("Aiming at ", cursorTarget)
+    while FFX_memory.getMenuCursorPos() != cursorTarget:
+        print(FFX_memory.getMenuCursorPos())
+        FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() == 5:
+        FFX_Xbox.tapB()
+    while FFX_memory.configCursor() != 3:
+        FFX_Xbox.tapDown()
+    while FFX_memory.configCursorColumn() != 1:
+        FFX_Xbox.tapRight()
     FFX_memory.closeMenu()
 
 def loadPostBlitz():

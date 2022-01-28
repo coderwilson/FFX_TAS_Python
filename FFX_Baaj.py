@@ -92,7 +92,6 @@ def Baaj_puzzle():
         if FFX_memory.userControl():
             #Events
             if checkpoint == 3:
-                FFX_memory.waitFrames(30 * 0.4)
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 5: #Flint room

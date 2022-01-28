@@ -14,9 +14,9 @@ def getCutsceneID():
     global baseValue
     key = baseValue + 0xD27C88
     cutscene_alt = process.readBytes(key, 4)
-    key = baseValue + 0xD2D67C
-    storyline_prog = process.readBytes(key, 4)
-    return (cutscene_alt, storyline_prog)
+    storyline_prog = getStoryProgress()
+    dialogue = diagProgressFlag()
+    return (cutscene_alt, storyline_prog, dialogue)
 
 def waitFrames(frames: int):
     frames = max(round(frames), 1)
@@ -237,7 +237,6 @@ def clickToControl():
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
-    waitFrames(30 * 0.05)
     return True
 
 def clickToControl2():
@@ -251,7 +250,6 @@ def clickToControl2():
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
-    waitFrames(30 * 0.05)
     return True
 
 def clickToControl3():
@@ -269,11 +267,10 @@ def clickToControl3():
             print("Menu open (after battle)")
             FFX_Xbox.tapB()
         else:
-            waitFrames(30 * 0.035)
+            pass
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
-    waitFrames(30 * 0.05)
     print("User control restored.")
     return True
 
@@ -1063,6 +1060,16 @@ def getCharWeakness(character):
 def getOverdriveValue(character): #Older function, I think Crimson wrote this one.
     return getOverdriveBattle(character)
 
+def tidusEscapedState():
+    global baseValue
+
+    key = baseValue + 0x0D334CC
+    pos = process.readBytes(key, 1)
+    offset = 0xDC8
+    retVal = not process.readBytes(baseValue + offset, 4)
+    print("Tidus Escaped State: ", retVal)
+    return retVal
+
 def deadstate(character):
     global process
     global baseValue
@@ -1225,7 +1232,12 @@ def menuOpen():
 
 def closeMenu():
     while menuOpen():
-        FFX_Xbox.menuA()
+        FFX_Xbox.tapA()
+
+def backToMainMenu():
+    if menuOpen():
+        while menuNumber() != 5:
+            FFX_Xbox.tapA()
 
 def openMenu():
     FFXC = FFX_Xbox.controllerHandle()
@@ -1233,11 +1245,7 @@ def openMenu():
     while not userControl(): #Get out of combat or whatever
         FFX_Xbox.menuB()
     while userControl() and not menuOpen():
-        FFXC.set_value('BtnY',1)
-        waitFrames(1)
-        FFXC.set_value('BtnY',0)
-        waitFrames(1)
-    waitFrames(15)
+        FFX_Xbox.tapY()
 
 def menuNumber():
     global baseValue
@@ -1387,7 +1395,6 @@ def menuControl():
     key = baseValue + 0x0085A03C
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(1)
         return True
     else:
         return False
@@ -1409,13 +1416,11 @@ def diagSkipPossible():
     key = baseValue + 0x00F2FED0
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(1)
         return True
     else:
         key = baseValue + 0x0085A03C
         control = process.readBytes(key,1)
         if control == 1:
-            waitFrames(1)
             return True
         else:
             return False
@@ -1436,13 +1441,11 @@ def specialTextOpen():
     key = baseValue + 0x01466D30
     control = process.readBytes(key,1)
     if control == 1:
-        waitFrames(30 * 0.035)
         return True
     else:
         key = baseValue + 0x01476988
         control = process.readBytes(key,1)
         if control == 1:
-            waitFrames(30 * 0.035)
             return True
         else:
             return False
@@ -1463,10 +1466,10 @@ def clickToStoryProgress(destination):
         if menuControl():
             FFXC.set_value('BtnB',1)
             FFXC.set_value('BtnA',1)
-            waitFrames(30 * 0.035)
+            waitFrames(1)
             FFXC.set_value('BtnB',0)
             FFXC.set_value('BtnA',0)
-            waitFrames(30 * 0.035)
+            waitFrames(1)
         if counter % 100000 == 0:
             print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 100000)
         counter += 1
@@ -1488,11 +1491,12 @@ def partySize():
 def activepartySize():
     return len(getActiveBattleFormation())
 
-def fullPartyFormat(frontLine):
+def fullPartyFormat(frontLine, *, fullMenuClose=True):
     order = getOrderSeven()
     partyMembers = len(order)
     frontLine = frontLine.lower()
     orderFinal = getPartyFormatFromText(frontLine)
+    orderFinal.extend(x for x in order if x not in orderFinal)
     if order == orderFinal:
         print("Good to go, no action taken.")
     else:
@@ -1500,24 +1504,15 @@ def fullPartyFormat(frontLine):
         print(order)
         print("Into formation:")
         print(orderFinal)
-        if menuOpen() == False:
-            while menuOpen() == False:
-                openMenu()
-        else:
-            #Sometimes needs delay if menu was opened via other means.
-            waitFrames(12)
-        waitFrames(10)
-        #if getStoryProgress() >= 1120: #Before vs after the Customize option is on the menu
-        #    while getMenuCursorPos() != 8:
-        #    print(getMenuCursorPos())
-        #    FFX_Xbox.menuUp()
-        #else:
+        while not menuOpen():
+            openMenu()
         while getMenuCursorPos() != 7:
-            print(getMenuCursorPos())
-            FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        waitFrames(1)
-        
+            if getMenuCursorPos() > 1 and getMenuCursorPos() < 7:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        while menuNumber() != 14:
+            FFX_Xbox.tapB()
         startPos = 0
         targetPos = 1
         while order != orderFinal:
@@ -1538,9 +1533,9 @@ def fullPartyFormat(frontLine):
                 #print("Cursor not in right spot")
                 while partyFormatCursor1() != startPos:
                     menuDirection(partyFormatCursor1(), startPos, partyMembers)
-            waitFrames(2)
-            FFX_Xbox.menuB() #Click on Start location
-            waitFrames(2)
+                    
+            while menuNumber() != 20:
+                FFX_Xbox.menuB() #Click on Start location
             
             #Set target, end position
             print("Selecting destination position.")
@@ -1555,9 +1550,8 @@ def fullPartyFormat(frontLine):
             print("Moving to destination position.")
             while partyFormatCursor2() != endPos:
                 menuDirection(partyFormatCursor2(), endPos, partyMembers)
-            waitFrames(2)
-            FFX_Xbox.menuB() #Click on End location, performs swap.
-            waitFrames(2)
+            while menuNumber() != 14:
+                FFX_Xbox.menuB() #Click on End location, performs swap.
             print("Start and destination positions have been swapped.")
             startPos += 1
             if startPos == partyMembers:
@@ -1569,33 +1563,13 @@ def fullPartyFormat(frontLine):
             print("Into formation:")
             print(orderFinal)
             order = getOrderSeven()
-            #waitFrames(30 * 30)
     print("Party format is good now.")
-    #if frontLine != 'miihen':
-    closeMenu()
-
-def menuDirection_oldAttempt(currentmenuposition, targetmenuposition, menusize):
-    print("Menu move") #could be improved further, for now this is good.
-    
-    if targetmenuposition > currentmenuposition:
-        distanceDown = targetmenuposition - currentmenuposition
-        print("Distance Down: ", distanceDown)
-        distanceUp = currentmenuposition + menusize - targetmenuposition
-        print("Distance Up: ", distanceUp)
-        if distanceUp < distanceDown:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
+    if fullMenuClose:
+        closeMenu()
     else:
-        distanceUp = currentmenuposition - targetmenuposition
-        print("Distance Up: ", distanceUp)
-        distanceDown = targetmenuposition + menusize - currentmenuposition
-        print("Distance Down: ", distanceDown)
-        if distanceUp < distanceDown:
-            FFX_Xbox.menuUp()
-        else:
-            FFX_Xbox.menuDown()
-            
+        backToMainMenu()
+
+           
 def menuDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
@@ -1604,20 +1578,20 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
     halfmenusize = menusize / 2
     if distance == halfmenusize:
         #print("Marker 1")
-        FFX_Xbox.menuUp()
+        FFX_Xbox.tapUp()
     elif distance < halfmenusize:
         if distanceUnsigned > 0:
             #print("Marker 2")
-            FFX_Xbox.menuUp()
+            FFX_Xbox.tapUp()
         else:
             #print("Marker 3")
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapDown()
     else:
         if distanceUnsigned > 0:
             #print("Marker 4")
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapDown()
         else:
-            FFX_Xbox.menuUp()
+            FFX_Xbox.tapUp()
             #print("Marker 5")
 
 def partyFormatCursor1():
@@ -2418,11 +2392,58 @@ def equipWeapCursor():
 
 def assignAbilityToEquipCursor():
     global baseValue
-    
     key = baseValue + 0x01440AD0
     retVal = process.readBytes(key,1)
     return retVal
+    
+def cureMenuOpen():
+    global baseValue
+    key = baseValue + 0x01440A35
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def configCursor():
+    global baseValue
+    key = baseValue + 0x0146A404
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
+def configCursorColumn():
+    global baseValue
+    key = baseValue + 0x0085A3FC
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
+def configAeonCursorColumn():
+    global baseValue
+    key = baseValue + 0x0085A454
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
+def loadMenuCursor():
+    global baseValue
+    key = baseValue + 0x008E72E0
+    retVal = process.readBytes(key,1)
+    return retVal    
+    
+    
+def rikkuOverdriveItemSelectedNumber():
+    global baseValue
+    key = baseValue + 0x00D2C948
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def sphereGridPlacementOpen():
+    global baseValue
+    key = baseValue + 0x012ACB6B
+    retVal = process.readBytes(key,1)
+    return retVal
 
+def movingPromptOpen():
+    global baseValue
+    key = baseValue + 0x012AD543
+    retVal = process.readBytes(key,1)
+    return retVal
 
 #-------------------------------------------------------
 #Bevelle Trials indicators

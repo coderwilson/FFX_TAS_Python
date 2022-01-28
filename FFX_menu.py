@@ -137,18 +137,21 @@ def autoSortItems(manual):
 
 def shortAeons():
     FFX_memory.openMenu()
-    FFX_memory.waitFrames(30 * 0.6)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuRight()
+    cursorTarget = 4
+    print("Aiming at ", cursorTarget)
+    while FFX_memory.getMenuCursorPos() != cursorTarget:
+        print(FFX_memory.getMenuCursorPos())
+        FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() == 5:
+        FFX_Xbox.tapB()
+    while FFX_memory.configCursor() != 5:
+        FFX_Xbox.tapUp()
+    while FFX_memory.configAeonCursorColumn() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.configCursor() != 3:
+        FFX_Xbox.tapUp()
+    while FFX_memory.configCursorColumn() != 1:
+        FFX_Xbox.tapRight()
     FFX_memory.closeMenu()
 
 def Liki():
@@ -751,44 +754,6 @@ def mLakeGrid():
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('ability','u','none') #Use
     FFX_menuGrid.useAndQuit()
-    
-    #Heal up
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.6)
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.6)
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.6)
-    #FFX_Xbox.menuB() #Tidus
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Kimahri
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown() #Skip Rikku
-    #FFX_Xbox.menuB() #Wakka
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Auron
-    #FFX_Xbox.menuB() #No need to heal Yuna or Lulu
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    
-    #Formation
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB() #Wakka to 3, Rikku to 4
     FFX_memory.closeMenu()
 
 def macTemple(blitzWin):
@@ -1664,30 +1629,30 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
     while not FFX_memory.sGridActive():
-        #print("Attempting to open Sphere Grid")
+        print("Attempting to open Sphere Grid")
         if FFX_memory.userControl() and not FFX_memory.menuOpen():
-            #print("Menu is not open at all")
+            print("Menu is not open at all")
             FFX_Xbox.tapY()
         elif FFX_memory.menuNumber() == 5: #Cursor on main menu
-            #print("Main menu cursor")
+            print("Main menu cursor")
             if FFX_memory.getMenuCursorPos() != 0:
                 while FFX_memory.getMenuCursorPos() != 0:
-                    FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(1)
+                    FFX_Xbox.tapUp()
+            print("Done with menu cursor")
+            while FFX_memory.menuNumber() == 5:
+                FFX_Xbox.tapB()
         elif FFX_memory.menuNumber() == 7: #Cursor selecting party member
-            #print("Selecting party member")
+            print("Selecting party member")
             if FFX_memory.getMenu2CharNum() != character:
                 while FFX_memory.getMenu2CharNum() != character:
-                    FFX_Xbox.menuDown()
-                    FFX_memory.waitFrames(2)
-            FFX_Xbox.menuB()
+                    FFX_Xbox.tapDown()
+            while FFX_memory.menuNumber() == 7:
+                FFX_Xbox.menuB()
             try:
                 FFXC.set_neutral()
             except:
                 FFXC = FFX_Xbox.controllerHandle()
                 FFXC.set_neutral()
-            FFX_memory.waitFrames(3)
     try:
         FFXC.set_neutral()
     except:

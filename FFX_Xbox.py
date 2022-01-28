@@ -44,6 +44,10 @@ class vgTranslator:
             self.gamepad.press_button(button=0x0004)
         elif xKey == "Dpad" and value == 8: #Dpad right
             self.gamepad.press_button(button=0x0008)
+        elif xKey == "TriggerL" and value == 1:
+            self.gamepad.left_trigger_float(value_float=1.0)
+        elif xKey == "TriggerR" and value == 1:
+            self.gamepad.right_trigger_float(value_float=1.0)
         
         #Buttons, releasing
         elif xKey == "BtnBack" and value == 0:
@@ -67,6 +71,10 @@ class vgTranslator:
             self.gamepad.release_button(button=0x0002)
             self.gamepad.release_button(button=0x0004)
             self.gamepad.release_button(button=0x0008)
+        elif xKey == "TriggerL" and value == 0:
+            self.gamepad.left_trigger_float(value_float=0.0)
+        elif xKey == "TriggerR" and value == 0:
+            self.gamepad.right_trigger_float(value_float=0.0)
         
         #Error states
         elif xKey == "AxisLx" or xKey == "AxisLy":
@@ -337,8 +345,20 @@ def menuBack():
     
 def lBumper() :
     FFXC.set_value('BtnShoulderL', 1)
-    FFX_memory.waitFrames(2)
+    FFX_memory.waitFrames(1)
     FFXC.set_value('BtnShoulderL', 0)
+    FFX_memory.waitFrames(1)
+
+def TriggerL() :
+    FFXC.set_value('TriggerL', 1)
+    FFX_memory.waitFrames(2)
+    FFXC.set_value('TriggerL', 0)
+    FFX_memory.waitFrames(2)
+    
+def TriggerR() :
+    FFXC.set_value('TriggerR', 1)
+    FFX_memory.waitFrames(2)
+    FFXC.set_value('TriggerR', 0)
     FFX_memory.waitFrames(2)
 
 def tidusOD():

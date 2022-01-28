@@ -59,8 +59,8 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-#Gamestate = "Macalania"
-#StepCounter = 1
+Gamestate = "Macalania"
+StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
@@ -81,8 +81,8 @@ StepCounter = 4
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
@@ -153,7 +153,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -239,14 +239,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(4)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(13)
+        FFX_LoadGame.loadOffset(9)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(12)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
         FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
-        FFX_LoadGame.loadOffset(24) #No remedy in inventory, likely game over.
+        FFX_LoadGame.loadOffset(10) #No remedy in inventory, likely game over.
         FFX_LoadGame.loadMacTemple()
     if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
         FFX_LoadGame.loadMacTemple2()
