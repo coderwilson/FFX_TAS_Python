@@ -6,6 +6,8 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -57,8 +59,17 @@ def defenderX():
     FFXC.set_neutral()
     
     FFX_Xbox.clickToBattle()
-    FFX_Battle.buddySwap(0)
-    FFX_Battle.aeonSummon(4)
+    while FFX_memory.battleActive():
+        #print("Troubleshooting message")
+        if FFX_memory.turnReady():
+            #print("Someone's turn.")
+            if FFX_Screen.turnTidus():
+                FFX_Battle.buddySwapYuna()
+            elif FFX_Screen.turnYuna():
+                FFX_Battle.aeonSummon(4)
+            else:
+                FFX_Battle.attack('none')
+    FFXC.set_movement(0,1)
     FFX_memory.clickToControl()
     
 def toTheRonso():
@@ -171,10 +182,11 @@ def Flux():
                 FFX_Battle.seymourFlux()
                 FFX_menu.afterFlux()
                 FFX_memory.fullPartyFormat('kimahri')
-    while not FFX_memory.cutsceneSkipPossible():
-        if FFX_memory.diagSkipPossible():
-            FFX_Xbox.tapB()
-    FFX_Xbox.skipScene()
+    if not gameVars.csr():
+        while not FFX_memory.cutsceneSkipPossible():
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+        FFX_Xbox.skipScene()
 
 def dream():
     FFX_memory.clickToControl()
@@ -216,29 +228,30 @@ def dream():
     print("First talk with Bahamut child")
     FFX_memory.clickToControl()
     
-    FFXC.set_movement(0, -1) #End of conversation
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl()
-    pos = FFX_memory.getCoords()
-    while pos[1] > -20:
-        FFXC.set_movement(1, 0)
+    if not gameVars.csr():
+        FFXC.set_movement(0, -1) #End of conversation
+        FFX_memory.waitFrames(30 * 0.7)
+        FFXC.set_movement(-1, 0)
+        FFX_memory.waitFrames(30 * 0.7)
+        FFXC.set_movement(0, -1)
+        FFX_memory.waitFrames(30 * 0.7)
+        FFXC.set_neutral()
+        
+        FFX_memory.clickToControl()
         pos = FFX_memory.getCoords()
-    
-    while pos[0] < 300:
-        FFXC.set_movement(0, 1)
-        pos = FFX_memory.getCoords()
-    FFXC.set_movement(-1, 0)
-    FFX_Xbox.SkipDialog(2)
-    FFXC.set_neutral() #Second/last convo with kid
-    print("Second talk with Bahamut child")
-    
-    FFX_memory.clickToControl()
+        while pos[1] > -20:
+            FFXC.set_movement(1, 0)
+            pos = FFX_memory.getCoords()
+        
+        while pos[0] < 300:
+            FFXC.set_movement(0, 1)
+            pos = FFX_memory.getCoords()
+        FFXC.set_movement(-1, 0)
+        FFX_Xbox.SkipDialog(2)
+        FFXC.set_neutral() #Second/last convo with kid
+        print("Second talk with Bahamut child")
+        
+        FFX_memory.clickToControl()
     
 def cave():
     checkpoint = 0
@@ -352,6 +365,14 @@ def cave():
                 FFX_memory.clickToControl()
                 checkpoint += 1
                 print("Second trial is complete")
+            elif checkpoint == 35 and FFX_memory.diagProgressFlag() == 3:
+                #CSR second trial
+                FFX_memory.waitFrames(10)
+                FFXC.set_value('Dpad', 8)
+                FFX_memory.waitFrames(45)
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
+                checkpoint += 1
             elif FFX_memory.turnReady():
                 if FFX_memory.getPower() < powerNeeded:
                     if FFX_memory.getBattleNum() == 351: #Two maelstroms and a splasher
@@ -419,65 +440,67 @@ def wrapUp():
     FFXC.set_neutral()
     FFX_memory.awaitControl()
     FFX_memory.waitFrames(30 * 0.07)
-    FFXC.set_movement(0, 1) #Start of the sadness cutscene.
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
     
-    sleepTime = 4
-    print("Sadness cutscene")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("This is gunna be a while.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Maybe you should go get a drink or something.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Like... what even is this???")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("I just")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("I just can't")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Do you realize that some poor soul")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("not only wrote the entire program for this by himself")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("And then wasted ten minutes to put in this ridiculous dialog?")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Talk about not having a life.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Ah well, still have some time. Might as well shout out a few people.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("First and most importantly, my wife for putting up with me for two years through this project.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("My wife is the best!")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Next, DwangoAC. He encouraged me to write my own code to do this.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("And he put together the TASbot community which has been hugely helpful.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("You will see Inverted's work right before the final bosses.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Next, some people from the FFX speed-running community.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("CrimsonInferno, current world record holder for this category. Dude knows everything about this run!")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("He also taught me a number of things about memory scans, pointers, etc. Dude is super smart.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    print("OK I'll catch you when it's done.")
-    FFX_memory.waitFrames(30 * sleepTime)
-    
-    FFX_memory.clickToControl()
-    print("OMG finally! Let's get to it! (Do kids say that any more?)")
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.awaitEvent()
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 0.2)
+    if not gameVars.csr():
+        FFXC.set_movement(0, 1) #Start of the sadness cutscene.
+        FFX_memory.awaitEvent()
+        FFXC.set_neutral()
+        
+        sleepTime = 4
+        print("Sadness cutscene")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("This is gunna be a while.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Maybe you should go get a drink or something.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Like... what even is this???")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("I just")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("I just can't")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Do you realize that some poor soul")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("not only wrote the entire program for this by himself")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("And then wasted ten minutes to put in this ridiculous dialog?")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Talk about not having a life.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Ah well, still have some time. Might as well shout out a few people.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("First and most importantly, my wife for putting up with me for two years through this project.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("My wife is the best!")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Next, DwangoAC. He encouraged me to write my own code to do this.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("And he put together the TASbot community which has been hugely helpful.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("You will see Inverted's work right before the final bosses.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Next, some people from the FFX speed-running community.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("CrimsonInferno, current world record holder for this category. Dude knows everything about this run!")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("He also taught me a number of things about memory scans, pointers, etc. Dude is super smart.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("OK I'll catch you when it's done.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        
+        FFX_memory.clickToControl()
+        print("OMG finally! Let's get to it! (Do kids say that any more?)")
+        FFXC.set_movement(0, 1)
+        FFX_memory.waitFrames(30 * 1)
+        FFXC.set_movement(-1, 1)
+        FFX_memory.awaitEvent()
+        FFXC.set_neutral()
+        FFX_memory.waitFrames(30 * 0.2)

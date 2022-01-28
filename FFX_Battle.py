@@ -5,9 +5,9 @@ import FFX_Logs
 import FFX_memory
 import random
 import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def tapTargeting():
@@ -56,6 +56,8 @@ def tidusFlee():
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     print("Out")
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
@@ -111,6 +113,8 @@ def useSkill(position):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     _navigate_to_position(position)
@@ -1684,7 +1688,7 @@ def thunderPlains(status, section):
     petrifiedstate = False
     petrifiedstate = checkPetrify()
 
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             print("Turn start - Thunder Plains")
             turnchar = FFX_memory.getBattleCharTurn()
@@ -1890,7 +1894,10 @@ def thunderPlains(status, section):
                 fleeAll()
     print("Battle is ended - Thunder Plains")
     FFX_memory.clickToControl()
-    # FFX_Xbox.tapB() #In case lightning is incoming. Happens far too often.
+    FFX_memory.waitFrames(2) #Allow lightning to attemt a strike
+    if FFX_memory.dodgeLightning(gameVars.getLStrike()):
+        print("Dodge")
+        gameVars.setLStrike(FFX_memory.lStrikeCount())
     if FFX_memory.getOverdriveValue(6) == 100:
         status[0] = True
     print("Status array, Rikku charge, Light curtain, and Lunar Curtain:")
@@ -1900,7 +1907,7 @@ def thunderPlains(status, section):
     print("Party format is good. Now checking health values.")
     hpValues = FFX_memory.getHP()
     if hpValues[0] < 400 or hpValues[2] < 400 or hpValues[4] < 400 or hpValues[6] < 180:
-        healUp()
+        healUp(3)
     FFX_memory.closeMenu()
     print("Ready to continue onward.")
     print("**Plains variables: Rikku charged, stolen light curtain, stolen lunar curtain, ")
@@ -3025,11 +3032,12 @@ def Evrae(blitzWin):
                     Steal()
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
-
-    while not FFX_memory.cutsceneSkipPossible():
-        if FFX_memory.menuOpen():
-            FFX_Xbox.tapB()
-    FFX_Xbox.skipSceneSpec()
+    
+    if not gameVars.csr():
+        while not FFX_memory.cutsceneSkipPossible():
+            if FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
+        FFX_Xbox.skipSceneSpec()
 
 
 def guards(groupNum, blitzWin=False):
@@ -4163,6 +4171,8 @@ def lancet(direction):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     _navigate_to_position(0)
@@ -4189,6 +4199,8 @@ def lancetTarget(target, direction):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     while FFX_memory.otherBattleMenu():
@@ -4243,6 +4255,8 @@ def lancetHome(direction):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     _navigate_to_position(2)
@@ -4371,8 +4385,12 @@ def kimahriOD(pos):
     print("Kimahri using Overdrive, pos - ", pos)
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapLeft()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(1)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     _navigate_to_position(pos, battleCursor=FFX_memory.battleCursor3)
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
@@ -4455,8 +4473,7 @@ def SinFace():
     FFX_Xbox.clickToBattle()
     FFXC.set_neutral()
     
-    complete = 0
-    while complete == 0:
+    while FFX_memory.battleActive():
         if FFX_memory.turnReady():
             if FFX_Screen.turnYuna():
                 aeonSummon(4)
@@ -4469,10 +4486,6 @@ def SinFace():
                 attack('none')
             else:
                 defend()
-        elif FFX_memory.getStoryProgress() == 3160:
-            FFX_memory.waitFrames(30 * 0.5)
-            FFX_Xbox.skipScene()
-            complete = 1
         else:
             FFX_Xbox.tapB()
 
@@ -4489,7 +4502,10 @@ def omnis():
     FFX_Screen.awaitTurn()
     print("Going for armor break.")
     FFX_memory.printRNG36()
+    #if gameVars.zombieWeapon() == 255:
     useSkill(1)
+    #else:
+    #    useSkill(0)
     FFX_memory.waitFrames(30 * 0.2)
     FFX_Screen.awaitTurn()
     
@@ -4544,44 +4560,52 @@ def BFA():
 
     #Skip the cutscene
     print("BFA down. Ready for Aeons")
-    FFX_memory.waitFrames(30 * 0.07)
-    while not FFX_memory.cutsceneSkipPossible():
-        FFX_Xbox.tapB()
-    FFX_Xbox.skipScene()
+    FFX_memory.waitFrames(2)
+    
+    if not gameVars.csr():
+        while not FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.tapB()
+        FFX_Xbox.skipScene()
 
     while FFX_memory.getStoryProgress() < 3380:
         if FFX_memory.turnReady():
             battleNum = FFX_memory.getBattleNum()
             print("Battle engaged. Battle number: ", battleNum)
-            while FFX_memory.battleMenuCursor() != 20:
-                if FFX_memory.battleMenuCursor() == 22 or FFX_memory.battleMenuCursor() == 1:
-                    FFX_Xbox.tapUp()
-                else:
-                    FFX_Xbox.tapDown()
-            FFX_memory.waitFrames(2)
-            FFX_Xbox.tapB()
-            FFX_memory.waitFrames(30)
-            FFX_Xbox.tapB()
-            FFX_memory.waitFrames(30)
-            FFX_Xbox.tapRight()
-            if FFX_memory.getGilvalue() > 99999:
+            if FFX_Screen.turnYuna():
+                if FFX_memory.battleMenuCursor() != 20:
+                    while FFX_memory.battleMenuCursor() != 20:
+                        if FFX_memory.battleMenuCursor() in [22,1]:
+                            FFX_Xbox.tapUp()
+                        else:
+                            FFX_Xbox.tapDown()
+                        if gameVars.usePause():
+                            FFX_memory.waitFrames(1)
+                FFX_memory.waitFrames(60)
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(30)
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(30)
                 FFX_Xbox.tapRight()
-            FFX_Xbox.tapUp()
-            FFX_Xbox.tapUp()
-            # Valefor is 20k, no extra money needed. Valefor is 397
-            if battleNum == 398 or battleNum == 399:  # Ifrit/Ixion
-                FFX_Xbox.tapUp()
-            elif battleNum == 400 or battleNum == 401:  # Shiva/Bahamut
+                if FFX_memory.getGilvalue() > 99999:
+                    FFX_Xbox.tapRight()
                 FFX_Xbox.tapUp()
                 FFX_Xbox.tapUp()
-            FFX_Xbox.tapB()
-            FFX_Xbox.tapB()
-            FFX_memory.waitFrames(30 * 0.5)
+                # Valefor is 20k, no extra money needed. Valefor is 397
+                if battleNum == 398 or battleNum == 399:  # Ifrit/Ixion
+                    FFX_Xbox.tapUp()
+                elif battleNum == 400 or battleNum == 401:  # Shiva/Bahamut
+                    FFX_Xbox.tapUp()
+                    FFX_Xbox.tapUp()
+                FFX_Xbox.tapB()
+                FFX_Xbox.tapB()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuB()
+                FFX_memory.waitFrames(30 * 0.5)
+            else:
+                defend()
         elif FFX_memory.battleActive() == False:
-            FFXC.set_value('BtnB', 1)
-            FFX_memory.waitFrames(30 * 0.035)
-            FFXC.set_value('BtnB', 0)
-            FFX_memory.waitFrames(30 * 0.035)
+            FFX_Xbox.tapB()
     print("Ready for Yu Yevon.")
     FFX_Screen.awaitTurn()  # No need for skipping dialog
     print("Awww such a sad final boss!")
@@ -4593,6 +4617,7 @@ def BFA():
             if zombieAttack == 1:
                 while FFX_memory.battleMenuCursor() != 1:
                     FFX_Xbox.tapDown()
+                    FFX_memory.waitFrames(2)
                 FFX_Xbox.tapB()
                 itemPos = FFX_memory.getThrowItemsSlot(6) - 1
                 while FFX_memory.battleCursor2() != itemPos:
@@ -4607,10 +4632,12 @@ def BFA():
                         FFX_Xbox.tapDown()
                     else:
                         FFX_Xbox.tapUp()
+                    FFX_memory.waitFrames(2)
                 FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.tapUp()
+                FFX_memory.waitFrames(12)
+                FFX_Xbox.menuUp()
                 FFX_Xbox.tapB()
+                FFX_Xbox.SkipDialog(2)
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus():
                 useSkill(0)

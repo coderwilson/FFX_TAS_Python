@@ -2554,7 +2554,7 @@ def getSaveSphereDetails():
         #Mac Temple entrance
         x = -22
         y = -127
-        diag = 66
+        diag = 68
     if mapVal == 153:
         #Mac Temple exit
         x = 820
@@ -2565,6 +2565,11 @@ def getSaveSphereDetails():
         x = 19
         y = -60
         diag = 35
+    if mapVal == 136:
+        #Bikanel Rikku tent
+        x = 205
+        y = 30
+        diag = 59
     if mapVal == 130:
         #Home entrance screen
         x = 61
@@ -2574,7 +2579,10 @@ def getSaveSphereDetails():
         #Airship while rescuing Yuna, cockpit
         x = -275
         y = 344
-        diag = 217
+        if getStoryProgress() < 2700: #During Yuna rescue
+            diag = 217
+        else: #Before Shedinja/Highbridge
+            diag = 220
     if mapVal == 285:
         #After Flux
         x = 140
@@ -2608,7 +2616,8 @@ def touchSaveSphere():
     complete = False
     while not complete:
         if diagProgressFlag() == ssDetails[2]:
-            if saveMenuCursor() == 0:
+            print("Cursor test: ", saveMenuCursor())
+            if saveMenuCursor() == 0 or saveMenuCursor == False:
                 FFX_Xbox.tapA()
             else:
                 FFX_Xbox.tapB()
