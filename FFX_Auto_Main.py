@@ -41,8 +41,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-#Gamestate = "Besaid"
-#StepCounter = 3
+Gamestate = "Besaid"
+StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -102,7 +102,7 @@ if Gamestate != "none":
 elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [31,40,49,59,90,91,98,104,108,121,200]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 40 #Select a specific seed.
+    #rngSeedNum = 40 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -153,7 +153,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -294,19 +294,19 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(3)
         FFX_LoadGame.loadEggHunt()
     
-    if FFX_memory.getStoryProgress() >= 80:
-        if Gamestate == "Luca" and StepCounter == 5:
-            noMemCursor = True
-        elif Gamestate == "Besaid" and StepCounter == 3:
-            noMemCursor = True
-        elif Gamestate == "Boat3":
-            noMemCursor = True
-        elif Gamestate == "Sin" and StepCounter == 4:
-            noMemCursor = True
-        else:
-            print("Setting memory cursor")
-            FFX_LoadGame.loadMemCursor()
-        print("Done with memory cursor")
+    #if FFX_memory.getStoryProgress() >= 80:
+    #    if Gamestate == "Luca" and StepCounter == 5:
+    #        noMemCursor = True
+    #    elif Gamestate == "Besaid" and StepCounter == 3:
+    #        noMemCursor = True
+    #    elif Gamestate == "Boat3":
+    #        noMemCursor = True
+    #    elif Gamestate == "Sin" and StepCounter == 4:
+    #        noMemCursor = True
+    #    else:
+    #        print("Setting memory cursor")
+    #        FFX_LoadGame.loadMemCursor()
+    #    print("Done with memory cursor")
 
 
 #Movement files - moved to FFX_compileAll.py

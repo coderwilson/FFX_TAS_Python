@@ -259,7 +259,9 @@ def ABswimming2() :
     FFXC.set_neutral()
     while FFX_memory.getStoryProgress() < 111:
         if FFX_memory.userControl():
-            if FFX_memory.diagProgressFlag() == 109:
+            print("Map          : ", FFX_memory.getMap())
+            print("Diag progress: ", FFX_memory.diagProgressFlag())
+            if FFX_memory.diagProgressFlag() == 109 and not FFX_memory.userControl():
                 FFXC.set_neutral()
                 if FFX_memory.saveMenuCursor2() == 0:
                     FFX_Xbox.tapA()
@@ -287,6 +289,7 @@ def ABswimming2() :
             elif FFX_memory.diagSkipPossible() and not gameVars.csr():
                 FFX_Xbox.tapB()
     
+    print("Should now be ready for Besaid")
     
     if not gameVars.csr():
         FFX_Xbox.clearSavePopup(0)

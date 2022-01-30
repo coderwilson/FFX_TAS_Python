@@ -54,19 +54,33 @@ def loadOffsetBattle(offset):
     FFX_memory.waitFrames(30 * 3)
 
 def loadMemCursor():
+    import FFX_vars
+    gameVars = FFX_vars.varsHandle()
     FFX_memory.awaitControl()
     FFX_memory.openMenu()
-    cursorTarget = 8 if FFX_memory.getStoryProgress() > 3000 else 9
+    if FFX_memory.getStoryProgress() <= 200: #Up to Besaid save, after Trials
+        cursorTarget = 5
+    else:
+        cursorTarget = 8# if FFX_memory.getStoryProgress() > 3000 else 9
     print("Aiming at ", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())
         FFX_Xbox.tapUp()
+        print(FFX_memory.getMenuCursorPos())
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.menuNumber() == 5:
         FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(90)
     while FFX_memory.configCursor() != 3:
         FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.configCursorColumn() != 1:
         FFX_Xbox.tapRight()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     FFX_memory.closeMenu()
 
 def loadPostBlitz():

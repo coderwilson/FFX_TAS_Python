@@ -3,6 +3,7 @@ import FFX_Xbox
 import time
 import FFX_Screen
 import FFX_targetPathing
+import FFX_vars
 
 from math import cos, sin
 baseValue = 0
@@ -1240,9 +1241,12 @@ def saveMenuOpen():
 
 
 def backToMainMenu():
+    gameVars = FFX_vars.varsHandle()
     if menuOpen():
         while menuNumber() != 5:
             FFX_Xbox.tapA()
+            if gameVars.usePause():
+                waitFrames(5)
 
 def openMenu():
     FFXC = FFX_Xbox.controllerHandle()
@@ -1511,6 +1515,7 @@ def activepartySize():
     return len(getActiveBattleFormation())
 
 def fullPartyFormat(frontLine, *, fullMenuClose=True):
+    gameVars = FFX_vars.varsHandle()
     order = getOrderSeven()
     partyMembers = len(order)
     frontLine = frontLine.lower()
@@ -1530,6 +1535,8 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                 FFX_Xbox.tapDown()
             else:
                 FFX_Xbox.tapUp()
+            if gameVars.usePause():
+                waitFrames(1)
         while menuNumber() != 14:
             FFX_Xbox.tapB()
         startPos = 0
@@ -1552,6 +1559,8 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                 #print("Cursor not in right spot")
                 while partyFormatCursor1() != startPos:
                     menuDirection(partyFormatCursor1(), startPos, partyMembers)
+                    if gameVars.usePause():
+                        waitFrames(1)
                     
             while menuNumber() != 20:
                 FFX_Xbox.menuB() #Click on Start location
@@ -1569,6 +1578,8 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
             print("Moving to destination position.")
             while partyFormatCursor2() != endPos:
                 menuDirection(partyFormatCursor2(), endPos, partyMembers)
+                if gameVars.usePause():
+                    waitFrames(1)
             while menuNumber() != 14:
                 FFX_Xbox.menuB() #Click on End location, performs swap.
             print("Start and destination positions have been swapped.")
@@ -2665,7 +2676,7 @@ def csrBaajSaveClear():
             if saveMenuOpen():
                 FFX_Xbox.tapA()
             elif diagProgressFlag() == 109:
-                if saveMenuCursor2() == 0:
+                if saveMenuCursor() == 0 and saveMenuCursor2() == 0:
                     FFX_Xbox.tapA()
                 else:
                     FFX_Xbox.tapB()

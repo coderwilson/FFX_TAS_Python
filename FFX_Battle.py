@@ -389,7 +389,8 @@ def Tros():
     if gameVars.csr():
         FFXC = FFX_Xbox.controllerHandle()
         while not FFX_memory.menuOpen():
-            pass
+            if FFX_memory.userControl():
+                break
         FFXC.set_value('BtnB', 1)
         FFX_memory.waitFrames(120)
         FFXC.set_neutral()
@@ -1095,7 +1096,7 @@ def MiihenRoad(selfDestruct):
     print("------------------ HP check: ", hpCheck)
     if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
         FFX_memory.fullPartyFormat('miihen', fullMenuClose=False)
-        healUp()
+        healUp(3)
     else:
         print("No need to heal up. Moving onward.")
         FFX_memory.fullPartyFormat('miihen')
@@ -1547,6 +1548,7 @@ def battleGui():
     #In between battles
     if gameVars.csr():
         FFX_Screen.awaitTurn()
+        FFX_memory.waitFrames(30)
     else:
         FFX_memory.clickToStoryProgress(865)
         print("Ready to skip cutscene")
@@ -3662,6 +3664,8 @@ def seymourSpell():
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()  # Black magic
     print(FFX_memory.battleCursor2())
@@ -3672,6 +3676,8 @@ def seymourSpell():
     if FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
         while FFX_memory.battleTargetId() != num:
             FFX_Xbox.tapLeft()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(1)
             
     tapTargeting()
 
@@ -3862,7 +3868,8 @@ def StealLeft():
 def stealAndAttack():
     print("Steal/Attack function")
     FFXC.set_neutral()
-    while FFX_memory.battleActive(): 
+    FFX_Screen.awaitTurn()
+    while not FFX_memory.battleComplete(): 
         if FFX_memory.turnReady():
             if FFX_Screen.turnRikku():
                 Steal()
@@ -3878,7 +3885,7 @@ def stealAndAttackPreTros():
     BattleComplete = 0
     turnCounter = 0
     FFXC.set_neutral()
-    while not FFX_memory.menuOpen():
+    while not FFX_memory.battleComplete():
         if FFX_memory.turnReady():
             if FFX_Screen.turnRikkuRed():
                 turnCounter += 1
@@ -4085,27 +4092,23 @@ def aeonSpellDirection(position, direction):
     tapTargeting()
     print("Aeon casting spell")
 
-def healUp_New(chars, menusize):
-    healUp(chars)
-
-
-def healUp(chars=0, *, fullMenuClose=True):
+def healUp_cwMethod(chars=3):
     FFX_Logs.writeLog("Healing characters post-battle")
     FFXC.set_neutral()
     print("Menuing, healing characters: ", chars)
+    #FFX_memory.waitFrames(30)
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
+    #FFX_memory.waitFrames(30)
+    pos = 1
     while FFX_memory.getMenuCursorPos() != 2:
-        if FFX_memory.getMenuCursorPos() < 2 or FFX_memory.getMenuCursorPos() > 7:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
+        FFX_Xbox.tapDown()
         if gameVars.usePause():
-            FFX_memory.waitFrames(2)
-    while FFX_memory.menuNumber() != 7:
-        FFX_Xbox.tapB()
-    if gameVars.usePause():
-        FFX_memory.waitFrames(2)
+            FFX_memory.waitFrames(1)
+    
+    FFX_memory.waitFrames(2)
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(1)
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
     order = FFX_memory.getOrderSeven()
@@ -4116,10 +4119,12 @@ def healUp(chars=0, *, fullMenuClose=True):
             if gameVars.usePause():
                 FFX_memory.waitFrames(1)
     print("Mark 2")
-    while FFX_memory.menuNumber() != 26:
-        FFX_Xbox.tapB()
-    while not FFX_memory.cureMenuOpen():
-        FFX_Xbox.tapB()
+    
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuB()
+    
     character_positions = {
         0 : FFX_memory.getCharFormationSlot(0), # Tidus
         1 : FFX_memory.getCharFormationSlot(1), # Yuna
@@ -4147,7 +4152,72 @@ def healUp(chars=0, *, fullMenuClose=True):
             FFX_Xbox.tapB()
             current_hp = FFX_memory.getHP()
         if current_hp == maximal_hp: break
-    print("Healing complete. Exiting menu.")
+
+def healUp_New(chars, menusize):
+    healUp(chars)
+
+def healUp(chars=3, *, fullMenuClose=True):
+    if gameVars.csr():
+        healUp_cwMethod(chars)
+    else:
+        FFX_Logs.writeLog("Healing characters post-battle")
+        FFXC.set_neutral()
+        print("Menuing, healing characters: ", chars)
+        if not FFX_memory.menuOpen():
+            FFX_memory.openMenu()
+        while FFX_memory.getMenuCursorPos() != 2:
+            if FFX_memory.getMenuCursorPos() < 2 or FFX_memory.getMenuCursorPos() > 7:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
+        while FFX_memory.menuNumber() != 7:
+            FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
+        print("Mark 1")
+        yunaPos = FFX_memory.getCharFormationSlot(1)
+        order = FFX_memory.getOrderSeven()
+        partyMembers = len(order)
+        if FFX_memory.getCharCursorPos() != yunaPos:
+            while FFX_memory.getCharCursorPos() != yunaPos:
+                FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
+                if gameVars.usePause():
+                    FFX_memory.waitFrames(1)
+        print("Mark 2")
+        while FFX_memory.menuNumber() != 26:
+            FFX_Xbox.tapB()
+        while not FFX_memory.cureMenuOpen():
+            FFX_Xbox.tapB()
+        character_positions = {
+            0 : FFX_memory.getCharFormationSlot(0), # Tidus
+            1 : FFX_memory.getCharFormationSlot(1), # Yuna
+            2 : FFX_memory.getCharFormationSlot(2), # Auron
+            3 : FFX_memory.getCharFormationSlot(3), # Kimahri
+            4 : FFX_memory.getCharFormationSlot(4), # Wakka
+            5 : FFX_memory.getCharFormationSlot(5), # Lulu
+            6 : FFX_memory.getCharFormationSlot(6) # Rikku
+        }
+        print(character_positions)
+        positions_to_characters = { val : key for key, val in character_positions.items() if val != 255 }
+        print(positions_to_characters)
+        maximal_hp = FFX_memory.getMaxHP()
+        print("Max HP: ", maximal_hp)
+        current_hp = FFX_memory.getHP()
+        for cur_position in range(len(positions_to_characters)):
+            while current_hp[positions_to_characters[cur_position]] < maximal_hp[positions_to_characters[cur_position]]:
+                print(current_hp)
+                prev_hp = current_hp[positions_to_characters[cur_position]]
+                while FFX_memory.assignAbilityToEquipCursor() != cur_position:
+                    if FFX_memory.assignAbilityToEquipCursor() < cur_position:
+                        FFX_Xbox.tapDown()
+                    else:
+                        FFX_Xbox.tapUp()
+                FFX_Xbox.tapB()
+                current_hp = FFX_memory.getHP()
+            if current_hp == maximal_hp: break
+        print("Healing complete. Exiting menu.")
     if fullMenuClose:
         FFX_memory.closeMenu()
     else:
