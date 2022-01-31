@@ -883,14 +883,11 @@ def equipSonicSteel(fullMenuClose=True):
     while FFX_memory.menuNumber() != 7:
         FFX_Xbox.tapB()    
     while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(0):
-        print(FFX_memory.getCharCursorPos(), FFX_memory.getCharFormationSlot(0))
         FFX_Xbox.tapDown()
     while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
-    print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
     while not FFX_memory.equipMenuOpenFromChar():
         FFX_Xbox.tapB()
-        print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
     
     weaponHandles = FFX_memory.weaponArrayCharacter(0)
     print("@@@@@")
@@ -913,10 +910,8 @@ def equipSonicSteel(fullMenuClose=True):
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
-    print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
     while FFX_memory.equipMenuOpenFromChar():
         FFX_Xbox.tapB()
-        print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
     
     if fullMenuClose:
         FFX_memory.closeMenu()
