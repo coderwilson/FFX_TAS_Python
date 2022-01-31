@@ -135,12 +135,12 @@ def agency(blitzWin):
         for j in range(11):
             FFX_Xbox.menuDown()
         while FFX_memory.getGilvalue() < 9550:
-            FFX_memory.waitFrames(3)
+            FFX_memory.waitFrames(30)
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuUp()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuRight()
             FFX_Xbox.menuDown()
         FFX_memory.waitFrames(6)
@@ -148,12 +148,12 @@ def agency(blitzWin):
         for j in range(11):
             FFX_Xbox.menuDown()
         while FFX_memory.getGilvalue() < 8725:
-            FFX_memory.waitFrames(3)
+            FFX_memory.waitFrames(30)
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuUp()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuRight()
             FFX_Xbox.menuDown()
         FFX_memory.waitFrames(6)

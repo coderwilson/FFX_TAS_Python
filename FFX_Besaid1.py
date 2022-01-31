@@ -32,9 +32,6 @@ def Beach():
             #print("Checkpoint (testing): ", checkpoint)
             #Events
             if checkpoint == 33: #Into the temple for the first time
-                if gameVars.csr():
-                    FFXC.set_neutral()
-                    FFX_menu.shortAeons()
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 42: #Wakka tent

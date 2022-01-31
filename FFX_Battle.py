@@ -3677,7 +3677,7 @@ def seymourSpell():
         while FFX_memory.battleTargetId() != num:
             FFX_Xbox.tapLeft()
             if gameVars.usePause():
-                FFX_memory.waitFrames(1)
+                FFX_memory.waitFrames(2)
             
     tapTargeting()
 
@@ -3872,7 +3872,12 @@ def stealAndAttack():
     while not FFX_memory.battleComplete(): 
         if FFX_memory.turnReady():
             if FFX_Screen.turnRikku():
-                Steal()
+                grenadeSlot = FFX_memory.getItemSlot(35)
+                grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
+                if grenadeCount < 6:
+                    Steal()
+                else:
+                    attack('none')
             if FFX_Screen.turnTidus():
                 attack('none')
         elif FFX_memory.otherBattleMenu():
@@ -3890,9 +3895,19 @@ def stealAndAttackPreTros():
             if FFX_Screen.turnRikkuRed():
                 turnCounter += 1
                 if turnCounter == 1:
-                    Steal()
+                    grenadeSlot = FFX_memory.getItemSlot(35)
+                    grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
+                    if grenadeCount < 6:
+                        Steal()
+                    else:
+                        attack('none')
                 if turnCounter == 2:
-                    StealDown()
+                    grenadeSlot = FFX_memory.getItemSlot(35)
+                    grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
+                    if grenadeCount < 6:
+                        StealDown()
+                    else:
+                        attack('none')
                 else:
                     attack('none')
             if FFX_Screen.turnTidus():
@@ -4847,16 +4862,18 @@ def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = '
     print("Character ", character)
     print("Equipment type: ", equipType)
     print("Number of items: ", len(equipHandles))
+    print("Special: ", special)
     print("@@@@@")
     equipNum = 255
     i = 0
     while len(equipHandles) > 0:
         currentHandle = equipHandles.pop(0)
+        print(currentHandle.abilities())
         if special == 'baroque':
             if currentHandle.abilities() == [0x8063,255,255,255]:
                 equipNum = i
         elif special == 'brotherhood':
-            if currentHandle.abilities() == [0x8063,0x8064,0x802A,0x8000]:
+            if currentHandle.abilities() == [32867,32868,32810,32768]:
                 equipNum = i
         elif abilityNum == 0:
             print("Equipping just the first available equipment.")
@@ -4864,6 +4881,8 @@ def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = '
         elif currentHandle.hasAbility(abilityNum): #First Strike for example
             equipNum = i
         i += 1
+    #if special == 'brotherhood':
+    #    FFX_memory.waitFrames(1000)
     while FFX_memory.battleCursor3() != equipNum:
         print("'''Battle cursor 3: ", FFX_memory.battleCursor3())
         print("'''equipNum: ", equipNum)

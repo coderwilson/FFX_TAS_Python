@@ -4,6 +4,7 @@ import time
 import FFX_Screen
 import FFX_targetPathing
 import FFX_vars
+import FFX_Logs
 
 from math import cos, sin
 baseValue = 0
@@ -2274,7 +2275,7 @@ def getEquipLegit(equipNum):
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) +0x03
     retVal = process.readBytes(key,1)
-    if retVal in [0,8]:
+    if retVal in [0,8,9]:
         return True
     else:
         return False
@@ -2323,8 +2324,9 @@ def getEquipExists(equipNum):
     global baseValue
     
     basePointer = baseValue + 0x00d30f2c
-    key = basePointer + (0x16 * equipNum) +0x0B
+    key = basePointer + (0x16 * equipNum) +0x02
     retVal = process.readBytes(key,1)
+    
     return retVal
     
 class equipment:
@@ -2335,6 +2337,8 @@ class equipment:
         self.equipAbilities = getEquipAbilities(equipNum)
         self.isEquipped = getEquipCurrentlyEquipped(equipNum)
         self.slots = getEquipSlotCount(equipNum)
+        self.exists = getEquipExists(equipNum)
+        
     
     def equipmentType(self):
         return self.equipType
@@ -2356,17 +2360,27 @@ class equipment:
     
     def slotCount(self):
         return self.slots
+    
+    def equipExists(self):
+        return self.exists
 
 def allEquipment():
     firstEquipment = True
     for i in range(200):
-        if getEquipLegit(i):
+        currentHandle = equipment(i)
+        if getBattleNum() == 180 and False:
+            print("----")
+            print("Exists: ", currentHandle.equipExists())
+            print("Abilities: ", currentHandle.abilities())
+            print("Legit: ", getEquipLegit(i))
+        if getEquipLegit(i) and currentHandle.equipExists():
             if firstEquipment:
                 equipHandleArray = [equipment(i)]
                 firstEquipment = False
             else:
                 equipHandleArray.append(equipment(i))
-    
+        #if getBattleNum() == 180:
+        #    waitFrames(10)
     return equipHandleArray
 
 def weaponArrayCharacter(charNum):
@@ -2376,9 +2390,8 @@ def weaponArrayCharacter(charNum):
     #print("####")
     firstEquipment = True
     while len(equipHandles) > 0:
-        #print(len(equipHandles))
         currentHandle = equipHandles.pop(0)
-        #print("Owner: ", currentHandle.owner())
+        print("Abilities: ", currentHandle.abilities())
         if currentHandle.owner() == charNum and currentHandle.equipmentType() == 0:
             if firstEquipment:
                 charWeaps = [currentHandle]
@@ -2700,3 +2713,31 @@ def memTestVal2():
 def memTestVal3():
     key = baseValue + 0x00D35EE3
     return process.readBytes(key, 1)
+
+#-------------------------------------------------------
+def printMemoryLog():
+    global baseValue
+    global process
+    #(Pointer) [[ffx.exe + 8DED2C] + 0x6D0]
+    ptrVal = process.read(baseValue + 0x008DED2C)
+    finalCoords = ptrVal + 0x6D0
+    coord1 = process.read(finalCoords)
+    FFX_Logs.writeStats("Temp Value 1: " + str(coord1))
+    
+    #(Pointer) [[ffx.exe + 8DED2C] + 0x704]
+    ptrVal = process.read(baseValue + 0x008DED2C)
+    finalCoords = ptrVal + 0x704
+    coord2 = process.read(finalCoords)
+    FFX_Logs.writeStats("Temp Value 2: " + str(coord1))
+    
+    
+    #(Pointer) [[ffx.exe + 8CB9D8] + 0x10D2E]
+    ptrVal = process.read(baseValue + 0x008CB9D8)
+    finalCoords = ptrVal + 0x10D2E
+    coord3 = process.read(finalCoords)
+    FFX_Logs.writeStats("Temp Value 3: " + str(coord1))
+    
+    
+    #ffx.exe + D2A00C
+    coord4 = process.read(baseValue + 0x00D2A00C)
+    FFX_Logs.writeStats("Temp Value 4: " + str(coord1))

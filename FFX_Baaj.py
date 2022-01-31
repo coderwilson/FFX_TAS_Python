@@ -17,8 +17,7 @@ def Entrance():
     FFX_memory.awaitControl()
     print("Starting Baaj exterior area")
     FFXC.set_neutral()
-    if not gameVars.csr():
-        FFX_menu.shortAeons()
+    FFX_menu.shortAeons()
     
     #Now back into the water
     checkpoint = 0

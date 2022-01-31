@@ -138,6 +138,7 @@ def autoSortItems(manual):
         FFX_memory.closeMenu()
 
 def shortAeons():
+    FFX_memory.printMemoryLog()
     FFX_memory.openMenu()
     if gameVars.csr():
         cursorTarget = 5
