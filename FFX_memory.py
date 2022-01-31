@@ -2426,11 +2426,18 @@ def assignAbilityToEquipCursor():
     retVal = process.readBytes(key,1)
     return retVal
     
+    
 def cureMenuOpen():
     global baseValue
     key = baseValue + 0x01440A35
     retVal = process.readBytes(key,1)
     return retVal
+    
+def equipMenuOpenFromChar():
+    global baseValue
+    key = baseValue + 0x01440A2A
+    retVal = process.readBytes(key, 1)
+    return retVal == 5
     
 def configCursor():
     global baseValue

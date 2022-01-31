@@ -2,8 +2,8 @@
 class allVars:
     def __init__(self):
         self.csrValue = True
-        self.blitzWinValue = False
-        self.artificialPauses = True
+        self.blitzWinValue = True
+        self.artificialPauses = False
         
         
         self.zombieWeaponVal = 255

@@ -829,9 +829,8 @@ def afterSeymour():
     FFX_menuGrid.useAndQuit()
     #currentmenuposition = 1
     #currentmenuposition = autoSortItems_New('n', 11)
-    equipSonicSteel()
+    equipSonicSteel(fullMenuClose=False)
     #currentmenuposition = FFX_memory.fullPartyFormat('macalaniaescape')
-    FFX_memory.closeMenu()
 
 def homeGrid():
     openGrid(character=0)
@@ -871,21 +870,27 @@ def beforeGuards():
     FFX_Xbox.menuB()
     FFX_memory.closeMenu()
 
-def equipSonicSteel():
+def equipSonicSteel(fullMenuClose=True):
     print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
     while not FFX_memory.menuOpen():
         FFX_memory.openMenu()
-    
     while FFX_memory.getMenuCursorPos() != 4:
-        FFX_Xbox.menuDown()
-
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuB()  # Tidus
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuB()  # Weapon
-    FFX_memory.waitFrames(15) #Allow cursor to set
+        if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() != 7:
+        FFX_Xbox.tapB()    
+    while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(0):
+        print(FFX_memory.getCharCursorPos(), FFX_memory.getCharFormationSlot(0))
+        FFX_Xbox.tapDown()
+    while FFX_memory.menuNumber() != 26:
+        FFX_Xbox.tapB()
+    print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
+    while not FFX_memory.equipMenuOpenFromChar():
+        FFX_Xbox.tapB()
+        print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
     
     weaponHandles = FFX_memory.weaponArrayCharacter(0)
     print("@@@@@")
@@ -908,14 +913,15 @@ def equipSonicSteel():
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
-        FFX_memory.waitFrames(1)
+    print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
+    while FFX_memory.equipMenuOpenFromChar():
+        FFX_Xbox.tapB()
+        print("Menu Cursor: ", FFX_memory.equipMenuOpenFromChar())
     
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(3)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(12)
+    if fullMenuClose:
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.backToMainMenu()
 
     return 5
 
