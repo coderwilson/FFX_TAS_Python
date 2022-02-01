@@ -3630,25 +3630,21 @@ def useItem(slot: int, direction = 'none', target = 255):
 def cheer():
     FFX_Logs.writeLog("Cheer command")
     print("Cheer command")
-    while not FFX_memory.otherBattleMenu():
-        while FFX_memory.battleMenuCursor() != 20:
-            if FFX_Screen.turnTidus() == False:
-                return
-            if FFX_memory.battleMenuCursor() == 0:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(1)
-        FFX_Xbox.tapB()
-    while FFX_memory.battleCursor2() != 1:
-        if FFX_memory.battleCursor2() == 0:
-            FFX_Xbox.tapRight()
+    while FFX_memory.battleMenuCursor() != 20:
+        if FFX_Screen.turnTidus() == False:
+            return
+        if FFX_memory.battleMenuCursor() == 0:
+            FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
         if gameVars.usePause():
             FFX_memory.waitFrames(1)
-    FFX_Xbox.SkipDialog(2)
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()
+    _navigate_to_position(1)
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()
+    tapTargeting()
 
 
 def seymourSpell():

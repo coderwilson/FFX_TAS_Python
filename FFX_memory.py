@@ -2433,6 +2433,24 @@ def cureMenuOpen():
     retVal = process.readBytes(key,1)
     return retVal
     
+def itemMenuNumber():
+    global baseValue
+    key = baseValue + 0x0085A318
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def itemMenuColumn():
+    global baseValue
+    key = baseValue + 0x01440A48
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def itemMenuRow():
+    global baseValue
+    key = baseValue + 0x01440A38
+    retVal = process.readBytes(key,1)
+    return retVal
+    
 def equipMenuOpenFromChar():
     global baseValue
     key = baseValue + 0x01440A2A

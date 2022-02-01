@@ -1,4 +1,5 @@
 import time
+import math
 import FFX_Xbox
 import FFX_Screen
 import FFX_menuGrid
@@ -846,28 +847,39 @@ def homeGrid():
     #itemPos(20,9)
 
 def beforeGuards():
-    FFX_memory.openMenu()
-    while not FFX_memory.menuNumber() == 26:
-        while FFX_memory.getMenuCursorPos() != 1:
-            if FFX_memory.getMenuCursorPos() < 1:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
-            FFX_memory.waitFrames(1)
+    while not FFX_memory.menuOpen():
+        FFX_memory.openMenu()
+        
+    while FFX_memory.getMenuCursorPos() != 1:
+        if FFX_memory.getMenuCursorPos() > 6 or FFX_memory.getMenuCursorPos() < 1:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
-    
     megaPotSlot = FFX_memory.getItemSlot(3) - 1
-    itemCursor = 0
-    FFX_memory.waitFrames(15)
-    if megaPotSlot % 2 == 1:
-        FFX_Xbox.tapRight()
-        itemCursor += 1
-    while megaPotSlot != itemCursor:
-        itemCursor += 2
-        FFX_Xbox.tapDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(20)
-    FFX_Xbox.menuB()
+    column = megaPotSlot % 2
+    row = (megaPotSlot-column) / 2
+    print(megaPotSlot, column, row)
+    
+    while FFX_memory.itemMenuColumn() != column:
+        if FFX_memory.itemMenuColumn() > column:
+            FFX_Xbox.tapLeft()
+        else:
+            FFX_Xbox.tapRight()
+    while FFX_memory.itemMenuRow() != row:
+        if FFX_memory.itemMenuRow() < row:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+            
+    while FFX_memory.itemMenuNumber() != 13:
+        FFX_Xbox.tapB()
+    current_hp = FFX_memory.getHP()
+    maximal_hp = FFX_memory.getMaxHP()
+    while current_hp != maximal_hp:
+        FFX_Xbox.tapB()
+        current_hp = FFX_memory.getHP()
     FFX_memory.closeMenu()
 
 def equipSonicSteel(fullMenuClose=True):
