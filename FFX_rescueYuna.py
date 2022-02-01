@@ -46,7 +46,7 @@ def preEvrae():
     FFX_zzairShipPath.airShipPath(1)
 
 def guards(blitzWin):
-    FFX_memory.clickToControl()
+    FFX_memory.clickToControl() 
     if not blitzWin:
         FFX_menu.equipSonicSteel()
     FFX_menu.beforeGuards()

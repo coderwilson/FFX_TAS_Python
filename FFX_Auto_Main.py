@@ -65,8 +65,8 @@ StepCounter = 1
 #StepCounter = 3
 StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-#Gamestate = "Home"
-#StepCounter = 1
+Gamestate = "Home"
+StepCounter = 1
 #StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
@@ -257,11 +257,11 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffsetBattle(0)
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(16)
+        FFX_LoadGame.loadOffset(11)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadOffset(7)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
-        FFX_LoadGame.loadOffset(30)
+        FFX_LoadGame.loadOffset(36)
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
         FFX_LoadGame.loadOffset(43)
