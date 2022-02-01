@@ -324,7 +324,20 @@ def awaitEvent():
         waitFrames(1)
 
 def getCoords():
-    return getActorCoords(0)
+    global process
+    global baseValue
+    global xPtr
+    global yPtr
+    global coordsCounter
+    coordsCounter += 1
+    xPtr = baseValue + 0x0084DED0
+    yPtr = baseValue + 0x0084DED8
+    coord1 = process.get_pointer(xPtr)
+    x = float_from_integer(process.read(coord1))
+    coord2 = process.get_pointer(yPtr)
+    y = float_from_integer(process.read(coord2))
+
+    return [x,y]
 
 def extractorHeight():
     global process
