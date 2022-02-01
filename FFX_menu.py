@@ -139,25 +139,35 @@ def autoSortItems(manual):
 
 def shortAeons():
     FFX_memory.printMemoryLog()
+    gameVars = FFX_vars.varsHandle()
     FFX_memory.openMenu()
-    if gameVars.csr():
-        cursorTarget = 5
-    else:
-        cursorTarget = 4
+    if gameVars.usePause():
+        FFX_memory.waitFrames(20)
+    cursorTarget = 4
     print("Aiming at ", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())
         FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.menuNumber() == 5:
         FFX_Xbox.tapB()
     while FFX_memory.configCursor() != 5:
         FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.configAeonCursorColumn() != 1:
         FFX_Xbox.tapRight()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.configCursor() != 3:
         FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.configCursorColumn() != 1:
         FFX_Xbox.tapRight()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     FFX_memory.closeMenu()
 
 def Liki():
@@ -874,6 +884,7 @@ def beforeGuards():
 def equipSonicSteel(fullMenuClose=True):
     print("Equipping Sonic Steel")
     FFX_memory.awaitControl()
+    gameVars = FFX_vars.varsHandle()
     while not FFX_memory.menuOpen():
         FFX_memory.openMenu()
     while FFX_memory.getMenuCursorPos() != 4:
@@ -881,10 +892,14 @@ def equipSonicSteel(fullMenuClose=True):
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.menuNumber() != 7:
         FFX_Xbox.tapB()    
     while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(0):
         FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
@@ -911,6 +926,8 @@ def equipSonicSteel(fullMenuClose=True):
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     while FFX_memory.equipMenuOpenFromChar():
         FFX_Xbox.tapB()
     

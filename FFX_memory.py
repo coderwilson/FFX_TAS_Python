@@ -324,20 +324,7 @@ def awaitEvent():
         waitFrames(1)
 
 def getCoords():
-    global process
-    global baseValue
-    global xPtr
-    global yPtr
-    global coordsCounter
-    coordsCounter += 1
-    xPtr = baseValue + 0x0084DED0
-    yPtr = baseValue + 0x0084DED8
-    coord1 = process.get_pointer(xPtr)
-    x = float_from_integer(process.read(coord1))
-    coord2 = process.get_pointer(yPtr)
-    y = float_from_integer(process.read(coord2))
-
-    return [x,y]
+    return getActorCoords(0)
 
 def extractorHeight():
     global process
@@ -1221,10 +1208,10 @@ def menuOpen():
 
     key = baseValue + 0x00F407E4
     menuOpen = process.readBytes(key,1)
-    if menuOpen == 1:
-        return True
-    else:
+    if menuOpen == 0:
         return False
+    else:
+        return True
 
 def closeMenu():
     while menuOpen():
@@ -1243,19 +1230,34 @@ def saveMenuOpen():
 
 def backToMainMenu():
     gameVars = FFX_vars.varsHandle()
-    if menuOpen():
-        while menuNumber() != 5:
+    while menuNumber() != 5:
+        if menuOpen():
             FFX_Xbox.tapA()
-            if gameVars.usePause():
-                waitFrames(5)
+        else:
+            FFX_Xbox.tapY()
+        if gameVars.usePause():
+            waitFrames(1)
 
 def openMenu():
     FFXC = FFX_Xbox.controllerHandle()
+    menuCounter = 0
+    while not (userControl() and menuOpen() and menuNumber() == 5):
+        if menuOpen() and not userControl():
+            print("After battle summary screen is open. Attempting close. ",menuCounter)
+            FFX_Xbox.menuB()
+        elif userControl() and not menuOpen():
+            print("Menu is not open, attempting to open. ",menuCounter)
+            FFX_Xbox.tapY()
+            menuCounter += 1
+        elif menuOpen() and userControl() and menuNumber() > 5:
+            print("The wrong menu is open. ",menuCounter)
+            FFX_Xbox.tapA()
+            menuCounter += 1
+        elif battleActive():
+            print("Can't open menu during battle. ",menuCounter)
+            return False
     FFXC.set_neutral()
-    while not userControl(): #Get out of combat or whatever
-        FFX_Xbox.menuB()
-    while userControl() and not menuOpen():
-        FFX_Xbox.tapY()
+    return True
 
 def menuNumber():
     global baseValue
@@ -1530,7 +1532,10 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
         print("Into formation:")
         print(orderFinal)
         while not menuOpen():
-            openMenu()
+            if openMenu() == False:
+                return
+        FFXC = FFX_Xbox.controllerHandle()
+        FFXC.set_neutral()
         while getMenuCursorPos() != 7:
             if getMenuCursorPos() > 1 and getMenuCursorPos() < 7:
                 FFX_Xbox.tapDown()
@@ -1594,11 +1599,11 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
             print("Into formation:")
             print(orderFinal)
             order = getOrderSeven()
-    print("Party format is good now.")
-    if fullMenuClose:
-        closeMenu()
-    else:
-        backToMainMenu()
+        print("Party format is good now.")
+        if fullMenuClose:
+            closeMenu()
+        else:
+            backToMainMenu()
 
            
 def menuDirection(currentmenuposition, targetmenuposition, menusize):
