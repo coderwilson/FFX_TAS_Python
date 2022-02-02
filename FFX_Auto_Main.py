@@ -187,7 +187,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(32)
+        FFX_LoadGame.loadOffset(22)
         FFXC.set_movement(0, 1)
         FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()

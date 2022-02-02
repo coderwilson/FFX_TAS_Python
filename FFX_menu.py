@@ -895,43 +895,41 @@ def beforeGuards():
         current_hp = FFX_memory.getHP()
     FFX_memory.closeMenu()
 
-def equipSonicSteel(fullMenuClose=True):
-    print("Equipping Sonic Steel")
+def equipWeapon(*, character, ability, fullMenuClose=True):
+    print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
-    while not FFX_memory.menuOpen():
-        FFX_memory.openMenu()
-    while FFX_memory.getMenuCursorPos() != 4:
-        if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
+    if FFX_memory.menuNumber() != 26:
+        while not FFX_memory.menuOpen():
+            FFX_memory.openMenu()
+        while FFX_memory.getMenuCursorPos() != 4:
+            if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+			if gameVars.usePause():
+				FFX_memory.waitFrames(1)
+        while FFX_memory.menuNumber() != 7:
+            FFX_Xbox.tapB()    
+        while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(character):
             FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(1)
-    while FFX_memory.menuNumber() != 7:
-        FFX_Xbox.tapB()    
-    while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(0):
-        FFX_Xbox.tapDown()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(1)
-    while FFX_memory.menuNumber() != 26:
-        FFX_Xbox.tapB()
+			if gameVars.usePause():
+				FFX_memory.waitFrames(1)
+        while FFX_memory.menuNumber() != 26:
+            FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
         FFX_Xbox.tapB()
     
-    weaponHandles = FFX_memory.weaponArrayCharacter(0)
+    weaponHandles = FFX_memory.weaponArrayCharacter(character)
     print("@@@@@")
     print(len(weaponHandles))
     print("@@@@@")
     weaponNum = 255
-    i = 0
-    while len(weaponHandles) > 0:
-        currentHandle = weaponHandles.pop(0)
-        if currentHandle.hasAbility(32769): #First Strike
-            weaponNum = i
-        i += 1
-    
-    print("Sonic Steel is in slot ", weaponNum)
+    for index, currentWeapon in enumerate(weaponHandles):
+        if currentWeapon.hasAbility(ability):
+            weaponNum = index
+            break    
+    print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
         return False #Item is no in inventory.
     
@@ -950,7 +948,14 @@ def equipSonicSteel(fullMenuClose=True):
     else:
         FFX_memory.backToMainMenu()
 
-    return 5
+    return True
+
+def equipSonicSteel(fullMenuClose=True):
+    return equipWeapon(character=0, ability=32769, fullMenuClose=fullMenuClose)
+    
+def equipScout(fullMenuClose=True):
+    return equipWeapon(character=4, ability=0x8022, fullMenuClose=fullMenuClose)
+
 
 def viaPurifico():
     openGrid(character=2) #Auron
