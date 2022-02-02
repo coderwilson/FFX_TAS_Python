@@ -1243,7 +1243,7 @@ def saveMenuOpen():
 
 def backToMainMenu():
     gameVars = FFX_vars.varsHandle()
-    while menuNumber() != 5:
+    while menuNumber() not in [1, 2, 3, 4, 5]:
         if menuOpen():
             FFX_Xbox.tapA()
         else:

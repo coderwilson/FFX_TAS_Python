@@ -81,8 +81,8 @@ StepCounter = 1
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
@@ -90,7 +90,7 @@ autoEggHunt = True
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = False
+forceBlitzWin = True
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 130 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -146,7 +146,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -211,7 +211,7 @@ if Gamestate != "none" :
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(29)
         import FFX_menu
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMRR()

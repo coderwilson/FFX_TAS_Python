@@ -309,7 +309,6 @@ def mrrGrid2():
             FFX_menuGrid.moveAndUse()
             FFX_menuGrid.selSphere('power','d','none')
             FFX_menuGrid.useAndQuit()
-            FFX_memory.closeMenu()
             gameVars.wakkaLateMenuSet(False)
             print("Wakka late menu updated: ", gameVars.wakkaLateMenu())
         else:
@@ -334,7 +333,6 @@ def mrrGridYuna():
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('mana','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuA()
 
 def battleSiteGrid():
     print("Doing the menu stuff")
@@ -381,7 +379,7 @@ def battleSiteGrid():
     FFX_Xbox.menuA()
     FFX_memory.waitFrames(15)
     
-    #Wakka's weapon    #Wakka's weapon
+    #Wakka's weapon
     equipScout(fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
 
