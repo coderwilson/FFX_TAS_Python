@@ -167,7 +167,7 @@ def desert():
 def desert1():
     print("desert1 function no longer used.")
 
-def findSummoners(blitzWin):
+def findSummoners():
     print("Desert complete. Starting Home section")
     FFX_menu.homeGrid()
     
@@ -217,7 +217,7 @@ def findSummoners(blitzWin):
             elif checkpoint == 88:
                 checkpoint = 21
             elif checkpoint == 20:
-                if blitzWin:
+                if gameVars.getBlitzWin():
                     checkpoint = 21
                 else:
                     checkpoint = 81

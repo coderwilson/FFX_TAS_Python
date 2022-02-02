@@ -286,16 +286,18 @@ def mrrGrid1():
         gridRight()
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('power','d','none')
-    print("Wakka late menu: ", wakkaLateMenu)
+    print("Wakka late menu (before): ", wakkaLateMenu)
     
     FFX_menuGrid.useAndQuit()
     
     FFX_memory.closeMenu()
     
-    return wakkaLateMenu
+    gameVars.wakkaLateMenuSet(wakkaLateMenu)
+    print("Wakka late menu(after): ", wakkaLateMenu)
 
-def mrrGrid2(wakkaLateMenu):
-    if wakkaLateMenu != False:
+def mrrGrid2():
+    print("Wakka late menu: ", gameVars.wakkaLateMenu())
+    if gameVars.wakkaLateMenu():
         if FFX_memory.getSLVLWakka() >= 3:
             print("Catching up Wakka's sphere grid.")
             openGrid(character=4)
@@ -308,10 +310,10 @@ def mrrGrid2(wakkaLateMenu):
             FFX_menuGrid.selSphere('power','d','none')
             FFX_menuGrid.useAndQuit()
             FFX_memory.closeMenu()
-            wakkaLateMenu = False
+            gameVars.wakkaLateMenuSet(False)
+            print("Wakka late menu updated: ", gameVars.wakkaLateMenu())
         else:
             print("Not enough sphere levels yet.")
-    return wakkaLateMenu
 
 def mrrGridYuna():
     print("Yuna levels good to level up.")
@@ -773,7 +775,7 @@ def mLakeGrid():
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
-def macTemple(blitzWin):
+def macTemple():
     openGrid(character=0)
     
     FFX_menuGrid.useFirst()
@@ -801,7 +803,7 @@ def macTemple(blitzWin):
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
-    if blitzWin == True:
+    if gameVars.getBlitzWin() == True:
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('strength','d','none')
         FFX_menuGrid.useAndUseAgain()
@@ -1112,9 +1114,9 @@ def seymourNatusBlitzLoss():
     FFX_memory.fullPartyFormat('highbridge')
     FFX_memory.closeMenu()
 
-def prepCalmLands(blitzWin):
+def prepCalmLands():
     openGrid(character=1)
-    if blitzWin == True:
+    if gameVars.getBlitzWin() == True:
         FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()
@@ -1133,7 +1135,7 @@ def prepCalmLands(blitzWin):
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
-def afterRonso(ver, blitzWin):
+def afterRonso():
     FFX_memory.openMenu()
     
     auronFirstStrike()
@@ -1164,7 +1166,7 @@ def afterRonso(ver, blitzWin):
     FFX_menuGrid.moveShiftRight('yuna')
     FFX_menuGrid.useFirst()
     
-    if ver == 1 or ver == 2: #Two of each
+    if gameVars.endGameVersion() in [1,2]: #Two of each
         FFX_menuGrid.selSphere('friend','d','d2')
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
@@ -1186,8 +1188,8 @@ def afterRonso(ver, blitzWin):
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
     
-    if ver == 4: #Four return spheres
-        if blitzWin == True:
+    if gameVars.endGameVersion() == 4: #Four return spheres
+        if gameVars.getBlitzWin() == True:
             FFX_menuGrid.selSphere('ret','d','yunaspec')
             FFX_menuGrid.selSphere('ret','d','d5')
         FFX_menuGrid.useAndMove()

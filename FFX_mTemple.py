@@ -12,7 +12,7 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def approach(blitzWin):
+def approach():
     print("------------------------------------------Affection array:")
     print(FFX_memory.affectionArray())
     print("------------------------------------------")
@@ -36,10 +36,10 @@ def approach(blitzWin):
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
 
-def arrival(blitzWin):
+def arrival():
     print("Starting Macalania Temple section")
     FFX_memory.awaitControl()
-    FFX_menu.macTemple(blitzWin)
+    FFX_menu.macTemple()
     #if FFX_memory.getPower() < 26:
     #    FFX_memory.setPower(26) #Need 34 total from here forward. 2 from Wendigo and 6 from bombs. 26 needed here.
     

@@ -14,7 +14,6 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def arrival():
     FFX_memory.clickToControl()
-    #wakkaLateMenu = FFX_menu.mrrGrid1()
     FFX_memory.closeMenu()
     FFX_memory.fullPartyFormat('mrr1')
     FFX_memory.closeMenu()
@@ -77,7 +76,7 @@ def arrival():
     print("Done with perlim MRR area, now for the real deal.")
     return claskoSkip
 
-def mainPath(wakkaLateMenu):
+def mainPath():
     FFX_memory.awaitControl()
     #Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
@@ -156,8 +155,8 @@ def mainPath(wakkaLateMenu):
                     FFX_menu.mrrGridYuna()
                     print("Yuna's gridding is complete for now.")
                     status[4] = 1
-                if wakkaLateMenu == True and FFX_memory.getSLVLWakka() >= 3:
-                    wakkaLateMenu = FFX_menu.mrrGrid2(wakkaLateMenu)
+                if gameVars.wakkaLateMenu() == True and FFX_memory.getSLVLWakka() >= 3:
+                    FFX_menu.mrrGrid2()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():

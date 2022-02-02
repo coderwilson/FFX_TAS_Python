@@ -231,11 +231,10 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 24: #Hilltop
                 FFX_memory.clickToEventTemple(2)
-                earlyTidusGrid = False
                 if FFX_memory.getTidusSlvl() >= 3:
                     import FFX_menu
                     FFX_menu.Liki()
-                    earlyTidusGrid = True
+                    gameVars.earlyTidusGridSetTrue()
                 checkpoint += 1
             elif checkpoint == 60: #Beach, save sphere
                 FFXC.set_neutral()
@@ -315,6 +314,4 @@ def leaving():
             elif checkpoint < 51 and FFX_memory.getMap() == 20:
                 checkpoint = 51
             elif checkpoint < 59 and FFX_memory.getMap() == 19:
-                checkpoint = 59    
-    
-    return earlyTidusGrid
+                checkpoint = 59

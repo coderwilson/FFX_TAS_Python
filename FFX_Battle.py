@@ -1387,8 +1387,8 @@ def MRRbattle(status):
         else:
             #Wakka attack Raptors and Gandarewas for Yuna AP.
             yunaTurnCount = 0
-            while FFX_memory.menuOpen() != True:
-                if FFX_Screen.BattleScreen():
+            while not FFX_memory.battleComplete():
+                if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         tidusFlee()
                     elif FFX_Screen.faintCheck() >= 1:
@@ -1412,7 +1412,9 @@ def MRRbattle(status):
                         buddySwapTidus()
     else: #Everything is done.
         fleeAll()
-    
+    print("+++")
+    print(gameVars.wakkaLateMenu())
+    print("+++")
     #OK the battle should be complete now. Let's do some wrap-up stuff.
     wrapUp()
     
@@ -2970,7 +2972,7 @@ def home4():
 
 
 # Process written by CrimsonInferno
-def Evrae(blitzWin):
+def Evrae():
     FFX_Logs.writeLog("Fight start: Evrae")
     tidusPrep = 0
     tidusAttacks = 0
@@ -2989,7 +2991,7 @@ def Evrae(blitzWin):
             # print("otherTurns: ", otherTurns)
             if turnchar == 0:
                 print("Registering Tidus's turn")
-                if blitzWin: #Blitz win logic
+                if gameVars.getBlitzWin(): #Blitz win logic
                     if tidusPrep == 0:
                         tidusPrep = 1
                         tidusHaste('none')
@@ -3025,7 +3027,7 @@ def Evrae(blitzWin):
                     rikkuTurns += 1
                     print("Rikku overdrive")
                     rikkuFullOD('Evrae')
-                elif not blitzWin and not lunarCurtain:
+                elif not gameVars.getBlitzWin() and not lunarCurtain:
                     print("Use Lunar Curtain")
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
@@ -3034,7 +3036,7 @@ def Evrae(blitzWin):
                     Steal()
             elif turnchar == 3:
                 print("Registering Kimahri's turn")
-                if not blitzWin and not lunarCurtain:
+                if not gameVars.getBlitzWin() and not lunarCurtain:
                     print("Use Lunar Curtain")
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
@@ -3060,7 +3062,7 @@ def Evrae(blitzWin):
         FFX_Xbox.skipSceneSpec()
 
 
-def guards(groupNum, blitzWin=False):
+def guards(groupNum):
     FFX_Logs.writeLog("Fight start: Bevelle Guards")
     rikkuHeal = False
     turnNum = 0
@@ -3116,7 +3118,7 @@ def guards(groupNum, blitzWin=False):
             elif FFX_Screen.turnRikku():
                 rikkuTurns += 1
                 if groupNum == 1:
-                    if blitzWin == False and rikkuTurns == 1:
+                    if gameVars.getBlitzWin() == False and rikkuTurns == 1:
                         useItem(FFX_memory.getUseItemsSlot(20), 'none')
                     else:
                         defend()
@@ -3454,7 +3456,7 @@ def biranYenke():
         print("Split items between friend and return spheres.")
         endGameVersion = 1
     
-    return endGameVersion
+    gameVars.endGameVersionSet(endGameVersion)
 
 def seymourFlux():
     stage = 1

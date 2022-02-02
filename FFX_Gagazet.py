@@ -12,10 +12,10 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
  
-def calmLands(blitzWin):
+def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
-    FFX_menu.prepCalmLands(blitzWin)
+    FFX_menu.prepCalmLands(gameVars.getBlitzWin())
     FFX_memory.fullPartyFormat('kimahri')
     
     FFXC.set_movement(0, 1)
@@ -97,25 +97,24 @@ def toTheRonso():
         else:
             FFXC.set_neutral()
             if FFX_memory.turnReady():
-                endGameVersion = FFX_Battle.biranYenke()
+                FFX_Battle.biranYenke()
             elif FFX_memory.diagSkipPossible():
                 FFXC.set_value('BtnB', 1)
                 FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.waitFrames(30 * 0.035)
     
-    return endGameVersion
     
-def gagazetGates(blitzWin, endGameVersion):
+def gagazetGates():
     #Should appear on the map just before the Ronso hymn
-    print("Grid version: " + str(endGameVersion))
-    FFX_Logs.writeLog("Grid version: " + str(endGameVersion))
+    print("Grid version: " + str(gameVars.endGameVersion()))
+    FFX_Logs.writeLog("Grid version: " + str(gameVars.endGameVersion()))
     FFX_memory.awaitControl()
     if FFX_memory.overdriveState()[6] == 100:
         FFX_memory.fullPartyFormat('kimahri')
     else:
         FFX_memory.fullPartyFormat('rikku')
-    FFX_menu.afterRonso(endGameVersion, blitzWin)
+    FFX_menu.afterRonso()
     FFX_memory.closeMenu() #just in case
     
     print("Gagazet path section")

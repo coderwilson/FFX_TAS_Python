@@ -45,9 +45,9 @@ def preEvrae():
 
     FFX_zzairShipPath.airShipPath(1)
 
-def guards(blitzWin):
+def guards():
     FFX_memory.clickToControl() 
-    if not blitzWin:
+    if not gameVars.getBlitzWin():
         FFX_menu.equipSonicSteel()
     FFX_menu.beforeGuards()
     #Need to add here, use Mega Potion
@@ -55,7 +55,7 @@ def guards(blitzWin):
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
-    FFX_Battle.guards(1, blitzWin)
+    FFX_Battle.guards(1)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
@@ -481,10 +481,10 @@ def evraeAltana():
                 FFX_Xbox.tapB()
     return 0
     
-def seymourNatus(blitzWin):
+def seymourNatus():
     FFX_memory.clickToControl()
     
-    if blitzWin == True:
+    if gameVars.getBlitzWin() == True:
         FFX_menu.seymourNatusBlitzWin()
     else:
         FFX_menu.seymourNatusBlitzLoss()
