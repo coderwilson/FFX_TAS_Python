@@ -490,7 +490,7 @@ def selSphere(sType, direction, shift):
             if gameVars.usePause():
                 FFX_Xbox.tapDown()
             else:
-                if menuPos - FFX_memory.getGridCursorPos() >=3:
+                if menuPos - FFX_memory.getGridCursorPos() >=3 and len(FFX_memory.getGridItemsOrder()) > 4:
                     FFX_Xbox.TriggerR()
                 else:
                     FFX_Xbox.tapDown()
@@ -499,7 +499,7 @@ def selSphere(sType, direction, shift):
                 FFX_Xbox.tapUp()
             else:
                 if FFX_memory.getGridCursorPos() - menuPos >=3:
-                    if menuPos == 0 and FFX_memory.getGridCursorPos() - menuPos == 3:
+                    if (menuPos == 0 and FFX_memory.getGridCursorPos() - menuPos == 3) or len(FFX_memory.getGridItemsOrder()) <= 4:
                         FFX_Xbox.tapUp()
                     else:
                         FFX_Xbox.TriggerL()

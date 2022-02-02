@@ -153,33 +153,8 @@ def woodsMenuing():
     FFX_menuGrid.useAndQuit()
     #Reorder the party
     
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(30 * 0.2)
-    
-    #Now for Wakka's weapon, Scout with icestrike
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Equip
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Wakka
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.closeMenu()
+    FFX_memory.fullPartyFormat('kilikawoods1', fullMenuClose=False)
+    FFX_menu.equipScout(fullMenuClose=True)
 
 def forest2():
     print("forest2 function no longer used")

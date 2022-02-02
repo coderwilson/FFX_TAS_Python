@@ -43,8 +43,8 @@ import FFX_Sin
 #StepCounter = 6
 Gamestate = "Besaid"
 StepCounter = 3
-#Gamestate = "Kilika"
-#StepCounter = 1
+Gamestate = "Kilika"
+StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
@@ -59,14 +59,14 @@ StepCounter = 3
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
-StepCounter = 4 #Not working on Seymour fight
+#StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-Gamestate = "Home"
-StepCounter = 1
+#Gamestate = "Home"
+#StepCounter = 1
 #StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
@@ -194,7 +194,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(32)
+        FFX_LoadGame.loadOffset(22)
         FFXC.set_movement(0, 1)
         FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
