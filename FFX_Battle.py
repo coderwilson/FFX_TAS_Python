@@ -1441,20 +1441,9 @@ def MRRbattle(status):
     hpCheck = FFX_memory.getHP()
     print("HP values: ", hpCheck)
     if status[5] == 2:
-        healUp(3)
-    elif hpCheck[1] != 475:  # Yuna is low. Heal all.
-        healUp(6)
-    elif hpCheck[3] != 644:  # Kimahri missing HP
-        healUp(5)
-    elif hpCheck[5] != 380:  # Lulu low
-        healUp(4)
-    elif hpCheck[2] != 1030:  # Auron missing HP
-        healUp(3)
-    elif hpCheck[4] != 818:  # Wakka missing HP
-        healUp(2)
-    elif hpCheck[0] != 520:  # Tidus
-        healUp(1)
-    FFX_memory.closeMenu()
+        healUp(3, fullMenuClose=False)
+    elif hpCheck != [520, 475, 1030, 644, 818, 380]:
+        healUp(fullMenuClose=False)
     #donezo. Back to the main path.
     print("Clean-up is now complete.")
     return status
@@ -4233,6 +4222,7 @@ def healUp(chars=3, *, fullMenuClose=True):
             current_hp = FFX_memory.getHP()
         if current_hp == maximal_hp: break
     print("Healing complete. Exiting menu.")
+    print(FFX_memory.menuNumber())
     if fullMenuClose:
         FFX_memory.closeMenu()
     else:

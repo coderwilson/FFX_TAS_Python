@@ -309,7 +309,6 @@ def mrrGrid2():
             FFX_menuGrid.moveAndUse()
             FFX_menuGrid.selSphere('power','d','none')
             FFX_menuGrid.useAndQuit()
-            FFX_memory.closeMenu()
             gameVars.wakkaLateMenuSet(False)
             print("Wakka late menu updated: ", gameVars.wakkaLateMenu())
         else:
@@ -334,7 +333,6 @@ def mrrGridYuna():
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('mana','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuA()
 
 def battleSiteGrid():
     print("Doing the menu stuff")
@@ -382,24 +380,7 @@ def battleSiteGrid():
     FFX_memory.waitFrames(15)
     
     #Wakka's weapon
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Equip
-    wakkaPos = FFX_memory.getCharFormationSlot(4)
-    if FFX_memory.getCharCursorPos() != wakkaPos:
-        while FFX_memory.getCharCursorPos() != wakkaPos:
-            FFX_Xbox.menuDown()
-            FFX_memory.waitFrames(1)
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Wakka
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Weapon
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Back to default.
-    FFX_memory.waitFrames(30)
-    
-    FFX_memory.closeMenu()
+    equipScout(fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1():
@@ -907,14 +888,14 @@ def equipWeapon(*, character, ability, fullMenuClose=True):
                 FFX_Xbox.tapDown()
             else:
                 FFX_Xbox.tapUp()
-			if gameVars.usePause():
-				FFX_memory.waitFrames(1)
+            if gameVars.usePause():
+                FFX_memory.waitFrames(1)
         while FFX_memory.menuNumber() != 7:
             FFX_Xbox.tapB()    
         while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(character):
             FFX_Xbox.tapDown()
-			if gameVars.usePause():
-				FFX_memory.waitFrames(1)
+            if gameVars.usePause():
+                FFX_memory.waitFrames(1)
         while FFX_memory.menuNumber() != 26:
             FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
