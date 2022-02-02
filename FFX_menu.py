@@ -885,19 +885,20 @@ def beforeGuards():
 def equipWeapon(*, character, ability, fullMenuClose=True):
     print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
-    while not FFX_memory.menuOpen():
-        FFX_memory.openMenu()
-    while FFX_memory.getMenuCursorPos() != 4:
-        if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
+    if FFX_memory.menuNumber() != 26:
+        while not FFX_memory.menuOpen():
+            FFX_memory.openMenu()
+        while FFX_memory.getMenuCursorPos() != 4:
+            if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        while FFX_memory.menuNumber() != 7:
+            FFX_Xbox.tapB()    
+        while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(character):
             FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
-    while FFX_memory.menuNumber() != 7:
-        FFX_Xbox.tapB()    
-    while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(character):
-        FFX_Xbox.tapDown()
-    while FFX_memory.menuNumber() != 26:
-        FFX_Xbox.tapB()
+        while FFX_memory.menuNumber() != 26:
+            FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
         FFX_Xbox.tapB()
     
