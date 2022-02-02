@@ -1147,6 +1147,7 @@ def aeonBoost():
     tapTargeting()
 
 def MRRbattle(status):
+    gameVars = FFX_vars.varsHandle()
     #Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
     print("---------------------------------------------------------")
     print("---------------------------------------------------------")
@@ -3741,6 +3742,8 @@ def attackByNum(num, direction='u'):
             #Waiting for battle menu to come up.
             pass
         FFX_memory.waitFrames(2) #Make sure we actually have control
+    if FFX_memory.battleMenuCursor() == 0:
+        FFX_memory.waitFrames(5)
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
         while not FFX_memory.battleMenuCursor() in [0, 216]:
             FFX_Xbox.tapUp()
