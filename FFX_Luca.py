@@ -175,7 +175,7 @@ def afterBlitz():
             if checkpoint == 8: #First chest
                 if gameVars.earlyHaste() == -1:
                     FFX_menu.lateHaste()
-                wakkaLateMenu = FFX_menu.mrrGrid1()
+                FFX_menu.mrrGrid1()
                 FFX_memory.closeMenu()
                 print("First chest")
                 FFX_memory.clickToEventTemple(6)
@@ -241,5 +241,3 @@ def afterBlitz():
     FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
-
-    gameVars.wakkaLateMenuSet(wakkaLateMenu)
