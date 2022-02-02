@@ -907,13 +907,10 @@ def equipWeapon(*, character, ability, fullMenuClose=True):
     print(len(weaponHandles))
     print("@@@@@")
     weaponNum = 255
-    i = 0
-    while len(weaponHandles) > 0:
-        currentHandle = weaponHandles.pop(0)
-        if currentHandle.hasAbility(ability): #First Strike
-            weaponNum = i
-        i += 1
-    
+    for index, currentWeapon in enumerate(weaponHandles):
+        if currentWeapon.hasAbility(ability):
+            weaponNum = index
+            break    
     print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
         return False #Item is no in inventory.
