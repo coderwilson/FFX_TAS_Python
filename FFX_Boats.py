@@ -15,7 +15,7 @@ def boatDance():
     print("No dancing this time")
     FFX_memory.waitFrames(30 * 50)
 
-def ssLiki(earlyTidusGrid):
+def ssLiki():
     checkpoint = 0
     while FFX_memory.getMap() != 43:
         if FFX_memory.userControl():
@@ -26,7 +26,7 @@ def ssLiki(earlyTidusGrid):
             elif checkpoint == 3: #Talk to Wakka
                 FFX_memory.clickToEventTemple(3)
                 print("Ready for SS Liki menu")
-                if earlyTidusGrid == False:
+                if not gameVars.earlyTidusGrid():
                     FFX_menu.Liki()
                     FFX_memory.closeMenu()
                 checkpoint += 1

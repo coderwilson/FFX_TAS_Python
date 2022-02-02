@@ -1,4 +1,6 @@
 # Libraries and Core Files
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 import time
 import random
 import FFX_core
@@ -8,8 +10,6 @@ import FFX_memory
 
 #Plug in controller
 import FFX_Xbox
-import FFX_vars
-gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 
 #Speed run sectional files
@@ -41,18 +41,18 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-Gamestate = "Besaid"
-StepCounter = 3
-Gamestate = "Kilika"
-StepCounter = 1
+#Gamestate = "Besaid"
+#StepCounter = 3
+#Gamestate = "Kilika"
+#StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 1
+Gamestate = "MRR"
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -81,8 +81,8 @@ StepCounter = 1
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
@@ -117,15 +117,8 @@ maxLoops = 25
 rngSeedOrig = rngSeedNum
 speedCount = 0
 strengthCount = 0
-endGameVersion = 1
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
-earlyHaste = 0
 earlyTidusGrid = False
-#if forceBlitzWin == True:
-#    blitzWin = True
-#else:
-#    blitzWin = False
-blitzWin = True #For testing
 
 #Main functions
 def reportGamestate():
@@ -153,7 +146,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -208,10 +201,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(46)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(26)
-        earlyHaste = 3
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
         FFX_LoadGame.loadOffsetBattle(9)
-        earlyHaste = 0
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
@@ -257,14 +248,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffsetBattle(0)
         FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(11)
+        FFX_LoadGame.loadOffset(16)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadOffset(7)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
-        FFX_LoadGame.loadOffset(36)
+        FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadOffset(43)
+        FFX_LoadGame.loadOffset(42)
         #FFX_LoadGame.loadBahamut()
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadOffset(2)
@@ -330,7 +321,7 @@ while Gamestate != "End":
         FFX_Logs.writeStats("Start time:")
         FFX_Logs.writeStats(str(startTime))
         print("Timer starts now.")
-        FFX_DreamZan.listenStory(gameLength)
+        FFX_DreamZan.listenStory()
         #Start of the game, up through the start of Sinspawn Ammes fight
         StepCounter = 2
         FFX_DreamZan.ammesBattle()
@@ -346,33 +337,9 @@ while Gamestate != "End":
     if Gamestate == "DreamZan" and StepCounter == 3:
         FFX_DreamZan.AfterAmmes()
         #Sin drops us near Baaj temple.
-        StepCounter = 4
-        reportGamestate()
-        
-    if Gamestate == "DreamZan" and StepCounter == 4:
-        print("This function no longer used.")
-        #if gameLength == "short":
-        #    FFX_DreamZan.SwimToJecht_shortGame()
-        #    Gamestate = "shortGame"
-        #    StepCounter = 1
-        #else:
-        #    FFX_DreamZan.SwimToJecht()
         Gamestate = "Baaj"
         StepCounter = 1
-
-    #if Gamestate == "shortGame" and StepCounter == 1:
-        #Only for the short game. Run these pieces then skip down to the last Sin section.
-        #If not a short game, continue as regular to the Baaj sections.
-        #import FFX_cheater_cheese
-        #FFX_cheater_cheese.BaajEntrance()
-        #FFX_cheater_cheese.sphereGrid()
-        #FFX_cheater_cheese.items()
-        #FFX_cheater_cheese.BackToSin()
-        #FFX_Sin.insideSin(gameLength, autoEggHunt)
-        #FFX_Battle.BFA_TASonly()
-        #Gamestate = "gameOver"
-        #stepCounter = 999
-
+    
     if Gamestate == "Baaj" and StepCounter == 1 :
         reportGamestate()
         print ("Starting Baaj temple section")
@@ -424,7 +391,7 @@ while Gamestate != "End":
         reportGamestate()
 
     if Gamestate == "Besaid" and StepCounter == 3 :
-        earlyTidusGrid = FFX_Besaid1.leaving()
+        FFX_Besaid1.leaving()
         FFX_Besaid1.waterfalls()
         
         Gamestate = "Boat1"
@@ -433,7 +400,7 @@ while Gamestate != "End":
 
     if Gamestate == "Boat1" :
         reportGamestate()
-        FFX_Boats.ssLiki(earlyTidusGrid)
+        FFX_Boats.ssLiki()
         FFX_Kilika.arrival()
         Gamestate = "Kilika"
         #Gamestate = "manualBreak" # Used for testing only.
@@ -481,7 +448,7 @@ while Gamestate != "End":
 
     if Gamestate == "Luca" and StepCounter == 1:
         reportGamestate()
-        earlyHaste = FFX_Luca.arrival()
+        FFX_Luca.arrival()
         FFX_Luca.followYuna()
         StepCounter = 2
 
@@ -531,7 +498,7 @@ while Gamestate != "End":
 
     if Gamestate == "Luca" and StepCounter == 4:
         reportGamestate()
-        blitzWin = FFX_Blitz.blitzMain(forceBlitzWin)
+        gameVars.setBlitzWin(FFX_Blitz.blitzMain(forceBlitzWin))
         if not gameVars.csr():
             FFX_Xbox.awaitSave()
         StepCounter = 5
@@ -539,17 +506,12 @@ while Gamestate != "End":
 
     if Gamestate == "Luca" and StepCounter == 5:
         reportGamestate()
-        wakkaLateMenu = FFX_Luca.afterBlitz(earlyHaste)
+        FFX_Luca.afterBlitz()
         StepCounter = 1
         Gamestate = "Miihen"
         #Gamestate = "manualBreak" # Used for testing only.
     
     #Just to make sure we set this variable somewhere.
-    try:
-        print(wakkaLateMenu)
-    except:
-        wakkaLateMenu = True
-    
     if Gamestate == "Miihen" and StepCounter == 1:
         reportGamestate()
         returnArray = FFX_Miihen.arrival()
@@ -598,9 +560,8 @@ while Gamestate != "End":
         
     if Gamestate == "MRR" and StepCounter == 1:
         reportGamestate()
-        #wakkaLateMenu = FFX_MRR.arrival()
         FFX_MRR.arrival()
-        FFX_MRR.mainPath(wakkaLateMenu)
+        FFX_MRR.mainPath()
         if FFX_memory.gameOver():
             Gamestate = "gameOverError"
         StepCounter = 2
@@ -657,13 +618,13 @@ while Gamestate != "End":
         FFX_Logs.nextFile()
 
     if Gamestate == "ThunderPlains" and StepCounter == 1:
-        status = [False,False,False,False,blitzWin]
+        status = [False,False,False,False,False]
         reportGamestate()
         status = FFX_ThunderPlains.southPathing(status)
         StepCounter = 2
 
     if Gamestate == "ThunderPlains" and StepCounter == 2:
-        FFX_ThunderPlains.agency(blitzWin)
+        FFX_ThunderPlains.agency()
         StepCounter = 3
 
     if Gamestate == "ThunderPlains" and StepCounter == 3:
@@ -687,13 +648,13 @@ while Gamestate != "End":
         reportGamestate()
         FFX_mWoods.lake()
         #FFX_mWoods.afterCrawler()
-        FFX_mTemple.approach(blitzWin)
+        FFX_mTemple.approach()
         StepCounter = 4
         #Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Macalania" and StepCounter == 4:
         reportGamestate()
-        FFX_mTemple.arrival(blitzWin)
+        FFX_mTemple.arrival()
         FFX_mTemple.startSeymourFight()
         FFX_mTemple.seymourFight()
         StepCounter = 5
@@ -725,7 +686,7 @@ while Gamestate != "End":
 
     if Gamestate == "Home" and StepCounter == 2:
         reportGamestate()
-        FFX_home.findSummoners(blitzWin)
+        FFX_home.findSummoners()
         FFX_rescueYuna.preEvrae()
         StepCounter = 1
         Gamestate = "rescueYuna"
@@ -733,8 +694,8 @@ while Gamestate != "End":
 
     if Gamestate == "rescueYuna" and StepCounter == 1:
         reportGamestate()
-        FFX_Battle.Evrae(blitzWin)
-        FFX_rescueYuna.guards(blitzWin)
+        FFX_Battle.Evrae()
+        FFX_rescueYuna.guards()
         StepCounter = 2
         #Gamestate = "manualBreak" # Used for testing only.
         
@@ -757,7 +718,7 @@ while Gamestate != "End":
 
     if Gamestate == "rescueYuna" and StepCounter == 5:
         reportGamestate()
-        FFX_rescueYuna.seymourNatus(blitzWin)
+        FFX_rescueYuna.seymourNatus()
         StepCounter = 1
         Gamestate = "Gagazet"
         FFX_Logs.nextFile()
@@ -765,22 +726,14 @@ while Gamestate != "End":
 
     if Gamestate == "Gagazet" and StepCounter == 1:
         reportGamestate()
-        FFX_Gagazet.calmLands(blitzWin)
+        FFX_Gagazet.calmLands()
         FFX_Gagazet.defenderX()
-        endGameVersion = FFX_Gagazet.toTheRonso()
+        FFX_Gagazet.toTheRonso()
         StepCounter = 2
-
-    #In case we're loading mid game...
-    if endGameVersion == 0:
-        endGameVersion = 4
-        # 1 = two Return spheres, two Friend spheres
-        # 2 = two Return spheres, two Friend spheres
-        # 3 = Game over (four Friend spheres)
-        # 4 = four Return spheres
 
     if Gamestate == "Gagazet" and StepCounter == 2:
         reportGamestate()
-        FFX_Gagazet.gagazetGates(blitzWin, endGameVersion)
+        FFX_Gagazet.gagazetGates()
         FFX_Gagazet.Flux()
         StepCounter = 3
     if Gamestate == "Gagazet" and StepCounter == 3:
@@ -807,17 +760,12 @@ while Gamestate != "End":
 
     if Gamestate == "Zanarkand" and StepCounter == 3:
         reportGamestate()
-        if endGameVersion == 0:
-            endGameVersion = 1 #Used during segmented testing.
-            # 4 == four Return spheres
-            # 3 == four Friend spheres
-            # 1 or 2 == two of each.
-        FFX_Zanarkand.sanctuaryKeeper(endGameVersion)
+        FFX_Zanarkand.sanctuaryKeeper()
         StepCounter = 4
 
     if Gamestate == "Zanarkand" and StepCounter == 4:
         reportGamestate()
-        FFX_Zanarkand.yunalesca(endGameVersion)
+        FFX_Zanarkand.yunalesca()
         StepCounter = 1
         Gamestate = "Sin"
         #Gamestate = "End" # Used for testing only.

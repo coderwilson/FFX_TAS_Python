@@ -368,6 +368,8 @@ def loadGuadoSkip():
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 1)
     FFXC.set_neutral()
+    import FFX_Guadosalam
+    FFX_Guadosalam.afterSpeech(checkpoint = 26)
 
 def loadMacLake():
     FFX_memory.awaitControl()

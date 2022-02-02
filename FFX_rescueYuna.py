@@ -45,9 +45,9 @@ def preEvrae():
 
     FFX_zzairShipPath.airShipPath(1)
 
-def guards(blitzWin):
+def guards():
     FFX_memory.clickToControl() 
-    if not blitzWin:
+    if not gameVars.getBlitzWin():
         FFX_menu.equipSonicSteel()
     FFX_menu.beforeGuards()
     #Need to add here, use Mega Potion
@@ -55,7 +55,7 @@ def guards(blitzWin):
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
-    FFX_Battle.guards(1, blitzWin)
+    FFX_Battle.guards(1)
     
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
@@ -172,12 +172,17 @@ def trials():
             elif checkpoint == 7: #First Bevelle sphere, and then more gliding.
                 print("Bevelle sphere")
                 FFX_memory.clickToEventTemple(7)
-                FFXC.set_movement(0, -1)
-                FFX_memory.waitFrames(30 * 1.5)
+                while FFX_memory.getActorCoords(0)[0] < -25:
+                    FFXC.set_movement(0, -1)
+                    if not FFX_memory.userControl():
+                        FFX_Xbox.menuB()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 9.5)
+                print("Mark 1")
+                FFX_memory.waitFrames(30 * 1)
                 FFXC.set_value('BtnB', 1)
+                print("Mark 2")
                 FFX_memory.awaitControl()
+                print("Mark 3")
                 FFXC.set_value('BtnB', 0)
                 checkpoint += 1
             elif checkpoint == 10: #Insert Bevelle sphere. Activate lower areas.
@@ -476,10 +481,10 @@ def evraeAltana():
                 FFX_Xbox.tapB()
     return 0
     
-def seymourNatus(blitzWin):
+def seymourNatus():
     FFX_memory.clickToControl()
     
-    if blitzWin == True:
+    if gameVars.getBlitzWin() == True:
         FFX_menu.seymourNatusBlitzWin()
     else:
         FFX_menu.seymourNatusBlitzLoss()

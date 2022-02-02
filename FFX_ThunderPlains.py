@@ -58,18 +58,8 @@ def southPathing(status):
 
     return status
 
-def agency(blitzWin):
-    #Arrive at the travel agency
-    FFX_memory.clickToControl3()
+def agencyShop():
     speedCount = FFX_memory.getSpeed()
-    
-    #Talk to the lady
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFXC.set_movement(1, 0)
-    FFX_Xbox.SkipDialog(0.15)
-    FFXC.set_neutral()
-    
     FFX_memory.clickToDiagProgress(92)
     FFX_memory.waitFrames(30)
     FFX_Xbox.menuDown()
@@ -131,29 +121,29 @@ def agency(blitzWin):
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Sell Auron Katana
     FFX_memory.waitFrames(6)
-    if blitzWin == False and FFX_memory.getGilvalue() < 9550:
+    if gameVars.getBlitzWin() == False and FFX_memory.getGilvalue() < 9550:
         for j in range(11):
             FFX_Xbox.menuDown()
         while FFX_memory.getGilvalue() < 9550:
-            FFX_memory.waitFrames(3)
+            FFX_memory.waitFrames(30)
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuUp()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuRight()
             FFX_Xbox.menuDown()
         FFX_memory.waitFrames(6)
-    elif blitzWin == True and FFX_memory.getGilvalue() < 8725:
+    elif gameVars.getBlitzWin() == True and FFX_memory.getGilvalue() < 8725:
         for j in range(11):
             FFX_Xbox.menuDown()
         while FFX_memory.getGilvalue() < 8725:
-            FFX_memory.waitFrames(3)
+            FFX_memory.waitFrames(30)
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuUp()
             FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
+            FFX_memory.waitFrames(15)
             FFX_Xbox.menuRight()
             FFX_Xbox.menuDown()
         FFX_memory.waitFrames(6)
@@ -166,7 +156,7 @@ def agency(blitzWin):
     FFX_memory.waitFrames(24)
     #FFX_memory.waitFrames(30 * 30) #Testing only
     
-    if blitzWin == False:
+    if gameVars.getBlitzWin() == False:
         FFX_Xbox.menuB()
         FFX_memory.waitFrames(24)
         FFX_Xbox.menuUp() #Baroque sword
@@ -192,45 +182,51 @@ def agency(blitzWin):
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
     FFX_memory.waitFrames(6)
-    
-    #Now for Yuna's scene
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.6)
-    FFXC.set_movement(0, 1)
-    FFX_memory.awaitEvent()
-    FFXC.set_neutral()
-    
+
+def agency():
+    #Arrive at the travel agency
     FFX_memory.clickToControl3()
-    print("Yuna's done talking. Let's keep going.")
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.2)
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(1, 0)
-    FFX_Xbox.SkipDialog(0.4)
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_memory.clickToEvent()
-    FFXC.set_neutral()
+    checkpoint = 0
     
-    print("------------------------------------------Affection array:")
-    print(FFX_memory.affectionArray())
-    print("------------------------------------------")
-    
-    FFX_memory.clickToControl3()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.1)
-    
-    FFX_Xbox.SkipDialog(3) #Pick up lightning shield
-    FFX_memory.awaitEvent()
-    
-    FFXC.set_neutral()
+    while FFX_memory.getMap() != 162:
+        if FFX_memory.userControl():
+            if checkpoint == 1:
+                FFXC.set_movement(0, 1)
+                FFX_memory.clickToEvent()
+                FFXC.set_neutral()
+                agencyShop()
+                checkpoint += 1
+            elif checkpoint == 4:
+                FFXC.set_movement(0, 1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
+                checkpoint += 1
+            elif checkpoint == 7:
+                kimahriAffection = FFX_memory.affectionArray()[3]
+                print("Kimahri affection, ", kimahriAffection)
+                while FFX_memory.affectionArray()[3] == kimahriAffection:
+                    FFX_targetPathing.setMovement([27, -44])
+                    FFX_Xbox.tapB()
+                print("Updated, full affection array:")
+                print(FFX_memory.affectionArray())
+                checkpoint += 1
+            elif checkpoint == 8:
+                while not FFX_memory.getMap() == 256:
+                    FFX_targetPathing.setMovement([3, -52])
+                    FFX_Xbox.tapB()
+                checkpoint += 1
+            elif checkpoint == 10:
+                FFXC.set_movement(0, 1)
+                FFX_memory.clickToEvent()
+            
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsAgency(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
     
 def northPathing(status):
     FFX_memory.clickToControl()

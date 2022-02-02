@@ -83,7 +83,7 @@ def NewGame2():
     print("Confirm Orchestrated soundtrack.")
     FFX_Xbox.menuB()
 
-def listenStory(gameLength):
+def listenStory():
     FFX_memory.waitFrames(10)
     print("Skipping intro scene, we'll watch this properly in about 8 hours.")
     FFX_vars.initVars()

@@ -81,15 +81,16 @@ def arrival():
         FFX_Xbox.skipStoredScene(10)
     print("Ready for next movement.")
 
-def afterSpeech():
+def afterSpeech(checkpoint = 0):
     FFX_memory.clickToControl() #Skips through the long cutscene
     print("Starting movement.")
+    print("Starting checkpoint: ", checkpoint)
     
-    FFX_memory.clickToEventTemple(4)
-    
-    checkpoint = 0
+    if checkpoint == 0:
+        FFX_memory.clickToEventTemple(4)
     
     while checkpoint != 34:
+        #print(FFX_targetPathing.guadoStoryline(checkpoint))
         if FFX_memory.userControl():
             if checkpoint > 17 and checkpoint < 26 and FFX_memory.getMap() == 135:
                 checkpoint = 26
@@ -120,65 +121,6 @@ def afterSpeech():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-            
-
-def afterSpeech_old():
-    FFX_memory.clickToControl() #Skips through the long cutscene
-    FFX_menu.guadoRikku()
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 8) #Out of the room and to the party
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 1.25)
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 0.7)
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 5)
-    FFXC.set_neutral()
-    
-    FFX_memory.awaitControl() #Doorway to the Farplane
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.4)
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.2)
-    FFXC.set_neutral()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 2)
-    FFX_Xbox.menuB() #Open the chest
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 4)
-    FFXC.set_neutral()
-    
-    FFX_memory.awaitControl() #Approach party
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl() #Enter discussion farplane with Auron and Rikku
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl() #Finish with Auron/Rikku, and head to farplane
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl() # Farplane, green square
-    FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    
-    FFX_memory.clickToControl() # Farplane, green square
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
 
 def guadoSkip():
     FFX_memory.clickToControl()

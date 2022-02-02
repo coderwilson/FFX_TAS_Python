@@ -131,7 +131,7 @@ def arrival():
                 checkpoint = 11
     FFX_Logs.writeStats("Early Haste:")
     FFX_Logs.writeStats(earlyHaste)
-    return earlyHaste
+    gameVars.earlyHasteSet(earlyHaste)
 
 def followYuna():
     print("followYuna function no longer used")
@@ -164,7 +164,7 @@ def blitzStart():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
-def afterBlitz(earlyHaste):
+def afterBlitz():
     FFX_Xbox.clickToBattle()
     battleNum = 0
     checkpoint = 0
@@ -173,7 +173,7 @@ def afterBlitz(earlyHaste):
             print("Checkpoint: ", checkpoint)
             #Events
             if checkpoint == 8: #First chest
-                if earlyHaste == -1:
+                if gameVars.earlyHaste() == -1:
                     FFX_menu.lateHaste()
                 wakkaLateMenu = FFX_menu.mrrGrid1()
                 FFX_memory.closeMenu()
@@ -208,14 +208,14 @@ def afterBlitz(earlyHaste):
                 battleNum += 1
                 print("After-Blitz Battle Number: ", battleNum)
                 if battleNum == 1:
-                    FFX_Battle.afterBlitz1(earlyHaste)
+                    FFX_Battle.afterBlitz1(gameVars.earlyHaste())
                 elif battleNum == 2:
                     FFX_Xbox.clickToBattle()
                     FFX_Battle.attack('none') #Hardest boss in the game.
                     print("Well that boss was difficult.")
                     FFX_memory.waitFrames(30 * 6)
                 elif battleNum == 3:
-                    FFX_Battle.afterBlitz3(earlyHaste)
+                    FFX_Battle.afterBlitz3(gameVars.earlyHaste())
                     FFX_memory.clickToControl()
                     FFX_memory.waitFrames(4)
                     FFXC.set_neutral()
@@ -242,4 +242,4 @@ def afterBlitz(earlyHaste):
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
 
-    return wakkaLateMenu
+    gameVars.wakkaLateMenuSet(wakkaLateMenu)

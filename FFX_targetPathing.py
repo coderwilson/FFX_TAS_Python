@@ -2160,7 +2160,7 @@ def mrrMain(checkpoint):
     if checkpoint == 66:
         print("Up the final lift.")
     if checkpoint == 67:
-        x = 281
+        x = 305
         y = 152
     if checkpoint == 68:
         x = 328
@@ -3395,6 +3395,44 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 12:
         x = 54
         y = 1200
+    return [x,y]
+
+def tPlainsAgency(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 4
+        y = -36
+    if checkpoint == 1: #Agency shop
+        x = 0
+        y = 0
+    if checkpoint == 2:
+        x = 21
+        y = -28
+    if checkpoint == 3:
+        x = 29
+        y = -10
+    if checkpoint == 4: #Scene with Yuna
+        x = 0
+        y = 0
+    if checkpoint == 5:
+        x = 31
+        y = -17
+    if checkpoint == 6:
+        x = 25
+        y = -36
+    if checkpoint == 7: #Talk to Kimahri, affection manip
+        x = 0
+        y = 0
+    if checkpoint == 8: #Talk to Rikku to leave the agency
+        x = 0
+        y = 0
+    if checkpoint == 9:
+        x = -44
+        y = 99
+    if checkpoint == 10: #Lightning shield, and exit to North pathing.
+        x = 0
+        y = 0
     return [x,y]
 
 def tPlainsNorth(checkpoint):
