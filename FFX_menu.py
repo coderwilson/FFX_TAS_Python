@@ -881,7 +881,7 @@ def equipWeapon(*, character, ability, fullMenuClose=True):
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
     if FFX_memory.menuNumber() != 26:
-        while not FFX_memory.menuOpen():
+        if not FFX_memory.menuOpen():
             FFX_memory.openMenu()
         while FFX_memory.getMenuCursorPos() != 4:
             if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
@@ -892,6 +892,8 @@ def equipWeapon(*, character, ability, fullMenuClose=True):
                 FFX_memory.waitFrames(1)
         while FFX_memory.menuNumber() != 7:
             FFX_Xbox.tapB()    
+            if gameVars.usePause():
+                FFX_memory.waitFrames(1)
         while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(character):
             FFX_Xbox.tapDown()
             if gameVars.usePause():
