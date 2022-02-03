@@ -249,12 +249,7 @@ def Tanker():
             elif FFX_Screen.turnAuron():
                 auronCount += 1
                 if auronCount < 2:
-                    FFX_memory.waitFrames(30 * 0.5)
-                    FFX_Xbox.tapB()
-                    FFX_memory.waitFrames(30 * 0.1)
-                    FFX_Xbox.tapDown()
-                    FFX_Xbox.tapLeft()
-                    FFX_Xbox.tapB()
+                    attackSelfTanker()
                 else:
                     attack('none')
                     countAttacks += 1
@@ -1141,7 +1136,7 @@ def aeonBoost():
         else:
             FFX_Xbox.tapUp()
         if gameVars.usePause():
-            FFX_memory.waitFrames(1)
+            FFX_memory.waitFrames(3)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     tapTargeting()
@@ -3761,6 +3756,33 @@ def attackByNum(num, direction='u'):
                 FFX_Xbox.tapDown()
     tapTargeting()
 
+def attackSelfTanker():
+    print("Attacking specific character, Auron (self)")
+    if not FFX_memory.turnReady():
+        print("Battle menu isn't up.")
+        while not FFX_memory.turnReady():
+            #Waiting for battle menu to come up.
+            pass
+        FFX_memory.waitFrames(2) #Make sure we actually have control
+    if FFX_memory.battleMenuCursor() == 0:
+        FFX_memory.waitFrames(5)
+    if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
+        while not FFX_memory.battleMenuCursor() in [0, 216]:
+            FFX_Xbox.tapUp()
+            if FFX_Screen.BattleComplete():
+                return #Safety
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.tapB()
+    
+    while FFX_memory.battleTargetId() != 2:
+        if FFX_memory.battleTargetId() > 20:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapLeft()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
+    tapTargeting()
+
 def attack(direction):
     print("Attack")
     direction = direction.lower()
@@ -4174,6 +4196,8 @@ def healUp(chars=3, *, fullMenuClose=True):
         return
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(20)
     FFXC = FFX_Xbox.controllerHandle()
     FFXC.set_neutral()
     while FFX_memory.getMenuCursorPos() != 2:
@@ -4182,27 +4206,28 @@ def healUp(chars=3, *, fullMenuClose=True):
         else:
             FFX_Xbox.tapUp()
         if gameVars.usePause():
-            FFX_memory.waitFrames(2)
+            FFX_memory.waitFrames(1)
     while FFX_memory.menuNumber() != 7:
         FFX_Xbox.tapB()
         if gameVars.usePause():
-            FFX_memory.waitFrames(4)
-    if gameVars.usePause():
-        FFX_memory.waitFrames(2)
+            FFX_memory.waitFrames(20)
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
     order = FFX_memory.getOrderSeven()
     partyMembers = len(order)
-    if gameVars.usePause():
-        FFX_memory.waitFrames(10)
     if FFX_memory.getCharCursorPos() != yunaPos:
-        while FFX_memory.getCharCursorPos() != yunaPos:
+        while FFX_memory.getMenu2CharNum() != 1:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
             if gameVars.usePause():
-                FFX_memory.waitFrames(2)
+                FFX_memory.waitFrames(20)
     print("Mark 2")
     while FFX_memory.menuNumber() != 26:
-        FFX_Xbox.tapB()
+        if FFX_memory.getMenu2CharNum() == 1:
+            FFX_Xbox.tapB()
+        else:
+            FFX_Xbox.tapDown()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(20)
     while not FFX_memory.cureMenuOpen():
         FFX_Xbox.tapB()
     character_positions = {
