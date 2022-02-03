@@ -387,10 +387,12 @@ def battleSiteOaka1():
     FFX_memory.clickToDiagProgress(96)
     FFX_memory.waitFrames(12)
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Items
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sell
+    while FFX_memory.itemShopMenu() != 7:
+        FFX_Xbox.tapB()
+    while FFX_memory.assignAbilityToEquipCursor() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.itemShopMenu() != 21:
+        FFX_Xbox.tapB()
     
     itemOrder = FFX_memory.getItemsOrder()
     itemCursor = 1
@@ -400,18 +402,18 @@ def battleSiteOaka1():
         elif itemOrder[itemCursor] == 6:
             print("Keep Phoenix Downs.")
         else: #Sell all except for Mega Potions and Phoenix Downs.
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuUp()
+            FFX_Xbox.tapB()
+            FFX_Xbox.tapUp()
             if FFX_memory.getItemCountSlot(itemCursor) > 10:
-                FFX_Xbox.menuUp()
-            FFX_Xbox.menuB() #Sell this item
+                FFX_Xbox.tapUp()
+            FFX_Xbox.tapB() #Sell this item
         if itemOrder[itemCursor + 1] == 70:
             print("Done with selling items.")
         elif itemCursor % 2 == 1:
-            FFX_Xbox.menuRight()
+            FFX_Xbox.tapRight()
         else:
-            FFX_Xbox.menuLeft()
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapLeft()
+            FFX_Xbox.tapDown()
         itemCursor += 1
     
     FFX_memory.closeMenu()
@@ -419,55 +421,41 @@ def battleSiteOaka1():
 def battleSiteOaka2():
     FFX_memory.clickToDiagProgress(74)
     FFX_memory.clickToDiagProgress(96)
-    while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(20)
-    FFX_memory.waitFrames(20)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sell
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
+    while FFX_memory.itemMenuRow() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.equipShopMenu() != 25:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != 9:
+        FFX_Xbox.tapDown()
+    curRow = FFX_memory.equipSellRow()
     while FFX_memory.getGilvalue() < 10890:
-        FFX_Xbox.menuDown()
-        FFX_memory.waitFrames(6)
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuRight()
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(20)
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Purchase Sentry
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Equip Sentry
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    
-    #Re-sort items - should be Mega Potions first slot, followed by Phoenix Downs
-    #FFX_memory.openMenu()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(6)
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(6)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
+        while FFX_memory.equipSellRow() != curRow + 1:
+            FFX_Xbox.tapDown()
+        curRow = FFX_memory.equipSellRow()
+        while FFX_memory.equipShopMenu() != 31:
+            FFX_Xbox.tapB()
+        while FFX_memory.equipConfirmationRow() != 0:
+            FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 9:
+        FFX_Xbox.tapA()
+    while FFX_memory.itemMenuRow() != 0:
+        FFX_Xbox.tapLeft()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipBuyRow() != 2:
+        FFX_Xbox.tapDown()
+    while FFX_memory.equipShopMenu() != 18:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 22:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
     
     FFX_memory.closeMenu()
 

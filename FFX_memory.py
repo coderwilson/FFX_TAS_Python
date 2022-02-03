@@ -2459,6 +2459,17 @@ def assignAbilityToEquipCursor():
     retVal = process.readBytes(key,1)
     return retVal
     
+def itemShopMenu():
+    global baseValue
+    key = baseValue + 0x0085A860
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def equipShopMenu():
+    global baseValue
+    key = baseValue + 0x0085A83C
+    retVal = process.readBytes(key,1)
+    return retVal
     
 def cureMenuOpen():
     global baseValue
@@ -2481,6 +2492,24 @@ def itemMenuColumn():
 def itemMenuRow():
     global baseValue
     key = baseValue + 0x01440A38
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def equipSellRow():
+    global baseValue
+    key = baseValue + 0x01440C00
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def equipBuyRow():
+    global baseValue
+    key = baseValue + 0x01440B68
+    retVal = process.readBytes(key,1)
+    return retVal
+    
+def equipSellConfirm():
+    global baseValue
+    key = baseValue + 0x01440C98
     retVal = process.readBytes(key,1)
     return retVal
     

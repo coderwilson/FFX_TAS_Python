@@ -4161,6 +4161,14 @@ def healUp_New(chars, menusize):
 def healUp(chars=3, *, fullMenuClose=True):
     FFX_Logs.writeLog("Healing characters post-battle")
     print("Menuing, healing characters: ", chars)
+    if FFX_memory.getHP() == FFX_memory.getMaxHP():
+        print("No need to heal. Exiting menu.")
+        print(FFX_memory.menuNumber())
+        if fullMenuClose:
+            FFX_memory.closeMenu()
+        else:
+            FFX_memory.backToMainMenu()
+        return
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
     FFXC = FFX_Xbox.controllerHandle()
