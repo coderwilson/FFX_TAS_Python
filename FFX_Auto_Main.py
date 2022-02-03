@@ -52,7 +52,7 @@ import FFX_Sin
 #Gamestate = "Miihen"
 #StepCounter = 1
 Gamestate = "MRR"
-StepCounter = 1
+StepCounter = 2
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -214,9 +214,10 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(29)
         import FFX_menu
         FFX_menu.mrrGrid1()
+        FFX_menu.equipScout()
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(1)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(8)

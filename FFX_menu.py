@@ -363,21 +363,7 @@ def battleSiteGrid():
     FFX_menuGrid.useAndQuit()
     
     #Sort items
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(15)
+    sortItems(fullMenuClose=False)
     
     #Wakka's weapon
     equipScout(fullMenuClose=False)
@@ -421,23 +407,37 @@ def battleSiteOaka1():
 def battleSiteOaka2():
     FFX_memory.clickToDiagProgress(74)
     FFX_memory.clickToDiagProgress(96)
-    while FFX_memory.equipShopMenu() != 12:
+    while FFX_memory.equipShopMenu() != 9:
         FFX_Xbox.tapB()
     while FFX_memory.itemMenuRow() != 1:
         FFX_Xbox.tapRight()
     while FFX_memory.equipShopMenu() != 25:
         FFX_Xbox.tapB()
-    while FFX_memory.equipSellRow() != 9:
+    while FFX_memory.equipSellRow() != 10:
         FFX_Xbox.tapDown()
     curRow = FFX_memory.equipSellRow()
     while FFX_memory.getGilvalue() < 10890:
         while FFX_memory.equipSellRow() != curRow + 1:
             FFX_Xbox.tapDown()
         curRow = FFX_memory.equipSellRow()
+        earlyBreak = False
         while FFX_memory.equipShopMenu() != 31:
+            if FFX_memory.equipShopMenu() == 29:
+                earlyBreak = True
+                break
             FFX_Xbox.tapB()
+        if earlyBreak:
+            print("Cannot sell this item so continuing")
+            continue
+        print(FFX_memory.equipConfirmationRow())
+        FFX_memory.waitFrames(5)
         while FFX_memory.equipConfirmationRow() != 0:
+            print(FFX_memory.equipConfirmationRow())
             FFX_Xbox.tapUp()
+        print(FFX_memory.equipConfirmationRow())
+        print("Selling")
+        while FFX_memory.equipShopMenu() != 25:
+            FFX_Xbox.tapB()
     while FFX_memory.equipShopMenu() != 9:
         FFX_Xbox.tapA()
     while FFX_memory.itemMenuRow() != 0:
@@ -863,6 +863,33 @@ def beforeGuards():
         FFX_Xbox.tapB()
         current_hp = FFX_memory.getHP()
     FFX_memory.closeMenu()
+    
+def sortItems(fullMenuClose=True):
+    while not FFX_memory.menuOpen():
+        FFX_memory.openMenu()
+        
+    while FFX_memory.getMenuCursorPos() != 1:
+        if FFX_memory.getMenuCursorPos() > 6 or FFX_memory.getMenuCursorPos() < 1:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() != 26:
+        FFX_Xbox.tapB()
+    while FFX_memory.itemMenuNumber() != 53:
+        FFX_Xbox.tapA()
+    while FFX_memory.assignAbilityToEquipCursor() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.itemMenuNumber() != 25:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipBuyRow() != 1:
+        FFX_Xbox.tapRight()
+    FFX_Xbox.tapB()
+    if fullMenuClose:
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.backToMainMenu()    
+    
+        
 
 def equipWeapon(*, character, ability, fullMenuClose=True):
     print("Equipping Weapon with ability ", ability)

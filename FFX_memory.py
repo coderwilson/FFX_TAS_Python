@@ -2507,7 +2507,13 @@ def equipBuyRow():
     retVal = process.readBytes(key,1)
     return retVal
     
-def equipSellConfirm():
+def cursorEnabledInEquip():
+    global baseValue
+    key = baseValue + 0x008CC7EC
+    retVal = process.readBytes(key,1)
+    return retVal == 12
+    
+def equipConfirmationRow():
     global baseValue
     key = baseValue + 0x01440C98
     retVal = process.readBytes(key,1)
