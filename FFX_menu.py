@@ -820,7 +820,7 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
                 
         target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
         while FFX_memory.getCharCursorPos() != target_pos:
-            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
+            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
             if gameVars.usePause():
                 FFX_memory.waitFrames(3)
         while FFX_memory.menuNumber() != 26:

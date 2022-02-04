@@ -4157,8 +4157,9 @@ def healUp(chars=3, *, fullMenuClose=True):
             FFX_memory.waitFrames(1)
     print("Mark 1")
     target_pos = FFX_memory.getCharacterIndexInMainMenu(1)
+    print(target_pos)
     while FFX_memory.getCharCursorPos() != target_pos:
-        FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
+        FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
         if gameVars.usePause():
             FFX_memory.waitFrames(20)
     print("Mark 2")

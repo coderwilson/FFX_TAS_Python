@@ -1636,25 +1636,26 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
     distanceUnsigned = currentmenuposition - targetmenuposition
-    #print("Menu Size: ", menusize)
+    print("Menu Size: ", menusize)
     halfmenusize = menusize / 2
     if distance == halfmenusize:
-        #print("Marker 1")
+        print("Marker 1")
         FFX_Xbox.tapUp()
     elif distance < halfmenusize:
         if distanceUnsigned > 0:
-            #print("Marker 2")
+            print("Marker 2")
             FFX_Xbox.tapUp()
         else:
-            #print("Marker 3")
+            print("Marker 3")
             FFX_Xbox.tapDown()
     else:
         if distanceUnsigned > 0:
-            #print("Marker 4")
+            print("Marker 4")
             FFX_Xbox.tapDown()
         else:
+            print("Marker 5")
             FFX_Xbox.tapUp()
-            #print("Marker 5")
+            
 
 def partyFormatCursor1():
     global baseValue

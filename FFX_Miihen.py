@@ -240,25 +240,26 @@ def midPoint():
             elif checkpoint == 2 and FFX_memory.getItemCountSlot(pDownSlot) >= 10:
                 checkpoint = 4
             elif checkpoint == 3:
-                FFXC.set_movement(0, 1)
-                FFX_memory.clickToEvent()
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1.5)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1.5)
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1.5)
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuUp()
-                FFX_Xbox.menuB() #Extra P.downs
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                checkpoint += 1
+                checkpoint = 4
+                #FFXC.set_movement(0, 1)
+                #FFX_memory.clickToEvent()
+                #FFXC.set_neutral()
+                #FFX_memory.waitFrames(30 * 1.5)
+                #FFX_Xbox.menuB()
+                #FFX_memory.waitFrames(30 * 1.5)
+                #FFX_Xbox.menuDown()
+                #FFX_Xbox.menuB()
+                #FFX_memory.waitFrames(30 * 1.5)
+                #FFX_Xbox.menuB()
+                #FFX_Xbox.menuDown()
+                #FFX_Xbox.menuB()
+                #FFX_Xbox.menuUp()
+                #FFX_Xbox.menuB() #Extra P.downs
+                #FFX_Xbox.menuA()
+                #FFX_Xbox.menuA()
+                #FFX_Xbox.menuA()
+                #FFX_Xbox.menuA()
+                #checkpoint += 1
             elif checkpoint == 5:
                 FFXC.set_movement(0, -1)
                 FFX_memory.awaitEvent()

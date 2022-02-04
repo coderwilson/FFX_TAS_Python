@@ -43,16 +43,16 @@ import FFX_Sin
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-#Gamestate = "Kilika"
-#StepCounter = 1
+Gamestate = "Kilika"
+StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-Gamestate = "MRR"
-StepCounter = 1
+#Gamestate = "MRR"
+#StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -81,8 +81,8 @@ StepCounter = 1
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
