@@ -366,8 +366,7 @@ def battleSiteGrid():
     sortItems(fullMenuClose=False)
     
     #Wakka's weapon
-    equipWeapon(character=4, fullMenuClose=False, special=1)
-    #equipScout(fullMenuClose=False)
+    equipWeapon(character=4, fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1():
@@ -803,7 +802,7 @@ def sortItems(fullMenuClose=True):
     
         
 
-def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
+def equipWeapon(*, character, ability=None, fullMenuClose=True):
     print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
@@ -811,21 +810,19 @@ def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
         if not FFX_memory.menuOpen():
             FFX_memory.openMenu()
         while FFX_memory.getMenuCursorPos() != 4:
-            if FFX_memory.getMenuCursorPos() > 9 or FFX_memory.getMenuCursorPos() < 4:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
+            FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 4, 11)
             if gameVars.usePause():
                 FFX_memory.waitFrames(1)
         while FFX_memory.menuNumber() == 5:
             FFX_Xbox.tapB()    
             if gameVars.usePause():
                 FFX_memory.waitFrames(2)
-        if FFX_memory.getMenu2CharNum() != character:
-            while FFX_memory.getMenu2CharNum() != character:
-                FFX_Xbox.tapDown()
-                if gameVars.usePause():
-                    FFX_memory.waitFrames(3)
+                
+        target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
+        while FFX_memory.getCharCursorPos() != target_pos:
+            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
+            if gameVars.usePause():
+                FFX_memory.waitFrames(3)
         while FFX_memory.menuNumber() != 26:
             FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
@@ -836,11 +833,18 @@ def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
     print(len(weaponHandles))
     print("@@@@@")
     weaponNum = 255
+    
+    abilityarray = []
+    if not ability:
+        abilityarray = []
+    elif isinstance(ability, int):
+        abilityarray = [ability]
+    
     for index, currentWeapon in enumerate(weaponHandles):
-        if special == 1 and currentWeapon.abilities() == [255,255,255,255]:
+        if not abilityarray and currentWeapon.abilities() == [255,255,255,255]:
             weaponNum = index
             break
-        elif currentWeapon.hasAbility(ability):
+        elif all(currentWeapon.hasAbility(cur_ability) for cur_ability in abilityarray):
             weaponNum = index
             break
     print("Weapon is in slot ", weaponNum)
@@ -1592,17 +1596,16 @@ def openGrid(character):
             FFX_Xbox.tapY()
         elif FFX_memory.menuNumber() == 5: #Cursor on main menu
             print("Main menu cursor")
-            if FFX_memory.getMenuCursorPos() != 0:
-                while FFX_memory.getMenuCursorPos() != 0:
-                    FFX_Xbox.tapUp()
+            while FFX_memory.getMenuCursorPos() != 0:
+                FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 0, 11)
             print("Done with menu cursor")
             while FFX_memory.menuNumber() == 5:
                 FFX_Xbox.tapB()
         elif FFX_memory.menuNumber() == 7: #Cursor selecting party member
             print("Selecting party member")
-            if FFX_memory.getMenu2CharNum() != character:
-                while FFX_memory.getMenu2CharNum() != character:
-                    FFX_Xbox.tapDown()
+            target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
+            while FFX_memory.getCharCursorPos() != target_pos:
+                FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
             while FFX_memory.menuNumber() == 7:
                 FFX_Xbox.menuB()
             try:

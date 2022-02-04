@@ -1417,6 +1417,13 @@ def getTidusSlvl():
     sLvl = process.readBytes(key,1)
     return sLvl
 
+def getKimahriSlvl():
+    global baseValue
+
+    key = baseValue + 0x00D32253
+    sLvl = process.readBytes(key,1)
+    return sLvl
+
 def getTidusXP():
     global baseValue
 
@@ -1533,6 +1540,12 @@ def partySize():
 def activepartySize():
     return len(getActiveBattleFormation())
 
+def getCharacterIndexInMainMenu(character):
+    res = getOrderSeven().index(character)
+    print("Char is in position ", res)
+    return res
+    
+
 def fullPartyFormat(frontLine, *, fullMenuClose=True):
     gameVars = FFX_vars.varsHandle()
     order = getOrderSeven()
@@ -1553,10 +1566,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
         while getMenuCursorPos() != 7:
-            if getMenuCursorPos() > 1 and getMenuCursorPos() < 7:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
+            menuDirection(getMenuCursorPos(), 7, 11)
             if gameVars.usePause():
                 waitFrames(1)
         while menuNumber() != 14:
@@ -1626,25 +1636,26 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
     distanceUnsigned = currentmenuposition - targetmenuposition
-    #print("Menu Size: ", menusize)
+    print("Menu Size: ", menusize)
     halfmenusize = menusize / 2
     if distance == halfmenusize:
-        #print("Marker 1")
+        print("Marker 1")
         FFX_Xbox.tapUp()
     elif distance < halfmenusize:
         if distanceUnsigned > 0:
-            #print("Marker 2")
+            print("Marker 2")
             FFX_Xbox.tapUp()
         else:
-            #print("Marker 3")
+            print("Marker 3")
             FFX_Xbox.tapDown()
     else:
         if distanceUnsigned > 0:
-            #print("Marker 4")
+            print("Marker 4")
             FFX_Xbox.tapDown()
         else:
+            print("Marker 5")
             FFX_Xbox.tapUp()
-            #print("Marker 5")
+            
 
 def partyFormatCursor1():
     global baseValue

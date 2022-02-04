@@ -3,7 +3,7 @@ class allVars:
     def __init__(self):
         self.csrValue = True
         self.blitzWinValue = True
-        self.artificialPauses = True
+        self.artificialPauses = False
         
         self.earlyTidusGridVal = False
         self.earlyHasteVal = -1
