@@ -997,40 +997,33 @@ def afterBlitz3(earlyHaste):
     print(earlyHaste)
     # Wakka dark attack, or Auron power break
     FFX_Screen.awaitTurn()
-    if FFX_Screen.turnAuron():
-        print("Auron's turn")
-        useSkill(0)
-    elif FFX_Screen.turnTidus():
-        print("Tidus's turn")
-        if earlyHaste != -1:
-            tidusHaste('up')
-        else:
-            attack('none')
-    else:
-        print("Wakka's turn")
-        useSkill(0)
-    FFX_Screen.awaitTurn()
-    if FFX_Screen.turnAuron():
-        useSkill(0)
-    elif FFX_Screen.turnTidus():
-        if earlyHaste != -1:
-            tidusHaste('up')
-        else:
-            attack('none')
-    else:
-        useSkill(0)
-    FFX_Screen.awaitTurn()
-    if FFX_Screen.turnAuron():
-        useSkill(0)
-    else:
-        useSkill(0)
-
+    tidusTurn = 0
     while FFX_memory.battleActive():
-        if FFX_memory.turnReady():
-            if FFX_Screen.faintCheck() > 0:
-                revive()
-            else:
+        hpValues = FFX_memory.getBattleHP()
+        if FFX_Screen.turnAuron():
+            attack('none')
+        if FFX_Screen.turnTidus():
+            if tidusTurn == 0:
+                if earlyHaste != -1:
+                    tidusHaste('up')
+                    tidusTurn += 1
+                else:
+                    tidusTurn += 1
+                    continue
+            elif tidusTurn == 1:
                 attack('none')
+                tidusTurn += 1
+            elif hpValues[0] < 202:
+                usePotionCharacter(2, 'u')
+            else:
+                defend()
+        if FFX_Screen.turnWakka():
+            if hpValues[1] < 312 and tidusTurn < 2:
+                usePotionCharacter(0, 'u')
+            elif hpValues[0] < 202:
+                usePotionCharacter(2, 'u')
+            else:
+                defend()
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(30 * 4)
     FFXC.set_value('BtnB', 0)

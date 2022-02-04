@@ -45,7 +45,7 @@ def loadOffsetBattle(offset):
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 2.5)
     while offset > 0:
-        FFX_Xbox.menuDown()
+        FFX_Xbox.tapDown()
         offset -= 1
     FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuB()

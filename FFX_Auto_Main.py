@@ -45,22 +45,22 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
-#StepCounter = 5
+StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-Gamestate = "MRR"
-StepCounter = 2
+#Gamestate = "MRR"
+#StepCounter = 2
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
@@ -202,7 +202,7 @@ if Gamestate != "none" :
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(26)
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
-        FFX_LoadGame.loadOffsetBattle(9)
+        FFX_LoadGame.loadOffsetBattle(5)
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
