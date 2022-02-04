@@ -4185,7 +4185,8 @@ def healUp(chars=3, *, fullMenuClose=True):
         if fullMenuClose:
             FFX_memory.closeMenu()
         else:
-            FFX_memory.backToMainMenu()
+            if FFX_memory.menuOpen():
+                FFX_memory.backToMainMenu()
         return
     if not FFX_memory.menuOpen():
         FFX_memory.openMenu()
