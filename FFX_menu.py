@@ -429,12 +429,10 @@ def battleSiteOaka2():
         if earlyBreak:
             print("Cannot sell this item so continuing")
             continue
-        print(FFX_memory.equipConfirmationRow())
-        FFX_memory.waitFrames(5)
+        while FFX_memory.equipConfirmationRow() != 1:
+            pass
         while FFX_memory.equipConfirmationRow() != 0:
-            print(FFX_memory.equipConfirmationRow())
             FFX_Xbox.tapUp()
-        print(FFX_memory.equipConfirmationRow())
         print("Selling")
         while FFX_memory.equipShopMenu() != 25:
             FFX_Xbox.tapB()
@@ -448,11 +446,15 @@ def battleSiteOaka2():
         FFX_Xbox.tapDown()
     while FFX_memory.equipShopMenu() != 18:
         FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 1:
+        pass
     while FFX_memory.equipConfirmationRow() != 0:
         FFX_Xbox.tapUp()
     while FFX_memory.equipShopMenu() != 22:
         FFX_Xbox.tapB()
-    while FFX_memory.equipConfirmationRow() != 0:
+    while FFX_memory.equipSellRow() != 1:
+        pass
+    while FFX_memory.equipSellRow() != 0:
         FFX_Xbox.tapUp()
     while FFX_memory.equipShopMenu() != 12:
         FFX_Xbox.tapB()
@@ -652,29 +654,26 @@ def mWoods():
     FFX_memory.clickToEvent()
     FFXC.set_neutral()
     while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB() #Talking through O'aka's conversation.
-    
+        FFX_Xbox.tapB() #Talking through O'aka's conversation.
     FFX_memory.closeMenu()
-    #autoSortItems('n')
-    
-    FFXC.set_movement(0, 1)
-    FFX_memory.clickToEvent()
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Talk to O'aka again
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Talk to O'aka once again
     while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Buy
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Sonic Steel
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #confirm
-    FFX_memory.waitFrames(30 * 0.05)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #equip
+        FFX_Xbox.tapB()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipShopMenu() != 18:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 1:
+        pass
+    while FFX_memory.equipConfirmationRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 22:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != 1:
+        pass
+    while FFX_memory.equipSellRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
     FFX_memory.closeMenu()
 
 def mLakeGrid():
@@ -867,7 +866,6 @@ def beforeGuards():
 def sortItems(fullMenuClose=True):
     while not FFX_memory.menuOpen():
         FFX_memory.openMenu()
-        
     while FFX_memory.getMenuCursorPos() != 1:
         if FFX_memory.getMenuCursorPos() > 6 or FFX_memory.getMenuCursorPos() < 1:
             FFX_Xbox.tapDown()
