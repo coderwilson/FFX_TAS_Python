@@ -4120,67 +4120,6 @@ def aeonSpellDirection(position, direction):
     tapTargeting()
     print("Aeon casting spell")
 
-def healUp_cwMethod(chars=3):
-    FFX_Logs.writeLog("Healing characters post-battle")
-    FFXC.set_neutral()
-    print("Menuing, healing characters: ", chars)
-    #FFX_memory.waitFrames(30)
-    if not FFX_memory.menuOpen():
-        if openMenu() == False:
-            return
-    #FFX_memory.waitFrames(30)
-    pos = 1
-    while FFX_memory.getMenuCursorPos() != 2:
-        FFX_Xbox.tapDown()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(1)
-    
-    FFX_memory.waitFrames(2)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(1)
-    print("Mark 1")
-    yunaPos = FFX_memory.getCharFormationSlot(1)
-    order = FFX_memory.getOrderSeven()
-    partyMembers = len(order)
-    if FFX_memory.getCharCursorPos() != yunaPos:
-        while FFX_memory.getCharCursorPos() != yunaPos:
-            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
-            if gameVars.usePause():
-                FFX_memory.waitFrames(1)
-    print("Mark 2")
-    
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.menuB()
-    
-    character_positions = {
-        0 : FFX_memory.getCharFormationSlot(0), # Tidus
-        1 : FFX_memory.getCharFormationSlot(1), # Yuna
-        2 : FFX_memory.getCharFormationSlot(2), # Auron
-        3 : FFX_memory.getCharFormationSlot(3), # Kimahri
-        4 : FFX_memory.getCharFormationSlot(4), # Wakka
-        5 : FFX_memory.getCharFormationSlot(5), # Lulu
-        6 : FFX_memory.getCharFormationSlot(6) # Rikku
-    }
-    print(character_positions)
-    positions_to_characters = { val : key for key, val in character_positions.items() if val != 255 }
-    print(positions_to_characters)
-    maximal_hp = FFX_memory.getMaxHP()
-    print("Max HP: ", maximal_hp)
-    current_hp = FFX_memory.getHP()
-    for cur_position in range(len(positions_to_characters)):
-        while current_hp[positions_to_characters[cur_position]] < maximal_hp[positions_to_characters[cur_position]]:
-            print(current_hp)
-            prev_hp = current_hp[positions_to_characters[cur_position]]
-            while FFX_memory.assignAbilityToEquipCursor() != cur_position:
-                if FFX_memory.assignAbilityToEquipCursor() < cur_position:
-                    FFX_Xbox.tapDown()
-                else:
-                    FFX_Xbox.tapUp()
-            FFX_Xbox.tapB()
-            current_hp = FFX_memory.getHP()
-        if current_hp == maximal_hp: break
 
 def healUp_New(chars, menusize):
     healUp(chars)
