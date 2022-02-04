@@ -364,6 +364,7 @@ def leavingDjose():
                 checkpoint += 1
         else:
             FFXC.set_neutral()
+            if FFX_memory.battleActive():
+                FFX_Battle.fleeAll()
         
     FFXC.set_neutral()
-
