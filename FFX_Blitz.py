@@ -838,6 +838,8 @@ def blitzMain(forceBlitzWin):
                 elif FFX_memory.diagSkipPossible(): #Skip through everything else
                     FFX_Xbox.menuB()
             elif newHalf():
+                if forceBlitzWin:
+                    FFX_memory.blitzballPatriotsStyle()
                 if FFX_memory.diagProgressFlag() == 347:
                     #Used for repeated Blitz games, not for story.
                     movementSetFlag = False
