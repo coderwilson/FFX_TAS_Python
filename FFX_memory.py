@@ -1269,7 +1269,10 @@ def openMenu():
         elif battleActive():
             print("Can't open menu during battle. ",menuCounter)
             return False
+        else:
+            print("The menu is now open. Waiting for it to be on menu 5. ", menuNumber())
     FFXC.set_neutral()
+    print("Menu open returning")
     return True
 
 def menuNumber():
@@ -2761,6 +2764,9 @@ def memTestVal3():
 
 #-------------------------------------------------------
 def printMemoryLog():
+    doNothing = True
+
+def printMemoryLog_backup():
     global baseValue
     global process
     #(Pointer) [[ffx.exe + 8DED2C] + 0x6D0]

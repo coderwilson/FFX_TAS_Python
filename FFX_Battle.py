@@ -1130,15 +1130,15 @@ def aeonBoost():
         FFX_Xbox.tapRight()
     if gameVars.usePause():
         FFX_memory.waitFrames(30)
-    while FFX_memory.battleCursor2() != 1:
-        if FFX_memory.battleCursor2() == 0:
+    while FFX_memory.otherBattleMenu():
+        if FFX_memory.battleCursor2() == 1:
+            FFX_Xbox.tapB()
+        elif FFX_memory.battleCursor2() == 0:
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
         if gameVars.usePause():
-            FFX_memory.waitFrames(3)
-    while FFX_memory.otherBattleMenu():
-        FFX_Xbox.tapB()
+            FFX_memory.waitFrames(2)
     tapTargeting()
 
 def MRRbattle(status):
@@ -3017,6 +3017,15 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
+                elif FFX_memory.getBattleHP()[0] < 1520:
+                    print("Kimahri should attempt to heal a character.")
+                    kimahriTurns += 1
+                    if fullheal(target = 0,
+                                direction="d") == 0:
+                        print("Restorative item not found.")
+                        Steal()
+                    else:
+                        print("Heal should be successful.")
                 else:
                     Steal()
             elif turnchar == 3:
@@ -4201,22 +4210,25 @@ def healUp(chars=3, *, fullMenuClose=True):
     FFXC = FFX_Xbox.controllerHandle()
     FFXC.set_neutral()
     while FFX_memory.getMenuCursorPos() != 2:
+        print("Selecting Ability command - ", FFX_memory.getMenuCursorPos())
         if FFX_memory.getMenuCursorPos() < 2 or FFX_memory.getMenuCursorPos() > 7:
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
         if gameVars.usePause():
             FFX_memory.waitFrames(1)
-    while FFX_memory.menuNumber() != 7:
+    while FFX_memory.menuNumber() == 5:
+        print("Select Ability - ", FFX_memory.menuNumber())
         FFX_Xbox.tapB()
         if gameVars.usePause():
-            FFX_memory.waitFrames(20)
+            FFX_memory.waitFrames(1)
     print("Mark 1")
     yunaPos = FFX_memory.getCharFormationSlot(1)
     order = FFX_memory.getOrderSeven()
     partyMembers = len(order)
-    if FFX_memory.getCharCursorPos() != yunaPos:
+    if FFX_memory.getMenu2CharNum() != 1:
         while FFX_memory.getMenu2CharNum() != 1:
+            print("Finding Yuna - ", FFX_memory.getMenu2CharNum())
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
             if gameVars.usePause():
                 FFX_memory.waitFrames(20)

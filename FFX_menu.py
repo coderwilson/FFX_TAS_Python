@@ -380,7 +380,8 @@ def battleSiteGrid():
     FFX_memory.waitFrames(15)
     
     #Wakka's weapon
-    equipScout(fullMenuClose=False)
+    equipWeapon(character=4, fullMenuClose=False, special=1)
+    #equipScout(fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1():
@@ -876,7 +877,7 @@ def beforeGuards():
         current_hp = FFX_memory.getHP()
     FFX_memory.closeMenu()
 
-def equipWeapon(*, character, ability, fullMenuClose=True):
+def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
     print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
@@ -890,14 +891,15 @@ def equipWeapon(*, character, ability, fullMenuClose=True):
                 FFX_Xbox.tapUp()
             if gameVars.usePause():
                 FFX_memory.waitFrames(1)
-        while FFX_memory.menuNumber() != 7:
+        while FFX_memory.menuNumber() == 5:
             FFX_Xbox.tapB()    
             if gameVars.usePause():
-                FFX_memory.waitFrames(1)
-        while FFX_memory.getCharCursorPos() != FFX_memory.getCharFormationSlot(character):
-            FFX_Xbox.tapDown()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(1)
+                FFX_memory.waitFrames(2)
+        if FFX_memory.getMenu2CharNum() != character:
+            while FFX_memory.getMenu2CharNum() != character:
+                FFX_Xbox.tapDown()
+                if gameVars.usePause():
+                    FFX_memory.waitFrames(3)
         while FFX_memory.menuNumber() != 26:
             FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
@@ -909,9 +911,12 @@ def equipWeapon(*, character, ability, fullMenuClose=True):
     print("@@@@@")
     weaponNum = 255
     for index, currentWeapon in enumerate(weaponHandles):
-        if currentWeapon.hasAbility(ability):
+        if special == 1 and currentWeapon.abilities() == [255,255,255,255]:
             weaponNum = index
-            break    
+            break
+        elif currentWeapon.hasAbility(ability):
+            weaponNum = index
+            break
     print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
         return False #Item is no in inventory.
