@@ -52,7 +52,7 @@ import FFX_Sin
 #Gamestate = "Miihen"
 #StepCounter = 1
 Gamestate = "MRR"
-StepCounter = 2
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"

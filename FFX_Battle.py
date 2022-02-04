@@ -1383,20 +1383,23 @@ def MRRbattle(status):
                     elif FFX_Screen.faintCheck() >= 1:
                         buddySwapTidus()
                     elif FFX_Screen.turnKimahri():
-                        defend()
+                        if FFX_memory.getKimahriSlvl() >= 6 and yunaTurnCount:
+                            fleeAll()
+                        else:
+                            defend()
                     elif FFX_Screen.turnYuna():
                         yunaTurnCount += 1
                         if yunaTurnCount == 1:
                             defend()
                         else:
-                            buddySwapTidus()
+                            fleeAll()
                     elif FFX_Screen.turnWakka():
                         if battle == 96 or battle == 97 or battle == 101:
                             attack('left')
                         elif battle == 98 or battle == 100:
                             attack('none')
                         else:
-                            buddySwapTidus()
+                            fleeAll()
                     else: #Should not occur, but you never know.
                         buddySwapTidus()
     else: #Everything is done.
@@ -4144,10 +4147,7 @@ def healUp(chars=3, *, fullMenuClose=True):
     FFXC.set_neutral()
     while FFX_memory.getMenuCursorPos() != 2:
         print("Selecting Ability command - ", FFX_memory.getMenuCursorPos())
-        if FFX_memory.getMenuCursorPos() < 2 or FFX_memory.getMenuCursorPos() > 7:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
+        FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 2, 11)
         if gameVars.usePause():
             FFX_memory.waitFrames(1)
     while FFX_memory.menuNumber() == 5:
@@ -4156,15 +4156,11 @@ def healUp(chars=3, *, fullMenuClose=True):
         if gameVars.usePause():
             FFX_memory.waitFrames(1)
     print("Mark 1")
-    yunaPos = FFX_memory.getCharFormationSlot(1)
-    order = FFX_memory.getOrderSeven()
-    partyMembers = len(order)
-    if FFX_memory.getMenu2CharNum() != 1:
-        while FFX_memory.getMenu2CharNum() != 1:
-            print("Finding Yuna - ", FFX_memory.getMenu2CharNum())
-            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), yunaPos, partyMembers)
-            if gameVars.usePause():
-                FFX_memory.waitFrames(20)
+    target_pos = FFX_memory.getCharacterIndexInMainMenu(1)
+    while FFX_memory.getCharCursorPos() != target_pos:
+        FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
+        if gameVars.usePause():
+            FFX_memory.waitFrames(20)
     print("Mark 2")
     while FFX_memory.menuNumber() != 26:
         if FFX_memory.getMenu2CharNum() == 1:

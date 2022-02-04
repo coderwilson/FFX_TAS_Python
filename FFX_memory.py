@@ -1417,6 +1417,13 @@ def getTidusSlvl():
     sLvl = process.readBytes(key,1)
     return sLvl
 
+def getKimahriSlvl():
+    global baseValue
+
+    key = baseValue + 0x00D32253
+    sLvl = process.readBytes(key,1)
+    return sLvl
+
 def getTidusXP():
     global baseValue
 
@@ -1533,6 +1540,12 @@ def partySize():
 def activepartySize():
     return len(getActiveBattleFormation())
 
+def getCharacterIndexInMainMenu(character):
+    res = getOrderSeven().index(character)
+    print("Char is in position ", res)
+    return res
+    
+
 def fullPartyFormat(frontLine, *, fullMenuClose=True):
     gameVars = FFX_vars.varsHandle()
     order = getOrderSeven()
@@ -1553,10 +1566,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
         while getMenuCursorPos() != 7:
-            if getMenuCursorPos() > 1 and getMenuCursorPos() < 7:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
+            menuDirection(getMenuCursorPos(), 7, 11)
             if gameVars.usePause():
                 waitFrames(1)
         while menuNumber() != 14:
