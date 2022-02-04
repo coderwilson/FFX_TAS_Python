@@ -1002,7 +1002,7 @@ def afterBlitz3(earlyHaste):
         hpValues = FFX_memory.getBattleHP()
         if FFX_Screen.turnAuron():
             attack('none')
-        if FFX_Screen.turnTidus():
+        elif FFX_Screen.turnTidus():
             if tidusTurn == 0:
                 if earlyHaste != -1:
                     tidusHaste('up')
@@ -1017,7 +1017,7 @@ def afterBlitz3(earlyHaste):
                 usePotionCharacter(2, 'u')
             else:
                 defend()
-        if FFX_Screen.turnWakka():
+        elif FFX_Screen.turnWakka():
             if hpValues[1] < 312 and tidusTurn < 2:
                 usePotionCharacter(0, 'u')
             elif hpValues[0] < 202:
