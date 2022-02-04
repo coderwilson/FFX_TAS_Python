@@ -363,21 +363,7 @@ def battleSiteGrid():
     FFX_menuGrid.useAndQuit()
     
     #Sort items
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(15)
+    sortItems(fullMenuClose=False)
     
     #Wakka's weapon
     equipWeapon(character=4, fullMenuClose=False, special=1)
@@ -388,10 +374,12 @@ def battleSiteOaka1():
     FFX_memory.clickToDiagProgress(96)
     FFX_memory.waitFrames(12)
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Items
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sell
+    while FFX_memory.itemShopMenu() != 7:
+        FFX_Xbox.tapB()
+    while FFX_memory.assignAbilityToEquipCursor() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.itemShopMenu() != 21:
+        FFX_Xbox.tapB()
     
     itemOrder = FFX_memory.getItemsOrder()
     itemCursor = 1
@@ -401,18 +389,18 @@ def battleSiteOaka1():
         elif itemOrder[itemCursor] == 6:
             print("Keep Phoenix Downs.")
         else: #Sell all except for Mega Potions and Phoenix Downs.
-            FFX_Xbox.menuB()
-            FFX_Xbox.menuUp()
+            FFX_Xbox.tapB()
+            FFX_Xbox.tapUp()
             if FFX_memory.getItemCountSlot(itemCursor) > 10:
-                FFX_Xbox.menuUp()
-            FFX_Xbox.menuB() #Sell this item
+                FFX_Xbox.tapUp()
+            FFX_Xbox.tapB() #Sell this item
         if itemOrder[itemCursor + 1] == 70:
             print("Done with selling items.")
         elif itemCursor % 2 == 1:
-            FFX_Xbox.menuRight()
+            FFX_Xbox.tapRight()
         else:
-            FFX_Xbox.menuLeft()
-            FFX_Xbox.menuDown()
+            FFX_Xbox.tapLeft()
+            FFX_Xbox.tapDown()
         itemCursor += 1
     
     FFX_memory.closeMenu()
@@ -420,145 +408,60 @@ def battleSiteOaka1():
 def battleSiteOaka2():
     FFX_memory.clickToDiagProgress(74)
     FFX_memory.clickToDiagProgress(96)
-    while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(20)
-    FFX_memory.waitFrames(20)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() #Sell
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    
+    while FFX_memory.equipShopMenu() != 9:
+        FFX_Xbox.tapB()
+    while FFX_memory.itemMenuRow() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.equipShopMenu() != 25:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != 10:
+        FFX_Xbox.tapDown()
+    curRow = FFX_memory.equipSellRow()
     while FFX_memory.getGilvalue() < 10890:
-        FFX_Xbox.menuDown()
-        FFX_memory.waitFrames(6)
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuRight()
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(20)
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Purchase Sentry
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Equip Sentry
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuA()
-    
-    #Re-sort items - should be Mega Potions first slot, followed by Phoenix Downs
-    #FFX_memory.openMenu()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(6)
-    #FFX_Xbox.menuA()
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(6)
-    #FFX_Xbox.menuRight()
-    #FFX_Xbox.menuB()
+        while FFX_memory.equipSellRow() != curRow + 1:
+            FFX_Xbox.tapDown()
+        curRow = FFX_memory.equipSellRow()
+        earlyBreak = False
+        while FFX_memory.equipShopMenu() != 31:
+            if FFX_memory.equipShopMenu() == 29:
+                earlyBreak = True
+                break
+            FFX_Xbox.tapB()
+        if earlyBreak:
+            print("Cannot sell this item so continuing")
+            continue
+        while FFX_memory.equipConfirmationRow() != 1:
+            pass
+        while FFX_memory.equipConfirmationRow() != 0:
+            FFX_Xbox.tapUp()
+        print("Selling")
+        while FFX_memory.equipShopMenu() != 25:
+            FFX_Xbox.tapB()
+    while FFX_memory.equipShopMenu() != 9:
+        FFX_Xbox.tapA()
+    while FFX_memory.itemMenuRow() != 0:
+        FFX_Xbox.tapLeft()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipBuyRow() != 2:
+        FFX_Xbox.tapDown()
+    while FFX_memory.equipShopMenu() != 18:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 1:
+        pass
+    while FFX_memory.equipConfirmationRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 22:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != 1:
+        pass
+    while FFX_memory.equipSellRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
     
     FFX_memory.closeMenu()
 
-def djoseFormation():
-    goal = [255,0,4,2,3,255,5,1]
-    print("Checking formation. Should be: ", goal)
-    current = FFX_memory.getOrder()
-    if current != goal:
-        FFX_memory.openMenu()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #Formation option
-        
-        #If Valefor did not faint, formation should be: Y A K T W L
-        #Otherwise formation should be: Y L K T A W
-        
-        #The end goal is: T W A K L Y
-        #Numerically, the end goal is 0,4,2,3,5,1
-        
-        #Note, goal[0] is unused because I prefer to count from 1.
-        #255 is an empty slot in FFX code.
-        
-        character = 0
-        cursor = 1
-        while current != goal:
-            if current[cursor] != goal[cursor]:
-                character = goal[cursor]
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuDown()
-                cursor += 1
-                if cursor > 6:
-                    cursor = 1
-                while current[cursor] != character:
-                    FFX_Xbox.menuDown()
-                    cursor += 1
-                    if cursor > 6:
-                        cursor = 1
-                FFX_Xbox.menuB()
-            else:
-                FFX_Xbox.menuDown()
-                cursor += 1
-                if cursor > 6:
-                    cursor = 1
-            current = FFX_memory.getOrder()
-        
-        #if vFaint == False:
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Yuna to 6, Lulu to 1 for now
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Wakka to 4, Tidus to 5
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Wakka to 3, Kimahri to 4
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Wakka to 2, Auron to 3
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Lulu to 5, Tidus to 1
-        #else:
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Yuna to 6, Wakka to 1 for now
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Auron to 3, Kimahri to 5
-        #    #now W L A T K Y
-        #    #The end goal is: T W A K L Y
-        #    FFX_Xbox.menuDown()
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuDown()
-        #    FFX_Xbox.menuB() #Tidus to 5, Kimahri to 4
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Tidus to 2, Lulu to 5
-        #    FFX_Xbox.menuB()
-        #    FFX_Xbox.menuUp()
-        #    FFX_Xbox.menuB() #Tidus to 1, Wakka to 2
-            
-        FFX_memory.closeMenu()
 
 def djoseTemple():
     openGrid(character=0)
@@ -665,29 +568,26 @@ def mWoods():
     FFX_memory.clickToEvent()
     FFXC.set_neutral()
     while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB() #Talking through O'aka's conversation.
-    
+        FFX_Xbox.tapB() #Talking through O'aka's conversation.
     FFX_memory.closeMenu()
-    #autoSortItems('n')
-    
-    FFXC.set_movement(0, 1)
-    FFX_memory.clickToEvent()
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Talk to O'aka again
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.menuB() #Talk to O'aka once again
     while not FFX_memory.menuOpen():
-        FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Buy
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Sonic Steel
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #confirm
-    FFX_memory.waitFrames(30 * 0.05)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #equip
+        FFX_Xbox.tapB()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipShopMenu() != 18:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 1:
+        pass
+    while FFX_memory.equipConfirmationRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 22:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != 1:
+        pass
+    while FFX_memory.equipSellRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 12:
+        FFX_Xbox.tapB()
     FFX_memory.closeMenu()
 
 def mLakeGrid():
@@ -876,6 +776,32 @@ def beforeGuards():
         FFX_Xbox.tapB()
         current_hp = FFX_memory.getHP()
     FFX_memory.closeMenu()
+    
+def sortItems(fullMenuClose=True):
+    while not FFX_memory.menuOpen():
+        FFX_memory.openMenu()
+    while FFX_memory.getMenuCursorPos() != 1:
+        if FFX_memory.getMenuCursorPos() > 6 or FFX_memory.getMenuCursorPos() < 1:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while FFX_memory.menuNumber() != 26:
+        FFX_Xbox.tapB()
+    while FFX_memory.itemMenuNumber() != 53:
+        FFX_Xbox.tapA()
+    while FFX_memory.assignAbilityToEquipCursor() != 1:
+        FFX_Xbox.tapRight()
+    while FFX_memory.itemMenuNumber() != 25:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipBuyRow() != 1:
+        FFX_Xbox.tapRight()
+    FFX_Xbox.tapB()
+    if fullMenuClose:
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.backToMainMenu()    
+    
+        
 
 def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
     print("Equipping Weapon with ability ", ability)
