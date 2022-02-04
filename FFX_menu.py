@@ -366,8 +366,7 @@ def battleSiteGrid():
     sortItems(fullMenuClose=False)
     
     #Wakka's weapon
-    equipWeapon(character=4, fullMenuClose=False, special=1)
-    #equipScout(fullMenuClose=False)
+    equipWeapon(character=4, fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1():
@@ -803,7 +802,7 @@ def sortItems(fullMenuClose=True):
     
         
 
-def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
+def equipWeapon(*, character, ability=None, fullMenuClose=True):
     print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
@@ -836,11 +835,18 @@ def equipWeapon(*, character, ability=0, fullMenuClose=True, special=0):
     print(len(weaponHandles))
     print("@@@@@")
     weaponNum = 255
+    
+    abilityarray = []
+    if not ability:
+        abilityarray = []
+    elif isinstance(ability, int):
+        abilityarray = [ability]
+    
     for index, currentWeapon in enumerate(weaponHandles):
-        if special == 1 and currentWeapon.abilities() == [255,255,255,255]:
+        if not abilityarray and currentWeapon.abilities() == [255,255,255,255]:
             weaponNum = index
             break
-        elif currentWeapon.hasAbility(ability):
+        elif all(currentWeapon.hasAbility(cur_ability) for cur_ability in abilityarray):
             weaponNum = index
             break
     print("Weapon is in slot ", weaponNum)
