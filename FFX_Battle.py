@@ -4219,7 +4219,6 @@ def lancetSwap(direction):
     lancet(direction)
     
     FFX_Screen.awaitTurn()
-    buddySwapTidus()
     fleeAll()
 
 def lancet(direction):

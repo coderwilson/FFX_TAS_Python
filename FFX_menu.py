@@ -74,50 +74,6 @@ def awaitQuitSG():
             FFX_Xbox.menuA()
     print("Back to the main menu")
 
-def autoSortItems_New(manual, menusize):
-
-    while not FFX_memory.menuOpen():
-        openMenu()
-
-    currentmenuposition = FFX_memory.getMenuCursorPos()
-
-    targetmenuposition = 1
-    menudistance = abs(targetmenuposition - currentmenuposition)
-
-    if menudistance < (menusize / 2 - 1):
-        for i in range(menudistance):
-            if targetmenuposition > currentmenuposition:
-                FFX_Xbox.menuDown()
-            else:
-                FFX_Xbox.menuUp()
-    else:
-        for i in range(menusize - menudistance):
-            if targetmenuposition > currentmenuposition:
-                FFX_Xbox.menuUp()
-            else:
-                FFX_Xbox.menuDown()
-
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    if manual == 'y':
-        FFX_Xbox.menuLeft()
-        FFX_Xbox.menuB()
-    elif manual == 'n':
-        FFX_Xbox.menuA()
-        FFX_Xbox.menuA()
-        #FFX_memory.closeMenu()
-    else:
-        FFX_Xbox.menuA()
-        FFX_Xbox.menuA()
-        #FFX_memory.closeMenu()
-    return 2
 
 def autoSortItems(manual):
     FFX_memory.openMenu()
@@ -722,10 +678,7 @@ def afterSeymour():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed', 'd', 'none')
     FFX_menuGrid.useAndQuit()
-    #currentmenuposition = 1
-    #currentmenuposition = autoSortItems_New('n', 11)
     equipSonicSteel(fullMenuClose=False)
-    #currentmenuposition = FFX_memory.fullPartyFormat('macalaniaescape')
 
 def homeGrid():
     openGrid(character=0)
@@ -745,10 +698,7 @@ def beforeGuards():
         FFX_memory.openMenu()
         
     while FFX_memory.getMenuCursorPos() != 1:
-        if FFX_memory.getMenuCursorPos() > 6 or FFX_memory.getMenuCursorPos() < 1:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
+        FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 1, 11)
     while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
     megaPotSlot = FFX_memory.getItemSlot(3) - 1
@@ -780,10 +730,7 @@ def sortItems(fullMenuClose=True):
     while not FFX_memory.menuOpen():
         FFX_memory.openMenu()
     while FFX_memory.getMenuCursorPos() != 1:
-        if FFX_memory.getMenuCursorPos() > 6 or FFX_memory.getMenuCursorPos() < 1:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
+        FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 1, 11)
     while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
     while FFX_memory.itemMenuNumber() != 53:
