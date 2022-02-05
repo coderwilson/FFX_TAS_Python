@@ -3228,25 +3228,15 @@ def altanaheal():
             FFX_Xbox.tapDown()
             if gameVars.usePause():
                 FFX_memory.waitFrames(2)
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(3)
+        while FFX_memory.mainBattleMenu():
+            FFX_Xbox.tapB()
         
         itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
         print("Position: ", itemPos)
-        while FFX_memory.battleCursor2() != itemPos:
-            if itemPos % 2 != FFX_memory.battleCursor2():
-                FFX_Xbox.tapRight()
-            elif FFX_memory.battleCursor2() < itemPos:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(1)
-        FFX_memory.waitFrames(3)
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(3)
-        print("Direction: ", direction)
-        
+        _navigate_to_position(itemPos)
+        while FFX_memory.otherBattleMenu():
+            FFX_Xbox.tapB()
+        print("Direction: ", direction)        
         while FFX_memory.battleTargetId() != 20:
             if direction == 'l':
                 FFX_Xbox.tapLeft()
@@ -3274,11 +3264,7 @@ def altanaheal():
                     direction = 'r'
             if gameVars.usePause():
                 FFX_memory.waitFrames(2)
-        
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(30 * 0.5)
+        tapTargeting()
         return 1
 
     else:
@@ -3287,9 +3273,7 @@ def altanaheal():
 
 
 def evraeAltana():
-    FFX_Logs.writeLog("Fight start: Evrae Altana")    
-    steal = 0
-    gems = 1
+    FFX_Logs.writeLog("Fight start: Evrae Altana")
     FFX_Xbox.clickToBattle()
     if FFX_memory.getBattleNum() == 266:
         print("Evrae Altana fight start")
@@ -3304,8 +3288,6 @@ def evraeAltana():
     
     FFX_memory.clickToControl()
     
-    #print("Returning value: " + str(gems))
-    #return gems
 
 def seymourNatus():
     FFX_Logs.writeLog("Fight start: Seymour Natus")
@@ -4683,7 +4665,7 @@ def BFA():
                 while FFX_memory.otherBattleMenu():
                     FFX_Xbox.tapB()
                 while FFX_memory.battleTargetId() < 20:
-                    FFX_memory.menuUp()
+                    FFX_memory.tapUp()
                 tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus():
