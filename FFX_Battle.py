@@ -4669,41 +4669,26 @@ def BFA():
     FFX_Screen.awaitTurn()  # No need for skipping dialog
     print("Awww such a sad final boss!")
 
-    zombieAttack = 0
+    zombieAttack = False
     story = FFX_memory.getStoryProgress()
     while story < 3400:
         if FFX_memory.turnReady():
-            if zombieAttack == 1:
+            if zombieAttack:
                 while FFX_memory.battleMenuCursor() != 1:
                     FFX_Xbox.tapDown()
-                    FFX_memory.waitFrames(2)
-                FFX_Xbox.menuB()
+                while FFX_memory.mainBattleMenu():
+                    FFX_Xbox.tapB()
                 itemPos = FFX_memory.getThrowItemsSlot(6) - 1
-                while FFX_memory.battleCursor2() != itemPos:
-                    print(FFX_memory.battleCursor2()," | ", itemPos)
-                    if FFX_memory.battleCursor2() == 0:
-                        FFX_Xbox.tapDown()
-                    elif itemPos % 2 == 0 and FFX_memory.battleCursor2() % 2 == 1:
-                        FFX_Xbox.tapRight()
-                    elif itemPos % 2 == 1 and FFX_memory.battleCursor2() % 2 == 0:
-                        FFX_Xbox.tapLeft()
-                    elif itemPos > FFX_memory.battleCursor2():
-                        FFX_Xbox.tapDown()
-                    else:
-                        FFX_Xbox.tapUp()
-                    FFX_memory.waitFrames(2)
-                FFX_memory.waitFrames(12)
-                FFX_Xbox.tapB()
-                FFX_memory.waitFrames(12)
+                _navigate_to_position(itemPos)
+                while FFX_memory.otherBattleMenu():
+                    FFX_Xbox.tapB()
                 while FFX_memory.battleTargetId() < 20:
                     FFX_memory.menuUp()
-                    FFX_memory.waitFrames(2)
-                FFX_Xbox.tapB()
-                FFX_Xbox.SkipDialog(2)
+                tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus():
                 useSkill(0)
-                zombieAttack = 1
+                zombieAttack = True
             else:
                 defend()
         elif FFX_memory.battleActive() == False:
