@@ -446,72 +446,6 @@ def djoseTemple():
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
-def moonflowWakkaWeap():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.15)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-
-def moonflowRikku():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Formation
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Yuna to 7, Auron to 3
-    FFX_memory.closeMenu()
-
-def guadoRikku():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Formation
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Rikku to 2, Wakka to 4
-    FFX_memory.closeMenu()
-
-def plainsArmor():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Equip
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Tidus
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Armor
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Lightningproof armor
-    
-    FFX_memory.closeMenu()
 
 def mWoods():
     FFX_memory.awaitControl()
@@ -1083,21 +1017,6 @@ def afterRonso():
         FFX_menuGrid.selSphere('speed','d','none')
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
-    
-    #Tidus armor break
-    #Changing - doing this after Flux. We can grab ZombieStrike at that time as well.
-    #FFX_menuGrid.useShiftRight('Tidus')
-    #FFX_menuGrid.moveFirst()
-    #gridRight()
-    #gridRight()
-    #gridRight()
-    #gridDown()
-    #gridDown()
-    #gridDown()
-    #gridDown()
-    #gridDown()
-    #FFX_menuGrid.moveAndUse()
-    #FFX_menuGrid.selSphere('ability','d','none')
     FFX_menuGrid.useAndQuit()
         
     FFX_Xbox.menuUp()
