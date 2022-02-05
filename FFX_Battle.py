@@ -4696,18 +4696,13 @@ def BFA():
         story = FFX_memory.getStoryProgress()
 
 def checkPetrify():
-    iterVar = 0
-    petrifiedstate = False
     for iterVar in range(7):
         if FFX_memory.petrifiedstate(iterVar):
-            petrifiedstate = True
-    return petrifiedstate
+            return True
+    return False
     
 def checkPetrifyTidus():
-    petrifiedstate = False
-    if FFX_memory.petrifiedstate(0):
-        petrifiedstate = True
-    return petrifiedstate
+    return FFX_memory.petrifiedstate(0)
 
 def rikkuODItems(slot):
     _navigate_to_position(slot, battleCursor=FFX_memory.RikkuODCursor1)
