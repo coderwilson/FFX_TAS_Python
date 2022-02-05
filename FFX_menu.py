@@ -830,6 +830,10 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
             break
     print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
+        if fullMenuClose:
+            FFX_memory.closeMenu()
+        else:
+            FFX_memory.backToMainMenu()
         return False #Item is no in inventory.
     
     if FFX_memory.menuNumber() != 26:
