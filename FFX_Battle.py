@@ -4542,8 +4542,7 @@ def SinFace():
             if FFX_Screen.turnYuna():
                 aeonSummon(4)
                 FFX_Screen.awaitTurn()
-                FFX_memory.waitFrames(30 * 1)
-                if FFX_memory.battleMenuCursor() == 0:
+                while FFX_memory.battleMenuCursor() == 0:
                     FFX_Xbox.tapDown()
                 FFX_Xbox.SkipDialog(2)
             elif FFX_Screen.turnAeon():
@@ -4570,7 +4569,6 @@ def omnis():
     useSkill(1)
     #else:
     #    useSkill(0)
-    FFX_memory.waitFrames(30 * 0.2)
     FFX_Screen.awaitTurn()
     
     if FFX_memory.getEnemyMaxHP()[0] == FFX_memory.getEnemyCurrentHP()[0]:
@@ -4605,16 +4603,13 @@ def BFA():
     useSkill(0)
 
     FFX_Screen.awaitTurn()
-    FFX_Xbox.tapLeft()
-    FFX_Xbox.tapLeft()
-    FFX_Xbox.tapLeft()
-    FFX_memory.waitFrames(30 * 0.8)
-    FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
-
-    FFX_Xbox.clickToBattle()
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.tapLeft()
+    while FFX_memory.battleCursor2() != 1:
+        FFX_Xbox.tapDown()
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()
+    tapTargeting()
     buddySwapYuna()
     aeonSummon(4)
     
