@@ -839,6 +839,8 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
         abilityarray = []
     elif isinstance(ability, int):
         abilityarray = [ability]
+    elif isinstance(ability, list):
+        abilityarray = ability
     
     for index, currentWeapon in enumerate(weaponHandles):
         if not abilityarray and currentWeapon.abilities() == [255,255,255,255]:
