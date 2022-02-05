@@ -806,27 +806,6 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
     print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
-    if FFX_memory.menuNumber() != 26:
-        if not FFX_memory.menuOpen():
-            FFX_memory.openMenu()
-        while FFX_memory.getMenuCursorPos() != 4:
-            FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 4, 11)
-            if gameVars.usePause():
-                FFX_memory.waitFrames(1)
-        while FFX_memory.menuNumber() == 5:
-            FFX_Xbox.tapB()    
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
-                
-        target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
-        while FFX_memory.getCharCursorPos() != target_pos:
-            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
-            if gameVars.usePause():
-                FFX_memory.waitFrames(3)
-        while FFX_memory.menuNumber() != 26:
-            FFX_Xbox.tapB()
-    while not FFX_memory.equipMenuOpenFromChar():
-        FFX_Xbox.tapB()
     
     weaponHandles = FFX_memory.weaponArrayCharacter(character)
     print("@@@@@")
@@ -852,6 +831,28 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
     print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
         return False #Item is no in inventory.
+    
+    if FFX_memory.menuNumber() != 26:
+        if not FFX_memory.menuOpen():
+            FFX_memory.openMenu()
+        while FFX_memory.getMenuCursorPos() != 4:
+            FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 4, 11)
+            if gameVars.usePause():
+                FFX_memory.waitFrames(1)
+        while FFX_memory.menuNumber() == 5:
+            FFX_Xbox.tapB()    
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
+                
+        target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
+        while FFX_memory.getCharCursorPos() != target_pos:
+            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
+            if gameVars.usePause():
+                FFX_memory.waitFrames(3)
+        while FFX_memory.menuNumber() != 26:
+            FFX_Xbox.tapB()
+    while not FFX_memory.equipMenuOpenFromChar():
+        FFX_Xbox.tapB()
     
     while FFX_memory.equipWeapCursor() != weaponNum:
         if FFX_memory.equipWeapCursor() < weaponNum:
