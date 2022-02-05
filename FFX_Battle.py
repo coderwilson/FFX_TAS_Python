@@ -3458,9 +3458,6 @@ def seymourFlux():
                 buddySwapRikku()
                 print("Rikku overdrive")
                 rikkuFullOD('Flux')
-
-                FFX_Xbox.tapB()  # Engage overdrive
-                FFX_Xbox.tapB()  # For safety
             else:
                 print("Non-critical turn. Defending.")
                 defend()
