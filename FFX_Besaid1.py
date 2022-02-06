@@ -231,8 +231,8 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 24: #Hilltop
                 FFX_memory.clickToEventTemple(2)
+                print("Ready for SS Liki menu - (var) ", gameVars.earlyTidusGrid())
                 if FFX_memory.getTidusSlvl() >= 3:
-                    import FFX_menu
                     FFX_menu.Liki()
                     gameVars.earlyTidusGridSetTrue()
                 checkpoint += 1

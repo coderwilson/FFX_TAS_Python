@@ -3224,13 +3224,15 @@ def altanaheal():
         print("Using %s" % itemname)
         while not FFX_memory.turnReady():
             pass
-        while FFX_memory.battleMenuCursor() != 1:
-            FFX_Xbox.tapDown()
+        while FFX_memory.mainBattleMenu():
+            if FFX_memory.battleMenuCursor() != 1:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapB()
             if gameVars.usePause():
                 FFX_memory.waitFrames(2)
         while FFX_memory.mainBattleMenu():
-            FFX_Xbox.tapB()
-        
+            FFX_Xbox.tapB()        
         itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
         print("Position: ", itemPos)
         _navigate_to_position(itemPos)
@@ -3278,7 +3280,7 @@ def evraeAltana():
     if FFX_memory.getBattleNum() == 266:
         print("Evrae Altana fight start")
         # Start by hasting Rikku.
-        while not FFX_memory.menuOpen(): #AKA end of battle screen
+        while not FFX_memory.battleComplete(): #AKA end of battle screen
             if FFX_memory.turnReady():
                 altanaheal()
 
@@ -3773,16 +3775,16 @@ def attack(direction):
     if not FFX_memory.turnReady():
         while not FFX_memory.turnReady():
             pass
-    if not FFX_memory.battleMenuCursor() in [0, 203, 216]:
-        while not FFX_memory.battleMenuCursor() in [0, 203, 216]:
+    while FFX_memory.mainBattleMenu():
+        if not FFX_memory.battleMenuCursor() in [0, 203, 216]:
             print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
             FFX_Xbox.tapUp()
-            if FFX_Screen.BattleComplete():
-                return
-    while FFX_memory.mainBattleMenu():
-        FFX_Xbox.tapB()
-        if FFX_Screen.BattleComplete():
+        elif FFX_Screen.BattleComplete():
             return
+        else:
+            FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     if direction == "left":
         FFX_Xbox.tapLeft()
     if direction == "right":
