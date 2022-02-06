@@ -111,9 +111,9 @@ def gagazetGates():
     FFX_Logs.writeLog("Grid version: " + str(gameVars.endGameVersion()))
     FFX_memory.awaitControl()
     if FFX_memory.overdriveState()[6] == 100:
-        FFX_memory.fullPartyFormat('kimahri')
+        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     else:
-        FFX_memory.fullPartyFormat('rikku')
+        FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
     FFX_menu.afterRonso()
     FFX_memory.closeMenu() #just in case
     

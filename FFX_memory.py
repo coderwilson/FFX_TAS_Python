@@ -1270,7 +1270,7 @@ def openMenu():
             print("Can't open menu during battle. ",menuCounter)
             return False
         else:
-            print("The menu is now open. Waiting for it to be on menu 5. ", menuNumber())
+            pass #print("The menu is now open. Waiting for it to be on menu 5. ", menuNumber())
     FFXC.set_neutral()
     print("Menu open returning")
     return True
@@ -2522,6 +2522,13 @@ def itemMenuColumn():
     key = baseValue + 0x01440A48
     retVal = process.readBytes(key,1)
     return retVal
+
+def informationActive():
+    global baseValue
+    key = baseValue + 0x0146AA28
+    retVal = process.readBytes(key,1)
+    return retVal == 7
+    
 
 def itemMenuRow():
     global baseValue
