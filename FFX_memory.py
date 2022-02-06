@@ -2434,6 +2434,24 @@ def weaponArrayCharacter(charNum):
                 charWeaps.append(currentHandle)
     return charWeaps
 
+def checkThunderStrike() -> int:
+    results = 0
+    tidusWeaps = weaponArrayCharacter(0)
+    while len(tidusWeaps) > 0:
+        currentHandle = tidusWeaps.pop(0)
+        if currentHandle.hasAbility(0x8026):
+            results += 1
+            break
+    
+    wakkaWeaps = weaponArrayCharacter(0)
+    while len(wakkaWeaps) > 0:
+        currentHandle = wakkaWeaps.pop(0)
+        if currentHandle.hasAbility(0x8026):
+            results += 2
+            break
+    return results
+    
+
 def hunterSpear():
     kimWeapHandles = weaponArrayCharacter(3)
     if len(kimWeapHandles) == 1:
@@ -2473,6 +2491,8 @@ def assignAbilityToEquipCursor():
     retVal = process.readBytes(key,1)
     return retVal
     
+#-------------------------------------------------
+#Shopping related stuff
 def itemShopMenu():
     global baseValue
     key = baseValue + 0x0085A860

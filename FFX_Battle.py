@@ -3990,18 +3990,23 @@ def thunderTarget(target, direction):
         print("Lulu is not the current person. Deferring turn.")
         return
     direction = direction.lower()
-    while FFX_memory.battleMenuCursor() != 21:
-        print(FFX_memory.battleMenuCursor())
-        if FFX_memory.battleMenuCursor() == 0:
-            FFX_Xbox.tapDown()
-        else:
-            FFX_Xbox.tapUp()
     while FFX_memory.mainBattleMenu():
-        FFX_Xbox.tapB()  # Black magic
+        if FFX_memory.battleMenuCursor() != 21:
+            print(FFX_memory.battleMenuCursor())
+            if FFX_memory.battleMenuCursor() == 0:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        else:
+            FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(1)
     print(FFX_memory.battleCursor2())
     _navigate_to_position(1)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()  # Thunder
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.battleTargetId() != target:
         if direction == 'l':
             if FFX_memory.battleTargetId() < 20:
