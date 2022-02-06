@@ -78,11 +78,11 @@ StepCounter = 1
 #StepCounter = 4
 #Gamestate = "Zanarkand"
 #StepCounter = 4
-#Gamestate = "Sin"
+Gamestate = "Sin"
 #StepCounter = 2
-#StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+StepCounter = 4
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
@@ -286,7 +286,7 @@ if Gamestate != "none" :
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
-        FFX_LoadGame.loadOffset(3)
+        FFX_LoadGame.loadOffset(25)
         FFX_LoadGame.loadEggHunt()
     
     #if FFX_memory.getStoryProgress() >= 80:

@@ -2552,6 +2552,21 @@ def configCursor():
     retVal = process.readBytes(key,1)
     return retVal    
     
+def readVal(address, bytes=1):
+    global baseValue
+    key = baseValue + address
+    retVal = process.readBytes(key,bytes)
+    return retVal    
+    
+def spareChangeAmount():
+    return readVal(0x00F40424, 4)
+    
+def spareChangeCursor():
+    return readVal(0x00F40418)
+    
+def spareChangeOpen():
+    return readVal(0x00F3CAF1) == 4
+    
 def configCursorColumn():
     global baseValue
     key = baseValue + 0x0085A3FC
