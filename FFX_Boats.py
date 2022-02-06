@@ -25,7 +25,7 @@ def ssLiki():
                 checkpoint += 1
             elif checkpoint == 3: #Talk to Wakka
                 FFX_memory.clickToEventTemple(3)
-                print("Ready for SS Liki menu")
+                print("Ready for SS Liki menu - (var) ", gameVars.earlyTidusGrid())
                 if not gameVars.earlyTidusGrid():
                     FFX_menu.Liki()
                     FFX_memory.closeMenu()
