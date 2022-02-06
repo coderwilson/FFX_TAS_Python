@@ -1656,6 +1656,30 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
             print("Marker 5")
             FFX_Xbox.tapUp()
             
+def sideToSideDirection(currentmenuposition, targetmenuposition, menusize):
+    #print("Menu move (new)")
+    distance = abs(currentmenuposition - targetmenuposition)
+    distanceUnsigned = currentmenuposition - targetmenuposition
+    print("Menu Size: ", menusize)
+    halfmenusize = menusize / 2
+    if distance == halfmenusize:
+        print("Marker 1")
+        FFX_Xbox.tapLeft()
+    elif distance < halfmenusize:
+        if distanceUnsigned > 0:
+            print("Marker 2")
+            FFX_Xbox.tapRight()
+        else:
+            print("Marker 3")
+            FFX_Xbox.tapLeft()
+    else:
+        if distanceUnsigned > 0:
+            print("Marker 4")
+            FFX_Xbox.tapLeft()
+        else:
+            print("Marker 5")
+            FFX_Xbox.tapRight()
+            
 
 def partyFormatCursor1():
     global baseValue

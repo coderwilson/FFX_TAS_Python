@@ -286,7 +286,7 @@ if Gamestate != "none" :
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
-        FFX_LoadGame.loadOffset(25)
+        FFX_LoadGame.loadOffset(1)
         FFX_LoadGame.loadEggHunt()
     
     #if FFX_memory.getStoryProgress() >= 80:

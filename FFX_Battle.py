@@ -4629,13 +4629,8 @@ def BFA():
                     FFX_Xbox.tapB()
                 while FFX_memory.otherBattleMenu():
                     FFX_Xbox.tapB()
-                # Valefor is 20k, no extra money needed. Valefor is 397
-                if battleNum == 398 or battleNum == 399:  # Ifrit / Ixion
-                    calculateSpareChangeMovement(30000)
-                elif battleNum == 400 or battleNum == 401:  # Shiva / Bahamut 
-                    calculateSpareChangeMovement(40000)
-                else:
-                    calculateSpareChangeMovement(20000) #Valefor 
+                print(FFX_memory.getEnemyMaxHP())
+                calculateSpareChangeMovement(FFX_memory.getEnemyMaxHP()[0]*10)
                 while FFX_memory.spareChangeOpen():
                     FFX_Xbox.tapB()
                 while not FFX_memory.mainBattleMenu():
@@ -4662,7 +4657,7 @@ def BFA():
                 while FFX_memory.otherBattleMenu():
                     FFX_Xbox.tapB()
                 while FFX_memory.battleTargetId() < 20:
-                    FFX_memory.tapUp()
+                    FFX_Xbox.tapUp()
                 tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus():
@@ -4822,41 +4817,27 @@ def get_digit(number, n):
     return number // 10**n % 10
     
 def calculateSpareChangeMovement(gilAmount):
-    #if gilAmount > FFX_memory.getGilvalue():
-    #    gilAmount = FFX_memory.getGilvalue()
+    if gilAmount > FFX_memory.getGilvalue():
+        gilAmount = FFX_memory.getGilvalue()
     gilAmount = min(gilAmount, 100000)
     position = {}
     gilCopy = gilAmount
-    for index in range(1, 8):
+    for index in range(0, 7):
         amount = get_digit(gilAmount, index)
         if amount > 5:
             gilAmount += 10**(index+1)
-    for cur in range(0, 7):
-        if not position[cur]:
-            continue
-        while FFX_memory.spareChangeCursor() != cur:
-            if FFX_memory.spareChangeCursor() < cur:
-                FFX_Xbox.tapLeft()
-            else:
-                FFX_Xbox.tapRight()
-        if position[cur] < 6:
-            while get_digit(FFX_memory.spareChangeAmount(), cur) != position[cur]:
-                FFX_Xbox.tapUp()
-    if FFX_memory.spareChangeAmount() == gilCopy:
-        return
+        position[index] = amount
+    print(position)
     for cur in range(6, -1, -1):
+        if not position[cur]: continue
         while FFX_memory.spareChangeCursor() != cur:
-            if FFX_memory.spareChangeCursor() < cur:
-                FFX_Xbox.tapLeft()
-            else:
-                FFX_Xbox.tapRight()
-        target = get_digit(gilCopy, cur)
-        if cur > 0 and get_digit(gilCopy, cur-1) > 5:
-            target += 1
-        if target == 10:
-            continue
+            FFX_memory.sideToSideDirection(FFX_memory.spareChangeCursor(), cur, 6)
+        target = position[cur]
         while get_digit(FFX_memory.spareChangeAmount(), cur) != target:
-            FFX_Xbox.tapDown()
+            if target > 5:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
         if FFX_memory.spareChangeAmount() == gilCopy:
             return
     return
