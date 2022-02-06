@@ -72,17 +72,17 @@ StepCounter = 1
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
+#Gamestate = "Gagazet"
 #StepCounter = 1
-StepCounter = 2 #Temp, do not use going forward
+#StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4
 #Gamestate = "Zanarkand"
 #StepCounter = 4
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
