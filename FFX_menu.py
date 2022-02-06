@@ -957,8 +957,6 @@ def afterRonso():
     FFX_menuGrid.moveFirst()
     gridUp()
     gridUp()
-    gridUp()
-    gridUp()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('Lv2','d','none')
     FFX_menuGrid.useAndMove()
