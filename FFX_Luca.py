@@ -129,9 +129,23 @@ def arrival():
             elif checkpoint < 11 and FFX_memory.getMap() == 104:
                 print("Map change: ", checkpoint)
                 checkpoint = 11
+    
     FFX_Logs.writeStats("Early Haste:")
     FFX_Logs.writeStats(earlyHaste)
     gameVars.earlyHasteSet(earlyHaste)
+    
+    print("##Checking for thunderstrike weapons for Tidus or Wakka")
+    thunderStrike = FFX_memory.checkThunderStrike()
+    if thunderStrike == 0:
+        print("##Neither character got a thunderstrike weapon.")
+    elif thunderStrike == 1:
+        print("##Tidus got a thunderstrike weapon.")
+    elif thunderStrike == 2:
+        print("##Wakka got a thunderstrike weapon.")
+    else:
+        print("##Both Tidus and Wakka somehow got a thunderstrike weapon.")
+    FFX_Logs.writeStats("Thunderstrike results:")
+    FFX_Logs.writeStats(thunderStrike)
 
 def followYuna():
     print("followYuna function no longer used")
@@ -140,8 +154,8 @@ def preBlitz():
     print("preBlitz function is no longer used.")
 
 def blitzStart():
-    checkpoint = 0
     print("Starting the Blitzball game via lots of storyline.")
+    checkpoint = 0
     while FFX_memory.getStoryProgress() < 519:
         #print(checkpoint)
         if FFX_memory.userControl():

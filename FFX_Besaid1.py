@@ -216,7 +216,10 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 18: #First tutorial
                 print("Tuturial - Tidus and Wakka")
-                FFX_memory.clickToEventTemple(3)
+                FFXC.set_movement(1, -1)
+                FFX_memory.clickToEvent()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
                 checkpoint += 1
             elif checkpoint == 23: #Second tutorial
                 print("Tutorial - Lulu magic")
@@ -254,8 +257,6 @@ def leaving():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 FFX_Xbox.skipScene(fast_mode=True)
-            elif checkpoint < 20 and FFX_Screen.BattleScreen(): #Attacking tutorial
-                FFX_Battle.attack('none')
             elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri fight
                 FFXC.set_neutral()
                 healCount = 0
@@ -278,7 +279,7 @@ def leaving():
                 FFX_memory.clickToControl()
             elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
                 FFX_Xbox.clickToBattle()
-                FFX_memory.waitFrames(2)
+                FFX_memory.waitFrames(4)
                 FFX_Battle.buddySwapYuna()
                 FFX_Xbox.clickToBattle()
                 FFX_Battle.aeonSummon(0)
