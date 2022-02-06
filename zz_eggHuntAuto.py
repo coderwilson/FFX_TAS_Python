@@ -71,9 +71,7 @@ def engage():
         lookingCount += 1
         if lookingCount % 40 == 0:
             checkpoint += 1
-        if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
-            FFX_Xbox.tapB()
-        elif FFX_memory.battleActive():
+        if FFX_memory.battleActive():
             print("Battle engaged - using flee.")
             FFXC.set_neutral()
             FFX_Battle.fleeAll()
@@ -168,9 +166,11 @@ def engage():
                 FFXC.set_neutral()
                 #print("Studder-step to egg. | ",lookingCount)
                 print("Studder-step to egg. | ",checkpoint)
+                FFX_Xbox.tapB()
             elif activeEgg == 99:
                 #print("Looking for a new egg. | ",lookingCount)
                 print("Looking for a new egg. | ",checkpoint)
+                FFX_Xbox.tapB()
             else:
                 #print("Targetting egg: | ",target)
                 print("Targetting egg: | ",checkpoint)
