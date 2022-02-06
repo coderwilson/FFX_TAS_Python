@@ -72,17 +72,17 @@ StepCounter = 1
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
+Gamestate = "Gagazet"
 #StepCounter = 1
-#StepCounter = 2 #Temp, do not use going forward
+StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4
 #Gamestate = "Zanarkand"
 #StepCounter = 4
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Game length. Full is the same as any%, short is about 35 minutes with memory manip.
 autoEggHunt = True
@@ -264,8 +264,11 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(11)
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
-        FFX_LoadGame.loadOffset(1)
-        FFX_LoadGame.loadGagaGates()
+        FFX_LoadGame.loadOffset(0)
+        #FFX_LoadGame.loadGagaGates()
+        #for i in range(60):
+            #print(f"Sleeping for {60-i} more seconds...")
+            #time.sleep(1)
     if Gamestate == "Gagazet" and StepCounter == 3: # Just before Seymour Flux
         FFX_LoadGame.LoadNeutral()
     if Gamestate == "Gagazet" and StepCounter == 4: # After the dream

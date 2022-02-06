@@ -949,11 +949,14 @@ def prepCalmLands():
 def afterRonso():
     FFX_memory.openMenu()
     
+    yunaFirstStrike()
     auronFirstStrike()
-    FFX_memory.closeMenu()
+    equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
     
     openGrid(character=5)
     FFX_menuGrid.moveFirst()
+    gridUp()
+    gridUp()
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
@@ -1002,6 +1005,7 @@ def afterRonso():
     if gameVars.endGameVersion() == 4: #Four return spheres
         if gameVars.getBlitzWin() == True:
             FFX_menuGrid.selSphere('ret','d','yunaspec')
+        else:
             FFX_menuGrid.selSphere('ret','d','d5')
         FFX_menuGrid.useAndMove()
         gridLeft()
@@ -1018,150 +1022,81 @@ def afterRonso():
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
-        
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuUp()
-    #FFX_Xbox.menuB()
-    
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuDown()
-    #FFX_Xbox.menuB() #Formation done
-    #FFX_memory.waitFrames(30 * 0.5)
-    #FFX_Xbox.menuA()
-    #FFX_memory.waitFrames(30 * 0.5)
-    #FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #First strike for Yuna
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Confirm first strike on weapon
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuB()
     FFX_memory.closeMenu()
 
-def auronFirstStrike():
-    #Start point assumes we start from the main menu, aka menu already open.
-    while FFX_memory.getMenuCursorPos() != 8:
-        FFX_Xbox.menuUp()
-    FFX_memory.waitFrames(2)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    print("Auron first strike logic")
-    
+def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
     equipArray = FFX_memory.allEquipment()
-    
-    equipNum = 255
-    
-    i = 0
-    while len(equipArray) > 0:
-        currentHandle = equipArray.pop(0)
-        print(currentHandle.owner(), " | ", currentHandle.abilities(), " | ",  currentHandle.slotCount())
-        if currentHandle.owner() == 2 and currentHandle.equipmentType() == 0 \
-            and currentHandle.abilities() == [0x800B, 0x8063, 255, 255] \
-            and currentHandle.slotCount() == 3 and equipNum == 255:
-            
-            equipNum = i
-            print("Equipment found: ", equipNum)
-            FFX_memory.waitFrames(5)
-        i += 1
-    print("Slot: ", equipNum)
-    #time.sleep(20)
-    #print("Slot: ", equipNum)
-    if equipNum != 255:
-        while FFX_memory.equipWeapCursor() != equipNum:
-            if FFX_memory.equipWeapCursor() < equipNum:
-                FFX_Xbox.tapDown()
+    print(owner, equipment_type, ability_array, slotcount)
+    if not ability_array:
+        ability_array = [255, 255, 255, 255]
+    # auron baroque sword - [0x800B, 0x8063, 255, 255]
+    print("Looking for: ", ability_array)
+    for current_index, currentHandle in enumerate(equipArray):
+        print("Slot: ", current_index, " | Owner: ", currentHandle.owner(), " | Abilities: ", currentHandle.abilities(), " | Slots: ",  currentHandle.slotCount())
+        if currentHandle.owner() == owner and currentHandle.equipmentType() == equipment_type \
+            and currentHandle.abilities() == ability_array \
+            and currentHandle.slotCount() == slotcount:
+            print("Equipment found in slot: ", current_index)
+            return current_index
+
+def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
+    if navigateToEquipMenu:
+        if not FFX_memory.menuOpen():
+            FFX_memory.openMenu()
+        while FFX_memory.getMenuCursorPos() != 8:
+            FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 8, 11)
+        while FFX_memory.menuNumber() == 5:
+            FFX_Xbox.tapB()
+    item_to_modify = findEquipmentIndex(owner=owner, equipment_type=equipment_type, ability_array=ability_array, slotcount=slotcount)
+    while FFX_memory.itemMenuRow() != item_to_modify:
+        if FFX_memory.itemMenuRow() < item_to_modify:
+            if item_to_modify - FFX_memory.itemMenuRow() > 5:
+                FFX_Xbox.TriggerR()
             else:
-                FFX_Xbox.tapUp()
-            #FFX_memory.waitFrames(1)
-        #FFX_memory.waitFrames(1)
-        FFX_memory.waitFrames(30)
-        FFXC.set_value('BtnB', 1)
-        FFX_memory.waitFrames(5)
-        FFXC.set_value('BtnB', 0)
-        FFX_memory.waitFrames(30)
-        #FFX_memory.waitFrames(1)
-        
-        print("Now selecting the First Strike ability")
-        print(FFX_memory.assignAbilityToEquipCursor())
-        while FFX_memory.assignAbilityToEquipCursor() != 2:
-            FFX_memory.assignAbilityToEquipCursor()
-            if FFX_memory.assignAbilityToEquipCursor() < 2:
                 FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
-            FFX_memory.waitFrames(1)
-        print("Done selecting first strike.")
-        FFX_memory.waitFrames(30)
-        FFXC.set_value('BtnB', 1)
-        FFX_memory.waitFrames(5)
-        FFXC.set_value('BtnB', 0)
-        FFX_memory.waitFrames(30)
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(15)
-        FFX_Xbox.menuRight()
-        FFX_memory.waitFrames(15)
-        FFX_Xbox.menuA()
-        FFX_memory.waitFrames(15)
-        FFX_Xbox.menuA()
-        FFX_memory.waitFrames(15)
-        
-        #Now to equip the weapon
-        while FFX_memory.getMenuCursorPos() != 4:
-            FFX_Xbox.tapUp()
-        FFX_memory.waitFrames(15)
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(15)
-        while FFX_memory.getMenu2CharNum() != 2:
-            FFX_Xbox.tapDown()
-            FFX_memory.waitFrames(1)
-        FFX_memory.waitFrames(15)
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(15)
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(15)
-        
-        weaponNum = 255
-        weaponHandles = FFX_memory.weaponArrayCharacter(2)
-        i = 0
-        while len(weaponHandles) > 0:
-            currentHandle = weaponHandles.pop(0)
-            if currentHandle.hasAbility(0x8001): #First Strike
-                weaponNum = i
-            i += 1
-        if weaponNum == 255:
-            print("Could not find weapon.")
         else:
-            while FFX_memory.equipWeapCursor() != weaponNum:
-                if FFX_memory.equipWeapCursor() < weaponNum:
-                    FFX_Xbox.tapDown()
-                else:
-                    FFX_Xbox.tapUp()
-                FFX_memory.waitFrames(1)
-            FFX_memory.waitFrames(15)
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(15)
-            FFX_Xbox.menuA()
-    #Return to main menu, this does not close menu.
+            if FFX_memory.itemMenuRow() - item_to_modify > 5 and FFX_memory.itemMenuRow() > 8:
+                FFX_Xbox.TriggerL()
+            else:
+                FFX_Xbox.tapUp()
+    while not FFX_memory.cureMenuOpen():
+        FFX_Xbox.tapB()
+    while FFX_memory.assignAbilityToEquipCursor() != ability_index:
+        if FFX_memory.assignAbilityToEquipCursor() < ability_index:
+            FFX_Xbox.tapDown() 
+        else:
+            FFX_Xbox.tapUp() 
+    while FFX_memory.informationActive():
+        FFX_Xbox.tapB()
+    while FFX_memory.equipBuyRow() != 1:
+        pass
+    while FFX_memory.equipBuyRow() != 0:
+        FFX_Xbox.tapUp()
+    while not FFX_memory.informationActive():
+        FFX_Xbox.tapB()
+    if exitOutOfCurrentWeapon:
+        while FFX_memory.cureMenuOpen():
+            FFX_Xbox.tapA()
+    if closeMenu:
+        if fullMenuClose:
+            FFX_memory.closeMenu()
+        else:
+            FFX_memory.backToMainMenu()
+            
+            
+def addFirstStrike(*, owner, equipment_type, ability_array=[], slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
+    addAbility(owner=owner, equipment_type=equipment_type, ability_array=ability_array, ability_index=2, slotcount=slotcount, navigateToEquipMenu=navigateToEquipMenu, exitOutOfCurrentWeapon=exitOutOfCurrentWeapon, closeMenu=closeMenu, fullMenuClose=fullMenuClose)
+    
+
+def auronFirstStrike():
+    print("Starting Auron")
+    addFirstStrike(owner=2, equipment_type=0, ability_array=[0x800B, 0x8063, 255, 255], slotcount=3, closeMenu=True, fullMenuClose=False, navigateToEquipMenu=False)
+    print("Done with Auron")
+
+def yunaFirstStrike():
+    print("Starting Yuna")
+    addFirstStrike(owner=1, equipment_type=0, slotcount=1, closeMenu=False, navigateToEquipMenu=True)
+    print("Done with Yuna")
 
 def beforeFlux():
     #FFX_memory.openMenu()
