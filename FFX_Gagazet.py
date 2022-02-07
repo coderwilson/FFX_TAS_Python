@@ -15,7 +15,7 @@ FFXC = FFX_Xbox.controllerHandle()
 def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
-    FFX_menu.prepCalmLands(gameVars.getBlitzWin())
+    FFX_menu.prepCalmLands()
     FFX_memory.fullPartyFormat('kimahri')
     
     FFXC.set_movement(0, 1)

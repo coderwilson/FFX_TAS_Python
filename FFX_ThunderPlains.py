@@ -72,6 +72,8 @@ def agencyShop():
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuRight()
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuRight()
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuDown()

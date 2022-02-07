@@ -1,9 +1,12 @@
 
 class allVars:
     def __init__(self):
+        self.setStartVars()
+    
+    def setStartVars(self):
         self.csrValue = True
-        self.blitzWinValue = True
-        self.artificialPauses = False
+        self.blitzWinValue = False
+        self.artificialPauses = True
         
         self.earlyTidusGridVal = False
         self.earlyHasteVal = -1

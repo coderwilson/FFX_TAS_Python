@@ -963,6 +963,7 @@ def Oblitzerator(earlyHaste):
             #print("Waiting for turn, Oblitzerator fight")
     print("End of fight, Oblitzerator")
     FFX_memory.clickToControl()
+
 def afterBlitz1(earlyHaste):
     FFX_Logs.writeLog("Fight start: After Blitzball (the fisheys)")
     print("Fight start: After Blitzball (the fisheys)")
@@ -989,6 +990,8 @@ def afterBlitz1(earlyHaste):
                     usePotionCharacter(0, 'u')
                 elif hpValues[0] < 100: #Wakka HP
                     usePotionCharacter(4, 'u')
+                elif gameVars.getLStrike() >= 2:
+                    attack('none')
                 else:
                     defend()
 
@@ -1004,12 +1007,8 @@ def afterBlitz3(earlyHaste):
             attack('none')
         elif FFX_Screen.turnTidus():
             if tidusTurn == 0:
-                if earlyHaste != -1:
-                    tidusHaste('up')
-                    tidusTurn += 1
-                else:
-                    tidusTurn += 1
-                    continue
+                tidusHaste('up')
+                tidusTurn += 1
             elif tidusTurn == 1:
                 attack('none')
                 tidusTurn += 1
@@ -1040,6 +1039,63 @@ def afterBlitz3(earlyHaste):
                 FFX_Xbox.awaitSave(index=1)
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
+
+def afterBlitz3LateHaste(earlyHaste):
+    print("Ready to take on Zu")
+    print(earlyHaste)
+    # Wakka dark attack, or Auron power break
+    FFX_Screen.awaitTurn()
+    if FFX_Screen.turnAuron():
+        print("Auron's turn")
+        useSkill(0)
+    elif FFX_Screen.turnTidus():
+        print("Tidus's turn")
+        if earlyHaste != -1:
+            tidusHaste('up')
+        else:
+            attack('none')
+    else:
+        print("Wakka's turn")
+        useSkill(0)
+    FFX_Screen.awaitTurn()
+    if FFX_Screen.turnAuron():
+        useSkill(0)
+    elif FFX_Screen.turnTidus():
+        if earlyHaste != -1:
+            tidusHaste('up')
+        else:
+            attack('none')
+    else:
+        useSkill(0)
+    FFX_Screen.awaitTurn()
+    if FFX_Screen.turnAuron():
+        useSkill(0)
+    else:
+        useSkill(0)
+
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            if FFX_Screen.faintCheck() > 0:
+                revive()
+            else:
+                attack('none')
+    FFXC.set_value('BtnB', 1)
+    FFX_memory.waitFrames(30 * 4)
+    FFXC.set_value('BtnB', 0)
+    print("Battle complete (Garuda)")
+    #Get to control
+    while not FFX_memory.userControl():
+        if FFX_memory.cutsceneSkipPossible():
+            while not FFX_memory.diagProgressFlag() == 1:
+                if FFX_memory.cutsceneSkipPossible():
+                    FFX_Xbox.skipScene()
+            if gameVars.csr():
+                FFX_memory.waitFrames(60)
+            else:
+                FFX_Xbox.awaitSave(index=1)
+        elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+            FFX_Xbox.tapB()
+
 
 def MiihenRoad(selfDestruct):
     FFX_Logs.writeLog("Fight start: Mi'ihen Road")
@@ -2892,13 +2948,20 @@ def home2():
 def home3():
     FFX_Logs.writeLog("Fight start: Home 3")
     FFX_Xbox.clickToBattle()
-    if not FFX_Screen.turnTidus():
-        while not FFX_Screen.turnTidus():
+    if FFX_memory.getUseItemsSlot(49) > 200:
+        if not FFX_Screen.turnTidus():
+            while not FFX_Screen.turnTidus():
+                defend()
+                FFX_memory.waitFrames(30 * 0.2)
+                FFX_Xbox.clickToBattle()
+        tidusHaste('none')
+    else:
+        while not FFX_Screen.turnRikku():
             defend()
             FFX_memory.waitFrames(30 * 0.2)
             FFX_Xbox.clickToBattle()
-    if FFX_memory.getUseItemsSlot(49) != 255:
-        tidusHaste('none')
+            useItem(FFX_memory.getUseItemsSlot(49), 'none')
+        
     
     rikkuItemThrown = 0
     while not FFX_memory.battleComplete(): #AKA end of battle screen

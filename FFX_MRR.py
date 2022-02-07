@@ -175,6 +175,8 @@ def mainPath():
 
 def battleSite():
     FFX_memory.awaitControl()
+    if gameVars.getLStrike() >= 2:
+        FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=False)
     FFX_menu.battleSiteGrid()
     
     checkpoint = 0

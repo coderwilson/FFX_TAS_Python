@@ -331,10 +331,19 @@ def battleSiteOaka1():
     FFX_Xbox.menuDown()
     while FFX_memory.itemShopMenu() != 7:
         FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.assignAbilityToEquipCursor() != 1:
         FFX_Xbox.tapRight()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     while FFX_memory.itemShopMenu() != 21:
         FFX_Xbox.tapB()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
+    
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
     itemOrder = FFX_memory.getItemsOrder()
     itemCursor = 1
@@ -345,17 +354,29 @@ def battleSiteOaka1():
             print("Keep Phoenix Downs.")
         else: #Sell all except for Mega Potions and Phoenix Downs.
             FFX_Xbox.tapB()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
             FFX_Xbox.tapUp()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
             if FFX_memory.getItemCountSlot(itemCursor) > 10:
                 FFX_Xbox.tapUp()
+                if gameVars.usePause():
+                    FFX_memory.waitFrames(2)
             FFX_Xbox.tapB() #Sell this item
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
         if itemOrder[itemCursor + 1] == 70:
             print("Done with selling items.")
         elif itemCursor % 2 == 1:
             FFX_Xbox.tapRight()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
         else:
             FFX_Xbox.tapLeft()
             FFX_Xbox.tapDown()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
         itemCursor += 1
     
     FFX_memory.closeMenu()

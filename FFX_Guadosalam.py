@@ -39,46 +39,52 @@ def arrival():
     print("TestVar - ", gameVars.csr)
     if not gameVars.csr():
         FFX_memory.clickToControl3()
+        while not FFX_targetPathing.setMovement([4,-114]):
+            pass
         print("Mark1")
-        FFXC.set_movement(0, 1)
-        FFX_memory.waitFrames(30 * 1)
+        FFXC.set_movement(-1, 1)
         FFX_memory.clickToEvent() #Talk to Auron (first for affection)
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
+        while not FFX_targetPathing.setMovement([-39,-77]):
+            pass
         print("Mark2")
         FFXC.set_movement(1, -1)
-        FFX_memory.waitFrames(30 * 0.7)
-        FFXC.set_movement(0, -1)
         FFX_memory.clickToEvent() #Start conversation with Wakka
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
+        while not FFX_targetPathing.setMovement([-13,-67]):
+            pass
         print("Mark3")
-        FFXC.set_movement(-1, 0)
-        FFX_memory.waitFrames(30 * 0.4)
+        FFXC.set_movement(-1, -1)
         FFX_memory.clickToEvent() #Lulu conversation
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
+        while not FFX_targetPathing.setMovement([15,-52]):
+            pass
+        while not FFX_targetPathing.setMovement([27,-37]):
+            pass
         print("Mark4")
-        FFXC.set_movement(-1, 0)
-        FFX_memory.waitFrames(30 * 0.5)
-        FFXC.set_movement(-1, -1)
-        FFX_memory.waitFrames(30 * 0.25)
-        FFXC.set_movement(0, 1)
-        FFX_memory.clickToEvent() # Yuna's turn
-        FFX_memory.waitFrames(30 * 0.2)
+        while FFX_memory.userControl(): # Yuna's turn
+            FFX_targetPathing.setMovement([39,-33])
+            FFX_Xbox.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
+        while not FFX_targetPathing.setMovement([22,-25]):
+            pass
         print("Mark5")
-        FFXC.set_movement(0, -1)
-        FFX_memory.waitFrames(30 * 0.3)
-        FFX_memory.clickToEvent() #Start conversation with Rikku
+        while FFX_memory.userControl(): #Start conversation with Rikku
+            FFX_targetPathing.setMovement([8,-26])
+            FFX_Xbox.tapB()
         FFXC.set_neutral()
-        FFX_Xbox.SkipDialog(66) #Seymour/Trommell
-        FFX_Xbox.skipStoredScene(10)
+        
+        while not FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.tapB()
+        FFX_Xbox.skipStoredScene(3)
     print("Ready for next movement.")
 
 def afterSpeech(checkpoint = 0):

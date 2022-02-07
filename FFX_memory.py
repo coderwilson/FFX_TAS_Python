@@ -2443,7 +2443,7 @@ def checkThunderStrike() -> int:
             results += 1
             break
     
-    wakkaWeaps = weaponArrayCharacter(0)
+    wakkaWeaps = weaponArrayCharacter(4)
     while len(wakkaWeaps) > 0:
         currentHandle = wakkaWeaps.pop(0)
         if currentHandle.hasAbility(0x8026):
