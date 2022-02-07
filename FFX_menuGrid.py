@@ -491,7 +491,10 @@ def selSphere(sType, direction, shift):
                 FFX_Xbox.tapDown()
             else:
                 if menuPos - FFX_memory.getGridCursorPos() >=3 and len(FFX_memory.getGridItemsOrder()) > 4:
-                    FFX_Xbox.TriggerR()
+                    if menuPos - FFX_memory.getGridCursorPos() == 3 and menuPos == len(FFX_memory.getGridItemsOrder())-1:
+                        FFX_Xbox.tapDown()
+                    else:
+                        FFX_Xbox.TriggerR()
                 else:
                     FFX_Xbox.tapDown()
         elif menuPos < FFX_memory.getGridCursorPos():

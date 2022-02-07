@@ -4688,28 +4688,16 @@ def BFA():
                             FFX_Xbox.tapDown()
                         if gameVars.usePause():
                             FFX_memory.waitFrames(1)
-                FFX_memory.waitFrames(60)
-                FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30)
-                FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30)
-                FFX_Xbox.tapRight()
-                if FFX_memory.getGilvalue() > 99999:
-                    FFX_Xbox.tapRight()
-                FFX_Xbox.tapUp()
-                FFX_Xbox.tapUp()
-                # Valefor is 20k, no extra money needed. Valefor is 397
-                if battleNum == 398 or battleNum == 399:  # Ifrit/Ixion
-                    FFX_Xbox.tapUp()
-                elif battleNum == 400 or battleNum == 401:  # Shiva/Bahamut
-                    FFX_Xbox.tapUp()
-                    FFX_Xbox.tapUp()
-                FFX_Xbox.tapB()
-                FFX_Xbox.tapB()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuB()
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 0.5)
+                while FFX_memory.mainBattleMenu():
+                    FFX_Xbox.tapB()
+                while FFX_memory.otherBattleMenu():
+                    FFX_Xbox.tapB()
+                print(FFX_memory.getEnemyMaxHP())
+                calculateSpareChangeMovement(FFX_memory.getEnemyMaxHP()[0]*10)
+                while FFX_memory.spareChangeOpen():
+                    FFX_Xbox.tapB()
+                while not FFX_memory.mainBattleMenu():
+                    FFX_Xbox.tapB()
             else:
                 defend()
         elif FFX_memory.battleActive() == False:
@@ -4732,7 +4720,7 @@ def BFA():
                 while FFX_memory.otherBattleMenu():
                     FFX_Xbox.tapB()
                 while FFX_memory.battleTargetId() < 20:
-                    FFX_memory.tapUp()
+                    FFX_Xbox.tapUp()
                 tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus():
@@ -4887,3 +4875,35 @@ def checkTidusOk():
     
 def checkRikkuOk():
     return checkCharacterOk(6)
+    
+def get_digit(number, n):
+    return number // 10**n % 10
+    
+def calculateSpareChangeMovement(gilAmount):
+    if gilAmount > FFX_memory.getGilvalue():
+        gilAmount = FFX_memory.getGilvalue()
+    gilAmount = min(gilAmount, 100000)
+    position = {}
+    gilCopy = gilAmount
+    for index in range(0, 7):
+        amount = get_digit(gilAmount, index)
+        if amount > 5:
+            gilAmount += 10**(index+1)
+        position[index] = amount
+    print(position)
+    for cur in range(6, -1, -1):
+        if not position[cur]: continue
+        while FFX_memory.spareChangeCursor() != cur:
+            FFX_memory.sideToSideDirection(FFX_memory.spareChangeCursor(), cur, 6)
+        target = position[cur]
+        while get_digit(FFX_memory.spareChangeAmount(), cur) != target:
+            if target > 5:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        if FFX_memory.spareChangeAmount() == gilCopy:
+            return
+    return
+        
+            
+    

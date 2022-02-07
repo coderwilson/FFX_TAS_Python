@@ -1656,6 +1656,30 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
             print("Marker 5")
             FFX_Xbox.tapUp()
             
+def sideToSideDirection(currentmenuposition, targetmenuposition, menusize):
+    #print("Menu move (new)")
+    distance = abs(currentmenuposition - targetmenuposition)
+    distanceUnsigned = currentmenuposition - targetmenuposition
+    print("Menu Size: ", menusize)
+    halfmenusize = menusize / 2
+    if distance == halfmenusize:
+        print("Marker 1")
+        FFX_Xbox.tapLeft()
+    elif distance < halfmenusize:
+        if distanceUnsigned > 0:
+            print("Marker 2")
+            FFX_Xbox.tapRight()
+        else:
+            print("Marker 3")
+            FFX_Xbox.tapLeft()
+    else:
+        if distanceUnsigned > 0:
+            print("Marker 4")
+            FFX_Xbox.tapLeft()
+        else:
+            print("Marker 5")
+            FFX_Xbox.tapRight()
+            
 
 def partyFormatCursor1():
     global baseValue
@@ -2571,6 +2595,21 @@ def configCursor():
     key = baseValue + 0x0146A404
     retVal = process.readBytes(key,1)
     return retVal    
+    
+def readVal(address, bytes=1):
+    global baseValue
+    key = baseValue + address
+    retVal = process.readBytes(key,bytes)
+    return retVal    
+    
+def spareChangeAmount():
+    return readVal(0x00F40424, 4)
+    
+def spareChangeCursor():
+    return readVal(0x00F40418)
+    
+def spareChangeOpen():
+    return readVal(0x00F3CAF1) == 4
     
 def configCursorColumn():
     global baseValue
