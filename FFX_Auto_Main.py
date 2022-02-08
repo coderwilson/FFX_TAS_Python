@@ -59,8 +59,8 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-#Gamestate = "Macalania"
-#StepCounter = 1
+Gamestate = "Macalania"
+StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight

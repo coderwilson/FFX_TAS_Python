@@ -1060,10 +1060,10 @@ def getOverdriveValue(character): #Older function, I think Crimson wrote this on
 def tidusEscapedState():
     global baseValue
 
-    key = baseValue + 0x0D334CC
-    pos = process.readBytes(key, 1)
+    basePointer = baseValue + 0x00D334CC
+    basePointerAddress = process.read(basePointer)
     offset = 0xDC8
-    retVal = not process.readBytes(baseValue + offset, 4)
+    retVal = not process.readBytes(basePointerAddress + offset, 1)
     print("Tidus Escaped State: ", retVal)
     return retVal
 
@@ -1554,7 +1554,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
     frontLine = frontLine.lower()
     orderFinal = getPartyFormatFromText(frontLine)
     orderFinal.extend(x for x in order if x not in orderFinal)
-    if order == orderFinal:
+    if order[:3] == orderFinal[:3]:
         print("Good to go, no action taken.")
     else:
         print("Converting from formation:")
@@ -1574,7 +1574,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
             FFX_Xbox.tapB()
         startPos = 0
         targetPos = 1
-        while order != orderFinal:
+        while order[:3] != orderFinal[:3]:
             print("==Full Party Format function, original")
             #Select target in the wrong spot.
             print("Selecting start position")

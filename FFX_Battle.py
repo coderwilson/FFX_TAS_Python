@@ -45,7 +45,7 @@ def tidusFlee():
         while FFX_memory.otherBattleMenu():
             FFX_Xbox.tapA()
     while FFX_memory.battleMenuCursor() != 20:
-        print("Cursor: ", FFX_memory.battleMenuCursor()) #Testing only
+        #print("Cursor: ", FFX_memory.battleMenuCursor()) #Testing only
         if FFX_Screen.turnTidus() == False:
             break
         if FFX_memory.battleMenuCursor() == 255:
@@ -1978,119 +1978,48 @@ def mWoods(woodsVars):
                 print("Tidus or Rikku incapacitated, fleeing")
                 fleeAll()
                 break
-            if not woodsVars[0]:  # Rikku needs charging.
-                print("Charing Rikku")
-                if turnchar == 6:
-                    if battleNum == 175 and not woodsVars[2]:
-                        print("Marker 2")
-                        Steal()
-                    elif battleNum == 172 and not woodsVars[1]:
-                        print("Marker 3")
-                        StealDown()
-                    elif battleNum == 171 and not woodsVars[1]:
-                        print("Marker 4")
-                        StealRight()
+            if not woodsVars[1] or not woodsVars[2]:
+                if battleNum in [171, 172, 175]:
+                    if turnchar == 6:
+                        if battleNum == 175 and FFX_memory.getUseItemsSlot(24) == 255:
+                            print("Marker 2")
+                            Steal()
+                        elif battleNum == 172 and FFX_memory.getUseItemsSlot(32) == 255:
+                            print("Marker 3")
+                            StealDown()
+                        elif battleNum == 171 and FFX_memory.getUseItemsSlot(32) == 255:
+                            print("Marker 4")
+                            StealRight()
+                        elif woodsVars[0] or FFX_memory.getOverdriveBattle(6) != 100:
+                            print("Charging")
+                            attack('none')
+                        else:
+                            print("Escaping")
+                            fleeAll()
                     else:
-                        print("Marker 5")
-                        attack('none')
+                        if woodsVars[0] or FFX_memory.getOverdriveBattle(6) == 100:
+                            if battleNum in [171, 172] and FFX_memory.getUseItemsSlot(32) == 255:
+                                defend()
+                            elif battleNum == 175 and FFX_memory.getUseItemsSlot(24) == 255:
+                                defend()
+                            else:
+                                fleeAll()
+                        else:
+                            escapeOne()
                 else:
-                    print("Marker 6: ", FFX_memory.getOverdriveBattle(6))
+                    print("Fleeing with ", turnchar)
+                    fleeAll()
+            elif not woodsVars[0]:
+                if turnchar == 6:
+                    attack('none')
+                else:
                     if FFX_memory.getOverdriveBattle(6) == 100:
-                        print("Rikku done charging, fleeing.")
                         fleeAll()
                     else:
-                        print("Rikku still charging, escaping.")
                         escapeOne()
-            elif not woodsVars[1] or not woodsVars[2]:
-                if battleNum == 175 and not woodsVars[2]:
-                    print("Marker 7")
-                    if turnchar == 0:
-                        #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(4)] > 200
-                        wakkaSafe = True
-                        if tidusturns == 0 and wakkasafe:
-                            buddySwapRikku()
-                        else:
-                            tidusFlee()
-                        tidusturns += 1
-                    elif turnchar == 2:
-                        tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition >= 3:
-                            buddySwapTidus()
-                        else:
-                            escapeOne()
-                    elif turnchar == 4:
-                        buddySwapTidus()
-                    elif turnchar == 6:
-                        Steal()
-                    else:
-                        print("Marker 8")
-                        tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition >= 3:
-                            buddySwapTidus()
-                        else:
-                            escapeOne()
-                elif battleNum == 172 and woodsVars[1] == False:
-                    print("Marker 9")
-                    if turnchar == 0:
-                        #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
-                        #    FFX_memory.getBattleCharSlot(4)] > 200
-                        wakkasafe = True #Something wrong with the original logic.
-                        if tidusturns == 0 and wakkasafe == True:
-                            buddySwapRikku()
-                        else:
-                            tidusFlee()
-                        tidusturns += 1
-                    elif turnchar == 2:
-                        tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition >= 3:
-                            buddySwapTidus()
-                        else:
-                            escapeOne()
-                    elif turnchar == 4:
-                        buddySwapTidus()
-                    elif turnchar == 6:
-                        StealDown()
-                    else:
-                        print("Marker 10")
-                        tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition >= 3:
-                            buddySwapTidus()
-                        else:
-                            escapeOne()
-                elif battleNum == 171 and woodsVars[1] == False:
-                    print("Marker 11")
-                    if turnchar == 0:
-                        #wakkasafe = FFX_memory.petrifiedstate(4) == False and FFX_memory.getBattleHP()[
-                        #    FFX_memory.getBattleCharSlot(4)] > 200
-                        wakkasafe = True #Something wrong with the original logic.
-                        if tidusturns == 0 and wakkasafe == True:
-                            buddySwapRikku()
-                        else:
-                            tidusFlee()
-                        tidusturns += 1
-                    elif turnchar == 2:
-                        tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition >= 3:
-                            buddySwapTidus()
-                        else:
-                            escapeOne()
-                    elif turnchar == 4:
-                        buddySwapTidus()
-                    elif turnchar == 6:
-                        StealRight()
-                    else:
-                        print("Marker 12")
-                        tidusposition = FFX_memory.getBattleCharSlot(0)
-                        if tidusposition >= 3:
-                            buddySwapTidus()
-                        else:
-                            escapeOne()
-                else:
-                    print("Marker 13")
-                    tidusFlee()
             else:
-                print("Marker 14")
-                tidusFlee()
+                fleeAll()
+                
 
     print("Battle complete, now to deal with the aftermath.")
     FFX_memory.clickToControl3()
@@ -2101,16 +2030,9 @@ def mWoods(woodsVars):
     if FFX_memory.getUseItemsSlot(24) != 255:
         woodsVars[2] = True
     print("Checking battle formation.")
-    if woodsVars[0]:
-        if woodsVars[1] and woodsVars[2]:
-            print("Party format: mwoodsdone")
-            FFX_memory.fullPartyFormat("mwoodsdone", fullMenuClose=False)
-        else:
-            FFX_memory.fullPartyFormat("mwoodsgotcharge", fullMenuClose=False)
-            print("Party format: mwoodsgotcharge")
-    else:
-        print("Party format: mwoodsneedcharge")
-        FFX_memory.fullPartyFormat("mwoodsneedcharge", fullMenuClose=False)
+    if all(woodsVars):
+        print("Party format: mwoodsdone")
+        FFX_memory.fullPartyFormat("mwoodsdone", fullMenuClose=False)
     print("Party format is now good. Let's check health.")
     # Heal logic
     partyHP = FFX_memory.getHP()
