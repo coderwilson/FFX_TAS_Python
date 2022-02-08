@@ -247,7 +247,10 @@ def afterBlitz():
                     print("Well that boss was difficult.")
                     FFX_memory.waitFrames(30 * 6)
                 elif battleNum == 3:
-                    FFX_Battle.afterBlitz3(gameVars.earlyHaste())
+                    if gameVars.earlyHaste() == -1:
+                        FFX_Battle.afterBlitz3LateHaste(gameVars.earlyHaste())
+                    else:
+                        FFX_Battle.afterBlitz3(gameVars.earlyHaste())
                     FFX_memory.clickToControl()
                     FFX_memory.waitFrames(4)
                     FFXC.set_neutral()

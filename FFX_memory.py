@@ -233,6 +233,7 @@ def clickToControl():
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
+    print("Control restored.")
     return True
 
 def clickToControl2():
@@ -1249,7 +1250,7 @@ def backToMainMenu():
         else:
             FFX_Xbox.tapY()
         if gameVars.usePause():
-            waitFrames(1)
+            waitFrames(6)
 
 def openMenu():
     FFXC = FFX_Xbox.controllerHandle()
@@ -1679,7 +1680,7 @@ def sideToSideDirection(currentmenuposition, targetmenuposition, menusize):
         else:
             print("Marker 5")
             FFX_Xbox.tapRight()
-            
+
 
 def partyFormatCursor1():
     global baseValue
@@ -2824,7 +2825,7 @@ def touchSaveSphere():
         elif diagProgressFlag() == ssDetails[2]:
             print("Cursor test: ", saveMenuCursor())
             if saveMenuCursor() == 0 and saveMenuCursor2() == 0:
-                FFX_Xbox.tapA()
+                FFX_Xbox.menuA()
                 #waitFrames(80)
             else:
                 FFX_Xbox.menuB()

@@ -43,8 +43,8 @@ import FFX_Sin
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-Gamestate = "Kilika"
-StepCounter = 1
+#Gamestate = "Kilika"
+#StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
@@ -73,36 +73,35 @@ StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
 #Gamestate = "Gagazet"
-#StepCounter = 1
+#StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
-#StepCounter = 4
-#Gamestate = "Zanarkand"
-#StepCounter = 4
-Gamestate = "Sin"
+#StepCounter = 4 #Blitz win, end game version 4
+Gamestate = "Zanarkand"
+StepCounter = 4 #Blitz win, end game version 1 or 2
+#Gamestate = "Sin"
 #StepCounter = 2
-StepCounter = 4
+#StepCounter = 4
 #Gamestate = "none"
 #StepCounter = 1
 
-#Game length. Full is the same as any%, short is about 35 minutes with memory manip.
-autoEggHunt = True
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 130 #New seed number, only used if doing seed hunt.
+rngSeedNum = 0 #New seed number, only used if doing seed hunt.
 ####################################################################################################
 
 if Gamestate != "none":
-    rngSeedNum = 200 #Select a specific seed.
+    #rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [31,40,49,59,90,91,98,104,108,121,200]
+    #rngSelectArray = [9,31,49,59,90,91,98,104,108,121,200]
+    rngSelectArray = [9,31,49,90,91,104,108,121] #Run down the interesting seeds.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 40 #Select a specific seed.
+    #rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -118,7 +117,7 @@ rngSeedOrig = rngSeedNum
 speedCount = 0
 strengthCount = 0
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
-earlyTidusGrid = False
+autoEggHunt = True
 
 #Main functions
 def reportGamestate():
@@ -146,7 +145,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -187,7 +186,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(22)
+        FFX_LoadGame.loadOffset(32)
         FFXC.set_movement(0, 1)
         FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
@@ -202,7 +201,7 @@ if Gamestate != "none" :
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
         FFX_LoadGame.loadOffset(26)
     if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
-        FFX_LoadGame.loadOffsetBattle(5)
+        FFX_LoadGame.loadOffsetBattle(9)
     #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
     #    FFX_LoadGame.loadPostBlitz()
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
@@ -211,13 +210,12 @@ if Gamestate != "none" :
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadOffset(19)
         import FFX_menu
         FFX_menu.mrrGrid1()
-        FFX_menu.equipScout()
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(8)
@@ -264,11 +262,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(11)
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
-        FFX_LoadGame.loadOffset(0)
-        #FFX_LoadGame.loadGagaGates()
-        #for i in range(60):
-            #print(f"Sleeping for {60-i} more seconds...")
-            #time.sleep(1)
+        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 3: # Just before Seymour Flux
         FFX_LoadGame.LoadNeutral()
     if Gamestate == "Gagazet" and StepCounter == 4: # After the dream
@@ -286,7 +281,7 @@ if Gamestate != "none" :
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(3)
         FFX_LoadGame.loadEggHunt()
     
     #if FFX_memory.getStoryProgress() >= 80:
@@ -318,6 +313,7 @@ while Gamestate != "End":
     if Gamestate == "none" and StepCounter == 1:
         reportGamestate()
         FFX_DreamZan.NewGame(Gamestate)
+        gameVars.setStartVars()
         Gamestate = "DreamZan"
         FFX_memory.waitFrames(30 * 0.5)
         FFX_DreamZan.NewGame2()

@@ -4,14 +4,14 @@ class allVars:
         self.setStartVars()
     
     def setStartVars(self):
-        self.csrValue = True
-        self.blitzWinValue = False
-        self.artificialPauses = True
+        self.csrValue = True #New game, default to True
+        self.blitzWinValue = False #New game, default to False
+        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False
         self.earlyHasteVal = -1
         self.wakkaLateMenuVal = False
-        self.endGameVersionVal = 0
+        self.endGameVersionVal = 1
         
         self.zombieWeaponVal = 255
         self.lStrikeCount = 0

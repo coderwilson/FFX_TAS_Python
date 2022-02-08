@@ -26,9 +26,9 @@ def makingPlans():
     FFX_memory.touchSaveSphere()
     print("Cursor test 3: ", FFX_memory.saveMenuCursor())
     #Fix this later.
-    FFX_memory.waitFrames(60)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuB()
+    #FFX_memory.waitFrames(60)
+    #FFX_Xbox.menuA()
+    #FFX_Xbox.menuB()
     
     target = [[-242,312],[-239,258],[-243,145],[-243,10]]
     checkpoint = 0

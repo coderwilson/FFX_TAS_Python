@@ -5,6 +5,8 @@ import FFX_memory
 import FFX_Screen
 import pyautogui
 import math
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 #import FFX_memory
 #import FFX_Battle
@@ -258,36 +260,48 @@ def tapUp():
     FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def tapDown():
     FFXC.set_value('Dpad', 2)
     FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def tapLeft():
     FFXC.set_value('Dpad', 4)
     FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def tapRight():
     FFXC.set_value('Dpad', 8)
     FFX_memory.waitFrames(1)
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def shoulderLeft():
     FFXC.set_value('BtnShoulderL', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('BtnShoulderL', 0)
     FFX_memory.waitFrames(2)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def shoulderRight():
     FFXC.set_value('BtnShoulderR', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('BtnShoulderR', 0)
     FFX_memory.waitFrames(2)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def menuA():
     FFXC.set_value('BtnA', 1)
@@ -306,12 +320,16 @@ def tapA():
     FFX_memory.waitFrames(1)
     FFXC.set_value('BtnA', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
 
 def tapB():
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(1)
     FFXC.set_value('BtnB', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
 
 def menuX():
     FFXC.set_value('BtnX', 1)
@@ -330,12 +348,16 @@ def tapX():
     FFX_memory.waitFrames(2)
     FFXC.set_value('BtnX', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def tapY():
     FFXC.set_value('BtnY', 1)
     FFX_memory.waitFrames(1)
     FFXC.set_value('BtnY', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def menuBack():
     FFXC.set_value('BtnBack', 1)
@@ -348,18 +370,24 @@ def lBumper() :
     FFX_memory.waitFrames(1)
     FFXC.set_value('BtnShoulderL', 0)
     FFX_memory.waitFrames(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
 
 def TriggerL() :
     FFXC.set_value('TriggerL', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('TriggerL', 0)
     FFX_memory.waitFrames(2)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     
 def TriggerR() :
     FFXC.set_value('TriggerR', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('TriggerR', 0)
     FFX_memory.waitFrames(2)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
 
 def tidusOD():
     #This function has primarily moved to the FFX_Battle library. Leaving this version live in case

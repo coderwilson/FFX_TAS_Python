@@ -6,6 +6,8 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -260,7 +262,8 @@ def trials4(checkpoint):
     FFXC.set_neutral()
     return checkpoint
 
-def sanctuaryKeeper(ver):
+def sanctuaryKeeper():
+    ver = gameVars.endGameVersion()
     print("Now prepping for Sanctuary Keeper fight")
     
     FFX_Logs.writeStats("Sanctuary Keeper sphere grid, pattern: " + str(ver))
@@ -278,11 +281,10 @@ def sanctuaryKeeper(ver):
     
     FFX_memory.openMenu()
     FFX_memory.fullPartyFormat('yuna')
-    #FFX_menu.endGameSwap2()
+    FFX_memory.closeMenu()
     
     FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(30 * 4)
-    FFXC.set_neutral()
     FFX_Xbox.clickToBattle()
     if FFX_Screen.turnTidus():
         FFX_Battle.defend()
@@ -290,9 +292,11 @@ def sanctuaryKeeper(ver):
     FFX_Battle.aeonSummon(4) #This is the whole fight. Kinda sad.
     FFX_memory.clickToControl()
 
-def yunalesca(ver):
-    FFX_memory.clickToControl()
-    FFX_memory.touchSaveSphere()
+def yunalesca():
+    ver = gameVars.endGameVersion()
+    while not FFX_targetPathing.setMovement([-2,-179]):
+        if FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
     
     if ver == 4:
         print("Final pattern for four return spheres off of the B&Y fight")
@@ -302,6 +306,8 @@ def yunalesca(ver):
         print("No further sphere gridding needed at this time.")
     
     print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
+    
+    FFX_memory.touchSaveSphere()
     
     checkpoint = 0
     while not FFX_memory.battleActive(): #Gets us to Yunalesca battle through multiple rooms.

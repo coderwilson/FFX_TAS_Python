@@ -98,33 +98,21 @@ def shortAeons():
     FFX_memory.printMemoryLog()
     gameVars = FFX_vars.varsHandle()
     FFX_memory.openMenu()
-    if gameVars.usePause():
-        FFX_memory.waitFrames(20)
     cursorTarget = 4
     print("Aiming at ", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())
         FFX_Xbox.tapUp()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     while FFX_memory.menuNumber() == 5:
         FFX_Xbox.tapB()
     while FFX_memory.configCursor() != 5:
         FFX_Xbox.tapUp()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     while FFX_memory.configAeonCursorColumn() != 1:
         FFX_Xbox.tapRight()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     while FFX_memory.configCursor() != 3:
         FFX_Xbox.tapUp()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     while FFX_memory.configCursorColumn() != 1:
         FFX_Xbox.tapRight()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     FFX_memory.closeMenu()
 
 def Liki():
@@ -331,19 +319,11 @@ def battleSiteOaka1():
     FFX_Xbox.menuDown()
     while FFX_memory.itemShopMenu() != 7:
         FFX_Xbox.tapB()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     while FFX_memory.assignAbilityToEquipCursor() != 1:
         FFX_Xbox.tapRight()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     while FFX_memory.itemShopMenu() != 21:
         FFX_Xbox.tapB()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(2)
     
-    if gameVars.usePause():
-        FFX_memory.waitFrames(2)
     
     itemOrder = FFX_memory.getItemsOrder()
     itemCursor = 1
@@ -354,29 +334,17 @@ def battleSiteOaka1():
             print("Keep Phoenix Downs.")
         else: #Sell all except for Mega Potions and Phoenix Downs.
             FFX_Xbox.tapB()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
             FFX_Xbox.tapUp()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
             if FFX_memory.getItemCountSlot(itemCursor) > 10:
                 FFX_Xbox.tapUp()
-                if gameVars.usePause():
-                    FFX_memory.waitFrames(2)
             FFX_Xbox.tapB() #Sell this item
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
         if itemOrder[itemCursor + 1] == 70:
             print("Done with selling items.")
         elif itemCursor % 2 == 1:
             FFX_Xbox.tapRight()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
         else:
             FFX_Xbox.tapLeft()
             FFX_Xbox.tapDown()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
         itemCursor += 1
     
     FFX_memory.closeMenu()
@@ -743,18 +711,12 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
             FFX_memory.openMenu()
         while FFX_memory.getMenuCursorPos() != 4:
             FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 4, 11)
-            if gameVars.usePause():
-                FFX_memory.waitFrames(1)
         while FFX_memory.menuNumber() == 5:
-            FFX_Xbox.tapB()    
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
+            FFX_Xbox.tapB()
                 
         target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
         while FFX_memory.getCharCursorPos() != target_pos:
             FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
-            if gameVars.usePause():
-                FFX_memory.waitFrames(3)
         while FFX_memory.menuNumber() != 26:
             FFX_Xbox.tapB()
     while not FFX_memory.equipMenuOpenFromChar():
@@ -765,8 +727,6 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
-        if gameVars.usePause():
-            FFX_memory.waitFrames(1)
     while FFX_memory.equipMenuOpenFromChar():
         FFX_Xbox.tapB()
     
@@ -973,6 +933,8 @@ def afterRonso():
     yunaFirstStrike()
     auronFirstStrike()
     equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(5)
     
     openGrid(character=5)
     FFX_menuGrid.moveFirst()
@@ -1084,7 +1046,7 @@ def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotco
         if FFX_memory.assignAbilityToEquipCursor() < ability_index:
             FFX_Xbox.tapDown() 
         else:
-            FFX_Xbox.tapUp() 
+            FFX_Xbox.tapUp()
     while FFX_memory.informationActive():
         FFX_Xbox.tapB()
     while FFX_memory.equipBuyRow() != 1:
@@ -1432,7 +1394,10 @@ def openGrid(character):
             print("Selecting party member")
             target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
             while FFX_memory.getCharCursorPos() != target_pos:
-                FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
+                if FFX_memory.getStoryProgress() == 2528: #After B&Y, party size is evaluated weird.
+                    FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, 7)
+                else:
+                    FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
             while FFX_memory.menuNumber() == 7:
                 FFX_Xbox.menuB()
             try:
