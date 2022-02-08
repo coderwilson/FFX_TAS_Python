@@ -256,9 +256,6 @@ def findSummoners():
                     else:
                         print("Home, bonus battle for Blitz loss")
                         FFX_Battle.home3()
-                elif FFX_memory.getMap() == 286:
-                    print("Home, bonus battle for Blitz loss")
-                    FFX_Battle.home3()
                 elif FFX_memory.getBattleNum() == 420:
                     print("Home, final battle")
                     FFX_Battle.home4()

@@ -116,7 +116,7 @@ def trials():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 26: #Insert Besaid sphere, and push to completion
-                FFX_memory.clickToEventTemple(6)
+                FFX_memory.clickToEventTemple(7)
                 FFXC.set_movement(0, 1)
                 FFX_memory.waitFrames(30 * 10)
                 FFXC.set_neutral()

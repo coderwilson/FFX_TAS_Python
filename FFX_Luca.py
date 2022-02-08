@@ -144,8 +144,24 @@ def arrival():
         print("##Wakka got a thunderstrike weapon.")
     else:
         print("##Both Tidus and Wakka somehow got a thunderstrike weapon.")
+    
+    FFX_Logs.writeStats("Blitz Win:")
+    FFX_Logs.writeStats(gameVars.getBlitzWin())
     FFX_Logs.writeStats("Thunderstrike results:")
     FFX_Logs.writeStats(thunderStrike)
+    
+    if thunderStrike != 0:
+        if thunderStrike % 2 == 1:
+            print("Equipping Tidus")
+            if thunderStrike >= 2:
+                fullClose = False
+            else:
+                fullClose = True
+            FFX_menu.equipWeapon(character=0,ability=0x8026, fullMenuClose=fullClose)
+        if thunderStrike >= 2:
+            print("Equipping Wakka")
+            FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=True)
+    gameVars.setLStrike(thunderStrike)
 
 def followYuna():
     print("followYuna function no longer used")
@@ -189,6 +205,8 @@ def afterBlitz():
             if checkpoint == 8: #First chest
                 if gameVars.earlyHaste() == -1:
                     FFX_menu.lateHaste()
+                if gameVars.getLStrike() >= 2:
+                    FFX_menu.equipWeapon(character=4,ability=0x8022, fullMenuClose=False)
                 FFX_menu.mrrGrid1()
                 FFX_memory.closeMenu()
                 print("First chest")
@@ -229,7 +247,10 @@ def afterBlitz():
                     print("Well that boss was difficult.")
                     FFX_memory.waitFrames(30 * 6)
                 elif battleNum == 3:
-                    FFX_Battle.afterBlitz3(gameVars.earlyHaste())
+                    if gameVars.earlyHaste() == -1:
+                        FFX_Battle.afterBlitz3LateHaste(gameVars.earlyHaste())
+                    else:
+                        FFX_Battle.afterBlitz3(gameVars.earlyHaste())
                     FFX_memory.clickToControl()
                     FFX_memory.waitFrames(4)
                     FFXC.set_neutral()

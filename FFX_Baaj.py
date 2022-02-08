@@ -149,7 +149,7 @@ def ABboat1() :
     print("Control restored.")
     FFXC.set_neutral()
     FFX_memory.waitFrames(4)
-    #FFX_memory.csrBaajSaveClear()
+    FFX_memory.csrBaajSaveClear()
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.3)
     #FFX_memory.csrBaajSaveClear()
