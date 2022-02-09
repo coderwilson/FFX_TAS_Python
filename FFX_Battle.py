@@ -76,7 +76,7 @@ def tidusHaste(direction):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
-    while FFX_memory.mainBattleMenu():
+    while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     _navigate_to_position(0)
     while FFX_memory.otherBattleMenu():
@@ -1499,38 +1499,43 @@ def battleGui():
     print("Fight start: Sinspawn Gui")
     FFX_Xbox.clickToBattle()
     print("Engaging Gui")
-    turns = 0
-    phase = 1
-    valeforFaint = False
-    lastHP = 0
-    while turns < 3:
+    wakkaTurn = False
+    yunaTurn = False
+    auronTurn = False
+    tidusTurn = False
+    aeonTurn = False
+    
+    while aeonTurn == False:
         if FFX_memory.turnReady():
-            turns += 1
-            if FFX_Screen.turnTidus():
-                defend()  # Tidus defends first turn
-            if FFX_Screen.turnWakka():
-                FFX_Xbox.weapSwap(0)
             if FFX_Screen.turnYuna():
-                buddySwapAuron()  # Auron in
-                useSkill(0)  # Performs power break
-            FFX_memory.waitFrames(30)
-        elif FFX_memory.diagSkipPossible():
-            FFX_Xbox.tapB()
-    if turns == 3:
-        FFX_Xbox.clickToBattle()
-        turns += 1
-        buddySwapKimahri()  # Switch Wakka for Kimahri
-        kimahriOD(2)
-        FFX_memory.waitFrames(30)
-        phase = 2
-    if turns == 4:
-        FFX_Xbox.clickToBattle()
-        buddySwapYuna()  # Tidus swap out for Yuna
-        aeonSummon(0)  # summon Valefor
-        FFX_Screen.awaitTurn()
-        valeforOD()
-        turns += 1
-        lastHP = FFX_memory.getBattleHP()[0]
+                if yunaTurn == False:
+                    buddySwapAuron()
+                    yunaTurn = True
+                else:
+                    aeonSummon(0)
+            elif FFX_Screen.turnWakka():
+                if wakkaTurn == False:
+                    FFX_Xbox.weapSwap(0)
+                    wakkaTurn = True
+                else:
+                    buddySwapKimahri()
+            elif FFX_Screen.turnKimahri():
+                kimahriOD(2)
+            elif FFX_Screen.turnTidus():
+                if tidusTurn == False:
+                    defend()
+                    tidusTurn = True
+                else:
+                    buddySwapYuna()
+            elif FFX_Screen.turnAuron():
+                if auronTurn == False:
+                    useSkill(0)
+                    auronTurn = True
+                else:
+                    defend()
+            elif FFX_Screen.turnAeon():
+                valeforOD()
+                aeonTurn = True
     
     FFX_Screen.awaitTurn()
     nextHP = FFX_memory.getBattleHP()[0]
@@ -1588,6 +1593,7 @@ def battleGui():
     #In between battles
     while not FFX_memory.battleActive():
         if FFX_memory.getStoryProgress() >= 865 and FFX_memory.cutsceneSkipPossible():
+            FFX_memory.waitFrames(12)
             FFX_Xbox.skipScene()
             print("Skipping scene")
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
