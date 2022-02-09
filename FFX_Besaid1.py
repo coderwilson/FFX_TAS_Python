@@ -110,15 +110,23 @@ def trials():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 20: #Touch the hidden door glyph
-                FFX_memory.clickToEventTemple(1)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-13, -33])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 23: #Second Besaid sphere
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 26: #Insert Besaid sphere, and push to completion
-                FFX_memory.clickToEventTemple(7)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-13, -60])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 10)
+                FFX_memory.waitFrames(300)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 34: #Night, talk to Yuna and Wakka

@@ -194,7 +194,12 @@ def trials():
                 FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
             elif checkpoint == 27: #Glyph sphere
-                FFX_memory.clickToEventTemple(4)
+                while not FFX_memory.diagSkipPossible():
+                    FFX_targetPathing.setMovement([-19, -30])
+                    FFX_Xbox.tapB()
+                    FFX_memory.waitFrames(6)
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 33: #Insert Glyph sphere
                 FFX_memory.clickToEventTemple(1)

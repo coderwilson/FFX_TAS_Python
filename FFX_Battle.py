@@ -141,7 +141,17 @@ def tidusOD(direction = None):
         FFX_Xbox.tapB()
     FFX_memory.waitFrames(12)
     print("Hit Overdrive")
-    FFX_Xbox.tapB()
+    FFX_Xbox.tapB() #First try pog
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
+    FFX_memory.waitFrames(11)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
+    FFX_memory.waitFrames(10)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
+    FFX_memory.waitFrames(9)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
+    FFX_memory.waitFrames(8)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
 
 
 def tidusODSeymour():
@@ -434,39 +444,35 @@ def SinFin():
     FFX_Logs.writeLog("Fight start: Sin's Fin")
     print("Fight start: Sin's Fin")
     FFX_Screen.awaitTurn()
-    complete = 0
-    while complete == 0:
-        print("Determining first turn.")
-        if FFX_Screen.turnTidus():
-            print("Tidus taking first turn")
-            defend()
-            FFX_memory.waitFrames(30 * 0.2)
-            print("Tidus defend")
-
-            FFX_Screen.awaitTurn()
-            buddySwapLulu() # Yuna out, Lulu in
-            thunder("right")
-            FFX_Screen.awaitTurn()
-            lancetTarget(23, 'r')
-            complete = 1
-
-        elif FFX_Screen.turnYuna():
-            print("Yuna taking first turn")
-            buddySwapLulu()  # Yuna out, Lulu in
-            thunder("right")
-
-            FFX_Screen.awaitTurn()
-            defend()
-            FFX_memory.waitFrames(30 * 0.2)
-            print("Tidus defend")
-            FFX_Screen.awaitTurn()
-            lancetTarget(23, 'r')
-            complete = 1
+    finTurns = 0
+    kimTurn = False
+    complete = False
+    while complete == False:
+        if FFX_memory.turnReady():
+            finTurns += 1
+            print("Determining first turn.")
+            if FFX_Screen.turnTidus():
+                defend()
+                FFX_memory.waitFrames(6)
+                print("Tidus defend")
+            elif FFX_Screen.turnYuna():
+                buddySwapLulu() # Yuna out, Lulu in
+                thunderTarget(target=23, direction='u')
+                FFX_memory.waitFrames(6)
+            elif FFX_Screen.turnKimahri():
+                lancetTarget(target=23, direction='u')
+                FFX_memory.waitFrames(6)
+                kimTurn = True
+            elif FFX_Screen.turnLulu():
+                thunderTarget(target=23, direction='u')
+            else:
+                defend()
+        if finTurns >= 3 and kimTurn == True:
+            complete = True
 
     print("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
     turnCounter = 0
-    complete = False
     while not FFX_memory.battleComplete():
         if FFX_memory.turnReady():
             turnCounter += 1
@@ -486,7 +492,6 @@ def SinFin():
             elif FFX_Screen.turnAeon():
                 valeforOD(sinFin = 1)
                 print("Valefor energy blast")
-                complete = True
     print("Sin's Fin fight complete")
     FFX_Xbox.clickToBattle()
 
@@ -1508,6 +1513,7 @@ def battleGui():
             if FFX_Screen.turnYuna():
                 buddySwapAuron()  # Auron in
                 useSkill(0)  # Performs power break
+            FFX_memory.waitFrames(30)
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
     if turns == 3:
@@ -1515,6 +1521,7 @@ def battleGui():
         turns += 1
         buddySwapKimahri()  # Switch Wakka for Kimahri
         kimahriOD(2)
+        FFX_memory.waitFrames(30)
         phase = 2
     if turns == 4:
         FFX_Xbox.clickToBattle()

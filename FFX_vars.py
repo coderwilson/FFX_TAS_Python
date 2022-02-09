@@ -4,17 +4,23 @@ class allVars:
         self.setStartVars()
     
     def setStartVars(self):
-        self.csrValue = True #New game, default to True
-        self.blitzWinValue = False #New game, default to False
+        #------------------------------------------------------------------
+        #The default values assume starting from the beginning of the game.
+        #If you are starting from a loaded save, you may need to change one or more
+        #of the values below.
+        #------------------------------------------------------------------
+        
+        self.csrValue = True #Default to True
+        self.blitzWinValue = False #Default to False
         self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         
-        self.earlyTidusGridVal = False
-        self.earlyHasteVal = -1
-        self.wakkaLateMenuVal = False
-        self.endGameVersionVal = 1
+        self.earlyTidusGridVal = False #Default False
+        self.earlyHasteVal = -1 #Default -1
+        self.wakkaLateMenuVal = False #Default False
+        self.endGameVersionVal = 0 #Default 0
         
-        self.zombieWeaponVal = 255
-        self.lStrikeCount = 0
+        self.zombieWeaponVal = 255 #Default 255
+        self.lStrikeCount = 0 #Default 0
     
     def csr(self):
         return self.csrValue

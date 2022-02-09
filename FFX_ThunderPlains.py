@@ -64,26 +64,26 @@ def agencyShop():
     FFX_memory.waitFrames(30)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Got any items
     FFX_memory.waitFrames(60)
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Buy
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #P.downs
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuRight()
     FFX_Xbox.menuRight()
     FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #4 P-downs
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Grenades
     FFX_memory.waitFrames(6)
-    FFX_Xbox.menuRight()
+    FFX_Xbox.menuRight() #Minimum of two
     speedNeeded = 14 - speedCount #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     if speedNeeded > 1:
         speedNeeded = 1 #Limit so we don't over-spend and run out of money.
@@ -92,7 +92,7 @@ def agencyShop():
             FFX_Xbox.menuRight()
             speedNeeded -= 1
     
-    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Purchase command, however many grenades determined above.
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
     FFX_memory.waitFrames(6)
@@ -128,6 +128,10 @@ def agencyShop():
     FFX_Xbox.menuUp()
     FFX_Xbox.menuB() #Sell Auron Katana
     FFX_memory.waitFrames(6)
+    
+    #The following sections are to ensure we have the right amount of gil
+    #left over AFTER purchasing the appropriate items here. First pattern
+    #includes baroque sword cost (Evrae), both include cost of Auron's weapon.
     if gameVars.getBlitzWin() == False and FFX_memory.getGilvalue() < 9550:
         for j in range(11):
             FFX_Xbox.menuDown()
@@ -163,13 +167,12 @@ def agencyShop():
     FFX_memory.waitFrames(12)
     FFX_Xbox.menuB() #Buy
     FFX_memory.waitFrames(24)
-    #FFX_memory.waitFrames(30 * 30) #Testing only
     
+    #Only purchase Baroque sword if blitz loss strats.
     if gameVars.getBlitzWin() == False:
         FFX_Xbox.menuB()
         FFX_memory.waitFrames(24)
         FFX_Xbox.menuUp() #Baroque sword
-        #FFX_memory.waitFrames(30 * 10) #Testing only
         FFX_memory.waitFrames(10)
         FFX_Xbox.menuB() #Weapon for Tidus (for Evrae fight)
         FFX_memory.waitFrames(10)
@@ -186,11 +189,7 @@ def agencyShop():
     FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuB() #Do not equip
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(6)
+    FFX_memory.closeMenu()
 
 def agency():
     #Arrive at the travel agency

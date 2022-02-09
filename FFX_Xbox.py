@@ -538,7 +538,7 @@ def nameAeon():
             tapB()
     
     print("Naming screen is up.")
-    FFX_memory.waitFrames(15)
+    FFX_memory.waitFrames(17)
     menuB()
     FFX_memory.waitFrames(4)
     menuUp()

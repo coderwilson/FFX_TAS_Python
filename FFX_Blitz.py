@@ -740,6 +740,6 @@ def blitzMain(forceBlitzWin):
         ", Opponent score: ", FFX_memory.blitzOppScore())
     FFXC.set_neutral()
     if FFX_memory.blitzOwnScore() > FFX_memory.blitzOppScore():
-        return True
+        gameVars.setBlitzWin(True)
     else:
-        return False
+        gameVars.setBlitzWin(False)
