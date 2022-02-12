@@ -51,12 +51,14 @@ def ssLiki():
 
 def ssWinno():
     FFX_memory.clickToControl()
-    FFXC.set_movement(1, 0)
-    FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_neutral()
+    while FFX_memory.userControl():
+        FFX_targetPathing.setMovement([28, -36])
+    FFXC.set_movement(1, -1)
+    FFX_memory.waitFrames(2)
+    FFX_memory.awaitControl()
+    FFX_memory.waitFrames(2)
     
     #Talk to O'akaXXIII
-    FFX_memory.clickToControl()
     oakaCoords = [FFX_memory.getActorCoords(1)[0],FFX_memory.getActorCoords(1)[1]]
     while FFX_memory.userControl():
         FFX_targetPathing.setMovement(oakaCoords)

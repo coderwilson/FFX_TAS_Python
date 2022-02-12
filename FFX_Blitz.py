@@ -395,7 +395,9 @@ def lettyMove():
         if playerArray[0].getCoords()[0] - playerArray[8].getCoords()[0] < -350:
             FFX_Xbox.tapX()
     else:
-        if graavDistance < 340:
+        if playerArray[2].currentHP() < 10:
+            FFX_Xbox.tapX()
+        elif graavDistance < 340:
             FFXC.set_movement(1, 0)
             FFX_Xbox.tapX()
         elif playerArray[7].getCoords()[1] < -100:
@@ -424,9 +426,11 @@ def lettyAct():
         passBall(target = 3)
         if reportState == True:
             print("Letty Action 2")
+    elif playerArray[2].currentHP() < 10:
+        passBall(target = 3)
     elif currentStage == 2:
         if playerArray[0].getCoords()[0] - playerArray[8].getCoords()[0] < -350:
-            passBall(target = 0)
+            passBall(target = 3)
         else:
             dribbleBall()
     elif distance(2, 8) < 320:
@@ -453,7 +457,9 @@ def jassuMove():
         otherDistance += 1
     
     
-    if currentStage in [0,1]:
+    if currentStage >= 1 and playerArray[3].currentHP() < 10:
+        FFX_Xbox.tapX()
+    elif currentStage in [0,1]:
         #Defend in the goal for safety.
         targetCoords = [-20, -595]
         FFX_blitzPathing.setMovement(targetCoords)
@@ -506,6 +512,8 @@ def jassuAct():
     
     if currentStage in [0,1]:
         passBall(target = 2)
+    elif playerArray[3].currentHP() < 10:
+        passBall(target = 0)
     elif currentStage == 2:
         dribbleBall()
     elif currentStage == 3:

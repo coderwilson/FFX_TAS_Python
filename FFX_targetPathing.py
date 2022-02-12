@@ -1175,8 +1175,8 @@ def KilikaTrials(checkpoint):
         x = -2
         y = 15
     if checkpoint == 24:
-        x = -35
-        y = -19
+        x = -37
+        y = -8
     if checkpoint == 25:
         print("Insert Kilika sphere")
     if checkpoint == 26:
@@ -2482,11 +2482,11 @@ def djoseTrials(checkpoint):
     if checkpoint == 19:
         print("Right sphere")
     if checkpoint == 20:
-        x = -8
-        y = 30
+        x = -18
+        y = 22
     if checkpoint == 21:
-        x = -8
-        y = 26
+        x = -7
+        y = 24
     if checkpoint == 22:
         print("Pushing pedestol")
     if checkpoint == 23:
@@ -2578,8 +2578,8 @@ def djoseTrials(checkpoint):
     if checkpoint == 56:
         print("Reset switch")
     if checkpoint == 57:
-        x = -7
-        y = 24
+        x = -9
+        y = 22
     if checkpoint == 58:
         print("Left sphere")
     if checkpoint == 59:
@@ -2607,7 +2607,7 @@ def djoseTrials(checkpoint):
         y = 5
     if checkpoint == 67:
         x = 9
-        y = 24 #Dial in
+        y = 19 #Dial in
     if checkpoint == 68:
         print("Right sphere")
     if checkpoint == 69:
@@ -2640,8 +2640,8 @@ def djoseTrials(checkpoint):
         x = -37
         y = 26
     if checkpoint == 79:
-        x = -58
-        y = 22
+        x = -54
+        y = 25
     if checkpoint == 80: #Destro glyph
         print("Destruction Glyph")
     if checkpoint == 81:
@@ -2792,7 +2792,7 @@ def djoseExit(checkpoint):
         x = -129
         y = -253
     if checkpoint == 17:
-        x = -172
+        x = -178
         y = -261
     if checkpoint == 18: #4k gold chest
         x = 0

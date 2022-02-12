@@ -227,7 +227,15 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 58:
                 print("Left sphere")
-                FFX_memory.clickToEventTemple(2)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-5,24])
+                    FFX_memory.waitFrames(3)
+                    FFXC.set_neutral()
+                    FFX_memory.waitFrames(3)
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
+                #FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 63:
                 print("Final insert Left sphere")
@@ -235,7 +243,16 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 68:
                 print("Right sphere")
-                FFX_memory.clickToEventTemple(6)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([5,24])
+                    FFX_memory.waitFrames(3)
+                    FFXC.set_neutral()
+                    FFX_memory.waitFrames(3)
+                    FFX_Xbox.tapB()
+                    FFX_memory.waitFrames(3)
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
+                #FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
             elif checkpoint == 73:
                 print("Final insert Right sphere")
@@ -243,11 +260,15 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 80:
                 print("Destruction Glyph")
-                FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(12)
-                FFXC.set_movement(1, 1)
-                FFX_memory.clickToEvent()
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-58,38])
+                    FFX_memory.waitFrames(3)
+                    FFXC.set_neutral()
+                    FFX_memory.waitFrames(4)
+                    FFX_Xbox.tapB()
+                    FFX_memory.waitFrames(3)
                 FFXC.set_neutral()
+                print("Glyph touched.")
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 82:
@@ -355,7 +376,7 @@ def leavingDjose():
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 18:
-                FFX_memory.clickToEventTemple(7)
+                FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint in [22,29]:
                 FFX_memory.clickToEventTemple(4)
@@ -366,5 +387,7 @@ def leavingDjose():
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Battle.fleeAll()
+            elif FFX_memory.menuOpen():
+                FFX_Xbox.tapB()
         
     FFXC.set_neutral()

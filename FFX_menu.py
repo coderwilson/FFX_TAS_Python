@@ -323,7 +323,8 @@ def battleSiteOaka1():
         FFX_Xbox.tapRight()
     while FFX_memory.itemShopMenu() != 21:
         FFX_Xbox.tapB()
-    
+        if gameVars.usePause():
+            FFX_memory.waitFrames(2)
     
     itemOrder = FFX_memory.getItemsOrder()
     itemCursor = 1
@@ -334,17 +335,29 @@ def battleSiteOaka1():
             print("Keep Phoenix Downs.")
         else: #Sell all except for Mega Potions and Phoenix Downs.
             FFX_Xbox.tapB()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
             FFX_Xbox.tapUp()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
             if FFX_memory.getItemCountSlot(itemCursor) > 10:
                 FFX_Xbox.tapUp()
+                if gameVars.usePause():
+                    FFX_memory.waitFrames(2)
             FFX_Xbox.tapB() #Sell this item
         if itemOrder[itemCursor + 1] == 70:
             print("Done with selling items.")
         elif itemCursor % 2 == 1:
             FFX_Xbox.tapRight()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
         else:
             FFX_Xbox.tapLeft()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
             FFX_Xbox.tapDown()
+            if gameVars.usePause():
+                FFX_memory.waitFrames(2)
         itemCursor += 1
     
     FFX_memory.closeMenu()
@@ -1370,8 +1383,6 @@ def itemPos(item, pos):
     FFX_Xbox.menuA()
     FFX_Xbox.menuA()
 
-
-
 def openGrid(character):
     try:
         FFXC.set_neutral()
@@ -1396,8 +1407,12 @@ def openGrid(character):
             while FFX_memory.getCharCursorPos() != target_pos:
                 if FFX_memory.getStoryProgress() == 2528: #After B&Y, party size is evaluated weird.
                     FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, 7)
+                elif FFX_memory.partySize() < 3:
+                    FFX_memory.menuDown()
                 else:
-                    FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
+                    #FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
+                    #Not working. Use this instead.
+                    FFX_Xbox.menuDown()
             while FFX_memory.menuNumber() == 7:
                 FFX_Xbox.menuB()
             try:

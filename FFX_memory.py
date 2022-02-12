@@ -337,15 +337,15 @@ def getCoords():
     x = float_from_integer(process.read(coord1))
     coord2 = process.get_pointer(yPtr)
     y = float_from_integer(process.read(coord2))
-
+    
     return [x,y]
 
 def extractorHeight():
     global process
     global baseValue
-    global zPtr
-    key = baseValue + 0x01fc44e4
-    height = float_from_integer(process.read(key + 0x1990))
+    height = getActorCoords(3)[2]
+    #key = baseValue + 0x01fc44e4
+    #height = float_from_integer(process.read(key + 0x1990))
     print("^^Extractor Height: ", height)
     return height
 
@@ -2151,13 +2151,13 @@ def resetBattleEnd():
 
 class blitzActor:
     def __init__(self, playerNum):
-        self.num = playerNum + 2
-        self.position = getActorCoords(self.num - 2)
+        self.num = playerNum
+        self.position = getActorCoords(self.num)
         #print(self.position)
         self.distance = 0
     
     def updateCoords(self, activePlayer=12):
-        self.position = getActorCoords(self.num)
+        self.position = getActorCoords(self.num + 2)
         #if activePlayer != 12 and activePlayer != self.num:
             #actPos = getActorCoords(activePlayer-2)
             #self.distance = abs(self.position[0] - actPos[0]) + abs(self.position[1] - actPos[1])
@@ -2166,9 +2166,22 @@ class blitzActor:
     
     def getCoords(self):
         #print(self.num - 2)
-        coords = getActorCoords(self.num - 2)
+        coords = getActorCoords(self.num)
         #print(coords)
         return coords
+    
+    def currentHP(self):
+        return blitzHP(self.num)
+
+def blitzHP(playerIndex=99):
+    global baseValue
+    if playerIndex == 99:
+        return 9999
+    else:
+        ptrKey = process.read(baseValue + 0x00F2FF14)
+        offset = 0x1c8 + (0x4 * playerIndex)
+        hpValue = process.read(ptrKey+offset)
+        return hpValue
 
 def blitzOwnScore():
     global baseValue

@@ -250,9 +250,11 @@ def trials():
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 32: #Insert Glyph sphere
-                FFX_memory.clickToEventTemple(0)
-                FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 0.07)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([450,525])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 34: #Take Destro sphere
                 FFX_memory.clickToEventTemple(7)

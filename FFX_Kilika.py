@@ -195,9 +195,11 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 27: #Glyph sphere
                 while not FFX_memory.diagSkipPossible():
-                    FFX_targetPathing.setMovement([-19, -30])
-                    FFX_Xbox.tapB()
+                    FFX_targetPathing.setMovement([-21, -30])
+                    FFX_memory.waitFrames(3)
+                    FFXC.set_neutral()
                     FFX_memory.waitFrames(6)
+                    FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
@@ -262,6 +264,10 @@ def forest3():
                 FFX_Xbox.SkipDialog(0.3)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
+            elif checkpoint < 30 and FFX_memory.getMap() == 46: #Exit woods
+                checkpoint = 30
+            elif checkpoint < 37 and FFX_memory.getMap() == 16: #Map with boat
+                checkpoint = 37
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika3(checkpoint)) == True:

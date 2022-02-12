@@ -35,10 +35,9 @@ def loadOffset(offset):
         FFX_Xbox.tapDown()
     for _ in range(15):
         FFX_Xbox.tapB()
-    FFX_memory.awaitControl()
-    FFX_memory.waitFrames(30 * 0.5)
-    FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
     FFXC.set_neutral()
+    FFX_memory.waitFrames(120)
+    FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
 
 def loadOffsetBattle(offset):
     print("Loading to save file in position ", offset)
@@ -345,9 +344,9 @@ def moonflow2():
     FFX_memory.waitFrames(30 * 0.5)
 
 def loadGuadoSkip():
-    FFX_memory.waitFrames(30 * 1)
+    FFX_memory.clickToControl3()
     FFXC.set_movement(1, -1)
-    FFX_memory.waitFrames(30 * 1)
+    FFX_memory.awaitEvent()
     FFXC.set_neutral()
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, 0)

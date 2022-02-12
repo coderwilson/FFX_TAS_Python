@@ -43,7 +43,6 @@ def arrival():
                     elif hunterDistance < 200 or checkpoint in [6,7,8,9,10]:
                         FFX_targetPathing.setMovement(hunterCoords)
                         FFX_Xbox.tapB()
-                        FFX_memory.waitFrames(3)
                     
                     elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
                         checkpoint += 1

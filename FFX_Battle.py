@@ -64,7 +64,7 @@ def tidusFlee():
         FFX_Xbox.tapB()
     tapTargeting()
 
-def tidusHaste(direction):
+def tidusHaste(direction, character=255):
     direction = direction.lower()
     while FFX_memory.battleMenuCursor() != 22:
         if FFX_Screen.turnTidus() == False:
@@ -81,13 +81,26 @@ def tidusHaste(direction):
     _navigate_to_position(0)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    if direction == 'left':
+    if character != 255:
+        direction = 'l'
+        while character != FFX_memory.battleTargetId():
+            if direction == 'l':
+                FFX_Xbox.menuLeft()
+                if FFX_memory.battleTargetId() >= 20:
+                    FFX_Xbox.menuRight()
+                    direction = 'd'
+            else:
+                FFX_Xbox.menuDown()
+                if FFX_memory.battleTargetId() >= 20:
+                    FFX_Xbox.menuUp()
+                    direction = 'l'
+    elif direction == 'left':
         FFX_Xbox.tapLeft()
-    if direction == 'right':
+    elif direction == 'right':
         FFX_Xbox.tapRight()
-    if direction == 'up':
+    elif direction == 'up':
         FFX_Xbox.tapUp()
-    if direction == 'down':
+    elif direction == 'down':
         FFX_Xbox.tapDown()
     tapTargeting()
 
@@ -142,15 +155,15 @@ def tidusOD(direction = None):
     FFX_memory.waitFrames(12)
     print("Hit Overdrive")
     FFX_Xbox.tapB() #First try pog
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.tapB() #Extra attempt in case of miss
-    FFX_memory.waitFrames(11)
-    FFX_Xbox.tapB() #Extra attempt in case of miss
-    FFX_memory.waitFrames(10)
+    FFX_memory.waitFrames(8)
     FFX_Xbox.tapB() #Extra attempt in case of miss
     FFX_memory.waitFrames(9)
     FFX_Xbox.tapB() #Extra attempt in case of miss
-    FFX_memory.waitFrames(8)
+    FFX_memory.waitFrames(10)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
+    FFX_memory.waitFrames(11)
+    FFX_Xbox.tapB() #Extra attempt in case of miss
+    FFX_memory.waitFrames(12)
     FFX_Xbox.tapB() #Extra attempt in case of miss
 
 
@@ -923,7 +936,7 @@ def Oblitzerator(earlyHaste):
 
     if earlyHaste == 1:
         #First turn is always Tidus. Haste Lulu if we've got the levels.
-        tidusHaste('left')
+        tidusHaste(direction='left', character=5)
 
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
@@ -1503,6 +1516,7 @@ def battleGui():
     yunaTurn = False
     auronTurn = False
     tidusTurn = False
+    kimTurn = False
     aeonTurn = False
     
     while aeonTurn == False:
@@ -3202,6 +3216,9 @@ def altanaheal():
     elif FFX_memory.getThrowItemsSlot(6) < 255:
         itemnum = 6
         itemname = "Phoenix Down"
+    elif FFX_memory.getThrowItemsSlot(7) < 255:
+        itemnum = 7
+        itemname = "Phoenix Down"
     else:
         itemnum = -1
         itemname = "noitemfound"
@@ -3216,39 +3233,45 @@ def altanaheal():
             else:
                 FFX_Xbox.tapB()
         while FFX_memory.mainBattleMenu():
-            FFX_Xbox.tapB()        
+            FFX_Xbox.tapB()
         itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
         print("Position: ", itemPos)
         _navigate_to_position(itemPos)
         while FFX_memory.otherBattleMenu():
             FFX_Xbox.tapB()
-        print("Direction: ", direction)        
-        while FFX_memory.battleTargetId() != 20:
-            if direction == 'l':
-                FFX_Xbox.tapLeft()
-                if FFX_memory.battleTargetId() < 20:
-                    print("Wrong battle line targetted.")
-                    FFX_Xbox.tapRight()
-                    direction = 'u'
-            elif direction == 'r':
-                FFX_Xbox.tapRight()
-                if FFX_memory.battleTargetId() < 20:
-                    print("Wrong battle line targetted.")
+        if itemNum == 7:
+            print("Special code for mega phoenix.")
+            FFX_memory.waitFrames(5)
+            FFX_Xbox.menuDown()
+            FFX_Xbox.menuB()
+        else:
+            print("Direction: ", direction)
+            while FFX_memory.battleTargetId() != 20:
+                if direction == 'l':
                     FFX_Xbox.tapLeft()
-                    direction = 'd'
-            elif direction == 'u':
-                FFX_Xbox.tapUp()
-                if FFX_memory.battleTargetId() < 20:
-                    print("Wrong battle line targetted.")
-                    FFX_Xbox.tapDown()
-                    direction = 'l'
-            elif direction == 'd':
-                FFX_Xbox.tapDown()
-                if FFX_memory.battleTargetId() < 20:
-                    print("Wrong battle line targetted.")
+                    if FFX_memory.battleTargetId() < 20:
+                        print("Wrong battle line targetted.")
+                        FFX_Xbox.tapRight()
+                        direction = 'u'
+                elif direction == 'r':
+                    FFX_Xbox.tapRight()
+                    if FFX_memory.battleTargetId() < 20:
+                        print("Wrong battle line targetted.")
+                        FFX_Xbox.tapLeft()
+                        direction = 'd'
+                elif direction == 'u':
                     FFX_Xbox.tapUp()
-                    direction = 'r'
-        tapTargeting()
+                    if FFX_memory.battleTargetId() < 20:
+                        print("Wrong battle line targetted.")
+                        FFX_Xbox.tapDown()
+                        direction = 'l'
+                elif direction == 'd':
+                    FFX_Xbox.tapDown()
+                    if FFX_memory.battleTargetId() < 20:
+                        print("Wrong battle line targetted.")
+                        FFX_Xbox.tapUp()
+                        direction = 'r'
+            tapTargeting()
         return 1
 
     else:
@@ -4306,6 +4329,11 @@ def buddySwap_char(character):
     FFX_Logs.writeLog("Swapping characters (in battle)")
     print("Swapping characters (in battle) - by char num")
     position = FFX_memory.getBattleCharSlot(character)
+    
+    #Special logic for after selfDestruct
+    if FFX_memory.getBattleNum() == 116 and character == 1:
+        position += 1
+    
     if position < 3:
         print("Cannot swap with character ", FFX_memory.nameFromNumber(character), \
             ", that character is in the front party.")
@@ -4313,11 +4341,7 @@ def buddySwap_char(character):
     else:
         while not FFX_memory.otherBattleMenu():
             FFX_Xbox.lBumper()
-        if FFX_memory.getBattleNum() == 116 and character == 1:
-            #Swapping in Yuna after selfdestruct. Gui.
-            position -= 2
-        else:
-            position -= 3
+        position -= 3
         reserveposition = position % 4
         print("Character is in position ", reserveposition)
         if reserveposition == 3:  # Swap with last slot

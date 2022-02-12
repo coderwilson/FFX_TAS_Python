@@ -329,7 +329,7 @@ def tapB():
     FFXC.set_value('BtnB', 0)
     FFX_memory.waitFrames(1)
     if gameVars.usePause():
-        FFX_memory.waitFrames(2)
+        FFX_memory.waitFrames(3)
 
 def menuX():
     FFXC.set_value('BtnX', 1)

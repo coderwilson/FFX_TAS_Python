@@ -35,7 +35,7 @@ def arrival():
                     
                     FFX_memory.clickToDiagProgress(82) #Let's go over the basics
                     #FFX_memory.clickToDiagProgress(39)
-                    FFX_Xbox.SkipDialog(1.5)
+                    FFX_Xbox.SkipDialog(1)
                 while FFX_memory.blitzCursor() != 12:
                     FFX_Xbox.tapA()
                 FFX_Xbox.menuB()
@@ -145,8 +145,6 @@ def arrival():
     else:
         print("##Both Tidus and Wakka somehow got a thunderstrike weapon.")
     
-    FFX_Logs.writeStats("Blitz Win:")
-    FFX_Logs.writeStats(gameVars.getBlitzWin())
     FFX_Logs.writeStats("Thunderstrike results:")
     FFX_Logs.writeStats(thunderStrike)
     
