@@ -1746,6 +1746,9 @@ def thunderPlains(status, section):
     bNum = FFX_memory.getBattleNum()
     nadeSlot = FFX_memory.getUseItemsSlot(35)
     print("Grenade Slot %d" % nadeSlot)
+    nadeCount = getItemCountSlot(nadeSlot)
+    if nadeCount > 3:
+        useGrenades = True
 
     startingstatus = []
     for i in range(len(status)):
@@ -1832,10 +1835,11 @@ def thunderPlains(status, section):
                             buddySwapTidus()
                         wakkaturns += 1
                     elif turnchar == 6:
-                        grenadeslot = FFX_memory.getUseItemsSlot(35)
-                        print("Grenade Slot %d" % grenadeslot)
-                        useItem(grenadeslot,'none')
-                        status[3] = True
+                        if useGrenades:
+                            grenadeslot = FFX_memory.getUseItemsSlot(35)
+                            print("Grenade Slot %d" % grenadeslot)
+                            useItem(grenadeslot,'none')
+                            status[3] = True
                         fleeAll()
                     elif turnchar == 2:
                         rikkuposition = FFX_memory.getBattleCharSlot(6)
