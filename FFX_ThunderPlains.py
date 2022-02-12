@@ -60,124 +60,66 @@ def southPathing(status):
 
 def agencyShop():
     speedCount = FFX_memory.getSpeed()
-    FFX_memory.clickToDiagProgress(92)
-    while FFX_memory.blitzCharSelectCursor() != 2:
-        FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(60)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(60)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuRight()
-    speedNeeded = 14 - speedCount #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
-    if speedNeeded > 1:
-        speedNeeded = 1 #Limit so we don't over-spend and run out of money.
-    if speedNeeded > 0:
-        while speedNeeded > 0:
-            FFX_Xbox.menuRight()
-            speedNeeded -= 1
     
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(6)
+    
+    speedNeeded = max(0, min(2, 14 - speedCount)) #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
+    grenade_slot = FFX_memory.getItemSlot(35)
+    if grenade_slot == 255:
+        cur_grenades = 0
+    else:
+        cur_grenades = FFX_memory.getItemCountSlot(grenade_slot)
+    total_grenades_needed = 3 + speedNeeded - cur_grenades
+    if total_grenades_needed:
+        FFX_memory.clickToDiagProgress(92)
+        while FFX_memory.blitzCharSelectCursor() != 2:
+            FFX_Xbox.tapDown()
+        while not FFX_memory.itemShopMenu() == 7:
+            FFX_Xbox.tapB()
+        while not FFX_memory.itemShopMenu() == 10:
+            FFX_Xbox.tapB()
+        while FFX_memory.equipBuyRow() != 6:
+            if FFX_memory.equipBuyRow() < 6:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        while not FFX_memory.itemShopMenu() == 16:
+            FFX_Xbox.tapB()
+        while FFX_memory.purchasingAmountItems() != total_grenades_needed:
+            if FFX_memory.purchasingAmountItems() < total_grenades_needed:
+                FFX_Xbox.tapRight()
+            else:
+                FFX_Xbox.tapLeft()
+        while not FFX_memory.itemShopMenu() == 10:
+            FFX_Xbox.tapB()
+        FFX_memory.closeMenu()
     
     #Next, Grab Auron's weapon
-    FFXC.set_movement(0, 1)
     FFX_Xbox.SkipDialog(0.1)
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(90)
     FFX_memory.clickToDiagProgress(92)
-    #FFX_Xbox.menuB()
-    FFXC.set_neutral()
-    #FFX_memory.waitFrames(150)
     while FFX_memory.blitzCharSelectCursor() != 1:
-        FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Got any weapons?
-    FFX_memory.waitFrames(30 * 1.6)
-    FFX_Xbox.menuRight()
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuB() #Sell
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Sell Tidus' longsword
-    FFX_memory.waitFrames(3)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Sell Auron Katana
-    FFX_memory.waitFrames(6)
-    if gameVars.getBlitzWin() == False and FFX_memory.getGilvalue() < 9550:
-        for j in range(11):
-            FFX_Xbox.menuDown()
-        while FFX_memory.getGilvalue() < 9550:
-            FFX_memory.waitFrames(3)
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
-            FFX_Xbox.menuRight()
-            FFX_Xbox.menuDown()
-        FFX_memory.waitFrames(6)
-    elif gameVars.getBlitzWin() == True and FFX_memory.getGilvalue() < 8725:
-        for j in range(11):
-            FFX_Xbox.menuDown()
-        while FFX_memory.getGilvalue() < 8725:
-            FFX_memory.waitFrames(3)
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
-            FFX_Xbox.menuUp()
-            FFX_Xbox.menuB()
-            FFX_memory.waitFrames(6)
-            FFX_Xbox.menuRight()
-            FFX_Xbox.menuDown()
-        FFX_memory.waitFrames(6)
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.menuLeft()
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.menuB() #Buy
-    FFX_memory.waitFrames(24)
-    #FFX_memory.waitFrames(30 * 30) #Testing only
-    
-    if gameVars.getBlitzWin() == False:
-        FFX_Xbox.menuB()
-        FFX_memory.waitFrames(24)
-        FFX_Xbox.menuUp() #Baroque sword
-        #FFX_memory.waitFrames(30 * 10) #Testing only
-        FFX_memory.waitFrames(10)
-        FFX_Xbox.menuB() #Weapon for Tidus (for Evrae fight)
-        FFX_memory.waitFrames(10)
-        FFX_Xbox.menuB() #Do not equip
-        FFX_memory.waitFrames(24)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Shimmering Blade
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuB() #Do not equip
+        FFX_Xbox.tapDown()
+    all_equipment = FFX_memory.allEquipment()    
+    tidus_longsword = [i for i, handle in enumerate(all_equipment) if (handle.abilities() == [255, 255, 255, 255] and handle.owner() == 0)][0]
+    print("Tidus Longsword in slot: ", tidus_longsword)
+    auron_katana = [i for i, handle in enumerate(all_equipment) if (handle.abilities() == [0x800B, 255, 255, 255] and handle.owner() == 2)][0]
+    print("Auron Katana in slot: ", auron_katana)
+    other_slots = [i for i, handle in enumerate(all_equipment) if (i not in [tidus_longsword, auron_katana] and handle.equipStatus == 255)]
+    print("Sellable Items in : ", other_slots)
+    FFX_menu.sellWeapon(tidus_longsword)
+    FFX_menu.sellWeapon(auron_katana)
+    if gameVars.getBlitzWin() and FFX_memory.getGilvalue() < 8725:
+        for loc in other_slots:
+            FFX_menu.sellWeapon(loc)
+            if FFX_memory.getGilvalue() >= 8725: break
+    elif not gameVars.getBlitzWin() and FFX_memory.getGilvalue() < 9550:
+        for loc in other_slots:
+            FFX_menu.sellWeapon(loc)
+            if FFX_memory.getGilvalue() >= 9550: break
+    if not gameVars.getBlitzWin():
+        FFX_menu.buyWeapon(0, equip=False)
+    FFX_menu.buyWeapon(5, equip=False)
     FFX_memory.closeMenu()
 
 def agency():

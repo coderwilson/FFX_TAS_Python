@@ -57,10 +57,10 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-#Gamestate = "Guadosalam"
-#StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+Gamestate = "Guadosalam"
+StepCounter = 2
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
@@ -76,8 +76,8 @@ StepCounter = 1
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
-Gamestate = "Zanarkand"
-StepCounter = 4 #Blitz win, end game version 1 or 2
+#Gamestate = "Zanarkand"
+#StepCounter = 4 #Blitz win, end game version 1 or 2
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
@@ -226,7 +226,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(20)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
-        FFX_LoadGame.loadOffset(4)
+        FFX_LoadGame.loadOffset(46)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(9)
