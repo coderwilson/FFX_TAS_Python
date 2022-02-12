@@ -365,43 +365,29 @@ def battleSiteOaka1():
 def battleSiteOaka2():
     FFX_memory.clickToDiagProgress(74)
     FFX_memory.clickToDiagProgress(96)
-    while FFX_memory.equipShopMenu() != 9:
+    if FFX_memory.getGilvalue() < 10890:
+        other_slots = [i for i, handle in enumerate(all_equipment) if (i > 9 and handle.equipStatus == 255)]
+        for cur in other_slots:
+            sellWeapon(cur)
+            if FFX_memory.getGilvalue() >= 10890: break
+    buyWeapon(2, equip=True)    
+    FFX_memory.closeMenu()
+
+def buyWeapon(location, equip=False):
+    while not FFX_memory.menuOpen():
         FFX_Xbox.tapB()
-    while FFX_memory.itemMenuRow() != 1:
-        FFX_Xbox.tapRight()
-    while FFX_memory.equipShopMenu() != 25:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipSellRow() != 10:
-        FFX_Xbox.tapDown()
-    curRow = FFX_memory.equipSellRow()
-    while FFX_memory.getGilvalue() < 10890:
-        while FFX_memory.equipSellRow() != curRow + 1:
+    if FFX_memory.equipShopMenu() != 12:
+        while FFX_memory.equipShopMenu() != 9:
+            FFX_Xbox.tapA()
+        while FFX_memory.itemMenuRow() != 0:
+            FFX_Xbox.tapLeft()
+        while FFX_memory.equipShopMenu() != 12:
+            FFX_Xbox.tapB()
+    while FFX_memory.equipBuyRow() != location:
+        if FFX_memory.equipBuyRow() < location:
             FFX_Xbox.tapDown()
-        curRow = FFX_memory.equipSellRow()
-        earlyBreak = False
-        while FFX_memory.equipShopMenu() != 31:
-            if FFX_memory.equipShopMenu() == 29:
-                earlyBreak = True
-                break
-            FFX_Xbox.tapB()
-        if earlyBreak:
-            print("Cannot sell this item so continuing")
-            continue
-        while FFX_memory.equipConfirmationRow() != 1:
-            pass
-        while FFX_memory.equipConfirmationRow() != 0:
+        else:
             FFX_Xbox.tapUp()
-        print("Selling")
-        while FFX_memory.equipShopMenu() != 25:
-            FFX_Xbox.tapB()
-    while FFX_memory.equipShopMenu() != 9:
-        FFX_Xbox.tapA()
-    while FFX_memory.itemMenuRow() != 0:
-        FFX_Xbox.tapLeft()
-    while FFX_memory.equipShopMenu() != 12:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipBuyRow() != 2:
-        FFX_Xbox.tapDown()
     while FFX_memory.equipShopMenu() != 18:
         FFX_Xbox.tapB()
     while FFX_memory.equipConfirmationRow() != 1:
@@ -410,15 +396,40 @@ def battleSiteOaka2():
         FFX_Xbox.tapUp()
     while FFX_memory.equipShopMenu() != 22:
         FFX_Xbox.tapB()
-    while FFX_memory.equipSellRow() != 1:
-        pass
-    while FFX_memory.equipSellRow() != 0:
-        FFX_Xbox.tapUp()
+    if equip:
+        while FFX_memory.equipSellRow() != 1:
+            pass
+        while FFX_memory.equipSellRow() != 0:
+            FFX_Xbox.tapUp()
     while FFX_memory.equipShopMenu() != 12:
         FFX_Xbox.tapB()
-    
-    FFX_memory.closeMenu()
 
+def sellWeapon(location):
+    while not FFX_memory.menuOpen():
+        FFX_Xbox.tapB()
+    if FFX_memory.equipShopMenu() != 25:    
+        while FFX_memory.equipShopMenu() != 9:
+            FFX_Xbox.tapA()
+        while FFX_memory.itemMenuRow() != 1:
+            FFX_Xbox.tapRight()
+        while FFX_memory.equipShopMenu() != 25:
+            FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != location:
+        if FFX_memory.equipSellRow() < location:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while FFX_memory.equipShopMenu() != 31:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipConfirmationRow() != 1:
+        pass
+    while FFX_memory.equipConfirmationRow() != 0:
+        FFX_Xbox.tapUp()
+    print("Selling")
+    while FFX_memory.equipShopMenu() != 25:
+        FFX_Xbox.tapB()
+    
+    
 
 def djoseTemple():
     openGrid(character=0)
@@ -448,7 +459,6 @@ def djoseTemple():
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
-
 def mWoods():
     FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)
@@ -461,24 +471,7 @@ def mWoods():
     while not FFX_memory.menuOpen():
         FFX_Xbox.tapB() #Talking through O'aka's conversation.
     FFX_memory.closeMenu()
-    while not FFX_memory.menuOpen():
-        FFX_Xbox.tapB()
-    while FFX_memory.equipShopMenu() != 12:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipShopMenu() != 18:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipConfirmationRow() != 1:
-        pass
-    while FFX_memory.equipConfirmationRow() != 0:
-        FFX_Xbox.tapUp()
-    while FFX_memory.equipShopMenu() != 22:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipSellRow() != 1:
-        pass
-    while FFX_memory.equipSellRow() != 0:
-        FFX_Xbox.tapUp()
-    while FFX_memory.equipShopMenu() != 12:
-        FFX_Xbox.tapB()
+    buyWeapon(0, equip=True)
     FFX_memory.closeMenu()
 
 def mLakeGrid():

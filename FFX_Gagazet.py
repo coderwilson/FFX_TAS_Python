@@ -127,10 +127,7 @@ def gagazetGates():
         else:
             FFXC.set_neutral()
             if FFX_memory.menuOpen():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                FFX_Xbox.tapB()
             elif FFX_memory.turnReady():
                 #Charge Rikku until full, otherwise flee all
                 if FFX_memory.overdriveState()[6] == 100:
@@ -144,24 +141,18 @@ def gagazetGates():
                     else:
                         FFX_memory.fullPartyFormat('rikku')
             elif FFX_memory.diagSkipPossible():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                FFX_Xbox.tapB()
     #Should now be on the map with Seymour Flux. Moving to next section
 
 def Flux():
     FFX_memory.fullPartyFormat('yuna')
     FFX_menu.beforeFlux()
-    
     checkpoint = 0
     while FFX_memory.getMap() != 309:
         if FFX_memory.userControl():
             if checkpoint == 7:
                 FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 0.5)
                 FFXC.set_neutral()
-                
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 8:

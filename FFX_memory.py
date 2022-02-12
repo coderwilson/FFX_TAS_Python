@@ -2407,7 +2407,7 @@ class equipment:
         self.equipType = getEquipType(equipNum)
         self.equipOwner = getEquipOwner(equipNum)
         self.equipAbilities = getEquipAbilities(equipNum)
-        self.isEquipped = getEquipCurrentlyEquipped(equipNum)
+        self.equipStatus = getEquipCurrentlyEquipped(equipNum)
         self.slots = getEquipSlotCount(equipNum)
         self.exists = getEquipExists(equipNum)
         
@@ -2428,7 +2428,7 @@ class equipment:
         return False
         
     def isEquipped(self):
-        return self.isEquipped
+        return self.equipStatus
     
     def slotCount(self):
         return self.slots
@@ -2629,7 +2629,10 @@ def configCursorColumn():
     global baseValue
     key = baseValue + 0x0085A3FC
     retVal = process.readBytes(key,1)
-    return retVal    
+    return retVal
+
+def purchasingAmountItems():
+        return readVal(0x01440C00)
     
 def configAeonCursorColumn():
     global baseValue
