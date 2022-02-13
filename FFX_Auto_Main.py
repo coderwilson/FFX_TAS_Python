@@ -41,8 +41,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-#Gamestate = "Besaid"
-#StepCounter = 3
+Gamestate = "Besaid"
+StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -52,13 +52,13 @@ import FFX_Sin
 #Gamestate = "Miihen"
 #StepCounter = 1
 #Gamestate = "MRR"
-#StepCounter = 1
+#StepCounter = 2
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-Gamestate = "Guadosalam"
-StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -88,7 +88,7 @@ StepCounter = 2
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = False
+forceBlitzWin = True
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 0 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -145,7 +145,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.writeStats("RNG seed:")
@@ -173,7 +173,7 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadOffset(39)
         print("Load complete")
         FFX_LoadGame.loadMemCursor()
         while FFX_memory.userControl():
@@ -210,13 +210,14 @@ if Gamestate != "none" :
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(29)
         import FFX_menu
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(0)
         FFX_LoadGame.LoadMRR2()
+        pass
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(8)
         FFX_LoadGame.AfterGui()
@@ -618,7 +619,8 @@ while Gamestate != "End":
         FFX_Logs.nextFile()
 
     if Gamestate == "ThunderPlains" and StepCounter == 1:
-        status = [False,False,False,False,False]
+        print(gameVars.getBlitzWin())
+        status = [False,False,False,gameVars.getBlitzWin(),False]
         reportGamestate()
         status = FFX_ThunderPlains.southPathing(status)
         StepCounter = 2

@@ -139,6 +139,38 @@ def wakkaOD():
     FFX_Xbox.SkipDialog(3)
 
 
+def auronOD(style="dragon fang"):
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapLeft()
+    while not FFX_memory.interiorBattleMenu():
+        FFX_Xbox.tapB()
+    print("Style: ", style)
+    #Doing the actual overdrive
+    if style == "dragon fang":
+        _navigate_to_position(0, battleCursor=FFX_memory.battleCursor3)        
+        while not FFX_memory.auronOverdriveActive():
+            FFX_Xbox.tapB()
+        print("Starting")
+        FFX_Xbox.tapDown()
+        FFX_Xbox.tapLeft()
+        FFX_Xbox.tapUp()
+        FFX_Xbox.tapRight()
+        FFX_Xbox.shoulderLeft()
+        FFX_Xbox.shoulderRight()
+        FFX_Xbox.tapA()
+        FFX_Xbox.tapB()
+    elif style == "shooting star":
+        _navigate_to_position(1, battleCursor=FFX_memory.battleCursor3)        
+        while not FFX_memory.auronOverdriveActive():
+            FFX_Xbox.tapB()
+        FFX_Xbox.tapY()
+        FFX_Xbox.tapA()
+        FFX_Xbox.tapX()
+        FFX_Xbox.tapB()
+        FFX_Xbox.tapLeft()
+        FFX_Xbox.tapRight()
+        FFX_Xbox.tapB()
+
 def tidusOD(direction = None):
     print("Tidus overdrive activating")
     while not FFX_memory.otherBattleMenu():
@@ -229,8 +261,6 @@ def Ammes():
 
     while BattleComplete != 1:
         if FFX_memory.turnReady():
-            #print(FFX_memory.getOverdriveBattle(0)) #Testing only
-            #FFX_memory.waitFrames(30 * 20) #Testing only
             if tidusODflag == False and FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0) == 100:
                 tidusOD()
                 tidusODflag = True
@@ -259,7 +289,6 @@ def Tanker():
                 tidusCount += 1
                 if tidusCount < 4:
                     FFX_Xbox.weapSwap(0)
-                    FFX_memory.waitFrames(30 * 0.5)
                 else:
                     attack('none')
                     countAttacks += 1
@@ -277,28 +306,27 @@ def Tanker():
 
 def Klikk():
     print("Fight start: Klikk")
-    rikkuSteal = 0
     klikkAttacks = 0
     klikkRevives = 0
     while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             BattleHP = FFX_memory.getBattleHP()
-            if BattleHP[0] == 0 or BattleHP[1] == 0:
+            if BattleHP[0] == 0:
                 revive()
                 klikkRevives += 1
             elif FFX_Screen.turnTidus():
-                attack('none')
+                if BattleHP[0] == 0 and FFX_memory.getEnemyCurrentHP()[0] > 125:
+                    usePotionCharacter(0, 'l')
+                else:
+                    attack('none')
                 klikkAttacks += 1
-            elif FFX_Screen.turnRikkuRed():
-                if rikkuSteal == 0:
+            elif FFX_Screen.turnRikku():
+                grenadeCount = FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(35))
+                if grenadeCount < 3:
                     print("Attempting to steal from Klikk")
                     Steal()
-                    rikkuSteal = 1
-                elif BattleHP[0] < 120:
+                elif BattleHP[0] < 120 and not (FFX_memory.getNextTurn() == 0 and FFX_memory.getEnemyCurrentHP()[0] <= 181):
                     usePotionCharacter(0, 'l')
-                    klikkRevives += 1
-                elif BattleHP[1] < 110:
-                    usePotionCharacter(6, 'l')
                     klikkRevives += 1
                 else:
                     attack('none')
@@ -398,16 +426,6 @@ def Tros():
                         Attacks += 1
     
     print("Tros battle complete.")
-    #if gameVars.csr():
-    #    FFXC = FFX_Xbox.controllerHandle()
-    #    while not FFX_memory.menuOpen():
-    #        if FFX_memory.userControl():
-    #            break
-    #    FFXC.set_value('BtnB', 1)
-    #    FFX_memory.waitFrames(120)
-    #    FFXC.set_neutral()
-    #else:
-    #    FFX_memory.clickToControl()  # Maybe not skippable dialog, but whatever.
     FFX_memory.clickToControl()
     FFX_Logs.writeStats("Tros Attacks:")
     FFX_Logs.writeStats(str(Attacks))
@@ -423,7 +441,7 @@ def pirhanas():
     #11 = two pirhanas
     #12 = three pirhanas with one being a triple formation (takes two hits)
     #13 = four pirhanas
-    if battleNum == 11:
+    if battleNum == 11 or (battleNum == 12 and FFX_memory.battleType() == 1):
         attack('none')
     else:
         escapeAll()
@@ -466,15 +484,12 @@ def SinFin():
             print("Determining first turn.")
             if FFX_Screen.turnTidus():
                 defend()
-                FFX_memory.waitFrames(6)
                 print("Tidus defend")
             elif FFX_Screen.turnYuna():
                 buddySwapLulu() # Yuna out, Lulu in
                 thunderTarget(target=23, direction='u')
-                FFX_memory.waitFrames(6)
             elif FFX_Screen.turnKimahri():
                 lancetTarget(target=23, direction='u')
-                FFX_memory.waitFrames(6)
                 kimTurn = True
             elif FFX_Screen.turnLulu():
                 thunderTarget(target=23, direction='u')
@@ -489,7 +504,6 @@ def SinFin():
     while not FFX_memory.battleComplete():
         if FFX_memory.turnReady():
             turnCounter += 1
-
             if FFX_Screen.turnKimahri():
                 FFX_Screen.awaitTurn()
                 lancetTarget(23, 'u')
@@ -521,22 +535,19 @@ def Echuilles():
                 revive()
             elif FFX_Screen.turnTidus():
                 tidusCounter += 1
-                if tidusCounter <= 4:
+                if tidusCounter <= 2:
                     print("Cheer")
                     tidusFlee()  # performs cheer command
-                elif FFX_memory.getOverdriveBattle(0) == 100 and FFX_memory.getEnemyCurrentHP()[0] < 770:
+                elif FFX_memory.getOverdriveBattle(0) == 100 and FFX_memory.getEnemyCurrentHP()[0] < 540:
                     print("Overdrive")
                     tidusOD()
                 else:
                     print("Tidus attack")
                     attack('none')
             elif FFX_Screen.turnWakka():
-                if tidusCounter == 1 or tidusCounter == 5:
+                if tidusCounter == 1:
                     print("Dark Attack")
                     useSkill(0)  #Dark Attack
-                elif tidusCounter >= 5 and FFX_memory.getBattleHP()[0] < 180:
-                    print("Heal Tidus for safety")
-                    usePotionCharacter(0, 'l')
                 else:
                     print("Wakka attack")
                     attack('none')
@@ -629,9 +640,7 @@ def KilikaWoods(valeforCharge):
                         if aeonTurn == False:
                             aeonTurn = True
                             if FFX_memory.getNextTurn() < 20:
-                                FFX_Xbox.tapRight()
-                                FFX_Xbox.SkipDialog(2)
-                                FFX_Screen.awaitTurn()
+                                aeonShield()
                         aeonBoost()
                         FFX_Screen.awaitTurn()
                         aeonBoost()
@@ -647,15 +656,13 @@ def KilikaWoods(valeforCharge):
                     print("Logic for battle number 33")
                     currentCharge = True
                     if FFX_Screen.turnYuna():
-                        FFX_memory.waitFrames(30 * 0.2)
+                        
                         aeonSummon(0)
                         FFX_Screen.awaitTurn()
                         if aeonTurn == False:
                             aeonTurn = True
                             if FFX_memory.getNextTurn() < 20:
-                                FFX_Xbox.tapRight()
-                                FFX_Xbox.SkipDialog(2)
-                                FFX_Screen.awaitTurn()
+                                aeonShield()
                         aeonBoost()
                         FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'left')
@@ -664,7 +671,7 @@ def KilikaWoods(valeforCharge):
                         #valeforCharge = True
                     else:
                         defend()
-                        FFX_memory.waitFrames(30 * 0.2)
+                        
                 elif bNum == 34:
                     print("Logic for battle number 34")
                     currentCharge = True
@@ -676,9 +683,7 @@ def KilikaWoods(valeforCharge):
                         if aeonTurn == False:
                             aeonTurn = True
                             if FFX_memory.getNextTurn() < 20:
-                                FFX_Xbox.tapRight()
-                                FFX_Xbox.SkipDialog(2)
-                                FFX_Screen.awaitTurn()
+                                aeonShield()
                         aeonBoost()
                         FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'right')
@@ -699,9 +704,7 @@ def KilikaWoods(valeforCharge):
                         if aeonTurn == False:
                             aeonTurn = True
                             if FFX_memory.getNextTurn() < 20:
-                                FFX_Xbox.tapRight()
-                                FFX_Xbox.SkipDialog(2)
-                                FFX_Screen.awaitTurn()
+                                aeonShield()
                         aeonSpellDirection(1, 'right')
                         FFX_Screen.awaitTurn()
                         aeonSpellDirection(1, 'right')
@@ -747,7 +750,7 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             attack('none')
                         else:
-                            tidusFlee()
+                            fleeAll()
                     else:
                         defend()
                 elif bNum == 32:
@@ -755,7 +758,7 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             attack('none')
                         else:
-                            tidusFlee()
+                            fleeAll()
                     elif FFX_Screen.turnWakka():
                         attack('right')
                     else:
@@ -765,7 +768,7 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             defend()
                         else:
-                            tidusFlee()
+                            fleeAll()
                     elif FFX_Screen.turnWakka():
                         attack('right')
                     else:
@@ -775,23 +778,19 @@ def KilikaWoods(valeforCharge):
                         if turnCounter < 4:
                             attack('none')
                         else:
-                            tidusFlee()
+                            fleeAll()
                     elif FFX_Screen.turnWakka():
                         attack('right')
                     else:
                         defend()
                 elif bNum == 35 or bNum == 36:
-                    if FFX_Screen.turnTidus():
-                        tidusFlee()
-                    else:
-                        defend()
+                    fleeAll()
                 elif bNum == 37:
                     if FFX_Screen.turnTidus():
                         buddySwapLulu()
                         thunderTarget(21, 'r')
                     elif FFX_Screen.turnLulu():
-                        buddySwapTidus()
-                        tidusFlee()
+                        fleeAll()
                     elif FFX_Screen.turnWakka():
                         if FFX_memory.getEnemyCurrentHP()[2] != 0:
                             attackByNum(22, 'l')
@@ -815,19 +814,17 @@ def Geneaux():
     FFX_Logs.writeLog("Fight start: Sinspawn Geneaux")
     print("Fight start: Sinspawn Geneaux")
     FFX_Xbox.clickToBattle()
-    if not FFX_Screen.turnTidus():
+    
+    if FFX_Screen.turnTidus():
+        attack('none')
+    elif FFX_Screen.turnYuna():
+        buddySwapKimahri()
+        attack('none')
         while not FFX_Screen.turnTidus():
-            if FFX_memory.turnReady():
-                defend()
-    
-    attack('none')
-    
-    FFX_Xbox.clickToBattle()
-    if not FFX_Screen.turnYuna():
-        while not FFX_Screen.turnYuna():
-            if FFX_memory.turnReady():
-                defend()
-    
+            defend()
+        while FFX_Screen.turnTidus():
+            defend()
+        buddySwapYuna()
     FFX_Screen.awaitTurn()
     aeonSummon(0) # Summon Valefor
     FFX_Screen.awaitTurn()
@@ -860,7 +857,6 @@ def LucaWorkers():
                     defend()
             if FFX_Screen.turnLulu():
                 thunder('none')
-            FFX_memory.waitFrames(5)
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()  # Clicking to get through the battle faster
     FFX_memory.clickToControl()
@@ -1140,9 +1136,9 @@ def MiihenRoad(selfDestruct):
                         selfDestruct = 1
                         break
                     else:
-                        tidusFlee()
+                        fleeAll()
                 else:
-                    tidusFlee()
+                    fleeAll()
             else:
                 escapeOne()
     
@@ -1184,6 +1180,20 @@ def chocoEater():
     FFX_Logs.writeStats("Chocobo eater turns:")
     FFX_Logs.writeStats(str(turns))
     print("Chocobo Eater battle complete.")
+
+def aeonShield():
+    print("Aeon Shield function")
+    FFX_Screen.awaitTurn()
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapRight()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
+    while FFX_memory.otherBattleMenu():
+        if FFX_memory.battleCursor2() == 0:
+            FFX_Xbox.tapB()
+        else:
+            FFX_Xbox.tapUp()
+    tapTargeting()
 
 def aeonBoost():
     print("Aeon Boost function")
@@ -1436,10 +1446,7 @@ def MRRbattle(status):
             status[5] = 3
             while FFX_memory.menuOpen() != True:
                 if FFX_Screen.BattleScreen():
-                    if FFX_Screen.turnTidus():
-                        tidusFlee()
-                    else:
-                        buddySwapTidus()
+                    fleeAll()
         else:
             #Wakka attack Raptors and Gandarewas for Yuna AP.
             yunaTurnCount = 0
@@ -1565,44 +1572,26 @@ def battleGui():
             if FFX_memory.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
                 valeforOD()
-                FFX_memory.waitFrames(30)
             elif turn1 == False:
                 turn1 = True
-                print("------Recharge unsuccessful. Attempting recovery.")
-                FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.tapRight() #Shield command
-                FFX_Xbox.SkipDialog(1.2)
-                FFX_memory.waitFrames(30 * 1)
+                print("------Recharge unsuccessful. Attempting recovery.")                
+                aeonShield()
             elif lastTurn == 8: #Valefor takes two turns in a row
-                print("------Two turns in a row")
-                FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.tapRight() #Shield command
-                FFX_Xbox.SkipDialog(1.2)
-                FFX_memory.waitFrames(30 * 1)
+                print("------Two turns in a row")                
+                aeonShield()
             elif nextHP > lastHP - 40 and not nextHP == lastHP: #Gravity spell was used
-                print("------Gravity was used")
-                FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.tapRight() #Shield command
-                FFX_Xbox.SkipDialog(1.2)
-                FFX_memory.waitFrames(30 * 1)
+                print("------Gravity was used")                
+                aeonShield()
             else:
                 print("------Attack was just used. Now boost.")
-                FFX_memory.waitFrames(30 * 0.4)
-                FFX_Xbox.tapRight() #Boost command
-                FFX_memory.waitFrames(30 * 0.8)
-                FFX_Xbox.tapDown()
-                FFX_Xbox.SkipDialog(1)
-                FFX_memory.waitFrames(30 * 1)
+                aeonBoost()
             lastHP = nextHP
         elif FFX_memory.turnReady() and FFX_memory.getBattleCharTurn() == 1:
             print("Yuna turn, something went wrong.")
-            FFX_memory.waitFrames(30 * 10)
         elif FFX_memory.turnReady() and FFX_memory.getBattleCharTurn() == 2:
             print("Auron turn, something went wrong.")
-            FFX_memory.waitFrames(30 * 10)
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
-    FFX_memory.waitFrames(30 * 1)
     
     #In between battles
     while not FFX_memory.battleActive():
@@ -1746,7 +1735,7 @@ def thunderPlains(status, section):
     bNum = FFX_memory.getBattleNum()
     nadeSlot = FFX_memory.getUseItemsSlot(35)
     print("Grenade Slot %d" % nadeSlot)
-    nadeCount = getItemCountSlot(nadeSlot)
+    nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
     if nadeCount > 3:
         useGrenades = True
 
@@ -1770,7 +1759,7 @@ def thunderPlains(status, section):
             if petrifiedstate == True:
                 print("------------Someone has been petrified which messes up the battle logic. Escaping.")
                 fleeAll()
-            elif bNum == 152 or bNum == 155 or bNum == 162:  # Any battle with Larvae
+            elif bNum in [152, 155, 162]:  # Any battle with Larvae
                 if status[4]:
                     fleeAll() #No longer need Lunar Curtain for Evrae fight, Blitz win logic.
                 else: #Blitz loss strat
@@ -1780,7 +1769,7 @@ def thunderPlains(status, section):
                             if tidusturns == 0:
                                 buddySwapRikku()
                             else:
-                                tidusFlee()
+                                fleeAll()
                             tidusturns += 1
                         elif turnchar == 6:
                             Steal()
@@ -1788,7 +1777,7 @@ def thunderPlains(status, section):
                         else:
                             buddySwapTidus()
                     elif turnchar == 0:
-                        tidusFlee()
+                        fleeAll()
                     else:
                         fleeAll()
             elif bNum == 160:
@@ -1798,7 +1787,7 @@ def thunderPlains(status, section):
                         if tidusturns == 0:
                             defend()
                         else:
-                            tidusFlee()
+                            fleeAll()
                         tidusturns += 1
                     elif turnchar == 4:
                         buddySwapRikku()
@@ -1809,7 +1798,7 @@ def thunderPlains(status, section):
                     else:
                         defend()
                 elif turnchar == 0:
-                    tidusFlee()
+                    fleeAll()
                 else:
                     fleeAll()
             elif bNum == 161:
@@ -1819,7 +1808,7 @@ def thunderPlains(status, section):
                         if tidusturns == 0:
                             buddySwapRikku()
                         else:
-                            tidusFlee()
+                            fleeAll()
                         tidusturns += 1
                     elif turnchar == 4:
                         if wakkaturns == 0:
@@ -1856,7 +1845,7 @@ def thunderPlains(status, section):
                         if tidusturns == 0:
                             buddySwapRikku()
                         else:
-                            tidusFlee()
+                            fleeAll()
                         tidusturns += 1
                     elif turnchar == 4:
                         if wakkaturns == 0:
@@ -1890,7 +1879,7 @@ def thunderPlains(status, section):
                         if tidusturns == 0:
                             buddySwapRikku()
                         else:
-                            tidusFlee()
+                            fleeAll()
                         tidusturns += 1
                     elif turnchar == 4:
                         if wakkaturns == 0:
@@ -1919,7 +1908,7 @@ def thunderPlains(status, section):
                     else:
                         fleeAll()
                 elif turnchar == 0:
-                    tidusFlee()
+                    fleeAll()
                 else:
                     tidusposition = FFX_memory.getBattleCharSlot(0)
                     if tidusposition >= 3:
@@ -1946,14 +1935,14 @@ def thunderPlains(status, section):
                         buddySwapTidus()
                         FFX_Screen.awaitTurn()
                         fleeAll()
-            elif bNum == 154 or bNum == 156 or bNum == 164:
+            elif bNum in [154, 156, 164]:
                 print("Battle with random mobs. Battle number: ", bNum)
                 if startingstatus[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
                     if turnchar == 0:
                         if tidusturns == 0:
                             buddySwapRikku()
                         else:
-                            tidusFlee()
+                            fleeAll()
                         tidusturns += 1
                     elif turnchar == 4:
                         buddySwapTidus()
@@ -1963,7 +1952,7 @@ def thunderPlains(status, section):
                     else:
                         defend()
                 elif tidusturns == 0:
-                    tidusFlee()
+                    fleeAll()
                 else:
                     fleeAll()
             else:  # Nothing useful this battle. Moving on.
@@ -1983,7 +1972,7 @@ def thunderPlains(status, section):
     print("Party format is good. Now checking health values.")
     hpValues = FFX_memory.getHP()
     if hpValues[0] < 400 or hpValues[2] < 400 or hpValues[4] < 400 or hpValues[6] < 180:
-        healUp(3)
+        healUp()
     FFX_memory.closeMenu()
     print("Ready to continue onward.")
     print("**Plains variables: Rikku charged, stolen light curtain, stolen lunar curtain, ")
@@ -2021,7 +2010,7 @@ def mWoods(woodsVars):
                         elif battleNum == 171 and FFX_memory.getUseItemsSlot(32) == 255:
                             print("Marker 4")
                             StealRight()
-                        elif woodsVars[0] or FFX_memory.getOverdriveBattle(6) != 100:
+                        elif not woodsVars[0] or FFX_memory.getOverdriveBattle(6) != 100:
                             print("Charging")
                             attack('none')
                         else:
@@ -2822,28 +2811,9 @@ def sandragora(version):
         if FFX_Screen.turnKimahri() or FFX_Screen.turnRikku():
             print("Kimahri/Rikku taking a spare turn. Just defend.")
             defend()
-            FFX_memory.waitFrames(30 * 0.2)
             FFX_Screen.awaitTurn()
         print("Setting up Auron overdrive")
-        FFX_Xbox.tapLeft()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(30 * 0.5)
-        FFX_Xbox.tapRight()
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(30 * 1)
-        FFX_Xbox.tapB()
-        FFX_memory.waitFrames(90)
-        # Overdrive pattern
-        print("Auron Overdrive")
-        FFX_Xbox.tapY()
-        FFX_Xbox.tapA()
-        FFX_Xbox.tapX()
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapLeft()
-        FFX_Xbox.tapRight()
-        FFX_Xbox.tapB()
-        print("Overdrive done")
+        auronOD(style="shooting star")
         FFX_memory.clickToControl()
 
 def home1():
@@ -2878,7 +2848,6 @@ def home2():
                 kimahriOD(3)
             elif FFX_memory.getBattleCharSlot(3) >= 3:
                 buddySwapKimahri()  # Tidus for Kimahri
-                FFX_memory.waitFrames(30 * 0.2)
                 lancetHome('none')
             else:
                 defend()
@@ -2899,7 +2868,6 @@ def home3():
     else:
         while not FFX_Screen.turnRikku():
             defend()
-            FFX_memory.waitFrames(30 * 0.2)
             FFX_Xbox.clickToBattle()
             useItem(FFX_memory.getUseItemsSlot(49), 'none')
         
@@ -2948,7 +2916,6 @@ def home4():
                 kimahriOD(4)
             elif FFX_memory.getBattleCharSlot(3) >= 3:
                 buddySwapKimahri()  # Tidus for Kimahri
-                FFX_memory.waitFrames(30 * 0.2)
                 lancetHome('none')
             else:
                 defend()
@@ -3001,7 +2968,7 @@ def Evrae():
                     elif tidusPrep == 3:
                         print("Equip Baroque Sword.")
                         equipInBattle(special = 'baroque')
-                        FFX_memory.waitFrames(15)
+                        
                         tidusPrep += 1
                     else:
                         tidusAttacks += 1
@@ -3167,7 +3134,7 @@ def guards(groupNum):
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
     FFXC.set_value('BtnB', 1)
-    FFX_memory.waitFrames(30 * 2.8)
+    
     FFXC.set_value('BtnB', 0)
 
 
@@ -3198,7 +3165,7 @@ def isaaru():
                         aeonSummon(4)
                 else:
                     FFX_Xbox.SkipDialog(3)
-                FFX_memory.waitFrames(30 * 0.5)
+                
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_value('BtnB', 1)
@@ -3243,39 +3210,33 @@ def altanaheal():
         _navigate_to_position(itemPos)
         while FFX_memory.otherBattleMenu():
             FFX_Xbox.tapB()
-        if itemNum == 7:
-            print("Special code for mega phoenix.")
-            FFX_memory.waitFrames(5)
-            FFX_Xbox.menuDown()
-            FFX_Xbox.menuB()
-        else:
-            print("Direction: ", direction)
-            while FFX_memory.battleTargetId() != 20:
-                if direction == 'l':
-                    FFX_Xbox.tapLeft()
-                    if FFX_memory.battleTargetId() < 20:
-                        print("Wrong battle line targetted.")
-                        FFX_Xbox.tapRight()
-                        direction = 'u'
-                elif direction == 'r':
+        print("Direction: ", direction)
+        while not FFX_memory.targetingEnemy():
+            if direction == 'l':
+                FFX_Xbox.tapLeft()
+                if not FFX_memory.targetingEnemy():
+                    print("Wrong battle line targetted.")
                     FFX_Xbox.tapRight()
-                    if FFX_memory.battleTargetId() < 20:
-                        print("Wrong battle line targetted.")
-                        FFX_Xbox.tapLeft()
-                        direction = 'd'
-                elif direction == 'u':
-                    FFX_Xbox.tapUp()
-                    if FFX_memory.battleTargetId() < 20:
-                        print("Wrong battle line targetted.")
-                        FFX_Xbox.tapDown()
-                        direction = 'l'
-                elif direction == 'd':
+                    direction = 'u'
+            elif direction == 'r':
+                FFX_Xbox.tapRight()
+                if not FFX_memory.targetingEnemy():
+                    print("Wrong battle line targetted.")
+                    FFX_Xbox.tapLeft()
+                    direction = 'd'
+            elif direction == 'u':
+                FFX_Xbox.tapUp()
+                if not FFX_memory.targetingEnemy():
+                    print("Wrong battle line targetted.")
                     FFX_Xbox.tapDown()
-                    if FFX_memory.battleTargetId() < 20:
-                        print("Wrong battle line targetted.")
-                        FFX_Xbox.tapUp()
-                        direction = 'r'
-            tapTargeting()
+                    direction = 'l'
+            elif direction == 'd':
+                FFX_Xbox.tapDown()
+                if not FFX_memory.targetingEnemy():
+                    print("Wrong battle line targetted.")
+                    FFX_Xbox.tapUp()
+                    direction = 'r'
+        tapTargeting()
         return 1
 
     else:
@@ -3288,7 +3249,6 @@ def evraeAltana():
     FFX_Xbox.clickToBattle()
     if FFX_memory.getBattleNum() == 266:
         print("Evrae Altana fight start")
-        # Start by hasting Rikku.
         while not FFX_memory.battleComplete(): #AKA end of battle screen
             if FFX_memory.turnReady():
                 altanaheal()
@@ -3311,9 +3271,12 @@ def seymourNatus():
             while not FFX_memory.menuOpen():
                 if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
-                        buddySwapLulu()
-                        FFX_Screen.awaitTurn()
-                        FFX_Xbox.weapSwap(0)
+                        if FFX_memory.getLuluSlvl() < 35:
+                            buddySwapLulu()
+                            FFX_Screen.awaitTurn()
+                            FFX_Xbox.weapSwap(0)
+                        else:
+                            attack('none')
                     elif FFX_Screen.turnLulu():
                         buddySwapTidus()
                         FFX_Screen.awaitTurn()
@@ -3335,7 +3298,7 @@ def seymourNatus():
                             turn += 1
                             attackByNum(22, 'r')
                         else:
-                            tidusFlee()
+                            fleeAll()
                     elif FFX_Screen.turnYuna():
                         attackByNum(22, 'r')
                     elif FFX_Screen.turnAuron():
@@ -3349,7 +3312,7 @@ def seymourNatus():
                             turn += 1
                             attack('none')
                         else:
-                            tidusFlee()
+                            fleeAll()
                     elif FFX_Screen.turnYuna():
                         attack('none')
                     elif FFX_Screen.turnAuron():
@@ -3363,7 +3326,7 @@ def seymourNatus():
                             turn += 1
                             attackByNum(21, 'l')
                         else:
-                            tidusFlee()
+                            fleeAll()
                     elif FFX_Screen.turnYuna():
                         attackByNum(21, 'l')
                     elif FFX_Screen.turnAuron():
@@ -3708,9 +3671,7 @@ def attackByNum(num, direction='u'):
         while not FFX_memory.turnReady():
             #Waiting for battle menu to come up.
             pass
-        FFX_memory.waitFrames(2) #Make sure we actually have control
-    if FFX_memory.battleMenuCursor() == 0:
-        FFX_memory.waitFrames(5)
+         #Make sure we actually have control
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
         while not FFX_memory.battleMenuCursor() in [0, 216]:
             FFX_Xbox.tapUp()
@@ -3746,9 +3707,6 @@ def attackSelfTanker():
         while not FFX_memory.turnReady():
             #Waiting for battle menu to come up.
             pass
-        FFX_memory.waitFrames(2) #Make sure we actually have control
-    if FFX_memory.battleMenuCursor() == 0:
-        FFX_memory.waitFrames(5)
     if FFX_memory.battleMenuCursor() != 0 and FFX_memory.battleMenuCursor() != 216:
         while not FFX_memory.battleMenuCursor() in [0, 216]:
             FFX_Xbox.tapUp()
@@ -3756,7 +3714,6 @@ def attackSelfTanker():
                 return #Safety
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
-    
     while FFX_memory.battleTargetId() != 2:
         if FFX_memory.battleTargetId() > 20:
             FFX_Xbox.tapDown()
@@ -4037,7 +3994,7 @@ def aeonSummon(position):
         if FFX_Screen.turnYuna() == False:
             return
         if FFX_memory.battleMenuCursor() == 255:
-            FFX_memory.waitFrames(30 * 0.01)
+            pass
         elif FFX_memory.battleMenuCursor() >= 1 and FFX_memory.battleMenuCursor() < 23:
             FFX_Xbox.tapUp()
         else:
@@ -4055,8 +4012,8 @@ def aeonSummon(position):
     aeonWaitTimer = 0
     while not FFX_memory.turnReady():
         if aeonWaitTimer % 100 == 0:
-            print("Waiting for Aeon's turn. ", aeonWaitTimer % 100)
-        FFX_memory.waitFrames(1)
+            print("Waiting for Aeon's turn. ", aeonWaitTimer % 10000)
+        pass
         aeonWaitTimer += 1
 
 
@@ -4264,7 +4221,7 @@ def lancetHome(direction):
     print("Lancet (home) function")
     while FFX_memory.battleMenuCursor() != 20:
         if FFX_memory.battleMenuCursor() == 255:
-            FFX_memory.waitFrames(30 * 0.01)
+            pass
         elif FFX_memory.battleMenuCursor() == 1:
             FFX_Xbox.tapUp()
         elif FFX_memory.battleMenuCursor() > 20:
@@ -4413,6 +4370,8 @@ def wrapUp():
         elif FFX_memory.turnReady():
             print("^^Still someone's turn. Could not wrap up battle.")
             return False
+        else:
+            FFX_Xbox.tapB()
     print("^^Wrap up complete.")
     return True
 
@@ -4495,13 +4454,12 @@ def SinFace():
                 FFX_Xbox.SkipDialog(2)
             elif FFX_Screen.turnAeon():
                 if aeonFirstTurn == True:
-                    FFX_memory.waitFrames(15)
-                    if FFX_memory.battleMenuCursor() == 216:
-                        FFX_Xbox.tapDown()
-                    elif FFX_memory.battleMenuCursor() == 217:
-                        FFX_Xbox.SkipDialog(2)
-                    else:
-                        FFX_Xbox.tapUp()
+                    while FFX_memory.battleMenuCursor() != 217:
+                        if FFX_memory.battleMenuCursor() == 216:
+                            FFX_Xbox.tapDown()
+                        else:
+                            FFX_Xbox.tapUp()
+                    FFX_Xbox.SkipDialog(2)
                 else:
                     attack('none')
             else:
@@ -4576,7 +4534,6 @@ def BFA():
 
     #Skip the cutscene
     print("BFA down. Ready for Aeons")
-    FFX_memory.waitFrames(2)
     
     if not gameVars.csr():
         while not FFX_memory.cutsceneSkipPossible():
@@ -4755,8 +4712,6 @@ def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = '
         elif currentHandle.hasAbility(abilityNum): #First Strike for example
             equipNum = i
         i += 1
-    #if special == 'brotherhood':
-    #    FFX_memory.waitFrames(1000)
     while FFX_memory.battleCursor3() != equipNum:
         print("'''Battle cursor 3: ", FFX_memory.battleCursor3())
         print("'''equipNum: ", equipNum)

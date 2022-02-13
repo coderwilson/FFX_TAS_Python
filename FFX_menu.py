@@ -156,7 +156,6 @@ def LucaWorkers():
     gridDown()
     gridDown()
     gridRight()
-    FFX_memory.waitFrames(30 * 0.1)
     if FFX_memory.sGridNodeSelected()[0] == 2:
         print("No early haste")
         earlyHaste = 0
@@ -183,28 +182,6 @@ def lateHaste():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','d','none') # Haste
     FFX_menuGrid.useAndQuit()
-
-def afterBlitz():
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Manually sorting items
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() #Get the map out of the way
-    FFX_memory.closeMenu()
 
 def mrrGrid1():
     print("Menuing: start of MRR ")
@@ -315,8 +292,8 @@ def battleSiteGrid():
 
 def battleSiteOaka1():
     FFX_memory.clickToDiagProgress(96)
-    FFX_memory.waitFrames(12)
-    FFX_Xbox.menuDown()
+    while FFX_memory.shopMenuDialogueRow() != 1:
+        FFX_Xbox.tapDown()
     while FFX_memory.itemShopMenu() != 7:
         FFX_Xbox.tapB()
     while FFX_memory.assignAbilityToEquipCursor() != 1:
@@ -366,7 +343,8 @@ def battleSiteOaka2():
     FFX_memory.clickToDiagProgress(74)
     FFX_memory.clickToDiagProgress(96)
     if FFX_memory.getGilvalue() < 10890:
-        other_slots = [i for i, handle in enumerate(all_equipment) if (i > 9 and handle.equipStatus == 255)]
+        all_equipment = FFX_memory.allEquipment() 
+        other_slots = [i for i, handle in enumerate(all_equipment) if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
         for cur in other_slots:
             sellWeapon(cur)
             if FFX_memory.getGilvalue() >= 10890: break
@@ -1383,15 +1361,15 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
     while not FFX_memory.sGridActive():
-        print("Attempting to open Sphere Grid")
+        #print("Attempting to open Sphere Grid")
         if FFX_memory.userControl() and not FFX_memory.menuOpen():
-            print("Menu is not open at all")
+         #   print("Menu is not open at all")
             FFX_Xbox.tapY()
         elif FFX_memory.menuNumber() == 5: #Cursor on main menu
-            print("Main menu cursor")
+          #  print("Main menu cursor")
             while FFX_memory.getMenuCursorPos() != 0:
                 FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 0, 11)
-            print("Done with menu cursor")
+           # print("Done with menu cursor")
             while FFX_memory.menuNumber() == 5:
                 FFX_Xbox.tapB()
         elif FFX_memory.menuNumber() == 7: #Cursor selecting party member
@@ -1405,7 +1383,7 @@ def openGrid(character):
                 else:
                     #FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
                     #Not working. Use this instead.
-                    FFX_Xbox.menuDown()
+                    FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, 7)
             while FFX_memory.menuNumber() == 7:
                 FFX_Xbox.menuB()
             try:

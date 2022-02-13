@@ -37,9 +37,12 @@ def NamingTidus_slow():
     FFX_Xbox.menuB() # Confirm again
 
 def NamingTidus():
-    FFX_Xbox.menuB() # Confirm
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() # Confirm again
+    while FFX_memory.equipSellRow() != 1:
+        FFX_Xbox.tapB()
+    while FFX_memory.equipSellRow() != 0:
+        FFX_Xbox.tapUp()
+    while FFX_memory.nameConfirmOpen():
+        FFX_Xbox.tapB()
 
 def NewGame(Gamestate):
     print("Starting the game")
@@ -161,38 +164,6 @@ def listenStory():
                     FFX_Xbox.skipScene(fast_mode=True)
                     FFX_Xbox.SkipDialog(3)
 
-def auronOD():
-    FFXC.set_value('Dpad', 2)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 4)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 1)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 8)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnShoulderL', 1)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnShoulderL', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnShoulderR', 1)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnShoulderR', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnA', 1)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnA', 0)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnB', 1)
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnB', 0)
 
 def ammesBattle():
     print("Starting ammes")
@@ -209,22 +180,7 @@ def ammesBattle():
     print("Waiting for Auron's Turn")
     print("At Overdrive")
     #Auron overdrive tutorial
-    while not FFX_memory.otherBattleMenu():
-        FFX_Xbox.menuLeft()
-    print("In other menu")
-    print(FFX_memory.interiorBattleMenu())
-    while not FFX_memory.interiorBattleMenu():
-        FFX_Xbox.tapB()
-    while FFX_memory.interiorBattleMenu():
-        FFX_Xbox.tapB()
-    print("Out of interior")
-    while not FFX_memory.auronOverdriveActive():
-        FFX_Xbox.tapB()
-    print("Starting")
-    #Doing the actual overdrive
-    auronOD()
-    auronOD()
-    auronOD()
+    FFX_Battle.auronOD()
 
 def AfterAmmes():
     FFX_memory.clickToControl()

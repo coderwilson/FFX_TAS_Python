@@ -23,7 +23,8 @@ def southPathing(status):
     FFX_memory.fullPartyFormat('postbunyip')
     FFX_memory.closeMenu()
     lStrikeCount = FFX_memory.lStrikeCount()
-    
+    if gameVars.getBlitzWin():
+        status[4] = True
     checkpoint = 0
     while FFX_memory.getMap() != 256:
         if FFX_memory.userControl():
@@ -71,7 +72,7 @@ def agencyShop():
     total_grenades_needed = 3 + speedNeeded - cur_grenades
     if total_grenades_needed:
         FFX_memory.clickToDiagProgress(92)
-        while FFX_memory.blitzCharSelectCursor() != 2:
+        while FFX_memory.shopMenuDialogueRow() != 2:
             FFX_Xbox.tapDown()
         while not FFX_memory.itemShopMenu() == 7:
             FFX_Xbox.tapB()
@@ -98,14 +99,14 @@ def agencyShop():
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(90)
     FFX_memory.clickToDiagProgress(92)
-    while FFX_memory.blitzCharSelectCursor() != 1:
+    while FFX_memory.shopMenuDialogueRow() != 1:
         FFX_Xbox.tapDown()
     all_equipment = FFX_memory.allEquipment()    
     tidus_longsword = [i for i, handle in enumerate(all_equipment) if (handle.abilities() == [255, 255, 255, 255] and handle.owner() == 0)][0]
     print("Tidus Longsword in slot: ", tidus_longsword)
     auron_katana = [i for i, handle in enumerate(all_equipment) if (handle.abilities() == [0x800B, 255, 255, 255] and handle.owner() == 2)][0]
     print("Auron Katana in slot: ", auron_katana)
-    other_slots = [i for i, handle in enumerate(all_equipment) if (i not in [tidus_longsword, auron_katana] and handle.equipStatus == 255)]
+    other_slots = [i for i, handle in enumerate(all_equipment) if (i not in [tidus_longsword, auron_katana] and handle.equipStatus == 255 and not handle.isBrotherhood())]
     print("Sellable Items in : ", other_slots)
     FFX_menu.sellWeapon(tidus_longsword)
     FFX_menu.sellWeapon(auron_katana)

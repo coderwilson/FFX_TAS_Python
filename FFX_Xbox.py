@@ -538,14 +538,12 @@ def nameAeon():
             tapB()
     
     print("Naming screen is up.")
-    FFX_memory.waitFrames(17)
-    menuB()
-    FFX_memory.waitFrames(4)
-    menuUp()
-    FFX_memory.waitFrames(3)
-    menuB()
-    menuB()
-    FFX_memory.waitFrames(9)
+    while FFX_memory.equipSellRow() != 1:
+        tapB()
+    while FFX_memory.equipSellRow() != 0:
+        tapUp()
+    while FFX_memory.nameConfirmOpen():
+        tapB()
     
     print("Now clearing the value so we're ready for the next aeon later.")
     FFX_memory.clearNameAeonReady()
