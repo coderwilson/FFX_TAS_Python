@@ -21,12 +21,19 @@ class allVars:
         
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0
+        self.fullKilikMenu = False
     
     def csr(self):
         return self.csrValue
     
     def SETcsr(self, value):
         self.csrValue = value
+    
+    def completeFullKilikMenu(self):
+        self.fullKilikMenu = True
+        
+    def didFullKilikMenu(self):
+        return self.fullKilikMenu
     
     def usePause(self):
         return self.artificialPauses

@@ -200,10 +200,9 @@ def leaving():
                 FFXC.set_movement(-1, -1)
                 FFX_memory.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.5)
                 FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30 * 0.5)
-                FFX_Xbox.menuDown()
+                while FFX_memory.shopMenuDialogueRow() != 1:
+                    FFX_Xbox.tapDown()
                 FFX_Xbox.tapB()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
@@ -272,10 +271,8 @@ def leaving():
                     if FFX_Screen.BattleScreen():
                         battleHP = FFX_memory.getBattleHP()
                         enemyHP = FFX_memory.getEnemyCurrentHP()
-                        if battleHP[0] < 140 and enemyHP[0] > 110:
-                            FFX_Xbox.menuDown()
-                            FFX_Xbox.menuDown()
-                            FFX_Xbox.SkipDialog(2) #Quick potion
+                        if not gameVars.earlyTidusGrid() and battleHP[0] < 140 and enemyHP[0] > 112:
+                            FFX_Battle.usePotionCharacter(0, 'l')
                             healCount += 1
                         else:
                             FFX_Battle.attack('none')
@@ -301,14 +298,8 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 39 and FFX_Screen.BattleScreen(): #Dark Attack tutorial
                 escapeAttempts = 0
-                while FFX_memory.battleComplete() == False:
-                    if FFX_Screen.BattleScreen():
-                        FFX_Battle.escapeOne()
-                        escapeAttempts += 1
-                        FFX_memory.waitFrames(30 * 0.2)
+                FFX_Battle.escapeAll()
                 FFX_memory.clickToControl()
-                FFX_Logs.writeStats("Besaid escape attempts:")
-                FFX_Logs.writeStats(str(escapeAttempts))
                 checkpoint += 1
             elif checkpoint > 39 and FFX_Screen.BattleScreen(): #One forced battle on the way out of Besaid
                 FFX_Battle.besaid()

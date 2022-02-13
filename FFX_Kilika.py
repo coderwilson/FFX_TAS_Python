@@ -94,7 +94,8 @@ def forest1():
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(4)
                 FFX_memory.touchSaveSphere()
-                FFX_menu.Geneaux()
+                if not gameVars.didFullKilikMenu():
+                    FFX_menu.Geneaux()
                 checkpoint += 1
             elif checkpoint == 63 and not gameVars.csr(): #Lord O'holland
                 FFX_memory.clickToEventTemple(0)
@@ -148,8 +149,16 @@ def woodsMenuing():
     FFX_Xbox.menuB() #Sphere grid on Tidus
     FFX_menuGrid.moveFirst()
     FFX_menuGrid.gridLeft()
+    fullMenu = False
+    if FFX_memory.getTidusSlvl() >= 2:
+        fullMenu = True
+        FFX_menuGrid.gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability', 'd', 'none')
+    if fullMenu:
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('speed', 'd', 'none')
+        gameVars.completeFullKilikMenu()
     FFX_menuGrid.useAndQuit()
     #Reorder the party
     

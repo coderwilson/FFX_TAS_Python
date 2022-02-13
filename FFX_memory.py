@@ -5,6 +5,8 @@ import FFX_Screen
 import FFX_targetPathing
 import FFX_vars
 import FFX_Logs
+from collections import Counter
+
 
 from math import cos, sin
 baseValue = 0
@@ -1004,6 +1006,18 @@ def getItemsCount():
     #print(itemCounts)
     return itemCounts
 
+def getMenuDisplayCharacters():
+    base = 0x01441BD4
+    characters = []
+    foundTidus = False
+    for cur in range(7):
+        char = readVal(base+cur)
+        print(cur, char)
+        characters.append(char)
+    print(characters)
+    return characters
+            
+
 def getItemCountSlot(itemSlot) -> int:
     items = getItemsCount()
     for x in range(30):
@@ -1143,6 +1157,10 @@ def confusedStateByPos(position):
             return confusedState(posArray[x])
         else:
             x += 1
+
+def battleType():
+    # 0 is normal, 1 is pre-empt, 2 is ambushed
+    return readVal(0x00D2C9DC)
 
 def getEnemyCurrentHP():
     global process
@@ -1285,7 +1303,7 @@ def sGridActive():
 
     key = baseValue + 0x0085B30C
     menuOpen = process.readBytes(key,1)
-    print(menuOpen)
+    #print(menuOpen)
     if menuOpen == 1:
         return True
     else:
@@ -1403,6 +1421,12 @@ def NewGameCursor():
     key = baseValue + 0x001467942
     value = process.readBytes(key,1)
     return value
+    
+def targetingAlly():
+    return readVal(0x00F3D1C0) == 0
+    
+def targetingEnemy():
+    return not targetingAlly()
 
 def getYunaSlvl():
     global baseValue
@@ -1424,6 +1448,9 @@ def getKimahriSlvl():
     key = baseValue + 0x00D32253
     sLvl = process.readBytes(key,1)
     return sLvl
+    
+def getLuluSlvl():
+    return readVal(0x00D3237B)
 
 def getTidusXP():
     global baseValue
@@ -1542,7 +1569,7 @@ def activepartySize():
     return len(getActiveBattleFormation())
 
 def getCharacterIndexInMainMenu(character):
-    res = getOrderSeven().index(character)
+    res = getMenuDisplayCharacters().index(character)
     print("Char is in position ", res)
     return res
     
@@ -1554,12 +1581,24 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
     frontLine = frontLine.lower()
     orderFinal = getPartyFormatFromText(frontLine)
     orderFinal.extend(x for x in order if x not in orderFinal)
-    if order[:3] == orderFinal[:3]:
+    if Counter(order[:3]) == Counter(orderFinal[:3]):
         print("Good to go, no action taken.")
     else:
         print("Converting from formation:")
         print(order)
         print("Into formation:")
+        print(orderFinal)
+        print("Manipulating final formation to minimize movements")
+        replacement_dict = {}
+        new_characters = [x for x in orderFinal[:3] if x not in order[:3]]
+        for i in range(3):
+            if order[i] in orderFinal[:3]:
+                replacement_dict[i] = order[i]
+            else:
+                replacement_dict[i] = new_characters.pop()
+        for i in range(3):
+            orderFinal[i] = replacement_dict[i]
+        print("New Final Order:")
         print(orderFinal)
         while not menuOpen():
             if openMenu() == False:
@@ -1574,7 +1613,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
             FFX_Xbox.tapB()
         startPos = 0
         targetPos = 1
-        while order[:3] != orderFinal[:3]:
+        while Counter(order[:3]) != Counter(orderFinal[:3]):
             print("==Full Party Format function, original")
             #Select target in the wrong spot.
             print("Selecting start position")
@@ -1584,8 +1623,23 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                     if startPos == partyMembers:
                         startPos = 0
             print("Character ", nameFromNumber(orderFinal[startPos]), " should be in position ", startPos)
-            print("Looking for character.")
             
+            #Set target, end position
+            print("Selecting destination position.")
+            endPos = 0
+            if orderFinal[startPos] != order[endPos]:
+                while orderFinal[startPos] != order[endPos] and order != orderFinal:
+                    endPos += 1
+            
+            print("Character ", nameFromNumber(order[endPos]), " found in position ", endPos)
+            
+            print("Looking for character.")
+            if startPos < 3 and endPos < 3:            
+                startPos += 1
+                if startPos == partyMembers:
+                    startPos = 0
+                continue
+               
             #Move cursor to start position
             print("Moving to start position")
             if partyFormatCursor1() != startPos:
@@ -1597,15 +1651,6 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                     
             while menuNumber() != 20:
                 FFX_Xbox.menuB() #Click on Start location
-            
-            #Set target, end position
-            print("Selecting destination position.")
-            endPos = 0
-            if orderFinal[startPos] != order[endPos]:
-                while orderFinal[startPos] != order[endPos] and order != orderFinal:
-                    endPos += 1
-            
-            print("Character ", nameFromNumber(order[endPos]), " found in position ", endPos)
             
             #Move cursor to end position
             print("Moving to destination position.")
@@ -1637,24 +1682,24 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
     distanceUnsigned = currentmenuposition - targetmenuposition
-    print("Menu Size: ", menusize)
+    #print("Menu Size: ", menusize)
     halfmenusize = menusize / 2
     if distance == halfmenusize:
-        print("Marker 1")
+     #   print("Marker 1")
         FFX_Xbox.tapUp()
     elif distance < halfmenusize:
         if distanceUnsigned > 0:
-            print("Marker 2")
+      #      print("Marker 2")
             FFX_Xbox.tapUp()
         else:
-            print("Marker 3")
+       #     print("Marker 3")
             FFX_Xbox.tapDown()
     else:
         if distanceUnsigned > 0:
-            print("Marker 4")
+        #    print("Marker 4")
             FFX_Xbox.tapDown()
         else:
-            print("Marker 5")
+         #   print("Marker 5")
             FFX_Xbox.tapUp()
             
 def sideToSideDirection(currentmenuposition, targetmenuposition, menusize):
@@ -2352,6 +2397,17 @@ def getEquipLegit(equipNum):
     else:
         return False
 
+def isEquipBrotherhood(equipNum):
+    if getEquipOwner(equipNum) == 0:
+        global baseValue
+        basePointer = baseValue + 0x00d30f2c
+        key = basePointer + (0x16 * equipNum) +0x03
+        retVal = process.readBytes(key,1)
+        if retVal == 9:
+            return True
+    return False
+    
+
 def getEquipOwner(equipNum):
     global baseValue
     
@@ -2410,6 +2466,7 @@ class equipment:
         self.equipStatus = getEquipCurrentlyEquipped(equipNum)
         self.slots = getEquipSlotCount(equipNum)
         self.exists = getEquipExists(equipNum)
+        self.brotherhood = isEquipBrotherhood(equipNum)
         
     
     def equipmentType(self):
@@ -2435,6 +2492,9 @@ class equipment:
     
     def equipExists(self):
         return self.exists
+
+    def isBrotherhood(self):
+        return self.brotherhood
 
 def allEquipment():
     firstEquipment = True
@@ -2489,6 +2549,8 @@ def checkThunderStrike() -> int:
             break
     return results
     
+def shopMenuDialogueRow():
+    return readVal(0x0146780A)
 
 def hunterSpear():
     kimWeapHandles = weaponArrayCharacter(3)
@@ -2579,6 +2641,9 @@ def equipSellRow():
     key = baseValue + 0x01440C00
     retVal = process.readBytes(key,1)
     return retVal
+
+def nameConfirmOpen():
+    return readVal(0x014408E8) == 8
 
 def equipBuyRow():
     global baseValue
