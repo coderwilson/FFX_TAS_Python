@@ -151,14 +151,15 @@ def arrival():
     if thunderStrike != 0:
         if thunderStrike % 2 == 1:
             print("Equipping Tidus")
-            if thunderStrike >= 2:
-                fullClose = False
-            else:
-                fullClose = True
+            #if thunderStrike >= 2:
+            #    fullClose = False
+            #else:
+            fullClose = True
             FFX_menu.equipWeapon(character=0,ability=0x8026, fullMenuClose=fullClose)
-        if thunderStrike >= 2:
-            print("Equipping Wakka")
-            FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=True)
+        #if thunderStrike >= 2:
+            #After review, this does not deal enough damage.
+        #    print("Equipping Wakka")
+        #    FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=True)
     gameVars.setLStrike(thunderStrike)
 
 def followYuna():
@@ -203,16 +204,24 @@ def afterBlitz():
             if checkpoint == 8: #First chest
                 if gameVars.earlyHaste() == -1:
                     FFX_menu.lateHaste()
-                if gameVars.getLStrike() >= 2:
-                    FFX_menu.equipWeapon(character=4,ability=0x8022, fullMenuClose=False)
+                #if gameVars.getLStrike() >= 2:
+                #    FFX_menu.equipWeapon(character=4,ability=0x8022, fullMenuClose=False)
                 FFX_menu.mrrGrid1()
                 FFX_memory.closeMenu()
                 print("First chest")
-                FFX_memory.clickToEventTemple(6)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-635,-410])
+                    FFX_Xbox.menuB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
                 checkpoint += 1
             elif checkpoint == 10: #Second chest
                 print("Second chest")
-                FFX_memory.clickToEventTemple(7)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-620,-424])
+                    FFX_Xbox.menuB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
                 checkpoint += 1
             elif checkpoint == 20: #Target Auron
                 if not gameVars.csr():

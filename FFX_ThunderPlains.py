@@ -73,11 +73,28 @@ def agencyShop():
     if total_grenades_needed:
         FFX_memory.clickToDiagProgress(92)
         while FFX_memory.shopMenuDialogueRow() != 2:
-            FFX_Xbox.tapDown()
+            FFX_Xbox.tapDown() #Select "Got any items?"
         while not FFX_memory.itemShopMenu() == 7:
-            FFX_Xbox.tapB()
+            FFX_Xbox.tapB() #Click through until items menu comes up
         while not FFX_memory.itemShopMenu() == 10:
+            FFX_Xbox.tapB() #Select buy command
+        
+        #For safety (Wendigo is the worst), buying extra phoenix downs first.
+        while FFX_memory.equipBuyRow() != 1: #Buy some phoenix downs first
+            if FFX_memory.equipBuyRow() == 0:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        while not FFX_memory.itemShopMenu() == 16:
             FFX_Xbox.tapB()
+        FFX_memory.waitFrames(3)
+        FFX_Xbox.tapUp()
+        FFX_Xbox.tapLeft()
+        FFX_Xbox.tapLeft()
+        FFX_Xbox.tapLeft()
+        FFX_Xbox.tapB() #Should result in +8 phoenix downs. Can be dialed in later.
+        
+        #Then buying grenades for multiple uses through the rest of the run.
         while FFX_memory.equipBuyRow() != 6:
             if FFX_memory.equipBuyRow() < 6:
                 FFX_Xbox.tapDown()

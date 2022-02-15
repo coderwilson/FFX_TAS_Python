@@ -156,9 +156,10 @@ def gameStage():
     #Stage 5: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 540: #First half
-        stages = [0, 0, 150, 260, 280, 285]
+        #stages = [0, 0, 150, 260, 280, 285]
+        stages = [0, 285, 280, 280, 280, 280]
     elif FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 0, 0, 120, 145, 160]
+        stages = [0, 90, 90, 120, 145, 160]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
         stages = [0, 0, 0, 250, 280, 286]
     else: #Used for any non-story blitzing.
@@ -185,9 +186,12 @@ def gameStage():
         elif abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 2:
             currentStage = 0
         
-        #Logic for first period, only want to shoot once for Tidus XP
-        #if FFX_memory.getStoryProgress() < 560 and currentStage < 3:
-        #    currentStage = 0
+        #Logic that immediately moves to scoring phases if in overtime.
+        if FFX_memory.getStoryProgress() >= 570 and FFX_memory.getStoryProgress() < 700:
+            if gameClock() < 20 and not gameVars.getBlitzOT():
+                gameVars.setBlitzOT(True)
+            if gameVars.getBlitzOT() and currentStage < 3:
+                currentStage = 3
     
     return currentStage
 
@@ -352,9 +356,12 @@ def tidusAct():
         shootBall(breakThrough = 0)
     elif currentStage == 5:
         #Late on the timer. Shoot at all costs.
-        if distance(0,8) < 200 and FFX_memory.getStoryProgress() < 560:
+        if FFX_memory.getStoryProgress() < 540:
             print("First half, shooting without breakthrough.")
-            shootBall(breakThrough = 0)
+            if gameClock() < 270 and distance(0,8) > 250:
+                shootBall()
+            else:
+                shootBall(breakThrough = 0)
         else:
             print("Stage 5 - shoot the ball!")
             shootBall()
@@ -396,17 +403,22 @@ def lettyMove():
             FFX_Xbox.tapX()
     else:
         if playerArray[2].currentHP() < 10:
+            print("Letty out of HP. Passing to Jassu.")
             FFX_Xbox.tapX()
         elif graavDistance < 340:
+            print("Graav too close. Passing ball away.")
             FFXC.set_movement(1, 0)
             FFX_Xbox.tapX()
         elif playerArray[7].getCoords()[1] < -100:
+            #Hide in goal
             targetCoords = [20, -600]
             FFX_blitzPathing.setMovement(targetCoords)
         elif playerArray[6].getCoords()[1] < -100:
+            #Hide in goal
             targetCoords = [20, -600]
             FFX_blitzPathing.setMovement(targetCoords)
         else:
+            #defend at a set distance from opposing forward.
             targetCoords = [0, playerArray[6].getCoords()[1] - 380]
             FFX_blitzPathing.setMovement(targetCoords)
 
@@ -433,7 +445,7 @@ def lettyAct():
             passBall(target = 3)
         else:
             dribbleBall()
-    elif distance(2, 8) < 320:
+    elif distance(2, 8) < 340:
         passBall(target = 0, breakThrough = 0)
     else:
         dribbleBall()
@@ -463,11 +475,16 @@ def jassuMove():
         #Defend in the goal for safety.
         targetCoords = [-20, -595]
         FFX_blitzPathing.setMovement(targetCoords)
-        if distance(2,8) > 360:
+        if playerArray[2].currentHP() >= 20:
+            if distance(2,8) > 360:
+                FFX_Xbox.tapX()
+        elif playerArray[8].getCoords()[1] < -350 or distance(3,8) < 310:
             FFX_Xbox.tapX()
     elif currentStage == 2:
         targetCoords = [-572, -123]
         FFX_blitzPathing.setMovement(targetCoords)
+        if playerArray[8].getCoords()[0] < -300:
+            FFX_Xbox.tapB()
     elif currentStage == 3:
         p10C = playerArray[10].getCoords()
         tidusC = playerArray[0].getCoords()
@@ -511,11 +528,17 @@ def jassuAct():
     
     
     if currentStage in [0,1]:
-        passBall(target = 2)
+        if playerArray[8].getCoords()[1] < -350 or distance(3,8) < 310:
+            passBall(target = 0)
+        else:
+            passBall(target = 2)
     elif playerArray[3].currentHP() < 10:
         passBall(target = 0)
     elif currentStage == 2:
-        dribbleBall()
+        if playerArray[8].getCoords()[0] < -300:
+            passBall(target=0)
+        else:
+            dribbleBall()
     elif currentStage == 3:
         p10C = playerArray[10].getCoords()
         tidusC = playerArray[0].getCoords()

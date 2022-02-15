@@ -156,14 +156,15 @@ def LucaWorkers():
     gridDown()
     gridDown()
     gridRight()
+    
+    FFX_menuGrid.moveAndUse()
+    print("+++ sGridNodes: ", FFX_memory.sGridNodeSelected())
     if FFX_memory.sGridNodeSelected()[0] == 2:
         print("No early haste")
         earlyHaste = 0
     else:
         print("Early haste, can haste for Oblitzerator")
         earlyHaste = 1
-    
-    FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('mana','d','none')
@@ -287,7 +288,10 @@ def battleSiteGrid():
     sortItems(fullMenuClose=False)
     
     #Wakka's weapon
-    equipWeapon(character=4, fullMenuClose=False)
+    if gameVars.getLStrike() >= 2:
+        equipWeapon(character=4, ability=0x8026, fullMenuClose=False)
+    else:
+        equipWeapon(character=4, fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
 
 def battleSiteOaka1():

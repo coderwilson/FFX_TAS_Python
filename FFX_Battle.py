@@ -999,8 +999,8 @@ def afterBlitz1(earlyHaste):
                     usePotionCharacter(0, 'u')
                 elif hpValues[0] < 100: #Wakka HP
                     usePotionCharacter(4, 'u')
-                elif gameVars.getLStrike() >= 2:
-                    attack('none')
+                #elif gameVars.getLStrike() >= 2:
+                #    attack('none')
                 else:
                     defend()
 
@@ -1106,7 +1106,7 @@ def afterBlitz3LateHaste(earlyHaste):
             FFX_Xbox.tapB()
 
 
-def MiihenRoad(selfDestruct):
+def MiihenRoad(selfDestruct=False):
     FFX_Logs.writeLog("Fight start: Mi'ihen Road")
     print("Fight start: Mi'ihen Road")
     battle = FFX_memory.getBattleNum()
@@ -1125,15 +1125,15 @@ def MiihenRoad(selfDestruct):
             break
         if FFX_memory.turnReady():
             if FFX_Screen.turnTidus():
-                print("Mi'ihen battle. Self-destruct: ", selfDestruct)
-                if selfDestruct == 0:
+                print("Mi'ihen battle. Self-destruct: ", gameVars.selfDestructGet())
+                if not gameVars.selfDestructGet():
                     if battle == 51 or battle == 64 or battle == 66 or battle == 87:
                         lancetSwap('none')
-                        selfDestruct = 1
+                        gameVars.selfDestructLearned()
                         break
                     elif battle == 65 or battle == 84:
                         lancetSwap('right')
-                        selfDestruct = 1
+                        gameVars.selfDestructLearned()
                         break
                     else:
                         fleeAll()
@@ -1153,8 +1153,7 @@ def MiihenRoad(selfDestruct):
         print("No need to heal up. Moving onward.")
         FFX_memory.fullPartyFormat('miihen')
     
-    print("selfDestruct flag: ", selfDestruct)
-    return selfDestruct
+    print("selfDestruct flag: ",gameVars.selfDestructGet())
 
 
 def chocoEater():

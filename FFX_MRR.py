@@ -130,8 +130,10 @@ def mainPath():
                 else:
                     FFX_Xbox.tapB()
             elif checkpoint == 58:
-                FFX_Xbox.SkipDialog(1)
                 print("Up the third lift")
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([29,227])
+                    FFX_Xbox.tapB()
                 checkpoint += 1
             elif checkpoint == 66:
                 FFX_Xbox.SkipDialog(1)

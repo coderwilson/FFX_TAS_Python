@@ -19,7 +19,6 @@ def arrival():
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
     
     #FFX_memory.fullPartyFormat('miihen')
-    selfDestruct = 0
     miihenSkip = False
     battleCount = 0
     SDbattleNum = 0
@@ -158,12 +157,7 @@ def arrival():
                     FFXC.set_neutral()
                     print("Starting battle")
                     battleCount += 1
-                    if selfDestruct == 0:
-                        selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
-                        if selfDestruct != 0:
-                            SDbattleNum = battleCount
-                    else:
-                        FFX_Battle.MiihenRoad(selfDestruct)
+                    FFX_Battle.MiihenRoad()
                     print("Battle complete")
             else:
                 FFXC.set_movement(1, 1)
@@ -172,7 +166,7 @@ def arrival():
                 elif FFX_memory.diagSkipPossible():
                     FFX_Xbox.tapB()
     print("Miihen skip status: ", miihenSkip)
-    return [selfDestruct, battleCount, SDbattleNum, miihenSkip]
+    return [gameVars.selfDestructGet(), battleCount, SDbattleNum, miihenSkip]
 
 def arrival2(selfDestruct, battleCount, SDbattleNum):
     print("Start of the second map")
@@ -205,12 +199,7 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
                     FFX_Xbox.tapB()
                 else:
                     print("Starting battle")
-                    if selfDestruct == 0:
-                        selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
-                        if selfDestruct != 0:
-                            SDbattleNum = battleCount
-                    else:
-                        FFX_Battle.MiihenRoad(selfDestruct)
+                    FFX_Battle.MiihenRoad()
                     print("Battle complete")
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
@@ -225,7 +214,7 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
                 checkpoint = 20
             elif checkpoint < 31 and FFX_memory.getMap() == 58:
                 checkpoint = 31
-    return [selfDestruct, battleCount, SDbattleNum]
+    return [gameVars.selfDestructGet(), battleCount, SDbattleNum]
 
 def midPoint():
     checkpoint = 0
@@ -344,7 +333,7 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
             if checkpoint == 2:
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
-            elif checkpoint == 26 and selfDestruct == 0:
+            elif checkpoint == 26 and not gameVars.selfDestructGet():
                 checkpoint = 24
             elif checkpoint == 34: #Talk to guard, then Seymour
                 FFXC.set_movement(0, 1)
@@ -374,16 +363,7 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
             if FFX_Screen.BattleScreen():
                 battleCount += 1
                 print("Starting battle")
-                if selfDestruct == 0:
-                    selfDestruct = FFX_Battle.MiihenRoad(selfDestruct)
-                    if selfDestruct != 0:
-                        SDbattleNum = battleCount
-                    if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
-                        FFX_memory.clickToControl() # After-battle screen is still open.
-                else:
-                    FFX_Battle.MiihenRoad(selfDestruct)
-                    if FFX_memory.menuOpen() and FFX_memory.userControl() == False:
-                        FFX_memory.clickToControl() # After-battle screen is still open.
+                FFX_Battle.MiihenRoad()
                 print("Battle complete")
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
@@ -392,8 +372,6 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
                     FFX_Xbox.tapB()
     FFX_Logs.writeStats('Miihen encounters:')
     FFX_Logs.writeStats(battleCount)
-    FFX_Logs.writeStats('SelfDestruct Learned:')
-    FFX_Logs.writeStats(SDbattleNum)
 
 def wrapUp():
     print("Now ready to meet Seymour")

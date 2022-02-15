@@ -117,7 +117,11 @@ def trials():
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 23: #Second Besaid sphere
-                FFX_memory.clickToEventTemple(0)
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-14, 31])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 26: #Insert Besaid sphere, and push to completion
                 while FFX_memory.userControl():

@@ -12,7 +12,8 @@ class allVars:
         
         self.csrValue = True #Default to True
         self.blitzWinValue = False #Default to False
-        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
+        self.blitzOvertime = False #Set to False, no need to change ever.
+        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
@@ -21,7 +22,9 @@ class allVars:
         
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0
-        self.fullKilikMenu = False
+        self.fullKilikMenu = False #Default to False
+        
+        self.selfDestruct = False #Default False
     
     def csr(self):
         return self.csrValue
@@ -43,6 +46,12 @@ class allVars:
     
     def getBlitzWin(self):
         return self.blitzWinValue
+    
+    def setBlitzOT(self, value):
+        self.blitzOvertime = value
+    
+    def getBlitzOT(self):
+        return self.blitzOvertime
     
     def setLStrike(self, value):
         self.lStrikeCount = value
@@ -76,6 +85,12 @@ class allVars:
     
     def endGameVersion(self):
         return self.endGameVersionVal
+
+    def selfDestructLearned(self):
+        self.selfDestruct = True
+    
+    def selfDestructGet(self):
+        return self.selfDestruct
 
 def initVars():
     mainVars = allVars()

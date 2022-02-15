@@ -1618,7 +1618,7 @@ def Luca3(checkpoint):
     if checkpoint == 7:
         x = -632
         y = -403
-    if checkpoint == 8: #First chest
+    if checkpoint == 6: #First chest
         print("First chest")
     if checkpoint == 9:
         x = -621

@@ -46,7 +46,7 @@ def Entrance():
     #Battles
     while FFX_memory.getStoryProgress() < 48:
         if FFX_Screen.BattleScreen():
-            if FFX_memory.getStoryProgress() == 44:
+            if FFX_memory.getBattleNum() == 2:
                 FFX_Battle.attack('none')
             else:
                 FFX_Battle.defend()
