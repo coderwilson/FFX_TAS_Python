@@ -170,7 +170,8 @@ def gameStage():
         if stages[i] < gameClock():
             currentStage = i
     
-    if FFX_memory.getStoryProgress() < 700: #Only apply following logic for the storyline game
+    if FFX_memory.getStoryProgress() < 700 and currentStage >= 1:
+        #Only apply following logic for the storyline game
         #Logic that updates stage based on defender movements
         if playerArray[0].getCoords()[1] - playerArray[10].getCoords()[1] > 300:
             if currentStage < 3:

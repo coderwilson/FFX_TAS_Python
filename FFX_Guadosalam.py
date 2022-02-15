@@ -42,24 +42,33 @@ def arrival():
         while not FFX_targetPathing.setMovement([4,-114]):
             pass
         print("Mark1")
-        FFXC.set_movement(-1, 1)
-        FFX_memory.clickToEvent() #Talk to Auron (first for affection)
+        #FFXC.set_movement(-1, 1)
+        #FFX_memory.clickToEvent()
+        while FFX_memory.userControl(): #Talk to Auron (first for affection)
+            FFX_targetPathing.setMovement([18,-119])
+            FFX_memory.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
         while not FFX_targetPathing.setMovement([-39,-77]):
             pass
         print("Mark2")
-        FFXC.set_movement(1, -1)
-        FFX_memory.clickToEvent() #Start conversation with Wakka
+        #FFXC.set_movement(1, -1)
+        #FFX_memory.clickToEvent()
+        while FFX_memory.userControl(): #Start conversation with Wakka
+            FFX_targetPathing.setMovement([-49,-61])
+            FFX_memory.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
         while not FFX_targetPathing.setMovement([-13,-67]):
             pass
         print("Mark3")
-        FFXC.set_movement(-1, -1)
-        FFX_memory.clickToEvent() #Lulu conversation
+        #FFXC.set_movement(-1, -1)
+        #FFX_memory.clickToEvent()
+        while FFX_memory.userControl(): #Lulu conversation
+            FFX_targetPathing.setMovement([-11,-55])
+            FFX_memory.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         

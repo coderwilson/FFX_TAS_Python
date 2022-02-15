@@ -70,30 +70,32 @@ def agencyShop():
     else:
         cur_grenades = FFX_memory.getItemCountSlot(grenade_slot)
     total_grenades_needed = 3 + speedNeeded - cur_grenades
-    if total_grenades_needed:
-        FFX_memory.clickToDiagProgress(92)
-        while FFX_memory.shopMenuDialogueRow() != 2:
-            FFX_Xbox.tapDown() #Select "Got any items?"
-        while not FFX_memory.itemShopMenu() == 7:
-            FFX_Xbox.tapB() #Click through until items menu comes up
-        while not FFX_memory.itemShopMenu() == 10:
-            FFX_Xbox.tapB() #Select buy command
-        
-        #For safety (Wendigo is the worst), buying extra phoenix downs first.
-        while FFX_memory.equipBuyRow() != 1: #Buy some phoenix downs first
-            if FFX_memory.equipBuyRow() == 0:
-                FFX_Xbox.tapDown()
-            else:
-                FFX_Xbox.tapUp()
-        while not FFX_memory.itemShopMenu() == 16:
-            FFX_Xbox.tapB()
-        FFX_memory.waitFrames(3)
-        FFX_Xbox.tapUp()
-        FFX_Xbox.tapLeft()
-        FFX_Xbox.tapLeft()
-        FFX_Xbox.tapLeft()
+    FFX_memory.clickToDiagProgress(92)
+    while FFX_memory.shopMenuDialogueRow() != 2:
+        FFX_Xbox.tapDown() #Select "Got any items?"
+    while not FFX_memory.itemShopMenu() == 7:
+        FFX_Xbox.tapB() #Click through until items menu comes up
+    while not FFX_memory.itemShopMenu() == 10:
+        FFX_Xbox.tapB() #Select buy command
+    
+    #For safety (Wendigo is the worst), buying extra phoenix downs first.
+    while FFX_memory.equipBuyRow() != 1: #Buy some phoenix downs first
+        if FFX_memory.equipBuyRow() == 0:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while not FFX_memory.itemShopMenu() == 16:
+        FFX_Xbox.tapB()
+    FFX_Xbox.tapUp() #sets to 11
+    while FFX_memory.purchasingAmountItems() != 8:
+        if FFX_memory.equipBuyRow() < 8:
+            FFX_Xbox.tapRight()
+        else:
+            FFX_Xbox.tapLeft()
+    while not FFX_memory.itemShopMenu() == 10:
         FFX_Xbox.tapB() #Should result in +8 phoenix downs. Can be dialed in later.
         
+    if total_grenades_needed:
         #Then buying grenades for multiple uses through the rest of the run.
         while FFX_memory.equipBuyRow() != 6:
             if FFX_memory.equipBuyRow() < 6:
@@ -109,7 +111,7 @@ def agencyShop():
                 FFX_Xbox.tapLeft()
         while not FFX_memory.itemShopMenu() == 10:
             FFX_Xbox.tapB()
-        FFX_memory.closeMenu()
+    FFX_memory.closeMenu()
     
     #Next, Grab Auron's weapon
     FFX_Xbox.SkipDialog(0.1)

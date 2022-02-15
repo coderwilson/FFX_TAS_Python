@@ -222,7 +222,6 @@ def remedy(character: int, direction: str):
         return 0
 
 def revive(itemNum = 6):
-    FFX_Logs.writeLog("Using Phoenix Down")
     print("Using Phoenix Down")
     if FFX_memory.getThrowItemsSlot(itemNum) > 250:
         fleeAll()
@@ -237,6 +236,38 @@ def revive(itemNum = 6):
     _navigate_to_position(itemPos)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
+    tapTargeting()
+
+def reviveTarget(itemNum = 6, target = 0):
+    direction = 'l'
+    print("Using Phoenix Down")
+    if FFX_memory.getThrowItemsSlot(itemNum) > 250:
+        fleeAll()
+        return
+    while not FFX_memory.mainBattleMenu():
+        pass
+    while FFX_memory.battleMenuCursor() != 1:
+        FFX_Xbox.tapDown()
+    while FFX_memory.mainBattleMenu():
+        FFX_Xbox.tapB()
+    itemPos = FFX_memory.getThrowItemsSlot(itemNum) - 1
+    _navigate_to_position(itemPos)
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()
+    
+    #Select target - default to Tidus
+    if FFX_memory.battleTargetId() != 0:
+        while FFX_memory.battleTargetId() != 0:
+            if direction == 'l':
+                FFX_Xbox.tapLeft()
+                if FFX_memory.battleTargetId() >= 20:
+                    FFX_Xbox.tapRight()
+                    direction = 'u'
+            else:
+                FFX_Xbox.tapUp()
+                if FFX_memory.battleTargetId() >= 20:
+                    FFX_Xbox.tapDown()
+                    direction = 'l'
     tapTargeting()
 
 
@@ -2150,8 +2181,9 @@ def spherimorph():
 
 
                 rikkuturns += 1
-
-    FFX_Xbox.SkipDialog(5)
+    
+    if not gameVars.csr():
+        FFX_Xbox.SkipDialog(5)
 
 #Process written by CrimsonInferno
 def negator(): # AKA crawler
@@ -2213,8 +2245,20 @@ def negator(): # AKA crawler
     
     FFX_memory.clickToControl()
 
+def getAnimaItemSlot():
+    useableSlot = FFX_memory.getUseItemsSlot(32)
+    if useableSlot > 200:
+        useableSlot = FFX_memory.getUseItemsSlot(30)
+    if useableSlot > 200:
+        useableSlot = FFX_memory.getUseItemsSlot(24)
+    if useableSlot > 200:
+        useableSlot = FFX_memory.getUseItemsSlot(27)
+    if useableSlot > 200:
+        useableSlot = 255
+    return useableSlot
+
 # Process written by CrimsonInferno
-def seymourGuado():
+def seymourGuado_blitzWin():
     FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
     FFX_Screen.awaitTurn()
 
@@ -2401,6 +2445,8 @@ def seymourGuado():
                             buddySwapLulu()
                 elif animahits < 4:
                     Steal()
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] == 0:
+                    reviveTarget(target=0)
                 else:
                     defend()
                 rikkuturns += 1
@@ -2428,6 +2474,219 @@ def seymourGuado():
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
+
+def seymourGuado_blitzLoss():
+    FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
+    FFX_Screen.awaitTurn()
+
+    tidushaste = False
+    kimahriconfused = False
+    missbackup = False
+    kimahridead = False
+    aurondead = False
+    wakkadead = False
+    tidusturns = 0
+    yunaturns = 0
+    kimahriturns = 0
+    auronturns = 0
+    wakkaturns = 0
+    rikkuturns = 0
+    animahits = 0
+    animamiss = 0
+    thrownItems = 0
+
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
+        if FFX_memory.turnReady():
+            turnchar = FFX_memory.getBattleCharTurn()
+            for i in range(0, 3):
+                if FFX_memory.getBattleHP()[i] == 0:
+                    if FFX_memory.getBattleCharSlot(2) == i:
+                        print("Auron is dead")
+                        aurondead = True
+                    elif FFX_memory.getBattleCharSlot(3) == i:
+                        print("Kimahri is dead")
+                        kimahridead = True
+                    elif FFX_memory.getBattleCharSlot(4) == i:
+                        print("Wakka is dead")
+                        wakkadead = True
+            if turnchar == 0:
+                if FFX_memory.getEnemyCurrentHP()[1] < 2999:
+                    attack('none')
+                    print("Should be last attack of the fight.")
+                elif tidusturns == 0:
+                    print("Tidus Haste self")
+                    tidusHaste('none')
+                    tidushaste = True
+                elif tidusturns == 1:
+                    cheer()
+                elif tidusturns == 2:
+                    print("Talk to Seymour")
+                    while not FFX_memory.otherBattleMenu():
+                        FFX_Xbox.tapLeft()
+                    while FFX_memory.battleCursor2() != 1:
+                        FFX_Xbox.tapDown()
+                    while FFX_memory.otherBattleMenu():
+                        FFX_Xbox.tapB()
+                    FFX_Xbox.tapLeft()
+                    tapTargeting()
+                elif tidusturns == 3:
+                    print("Swap to Brotherhood")
+                    equipInBattle(special = 'brotherhood')
+                elif tidusturns == 4:
+                    tidusODSeymour()
+                elif tidusturns == 5:
+                    buddySwapWakka()
+                elif animahits + animamiss == 3 and animamiss > 0 and missbackup == False:
+                    buddySwapLulu()
+                    defend()
+                    missbackup = True
+                elif tidushaste == False:
+                    print("Tidus Haste self")
+                    tidusHaste('none')
+                    tidushaste = True
+                elif animahits < 4:
+                    oldHP = FFX_memory.getEnemyCurrentHP()[3]
+                    attack('none')
+                    newHP = FFX_memory.getEnemyCurrentHP()[3]
+                    if newHP < oldHP:
+                        print("Hit Anima")
+                        animahits += 1
+                    else:
+                        print("Miss Anima")
+                        animamiss += 1
+                else:
+                    attack('none')
+                tidusturns += 1
+                print("Tidus turns: %d" % tidusturns)
+            elif turnchar == 1:
+                if yunaturns == 0:
+                    FFX_Xbox.weapSwap(0)
+                else:
+                    buddySwapLulu()
+                    FFX_Screen.awaitTurn()
+                    FFX_Xbox.weapSwap(0)
+                yunaturns += 1
+                print("Yuna turn, complete")
+            elif turnchar == 5:
+                if animahits == 0:
+                    print("Confused states:")
+                    print("Yuna confusion: ", FFX_memory.confusedState(1))
+                    print("Tidus confusion: ", FFX_memory.confusedState(0))
+                    print("Kimahri confusion: ", FFX_memory.confusedState(3))
+                    print("Lulu confusion: ", FFX_memory.confusedState(5))
+                    buddySwapRikku()
+                    if FFX_memory.confusedState(0) == True:
+                        remedy(character = 0,direction="l")
+                    elif FFX_memory.confusedState(3):
+                        remedy(character = 3, direction="l")
+                else:
+                    buddySwapTidus()
+                    attack('none')
+            elif turnchar == 3:
+                if kimahriconfused == True:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition >= 3:
+                        buddySwapTidus()
+                    elif rikkuposition >= 3:
+                        buddySwapRikku()
+                    else:
+                        defend()
+                elif kimahriturns == 0:
+                    print("Confused states:")
+                    print("Yuna confusion: ", FFX_memory.confusedState(1))
+                    print("Tidus confusion: ", FFX_memory.confusedState(0))
+                    print("Kimahri confusion: ", FFX_memory.confusedState(3))
+                    print("Auron confusion: ", FFX_memory.confusedState(2))
+                    print("Lulu confusion: ", FFX_memory.confusedState(5))
+                    if FFX_memory.confusedState(0) == True:
+                        remedy(character = 0,direction="l")
+                    elif FFX_memory.confusedState(1) == True:
+                        remedy(character = 1,direction="l")
+                    elif FFX_memory.confusedState(5) == True:
+                        remedy(character = 5,direction="l")
+                    else:
+                        defend()
+                elif thrownItems < 2:
+                    itemSlot = getAnimaItemSlot()
+                    if itemSlot != 255:
+                        useItem(itemSlot)
+                    else:
+                        Steal()
+                    thrownItems += 1
+                elif animamiss > 0 and (missbackup == False or FFX_Screen.faintCheck() == 0):
+                    Steal()
+                else:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition >= 3:
+                        buddySwapTidus()
+                    elif rikkuposition >= 3:
+                        buddySwapRikku()
+                    else:
+                        Steal()
+                kimahriturns += 1
+                print("Kimahri turn, complete")
+            elif turnchar == 4:
+                if wakkaturns == 0:
+                    FFX_Xbox.weapSwap(0)
+                elif animamiss > 0 and (missbackup == False or FFX_Screen.faintCheck() == 0):
+                    if kimahridead == True and rikkuturns < 2:
+                        buddySwapRikku()
+                    else:
+                        FFX_Xbox.weapSwap(0)
+                else:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    if tidusposition >= 3:
+                        buddySwapTidus()
+                    elif rikkuposition >= 3:
+                        buddySwapRikku()
+                    else:
+                        defend()
+                wakkaturns += 1
+                print("Wakka turn, complete")
+            elif turnchar == 6:
+                if FFX_Screen.faintCheck() == 2:
+                    reviveAll()
+                    missbackup = True
+                    tidushaste = False
+                elif thrownItems < 2:
+                    itemSlot = getAnimaItemSlot()
+                    if itemSlot != 255:
+                        useItem(itemSlot)
+                    else:
+                        Steal()
+                    thrownItems += 1
+                else:
+                    tidusposition = FFX_memory.getBattleCharSlot(0)
+                    if tidusposition >= 3:
+                        buddySwapTidus()
+                    elif animamiss > 0 and (missbackup == False or FFX_Screen.faintCheck() == 0):
+                        Steal()
+                    elif animahits < 4:
+                        Steal()
+                    elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] == 0:
+                        reviveTarget(target=0)
+                    else:
+                        defend()
+                rikkuturns += 1
+                print("Rikku turn, complete")
+            else:
+                print("No turn. Holding for next action.")
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
+            print("Diag skip")
+    print("Battle summary screen")
+    FFXC.set_value('BtnB', 1)
+    FFX_memory.waitFrames(30 * 2.8)
+    FFXC.set_value('BtnB', 0)
+
+def seymourGuado():
+    if gameVars.getBlitzWin():
+        seymourGuado_blitzWin()
+    else:
+        seymourGuado_blitzLoss()
 
 def fullheal(target: int, direction: str):
     print("Full Heal function")

@@ -129,8 +129,10 @@ def trials():
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
-                FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(300)
+                if gameVars.usePause():
+                    FFX_memory.waitFrames(2)
+                while FFX_memory.getMap() == 122:
+                    FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 34: #Night, talk to Yuna and Wakka

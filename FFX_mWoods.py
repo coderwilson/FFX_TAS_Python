@@ -78,8 +78,9 @@ def lakeRoad():
     #    FFX_memory.setSpeed(12)
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
     FFX_memory.fullPartyFormat('spheri')
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
+    while not FFX_targetPathing.setMovement([101,-72]):
+        pass
+    
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
             mapVal = FFX_memory.getMap()
@@ -164,48 +165,19 @@ def lake():
     print(FFX_memory.affectionArray())
     print("------------------------------------------")
     
-    complete = 0
     checkpoint = 0
-    lastCP = 0
-    while checkpoint != 100:
-        if lastCP != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
-            lastCP = checkpoint
+    while FFX_memory.getBattleNum() != 194:
         if FFX_memory.userControl():
-            battle = FFX_memory.getBattleNum()
-            #cam = FFX_memory.getCamera()
-            pos = FFX_memory.getCoords()
-            if checkpoint == 0:
-                if pos[0] < 50:
-                    checkpoint = 10
-                else:
-                    if pos[1] > ((0.56 * pos[0]) - 55):
-                        FFXC.set_movement(-1, 1)
-                    else:
-                        FFXC.set_movement(0, 1)
-            elif checkpoint == 10:
-                if pos[1] < -215:
-                    checkpoint = 20
-                else:
-                    if pos[1] < -120:
-                        FFXC.set_movement(-1, -1)
-                    elif pos[1] < ((1.92 * pos[0]) -101.65):
-                        FFXC.set_movement(-1, 1)
-                    else:
-                        FFXC.set_movement(-1, 0)
-            elif checkpoint == 20:
-                FFXC.set_movement(-1, -1)
+            if FFX_targetPathing.setMovement(FFX_targetPathing.mLake(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 194:
-                    FFX_Battle.negator()
-                    checkpoint = 100
-                else:
+            if FFX_memory.battleActive() and FFX_memory.getBattleNum() != 194:
                     FFX_Battle.fleeAll()
-            else:
-                FFX_Xbox.menuB() #Skipping dialog
-    
+            elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
+                FFX_Xbox.menuB()
+    FFX_Xbox.clickToBattle()
     FFX_Battle.negator()
 
 def afterCrawler():
