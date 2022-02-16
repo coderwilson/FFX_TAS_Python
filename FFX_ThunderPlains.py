@@ -88,7 +88,7 @@ def agencyShop():
         FFX_Xbox.tapB()
     FFX_Xbox.tapUp() #sets to 11
     while FFX_memory.purchasingAmountItems() != 8:
-        if FFX_memory.equipBuyRow() < 8:
+        if FFX_memory.purchasingAmountItems() < 8:
             FFX_Xbox.tapRight()
         else:
             FFX_Xbox.tapLeft()
