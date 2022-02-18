@@ -49,7 +49,7 @@ def arrival():
                     
                 else:
                     #Run this branch on a noraml Any% run, no CSR
-                    if checkpoint in [4,5,6,7,8,9] and FFX_memory.miihenGuyCoords()[1] < 1380:
+                    if checkpoint in [4,5,6,7,8,9] and FFX_memory.miihenGuyCoords()[1] < 1370:
                         checkpoint = 10
                         print("**Late for Mi'ihen skip, forcing recovery.")
                     elif checkpoint == 6:

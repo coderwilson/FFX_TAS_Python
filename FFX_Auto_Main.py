@@ -41,8 +41,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-Gamestate = "Besaid"
-StepCounter = 3
+#Gamestate = "Besaid"
+#StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -52,7 +52,7 @@ StepCounter = 3
 #Gamestate = "Miihen"
 #StepCounter = 1
 #Gamestate = "MRR"
-#StepCounter = 2
+#StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -72,8 +72,8 @@ StepCounter = 3
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
-#StepCounter = 1 #Blitz Win, no end game version selected
+Gamestate = "Gagazet"
+StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
 #Gamestate = "Zanarkand"
@@ -88,9 +88,9 @@ StepCounter = 3
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 0 #New seed number, only used if doing seed hunt.
+rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
 
 if Gamestate != "none":
@@ -98,10 +98,10 @@ if Gamestate != "none":
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
-    #rngSelectArray = [9,31,49,59,90,91,98,104,108,121,200]
-    rngSelectArray = [9,31,49,90,91,104,108,121] #Run down the interesting seeds.
+    rngSelectArray = [9,31,49,90,91,98,104,108,121,200,246,253,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 200 #Select a specific seed.
+    #rngSeedNum = 246 #Thunder ball seed. Comment out to use random seed.
+    rngSeedNum = 254 #Specific seed. Comment out to use random seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -135,7 +135,6 @@ FFX_memory.start()
 #Main
 import FFX_Logs
 print("FFX automation starting")
-FFX_Logs.nextStats(rngSeedNum)
 print("Please launch the game now.")
 #FFX_memory.waitFrames(30 * 5)
 #print("Now attempting to activate FFX window")
@@ -148,6 +147,7 @@ FFX_Screen.clearMouse(0)
 #FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
+FFX_Logs.nextStats(rngSeed)
 FFX_Logs.writeStats("RNG seed:")
 FFX_Logs.writeStats(rngSeed)
 
@@ -173,7 +173,7 @@ if Gamestate != "none" :
     if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
         FFX_LoadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(39)
+        FFX_LoadGame.loadOffset(29)
         print("Load complete")
         FFX_LoadGame.loadMemCursor()
         while FFX_memory.userControl():
@@ -210,14 +210,14 @@ if Gamestate != "none" :
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadOffset(19)
         import FFX_menu
         FFX_menu.mrrGrid1()
+        FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(0)
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.LoadMRR2()
-        pass
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(8)
         FFX_LoadGame.AfterGui()
@@ -227,10 +227,10 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(20)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
-        FFX_LoadGame.loadOffset(46)
+        FFX_LoadGame.loadOffset(4)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(9)
+        FFX_LoadGame.loadOffset(13)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(12)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
@@ -461,7 +461,9 @@ while Gamestate != "End":
         print("Pre-Blitz time: ", str(totalTime))
         FFX_Logs.writeStats("Pre Blitz time:")
         FFX_Logs.writeStats(totalTime)
-        if rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops: # Used to run multiple tests via a single execution
+        if rngSeedNum == 255:
+            StepCounter = 3
+        elif rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops: # Used to run multiple tests via a single execution
             Gamestate = 'none'
             StepCounter = 1
             FFXC.set_movement(0, -1) #Step away from the save sphere
@@ -499,7 +501,9 @@ while Gamestate != "End":
 
     if Gamestate == "Luca" and StepCounter == 4:
         reportGamestate()
-        gameVars.setBlitzWin(FFX_Blitz.blitzMain(forceBlitzWin))
+        print("------Blitz Start")
+        FFX_Blitz.blitzMain(forceBlitzWin)
+        print("------Blitz End")
         if not gameVars.csr():
             FFX_Xbox.awaitSave()
         StepCounter = 5
@@ -532,7 +536,10 @@ while Gamestate != "End":
         FFX_Logs.writeStats("Miihen End time:")
         FFX_Logs.writeStats(totalTime)
         
-        if rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops: # Used to run multiple tests via a single execution
+        if rngSeedNum == 255:
+            Gamestate = "MRR"
+            StepCounter = 1
+        elif rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops: # Used to run multiple tests via a single execution
             Gamestate = "none"
             StepCounter = 1
             import FFX_Reset
@@ -619,8 +626,7 @@ while Gamestate != "End":
         FFX_Logs.nextFile()
 
     if Gamestate == "ThunderPlains" and StepCounter == 1:
-        print(gameVars.getBlitzWin())
-        status = [False,False,False,gameVars.getBlitzWin(),False]
+        status = [False,False,False,False,False]
         reportGamestate()
         status = FFX_ThunderPlains.southPathing(status)
         StepCounter = 2

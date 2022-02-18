@@ -133,7 +133,7 @@ def Klikk_fight() :
     
     #print("Doing Use tutorial")
     FFX_Xbox.clickToBattle()
-    FFX_Battle.useItem(1,'none')
+    FFX_Battle.useItem(0,'none')
     
     #Tidus self-potion
     FFX_Screen.awaitTurn()

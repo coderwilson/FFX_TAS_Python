@@ -49,8 +49,10 @@ def guards():
     FFX_memory.clickToControl() 
     if not gameVars.getBlitzWin():
         FFX_menu.equipSonicSteel()
-    FFX_menu.beforeGuards()
+    
     #Need to add here, use Mega Potion
+    if FFX_memory.getItemSlot(3) < 200:
+        FFX_menu.beforeGuards()
     
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)

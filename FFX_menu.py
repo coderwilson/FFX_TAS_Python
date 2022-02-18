@@ -1383,7 +1383,7 @@ def openGrid(character):
                 if FFX_memory.getStoryProgress() == 2528: #After B&Y, party size is evaluated weird.
                     FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, 7)
                 elif FFX_memory.partySize() < 3:
-                    FFX_memory.menuDown()
+                    FFX_Xbox.menuDown()
                 else:
                     #FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
                     #Not working. Use this instead.

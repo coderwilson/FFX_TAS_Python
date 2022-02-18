@@ -11,7 +11,20 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
- 
+
+def checkGems():
+    gemSlot = FFX_memory.getItemSlot(34)
+    if gemSlot < 200:
+        gems = FFX_memory.getItemCountSlot(gemSlot)
+    else:
+        gems = 0
+    
+    gemSlot = FFX_memory.getItemSlot(28)
+    if gemSlot < 200:
+        gems += FFX_memory.getItemCountSlot(gemSlot)
+    print("Total gems: ", gems)
+    return gems
+
 def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
@@ -19,31 +32,32 @@ def calmLands():
     FFX_memory.fullPartyFormat('kimahri')
     
     FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 4)
+    time.sleep(4)
     FFXC.set_neutral()
     FFX_memory.clickToControl()
     
-    gemSlot = FFX_memory.getItemSlot(34)
-    if gemSlot != 255:
-        gems = FFX_memory.getItemCountSlot(gemSlot)
-    else:
-        gems = 0
     
     checkpoint = 0
-    itemSteal = gems
     while FFX_memory.getMap() != 279:
         if FFX_memory.userControl():
-            if checkpoint == 9 and itemSteal < 2:
+            gemSlot = FFX_memory.getItemSlot(34)
+            if checkpoint == 9 and checkGems() < 2:
                 checkpoint = 8
-                FFXC.set_movement(0, -1)
-                FFX_memory.waitFrames(30 * 2)
+                FFXC.set_movement(-1, 0)
+                time.sleep(2)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.calmLands(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                itemSteal += FFX_Battle.calmLands(itemSteal)
+                print("++Battle number: ", FFX_memory.getBattleNum())
+                if checkGems() < 2:
+                    print("++Calm Lands battle, looking for gems.")
+                    FFX_Battle.calmLands()
+                else:
+                    print("++Calm Lands battle, no gems needed")
+                    FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():
@@ -103,8 +117,7 @@ def toTheRonso():
                 FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.waitFrames(30 * 0.035)
-    
-    
+
 def gagazetGates():
     #Should appear on the map just before the Ronso hymn
     print("Grid version: " + str(gameVars.endGameVersion()))
@@ -334,7 +347,7 @@ def cave():
                 else:
                     FFXC.set_movement(0, -1)
                     FFX_memory.waitFrames(30 * 0.5)
-            elif checkpoint == 59: #Just before sanctuary keeper
+            elif checkpoint == 58: #Just before sanctuary keeper
                 FFXC.set_neutral()
                 print("Prepping for Sanctuary Keeper")
                 FFX_memory.fullPartyFormat('yuna')

@@ -81,14 +81,16 @@ def arrival():
                 friendSlot = FFX_memory.getItemSlot(97)
                 if friendSlot == 255:
                     friendCount = 0
-                    FFXC.set_movement(-1, 1)
+                    FFX_targetPathing.setMovement([8,90])
+                    FFX_memory.waitFrames(1)
                     FFX_Xbox.tapB()
                 else:
                     if FFX_memory.getItemCountSlot(friendSlot) > friendCount:
                         checkpoint += 1
                         FFX_memory.clickToControl()
                     else:
-                        FFXC.set_movement(1, 1)
+                        FFX_targetPathing.setMovement([8,90])
+                        FFX_memory.waitFrames(1)
                         FFX_Xbox.tapB()
             elif checkpoint == 24: #Third chest
                 luckSlot = FFX_memory.getItemSlot(94)
@@ -220,7 +222,7 @@ def trials3(checkpoint):
     while checkpoint < 69:
         if FFX_memory.userControl():
             if checkpoint == 66:
-                FFXC.set_movement(-1, 0)
+                FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.7)

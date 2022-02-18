@@ -3318,8 +3318,8 @@ def guadoSkip(checkpoint):
         y = 55
     if checkpoint == 20:
         print("Guado skip failed.")
-        x = -59
-        y = 67
+        x = -44
+        y = 56
     if checkpoint == 21:
         print("Shelinda scene")
     if checkpoint == 22:
@@ -5593,7 +5593,7 @@ def gagazetCave(checkpoint):
     if checkpoint == 57:
         x = 7
         y = 99
-    if checkpoint == 58:
+    if checkpoint == 59:
         x = -208
         y = 240
     if checkpoint == 60:
@@ -5884,8 +5884,8 @@ def zanarkandTrials(checkpoint):
     if checkpoint == 26:
         print("Placing Kilika sphere")
     if checkpoint == 27:
-        x = 71
-        y = -21
+        x = 72
+        y = -12
     if checkpoint == 28:
         print("Activating second pedestol")
     if checkpoint == 29:

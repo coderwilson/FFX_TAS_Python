@@ -56,6 +56,8 @@ def tidusFlee():
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+        if FFX_memory.otherBattleMenu():
+            FFX_Xbox.tapA()
     print("Out")
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
@@ -1766,8 +1768,10 @@ def thunderPlains(status, section):
     nadeSlot = FFX_memory.getUseItemsSlot(35)
     print("Grenade Slot %d" % nadeSlot)
     nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
-    if nadeCount > 3:
+    if nadeCount > 3 and FFX_memory.getSpeed() < 14:
         useGrenades = True
+    else:
+        useGrenades = False
 
     startingstatus = []
     for i in range(len(status)):
@@ -1776,7 +1780,6 @@ def thunderPlains(status, section):
     tidusturns = 0
     wakkaturns = 0
     auronturns = 0
-    speedcount = FFX_memory.getSpeed()
     rikkucharge = FFX_memory.getOverdriveValue(6)
     
     petrifiedstate = False
@@ -1832,8 +1835,8 @@ def thunderPlains(status, section):
                 else:
                     fleeAll()
             elif bNum == 161:
-                print("Battle with Iron Giant. Battle number: ", bNum)
-                if startingstatus[3] == False and speedcount < 14 and section == 2:
+                print("Battle with Iron Giant and Buer monsters. Battle number: ", bNum)
+                if startingstatus[3] == False and useGrenades and section == 2:
                     if turnchar == 0:
                         if tidusturns == 0:
                             buddySwapRikku()
@@ -1855,10 +1858,11 @@ def thunderPlains(status, section):
                         wakkaturns += 1
                     elif turnchar == 6:
                         if useGrenades:
-                            grenadeslot = FFX_memory.getUseItemsSlot(35)
-                            print("Grenade Slot %d" % grenadeslot)
-                            useItem(grenadeslot,'none')
+                            print("Grenade Slot %d" % nadeSlot)
+                            useItem(nadeslot,'none')
                             status[3] = True
+                        else:
+                            Steal()
                         fleeAll()
                     elif turnchar == 2:
                         rikkuposition = FFX_memory.getBattleCharSlot(6)
@@ -1870,7 +1874,7 @@ def thunderPlains(status, section):
                         auronturns += 1
                     else:
                         fleeAll()
-                elif startingstatus[1] == False and FFX_memory.getStoryProgress == 1375:
+                elif startingstatus[1] == False:
                     if turnchar == 0:
                         if tidusturns == 0:
                             buddySwapRikku()
@@ -1945,6 +1949,26 @@ def thunderPlains(status, section):
                         buddySwapTidus()
                     else:
                         fleeAll()
+            elif bNum in [154, 156, 164] and useGrenades:
+                print("Battle with random mobs. Battle number: ", bNum)
+                if startingstatus[3] == False and section == 2:
+                    if turnchar == 0:
+                        if tidusturns == 0:
+                            buddySwapRikku()
+                        else:
+                            fleeAll()
+                        tidusturns += 1
+                    elif turnchar == 4:
+                        buddySwapTidus()
+                    elif turnchar == 6:
+                        useItem(nadeSlot, 'none')
+                        status[3] = True
+                    else:
+                        defend()
+                elif tidusturns == 0:
+                    fleeAll()
+                else:
+                    fleeAll()
             elif status[4] == False and FFX_memory.getItemSlot(49) > 200 and bNum in [153, 154, 163]:
                 print("Grabbing petrify grenade. Blitz Loss only strat.")
                 if bNum in [153,163]:
@@ -1965,26 +1989,6 @@ def thunderPlains(status, section):
                         buddySwapTidus()
                         FFX_Screen.awaitTurn()
                         fleeAll()
-            elif bNum in [154, 156, 164]:
-                print("Battle with random mobs. Battle number: ", bNum)
-                if startingstatus[3] == False and speedcount < 10 and section == 2 and FFX_memory.getStoryProgress == 1375:
-                    if turnchar == 0:
-                        if tidusturns == 0:
-                            buddySwapRikku()
-                        else:
-                            fleeAll()
-                        tidusturns += 1
-                    elif turnchar == 4:
-                        buddySwapTidus()
-                    elif turnchar == 6:
-                        useItem(nadeSlot, 'none')
-                        status[3] = True
-                    else:
-                        defend()
-                elif tidusturns == 0:
-                    fleeAll()
-                else:
-                    fleeAll()
             else:  # Nothing useful this battle. Moving on.
                 fleeAll()
     print("Battle is ended - Thunder Plains")
@@ -2893,6 +2897,7 @@ def bikanelBattleLogic(status):
     #status should be an array length 2
     #[rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
     battleNum = FFX_memory.getBattleNum()
+    itemStolen = False
     throwPower = False
     throwSpeed = False
     print("---------------Starting desert battle: ", battleNum)
@@ -2962,13 +2967,13 @@ def bikanelBattleLogic(status):
             battleGoal = 3 #Nothing to do but get to Home.
         
     #Then we take action.
-    if battleGoal == 0: #Steal an item
-        print("Looking to steal an item.")
-        while not FFX_memory.menuOpen():
+    while not FFX_memory.battleComplete():
+        if battleGoal == 0: #Steal an item
+            print("Looking to steal an item.")
             if FFX_memory.turnReady():
                 if FFX_memory.getBattleCharTurn() == 0:
                     buddySwapKimahri()
-                    FFX_Screen.awaitTurn()
+                elif itemStolen == False and (FFX_Screen.turnKimahri() or FFX_Screen.turnReady()):
                     if stealDirection == 'left':
                         StealLeft()
                     elif stealDirection == 'right':
@@ -2979,6 +2984,12 @@ def bikanelBattleLogic(status):
                         StealDown()
                     else:
                         Steal()
+                    
+                    #After stealing an item, what to do next?
+                    if throwPower == True or throwSpeed == True:
+                        battleGoal = 1
+                    else:
+                        battleGoal = 3
                 elif status[0] == False:
                     if FFX_memory.getBattleCharTurn() == 6:
                         attack('none')
@@ -2988,14 +2999,12 @@ def bikanelBattleLogic(status):
                     buddySwapTidus()
                     FFX_Screen.awaitTurn()
                     fleeAll()
-    elif battleGoal == 1: #Throw an item
-        print("Throw item with Kimahri, everyone else escape.")
-        while not FFX_memory.menuOpen():
+        elif battleGoal == 1: #Throw an item
+            print("Throw item with Kimahri, everyone else escape.")
             if FFX_memory.turnReady():
                 if FFX_memory.getBattleCharTurn() == 0:
                     buddySwapKimahri()
-                    FFX_Screen.awaitTurn()
-                    
+                elif FFX_Screen.turnKimahri() or FFX_Screen.turnRikku():
                     if items[2] >= 1:
                         itemToUse = 40
                     elif items[3] >= 1:
@@ -3005,20 +3014,17 @@ def bikanelBattleLogic(status):
                     
                     useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
                 else:
-                    buddySwapTidus()
-                    FFX_Screen.awaitTurn()
                     fleeAll()
-    elif battleGoal == 2: #Charge Rikku
-        print("Attack/Steal with Rikku, everyone else escape.")
-        while not FFX_memory.menuOpen():
+        elif battleGoal == 2: #Charge Rikku
+            print("Attack/Steal with Rikku, everyone else escape.")
             if FFX_memory.turnReady():
                 if FFX_memory.getBattleCharTurn() == 6:
                     attack('none')
                 else:
                     escapeOne()
-    elif battleGoal == 3: #Flee, nothing else.
-        print("Flee all battles, nothing more to do.")
-        fleeAll()
+        else: #Flee, nothing else.
+            print("Flee all battles, nothing more to do.")
+            fleeAll()
 
 def updateStealItemsDesert():
     itemArray = [0,0,0,0]
@@ -3055,16 +3061,16 @@ def updateStealItemsDesert():
 def sandragora(version):
     FFX_Screen.awaitTurn()
     if version == 1: #Kimahri's turn
-        tidusHaste('left')
-        FFX_Screen.awaitTurn()
-        if FFX_Screen.turnRikku():
+        if FFX_memory.getBattleCharSlot(3) >= 3:
             buddySwapKimahri()
-            FFX_Screen.awaitTurn()
+        else:
+            tidusHaste('l',character=3)
+        FFX_Screen.awaitTurn()
         print("Now Kimahri will use his overdrive.")
         kimahriOD(3)
         FFX_memory.clickToControl()
     else: #Auron's turn
-        tidusHaste('down')
+        tidusHaste('d',character=2)
         FFX_Screen.awaitTurn()
         if FFX_Screen.turnKimahri() or FFX_Screen.turnRikku():
             print("Kimahri/Rikku taking a spare turn. Just defend.")
@@ -3339,6 +3345,10 @@ def guards(groupNum):
                 if groupNum == 1:
                     if gameVars.getBlitzWin() == False and rikkuTurns == 1:
                         useItem(FFX_memory.getUseItemsSlot(20), 'none')
+                    elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1000:
+                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
+                    elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(3)] < 600:
+                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
                     else:
                         defend()
                 elif groupNum == 3:
@@ -3593,28 +3603,23 @@ def seymourNatus():
             FFX_Xbox.tapB()            
     return 0
 
-def calmLands(itemSteal):
+def calmLands():
     FFX_Logs.writeLog("Fight start: Calm Lands")
-    steal = 0
-    if itemSteal < 2:
-        if FFX_memory.getBattleNum() == 273:  # Red element in center slot, with machina and dog
-            print("Grabbing a gem here. This is gem number ", itemSteal + 1)
-            tidusHaste('left')
-            FFX_Screen.awaitTurn()
-            StealLeft()
-            steal += 1
-        elif FFX_memory.getBattleNum() == 275:  # Red element in top slot, with bee and tank
-            print("Grabbing a gem here. This is gem number ", itemSteal + 1)
-            tidusHaste('up')
-            FFX_Screen.awaitTurn()
-            StealDown()
-            steal += 1
+    if FFX_memory.getBattleNum() == 273:  # Red element in center slot, with machina and dog
+        print("Grabbing a gem here.")
+        tidusHaste(direction='l', character=3)
+        FFX_Screen.awaitTurn()
+        StealLeft()
+    elif FFX_memory.getBattleNum() == 275:  # Red element in top slot, with bee and tank
+        print("Grabbing a gem here.")
+        tidusHaste(direction='u', character=3)
+        FFX_Screen.awaitTurn()
+        StealDown()
     fleeAll()
     FFX_memory.clickToControl()
     hpPool = FFX_memory.getHP()
     if hpPool[0] != 1520 or hpPool[2] != 1030 or hpPool[3] != 1244:
         healUp(3)
-    return steal
 
 def gagazetPath():
     if FFX_memory.getBattleNum() == 337:
@@ -3739,7 +3744,7 @@ def _navigate_to_position(position, battleCursor = FFX_memory.battleCursor2):
                 FFX_Xbox.tapDown()
 
 def useItem(slot: int, direction = 'none', target = 255):
-    slot -= 1 #This allows us to index at 1 instead of 0 for the programmer's sake.
+    #slot -= 1 #This allows us to index at 1 instead of 0 for the programmer's sake.
     FFX_Logs.writeLog("Using items via the Use command")
     print("Using items via the Use command")
     print("Item slot: ", slot)
@@ -4836,7 +4841,7 @@ def BFA():
                     FFX_Xbox.tapDown()
                 while FFX_memory.mainBattleMenu():
                     FFX_Xbox.tapB()
-                itemPos = FFX_memory.getThrowItemsSlot(6) - 1
+                itemPos = FFX_memory.getThrowItemsSlot(6)
                 _navigate_to_position(itemPos)
                 while FFX_memory.otherBattleMenu():
                     FFX_Xbox.tapB()
@@ -4911,9 +4916,6 @@ def rikkuFullOD(battle):
         item2 = FFX_memory.getItemSlot(90)
         print("Mag Sphere in slot: ", item2)
 
-    item1 -= 1
-    item2 -= 1
-    
     if item1 > item2:
         item3 = item1
         item1 = item2

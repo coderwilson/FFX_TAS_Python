@@ -642,8 +642,10 @@ def getBattleFormation():
     char7 = process.readBytes(key,1)
     key = baseValue + 0x00D2C8A7
     char8 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A8
+    char9 = process.readBytes(key,1)
 
-    battleForm = [char1, char2, char3, char4, char5, char6, char7, char8]
+    battleForm = [char1, char2, char3, char4, char5, char6, char7, char8, char9]
     print(battleForm)
     if 255 in battleForm:
         while 255 in battleForm:
@@ -702,84 +704,19 @@ def getSLVLWakka():
     return sLvl
 
 def itemAddress(num):
-    if num == 1:
-        return 0x00D3095C
-    if num == 2:
-        return 0x00D3095E
-    if num == 3:
-        return 0x00D30960
-    if num == 4:
-        return 0x00D30962
-    if num == 5:
-        return 0x00D30964
-    if num == 6:
-        return 0x00D30966
-    if num == 7:
-        return 0x00D30968
-    if num == 8:
-        return 0x00D3096A
-    if num == 9:
-        return 0x00D3096C
-    if num == 10:
-        return 0x00D3096E
-    if num == 11:
-        return 0x00D30970
-    if num == 12:
-        return 0x00D30972
-    if num == 13:
-        return 0x00D30974
-    if num == 14:
-        return 0x00D30976
-    if num == 15:
-        return 0x00D30978
-    if num == 16:
-        return 0x00D3097A
-    if num == 17:
-        return 0x00D3097C
-    if num == 18:
-        return 0x00D3097E
-    if num == 19:
-        return 0x00D30980
-    if num == 20:
-        return 0x00D30982
-    if num == 21:
-        return 0x00D30984
-    if num == 22:
-        return 0x00D30986
-    if num == 23:
-        return 0x00D30988
-    if num == 24:
-        return 0x00D3098A
-    if num == 25:
-        return 0x00D3098C
-    if num == 26:
-        return 0x00D3098E
-    if num == 27:
-        return 0x00D30990
-    if num == 28:
-        return 0x00D30992
-    if num == 29:
-        return 0x00D30994
-    if num == 30:
-        return 0x00D30996
+    global baseValue
+    return baseValue + 0x00D3095C + (num * 0x2)
 
 def getItemsOrder():
-    global baseValue
-    items = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
-    for x in range(30):
-        address = itemAddress(x + 1)
-        key = baseValue + address
-        item = process.readBytes(key,1)
-        items[x + 1] = item
-
+    items = []
+    for x in range(60):
+        items.append(process.readBytes(itemAddress(x),1))
     #print(items)
     return items
 
 def getUseItemsOrder():
     itemArray = getItemsOrder()
-    x = 1
-    while x < len(itemArray):
+    for x in range(len(itemArray)):
         #print("x = %d" % x)
         try:
             if itemArray[x] == 20:
@@ -789,20 +726,18 @@ def getUseItemsOrder():
                 del itemArray[x]
             elif itemArray[x] > 69:
                 del itemArray[x]
-            else:
-                x += 1
         except:
-            x += 1
+            doNothing = True
         #print(itemArray)
-    print("Use command, item order:")
-    print(itemArray)
+    #print("Use command, item order:")
+    #print(itemArray)
     return itemArray
 
 def getUseItemsSlot(itemNum):
     items = getUseItemsOrder()
-    x = 1
+    x = 0
     while x < len(items):
-        #print(items[x + 1], " | ", itemNum)
+        print(items[x], " | ", itemNum, " | ", x)
         if items[x] == itemNum:
             return x
         x += 1
@@ -810,7 +745,7 @@ def getUseItemsSlot(itemNum):
 
 def getThrowItemsOrder():
     itemArray = getItemsOrder()
-    x = 1
+    x = 0
     while x < len(itemArray):
         try:
             if itemArray[x] > 15:
@@ -819,13 +754,13 @@ def getThrowItemsOrder():
                 x += 1
         except:
             x += 1
-    print("Throw Item command, item order:")
-    print(itemArray)
+    #print("Throw Item command, item order:")
+    #print(itemArray)
     return itemArray
 
 def getThrowItemsSlot(itemNum):
     items = getThrowItemsOrder()
-    x = 1
+    x = 0
     while x < len(items):
         #print(items[x + 1], " | ", itemNum)
         if items[x] == itemNum:
@@ -845,8 +780,8 @@ def getGridItemsOrder():
                 x += 1
         except:
             x += 1
-    print("Sphere grid, item order:")
-    print(itemArray)
+    #print("Sphere grid, item order:")
+    #print(itemArray)
     return itemArray
 
 def getGridItemsSlot(itemNum) -> int:
@@ -888,10 +823,13 @@ def getGridUseActive():
 
 def getItemSlot(itemNum):
     items = getItemsOrder()
-    for x in range(30):
+    #print(getItemsOrder())
+    #print("---",len(items))
+    for x in range(len(items)):
         #print(items[x + 1], " | ", itemNum)
-        if items[x + 1] == itemNum:
-            return (x + 1)
+        if items[x] == itemNum:
+            #print("Item slot: ", x)
+            return (x)
     return 255
 
 def checkItemsMacalania():
@@ -932,79 +870,18 @@ def checkItemsMacalania():
     return retVal
 
 def itemCountAddr(num):
-    if num == 1:
-        return 0x00D30B5C
-    if num == 2:
-        return 0x00D30B5D
-    if num == 3:
-        return 0x00D30B5E
-    if num == 4:
-        return 0x00D30B5F
-    if num == 5:
-        return 0x00D30B60
-    if num == 6:
-        return 0x00D30B61
-    if num == 7:
-        return 0x00D30B62
-    if num == 8:
-        return 0x00D30B63
-    if num == 9:
-        return 0x00D30B64
-    if num == 10:
-        return 0x00D30B65
-    if num == 11:
-        return 0x00D30B66
-    if num == 12:
-        return 0x00D30B67
-    if num == 13:
-        return 0x00D30B68
-    if num == 14:
-        return 0x00D30B69
-    if num == 15:
-        return 0x00D30B6A
-    if num == 16:
-        return 0x00D30B6B
-    if num == 17:
-        return 0x00D30B6C
-    if num == 18:
-        return 0x00D30B6D
-    if num == 19:
-        return 0x00D30B6E
-    if num == 20:
-        return 0x00D30B6F
-    if num == 21:
-        return 0x00D30B70
-    if num == 22:
-        return 0x00D30B71
-    if num == 23:
-        return 0x00D30B72
-    if num == 24:
-        return 0x00D30B73
-    if num == 25:
-        return 0x00D30B74
-    if num == 26:
-        return 0x00D30B75
-    if num == 27:
-        return 0x00D30B76
-    if num == 28:
-        return 0x00D30B77
-    if num == 29:
-        return 0x00D30B78
-    if num == 30:
-        return 0x00D30B79
+    return 0x00D30B5C + num
 
 def getItemsCount():
     global baseValue
-    itemCounts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
-    for x in range(30):
-        address = itemCountAddr(x + 1)
-        key = baseValue + address
-        itemCount = process.readBytes(key,1)
-        itemCounts[x + 1] = itemCount
-
-    #print(itemCounts)
+    itemCounts = []
+    for x in range(60):
+        itemCounts.append(process.readBytes(baseValue + 0x00D30B5C + x,1))
     return itemCounts
+
+def getItemCountSlot(itemSlot) -> int:
+    global baseValue
+    return process.readBytes(baseValue + 0x00D30B5C + itemSlot,1)
 
 def getMenuDisplayCharacters():
     base = 0x01441BD4
@@ -1016,15 +893,6 @@ def getMenuDisplayCharacters():
         characters.append(char)
     print(characters)
     return characters
-            
-
-def getItemCountSlot(itemSlot) -> int:
-    items = getItemsCount()
-    for x in range(30):
-        if itemSlot == x + 1:
-            print("Number of this item: ", items[x + 1])
-            return items[x + 1]
-    return 0
 
 def getGilvalue():
     global baseValue
@@ -1832,7 +1700,7 @@ def getActorCoords(actorNumber):
         retVal[0] = float_from_integer(process.read(keyX))
         keyY = basePointerAddress + offsetY
         retVal[1] = float_from_integer(process.read(keyY))
-        keyZ = basePointerAddress + offsetY
+        keyZ = basePointerAddress + offsetZ
         retVal[2] = float_from_integer(process.read(keyZ))
 
         return retVal
@@ -1840,21 +1708,13 @@ def getActorCoords(actorNumber):
         doNothing = True
 
 def miihenGuyCoords():
-    global process
-    global baseValue
-    retVal = [0,0]
     
-    basePointer = baseValue + 0x01fc44e4
-    basePointerAddress = process.read(basePointer)
-    offsetX = 0x330c
-    offsetY = 0x3314
-
-    keyX = basePointerAddress + offsetX
-    retVal[0] = float_from_integer(process.read(keyX))
-    keyY = basePointerAddress + offsetY
-    retVal[1] = float_from_integer(process.read(keyY))
-
-    return retVal
+    if gameVars.csr():
+        return getActorCoords(6)
+    elif diagProgressFlag() == 48: #After talking to Lucille
+        return getActorCoords(6)
+    else:
+        return getActorCoords(6)
 
 def lucilleMiihenCoords():
     return getActorCoords(8)
