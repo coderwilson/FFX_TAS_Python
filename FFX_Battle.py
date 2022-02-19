@@ -815,18 +815,19 @@ def KilikaWoods(valeforCharge):
                 elif bNum == 35 or bNum == 36:
                     fleeAll()
                 elif bNum == 37:
-                    if FFX_Screen.turnTidus():
+                    yunaWent = False
+                    tidusWent = False
+                    if FFX_Screen.turnTidus() and not tidusWent:
+                        tidusWent = True
                         buddySwapLulu()
                         thunderTarget(21, 'r')
-                    elif FFX_Screen.turnLulu():
-                        fleeAll()
-                    elif FFX_Screen.turnWakka():
-                        if FFX_memory.getEnemyCurrentHP()[2] != 0:
-                            attackByNum(22, 'l')
-                        else:
-                            defend()
-                    else:
+                    elif FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
+                        attackByNum(22, 'l')
+                    elif FFX_Screen.turnYuna() and not yunaWent:
+                        yunaWent = True
                         defend()
+                    elif yunaWent:
+                        fleeAll()
 
     FFX_memory.clickToControl()  # Rewards screen
     hpCheck = FFX_memory.getHP()
@@ -959,7 +960,7 @@ def Oblitzerator(earlyHaste):
     FFX_Xbox.clickToBattle()
     crane = 0
 
-    if earlyHaste == 1:
+    if earlyHaste >= 1:
         #First turn is always Tidus. Haste Lulu if we've got the levels.
         tidusHaste(direction='left', character=5)
 
@@ -1045,7 +1046,7 @@ def afterBlitz3(earlyHaste):
             attack('none')
         elif FFX_Screen.turnTidus():
             if tidusTurn == 0:
-                tidusHaste('up', character=2)
+                tidusHaste('up')
                 tidusTurn += 1
             elif tidusTurn == 1:
                 attack('none')

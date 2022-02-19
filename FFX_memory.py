@@ -2550,6 +2550,15 @@ def readVal(address, bytes=1):
 def spareChangeAmount():
     return readVal(0x00F40424, 4)
     
+def oakaGilAmount():
+    return readVal(0x01467A84, 4)
+    
+def oakaGilCursor():
+    return readVal(0x014663A8)
+    
+def oakaInterface():
+    return readVal(0x00F26D30)
+    
 def spareChangeCursor():
     return readVal(0x00F40418)
     

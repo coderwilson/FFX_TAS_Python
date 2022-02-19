@@ -80,7 +80,7 @@ def agencyShop():
     
     #For safety (Wendigo is the worst), buying extra phoenix downs first.
     while FFX_memory.equipBuyRow() != 1: #Buy some phoenix downs first
-        if FFX_memory.equipBuyRow() == 0:
+        if FFX_memory.equipBuyRow() < 1:
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()

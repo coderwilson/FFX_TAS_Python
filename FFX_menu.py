@@ -285,7 +285,7 @@ def battleSiteGrid():
     FFX_menuGrid.useAndQuit()
     
     #Sort items
-    sortItems(fullMenuClose=False)
+    #sortItems(fullMenuClose=False)
     
     #Wakka's weapon
     if gameVars.getLStrike() >= 2:
@@ -293,6 +293,23 @@ def battleSiteGrid():
     else:
         equipWeapon(character=4, fullMenuClose=False)
     FFX_memory.fullPartyFormat('battleSite')
+
+def _navigate_to_position(position, battleCursor):
+    while battleCursor() == 255:
+        pass
+    if battleCursor() != position:
+        print("Wrong position targetted", battleCursor() % 2, position % 2)
+        while battleCursor() % 2 != position % 2:
+            if battleCursor() % 2 < position % 2:
+                FFX_Xbox.tapRight()
+            else:
+                FFX_Xbox.tapLeft()
+        while battleCursor() != position:
+            print(battleCursor())
+            if battleCursor() > position:
+                FFX_Xbox.tapUp()
+            else:
+                FFX_Xbox.tapDown()
 
 def battleSiteOaka1():
     FFX_memory.clickToDiagProgress(96)
@@ -308,39 +325,23 @@ def battleSiteOaka1():
             FFX_memory.waitFrames(2)
     
     itemOrder = FFX_memory.getItemsOrder()
-    itemCursor = 1
-    while itemOrder[itemCursor] != 70: #Don't sell anything Power Sphere or after.
-        if itemOrder[itemCursor] == 3:
-            print("Keep Mega-Potions")
-        elif itemOrder[itemCursor] == 6:
-            print("Keep Phoenix Downs.")
-        else: #Sell all except for Mega Potions and Phoenix Downs.
+    items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2, 8]]
+    print(items_to_sell)
+    for slot, cur_item in items_to_sell:
+        print(slot, cur_item)
+        _navigate_to_position(slot, FFX_memory.equipSellRow)
+        cur_amount = FFX_memory.getItemCountSlot(slot)
+        amount_to_sell = cur_amount - {0:4, 1:4, 2:0, 8:0}[cur_item]
+        print("Selling from ", cur_amount, " to ", amount_to_sell)
+        while FFX_memory.itemShopMenu() != 27:
             FFX_Xbox.tapB()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
-            FFX_Xbox.tapUp()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
-            if FFX_memory.getItemCountSlot(itemCursor) > 10:
-                FFX_Xbox.tapUp()
-                if gameVars.usePause():
-                    FFX_memory.waitFrames(2)
-            FFX_Xbox.tapB() #Sell this item
-        if itemOrder[itemCursor + 1] == 70:
-            print("Done with selling items.")
-        elif itemCursor % 2 == 1:
-            FFX_Xbox.tapRight()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
-        else:
-            FFX_Xbox.tapLeft()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
-            FFX_Xbox.tapDown()
-            if gameVars.usePause():
-                FFX_memory.waitFrames(2)
-        itemCursor += 1
-    
+        while FFX_memory.equipBuyRow() != amount_to_sell:
+            if FFX_memory.equipBuyRow() < amount_to_sell:
+                FFX_Xbox.tapRight()
+            else:
+                FFX_Xbox.tapLeft()
+        while FFX_memory.itemShopMenu() != 21:
+            FFX_Xbox.tapB()    
     FFX_memory.closeMenu()
 
 def battleSiteOaka2():
@@ -612,7 +613,7 @@ def beforeGuards():
         FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 1, 11)
     while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
-    megaPotSlot = FFX_memory.getItemSlot(3) - 1
+    megaPotSlot = FFX_memory.getItemSlot(3)
     column = megaPotSlot % 2
     row = (megaPotSlot-column) / 2
     print(megaPotSlot, column, row)
