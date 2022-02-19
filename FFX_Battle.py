@@ -138,7 +138,7 @@ def wakkaOD():
     FFX_Xbox.SkipDialog(2)
     
     FFX_memory.waitFrames(30 * 3) #Replace with memory reading later.
-    FFX_Xbox.SkipDialog(3)
+    FFX_Xbox.SkipDialog(4)
 
 
 def auronOD(style="dragon fang"):
@@ -234,7 +234,7 @@ def revive(itemNum = 6):
         FFX_Xbox.tapDown()
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
-    itemPos = FFX_memory.getThrowItemsSlot(itemNum) - 1
+    itemPos = FFX_memory.getThrowItemsSlot(itemNum)
     _navigate_to_position(itemPos)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
@@ -252,7 +252,7 @@ def reviveTarget(itemNum = 6, target = 0):
         FFX_Xbox.tapDown()
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
-    itemPos = FFX_memory.getThrowItemsSlot(itemNum) - 1
+    itemPos = FFX_memory.getThrowItemsSlot(itemNum)
     _navigate_to_position(itemPos)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
@@ -1713,31 +1713,34 @@ def extractor():
     attack('none') #Wakka attack
 
     FFX_Screen.awaitTurn()
-    tidusHaste('left')
+    tidusHaste('l',character=4)
 
-    tidusCheer = 0
-    complete = 0
+    cheerCount = 0
     while not FFX_memory.battleComplete(): #AKA end of battle screen
+        #First determin if cheers are needed.
+        if gameVars.getLStrike() % 2 == 0 and cheerCount < 4:
+            tidusCheer = True
+        elif gameVars.getLStrike() % 2 == 1 and cheerCount < 1:
+            tidusCheer = True
+        else:
+            tidusCheer = False
+        
+        #Then do the battle logic.
         if FFX_memory.specialTextOpen():
             FFX_Xbox.tapB()
         elif FFX_memory.turnReady():
             if FFX_Screen.faintCheck() > 0:
                 revive()
-            elif FFX_Screen.turnTidus() and tidusCheer < 2:
-                tidusCheer += 1
+            elif FFX_Screen.turnTidus() and tidusCheer:
+                cheerCount += 1
                 cheer()
             elif FFX_memory.extractorHeight() < -180: #Readying depth charges
-                if FFX_Screen.turnTidus() and FFX_memory.getOverdriveBattle(0) == 100:
-                    tidusOD()
-                    FFX_Screen.awaitTurn()
-                elif FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4) == 100:
+                if FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4) == 100:
                     wakkaOD()
-                    FFX_Screen.awaitTurn()
-                attack('none')
+                else:
+                    attack('none')
             else:
                 attack('none')
-        elif FFX_Screen.BattleComplete():
-            complete = 1
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
     FFX_memory.clickToControl()
@@ -3887,7 +3890,7 @@ def _useHealingItem(num, direction, itemID):
     while not FFX_memory.otherBattleMenu():
         pass
     print(FFX_memory.battleCursor2())
-    _navigate_to_position(FFX_memory.getThrowItemsSlot(itemID)-1)
+    _navigate_to_position(FFX_memory.getThrowItemsSlot(itemID))
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
 

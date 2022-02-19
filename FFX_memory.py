@@ -716,27 +716,29 @@ def getItemsOrder():
 
 def getUseItemsOrder():
     itemArray = getItemsOrder()
-    for x in range(len(itemArray)):
+    x = 0
+    while x < len(itemArray):
         #print("x = %d" % x)
         try:
             if itemArray[x] == 20:
-                print("Al Bhed pots, disregard.")
+                ignoreThisValue = True
                 x += 1
             elif itemArray[x] < 23:
                 del itemArray[x]
             elif itemArray[x] > 69:
                 del itemArray[x]
-        except:
-            doNothing = True
-        #print(itemArray)
-    #print("Use command, item order:")
-    #print(itemArray)
+            else:
+                x += 1
+        except Exception as y:
+            print(y)
+            retryThisValue = True
+            print("Retrying value")
     return itemArray
 
 def getUseItemsSlot(itemNum):
     items = getUseItemsOrder()
     x = 0
-    while x < len(items):
+    for x in range(len(items)):
         print(items[x], " | ", itemNum, " | ", x)
         if items[x] == itemNum:
             return x
@@ -752,8 +754,10 @@ def getThrowItemsOrder():
                 itemArray.remove(itemArray[x])
             else:
                 x += 1
-        except:
-            x += 1
+        except Exception as y:
+            print(y)
+            retryThisValue = True
+            print("Retrying value")
     #print("Throw Item command, item order:")
     #print(itemArray)
     return itemArray
@@ -778,8 +782,10 @@ def getGridItemsOrder():
                 itemArray.remove(itemArray[x])
             else:
                 x += 1
-        except:
-            x += 1
+        except Exception as y:
+            print(y)
+            retryThisValue = True
+            print("Retrying value")
     #print("Sphere grid, item order:")
     #print(itemArray)
     return itemArray

@@ -72,8 +72,8 @@ import FFX_Sin
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
-StepCounter = 1 #Blitz Win, no end game version selected
+#Gamestate = "Gagazet"
+#StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
 #Gamestate = "Zanarkand"
@@ -81,8 +81,8 @@ StepCounter = 1 #Blitz Win, no end game version selected
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 
 ####################################################################################################
