@@ -3476,7 +3476,7 @@ def altanaheal():
                 FFX_Xbox.tapB()
         while FFX_memory.mainBattleMenu():
             FFX_Xbox.tapB()
-        itemPos = FFX_memory.getThrowItemsSlot(itemnum) - 1
+        itemPos = FFX_memory.getThrowItemsSlot(itemnum)
         print("Position: ", itemPos)
         _navigate_to_position(itemPos)
         while FFX_memory.otherBattleMenu():
