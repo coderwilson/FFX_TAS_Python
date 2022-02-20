@@ -51,8 +51,8 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 2
+Gamestate = "MRR"
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -65,9 +65,9 @@ import FFX_Sin
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-Gamestate = "Home"
+#Gamestate = "Home"
 #StepCounter = 1
-StepCounter = 2
+#StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
 #StepCounter = 2
@@ -210,7 +210,7 @@ if Gamestate != "none" :
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(38)
         import FFX_menu
         FFX_menu.mrrGrid1()
         FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
@@ -380,8 +380,6 @@ while Gamestate != "End":
     if Gamestate == "Besaid" and StepCounter == 1 :
         reportGamestate()
         FFX_Besaid1.Beach()
-        FFX_Besaid1.swimming1()
-        FFX_Besaid1.enteringVillage()
         StepCounter = 2
         reportGamestate()
 

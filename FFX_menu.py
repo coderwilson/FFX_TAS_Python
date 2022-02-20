@@ -1070,12 +1070,6 @@ def yunaFirstStrike():
     addFirstStrike(owner=1, equipment_type=0, slotcount=1, closeMenu=False, navigateToEquipMenu=True)
     print("Done with Yuna")
 
-def beforeFlux():
-    #FFX_memory.openMenu()
-    
-    #FFX_memory.closeMenu()
-    print("Function not used")
-
 def afterFlux():
     openGrid(character=0)
     

@@ -65,19 +65,16 @@ def calmLands():
                 FFX_Xbox.menuB()
 
 def defenderX():
-    FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.awaitControl()
     while FFX_targetPathing.setMovement([67,-255]) == False:
-        doNothing = True
+        pass
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
     
     FFX_Xbox.clickToBattle()
     while FFX_memory.battleActive():
-        #print("Troubleshooting message")
         if FFX_memory.turnReady():
-            #print("Someone's turn.")
             if FFX_Screen.turnTidus():
                 FFX_Battle.buddySwapYuna()
             elif FFX_Screen.turnYuna():
@@ -97,10 +94,7 @@ def toTheRonso():
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                FFX_Xbox.tapB()
     
     #Now in screen with Ronso
     checkpoint = 0
@@ -114,10 +108,7 @@ def toTheRonso():
             if FFX_memory.turnReady():
                 FFX_Battle.biranYenke()
             elif FFX_memory.diagSkipPossible():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                FFX_Xbox.tapB()
 
 def gagazetGates():
     #Should appear on the map just before the Ronso hymn
