@@ -29,15 +29,8 @@ def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
     FFX_menu.prepCalmLands()
-    hpPool = FFX_memory.getHP()
-    if hpPool[0] != 1520 or hpPool[2] != 1030 or hpPool[3] != 1244:
-        quickHeal = True
-        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
-    else:
-        quickHeal = False
-        FFX_memory.fullPartyFormat('kimahri')
-    if quickHeal == True:
-        FFX_Battle.healUp(3)
+    FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    FFX_Battle.healUp(fullMenuClose=True)
     
     FFXC.set_movement(0, 1)
     time.sleep(4)
