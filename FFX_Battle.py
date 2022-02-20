@@ -3352,13 +3352,7 @@ def guards(groupNum):
                     else:
                         defend()
                 elif groupNum == 3:
-                    if rikkuTurns == 1:
-                        if FFX_memory.getUseItemsSlot(20) < 200:
-                            useItem(FFX_memory.getUseItemsSlot(20), 'none')
-                        else:
-                            defend()
-                    else:
-                        defend()
+                    defend()
                 elif groupNum == 2 or groupNum == 4:
                     if items[1] >= 1:
                         itemToUse = 37
@@ -3412,6 +3406,7 @@ def isaaru():
             confirm = 1
 
     if confirm == 1: #Larvae battle
+        gameVars.addRescueCount()
         aeonSummon(2)
         while FFX_memory.battleActive():
             FFX_Xbox.tapB()
@@ -3425,7 +3420,6 @@ def isaaru():
                         aeonSummon(4)
                 else:
                     FFX_Xbox.SkipDialog(3)
-                
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_value('BtnB', 1)
@@ -3552,12 +3546,15 @@ def seymourNatus():
         elif FFX_memory.getBattleNum() == 270:  # YAT-63 x2
             fight = 4
             while FFX_memory.battleActive():
+                if gameVars.completedRescueFights():
+                    fleeAll()
                 if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         if turn == 0:
                             turn += 1
                             attackByNum(22, 'r')
                         else:
+                            gameVars.addRescueCount()
                             fleeAll()
                     elif FFX_Screen.turnYuna():
                         attackByNum(22, 'r')
@@ -3566,6 +3563,8 @@ def seymourNatus():
         elif FFX_memory.getBattleNum() == 269:  # YAT-63 with two guard guys
             fight = 3
             while FFX_memory.battleActive():
+                if gameVars.completedRescueFights():
+                    fleeAll()
                 if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         if turn == 0:
@@ -3573,6 +3572,7 @@ def seymourNatus():
                             attack('none')
                         else:
                             fleeAll()
+                            gameVars.addRescueCount()
                     elif FFX_Screen.turnYuna():
                         attack('none')
                     elif FFX_Screen.turnAuron():
@@ -3580,6 +3580,8 @@ def seymourNatus():
         elif FFX_memory.getBattleNum() == 271:  # one YAT-63, two YAT-99
             fight = 2
             while FFX_memory.battleActive():
+                if gameVars.completedRescueFights():
+                    fleeAll()
                 if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         if turn == 0:
@@ -3587,6 +3589,7 @@ def seymourNatus():
                             attackByNum(21, 'l')
                         else:
                             fleeAll()
+                            gameVars.addRescueCount()
                     elif FFX_Screen.turnYuna():
                         attackByNum(21, 'l')
                     elif FFX_Screen.turnAuron():
@@ -3599,19 +3602,14 @@ def calmLands():
     FFX_Logs.writeLog("Fight start: Calm Lands")
     if FFX_memory.getBattleNum() == 273:  # Red element in center slot, with machina and dog
         print("Grabbing a gem here.")
-        tidusHaste(direction='l', character=3)
-        FFX_Screen.awaitTurn()
+        buddySwapKimahri()
         StealLeft()
     elif FFX_memory.getBattleNum() == 275:  # Red element in top slot, with bee and tank
         print("Grabbing a gem here.")
-        tidusHaste(direction='u', character=3)
-        FFX_Screen.awaitTurn()
+        buddySwapKimahri()
         StealDown()
     fleeAll()
     FFX_memory.clickToControl()
-    hpPool = FFX_memory.getHP()
-    if hpPool[0] != 1520 or hpPool[2] != 1030 or hpPool[3] != 1244:
-        healUp(3)
 
 def gagazetPath():
     if FFX_memory.getBattleNum() == 337:

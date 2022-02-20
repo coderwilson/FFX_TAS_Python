@@ -83,13 +83,6 @@ def Beach():
     FFX_Logs.writeStats("Optimal pirhana battles:")
     FFX_Logs.writeStats(str(goodBattles))
 
-def swimming1():
-    # print("Function no longer used")
-    return
-
-def enteringVillage():
-    # print("Function no longer used")
-    return
 
 def trials():
     checkpoint = 0
@@ -141,9 +134,9 @@ def trials():
                 FFXC.set_neutral()
                 
                 FFX_memory.clickToDiagProgress(47) #Wakka, "She's cute, ya?"
-                FFX_memory.waitFrames(20)
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
+                while FFX_memory.shopMenuDialogueRow() != 1:
+                    FFX_Xbox.tapDown()
+                FFX_Xbox.tapB()
                 checkpoint += 1
             elif checkpoint == 36: #Sleep tight
                 FFX_memory.clickToEventTemple(3)
@@ -166,12 +159,6 @@ def trials():
             elif checkpoint == 32 and FFX_memory.menuOpen():
                 #Name for Valefor
                 FFX_Xbox.nameAeon()
-                
-                #FFX_memory.waitFrames(30 * 0.2)
-                #FFX_Xbox.menuB()
-                #FFX_memory.waitFrames(30 * 0.2)
-                #FFX_Xbox.menuUp()
-                #FFX_Xbox.menuB()
                 checkpoint += 1 #To the night scene
                 
             
@@ -254,7 +241,6 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 60: #Beach, save sphere
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 0.2)
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
@@ -286,18 +272,15 @@ def leaving():
                         FFX_Xbox.tapB()
                 FFX_Logs.writeStats("Kimahri heal count:")
                 FFX_Logs.writeStats(healCount)
-                FFX_Xbox.SkipDialog(1.5)
                 FFX_memory.clickToControl()
             elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
                 FFX_Xbox.clickToBattle()
-                FFX_memory.waitFrames(4)
                 FFX_Battle.buddySwapYuna()
                 FFX_Xbox.clickToBattle()
                 FFX_Battle.aeonSummon(0)
                 while not FFX_memory.menuOpen():
                     if FFX_Screen.BattleScreen():
                         FFX_Battle.aeonSpell(1)
-                        FFX_memory.waitFrames(30 * 0.4)
                 print("Now to open the menu")
                 FFX_memory.clickToControl()
                 FFX_memory.fullPartyFormat('Besaid')

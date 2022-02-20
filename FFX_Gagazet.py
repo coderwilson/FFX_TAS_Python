@@ -29,15 +29,11 @@ def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
     FFX_menu.prepCalmLands()
-    hpPool = FFX_memory.getHP()
-    if hpPool[0] != 1520 or hpPool[2] != 1030 or hpPool[3] != 1244:
-        quickHeal = True
-        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    if checkGems() < 2:
+        FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
     else:
-        quickHeal = False
-        FFX_memory.fullPartyFormat('kimahri')
-    if quickHeal == True:
-        FFX_Battle.healUp(3)
+        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    FFX_Battle.healUp(fullMenuClose=True)
     
     #Enter the cutscene where Yuna muses about ending her journey.
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
@@ -51,7 +47,10 @@ def calmLands():
     checkpoint = 0
     while FFX_memory.getMap() != 279:
         if FFX_memory.userControl():
-            gemSlot = FFX_memory.getItemSlot(34)
+            if checkGems() < 2:
+                FFX_memory.fullPartyFormat('yuna')
+            else:
+                FFX_memory.fullPartyFormat('kimahri')
             if checkpoint == 9 and checkGems() < 2:
                 checkpoint = 8
                 FFXC.set_movement(-1, 0)
@@ -75,19 +74,16 @@ def calmLands():
                 FFX_Xbox.menuB()
 
 def defenderX():
-    FFX_memory.waitFrames(30 * 0.5)
     FFX_memory.awaitControl()
     while FFX_targetPathing.setMovement([67,-255]) == False:
-        doNothing = True
+        pass
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
     
     FFX_Xbox.clickToBattle()
     while FFX_memory.battleActive():
-        #print("Troubleshooting message")
         if FFX_memory.turnReady():
-            #print("Someone's turn.")
             if FFX_Screen.turnTidus():
                 FFX_Battle.buddySwapYuna()
             elif FFX_Screen.turnYuna():
@@ -107,10 +103,7 @@ def toTheRonso():
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                FFX_Xbox.tapB()
     
     #Now in screen with Ronso
     checkpoint = 0
@@ -124,10 +117,7 @@ def toTheRonso():
             if FFX_memory.turnReady():
                 FFX_Battle.biranYenke()
             elif FFX_memory.diagSkipPossible():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(30 * 0.035)
-                FFXC.set_value('BtnB', 0)
-                FFX_memory.waitFrames(30 * 0.035)
+                FFX_Xbox.tapB()
 
 def gagazetGates():
     #Should appear on the map just before the Ronso hymn
@@ -170,7 +160,6 @@ def gagazetGates():
 
 def Flux():
     FFX_memory.fullPartyFormat('yuna')
-    FFX_menu.beforeFlux()
     checkpoint = 0
     while FFX_memory.getMap() != 309:
         if FFX_memory.userControl():

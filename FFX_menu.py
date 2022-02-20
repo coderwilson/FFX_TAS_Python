@@ -845,18 +845,6 @@ def seymourNatusBlitzWin():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndQuit()
-    
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.closeMenu()
 
 def seymourNatusBlitzLoss():
     openGrid(character=1)
@@ -893,9 +881,6 @@ def seymourNatusBlitzLoss():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','left')
     FFX_menuGrid.useAndQuit()
-    
-    FFX_memory.fullPartyFormat('highbridge')
-    FFX_memory.closeMenu()
 
 def prepCalmLands():
     openGrid(character=1)
@@ -916,7 +901,6 @@ def prepCalmLands():
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_memory.closeMenu()
 
 def afterRonso():
     FFX_memory.openMenu()
@@ -1070,12 +1054,6 @@ def yunaFirstStrike():
     addFirstStrike(owner=1, equipment_type=0, slotcount=1, closeMenu=False, navigateToEquipMenu=True)
     print("Done with Yuna")
 
-def beforeFlux():
-    #FFX_memory.openMenu()
-    
-    #FFX_memory.closeMenu()
-    print("Function not used")
-
 def afterFlux():
     openGrid(character=0)
     
@@ -1140,37 +1118,7 @@ def zombieStrkeBackup():
     FFX_menuGrid.useAndQuit()
     #FFX_memory.closeMenu()
 
-def endGameSwap():
-    formation = FFX_memory.getOrder()
-    if formation[2] == 1:
-        FFX_memory.openMenu()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #Yuna from position 2 to 7
-        FFX_memory.closeMenu()
 
-def endGameSwap2():
-    formation = FFX_memory.getOrder()
-    if formation[7] == 1:
-        FFX_memory.openMenu()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuDown()
-        FFX_Xbox.menuB()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuUp()
-        FFX_Xbox.menuB() #Yuna from position 7 to 2
-        FFX_memory.closeMenu()
 
 def BFA():
     openGrid(character=1) #Yuna final grid

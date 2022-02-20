@@ -2633,6 +2633,9 @@ def configCursorColumn():
     retVal = process.readBytes(key,1)
     return retVal
 
+def airshipMapMenu():
+    return readVal(0x00F26D64)
+
 def purchasingAmountItems():
         return readVal(0x01440C00)
     

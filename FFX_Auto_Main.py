@@ -51,8 +51,8 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 2
+Gamestate = "MRR"
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -68,9 +68,9 @@ import FFX_Sin
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-#Gamestate = "rescueYuna"
+Gamestate = "rescueYuna"
 #StepCounter = 1
-#StepCounter = 2
+StepCounter = 2
 #StepCounter = 5
 Gamestate = "Gagazet"
 StepCounter = 1 #Blitz Win, no end game version selected
@@ -144,7 +144,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
@@ -210,7 +210,7 @@ if Gamestate != "none" :
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(38)
         import FFX_menu
         FFX_menu.mrrGrid1()
         FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
@@ -255,15 +255,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadOffset(42)
-        #FFX_LoadGame.loadBahamut()
+        FFX_LoadGame.loadOffset(1)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadOffset(2)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
-        FFX_LoadGame.loadOffset(11)
+        FFX_LoadGame.loadOffset(1)
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 3: # Just before Seymour Flux
         FFX_LoadGame.LoadNeutral()
@@ -389,8 +388,6 @@ while Gamestate != "End":
     if Gamestate == "Besaid" and StepCounter == 1 :
         reportGamestate()
         FFX_Besaid1.Beach()
-        FFX_Besaid1.swimming1()
-        FFX_Besaid1.enteringVillage()
         StepCounter = 2
         reportGamestate()
 

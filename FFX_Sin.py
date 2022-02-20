@@ -163,13 +163,12 @@ def insideSin():
             if FFX_memory.getMap() == 296: #Seymour battle
                 print("We've reached the Seymour screen.")
                 FFX_memory.fullPartyFormat('yuna')
-                #FFX_menu.endGameSwap2()
                 FFXC.set_movement(0, 1)
                 FFX_memory.waitFrames(30 * 5)
                 FFXC.set_neutral()
                 FFX_Battle.omnis()
                 FFX_memory.clickToControl()
-                FFX_menu.endGameSwap()
+                FFX_memory.fullPartyFormat('kimahri')
             elif checkpoint < 41 and FFX_memory.getMap() == 204:
                 checkpoint = 41
             elif checkpoint < 68 and FFX_memory.getMap() == 327:
@@ -206,11 +205,7 @@ def eggHunt(autoEggHunt):
     eggDuration = eggEnd - eggStart
     FFX_Logs.writeStats("Egg hunt duration:")
     FFX_Logs.writeStats(str(eggDuration))
-    
     print("Done with the egg hunt. Final prep for BFA.")
-    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
-    if gameVars.zombieWeapon() != 255:
+    if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
         FFX_menu.equipWeapon(character=gameVars.zombieWeapon(),ability=0x8032, fullMenuClose=True)
-    else:
-        FFX_memory.closeMenu()
     FFX_menu.BFA()

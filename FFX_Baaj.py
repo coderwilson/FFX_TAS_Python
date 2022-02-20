@@ -32,15 +32,7 @@ def Entrance():
             elif FFX_targetPathing.setMovement(FFX_targetPathing.baajRamp(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
-    
-    #FFXC.set_movement(0, 1)
-    #FFX_memory.waitFrames(30 * 1)
-    #FFXC.set_movement(1, 1)
-    #FFX_memory.waitFrames(30 * 0.3)
-    #FFXC.set_movement(0, 1)
-    #print("Mark 1")
-    #FFX_memory.waitFrames(30 * 35)
-    #print("Mark 2")
+                
     FFXC.set_neutral()
     
     #Battles
@@ -52,17 +44,6 @@ def Entrance():
                 FFX_Battle.defend()
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
-    
-    #FFX_Battle.attack('none')
-    #FFX_memory.waitFrames(30 * 0.2)
-    #FFX_Screen.awaitTurn()
-    #FFX_Battle.attack('none')
-    #FFX_Xbox.clickToBattle()
-    #while not FFX_memory.userControl():
-    #    if FFX_Screen.BattleScreen():
-    #        FFX_Battle.defend()
-    #    else:
-    #        FFX_Xbox.menuB()
     
     #Out of the frying pan, into the furnace
     FFX_memory.clickToControl()
@@ -139,20 +120,18 @@ def Klikk_fight() :
     FFX_Screen.awaitTurn()
     FFX_Battle.Klikk()
     
-def ABboat1() :
+def ABboat1():
     print("Start of Al Bhed boat section.")
     FFX_memory.clearSaveMenuCursor2()
     FFXC.set_neutral()
     if gameVars.csr():
         FFX_memory.waitFrames(30)
-    #FFX_memory.csrBaajSaveClear()
     print("Control restored.")
     FFXC.set_neutral()
     FFX_memory.waitFrames(4)
     FFX_memory.csrBaajSaveClear()
     FFXC.set_movement(0, -1)
     FFX_memory.waitFrames(30 * 0.3)
-    #FFX_memory.csrBaajSaveClear()
     FFXC.set_movement(0, -1)
     if not gameVars.csr():
         FFX_Xbox.SkipDialog(4) #Start Sphere Grid tutorial

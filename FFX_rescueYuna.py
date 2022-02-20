@@ -395,10 +395,7 @@ def ViaPurifico():
             complete = FFX_Battle.isaaru()
         else:
             FFXC.set_neutral()
-            FFXC.set_value('BtnB',1) #Skipping dialog for Isaaru
-            FFX_memory.waitFrames(30 * 0.035)
-            FFXC.set_value('BtnB',0)
-            FFX_memory.waitFrames(30 * 0.035)
+            FFX_Xbox.tapB()
 
 def evraeAltana():
     FFX_memory.clickToControl()
@@ -473,17 +470,16 @@ def evraeAltana():
 def seymourNatus():
     FFX_memory.clickToControl()
     
-    if gameVars.getBlitzWin() == True:
+    if gameVars.getBlitzWin():
         FFX_menu.seymourNatusBlitzWin()
     else:
         FFX_menu.seymourNatusBlitzLoss()
     
+    FFX_memory.fullPartyFormat('highbridge')
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
             FFX_targetPathing.setMovement(FFX_targetPathing.seymourNatus())
-        
-        
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
