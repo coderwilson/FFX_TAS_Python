@@ -68,12 +68,12 @@ StepCounter = 1
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-#Gamestate = "rescueYuna"
+Gamestate = "rescueYuna"
 #StepCounter = 1
-#StepCounter = 2
+StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
-#StepCounter = 1 #Blitz Win, no end game version selected
+Gamestate = "Gagazet"
+StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
 #Gamestate = "Zanarkand"
@@ -144,7 +144,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
@@ -255,15 +255,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(30)
         FFX_LoadGame.loadRescue()
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadOffset(42)
-        #FFX_LoadGame.loadBahamut()
+        FFX_LoadGame.loadOffset(1)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadOffset(2)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
-        FFX_LoadGame.loadOffset(11)
+        FFX_LoadGame.loadOffset(1)
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 3: # Just before Seymour Flux
         FFX_LoadGame.LoadNeutral()

@@ -25,6 +25,8 @@ class allVars:
         self.fullKilikMenu = False #Default to False
         
         self.selfDestruct = False #Default False
+        
+        self.rescueCount = 0
     
     def csr(self):
         return self.csrValue
@@ -91,6 +93,13 @@ class allVars:
     
     def selfDestructGet(self):
         return self.selfDestruct
+        
+    def addRescueCount(self):
+        self.rescueCount += 1
+        
+    def completedRescueFights(self):
+        print(f"Completed {self.rescueCount} exp kills")
+        return self.rescueCount >= 4
 
 def initVars():
     mainVars = allVars()

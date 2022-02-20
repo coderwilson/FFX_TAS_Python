@@ -29,7 +29,10 @@ def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
     FFX_menu.prepCalmLands()
-    FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    if checkGems() < 2:
+        FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
+    else:
+        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
     
     FFXC.set_movement(0, 1)
@@ -41,7 +44,10 @@ def calmLands():
     checkpoint = 0
     while FFX_memory.getMap() != 279:
         if FFX_memory.userControl():
-            gemSlot = FFX_memory.getItemSlot(34)
+            if checkGems() < 2:
+                FFX_memory.fullPartyFormat('yuna')
+            else:
+                FFX_memory.fullPartyFormat('kimahri')
             if checkpoint == 9 and checkGems() < 2:
                 checkpoint = 8
                 FFXC.set_movement(-1, 0)
@@ -151,7 +157,6 @@ def gagazetGates():
 
 def Flux():
     FFX_memory.fullPartyFormat('yuna')
-    FFX_menu.beforeFlux()
     checkpoint = 0
     while FFX_memory.getMap() != 309:
         if FFX_memory.userControl():

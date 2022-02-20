@@ -229,25 +229,6 @@ def midPoint():
                 checkpoint = 4
             elif checkpoint == 3:
                 checkpoint = 4
-                #FFXC.set_movement(0, 1)
-                #FFX_memory.clickToEvent()
-                #FFXC.set_neutral()
-                #FFX_memory.waitFrames(30 * 1.5)
-                #FFX_Xbox.menuB()
-                #FFX_memory.waitFrames(30 * 1.5)
-                #FFX_Xbox.menuDown()
-                #FFX_Xbox.menuB()
-                #FFX_memory.waitFrames(30 * 1.5)
-                #FFX_Xbox.menuB()
-                #FFX_Xbox.menuDown()
-                #FFX_Xbox.menuB()
-                #FFX_Xbox.menuUp()
-                #FFX_Xbox.menuB() #Extra P.downs
-                #FFX_Xbox.menuA()
-                #FFX_Xbox.menuA()
-                #FFX_Xbox.menuA()
-                #FFX_Xbox.menuA()
-                #checkpoint += 1
             elif checkpoint == 5:
                 FFXC.set_movement(0, -1)
                 FFX_memory.awaitEvent()
@@ -265,65 +246,6 @@ def midPoint():
     FFX_Battle.chocoEater()
     print("Miihen - Chocobo Eater complete")
 
-def midPoint_old():
-    #Should now be at the Mi'ihen travel agency.
-    FFX_memory.clickToControl3()
-    
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.6)
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 20)
-    FFXC.set_neutral()
-    
-    print("Evening scene")
-    FFX_memory.awaitControl()
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 1)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl3() #Dude gives us some Lv.1 spheres
-    
-    print("Let's grab some P.downs")
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.4)
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFXC.set_neutral()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.5)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.5)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 1.5)
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() #Extra P.downs
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    
-    #Start conversation with Rin
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    print("Conversation with Rin")
-    FFX_memory.clickToControl()
-    FFXC.set_movement(-1, -1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral() #Leave the shop
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
-    print("Miihen - ready for Chocobo Eater")
-    FFX_Battle.chocoEater()
-    print("Miihen - Chocobo Eater complete")
 
 def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save sphere.
     checkpoint = 0
