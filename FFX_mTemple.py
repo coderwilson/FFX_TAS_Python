@@ -316,8 +316,9 @@ def underLake():
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 15:
-                FFXC.set_movement(0, 1)
-                FFX_memory.clickToEvent()
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-4,-8])
+                    FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
             

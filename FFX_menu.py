@@ -1062,14 +1062,14 @@ def afterFlux():
     gridRight()
     gridRight()
     gridRight()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('Lv4','d','none')
-    FFX_menuGrid.useAndMove()
-    gridUp()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability','u','none')
-    FFX_menuGrid.useAndMove()
-    gridDown()
+    #FFX_menuGrid.moveAndUse()
+    #FFX_menuGrid.selSphere('Lv4','d','none')
+    #FFX_menuGrid.useAndMove()
+    #gridUp()
+    #FFX_menuGrid.moveAndUse()
+    #FFX_menuGrid.selSphere('ability','u','none')
+    #FFX_menuGrid.useAndMove()
+    #gridDown()
     gridDown()
     gridDown()
     gridDown()
@@ -1116,8 +1116,7 @@ def zombieStrkeBackup():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','u','none')
     FFX_menuGrid.useAndQuit()
-    FFX_memory.closeMenu()
-
+    #FFX_memory.closeMenu()
 
 
 

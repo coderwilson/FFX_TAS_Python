@@ -505,13 +505,13 @@ def jassuMove():
                 targetCoords = [p10C[0] - 180,p10C[1] - 120]
             FFX_blitzPathing.setMovement(targetCoords)
         elif p10C[0] < -400:
-            targetCoords = [p10C[0] - 0,p10C[1] - 280]
+            targetCoords = [p10C[0] - 0,p10C[1] - 310]
         elif playerArray[3].getCoords()[1] < -200:
             #In position to see if anything happens
-            targetCoords = [p10C[0] - 180,p10C[1] - 120]
+            targetCoords = [p10C[0] - 200,p10C[1] - 120]
             FFX_blitzPathing.setMovement(targetCoords)
         else:
-            targetCoords = [p10C[0] - 180,p10C[1] - 120]
+            targetCoords = [p10C[0] - 200,p10C[1] - 120]
             FFX_blitzPathing.setMovement(targetCoords)
     else: #Pass to Tidus
         FFX_Xbox.tapX()

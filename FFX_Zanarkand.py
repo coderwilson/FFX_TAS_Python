@@ -18,6 +18,16 @@ def arrival():
     FFX_memory.fullPartyFormat('kimahri')
     
     print("Outdoor Zanarkand pathing section")
+    while FFX_memory.getMap() != 225:
+        if FFX_memory.userControl():
+            if FFX_memory.getCoords()[1] > -52:
+                FFX_targetPathing.setMovement([103,-54])
+            elif FFX_memory.getCoords()[0] < 172:
+                FFX_targetPathing.setMovement([176,-118])
+            else:
+                FFXC.set_movement(-1, 1)
+        else:
+            FFXC.set_neutral()
     
     fortuneSlot = FFX_memory.getItemSlot(74)
     if fortuneSlot == 255:
@@ -336,7 +346,16 @@ def yunalesca():
     FFX_Battle.aeonSummon(4) #Summon Bahamut and attack.
     FFX_memory.clickToControl() #This does all the attacking and dialog skipping
     
-    #return #used for testing only
+    #Now to check for zombie strike and then report to logs.
+    print("Ready to check for Zomibe Strike")
+    if FFX_memory.checkZombieStrike():
+        FFX_Logs.writeStats("Zombiestrike True:")
+        FFX_Logs.writeStats(gameVars.zombieWeapon())
+    else:
+        FFX_Logs.writeStats("Zombiestrike False:")
+        FFX_Logs.writeStats(gameVars.zombieWeapon())
+    print("++Zombiestrike:")
+    print("++",gameVars.zombieWeapon())
     
     print("Heading back outside.")
     FFXC.set_neutral()

@@ -324,7 +324,7 @@ def clickToEventTemple(direction):
 def awaitEvent():
     waitFrames(1)
     while userControl():
-        waitFrames(1)
+        pass
 
 def getCoords():
     global process
@@ -909,6 +909,12 @@ def setGilvalue(newValue):
     global baseValue
     key = baseValue + 0x00D307D8
     return process.write(key, newValue)
+
+def setStory(newValue):
+    global baseValue
+    key = baseValue + 0x00D2D67C
+    return process.writeBytes(key, newValue, 2)
+
 
 def RikkuODCursor1():
     global baseValue
@@ -2367,11 +2373,11 @@ def allEquipment():
     firstEquipment = True
     for i in range(200):
         currentHandle = equipment(i)
-        if getBattleNum() == 180 and False:
-            print("----")
-            print("Exists: ", currentHandle.equipExists())
-            print("Abilities: ", currentHandle.abilities())
-            print("Legit: ", getEquipLegit(i))
+        #if getBattleNum() == 180 and False:
+            #print("----")
+            #print("Exists: ", currentHandle.equipExists())
+            #print("Abilities: ", currentHandle.abilities())
+            #print("Legit: ", getEquipLegit(i))
         if getEquipLegit(i) and currentHandle.equipExists():
             if firstEquipment:
                 equipHandleArray = [equipment(i)]
@@ -2390,7 +2396,7 @@ def weaponArrayCharacter(charNum):
     firstEquipment = True
     while len(equipHandles) > 0:
         currentHandle = equipHandles.pop(0)
-        print("Abilities: ", currentHandle.abilities())
+        #print("Abilities: ", currentHandle.abilities())
         if currentHandle.owner() == charNum and currentHandle.equipmentType() == 0:
             if firstEquipment:
                 charWeaps = [currentHandle]
@@ -2415,7 +2421,62 @@ def checkThunderStrike() -> int:
             results += 2
             break
     return results
+
+def checkZombieStrike():
+    ability = 0x8032
+    gameVars = FFX_vars.varsHandle()
     
+    charWeaps = weaponArrayCharacter(0) #Tidus
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(0)
+            return True
+    
+    charWeaps = weaponArrayCharacter(1) #Yuna
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(1)
+            return True
+    
+    charWeaps = weaponArrayCharacter(2) #Auron
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(2)
+            return True
+    
+    charWeaps = weaponArrayCharacter(3) #Kimahri
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(3)
+            return True
+    
+    charWeaps = weaponArrayCharacter(4) #Wakka
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(4)
+            return True
+    
+    charWeaps = weaponArrayCharacter(5) #Lulu
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(5)
+            return True
+    
+    charWeaps = weaponArrayCharacter(6) #Rikku
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setZombie(6)
+            return True
+    
+    return False
+
 def shopMenuDialogueRow():
     return readVal(0x0146780A)
 

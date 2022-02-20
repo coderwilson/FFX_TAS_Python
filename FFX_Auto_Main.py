@@ -88,7 +88,7 @@ StepCounter = 1 #Blitz Win, no end game version selected
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -277,7 +277,16 @@ if Gamestate != "none" :
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(10)
         import FFX_menu
-        FFX_menu.zombieStrkeBackup()
+        #FFX_menu.zombieStrkeBackup()
+        #FFX_memory.setStory(2800)
+        #FFXC.set_movement(1, -1)
+        #FFX_memory.awaitEvent()
+        #FFXC.set_neutral()
+        #FFX_memory.awaitControl()
+        #FFXC.set_movement(0, 1)
+        #FFX_memory.awaitEvent()
+        #FFXC.set_neutral()
+        #FFX_memory.awaitControl()
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
@@ -795,6 +804,7 @@ while Gamestate != "End":
     if Gamestate == "Sin" and StepCounter == 4:
         FFX_Sin.eggHunt(autoEggHunt)
         FFX_Battle.BFA()
+        FFX_Battle.yuYevon()
         Gamestate = "End"
 
 #print("Waiting for Yu Yevon to die.")

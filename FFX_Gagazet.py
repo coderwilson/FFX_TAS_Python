@@ -35,11 +35,14 @@ def calmLands():
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
     
-    FFXC.set_movement(0, 1)
-    time.sleep(4)
-    FFXC.set_neutral()
-    FFX_memory.clickToControl()
-    
+    #Enter the cutscene where Yuna muses about ending her journey.
+    while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
+        if FFX_memory.userControl():
+            FFXC.set_movement(0, 1)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
     
     checkpoint = 0
     while FFX_memory.getMap() != 279:
@@ -91,7 +94,7 @@ def defenderX():
     FFX_memory.clickToControl()
     
 def toTheRonso():
-    checkpoint = 0
+    checkpoint = 2
     while FFX_memory.getMap() != 259:
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.defenderX(checkpoint)) == True:

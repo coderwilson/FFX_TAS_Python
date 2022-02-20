@@ -4733,10 +4733,10 @@ def omnis():
     FFX_Screen.awaitTurn()
     print("Going for armor break.")
     FFX_memory.printRNG36()
-    #if gameVars.zombieWeapon() == 255:
-    useSkill(1)
-    #else:
-    #    useSkill(0)
+    if gameVars.zombieWeapon() == 255:
+        useSkill(1)
+    else:
+        useSkill(0)
     FFX_Screen.awaitTurn()
     
     if FFX_memory.getEnemyMaxHP()[0] == FFX_memory.getEnemyCurrentHP()[0]:
@@ -4818,15 +4818,29 @@ def BFA():
                 defend()
         elif FFX_memory.battleActive() == False:
             FFX_Xbox.tapB()
+
+def yuYevon():
     print("Ready for Yu Yevon.")
     FFX_Screen.awaitTurn()  # No need for skipping dialog
     print("Awww such a sad final boss!")
-
     zombieAttack = False
+    zaChar = gameVars.zombieWeapon()
+    if zaChar == 1:
+        yunaSwap = False
     story = FFX_memory.getStoryProgress()
     while story < 3400:
         if FFX_memory.turnReady():
-            if zombieAttack:
+            if zaChar == 1 and not zombieAttack: #Yuna logic
+                if yunaSwap == False and FFX_Screen.turnYuna():
+                    equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 1)
+                    yunaSwap = True
+                elif yunaSwap == True and zombieAttack == False and FFX_Screen.turnTidus():
+                    FFX_Xbox.weapSwap(0)
+                elif FFX_Screen.turnYuna():
+                    attack('none')
+                else:
+                    defend()
+            elif zombieAttack: #Throw P.down to end game
                 while FFX_memory.battleMenuCursor() != 1:
                     FFX_Xbox.tapDown()
                 while FFX_memory.mainBattleMenu():
@@ -4839,14 +4853,27 @@ def BFA():
                     FFX_Xbox.tapUp()
                 tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
-            elif FFX_Screen.turnTidus():
+            elif FFX_Screen.turnTidus() and zaChar == 255:
+                #Tidus to use Zombie Strike ability
                 useSkill(0)
                 zombieAttack = True
-            else:
+            elif zaChar == 255 and not FFX_Screen.turnTidus():
+                #Non-Tidus char to defend so Tidus can use Zombie Strike ability
                 defend()
+            else:
+                if FFX_memory.getBattleCharTurn() == zaChar:
+                    attack('none')
+                    zombieAttack = True
+                elif FFX_memory.getBattleCharSlot(zaChar) >= 3:
+                    buddySwap_char(zaChar)
+                elif FFX_Screen.turnTidus():
+                    tidusHaste('l', character = zaChar)
+                else:
+                    defend()
         elif FFX_memory.battleActive() == False:
             FFX_Xbox.tapB()
         story = FFX_memory.getStoryProgress()
+    
 
 def checkPetrify():
     for iterVar in range(7):

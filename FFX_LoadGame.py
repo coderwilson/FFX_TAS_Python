@@ -28,10 +28,14 @@ def LoadFirst():
 
 def loadOffset(offset):
     print("Loading to save file in position ", offset)
+    extraOffset = 1
+    totalOffset = extraOffset + offset
+    if offset == 0:
+        totalOffset = 0
     #FFX_memory.waitFrames(30 * 0.2)
     #FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 2.5)
-    for _ in range(offset):
+    for _ in range(totalOffset):
         FFX_Xbox.tapDown()
     for _ in range(15):
         FFX_Xbox.tapB()
