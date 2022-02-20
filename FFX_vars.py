@@ -13,12 +13,12 @@ class allVars:
         self.csrValue = True #Default to True
         self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
-        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
+        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
         self.wakkaLateMenuVal = False #Default False
-        self.endGameVersionVal = 0 #Default 0
+        self.endGameVersionVal = 1 #Default 0
         
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0
@@ -61,6 +61,9 @@ class allVars:
     
     def zombieWeapon(self):
         return self.zombieWeaponVal
+    
+    def setZombie(self, value):
+        self.zombieWeaponVal = value
     
     def earlyTidusGridSetTrue(self):
         self.earlyTidusGridVal = True

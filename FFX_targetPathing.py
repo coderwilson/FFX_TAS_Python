@@ -2526,8 +2526,8 @@ def djoseTrials(checkpoint):
         x = 9
         y = 15
     if checkpoint == 37:
-        x = 8
-        y = 23
+        x = 12
+        y = 22
     if checkpoint == 38:
         print("Powered sphere")
     if checkpoint == 39:
@@ -5232,8 +5232,8 @@ def defenderX(checkpoint):
         x = 62
         y = -66
     if checkpoint == 1:
-        x = 118
-        y = 111
+        x = 69
+        y = -229
     if checkpoint == 2:
         x = -14
         y = 104

@@ -43,7 +43,7 @@ def makingPlans():
     
     #Fix this later, should be based on memory values.
     print("The hymn is the key")
-    FFX_Xbox.SkipDialog(2)
+    FFX_Xbox.SkipDialog(1)
     FFXC.set_neutral()
     FFX_memory.waitFrames(120)
     FFX_memory.waitFrames(30 * 0.5)
@@ -151,9 +151,10 @@ def insideSin():
             FFX_Xbox.menuB()
     FFXC.set_neutral()
     
-    FFX_memory.fullPartyFormat('kimahri')
-    #if gameVars.zombieWeapon() == 255:
-    #    FFX_menu.zombieStrkeBackup()
+    FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    if gameVars.zombieWeapon() == 255:
+        FFX_menu.zombieStrkeBackup()
+    FFX_memory.closeMenu()
     
     checkpoint = 0
     while FFX_memory.getMap() != 324: #All the way to the egg hunt.
@@ -207,5 +208,9 @@ def eggHunt(autoEggHunt):
     FFX_Logs.writeStats(str(eggDuration))
     
     print("Done with the egg hunt. Final prep for BFA.")
-    FFX_memory.fullPartyFormat('yuna')
+    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
+    if gameVars.zombieWeapon() != 255:
+        FFX_menu.equipWeapon(character=gameVars.zombieWeapon(),ability=0x8032, fullMenuClose=True)
+    else:
+        FFX_memory.closeMenu()
     FFX_menu.BFA()

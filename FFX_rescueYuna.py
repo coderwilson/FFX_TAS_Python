@@ -174,6 +174,8 @@ def trials():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 13: #Down to the lower areas.
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(2)
                 FFXC.set_movement(-1, 0)
                 FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
