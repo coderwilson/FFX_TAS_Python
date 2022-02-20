@@ -49,6 +49,21 @@ def ssLiki():
                 FFX_Battle.Echuilles()
                 print("Sinspawn Echuilles fight complete")
 
+def get_digit(number, n):
+    return number // 10**n % 10
+
+def _set_index_to_value(index, value, power):
+    while FFX_memory.oakaGilCursor() != index:
+        if FFX_memory.oakaGilCursor() < index:
+            FFX_Xbox.tapRight()
+        else:
+            FFX_Xbox.tapLeft()
+    while get_digit(FFX_memory.oakaGilAmount(), power) != value:
+        if get_digit(FFX_memory.oakaGilAmount(), power) < value:
+            FFX_Xbox.tapUp()
+        else:
+            FFX_Xbox.tapDown()
+
 def ssWinno():
     FFX_memory.clickToControl()
     while FFX_memory.userControl():
@@ -66,23 +81,19 @@ def ssWinno():
         FFX_memory.waitFrames(3)
         oakaCoords = [FFX_memory.getActorCoords(1)[0],FFX_memory.getActorCoords(1)[1]]
     FFXC.set_neutral()
-    FFX_memory.clickToDiagProgress(21)
-    FFX_memory.waitFrames(60)
+    while FFX_memory.oakaInterface() != 12:
+        FFX_Xbox.tapB()
+    print("Setting Hundreds")
+    _set_index_to_value(5, 0, 2)
+    print("Setting Thousands")
+    _set_index_to_value(4, 1, 3)
+    print("Setting Zeroes")
+    _set_index_to_value(7, 1, 0)
+    while FFX_memory.oakaInterface() != 0:
+        FFX_Xbox.tapB()   
+    while FFX_memory.shopMenuDialogueRow() != 1:
+        FFX_Xbox.tapDown()
     FFX_Xbox.tapB()
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.tapDown()
-    FFX_Xbox.tapLeft()
-    FFX_Xbox.tapUp()
-    FFX_Xbox.tapRight()
-    FFX_Xbox.tapRight()
-    FFX_Xbox.tapRight()
-    FFX_Xbox.tapUp() #1001
-    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(30)
-    FFX_Xbox.tapDown()
-    FFX_Xbox.tapB() #No Sweat
     FFX_memory.clickToControl3()
     
 def ssWinno2():

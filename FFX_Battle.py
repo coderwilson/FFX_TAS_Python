@@ -21,11 +21,8 @@ def valeforOD(sinFin = 0, version = 0):
         FFX_Xbox.tapLeft()
     print("Overdrive: ", version) 
     if version == 1:
-        print("Start ", FFX_memory.battleCursor2())
         while FFX_memory.battleCursor2() != 1:
             FFX_Xbox.tapDown()
-            print(FFX_memory.battleCursor2())
-        print("End ", FFX_memory.battleCursor2())
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()  # Energy Blast
     if sinFin == 1:
@@ -45,7 +42,6 @@ def tidusFlee():
         while FFX_memory.otherBattleMenu():
             FFX_Xbox.tapA()
     while FFX_memory.battleMenuCursor() != 20:
-        #print("Cursor: ", FFX_memory.battleMenuCursor()) #Testing only
         if FFX_Screen.turnTidus() == False:
             break
         if FFX_memory.battleMenuCursor() == 255:
@@ -87,14 +83,14 @@ def tidusHaste(direction, character=255):
         direction = 'l'
         while character != FFX_memory.battleTargetId():
             if direction == 'l':
-                FFX_Xbox.menuLeft()
+                FFX_Xbox.tapLeft()
                 if FFX_memory.battleTargetId() >= 20:
-                    FFX_Xbox.menuRight()
+                    FFX_Xbox.tapRight()
                     direction = 'd'
             else:
-                FFX_Xbox.menuDown()
+                FFX_Xbox.tapDown()
                 if FFX_memory.battleTargetId() >= 20:
-                    FFX_Xbox.menuUp()
+                    FFX_Xbox.tapUp()
                     direction = 'l'
     elif direction == 'left':
         FFX_Xbox.tapLeft()
@@ -819,18 +815,19 @@ def KilikaWoods(valeforCharge):
                 elif bNum == 35 or bNum == 36:
                     fleeAll()
                 elif bNum == 37:
-                    if FFX_Screen.turnTidus():
+                    yunaWent = False
+                    tidusWent = False
+                    if FFX_Screen.turnTidus() and not tidusWent:
+                        tidusWent = True
                         buddySwapLulu()
                         thunderTarget(21, 'r')
-                    elif FFX_Screen.turnLulu():
-                        fleeAll()
-                    elif FFX_Screen.turnWakka():
-                        if FFX_memory.getEnemyCurrentHP()[2] != 0:
-                            attackByNum(22, 'l')
-                        else:
-                            defend()
-                    else:
+                    elif FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
+                        attackByNum(22, 'l')
+                    elif FFX_Screen.turnYuna() and not yunaWent:
+                        yunaWent = True
                         defend()
+                    elif yunaWent:
+                        fleeAll()
 
     FFX_memory.clickToControl()  # Rewards screen
     hpCheck = FFX_memory.getHP()
@@ -937,7 +934,7 @@ def LucaWorkers2(earlyHaste):
                         defend()
             elif earlyHaste >= 1 and tidTurn == 0:
                 tidTurn += 1
-                tidusHaste('left')
+                tidusHaste('left', character=5)
             elif FFX_Screen.turnLulu():
                 luluTurn += 1
                 if luluTurn == 2 and kimTurn < 2:
@@ -963,7 +960,7 @@ def Oblitzerator(earlyHaste):
     FFX_Xbox.clickToBattle()
     crane = 0
 
-    if earlyHaste == 1:
+    if earlyHaste >= 1:
         #First turn is always Tidus. Haste Lulu if we've got the levels.
         tidusHaste(direction='left', character=5)
 
@@ -1144,15 +1141,8 @@ def MiihenRoad(selfDestruct=False):
     print("Fight start: Mi'ihen Road")
     battle = FFX_memory.getBattleNum()
     
-    hpArray = FFX_memory.getBattleHP()
-    hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
-    if hpTotal < 1800:
-        ambushed = True
-    else:
-        ambushed = False
-
     while not FFX_memory.battleComplete(): #AKA end of battle screen
-        if ambushed == True:
+        if FFX_memory.battleType() == 2:
             print("Looks like we got ambushed. Skipping this battle.")
             fleeAll()
             break
@@ -1180,7 +1170,7 @@ def MiihenRoad(selfDestruct=False):
     hpCheck = FFX_memory.getHP()
     print("------------------ HP check: ", hpCheck)
     if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
-        FFX_memory.fullPartyFormat('miihen', fullMenuClose=True)
+        FFX_memory.fullPartyFormat('miihen', fullMenuClose=False)
         healUp()
     else:
         print("No need to heal up. Moving onward.")
@@ -1316,6 +1306,10 @@ def MRRbattle(status):
                         status[5] = 1
     elif status[5] == 1: #Next need to recharge Valefor
         valeforChargeComplete = True
+        if FFX_memory.battleType() == 1:
+            for _ in range(3):
+                FFX_Screen.awaitTurn()
+                defend()
         if battle == 96: #Gandarewa, Red Element, Raptor (camera front)
             #Working, confirmed good
             wakkaTurns = 0
@@ -2746,7 +2740,10 @@ def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
                     direction="l") == 0:
             if FFX_Screen.faintCheck():
                 print("No healing available so reviving instead")
-                revive()
+                if FFX_memory.getThrowItemsSlot(6) < 255:
+                    revive()
+                elif FFX_memory.getThrowItemsSlot(7) < 255:
+                    reviveAll()
             else:
                 defend()
     elif FFX_Screen.faintCheck():
@@ -3682,7 +3679,7 @@ def seymourFlux():
             elif FFX_Screen.turnTidus():
                 print("Tidus's turn. Stage: ", stage)
                 if stage < 3:
-                    tidusHaste('down')
+                    tidusHaste('down', character=1)
                 else:
                     attack('none')
             elif FFX_Screen.turnAuron():

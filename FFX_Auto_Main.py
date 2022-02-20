@@ -52,7 +52,7 @@ import FFX_Sin
 #Gamestate = "Miihen"
 #StepCounter = 1
 #Gamestate = "MRR"
-#StepCounter = 1
+#StepCounter = 2
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -88,7 +88,7 @@ StepCounter = 2
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = False
+forceBlitzWin = True
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -186,7 +186,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(41)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(32)
+        FFX_LoadGame.loadOffset(22)
         FFXC.set_movement(0, 1)
         FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
@@ -216,7 +216,7 @@ if Gamestate != "none" :
         FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
         FFX_LoadGame.LoadMRR()
     if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadOffset(0)
         FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadOffset(8)
