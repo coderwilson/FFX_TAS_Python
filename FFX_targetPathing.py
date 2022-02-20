@@ -1719,8 +1719,8 @@ def miihen(checkpoint):
         x = -10
         y = 1000
     if checkpoint == 5:
-        x = -46
-        y = 1348
+        x = -47
+        y = 1351
     if checkpoint in [6,7,8,9,10]:
         print("Attempting Miihen skip")
     if checkpoint == 11:

@@ -103,7 +103,7 @@ def arrival():
                             #Greater number for spear guy's position means we will start moving faster.
                             #Smaller number means moving later.
                             FFXC.set_movement(0, 1)
-                            FFX_memory.waitFrames(5)
+                            FFX_memory.waitFrames(3)
                             FFX_Xbox.SkipDialog(0.3) #Walk into the guy mashing B (or X, or whatever the key is)
                             FFXC.set_neutral() #Stop trying to move. (recommended by Crimson)
                             print("Starting special skipping.")

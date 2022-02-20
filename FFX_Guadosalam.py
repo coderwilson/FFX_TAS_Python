@@ -46,7 +46,7 @@ def arrival():
         #FFX_memory.clickToEvent()
         while FFX_memory.userControl(): #Talk to Auron (first for affection)
             FFX_targetPathing.setMovement([18,-119])
-            FFX_memory.tapB()
+            FFX_Xbox.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
@@ -57,7 +57,7 @@ def arrival():
         #FFX_memory.clickToEvent()
         while FFX_memory.userControl(): #Start conversation with Wakka
             FFX_targetPathing.setMovement([-49,-61])
-            FFX_memory.tapB()
+            FFX_Xbox.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         
@@ -68,7 +68,7 @@ def arrival():
         #FFX_memory.clickToEvent()
         while FFX_memory.userControl(): #Lulu conversation
             FFX_targetPathing.setMovement([-11,-55])
-            FFX_memory.tapB()
+            FFX_Xbox.tapB()
         FFXC.set_neutral()
         FFX_memory.clickToControl3()
         

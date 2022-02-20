@@ -54,34 +54,17 @@ def guards():
     if FFX_memory.getItemSlot(3) < 200:
         FFX_menu.beforeGuards()
     
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    FFX_Battle.guards(1)
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    FFX_Battle.guards(2)
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    FFX_Battle.guards(3)
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    FFX_Battle.guards(4)
-    
-    FFX_memory.clickToControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_neutral()
-    FFX_Battle.guards(5)
+    guardNum = 1
+    while guardNum < 6:
+        if FFX_memory.userControl():
+            FFX_targetPathing.setMovement([0, -200])
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.battleActive():
+                FFX_Battle.guards(guardNum)
+                guardNum += 1
+            elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
     
     if not gameVars.csr():
         FFX_Xbox.SkipDialog(126)

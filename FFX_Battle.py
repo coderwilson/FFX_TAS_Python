@@ -1731,14 +1731,14 @@ def extractor():
         elif FFX_memory.turnReady():
             if FFX_Screen.faintCheck() > 0:
                 revive()
-            elif FFX_Screen.turnTidus() and tidusCheer:
-                cheerCount += 1
-                cheer()
             elif FFX_memory.extractorHeight() < -180: #Readying depth charges
                 if FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4) == 100:
                     wakkaOD()
                 else:
                     attack('none')
+            elif FFX_Screen.turnTidus() and tidusCheer:
+                cheerCount += 1
+                cheer()
             else:
                 attack('none')
         elif FFX_memory.diagSkipPossible():
@@ -3297,7 +3297,7 @@ def guards(groupNum):
     rikkuTurns = 0
     items = [0,0,0,0]
     FFX_Xbox.clickToBattle()
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             items = updateStealItemsDesert()
             if FFX_Screen.turnTidus():
@@ -3400,15 +3400,7 @@ def guards(groupNum):
                                 defend()
                     else:
                         defend()
-                
-    while not FFX_memory.menuOpen():
-        if FFX_memory.diagSkipPossible():
-            FFX_Xbox.tapB()
-    FFXC.set_value('BtnB', 1)
-    
-    FFXC.set_value('BtnB', 0)
-
-
+    FFX_memory.clickToControl()
 
 def isaaru():
     FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")

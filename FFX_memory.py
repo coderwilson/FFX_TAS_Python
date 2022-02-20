@@ -1714,7 +1714,8 @@ def getActorCoords(actorNumber):
         doNothing = True
 
 def miihenGuyCoords():
-    
+    import FFX_vars
+    gameVars = FFX_vars.varsHandle()
     if gameVars.csr():
         return getActorCoords(6)
     elif diagProgressFlag() == 48: #After talking to Lucille
@@ -2055,7 +2056,7 @@ def forceMapLoad():
 def resetBattleEnd():
     global baseValue
     key = baseValue + 0x00D2C9F1
-    process.writeBytes(key,3,1)
+    process.writeBytes(key,1,1)
 
 #---------------------------------------------
 #Blitzball!

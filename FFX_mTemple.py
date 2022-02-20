@@ -319,7 +319,7 @@ def underLake():
                 FFXC.set_movement(0, 1)
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
-                FFX_memory.clickToControl()
+                FFX_memory.clickToControl3()
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.underMacTemple(checkpoint)) == True:

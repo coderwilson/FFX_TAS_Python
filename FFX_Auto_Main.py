@@ -65,9 +65,9 @@ import FFX_Sin
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-#Gamestate = "Home"
+Gamestate = "Home"
 #StepCounter = 1
-#StepCounter = 2
+StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1
 #StepCounter = 2
@@ -81,8 +81,8 @@ import FFX_Sin
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 
 ####################################################################################################
@@ -101,7 +101,7 @@ elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [9,31,49,90,91,98,104,108,121,200,246,253,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     #rngSeedNum = 246 #Thunder ball seed. Comment out to use random seed.
-    rngSeedNum = 254 #Specific seed. Comment out to use random seed.
+    #rngSeedNum = 254 #Specific seed. Comment out to use random seed.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -144,7 +144,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
