@@ -331,12 +331,14 @@ def battleSiteOaka1():
         print(slot, cur_item)
         _navigate_to_position(slot, FFX_memory.equipSellRow)
         cur_amount = FFX_memory.getItemCountSlot(slot)
-        amount_to_sell = cur_amount - {0:4, 1:4, 2:0, 8:0}[cur_item]
+        amount_to_sell = max(cur_amount - {0:2, 1:2, 2:0, 8:0}[cur_item], 0)
         print("Selling from ", cur_amount, " to ", amount_to_sell)
         while FFX_memory.itemShopMenu() != 27:
             FFX_Xbox.tapB()
         while FFX_memory.equipBuyRow() != amount_to_sell:
-            if FFX_memory.equipBuyRow() < amount_to_sell:
+            if cur_amount == amount_to_sell:
+                FFX_Xbox.tapUp()
+            elif FFX_memory.equipBuyRow() < amount_to_sell:
                 FFX_Xbox.tapRight()
             else:
                 FFX_Xbox.tapLeft()
