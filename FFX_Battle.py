@@ -488,14 +488,11 @@ def besaid():
             if FFX_Screen.turnYuna():
                 buddySwapWakka()
             elif FFX_Screen.turnLulu():
-                thunder('left')
+                thunderTarget(22, 'l')
             elif FFX_Screen.turnWakka():
-                attack('none')
+                attackByNum(20, direction='r')
             elif FFX_Screen.turnTidus():
-                if enemyHP[0] == 0:
-                    attack('none')
-                else:
-                    attack('right')
+                attackByNum(21, direction='r')
 
     FFX_memory.clickToControl()
 
@@ -1762,14 +1759,15 @@ def chargeRikku():
 
 def thunderPlains(status, section):
     bNum = FFX_memory.getBattleNum()
-    nadeSlot = FFX_memory.getUseItemsSlot(35)
-    print("Grenade Slot %d" % nadeSlot)
+    nadeSlot = FFX_memory.getItemSlot(35)
+    print("++Grenade Slot %d" % nadeSlot)
     nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
-    if nadeCount > 3 and FFX_memory.getSpeed() < 14:
-        useGrenades = True
-    else:
-        useGrenades = False
-
+    print("++Grenade count: %d" % nadeCount)
+    print("++Speed sphere count: %d" % FFX_memory.getSpeed())
+    useGrenades = nadeCount > 3 and FFX_memory.getSpeed() < 14
+    print("++Use Grenades decision: ", useGrenades)
+    useNadeSlot = FFX_memory.getUseItemsSlot(35)
+    
     startingstatus = []
     for i in range(len(status)):
         startingstatus.append(status[i])
@@ -1782,194 +1780,114 @@ def thunderPlains(status, section):
     petrifiedstate = False
     petrifiedstate = checkPetrify()
 
-    while not FFX_memory.battleComplete(): #AKA end of battle screen
-        if FFX_memory.turnReady():
-            print("Turn start - Thunder Plains")
-            turnchar = FFX_memory.getBattleCharTurn()
-            if petrifiedstate == True:
-                print("------------Someone has been petrified which messes up the battle logic. Escaping.")
-                fleeAll()
-            elif bNum in [152, 155, 162]:  # Any battle with Larvae
-                if status[4]:
-                    fleeAll() #No longer need Lunar Curtain for Evrae fight, Blitz win logic.
-                else: #Blitz loss strat
-                    print("Battle with Larvae. Battle number: ", bNum)
-                    if startingstatus[2] == False:
-                        if turnchar == 0:
+    if petrifiedstate == True:
+        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+        fleeAll()
+    elif bNum in [152, 155, 162]:  # Any battle with Larvae
+        if status[4]:
+            fleeAll() #No longer need Lunar Curtain for Evrae fight, Blitz win logic.
+        else: #Blitz loss strat
+            print("Battle with Larvae. Battle number: ", bNum)
+            while not FFX_memory.battleComplete():
+                if FFX_memory.turnReady():
+                    if startingstatus[2] == False and FFX_memory.turnReady():
+                        if FFX_Screen.turnTidus():
                             if tidusturns == 0:
                                 buddySwapRikku()
                             else:
                                 fleeAll()
                             tidusturns += 1
-                        elif turnchar == 6:
+                        elif FFX_Screen.turnRikku():
                             Steal()
                             status[2] = True
                         else:
                             buddySwapTidus()
-                    elif turnchar == 0:
-                        fleeAll()
                     else:
                         fleeAll()
-            elif bNum == 160:
-                print("Battle with Iron Giant. Battle number: ", bNum)
+    elif bNum == 160:
+        print("Battle with Iron Giant. Battle number: ", bNum)
+        while not FFX_memory.battleComplete():
+            if FFX_memory.turnReady():
                 if startingstatus[1] == False:
-                    if turnchar == 0:
+                    if FFX_Screen.turnTidus():
                         if tidusturns == 0:
                             defend()
                         else:
                             fleeAll()
                         tidusturns += 1
-                    elif turnchar == 4:
+                    elif FFX_Screen.turnWakka():
                         buddySwapRikku()
-                    elif turnchar == 6:
+                    elif FFX_Screen.turnRikku():
                         Steal()
                         print("OMG something's happening!")
                         status[1] = True
                     else:
                         defend()
-                elif turnchar == 0:
-                    fleeAll()
                 else:
                     fleeAll()
-            elif bNum == 161:
-                print("Battle with Iron Giant and Buer monsters. Battle number: ", bNum)
-                if startingstatus[3] == False and useGrenades and section == 2:
-                    if turnchar == 0:
-                        if tidusturns == 0:
-                            buddySwapRikku()
-                        else:
-                            fleeAll()
-                        tidusturns += 1
-                    elif turnchar == 4:
-                        if wakkaturns == 0:
-                            wakkaposition = FFX_memory.getBattleCharSlot(4)
-                            rikkuposition = FFX_memory.getBattleCharSlot(6)
-                            wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
-                            rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                            if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
-                                defend()
-                            else:
-                                buddySwapTidus()
-                        else:
-                            buddySwapTidus()
-                        wakkaturns += 1
-                    elif turnchar == 6:
-                        if useGrenades:
-                            print("Grenade Slot %d" % nadeSlot)
-                            useItem(nadeslot,'none')
-                            status[3] = True
-                        else:
-                            Steal()
+    elif bNum == 161:
+        print("Battle with Iron Giant and Buer monsters. Battle number: ", bNum)
+        while not FFX_memory.battleComplete():
+            if FFX_memory.turnReady():
+                if FFX_Screen.turnTidus():
+                    if tidusturns == 0:
+                        buddySwapRikku()
+                    else:
                         fleeAll()
-                    elif turnchar == 2:
+                    tidusturns += 1
+                elif FFX_Screen.turnWakka():
+                    if wakkaturns == 0:
+                        wakkaposition = FFX_memory.getBattleCharSlot(4)
                         rikkuposition = FFX_memory.getBattleCharSlot(6)
+                        wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
                         rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                        if rikkuHP > 0:
+                        if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
                             defend()
                         else:
                             buddySwapTidus()
-                        auronturns += 1
                     else:
-                        fleeAll()
-                elif startingstatus[1] == False:
-                    if turnchar == 0:
-                        if tidusturns == 0:
-                            buddySwapRikku()
-                        else:
-                            fleeAll()
-                        tidusturns += 1
-                    elif turnchar == 4:
-                        if wakkaturns == 0:
-                            wakkaposition = FFX_memory.getBattleCharSlot(4)
-                            rikkuposition = FFX_memory.getBattleCharSlot(6)
-                            wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
-                            rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                            if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
-                                defend()
-                            else:
-                                buddySwapTidus()
-                        else:
-                            buddySwapTidus()
-                        wakkaturns += 1
-                    elif turnchar == 6:
+                        buddySwapTidus()
+                    wakkaturns += 1
+                elif FFX_Screen.turnRikku():
+                    print("--", useGrenades)
+                    if useGrenades:
+                        print("Grenade Slot %d" % useNadeSlot)
+                        useItem(useNadeSlot,'none')
+                    else:
                         Steal()
-                        print("OMG something's happening!")
-                        status[1] = True
-                    elif turnchar == 2:
-                        rikkuposition = FFX_memory.getBattleCharSlot(6)
-                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                        if rikkuHP > 0:
-                            defend()
-                        else:
-                            buddySwapTidus()
-                        auronturns += 1
-                    else:
-                        fleeAll()
-                elif startingstatus[1] == False:
-                    if turnchar == 0:
-                        if tidusturns == 0:
-                            buddySwapRikku()
-                        else:
-                            fleeAll()
-                        tidusturns += 1
-                    elif turnchar == 4:
-                        if wakkaturns == 0:
-                            wakkaposition = FFX_memory.getBattleCharSlot(4)
-                            rikkuposition = FFX_memory.getBattleCharSlot(6)
-                            wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
-                            rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                            if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
-                                defend()
-                            else:
-                                buddySwapTidus()
-                        else:
-                            buddySwapTidus()
-                        wakkaturns += 1
-                    elif turnchar == 6:
-                        Steal()
-                        status[1] = True
-                    elif turnchar == 2:
-                        rikkuposition = FFX_memory.getBattleCharSlot(6)
-                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                        if rikkuHP > 0:
-                            defend()
-                        else:
-                            buddySwapTidus()
-                        auronturns += 1
-                    else:
-                        fleeAll()
-                elif turnchar == 0:
                     fleeAll()
-                else:
-                    tidusposition = FFX_memory.getBattleCharSlot(0)
-                    if tidusposition >= 3:
-                        buddySwapTidus()
-                    else:
-                        fleeAll()
-            elif bNum in [154, 156, 164] and useGrenades:
-                print("Battle with random mobs. Battle number: ", bNum)
-                if startingstatus[3] == False and section == 2:
-                    if turnchar == 0:
-                        if tidusturns == 0:
-                            buddySwapRikku()
-                        else:
-                            fleeAll()
-                        tidusturns += 1
-                    elif turnchar == 4:
-                        buddySwapTidus()
-                    elif turnchar == 6:
-                        useItem(nadeSlot, 'none')
-                        status[3] = True
-                    else:
+                elif FFX_Screen.turnAuron():
+                    rikkuposition = FFX_memory.getBattleCharSlot(6)
+                    rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
+                    if rikkuHP > 0:
                         defend()
-                elif tidusturns == 0:
-                    fleeAll()
+                    else:
+                        buddySwapTidus()
+                    auronturns += 1
                 else:
                     fleeAll()
-            elif status[4] == False and FFX_memory.getItemSlot(49) > 200 and bNum in [153, 154, 163]:
-                print("Grabbing petrify grenade. Blitz Loss only strat.")
+    elif bNum in [154, 156, 164] and useGrenades:
+        print("Battle with random mobs including Buer. Battle number: ", bNum)
+        while not FFX_memory.battleComplete():
+            if FFX_memory.turnReady():
+                if FFX_Screen.turnTidus():
+                    if tidusturns == 0:
+                        buddySwapRikku()
+                    else:
+                        fleeAll()
+                    tidusturns += 1
+                elif FFX_Screen.turnWakka():
+                    buddySwapTidus()
+                elif FFX_Screen.turnRikku():
+                    useItem(useNadeSlot, 'none')
+                else:
+                    defend()
+    elif status[4] == False and FFX_memory.getItemSlot(49) > 200 and bNum in [153, 154, 163]:
+        print("Grabbing petrify grenade. Blitz Loss only strat.")
+        while not FFX_memory.battleComplete():
+            if FFX_memory.turnReady():
                 if bNum in [153,163]:
-                    if turnchar == 0:
+                    if FFX_Screen.turnTidus():
                         buddySwapRikku()
                         FFX_Screen.awaitTurn()
                         Steal()
@@ -1978,7 +1896,7 @@ def thunderPlains(status, section):
                         FFX_Screen.awaitTurn()
                         fleeAll()
                 else:
-                    if turnchar == 0:
+                    if FFX_Screen.turnTidus():
                         buddySwapRikku()
                         FFX_Screen.awaitTurn()
                         StealRight()
@@ -1986,8 +1904,9 @@ def thunderPlains(status, section):
                         buddySwapTidus()
                         FFX_Screen.awaitTurn()
                         fleeAll()
-            else:  # Nothing useful this battle. Moving on.
-                fleeAll()
+    else:  # Nothing useful this battle. Moving on.
+        fleeAll()
+    
     print("Battle is ended - Thunder Plains")
     FFX_memory.clickToControl()
     FFX_memory.waitFrames(2) #Allow lightning to attemt a strike
