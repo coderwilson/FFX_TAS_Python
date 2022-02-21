@@ -605,7 +605,7 @@ def homeGrid():
     
     FFX_memory.fullPartyFormat('desert1')
     FFX_memory.closeMenu()
-    #itemPos(20,9)
+    
 
 def beforeGuards():
     while not FFX_memory.menuOpen():
@@ -1236,77 +1236,6 @@ def skReturn2():
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
 
-def itemPos(item, pos):
-    counter = 0
-    cursor = 1
-    currentSlot = FFX_memory.getItemSlot(item)
-    if currentSlot == pos:
-        print("Item is already in the correct slot. Item number: ", item)
-        return
-    if currentSlot == 0: #This is a hard run killer.
-        while currentSlot == 0:
-            counter += 1
-            print("You are missing a critical item and are unable to proceed. Message: ", counter)
-            print("Item number: ", item)
-            FFX_memory.waitFrames(30 * 10)
-    FFX_memory.openMenu()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.8)
-    FFX_Xbox.menuA()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuRight()
-    FFX_memory.waitFrames(30 * 0.2)
-    FFX_Xbox.menuB() #Sort
-    FFX_memory.waitFrames(30 * 0.6)
-    FFX_Xbox.menuB() #Manual
-    
-    item1 = currentSlot
-    item2 = pos
-    
-    if item1 > item2: #Quick bubble sort
-        item3 = item2
-        item2 = item1
-        item1 = item3
-    
-    print("Swapping items: ", item1, " | ", item2)
-    
-    if item1 % 2 == 0: #First item is in the right-hand column
-        FFX_Xbox.menuRight()
-        cursor += 1
-    
-    while cursor < item1:
-        FFX_Xbox.menuDown()
-        cursor += 2
-    
-    #FFX_memory.waitFrames(30 * 10) #Testing purposes only
-    FFX_Xbox.menuB() #We should now have selected the first item.
-    #FFX_memory.waitFrames(30 * 0.4)
-    
-    if item1 % 2 != item2 % 2: #First and second items are on different columns
-        print("Items are in opposing columns. Switching columns.")
-        if item1 % 2 == 0:
-            FFX_Xbox.menuLeft()
-            FFX_Xbox.menuDown()
-        else:
-            FFX_Xbox.menuRight()
-        cursor += 1
-    
-    if cursor == item2:
-        #FFX_memory.waitFrames(30 * 10) #Testing purposes only
-        FFX_Xbox.menuB() #Cursor starts on item 2. Only occurs if opposite columns.
-    else:
-        while cursor < item2:
-            FFX_Xbox.menuDown()
-            cursor += 2
-        #FFX_memory.waitFrames(30 * 10) #Testing purposes only
-        FFX_Xbox.menuB() #Cursor is now on item 2.
-    
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
 
 def openGrid(character):
     try:

@@ -488,14 +488,11 @@ def besaid():
             if FFX_Screen.turnYuna():
                 buddySwapWakka()
             elif FFX_Screen.turnLulu():
-                thunder('left')
+                thunderTarget(22, 'l')
             elif FFX_Screen.turnWakka():
-                attack('none')
+                attackByNum(20, direction='r')
             elif FFX_Screen.turnTidus():
-                if enemyHP[0] == 0:
-                    attack('none')
-                else:
-                    attack('right')
+                attackByNum(21, direction='r')
 
     FFX_memory.clickToControl()
 
@@ -1762,13 +1759,10 @@ def chargeRikku():
 
 def thunderPlains(status, section):
     bNum = FFX_memory.getBattleNum()
-    nadeSlot = FFX_memory.getUseItemsSlot(35)
+    nadeSlot = FFX_memory.getItemsSlot(35)
     print("Grenade Slot %d" % nadeSlot)
     nadeCount = FFX_memory.getItemCountSlot(nadeSlot)
-    if nadeCount > 3 and FFX_memory.getSpeed() < 14:
-        useGrenades = True
-    else:
-        useGrenades = False
+    useGrenades = nadeCount > 3 and FFX_memory.getSpeed() < 14
 
     startingstatus = []
     for i in range(len(status)):

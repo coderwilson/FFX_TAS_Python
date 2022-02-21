@@ -143,7 +143,7 @@ def arrival():
                 FFX_Xbox.tapB()
 
 def trials():
-    FFX_menu.endGameSwap2()
+    FFX_memory.fullPartyFormat('yuna')
     
     checkpoint = 0
     while checkpoint < 89:
@@ -291,9 +291,7 @@ def sanctuaryKeeper():
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
     
-    FFX_memory.openMenu()
     FFX_memory.fullPartyFormat('yuna')
-    FFX_memory.closeMenu()
     
     FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(30 * 4)

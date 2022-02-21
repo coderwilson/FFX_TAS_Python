@@ -43,19 +43,14 @@ def makingPlans():
     
     #Fix this later, should be based on memory values.
     print("The hymn is the key")
-    FFX_Xbox.SkipDialog(1)
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(120)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFX_Xbox.menuB()
+    while FFX_memory.oakaGilCursor() != 20:
+        FFX_Xbox.tapB()
     FFX_memory.waitFrames(30 * 0.3)
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
     FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
+    FFX_Xbox.SkipDialog(5)
     
 def Shedinja():
     FFX_memory.awaitControl()
