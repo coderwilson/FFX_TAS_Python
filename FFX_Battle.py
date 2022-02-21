@@ -1697,6 +1697,7 @@ def fleePathing():
 def extractor():
     print("Fight start: Extractor")
     FFXC.set_neutral()
+    
     FFX_Screen.awaitTurn()
     tidusHaste('none')
 
@@ -1715,19 +1716,13 @@ def extractor():
             tidusCheer = True
         else:
             tidusCheer = False
-        
         #Then do the battle logic.
         if FFX_memory.specialTextOpen():
             FFX_Xbox.tapB()
         elif FFX_memory.turnReady():
             if FFX_Screen.faintCheck() > 0:
                 revive()
-            elif FFX_memory.extractorHeight() < -180: #Readying depth charges
-                if FFX_Screen.turnWakka() and FFX_memory.getOverdriveBattle(4) == 100:
-                    wakkaOD()
-                else:
-                    attack('none')
-            elif FFX_Screen.turnTidus() and tidusCheer:
+            elif FFX_Screen.turnTidus() and ((gameVars.getLStrike() % 2 == 0 and cheerCount < 4) or (gameVars.getLStrike() % 2 == 1 and cheerCount < 1)): 
                 cheerCount += 1
                 cheer()
             else:

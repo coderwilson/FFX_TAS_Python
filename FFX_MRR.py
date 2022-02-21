@@ -204,8 +204,9 @@ def battleSite():
                 FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
                 FFX_Xbox.tapB() #Tell me when you're ready.
-                while FFX_memory.saveMenuCursor() != 1:
-                    FFX_Xbox.tapDown()
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(60)
+                FFX_Xbox.menuDown()
                 FFX_Xbox.tapB()
                 checkpoint = 100
             elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSite(checkpoint)) == True:
