@@ -45,12 +45,9 @@ def makingPlans():
     print("The hymn is the key")
     while FFX_memory.oakaGilCursor() != 20:
         FFX_Xbox.tapB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.SkipDialog(5)
+    while FFX_memory.mapCursor() != 10:
+        FFX_memory.menuDirection(FFX_memory.mapCursor(), 10, 13)
+    FFX_memory.clickToControl()
     
 def Shedinja():
     FFX_memory.awaitControl()

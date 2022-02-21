@@ -18,7 +18,7 @@ class allVars:
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
         self.wakkaLateMenuVal = False #Default False
-        self.endGameVersionVal = 1 #Default 0
+        self.endGameVersionVal = 4#1 #Default 0
         
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0

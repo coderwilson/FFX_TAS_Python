@@ -242,10 +242,7 @@ def clickToControl2():
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
-        FFXC.set_value('BtnB', 1)
-        waitFrames(30 * 0.04)
-        FFXC.set_value('BtnB', 0)
-        waitFrames(30 * 0.04)
+        FFX_Xbox.tapB()
         waitCounter += 1
         if waitCounter % 1000 == 0:
             print("Awaiting control - ", waitCounter / 1000)
@@ -1276,6 +1273,15 @@ def saveMenuCursor():
 
     key = baseValue + 0x001467942
     return process.readBytes(key,1)
+    
+def mapCursor():
+    global baseValue
+    basePointer = baseValue + 0x00F2FF14
+    basePointerAddress = process.read(basePointer)
+    print(basePointerAddress)
+    ret = process.readBytes(basePointerAddress + 272, 1)
+    print(ret)
+    return ret
 
 def clearSaveMenuCursor():
     global baseValue
@@ -2633,8 +2639,6 @@ def configCursorColumn():
     retVal = process.readBytes(key,1)
     return retVal
 
-def airshipMapMenu():
-    return readVal(0x00F26D64)
 
 def purchasingAmountItems():
         return readVal(0x01440C00)

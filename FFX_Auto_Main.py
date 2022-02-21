@@ -76,13 +76,13 @@ Gamestate = "Gagazet"
 StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
-#Gamestate = "Zanarkand"
-#StepCounter = 4 #Blitz win, end game version 1 or 2
+Gamestate = "Zanarkand"
+StepCounter = 3 #Blitz win, end game version 1 or 2
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 
 ####################################################################################################
@@ -270,23 +270,13 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(6)
         FFX_LoadGame.loadGagazetDream()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.zanEntrance()
-    if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
-        FFX_LoadGame.loadOffset(36)
+    if Gamestate == "Zanarkand" and StepCounter == 3: # Just before the trials.
+        FFX_LoadGame.loadOffset(1)
         FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(10)
-        import FFX_menu
-        #FFX_menu.zombieStrkeBackup()
-        #FFX_memory.setStory(2800)
-        #FFXC.set_movement(1, -1)
-        #FFX_memory.awaitEvent()
-        #FFXC.set_neutral()
-        #FFX_memory.awaitControl()
-        #FFXC.set_movement(0, 1)
-        #FFX_memory.awaitEvent()
-        #FFXC.set_neutral()
-        #FFX_memory.awaitControl()
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
