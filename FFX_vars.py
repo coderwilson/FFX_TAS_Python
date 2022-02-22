@@ -18,7 +18,7 @@ class allVars:
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
         self.wakkaLateMenuVal = False #Default False
-        self.endGameVersionVal = 4#1 #Default 0
+        self.endGameVersionVal = 0 #Default 0
         
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0
@@ -26,8 +26,15 @@ class allVars:
         
         self.selfDestruct = False #Default False
         
-        self.rescueCount = 0
         self.YTKFarm = 0
+        self.rescueCount = 0 #Default to 0
+        self.fluxOverkillVar = False #Default to False
+    
+    def fluxOverkill(self):
+        return self.fluxOverkillVar
+    
+    def fluxOverkillSuccess(self):
+        self.fluxOverkillVar = True
     
     def csr(self):
         return self.csrValue

@@ -416,18 +416,18 @@ def lettyMove():
             print("Graav too close. Passing ball away.")
             FFXC.set_movement(1, 0)
             FFX_Xbox.tapX()
-        elif playerArray[7].getCoords()[1] < -100:
-            #Hide in goal
-            targetCoords = [20, -600]
-            FFX_blitzPathing.setMovement(targetCoords)
-        elif playerArray[6].getCoords()[1] < -100:
-            #Hide in goal
-            targetCoords = [20, -600]
-            FFX_blitzPathing.setMovement(targetCoords)
         else:
-            #defend at a set distance from opposing forward.
-            targetCoords = [0, playerArray[6].getCoords()[1] - 380]
+            #Hide in goal
+            targetCoords = [20, -600]
             FFX_blitzPathing.setMovement(targetCoords)
+        #elif playerArray[6].getCoords()[1] < -100:
+            #Hide in goal
+        #    targetCoords = [20, -600]
+        #    FFX_blitzPathing.setMovement(targetCoords)
+        #else:
+            #defend at a set distance from opposing forward.
+        #    targetCoords = [0, playerArray[6].getCoords()[1] - 380]
+        #    FFX_blitzPathing.setMovement(targetCoords)
 
 def lettyAct():
     currentStage = gameStage()
@@ -485,8 +485,8 @@ def jassuMove():
         if playerArray[2].currentHP() >= 40:
             if distance(2,8) > 360:
                 FFX_Xbox.tapX()
-        elif playerArray[8].getCoords()[1] < -350 or distance(3,8) < 310:
-            FFX_Xbox.tapX()
+        #elif playerArray[8].getCoords()[1] < -350 or distance(3,8) < 310:
+        #    FFX_Xbox.tapX()
     elif currentStage == 2:
         targetCoords = [-572, -123]
         FFX_blitzPathing.setMovement(targetCoords)

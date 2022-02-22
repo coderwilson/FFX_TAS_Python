@@ -6246,57 +6246,61 @@ def yunalescaToAirship(checkpoint):
         x = 0
         y = -160
     if checkpoint == 7:
+        print("Touch save sphere")
         x = 0
-        y = -200
+        y = -160
     if checkpoint == 8:
         x = 0
-        y = -500
+        y = -200
     if checkpoint == 9:
+        x = 0
+        y = -500
+    if checkpoint == 10:
         x = -65
         y = -56
-    if checkpoint == 10:
+    if checkpoint == 11:
         x = -46
         y = -35
-    if checkpoint == 11:
+    if checkpoint == 12:
         x = 3
         y = 62
-    if checkpoint == 12:
+    if checkpoint == 13:
         x = 28
         y = 68
-    if checkpoint == 13:
+    if checkpoint == 14:
         x = 83
         y = 34
-    if checkpoint == 14:
+    if checkpoint == 15:
         x = 99
         y = -67
-    if checkpoint == 15:
-        x = 100
-        y = -93
     if checkpoint == 16:
         x = 100
-        y = -200
+        y = -93
     if checkpoint == 17:
+        x = 100
+        y = -200
+    if checkpoint == 18:
         x = -1
         y = 243
-    if checkpoint == 18:
+    if checkpoint == 19:
         x = -3
         y = 148
-    if checkpoint == 19:
+    if checkpoint == 20:
         x = -5
         y = 39
-    if checkpoint == 20:
+    if checkpoint == 21:
         x = -12
         y = -53
-    if checkpoint == 21:
+    if checkpoint == 22:
         x = -6
         y = -89
-    if checkpoint == 22:
-        x = -10
-        y = -200
     if checkpoint == 23:
         x = -10
-        y = -400
+        y = -200
     if checkpoint == 24:
+        x = -10
+        y = -400
+    if checkpoint == 25:
         x = 125
         y = 1423
     return [x,y]

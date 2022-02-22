@@ -13,7 +13,7 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
- 
+
 def makingPlans():
     FFX_memory.clickToControl3()
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
@@ -22,9 +22,9 @@ def makingPlans():
     while not FFX_targetPathing.setMovement([-267,347]):
         pass
     
-    print("Cursor test 2: ", FFX_memory.saveMenuCursor())
-    FFX_memory.touchSaveSphere()
-    print("Cursor test 3: ", FFX_memory.saveMenuCursor())
+    #print("Cursor test 2: ", FFX_memory.saveMenuCursor())
+    #FFX_memory.touchSaveSphere()
+    #print("Cursor test 3: ", FFX_memory.saveMenuCursor())
     #Fix this later.
     #FFX_memory.waitFrames(60)
     #FFX_Xbox.menuA()
@@ -148,7 +148,7 @@ def insideSin():
     else:
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     if gameVars.zombieWeapon() == 255:
-        FFX_menu.zombieStrkeBackup()
+        FFX_menu.zombieStrikeBackup()
     FFX_memory.closeMenu()
     
     checkpoint = 0

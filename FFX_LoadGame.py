@@ -34,7 +34,7 @@ def loadOffset(offset):
     FFX_memory.waitFrames(30 * 2.5)
     for _ in range(totalOffset):
         FFX_Xbox.tapDown()
-    for _ in range(15):
+    for _ in range(7):
         FFX_Xbox.tapB()
     FFXC.set_neutral()
     FFX_memory.waitFrames(120)
@@ -462,17 +462,18 @@ def zanEntrance():
     FFXC.set_value('AxisLx', 0)
 
 def zanTrials():
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_movement(1,1)
     FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_value('AxisLx', 0)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_value('AxisLy', 0)
-
-def loadGagazetDream():
-    FFXC.set_movement(1, 1)
+    FFXC.set_movement(0,1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
+
+def loadGagazetDream():
+    print("Positioning to next map")
+    while FFX_memory.getMap() != 309:
+        FFXC.set_movement(1, 1)
+    FFXC.set_neutral()
+    print("Positioning complete")
     FFX_memory.awaitControl()
 
 def loadEggHunt():

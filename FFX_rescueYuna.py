@@ -79,16 +79,19 @@ def guards():
     
     FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 3)
-    FFXC.set_neutral()
+    while not FFX_targetPathing.setMovement([-110,0]):
+        pass
+    FFX_memory.clickToEventTemple(0) #Through the water door
     
     checkpoint = 0
     while checkpoint < 8:
         if FFX_memory.userControl():
+            #Map changes
+            if checkpoint < 2 and FFX_memory.getMap() == 182:
+                checkpoint = 2
             #print("Checkpoint: ", checkpoint)
             #General pathing
-            if FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:

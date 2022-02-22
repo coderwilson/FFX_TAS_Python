@@ -51,14 +51,14 @@ import FFX_Sin
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-Gamestate = "MRR"
-StepCounter = 1
+#Gamestate = "MRR"
+#StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-#Gamestate = "Guadosalam"
-#StepCounter = 2
+Gamestate = "Guadosalam"
+StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -68,18 +68,18 @@ StepCounter = 1
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-Gamestate = "rescueYuna"
+#Gamestate = "rescueYuna"
 #StepCounter = 1
-StepCounter = 2
+#StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
-StepCounter = 1 #Blitz Win, no end game version selected
+#Gamestate = "Gagazet"
+#StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
 Gamestate = "Zanarkand"
 StepCounter = 3 #Blitz win, end game version 1 or 2
-Gamestate = "Sin"
-StepCounter = 3
+#Gamestate = "Sin"
+#StepCounter = 2
 #StepCounter = 4
 #Gamestate = "none"
 #StepCounter = 1
@@ -100,7 +100,7 @@ if Gamestate != "none":
 elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [9,31,49,90,91,98,104,108,121,200,246,253,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 246 #Thunder ball seed. Comment out to use random seed.
+    rngSeedNum = 246 #Thunder ball seed. Comment out to use random seed.
     #rngSeedNum = 254 #Specific seed. Comment out to use random seed.
     rngReviewOnly = False
     gameLength = "Full Run"
@@ -274,7 +274,13 @@ if Gamestate != "none" :
         FFX_LoadGame.zanEntrance()
     if Gamestate == "Zanarkand" and StepCounter == 3: # Just before the trials.
         FFX_LoadGame.loadOffset(1)
+    if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
+        FFX_LoadGame.loadOffset(35)
         FFX_LoadGame.zanTrials()
+    if Gamestate == "Zanarkand" and StepCounter == 3: # After trials, before boss
+        FFX_LoadGame.loadOffset(1)
+        FFX_memory.setEncounterRate(0)
+        #FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(10)
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
@@ -624,9 +630,8 @@ while Gamestate != "End":
         FFX_Logs.nextFile()
 
     if Gamestate == "ThunderPlains" and StepCounter == 1:
-        status = [False,False,False,False,False]
         reportGamestate()
-        status = FFX_ThunderPlains.southPathing(status)
+        status = FFX_ThunderPlains.southPathing()
         StepCounter = 2
 
     if Gamestate == "ThunderPlains" and StepCounter == 2:
@@ -634,14 +639,13 @@ while Gamestate != "End":
         StepCounter = 3
 
     if Gamestate == "ThunderPlains" and StepCounter == 3:
-        status = FFX_ThunderPlains.northPathing(status)
-        rikkucharged = status[0]
+        FFX_ThunderPlains.northPathing()
         Gamestate = "Macalania"
         StepCounter = 1
 
     if Gamestate == "Macalania" and StepCounter == 1:
         reportGamestate()
-        FFX_mWoods.arrival(rikkucharged)
+        FFX_mWoods.arrival(False)
         StepCounter = 2
 
     if Gamestate == "Macalania" and StepCounter == 2:

@@ -187,7 +187,7 @@ def battleSite():
             if checkpoint == 5:
                 print("O'aka menu section")
                 while FFX_memory.userControl():
-                    FFX_targetPathing.setMovement([-45, 3430])
+                    FFX_targetPathing.setMovement([-45, 3425])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_menu.battleSiteOaka1()
@@ -203,6 +203,7 @@ def battleSite():
             elif checkpoint == 14:
                 FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
+                FFXC.set_neutral()
                 FFX_Xbox.tapB() #Tell me when you're ready.
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(60)
