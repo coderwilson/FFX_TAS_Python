@@ -27,6 +27,7 @@ class allVars:
         self.selfDestruct = False #Default False
         
         self.rescueCount = 0
+        self.YTKFarm = 0
     
     def csr(self):
         return self.csrValue
@@ -104,6 +105,13 @@ class allVars:
         print(f"Completed {self.rescueCount} exp kills")
         return self.rescueCount >= 4
 
+
+    def addYTKFarm(self):
+        self.YTKFarm += 1
+        
+    def completedYTKFarm(self):
+        return self.YTKFarm >= 2
+        
 def initVars():
     mainVars = allVars()
 

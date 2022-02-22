@@ -85,6 +85,12 @@ def arrival():
         luckCount = FFX_memory.getItemCountSlot(luckSlot)
     
     checkpoint = 0
+    if not gameVars.fluxOverkill():
+        FFX_memory.fullPartyFormat('yuna')
+    elif FFX_memory.overdriveState()[6] != 100:
+        FFX_memory.fullPartyFormat('rikku')
+    else: 
+        FFX_memory.fullPartyFormat('kimahri')
     while FFX_memory.getMap() != 320:
         if FFX_memory.userControl():
             if checkpoint == 13: #Second chest
@@ -136,7 +142,10 @@ def arrival():
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                FFX_Battle.fleeAll()
+                if not gameVars.fluxOverkill():
+                    FFX_Battle.farmDome()
+                else:
+                    FFX_Battle.chargeRikkuOD()                
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
@@ -290,8 +299,8 @@ def sanctuaryKeeper():
     else:
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
+    FFX_memory.fullPartyFormat('yuna', fullMenuClose)
     
-    FFX_memory.fullPartyFormat('yuna')
     
     FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(30 * 4)

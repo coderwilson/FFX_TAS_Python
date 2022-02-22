@@ -78,8 +78,8 @@ StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 4 #Blitz win, end game version 4
 Gamestate = "Zanarkand"
 StepCounter = 3 #Blitz win, end game version 1 or 2
-#Gamestate = "Sin"
-#StepCounter = 2
+Gamestate = "Sin"
+StepCounter = 3
 #StepCounter = 4
 #Gamestate = "none"
 #StepCounter = 1
@@ -279,6 +279,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(10)
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         FFX_LoadGame.loadOffset(28)
+    if Gamestate == "Sin" and StepCounter == 3: #Save sphere on the Highbridge before talking to Shedinja
+        FFX_LoadGame.loadOffset(24)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
         FFX_LoadGame.loadOffset(3)
         FFX_LoadGame.loadEggHunt()

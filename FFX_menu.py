@@ -1176,7 +1176,6 @@ def skReturn():
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuA()
 
 def skMixed():
     openGrid(character=1)
@@ -1212,8 +1211,6 @@ def skMixed():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
-    FFX_Xbox.menuA()
-    FFX_Xbox.menuA()
 
 def skFriend(): #incomplete / game over
     print("Not yet programmed")
