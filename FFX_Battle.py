@@ -4999,7 +4999,7 @@ def chargeRikkuOD():
         fleeAll()            
 
 def farmDome():
-    if FFX_memory.getBattleNum() in [361, 364, 366]:
+    if FFX_memory.getBattleNum() in [361, 364, 365, 366]:
         if FFX_memory.getBattleNum() == 361: # Defender Z
             while FFX_memory.battleActive():
                 if FFX_Screen.turnYuna():
