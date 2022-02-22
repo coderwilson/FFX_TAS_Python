@@ -1100,7 +1100,7 @@ def gagazetCave():
     FFX_Xbox.menuB() #Auron to slot 3
     FFX_memory.closeMenu()
 
-def zombieStrkeBackup():
+def zombieStrikeBackup():
     openGrid(character=0)
     
     FFX_menuGrid.moveFirst()
@@ -1146,9 +1146,10 @@ def BFA():
     gridDown()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed','u','left')
-    FFX_menuGrid.useShiftLeft('Kimahri')
-    FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('skill','d','up')
+    if FFX_memory.overdriveState()[6] != 100:
+        FFX_menuGrid.useShiftLeft('Rikku')
+        FFX_menuGrid.useFirst()
+        FFX_menuGrid.selSphere('skill','d','up')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 

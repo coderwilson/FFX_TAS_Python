@@ -143,7 +143,7 @@ def arrival():
                 FFX_Xbox.tapB()
 
 def trials():
-    FFX_menu.endGameSwap2()
+    FFX_memory.fullPartyFormat('yuna')
     
     checkpoint = 0
     while checkpoint < 89:
@@ -262,10 +262,10 @@ def trials4(checkpoint):
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 87:
-                FFXC.set_movement(1, 0)
-                FFX_memory.clickToEvent()
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([141,1])
+                    FFX_Xbox.tapB()
                 FFXC.set_neutral()
-                FFX_Xbox.SkipDialog(0.5)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
@@ -369,16 +369,20 @@ def yunalesca():
             elif checkpoint < 4 and FFX_memory.getMap() == 318: #Exit to room with the inert Aeon
                 checkpoint = 4
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint < 9 and FFX_memory.getMap() == 320: #Back to larger of the puzzle rooms
-                checkpoint = 9
+            elif checkpoint == 7:
+                FFX_memory.touchSaveSphere()
+                checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint < 17 and FFX_memory.getMap() == 316: #Hallway before puzzle rooms
-                checkpoint = 17
+            elif checkpoint < 10 and FFX_memory.getMap() == 320: #Back to larger of the puzzle rooms
+                checkpoint = 10
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint < 24 and FFX_memory.getMap() == 315: #Hallway before puzzle rooms
-                checkpoint = 24
+            elif checkpoint < 18 and FFX_memory.getMap() == 316: #Hallway before puzzle rooms
+                checkpoint = 18
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint == 25:
+            elif checkpoint < 25 and FFX_memory.getMap() == 315: #Hallway before puzzle rooms
+                checkpoint = 25
+                print("Checkpoint reached: ", checkpoint)
+            elif checkpoint == 26:
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(17)
                 FFX_Xbox.skipScene()

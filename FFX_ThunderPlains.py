@@ -10,20 +10,20 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 
-def southPathing(status):
+def southPathing():
     FFX_memory.clickToControl()
     
     gameVars.setLStrike(FFX_memory.lStrikeCount())
     
-    speedcount = FFX_memory.getSpeed()
-    if speedcount >= 14:
-        status[3] = True
+    #speedcount = FFX_memory.getSpeed()
+    #if speedcount >= 14:
+    #    status[3] = True
     
     FFX_memory.fullPartyFormat('postbunyip')
     FFX_memory.closeMenu()
     lStrikeCount = FFX_memory.lStrikeCount()
-    if gameVars.getBlitzWin():
-        status[4] = True
+    #if gameVars.getBlitzWin():
+    #    status[4] = True
     checkpoint = 0
     while FFX_memory.getMap() != 256:
         if FFX_memory.userControl():
@@ -42,7 +42,7 @@ def southPathing(status):
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.menuB()
             if FFX_Screen.BattleScreen():
-                status = FFX_Battle.thunderPlains(status, 1)
+                FFX_Battle.thunderPlains(1)
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     
@@ -55,8 +55,6 @@ def southPathing(status):
             FFX_Xbox.menuB()
     FFXC.set_neutral()
     complete = 1
-
-    return status
 
 def agencyShop():
     speedCount = FFX_memory.getSpeed()
@@ -163,13 +161,14 @@ def agency():
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 7:
-                kimahriAffection = FFX_memory.affectionArray()[3]
-                print("Kimahri affection, ", kimahriAffection)
-                while FFX_memory.affectionArray()[3] == kimahriAffection:
-                    FFX_targetPathing.setMovement([27, -44])
-                    FFX_Xbox.tapB()
-                print("Updated, full affection array:")
-                print(FFX_memory.affectionArray())
+                if gameVars.csr():
+                    kimahriAffection = FFX_memory.affectionArray()[3]
+                    print("Kimahri affection, ", kimahriAffection)
+                    while FFX_memory.affectionArray()[3] == kimahriAffection:
+                        FFX_targetPathing.setMovement([27, -44])
+                        FFX_Xbox.tapB()
+                    print("Updated, full affection array:")
+                    print(FFX_memory.affectionArray())
                 checkpoint += 1
             elif checkpoint == 8:
                 while not FFX_memory.getMap() == 256:
@@ -188,10 +187,12 @@ def agency():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     
-def northPathing(status):
+def northPathing():
     FFX_memory.clickToControl()
     
     lStrikeCount = FFX_memory.lStrikeCount()
+    lunarSlot = FFX_memory.getItemSlot(56) != 255
+    
     
     checkpoint = 0
     while FFX_memory.getMap() != 110:
@@ -200,7 +201,7 @@ def northPathing(status):
             if FFX_memory.dodgeLightning(lStrikeCount):
                 print("Dodge")
                 lStrikeCount = FFX_memory.lStrikeCount()
-            elif checkpoint == 12 and status[4] == False and status[2] == False:
+            elif checkpoint == 12 and not gameVars.getBlitzWin() and not lunarSlot:
                 checkpoint = 10
             
             #General pathing
@@ -213,7 +214,7 @@ def northPathing(status):
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.menuB()
             if FFX_Screen.BattleScreen():
-                status = FFX_Battle.thunderPlains(status, 1)
+                FFX_Battle.thunderPlains(1)
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     
@@ -236,5 +237,3 @@ def northPathing(status):
     else:
         while not FFX_targetPathing.setMovement([258,-7]):
             pass
-
-    return status

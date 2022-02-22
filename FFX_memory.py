@@ -644,8 +644,10 @@ def getBattleFormation():
     char8 = process.readBytes(key,1)
     key = baseValue + 0x00D2C8A8
     char9 = process.readBytes(key,1)
+    key = baseValue + 0x00D2C8A9
+    char10 = process.readBytes(key,1)
 
-    battleForm = [char1, char2, char3, char4, char5, char6, char7, char8, char9]
+    battleForm = [char1, char2, char3, char4, char5, char6, char7, char8, char9, char10]
     print(battleForm)
     if 255 in battleForm:
         while 255 in battleForm:

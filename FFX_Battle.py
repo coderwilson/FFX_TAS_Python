@@ -1757,7 +1757,7 @@ def chargeRikku():
     FFX_memory.clickToControl()
     healUp(3)
 
-def thunderPlains(status, section):
+def thunderPlains(section):
     bNum = FFX_memory.getBattleNum()
     nadeSlot = FFX_memory.getItemSlot(35)
     print("++Grenade Slot %d" % nadeSlot)
@@ -1767,11 +1767,10 @@ def thunderPlains(status, section):
     useGrenades = nadeCount > 3 and FFX_memory.getSpeed() < 14
     print("++Use Grenades decision: ", useGrenades)
     useNadeSlot = FFX_memory.getUseItemsSlot(35)
+    lunarSlot = FFX_memory.getItemSlot(56) != 255
+    lightSlot = FFX_memory.getItemSlot(57) != 255
+    petrifySlot = FFX_memory.getItemSlot(49) != 255
     
-    startingstatus = []
-    for i in range(len(status)):
-        startingstatus.append(status[i])
-
     tidusturns = 0
     wakkaturns = 0
     auronturns = 0
@@ -1784,13 +1783,13 @@ def thunderPlains(status, section):
         print("------------Someone has been petrified which messes up the battle logic. Escaping.")
         fleeAll()
     elif bNum in [152, 155, 162]:  # Any battle with Larvae
-        if status[4]:
+        if lunarSlot:
             fleeAll() #No longer need Lunar Curtain for Evrae fight, Blitz win logic.
         else: #Blitz loss strat
             print("Battle with Larvae. Battle number: ", bNum)
             while not FFX_memory.battleComplete():
                 if FFX_memory.turnReady():
-                    if startingstatus[2] == False and FFX_memory.turnReady():
+                    if not lunarSlot and FFX_memory.turnReady():
                         if FFX_Screen.turnTidus():
                             if tidusturns == 0:
                                 buddySwapRikku()
@@ -1799,7 +1798,7 @@ def thunderPlains(status, section):
                             tidusturns += 1
                         elif FFX_Screen.turnRikku():
                             Steal()
-                            status[2] = True
+                            lunarSlot = True
                         else:
                             buddySwapTidus()
                     else:
@@ -1808,7 +1807,7 @@ def thunderPlains(status, section):
         print("Battle with Iron Giant. Battle number: ", bNum)
         while not FFX_memory.battleComplete():
             if FFX_memory.turnReady():
-                if startingstatus[1] == False:
+                if not lightSlot:
                     if FFX_Screen.turnTidus():
                         if tidusturns == 0:
                             defend()
@@ -1820,7 +1819,7 @@ def thunderPlains(status, section):
                     elif FFX_Screen.turnRikku():
                         Steal()
                         print("OMG something's happening!")
-                        status[1] = True
+                        lightSlot = True
                     else:
                         defend()
                 else:
@@ -1828,7 +1827,7 @@ def thunderPlains(status, section):
     elif bNum == 161:
         print("Battle with Iron Giant and Buer monsters. Battle number: ", bNum)
         while not FFX_memory.battleComplete():
-            if FFX_memory.turnReady():
+            if FFX_memory.turnReady() and (useGrenades or not lightSlot):
                 if FFX_Screen.turnTidus():
                     if tidusturns == 0:
                         buddySwapRikku()
@@ -1866,6 +1865,8 @@ def thunderPlains(status, section):
                     auronturns += 1
                 else:
                     fleeAll()
+            else:
+                fleeAll()
     elif bNum in [154, 156, 164] and useGrenades:
         print("Battle with random mobs including Buer. Battle number: ", bNum)
         while not FFX_memory.battleComplete():
@@ -1882,7 +1883,7 @@ def thunderPlains(status, section):
                     useItem(useNadeSlot, 'none')
                 else:
                     defend()
-    elif status[4] == False and FFX_memory.getItemSlot(49) > 200 and bNum in [153, 154, 163]:
+    elif not gameVars.getBlitzWin() and not petrifySlot and bNum in [153, 154, 163]:
         print("Grabbing petrify grenade. Blitz Loss only strat.")
         while not FFX_memory.battleComplete():
             if FFX_memory.turnReady():
@@ -1913,10 +1914,6 @@ def thunderPlains(status, section):
     if FFX_memory.dodgeLightning(gameVars.getLStrike()):
         print("Dodge")
         gameVars.setLStrike(FFX_memory.lStrikeCount())
-    if FFX_memory.getOverdriveValue(6) == 100:
-        status[0] = True
-    print("Status array, Rikku charge, Light curtain, and Lunar Curtain:")
-    print(status)
     print("Checking party format and resolving if needed.")
     FFX_memory.fullPartyFormat('postbunyip', fullMenuClose=False)
     print("Party format is good. Now checking health values.")
@@ -1925,10 +1922,7 @@ def thunderPlains(status, section):
         healUp()
     FFX_memory.closeMenu()
     print("Ready to continue onward.")
-    print("**Plains variables: Rikku charged, stolen light curtain, stolen lunar curtain, ")
-    print("**speed spheres done, Blitz Win state, and petrify grenade (if needed)")
-    print(status)
-    return status
+    
 
 def mWoods(woodsVars):
     FFX_Logs.writeLog("Fight start: Macalania Woods")
@@ -3579,9 +3573,12 @@ def biranYenke():
 def seymourFlux():
     stage = 1
     print("Start: Seymour Flux battle")
+    lastHP = 70000
     FFX_Xbox.clickToBattle()
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
+            lastHP = FFX_memory.getEnemyCurrentHP()[0]
+            print("Last HP")
             if FFX_Screen.turnYuna():
                 print("Yuna's turn. Stage: ", stage)
                 if stage == 1:
@@ -3597,8 +3594,10 @@ def seymourFlux():
                 print("Tidus's turn. Stage: ", stage)
                 if stage < 3:
                     tidusHaste('down', character=1)
-                else:
+                elif lastHP > 3500:
                     attack('none')
+                else:
+                    defend('none')
             elif FFX_Screen.turnAuron():
                 print("Auron's turn. Swap for Rikku and overdrive.")
                 buddySwapRikku()
@@ -3609,6 +3608,9 @@ def seymourFlux():
                 defend()
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
+    
+    if lastHP >= 3500:
+        gameVars.fluxOverkillSuccess()
     print("Seymour Flux battle complete.")
     FFX_memory.clickToControl()
 
@@ -4620,10 +4622,6 @@ def SinFace():
         if FFX_memory.turnReady():
             if FFX_Screen.turnYuna():
                 aeonSummon(4)
-                FFX_Screen.awaitTurn()
-                while FFX_memory.battleMenuCursor() == 0:
-                    FFX_Xbox.tapDown()
-                FFX_Xbox.SkipDialog(2)
             elif FFX_Screen.turnAeon():
                 if aeonFirstTurn == True:
                     while FFX_memory.battleMenuCursor() != 217:
@@ -4650,7 +4648,7 @@ def omnis():
     defend()
 
     FFX_Screen.awaitTurn()
-    print("Going for armor break.")
+    print("Going for armor break. (zombie weapon ", gameVars.zombieWeapon(), ")")
     FFX_memory.printRNG36()
     if gameVars.zombieWeapon() == 255:
         useSkill(1)
@@ -4686,7 +4684,7 @@ def BFA():
     
     FFX_Logs.writeLog("Fight start: BFA and final boss")
     FFX_Xbox.clickToBattle()
-    buddySwapKimahri()
+    buddySwapRikku()
     useSkill(0)
 
     FFX_Screen.awaitTurn()
@@ -4744,19 +4742,53 @@ def yuYevon():
     print("Awww such a sad final boss!")
     zombieAttack = False
     zaChar = gameVars.zombieWeapon()
-    if zaChar == 1:
-        yunaSwap = False
+    if zaChar in [0,1,2,6]:
+        weapSwap = False
     story = FFX_memory.getStoryProgress()
     while story < 3400:
         if FFX_memory.turnReady():
             if zaChar == 1 and not zombieAttack: #Yuna logic
                 if yunaSwap == False and FFX_Screen.turnYuna():
                     equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 1)
-                    yunaSwap = True
-                elif yunaSwap == True and zombieAttack == False and FFX_Screen.turnTidus():
+                    weapSwap = True
+                elif weapSwap == True and zombieAttack == False and FFX_Screen.turnTidus():
                     FFX_Xbox.weapSwap(0)
                 elif FFX_Screen.turnYuna():
                     attack('none')
+                else:
+                    defend()
+            elif zaChar == 0 and not zombieAttack: #Tidus logic:
+                if FFX_Screen.turnYuna():
+                    defend()
+                elif FFX_Screen.turnTidus() and not weapSwap:
+                    equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 0)
+                elif FFX_Screen.turnTidus():
+                    attack('none')
+                    zombieAttack = True
+                else:
+                    defend()
+            elif zaChar == 2 and not zombieAttack: #Auron logic:
+                if FFX_Screen.turnYuna():
+                    defend()
+                elif FFX_Screen.turnAuron() and not weapSwap:
+                    equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 1)
+                    weapSwap = True
+                elif FFX_Screen.turnAuron():
+                    attack('none')
+                else:
+                    defend()
+            elif zaChar == 6 and not zombieAttack: #Rikku logic:
+                if FFX_Screen.turnYuna() and not weapSwap:
+                    #Piggy back off the weapSwap function
+                    defend()
+                    weapSwap = True
+                elif FFX_Screen.turnYuna():
+                    FFX_Xbox.weapSwap(0)
+                elif FFX_Screen.turnTidus():
+                    tidusHaste('l', character=6)
+                elif FFX_Screen.turnRikku():
+                    attack('none')
+                    zombieAttack = True
                 else:
                     defend()
             elif zombieAttack: #Throw P.down to end game
@@ -4884,7 +4916,7 @@ def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = '
         equipHandles = FFX_memory.armorArrayCharacter(character)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-       
+    
     print("@@@@@")
     print("Character ", character)
     print("Equipment type: ", equipType)
@@ -4957,6 +4989,5 @@ def calculateSpareChangeMovement(gilAmount):
         if FFX_memory.spareChangeAmount() == gilCopy:
             return
     return
-        
-            
+
     
