@@ -57,11 +57,11 @@ import FFX_Sin
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-Gamestate = "Guadosalam"
-StepCounter = 2
-#Gamestate = "Macalania"
-#StepCounter = 1
+#Gamestate = "Guadosalam"
 #StepCounter = 2
+Gamestate = "Macalania"
+#StepCounter = 1
+StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
@@ -76,8 +76,8 @@ StepCounter = 2
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
-Gamestate = "Zanarkand"
-StepCounter = 3 #Blitz win, end game version 1 or 2
+#Gamestate = "Zanarkand"
+#StepCounter = 3 #Blitz win, end game version 1 or 2
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
@@ -161,6 +161,8 @@ if Gamestate != "none" :
     reportGamestate()
     import FFX_LoadGame
     
+    #Need to update these to use FFX_LoadGame.loadSaveNum(number) for all.
+    
     if Gamestate == "Baaj" and StepCounter == 1:
         FFX_LoadGame.loadOffset(22)
         #FFX_LoadGame.LoadBaaj()
@@ -232,7 +234,7 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
         FFX_LoadGame.loadOffset(13)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(12)
+        FFX_LoadGame.loadSaveNum(7)
     if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
         FFX_LoadGame.loadOffset(18)
         FFX_LoadGame.loadMacLake()
@@ -272,14 +274,13 @@ if Gamestate != "none" :
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.zanEntrance()
-    if Gamestate == "Zanarkand" and StepCounter == 3: # Just before the trials.
-        FFX_LoadGame.loadOffset(1)
     if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
         FFX_LoadGame.loadOffset(35)
         FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 3: # After trials, before boss
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadSaveNum(45)
         FFX_memory.setEncounterRate(0)
+        time.sleep(10)
         #FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(10)
@@ -776,10 +777,15 @@ while Gamestate != "End":
     if Gamestate == "Zanarkand" and StepCounter == 4:
         reportGamestate()
         FFX_Zanarkand.yunalesca()
-        StepCounter = 1
-        Gamestate = "Sin"
+        StepCounter = 5
         #Gamestate = "End" # Used for testing only.
 
+
+    if Gamestate == "Zanarkand" and StepCounter == 5:
+        FFX_Zanarkand.post_Yunalesca()
+        StepCounter = 1
+        Gamestate = "Sin"
+    
     if Gamestate == "Sin" and StepCounter == 1:
         reportGamestate()
         FFX_Sin.makingPlans()

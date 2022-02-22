@@ -8,12 +8,60 @@ import FFX_menuGrid
 import FFX_zzairShipPath
 import pyautogui
 import FFX_targetPathing
+import os
+from os import listdir
+from os.path import isfile, join
+from pathlib import Path
 
 #This file is intended to load the game to a saved file.
 #This assumes that the save is the first non-auto-save in the list of saves.
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
+
+def getSavedFiles():
+    import FFX_vars
+    gameVars = FFX_vars.varsHandle()
+    #saveFiles = [f for f in listdir(path)]
+    saveFilesFull = sorted(Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime)
+    saveFiles = [ os.path.basename(i) for i in saveFilesFull]
+    saveFiles = saveFiles[::-1]
+    print("----Save File List")
+    print("----Save File List")
+    print(saveFiles)
+    print("----Save File List")
+    print("----Save File List")
+    #time.sleep(90)
+    return saveFiles
+
+def loadSaveNum(number):
+    FFX_memory.waitFrames(10)
+    saveFiles = getSavedFiles()
+    testString = "ffx_" + str(number).zfill(3)
+    print("Searching for string: ", testString)
+    savePos = 255
+    for x in range(len(saveFiles)):
+        if saveFiles[x] == testString:
+            print("Save file is in position: ", x)
+            savePos = x
+    
+    if savePos != 255:
+        while FFX_memory.loadGamePos() != savePos:
+            if FFX_memory.loadGamePos() + 4 < savePos:
+                FFX_Xbox.TriggerR()
+            elif FFX_memory.loadGamePos() < savePos:
+                FFX_Xbox.tapDown()
+            else:
+                FFX_Xbox.tapUp()
+        
+        for _ in range(7):
+            FFX_Xbox.tapB()
+        FFXC.set_neutral()
+        FFX_memory.waitFrames(120)
+        FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
+    else:
+        print("That save file does not exist. Quitting program.")
+        exit()
 
 def LoadFirst():
     print("Loading to first save file")

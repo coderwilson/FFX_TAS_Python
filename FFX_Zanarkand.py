@@ -364,10 +364,10 @@ def yunalesca():
     print("++Zombiestrike:")
     print("++",gameVars.zombieWeapon())
     
+def post_Yunalesca(checkpoint=0):
     print("Heading back outside.")
     FFXC.set_neutral()
     FFX_memory.waitFrames(2)
-    checkpoint = 0
     while FFX_memory.getMap() != 194:
         if FFX_memory.userControl():
             if checkpoint < 2 and FFX_memory.getMap() == 319: #Back to room before Yunalesca

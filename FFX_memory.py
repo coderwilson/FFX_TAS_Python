@@ -2932,3 +2932,21 @@ def printMemoryLog_backup():
     #ffx.exe + D2A00C
     coord4 = process.read(baseValue + 0x00D2A00C)
     FFX_Logs.writeStats("Temp Value 4: " + str(coord1))
+
+#-------------------------------------------------------
+#Load game functions
+
+def loadGamePage():
+    global baseValue
+    key = baseValue + 0x008E72DC
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def loadGameCursor():
+    global baseValue
+    key = baseValue + 0x008E72E0
+    retVal = process.readBytes(key,1)
+    return retVal
+
+def loadGamePos():
+    return loadGamePage() + loadGameCursor()
