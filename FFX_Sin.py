@@ -43,19 +43,11 @@ def makingPlans():
     
     #Fix this later, should be based on memory values.
     print("The hymn is the key")
-    FFX_Xbox.SkipDialog(1)
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(120)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
+    while FFX_memory.oakaGilCursor() != 20:
+        FFX_Xbox.tapB()
+    while FFX_memory.mapCursor() != 10:
+        FFX_memory.menuDirection(FFX_memory.mapCursor(), 10, 13)
+    FFX_memory.clickToControl()
     
 def Shedinja():
     FFX_memory.awaitControl()
@@ -151,7 +143,10 @@ def insideSin():
             FFX_Xbox.menuB()
     FFXC.set_neutral()
     
-    FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    if FFX_memory.overdriveState()[6] != 100:
+        FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
+    else:
+        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     if gameVars.zombieWeapon() == 255:
         FFX_menu.zombieStrikeBackup()
     FFX_memory.closeMenu()
@@ -168,7 +163,10 @@ def insideSin():
                 FFXC.set_neutral()
                 FFX_Battle.omnis()
                 FFX_memory.clickToControl()
-                FFX_memory.fullPartyFormat('kimahri')
+                if FFX_memory.overdriveState()[6] != 100:
+                    FFX_memory.fullPartyFormat('rikku')
+                else:
+                    FFX_memory.fullPartyFormat('kimahri')
             elif checkpoint < 41 and FFX_memory.getMap() == 204:
                 checkpoint = 41
             elif checkpoint < 68 and FFX_memory.getMap() == 327:
@@ -181,7 +179,7 @@ def insideSin():
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                FFX_Battle.fleeAll()
+                FFX_Battle.chargeRikkuOD()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     

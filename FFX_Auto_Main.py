@@ -77,8 +77,7 @@ StepCounter = 2
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
 Gamestate = "Zanarkand"
-StepCounter = 3 #Blitz win, end game version 4
-#StepCounter = 4 #Blitz win, end game version 1 or 2
+StepCounter = 3 #Blitz win, end game version 1 or 2
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
@@ -89,7 +88,7 @@ StepCounter = 3 #Blitz win, end game version 4
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = False
+forceBlitzWin = True
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -271,7 +270,10 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(6)
         FFX_LoadGame.loadGagazetDream()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
+        FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.zanEntrance()
+    if Gamestate == "Zanarkand" and StepCounter == 3: # Just before the trials.
+        FFX_LoadGame.loadOffset(1)
     if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
         FFX_LoadGame.loadOffset(35)
         FFX_LoadGame.zanTrials()
@@ -281,19 +283,10 @@ if Gamestate != "none" :
         #FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
         FFX_LoadGame.loadOffset(10)
-        import FFX_menu
-        #FFX_menu.zombieStrkeBackup()
-        #FFX_memory.setStory(2800)
-        #FFXC.set_movement(1, -1)
-        #FFX_memory.awaitEvent()
-        #FFXC.set_neutral()
-        #FFX_memory.awaitControl()
-        #FFXC.set_movement(0, 1)
-        #FFX_memory.awaitEvent()
-        #FFXC.set_neutral()
-        #FFX_memory.awaitControl()
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.loadOffset(27)
+        FFX_LoadGame.loadOffset(28)
+    if Gamestate == "Sin" and StepCounter == 3: #Save sphere on the Highbridge before talking to Shedinja
+        FFX_LoadGame.loadOffset(24)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
         FFX_LoadGame.loadOffset(3)
         FFX_LoadGame.loadEggHunt()

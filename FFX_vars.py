@@ -13,12 +13,12 @@ class allVars:
         self.csrValue = True #Default to True
         self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
-        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
+        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
         self.wakkaLateMenuVal = False #Default False
-        self.endGameVersionVal = 4 #Default 0
+        self.endGameVersionVal = 0 #Default 0
         
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0
@@ -26,6 +26,7 @@ class allVars:
         
         self.selfDestruct = False #Default False
         
+        self.YTKFarm = 0
         self.rescueCount = 0 #Default to 0
         self.fluxOverkillVar = False #Default to False
     
@@ -111,6 +112,13 @@ class allVars:
         print(f"Completed {self.rescueCount} exp kills")
         return self.rescueCount >= 4
 
+
+    def addYTKFarm(self):
+        self.YTKFarm += 1
+        
+    def completedYTKFarm(self):
+        return self.YTKFarm >= 2
+        
 def initVars():
     mainVars = allVars()
 

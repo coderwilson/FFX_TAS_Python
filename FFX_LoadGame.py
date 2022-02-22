@@ -28,10 +28,7 @@ def LoadFirst():
 
 def loadOffset(offset):
     print("Loading to save file in position ", offset)
-    extraOffset = 1
-    totalOffset = extraOffset + offset
-    if offset in [0,1]:
-        totalOffset = offset
+    totalOffset = offset
     #FFX_memory.waitFrames(30 * 0.2)
     #FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 2.5)
