@@ -4978,7 +4978,7 @@ def calculateSpareChangeMovement(gilAmount):
 
 def chargeRikkuOD():
     if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 378, 384]:
-        while not FFX_memory.menuOpen():
+        while FFX_memory.battleActive():
             if checkPetrifyTidus() or not checkRikkuOk():
                 print("Tidus or Rikku incapacitated, fleeing")
                 fleeAll()
@@ -4994,14 +4994,14 @@ def chargeRikkuOD():
         if FFX_memory.overdriveState()[6] == 100:
             FFX_memory.fullPartyFormat('kimahri')
         else:
-            FFX_Battle.healUp()
+            healUp()
     else:   
-        FFX_Battle.fleeAll()            
+        fleeAll()            
 
 def farmDome():
     if FFX_memory.getBattleNum() in [361, 364, 366]:
         if FFX_memory.getBattleNum() == 361: # Defender Z
-            while not FFX_memory.menuOpen():
+            while FFX_memory.battleActive():
                 if FFX_Screen.turnYuna():
                     aeonSummon(4)
                 elif FFX_Screen.turnAeon():
@@ -5011,8 +5011,8 @@ def farmDome():
                 gameVars.addYTKFarm()
                 gameVars.addYTKFarm()
         elif FFX_memory.getBattleNum() in [364, 365, 366]: # YAT-97	YKT-11	YAT-97
-            while not FFX_memory.menuOpen():
-                if 0 in getEnemyCurrentHP() or not checkTidusOk() or not checkYunaOk():
+            while FFX_memory.battleActive():
+                if 0 in FFX_memory.getEnemyCurrentHP() or not checkTidusOk() or not checkYunaOk():
                     fleeAll()
                 elif FFX_Screen.turnYuna():
                     attack('left' if FFX_memory.getBattleNum() == 366 else 'none')

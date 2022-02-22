@@ -72,12 +72,12 @@ StepCounter = 2
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
-#StepCounter = 1 #Blitz Win, no end game version selected
+Gamestate = "Gagazet"
+StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Temp, do not use going forward
 #StepCounter = 4 #Blitz win, end game version 4
-Gamestate = "Zanarkand"
-StepCounter = 3 #Blitz win, end game version 1 or 2
+#Gamestate = "Zanarkand"
+#StepCounter = 3 #Blitz win, end game version 1 or 2
 #Gamestate = "Sin"
 #StepCounter = 2
 #StepCounter = 4
@@ -259,7 +259,7 @@ if Gamestate != "none" :
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadOffset(2)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadOffset(2)
         FFX_LoadGame.loadCalm()
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
         FFX_LoadGame.loadOffset(18)
