@@ -85,6 +85,8 @@ def arrival():
         luckCount = FFX_memory.getItemCountSlot(luckSlot)
     
     checkpoint = 0
+    print(gameVars.fluxOverkill())
+    print(FFX_memory.overdriveState()[6])
     if not gameVars.fluxOverkill():
         FFX_memory.fullPartyFormat('yuna')
     elif FFX_memory.overdriveState()[6] != 100:
