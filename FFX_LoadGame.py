@@ -57,7 +57,8 @@ def loadSaveNum(number):
         for _ in range(7):
             FFX_Xbox.tapB()
         FFXC.set_neutral()
-        FFX_memory.waitFrames(120)
+        FFX_memory.awaitControl()
+        FFX_memory.waitFrames(5)
         FFX_memory.resetBattleEnd() #So that we don't evaluate battle as complete after loading.
     else:
         print("That save file does not exist. Quitting program.")
@@ -525,10 +526,12 @@ def loadGagazetDream():
     FFX_memory.awaitControl()
 
 def loadEggHunt():
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 2)
-    FFXC.set_movement(0, 1)
-    while FFX_memory.getMap() == 327:
-        keepMoving = True
+    FFX_memory.awaitControl()
+    while not FFX_targetPathing.setMovement([-10,-507]):
+        pass
+    while not FFX_targetPathing.setMovement([-5,-360]):
+        pass
+    
+    while FFX_memory.getMap() != 324:
+        FFXC.set_movement(0, 1)
     FFXC.set_neutral()
-    FFX_memory.waitFrames(30 * 1)

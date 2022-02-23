@@ -59,9 +59,9 @@ import FFX_Sin
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
+#Gamestate = "Macalania"
 #StepCounter = 1
-StepCounter = 2
+#StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
@@ -73,14 +73,17 @@ StepCounter = 2
 #StepCounter = 2
 #StepCounter = 5
 Gamestate = "Gagazet"
-StepCounter = 1 #Blitz Win, no end game version selected
-#StepCounter = 2 #Temp, do not use going forward
-#StepCounter = 4 #Blitz win, end game version 4
+#StepCounter = 1 #Blitz Win, no end game version selected
+#StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win.
+StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
 #Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
+#StepCounter = 4 #Before Yunalesca
+#StepCounter = 5 #After Yunalesca
 #Gamestate = "Sin"
-#StepCounter = 2
-#StepCounter = 4
+#StepCounter = 2 #Shedinja Highbridge
+#StepCounter = 3 #Before Sea of Sorrows
+#StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
 #Gamestate = "none"
 #StepCounter = 1
 
@@ -88,7 +91,7 @@ StepCounter = 1 #Blitz Win, no end game version selected
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -118,6 +121,7 @@ speedCount = 0
 strengthCount = 0
 gems = 0 #Set to 2 if loading in after Evrae Altana with two gems
 autoEggHunt = True
+specialZanLoad = False
 
 #Main functions
 def reportGamestate():
@@ -164,18 +168,12 @@ if Gamestate != "none" :
     #Need to update these to use FFX_LoadGame.loadSaveNum(number) for all.
     
     if Gamestate == "Baaj" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(22)
+        FFX_LoadGame.loadSaveNum(40)
         #FFX_LoadGame.LoadBaaj()
-    if Gamestate == "Baaj" and StepCounter == 5:
-        FFX_LoadGame.LoadFirst()
-    if Gamestate == "Baaj" and StepCounter == 6:
-        FFX_LoadGame.loadOffset(1)
     if Gamestate == "Besaid" and StepCounter == 1 : #Save pop-up after falling off of Rikku's boat
-        FFX_LoadGame.loadOffset(48)
-    if Gamestate == "Besaid" and StepCounter == 2 : #Crusader's lodge before trials start
-        FFX_LoadGame.BesaidTrials()
+        FFX_LoadGame.loadSaveNum(111)
     if Gamestate == "Besaid" and StepCounter == 3 : #Crusader's lodge after "Enough, Wakka!"
-        FFX_LoadGame.loadOffset(29)
+        FFX_LoadGame.loadSaveNum(39)
         print("Load complete")
         FFX_LoadGame.loadMemCursor()
         while FFX_memory.userControl():
@@ -185,91 +183,70 @@ if Gamestate != "none" :
                 FFXC.set_movement(0, 1)
         print("Ready for regular path")
     if Gamestate == "Boat1" : #Besaid beach before boarding SS Liki ( nice alliteration :D )
-        FFX_LoadGame.loadOffset(41)
+        FFX_LoadGame.loadSaveNum(31)
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1: #Just after entering the woods
-        FFX_LoadGame.loadOffset(22)
+        FFX_LoadGame.loadSaveNum(22)
         FFXC.set_movement(0, 1)
         FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
-    if Gamestate == "Boat3":
-        FFX_LoadGame.loadOffset(1)
-        FFXC.set_movement(0, 1)
-        FFX_memory.waitFrames(30 * 1)
-        FFXC.set_neutral()
-        FFX_memory.waitFrames(30 * 2)
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
-        FFX_LoadGame.loadOffset(46)
+        FFX_LoadGame.loadSaveNum(112)
     if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
-        FFX_LoadGame.loadOffset(26)
-    if Gamestate == "Luca" and StepCounter == 5: # After Blitzball, before battles.
-        FFX_LoadGame.loadOffsetBattle(9)
-    #if Gamestate == "Luca" and StepCounter == 6: #After the talk with Auron
-    #    FFX_LoadGame.loadPostBlitz()
+        FFX_LoadGame.loadSaveNum(37)
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
-        FFX_LoadGame.loadOffset(33)
+        FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
+        #FFX_LoadGame.loadSaveNum(16) #With laughing scene
         import FFX_menu
         FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart_Laugh()
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
-        FFX_LoadGame.loadOffset(38)
+        
+        FFX_LoadGame.loadSaveNum(38)
         import FFX_menu
         FFX_menu.mrrGrid1()
         FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
         FFX_LoadGame.LoadMRR()
-    if Gamestate == "MRR" and StepCounter == 2: #Just before the last lift to the battle site
-        FFX_LoadGame.loadOffset(0)
-        FFX_LoadGame.LoadMRR2()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
-        FFX_LoadGame.loadOffset(8)
+        FFX_LoadGame.loadSaveNum(27)
         FFX_LoadGame.AfterGui()
-    if Gamestate == "Djose" and StepCounter == 2: #Just before the Djose temple
-        FFX_LoadGame.djoseTemple()
     if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
-        FFX_LoadGame.loadOffset(20)
+        FFX_LoadGame.loadSaveNum(2)
         FFX_LoadGame.moonflow2()
     if Gamestate == "Guadosalam" and StepCounter == 2: #After the Farplane
-        FFX_LoadGame.loadOffset(4)
+        FFX_LoadGame.loadSaveNum(3)
         FFX_LoadGame.loadGuadoSkip()
     if Gamestate == "Macalania" and StepCounter == 1: #1 = south, 2 = north
-        FFX_LoadGame.loadOffset(13)
+        FFX_LoadGame.loadSaveNum(9)
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
         FFX_LoadGame.loadSaveNum(7)
-    if Gamestate == "Macalania" and StepCounter == 3: #between Spherimorph and Crawler. Move to lake
-        FFX_LoadGame.loadOffset(18)
-        FFX_LoadGame.loadMacLake()
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
-        FFX_LoadGame.loadOffset(10) #No remedy in inventory, likely game over.
+        FFX_LoadGame.loadSaveNum(10) #No remedy in inventory, likely game over.
         FFX_LoadGame.loadMacTemple()
-    if Gamestate == "Macalania" and StepCounter == 5: #After Seymour, before trials
-        FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
-        FFX_LoadGame.loadOffset(17)
+        FFX_LoadGame.loadSaveNum(41)
         FFX_LoadGame.loadMacTemple2()
-    if Gamestate == "Macalania" and StepCounter == 7: #Before Wendigo
-        FFX_LoadGame.loadOffsetBattle(0)
-        FFX_LoadGame.loadWendigo()
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadOffset(16)
     if Gamestate == "Home" and StepCounter == 2:
-        FFX_LoadGame.loadOffset(7)
-    if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, before pathing to the deck
-        FFX_LoadGame.loadOffset(30)
-        FFX_LoadGame.loadRescue()
+        FFX_LoadGame.loadSaveNum(11)
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
         FFX_LoadGame.loadOffset(1)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadSaveNum(42)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
-        FFX_LoadGame.loadOffset(2)
+        FFX_LoadGame.loadSaveNum(43)
         FFX_LoadGame.loadCalm()
-    if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates
-        FFX_LoadGame.loadOffset(18)
+        gameVars.setBlitzWin(True)
+    if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates, after B&Y
+        FFX_LoadGame.loadSaveNum(138)
+        gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadGagaGates()
-    if Gamestate == "Gagazet" and StepCounter == 3: # Just before Seymour Flux
-        FFX_LoadGame.LoadNeutral()
-    if Gamestate == "Gagazet" and StepCounter == 4: # After the dream
-        FFX_LoadGame.loadOffset(6)
+    if Gamestate == "Gagazet" and StepCounter == 5: # After the dream
+        #FFX_LoadGame.loadSaveNum(47)
+        #gameVars.endGameVersionSet(4)
+        FFX_LoadGame.loadSaveNum(52)
+        gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadGagazetDream()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
         FFX_LoadGame.loadOffset(19)
@@ -279,17 +256,22 @@ if Gamestate != "none" :
         FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 3: # After trials, before boss
         FFX_LoadGame.loadSaveNum(45)
-        FFX_memory.setEncounterRate(0)
-        time.sleep(10)
+        gameVars.endGameVersionSet(4)
         #FFX_LoadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4: # After Sanctuary Keeper
-        FFX_LoadGame.loadOffset(10)
+        FFX_LoadGame.loadSaveNum(44)
+    if Gamestate == "Zanarkand" and StepCounter == 5: # After Yunalesca
+        FFX_LoadGame.loadSaveNum(48)
+        specialZanLoad = True
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.loadOffset(28)
-    if Gamestate == "Sin" and StepCounter == 3: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.loadOffset(24)
+        FFX_LoadGame.loadSaveNum(49)
+    if Gamestate == "Sin" and StepCounter == 3: #Start of "Sea of Sorrows" section
+        FFX_LoadGame.loadSaveNum(50)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
-        FFX_LoadGame.loadOffset(3)
+        #This save has zombiestrike weapons for all except Kimahri
+        #Please use for egg hunt and zombie weapon testing.
+        FFX_LoadGame.loadSaveNum(51)
+        gameVars.setZombie(5)
         FFX_LoadGame.loadEggHunt()
     
     #if FFX_memory.getStoryProgress() >= 80:
@@ -745,14 +727,19 @@ while Gamestate != "End":
     if Gamestate == "Gagazet" and StepCounter == 2:
         reportGamestate()
         FFX_Gagazet.gagazetGates()
-        FFX_Gagazet.Flux()
         StepCounter = 3
+        
     if Gamestate == "Gagazet" and StepCounter == 3:
         reportGamestate()
-        FFX_Gagazet.dream()
+        FFX_Gagazet.Flux()
         StepCounter = 4
-
+        
     if Gamestate == "Gagazet" and StepCounter == 4:
+        reportGamestate()
+        FFX_Gagazet.dream()
+        StepCounter = 5
+
+    if Gamestate == "Gagazet" and StepCounter == 5:
         reportGamestate()
         FFX_Gagazet.cave()
         FFX_Gagazet.wrapUp()
