@@ -971,8 +971,8 @@ def afterRonso():
         FFX_menuGrid.selSphere('mana','u','none')
         FFX_menuGrid.useAndMove()
         gridRight()
-        gridRight()
         gridDown()
+        gridRight()
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('speed','d','none')
         FFX_menuGrid.useAndUseAgain()
@@ -1062,14 +1062,6 @@ def afterFlux():
     gridRight()
     gridRight()
     gridRight()
-    #FFX_menuGrid.moveAndUse()
-    #FFX_menuGrid.selSphere('Lv4','d','none')
-    #FFX_menuGrid.useAndMove()
-    #gridUp()
-    #FFX_menuGrid.moveAndUse()
-    #FFX_menuGrid.selSphere('ability','u','none')
-    #FFX_menuGrid.useAndMove()
-    #gridDown()
     gridDown()
     gridDown()
     gridDown()
@@ -1078,7 +1070,6 @@ def afterFlux():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_memory.closeMenu()
 
 def gagazetCave():
     #Occurs after swimming

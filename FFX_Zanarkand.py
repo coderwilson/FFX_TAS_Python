@@ -301,7 +301,7 @@ def sanctuaryKeeper():
     else:
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
-    FFX_memory.fullPartyFormat('yuna', fullMenuClose)
+    FFX_memory.fullPartyFormat('yuna')
     
     
     FFXC.set_movement(-1, 1)

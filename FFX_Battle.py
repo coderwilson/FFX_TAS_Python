@@ -1762,7 +1762,7 @@ def thunderPlains(section):
     useGrenades = nadeCount > 3 and FFX_memory.getSpeed() < 14
     print("++Use Grenades decision: ", useGrenades)
     useNadeSlot = FFX_memory.getUseItemsSlot(35)
-    lunarSlot = FFX_memory.getItemSlot(56) != 255
+    lunarSlot = gameVars.getBlitzWin() or FFX_memory.getItemSlot(56) != 255
     lightSlot = FFX_memory.getItemSlot(57) != 255
     petrifySlot = FFX_memory.getItemSlot(49) != 255
     
@@ -1801,83 +1801,65 @@ def thunderPlains(section):
     elif bNum == 160:
         print("Battle with Iron Giant. Battle number: ", bNum)
         while not FFX_memory.battleComplete():
-            if FFX_memory.turnReady():
-                if not lightSlot:
-                    if FFX_Screen.turnTidus():
-                        if tidusturns == 0:
-                            defend()
-                        else:
-                            fleeAll()
-                        tidusturns += 1
-                    elif FFX_Screen.turnWakka():
-                        buddySwapRikku()
-                    elif FFX_Screen.turnRikku():
+            FFX_Screen.awaitTurn()
+            if lightSlot:
+                fleeAll()
+            else:
+                buddySwapRikku()
+            while not FFX_memory.battleComplete():
+                if FFX_Screen.turnRikku():
+                    if not lightSlot:
                         Steal()
-                        print("OMG something's happening!")
-                        lightSlot = True
+                        lightSlot = FFX_memory.getItemSlot(57) != 255
+                    elif FFX_memory.getOverdriveValue(6) < 100:
+                        attack()
                     else:
-                        defend()
+                        fleeAll()
                 else:
-                    fleeAll()
+                    if FFX_memory.getOverdriveValue(6) < 100 and not checkRikkuOk():
+                        escapeOne()
+                    else:
+                        fleeAll()
     elif bNum == 161:
         print("Battle with Iron Giant and Buer monsters. Battle number: ", bNum)
         while not FFX_memory.battleComplete():
-            if FFX_memory.turnReady() and (useGrenades or not lightSlot):
-                if FFX_Screen.turnTidus():
-                    if tidusturns == 0:
-                        buddySwapRikku()
-                    else:
-                        fleeAll()
-                    tidusturns += 1
-                elif FFX_Screen.turnWakka():
-                    if wakkaturns == 0:
-                        wakkaposition = FFX_memory.getBattleCharSlot(4)
-                        rikkuposition = FFX_memory.getBattleCharSlot(6)
-                        wakkaHP = FFX_memory.getBattleHP()[wakkaposition]
-                        rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                        if wakkaHP > rikkuHP > 0 and FFX_memory.getOverdriveValue(6) < 100:
-                            defend()
+            FFX_Screen.awaitTurn()
+            if useGrenades or not lightSlot:
+                buddySwapRikku()
+                grenadeThrown = False
+                while not FFX_memory.battleComplete():
+                    if FFX_memory.turnReady():
+                        if FFX_Screen.turnRikku():
+                            if useGrenades and not grenadeThrown:
+                                print("Grenade Slot %d" % useNadeSlot)
+                                useItem(useNadeSlot,'none')
+                                grenadeThrown = True
+                            elif not lightSlot:
+                                Steal()
+                                lightSlot = FFX_memory.getItemSlot(57) != 255
+                            elif FFX_memory.getOverdriveValue(6) < 100:
+                                attack()
+                            else:
+                                fleeAll()
                         else:
-                            buddySwapTidus()
-                    else:
-                        buddySwapTidus()
-                    wakkaturns += 1
-                elif FFX_Screen.turnRikku():
-                    print("--", useGrenades)
-                    if useGrenades:
-                        print("Grenade Slot %d" % useNadeSlot)
-                        useItem(useNadeSlot,'none')
-                    else:
-                        Steal()
-                    fleeAll()
-                elif FFX_Screen.turnAuron():
-                    rikkuposition = FFX_memory.getBattleCharSlot(6)
-                    rikkuHP = FFX_memory.getBattleHP()[rikkuposition]
-                    if rikkuHP > 0:
-                        defend()
-                    else:
-                        buddySwapTidus()
-                    auronturns += 1
-                else:
-                    fleeAll()
+                            if not checkRikkuOk():
+                                fleeAll()
+                            elif FFX_memory.getOverdriveValue(6) < 100:
+                                escapeOne()
+                            elif lightSlot and (not useGrenades or grenadeThrown):
+                                fleeAll()
+                            else:
+                                defend()
             else:
                 fleeAll()
     elif bNum in [154, 156, 164] and useGrenades:
         print("Battle with random mobs including Buer. Battle number: ", bNum)
         while not FFX_memory.battleComplete():
-            if FFX_memory.turnReady():
-                if FFX_Screen.turnTidus():
-                    if tidusturns == 0:
-                        buddySwapRikku()
-                    else:
-                        fleeAll()
-                    tidusturns += 1
-                elif FFX_Screen.turnWakka():
-                    buddySwapTidus()
-                elif FFX_Screen.turnRikku():
-                    useItem(useNadeSlot, 'none')
-                else:
-                    defend()
+            FFX_Screen.awaitTurn()
+            if useGrenades:
+                buddySwapRikku()
+                useItem(useNadeSlot, 'none')
+            fleeAll()
     elif not gameVars.getBlitzWin() and not petrifySlot and bNum in [153, 154, 163]:
         print("Grabbing petrify grenade. Blitz Loss only strat.")
         while not FFX_memory.battleComplete():
