@@ -85,8 +85,6 @@ def arrival():
         luckCount = FFX_memory.getItemCountSlot(luckSlot)
     
     checkpoint = 0
-    print(gameVars.fluxOverkill())
-    print(FFX_memory.overdriveState()[6])
     if not gameVars.fluxOverkill():
         FFX_memory.fullPartyFormat('yuna')
     elif FFX_memory.overdriveState()[6] != 100:
@@ -302,10 +300,12 @@ def sanctuaryKeeper():
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
     FFX_memory.fullPartyFormat('yuna')
+    FFX_memory.closeMenu()
     
-    
+    while not FFX_targetPathing.setMovement([110,20]):
+        pass
     FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 4)
+    FFX_memory.awaitEvent()
     FFX_Xbox.clickToBattle()
     if FFX_Screen.turnTidus():
         FFX_Battle.defend()
