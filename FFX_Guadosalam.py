@@ -249,10 +249,12 @@ def guadoSkip():
                 print(FFX_memory.getCamera())
                 if FFX_memory.getCamera()[1] < -10:
                     print("Guado skip success.")
-                    #guadoSkipStatus = False
-                    #checkpoint = 18
-                    guadoSkipStatus = True
-                    checkpoint += 1
+                    if gameVars.csr():
+                        guadoSkipStatus = False
+                        checkpoint = 18
+                    else:
+                        guadoSkipStatus = True
+                        checkpoint += 1
                 else:
                     print("Guado skip fail. Back-up strats.")
                     guadoSkipStatus = False

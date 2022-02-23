@@ -1168,7 +1168,6 @@ def afterFlux():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','d','none')
     FFX_menuGrid.useAndQuit()
-    FFX_memory.closeMenu()
 
 def gagazetCave():
     #Occurs after swimming
