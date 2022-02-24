@@ -71,13 +71,15 @@ def guards():
         FFX_Xbox.skipStoredScene(10)
         FFX_Xbox.SkipDialog(2)
     
+    FFXC.set_neutral()
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
         elif FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.skipScene()
     
-    FFX_memory.clickToEventTemple(6) #Take the spiral lift down
+    if not gameVars.csr():
+        FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
     while not FFX_targetPathing.setMovement([-110,0]):
         pass

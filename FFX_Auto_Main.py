@@ -76,16 +76,16 @@ import FFX_Sin
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
-Gamestate = "Zanarkand"
+#Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
-StepCounter = 5 #After Yunalesca
+#StepCounter = 5 #After Yunalesca
 #Gamestate = "Sin"
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 
 ####################################################################################################
