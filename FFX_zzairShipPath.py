@@ -9,6 +9,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def airShipPath(version):
     FFX_memory.clickToControl()
+    distillerPurchase = False
     
     complete = False
     checkpoint = 0
@@ -19,6 +20,32 @@ def airShipPath(version):
             if checkpoint == 2:
                 FFX_memory.clickToEventTemple(3)
                 checkpoint += 1
+            elif version == 1 and distillerPurchase == False and checkpoint == 5 and \
+                (FFX_memory.getSpeed() < 9 or FFX_memory.getPower() < 24):
+                
+                #Tyton to update this with the actual purchase.
+                while FFX_memory.diagProgressFlag() != 44:
+                    if FFX_memory.userControl():
+                        FFX_targetPathing.setMovement([-6,6])
+                        FFX_Xbox.tapB()
+                    else:
+                        FFXC.set_neutral()
+                        if FFX_memory.battleActive():
+                            FFX_Battle.fleeAll()
+                FFXC.set_neutral()
+                FFX_memory.clickToDiagProgress(48)
+                FFX_memory.waitFrames(90)
+                FFX_Xbox.tapDown()
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(90)
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_memory.clickToControl3()
+                distillerPurchase = True
             elif checkpoint < 6 and FFX_memory.getMap() == 351: #Screen with Isaaru
                 checkpoint = 6
             elif checkpoint < 9 and FFX_memory.getMap() == 211: #Gallery screen (includes lift screens)
@@ -42,7 +69,7 @@ def airShipPath(version):
                 checkpoint += 1
             
             #Return trip map changes
-            elif checkpoint in [13,32,34]:
+            elif checkpoint in [32,34]: #Formerly included 13
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 37:
@@ -122,6 +149,7 @@ def airShipPath(version):
             if FFX_memory.battleActive():
                 FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+                print("Mark")
                 FFX_Xbox.tapB()
     
     print("End of section, Airship pathing")

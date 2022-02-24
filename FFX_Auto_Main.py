@@ -69,17 +69,17 @@ import FFX_Sin
 #StepCounter = 1
 #StepCounter = 2
 #Gamestate = "rescueYuna"
-#StepCounter = 1
+#StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
+#Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
-#StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win.
-StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
-#Gamestate = "Zanarkand"
+#StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
+#StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
+Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
-#StepCounter = 5 #After Yunalesca
+StepCounter = 5 #After Yunalesca
 #Gamestate = "Sin"
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
@@ -101,10 +101,9 @@ if Gamestate != "none":
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [9,31,49,90,91,98,104,108,121,200,246,253,254]
+    rngSelectArray = [9,31,49,90,91,98,104,108,121,200,246,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 246 #Thunder ball seed. Comment out to use random seed.
-    #rngSeedNum = 254 #Specific seed. Comment out to use random seed.
+    #rngSeedNum = 253 #Thunder ball seed. Out of gil for Sonic Steel.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -148,7 +147,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
@@ -199,7 +198,9 @@ if Gamestate != "none" :
         #FFX_LoadGame.loadSaveNum(16) #With laughing scene
         import FFX_menu
         FFX_menu.mrrGrid1()
-        FFX_LoadGame.LoadMiihenStart_Laugh()
+        FFX_LoadGame.LoadMiihenStart()
+        #FFX_LoadGame.LoadMiihenStart_Laugh()
+        FFX_memory.setEncounterRate(0)
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         
         FFX_LoadGame.loadSaveNum(38)
@@ -230,8 +231,11 @@ if Gamestate != "none" :
         FFX_LoadGame.loadOffset(16)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadSaveNum(11)
+    if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, first movement.
+        #FFX_LoadGame.loadSaveNum(55) #Blitz Win, normal save.
+        FFX_LoadGame.loadSaveNum(56) #Blitz Win, save less speed/power spheres
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadOffset(1)
+        FFX_LoadGame.loadSaveNum(42)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadSaveNum(42)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
@@ -239,7 +243,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadCalm()
         gameVars.setBlitzWin(True)
     if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates, after B&Y
-        FFX_LoadGame.loadSaveNum(138)
+        #FFX_LoadGame.loadSaveNum(138) #Blitz Win
+        FFX_LoadGame.loadSaveNum(53) #Blitz Loss
         gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 5: # After the dream
@@ -680,13 +685,13 @@ while Gamestate != "End":
     if Gamestate == "Home" and StepCounter == 2:
         reportGamestate()
         FFX_home.findSummoners()
-        FFX_rescueYuna.preEvrae()
         StepCounter = 1
         Gamestate = "rescueYuna"
         #Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "rescueYuna" and StepCounter == 1:
         reportGamestate()
+        FFX_rescueYuna.preEvrae()
         FFX_Battle.Evrae()
         FFX_rescueYuna.guards()
         StepCounter = 2

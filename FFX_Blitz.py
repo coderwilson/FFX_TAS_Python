@@ -10,6 +10,7 @@ FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 playerArray = [0,0,0,0,0,0,0,0,0,0,0,0]
+firstShot = False
 
 #Initialize the player array
 for i in range(12):
@@ -155,8 +156,9 @@ def gameStage():
     #Stage 4: Pass to Tidus
     #Stage 5: Shoot for goal
     currentStage = 0
-    if FFX_memory.getStoryProgress() < 540: #First half
-        #stages = [0, 0, 150, 260, 280, 285]
+    if FFX_memory.getStoryProgress() < 540 and not firstShot: #First half
+        stages = [0, 280, 280, 280, 280, 280]
+    elif FFX_memory.getStoryProgress() < 540: #First half
         stages = [0, 280, 280, 280, 280, 280]
     elif FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
         stages = [0, 90, 90, 120, 145, 160]
@@ -252,6 +254,7 @@ def shootBall(breakThrough = 5):
             FFX_memory.waitFrames(3)
         else:
             FFX_Xbox.menuB()
+        firstShot = True
 
 def dribbleBall():
     if selectBreakthrough():
@@ -404,10 +407,11 @@ def lettyMove():
         FFXC.set_movement(1, 0)
         FFX_Xbox.tapX()
     elif currentStage == 2:
-        targetCoords = [playerArray[8].getCoords()[0] + 180, playerArray[8].getCoords()[1] - 230]
+        targetCoords = [20, -580]
         FFX_blitzPathing.setMovement(targetCoords)
-        if playerArray[0].getCoords()[0] - playerArray[8].getCoords()[0] < -350:
-            FFX_Xbox.tapX()
+        if distance(2,8) > 300:
+            if distance(3,8) > 350:
+                FFX_Xbox.tapX()
     else:
         if playerArray[2].currentHP() < 10:
             print("Letty out of HP. Passing to Jassu.")
@@ -420,14 +424,6 @@ def lettyMove():
             #Hide in goal
             targetCoords = [20, -600]
             FFX_blitzPathing.setMovement(targetCoords)
-        #elif playerArray[6].getCoords()[1] < -100:
-            #Hide in goal
-        #    targetCoords = [20, -600]
-        #    FFX_blitzPathing.setMovement(targetCoords)
-        #else:
-            #defend at a set distance from opposing forward.
-        #    targetCoords = [0, playerArray[6].getCoords()[1] - 380]
-        #    FFX_blitzPathing.setMovement(targetCoords)
 
 def lettyAct():
     currentStage = gameStage()
@@ -448,10 +444,7 @@ def lettyAct():
     elif playerArray[2].currentHP() < 10:
         passBall(target = 3)
     elif currentStage == 2:
-        if playerArray[0].getCoords()[0] - playerArray[8].getCoords()[0] < -350:
-            passBall(target = 3)
-        else:
-            dribbleBall()
+        passBall(target = 3,breakThrough = 0)
     elif distance(2, 8) < 340:
         passBall(target = 0, breakThrough = 0)
     else:

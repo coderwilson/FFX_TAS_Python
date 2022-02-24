@@ -114,20 +114,15 @@ def mainPath():
                 FFX_memory.clickToEventTemple(7)
                 print("Got X-potion")
                 checkpoint += 1
-            elif checkpoint >= 53 and checkpoint <= 56: #400 gil guy
+            elif checkpoint >= 54 and checkpoint <= 56: #400 gil guy
                 if FFX_memory.getGilvalue() != lastGilValue: #check if we got the 400 from the guy
                     if FFX_memory.getGilvalue() == lastGilValue + 400:
                         print("We've procured the 400 gil from the guy.")
                         checkpoint = 57 #now to the actual lift
                     else:
                         lastGilValue = FFX_memory.getGilvalue()
-                elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True: #Otherwise pathing
-                    if checkpoint == 57:
-                        checkpoint = 52
-                    else:
-                        checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
                 else:
+                    FFX_targetPathing.setMovement(FFX_memory.mrrGuyCoords())
                     FFX_Xbox.tapB()
             elif checkpoint == 58:
                 print("Up the third lift")
