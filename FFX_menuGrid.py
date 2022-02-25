@@ -362,6 +362,22 @@ def moveShiftLeft(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderLeft()
+    if toon == 'tidus':
+        while not gridTidus():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
+    if toon == 'rikku':
+        while not gridRikku():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderLeft()
     print("Ready for grid: " + toon)
 
 def moveShiftRight(toon):
@@ -380,6 +396,22 @@ def moveShiftRight(toon):
                 FFX_Xbox.shoulderRight()
     elif toon == 'lulu':
         while not gridLulu():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'tidus':
+        while not gridTidus():
+            if moveReady() or moveActive() or moveComplete():
+                FFX_Xbox.menuB()
+            elif moveUseMenu():
+                FFX_Xbox.menuBack()
+            elif firstPosition():
+                FFX_Xbox.shoulderRight()
+    if toon == 'rikku':
+        while not gridRikku():
             if moveReady() or moveActive() or moveComplete():
                 FFX_Xbox.menuB()
             elif moveUseMenu():
@@ -514,6 +546,9 @@ def selSphere(sType, direction, shift):
         gridUp()
     if shift == 'left':
         gridLeft()
+    if shift == 'l2':
+        gridLeft()
+        gridLeft()
     if shift == 'l5':
         gridLeft()
         gridLeft()
@@ -549,6 +584,10 @@ def selSphere(sType, direction, shift):
         gridRight()
         FFX_memory.waitFrames(30 * 0.1)
         gridLeft()
+    if shift == 'afterBYSpec':
+        gridRight()
+        gridRight()
+        gridUp()
     if shift == 'torikku':
         FFX_memory.waitFrames(30 * 0.2)
         gridDown()

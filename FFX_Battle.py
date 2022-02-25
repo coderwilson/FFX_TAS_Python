@@ -3551,62 +3551,89 @@ def seymourFlux():
     print("Start: Seymour Flux battle")
     lastHP = 70000
     FFX_Xbox.clickToBattle()
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
-        if FFX_memory.turnReady():
-            lastHP = FFX_memory.getEnemyCurrentHP()[0]
-            print("Last HP")
-            if FFX_Screen.turnYuna():
-                print("Yuna's turn. Stage: ", stage)
-                if stage == 1:
-                    attack('none')
-                    stage += 1
-                elif stage == 2:
-                    aeonSummon(4)
-                    attack('none')
-                    stage += 1
+    if gameVars.endGameVersion() == 3:
+        bahamutSummoned = False
+        while not FFX_memory.battleComplete(): #AKA end of battle screen
+            if FFX_memory.turnReady():
+                if FFX_Screen.turnTidus():
+                    buddySwapYuna()
+                elif FFX_Screen.turnYuna():
+                    if bahamutSummoned == False:
+                        aeonSummon(4)
+                        bahamutSummoned = True
+                    else:
+                        attack('none')
+                elif FFX_Screen.turnAeon():
+                    if gameVars.getBlitzWin():
+                        attack('none')
+                    else:
+                        impulse()
+                elif FFX_memory.faintCheck() >= 1:
+                    revive()
                 else:
-                    attack('none')
-            elif FFX_Screen.turnTidus():
-                print("Tidus's turn. Stage: ", stage)
-                if stage < 3:
-                    tidusHaste('down', character=1)
-                elif lastHP > 3500:
-                    attack('none')
+                    defend()
+    else:
+        while not FFX_memory.battleComplete(): #AKA end of battle screen
+            if FFX_memory.turnReady():
+                lastHP = FFX_memory.getEnemyCurrentHP()[0]
+                print("Last HP")
+                if FFX_Screen.turnYuna():
+                    print("Yuna's turn. Stage: ", stage)
+                    if stage == 1:
+                        attack('none')
+                        stage += 1
+                    elif stage == 2:
+                        aeonSummon(4)
+                        attack('none')
+                        stage += 1
+                    else:
+                        attack('none')
+                elif FFX_Screen.turnTidus():
+                    print("Tidus's turn. Stage: ", stage)
+                    if stage < 3:
+                        tidusHaste('down', character=1)
+                    elif lastHP > 3500:
+                        attack('none')
+                    else:
+                        defend('none')
+                elif FFX_Screen.turnAuron():
+                    print("Auron's turn. Swap for Rikku and overdrive.")
+                    buddySwapRikku()
+                    print("Rikku overdrive")
+                    rikkuFullOD('Flux')
                 else:
-                    defend('none')
-            elif FFX_Screen.turnAuron():
-                print("Auron's turn. Swap for Rikku and overdrive.")
-                buddySwapRikku()
-                print("Rikku overdrive")
-                rikkuFullOD('Flux')
-            else:
-                print("Non-critical turn. Defending.")
-                defend()
-        elif FFX_memory.diagSkipPossible():
-            FFX_Xbox.tapB()
+                    print("Non-critical turn. Defending.")
+                    defend()
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
     
     if lastHP >= 3500:
         gameVars.fluxOverkillSuccess()
     print("Seymour Flux battle complete.")
-    FFX_memory.clickToControl()
 
 def sKeeper():
-    if FFX_memory.getBattleNum() == 355:
-        print("Start of Sanctuary Keeper fight")
-        FFX_Xbox.clickToBattle()
-        FFX_Xbox.weapSwap(0)
-        FFX_Screen.awaitTurn()
-        useSkill(0)
-        FFX_Screen.awaitTurn()
-        defend()  # Auron defends
-        FFX_Screen.awaitTurn()
-        aeonSummon(4)
-        FFX_memory.clickToControl()
-        return 1
+    FFX_Xbox.clickToBattle()
+    if gameVars.endGameVersion() == 3 and gameVars.getBlitzWin():
+        while not FFX_memory.battleComplete():
+            if FFX_memory.turnReady():
+                if FFX_Screen.turnYuna():
+                    aeonSummon(4)
+                elif FFX_Screen.turnAeon():
+                    attack('none')
+                else:
+                    defend()
     else:
-        fleeLateGame()
-        return 0
-
+        while not FFX_memory.battleComplete():
+            print("Start of Sanctuary Keeper fight")
+            FFX_Xbox.weapSwap(0)
+            FFX_Screen.awaitTurn()
+            useSkill(0)
+            FFX_Screen.awaitTurn()
+            defend()  # Auron defends
+            FFX_Screen.awaitTurn()
+            aeonSummon(4)
+            FFX_memory.clickToControl()
+    FFX_memory.clickToControl()
 
 def gagazetCave(direction):
     FFX_Screen.awaitTurn()
@@ -4652,7 +4679,10 @@ def BFA():
     FFX_Logs.writeLog("Fight start: BFA and final boss")
     FFX_Xbox.clickToBattle()
     buddySwapRikku()
-    useSkill(0)
+    if FFX_memory.overdriveState()[6] == 100:
+        rikkuFullOD('bfa')
+    else:
+        useSkill(0)
 
     FFX_Screen.awaitTurn()
     while FFX_memory.mainBattleMenu():
@@ -4709,19 +4739,27 @@ def yuYevon():
     print("Awww such a sad final boss!")
     zombieAttack = False
     zaChar = gameVars.zombieWeapon()
-    if zaChar in [0,1,2,6]:
-        weapSwap = False
+    #if zaChar in [0,1,2,6]:
+    weapSwap = False
     story = FFX_memory.getStoryProgress()
     while story < 3400:
         if FFX_memory.turnReady():
+            print("-----------------------")
+            print("-----------------------")
+            print("zaChar: ", zaChar)
+            print("zombieAttack: ", zombieAttack)
+            print("weapSwap: ", weapSwap)
+            print("-----------------------")
+            print("-----------------------")
             if zaChar == 1 and not zombieAttack: #Yuna logic
-                if yunaSwap == False and FFX_Screen.turnYuna():
+                if weapSwap == False and FFX_Screen.turnYuna():
                     equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 1)
                     weapSwap = True
-                elif weapSwap == True and zombieAttack == False and FFX_Screen.turnTidus():
-                    FFX_Xbox.weapSwap(0)
                 elif FFX_Screen.turnYuna():
                     attack('none')
+                    zombieAttack = True
+                elif weapSwap == True and zombieAttack == False and FFX_Screen.turnTidus():
+                    FFX_Xbox.weapSwap(0)
                 else:
                     defend()
             elif zaChar == 0 and not zombieAttack: #Tidus logic:
@@ -4729,6 +4767,7 @@ def yuYevon():
                     defend()
                 elif FFX_Screen.turnTidus() and not weapSwap:
                     equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 0)
+                    weapSwap = True
                 elif FFX_Screen.turnTidus():
                     attack('none')
                     zombieAttack = True
@@ -4736,12 +4775,13 @@ def yuYevon():
                     defend()
             elif zaChar == 2 and not zombieAttack: #Auron logic:
                 if FFX_Screen.turnYuna():
-                    defend()
+                    buddySwapAuron()
                 elif FFX_Screen.turnAuron() and not weapSwap:
-                    equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 1)
+                    equipInBattle(equipType = 'weap', abilityNum = 0x8032, character = 2)
                     weapSwap = True
                 elif FFX_Screen.turnAuron():
                     attack('none')
+                    zombieAttack = True
                 else:
                     defend()
             elif zaChar == 6 and not zombieAttack: #Rikku logic:
@@ -4752,7 +4792,7 @@ def yuYevon():
                 elif FFX_Screen.turnYuna():
                     FFX_Xbox.weapSwap(0)
                 elif FFX_Screen.turnTidus():
-                    tidusHaste('l', character=6)
+                    tidusHaste('r', character=6)
                 elif FFX_Screen.turnRikku():
                     attack('none')
                     zombieAttack = True
@@ -4850,6 +4890,11 @@ def rikkuFullOD(battle):
         print("Bomb Core in slot: ", item1)
         item2 = FFX_memory.getItemSlot(90)
         print("Mag Sphere in slot: ", item2)
+    elif battle == 'bfa':
+        item1 = FFX_memory.getItemSlot(35)
+        print("Grenade in slot: ", item1)
+        item2 = FFX_memory.getItemSlot(85)
+        print("HP Sphere in slot: ", item2)
 
     if item1 > item2:
         item3 = item1
@@ -4959,40 +5004,41 @@ def calculateSpareChangeMovement(gilAmount):
 
 def chargeRikkuOD():
     if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 378, 384]:
-        while FFX_memory.battleActive():
-            if checkPetrifyTidus() or not checkRikkuOk():
-                print("Tidus or Rikku incapacitated, fleeing")
-                fleeAll()
-            turnchar = FFX_memory.getBattleCharTurn()
-            if turnchar == 6:
-                attack('none')
-            else:
-               if FFX_memory.getOverdriveBattle(6) == 100:
-                    fleeAll()
-               else:
-                    escapeOne()
-        FFX_memory.clickToControl3()
-        if FFX_memory.overdriveState()[6] == 100:
-            FFX_memory.fullPartyFormat('kimahri')
+        if checkPetrifyTidus() or not checkRikkuOk():
+            print("Tidus or Rikku incapacitated, fleeing")
+            fleeAll()
         else:
-            healUp()
+            while not FFX_memory.battleComplete():
+                if FFX_memory.turnReady():
+                    turnchar = FFX_memory.getBattleCharTurn()
+                    if turnchar == 6:
+                        attack('none')
+                    elif FFX_memory.getOverdriveBattle(6) == 100:
+                        fleeAll()
+                    else:
+                        escapeOne()
+            FFX_memory.clickToControl3()
+            if FFX_memory.overdriveState()[6] == 100:
+                FFX_memory.fullPartyFormat('kimahri')
+            else:
+                healUp()
     else:   
         fleeAll()            
 
 def farmDome():
-    if FFX_memory.getBattleNum() in [361, 364, 365, 366]:
+    if FFX_memory.getBattleNum() in [361, 364, 366]:
         if FFX_memory.getBattleNum() == 361: # Defender Z
-            while FFX_memory.battleActive():
+            while not FFX_memory.battleComplete():
                 if FFX_Screen.turnYuna():
                     aeonSummon(4)
                 elif FFX_Screen.turnAeon():
                     attack('none')
                 else:
                     defend()
-                gameVars.addYTKFarm()
-                gameVars.addYTKFarm()
+            gameVars.addYTKFarm()
+            gameVars.addYTKFarm()
         elif FFX_memory.getBattleNum() in [364, 365, 366]: # YAT-97	YKT-11	YAT-97
-            while FFX_memory.battleActive():
+            while not FFX_memory.battleComplete():
                 if 0 in FFX_memory.getEnemyCurrentHP() or not checkTidusOk() or not checkYunaOk():
                     fleeAll()
                 elif FFX_Screen.turnYuna():
@@ -5001,7 +5047,7 @@ def farmDome():
                     attack('left' if FFX_memory.getBattleNum() == 366 else 'none')
                 else:
                     defend()
-                gameVars.addYTKFarm()
+            gameVars.addYTKFarm()
         FFX_memory.clickToControl3()
         if gameVars.completedYTKFarm():
             gameVars.fluxOverkillSuccess()

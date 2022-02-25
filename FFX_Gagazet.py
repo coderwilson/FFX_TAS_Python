@@ -152,6 +152,7 @@ def gagazetGates():
                     FFX_memory.clickToControl()
                     if FFX_memory.overdriveState()[6] == 100:
                         FFX_memory.fullPartyFormat('kimahri')
+                        #FFX_memory.setEncounterRate(0)
                     else:
                         FFX_memory.fullPartyFormat('rikku')
             elif FFX_memory.diagSkipPossible():
@@ -159,7 +160,10 @@ def gagazetGates():
     #Should now be on the map with Seymour Flux. Moving to next section
 
 def Flux():
-    FFX_memory.fullPartyFormat('yuna')
+    print("Flux screen - ready for Seymour again.")
+    FFXC.set_neutral()
+    if gameVars.endGameVersion() != 3:
+        FFX_memory.fullPartyFormat('yuna')
     checkpoint = 0
     while FFX_memory.getMap() != 309:
         if FFX_memory.userControl():
@@ -177,14 +181,18 @@ def Flux():
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if FFX_memory.diagSkipPossible():
+            if FFX_memory.battleActive():
+                print("Flux battle start")
+                FFX_Battle.seymourFlux()
+                #FFXC.set_movement(0,1)
+                FFX_memory.clickToControl3()
+                if gameVars.endGameVersion() != 3:
+                    FFX_menu.afterFlux()
+                FFX_memory.fullPartyFormat('kimahri')
+            elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-            elif FFX_memory.turnReady():
-                FFX_Battle.seymourFlux()
-                FFX_menu.afterFlux()
-                FFX_memory.fullPartyFormat('kimahri')
     if not gameVars.csr():
         while not FFX_memory.cutsceneSkipPossible():
             if FFX_memory.diagSkipPossible():
@@ -297,7 +305,7 @@ def cave():
                 FFXC.set_neutral()
                 
                 print("Now the trial has started.")
-                FFX_Xbox.SkipDialog(2.8)
+                FFX_Xbox.SkipDialog(2)
                 
                 #Need logic here for when to start the trial
                 
