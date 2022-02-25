@@ -142,18 +142,14 @@ def desert():
                 print("-----------------------------")
                 print("Items status: ", stealItems)
                 print("-----------------------------")
-                #if stealItems[0] == 2: #Bomb Cores aren't working right.
-                #    itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
-                #else:
-                #    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
-                itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
+                itemsNeeded = 7 - sum(stealItems)
                 
                 #Finally, check for other factors and report to console.
                 if FFX_memory.overdriveState()[6] == 100:
                     chargeState = True
                 if FFX_memory.getSpeed() >= 9:
                     needSpeed = False
-                if FFX_memory.getPower() >= 23:
+                if FFX_memory.getPower() >= 18:
                     needPower = False
                 print("-----------------------------Flag statuses")
                 print("Rikku is charged up: ", chargeState)
@@ -249,10 +245,7 @@ def findSummoners():
                     if dhBattleCount == 1:
                         print("Home, battle 2")
                         FFX_Battle.home2()
-                        while not FFX_memory.userControl():
-                            if FFX_memory.menuOpen():
-                                FFX_Xbox.tapB()
-                        FFX_memory.fullPartyFormat('desert1')
+                        FFX_memory.fullPartyFormat('desert3')
                     else:
                         print("Home, bonus battle for Blitz loss")
                         FFX_Battle.home3()

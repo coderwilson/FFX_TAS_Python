@@ -53,6 +53,12 @@ def guards():
     #Need to add here, use Mega Potion
     if FFX_memory.getItemSlot(3) < 200:
         FFX_menu.beforeGuards()
+    sleepingPowders = FFX_memory.getItemSlot(37) != 255:
+    if not sleepingPowders:
+        if FFX_memory.getLuluSlvl() < 35:
+            FFX_memory.fullPartyFormat('guards_lulu')
+        else:
+            FFX_memory.fullPartyFormat('guards_no_lulu')
     
     guardNum = 1
     while guardNum < 6:
@@ -61,7 +67,7 @@ def guards():
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                FFX_Battle.guards(guardNum)
+                FFX_Battle.guards(guardNum, sleepingPowders)
                 guardNum += 1
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()

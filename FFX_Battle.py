@@ -3006,7 +3006,6 @@ def home2():
                 defend()
     print("Home 2 shows as fight complete.")
     FFX_memory.clickToControl()
-    FFX_memory.fullPartyFormat('desert1')
 
 def home3():
     FFX_Logs.writeLog("Fight start: Home 3")
@@ -3176,111 +3175,112 @@ def Evrae():
         FFX_Xbox.skipSceneSpec()
 
 
-def guards(groupNum):
+def guards(groupNum, sleepingPowders):
     FFX_Logs.writeLog("Fight start: Bevelle Guards")
     rikkuHeal = False
     turnNum = 0
     rikkuTurns = 0
-    items = [0,0,0,0]
+    items = updateStealItemsDesert()
     FFX_Xbox.clickToBattle()
-    while not FFX_memory.battleComplete(): #AKA end of battle screen
-        if FFX_memory.turnReady():
-            items = updateStealItemsDesert()
-            if FFX_Screen.turnTidus():
-                turnNum += 1
-                if groupNum == 5:
-                    if turnNum == 1:
-                        tidusHaste('left')
-                    else:
-                        attackByNum(22)
-                else:
+    throw_distiller = FFX_memory.getItemSlot(16) != 255 or FFX_memory.getItemSlot(18) != 255
+    num_throws = 0
+    hasted = False
+    tidusWent = False
+    if sleepingPowders: # We have sleeping powders
+        while not FFX_memory.battleComplete(): #AKA end of battle screen
+            if groupNum in [1, 3]:
+                if FFX_Screen.turnTidus():
                     attack('none')
-            elif FFX_Screen.turnKimahri():
-                if groupNum == 5 and items[0] >= 1:
-                    enemyHP = FFX_memory.getEnemyCurrentHP()
-                    if enemyHP[0] != 0:
-                        useItem(FFX_memory.getUseItemsSlot(27), 'left')
+                elif throw_distiller:
+                    if FFX_memory.getItemSlot(18) != 255:
+                        _useHealingItem(18)
                     else:
-                        useItem(FFX_memory.getUseItemsSlot(27), 'none')
-                elif groupNum in [2,4,5]:
-                    if items[2] >= 1:
-                        itemToUse = 40
-                    elif items[3] >= 1:
-                        itemToUse = 39
-                    else:
-                        itemToUse = 37
-                        
-                    if FFX_memory.getUseItemsSlot(itemToUse) < 200:
-                        useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
-                    else:
-                        if FFX_memory.getBattleHP()[0] < 800 and \
-                            FFX_memory.getItemCountSlot(FFX_memory.getUseItemsSlot(20)) >= 1:
-                            useItem(FFX_memory.getUseItemsSlot(20), 'none')
-                        elif FFX_memory.getUseItemsSlot(30) != 255:
-                            useItem(FFX_memory.getUseItemsSlot(30), 'none')
-                        elif FFX_memory.getUseItemsSlot(32) != 255:
-                            useItem(FFX_memory.getUseItemsSlot(32), 'none')
-                        elif FFX_memory.getUseItemsSlot(24) != 255:
-                            useItem(FFX_memory.getUseItemsSlot(24), 'none')
-                        elif FFX_memory.getUseItemsSlot(35) != 255 and \
-                            FFX_memory.getItemCountSlot(FFX_memory.getUseItemsSlot(35)) > 1:
-                            useItem(FFX_memory.getUseItemsSlot(35), 'none')
-                        else:
-                            defend()
+                        _useHealingItem(16)
+                    throw_distiller = False
                 else:
                     defend()
-            elif FFX_Screen.turnRikku():
-                rikkuTurns += 1
-                if groupNum == 1:
-                    if gameVars.getBlitzWin() == False and rikkuTurns == 1:
-                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
-                    elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1000:
-                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
-                    elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(3)] < 600:
-                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
+            elif groupNum in [2, 4]:
+                if FFX_Screen.turnTidus():
+                    attack('none')
+                elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri() and num_throws < 2:
+                    if num_throws == 0:
+                        useItem(FFX_memory.getUseItemsSlot(37))
                     else:
-                        defend()
-                elif groupNum == 3:
-                    defend()
-                elif groupNum == 2 or groupNum == 4:
-                    if items[1] >= 1:
-                        itemToUse = 37
-                    elif items[2] >= 1:
-                        itemToUse = 40
-                    elif items[3] >= 1:
-                        itemToUse = 39
-                    useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
+                        if FFX_memory.getItemCountSlot(40) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(40))
+                        elif FFX_memory.getItemCountSlot(39) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(39))
+                        elif FFX_memory.getItemSlot(27) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(27))
+                    num_throws += 1
                 else:
-                    if rikkuTurns < 3:
-                        if items[2] >= 1:
-                            itemToUse = 40
-                        elif items[3] >= 1:
-                            itemToUse = 39
-                        elif items[1] >= 1:
-                            itemToUse = 37
-                        else:
-                            itemToUse = 255
-                        if itemToUse != 255:
-                            useItem(FFX_memory.getUseItemsSlot(itemToUse), 'none')
-                        else:
-                            rikkuTurns -= 1
-                            if FFX_memory.getBattleHP()[0] < 800 and \
-                                FFX_memory.getItemCountSlot(FFX_memory.getUseItemsSlot(20)) >= 1:
-                                useItem(FFX_memory.getUseItemsSlot(20), 'none')
-                            elif FFX_memory.getUseItemsSlot(30) != 255:
-                                useItem(FFX_memory.getUseItemsSlot(30), 'none')
-                            elif FFX_memory.getUseItemsSlot(32) != 255:
-                                useItem(FFX_memory.getUseItemsSlot(32), 'none')
-                            elif FFX_memory.getUseItemsSlot(24) != 255:
-                                useItem(FFX_memory.getUseItemsSlot(24), 'none')
-                            elif FFX_memory.getUseItemsSlot(35) != 255 and \
-                                FFX_memory.getItemCountSlot(FFX_memory.getUseItemsSlot(35)) > 1:
-                                useItem(FFX_memory.getUseItemsSlot(35), 'none')
-                            else:
-                                defend()
+                    defend()
+            elif groupNum == 5:
+                if FFX_Screen.turnTidus():
+                    if not hasted:
+                        tidusHaste('left', character=6)
                     else:
-                        defend()
-    FFX_memory.clickToControl()
+                        attack('none')
+                if FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
+                        if FFX_memory.getItemSlot(37) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(37))
+                        elif FFX_memory.getItemCountSlot(40) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(40))
+                        elif FFX_memory.getItemCountSlot(39) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(39))
+                        elif FFX_memory.getItemSlot(27) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(27))
+        FFX_memory.clickToControl()
+    else: # We do not have sleeping powders
+        while not FFX_memory.battleComplete():
+            if groupNum in [1, 3]:
+                if FFX_Screen.turnTidus():
+                    attack('none')
+                elif throw_distiller:
+                    if FFX_memory.getItemSlot(18) != 255:
+                        _useHealingItem(18)
+                    else:
+                        _useHealingItem(16)
+                    throw_distiller = False
+                else:
+                    defend()
+            elif groupNum in [2, 4]:
+                if FFX_Screen.turnTidus():
+                    if not tidusWent:
+                        buddySwapKimahri()
+                    else:
+                        attack('none')
+                elif FFX_Screen.turnKimahri():
+                    if FFX_memory.getItemCountSlot(40) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(40))
+                    elif FFX_memory.getItemCountSlot(39) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(39))
+                    elif FFX_memory.getItemSlot(27) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(27))
+                elif FFX_Screen.turnRikku():
+                    buddySwapTidus()
+                else:
+                    defend()
+            elif groupNum == 5:
+                if FFX_Screen.turnTidus():
+                    if not tidusWent:
+                        buddySwapRikku()
+                    else:
+                        attack('none')
+                elif FFX_Screen.turnRikku():
+                    if FFX_memory.getItemCountSlot(40) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(40))
+                    elif FFX_memory.getItemCountSlot(39) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(39))
+                    elif FFX_memory.getItemSlot(27) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(27))
+                elif FFX_Screen.turnKimahri():
+                    buddySwapTidus()
+                else:
+                    defend()
+        FFX_memory.clickToControl()
+        if groupNum == 2:
+            FFX_memory.fullPartyFormat('guards_lulu')
 
 def isaaru():
     FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")
@@ -3631,7 +3631,6 @@ def _navigate_to_position(position, battleCursor = FFX_memory.battleCursor2):
                 FFX_Xbox.tapDown()
 
 def useItem(slot: int, direction = 'none', target = 255):
-    #slot -= 1 #This allows us to index at 1 instead of 0 for the programmer's sake.
     FFX_Logs.writeLog("Using items via the Use command")
     print("Using items via the Use command")
     print("Item slot: ", slot)
@@ -3759,7 +3758,7 @@ def seymourSpell():
             
     tapTargeting()
 
-def _useHealingItem(num, direction, itemID):
+def _useHealingItem(num=None, direction='l', itemID=0):
     print("Healing character, ", num)
     direction = direction.lower()
     while not FFX_memory.turnReady():
@@ -3777,36 +3776,36 @@ def _useHealingItem(num, direction, itemID):
     _navigate_to_position(FFX_memory.getThrowItemsSlot(itemID))
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-
-    while FFX_memory.battleTargetId() != num:
-        if direction == 'l':
-            if FFX_memory.battleTargetId() >= 20:
-                print("Wrong battle line targetted.")
-                FFX_Xbox.tapRight()
-                direction = 'u'
-            else:
-                FFX_Xbox.tapLeft()
-        elif direction == 'r':
-            if FFX_memory.battleTargetId() >= 20:
-                print("Wrong character targetted.")
-                FFX_Xbox.tapLeft()
-                direction = 'd'
-            else:
-                FFX_Xbox.tapRight()
-        elif direction == 'u':
-            if FFX_memory.battleTargetId() >= 20:
-                print("Wrong character targetted.")
-                FFX_Xbox.tapDown()
-                direction = 'l'
-            else:
-                FFX_Xbox.tapUp()
-        elif direction == 'd':
-            if FFX_memory.battleTargetId() >= 20:
-                print("Wrong character targetted.")
-                FFX_Xbox.tapUp()
-                direction = 'r'
-            else:
-                FFX_Xbox.tapDown()
+    if num:
+        while FFX_memory.battleTargetId() != num:
+            if direction == 'l':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong battle line targetted.")
+                    FFX_Xbox.tapRight()
+                    direction = 'u'
+                else:
+                    FFX_Xbox.tapLeft()
+            elif direction == 'r':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong character targetted.")
+                    FFX_Xbox.tapLeft()
+                    direction = 'd'
+                else:
+                    FFX_Xbox.tapRight()
+            elif direction == 'u':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong character targetted.")
+                    FFX_Xbox.tapDown()
+                    direction = 'l'
+                else:
+                    FFX_Xbox.tapUp()
+            elif direction == 'd':
+                if FFX_memory.battleTargetId() >= 20:
+                    print("Wrong character targetted.")
+                    FFX_Xbox.tapUp()
+                    direction = 'r'
+                else:
+                    FFX_Xbox.tapDown()
     tapTargeting()
 
 def usePotionCharacter(num, direction):

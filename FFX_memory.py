@@ -1651,6 +1651,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0,6,2,3,4,5]
     elif frontLine == 'desert2':
         orderFinal = [0,3,2,6,4,5]
+    elif frontLine == 'desert3':
+        orderFinal = [0,5,2,6,4,3]
     elif frontLine == 'desert9':
         orderFinal = [0,4,2,3,5]
     elif frontLine == 'guards':
@@ -1685,6 +1687,10 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [5,1,0,4]
     elif frontLine == 'highbridge':
         orderFinal = [0,1,2,6,4,5]
+    elif frontLine == 'guards_no_lulu':
+        orderFinal = [0, 2, 6]
+    elif frontLine == 'guards_lulu':
+        orderFinal = [0, 5, 6]
     else:
         orderFinal = [6,5,4,3,2,1,0]
     return orderFinal
