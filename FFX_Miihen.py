@@ -26,13 +26,13 @@ def arrival():
     checkpoint = 0
     while FFX_memory.getMap() != 120:
         if FFX_memory.userControl():
-        
+            #print("Checkpoint: ", checkpoint)
             #Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
                 if gameVars.csr():
                     #Only run this branch if CSR is online.
                     tidusCoords = FFX_memory.getCoords()
-                    hunterCoords = FFX_memory.getActorCoords(10)
+                    hunterCoords = FFX_memory.miihenGuyCoords()
                     hunterDistance = abs(tidusCoords[1] - hunterCoords[1]) \
                         + abs(tidusCoords[0] - hunterCoords[0])
                     
@@ -182,10 +182,9 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
                     checkpoint += 1
                 else:
                     FFXC.set_neutral()
-                    FFX_Xbox.SkipDialog(4)
-                    if FFX_memory.userControl():
-                        FFX_memory.clickToControl3()
-                        checkpoint += 1
+                    FFX_Xbox.SkipDialog(1)
+                    FFX_memory.clickToControl3()
+                    checkpoint += 1
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:

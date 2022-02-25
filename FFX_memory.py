@@ -1713,6 +1713,13 @@ def nameFromNumber(charNum):
     if charNum == 6:
         return "Rikku"
 
+def getActorID(actorNum):
+    global baseValue
+    basePointer = baseValue + 0x01fc44e4
+    basePointerAddress = process.read(basePointer)
+    offsetX = (0x880 * actorNum)
+    return process.readBytes(basePointerAddress + offsetX, 2)
+
 def getActorCoords(actorNumber):
     global process
     global baseValue
@@ -1736,14 +1743,27 @@ def getActorCoords(actorNumber):
         doNothing = True
 
 def miihenGuyCoords():
-    import FFX_vars
-    gameVars = FFX_vars.varsHandle()
-    if gameVars.csr():
-        return getActorCoords(6)
-    elif diagProgressFlag() == 48: #After talking to Lucille
-        return getActorCoords(6)
-    else:
-        return getActorCoords(6)
+    print("+++Searching for Mi'ihen Spear guy")
+    spearGuy = 255
+    for x in range(20):
+        actorNum = getActorID(x)
+        print("Actor ", x, ": ", hex(actorNum))
+        if actorNum == 0x202D:
+            spearGuy = x
+    print("+++Spear guy in position: ", spearGuy)
+    return getActorCoords(spearGuy)
+
+def mrrGuyCoords():
+    print("+++Searching for MRR guy")
+    mrrGuy = 255
+    for x in range(20):
+        actorNum = getActorID(x)
+        print("Actor ", x, ": ", hex(actorNum))
+        if actorNum == 0x2083:
+            mrrGuy = x
+    print("+++MRR guy in position: ", mrrGuy)
+    mrrGuyPos = getActorCoords(mrrGuy)
+    return [mrrGuyPos[0],mrrGuyPos[1]]
 
 def lucilleMiihenCoords():
     return getActorCoords(8)

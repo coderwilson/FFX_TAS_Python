@@ -2119,10 +2119,10 @@ def mrrMain(checkpoint):
     if checkpoint == 52:
         x = 121
         y = 50
-    if checkpoint == 53: #Lining up with the guy for 400 gil
-        x = 116
-        y = 81
-    if checkpoint == 54:
+    if checkpoint == 53:
+        x = 112
+        y = 100
+    if checkpoint == 54: #Lining up with the guy for 400 gil
         x = 61
         y = 140
     if checkpoint == 55:
@@ -2148,26 +2148,26 @@ def mrrMain(checkpoint):
     if checkpoint == 62:
         x = 219
         y = 202
-    if checkpoint == 63: #Next to the final lift
-        x = 227
-        y = 165
+    if checkpoint == 63: #Diagonal towards the save sphere
+        x = 226
+        y = 170
     if checkpoint == 64:
-        x = 249
-        y = 172
+        x = 248
+        y = 169
     if checkpoint == 65:
-        x = 264
-        y = 156
+        x = 271
+        y = 183
     if checkpoint == 66:
         print("Up the final lift.")
     if checkpoint == 67:
-        x = 305
-        y = 152
+        x = 304
+        y = 186
     if checkpoint == 68:
-        x = 328
-        y = 154
+        x = 327
+        y = 185
     if checkpoint == 69:
-        x = 342
-        y = 160
+        x = 341
+        y = 172
     if checkpoint == 70:
         x = 450
         y = 160
@@ -2774,8 +2774,8 @@ def djoseExit(checkpoint):
         x = -13
         y = -4
     if checkpoint == 11:
-        x = -9
-        y = 13
+        x = -19
+        y = 18
     if checkpoint == 12: #Remedy
         x = 0
         y = 0
@@ -6566,8 +6566,8 @@ def airShip(checkpoint):
         x = -7
         y = 72
     if checkpoint == 4:
-        x = 3
-        y = 15
+        x = -3
+        y = 11
     if checkpoint == 5:
         x = 10
         y = -100

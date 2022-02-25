@@ -38,9 +38,6 @@ def defend():
 
 def tidusFlee():
     print("Tidus Flee (or similar command pattern)")
-    if FFX_memory.otherBattleMenu():
-        while FFX_memory.otherBattleMenu():
-            FFX_Xbox.tapA()
     while FFX_memory.battleMenuCursor() != 20:
         if FFX_Screen.turnTidus() == False:
             break
@@ -372,9 +369,10 @@ def Klikk():
     if gameVars.csr():
         while not FFX_memory.userControl():
             if FFX_memory.menuOpen():
-                FFXC.set_value('BtnB', 1)
-                FFX_memory.waitFrames(120)
-                FFXC.set_neutral()
+                FFX_Xbox.tapB()
+                #FFXC.set_value('BtnB', 1)
+                #FFX_memory.waitFrames(90) #Dial in further. Necessary to avoid save dialog.
+                #FFXC.set_neutral()
     else:
         FFX_memory.clickToControl()  # Maybe not skippable dialog, but whatever.
 
@@ -1812,7 +1810,7 @@ def thunderPlains(section):
                         Steal()
                         lightSlot = FFX_memory.getItemSlot(57) != 255
                     elif FFX_memory.getOverdriveValue(6) < 100:
-                        attack()
+                        attack('none')
                     else:
                         fleeAll()
                 else:
@@ -1838,7 +1836,7 @@ def thunderPlains(section):
                                 Steal()
                                 lightSlot = FFX_memory.getItemSlot(57) != 255
                             elif FFX_memory.getOverdriveValue(6) < 100:
-                                attack()
+                                attack('none')
                             else:
                                 fleeAll()
                         else:
@@ -3136,7 +3134,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[0] < 1520:
+                elif FFX_memory.getBattleHP()[getBattleCharSlot(0)] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3154,7 +3152,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[0] < 1520:
+                elif FFX_memory.getBattleHP()[getBattleCharSlot(0)] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3613,6 +3611,7 @@ def seymourFlux():
 
 def sKeeper():
     FFX_Xbox.clickToBattle()
+    print("Start of Sanctuary Keeper fight")
     if gameVars.endGameVersion() == 3 and gameVars.getBlitzWin():
         while not FFX_memory.battleComplete():
             if FFX_memory.turnReady():
@@ -3623,16 +3622,19 @@ def sKeeper():
                 else:
                     defend()
     else:
+        armorBreak = False
         while not FFX_memory.battleComplete():
-            print("Start of Sanctuary Keeper fight")
-            FFX_Xbox.weapSwap(0)
-            FFX_Screen.awaitTurn()
-            useSkill(0)
-            FFX_Screen.awaitTurn()
-            defend()  # Auron defends
-            FFX_Screen.awaitTurn()
-            aeonSummon(4)
-            FFX_memory.clickToControl()
+            if FFX_memory.turnReady():
+                if FFX_Screen.turnTidus():
+                    useSkill(0)
+                    armorBreak = True
+                elif FFX_Screen.turnYuna():
+                    if armorBreak:
+                        aeonSummon(4)
+                    else:
+                        defend()
+                elif FFX_Screen.turnAeon():
+                    attack('none')
     FFX_memory.clickToControl()
 
 def gagazetCave(direction):

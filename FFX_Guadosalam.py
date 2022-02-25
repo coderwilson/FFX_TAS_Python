@@ -195,7 +195,7 @@ def guadoSkip():
             guadoPos = FFX_memory.getActorCoords(17)
             if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
                 while FFX_memory.userControl():
-                    FFX_targetPathing.setMovement(guadoPos[0], guadoPos[1])
+                    FFX_targetPathing.setMovement([guadoPos[0], guadoPos[1]])
                     FFX_Xbox.tapB()
                 recovery = True
             else:
