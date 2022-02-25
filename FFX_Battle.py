@@ -3135,7 +3135,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[getBattleCharSlot(0)] < 1520:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3153,7 +3153,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[getBattleCharSlot(0)] < 1520:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3239,7 +3239,10 @@ def guards(groupNum):
                     else:
                         defend()
                 elif groupNum == 3:
-                    defend()
+                    if FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
+                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
+                    else:
+                        defend()
                 elif groupNum == 2 or groupNum == 4:
                     if items[1] >= 1:
                         itemToUse = 37
