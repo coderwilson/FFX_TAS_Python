@@ -3239,10 +3239,7 @@ def guards(groupNum):
                     else:
                         defend()
                 elif groupNum == 3:
-                    if FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
-                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
-                    else:
-                        defend()
+                    defend()
                 elif groupNum == 2 or groupNum == 4:
                     if items[1] >= 1:
                         itemToUse = 37
