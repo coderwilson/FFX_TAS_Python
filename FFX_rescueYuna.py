@@ -46,7 +46,9 @@ def preEvrae():
     FFX_zzairShipPath.airShipPath(1)
 
 def guards():
-    FFX_memory.clickToControl() 
+    print("Start, Guards")
+    FFX_memory.clickToControl()
+    
     if not gameVars.getBlitzWin():
         FFX_menu.equipSonicSteel()
     
@@ -55,7 +57,8 @@ def guards():
         FFX_menu.beforeGuards()
     
     guardNum = 1
-    while guardNum < 6:
+    csSkips = 0
+    while FFX_memory.getMap() != 180:
         if FFX_memory.userControl():
             FFX_targetPathing.setMovement([0, -200])
         else:
@@ -65,21 +68,20 @@ def guards():
                 guardNum += 1
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
-    if not gameVars.csr():
-        FFX_Xbox.SkipDialog(126)
-        FFX_Xbox.skipStoredScene(10)
-        FFX_Xbox.SkipDialog(2)
-    
+            elif FFX_memory.cutsceneSkipPossible():
+                csSkips += 1
+                if csSkips == 1:
+                    FFX_Xbox.skipStoredScene(3)
+                else:
+                    FFX_Xbox.skipScene()
+    print("End of Bevelle guards")
     FFXC.set_neutral()
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
-        elif FFX_memory.cutsceneSkipPossible():
-            FFX_Xbox.skipScene()
+    print("User control re-gained.")
     
-    if not gameVars.csr():
-        FFX_memory.clickToEventTemple(6) #Take the spiral lift down
+    FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
     while not FFX_targetPathing.setMovement([-110,0]):
         pass

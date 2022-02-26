@@ -265,8 +265,8 @@ def clickToControl3():
         else:
             pass
         waitCounter += 1
-        if waitCounter % 1000 == 0:
-            print("Awaiting control - ", waitCounter / 1000)
+        if waitCounter % 10000 == 0:
+            print("Awaiting control - ", waitCounter / 10000)
     print("User control restored.")
     return True
 
@@ -1707,6 +1707,10 @@ def nameFromNumber(charNum):
     if charNum == 6:
         return "Rikku"
 
+def getActorArraySize():
+    global baseValue
+    return process.read(baseValue + 0x01fc44e0)
+
 def getActorID(actorNum):
     global baseValue
     basePointer = baseValue + 0x01fc44e4
@@ -1739,7 +1743,7 @@ def getActorCoords(actorNumber):
 def miihenGuyCoords():
     print("+++Searching for Mi'ihen Spear guy")
     spearGuy = 255
-    for x in range(20):
+    for x in range(getActorArraySize()):
         actorNum = getActorID(x)
         print("Actor ", x, ": ", hex(actorNum))
         if actorNum == 0x202D:
@@ -1750,7 +1754,7 @@ def miihenGuyCoords():
 def mrrGuyCoords():
     print("+++Searching for MRR guy")
     mrrGuy = 255
-    for x in range(20):
+    for x in range(getActorArraySize()):
         actorNum = getActorID(x)
         print("Actor ", x, ": ", hex(actorNum))
         if actorNum == 0x2083:

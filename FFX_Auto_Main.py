@@ -65,9 +65,9 @@ import FFX_Sin
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-#Gamestate = "Home"
+Gamestate = "Home"
 #StepCounter = 1
-#StepCounter = 2
+StepCounter = 2
 #Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
@@ -84,8 +84,8 @@ import FFX_Sin
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 
 ####################################################################################################
@@ -101,9 +101,10 @@ if Gamestate != "none":
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [9,31,49,90,91,98,104,108,121,200,246,254]
+    rngSelectArray = [9,31,49,90,98,104,108,121,200,246,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     #rngSeedNum = 253 #Thunder ball seed. Out of gil for Sonic Steel.
+    rngSeedNum = 49 #Thunder ball seed. Out of gil for Sonic Steel.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.

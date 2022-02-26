@@ -10,8 +10,8 @@ class allVars:
         #of the values below.
         #------------------------------------------------------------------
         
-        self.csrValue = True #Default to True
-        self.blitzWinValue = False #No default value required
+        self.csrValue = False #Default to True
+        self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
         self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         

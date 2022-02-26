@@ -3188,7 +3188,7 @@ def guards(groupNum):
                 turnNum += 1
                 if groupNum == 5:
                     if turnNum == 1:
-                        tidusHaste('left')
+                        tidusHaste('l',character=6)
                     else:
                         attackByNum(22)
                 else:
@@ -3281,7 +3281,7 @@ def guards(groupNum):
                                 defend()
                     else:
                         defend()
-    FFX_memory.clickToControl()
+    #FFX_memory.clickToControl()
 
 def isaaru():
     FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")
@@ -3638,6 +3638,8 @@ def sKeeper():
                         defend()
                 elif FFX_Screen.turnAeon():
                     attack('none')
+                else:
+                    defend()
     FFX_memory.clickToControl()
 
 def gagazetCave(direction):
@@ -5033,7 +5035,9 @@ def chargeRikkuOD():
 
 def farmDome():
     if FFX_memory.getBattleNum() in [361, 364, 366]:
-        if FFX_memory.getBattleNum() == 361: # Defender Z
+        if FFX_memory.battleType() == 2:
+            fleeAll()
+        elif FFX_memory.getBattleNum() == 361: # Defender Z
             while not FFX_memory.battleComplete():
                 if FFX_Screen.turnYuna():
                     aeonSummon(4)
