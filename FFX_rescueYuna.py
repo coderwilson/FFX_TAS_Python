@@ -46,7 +46,9 @@ def preEvrae():
     FFX_zzairShipPath.airShipPath(1)
 
 def guards():
-    FFX_memory.clickToControl() 
+    print("Start, Guards")
+    FFX_memory.clickToControl()
+    
     if not gameVars.getBlitzWin():
         FFX_menu.equipSonicSteel(fullMenuClose=False)
     
@@ -86,7 +88,6 @@ def guards():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
     print("User control re-gained.")
-
     
     FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
@@ -289,7 +290,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 1 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     elif FFX_memory.getActorCoords(0)[1] > 250 and FFX_memory.getActorCoords(0)[1] < 450:
                         FFXC.set_value('BtnB', 1)
                     else:

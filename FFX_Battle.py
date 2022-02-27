@@ -1041,7 +1041,7 @@ def afterBlitz3(earlyHaste):
             attack('none')
         elif FFX_Screen.turnTidus():
             if tidusTurn == 0:
-                tidusHaste('up')
+                tidusHaste('d',character=2)
                 tidusTurn += 1
             elif tidusTurn == 1:
                 attack('none')
@@ -1613,6 +1613,8 @@ def battleGui():
             print("Auron turn, something went wrong.")
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
+        elif FFX_Screen.turnSeymour():
+            break
     
     #In between battles
     while not FFX_memory.battleActive():
@@ -3652,6 +3654,8 @@ def sKeeper():
                         defend()
                 elif FFX_Screen.turnAeon():
                     attack('none')
+                else:
+                    defend()
     FFX_memory.clickToControl()
 
 def gagazetCave(direction):

@@ -265,8 +265,8 @@ def clickToControl3():
         else:
             pass
         waitCounter += 1
-        if waitCounter % 1000 == 0:
-            print("Awaiting control - ", waitCounter / 1000)
+        if waitCounter % 10000 == 0:
+            print("Awaiting control - ", waitCounter / 10000)
     print("User control restored.")
     return True
 
@@ -1714,7 +1714,8 @@ def nameFromNumber(charNum):
         return "Lulu"
     if charNum == 6:
         return "Rikku"
-        
+      
+      
 def getActorArraySize():
     global baseValue
     return process.read(baseValue + 0x01fc44e0)
