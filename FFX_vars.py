@@ -13,7 +13,7 @@ class allVars:
         self.csrValue = True #Default to True
         self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
-        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
+        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
@@ -30,9 +30,9 @@ class allVars:
         self.rescueCount = 0 #Default to 0
         self.fluxOverkillVar = False #Default to False
         
-        self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-    
+        self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        
     def gameSavePath(self):
         return self.savePath
     

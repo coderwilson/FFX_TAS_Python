@@ -67,10 +67,11 @@ import FFX_Sin
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
 Gamestate = "Home"
 #StepCounter = 1
+Gamestate = "rescueYuna"
+=======
 StepCounter = 2
-#Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
-#StepCounter = 2
+StepCounter = 2
 #StepCounter = 5
 #Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
@@ -84,14 +85,14 @@ StepCounter = 2
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = False
+forceBlitzWin = True
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -148,7 +149,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
@@ -236,7 +237,7 @@ if Gamestate != "none" :
         #FFX_LoadGame.loadSaveNum(55) #Blitz Win, normal save.
         FFX_LoadGame.loadSaveNum(56) #Blitz Win, save less speed/power spheres
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadSaveNum(42)
+        FFX_LoadGame.loadSaveNum(47)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadSaveNum(42)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands

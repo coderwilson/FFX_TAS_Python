@@ -50,11 +50,18 @@ def guards():
     FFX_memory.clickToControl()
     
     if not gameVars.getBlitzWin():
-        FFX_menu.equipSonicSteel()
+        FFX_menu.equipSonicSteel(fullMenuClose=False)
     
-    #Need to add here, use Mega Potion
+    sleepingPowders = FFX_memory.getItemSlot(37) != 255
+    if not sleepingPowders:
+        if FFX_memory.getLuluSlvl() < 35:
+            FFX_memory.fullPartyFormat('guards_lulu', fullMenuClose=False)
+        else:
+            FFX_memory.fullPartyFormat('guards_no_lulu', fullMenuClose=False)
     if FFX_memory.getItemSlot(3) < 200:
         FFX_menu.beforeGuards()
+    FFX_memory.closeMenu()
+
     
     guardNum = 1
     csSkips = 0
@@ -64,7 +71,7 @@ def guards():
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                FFX_Battle.guards(guardNum)
+                FFX_Battle.guards(guardNum, sleepingPowders)
                 guardNum += 1
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
@@ -75,6 +82,7 @@ def guards():
                 else:
                     FFX_Xbox.skipScene()
     print("End of Bevelle guards")
+    
     FFXC.set_neutral()
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():

@@ -282,8 +282,8 @@ def clickToControlSpecial():
         FFXC.set_value('BtnY', 0)
         waitFrames(30 * 0.035)
         waitCounter += 1
-        if waitCounter % 100 == 0:
-            print("Awaiting control - ", waitCounter / 100)
+        if waitCounter % 10000 == 0:
+            print("Awaiting control - ", waitCounter / 10000)
     waitFrames(30 * 0.05)
     return True
 
@@ -746,10 +746,11 @@ def getUseItemsSlot(itemNum):
 
 def getThrowItemsOrder():
     itemArray = getItemsOrder()
+    print(itemArray)
     x = 0
     while x < len(itemArray):
         try:
-            if itemArray[x] > 15:
+            if itemArray[x] > 18:
                 itemArray.remove(itemArray[x])
             else:
                 x += 1
@@ -759,6 +760,7 @@ def getThrowItemsOrder():
             print("Retrying value")
     #print("Throw Item command, item order:")
     #print(itemArray)
+    print(itemArray)
     return itemArray
 
 def getThrowItemsSlot(itemNum):
@@ -1651,6 +1653,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0,6,2,3,4,5]
     elif frontLine == 'desert2':
         orderFinal = [0,3,2,6,4,5]
+    elif frontLine == 'desert3':
+        orderFinal = [0,5,2,6,4,3]
     elif frontLine == 'desert9':
         orderFinal = [0,4,2,3,5]
     elif frontLine == 'guards':
@@ -1685,6 +1689,10 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [5,1,0,4]
     elif frontLine == 'highbridge':
         orderFinal = [0,1,2,6,4,5]
+    elif frontLine == 'guards_no_lulu':
+        orderFinal = [0, 2, 6]
+    elif frontLine == 'guards_lulu':
+        orderFinal = [0, 5, 6]
     elif frontLine == 'tidkimwak':
         orderFinal = [0, 4, 3, 6, 1, 2, 5]
     else:
@@ -1706,11 +1714,12 @@ def nameFromNumber(charNum):
         return "Lulu"
     if charNum == 6:
         return "Rikku"
-
+      
+      
 def getActorArraySize():
     global baseValue
     return process.read(baseValue + 0x01fc44e0)
-
+    
 def getActorID(actorNum):
     global baseValue
     basePointer = baseValue + 0x01fc44e4
@@ -2513,6 +2522,9 @@ def checkZombieStrike():
 
 def shopMenuDialogueRow():
     return readVal(0x0146780A)
+
+def airshipShopDialogueRow():
+    return readVal(0x014676D2)
 
 def hunterSpear():
     kimWeapHandles = weaponArrayCharacter(3)
