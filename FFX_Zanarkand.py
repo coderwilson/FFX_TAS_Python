@@ -151,9 +151,7 @@ def arrival():
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
 
-def trials():
-    FFX_memory.fullPartyFormat('yuna')
-    
+def trials():    
     checkpoint = 0
     while checkpoint < 89:
         checkpoint = trials0(checkpoint)

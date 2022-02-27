@@ -68,7 +68,6 @@ import FFX_Sin
 Gamestate = "Home"
 #StepCounter = 1
 Gamestate = "rescueYuna"
-=======
 StepCounter = 2
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 StepCounter = 2
@@ -85,8 +84,8 @@ StepCounter = 2
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 
 ####################################################################################################
