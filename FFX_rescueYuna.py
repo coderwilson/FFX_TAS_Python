@@ -48,20 +48,22 @@ def preEvrae():
 def guards():
     FFX_memory.clickToControl() 
     if not gameVars.getBlitzWin():
-        FFX_menu.equipSonicSteel()
+        FFX_menu.equipSonicSteel(fullMenuClose=False)
     
-    #Need to add here, use Mega Potion
-    if FFX_memory.getItemSlot(3) < 200:
-        FFX_menu.beforeGuards()
-    sleepingPowders = FFX_memory.getItemSlot(37) != 255:
+    sleepingPowders = FFX_memory.getItemSlot(37) != 255
     if not sleepingPowders:
         if FFX_memory.getLuluSlvl() < 35:
-            FFX_memory.fullPartyFormat('guards_lulu')
+            FFX_memory.fullPartyFormat('guards_lulu', fullMenuClose=False)
         else:
-            FFX_memory.fullPartyFormat('guards_no_lulu')
+            FFX_memory.fullPartyFormat('guards_no_lulu', fullMenuClose=False)
+    if FFX_memory.getItemSlot(3) < 200:
+        FFX_menu.beforeGuards()
+    FFX_memory.closeMenu()
+
     
     guardNum = 1
-    while guardNum < 6:
+    csSkips = 0
+    while FFX_memory.getMap() != 180:
         if FFX_memory.userControl():
             FFX_targetPathing.setMovement([0, -200])
         else:
@@ -71,21 +73,22 @@ def guards():
                 guardNum += 1
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
-    if not gameVars.csr():
-        FFX_Xbox.SkipDialog(126)
-        FFX_Xbox.skipStoredScene(10)
-        FFX_Xbox.SkipDialog(2)
+            elif FFX_memory.cutsceneSkipPossible():
+                csSkips += 1
+                if csSkips == 1:
+                    FFX_Xbox.skipStoredScene(3)
+                else:
+                    FFX_Xbox.skipScene()
+    print("End of Bevelle guards")
     
     FFXC.set_neutral()
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
-        elif FFX_memory.cutsceneSkipPossible():
-            FFX_Xbox.skipScene()
+    print("User control re-gained.")
+
     
-    if not gameVars.csr():
-        FFX_memory.clickToEventTemple(6) #Take the spiral lift down
+    FFX_memory.clickToEventTemple(6) #Take the spiral lift down
     
     while not FFX_targetPathing.setMovement([-110,0]):
         pass
@@ -201,7 +204,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 1 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     else:
                         if FFX_memory.getActorCoords(0)[1] > 293 and FFX_memory.getActorCoords(0)[1] < 432:
                             FFXC.set_value('BtnB', 1)
@@ -229,7 +232,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30 and \
                         FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     else:
                         FFXC.set_value('BtnB', 0)
                 FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
@@ -322,7 +325,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     else:
                         if FFX_memory.getActorCoords(0)[1] < 250:
                             FFXC.set_value('BtnB', 1)

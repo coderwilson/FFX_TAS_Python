@@ -2,6 +2,7 @@ import FFX_memory
 import FFX_Screen
 import FFX_Battle
 import FFX_targetPathing
+import math
 import time
 
 import FFX_Xbox
@@ -13,6 +14,7 @@ def airShipPath(version):
     
     complete = False
     checkpoint = 0
+    FFX_memory.fullPartyFormat('evrae')
     while complete == False:
         if FFX_memory.userControl():
             #print("Checkpoint: ", checkpoint)
@@ -34,16 +36,43 @@ def airShipPath(version):
                             FFX_Battle.fleeAll()
                 FFXC.set_neutral()
                 FFX_memory.clickToDiagProgress(48)
-                FFX_memory.waitFrames(90)
-                FFX_Xbox.tapDown()
-                FFX_Xbox.tapB()
-                FFX_memory.waitFrames(90)
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
+                while FFX_memory.airshipShopDialogueRow() != 1:
+                    FFX_Xbox.tapDown()
+                while not FFX_memory.itemShopMenu() == 7:
+                    FFX_Xbox.tapB() #Click through until items menu comes up
+                while not FFX_memory.itemShopMenu() == 10:
+                    FFX_Xbox.tapB() #Select buy command
+                if FFX_memory.getPower() < 23:
+                    while FFX_memory.equipBuyRow() != 7:
+                        if FFX_memory.equipBuyRow() < 7:
+                            FFX_Xbox.tapDown()
+                        else:
+                            FFX_Xbox.tapUp()
+                    while not FFX_memory.itemShopMenu() == 16:
+                        FFX_Xbox.tapB()
+                    while FFX_memory.purchasingAmountItems() != min(math.ceil((23 - FFX_memory.getPower()) / 2), 3):
+                        if FFX_memory.purchasingAmountItems() < min(math.ceil((23 - FFX_memory.getPower()) / 2), 3):
+                            FFX_Xbox.tapRight()
+                        else:
+                            FFX_Xbox.tapLeft()
+                    while not FFX_memory.itemShopMenu() == 10:
+                        FFX_Xbox.tapB()
+                if FFX_memory.getSpeed() < 9:
+                    while FFX_memory.equipBuyRow() != 9:
+                        if FFX_memory.equipBuyRow() < 9:
+                            FFX_Xbox.tapDown()
+                        else:
+                            FFX_Xbox.tapUp()
+                    while not FFX_memory.itemShopMenu() == 16:
+                        FFX_Xbox.tapB()
+                    while FFX_memory.purchasingAmountItems() != min(math.ceil((9 - FFX_memory.getSpeed()) / 2), 2):
+                        if FFX_memory.purchasingAmountItems() < min(math.ceil((9 - FFX_memory.getSpeed()) / 2), 2):
+                            FFX_Xbox.tapRight()
+                        else:
+                            FFX_Xbox.tapLeft()
+                    while not FFX_memory.itemShopMenu() == 10:
+                        FFX_Xbox.tapB()
+                FFX_memory.closeMenu()
                 FFX_memory.clickToControl3()
                 distillerPurchase = True
             elif checkpoint < 6 and FFX_memory.getMap() == 351: #Screen with Isaaru

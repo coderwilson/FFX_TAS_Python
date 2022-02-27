@@ -321,6 +321,7 @@ def underLake():
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
+                checkpoint += 1
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.underMacTemple(checkpoint)) == True:

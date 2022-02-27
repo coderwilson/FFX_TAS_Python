@@ -638,7 +638,6 @@ def beforeGuards():
     while current_hp != maximal_hp:
         FFX_Xbox.tapB()
         current_hp = FFX_memory.getHP()
-    FFX_memory.closeMenu()
     
 def sortItems(fullMenuClose=True):
     while not FFX_memory.menuOpen():

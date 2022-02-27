@@ -282,8 +282,8 @@ def clickToControlSpecial():
         FFXC.set_value('BtnY', 0)
         waitFrames(30 * 0.035)
         waitCounter += 1
-        if waitCounter % 100 == 0:
-            print("Awaiting control - ", waitCounter / 100)
+        if waitCounter % 10000 == 0:
+            print("Awaiting control - ", waitCounter / 10000)
     waitFrames(30 * 0.05)
     return True
 
@@ -746,10 +746,11 @@ def getUseItemsSlot(itemNum):
 
 def getThrowItemsOrder():
     itemArray = getItemsOrder()
+    print(itemArray)
     x = 0
     while x < len(itemArray):
         try:
-            if itemArray[x] > 15:
+            if itemArray[x] > 18:
                 itemArray.remove(itemArray[x])
             else:
                 x += 1
@@ -759,6 +760,7 @@ def getThrowItemsOrder():
             print("Retrying value")
     #print("Throw Item command, item order:")
     #print(itemArray)
+    print(itemArray)
     return itemArray
 
 def getThrowItemsSlot(itemNum):
@@ -1712,7 +1714,11 @@ def nameFromNumber(charNum):
         return "Lulu"
     if charNum == 6:
         return "Rikku"
-
+        
+def getActorArraySize():
+    global baseValue
+    return process.read(baseValue + 0x01fc44e0)
+    
 def getActorID(actorNum):
     global baseValue
     basePointer = baseValue + 0x01fc44e4
@@ -1745,7 +1751,7 @@ def getActorCoords(actorNumber):
 def miihenGuyCoords():
     print("+++Searching for Mi'ihen Spear guy")
     spearGuy = 255
-    for x in range(20):
+    for x in range(getActorArraySize()):
         actorNum = getActorID(x)
         print("Actor ", x, ": ", hex(actorNum))
         if actorNum == 0x202D:
@@ -1756,7 +1762,7 @@ def miihenGuyCoords():
 def mrrGuyCoords():
     print("+++Searching for MRR guy")
     mrrGuy = 255
-    for x in range(20):
+    for x in range(getActorArraySize()):
         actorNum = getActorID(x)
         print("Actor ", x, ": ", hex(actorNum))
         if actorNum == 0x2083:
@@ -2515,6 +2521,9 @@ def checkZombieStrike():
 
 def shopMenuDialogueRow():
     return readVal(0x0146780A)
+
+def airshipShopDialogueRow():
+    return readVal(0x014676D2)
 
 def hunterSpear():
     kimWeapHandles = weaponArrayCharacter(3)
