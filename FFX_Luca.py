@@ -283,3 +283,6 @@ def afterBlitz():
     FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
+    
+    FFX_Logs.writeStats("Blitz Win:")
+    FFX_Logs.writeStats(gameVars.getBlitzWin())

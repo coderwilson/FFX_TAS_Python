@@ -197,7 +197,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 1 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     else:
                         if FFX_memory.getActorCoords(0)[1] > 293 and FFX_memory.getActorCoords(0)[1] < 432:
                             FFXC.set_value('BtnB', 1)
@@ -225,7 +225,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30 and \
                         FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     else:
                         FFXC.set_value('BtnB', 0)
                 FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
@@ -282,7 +282,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 1 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     elif FFX_memory.getActorCoords(0)[1] > 250 and FFX_memory.getActorCoords(0)[1] < 450:
                         FFXC.set_value('BtnB', 1)
                     else:
@@ -318,7 +318,7 @@ def trials():
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_Xbox.menuB()
-                            FFX_memory.waitFrames(15)
+                            FFX_memory.waitFrames(25)
                     else:
                         if FFX_memory.getActorCoords(0)[1] < 250:
                             FFXC.set_value('BtnB', 1)

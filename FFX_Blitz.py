@@ -172,7 +172,9 @@ def gameStage():
         if stages[i] < gameClock():
             currentStage = i
     
-    if FFX_memory.getStoryProgress() < 700 and currentStage >= 1:
+    if abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 1: #Formerly 2 for safety
+        currentStage = 0
+    elif FFX_memory.getStoryProgress() < 700 and currentStage >= 1:
         #Only apply following logic for the storyline game
         #Logic that updates stage based on defender movements
         if playerArray[0].getCoords()[1] - playerArray[10].getCoords()[1] > 300:
@@ -185,8 +187,6 @@ def gameStage():
         #Logic that reduces stage if score is too far apart.
         if FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore() >= 1 \
             and FFX_memory.getStoryProgress() >= 570:
-            currentStage = 0
-        elif abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 2:
             currentStage = 0
         
         #Logic that immediately moves to scoring phases if in overtime.
@@ -204,6 +204,7 @@ def gameStage():
         if (playerArray[10].getCoords()[0] < -400 or playerArray[10].getCoords()[1] < 200) \
             and currentStage == 2:
             currentStage = 3
+        
     
     return currentStage
 

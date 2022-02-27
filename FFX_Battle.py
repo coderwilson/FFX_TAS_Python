@@ -1041,7 +1041,7 @@ def afterBlitz3(earlyHaste):
             attack('none')
         elif FFX_Screen.turnTidus():
             if tidusTurn == 0:
-                tidusHaste('up')
+                tidusHaste('d',character=2)
                 tidusTurn += 1
             elif tidusTurn == 1:
                 attack('none')
@@ -1613,6 +1613,8 @@ def battleGui():
             print("Auron turn, something went wrong.")
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
+        elif FFX_Screen.turnSeymour():
+            break
     
     #In between battles
     while not FFX_memory.battleActive():
@@ -3239,7 +3241,10 @@ def guards(groupNum):
                     else:
                         defend()
                 elif groupNum == 3:
-                    defend()
+                    if FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
+                        useItem(FFX_memory.getUseItemsSlot(20), 'none')
+                    else:
+                        defend()
                 elif groupNum == 2 or groupNum == 4:
                     if items[1] >= 1:
                         itemToUse = 37
@@ -3593,7 +3598,7 @@ def seymourFlux():
                     elif lastHP > 3500:
                         attack('none')
                     else:
-                        defend('none')
+                        defend()
                 elif FFX_Screen.turnAuron():
                     print("Auron's turn. Swap for Rikku and overdrive.")
                     buddySwapRikku()

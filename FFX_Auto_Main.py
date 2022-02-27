@@ -84,8 +84,8 @@ StepCounter = 2
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 
 ####################################################################################################
@@ -101,10 +101,10 @@ if Gamestate != "none":
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [9,31,49,90,98,104,108,121,200,246,254]
+    rngSelectArray = [9,31,90,98,104,108,121,200,246,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     #rngSeedNum = 253 #Thunder ball seed. Out of gil for Sonic Steel.
-    rngSeedNum = 49 #Thunder ball seed. Out of gil for Sonic Steel.
+    rngSeedNum = 1 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
