@@ -105,8 +105,11 @@ class vgTranslator:
         if y < -1:
             y = -1
         
-        self.gamepad.left_joystick_float(x_value_float = x, y_value_float = y)
-        self.gamepad.update()
+        try:
+            self.gamepad.left_joystick_float(x_value_float = x, y_value_float = y)
+            self.gamepad.update()
+        except:
+            pass
     
     def set_neutral(self):
         self.gamepad.reset()

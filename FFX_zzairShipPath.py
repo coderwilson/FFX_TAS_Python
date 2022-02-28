@@ -14,7 +14,7 @@ def airShipPath(version):
     
     complete = False
     checkpoint = 0
-    FFX_memory.fullPartyFormat('evrae')
+    #FFX_memory.fullPartyFormat('evrae')
     while complete == False:
         if FFX_memory.userControl():
             #print("Checkpoint: ", checkpoint)
