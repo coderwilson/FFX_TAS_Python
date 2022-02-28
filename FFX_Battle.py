@@ -3124,7 +3124,6 @@ def Evrae():
                     elif tidusPrep == 3:
                         print("Equip Baroque Sword.")
                         equipInBattle(special = 'baroque')
-                        
                         tidusPrep += 1
                     else:
                         tidusAttacks += 1
@@ -3140,8 +3139,8 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
-                    print("Kimahri should attempt to heal a character.")
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and FFX_memory.getEnemyCurrentHP()[0] >= 6500:
+                    print("Rikku should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
                                 direction="d") == 0:
@@ -3158,7 +3157,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and FFX_memory.getEnemyCurrentHP()[0] >= 6500:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3201,6 +3200,13 @@ def guards(groupNum, sleepingPowders):
                     else:
                         _useHealingItem(itemID=16)
                     throw_distiller = False
+                elif 6 in FFX_memory.getActiveBattleFormation() and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] <= 120:
+                    if FFX_memory.getItemSlot(0) != 255:
+                        usePotionCharacter(6, 'r')
+                    elif FFX_memory.getItemSlot(1) != 255:
+                        _useHealingItem(num=6, direction='r', itemID=1)
+                    else:
+                        defend()
                 else:
                     defend()
             elif groupNum in [2, 4]:
@@ -3249,6 +3255,13 @@ def guards(groupNum, sleepingPowders):
                     else:
                         _useHealingItem(itemID=16)
                     throw_distiller = False
+                elif 6 in FFX_memory.getActiveBattleFormation() and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] <= 120:
+                    if FFX_memory.getItemSlot(0) != 255:
+                        usePotionCharacter(6, 'r')
+                    elif FFX_memory.getItemSlot(1) != 255:
+                        _useHealingItem(num=6, direction='r', itemID=1)
+                    else:
+                        defend()
                 else:
                     defend()
             elif groupNum in [2, 4]:
@@ -4579,7 +4592,7 @@ def wrapUp():
     print("^^Wrap up complete.")
     return True
 
-def impulse(direction=None):
+def impulse(direction=None, targetFarLine=False):
     while FFX_memory.battleMenuCursor() != 217:
         if FFX_memory.battleMenuCursor() == 216:
             FFX_Xbox.tapDown()
@@ -4589,6 +4602,9 @@ def impulse(direction=None):
         FFX_Xbox.tapB()
     if direction == 'left':
         FFX_Xbox.tapLeft()
+    if targetFarLine:
+        while not FFX_memory.battleLineTarget():
+            FFX_Xbox.tapLeft()
     tapTargeting()
 
 def SinArms():
@@ -4628,7 +4644,7 @@ def SinArms():
     FFX_Xbox.clickToBattle() #Start of Sin Core
     aeonSummon(4)
     FFX_Screen.awaitTurn()
-    impulse('left')
+    impulse(targetFarLine=True)
     
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
