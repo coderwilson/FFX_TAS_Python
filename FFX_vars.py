@@ -13,7 +13,7 @@ class allVars:
         self.csrValue = True #Default to True
         self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
-        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
+        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1

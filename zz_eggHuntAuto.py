@@ -151,7 +151,10 @@ def engage():
                 Lx = copysign(Lx/Ly if Ly else 0, Lx)
                 Ly = copysign(1, Ly)
 
-            FFXC.set_movement(Lx, Ly)
+            try:
+                FFXC.set_movement(Lx, Ly)
+            except:
+                pass
             target = oldTarget
 
             #camCount += 1

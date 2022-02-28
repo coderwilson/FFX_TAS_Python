@@ -45,9 +45,9 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -65,15 +65,15 @@ import FFX_Sin
 #StepCounter = 3
 #StepCounter = 4 #Not working on Seymour fight
 #StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
-Gamestate = "Home"
+#Gamestate = "Home"
 #StepCounter = 1
-Gamestate = "rescueYuna"
-StepCounter = 2
+#StepCounter = 2
+#Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
-StepCounter = 2
+#StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
-#StepCounter = 1 #Blitz Win, no end game version selected
+Gamestate = "Gagazet"
+StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
 #Gamestate = "Zanarkand"
@@ -91,7 +91,7 @@ StepCounter = 1
 ####################################################################################################
 #RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = True
+forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 ####################################################################################################
@@ -99,12 +99,13 @@ rngSeedNum = 1 #New seed number, only used if doing seed hunt.
 if Gamestate != "none":
     #rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
+    gameVars.SETcsr(True)
     gameLength = "Loading mid point for testing."
 elif seedHunt == False: #Below logic for full runs only.
     rngSelectArray = [9,31,90,98,104,108,121,200,246,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     #rngSeedNum = 253 #Thunder ball seed. Out of gil for Sonic Steel.
-    rngSeedNum = 1 #Manually choose seed here.
+    rngSeedNum = 160 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
 else: #Just to make sure we're running from new game for seed finding.
@@ -148,7 +149,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)

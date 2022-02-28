@@ -1262,6 +1262,20 @@ def BFA():
         FFX_menuGrid.useShiftLeft('Rikku')
         FFX_menuGrid.useFirst()
         FFX_menuGrid.selSphere('skill','d','up')
+    
+    if gameVars.zombieWeapon() == 255:
+        FFX_menuGrid.useShiftLeft('tidus')
+        gridUp()
+        gridUp()
+        gridUp()
+        gridUp()
+        gridUp()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('lv4','d','none')
+        FFX_menuGrid.useAndMove()
+        gridUp()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('ability','u','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 

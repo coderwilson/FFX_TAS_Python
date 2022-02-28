@@ -3579,7 +3579,7 @@ def biranYenke():
 def seymourFlux():
     stage = 1
     print("Start: Seymour Flux battle")
-    lastHP = 70000
+    yunaXP = FFX_memory.getSLVLYuna()
     FFX_Xbox.clickToBattle()
     if gameVars.endGameVersion() == 3:
         bahamutSummoned = False
@@ -3636,10 +3636,16 @@ def seymourFlux():
                     defend()
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
-    if lastHP >= 3500:
+    FFX_memory.clickToControl()
+    if FFX_memory.getSLVLYuna() - yunaXP == 15000:
         gameVars.fluxOverkillSuccess()
+    print("------------------------------------")
+    print("------------------------------------")
+    print("Flux Overkill: ", gameVars.fluxOverkill())
     print("Seymour Flux battle complete.")
+    print("------------------------------------")
+    print("------------------------------------")
+    time.sleep(60) #Testing only
 
 def sKeeper():
     FFX_Xbox.clickToBattle()
