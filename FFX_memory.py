@@ -197,6 +197,9 @@ def battleTargetId():
     retVal = process.readBytes(key,1)
     print("Battle Target ID: ", retVal)
     return retVal
+    
+def battleLineTarget():
+    return readVal(0x00F3CA42)
 
 def battleTargetActive():
     global baseValue
