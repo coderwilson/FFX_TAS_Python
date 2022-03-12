@@ -4,6 +4,7 @@ import time
 import FFX_Screen
 import FFX_targetPathing
 import FFX_vars
+gameVars = FFX_vars.varsHandle()
 import FFX_Logs
 from collections import Counter
 
@@ -2991,3 +2992,47 @@ def loadGameCursor():
 
 def loadGamePos():
     return loadGamePage() + loadGameCursor()
+
+#-------------------------------------------------------
+#RNG tracking based on the first six hits
+
+def lastHitInit():
+    global baseValue
+    print("Initializing values")
+    key = baseValue + 0xd334cc
+    ptrVal = process.read(key)
+    lastHitVals = [0] * 8
+    try:
+        for x in range(8):
+            lastHitVals[x] = process.read( ptrVal + ((x+20)*0xF90) + 0x7AC)
+            print("Val: ", lastHitVals[x])
+        print(lastHitVals)
+        gameVars.firstHitsSet(lastHitVals)
+        return True
+    except:
+        return False
+
+def lastHitCheckChange():
+    global baseValue
+    key = baseValue + 0xd334cc
+    ptrVal = process.read(key)
+    changeFound = False
+    for x in range(8):
+        try:
+            memVal = process.read( ptrVal + ((x+20)*0xF90) + 0x7AC)
+            print(memVal)
+            if memVal != gameVars.firstHitsValue(x) and not changeFound:
+                changeFound = True
+                changeValue = memVal
+        except:
+            pass
+    #time.sleep(3)
+    
+    if changeFound:
+        print("**Registered hit: ", changeValue)
+        FFX_Logs.writeStats(changeValue)
+        lastHitInit()
+        return True
+    else:
+        return False
+    

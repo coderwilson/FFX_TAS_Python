@@ -45,9 +45,9 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-Gamestate = "Luca"
+#Gamestate = "Luca"
 #StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -72,8 +72,8 @@ StepCounter = 3
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
-StepCounter = 1 #Blitz Win, no end game version selected
+#Gamestate = "Gagazet"
+#StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
 #Gamestate = "Zanarkand"
@@ -93,25 +93,30 @@ StepCounter = 1
 
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 1 #New seed number, only used if doing seed hunt.
+rngSeedNum = 92 #New seed number, only used if doing seed hunt.
+rngSelectArray = [9,31,90,98,104,108,121,164,200,246,254]
 ####################################################################################################
 
-if Gamestate != "none":
+if Gamestate == "Luca" and StepCounter == 3:
+    blitzTesting = True
+    gameLength = "Testing Blitzball only"
+elif Gamestate != "none":
     #rngSeedNum = 200 #Select a specific seed.
     rngReviewOnly = False
-    gameVars.SETcsr(True)
+    gameVars.SETcsr(True) #Manually choose CSR or non-CSR mode.
     gameLength = "Loading mid point for testing."
+    blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
-    rngSelectArray = [9,31,90,98,104,108,121,200,246,254]
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 253 #Thunder ball seed. Out of gil for Sonic Steel.
-    rngSeedNum = 160 #Manually choose seed here.
+    rngSeedNum = 31 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
+    blitzTesting = False
 else: #Just to make sure we're running from new game for seed finding.
     StepCounter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"
+    blitzTesting = False
 
 print("Game type will be: ", gameLength)
 maxLoops = 25
@@ -193,8 +198,6 @@ if Gamestate != "none" :
         FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(112)
-    if Gamestate == "Luca" and StepCounter == 3: # after Oblitzerator, before Blitzball
-        FFX_LoadGame.loadSaveNum(37)
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
         FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
         #FFX_LoadGame.loadSaveNum(16) #With laughing scene
@@ -303,6 +306,13 @@ rikkucharged = 0
 
 while Gamestate != "End":
 
+    #Blitzball testing logic
+    if Gamestate == "Luca" and StepCounter == 3:
+        FFX_DreamZan.NewGame(Gamestate)
+        FFX_Logs.writeLog("Loading to a specific gamestate.\n")
+        FFX_LoadGame.loadSaveNum(37)
+        
+    
     if rngSeedNum >= 256:
         Gamestate = "End"
 
@@ -479,6 +489,9 @@ while Gamestate != "End":
             FFX_Reset.resetToMainMenu()
             StepCounter = 1
             rngSeedNum += 1
+            if rngSeedNum in rngSelectArray:
+                while rngSeedNum in rngSelectArray:
+                    rngSeedNum += 1
             FFX_Logs.nextStats(rngSeedNum) #Start next stats file
             FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
             rngSeed = FFX_memory.rngSeed()
@@ -500,7 +513,33 @@ while Gamestate != "End":
         print("------Blitz End")
         if not gameVars.csr():
             FFX_Xbox.awaitSave()
-        StepCounter = 5
+        
+        if blitzTesting == True: # Used to run multiple tests, Blitzball only
+            FFXC.set_neutral()
+            print("------------------------------------------")
+            print("------------------------------------------")
+            print("Resetting")
+            print("------------------------------------------")
+            print("------------------------------------------")
+            FFX_Screen.awaitTurn()
+            import FFX_Reset
+            #FFX_memory.clickToControl()
+            StepCounter = 3
+            
+            
+            #FFX_Logs.writeStats("Test duration:")
+            #FFX_Logs.writeStats(totalTime)
+            FFX_memory.waitFrames(30 * 2)
+
+            FFX_Reset.resetToMainMenu()
+            time.sleep(3)
+        else:
+            print("------------------------------------------")
+            print("------------------------------------------")
+            print("Post-Blitz")
+            print("------------------------------------------")
+            print("------------------------------------------")
+            StepCounter = 5
         
 
     if Gamestate == "Luca" and StepCounter == 5:
@@ -822,8 +861,27 @@ totalTime = endTime - startTime
 FFX_Logs.writeStats("Total time:")
 FFX_Logs.writeStats(str(totalTime))
 print("The game duration was: ", str(totalTime))
-FFX_memory.waitFrames(30 * 10)
+print("This duration is intended for comparison reference only, not as a true timer.")
+print("Please do not use this as your submitted time.")
+FFX_memory.waitFrames(30)
+print("--------")
+print("In order to conform with speed run standards,")
+FFX_memory.waitFrames(60)
+print("we now wait until the end of the credits and stuff")
+FFX_memory.waitFrames(60)
+print("and then will open up the list of saves.")
+FFX_memory.waitFrames(60)
+print("This will show the autosave values, which conforms to the speed run rules.")
 
+
+while FFX_memory.getMap() != 23:
+    if FFX_memory.getMap() == 292:
+        FFX_Xbox.tapStart()
+    elif FFX_memory.cutsceneSkipPossible():
+        FFX_Xbox.skipScene()
+FFX_memory.waitFrames(180)
+while not FFX_memory.saveMenuOpen():
+    FFX_Xbox.tapB()
 
 FFX_memory.end()
 

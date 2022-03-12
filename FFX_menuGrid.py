@@ -578,7 +578,9 @@ def selSphere(sType, direction, shift):
         gridUp()
         gridRight()
         gridDown()
-        #gridDown()
+        FFX_memory.waitFrames(4)
+        if FFX_memory.sGridNodeSelected() == [248,195]:
+            gridDown()
     if shift == 'aftersk2':
         gridRight()
         gridRight()

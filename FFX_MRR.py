@@ -152,7 +152,7 @@ def mainPath():
                     FFX_menu.mrrGridYuna()
                     print("Yuna's gridding is complete for now.")
                     status[4] = 1
-                if gameVars.wakkaLateMenu() == True and FFX_memory.getSLVLWakka() >= 3:
+                if FFX_memory.getSLVLWakka() >= 7:
                     FFX_menu.mrrGrid2()
                 FFX_memory.closeMenu()
             elif FFX_memory.menuOpen():

@@ -6,6 +6,7 @@ import FFX_menu
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
+import FFX_Logs
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -66,6 +67,9 @@ def _set_index_to_value(index, value, power):
 
 def ssWinno():
     FFX_memory.clickToControl()
+    FFX_Logs.writeStats("Winno Speed Count:")
+    FFX_Logs.writeStats(FFX_memory.getSpeed())
+    
     while FFX_memory.userControl():
         FFX_targetPathing.setMovement([28, -36])
     FFXC.set_movement(1, -1)

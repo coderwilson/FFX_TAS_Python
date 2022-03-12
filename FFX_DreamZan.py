@@ -6,6 +6,7 @@ import FFX_Battle
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
+import FFX_Logs
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -168,11 +169,17 @@ def listenStory():
 def ammesBattle():
     print("Starting ammes")
     FFX_Xbox.clickToBattle()
+    FFX_memory.lastHitInit()
     FFX_Battle.defend()
+    FFX_Logs.writeStats("First Six Hits:")
+    print("First Six Hits:")
     
     print("Killing Sinspawn")
     while FFX_memory.battleActive():
-        FFX_Xbox.tapB()
+        if FFX_memory.turnReady():
+            FFX_Battle.attack('none')
+            while not FFX_memory.lastHitCheckChange():
+                pass
     print("Done Killing Sinspawn")
     FFX_memory.waitFrames(6) #Just for no overlap
     print("Clicking to battle.")

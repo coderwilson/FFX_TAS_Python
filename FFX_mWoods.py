@@ -69,13 +69,24 @@ def arrival(rikkucharged):
     FFX_memory.waitFrames(30 * 0.3)
     FFXC.set_neutral()
     FFX_memory.touchSaveSphere()
-    FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.4)
+    #FFXC.set_movement(1, 1)
+    #FFX_memory.waitFrames(30 * 0.4)
     FFXC.set_neutral()
 
 def lakeRoad():
     #if FFX_memory.getSpeed() < 12:
     #    FFX_memory.setSpeed(12)
+    FFX_memory.awaitControl()
+    while not FFX_targetPathing.setMovement([174,-96]):
+        pass
+    while not FFX_targetPathing.setMovement([138,-83]):
+        pass
+    while not FFX_targetPathing.setMovement([101,-82]):
+        pass
+    while FFX_memory.userControl():
+        FFXC.set_movement(0, 1)
+        FFX_Xbox.tapB()
+    FFXC.set_neutral()
     FFX_menu.mWoods() #Selling and buying, item sorting, etc
     FFX_memory.fullPartyFormat('spheri')
     while not FFX_targetPathing.setMovement([101,-72]):

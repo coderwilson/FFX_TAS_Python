@@ -1190,7 +1190,7 @@ def chocoEater():
             else:
                 print("Attempting defend")
                 if FFX_memory.getNextTurn() > 10:
-                    FFX_memory.waitFrames(30 * 0.5) #Avoids a soft-lock, boss starts twerking.
+                    FFX_memory.waitFrames(20) #Avoids a soft-lock, boss starts twerking.
                 defend()
         elif FFX_memory.diagSkipPossible():
             print("Skipping dialog")
@@ -3201,7 +3201,8 @@ def guards(groupNum, sleepingPowders):
                     else:
                         _useHealingItem(itemID=16)
                     throw_distiller = False
-                elif 6 in FFX_memory.getActiveBattleFormation() and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] <= 120:
+                elif 6 in FFX_memory.getActiveBattleFormation() and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] <= 120 \
+                    and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] != 0:
                     if FFX_memory.getItemSlot(0) != 255:
                         usePotionCharacter(6, 'r')
                     elif FFX_memory.getItemSlot(1) != 255:
@@ -3256,7 +3257,8 @@ def guards(groupNum, sleepingPowders):
                     else:
                         _useHealingItem(itemID=16)
                     throw_distiller = False
-                elif 6 in FFX_memory.getActiveBattleFormation() and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] <= 120:
+                elif 6 in FFX_memory.getActiveBattleFormation() and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] <= 120 \
+                    and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(6)] !=0:
                     if FFX_memory.getItemSlot(0) != 255:
                         usePotionCharacter(6, 'r')
                     elif FFX_memory.getItemSlot(1) != 255:
@@ -3289,7 +3291,7 @@ def guards(groupNum, sleepingPowders):
                         buddySwapRikku()
                         tidusWent = True
                     else:
-                        attack('none')
+                        attackByNum(22, 'l')
                 elif FFX_Screen.turnRikku():
                     if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
@@ -3297,6 +3299,10 @@ def guards(groupNum, sleepingPowders):
                         useItem(FFX_memory.getUseItemsSlot(39))
                     elif FFX_memory.getUseItemsSlot(27) != 255:
                         useItem(FFX_memory.getUseItemsSlot(27))
+                    elif FFX_memory.faintCheck() >= 1:
+                        revive()
+                    else:
+                        defend()
                 elif FFX_Screen.turnKimahri():
                     buddySwapTidus()
                 else:
@@ -3304,6 +3310,8 @@ def guards(groupNum, sleepingPowders):
         FFX_memory.clickToControl()
         if groupNum == 2:
             FFX_memory.fullPartyFormat('guards_lulu')
+        else:
+            FFX_memory.fullPartyFormat('guards_no_lulu')
 
 def isaaru():
     FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")
@@ -3646,7 +3654,7 @@ def seymourFlux():
     print("Seymour Flux battle complete.")
     print("------------------------------------")
     print("------------------------------------")
-    time.sleep(60) #Testing only
+    #time.sleep(60) #Testing only
 
 def sKeeper():
     FFX_Xbox.clickToBattle()
@@ -4689,12 +4697,12 @@ def omnis():
     defend()
 
     FFX_Screen.awaitTurn()
-    print("Going for armor break. (zombie weapon ", gameVars.zombieWeapon(), ")")
-    FFX_memory.printRNG36()
-    if gameVars.zombieWeapon() == 255:
-        useSkill(1)
-    else:
-        useSkill(0)
+    #print("Going for armor break. (zombie weapon ", gameVars.zombieWeapon(), ")")
+    #FFX_memory.printRNG36()
+    #if gameVars.zombieWeapon() == 255:
+    #    useSkill(1)
+    #else:
+    useSkill(0)
     FFX_Screen.awaitTurn()
     
     if FFX_memory.getEnemyMaxHP()[0] == FFX_memory.getEnemyCurrentHP()[0]:

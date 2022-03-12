@@ -4,6 +4,8 @@ import FFX_Battle
 import FFX_targetPathing
 import math
 import time
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 import FFX_Xbox
 FFXC = FFX_Xbox.controllerHandle()
@@ -16,13 +18,14 @@ def airShipPath(version):
     checkpoint = 0
     while complete == False:
         if FFX_memory.userControl():
+            #print(gameVars.csr()) #Testing only
             #print("Checkpoint: ", checkpoint)
             #Map changes
             if checkpoint == 2:
                 FFX_memory.clickToEventTemple(3)
                 checkpoint += 1
             elif version == 1 and distillerPurchase == False and checkpoint == 5 and \
-                (FFX_memory.getSpeed() < 9 or FFX_memory.getPower() < 24):
+                (FFX_memory.getSpeed() < 9 or FFX_memory.getPower() < 23):
                 
                 #Tyton to update this with the actual purchase.
                 while FFX_memory.diagProgressFlag() != 44:
@@ -33,6 +36,8 @@ def airShipPath(version):
                         FFXC.set_neutral()
                         if FFX_memory.battleActive():
                             FFX_Battle.fleeAll()
+                        elif FFX_memory.menuOpen():
+                            FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToDiagProgress(48)
                 while FFX_memory.airshipShopDialogueRow() != 1:
@@ -106,9 +111,17 @@ def airShipPath(version):
             elif checkpoint == 40:
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
+            elif checkpoint in [43,44] and not gameVars.csr():
+                checkpoint = 45
             elif checkpoint == 44: #Talk to Cid
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-250,339])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                complete = True
+            elif checkpoint == 46: #Talk to Cid
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-230,366])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 complete = True
