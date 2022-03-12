@@ -944,6 +944,7 @@ def LucaWorkers2(earlyHaste):
                 else:
                     defend()
         elif FFX_memory.diagSkipPossible():
+            print(FFX_memory.diagProgressFlag(), FFX_memory.getStoryProgress())
             FFX_Xbox.tapB()  # Clicking to get through the battle faster
     FFX_Logs.writeStats('Workers revive count:')
     FFX_Logs.writeStats(reviveCount)
@@ -3139,7 +3140,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and FFX_memory.getEnemyCurrentHP()[0] >= 6500:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and tidusAttacks < 3:
                     print("Rikku should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3157,7 +3158,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and FFX_memory.getEnemyCurrentHP()[0] >= 6500:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and tidusAttacks < 3:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
