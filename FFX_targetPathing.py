@@ -6669,11 +6669,17 @@ def airShip(checkpoint):
         y = 195
     if checkpoint == 42:
         x = -242
-        y = 311
+        y = 316
     if checkpoint == 43:
         x = -245
         y = 327
     if checkpoint == 44: #Cid
+        x = 0
+        y = 0
+    if checkpoint == 45: #non-CSR
+        x = -245
+        y = 327
+    if checkpoint == 46: #non-CSR Cid
         x = 0
         y = 0
     return [x,y]

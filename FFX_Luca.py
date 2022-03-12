@@ -204,10 +204,10 @@ def afterBlitz():
             if checkpoint == 8: #First chest
                 if gameVars.earlyHaste() == -1:
                     FFX_menu.lateHaste()
+                    FFX_memory.closeMenu()
                 #if gameVars.getLStrike() >= 2:
                 #    FFX_menu.equipWeapon(character=4,ability=0x8022, fullMenuClose=False)
-                FFX_menu.mrrGrid1()
-                FFX_memory.closeMenu()
+                #FFX_menu.mrrGrid1()
                 print("First chest")
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-635,-410])

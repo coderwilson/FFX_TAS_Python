@@ -1,4 +1,3 @@
-
 class allVars:
     def __init__(self):
         self.setStartVars()
@@ -30,9 +29,20 @@ class allVars:
         self.rescueCount = 0 #Default to 0
         self.fluxOverkillVar = False #Default to False
         
+        self.firstHits = [0] * 8
+        
         #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        
+    
+    def firstHitsSet(self,values):
+        for x in range(8):
+            self.firstHits[x] = values[x]
+    
+    def firstHitsValue(self, index):
+        return self.firstHits[index]
+    def printFirstHits(self):
+        print(self.firstHits)
+    
     def gameSavePath(self):
         return self.savePath
     
@@ -46,6 +56,7 @@ class allVars:
         return self.csrValue
     
     def SETcsr(self, value):
+        print("Setting CSR: ", value)
         self.csrValue = value
     
     def completeFullKilikMenu(self):

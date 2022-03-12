@@ -215,26 +215,26 @@ def mrrGrid1():
     FFX_memory.closeMenu()
     
     gameVars.wakkaLateMenuSet(wakkaLateMenu)
-    print("Wakka late menu(after): ", wakkaLateMenu)
 
 def mrrGrid2():
-    print("Wakka late menu: ", gameVars.wakkaLateMenu())
-    if gameVars.wakkaLateMenu():
-        if FFX_memory.getSLVLWakka() >= 3:
-            print("Catching up Wakka's sphere grid.")
-            openGrid(character=4)
-            
-            FFX_menuGrid.moveFirst()
-            gridDown()
-            gridDown()
-            gridRight()
-            FFX_menuGrid.moveAndUse()
-            FFX_menuGrid.selSphere('power','d','none')
-            FFX_menuGrid.useAndQuit()
-            gameVars.wakkaLateMenuSet(False)
-            print("Wakka late menu updated: ", gameVars.wakkaLateMenu())
-        else:
-            print("Not enough sphere levels yet.")
+    #if gameVars.wakkaLateMenu():
+    if FFX_memory.getSLVLWakka() >= 3:
+        print("Catching up Wakka's sphere grid.")
+        openGrid(character=4)
+        
+        FFX_menuGrid.moveFirst()
+        gridRight()
+        gridDown()
+        gridDown()
+        gridDown()
+        gridRight()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.useAndQuit()
+        gameVars.wakkaLateMenuSet(False)
+        print("Wakka late menu updated: ", gameVars.wakkaLateMenu())
+    else:
+        print("Not enough sphere levels yet.")
 
 def mrrGridYuna():
     print("Yuna levels good to level up.")
@@ -445,14 +445,6 @@ def djoseTemple():
     FFX_memory.closeMenu()
 
 def mWoods():
-    FFX_memory.awaitControl()
-    FFXC.set_movement(0, 1)
-    FFX_memory.waitFrames(30 * 0.8)
-    FFXC.set_movement(-1, 1)
-    FFX_memory.waitFrames(30 * 0.5)
-    FFXC.set_movement(0, 1)
-    FFX_memory.clickToEvent()
-    FFXC.set_neutral()
     while not FFX_memory.menuOpen():
         FFX_Xbox.tapB() #Talking through O'aka's conversation.
     FFX_memory.closeMenu()
@@ -1244,7 +1236,7 @@ def BFA():
     if gameVars.endGameVersion() == 3:
         FFX_menuGrid.useAndMove()
         #time.sleep(60) #Two minute buffer to figure out what we're doing.
-        gridRight() #Not sure exactly
+        gridRight()
         gridRight()
         gridRight()
         gridRight()
@@ -1265,6 +1257,7 @@ def BFA():
     
     if gameVars.zombieWeapon() == 255:
         FFX_menuGrid.useShiftLeft('tidus')
+        FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()
         gridUp()
