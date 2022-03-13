@@ -101,7 +101,7 @@ def facingSin():
     if gameVars.csr():
         FFX_memory.clickToControl()
     else:
-        FFX_Xbox.SkipDialog(10)
+        FFX_Xbox.SkipDialog(15) #Gets us through the Airship destination menu.
         while not FFX_memory.userControl():
             if FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
@@ -136,8 +136,8 @@ def facingSin():
 def insideSin():
     FFXC.set_movement(0, -1)
     while FFX_memory.getMap() != 203: #Skip dialog and run to the sea of sorrows map
-        if FFX_memory.getStoryProgress() == 3160:
-            FFX_memory.waitFrames(30 * 0.5)
+        if FFX_memory.getStoryProgress() == 3160 and FFX_memory.cutsceneSkipPossible():
+            FFX_memory.waitFrames(15)
             FFX_Xbox.skipScene()
         else:
             FFX_Xbox.menuB()

@@ -394,9 +394,6 @@ def post_Yunalesca(checkpoint=0):
                 print("Checkpoint reached: ", checkpoint)
             elif checkpoint == 26:
                 FFXC.set_neutral()
-                FFX_Xbox.SkipDialog(17)
-                FFX_Xbox.skipScene()
-                FFX_memory.clickToControl()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalescaToAirship(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
@@ -406,4 +403,9 @@ def post_Yunalesca(checkpoint=0):
                 FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
+            elif FFX_memory.cutsceneSkipPossible():
+                print(FFX_memory.getCutsceneID())
+                if FFX_memory.getCutsceneID() == (5673,2850,3):
+                    FFX_memory.waitFrames(10)
+                    FFX_Xbox.skipScene()
 

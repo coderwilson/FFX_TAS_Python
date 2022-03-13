@@ -66,16 +66,29 @@ def controllingPlayer():
     return 1
 
 def findSafePlace():
+    #current player
     cPlayer = playerArray[controllingPlayer()].getCoords()
+    cPlayerNum = controllingPlayer()
+    #graav coords
     dPos = playerArray[8].getCoords()
     
     #Determin target coords based on character and state.
-    if cPlayer in [1, 4]:
+    if cPlayerNum in [1, 4]:
         targetCoords = [520, -20]
-    elif cPlayer in [2,3]:
-        targetCoords = [-14, -588]
+    elif cPlayerNum in [2,3]:
+        if dPos[1] < -20 and cPlayer[1] > -500 and distance(cPlayerNum, 8) < 370:
+            if cPlayer[0] > dPos[0]:
+                targetCoords = [462,-354]
+            else:
+                targetCoords = [-462,-354]
+        elif distanceSpecial() < 50:
+            targetCoords = [1, -592]
+        else:
+            targetCoords = [-231, -539]
+    elif distanceSpecial() <50:
+        targetCoords = [1, -592]
     else: #Should never occur, should never get Tidus/Wakka into this logic.
-        targetCoords = [-14, -588]
+        targetCoords = [-231, -539]
     
     #Now attempt to move to the target.
     #If we're at the target, return True.
@@ -190,7 +203,7 @@ def gameStage():
     elif FFX_memory.getStoryProgress() < 540: #First half
         stages = [0, 300, 300, 300, 300, 300]
     elif FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 20, 110, 141, 162, 169]
+        stages = [0, 0, 115, 135, 150, 163]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
         stages = [0, 0, 0, 250, 275, 286]
     else: #Used for any non-story blitzing.
@@ -202,6 +215,10 @@ def gameStage():
             currentStage = i
     
     if abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 2:
+        currentStage = 0
+    elif abs(FFX_memory.blitzOwnScore() - FFX_memory.blitzOppScore()) >= 1 \
+        and FFX_memory.getStoryProgress() > 570 \
+        and FFX_memory.getStoryProgress() < 700 :
         currentStage = 0
     elif FFX_memory.getStoryProgress() < 700 and currentStage >= 1:
         #Only apply following logic for the storyline game
@@ -240,6 +257,8 @@ def gameStage():
 reportState = False
 
 def passBall(target=0, breakThrough = 5):
+    if controllingPlayer() == 4:
+        breakThrough = 0
     if selectBreakthrough():
         if breakThrough == 5:
             if cursor1() == 0:
@@ -263,6 +282,8 @@ def passBall(target=0, breakThrough = 5):
             FFX_Xbox.menuB()
 
 def shootBall(breakThrough = 5):
+    if FFX_memory.getStoryProgress() < 540 and controllingPlayer() == 0:
+        breakThrough = 0
     if selectShotType():
         if cursor1() == 1:
             FFX_Xbox.menuB()
@@ -418,6 +439,21 @@ def tidusAct():
     elif goalDistance < 500 and FFX_memory.getStoryProgress() > 560:
         #Wakka can shoot farther than Tidus.
         shootBall()
+    elif graavDistance > 180 and currentStage in [0,1]:
+        if distance(3,8) > 300 and distance(0,3) < 500:
+            passBall(target=3)
+        elif distance(2,8) > 300 and distance(0,2) < 500:
+            passBall(target=2)
+        else:
+            print("Could not find a pass target.")
+            print("--------")
+            print("Distance Graav to Jassu: ", distance(3,8))
+            print("Pass distance: ", distance(0,3))
+            print("--------")
+            print("Distance Graav to Letty: ", distance(2,8))
+            print("Pass distance: ", distance(0,2))
+            
+        shootBall()
     elif graavDistance > 240 and graavDistance < 270:
         #Graav too close.
         shootBall()
@@ -444,10 +480,11 @@ def lettyMove():
         elif not playerGuarded(2):
             FFX_Xbox.tapX()
     elif currentStage == 1:
-        if not playerGuarded(3) and distance(3,7) > 350:
+        if not playerGuarded(3) and distance(3,7) > 380 and distance(3,10) > 380:
             FFX_Xbox.tapX()
         else:
-            findSafePlace()
+            if findSafePlace() and graavDistance < 320:
+                FFX_Xbox.tapX()
     else:
         if distance(3,8) < 340 or distance(3,7) < 340:
             findSafePlace()
@@ -455,7 +492,8 @@ def lettyMove():
             print("Letty out of HP. Passing to Jassu.")
             FFX_Xbox.tapX()
         else:
-            findSafePlace()
+            if findSafePlace() and graavDistance < 320:
+                FFX_Xbox.tapX()
 
 def lettyAct():
     currentStage = gameStage()
@@ -488,9 +526,9 @@ def lettyAct():
         else:
             tar = 4
         passBall(target = tar,breakThrough = breakThroughVal)
-    elif currentStage == 1 and not playerGuarded(3) and distance(3,7) > 350:
+    elif currentStage == 1 and not playerGuarded(3) and distance(3,7) > 380:
         passBall(target=3)
-    elif distance(2, 8) < 340:
+    elif distance(2, 8) < 320:
         passBall(target = 0, breakThrough = 0)
     elif playerArray[2].currentHP() < 10:
         if playerGuarded(3):
@@ -504,6 +542,12 @@ def lettyAct():
 
 def jassuMove():
     currentStage = gameStage()
+    targetCoords = [-572, -123]
+    p10C = playerArray[10].getCoords()
+    graavC = playerArray[8].getCoords()
+    tidusC = playerArray[0].getCoords()
+    findSafety = False
+    moveForward = False
     if reportState == True:
         print("Jassu movement")
         print("Stage: ", currentStage)
@@ -523,46 +567,51 @@ def jassuMove():
         FFX_Xbox.tapX()
     elif currentStage in [0,1]:
         #Defend in the goal for safety.
-        findSafePlace()
-        if playerArray[2].currentHP() >= 40:
+        findSafety = True
+        if playerArray[2].currentHP() >= 40 and currentStage == 0:
             if distance(2,8) > 360 and distance(2,7) > 360 and distance(2,6) > 360:
                 FFX_Xbox.tapX()
     elif currentStage == 2:
-        workingForward() #Move forward to staging position, prep for shot.
+        if playerArray[10].getCoords()[1] < 100:
+            targetCoords = [playerArray[10].getCoords()[0], playerArray[10].getCoords()[1] - 300]
+        else:
+            workingForward() #Move forward to staging position, prep for shot.
+            moveForward = True
         if playerArray[8].getCoords()[0] < -300:
             FFX_Xbox.tapX()
         elif distance(3,10) < 310:
             FFX_Xbox.tapX()
     elif currentStage == 3:
-        p10C = playerArray[10].getCoords()
-        graavC = playerArray[8].getCoords()
-        tidusC = playerArray[0].getCoords()
         relDist = (tidusC[0] + tidusC[1]) - (p10C[0] + p10C[1])
         relDist2 = (tidusC[0] + tidusC[1]) - (graavC[0] + graavC[1])
-        if graavC[0] < -100:
+        if graavC[0] < -300:
             if relDist2 > 270:
                 FFX_Xbox.tapB()
             else:
-                targetCoords = [graavC[0] - 60,graavC[1] - 270]
+                targetCoords = [graavC[0] - 60,graavC[1] - 300]
         elif relDist > 270: #Tidus in position behind defender
             FFX_Xbox.tapX()
         elif abs(playerArray[6].getCoords()[1] - playerArray[10].getCoords()[1]) < 50:
             if p10C[0] < -400:
-                targetCoords = [p10C[0] - 0,p10C[1] - 280]
+                targetCoords = [p10C[0] - 0,p10C[1] - 330]
             else:
-                targetCoords = [p10C[0] - 180,p10C[1] - 120]
-            FFX_blitzPathing.setMovement(targetCoords)
+                targetCoords = [p10C[0] - 180,p10C[1] - 180]
         elif p10C[0] < -400:
             targetCoords = [p10C[0] - 0,p10C[1] - 310]
         elif playerArray[3].getCoords()[1] < -200:
             #In position to see if anything happens
             targetCoords = [p10C[0] - 200,p10C[1] - 120]
-            FFX_blitzPathing.setMovement(targetCoords)
         else:
             targetCoords = [p10C[0] - 200,p10C[1] - 120]
-            FFX_blitzPathing.setMovement(targetCoords)
     else: #Pass to Tidus
+        targetCoords = [p10C[0] - 180,p10C[1] - 150]
         FFX_Xbox.tapX()
+    
+    if findSafety:
+        if findSafePlace() and graavDistance < 320:
+            FFX_Xbox.tapX()
+    elif not moveForward:
+        FFX_blitzPathing.setMovement(targetCoords)
 
 def jassuAct():
     currentStage = gameStage()
@@ -584,6 +633,8 @@ def jassuAct():
     if currentStage in [0,1]:
         if playerArray[2].currentHP() >= 40 and distance(2,8) > 360:
             passBall(target = 2)
+        elif graavDistance < 320:
+            passBall(target = 0)
         else:
             dribbleBall()
     elif playerArray[3].currentHP() < 10:
@@ -617,7 +668,7 @@ def jassuAct():
 
 
 def otherMove():
-    if findSafePlace():
+    if findSafePlace() and distance(3,8) > 350:
         FFX_Xbox.tapX()
 
 def otherAct():
@@ -636,12 +687,12 @@ def otherAct():
             else:
                 passBall(target = 1, breakThrough = 0)
     elif currentStage <= 1:
-        if playerGuarded(2):
+        if distance(2,8) > 350:
             passBall(target = 3)
         else:
             passBall(target = 2)
     elif currentStage == 2:
-        if playerGuarded(3):
+        if distance(3,8) > 350:
             passBall(target = 2)
         else:
             passBall(target = 3)
@@ -684,6 +735,17 @@ def distance(n1, n2):
         print("Exception: ", x)
         return 999
 
+def distanceSpecial():
+    try:
+        player1 = playerArray[6].getCoords()
+        player2 = [210,-250] #Formerly 230,-260
+        totalDistance = (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
+        #print("Distance test: ", totalDistance)
+        return totalDistance
+    except Exception as x:
+        print("Exception: ", x)
+        return 999
+
 def updatePlayerArray():
     for i in range(12):
         playerArray[i].updateCoords()
@@ -700,118 +762,122 @@ def blitzMain(forceBlitzWin):
     lastMenu = 0
     lastPhase = 99
     while FFX_memory.getStoryProgress() < 582 or FFX_memory.getStoryProgress() > 700: #End of Blitz
-        if lastPhase != gameStage() and gameClock() > 0 and gameClock() < 301:
-            lastPhase = gameStage()
-            print("--------------------------------------")
-            print("--------------------------------------")
-            print("New phase reached. ", lastPhase)
-            print("--------------------------------------")
-            print("--------------------------------------")
-        if goersScoreFirst() or halftimeDialog():
-            if lastMenu != 3:
-                print("Dialog on-screen")
-                lastMenu = 3
-            FFXC.set_neutral()
-            FFX_Xbox.menuB()
-        if FFX_memory.getMap() == 62:
-            if activeClock():
-                if lastState != 1:
-                    print("Clock running.")
-                    lastState = 1
-                if aurochsControl():
-                    if lastMenu != 2:
-                        print("Camera focusing Aurochs player")
-                        lastMenu = 2
-                    if movementSetFlag == False:
-                        FFX_Xbox.tapY()
+        try:
+            if lastPhase != gameStage() and gameClock() > 0 and gameClock() < 301:
+                lastPhase = gameStage()
+                print("--------------------------------------")
+                print("--------------------------------------")
+                print("New phase reached. ", lastPhase)
+                print("--------------------------------------")
+                print("--------------------------------------")
+            if goersScoreFirst() or halftimeDialog():
+                if lastMenu != 3:
+                    print("Dialog on-screen")
+                    lastMenu = 3
+                FFXC.set_neutral()
+                FFX_Xbox.menuB()
+            if FFX_memory.getMap() == 62:
+                if activeClock():
+                    if lastState != 1:
+                        print("Clock running.")
+                        lastState = 1
+                    if aurochsControl():
+                        if lastMenu != 2:
+                            print("Camera focusing Aurochs player")
+                            lastMenu = 2
+                        if movementSetFlag == False:
+                            FFX_Xbox.tapY()
+                        else:
+                            blitzMovement()
                     else:
-                        blitzMovement()
+                        if lastMenu != 8:
+                            print("Camera focusing opposing player")
+                            lastMenu = 8
                 else:
-                    if lastMenu != 8:
-                        print("Camera focusing opposing player")
-                        lastMenu = 8
+                    FFXC.set_neutral()
+                    if lastState != 2:
+                        print("Menu should be coming up")
+                        lastState = 2
+                    #FFX_memory.menuControl() # Could use this too
+                    #print(FFX_memory.blitzMenuNum())
+                    if selectMovement():
+                        if lastMenu != 4:
+                            print("Selecting movement method")
+                            lastMenu = 4
+                        if cursor1() == 1:
+                            FFX_Xbox.menuB()
+                            movementSetFlag = True
+                        else:
+                            FFX_Xbox.menuDown()
+                            print(cursor1())
+                    elif selectFormation():
+                        if lastMenu != 5:
+                            print("Selecting Formation")
+                            lastMenu = 5
+                        if cursor1() == 0:
+                            FFX_Xbox.menuB()
+                        else:
+                            FFX_Xbox.menuUp()
+                    elif selectFormation2():
+                        if lastMenu != 5:
+                            print("Selecting Formation")
+                            lastMenu = 5
+                        if cursor1() == 7:
+                            FFX_Xbox.menuB()
+                        else:
+                            FFX_Xbox.menuUp()
+                    elif selectBreakthrough():
+                        if lastMenu != 6:
+                            print("Selecting Break-through")
+                            FFX_memory.waitFrames(2)
+                            lastMenu = 6
+                        decideAction()
+                    elif selectPassTarget():
+                        if lastMenu != 11:
+                            print("Selecting pass target.")
+                            lastMenu = 11
+                        decideAction()
+                    elif selectShotType():
+                        if lastMenu != 12:
+                            print("Selecting shot type")
+                            lastMenu = 12
+                        if cursor1() == 1:
+                            FFX_Xbox.menuB()
+                        else:
+                            FFX_Xbox.menuDown()
+                            FFX_memory.waitFrames(3)
+                    elif selectAction():
+                        if lastMenu != 7:
+                            print("Selecting action (Shoot/Pass/Dribble)")
+                            lastMenu = 7
+                        decideAction()
             else:
                 FFXC.set_neutral()
-                if lastState != 2:
-                    print("Menu should be coming up")
-                    lastState = 2
-                #FFX_memory.menuControl() # Could use this too
-                #print(FFX_memory.blitzMenuNum())
-                if selectMovement():
-                    if lastMenu != 4:
-                        print("Selecting movement method")
-                        lastMenu = 4
-                    if cursor1() == 1:
+                if lastState != 3:
+                    print("Screen outside the Blitz sphere")
+                    lastState = 3
+                if halfSummaryScreen():
+                    if FFX_memory.diagProgressFlag() == 113:
+                        if cursor1() != 1: #Pass command
+                            FFX_Xbox.menuDown()
+                            FFX_memory.waitFrames(3)
+                        else:
+                            FFX_Xbox.menuB()
+                    elif FFX_memory.diagSkipPossible(): #Skip through everything else
                         FFX_Xbox.menuB()
-                        movementSetFlag = True
-                    else:
-                        FFX_Xbox.menuDown()
-                        print(cursor1())
-                elif selectFormation():
-                    if lastMenu != 5:
-                        print("Selecting Formation")
-                        lastMenu = 5
-                    if cursor1() == 0:
-                        FFX_Xbox.menuB()
-                    else:
-                        FFX_Xbox.menuUp()
-                elif selectFormation2():
-                    if lastMenu != 5:
-                        print("Selecting Formation")
-                        lastMenu = 5
-                    if cursor1() == 7:
-                        FFX_Xbox.menuB()
-                    else:
-                        FFX_Xbox.menuUp()
-                elif selectBreakthrough():
-                    if lastMenu != 6:
-                        print("Selecting Break-through")
-                        FFX_memory.waitFrames(2)
-                        lastMenu = 6
-                    decideAction()
-                elif selectPassTarget():
-                    if lastMenu != 11:
-                        print("Selecting pass target.")
-                        lastMenu = 11
-                    decideAction()
-                elif selectShotType():
-                    if lastMenu != 12:
-                        print("Selecting shot type")
-                        lastMenu = 12
-                    if cursor1() == 1:
-                        FFX_Xbox.menuB()
-                    else:
-                        FFX_Xbox.menuDown()
-                        FFX_memory.waitFrames(3)
-                elif selectAction():
-                    if lastMenu != 7:
-                        print("Selecting action (Shoot/Pass/Dribble)")
-                        lastMenu = 7
-                    decideAction()
-        else:
-            FFXC.set_neutral()
-            if lastState != 3:
-                print("Screen outside the Blitz sphere")
-                lastState = 3
-            if halfSummaryScreen():
-                if FFX_memory.diagProgressFlag() == 113:
-                    if cursor1() != 1: #Pass command
-                        FFX_Xbox.menuDown()
-                        FFX_memory.waitFrames(3)
-                    else:
-                        FFX_Xbox.menuB()
-                elif FFX_memory.diagSkipPossible(): #Skip through everything else
-                    FFX_Xbox.menuB()
-            elif newHalf():
-                if forceBlitzWin:
-                    FFX_memory.blitzballPatriotsStyle()
-                if FFX_memory.diagProgressFlag() == 347:
-                    #Used for repeated Blitz games, not for story.
-                    movementSetFlag = False
-                prepHalf()
-            else:
-                Storyline(forceBlitzWin)
-    
+                elif newHalf():
+                    if forceBlitzWin:
+                        FFX_memory.blitzballPatriotsStyle()
+                    if FFX_memory.diagProgressFlag() == 347:
+                        #Used for repeated Blitz games, not for story.
+                        movementSetFlag = False
+                    prepHalf()
+                else:
+                    Storyline(forceBlitzWin)
+        except Exception as xVal:
+            print("Caught exception in blitz main:")
+            print(xVal)
+        
     print("Blitz game has completed.")
     #Set the blitzWin flag for the rest of the run.
     print("Final scores: Aurochs: ", FFX_memory.blitzOwnScore(), \
