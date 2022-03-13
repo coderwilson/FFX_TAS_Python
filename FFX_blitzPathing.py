@@ -11,6 +11,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def setMovement(target) -> bool:
 
+    #print("Blitz movement: ", target)
     player = FFX_memory.getCoords()
     #(forward, right) = FFX_memory.getMovementVectors()
     (forward, right) = ((1, 0), (0, -1))
@@ -41,7 +42,6 @@ def setMovement(target) -> bool:
     elif abs(Ly) > abs(Lx):
         Lx = copysign(Lx/Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
-    
     
     FFXC.set_movement(Lx, Ly)
     #FFX_memory.waitFrames(frames=1)

@@ -44,7 +44,7 @@ def loadSaveNum(number):
         if saveFiles[x] == testString:
             print("Save file is in position: ", x)
             savePos = x
-    
+    FFX_memory.waitFrames(20)
     if savePos != 255:
         while FFX_memory.loadGamePos() != savePos:
             if FFX_memory.loadGamePos() + 4 < savePos:

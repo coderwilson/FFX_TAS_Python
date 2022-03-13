@@ -45,9 +45,9 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -93,7 +93,7 @@ StepCounter = 1
 
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 92 #New seed number, only used if doing seed hunt.
+rngSeedNum = 18 #New seed number, only used if doing seed hunt.
 rngSelectArray = [9,31,90,98,104,108,121,164,200,246,254]
 ####################################################################################################
 
@@ -108,7 +108,7 @@ elif Gamestate != "none":
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 31 #Manually choose seed here.
+    rngSeedNum = 18 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -163,12 +163,13 @@ FFX_Logs.writeStats(rngSeed)
 
 #Next, check if we are loading to a save file
 if Gamestate != "none" :
-    FFX_DreamZan.NewGame(Gamestate)
-    FFX_Logs.writeLog("Loading to a specific gamestate.\n")
-    startTime = FFX_Logs.timeStamp()
-    #FFX_Logs.writeStats("Start time:")
-    #FFX_Logs.writeStats(str(startTime))
-    reportGamestate()
+    if not (Gamestate == "Luca" and StepCounter == 3):
+        FFX_DreamZan.NewGame(Gamestate)
+        FFX_Logs.writeLog("Loading to a specific gamestate.\n")
+        startTime = FFX_Logs.timeStamp()
+        #FFX_Logs.writeStats("Start time:")
+        #FFX_Logs.writeStats(str(startTime))
+        reportGamestate()
     import FFX_LoadGame
     
     #Need to update these to use FFX_LoadGame.loadSaveNum(number) for all.
@@ -198,19 +199,17 @@ if Gamestate != "none" :
         FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1: # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(112)
+    if Gamestate == "Luca" and StepCounter == 5: # Approaching Luca via boat
+        FFX_LoadGame.loadSaveNum(5)
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
         FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
         #FFX_LoadGame.loadSaveNum(16) #With laughing scene
-        import FFX_menu
-        FFX_menu.mrrGrid1()
         FFX_LoadGame.LoadMiihenStart()
         #FFX_LoadGame.LoadMiihenStart_Laugh()
         FFX_memory.setEncounterRate(0)
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         
         FFX_LoadGame.loadSaveNum(38)
-        import FFX_menu
-        FFX_menu.mrrGrid1()
         FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
         FFX_LoadGame.LoadMRR()
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
@@ -240,7 +239,7 @@ if Gamestate != "none" :
         #FFX_LoadGame.loadSaveNum(55) #Blitz Win, normal save.
         FFX_LoadGame.loadSaveNum(56) #Blitz Win, save less speed/power spheres
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
-        FFX_LoadGame.loadSaveNum(47)
+        FFX_LoadGame.loadSaveNum(15)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
         FFX_LoadGame.loadSaveNum(42)
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
