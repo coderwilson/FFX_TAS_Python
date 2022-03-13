@@ -56,7 +56,7 @@ def arrival():
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 2 and gameVars.csr():
-                checkpoint = 6
+                checkpoint = 9
             elif checkpoint == 4: #Talking to Trommell
                 FFX_memory.clickToEventTemple(6)
                 if FFX_memory.getCoords()[0] < 23.5:
@@ -92,13 +92,8 @@ def arrival():
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.waitFrames(45)
                 FFXC.set_neutral()
-                checkpoint += 1
+                checkpoint = 9
                 FFX_memory.clickToControl3()
-            
-            elif checkpoint == 8: #Open chest
-                FFX_memory.clickToEventTemple(7)
-                checkpoint += 1
-                
             elif checkpoint == 11:
                 print("Check if skip is online")
                 if gameVars.csr():
