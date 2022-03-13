@@ -1780,12 +1780,12 @@ def thunderPlains(section):
                     if not lightSlot:
                         Steal()
                         lightSlot = FFX_memory.getItemSlot(57) != 255
-                    elif FFX_memory.getOverdriveValue(6) < 100:
+                    elif FFX_memory.getOverdriveBattle(6) < 100:
                         attack('none')
                     else:
                         fleeAll()
                 else:
-                    if FFX_memory.getOverdriveValue(6) < 100 and not checkRikkuOk():
+                    if FFX_memory.getOverdriveBattle(6) < 100 and not checkRikkuOk():
                         escapeOne()
                     else:
                         fleeAll()
@@ -1806,14 +1806,14 @@ def thunderPlains(section):
                             elif not lightSlot:
                                 Steal()
                                 lightSlot = FFX_memory.getItemSlot(57) != 255
-                            elif FFX_memory.getOverdriveValue(6) < 100:
+                            elif FFX_memory.getOverdriveBattle(6) < 100:
                                 attack('none')
                             else:
                                 fleeAll()
                         else:
                             if not checkRikkuOk():
                                 fleeAll()
-                            elif FFX_memory.getOverdriveValue(6) < 100:
+                            elif FFX_memory.getOverdriveBattle(6) < 100:
                                 escapeOne()
                             elif lightSlot and (not useGrenades or grenadeThrown):
                                 fleeAll()
