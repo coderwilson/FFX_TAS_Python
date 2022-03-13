@@ -12,7 +12,8 @@ class allVars:
         self.csrValue = True #Default to True
         self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
-        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
+        self.blitzFirstShotVal = False
+        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
         
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
@@ -31,8 +32,10 @@ class allVars:
         
         self.firstHits = [0] * 8
         
+        #coderwilson automation PC
         #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        #coderwilson main PC
+        self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
     
     def firstHitsSet(self,values):
         for x in range(8):
@@ -45,6 +48,15 @@ class allVars:
     
     def gameSavePath(self):
         return self.savePath
+    
+    def blitzFirstShot(self):
+        return self.blitzFirstShotVal
+    
+    def blitzFirstShotTaken(self):
+        self.blitzFirstShotVal = True
+    
+    def blitzFirstShotReset(self):
+        self.blitzFirstShotVal = False
     
     def fluxOverkill(self):
         return self.fluxOverkillVar

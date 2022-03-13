@@ -1236,7 +1236,7 @@ def BFA():
     if gameVars.endGameVersion() == 3:
         FFX_menuGrid.useAndMove()
         #time.sleep(60) #Two minute buffer to figure out what we're doing.
-        gridRight()
+        gridRight() #Not sure exactly
         gridRight()
         gridRight()
         gridRight()
@@ -1257,7 +1257,6 @@ def BFA():
     
     if gameVars.zombieWeapon() == 255:
         FFX_menuGrid.useShiftLeft('tidus')
-        FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()
         gridUp()

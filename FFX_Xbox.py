@@ -391,12 +391,6 @@ def TriggerR() :
     FFX_memory.waitFrames(2)
     if gameVars.usePause():
         FFX_memory.waitFrames(2)
-        
-def tapStart():
-    FFXC.set_value('BtnStart', 1) #Generate button to skip
-    FFX_memory.waitFrames(1)
-    FFXC.set_value('BtnStart', 0)
-    FFX_memory.waitFrames(2)
 
 def tidusOD():
     #This function has primarily moved to the FFX_Battle library. Leaving this version live in case

@@ -2607,7 +2607,7 @@ def fullheal(target: int, direction: str):
 # Process written by CrimsonInferno
 def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     print("Wendigo Res/Heal function")
-    if FFX_memory.getEnemyCurrentHP().count(0) == 2:
+    if FFX_memory.getEnemyCurrentHP().count(0) == 2 and FFX_memory.getNextTurn() < 20:
         return 0
     healCount = 0
     partyHP = FFX_memory.getBattleHP()
