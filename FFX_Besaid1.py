@@ -263,7 +263,7 @@ def leaving():
                     if FFX_Screen.BattleScreen():
                         battleHP = FFX_memory.getBattleHP()
                         enemyHP = FFX_memory.getEnemyCurrentHP()
-                        if not gameVars.earlyTidusGrid() and battleHP[0] < 120 and enemyHP[0] > 119:
+                        if not gameVars.earlyTidusGrid() and battleHP[0] < 140 and enemyHP[0] > 112:
                             FFX_Battle.usePotionCharacter(0, 'l')
                             healCount += 1
                         else:

@@ -348,12 +348,12 @@ def Klikk():
                 klikkAttacks += 1
             elif FFX_Screen.turnRikku():
                 grenadeCount = FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(35))
-                if BattleHP[0] < 120 and not (FFX_memory.getNextTurn() == 0 and FFX_memory.getEnemyCurrentHP()[0] <= 181):
-                    usePotionCharacter(0, 'l')
-                    klikkRevives += 1  
-                elif grenadeCount < 3:
+                if grenadeCount < 3:
                     print("Attempting to steal from Klikk")
                     Steal()
+                elif BattleHP[0] < 120 and not (FFX_memory.getNextTurn() == 0 and FFX_memory.getEnemyCurrentHP()[0] <= 181):
+                    usePotionCharacter(0, 'l')
+                    klikkRevives += 1
                 else:
                     attack('none')
                     klikkAttacks += 1
@@ -632,7 +632,6 @@ def KilikaWoods(valeforCharge):
 
     print("Kilika battle")
     aeonTurn = False
-    yunaWent = False
     while FFX_memory.battleActive(): #AKA end of battle screen
         if valeforCharge == False and skipCharge == False:  # Still to charge Valefor
             if FFX_memory.turnReady():
@@ -811,15 +810,19 @@ def KilikaWoods(valeforCharge):
                 elif bNum == 35 or bNum == 36:
                     fleeAll()
                 elif bNum == 37:
-                    if FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
+                    yunaWent = False
+                    tidusWent = False
+                    if FFX_Screen.turnTidus() and not tidusWent:
+                        tidusWent = True
+                        buddySwapLulu()
+                        thunderTarget(21, 'r')
+                    elif FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
                         attackByNum(22, 'l')
                     elif FFX_Screen.turnYuna() and not yunaWent:
                         yunaWent = True
                         defend()
                     elif yunaWent:
                         fleeAll()
-                    else:
-                        defend()
 
     FFX_memory.clickToControl()  # Rewards screen
     hpCheck = FFX_memory.getHP()
@@ -887,35 +890,63 @@ def LucaWorkers():
 def LucaWorkers2(earlyHaste):
     FFX_Logs.writeLog("Fight start: Workers in Luca")
     print("Fight start: Workers in Luca")
-    hasted = False
+    BattleComplete = 0
+    kimTurn = 0
+    tidTurn = 0
+    luluTurn = 0
+    reviveCount = 0
     FFX_Xbox.clickToBattle()
 
     while not FFX_memory.menuOpen(): #AKA end of battle screen
         if FFX_memory.turnReady():
-            if earlyHaste >= 1:
-                if FFX_Screen.turnTidus() and not hasted:
-                    tidusHaste('left', character=5)
-                elif FFX_Screen.turnLulu():
-                    thunder('none')
+            if earlyHaste == 0 and FFX_Screen.turnKimahri():
+                if FFX_Screen.faintCheck() >= 1:
+                    revive()
+                    reviveCount += 1
                 else:
-                    defend()
-            elif FFX_memory.lucaWorkersBattleID() in [44, 35]:
-                if FFX_Screen.turnTidus():
-                    attack('none')
-                elif FFX_Screen.turnKimahri():
-                    if FFX_memory.getEnemyCurrentHP().count(0) == 1 and FFX_memory.getOverdriveBattle(3) == 100 and FFX_memory.getEnemyCurrentHP()[0] > 80:
-                        kimahriOD(1)
-                    else:
+                    kimTurn += 1
+                    if kimTurn == 2:
+                        enemyHP = FFX_memory.getEnemyCurrentHP()
+                        print(enemyHP)
+                        if enemyHP[0] > 80 and enemyHP[1] == 0:
+                            kimahriOD(1)
+                        elif enemyHP[1] == 0:
+                            attack('none')
+                        else:
+                            defend()
+                    elif kimTurn < 3:
                         attack('none')
-                elif FFX_Screen.turnLulu():
+                    else:
+                        defend()
+            elif earlyHaste == 0 and FFX_Screen.turnTidus():
+                if FFX_Screen.faintCheck() >= 1:
+                    revive()
+                else:
+                    tidTurn += 1
+                    if tidTurn < 3:
+                        attack('none')
+                    else:
+                        defend()
+            elif earlyHaste >= 1 and tidTurn == 0:
+                tidTurn += 1
+                tidusHaste('left', character=5)
+            elif FFX_Screen.turnLulu():
+                luluTurn += 1
+                if luluTurn == 2 and kimTurn < 2:
+                    FFX_Xbox.weapSwap(0)
+                elif luluTurn == 1:
                     thunder('right')
-            else:
-                if FFX_Screen.turnLulu():
+                else:
                     thunder('none')
+            else:
+                if FFX_Screen.faintCheck() >= 1:
+                    revive()
                 else:
                     defend()
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()  # Clicking to get through the battle faster
+    FFX_Logs.writeStats('Workers revive count:')
+    FFX_Logs.writeStats(reviveCount)
     FFX_memory.clickToControl()
 
 def Oblitzerator(earlyHaste):
@@ -1106,7 +1137,7 @@ def MiihenRoad(selfDestruct=False):
     battle = FFX_memory.getBattleNum()
     
     while not FFX_memory.battleComplete(): #AKA end of battle screen
-        if FFX_memory.battleType() == 2 and not checkTidusOk():
+        if FFX_memory.battleType() == 2:
             print("Looks like we got ambushed. Skipping this battle.")
             fleeAll()
             break
@@ -1127,7 +1158,7 @@ def MiihenRoad(selfDestruct=False):
                 else:
                     fleeAll()
             else:
-                fleeAll()
+                escapeOne()
     
     FFXC.set_movement(0, 1)
     wrapUp()
@@ -2150,7 +2181,7 @@ def seymourGuado_blitzWin():
                     elif FFX_memory.getBattleCharSlot(4) == i:
                         print("Wakka is dead")
                         wakkadead = True
-            if FFX_memory.getEnemyCurrentHP()[1] < 2999 and turnchar == 0:
+            if FFX_memory.getEnemyCurrentHP()[1] < 2999:
                 attack('none')
                 print("Should be last attack of the fight.")
             elif turnchar == 0:
@@ -2414,7 +2445,6 @@ def seymourGuado_blitzLoss():
                         print("Miss Anima")
                         animamiss += 1
                 else:
-                    print("Plain Attacking")
                     attack('none')
                 tidusturns += 1
                 print("Tidus turns: %d" % tidusturns)
@@ -2629,7 +2659,6 @@ def wendigo():
     tidusmaxHP = 1520
     tidusdied = False
     tidushaste = False
-    luluSwap = False
     FFX_Logs.writeLog("Fight start: Wendigo")
     
     FFX_Screen.awaitTurn()
@@ -2661,7 +2690,6 @@ def wendigo():
                         buddySwapAuron()
                     else:
                         print("Swapping to Lulu")
-                        luluSwap = True
                         buddySwapLulu()
             elif turnchar == 0:
                 print("Test 1")
@@ -2718,12 +2746,9 @@ def wendigo():
                         powerbreak = True
                         usepowerbreak = True
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
-                    if guadosteal == False and FFX_memory.getEnemyCurrentHP().count(0) != 2:
+                    if guadosteal == False:
                         Steal()
                         guadosteal = True
-                    elif FFX_memory.getEnemyCurrentHP().count(0) == 2 and not luluSwap:
-                        luluSwap = True
-                        buddySwapLulu()
                     else:
                         defend()
             elif turnchar == 2:
@@ -3114,7 +3139,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and tidusAttacks < 3:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and FFX_memory.getEnemyCurrentHP()[0] >= 6500:
                     print("Rikku should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3132,7 +3157,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and tidusAttacks < 3:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and FFX_memory.getEnemyCurrentHP()[0] >= 6500:
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,

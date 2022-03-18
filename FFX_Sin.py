@@ -205,5 +205,5 @@ def eggHunt(autoEggHunt):
     FFX_Logs.writeStats(str(eggDuration))
     print("Done with the egg hunt. Final prep for BFA.")
     if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
-        FFX_menu.equipWeapon(character=gameVars.zombieWeapon(),ability=0x8032, fullMenuClose=False)
+        FFX_menu.equipWeapon(character=gameVars.zombieWeapon(),ability=0x8032, fullMenuClose=True)
     FFX_menu.BFA()

@@ -302,8 +302,19 @@ def trials():
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 100:
-                checkpoint += 2
+                print("Insert Destruction sphere")
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([0,72])
+                    FFX_memory.waitFrames(3)
+                    FFXC.set_neutral()
+                    FFX_Xbox.tapB()
+                    FFX_memory.waitFrames(3)
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()    
+                checkpoint += 1
             elif checkpoint == 102:
+                print("Destro chest")
+                FFX_memory.clickToEventTemple(1)
                 checkpoint += 1
             elif checkpoint == 104:
                 print("End of Trials")

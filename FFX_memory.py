@@ -2992,9 +2992,6 @@ def loadGameCursor():
 
 def loadGamePos():
     return loadGamePage() + loadGameCursor()
-    
-def lucaWorkersBattleID():
-    return readVal(0x01466DCC)
 
 #-------------------------------------------------------
 #RNG tracking based on the first six hits
