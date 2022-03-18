@@ -15,10 +15,7 @@ FFXC = FFX_Xbox.controllerHandle()
 def arrival():
     FFX_memory.awaitControl()
     #Starts from the map just after the fireplace chat.
-    if FFX_memory.overdriveState()[6] != 100:
-        FFX_memory.fullPartyFormat('rikku')
-    else:
-        FFX_memory.fullPartyFormat('kimahri')
+    FFX_memory.fullPartyFormat('kimahri')
     
     print("Outdoor Zanarkand pathing section")
     while FFX_memory.getMap() != 225:
@@ -60,7 +57,7 @@ def arrival():
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                FFX_Battle.chargeRikkuOD()
+                FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
