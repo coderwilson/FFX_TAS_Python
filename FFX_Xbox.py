@@ -391,7 +391,7 @@ def TriggerR() :
     FFX_memory.waitFrames(2)
     if gameVars.usePause():
         FFX_memory.waitFrames(2)
-
+        
 def tapStart():
     FFXC.set_value('BtnStart', 1) #Generate button to skip
     FFX_memory.waitFrames(1)

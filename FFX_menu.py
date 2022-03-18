@@ -1257,7 +1257,6 @@ def BFA():
     
     if gameVars.zombieWeapon() == 255:
         FFX_menuGrid.useShiftLeft('tidus')
-        FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()
         gridUp()
