@@ -58,7 +58,7 @@ def guards():
             FFX_memory.fullPartyFormat('guards_lulu', fullMenuClose=False)
         else:
             FFX_memory.fullPartyFormat('guards_no_lulu', fullMenuClose=False)
-    if FFX_memory.getItemSlot(3) < 200:
+    if FFX_memory.getItemSlot(3) < 200 and FFX_memory.getHP() != FFX_memory.getMaxHP():
         FFX_menu.beforeGuards()
     FFX_memory.closeMenu()
 

@@ -69,7 +69,8 @@ def arrival():
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
                 FFX_memory.clickToControl3()
-                FFX_Battle.healUp()
+                if FFX_memory.getHP()[0] < 520:
+                    FFX_Battle.healUp()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
