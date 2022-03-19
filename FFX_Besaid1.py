@@ -240,8 +240,8 @@ def leaving():
                     gameVars.earlyTidusGridSetTrue()
                 checkpoint += 1
             elif checkpoint == 60: #Beach, save sphere
-                FFXC.set_neutral()
-                FFX_memory.touchSaveSphere()
+                #FFXC.set_neutral()
+                #FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
                 checkpoint -= 2

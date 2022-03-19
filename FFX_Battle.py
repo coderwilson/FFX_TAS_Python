@@ -562,7 +562,7 @@ def Echuilles():
                 if tidusCounter <= 2:
                     print("Cheer")
                     tidusFlee()  # performs cheer command
-                elif FFX_memory.getOverdriveBattle(0) == 100 and FFX_memory.getEnemyCurrentHP()[0] < 540:
+                elif FFX_memory.getOverdriveBattle(0) == 100 and FFX_memory.getEnemyCurrentHP()[0] <= 558:
                     print("Overdrive")
                     tidusOD()
                 else:
@@ -895,6 +895,7 @@ def LucaWorkers2(earlyHaste):
             if earlyHaste >= 1:
                 if FFX_Screen.turnTidus() and not hasted:
                     tidusHaste('left', character=5)
+                    hasted = True
                 elif FFX_Screen.turnLulu():
                     thunder('none')
                 else:
@@ -1648,7 +1649,6 @@ def djose(stoneBreath):
         healUp(3)
     else:
         print("Djose: No need to heal.")
-    FFX_memory.fullPartyFormat('djose')
     return stoneBreath
 
 
@@ -3450,51 +3450,42 @@ def seymourNatus():
             while FFX_memory.battleActive():
                 if gameVars.completedRescueFights():
                     fleeAll()
-                if FFX_memory.turnReady():
-                    if FFX_Screen.turnTidus():
-                        if turn == 0:
-                            turn += 1
-                            attackByNum(22, 'r')
-                        else:
-                            gameVars.addRescueCount()
+                elif FFX_memory.turnReady():
+                    if FFX_Screen.turnTidus() or FFX_Screen.turnYuna():
+                        if FFX_memory.getEnemyCurrentHP().count(0) == 1:
                             fleeAll()
-                    elif FFX_Screen.turnYuna():
-                        attackByNum(22, 'r')
-                    elif FFX_Screen.turnAuron():
+                            gameVars.addRescueCount()
+                        else:
+                            attackByNum(22, 'r')                       
+                    else:
                         defend()
         elif FFX_memory.getBattleNum() == 269:  # YAT-63 with two guard guys
             fight = 3
             while FFX_memory.battleActive():
                 if gameVars.completedRescueFights():
                     fleeAll()
-                if FFX_memory.turnReady():
-                    if FFX_Screen.turnTidus():
-                        if turn == 0:
-                            turn += 1
-                            attack('none')
-                        else:
+                elif FFX_memory.turnReady():
+                    if FFX_Screen.turnTidus() or FFX_Screen.turnYuna():
+                        if FFX_memory.getEnemyCurrentHP().count(0) == 1:
                             fleeAll()
                             gameVars.addRescueCount()
-                    elif FFX_Screen.turnYuna():
-                        attack('none')
-                    elif FFX_Screen.turnAuron():
+                        else:
+                            attack('none')                        
+                    else:
                         defend()
         elif FFX_memory.getBattleNum() == 271:  # one YAT-63, two YAT-99
             fight = 2
             while FFX_memory.battleActive():
                 if gameVars.completedRescueFights():
                     fleeAll()
-                if FFX_memory.turnReady():
-                    if FFX_Screen.turnTidus():
-                        if turn == 0:
-                            turn += 1
-                            attackByNum(21, 'l')
-                        else:
+                elif FFX_memory.turnReady():
+                    if FFX_Screen.turnTidus() or FFX_Screen.turnYuna():
+                        if FFX_memory.getEnemyCurrentHP().count(0) == 1:
                             fleeAll()
                             gameVars.addRescueCount()
-                    elif FFX_Screen.turnYuna():
-                        attackByNum(21, 'l')
-                    elif FFX_Screen.turnAuron():
+                        else:
+                            attackByNum(21, 'l')                       
+                    else:
                         defend()
         if FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()            

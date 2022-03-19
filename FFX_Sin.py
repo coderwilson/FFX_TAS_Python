@@ -147,8 +147,6 @@ def insideSin():
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
     else:
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
-    #if gameVars.zombieWeapon() == 255:
-    #    FFX_menu.zombieStrikeBackup()
     FFX_memory.closeMenu()
     
     checkpoint = 0

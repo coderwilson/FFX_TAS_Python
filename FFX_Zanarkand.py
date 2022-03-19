@@ -90,10 +90,6 @@ def arrival():
     checkpoint = 0
     if not gameVars.fluxOverkill():
         FFX_memory.fullPartyFormat('yuna')
-    elif FFX_memory.overdriveState()[6] != 100:
-        FFX_memory.fullPartyFormat('rikku')
-    else: 
-        FFX_memory.fullPartyFormat('kimahri')
     while FFX_memory.getMap() != 320:
         if FFX_memory.userControl():
             if checkpoint == 13: #Second chest
