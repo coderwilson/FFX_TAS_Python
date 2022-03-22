@@ -64,51 +64,48 @@ def forest1():
     optimalBattles = 0
     
     valeforCharge = False
-    checkpoint = 0
+    if gameVars.csr():
+        checkpoint = 0
+    else:
+        checkpoint = 2
     while FFX_memory.getMap() != 108: #All the way into the trials
         if FFX_memory.userControl():
-            if checkpoint == 48 or checkpoint == 49:
+            if checkpoint == 81 or checkpoint == 82:
                 #print("Valefor charge state: ", valeforCharge)
                 if valeforCharge == True:
-                    checkpoint = 50
-            if checkpoint == 50 and valeforCharge == False:
-                checkpoint = 48
+                    checkpoint = 83
+            if checkpoint == 83 and valeforCharge == False:
+                checkpoint = 81
             
             #events
-            if checkpoint == 6: #Chest with Wakka's weapon Scout
+            if checkpoint == 9: #Chest with Wakka's weapon Scout
                 FFX_memory.clickToEventTemple(0)
                 woodsMenuing()
                 checkpoint += 1
-            elif checkpoint == 31: #Luck sphere chest
+            elif checkpoint == 47: #Luck sphere chest
                 luckSlot = FFX_memory.getItemSlot(94)
                 if luckSlot == 255:
                     FFX_targetPathing.setMovement([-250,200])
                     FFX_Xbox.tapB()
                 else:
                     checkpoint += 1
-            elif checkpoint == 52:
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(5)
-                FFXC.set_movement(1, 0)
-                FFX_memory.waitFrames(2)
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(4)
+            elif checkpoint == 86:
                 FFX_memory.touchSaveSphere()
                 if not gameVars.didFullKilikMenu():
                     FFX_menu.Geneaux()
                 checkpoint += 1
-            elif checkpoint == 63 and not gameVars.csr(): #Lord O'holland
+            elif checkpoint == 99 and not gameVars.csr(): #Lord O'holland
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 63 and gameVars.csr():
+            elif checkpoint == 97 and gameVars.csr():
                 #FFX_memory.clickToEventTemple(0)
-                checkpoint += 1
-            elif checkpoint == 67: #Into the trials
+                checkpoint = 100
+            elif checkpoint == 101: #Into the trials
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
-                checkpoint += 1
+                #Do not increment checkpoint. Just repeat this logic until entering the trials.
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika2(checkpoint)) == True:
@@ -118,9 +115,9 @@ def forest1():
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if checkpoint < 3:
+                if checkpoint < 9:
                     FFX_Battle.lancetTutorial()
-                elif checkpoint > 50:
+                elif checkpoint > 86:
                     FFX_Battle.Geneaux()
                 else:
                     valeforCharge = FFX_Battle.KilikaWoods(valeforCharge)
@@ -131,12 +128,12 @@ def forest1():
                 FFX_Xbox.tapB()
                 
             #Map changes
-            elif checkpoint < 51 and FFX_memory.getMap() == 65: #Stairs
-                checkpoint = 51
-            elif checkpoint < 59 and FFX_memory.getMap() == 78: #Temple Entrance
-                checkpoint = 59
-            elif checkpoint < 61 and FFX_memory.getMap() == 96: #Temple interior
-                checkpoint = 61
+            elif checkpoint < 84 and FFX_memory.getMap() == 65: #Stairs
+                checkpoint = 84
+            elif checkpoint < 94 and FFX_memory.getMap() == 78: #Temple Entrance
+                checkpoint = 94
+            elif checkpoint < 96 and FFX_memory.getMap() == 96: #Temple interior
+                checkpoint = 96
     FFX_Logs.writeStats("Kilika battles (North):")
     FFX_Logs.writeStats(str(kilikaBattles))
     FFX_Logs.writeStats("Kilika optimal battles (North):")
@@ -263,20 +260,20 @@ def forest3():
     kilikaBattles = 0
     optimalBattles = 0
     checkpoint = 0
-    while checkpoint < 40: #All the way to the boats
+    while checkpoint < 69: #All the way to the boats
         if FFX_memory.userControl():
             #Events
-            if checkpoint == 39:
+            if checkpoint == 68:
                 FFXC.set_movement(0, -1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(0.3)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint < 30 and FFX_memory.getMap() == 46: #Exit woods
-                checkpoint = 30
-            elif checkpoint < 37 and FFX_memory.getMap() == 16: #Map with boat
-                checkpoint = 37
+            elif checkpoint < 53 and FFX_memory.getMap() == 46: #Exit woods
+                checkpoint = 53
+            elif checkpoint < 64 and FFX_memory.getMap() == 16: #Map with boat
+                checkpoint = 64
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika3(checkpoint)) == True:
@@ -293,10 +290,10 @@ def forest3():
                 FFX_Xbox.tapB()
                 
             #Map changes
-            elif checkpoint < 30 and FFX_memory.getMap() == 46: #Exit woods
-                checkpoint = 30
-            elif checkpoint < 37 and FFX_memory.getMap() == 16: #Map with boat
-                checkpoint = 37
+            elif checkpoint < 53 and FFX_memory.getMap() == 46: #Exit woods
+                checkpoint = 53
+            elif checkpoint < 64 and FFX_memory.getMap() == 16: #Map with boat
+                checkpoint = 64
     FFX_Logs.writeStats("Kilika battles (South):")
     FFX_Logs.writeStats(str(kilikaBattles))
     FFX_Logs.writeStats("Kilika optimal battles (South):")

@@ -10,8 +10,7 @@ FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def setMovement(target) -> bool:
-
-    #print("Blitz movement: ", target)
+    #print("Blitz movement target: ", target)
     player = FFX_memory.getCoords()
     #(forward, right) = FFX_memory.getMovementVectors()
     (forward, right) = ((1, 0), (0, -1))

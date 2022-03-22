@@ -93,8 +93,8 @@ StepCounter = 1
 
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 18 #New seed number, only used if doing seed hunt.
-rngSelectArray = [9,31,90,98,104,108,121,164,200,246,254]
+rngSeedNum = 247 #New seed number, only used if doing seed hunt.
+rngSelectArray = [4,16,17,18,24,31,41,44,46,52,88,96,101,105,131,138,140,157,161,172,182,197,200,221,224,232,254]
 ####################################################################################################
 
 if Gamestate == "Luca" and StepCounter == 3:
@@ -108,7 +108,7 @@ elif Gamestate != "none":
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 18 #Manually choose seed here.
+    #rngSeedNum = 131 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -154,7 +154,8 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 
-FFX_memory.setRngSeed(18) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
@@ -310,6 +311,8 @@ while Gamestate != "End":
         FFX_DreamZan.NewGame(Gamestate)
         FFX_Logs.writeLog("Loading to a specific gamestate.\n")
         FFX_LoadGame.loadSaveNum(37)
+        #FFX_memory.setRNG2()
+
         
     
     if rngSeedNum >= 256:

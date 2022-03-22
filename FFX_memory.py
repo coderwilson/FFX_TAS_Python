@@ -141,6 +141,7 @@ def turnReady():
     else:
         while not mainBattleMenu():
             pass
+        waitFrames(1)
         return True
 
 def battleCursor2():
@@ -1673,6 +1674,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0,3,5,4,2,6,1]
     elif frontLine == 'besaid1':
         orderFinal = [0,1,5,3,4]
+    elif frontLine == 'besaid2':
+        orderFinal = [0,4,5,3,5]
     elif frontLine == 'kilika':
         orderFinal = [0,1,4,3,5]
     elif frontLine == 'mrr1':
@@ -1850,7 +1853,7 @@ def overdriveState2():
 def dodgeLightning(lDodgeNum): #Not working yet
     global baseValue
     
-    if lStrikeCount() != lDodgeNum:
+    if lStrikeCount() != lDodgeNum or (lStrikeCount() == 1 and lDodgeNum == 0):
         waitFrames(30 * 0.07)
         FFX_Xbox.menuB()
         waitFrames(30 * 0.07)
@@ -2111,11 +2114,18 @@ def resetBattleEnd():
     key = baseValue + 0x00D2C9F1
     process.writeBytes(key,1,1)
 
+def setRNG2():
+    global baseValue
+    global process
+    key = baseValue + 0x00D35EE0
+    process.writeBytes(key,0x7E9F20D2,4)
+
+
 #---------------------------------------------
 #Blitzball!
 
 class blitzActor:
-    def __init__(self, playerNum):
+    def __init__(self, playerNum:int):
         self.num = playerNum
         self.position = getActorCoords(self.num)
         #print(self.position)
@@ -2137,6 +2147,31 @@ class blitzActor:
     
     def currentHP(self):
         return blitzHP(self.num)
+    
+    def aggro(self):
+        return getBlitzAggro(self.num)
+
+def getBlitzAggro(playerIndex:int=99):
+    global baseValue
+    ptrKey = process.read(baseValue + 0x00F2FF14)
+    if playerIndex == 6:
+        offset = 0x2DC35
+    elif playerIndex == 7:
+        offset = 0x343E5
+    elif playerIndex == 8:
+        offset = 0x3AB95
+    elif playerIndex == 9:
+        offset = 0x41345
+    elif playerIndex == 10:
+        offset = 0x47AF5
+    
+    if playerIndex in [6,7,8,9,10]:
+        if process.readBytes(ptrKey+offset, 1) == 255:
+            return False
+        else:
+            return True
+    else:
+        return False
 
 def blitzHP(playerIndex=99):
     global baseValue

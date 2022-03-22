@@ -40,8 +40,6 @@ def arrival():
     print("Starting Macalania Temple section")
     FFX_memory.awaitControl()
     FFX_menu.macTemple()
-    #if FFX_memory.getPower() < 26:
-    #    FFX_memory.setPower(26) #Need 34 total from here forward. 2 from Wendigo and 6 from bombs. 26 needed here.
     
     #Movement:
     jyscalSkipStatus = False
@@ -56,7 +54,7 @@ def arrival():
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 2 and gameVars.csr():
-                checkpoint = 9
+                checkpoint = 11
             elif checkpoint == 4: #Talking to Trommell
                 FFX_memory.clickToEventTemple(6)
                 if FFX_memory.getCoords()[0] < 23.5:
@@ -92,8 +90,10 @@ def arrival():
                 FFXC.set_value('BtnB', 0)
                 FFX_memory.waitFrames(45)
                 FFXC.set_neutral()
-                checkpoint = 9
+                checkpoint += 1
                 FFX_memory.clickToControl3()
+            elif checkpoint == 6:
+                checkpoint = 11
             elif checkpoint == 11:
                 print("Check if skip is online")
                 if gameVars.csr():

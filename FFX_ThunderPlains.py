@@ -201,8 +201,10 @@ def northPathing():
             if FFX_memory.dodgeLightning(lStrikeCount):
                 print("Dodge")
                 lStrikeCount = FFX_memory.lStrikeCount()
-            elif checkpoint == 12 and not gameVars.getBlitzWin() and not lunarSlot:
-                checkpoint = 10
+            elif gameVars.csr() and checkpoint == 14:
+                checkpoint = 16
+            elif checkpoint == 17 and not gameVars.getBlitzWin() and not lunarSlot:
+                checkpoint = 16
             
             #General pathing
             elif FFX_memory.userControl():
