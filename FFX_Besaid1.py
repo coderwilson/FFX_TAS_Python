@@ -27,24 +27,28 @@ def Beach():
     besaidBattles = 0
     goodBattles = 0
     checkpoint = 0
+    lastCP = 0
     while FFX_memory.getMap() != 122:
+        if checkpoint != lastCP:
+            print("Checkpoint reached: ", checkpoint)
+            lastCP = checkpoint
         if FFX_memory.userControl():
             #print("Checkpoint (testing): ", checkpoint)
             #Events
-            if checkpoint == 33: #Into the temple for the first time
+            if checkpoint == 34: #Into the temple for the first time
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 42: #Wakka tent
+            elif checkpoint == 43: #Wakka tent
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-            elif checkpoint == 43: #Talk to Wakka
+            elif checkpoint == 44: #Talk to Wakka
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([15,16])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
                 checkpoint += 1
-            elif checkpoint == 44: #Exiting tent
+            elif checkpoint == 45: #Exiting tent
                 print("Exiting tent")
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
