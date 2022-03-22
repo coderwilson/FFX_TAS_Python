@@ -417,66 +417,69 @@ def besaid1(checkpoint):
     if checkpoint == 28:
         x = 75
         y = -700
-    if checkpoint == 29: #Enter Besiad village
+    if checkpoint == 29: #Enter Besaid village
+        x = -18
+        y = 444
+    if checkpoint == 30:
         x = -22
         y = 186
-    if checkpoint == 30:
+    if checkpoint == 31:
         x = -16
         y = 14
-    if checkpoint == 31:
+    if checkpoint == 32:
         x = -8
         y = -59
-    if checkpoint == 32:
+    if checkpoint == 33:
         x = -5
         y = -179
-    if checkpoint == 33: #Temple
+    if checkpoint == 34: #Temple
         print("Temple")
-    if checkpoint == 34:
+    if checkpoint == 35:
         x = 38
         y = 27
-    if checkpoint == 35:
-        x = 0
-        y = -124
     if checkpoint == 36:
         x = 0
-        y = -180
+        y = -124
     if checkpoint == 37:
+        x = 0
+        y = -180
+    if checkpoint == 38:
         x = -13
         y = -69
-    if checkpoint == 38:
+    if checkpoint == 39:
         x = -15
         y = -5
-    if checkpoint == 39:
+    if checkpoint == 40:
         x = -17
         y = 50
-    if checkpoint == 40:
+    if checkpoint == 41:
         x = -51
         y = 202
-    if checkpoint == 41:
+    if checkpoint == 42:
         x = -79
         y = 292
-    if checkpoint == 42: #Into Wakka's tent
+    if checkpoint == 43: #Into Wakka's tent
         print("Into Wakka's tent")
-    if checkpoint == 43:
-        print("Sleep tight.")
     if checkpoint == 44:
-        print("Exit the tent")
+        print("Sleep tight.")
     if checkpoint == 45:
+        print("Exit the tent")
+    if checkpoint == 46:
         x = -51
         y = 202
-    if checkpoint == 46:
+    if checkpoint == 47:
         x = -17
         y = 50
-    if checkpoint == 47:
+    if checkpoint == 48:
         x = -15
         y = -5
-    if checkpoint == 48:
+    if checkpoint == 49:
         x = -13
         y = -69
-    if checkpoint == 49:
+    if checkpoint == 50:
         x = 0
         y = -200
-    if checkpoint == 50: #The Precepts must be obeyed!
+    if checkpoint == 51: #The Precepts must be obeyed!
         x = 0
         y = 30
     return [x,y]
@@ -680,13 +683,13 @@ def besaid2(checkpoint):
         y = 250
     if checkpoint == 27:
         x = 26
-        y = -109
+        y = -85
     if checkpoint == 28:
-        x = 86
-        y = 17
+        x = 97
+        y = 33
     if checkpoint == 29:
-        x = 79
-        y = 61
+        x = 65
+        y = 84
     if checkpoint == 30:
         x = -12
         y = 183
@@ -777,7 +780,7 @@ def besaid2(checkpoint):
     if checkpoint == 59: #Beach
         x = -318
         y = -472
-    if checkpoint == 60:
+    if checkpoint == 60: #Save sphere, but no longer used.
         print("Save sphere")
     if checkpoint == 61:
         x = -283
@@ -907,202 +910,304 @@ def Kilika2(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = -79
-        y = -413
+        x = -77
+        y = -475
     if checkpoint == 1:
-        x = -177
-        y = -424
+        x = -83
+        y = -427
     if checkpoint == 2:
-        x = -211
-        y = -411
+        x = -101
+        y = -417
     if checkpoint == 3:
-        x = -220
-        y = -399
+        x = -146
+        y = -413
     if checkpoint == 4:
-        x = -230
-        y = -354
+        x = -179
+        y = -417
     if checkpoint == 5:
-        x = -222
-        y = -336
+        x = -212
+        y = -416
     if checkpoint == 6:
-        print("Chest with Wakka's weapon Scout")
+        x = -221
+        y = -406
     if checkpoint == 7:
-        x = -214
-        y = -323
+        x = -222
+        y = -362
     if checkpoint == 8:
-        x = -208
-        y = -289
+        x = -224
+        y = -336
     if checkpoint == 9:
-        x = -237
-        y = -233
+        print("Wakka Scout")
     if checkpoint == 10:
-        x = -244
-        y = -202
+        x = -216
+        y = -330
     if checkpoint == 11:
-        x = -243
-        y = -120
+        x = -216
+        y = -316
     if checkpoint == 12:
-        x = -249
-        y = -102
+        x = -206
+        y = -305
     if checkpoint == 13:
-        x = -244
-        y = -92
+        x = -204
+        y = -293
     if checkpoint == 14:
-        x = -240
-        y = -58
+        x = -215
+        y = -275
     if checkpoint == 15:
-        x = -246
-        y = -16
+        x = -226
+        y = -250
     if checkpoint == 16:
-        x = -256
-        y = 12
+        x = -234
+        y = -226
     if checkpoint == 17:
-        x = -259
-        y = 35
+        x = -241
+        y = -206
     if checkpoint == 18:
         x = -241
-        y = 60
+        y = -135
     if checkpoint == 19:
-        x = -207
-        y = 67
+        x = -242
+        y = -124
     if checkpoint == 20:
-        x = -182
-        y = 70
+        x = -249
+        y = -101
     if checkpoint == 21:
-        x = -170
-        y = 59
+        x = -241
+        y = -84
     if checkpoint == 22:
-        x = -103
-        y = 69
+        x = -242
+        y = -57
     if checkpoint == 23:
-        x = -89
-        y = 90
+        x = -240
+        y = -35
     if checkpoint == 24:
-        x = -88
-        y = 129
+        x = -244
+        y = -20
     if checkpoint == 25:
-        x = -91
-        y = 144
+        x = -251
+        y = 3
     if checkpoint == 26:
-        x = -117
-        y = 207
+        x = -264
+        y = 25
     if checkpoint == 27:
-        x = -162
-        y = 208
+        x = -259
+        y = 37
     if checkpoint == 28:
-        x = -179
-        y = 201
+        x = -248
+        y = 53
     if checkpoint == 29:
-        x = -194
-        y = 212
+        x = -237
+        y = 58
     if checkpoint == 30:
-        x = -245
-        y = 207
-    if checkpoint == 31: #Chest
-        print("Picking up chest")
+        x = -225
+        y = 68
+    if checkpoint == 31:
+        x = -217
+        y = 71
     if checkpoint == 32:
+        x = -206
+        y = 61
+    if checkpoint == 33:
+        x = -185
+        y = 72
+    if checkpoint == 34:
+        x = -166
+        y = 51
+    if checkpoint == 35:
+        x = -144
+        y = 64
+    if checkpoint == 36:
+        x = -100
+        y = 65
+    if checkpoint == 37:
+        x = -86
+        y = 96
+    if checkpoint == 38:
+        x = -85
+        y = 124
+    if checkpoint == 39:
+        x = -100
+        y = 176
+    if checkpoint == 40:
+        x = -122
+        y = 211
+    if checkpoint == 41:
+        x = -134
+        y = 210
+    if checkpoint == 42:
+        x = -167
+        y = 210
+    if checkpoint == 43:
+        x = -178
+        y = 201
+    if checkpoint == 44:
         x = -196
         y = 212
-    if checkpoint == 33:
-        x = -171
-        y = 204
-    if checkpoint == 34:
-        x = -158
-        y = 210
-    if checkpoint == 35:
-        x = -125
-        y = 205
-    if checkpoint == 36:
-        x = -82
-        y = 141
-    if checkpoint == 37:
-        x = -52
-        y = 86
-    if checkpoint == 38:
-        x = -28
-        y = 76
-    if checkpoint == 39:
-        x = 31
-        y = 71
-    if checkpoint == 40:
-        x = 91
-        y = 76
-    if checkpoint == 41:
-        x = 143
-        y = 79
-    if checkpoint == 42:
-        x = 156
-        y = 102
-    if checkpoint == 43:
-        x = 136
-        y = 164
-    if checkpoint == 44:
-        x = 90
-        y = 223
     if checkpoint == 45:
-        x = 36
-        y = 282
+        x = -217
+        y = 210
     if checkpoint == 46:
-        x = -30
-        y = 289
+        x = -241
+        y = 208
     if checkpoint == 47:
-        x = -68
-        y = 300
+        print("Picking up chest")
     if checkpoint == 48:
-        x = -67
-        y = 408
+        x = -230
+        y = 212
     if checkpoint == 49:
+        x = -199
+        y = 212
+    if checkpoint == 50:
+        x = -188
+        y = 208
+    if checkpoint == 51:
+        x = -178
+        y = 202
+    if checkpoint == 52:
+        x = -170
+        y = 204
+    if checkpoint == 53:
+        x = -160
+        y = 209
+    if checkpoint == 54:
+        x = -137
+        y = 208
+    if checkpoint == 55:
+        x = -118
+        y = 208
+    if checkpoint == 56:
+        x = -109
+        y = 195
+    if checkpoint == 57:
+        x = -92
+        y = 147
+    if checkpoint == 58:
+        x = -59
+        y = 99
+    if checkpoint == 59:
+        x = -49
+        y = 83
+    if checkpoint == 60:
+        x = -33
+        y = 79
+    if checkpoint == 61:
+        x = 7
+        y = 71
+    if checkpoint == 62:
+        x = 34
+        y = 72
+    if checkpoint == 63:
+        x = 53
+        y = 76
+    if checkpoint == 64:
+        x = 88
+        y = 79
+    if checkpoint == 65:
+        x = 100
+        y = 70
+    if checkpoint == 66:
+        x = 133
+        y = 79
+    if checkpoint == 67:
+        x = 149
+        y = 87
+    if checkpoint == 68:
+        x = 151
+        y = 110
+    if checkpoint == 69:
+        x = 148
+        y = 132
+    if checkpoint == 70:
+        x = 130
+        y = 175
+    if checkpoint == 71:
+        x = 96
+        y = 212
+    if checkpoint == 72:
+        x = 69
+        y = 249
+    if checkpoint == 73:
+        x = 66
+        y = 258
+    if checkpoint == 74:
+        x = 49
+        y = 268
+    if checkpoint == 75:
+        x = 30
+        y = 284
+    if checkpoint == 76:
+        x = 2
+        y = 292
+    if checkpoint == 77:
+        x = -30
+        y = 294
+    if checkpoint == 78:
+        x = -58
+        y = 299
+    if checkpoint == 79:
+        x = -66
+        y = 300
+    if checkpoint == 80:
+        x = -68
+        y = 328
+    if checkpoint == 81:
+        x = -70
+        y = 417
+    if checkpoint == 82:
         x = -95
-        y = 408
-    if checkpoint == 50: # #Map change, towards stairs
+        y = 415
+    if checkpoint == 83: #Into next area
         x = -80
         y = 500
-    if checkpoint == 51:
+    if checkpoint == 84:
+        x = -58
+        y = 144
+    if checkpoint == 85:
+        x = -20
+        y = 172
+    if checkpoint == 86: #Stairs save sphere
+        print("Stairs")
+    if checkpoint == 87:
         x = -10
-        y = 178
-    if checkpoint == 52: #Save sphere
-        print("Touch save sphere")
-    if checkpoint == 53:
-        x = -5
-        y = 193
-    if checkpoint == 54: #Just before Geneaux battle
-        x = 15
-        y = 264
-    if checkpoint == 55:
-        x = -11
-        y = 541
-    if checkpoint == 56:
-        x = -57
-        y = 617
-    if checkpoint == 57:
-        x = -121
+        y = 192
+    if checkpoint == 88:
+        x = 17
+        y = 233
+    if checkpoint == 89:
+        x = 13
+        y = 286
+    if checkpoint == 90:
+        x = -51
+        y = 609
+    if checkpoint == 91:
+        x = -99
+        y = 656
+    if checkpoint == 92:
+        x = -129
         y = 685
-    if checkpoint == 58: #To the temple
-        x = -180
-        y = 770
-    if checkpoint == 59:
+    if checkpoint == 93:
+        x = -160
+        y = 740
+    if checkpoint == 94:
         x = 2
-        y = 256
-    if checkpoint == 60: #Into the temple
+        y = 270
+    if checkpoint == 95: #Into the temple
         x = 2
-        y = 400
-    if checkpoint == 61:
-        x = -27
-        y = 16
-    if checkpoint == 62:
-        x = -29
-        y = 34
-    if checkpoint == 63: #Wakka praying
-        print("Lord O'halland")
-    if checkpoint == 64:
-        x = -5
-        y = 58
-    if checkpoint == 65:
+        y = 500
+    if checkpoint == 96:
+        x = -1
+        y = -56
+    if checkpoint == 97: #non-CSR, slight left
+        x = -22
+        y = 4
+    if checkpoint == 98: #non-CSR, past Lulu
+        x = -22
+        y = 33
+    if checkpoint == 99: #non-CSR, pray to O'holland
+        print("non-CSR, pray to O'holland")
+    if checkpoint == 100:
         x = 2
-        y = 93
-    if checkpoint == 66: #Door to the cloyster lift
-        x = 0
-        y = 234
+        y = 54
     return [x,y]
 
 def KilikaTrials(checkpoint):
@@ -1270,122 +1375,209 @@ def Kilika3(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = -63
-        y = 301
+        x = -68
+        y = 314
     if checkpoint == 1:
-        x = -30
-        y = 293
+        x = -65
+        y = 299
     if checkpoint == 2:
-        x = 37
-        y = 280
+        x = -33
+        y = 289
     if checkpoint == 3:
-        x = 76
-        y = 251
+        x = 26
+        y = 284
     if checkpoint == 4:
-        x = 100
-        y = 203
+        x = 38
+        y = 278
     if checkpoint == 5:
-        x = 133
-        y = 176
+        x = 64
+        y = 258
     if checkpoint == 6:
-        x = 152
-        y = 100
+        x = 78
+        y = 242
     if checkpoint == 7:
-        x = 141
-        y = 75
+        x = 101
+        y = 211
     if checkpoint == 8:
-        x = 90
-        y = 76
+        x = 126
+        y = 178
     if checkpoint == 9:
-        x = 25
-        y = 69
+        x = 149
+        y = 138
     if checkpoint == 10:
-        x = -108
-        y = 67
+        x = 153
+        y = 107
     if checkpoint == 11:
-        x = -168
-        y = 56
+        x = 148
+        y = 81
     if checkpoint == 12:
-        x = -211
-        y = 69
+        x = 120
+        y = 72
     if checkpoint == 13:
-        x = -247
-        y = 56
+        x = 89
+        y = 77
     if checkpoint == 14:
-        x = -269
-        y = 32
+        x = 70
+        y = 75
     if checkpoint == 15:
-        x = -243
-        y = -19
+        x = 28
+        y = 70
     if checkpoint == 16:
-        x = -244
-        y = -88
+        x = -38
+        y = 80
     if checkpoint == 17:
+        x = -112
+        y = 59
+    if checkpoint == 18:
+        x = -150
+        y = 58
+    if checkpoint == 19:
+        x = -184
+        y = 71
+    if checkpoint == 20:
+        x = -207
+        y = 64
+    if checkpoint == 21:
+        x = -228
+        y = 63
+    if checkpoint == 22:
+        x = -245
+        y = 52
+    if checkpoint == 23:
+        x = -254
+        y = 45
+    if checkpoint == 24:
+        x = -256
+        y = 36
+    if checkpoint == 25:
+        x = -259
+        y = 25
+    if checkpoint == 26:
+        x = -256
+        y = 14
+    if checkpoint == 27:
+        x = -246
+        y = -10
+    if checkpoint == 28:
+        x = -244
+        y = -25
+    if checkpoint == 29: #Exit woods
+        x = -240
+        y = -39
+    if checkpoint == 30:
+        x = -242
+        y = -54
+    if checkpoint == 31:
+        x = -241
+        y = -80
+    if checkpoint == 32:
+        x = -241
+        y = -122
+    if checkpoint == 33:
         x = -242
         y = -135
-    if checkpoint == 18:
-        x = -244
-        y = -205
-    if checkpoint == 19:
-        x = -221
-        y = -251
-    if checkpoint == 20:
-        x = -203
-        y = -288
-    if checkpoint == 21:
-        x = -215
-        y = -321
-    if checkpoint == 22:
-        x = -230
-        y = -350
-    if checkpoint == 23:
-        x = -219
-        y = -409
-    if checkpoint == 24:
-        x = -201
-        y = -419
-    if checkpoint == 25:
-        x = -134
-        y = -422
-    if checkpoint == 26:
-        x = -90
-        y = -425
-    if checkpoint == 27:
-        x = -80
-        y = -445
-    if checkpoint == 28:
-        x = -85
-        y = -504
-    if checkpoint == 29: #Exit woods
-        x = -85
-        y = -600
-    if checkpoint == 30:
-        x = -148
-        y = 202
-    if checkpoint == 31:
-        x = -124
-        y = 142
-    if checkpoint == 32:
-        x = -113
-        y = 113
-    if checkpoint == 33:
-        x = 0
-        y = 114
     if checkpoint == 34:
-        x = 82
-        y = 104
+        x = -244
+        y = -204
     if checkpoint == 35:
-        x = 88
-        y = 50
+        x = -236
+        y = -233
     if checkpoint == 36:
-        x = 88
-        y = -50
+        x = -229
+        y = -249
     if checkpoint == 37:
-        x = -52
-        y = -191
+        x = -220
+        y = -263
     if checkpoint == 38:
-        x = -154
-        y = -235
+        x = -207
+        y = -289
+    if checkpoint == 39:
+        x = -206
+        y = -298
+    if checkpoint == 40:
+        x = -214
+        y = -323
+    if checkpoint == 41:
+        x = -218
+        y = -338
+    if checkpoint == 42:
+        x = -226
+        y = -342
+    if checkpoint == 43:
+        x = -225
+        y = -356
+    if checkpoint == 44:
+        x = -223
+        y = -388
+    if checkpoint == 45:
+        x = -218
+        y = -411
+    if checkpoint == 46:
+        x = -209
+        y = -417
+    if checkpoint == 47:
+        x = -174
+        y = -417
+    if checkpoint == 48:
+        x = -104
+        y = -418
+    if checkpoint == 49:
+        x = -84
+        y = -430
+    if checkpoint == 50:
+        x = -78
+        y = -452
+    if checkpoint == 51:
+        x = -85
+        y = -525
+    if checkpoint == 52: #Back to the docks
+        x = -70
+        y = -600
+    if checkpoint == 53:
+        x = -150
+        y = 200
+    if checkpoint == 54:
+        x = -126
+        y = 149
+    if checkpoint == 55:
+        x = -121
+        y = 127
+    if checkpoint == 56:
+        x = -111
+        y = 109
+    if checkpoint == 57:
+        x = -59
+        y = 108
+    if checkpoint == 58:
+        x = -6
+        y = 110
+    if checkpoint == 59:
+        x = 41
+        y = 102
+    if checkpoint == 60:
+        x = 80
+        y = 99
+    if checkpoint == 61:
+        x = 87
+        y = 89
+    if checkpoint == 62:
+        x = 88
+        y = 43
+    if checkpoint == 63:
+        x = 88
+        y = -100
+    if checkpoint == 64:
+        x = -48
+        y = -184
+    if checkpoint == 65:
+        x = -56
+        y = -194
+    if checkpoint == 66:
+        x = -84
+        y = -213
+    if checkpoint == 67: #Just before the boat, after the hammer guy
+        x = -161
+        y = -241
     return [x,y]
 
 def winno(checkpoint):
@@ -3357,42 +3549,45 @@ def tPlainsSouth(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = 16
-        y = -961
+        x = -23
+        y = -1023
     if checkpoint == 1:
-        x = 9
-        y = -934
+        x = -32
+        y = -973
     if checkpoint == 2:
-        x = 0
-        y = -816
+        x = -24
+        y = -927
     if checkpoint == 3:
-        x = -22
-        y = -592
+        x = 1
+        y = -840
     if checkpoint == 4:
-        x = -21
-        y = -273
-    if checkpoint == 5:
-        x = -72
-        y = -56
+        x = -3
+        y = -663
+    if checkpoint == 5: #Past crater
+        x = -7
+        y = -635
     if checkpoint == 6:
-        x = -72
-        y = 42
+        x = 5
+        y = -522
     if checkpoint == 7:
-        x = 34
-        y = 330
+        x = -12
+        y = -290
     if checkpoint == 8:
-        x = 70
-        y = 475
+        x = 3
+        y = 4
     if checkpoint == 9:
-        x = 81
-        y = 529
+        x = 7
+        y = 362
     if checkpoint == 10:
-        x = 48
-        y = 680
+        x = 12
+        y = 495
     if checkpoint == 11:
+        x = 45
+        y = 787
+    if checkpoint == 12:
         x = 54
         y = 865
-    if checkpoint == 12:
+    if checkpoint == 13:
         x = 54
         y = 1200
     return [x,y]
@@ -3439,44 +3634,71 @@ def tPlainsNorth(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = -92
-        y = -1076
+        x = -102
+        y = -1162
     if checkpoint == 1:
-        x = -52
-        y = -875
+        x = -92
+        y = -1066
     if checkpoint == 2:
-        x = 22
-        y = -503
+        x = -54
+        y = -870
     if checkpoint == 3:
-        x = 67
-        y = -425
+        x = -16
+        y = -649
     if checkpoint == 4:
-        x = 95
-        y = -320
+        x = 16
+        y = -498
     if checkpoint == 5:
-        x = 83
-        y = -145
+        x = 26
+        y = -426
     if checkpoint == 6:
-        x = 77
-        y = -12
+        x = 44
+        y = -396
     if checkpoint == 7:
-        x = 64
-        y = 16
+        x = 57
+        y = -324
     if checkpoint == 8:
-        x = -76
-        y = 376
+        x = 72
+        y = -304
     if checkpoint == 9:
-        x = -83
-        y = 468
+        x = 76
+        y = -261
     if checkpoint == 10:
-        x = 105
-        y = 709
+        x = 79
+        y = -134
     if checkpoint == 11:
-        x = 95
-        y = 918
+        x = 79
+        y = -18
     if checkpoint == 12:
-        x = 60
-        y = 1500
+        x = 70
+        y = 0
+    if checkpoint == 13:
+        x = 52
+        y = 123
+    if checkpoint == 14: #any% only (non-CSR)
+        x = -52
+        y = 414
+    if checkpoint == 15:
+        x = -26
+        y = 451
+    if checkpoint == 16: #Both back on track
+        x = -1
+        y = 739
+    if checkpoint == 17:
+        x = -18
+        y = 797
+    if checkpoint == 18:
+        x = -35
+        y = 883
+    if checkpoint == 19:
+        x = -37
+        y = 967
+    if checkpoint == 20:
+        x = -73
+        y = 1025
+    if checkpoint == 21:
+        x = -73
+        y = 1300
     return [x,y]
 
 def mWoods(checkpoint):

@@ -11,27 +11,27 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def gridUp():
     FFXC.set_value('Dpad', 1)
-    FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(4)
+    FFX_memory.waitFrames(3)
 
 def gridDown():
     FFXC.set_value('Dpad', 2)
-    FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(4)
+    FFX_memory.waitFrames(3)
 
 def gridLeft():
     FFXC.set_value('Dpad', 4)
-    FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(4)
+    FFX_memory.waitFrames(3)
 
 def gridRight():
     FFXC.set_value('Dpad', 8)
-    FFX_memory.waitFrames(1)
+    FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    FFX_memory.waitFrames(4)
+    FFX_memory.waitFrames(3)
 
 def gridTidus():
     if FFX_memory.sGridChar() == 0:

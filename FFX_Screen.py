@@ -4,6 +4,8 @@ import pyautogui
 import FFX_Logs
 import FFX_memory
 #from playsound import playsound
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 def clearMouse(counter):
     try:
@@ -16,7 +18,10 @@ def clearMouse(counter):
 
 def BattleScreen():
     if FFX_memory.turnReady():
-        FFX_memory.waitFrames(30 * 0.4)
+        #if gameVars.usePause():
+        #    FFX_memory.waitFrames(12)
+        #else:
+        #    FFX_memory.waitFrames(6)
         return True
     else:
         return False

@@ -239,9 +239,9 @@ def leaving():
                     FFX_menu.Liki()
                     gameVars.earlyTidusGridSetTrue()
                 checkpoint += 1
-            elif checkpoint == 60: #Beach, save sphere
-                FFXC.set_neutral()
-                FFX_memory.touchSaveSphere()
+            elif checkpoint in [59,60]: #Beach, save sphere
+                #FFXC.set_neutral()
+                #FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
                 checkpoint -= 2
@@ -289,6 +289,7 @@ def leaving():
                 escapeAttempts = 0
                 FFX_Battle.escapeAll()
                 FFX_memory.clickToControl()
+                FFX_memory.fullPartyFormat('Besaid2')
                 checkpoint += 1
             elif checkpoint > 39 and FFX_Screen.BattleScreen(): #One forced battle on the way out of Besaid
                 FFX_Battle.besaid()

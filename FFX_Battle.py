@@ -17,6 +17,7 @@ def tapTargeting():
     print("Done", not FFX_memory.mainBattleMenu(), FFX_memory.battleActive())
 
 def valeforOD(sinFin = 0, version = 0):
+    FFX_memory.waitFrames(6)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
     print("Overdrive: ", version) 
@@ -1170,6 +1171,7 @@ def chocoEater():
 def aeonShield():
     print("Aeon Shield function")
     FFX_Screen.awaitTurn()
+    FFX_memory.waitFrames(6)
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapRight()
     if gameVars.usePause():
@@ -1184,6 +1186,7 @@ def aeonShield():
 def aeonBoost():
     print("Aeon Boost function")
     FFX_Screen.awaitTurn()
+    FFX_memory.waitFrames(6)
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapRight()
     if gameVars.usePause():
@@ -4493,6 +4496,7 @@ def escapeOne():
     tapTargeting()
 
 def buddySwap_char(character):
+    FFX_memory.waitFrames(6)
     FFX_Logs.writeLog("Swapping characters (in battle)")
     print("Swapping characters (in battle) - by char num")
     position = FFX_memory.getBattleCharSlot(character)

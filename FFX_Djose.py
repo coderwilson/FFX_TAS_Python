@@ -258,6 +258,8 @@ def trials():
                 print("Final insert Right sphere")
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
+            elif checkpoint == 76: #No longer doing Destruction Sphere stuff.
+                checkpoint = 85
             elif checkpoint == 80:
                 print("Destruction Glyph")
                 while FFX_memory.userControl():
