@@ -155,6 +155,7 @@ FFX_Screen.clearMouse(0)
 
 
 FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed: ", rngSeed)
 FFX_Logs.nextStats(rngSeed)
