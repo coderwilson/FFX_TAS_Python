@@ -5467,6 +5467,121 @@ def defenderX(checkpoint):
         y = 350
     return [x,y]
 
+def neApproach(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 121
+        y = 120
+    if checkpoint == 1:
+        x = 122
+        y = 134
+    if checkpoint == 2:
+        x = 113
+        y = 150
+    if checkpoint == 3:
+        x = -35
+        y = 167
+    if checkpoint == 4:
+        x = -200
+        y = 170
+    if checkpoint == 5:
+        x = -228
+        y = 228
+    if checkpoint == 6:
+        x = -289
+        y = 185
+    if checkpoint == 7:
+        x = -305
+        y = 172
+    if checkpoint == 8:
+        x = -385
+        y = 168
+    if checkpoint == 9:
+        x = -250
+        y = 10
+    return [x,y]
+
+def neForceEncounters(checkpoint):
+    x = 0
+    y = 999
+    if checkpoint % 2 == 0:
+        y = 70
+    if checkpoint % 2 == 1:
+        y = 20
+    return [x,y]
+
+def neReturn(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 0
+        y = -100
+    if checkpoint == 1:
+        x = -305
+        y = 168
+    if checkpoint == 3:
+        x = -282
+        y = 189
+    if checkpoint == 4:
+        x = -231
+        y = 230
+    if checkpoint == 5:
+        x = -223
+        y = 243
+    if checkpoint == 6:
+        x = -220
+        y = 350
+    if checkpoint == 7:
+        x = -2
+        y = 163
+    if checkpoint == 8:
+        x = 91
+        y = 150
+    if checkpoint == 9:
+        x = 120
+        y = 144
+    if checkpoint == 10:
+        x = 126
+        y = 134
+    if checkpoint == 11:
+        x = 119
+        y = 122
+    if checkpoint == 12:
+        x = 109
+        y = 111
+    if checkpoint == 13:
+        x = 64
+        y = 95
+    if checkpoint == 14:
+        x = 8
+        y = 105
+    if checkpoint == 15:
+        x = -4
+        y = 106
+    if checkpoint == 16:
+        x = -12
+        y = 116
+    if checkpoint == 17:
+        x = -11
+        y = 174
+    if checkpoint == 18:
+        x = -9
+        y = 214
+    if checkpoint == 19:
+        x = -6
+        y = 254
+    if checkpoint == 20:
+        x = 4
+        y = 290
+    if checkpoint == 21: #Through the trigger to Gagazet gates
+        x = 30
+        y = 350
+    if checkpoint == 22: #Safety
+        x = 100
+        y = 600
+    return [x,y]
+
 def kelkRonso(checkpoint):
     x = 999
     y = 999

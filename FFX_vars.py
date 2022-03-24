@@ -10,6 +10,7 @@ class allVars:
         #------------------------------------------------------------------
         
         self.csrValue = True #Default to True
+        self.tryNEVal = True
         self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
         self.blitzFirstShotVal = False
@@ -32,10 +33,28 @@ class allVars:
         
         self.firstHits = [0] * 8
         
+        self.neArmorVal = 255 #Default 255
+        self.neBattles = 0 #Default to 0
+        
         #coderwilson automation PC
         #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         #coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+    
+    def neExtraBattles(self):
+        return self.neBattles
+    
+    def neBattlesIncrement(self):
+        self.neBattles += 1
+    
+    def neArmor(self):
+        return self.neArmorVal
+    
+    def setneArmor(self, value):
+        self.neArmorVal = value
+    
+    def tryForNE(self):
+        return self.tryNEVal
     
     def firstHitsSet(self,values):
         for x in range(8):

@@ -1,6 +1,6 @@
 import time
-import win32gui
-
+#import win32gui
+'''
 #Variables
 Window = "FINAL FANTASY X"
 
@@ -21,3 +21,4 @@ def openFFXwindow():
     win32gui.EnumWindows( winEnumHandler, None )
 
 #Functions
+'''

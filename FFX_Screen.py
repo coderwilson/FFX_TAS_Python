@@ -9,12 +9,14 @@ gameVars = FFX_vars.varsHandle()
 
 def clearMouse(counter):
     try:
-        pyautogui.moveTo(1598,898)
+        #pyautogui.moveTo(1598,898)
+        return
     except:
         if counter > 10:
             return
         else:
-            clearMouse(counter + 1)
+            #clearMouse(counter + 1)
+            return
 
 def BattleScreen():
     if FFX_memory.turnReady():

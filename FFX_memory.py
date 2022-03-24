@@ -8,7 +8,6 @@ gameVars = FFX_vars.varsHandle()
 import FFX_Logs
 from collections import Counter
 
-
 from math import cos, sin
 baseValue = 0
 
@@ -113,9 +112,8 @@ def getNextTurn():
 
 def battleMenuCursor():
     global baseValue
-    key = baseValue + 0x00F3F77B
-    while process.readBytes(key,1) == 0:
-        pass
+    if not turnReady():
+        return 255
     key2 = baseValue + 0x00F3C926
     return process.readBytes(key2,1)
 
@@ -2559,6 +2557,66 @@ def checkZombieStrike():
     
     return False
 
+def weapon_armor_cursor():
+    global baseValue
+    return process.readBytes(baseValue + 0x0146A5E4,1)
+
+
+def checkNEArmor():
+    ability = 0x801D
+    gameVars = FFX_vars.varsHandle()
+    
+    charWeaps = armorArrayCharacter(0) #Tidus
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(0)
+            return True
+    
+    charWeaps = armorArrayCharacter(1) #Yuna
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(1)
+            return True
+    
+    charWeaps = armorArrayCharacter(2) #Auron
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(2)
+            return True
+    
+    charWeaps = armorArrayCharacter(3) #Kimahri
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(3)
+            return True
+    
+    charWeaps = armorArrayCharacter(4) #Wakka
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(4)
+            return True
+    
+    charWeaps = armorArrayCharacter(5) #Lulu
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(5)
+            return True
+    
+    charWeaps = armorArrayCharacter(6) #Rikku
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            gameVars.setneArmor(6)
+            return True
+    
+    return False
+
 def shopMenuDialogueRow():
     return readVal(0x0146780A)
 
@@ -2891,6 +2949,10 @@ def getSaveSphereDetails():
             diag = 217
         else: #Before Shedinja/Highbridge
             diag = 220
+    if mapVal == 266:
+        x = -305
+        y = 185
+        diag = 39
     if mapVal == 285:
         #After Flux
         x = 140
@@ -3073,4 +3135,238 @@ def lastHitCheckChange():
         return True
     else:
         return False
+
+#-------------------------------------------------------
+#NE armor manip
+RNG_CONSTANTS_1 = (
+    2100005341, 1700015771, 247163863, 891644838, 1352476256, 1563244181,
+    1528068162, 511705468, 1739927914, 398147329, 1278224951, 20980264,
+    1178761637, 802909981, 1130639188, 1599606659, 952700148, -898770777,
+    -1097979074, -2013480859, -338768120, -625456464, -2049746478, -550389733,
+    -5384772, -128808769, -1756029551, 1379661854, 904938180, -1209494558,
+    -1676357703, -1287910319, 1653802906, 393811311, -824919740, 1837641861,
+    946029195, 1248183957, -1684075875, -2108396259, -681826312, 1003979812,
+    1607786269, -585334321, 1285195346, 1997056081, -106688232, 1881479866,
+    476193932, 307456100, 1290745818, 162507240, -213809065, -1135977230,
+    -1272305475, 1484222417, -1559875058, 1407627502, 1206176750, -1537348094,
+    638891383, 581678511, 1164589165, -1436620514, 1412081670, -1538191350,
+    -284976976, 706005400,
+)
+
+RNG_CONSTANTS_2 = (
+    10259, 24563, 11177, 56952, 46197, 49826, 27077, 1257, 44164, 56565, 31009,
+    46618, 64397, 46089, 58119, 13090, 19496, 47700, 21163, 16247, 574, 18658,
+    60495, 42058, 40532, 13649, 8049, 25369, 9373, 48949, 23157, 32735, 29605,
+    44013, 16623, 15090, 43767, 51346, 28485, 39192, 40085, 32893, 41400, 1267,
+    15436, 33645, 37189, 58137, 16264, 59665, 53663, 11528, 37584, 18427,
+    59827, 49457, 22922, 24212, 62787, 56241, 55318, 9625, 57622, 7580, 56469,
+    49208, 41671, 36458,
+)
+
+def rng10():
+    global baseValue
+    return process.read(baseValue + 0xD35F00)
+
+def rng10Array():
+    retVal = [rng10()] #First value is the current value
+    for x in range(256): #Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x],10))
+    return retVal
+
+def nextChanceRNG10(dropChanceVal:int=60) -> int:
+    testArray = rng10Array()
+    for i in range(len(testArray)):
+        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
+        if i < 3:
+            pass
+        elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
+            #print("The next scenario where Wraith will drop an equipment is position: ", i-3)
+            #print("Please advance RNG10 that many times.")
+            return (i-3)
+
+def nextChanceRNG10Calm() -> int:
+    testArray = rng10Array()
+    for i in range(len(testArray)):
+        if i < 3:
+            pass
+        elif (testArray[i] & 0x7fffffff) % 255 >= 60 and (testArray[i+3] & 0x7fffffff) % 255 < 60:
+            #print("The next scenario where Wraith will drop an equipment is position: ", i-3)
+            #print("Please advance RNG10 that many times.")
+            return (i-3)
+
+def noChanceX3RNG10Highbridge() -> int:
+    testArray = rng10Array()
+    for i in range(len(testArray)):
+        if i < 3:
+            pass
+        elif (testArray[i] & 0x7fffffff) % 255 < 30 and (testArray[i+3] & 0x7fffffff) % 255 < 30 \
+            and (testArray[i] & 0x7fffffff) % 255 < 30:
+            #print("The next scenario where Wraith will drop an equipment is position: ", i-3)
+            #print("Please advance RNG10 that many times.")
+            return (i-3)
+
+def advanceRNG10():
+    global baseValue
+    key = baseValue + 0xD35F00
+    process.write(key, rng10Array()[1])
+    #print("Value advanced.")
+
+def rng12():
+    global baseValue
+    return process.read(baseValue + 0xD35F08)
+
+def rng12Array():
+    retVal = [rng12()] #First value is the current value
+    for x in range(255): #Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x], 12))
+    return retVal
+
+def nextChanceRNG12(beforeNatus:bool=False) -> int:
+    slotMod = 12
+    slotChances = [2, 2, 2, 2, 3, 3, 3, 3]
+    abilityMod = 13
+    abilityCountChances = [1, 1, 1, 1, 1, 1, 1, 2]
     
+    user = 256
+    nextChance = 256
+    neWillDrop = False
+    if beforeNatus:
+        ptr = 5
+    else:
+        ptr = 1
+    testArray = rng12Array()
+    while nextChance == 256:
+        #Assume killer is aeon
+        user = (testArray[ptr] & 0x7fffffff) % 7
+        if ptr > 250:
+            return 256
+        elif (testArray[ptr+1] & 0x7fffffff) % 2 == 1: #equipment
+            baseSlots = (slotMod + ((testArray[ptr+2] & 0x7fffffff) & 7)) - 4
+            slots = (baseSlots + ((baseSlots >> 31) & 7)) >> 2
+        
+            baseMod = (abilityMod + ((testArray[ptr+3] & 0x7fffffff) & 7)) - 4
+            abilities = (baseMod + ((baseMod >> 31) & 7)) >> 3
+            
+            #print("User: ", user)
+            #print("Slots: ", slots)
+            #print("Mods: ", abilities)
+            if ptr == 1:
+                if nextDropRNG13(abilities, beforeNatus):
+                    neWillDrop = True
+                    nextChance = 0
+                else:
+                    nextChance = 1
+                if beforeNatus:
+                    nextChance += 1
+            else:
+                nextChance = int((ptr-1) / 4)
+        else:
+            ptr += 4
+            user = 256
+    if beforeNatus:
+        nextChance -= 1
+    #print("Next armor drop: ", nextChance)
+    #if neWillDrop:
+        #print("You're all set! This is your chance!")
+    #else:
+        #print("The next value where Wraith will drop an equipment is position: ", nextChance)
+        #print("Please advance RNG12 that many times.")
+    return int(nextChance)
+
+def advanceRNG12():
+    global baseValue
+    key = baseValue + 0xD35F08
+    process.write(key, rng12Array()[4])
+    #print("Value advanced.")
+
+def rng13():
+    global baseValue
+    return process.read(baseValue + 0xD35F0C)
+
+def rng13Array():
+    retVal = [rng13()] #First value is the current value
+    for x in range(20): #Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x], 13))
+    #print(retVal)
+    return retVal
+
+def nextDropRNG13(aSlots:int, beforeNatus:bool) -> int:
+    nextChance = 256
+    outcomes = [4,1,1,1,2,2,3,3]
+    filledSlots = [9] * aSlots
+    if beforeNatus:
+        ptr = 2
+    else:
+        ptr = 1
+    testArray = rng13Array()
+    while 9 in filledSlots and ptr < 20:
+        try:
+            if outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)] in filledSlots:
+                pass
+            else:
+                filledSlots.remove(9)
+                filledSlots.append(outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
+        except:
+            pass
+        #print("T: ", filledSlots)
+        ptr += 1
+        
+    if 1 in filledSlots:
+        #print("++The next item, if armor, will contain No Encounters.")
+        return True
+    else:
+        #print("--The next item cannot have No Encounters.")
+        return False
+
+def nextChanceRNG13() -> int:
+    nextChance = 256
+    outcomes = [4,1,1,1,2,2,3,3]
+    ptr = 1
+    nextChance = 0
+    testArray = rng13Array()
+    while nextChance == 0:
+        if outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)] == 1:
+            nextChance = ptr
+        else:
+            ptr += 1
+
+    #print("The next scenario where Wraith can drop No Encounters: ", nextChance)
+    #if nextChance != 1:
+        #print("Please advance RNG10 that many times.")
+    #else:
+        #print("Now lined up to drop NE armor, assuming an armor drops.")
+    return int(nextChance)
+
+def advanceRNG13():
+    global baseValue
+    key = baseValue + 0xD35F0C
+    process.write(key, rng13Array()[4])
+    #print("Value advanced.")
+
+def s32(integer: int) -> int:
+    return ((integer & 0xffffffff) ^ 0x80000000) - 0x80000000
+
+def rollNextRNG(lastRNG:int, index:int) -> int:
+    """Returns a generator object that yields rng values
+    for a given rng index.
+    """
+    rng_value = s32(lastRNG)
+    rng_constant_1 = RNG_CONSTANTS_1[index]
+    rng_constant_2 = RNG_CONSTANTS_2[index]
+
+    new_value = s32(rng_value * rng_constant_1 ^ rng_constant_2)
+    new_value = s32((new_value >> 0x10) + (new_value << 0x10))
+    return new_value
+
+def printManipInfo():
+    print("--------------------------")
+    print("The next state for drops:")
+    print("RNG13 manip: ", nextChanceRNG13() - 1)
+    print("RNG12 manip: ", nextChanceRNG12(), " | supercedes RNG13 above")
+    print("RNG10 manip: ", nextChanceRNG10(), " | literal next")
+    print("RNG10 manip: ", nextChanceRNG10Calm(), " | perfect world next (accounts for Defender X)")
+    print("--------------------------")
+    print("Best case state: 0/1, 0, ?, 0")
+    print("Acceptable state: 0/1, 0, ?, not-0")
+    print("--------------------------")

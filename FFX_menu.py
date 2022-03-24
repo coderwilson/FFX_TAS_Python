@@ -725,6 +725,74 @@ def equipSonicSteel(fullMenuClose=True):
 def equipScout(fullMenuClose=True):
     return equipWeapon(character=4, ability=0x8022, fullMenuClose=fullMenuClose)
 
+def equipArmor(*, character, ability=None, fullMenuClose=True):
+    print("Equipping Armor with ability ", ability)
+    FFX_memory.awaitControl()
+    gameVars = FFX_vars.varsHandle()
+    
+    armorHandles = FFX_memory.armorArrayCharacter(character)
+    print("@@@@@")
+    print(len(armorHandles))
+    print("@@@@@")
+    armorNum = 255
+    
+    abilityarray = []
+    if not ability:
+        abilityarray = []
+    elif isinstance(ability, int):
+        abilityarray = [ability]
+    elif isinstance(ability, list):
+        abilityarray = ability
+    
+    for index, currentArmor in enumerate(armorHandles):
+        if not abilityarray and currentArmor.abilities() == [255,255,255,255]:
+            armorNum = index
+            break
+        elif all(currentArmor.hasAbility(cur_ability) for cur_ability in abilityarray):
+            armorNum = index
+            break
+    print("Armor is in slot ", armorNum)
+    if armorNum == 255:
+        if fullMenuClose:
+            FFX_memory.closeMenu()
+        else:
+            FFX_memory.backToMainMenu()
+        return False #Item is no in inventory.
+    
+    if FFX_memory.menuNumber() != 26:
+        if not FFX_memory.menuOpen():
+            FFX_memory.openMenu()
+        while FFX_memory.getMenuCursorPos() != 4:
+            FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 4, 11)
+        while FFX_memory.menuNumber() == 5:
+            FFX_Xbox.tapB()
+                
+        target_pos = FFX_memory.getCharacterIndexInMainMenu(character)
+        while FFX_memory.getCharCursorPos() != target_pos:
+            FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, len(FFX_memory.getOrderSeven()))
+        FFX_memory.waitFrames(1)
+        FFX_Xbox.tapB()
+        FFX_memory.waitFrames(18)
+        FFX_Xbox.tapDown()
+        while FFX_memory.menuNumber() != 26:
+            FFX_Xbox.tapB()
+    while not FFX_memory.equipMenuOpenFromChar():
+        FFX_Xbox.tapB()
+    
+    while FFX_memory.equipWeapCursor() != armorNum:
+        if FFX_memory.equipWeapCursor() < armorNum:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    while FFX_memory.equipMenuOpenFromChar():
+        FFX_Xbox.tapB()
+    
+    if fullMenuClose:
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.backToMainMenu()
+
+    return True
 
 def viaPurifico():
     openGrid(character=2) #Auron

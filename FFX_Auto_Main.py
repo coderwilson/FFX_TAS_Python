@@ -45,9 +45,9 @@ import FFX_Sin
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-Gamestate = "Luca"
+#Gamestate = "Luca"
 #StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -72,10 +72,11 @@ StepCounter = 3
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
-#StepCounter = 1 #Blitz Win, no end game version selected
-#StepCounter = 2 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
-#StepCounter = 5 #After Flux/Dream. Can select version 3 or 4 below.
+Gamestate = "Gagazet"
+StepCounter = 1 #Blitz Win, no end game version selected
+#StepCounter = 2 #NE armor testing
+#StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
+#StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
@@ -84,8 +85,8 @@ StepCounter = 3
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 
 ####################################################################################################
@@ -108,7 +109,7 @@ elif Gamestate != "none":
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 131 #Manually choose seed here.
+    #rngSeedNum = 24 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -152,7 +153,6 @@ reportGamestate()
 
 print("Game start screen")
 FFX_Screen.clearMouse(0)
-
 
 FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
@@ -247,12 +247,14 @@ if Gamestate != "none" :
         FFX_LoadGame.loadSaveNum(43)
         FFX_LoadGame.loadCalm()
         gameVars.setBlitzWin(True)
-    if Gamestate == "Gagazet" and StepCounter == 2: # Gagazet gates, after B&Y
+    if Gamestate == "Gagazet" and StepCounter == 2: # NE armor save
+        FFX_LoadGame.loadSaveNum(57)
+    if Gamestate == "Gagazet" and StepCounter == 3: # Gagazet gates, after B&Y
         #FFX_LoadGame.loadSaveNum(138) #Blitz Win
         FFX_LoadGame.loadSaveNum(53) #Blitz Loss
         gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadGagaGates()
-    if Gamestate == "Gagazet" and StepCounter == 5: # After the dream
+    if Gamestate == "Gagazet" and StepCounter == 6: # After the dream
         #FFX_LoadGame.loadSaveNum(47)
         #gameVars.endGameVersionSet(4)
         FFX_LoadGame.loadSaveNum(52)
@@ -769,25 +771,37 @@ while Gamestate != "End":
         reportGamestate()
         FFX_Gagazet.calmLands()
         FFX_Gagazet.defenderX()
-        FFX_Gagazet.toTheRonso()
         StepCounter = 2
-
+        
     if Gamestate == "Gagazet" and StepCounter == 2:
         reportGamestate()
-        FFX_Gagazet.gagazetGates()
+        if gameVars.tryForNE():
+            import FFX_neArmor
+            print("Mark 1")
+            FFX_neArmor.toHiddenCave()
+            print("Mark 2")
+            FFX_neArmor.dropHunt()
+            print("Mark 3")
+            FFX_neArmor.returnToGagazet()
         StepCounter = 3
-        
+
     if Gamestate == "Gagazet" and StepCounter == 3:
         reportGamestate()
-        FFX_Gagazet.Flux()
+        FFX_Gagazet.toTheRonso()
+        FFX_Gagazet.gagazetGates()
         StepCounter = 4
         
     if Gamestate == "Gagazet" and StepCounter == 4:
         reportGamestate()
-        FFX_Gagazet.dream()
+        FFX_Gagazet.Flux()
         StepCounter = 5
-
+        
     if Gamestate == "Gagazet" and StepCounter == 5:
+        reportGamestate()
+        FFX_Gagazet.dream()
+        StepCounter = 6
+
+    if Gamestate == "Gagazet" and StepCounter == 6:
         reportGamestate()
         FFX_Gagazet.cave()
         FFX_Gagazet.wrapUp()

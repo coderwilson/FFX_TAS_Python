@@ -484,6 +484,7 @@ def evraeAltana():
                     FFXC.set_movement(0, 1)
         elif FFX_Screen.BattleScreen():
             FFX_Battle.evraeAltana()
+            FFX_memory.printManipInfo()
         elif FFX_Screen.BattleComplete():
             FFX_Xbox.menuB()
         else:
