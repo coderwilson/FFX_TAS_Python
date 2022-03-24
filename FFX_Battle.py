@@ -3444,7 +3444,7 @@ def seymourNatus_neTesting():
     FFX_Logs.writeLog("Fight start: Highbridge")
     fight = 0
     turn = 0
-    rng12Manip = FFX_memory.nextChanceRNG12(beforeNatus:bool=True)
+    rng12Manip = FFX_memory.nextChanceRNG12(beforeNatus=True)
     rng10Next = FFX_memory.nextChanceRNG10(30)
     while FFX_memory.battleActive():
         if FFX_memory.getBattleNum() == 272:  # Seymour Natus

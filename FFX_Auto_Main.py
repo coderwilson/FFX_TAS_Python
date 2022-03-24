@@ -85,8 +85,8 @@ StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 
 ####################################################################################################
@@ -109,7 +109,7 @@ elif Gamestate != "none":
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    #rngSeedNum = 24 #Manually choose seed here.
+    rngSeedNum = 46 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False

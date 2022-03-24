@@ -110,7 +110,7 @@ def calmLands():
                     else:
                         print("--Perfectly set up and good to go.")
                         FFX_Battle.fleeAll()
-                        FFX_memory.setEncounterRate(0) #Testing only
+                        #FFX_memory.setEncounterRate(0) #Testing only
                 FFX_memory.clickToControl3()
                 if checkGems() < 2:
                     FFX_memory.fullPartyFormat('yuna',fullMenuClose=False)

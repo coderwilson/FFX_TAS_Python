@@ -2637,6 +2637,7 @@ def hunterSpear():
 def armorArrayCharacter(charNum):
     equipHandles = allEquipment()
     firstEquipment = True
+    charWeaps = []
     while len(equipHandles) > 0:
         #print(len(equipHandles))
         currentHandle = equipHandles.pop(0)
@@ -2647,7 +2648,10 @@ def armorArrayCharacter(charNum):
                 firstEquipment = False
             else:
                 charWeaps.append(currentHandle)
-    return charWeaps
+    try:
+        return charWeaps
+    except:
+        return []
 
 def equipWeapCursor():
     global baseValue

@@ -41,7 +41,7 @@ def toHiddenCave():
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
-    FFX_memory.setEncounterRate(1) #Testing only
+    #FFX_memory.setEncounterRate(1) #Testing only
     FFX_memory.fullPartyFormat('Kimahri')
     FFX_memory.printManipInfo()
     checkpoint = 0
