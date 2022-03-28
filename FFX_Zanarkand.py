@@ -19,7 +19,7 @@ def arrival():
     if FFX_memory.overdriveState2()[6] != 100:
         FFX_memory.fullPartyFormat('rikku')
         if gameVars.neArmor() != 255:
-            FFX_menu.equipArmor(character=gameVars.neArmor(),ability=255)
+            FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
             reEquipNE = True
     else:
         FFX_memory.fullPartyFormat('kimahri')
@@ -66,11 +66,10 @@ def arrival():
 
             if FFX_Screen.BattleScreen():
                 FFX_Battle.chargeRikkuOD()
-                if reEquipNE:
+                if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False
                     FFX_memory.clickToControl()
-                    if FFX_memory.overdriveState2()[6] == 100 and gameVars.neArmor() != 255:
-                        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
+                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():

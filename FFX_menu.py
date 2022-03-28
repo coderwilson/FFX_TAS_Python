@@ -734,7 +734,9 @@ def equipArmor(*, character, ability=255, fullMenuClose=True):
     print("@@@@@")
     print(len(armorHandles))
     print("@@@@@")
-    if len(armorHandles) != 0:
+    if ability == 99:
+        armorNum = len(armorHandles)
+    elif len(armorHandles) != 0:
         armorNum = 255
         
         abilityarray = []

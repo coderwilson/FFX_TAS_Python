@@ -108,7 +108,7 @@ def returnToGagazet():
     if FFX_memory.getCoords()[0] > 300:
         goGreen = True
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
-        if FFX_memory.overdriveState2()[6] == 100:
+        if FFX_memory.overdriveState2()[6] != 100:
             unequip = True
     else:
         goGreen = False
@@ -128,7 +128,7 @@ def returnToGagazet():
             elif checkpoint < 1 and FFX_memory.getMap() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
-                FFX_menu.equipArmor(character=gameVars.neArmor(),ability=255)
+                FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
                 unequip = False
             elif checkpoint == 2:
                 FFX_memory.touchSaveSphere()
