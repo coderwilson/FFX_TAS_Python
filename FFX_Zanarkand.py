@@ -15,8 +15,12 @@ FFXC = FFX_Xbox.controllerHandle()
 def arrival():
     FFX_memory.awaitControl()
     #Starts from the map just after the fireplace chat.
-    if FFX_memory.overdriveState()[6] != 100:
+    reEquipNE = False
+    if FFX_memory.overdriveState2()[6] != 100:
         FFX_memory.fullPartyFormat('rikku')
+        if gameVars.neArmor() != 255:
+            FFX_menu.equipArmor(character=gameVars.neArmor(),ability=255)
+            reEquipNE = True
     else:
         FFX_memory.fullPartyFormat('kimahri')
     
@@ -59,8 +63,14 @@ def arrival():
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
+
             if FFX_Screen.BattleScreen():
                 FFX_Battle.chargeRikkuOD()
+                if reEquipNE:
+                    reEquipNE = False
+                    FFX_memory.clickToControl()
+                    if FFX_memory.overdriveState2()[6] == 100 and gameVars.neArmor() != 255:
+                        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():

@@ -219,7 +219,7 @@ def remedy(character: int, direction: str):
 def revive(itemNum = 6):
     print("Using Phoenix Down")
     if FFX_memory.getThrowItemsSlot(itemNum) > 250:
-        fleeAll()
+        attack('none')
         return
     while not FFX_memory.mainBattleMenu():
         pass
@@ -465,13 +465,19 @@ def Tros():
 
 def pirhanas():
     battleNum = FFX_memory.getBattleNum()
+    print("#########Seed: ", FFX_memory.rngSeed())
     #11 = two pirhanas
     #12 = three pirhanas with one being a triple formation (takes two hits)
     #13 = four pirhanas
-    if battleNum == 11 or (battleNum == 12 and FFX_memory.battleType() == 1):
-        attack('none')
-    else:
-        escapeAll()
+    
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            if FFX_memory.rngSeed() == 105:
+                attack('none')
+            elif battleNum == 11 or (battleNum == 12 and FFX_memory.battleType() == 1):
+                attack('none')
+            else:
+                escapeAll()
     FFX_memory.clickToControl()
 
 def besaid():
@@ -785,7 +791,7 @@ def KilikaWoods(valeforCharge):
                         else:
                             fleeAll()
                     elif FFX_Screen.turnWakka():
-                        attack('right')
+                        attackByNum(21,'r')
                     else:
                         defend()
                 elif bNum == 33:
@@ -795,7 +801,7 @@ def KilikaWoods(valeforCharge):
                         else:
                             fleeAll()
                     elif FFX_Screen.turnWakka():
-                        attack('right')
+                        attackByNum(21,'r')
                     else:
                         defend()
                 elif bNum == 34:
@@ -805,7 +811,7 @@ def KilikaWoods(valeforCharge):
                         else:
                             fleeAll()
                     elif FFX_Screen.turnWakka():
-                        attack('right')
+                        attackByNum(22,'r')
                     else:
                         defend()
                 elif bNum == 35 or bNum == 36:
@@ -1156,10 +1162,12 @@ def chocoEater():
             if FFX_Screen.faintCheck() > 1: #Only if two people are down, very rare but for safety.
                 print("Attempting revive")
                 revive()
+            elif FFX_memory.getNextTurn() >= 20 and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(2)] == 0:
+                print("Special defend to avoid soft lock")
+                waitFrames(60)
+                defend()
             else:
                 print("Attempting defend")
-                if FFX_memory.getNextTurn() > 10:
-                    FFX_memory.waitFrames(20) #Avoids a soft-lock, boss starts twerking.
                 defend()
         elif FFX_memory.diagSkipPossible():
             print("Skipping dialog")
@@ -2943,6 +2951,47 @@ def updateStealItemsDesert():
     
     return itemArray
 
+def sandyManip() -> bool:
+    if gameVars.getBlitzWin():
+        blitzBuffer = 35
+    else:
+        blitzBuffer = 36
+    whiteVals = FFX_memory.nextChanceRNG01()
+    greenVals = FFX_memory.nextChanceRNG01(version='green')
+    
+    whiteOdd = whiteVals[0]
+    whiteEven = whiteVals[1]
+    greenOdd = greenVals[0]
+    greenEven = greenVals[1]
+    
+    x = 0
+    while x < len(whiteOdd):
+        if whiteOdd[x] < blitzBuffer:
+            whiteOdd.remove(whiteOdd[x])
+        else:
+            x+= 1
+    x = 0
+    while x < len(whiteEven):
+        if whiteEven[x] < blitzBuffer:
+            whiteEven.remove(whiteEven[x])
+        else:
+            x+= 1
+    x = 0
+    blitzBuffer += 2
+    while x < len(greenOdd):
+        if greenOdd[x] < blitzBuffer:
+            greenOdd.remove(greenOdd[x])
+        else:
+            x+= 1
+    x = 0
+    while x < len(greenEven):
+        if greenEven[x] < blitzBuffer:
+            greenEven.remove(greenEven[x])
+        else:
+            x+= 1
+    #If the lowest Even value is less than the lowest Odd value, worth switching.
+    return min(greenEven[0], whiteEven[0]) < min(greenOdd[0], whiteOdd[0])
+
 def sandragora(version):
     FFX_Screen.awaitTurn()
     if version == 1: #Kimahri's turn
@@ -2955,6 +3004,18 @@ def sandragora(version):
         kimahriOD(3)
         FFX_memory.clickToControl()
     else: #Auron's turn
+        #Manip for NE armor
+        if sandyManip():
+            print("Swapping odd/even seeds on RNG01")
+            fleeAll()
+            FFX_memory.clickToControl()
+            FFXC.set_movement(0, 1)
+            FFX_memory.awaitEvent()
+            FFXC.set_neutral()
+            FFX_Screen.awaitTurn()
+        else:
+            print("DO NOT Swap odd/even seeds on RNG01")
+    
         tidusHaste('d',character=2)
         FFX_Screen.awaitTurn()
         if FFX_Screen.turnKimahri() or FFX_Screen.turnRikku():
@@ -3001,17 +3062,14 @@ def home2():
             else:
                 defend()
     print("Home 2 shows as fight complete.")
+    FFXC.set_neutral()
     FFX_memory.clickToControl()
 
 def home3():
     FFX_Logs.writeLog("Fight start: Home 3")
+    #equipBrotherhood = False
     FFX_Xbox.clickToBattle()
     if FFX_memory.getUseItemsSlot(49) > 200:
-        if not FFX_Screen.turnTidus():
-            while not FFX_Screen.turnTidus():
-                defend()
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.clickToBattle()
         tidusHaste('none')
     else:
         while not FFX_Screen.turnRikku():
@@ -3023,21 +3081,32 @@ def home3():
     rikkuItemThrown = 0
     while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
+            print("---------Turn:")
             if FFX_Screen.turnTidus():
+                print("---------Tidus")
                 if FFX_memory.getUseItemsSlot(49) != 255:
                     defend()
+                #elif not equipBrotherhood:
+                    #equipInBattle(special = 'brotherhood')
+                    #equipBrotherhood = True
                 else:
                     attack('none')
-            elif FFX_Screen.turnRikku() and rikkuItemThrown < 2:
+            elif FFX_Screen.turnRikku() and rikkuItemThrown < 1 and home3item() != 255:
+                print("---------Rikku")
                 useItemSlot = home3item()
                 useItem(useItemSlot, 'none')
                 rikkuItemThrown += 1
             elif FFX_Screen.faintCheck() > 0:
+                print("---------any, revive")
                 revive()
             else:
+                print("---------any, defend")
                 defend()
+    FFXC.set_neutral()
     print("Home 3 shows as fight complete.")
-    #FFX_memory.clickToControl()
+    #if equipBrotherhood:
+        #FFX_memory.clickToControl()
+        #FFX_menu.equipSonicSteel(fullMenuClose=True)
 
 def home3item():
     throwSlot = FFX_memory.getUseItemsSlot(49) #Petrify Grenade
@@ -3046,12 +3115,10 @@ def home3item():
     throwSlot = FFX_memory.getUseItemsSlot(40) #Smoke Bomb
     if throwSlot != 255:
         return throwSlot
-    throwSlot = FFX_memory.getUseItemsSlot(39) #Silence Grenade
+    throwSlot = FFX_memory.getUseItemsSlot(39) #Silence - for the Guado-face.
     if throwSlot != 255:
         return throwSlot
-    throwSlot = FFX_memory.getUseItemsSlot(37) #Sleeping Powder
-    if throwSlot != 255:
-        return throwSlot
+    return 255
 
 def home4():
     FFX_Logs.writeLog("Fight start: Home 4")
@@ -3330,7 +3397,7 @@ def isaaru():
                     else:
                         aeonSummon(4)
                 else:
-                    FFX_Xbox.SkipDialog(3)
+                    attack('none')
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFXC.set_value('BtnB', 1)
@@ -3725,6 +3792,15 @@ def sKeeper():
                     defend()
     FFX_memory.clickToControl()
 
+def caveChargeRikku():
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnRikku():
+                attack('none')
+            else:
+                escapeOne()
+    FFX_memory.clickToControl()
+
 def gagazetCave(direction):
     FFX_Screen.awaitTurn()
     attack(direction)
@@ -3995,7 +4071,7 @@ def attack(direction):
         while not FFX_memory.turnReady():
             pass
     while FFX_memory.mainBattleMenu():
-        if not FFX_memory.battleMenuCursor() in [0, 203, 216]:
+        if not FFX_memory.battleMenuCursor() in [0, 203, 210, 216]:
             print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
             FFX_Xbox.tapUp()
         elif FFX_Screen.BattleComplete():
@@ -4018,7 +4094,7 @@ def attack(direction):
     if direction == "down":
         FFX_Xbox.tapDown()
     tapTargeting()
-
+    FFX_Xbox.tapB()
 
 def _steal(direction=None):
     if not FFX_memory.mainBattleMenu():
@@ -5250,7 +5326,7 @@ def ghostKill():
     if FFX_memory.battleActive():
         while FFX_memory.battleActive():
             if FFX_memory.turnReady():
-                if FFX_memory.getBattleNum() == 319:
+                if FFX_memory.getBattleNum() in [319,323]:
                     if FFX_Screen.turnYuna():
                         aeonSummon(4)
                     elif FFX_Screen.turnAeon():

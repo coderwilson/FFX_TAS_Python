@@ -169,7 +169,6 @@ def findSummoners():
     FFX_menu.homeGrid()
     
     checkpoint = 0
-    dhBattleCount = 0
     while FFX_memory.getMap() != 261:
         if FFX_memory.userControl():
             #events
@@ -188,24 +187,24 @@ def findSummoners():
                 FFXC.set_movement(0, 1)
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuLeft()
-                FFX_Xbox.menuB()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuRight()
-                FFX_Xbox.menuRight()
-                FFX_Xbox.menuRight()
-                FFX_Xbox.menuRight()
-                FFX_Xbox.menuB()
+                FFX_memory.waitFrames(15)
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(15)
+                FFX_Xbox.tapLeft()
+                FFX_Xbox.tapLeft()
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(15)
+                FFX_Xbox.tapLeft()
+                FFX_Xbox.tapLeft()
+                FFX_Xbox.tapLeft()
+                FFX_Xbox.tapLeft()
+                FFX_Xbox.tapB()
+                FFX_memory.waitFrames(15)
+                FFX_Xbox.tapRight()
+                FFX_Xbox.tapRight()
+                FFX_Xbox.tapRight()
+                FFX_Xbox.tapRight()
+                FFX_Xbox.tapB()
                 FFX_memory.clickToControl()
                 FFXC.set_movement(1, -1)
                 FFX_memory.awaitEvent()
@@ -242,11 +241,10 @@ def findSummoners():
                     print("Home, battle 1")
                     FFX_Battle.home1()
                 elif FFX_memory.getBattleNum() == 419:
-                    dhBattleCount += 1
-                    if dhBattleCount == 1:
+                    if FFX_memory.getMap() == 280:
                         print("Home, battle 2")
                         FFX_Battle.home2()
-                        FFX_memory.fullPartyFormat('desert3')
+                        FFX_memory.fullPartyFormat('desert1')
                     else:
                         print("Home, bonus battle for Blitz loss")
                         FFX_Battle.home3()
@@ -255,6 +253,7 @@ def findSummoners():
                     FFX_Battle.home4()
                     FFX_memory.fullPartyFormat('evrae')
                 else:
+                    print("Flee from battle: ", FFX_memory.getBattleNum())
                     FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()

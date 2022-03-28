@@ -3167,6 +3167,50 @@ RNG_CONSTANTS_2 = (
     49208, 41671, 36458,
 )
 
+def rng01():
+    global baseValue
+    return process.read(baseValue + 0xD35EDC)
+
+def rng01Array():
+    retVal = [rng01()] #First value is the current value
+    for x in range(600): #Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x],1))
+    return retVal
+
+def nextChanceRNG01(version='white'):
+    testArray = rng01Array()
+    evenArray = []
+    oddArray = []
+    rangeVal = int((len(testArray)-1)/2) - 2
+    test1 = False
+    if version == 'white':
+        modulo = 13
+        battleIndex = 8
+    else:
+        modulo = 10
+        battleIndex = 0
+    #print("TEST-TEST-TEST: ", (testArray[((i+1)*2)+1] & 0x7fffffff) % 7)
+    for i in range(rangeVal):
+        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
+        if (testArray[((i+1)*2)-1] & 0x7fffffff) % modulo == battleIndex:
+            oddArray.append(i)
+        if (testArray[(i+1)*2] & 0x7fffffff) % modulo == battleIndex:
+            evenArray.append(i)
+        
+    print("--------------------------------")
+    print("Next event will appear on the odd array without manip. Area: ", version)
+    print("oddArray: ", oddArray)
+    print("evenArray: ", evenArray)
+    print("--------------------------------")
+    return([oddArray, evenArray])
+
+def advanceRNG01():
+    global baseValue
+    key = baseValue + 0xD35EDC
+    process.write(key, rng01Array()[2])
+    #print("Value advanced.")
+
 def rng10():
     global baseValue
     return process.read(baseValue + 0xD35F00)
@@ -3295,7 +3339,7 @@ def rng13Array():
     #print(retVal)
     return retVal
 
-def nextDropRNG13(aSlots:int, beforeNatus:bool) -> int:
+def nextDropRNG13(aSlots:int, beforeNatus:bool=False) -> int:
     nextChance = 256
     outcomes = [4,1,1,1,2,2,3,3]
     filledSlots = [9] * aSlots

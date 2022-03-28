@@ -36,10 +36,12 @@ def faintCheck():
         return 0
     if charHP[0] == 0:
         faints += 1
-    if charHP[1] == 0 and partySize >= 2:
-        faints += 1
-    if charHP[2] == 0 and partySize >= 3 and FFX_memory.getBattleNum() != 145:
-        faints += 1
+    if len(FFX_memory.getBattleFormation()) >= 1:
+        if charHP[1] == 0 and partySize >= 2:
+            faints += 1
+    if len(FFX_memory.getBattleFormation()) >= 1:
+        if charHP[2] == 0 and partySize >= 3 and FFX_memory.getBattleNum() != 145:
+            faints += 1
     if faints > 0:
         FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))
     return faints

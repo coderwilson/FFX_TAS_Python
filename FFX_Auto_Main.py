@@ -41,8 +41,8 @@ import FFX_Sin
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-#Gamestate = "Besaid"
-#StepCounter = 3
+Gamestate = "Besaid"
+StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -72,8 +72,8 @@ import FFX_Sin
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
 #StepCounter = 5
-Gamestate = "Gagazet"
-StepCounter = 1 #Blitz Win, no end game version selected
+#Gamestate = "Gagazet"
+#StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
 #StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
@@ -95,7 +95,9 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 247 #New seed number, only used if doing seed hunt.
-rngSelectArray = [4,16,17,18,24,31,41,44,46,52,88,96,101,105,131,138,140,157,161,172,182,197,200,221,224,232,254]
+rngSelectArray = [17,24,41,46,88,140,157,161,172,182,197,200,221,224,232,254]
+goodSeeds = [31]
+secondLook = [18,44,52,96,105,138]
 ####################################################################################################
 
 if Gamestate == "Luca" and StepCounter == 3:
@@ -109,7 +111,7 @@ elif Gamestate != "none":
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 46 #Manually choose seed here.
+    rngSeedNum = 157 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -233,7 +235,7 @@ if Gamestate != "none" :
         FFX_LoadGame.loadSaveNum(41)
         FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Home" and StepCounter == 1:
-        FFX_LoadGame.loadOffset(16)
+        FFX_LoadGame.loadSaveNum(60)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadSaveNum(11)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, first movement.
@@ -719,7 +721,7 @@ while Gamestate != "End":
         FFX_mTemple.underLake()
         StepCounter = 1
         Gamestate = "Home"
-        #Gamestate = "manualBreak" # Used for testing only.
+        #Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Home" and StepCounter == 1:
         reportGamestate()
@@ -873,31 +875,32 @@ endTime = FFX_Logs.timeStamp()
 FFX_Logs.writeStats("End time:")
 FFX_Logs.writeStats(str(endTime))
 
-totalTime = endTime - startTime
-FFX_Logs.writeStats("Total time:")
-FFX_Logs.writeStats(str(totalTime))
-print("The game duration was: ", str(totalTime))
-print("This duration is intended for comparison reference only, not as a true timer.")
-print("Please do not use this as your submitted time.")
-FFX_memory.waitFrames(30)
-print("--------")
-print("In order to conform with speed run standards,")
-FFX_memory.waitFrames(60)
-print("we now wait until the end of the credits and stuff")
-FFX_memory.waitFrames(60)
-print("and then will open up the list of saves.")
-FFX_memory.waitFrames(60)
-print("This will show the autosave values, which conforms to the speed run rules.")
+if FFX_memory.getStoryProgress() > 3210:
+    totalTime = endTime - startTime
+    FFX_Logs.writeStats("Total time:")
+    FFX_Logs.writeStats(str(totalTime))
+    print("The game duration was: ", str(totalTime))
+    print("This duration is intended for comparison reference only, not as a true timer.")
+    print("Please do not use this as your submitted time.")
+    FFX_memory.waitFrames(30)
+    print("--------")
+    print("In order to conform with speed run standards,")
+    FFX_memory.waitFrames(60)
+    print("we now wait until the end of the credits and stuff")
+    FFX_memory.waitFrames(60)
+    print("and then will open up the list of saves.")
+    FFX_memory.waitFrames(60)
+    print("This will show the autosave values, which conforms to the speed run rules.")
 
 
-while FFX_memory.getMap() != 23:
-    if FFX_memory.getMap() == 292:
-        FFX_Xbox.tapStart()
-    elif FFX_memory.cutsceneSkipPossible():
-        FFX_Xbox.skipScene()
-FFX_memory.waitFrames(180)
-while not FFX_memory.saveMenuOpen():
-    FFX_Xbox.tapB()
+    while FFX_memory.getMap() != 23:
+        if FFX_memory.getMap() == 292:
+            FFX_Xbox.tapStart()
+        elif FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.skipScene()
+    FFX_memory.waitFrames(180)
+    while not FFX_memory.saveMenuOpen():
+        FFX_Xbox.tapB()
 
 FFX_memory.end()
 

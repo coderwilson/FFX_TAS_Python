@@ -154,7 +154,7 @@ def tidusShotTiming() -> int:
     baseTiming = int(169)
     for x in range(5):
         if distance(0,x+6) < 180:
-            baseTiming = int(baseTiming - 4)
+            baseTiming = int(baseTiming - 3)
     return baseTiming
 
 def gameStage():
@@ -166,9 +166,9 @@ def gameStage():
     #Stage 5: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 0, 4, 141, 155, tidusShotTiming()]
+        stages = [0, 0, 4, 143, 155, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
-        stages = [0, 0, 0, 254, 275, 286]
+        stages = [0, 0, 0, 254, 277, 289]
     else: #Used for any non-story blitzing.
         stages = [0, 0, 0, 0, 0, 270]
     
@@ -741,9 +741,8 @@ def jassuMove():
     if currentStage == 20:
         findSafePlace()
         if distance(0,8) > 400 and distance(0,10) > 400:
-            FFX_Xbox.tapX()
-        else:
-            findSafePlace()
+            if graavC[1] - tidusC[1] > 300:
+                FFX_Xbox.tapX()
     elif currentStage == 30:
         #if reportState:
         #    print("All aboard!!!")
@@ -767,10 +766,6 @@ def jassuMove():
         else:
             workingForward() #Move forward to staging position, prep for shot.
             moveForward = True
-        if playerArray[8].getCoords()[0] < -300:
-            FFX_Xbox.tapX()
-        elif distance(3,10) < 310:
-            FFX_Xbox.tapX()
     elif currentStage == 3:
         relDist = (tidusC[0] + tidusC[1]) - (p10C[0] + p10C[1])
         relDist2 = (tidusC[0] + tidusC[1]) - (graavC[0] + graavC[1])
@@ -838,15 +833,7 @@ def jassuAct():
     elif playerArray[3].currentHP() < 10:
         passBall(target = 0)
     elif currentStage == 2:
-        if playerArray[8].getCoords()[0] < -300:
-            if not playerGuarded(2):
-                passBall(target=2)
-            else:
-                passBall(target=0)
-        elif distance(3,10) < 310:
-            passBall(target=0)
-        else:
-            dribbleBall()
+        dribbleBall()
     elif currentStage == 3:
         p10C = playerArray[10].getCoords()
         tidusC = playerArray[0].getCoords()

@@ -725,7 +725,7 @@ def equipSonicSteel(fullMenuClose=True):
 def equipScout(fullMenuClose=True):
     return equipWeapon(character=4, ability=0x8022, fullMenuClose=fullMenuClose)
 
-def equipArmor(*, character, ability=None, fullMenuClose=True):
+def equipArmor(*, character, ability=255, fullMenuClose=True):
     print("Equipping Armor with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
@@ -734,31 +734,29 @@ def equipArmor(*, character, ability=None, fullMenuClose=True):
     print("@@@@@")
     print(len(armorHandles))
     print("@@@@@")
-    armorNum = 255
-    
-    abilityarray = []
-    if not ability:
+    if len(armorHandles) != 0:
+        armorNum = 255
+        
         abilityarray = []
-    elif isinstance(ability, int):
-        abilityarray = [ability]
-    elif isinstance(ability, list):
-        abilityarray = ability
+        if not ability:
+            abilityarray = []
+        elif isinstance(ability, int):
+            abilityarray = [ability]
+        elif isinstance(ability, list):
+            abilityarray = ability
+        for index, currentArmor in enumerate(armorHandles):
+            if not abilityarray and currentArmor.abilities() == [255,255,255,255]:
+                armorNum = index
+                break
+            elif all(currentArmor.hasAbility(cur_ability) for cur_ability in abilityarray):
+                armorNum = index
+                break
+        if armorNum == 255:
+            armorNum = len(armorHandles) + 1
+    else:
+        armorNum = 0
     
-    for index, currentArmor in enumerate(armorHandles):
-        if not abilityarray and currentArmor.abilities() == [255,255,255,255]:
-            armorNum = index
-            break
-        elif all(currentArmor.hasAbility(cur_ability) for cur_ability in abilityarray):
-            armorNum = index
-            break
     print("Armor is in slot ", armorNum)
-    if armorNum == 255:
-        if fullMenuClose:
-            FFX_memory.closeMenu()
-        else:
-            FFX_memory.backToMainMenu()
-        return False #Item is no in inventory.
-    
     if FFX_memory.menuNumber() != 26:
         if not FFX_memory.menuOpen():
             FFX_memory.openMenu()
@@ -785,7 +783,11 @@ def equipArmor(*, character, ability=None, fullMenuClose=True):
         else:
             FFX_Xbox.tapUp()
     while FFX_memory.equipMenuOpenFromChar():
-        FFX_Xbox.tapB()
+        if FFX_memory.assignAbilityToEquipCursor() == 1:
+            FFX_Xbox.tapUp()
+        else:
+            FFX_Xbox.tapB()
+        FFX_memory.waitFrames(2)
     
     if fullMenuClose:
         FFX_memory.closeMenu()

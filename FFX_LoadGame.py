@@ -437,15 +437,12 @@ def loadMacTemple():
     FFXC.set_neutral()
     
 def loadMacTemple2():
-    loadOffset(42)
     FFX_memory.awaitControl()
-    FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_movement(-1,-1)
     FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(30 * 1.5)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_neutral()
 
 def loadWendigo():
     import FFX_Battle

@@ -1461,21 +1461,21 @@ def Kilika3(checkpoint):
     if checkpoint == 28:
         x = -244
         y = -25
-    if checkpoint == 29: #Exit woods
+    if checkpoint == 29:
         x = -240
         y = -39
     if checkpoint == 30:
         x = -242
         y = -54
-    if checkpoint == 31:
+    if checkpoint == 31: #Before crossing log, between two trees.
         x = -241
         y = -80
-    if checkpoint == 32:
-        x = -241
+    if checkpoint == 32: #Right before stepping on the log
+        x = -246
         y = -122
     if checkpoint == 33:
-        x = -242
-        y = -135
+        x = -241
+        y = -144
     if checkpoint == 34:
         x = -244
         y = -204
@@ -4237,24 +4237,24 @@ def mTempleTrials(checkpoint):
     if checkpoint == 17:
         print("Place first Mac Sphere")
     if checkpoint == 18:
-        x = 12
-        y = 2
+        x = 41
+        y = 44
     if checkpoint == 19:
-        x = 0
-        y = 3
+        x = 42
+        y = 49
     if checkpoint == 20:
-        print("Pick up Glyph sphere")
+        print("Push pedestol")
     if checkpoint == 21:
         x = 12
         y = 2
     if checkpoint == 22:
-        x = 41
-        y = 44
+        x = 0
+        y = 3
     if checkpoint == 23:
-        x = 41
-        y = 47
+        print("Pick up Glyph sphere")
     if checkpoint == 24:
-        print("Push pedestol")
+        x = -8
+        y = 4
     if checkpoint == 25: #Spot next to the ramp-sphere
         x = -77
         y = 54
@@ -5502,7 +5502,7 @@ def neApproach(checkpoint):
         y = 10
     return [x,y]
 
-def neForceEncounters(checkpoint):
+def neForceEncountersWhite(checkpoint):
     x = 0
     y = 999
     if checkpoint % 2 == 0:
@@ -5510,6 +5510,215 @@ def neForceEncounters(checkpoint):
     if checkpoint % 2 == 1:
         y = 20
     return [x,y]
+
+def neForceEncountersGreen(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 0
+        y = 70
+    if checkpoint == 1:
+        x = 0
+        y = 170
+    if checkpoint == 2:
+        x = 0
+        y = 170
+    if checkpoint == 3:
+        x = 0
+        y = 170
+    if checkpoint == 4:
+        x = 13
+        y = 186
+    if checkpoint == 5:
+        x = 67
+        y = 251
+    if checkpoint == 6:
+        x = 95
+        y = 271
+    if checkpoint == 7:
+        x = 153
+        y = 287
+    if checkpoint == 8:
+        x = 298
+        y = 283
+    if checkpoint == 9:
+        x = 353
+        y = 307
+    if checkpoint == 10:
+        x = 389
+        y = 335
+    if checkpoint == 11:
+        x = 416
+        y = 382
+    if checkpoint == 12:
+        x = 430
+        y = 438
+    if checkpoint == 13: #Light area 1
+        x = 431
+        y = 484
+    if checkpoint == 14: #Light area 2
+        x = 458
+        y = 505
+    return [x,y]
+
+def neReturnGreen(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 428
+        y = 452
+    if checkpoint == 1:
+        x = 421
+        y = 405
+    if checkpoint == 2:
+        x = 411
+        y = 370
+    if checkpoint == 3:
+        x = 384
+        y = 327
+    if checkpoint == 4:
+        x = 341
+        y = 300
+    if checkpoint == 5:
+        x = 297
+        y = 285
+    if checkpoint == 6:
+        x = 208
+        y = 281
+    if checkpoint == 7:
+        x = 114
+        y = 278
+    if checkpoint == 8:
+        x = 73
+        y = 261
+    if checkpoint == 9:
+        x = 6
+        y = 177
+    if checkpoint == 10:
+        x = 0
+        y = 0
+    if checkpoint == 11:
+        x = 0
+        y = 0
+    if checkpoint == 12:
+        x = 0
+        y = 0
+    if checkpoint == 13:
+        x = 0
+        y = 0
+    if checkpoint == 14:
+        x = 0
+        y = 0
+    if checkpoint == 15:
+        x = 0
+        y = 0
+    if checkpoint == 16:
+        x = 0
+        y = 0
+    if checkpoint == 17:
+        x = 0
+        y = 0
+    if checkpoint == 18:
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
+    if checkpoint == 25:
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x,y]
+
 
 def neReturn(checkpoint):
     x = 999

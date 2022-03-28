@@ -193,7 +193,7 @@ def gagazetGates():
             FFXC.set_neutral()
             if FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-            elif FFX_memory.turnReady():
+            elif FFX_memory.battleActive():
                 #Charge Rikku until full, otherwise flee all
                 if FFX_memory.overdriveState()[6] == 100:
                     FFX_Battle.fleeAll()
@@ -206,6 +206,9 @@ def gagazetGates():
                         #FFX_memory.setEncounterRate(0)
                     else:
                         FFX_memory.fullPartyFormat('rikku')
+                FFX_memory.clickToControl()
+                if FFX_memory.overdriveState2()[6] == 100 and gameVars.neArmor() != 255:
+                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("Should now be on the map with Seymour Flux.")
@@ -435,7 +438,7 @@ def cave():
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
                 checkpoint += 1
-            elif FFX_memory.turnReady():
+            elif FFX_memory.battleActive():
                 if FFX_memory.getPower() < powerNeeded:
                     if FFX_memory.getBattleNum() == 351: #Two maelstroms and a splasher
                         FFX_Battle.gagazetCave('down')
@@ -443,6 +446,11 @@ def cave():
                         FFX_Battle.gagazetCave('right')
                     elif FFX_memory.getBattleNum() == 354: #Four groups of splashers
                         FFX_Battle.gagazetCave('none')
+                    elif FFX_memory.overdriveState2()[6] != 100:
+                        if FFX_memory.getBattleNum() in [351,352,353,354]:
+                            FFX_Battle.caveChargeRikku()
+                        else:
+                            FFX_Battle.fleeAll()
                     else:
                         FFX_Battle.fleeAll()
                 else:

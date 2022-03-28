@@ -62,7 +62,8 @@ def Beach():
             if FFX_Screen.BattleScreen():
                 FFX_Battle.pirhanas()
                 besaidBattles += 1
-                if FFX_memory.getBattleNum() == 11:
+                battleNum = FFX_memory.getBattleNum()
+                if battleNum == 11 or (battleNum == 12 and FFX_memory.battleType() == 1):
                     goodBattles += 1
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
