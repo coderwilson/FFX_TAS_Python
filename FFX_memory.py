@@ -1767,14 +1767,14 @@ def getActorAngle(actorNumber):
         pass
 
 def miihenGuyCoords():
-    print("+++Searching for Mi'ihen Spear guy")
+    #print("+++Searching for Mi'ihen Spear guy")
     spearGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        print("Actor ", x, ": ", hex(actorNum))
+        #print("Actor ", x, ": ", hex(actorNum))
         if actorNum == 0x202D:
             spearGuy = x
-    print("+++Spear guy in position: ", spearGuy)
+    #print("+++Spear guy in position: ", spearGuy)
     return getActorCoords(spearGuy)
 
 def mrrGuyCoords():
@@ -3189,6 +3189,31 @@ RNG_CONSTANTS_2 = (
     59827, 49457, 22922, 24212, 62787, 56241, 55318, 9625, 57622, 7580, 56469,
     49208, 41671, 36458,
 )
+
+def buildRNGarray(index:int, arraySize:int=255):
+    global baseValue
+    offset = baseValue + 0xD35ED8 + (index * 4)
+    arrayVal = [process.read(offset)]
+    for x in range(arraySize):
+        arrayVal.append(rollNextRNG(arrayVal[x],index))
+    return arrayVal
+
+def nextCrit(character:int, charLuck:int, enemyLuck:int) -> int:
+    #Returns the next time the character will critically strike.
+    #If 255 is returned, there will not be a next crit in the foreseeable future.
+    rngIndex = min(20+character, 27)
+    rngArray = buildRNGarray(index=rngIndex)
+    x = 2 #1 for first roll, 2 for second roll. Damage rolled before crit.
+    nextCritCount = 0
+    while x < len(rngArray) - 1:
+        crit_roll = rngArray[x] % 101
+        crit_chance = charLuck - enemyLuck
+        if crit_roll < crit_chance:
+            return nextCritCount
+        else:
+            nextCritCount += 1
+            x += 2
+    return 255
 
 def rng01():
     global baseValue

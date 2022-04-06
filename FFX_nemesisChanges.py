@@ -524,8 +524,8 @@ def arenaPurchase():
     FFX_Xbox.tapB()
     FFX_memory.clickToDiagProgress(73)
     FFX_memory.waitFrames(15)
+    FFX_Xbox.tapUp()
     FFX_Xbox.tapB() #Let's see your weapons
-    FFX_memory.waitFrames(60)
     FFX_menu.arenaPurchase1()
     #Sell all undesirable equipment
     #Purchase the following weapons:

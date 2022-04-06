@@ -159,6 +159,10 @@ def arrival():
                     battleCount += 1
                     FFX_Battle.MiihenRoad()
                     print("Battle complete")
+                
+                #Kimahri manip
+                print("||| Next Kimahri Crit vs Gui: ", FFX_memory.nextCrit(character=6, charLuck=18, enemyLuck=15))
+                FFX_memory.waitFrames(180)
             else:
                 FFXC.set_movement(1, 1)
                 if FFX_memory.menuOpen():

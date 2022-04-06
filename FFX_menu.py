@@ -1526,12 +1526,12 @@ def openGrid(character):
 #------------------------------------------------------------
 # Nemesis menus
 def arenaPurchase1():
-    FFX_Xbox.tapRight()
-    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(60)
-    all_equipment = FFX_memory.allEquipment() 
-    other_slots = [i for i, handle in enumerate(all_equipment) if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
-    for cur in other_slots:
-        sellWeapon(cur)
+    #FFX_Xbox.tapRight()
+    #FFX_Xbox.tapB()
+    #FFX_memory.waitFrames(60)
+    #all_equipment = FFX_memory.allEquipment() 
+    #other_slots = [i for i, handle in enumerate(all_equipment) if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
+    #for cur in other_slots:
+    #    sellWeapon(cur)
     #buyWeapon(2, equip=True)    
     FFX_memory.closeMenu()
