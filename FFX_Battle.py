@@ -1549,7 +1549,7 @@ def battleGui():
     tidusTurn = False
     kimTurn = False
     aeonTurn = False
-    
+    kimahriCrit = False
     while aeonTurn == False:
         if FFX_memory.turnReady():
             if FFX_Screen.turnYuna():
@@ -1565,7 +1565,10 @@ def battleGui():
                 else:
                     buddySwapKimahri()
             elif FFX_Screen.turnKimahri():
+                hp = FFX_memory.getBattleHP()[0]
                 kimahriOD(2)
+                if FFX_memory.getBattleHP()[0] == hp - 7464:
+                    kimahriCrit = True
             elif FFX_Screen.turnTidus():
                 if tidusTurn == False:
                     defend()
@@ -1588,14 +1591,18 @@ def battleGui():
     turn1 = False
     nextTurn = 20
     lastTurn = 20
+    went = False
     while FFX_memory.battleActive():
         if FFX_memory.turnReady() and FFX_memory.getBattleCharTurn() == 8:
             nextHP = FFX_memory.getBattleHP()[0]
             lastTurn = nextTurn
             nextTurn = FFX_memory.getNextTurn()
-            if FFX_memory.getOverdriveBattle(8) == 20:
+            if went and kimahriCrit:
+                aeonSpell(1)
+            elif FFX_memory.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
                 valeforOD()
+                went = True
             elif turn1 == False:
                 turn1 = True
                 print("------Recharge unsuccessful. Attempting recovery.")                
@@ -1631,12 +1638,33 @@ def battleGui():
     #Second Gui battle
     FFX_Screen.awaitTurn()
     turn = 1
-    while FFX_memory.battleActive():
-        if FFX_memory.turnReady():
-            if FFX_Screen.turnSeymour():
-                seymourSpell()
+    if kimahriCrit or FFX_memory.getOverdriveBattle(8) == 20 or FFX_memory.getOverdriveBattle(1) == 100:
+        seymourTurn = 0
+        while FFX_memory.battleActive():
+            if FFX_Screen.turnSeymour and seymourTurn < 2:
+                seymourSpell(head=False)
+                seymourTurn += 1
+            elif FFX_Screen.turnYuna and seymourTurn >= 2:
+                if FFX_memory.getOverdriveBattle(1) == 100:
+                    while not FFX_memory.otherBattleMenu():
+                        FFX_Xbox.tapLeft()
+                    while not FFX_memory.interiorBattleMenu():
+                        FFX_Xbox.tapB()
+                    while FFX_memory.interiorBattleMenu():
+                        FFX_Xbox.tapB()
+                else:
+                    aeonSummon(0)
+            elif FFX_Screen.turnAeon():
+                valeforOD()
             else:
                 defend()
+    else:
+        while FFX_memory.battleActive():
+            if FFX_memory.turnReady():
+                if FFX_Screen.turnSeymour():
+                    seymourSpell()
+                else:
+                    defend()
     
     while not FFX_memory.userControl():
         if FFX_memory.cutsceneSkipPossible():
@@ -4016,7 +4044,7 @@ def cheer():
     tapTargeting()
 
 
-def seymourSpell():
+def seymourSpell(head=True):
     print("Seymour casting tier 2 spell")
     num = 21 #Should be the enemy number for the head
     if not FFX_memory.turnReady():
@@ -4036,7 +4064,7 @@ def seymourSpell():
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     
-    if FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
+    if head and FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
         while FFX_memory.battleTargetId() != num:
             FFX_Xbox.tapLeft()
             
