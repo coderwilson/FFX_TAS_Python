@@ -9,38 +9,47 @@ class allVars:
         #of the values below.
         #------------------------------------------------------------------
         
-        self.csrValue = True #Default to True
-        self.tryNEVal = True
-        self.blitzWinValue = False #No default value required
+        #----Most important values to review
+        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
+        self.csrValue = False #Set based on if cutscene remover is working.
+        self.nemesisValue = True #Set based on if you're doing any% (False) or Nemesis% (True)
+        
+        
+        #----Blitzball
+        self.blitzWinValue = True #No default value required
         self.blitzOvertime = False #Set to False, no need to change ever.
         self.blitzFirstShotVal = False
-        self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         
+        #----Sphere grid
+        self.fullKilikMenu = False #Default to False
         self.earlyTidusGridVal = False #Default False
         self.earlyHasteVal = -1 #Default -1
         self.wakkaLateMenuVal = False #Default False
         self.endGameVersionVal = 0 #Default 0
         
+        #----Equipment
         self.zombieWeaponVal = 255 #Default 255
         self.lStrikeCount = 0 #Default 0
-        self.fullKilikMenu = False #Default to False
         
+        #----Other
         self.selfDestruct = False #Default False
-        
         self.YTKFarm = 0 #Default to 0
         self.rescueCount = 0 #Default to 0
         self.fluxOverkillVar = False #Default to False
-        
+        self.tryNEVal = True #Based on 
         self.firstHits = [0] * 8
-        
         self.neArmorVal = 255 #Default 255
         self.neBattles = 0 #Default to 0
         
+        #----Path for save files, used for loading a specific save
         #coderwilson automation PC
         self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         #coderwilson main PC
         #self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
     
+    
+    def nemesis(self):
+        return self.nemesisValue
     
     def neExtraBattles(self):
         return self.neBattles

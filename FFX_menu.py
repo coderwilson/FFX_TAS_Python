@@ -554,6 +554,18 @@ def macTemple():
         FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
+    if gameVars.nemesis():
+        gridUp()
+        gridLeft()
+        gridUp()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('strength','u','none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndMove()
+        gridDown()
+        gridRight()
+        gridDown()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed','d','none')
     FFX_menuGrid.useAndUseAgain()
@@ -561,9 +573,23 @@ def macTemple():
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndMove()
+    if gameVars.nemesis():
+        gridRight()
+        gridDown()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('strength','u','none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndMove()
+        gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','u','none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('strength','u','none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -578,13 +604,23 @@ def afterSeymour():
     FFX_menuGrid.selSphere('power', 'd', 'none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power', 'u', 'none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('mp', 'u', 'none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('mana', 'u', 'none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed', 'd', 'none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('mp', 'u', 'none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('mana', 'u', 'none')
     FFX_menuGrid.useAndQuit()
-    equipSonicSteel(fullMenuClose=False)
+    FFX_memory.closeMenu()
 
 def homeGrid():
     openGrid(character=0)
@@ -964,6 +1000,7 @@ def prepCalmLands():
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndQuit()
+    FFX_memory.closeMenu()
 
 def afterRonso():
     if gameVars.endGameVersion() != 3:
@@ -1307,7 +1344,6 @@ def BFA():
     
     if gameVars.endGameVersion() == 3:
         FFX_menuGrid.useAndMove()
-        #time.sleep(60) #Two minute buffer to figure out what we're doing.
         gridRight() #Not sure exactly
         gridRight()
         gridRight()
@@ -1487,3 +1523,15 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
 
+#------------------------------------------------------------
+# Nemesis menus
+def arenaPurchase1():
+    FFX_Xbox.tapRight()
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(60)
+    all_equipment = FFX_memory.allEquipment() 
+    other_slots = [i for i, handle in enumerate(all_equipment) if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
+    for cur in other_slots:
+        sellWeapon(cur)
+    #buyWeapon(2, equip=True)    
+    FFX_memory.closeMenu()

@@ -249,8 +249,14 @@ def trials():
 def escape():
     FFX_memory.clickToControl()
     print("First, some menuing")
-    FFX_menu.afterSeymour()
-    FFX_memory.fullPartyFormat('macalaniaescape')
+    menuDone = False
+    if gameVars.nemesis():
+        FFX_memory.fullPartyFormat('yuna',fullMenuClose=False)
+    else:
+        FFX_menu.afterSeymour()
+        menuDone = True
+        FFX_memory.fullPartyFormat('macalaniaescape',fullMenuClose=False)
+    FFX_menu.equipSonicSteel(fullMenuClose=True)
     
     print("Now to escape the Guado")
     
@@ -276,7 +282,12 @@ def escape():
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Screen.awaitTurn()
-                if FFX_memory.getBattleNum() == 195:
+                if not menuDone:
+                    FFX_Battle.escapeWithXP()
+                    FFX_menu.afterSeymour()
+                    menuDone = True
+                    FFX_memory.fullPartyFormat('macalaniaescape')
+                elif FFX_memory.getBattleNum() == 195:
                     break
                 else:
                     FFX_Battle.fleeAll()

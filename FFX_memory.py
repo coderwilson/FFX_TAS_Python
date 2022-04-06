@@ -1719,8 +1719,8 @@ def nameFromNumber(charNum):
         return "Lulu"
     if charNum == 6:
         return "Rikku"
-      
-      
+
+
 def getActorArraySize():
     global baseValue
     return process.read(baseValue + 0x01fc44e0)
@@ -1752,7 +1752,19 @@ def getActorCoords(actorNumber):
 
         return retVal
     except:
-        doNothing = True
+        pass
+
+def getActorAngle(actorNumber):
+    global process
+    global baseValue
+    try:
+        basePointer = baseValue + 0x01fc44e4
+        basePointerAddress = process.read(basePointer)
+        offset = (0x880 * actorNumber) + 0x158
+        retVal = float_from_integer(process.read(basePointerAddress + offset))
+        return retVal
+    except:
+        pass
 
 def miihenGuyCoords():
     print("+++Searching for Mi'ihen Spear guy")
@@ -1900,6 +1912,12 @@ def setEncounterRate(setVal):
     global baseValue
 
     key = baseValue + 0x008421C8
+    process.writeBytes(key, setVal, 1)
+
+def setGameSpeed(setVal):
+    global baseValue
+
+    key = baseValue + 0x008E82A4
     process.writeBytes(key, setVal, 1)
 
 def printRNG36():
@@ -2967,6 +2985,11 @@ def getSaveSphereDetails():
         x = -5
         y = -170
         diag = 26
+    if mapVal == 140:
+        #Thunder plains
+        x = -45
+        y = -870
+        diag = 77
     
     print("Values: [", x, ",", y, "] - ", diag)
     return [x,y,diag]

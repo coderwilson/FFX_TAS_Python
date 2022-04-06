@@ -153,7 +153,11 @@ def arrival():
                 if not gameVars.fluxOverkill():
                     FFX_Battle.farmDome()
                 else:
-                    FFX_Battle.chargeRikkuOD()                
+                    FFX_Battle.chargeRikkuOD()
+                if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
+                    reEquipNE = False
+                    FFX_memory.clickToControl()
+                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():

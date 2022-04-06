@@ -25,7 +25,7 @@ def arrival():
                 FFXC.set_movement(1, -1)
                 FFX_memory.clickToControl()
                 checkpoint += 1
-            elif checkpoint == 33: #Moonflow chest
+            elif checkpoint == 43: #Moonflow chest
                 print("Moonflow chest")
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
@@ -37,13 +37,13 @@ def arrival():
                 checkpoint = 11
             elif checkpoint < 14 and FFX_memory.getMap() == 75:
                 checkpoint = 14
-            elif checkpoint < 39 and FFX_memory.getMap() == 105:
-                checkpoint = 39
-            elif checkpoint < 44 and FFX_memory.getStoryProgress() == 1045:
-                checkpoint = 44
+            elif checkpoint < 49 and FFX_memory.getMap() == 105:
+                checkpoint = 49
+            elif checkpoint < 54 and FFX_memory.getStoryProgress() == 1045:
+                checkpoint = 54
                 print("Updating checkpoint based on story/map progress: ", checkpoint)
-            elif checkpoint == 44 and FFX_memory.getMap() == 188:
-                checkpoint = 45
+            elif checkpoint == 54 and FFX_memory.getMap() == 188:
+                checkpoint = 55
                 print("Updating checkpoint based on story/map progress: ", checkpoint)
                 
             #General pathing

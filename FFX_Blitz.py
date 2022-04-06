@@ -166,9 +166,9 @@ def gameStage():
     #Stage 5: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 0, 4, 143, 155, tidusShotTiming()]
+        stages = [0, 0, 4, 142, 156, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
-        stages = [0, 0, 0, 254, 277, 289]
+        stages = [0, 0, 40, 264, 278, 278]
     else: #Used for any non-story blitzing.
         stages = [0, 0, 0, 0, 0, 270]
     
@@ -450,7 +450,10 @@ def passBall(target=0, breakThrough = 5):
 
 def shootBall(breakThrough = 5):
     if FFX_memory.getStoryProgress() < 570 and controllingPlayer() == 0:
-        breakThrough = 0
+        if gameClock() > 167:
+            breakThrough = 5
+        else:
+            breakThrough = 0
     else:
         breakThrough = 5
     if selectShotType():
@@ -552,14 +555,17 @@ def tidusMove():
     elif currentStage in [0,1,2,5]:
         FFXC.set_movement(-1, -1)
         FFX_Xbox.tapX()
-    #elif graavDistance < 280:
-    #    #Graav too close.
-    #    FFXC.set_movement(-1, -1)
-    #    FFX_Xbox.tapX()
-    #elif otherDistance >= 2:
-    #    #Too many players closing in.
-    #    FFXC.set_movement(-1, -1)
-    #    FFX_Xbox.tapX()
+    elif currentStage == 4:
+        if graavDistance < 280:
+            #Graav too close.
+            FFXC.set_movement(-1, -1)
+            FFX_Xbox.tapX()
+        elif otherDistance >= 2:
+            #Too many players closing in.
+            FFXC.set_movement(-1, -1)
+            FFX_Xbox.tapX()
+        else:
+            FFX_blitzPathing.setMovement(shootTarget)
     else: #stages 3 and 4 only. All other stages we try to pass, or just shoot.
         FFX_blitzPathing.setMovement(shootTarget)
 
@@ -585,7 +591,7 @@ def tidusAct():
         gameVars.blitzFirstShotTaken()
     elif FFX_memory.getStoryProgress() > 700:
         shootBall(breakThrough = 0)
-    elif currentStage == 5:
+    elif currentStage in [4,5]:
         #Late on the timer. Shoot at all costs.
         if FFX_memory.getStoryProgress() < 540:
             print("First half, shooting without breakthrough.")
@@ -603,16 +609,16 @@ def tidusAct():
             gameVars.blitzFirstShotTaken()
         else:
             shootBall()
-    elif goalDistance < 400 and currentStage == 4:
-        #Close to goal. Shoot.
-        print("In position - shoot the ball!")
-        if graavDistance < 200:
-            shootBall(breakThrough = 0)
-        elif distance(0,10) < 200 and FFX_memory.getStoryProgress() < 540:
-            print("First half, shooting without breakthrough.")
-            shootBall(breakThrough = 0)
-        else:
-            shootBall(breakThrough = 0)
+    #elif goalDistance < 400 and currentStage == 4:
+    #    #Close to goal. Shoot.
+    #    print("In position - shoot the ball!")
+    #    if graavDistance < 200:
+    #        shootBall(breakThrough = 0)
+    #    elif distance(0,10) < 200 and FFX_memory.getStoryProgress() < 540:
+    #        print("First half, shooting without breakthrough.")
+    #        shootBall(breakThrough = 0)
+    #    else:
+    #        shootBall(breakThrough = 0)
     else:
         shootBall(breakThrough = 0)
 

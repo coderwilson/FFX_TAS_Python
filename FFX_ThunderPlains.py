@@ -22,6 +22,7 @@ def southPathing():
     FFX_memory.fullPartyFormat('postbunyip')
     FFX_memory.closeMenu()
     lStrikeCount = FFX_memory.lStrikeCount()
+    count50 = 0
     #if gameVars.getBlitzWin():
     #    status[4] = True
     checkpoint = 0
@@ -29,8 +30,34 @@ def southPathing():
         if FFX_memory.userControl():
             #Lightning dodging
             if FFX_memory.dodgeLightning(gameVars.getLStrike()):
-                print("Dodge")
+                #print("Dodge")
                 gameVars.setLStrike(FFX_memory.lStrikeCount())
+                if checkpoint == 34:
+                    count50 += 1
+                    print("Dodge: ", count50)
+            elif checkpoint == 2 and gameVars.nemesis():
+                checkpoint = 20
+            elif checkpoint == 21:
+                #FFX_memory.touchSaveSphere()
+                checkpoint += 1
+            elif checkpoint == 25:
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-175,-487])
+                    FFX_Xbox.tapX()
+                checkpoint += 1
+            elif checkpoint == 33:
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([205,160])
+                    FFX_Xbox.tapX()
+                checkpoint += 1
+                print("Now ready to dodge some lightning.")
+            elif checkpoint == 34:
+                if count50 == 50:
+                    checkpoint += 1
+                else: #Dodging fifty bolts.
+                    FFXC.set_neutral()
+            elif checkpoint == 39: #Back to the normal path
+                checkpoint = 10
             
             #General pathing
             elif FFX_memory.userControl():
@@ -41,7 +68,7 @@ def southPathing():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.menuB()
-            if FFX_Screen.BattleScreen():
+            elif FFX_Screen.BattleScreen():
                 FFX_Battle.thunderPlains(1)
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
@@ -145,6 +172,7 @@ def agency():
     checkpoint = 0
     
     while FFX_memory.getMap() != 162:
+        strCount = FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(87))
         if FFX_memory.userControl():
             if checkpoint == 1:
                 while not FFX_memory.diagSkipPossible():
@@ -175,6 +203,9 @@ def agency():
                     FFX_targetPathing.setMovement([3, -52])
                     FFX_Xbox.tapB()
                 checkpoint += 1
+            elif checkpoint == 9 and gameVars.nemesis() and strCount < 3:
+                FFX_targetPathing.setMovement([-73,45])
+                FFX_Xbox.tapB()
             elif checkpoint == 10:
                 FFXC.set_movement(0, 1)
                 FFX_memory.clickToEvent()

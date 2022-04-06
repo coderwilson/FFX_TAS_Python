@@ -33,10 +33,10 @@ def path():
             lastCP = checkpoint
         
         if FFX_memory.userControl():
-            if checkpoint in [35, 36] and stoneBreath == 1:
-                checkpoint = 37
-            elif checkpoint == 37 and stoneBreath == 0:
-                checkpoint = 35
+            if checkpoint in [45, 46] and stoneBreath == 1:
+                checkpoint = 47
+            elif checkpoint == 47 and stoneBreath == 0:
+                checkpoint = 45
             
             #This is for the attempted Djose skip. It is not viable. Feel free to re-try this.
             #elif checkpoint == 33:# and stoneBreath == 0: #Turn/talk
@@ -56,16 +56,16 @@ def path():
             
             else:
                 #Map changes
-                if FFX_memory.getMap() == 76 and checkpoint < 39:
-                    checkpoint = 40
-                if checkpoint in [39, 44, 46]:
+                if FFX_memory.getMap() == 76 and checkpoint < 49:
+                    checkpoint = 50
+                if checkpoint in [49, 54, 56]:
                     FFX_memory.clickToEventTemple(0)
                     checkpoint += 1
                 elif FFX_targetPathing.djosePath(checkpoint)[0] < FFX_memory.getActorCoords(0)[0] \
-                    and checkpoint < 36 and checkpoint > 18:
+                    and checkpoint < 46 and checkpoint > 18:
                     checkpoint += 1
                 elif FFX_targetPathing.djosePath(checkpoint)[1] < FFX_memory.getActorCoords(0)[1] \
-                    and checkpoint < 36 and checkpoint > 18:
+                    and checkpoint < 46 and checkpoint > 18:
                     checkpoint += 1
                 #General pathing
                 elif FFX_targetPathing.setMovement(FFX_targetPathing.djosePath(checkpoint)) == True:

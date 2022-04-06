@@ -67,57 +67,7 @@ def calmLands():
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                print("++Battle number: ", FFX_memory.getBattleNum())
-                rng10nextChanceLow = FFX_memory.nextChanceRNG10(12)
-                lowArray = [273,275,276,281,283,284]
-                rng10nextChanceMid = FFX_memory.nextChanceRNG10(60)
-                midArray = [277,279,285,287,289,290]
-                rng10nextChanceHigh = FFX_memory.nextChanceRNG10(128)
-                highArray = [278,286,288]
-                
-                if checkGems() < 2:
-                    print("++Calm Lands battle, looking for gems.")
-                    FFX_Battle.calmLands()
-                elif FFX_memory.nextChanceRNG12() != 0:
-                    print("Not ready for NE armor drop. Apply logic to try to drop something else.")
-                    #NE armor too far ahead. Need to drop armors.
-                    if rng10nextChanceLow == 0 and FFX_memory.getBattleNum() in lowArray:
-                        FFX_Battle.advanceRNG12()
-                    elif rng10nextChanceMid == 0 and FFX_memory.getBattleNum() in midArray:
-                        FFX_Battle.advanceRNG12()
-                    elif rng10nextChanceHigh == 0 and FFX_memory.getBattleNum() in highArray:
-                        FFX_Battle.advanceRNG12()
-                    else: #Cycle mid chance as needed.
-                        FFX_Battle.advanceRNG10(rng10nextChanceMid)
-                else:
-                    setupNext = FFX_memory.nextChanceRNG10Calm()
-                    if FFX_memory.getCoords()[0] > 1000:
-                        print("--Near Gagazet, just get off RNG10 equipment drop.")
-                        if FFX_memory.nextChanceRNG10() == 0:
-                            FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
-                            #Don't want to have Defender X drop an item
-                    elif setupNext!= 0:
-                        if setupNext < 25:
-                            print("++Still a ways. Try to set up for Defender X plus Wraith.")
-                            FFX_Battle.advanceRNG10(setupNext)
-                            #Try for perfect setup if it's not too far off.
-                        elif FFX_memory.nextChanceRNG10() == 0:
-                            print("++No perfect chance coming up. Going for regular chance.")
-                            FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
-                        else:
-                            print("--Next perfect value is too far away. Moving on.")
-                            FFX_Battle.fleeAll()
-                    else:
-                        print("--Perfectly set up and good to go.")
-                        FFX_Battle.fleeAll()
-                        #FFX_memory.setEncounterRate(0) #Testing only
-                FFX_memory.clickToControl3()
-                if checkGems() < 2:
-                    FFX_memory.fullPartyFormat('yuna',fullMenuClose=False)
-                else:
-                    FFX_memory.fullPartyFormat('kimahri',fullMenuClose=False)
-                FFX_Battle.healUp(fullMenuClose=True)
-                FFX_memory.printManipInfo()
+                FFX_Battle.calmLandsManip()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():

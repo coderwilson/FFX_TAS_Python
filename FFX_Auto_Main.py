@@ -35,14 +35,17 @@ import FFX_Gagazet
 import FFX_Zanarkand
 import FFX_Sin
 
+if gameVars.nemesis():
+    import FFX_nemesisChanges
+
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
 #These are the popular ones. New Game ('none') is the last one.
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 6
-Gamestate = "Besaid"
-StepCounter = 3
+#Gamestate = "Besaid"
+#StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
 #Gamestate = "Luca"
@@ -57,8 +60,8 @@ StepCounter = 3
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-#Gamestate = "Guadosalam"
-#StepCounter = 2
+Gamestate = "Guadosalam"
+StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -72,11 +75,13 @@ StepCounter = 3
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
 #StepCounter = 5
-#Gamestate = "Gagazet"
+Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
 #StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
+#StepCounter = 10 #Nemesis variant, blitz win logic
+StepCounter = 11 #Remiem racing
 #Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
@@ -85,8 +90,8 @@ StepCounter = 3
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 
 ####################################################################################################
@@ -94,24 +99,26 @@ StepCounter = 1
 
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
-rngSeedNum = 247 #New seed number, only used if doing seed hunt.
-rngSelectArray = [17,24,41,46,88,140,157,161,172,182,197,200,221,224,232,254]
-goodSeeds = [31]
-secondLook = [18,44,52,96,105,138]
+rngSeedNum = 255 #New seed number, only used if doing seed hunt.
+rngSelectArray = [31,41,157,182,224]
+goodSeeds = [31,41,157,182,224]
+#182, needs improved Spherimorph logic.
+#224 do not switch on Sandragora.
+secondLook = [18,24,44,52,96,105,138,200,232,254]
 ####################################################################################################
 
 if Gamestate == "Luca" and StepCounter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
 elif Gamestate != "none":
-    #rngSeedNum = 200 #Select a specific seed.
+    rngSeedNum = 255 #Select a specific seed.
     rngReviewOnly = False
     gameVars.SETcsr(True) #Manually choose CSR or non-CSR mode.
     gameLength = "Loading mid point for testing."
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 157 #Manually choose seed here.
+    rngSeedNum = 41 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -218,6 +225,7 @@ if Gamestate != "none" :
     if Gamestate == "Djose" and StepCounter == 1: # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadSaveNum(27)
         FFX_LoadGame.AfterGui()
+        #FFX_memory.setEncounterRate(0)
     if Gamestate == "Moonflow" and StepCounter == 2: #North bank, before Rikku
         FFX_LoadGame.loadSaveNum(2)
         FFX_LoadGame.moonflow2()
@@ -262,6 +270,18 @@ if Gamestate != "none" :
         FFX_LoadGame.loadSaveNum(52)
         gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadGagazetDream()
+    if Gamestate == "Gagazet" and StepCounter == 10: # Calm Lands, but Nemesis version
+        FFX_LoadGame.loadSaveNum(43)
+        FFX_LoadGame.loadCalm()
+    if Gamestate == "Gagazet" and StepCounter == 11: # Calm Lands, but Nemesis version
+        FFX_LoadGame.loadSaveNum(64)
+        FFXC.set_movement(1, 0)
+        FFX_memory.waitFrames(60)
+        FFXC.set_movement(0, 1)
+        FFX_memory.waitFrames(60)
+        FFXC.set_neutral()
+        import FFX_menu
+        FFX_menu.prepCalmLands()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
         FFX_LoadGame.loadOffset(19)
         FFX_LoadGame.zanEntrance()
@@ -764,10 +784,11 @@ while Gamestate != "End":
     if Gamestate == "rescueYuna" and StepCounter == 5:
         reportGamestate()
         FFX_rescueYuna.seymourNatus()
-        StepCounter = 1
         Gamestate = "Gagazet"
-        FFX_Logs.nextFile()
-        #Gamestate = "manualBreak" # Used for testing only.
+        if gameVars.nemesis():
+            StepCounter = 10
+        else:
+            StepCounter = 1
 
     if Gamestate == "Gagazet" and StepCounter == 1:
         reportGamestate()
@@ -859,6 +880,21 @@ while Gamestate != "End":
         FFX_Battle.BFA()
         FFX_Battle.yuYevon()
         Gamestate = "End"
+        
+    #Nemesis logic only:
+    if Gamestate == "Gagazet" and StepCounter == 10:
+        FFX_nemesisChanges.calmLands()
+        StepCounter += 1
+    
+    if Gamestate == "Gagazet" and StepCounter == 11:
+        FFX_nemesisChanges.remiemRaces()
+        StepCounter += 1
+        
+    if Gamestate == "Gagazet" and StepCounter == 12:
+        FFX_nemesisChanges.templeToArena()
+        FFX_nemesisChanges.arenaPurchase()
+        FFX_Gagazet.defenderX()
+        StepCounter = 2
 
 #print("Waiting for Yu Yevon to die.")
 #FFX_memory.waitFrames(30 * 6)

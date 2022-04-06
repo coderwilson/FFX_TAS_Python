@@ -38,7 +38,7 @@ def arrival(rikkucharged):
                     FFXC.set_movement(1, 1)
                     FFX_Xbox.tapB()
             elif checkpoint == 59:
-                if woodsVars[0] == False or woodsVars[1] == False or woodsVars[2] == False:
+                if woodsVars[0] == False or (woodsVars[1] == False and woodsVars[2] == False):
                     checkpoint = 57
                 else: #All good to proceed
                     checkpoint += 1

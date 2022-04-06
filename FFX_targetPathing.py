@@ -1199,9 +1199,9 @@ def Kilika2(checkpoint):
         y = -56
     if checkpoint == 97: #non-CSR, slight left
         x = -22
-        y = 4
+        y = 6
     if checkpoint == 98: #non-CSR, past Lulu
-        x = -22
+        x = -30
         y = 33
     if checkpoint == 99: #non-CSR, pray to O'holland
         print("non-CSR, pray to O'holland")
@@ -2415,11 +2415,11 @@ def battleSite(checkpoint):
         x = -71
         y = 3324
     if checkpoint == 10:
-        x = -31
-        y = 3300
+        x = -45
+        y = 3296
     if checkpoint == 11:
-        x = -3
-        y = 3303
+        x = -16
+        y = 3276
     if checkpoint == 12:
         print("Into the scene with Kinoc")
     if checkpoint == 13:
@@ -2481,138 +2481,168 @@ def djosePath(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = -209
-        y = -377
+        x = -237
+        y = -672
     if checkpoint == 1:
-        x = -190
-        y = -300
+        x = -191
+        y = -450
     if checkpoint == 2:
-        x = -155
-        y = -173
+        x = -152
+        y = -279
     if checkpoint == 3:
-        x = -155
-        y = -160
+        x = -126
+        y = -166
     if checkpoint == 4:
-        x = -123
-        y = -99
+        x = -126
+        y = -166
     if checkpoint == 5:
-        x = -117
-        y = -85
+        x = -126
+        y = -166
     if checkpoint == 6:
-        x = -110
-        y = -68
+        x = -126
+        y = -166
     if checkpoint == 7:
-        x = -95
-        y = -35
+        x = -126
+        y = -166
     if checkpoint == 8:
-        x = -92
-        y = -26
+        x = -126
+        y = -166
     if checkpoint == 9:
-        x = -82
-        y = 10
+        x = -126
+        y = -166
     if checkpoint == 10:
-        x = -80
-        y = 22
+        x = -126
+        y = -166
     if checkpoint == 11:
-        x = -75
-        y = 37
+        x = -126
+        y = -166
     if checkpoint == 12:
-        x = -64
-        y = 66
+        x = -126
+        y = -166
     if checkpoint == 13:
-        x = -59
-        y = 75
+        x = -126
+        y = -166
     if checkpoint == 14:
+        x = -60
+        y = 32
+    if checkpoint == 15:
+        x = -60
+        y = 32
+    if checkpoint == 16:
+        x = -60
+        y = 32
+    if checkpoint == 17:
+        x = -60
+        y = 32
+    if checkpoint == 18:
+        x = -60
+        y = 32
+    if checkpoint == 19:
+        x = -60
+        y = 32
+    if checkpoint == 20:
+        x = -60
+        y = 32
+    if checkpoint == 21:
+        x = -34
+        y = 92
+    if checkpoint == 22:
+        x = -34
+        y = 92
+    if checkpoint == 23:
+        x = -34
+        y = 92
+    if checkpoint == 24:
         x = -33
         y = 118
-    if checkpoint == 15:
+    if checkpoint == 25:
         x = 27
         y = 215
-    if checkpoint == 16:
+    if checkpoint == 26:
         x = 38
         y = 232
-    if checkpoint == 17:
+    if checkpoint == 27:
         x = 56
         y = 260
-    if checkpoint == 18:
+    if checkpoint == 28:
         x = 94
         y = 321
-    if checkpoint == 19:
+    if checkpoint == 29:
         x = 111
         y = 349
-    if checkpoint == 20:
+    if checkpoint == 30:
         x = 123
         y = 368
-    if checkpoint == 21:
+    if checkpoint == 31:
         x = 137
         y = 390
-    if checkpoint == 22:
+    if checkpoint == 32:
         x = 157
         y = 422
-    if checkpoint == 23:
+    if checkpoint == 33:
         x = 177
         y = 453
-    if checkpoint == 24:
+    if checkpoint == 34:
         x = 213
         y = 506
-    if checkpoint == 25:
+    if checkpoint == 35:
         x = 234
         y = 521
-    if checkpoint == 26:
+    if checkpoint == 36:
         x = 266
         y = 543
-    if checkpoint == 27:
+    if checkpoint == 37:
         x = 329
         y = 587
-    if checkpoint == 28:
+    if checkpoint == 38:
         x = 337
         y = 593
-    if checkpoint == 29:
+    if checkpoint == 39:
         x = 375
         y = 619
-    if checkpoint == 30:
+    if checkpoint == 40:
         x = 440
         y = 650
-    if checkpoint in [31,32,33]:
+    if checkpoint in [41,42,43]:
         x = 449
         y = 652
-    if checkpoint == 34:
+    if checkpoint == 44:
         x = 495
         y = 700
-    if checkpoint == 35: #Point of deferral 1
+    if checkpoint == 45: #Point of deferral 1
         x = 550
         y = 730
-    if checkpoint == 36: #Point of deferral 2
+    if checkpoint == 46: #Point of deferral 2
         x = 489
         y = 730
-    if checkpoint == 37: #Point of continuation
+    if checkpoint == 47: #Point of continuation
         x = 604
         y = 836
-    if checkpoint == 38:
+    if checkpoint == 48:
         x = 734
         y = 859
-    if checkpoint == 39: #Transition to next map
+    if checkpoint == 49: #Transition to next map
         x = 0
         y = 0
-    if checkpoint == 40:
+    if checkpoint == 50:
         x = 27
         y = -231
-    if checkpoint == 41:
+    if checkpoint == 51:
         x = 59
         y = -14
-    if checkpoint == 42:
+    if checkpoint == 52:
         x = 51
         y = 0
-    if checkpoint == 43:
+    if checkpoint == 53:
         x = 9
         y = 151
-    if checkpoint == 44: #Transition to temple map
+    if checkpoint == 54: #Transition to temple map
         x = 0
         y = 0
-    if checkpoint == 45:
+    if checkpoint == 55:
         x = -4
         y = -87
-    if checkpoint == 46: #Transition into temple
+    if checkpoint == 56: #Transition into temple
         x = 0
         y = 0
     return [x,y]
@@ -3132,98 +3162,128 @@ def moonflow(checkpoint):
         x = 567
         y = 1200
     if checkpoint == 14: #Start of the long Moonflow path/map
-        x = -1004
-        y = 1666
+        x = -988
+        y = 1678
     if checkpoint == 15:
-        x = -1093
-        y = 1529
+        x = -1072
+        y = 1557
     if checkpoint == 16:
-        x = -1166
-        y = 1363
+        x = -1112
+        y = 1484
     if checkpoint == 17:
-        x = -1218
-        y = 1204
+        x = -1159
+        y = 1369
     if checkpoint == 18:
-        x = -1272
-        y = 914
+        x = -1176
+        y = 1347
     if checkpoint == 19:
-        x = -1316
-        y = 787
+        x = -1230
+        y = 1140
     if checkpoint == 20:
-        x = -1364
-        y = 760
-    if checkpoint == 21:
-        x = -1535
-        y = 653
+        x = -1317
+        y = 783
+    if checkpoint == 21: #Ronso discussion
+        x = -1317
+        y = 783
     if checkpoint == 22:
-        x = -1577
-        y = 627
+        x = -1348
+        y = 758
     if checkpoint == 23:
-        x = -1659
-        y = 544
+        x = -1438
+        y = 717
     if checkpoint == 24:
-        x = -1713
-        y = 479
+        x = -1523
+        y = 661
     if checkpoint == 25:
-        x = -1817
-        y = 336
+        x = -1571
+        y = 624
     if checkpoint == 26:
-        x = -1839
-        y = 291
+        x = -1624
+        y = 573
     if checkpoint == 27:
-        x = -1869
-        y = 129
+        x = -1666
+        y = 538
     if checkpoint == 28:
-        x = -1876
-        y = -204
+        x = -1704
+        y = 484
     if checkpoint == 29:
-        x = -1901
-        y = -458
+        x = -1801
+        y = 365
     if checkpoint == 30:
-        x = -1895
-        y = -504
+        x = -1833
+        y = 317
     if checkpoint == 31:
-        x = -1862
-        y = -511
+        x = -1838
+        y = 299
     if checkpoint == 32:
-        x = -1810
-        y = -480
-    if checkpoint == 33: #Moonflow chest
-        print("Moonflow chest")
+        x = -1838
+        y = 299
+    if checkpoint == 33:
+        x = -1856
+        y = 214
     if checkpoint == 34:
+        x = -1864
+        y = 162
+    if checkpoint == 35:
+        x = -1866
+        y = 124
+    if checkpoint == 36:
+        x = -1872
+        y = -23
+    if checkpoint == 37:
+        x = -1880
+        y = -163
+    if checkpoint == 38:
+        x = -1901
+        y = -401
+    if checkpoint == 39:
+        x = -1898
+        y = -483
+    if checkpoint == 40:
+        x = -1893
+        y = -506
+    if checkpoint == 41:
+        x = -1855
+        y = -503
+    if checkpoint == 42:
+        x = -1812
+        y = -476
+    if checkpoint == 43: #Moonflow chest
+        print("Moonflow chest")
+    if checkpoint == 44:
         x = -1862
         y = -511
-    if checkpoint == 35:
+    if checkpoint == 45:
         x = -1901
         y = -513
-    if checkpoint == 36:
+    if checkpoint == 46:
         x = -1913
         y = -559
-    if checkpoint == 37:
+    if checkpoint == 47:
         x = -1968
         y = -650
-    if checkpoint == 38:
+    if checkpoint == 48:
         x = -1970
         y = -900
-    if checkpoint == 39: #Actual Moonflow map
+    if checkpoint == 49: #Actual Moonflow map
         x = -1190
         y = 193
-    if checkpoint == 40:
+    if checkpoint == 50:
         x = -1118 #Can be used for tuning later.
         y = -614
-    if checkpoint == 41:
+    if checkpoint == 51:
         x = -1118
         y = -614
-    if checkpoint == 42:
+    if checkpoint == 52:
         x = -1034
         y = -566
-    if checkpoint == 43: #Last before "Whoa a Shoopuff"
+    if checkpoint == 53: #Last before "Whoa a Shoopuff"
         x = -960
         y = -500
-    if checkpoint == 44:
+    if checkpoint == 54:
         x = -200
         y = -60
-    if checkpoint == 45:
+    if checkpoint == 55:
         x = -30
         y = 180
     return [x,y]
@@ -3590,6 +3650,63 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 13:
         x = 54
         y = 1200
+    if checkpoint == 20: #Nemesis route changes significantly.
+        x = -44
+        y = -887
+    if checkpoint == 21: #Touch save sphere
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = -57
+        y = -872
+    if checkpoint == 23:
+        x = -101
+        y = -739
+    if checkpoint == 24:
+        x = -170
+        y = -491
+    if checkpoint == 25: #Touch cactuar stone 1
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = -63
+        y = -361
+    if checkpoint == 27:
+        x = -20
+        y = -152
+    if checkpoint == 28:
+        x = 2
+        y = 9
+    if checkpoint == 29:
+        x = 63
+        y = 98
+    if checkpoint == 30:
+        x = 114
+        y = 193
+    if checkpoint == 31:
+        x = 185
+        y = 204
+    if checkpoint == 32:
+        x = 204
+        y = 166
+    if checkpoint == 33: #Touch cactuar stone 2
+        x = 0
+        y = 0
+    if checkpoint == 34: #Count 50 dodges
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 188
+        y = 187
+    if checkpoint == 36:
+        x = 116
+        y = 223
+    if checkpoint == 37:
+        x = 116
+        y = 339
+    if checkpoint == 38:
+        x = 58
+        y = 380
     return [x,y]
 
 def tPlainsAgency(checkpoint):
@@ -4795,6 +4912,24 @@ def desert(checkpoint):
     if checkpoint == 60:
         x = -300
         y = 1000
+    if checkpoint == 70: #Nemesis logic
+        x = -457
+        y = 521
+    if checkpoint == 71:
+        x = -446
+        y = 458
+    if checkpoint == 72: #Chest, lv.2 key sphere
+        x = 0
+        y = 0
+    if checkpoint == 73:
+        x = -474
+        y = 476
+    if checkpoint == 74: #Chest, 10k gil
+        x = 0
+        y = 0
+    if checkpoint == 75:
+        x = -481
+        y = 505
     return [x,y]
 
 def Home(checkpoint):
@@ -4951,6 +5086,18 @@ def Home(checkpoint):
         x = 0
         y = 0
     if checkpoint == 50:
+        x = 0
+        y = 0
+    if checkpoint == 60: #Nemesis, extra chest.
+        x = -343
+        y = 189
+    if checkpoint == 61:
+        x = -339
+        y = 169
+    if checkpoint == 62:
+        x = -311
+        y = 146
+    if checkpoint == 63: #Nemesis, extra chest.
         x = 0
         y = 0
     if checkpoint == 81:

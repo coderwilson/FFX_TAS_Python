@@ -59,10 +59,42 @@ def desert():
             if checkpoint == 9:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
+            elif checkpoint == 11 and len(FFX_memory.getOrderSeven()) > 4:
+                checkpoint += 1
             elif checkpoint < 39 and FFX_memory.getMap() == 137:
                 checkpoint = 39
             elif checkpoint < 50 and FFX_memory.getMap() == 138:
                 checkpoint = 50
+            
+            #Nemesis stuff
+            elif checkpoint == 47 and gameVars.nemesis():
+                checkpoint = 70
+            elif checkpoint == 72:
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(6)
+                FFXC.set_movement(-1,0)
+                FFX_memory.waitFrames(4)
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(6)
+                if FFX_memory.userControl():
+                    FFX_Xbox.tapB()
+                    FFX_memory.waitFrames(2)
+                    FFX_memory.clickToControl()
+                    checkpoint += 1
+            elif checkpoint == 74:
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(6)
+                FFXC.set_movement(-1,0)
+                FFX_memory.waitFrames(4)
+                FFXC.set_neutral()
+                FFX_memory.waitFrames(6)
+                if FFX_memory.userControl():
+                    FFX_Xbox.tapB()
+                    FFX_memory.waitFrames(2)
+                    FFX_memory.clickToControl()
+                    checkpoint += 1
+            elif checkpoint == 76:
+                checkpoint = 48
             
             #Other events
             elif checkpoint == 2 or checkpoint == 24: #Save sphere
@@ -181,6 +213,11 @@ def findSummoners():
                 checkpoint = 12
             elif checkpoint < 18 and FFX_memory.getMap() == 280:
                 checkpoint = 19
+            elif checkpoint == 34 and gameVars.nemesis():
+                checkpoint = 60
+            elif checkpoint == 63:
+                FFX_memory.clickToEventTemple(6)
+                checkpoint = 35
             elif checkpoint in [81,82,83] and FFX_memory.getMap() == 286: #Bonus room, blitzLoss only
                 checkpoint = 84
             elif checkpoint == 86:

@@ -22,8 +22,10 @@ def arrival():
     checkpoint = 0
     while FFX_memory.getMap() != 92:
         if FFX_memory.userControl():
-            if gameVars.csr() and checkpoint == 2:
+            if gameVars.csr() and checkpoint == 1:
+                print("CSR, skipping forward")
                 checkpoint = 4
+                print("Checkpoint reached: ", checkpoint)
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 FFX_memory.waitFrames(30 * 0.7)
@@ -193,16 +195,17 @@ def battleSite():
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 12:
-                FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 1)
+                FFXC.set_movement(1, 0)
+                FFX_memory.waitFrames(45)
                 checkpoint += 1
             elif checkpoint == 14:
                 FFXC.set_movement(1, 0)
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
+                FFX_memory.waitFrames(9)
                 FFX_Xbox.tapB() #Tell me when you're ready.
                 FFXC.set_neutral()
-                FFX_memory.waitFrames(60)
+                FFX_memory.waitFrames(15)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.tapB()
                 checkpoint = 100
