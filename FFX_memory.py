@@ -1700,6 +1700,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0, 5, 6]
     elif frontLine == 'tidkimwak':
         orderFinal = [0, 4, 3, 6, 1, 2, 5]
+    elif frontLine == 'nemlulu':
+        orderFinal = [0,1,5,2,3,4,6]
     else:
         orderFinal = [6,5,4,3,2,1,0]
     return orderFinal
@@ -2963,6 +2965,11 @@ def getSaveSphereDetails():
         x = 61
         y = 92
         diag = 25
+    if mapVal == 208:
+        #Highbridge before Natus
+        x = 33
+        y = 1251
+        diag = 124
     if mapVal == 194:
         #Airship while rescuing Yuna, cockpit
         x = -275
@@ -3466,3 +3473,37 @@ def printManipInfo():
     print("Best case state: 0/1, 0, ?, 0")
     print("Acceptable state: 0/1, 0, ?, not-0")
     print("--------------------------")
+
+def arenaArray():
+    global baseValue
+    retArray = []
+    for i in range(104):
+        key = baseValue + 0xD30C9C + i
+        retArray.append(process.readBytes(key,1))
+    #print("Arena array:")
+    #print(retArray)
+    return retArray
+
+def arenaFarmCheck(zone:str="besaid",endGoal:int=10,report=False):
+    complete = True
+    zone = zone.lower()
+    if zone == "besaid":
+        zoneIndexes = [8,15,27]
+    if zone == "tplains":
+        zoneIndexes = [6,24,35,52,64,76,89,87]
+    if zone == "calm":
+        zoneIndexes = [4,13,33,55,57,72,73,80]
+    
+    testArray = arenaArray()
+    resultArray = []
+    
+    for i in range(len(zoneIndexes)):
+        #print(testArray[zoneIndexes[i]])
+        resultArray.append(testArray[zoneIndexes[i]])
+        if testArray[zoneIndexes[i]] < endGoal:
+            complete = False
+    if report:
+        print("Number of captures in this zone: ")
+        print(resultArray)
+        print("End goal is ", endGoal, " minimum before leaving this zone for each index.")
+    return complete

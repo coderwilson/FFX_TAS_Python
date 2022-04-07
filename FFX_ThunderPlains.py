@@ -30,7 +30,6 @@ def southPathing():
         if FFX_memory.userControl():
             #Lightning dodging
             if FFX_memory.dodgeLightning(gameVars.getLStrike()):
-                #print("Dodge")
                 gameVars.setLStrike(FFX_memory.lStrikeCount())
                 if checkpoint == 34:
                     count50 += 1

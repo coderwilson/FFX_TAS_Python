@@ -502,15 +502,19 @@ def seymourNatus():
         FFX_menu.seymourNatusBlitzLoss()
     
     FFX_memory.fullPartyFormat('highbridge')
+    FFX_memory.touchSaveSphere()
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
-            FFX_targetPathing.setMovement(FFX_targetPathing.seymourNatus())
+            FFX_targetPathing.setMovement([2, FFX_memory.getCoords()[1] -80])
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 print("Battle Start")
-                complete = FFX_Battle.seymourNatus()
+                if FFX_memory.battleType() == 2:
+                    FFX_Battle.fleeAll()
+                else:
+                    complete = FFX_Battle.seymourNatus()
     
     #Movement for make-out scene
     FFX_memory.clickToControl()

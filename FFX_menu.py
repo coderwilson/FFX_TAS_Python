@@ -690,7 +690,7 @@ def sortItems(fullMenuClose=True):
     
         
 
-def equipWeapon(*, character, ability=None, fullMenuClose=True):
+def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
     print("Equipping Weapon with ability ", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
@@ -710,7 +710,11 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
         abilityarray = ability
     
     for index, currentWeapon in enumerate(weaponHandles):
-        if not abilityarray and currentWeapon.abilities() == [255,255,255,255]:
+        if special == 'brotherhood':
+            if currentWeapon.abilities() == [0x8063,0x8064,0x802A,0x8000]:
+                weaponNum = index
+                break
+        elif not abilityarray and currentWeapon.abilities() == [255,255,255,255]:
             weaponNum = index
             break
         elif all(currentWeapon.hasAbility(cur_ability) for cur_ability in abilityarray):
@@ -757,7 +761,7 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True):
 
 def equipSonicSteel(fullMenuClose=True):
     return equipWeapon(character=0, ability=32769, fullMenuClose=fullMenuClose)
-    
+
 def equipScout(fullMenuClose=True):
     return equipWeapon(character=4, ability=0x8022, fullMenuClose=fullMenuClose)
 
@@ -923,6 +927,12 @@ def seymourNatusBlitzWin():
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
+    if gameVars.nemesis():
+        gridLeft()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndMove()
+        gridUp()
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
@@ -933,9 +943,19 @@ def seymourNatusBlitzWin():
     FFX_menuGrid.selSphere('power','u','none')
     
     FFX_menuGrid.useAndMove()
+    if gameVars.nemesis():
+        gridRight()
+        gridDown()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndMove()
+        gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
@@ -943,6 +963,9 @@ def seymourNatusBlitzWin():
     gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('mana','d','none')
     FFX_menuGrid.useAndQuit()
 
 def seymourNatusBlitzLoss():
@@ -962,12 +985,21 @@ def seymourNatusBlitzLoss():
     FFX_menuGrid.selSphere('speed','u','none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('power','u','none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndMove()
+        gridUp()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('mana','d','none')
+        
     FFX_menuGrid.useAndMove()
     
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('mana','d','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
@@ -975,8 +1007,18 @@ def seymourNatusBlitzLoss():
     gridRight()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','none')
+    if gameVars.nemesis():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','d','none')
     FFX_menuGrid.useAndMove()
     gridRight()
+    if gameVars.nemesis():
+        gridRight()
+        gridDown()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.useAndMove()
+        gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power','d','left')
     FFX_menuGrid.useAndQuit()
@@ -987,12 +1029,24 @@ def prepCalmLands():
         FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()
+        if gameVars.nemesis():
+            FFX_menuGrid.moveAndUse()
+            FFX_menuGrid.selSphere('mana','d','none')
+            FFX_menuGrid.useAndMove()
         gridDown()
         gridDown()
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('power','d','none')
     else:
         FFX_menuGrid.moveFirst()
+        if gameVars.nemesis():
+            gridUp()
+            gridUp()
+            gridLeft()
+            FFX_menuGrid.moveAndUse()
+            FFX_menuGrid.selSphere('power','d','none')
+            FFX_menuGrid.useAndMove()
+            gridUp()
         gridRight()
         gridRight()
         FFX_menuGrid.moveAndUse()
@@ -1241,7 +1295,7 @@ def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotco
             
 def addFirstStrike(*, owner, equipment_type, ability_array=[], slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
     addAbility(owner=owner, equipment_type=equipment_type, ability_array=ability_array, ability_index=2, slotcount=slotcount, navigateToEquipMenu=navigateToEquipMenu, exitOutOfCurrentWeapon=exitOutOfCurrentWeapon, closeMenu=closeMenu, fullMenuClose=fullMenuClose)
-    
+
 
 def auronFirstStrike():
     print("Starting Auron")
@@ -1388,18 +1442,21 @@ def skReturn():
     FFX_menuGrid.selSphere('luck','d','none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('fortune','d','none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    if FFX_memory.getPower >= 1:
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','u','none')
+    if FFX_memory.getPower >= 1:
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
-    FFX_menuGrid.useAndUseAgain()
+    if FFX_memory.getPower >= 1:
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
@@ -1424,20 +1481,23 @@ def skMixed():
     gridDown()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
-    FFX_menuGrid.useAndUseAgain()
+    if FFX_memory.getPower >= 1:
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
-    FFX_menuGrid.useAndUseAgain()
+    if FFX_memory.getPower >= 1:
+        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
-    FFX_menuGrid.useAndMove()
-    gridDown()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    if FFX_memory.getPower >= 1:
+        FFX_menuGrid.useAndMove()
+        gridDown()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
 
 def skFriend():
@@ -1533,5 +1593,31 @@ def arenaPurchase1():
     #other_slots = [i for i, handle in enumerate(all_equipment) if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
     #for cur in other_slots:
     #    sellWeapon(cur)
-    #buyWeapon(2, equip=True)    
-    FFX_memory.closeMenu()
+    #buyWeapon(2, equip=True)
+    FFX_memory.waitFrames(60)
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapB() #Tidus catcher
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapUp()
+    FFX_Xbox.tapB() #Confirm
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapB() #Do not equip
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapDown()
+    FFX_Xbox.tapB() #Yuna catcher
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapUp()
+    FFX_Xbox.tapB() #Confirm
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapB() #Do not equip
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapA()
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapA()
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapUp()
+    FFX_Xbox.tapA()
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(60)

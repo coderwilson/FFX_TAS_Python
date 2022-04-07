@@ -77,15 +77,23 @@ def dropHunt():
             else:
                 if FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersWhite(checkpoint)) == True:
                     checkpoint += 1
+                    if checkpoint % 2 == 0 and not goGreen:
+                        checkpoint = 0
                     print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 if FFX_memory.nextChanceRNG12() == 0 and FFX_memory.nextChanceRNG10() == 0:
-                    FFX_Battle.ghostKill()
+                    if FFX_memory.getBattleNum() in [319,323]:
+                        FFX_Battle.ghostKill()
+                        FFX_memory.clickToControl3()
+                    else:
+                        FFX_Battle.fleeAll()
+                        FFX_memory.clickToControl3()
                     FFX_memory.checkNEArmor()
                 else:
                     FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
+                    FFX_memory.clickToControl3()
                 FFX_Battle.healUp(fullMenuClose=True)
                 if gameVars.neArmor() == 255:
                     FFX_memory.fullPartyFormat('Kimahri')
