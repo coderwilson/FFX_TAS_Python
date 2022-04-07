@@ -37,6 +37,7 @@ import FFX_Sin
 
 if gameVars.nemesis():
     import FFX_nemesisChanges
+    import FFX_nem_arenaPrep
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
@@ -60,8 +61,8 @@ if gameVars.nemesis():
 #StepCounter = 1
 #Gamestate = "Moonflow"
 #StepCounter = 2
-Gamestate = "Guadosalam"
-StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
 #Gamestate = "Macalania"
 #StepCounter = 1
 #StepCounter = 2
@@ -71,17 +72,17 @@ StepCounter = 2
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-#Gamestate = "rescueYuna"
+Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-#StepCounter = 5
-Gamestate = "Gagazet"
+StepCounter = 5
+#Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
 #StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #StepCounter = 10 #Nemesis variant, blitz win logic
-StepCounter = 11 #Remiem racing
+#StepCounter = 11 #Remiem racing
 #Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
@@ -91,6 +92,10 @@ StepCounter = 11 #Remiem racing
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
 #Gamestate = "none"
+#StepCounter = 1
+
+#Nemesis load testing
+#Gamestate = "Nem_Farm"
 #StepCounter = 1
 
 
@@ -252,7 +257,8 @@ if Gamestate != "none" :
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
         FFX_LoadGame.loadSaveNum(15)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
-        FFX_LoadGame.loadSaveNum(42)
+        #FFX_LoadGame.loadSaveNum(42) #Regular
+        FFX_LoadGame.loadSaveNum(67) #Nemesis
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
         FFX_LoadGame.loadSaveNum(43)
         FFX_LoadGame.loadCalm()
@@ -307,6 +313,13 @@ if Gamestate != "none" :
         FFX_LoadGame.loadSaveNum(51)
         gameVars.setZombie(5)
         FFX_LoadGame.loadEggHunt()
+    
+    #Nemesis run loads
+    if Gamestate == "Nem_Farm" and StepCounter == 1:
+        FFX_LoadGame.loadSaveNum(66)
+        #FFXC.set_movement(1,-1)
+        #FFX_memory.waitFrames(20)
+        #FFXC.set_neutral()
     
     #if FFX_memory.getStoryProgress() >= 80:
     #    if Gamestate == "Luca" and StepCounter == 5:
@@ -861,7 +874,11 @@ while Gamestate != "End":
     if Gamestate == "Sin" and StepCounter == 1:
         reportGamestate()
         FFX_Sin.makingPlans()
-        StepCounter = 2
+        if gameVars.nemesis():
+            Gamestate = "Nem_Farm"
+            StepCounter = 1
+        else:
+            StepCounter = 2
 
     if Gamestate == "Sin" and StepCounter == 2:
         reportGamestate()
@@ -895,6 +912,27 @@ while Gamestate != "End":
         FFX_nemesisChanges.arenaPurchase()
         FFX_Gagazet.defenderX()
         StepCounter = 2
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 1:
+        reportGamestate()
+        FFX_nem_arenaPrep.tPlains(capNum=1)
+        StepCounter = 2
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 2:
+        reportGamestate()
+        FFX_nem_arenaPrep.calm(capNum=1)
+        StepCounter = 3
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 3:
+        reportGamestate()
+        #FFX_nem_arenaPrep.tPlainsEarly()
+        StepCounter = 4
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 4:
+        reportGamestate()
+        FFX_nem_arenaPrep.besaidFarm()
+        StepCounter = 5
+        Gamestate = "End" #For Testing
 
 #print("Waiting for Yu Yevon to die.")
 #FFX_memory.waitFrames(30 * 6)

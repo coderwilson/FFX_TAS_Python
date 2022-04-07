@@ -7,6 +7,7 @@ import FFX_Logs
 import FFX_memory
 import FFX_targetPathNem
 import FFX_vars
+import FFX_Gagazet
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -21,14 +22,14 @@ def nextRace():
 
 def calmLands():
     #Start chocobo races
-    FFX_memory.setGameSpeed(2)
+    #FFX_memory.setGameSpeed(2)
     calmLands_1()
     
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(28)
     FFX_memory.waitFrames(9)
     FFX_Xbox.tapB()
-    FFX_memory.setGameSpeed(0)
+    #FFX_memory.setGameSpeed(0)
     wobblyComplete = False
     while not wobblyComplete:
         wobblyComplete = chocoTame1()
@@ -58,6 +59,10 @@ def calmLands():
 
 def calmLands_1():
     #Enter the cutscene that starts Calm Lands
+    if FFX_Gagazet.checkGems() < 2:
+        FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
+    else:
+        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     FFX_menu.prepCalmLands()
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
         if FFX_memory.userControl():
@@ -68,21 +73,31 @@ def calmLands_1():
                 FFX_Xbox.tapB()
     
     #Now head to the chocobo lady.
-    FFX_memory.setEncounterRate(0) #Testing only
+    #FFX_memory.setEncounterRate(0) #Testing only
     checkpoint = 0
     while FFX_memory.diagProgressFlag() != 305:
         if FFX_memory.userControl():
             if checkpoint == 9:
-                FFX_targetPathNem.setMovement([-1565,434])
-                FFX_Xbox.tapB()
-                print("Near chocobo lady")
+                if FFX_Gagazet.checkGems() < 2:
+                    checkpoint -= 2
+                else:
+                    FFX_targetPathNem.setMovement([-1565,434])
+                    FFX_Xbox.tapB()
+                    print("Near chocobo lady")
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.calmLands1(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                FFX_Battle.calmLandsManip()
+                if FFX_Gagazet.checkGems() < 2:
+                    FFX_Battle.calmLands()
+                else:
+                    FFX_Battle.calmLandsManip()
+                if FFX_Gagazet.checkGems() < 2:
+                    FFX_memory.fullPartyFormat('yuna')
+                else:
+                    FFX_memory.fullPartyFormat('kimahri')
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     FFX_memory.waitFrames(6)
@@ -262,6 +277,16 @@ def chocoTame3():
             checkpoint += 1
             FFXC.set_value('Dpad', 4)
             FFX_memory.waitFrames(16)
+            FFXC.set_value('Dpad', 0)
+        if position[1] > -120 and checkpoint == 10: #Still dialing in on this one.
+            checkpoint += 1
+            FFXC.set_value('Dpad', 8)
+            FFX_memory.waitFrames(16)
+            FFXC.set_value('Dpad', 0)
+        if position[1] > -20 and checkpoint == 11:
+            checkpoint += 1
+            FFXC.set_value('Dpad', 4)
+            FFX_memory.waitFrames(10)
             FFXC.set_value('Dpad', 0)
     FFXC.set_neutral()
 
@@ -524,8 +549,9 @@ def arenaPurchase():
     FFX_Xbox.tapB()
     FFX_memory.clickToDiagProgress(73)
     FFX_memory.waitFrames(15)
-    FFX_Xbox.tapUp()
+    #FFX_Xbox.tapUp()
     FFX_Xbox.tapB() #Let's see your weapons
+    #FFX_memory.waitFrames(9000)
     FFX_menu.arenaPurchase1()
     #Sell all undesirable equipment
     #Purchase the following weapons:
@@ -534,11 +560,13 @@ def arenaPurchase():
         
     #---Done buying.
     FFX_memory.awaitControl()
+    FFX_memory.waitFrames(2)
     FFXC.set_movement(0, -1)
-    FFX_memory.clickToEvent() #Exit the arena map
+    FFX_memory.awaitEvent() #Exit the arena map
     FFXC.set_neutral()
     FFX_memory.awaitControl()
-    while FFX_memory.userControl():
+    FFX_memory.waitFrames(2)
+    while FFX_memory.userControl(): #Back onto chocobo
         FFX_targetPathNem.setMovement([1347,-69])
         FFX_Xbox.tapB()
     

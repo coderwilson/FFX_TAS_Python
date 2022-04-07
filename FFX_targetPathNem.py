@@ -725,6 +725,354 @@ def leaveRemiem(checkpoint):
         y = 0
     return [x,y]
 
+def tpFarm(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 6
+        y = -54
+    if checkpoint == 1:
+        x = 10
+        y = -200
+    if checkpoint == 2: #Outside agency
+        x = -48
+        y = 54
+    if checkpoint == 3:
+        x = 0
+        y = 300
+    if checkpoint == 4: #North thunder plains
+        x = -97
+        y = -1056
+    if checkpoint == 5:
+        x = -99
+        y = -974
+    if checkpoint == 6: #Beneath tower
+        x = -65
+        y = -901
+    if checkpoint == 7:
+        x = -38
+        y = -833
+    if checkpoint == 8: #Beneath tower
+        x = -65
+        y = -901
+    if checkpoint == 9:
+        x = -99
+        y = -974
+    if checkpoint == 10:
+        x = -97
+        y = -1056
+    if checkpoint == 11: #Back to agency
+        x = -97
+        y = -1500
+    if checkpoint == 12:
+        x = -55
+        y = 39
+    if checkpoint == 13:
+        x = -72
+        y = 42
+    if checkpoint == 14: #Into the agency
+        x = 0
+        y = 0
+    if checkpoint == 15:
+        x = -36
+        y = -21
+    if checkpoint == 16:
+        x = 0
+        y = 0
+    if checkpoint == 17:
+        x = 0
+        y = 0
+    if checkpoint == 18:
+        x = 0
+        y = 0
+    if checkpoint == 19:
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 0
+        y = 0
+    if checkpoint == 21:
+        x = 0
+        y = 0
+    if checkpoint == 22:
+        x = 0
+        y = 0
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
+    if checkpoint == 25:
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x,y]
+
+def calm(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -633
+        y = -104
+    if checkpoint == 1:
+        x = -597
+        y = -144
+    if checkpoint == 2:
+        x = -528
+        y = -99
+    if checkpoint == 3:
+        x = 437
+        y = -123
+    if checkpoint == 4:
+        x = 582
+        y = -138
+    if checkpoint == 5: #First farm position
+        x = 892
+        y = -100
+    if checkpoint == 6:
+        x = 1005
+        y = -110
+    if checkpoint == 7: #Continue on to the arena
+        x = 1362
+        y = -152
+    if checkpoint == 8:
+        x = 1500
+        y = -200
+    return [x,y]
+
+
+def besaidFarm(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -345
+        y = -470
+    if checkpoint == 1: #Map change
+        x = 0
+        y = 0
+    if checkpoint == 2:
+        x = 51
+        y = -34
+    if checkpoint == 3:
+        x = 13
+        y = 2
+    if checkpoint == 4:
+        x = -15
+        y = -21
+    if checkpoint == 5:
+        x = -38
+        y = -19
+    if checkpoint == 6:
+        x = -35
+        y = 2
+    if checkpoint == 7:
+        x = -22
+        y = 24
+    if checkpoint == 8:
+        x = -16
+        y = 43
+    if checkpoint == 9:
+        x = -35
+        y = 57
+    if checkpoint == 10:
+        x = -67
+        y = 69
+    if checkpoint == 11: #Map to map
+        x = 0
+        y = 0
+    if checkpoint == 12:
+        x = 424
+        y = 122
+    if checkpoint == 13:
+        x = 369
+        y = 5
+    if checkpoint == 14:
+        x = 424
+        y = 122
+    if checkpoint == 15:
+        x = 454
+        y = 199
+    if checkpoint == 16: #Back to previous map
+        x = 5000
+        y = 3000
+    if checkpoint == 17:
+        x = -22
+        y = 52
+    if checkpoint == 18:
+        x = -12
+        y = 25
+    if checkpoint == 19:
+        x = -38
+        y = -2
+    if checkpoint == 20:
+        x = -31
+        y = -20
+    if checkpoint == 21:
+        x = 4
+        y = -11
+    if checkpoint == 22:
+        x = 18
+        y = 0
+    if checkpoint == 23:
+        x = 64
+        y = -28
+    if checkpoint == 24:
+        x = 70
+        y = -73
+    if checkpoint == 25: #Back to beach
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x,y]
 
 def template(checkpoint):
     x = 999

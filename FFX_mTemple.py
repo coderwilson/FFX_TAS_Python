@@ -155,6 +155,8 @@ def startSeymourFight():
     FFXC.set_neutral()
 
 def seymourFight():
+    #if gameVars.nemesis():
+    #    FFX_menu.equipWeapon(character=0,special='brotherhood')
     
     FFX_Battle.seymourGuado()
     

@@ -41,7 +41,7 @@ def makingPlans():
     FFX_zzairShipPath.airShipPath(2) #Talk to Yuna/Kimahri
     FFXC.set_neutral()
     
-    #Fix this later, should be based on memory values.
+def Shedinja():
     print("The hymn is the key")
     while FFX_memory.oakaGilCursor() != 20:
         FFX_Xbox.tapB()
@@ -49,7 +49,6 @@ def makingPlans():
         FFX_memory.menuDirection(FFX_memory.mapCursor(), 10, 13)
     FFX_memory.clickToControl()
     
-def Shedinja():
     FFX_memory.awaitControl()
     print("Moving to Shedinja")
     FFXC.set_movement(1, 1)

@@ -20,7 +20,7 @@ def valeforOD(sinFin = 0, version = 0):
     FFX_memory.waitFrames(6)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapLeft()
-    print("Overdrive: ", version) 
+    print("Overdrive: ", version)
     if version == 1:
         while FFX_memory.battleCursor2() != 1:
             FFX_Xbox.tapDown()
@@ -1549,7 +1549,7 @@ def battleGui():
     tidusTurn = False
     kimTurn = False
     aeonTurn = False
-    kimahriCrit = False
+    
     while aeonTurn == False:
         if FFX_memory.turnReady():
             if FFX_Screen.turnYuna():
@@ -1565,10 +1565,7 @@ def battleGui():
                 else:
                     buddySwapKimahri()
             elif FFX_Screen.turnKimahri():
-                hp = FFX_memory.getBattleHP()[0]
                 kimahriOD(2)
-                if FFX_memory.getBattleHP()[0] == hp - 7464:
-                    kimahriCrit = True
             elif FFX_Screen.turnTidus():
                 if tidusTurn == False:
                     defend()
@@ -1591,18 +1588,14 @@ def battleGui():
     turn1 = False
     nextTurn = 20
     lastTurn = 20
-    went = False
     while FFX_memory.battleActive():
         if FFX_memory.turnReady() and FFX_memory.getBattleCharTurn() == 8:
             nextHP = FFX_memory.getBattleHP()[0]
             lastTurn = nextTurn
             nextTurn = FFX_memory.getNextTurn()
-            if went and kimahriCrit:
-                aeonSpell(1)
-            elif FFX_memory.getOverdriveBattle(8) == 20:
+            if FFX_memory.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
                 valeforOD()
-                went = True
             elif turn1 == False:
                 turn1 = True
                 print("------Recharge unsuccessful. Attempting recovery.")                
@@ -1638,33 +1631,12 @@ def battleGui():
     #Second Gui battle
     FFX_Screen.awaitTurn()
     turn = 1
-    if kimahriCrit or FFX_memory.getOverdriveBattle(8) == 20 or FFX_memory.getOverdriveBattle(1) == 100:
-        seymourTurn = 0
-        while FFX_memory.battleActive():
-            if FFX_Screen.turnSeymour and seymourTurn < 2:
-                seymourSpell(head=False)
-                seymourTurn += 1
-            elif FFX_Screen.turnYuna and seymourTurn >= 2:
-                if FFX_memory.getOverdriveBattle(1) == 100:
-                    while not FFX_memory.otherBattleMenu():
-                        FFX_Xbox.tapLeft()
-                    while not FFX_memory.interiorBattleMenu():
-                        FFX_Xbox.tapB()
-                    while FFX_memory.interiorBattleMenu():
-                        FFX_Xbox.tapB()
-                else:
-                    aeonSummon(0)
-            elif FFX_Screen.turnAeon():
-                valeforOD()
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnSeymour():
+                seymourSpell()
             else:
                 defend()
-    else:
-        while FFX_memory.battleActive():
-            if FFX_memory.turnReady():
-                if FFX_Screen.turnSeymour():
-                    seymourSpell()
-                else:
-                    defend()
     
     while not FFX_memory.userControl():
         if FFX_memory.cutsceneSkipPossible():
@@ -2648,8 +2620,59 @@ def seymourGuado_blitzLoss():
     FFX_memory.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
 
+def seymourGuado_nemesis():
+    FFX_Screen.awaitTurn()
+    tidusHaste('none')
+    FFX_Screen.awaitTurn()
+    defend()
+    FFX_memory.waitFrames(5)
+    FFX_Screen.awaitTurn()
+    tidusODSeymour()
+    FFX_Screen.awaitTurn()
+    yunaDefend = False
+    while not FFX_Screen.turnTidus():
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnYuna():
+                if not yunaDefend:
+                    FFX_Xbox.weapSwap(0)
+                    yunaDefend = True
+                else:
+                    buddySwapAuron()
+                    FFX_Xbox.weapSwap(0)
+            elif FFX_Screen.turnKimahri():
+                Steal()
+            elif FFX_Screen.turnLulu():
+                buddySwapAuron()
+            else:
+                defend()
+    FFX_Screen.awaitTurn()
+    buddySwapWakka()
+    FFX_Xbox.weapSwap(0)
+    #Anima uses Pain
+    FFX_Screen.awaitTurn()
+    buddySwapTidus()
+    attack('none')
+    
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnTidus():
+                attack('none')
+            elif FFX_Screen.turnRikku():
+                Steal()
+            elif FFX_Screen.turnLulu():
+                buddySwapRikku()
+            else:
+                buddySwapLulu()
+                FFX_Xbox.weapSwap(0)
+    print("Battle summary screen")
+    FFXC.set_value('BtnB', 1)
+    FFX_memory.waitFrames(30 * 2.8)
+    FFXC.set_value('BtnB', 0)
+
 def seymourGuado():
-    if gameVars.getBlitzWin():
+    if gameVars.nemesis():
+        seymourGuado_nemesis()
+    elif gameVars.getBlitzWin():
         seymourGuado_blitzWin()
     else:
         seymourGuado_blitzLoss()
@@ -3748,6 +3771,7 @@ def seymourNatus():
 
 def calmLands():
     FFX_Logs.writeLog("Fight start: Calm Lands")
+    FFX_Screen.awaitTurn()
     if FFX_memory.getBattleNum() == 273:  # Red element in center slot, with machina and dog
         print("Grabbing a gem here.")
         buddySwapKimahri()
@@ -4044,7 +4068,7 @@ def cheer():
     tapTargeting()
 
 
-def seymourSpell(head=True):
+def seymourSpell():
     print("Seymour casting tier 2 spell")
     num = 21 #Should be the enemy number for the head
     if not FFX_memory.turnReady():
@@ -4064,7 +4088,7 @@ def seymourSpell(head=True):
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     
-    if head and FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
+    if FFX_memory.getEnemyCurrentHP()[num - 20] != 0: #Target head if alive.
         while FFX_memory.battleTargetId() != num:
             FFX_Xbox.tapLeft()
             
@@ -4735,7 +4759,8 @@ def fleeAll():
                 elif not checkTidusOk() or tidus_position == 255 or FFX_memory.tidusEscapedState():
                     escapeOne()
                 else:
-                    defend()                
+                    defend()  
+    FFX_memory.clickToControl3()
 
 def fleeLateGame():
     fleeAll()
@@ -5375,6 +5400,19 @@ def faintCheckWithEscapes():
             return True
     return False
 
+def checkGems():
+    gemSlot = FFX_memory.getItemSlot(34)
+    if gemSlot < 200:
+        gems = FFX_memory.getItemCountSlot(gemSlot)
+    else:
+        gems = 0
+    
+    gemSlot = FFX_memory.getItemSlot(28)
+    if gemSlot < 200:
+        gems += FFX_memory.getItemCountSlot(gemSlot)
+    print("Total gems: ", gems)
+    return gems
+
 def calmLandsManip():
     print("++Battle number: ", FFX_memory.getBattleNum())
     rng10nextChanceLow = FFX_memory.nextChanceRNG10(12)
@@ -5391,41 +5429,41 @@ def calmLandsManip():
         print("Not ready for NE armor drop. Apply logic to try to drop something else.")
         #NE armor too far ahead. Need to drop armors.
         if rng10nextChanceLow == 0 and FFX_memory.getBattleNum() in lowArray:
-            FFX_Battle.advanceRNG12()
+            advanceRNG12()
         elif rng10nextChanceMid == 0 and FFX_memory.getBattleNum() in midArray:
-            FFX_Battle.advanceRNG12()
+            advanceRNG12()
         elif rng10nextChanceHigh == 0 and FFX_memory.getBattleNum() in highArray:
-            FFX_Battle.advanceRNG12()
+            advanceRNG12()
         else: #Cycle mid chance as needed.
-            FFX_Battle.advanceRNG10(rng10nextChanceMid)
+            advanceRNG10(rng10nextChanceMid)
     else:
         setupNext = FFX_memory.nextChanceRNG10Calm()
         if FFX_memory.getCoords()[0] > 1000:
             print("--Near Gagazet, just get off RNG10 equipment drop.")
             if FFX_memory.nextChanceRNG10() == 0:
-                FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
+                advanceRNG10(FFX_memory.nextChanceRNG10())
                 #Don't want to have Defender X drop an item
         elif setupNext!= 0:
             if setupNext < 25:
                 print("++Still a ways. Try to set up for Defender X plus Wraith.")
-                FFX_Battle.advanceRNG10(setupNext)
+                advanceRNG10(setupNext)
                 #Try for perfect setup if it's not too far off.
             elif FFX_memory.nextChanceRNG10() == 0:
                 print("++No perfect chance coming up. Going for regular chance.")
-                FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
+                advanceRNG10(FFX_memory.nextChanceRNG10())
             else:
                 print("--Next perfect value is too far away. Moving on.")
-                FFX_Battle.fleeAll()
+                fleeAll()
         else:
             print("--Perfectly set up and good to go.")
-            FFX_Battle.fleeAll()
+            fleeAll()
             #FFX_memory.setEncounterRate(0) #Testing only
     FFX_memory.clickToControl3()
     if checkGems() < 2:
         FFX_memory.fullPartyFormat('yuna',fullMenuClose=False)
     else:
         FFX_memory.fullPartyFormat('kimahri',fullMenuClose=False)
-    FFX_Battle.healUp(fullMenuClose=True)
+    healUp(fullMenuClose=True)
     FFX_memory.printManipInfo()
 
 def advanceRNG10(numAdvances:int):
