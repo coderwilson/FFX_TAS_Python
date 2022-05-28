@@ -11,7 +11,7 @@ class allVars:
         
         #----Most important values to review
         self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
-        self.csrValue = False #Set based on if cutscene remover is working.
+        self.csrValue = True #Default True
         self.nemesisValue = True #Set based on if you're doing any% (False) or Nemesis% (True)
         
         
@@ -41,15 +41,50 @@ class allVars:
         self.neArmorVal = 255 #Default 255
         self.neBattles = 0 #Default to 0
         
+        #----Nemesis variables, unused in any%
+        self.nemAPVal = 1 #Default to 1
+        self.areaResults = [0]*13
+        self.speciesResults = [0]*14
+        self.originalResults = [0]*7
+        self.yojimboIndex = 1
+        
         #----Path for save files, used for loading a specific save
         #coderwilson automation PC
         self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         #coderwilson main PC
         #self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
     
+    def printArenaStatus(self):
+        print("##############################################")
+        print("Area: ", self.areaResults)
+        print("Species: ", self.speciesResults)
+        print("Original: ", self.originalResults)
+        print("##############################################")
+    
+    def arenaSuccess(self,arrayNum,index):
+        print(arrayNum, " | ", index)
+        if arrayNum == 0:
+            self.areaResults[index] = 1
+        if arrayNum == 1:
+            self.speciesResults[index] = 1
+        if arrayNum == 2:
+            self.originalResults[index] = 1
+        self.printArenaStatus()
+    
+    def yojimboGetIndex(self):
+        return self.yojimboIndex
+    
+    def yojimboIncrementIndex(self):
+        self.yojimboIndex += 1
     
     def nemesis(self):
         return self.nemesisValue
+    
+    def nemCheckpointAP(self):
+        return self.nemAPVal
+        
+    def setNemChecpointAP(self, value):
+        self.nemAPVal = value
     
     def neExtraBattles(self):
         return self.neBattles

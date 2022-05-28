@@ -75,16 +75,45 @@ def awaitQuitSG():
     print("Back to the main menu")
 
 
-def autoSortItems(manual):
+def autoSortItems(manual='n'):
     FFX_memory.openMenu()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuA()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuRight()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuRight()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB()
+    if manual == 'y':
+        FFX_Xbox.menuLeft()
+        FFX_Xbox.menuB()
+    elif manual == 'n':
+        FFX_memory.closeMenu()
+    else:
+        FFX_memory.closeMenu()
+
+def autoSortEquipment(manual='n'):
+    FFX_memory.openMenu()
+    FFX_Xbox.menuDown()
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuA()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuRight()
+    FFX_Xbox.menuRight()
+    FFX_memory.waitFrames(12)
+    FFX_Xbox.menuB()
+    FFX_memory.waitFrames(12)
     FFX_Xbox.menuRight()
     FFX_Xbox.menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    FFX_Xbox.menuRight()
+    FFX_Xbox.menuB()
     FFX_Xbox.menuB()
     if manual == 'y':
         FFX_Xbox.menuLeft()
@@ -1248,7 +1277,12 @@ def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
             print("Equipment found in slot: ", current_index)
             return current_index
 
-def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
+def abilityToCustomizeRef(ability_index):
+    if FFX_memory.customizeMenuArray()[FFX_memory.assignAbilityToEquipCursor()] == ability_index:
+        return True
+    return False
+
+def addAbility(*, owner, equipment_type, ability_array=[], ability_index=255, slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
     if navigateToEquipMenu:
         if not FFX_memory.menuOpen():
             FFX_memory.openMenu()
@@ -1259,7 +1293,7 @@ def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotco
     item_to_modify = findEquipmentIndex(owner=owner, equipment_type=equipment_type, ability_array=ability_array, slotcount=slotcount)
     while FFX_memory.itemMenuRow() != item_to_modify:
         if FFX_memory.itemMenuRow() < item_to_modify:
-            if item_to_modify - FFX_memory.itemMenuRow() > 5:
+            if item_to_modify - FFX_memory.itemMenuRow() > 9:
                 FFX_Xbox.TriggerR()
             else:
                 FFX_Xbox.tapDown()
@@ -1270,11 +1304,15 @@ def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotco
                 FFX_Xbox.tapUp()
     while not FFX_memory.cureMenuOpen():
         FFX_Xbox.tapB()
-    while FFX_memory.assignAbilityToEquipCursor() != ability_index:
-        if FFX_memory.assignAbilityToEquipCursor() < ability_index:
-            FFX_Xbox.tapDown() 
-        else:
-            FFX_Xbox.tapUp()
+    while not abilityToCustomizeRef(ability_index): #Find the right ability
+        FFX_Xbox.tapDown()
+    #while FFX_memory.assignAbilityToEquipCursor() != ability_index:
+    #    if FFX_memory.assignAbilityToEquipCursor() < ability_index:
+    #        FFX_Xbox.tapDown() 
+    #    else:
+    #        FFX_Xbox.tapUp()
+        if gameVars.usePause():
+            FFX_memory.waitFrames(3)
     while FFX_memory.informationActive():
         FFX_Xbox.tapB()
     while FFX_memory.equipBuyRow() != 1:
@@ -1294,7 +1332,7 @@ def addAbility(*, owner, equipment_type, ability_array=[], ability_index, slotco
             
             
 def addFirstStrike(*, owner, equipment_type, ability_array=[], slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
-    addAbility(owner=owner, equipment_type=equipment_type, ability_array=ability_array, ability_index=2, slotcount=slotcount, navigateToEquipMenu=navigateToEquipMenu, exitOutOfCurrentWeapon=exitOutOfCurrentWeapon, closeMenu=closeMenu, fullMenuClose=fullMenuClose)
+    addAbility(owner=owner, equipment_type=equipment_type, ability_array=ability_array, ability_index=0x8001, slotcount=slotcount, navigateToEquipMenu=navigateToEquipMenu, exitOutOfCurrentWeapon=exitOutOfCurrentWeapon, closeMenu=closeMenu, fullMenuClose=fullMenuClose)
 
 
 def auronFirstStrike():
@@ -1304,8 +1342,75 @@ def auronFirstStrike():
 
 def yunaFirstStrike():
     print("Starting Yuna")
-    addFirstStrike(owner=1, equipment_type=0, slotcount=1, closeMenu=False, navigateToEquipMenu=True)
+    if gameVars.nemesis():
+        addFirstStrike(owner=1, equipment_type=0,ability_array=[0x807A,255,255,255],slotcount=2, closeMenu=False, navigateToEquipMenu=True)
+    else:
+        addFirstStrike(owner=1, equipment_type=0, slotcount=1, closeMenu=False, navigateToEquipMenu=True)
     print("Done with Yuna")
+
+def tidusSlayer(odPos:int=2):
+    if not FFX_memory.menuOpen():
+        FFX_memory.openMenu()
+    while FFX_memory.getMenuCursorPos() != 3:
+        FFX_Xbox.tapDown()
+    while FFX_memory.menuNumber() == 5:
+        FFX_Xbox.tapB()
+    FFX_memory.waitFrames(10)
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(10)
+    FFX_Xbox.menuA()
+    FFX_Xbox.tapRight()
+    FFX_Xbox.menuB()
+    if odPos == 2:
+        FFX_Xbox.menuDown()
+    else:
+        FFX_Xbox.menuUp()
+    FFX_Xbox.menuB()
+    FFX_memory.closeMenu()
+
+def sellAll(NEA=False):
+    #Assume already on the sell items screen, index zero
+    fullArray = FFX_memory.allEquipment()
+    sellItem = True
+    FFX_Xbox.menuUp()
+    FFX_memory.waitFrames(9)
+    while FFX_memory.equipSellRow() + 1 < len(fullArray):
+        FFX_Xbox.menuDown()
+        FFX_memory.waitFrames(9)
+        #print(fullArray[FFX_memory.equipSellRow()].isEquipped())
+        if fullArray[FFX_memory.equipSellRow()].isEquipped() != 255:
+            #Currently equipped
+            sellItem = False
+        if fullArray[FFX_memory.equipSellRow()].isEquipped() == 0:
+            #Currently equipped
+            sellItem = False
+        if fullArray[FFX_memory.equipSellRow()].hasAbility(0x8056):
+            #Auto-haste
+            sellItem = False
+        if fullArray[FFX_memory.equipSellRow()].hasAbility(0x8001):
+            #First Strike
+            sellItem = False
+        if fullArray[FFX_memory.equipSellRow()].abilities() == [0x8072,255,255,255]:
+            #Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
+            if fullArray[FFX_memory.equipSellRow()].owner() in [1,2,4,6]:
+                sellItem = False
+        #if fullArray[FFX_memory.equipSellRow()].hasAbility(0x8032):
+        #    #ZombieStrike for Yu Yevon
+        #    sellItem = False
+        if NEA==False and fullArray[FFX_memory.equipSellRow()].hasAbility(0x801D):
+            #No-Encounters
+            sellItem = False
+        if fullArray[FFX_memory.equipSellRow()].abilities() == [0x8063,0x8064,0x802A,0x8000]:
+            #Brotherhood
+            sellItem = False
+        
+        if sellItem:
+            FFX_Xbox.menuB()
+            FFX_Xbox.tapUp()
+            FFX_Xbox.menuB()
+            FFX_memory.waitFrames(1)
+        else:
+            sellItem = True
 
 def afterFlux():
     openGrid(character=0)
@@ -1442,10 +1547,10 @@ def skReturn():
     FFX_menuGrid.selSphere('luck','d','none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('fortune','d','none')
-    if FFX_memory.getPower >= 1:
+    if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
-    if FFX_memory.getPower >= 1:
+    if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndMove()
@@ -1454,7 +1559,7 @@ def skReturn():
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    if FFX_memory.getPower >= 1:
+    if FFX_memory.getPower() >= 1:
         FFX_menuGrid.selSphere('power','u','none')
         FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
@@ -1481,7 +1586,7 @@ def skMixed():
     gridDown()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    if FFX_memory.getPower >= 1:
+    if FFX_memory.getPower() >= 1:
         FFX_menuGrid.selSphere('power','u','none')
         FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
@@ -1489,11 +1594,11 @@ def skMixed():
     gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    if FFX_memory.getPower >= 1:
+    if FFX_memory.getPower() >= 1:
         FFX_menuGrid.selSphere('power','u','none')
         FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('speed','d','none')
-    if FFX_memory.getPower >= 1:
+    if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndMove()
         gridDown()
         FFX_menuGrid.moveAndUse()
@@ -1610,7 +1715,8 @@ def arenaPurchase1():
     FFX_Xbox.tapUp()
     FFX_Xbox.tapB() #Confirm
     FFX_memory.waitFrames(15)
-    FFX_Xbox.tapB() #Do not equip
+    FFX_Xbox.tapUp()
+    FFX_Xbox.tapB() #Do equip
     FFX_memory.waitFrames(15)
     FFX_Xbox.tapA()
     FFX_memory.waitFrames(15)

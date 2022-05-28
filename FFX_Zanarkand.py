@@ -379,6 +379,8 @@ def yunalesca():
 def post_Yunalesca(checkpoint=0):
     print("Heading back outside.")
     FFXC.set_neutral()
+    if gameVars.nemesis():
+        FFX_menu.equipWeapon(character=0, ability=0x807A, fullMenuClose=True)
     FFX_memory.waitFrames(2)
     while FFX_memory.getMap() != 194:
         if FFX_memory.userControl():

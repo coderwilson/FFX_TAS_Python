@@ -96,9 +96,8 @@ def listenStory():
     while not FFX_memory.userControl():
         if FFX_memory.getMap() == 132:
             if FFX_memory.diagProgressFlag() == 1:
-                #print("Cutscene Remover: ", csModVar.csr())
                 csModVar.SETcsr(False)
-                #print("Cutscene Remover: ", csModVar.csr())
+                FFX_memory.awaitControl()
             FFXC.set_value('BtnBack', 1)
             FFX_memory.waitFrames(1)
             FFXC.set_value('BtnBack', 0)

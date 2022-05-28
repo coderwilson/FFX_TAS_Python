@@ -14,6 +14,30 @@ FFXC = FFX_Xbox.controllerHandle()
 
 #The following functions replace the default ones from the regular Bahamut run.
 
+def arenaNPC():
+    FFX_memory.awaitControl()
+    if FFX_memory.getMap() != 307:
+        return
+    while not (FFX_memory.diagProgressFlag() == 74 and FFX_memory.diagSkipPossible()):
+        if FFX_memory.userControl():
+            if FFX_memory.getCoords()[1] > -12:
+                FFXC.set_movement(0,-1)
+                FFX_memory.waitFrames(1)
+            else:
+                FFX_targetPathNem.setMovement([2,-15])
+                FFX_Xbox.tapB()
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.diagProgressFlag() == 59:
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.menuA()
+                FFX_Xbox.tapB()
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    FFX_memory.waitFrames(3)
+
 def nextRace():
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(28)
@@ -35,19 +59,19 @@ def calmLands():
         wobblyComplete = chocoTame1()
     
     print("Wobbly Chocobo complete")
-    nextRace()
-    dodgerComplete = False
-    while not dodgerComplete:
-        dodgerComplete = chocoTame2()
+    #nextRace()
+    #dodgerComplete = False
+    #while not dodgerComplete:
+    #    dodgerComplete = chocoTame2()
     
-    print("Dodger Chocobo complete")
-    nextRace()
+    #print("Dodger Chocobo complete")
+    #nextRace()
     
-    hyperComplete = False
-    while not hyperComplete:
-        hyperComplete = chocoTame3()
+    #hyperComplete = False
+    #while not hyperComplete:
+    #    hyperComplete = chocoTame3()
     
-    print("Hyper Chocobo complete")
+    #print("Hyper Chocobo complete")
     
     #catcherComplete = False
     #while not catcherComplete:
@@ -59,10 +83,7 @@ def calmLands():
 
 def calmLands_1():
     #Enter the cutscene that starts Calm Lands
-    if FFX_Gagazet.checkGems() < 2:
-        FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
-    else:
-        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
     FFX_menu.prepCalmLands()
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
         if FFX_memory.userControl():
@@ -75,33 +96,30 @@ def calmLands_1():
     #Now head to the chocobo lady.
     #FFX_memory.setEncounterRate(0) #Testing only
     checkpoint = 0
-    while FFX_memory.diagProgressFlag() != 305:
+    while FFX_memory.getMap() != 307:
         if FFX_memory.userControl():
-            if checkpoint == 9:
-                if FFX_Gagazet.checkGems() < 2:
-                    checkpoint -= 2
-                else:
-                    FFX_targetPathNem.setMovement([-1565,434])
-                    FFX_Xbox.tapB()
-                    print("Near chocobo lady")
-            elif FFX_targetPathNem.setMovement(FFX_targetPathNem.calmLands1(checkpoint)) == True:
+            #if checkpoint == 10:
+            #    if FFX_Gagazet.checkGems() < 2:
+            #        checkpoint -= 2
+            if FFX_targetPathNem.setMovement(FFX_targetPathNem.calmLands1(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 if FFX_Gagazet.checkGems() < 2:
-                    FFX_Battle.calmLands()
+                    FFX_Battle.calmLandsGems()
                 else:
                     FFX_Battle.calmLandsManip()
-                if FFX_Gagazet.checkGems() < 2:
-                    FFX_memory.fullPartyFormat('yuna')
-                else:
-                    FFX_memory.fullPartyFormat('kimahri')
+                FFX_memory.fullPartyFormat('yuna')
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    FFX_memory.waitFrames(6)
-    FFX_Xbox.tapB() #I want to ride a chocobo.
+    
+    print("Now talk to NPC")
+    #arenaNPC()
+    #arenaPurchase()
+    #FFX_memory.waitFrames(6)
+    #FFX_Xbox.tapB() #I want to ride a chocobo.
 
 def chocoTame1():
     FFX_memory.clickToDiagProgress(43)
@@ -139,9 +157,9 @@ def chocoTame1():
     if FFX_memory.diagProgressFlag() == 51: #Success
         FFX_memory.clickToDiagProgress(77)
         FFX_memory.waitFrames(12)
-        FFX_Xbox.tapUp()
+        FFX_Xbox.tapDown() #Up for next race, down for quit
         FFX_Xbox.tapB()
-        FFX_memory.waitFrames(20)
+        #FFX_memory.waitFrames(20)
         FFX_Xbox.tapUp()
         FFX_Xbox.tapB()
         return True
@@ -402,10 +420,10 @@ def remiemRaces():
     print("Ready to start races")
     chocoRace1()
     print("Celestial Weapon obtained.")
-    chocoRace2()
-    print("Obtained")
-    chocoRace3()
-    print("Something obtained")
+    #chocoRace2()
+    #print("Obtained")
+    #chocoRace3()
+    #print("Something obtained")
     print("Now heading back to the monster arena.")
 
 def chocoRace1():
@@ -539,11 +557,13 @@ def templeToArena():
 def arenaPurchase():
     FFX_memory.clickToControl()
     
-    #Straight forward to the guy
+    print("Straight forward to the guy")
     FFXC.set_movement(0, 1)
     FFX_memory.clickToEvent()
     FFXC.set_neutral()
+    print("Now for dialog")
     FFX_memory.clickToDiagProgress(65)
+    print("Select Sure")
     FFX_memory.waitFrames(15)
     FFX_Xbox.tapDown()
     FFX_Xbox.tapB()
@@ -565,7 +585,28 @@ def arenaPurchase():
     FFX_memory.awaitEvent() #Exit the arena map
     FFXC.set_neutral()
     FFX_memory.awaitControl()
-    FFX_memory.waitFrames(2)
+    
+    checkpoint = 0
+    while FFX_memory.getMap() != 279:
+        if FFX_memory.userControl():
+            if checkpoint == 7 and FFX_Gagazet.checkGems() < 2:
+                checkpoint -= 2
+            elif FFX_targetPathNem.setMovement(FFX_targetPathNem.calmLands2(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if FFX_memory.battleActive():
+                if FFX_Gagazet.checkGems() < 2:
+                    FFX_Battle.calmLandsGems()
+                else:
+                    FFX_Battle.calmLandsManip()
+                FFX_memory.fullPartyFormat('yuna')
+            elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    
+
+def arenaPurchaseWithChocobo():
     while FFX_memory.userControl(): #Back onto chocobo
         FFX_targetPathNem.setMovement([1347,-69])
         FFX_Xbox.tapB()

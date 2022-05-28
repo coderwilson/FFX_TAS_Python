@@ -31,17 +31,16 @@ def BattleScreen():
 def faintCheck():
     faints = 0
     charHP = FFX_memory.getBattleHP()
-    partySize = FFX_memory.partySize()
+    frontParty = FFX_memory.getActiveBattleFormation()
+    partySize = FFX_memory.activepartySize()
     if turnAeon():
         return 0
-    if charHP[0] == 0:
+    if frontParty[0] != 255 and charHP[0] == 0:
         faints += 1
-    if len(FFX_memory.getBattleFormation()) >= 1:
-        if charHP[1] == 0 and partySize >= 2:
-            faints += 1
-    if len(FFX_memory.getBattleFormation()) >= 1:
-        if charHP[2] == 0 and partySize >= 3 and FFX_memory.getBattleNum() != 145:
-            faints += 1
+    if frontParty[1] != 255 and charHP[1] == 0:
+        faints += 1
+    if frontParty[2] != 255 and charHP[2] == 0:
+        faints += 1
     if faints > 0:
         FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))
     return faints
@@ -124,7 +123,7 @@ def turnSeymour() :
 
 def turnAeon():
     turn = FFX_memory.getBattleCharTurn()
-    if turn > 7 and turn <= 12:
+    if turn > 7 and turn <= 19:
         print("Aeon's turn:")
         return True
     else :

@@ -94,16 +94,16 @@ def forest1():
                 if not gameVars.didFullKilikMenu():
                     FFX_menu.Geneaux()
                 checkpoint += 1
-            elif checkpoint == 99 and not gameVars.csr(): #Lord O'holland
+            elif checkpoint == 99:# and not gameVars.csr(): #Lord O'holland
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-30,45])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 97 and gameVars.csr():
-                #FFX_memory.clickToEventTemple(0)
-                checkpoint = 100
+            #elif checkpoint == 97 and gameVars.csr():
+            #    #FFX_memory.clickToEventTemple(0)
+            #    checkpoint = 100
             elif checkpoint == 101: #Into the trials
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()

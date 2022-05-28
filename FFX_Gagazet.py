@@ -29,10 +29,7 @@ def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
     FFX_menu.prepCalmLands()
-    if checkGems() < 2:
-        FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
-    else:
-        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
     
     FFX_memory.printManipInfo()
@@ -45,10 +42,6 @@ def calmLands():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     
-    if checkGems() < 2:
-        FFX_memory.fullPartyFormat('yuna')
-    else:
-        FFX_memory.fullPartyFormat('kimahri')
     checkpoint = 0
     while FFX_memory.getMap() != 279:
         if FFX_memory.userControl():
@@ -56,10 +49,6 @@ def calmLands():
                 checkpoint += 1
                 if checkpoint == 9:
                     if checkGems() < 2:
-                        checkpoint -= 1
-                        FFXC.set_movement(-1, 0)
-                        FFX_memory.waitFrames(60)
-                    elif rng10nextChanceMid == 0 and FFX_memory.nextChanceRNG12() == 0:
                         checkpoint -= 1
                         FFXC.set_movement(-1, 0)
                         FFX_memory.waitFrames(60)
@@ -75,6 +64,7 @@ def calmLands():
 
 def defenderX():
     FFX_memory.awaitControl()
+    FFX_memory.fullPartyFormat('kimahri')
     while FFX_targetPathing.setMovement([67,-255]) == False:
         pass
     FFXC.set_movement(0, 1)
@@ -432,14 +422,12 @@ def wrapUp():
                 print("Move forward to next map. Final path before making camp.")
                 checkpoint = 7
             elif checkpoint == 3:
-                if FFX_memory.getStoryProgress() >= 2651:
-                    checkpoint += 1
-                else: #2635 before agency scene, 2650 during the agency scene
-                    FFXC.set_movement(-1, 1)
-                    FFXC.set_value('BtnB', 1)
-                    FFX_memory.waitFrames(30 * 0.035)
-                    FFXC.set_value('BtnB', 0)
-                    FFX_memory.waitFrames(30 * 0.035)
+                #Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
+                while FFX_memory.getStoryProgress() < 2651:
+                    FFX_targetPathing.setMovement([786,-819])
+                    FFX_Xbox.tapB()
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
             elif checkpoint == 6:
                 if FFX_memory.getMap() == 312:
                     print("Final path before making camp.")
@@ -513,7 +501,15 @@ def wrapUp():
         FFX_memory.waitFrames(30 * sleepTime)
         print("He also taught me a number of things about memory scans, pointers, etc. Dude is super smart.")
         FFX_memory.waitFrames(30 * sleepTime)
-        print("OK I'll catch you when it's done.")
+        print("Peppy too. He has found a few key things in memory too.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("He has also done a lot of optimizations I just couldn't get back to.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam.")
+        FFX_memory.waitFrames(30 * sleepTime)
+        print("OK that wraps it up for this bit. I'll catch you when it's done.")
         FFX_memory.waitFrames(30 * sleepTime)
         
         FFX_memory.clickToControl()
