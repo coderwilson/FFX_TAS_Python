@@ -201,11 +201,24 @@ def agency():
                 while not FFX_memory.getMap() == 256:
                     FFX_targetPathing.setMovement([3, -52])
                     FFX_Xbox.tapB()
+                FFX_memory.clickToControl()
+                if gameVars.nemesis():
+                    #Back in and out to spawn the chest
+                    FFXC.set_movement(-1,1)
+                    while FFX_memory.getMap() != 263:
+                        pass
+                    FFXC.set_neutral()
+                    FFX_memory.waitFrames(3)
+                    while FFX_memory.getMap() != 256:
+                        FFX_targetPathing.setMovement([3, -150])
+                        FFX_Xbox.tapB()
+                    FFXC.set_neutral()
+                    FFX_memory.awaitControl()
                 checkpoint += 1
             elif checkpoint == 9 and gameVars.nemesis() and strCount < 3:
                 FFX_targetPathing.setMovement([-73,45])
                 FFX_Xbox.tapB()
-            elif checkpoint == 10:
+            elif checkpoint == 11:
                 FFXC.set_movement(0, 1)
                 FFX_memory.clickToEvent()
             

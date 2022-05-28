@@ -1909,7 +1909,7 @@ def miihen(checkpoint):
         y = 538
     if checkpoint == 4:
         x = -10
-        y = 1000
+        y = 900
     if checkpoint == 5:
         x = -47
         y = 1351
@@ -3740,9 +3740,12 @@ def tPlainsAgency(checkpoint):
         x = 0
         y = 0
     if checkpoint == 9:
+        x = -59
+        y = 19
+    if checkpoint == 10:
         x = -44
         y = 99
-    if checkpoint == 10: #Lightning shield, and exit to North pathing.
+    if checkpoint == 11: #Lightning shield, and exit to North pathing.
         x = 0
         y = 0
     return [x,y]

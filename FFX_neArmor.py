@@ -11,7 +11,7 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 
 def toHiddenCave():
-    FFX_memory.fullPartyFormat('Kimahri')
+    FFX_memory.fullPartyFormat('yuna')
     FFX_memory.printManipInfo()
     checkpoint = 0
     while FFX_memory.getMap() != 56:
@@ -19,7 +19,7 @@ def toHiddenCave():
         if FFX_memory.userControl():
             if checkpoint < 5 and FFX_memory.getMap() == 266:
                 checkpoint = 5
-            if checkpoint == 8 and FFX_memory.nextChanceRNG12() >= 1:
+            if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1:
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
@@ -36,7 +36,8 @@ def toHiddenCave():
                         FFX_Battle.advanceRNG12()
                 else:
                     FFX_Battle.fleeAll()
-                FFX_memory.fullPartyFormat('Kimahri')
+                FFX_memory.fullPartyFormat('yuna')
+                FFX_memory.touchSaveSphere()
                 FFX_memory.printManipInfo()
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()

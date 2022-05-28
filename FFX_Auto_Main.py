@@ -38,6 +38,7 @@ import FFX_Sin
 if gameVars.nemesis():
     import FFX_nemesisChanges
     import FFX_nem_arenaPrep
+    import FFX_nem_arenaBattles
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
@@ -75,13 +76,13 @@ if gameVars.nemesis():
 Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-StepCounter = 5
+StepCounter = 5 #Can pick regular run vs nemesis below.
 #Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
 #StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
-#StepCounter = 10 #Nemesis variant, blitz win logic
+#StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
 #Gamestate = "Zanarkand"
 #StepCounter = 3 #Blitz win, end game version 1 or 2
@@ -91,12 +92,16 @@ StepCounter = 5
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
-#StepCounter = 1
+#StepCounter = 2 #Start of Calm Lands (only one each)
+#StepCounter = 3
+#StepCounter = 20 #After Gagazet, before Calm Lands farm
+#StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
+#StepCounter = 24 #Final Prep before arena bosses
 
 
 ####################################################################################################
@@ -118,12 +123,11 @@ if Gamestate == "Luca" and StepCounter == 3:
 elif Gamestate != "none":
     rngSeedNum = 255 #Select a specific seed.
     rngReviewOnly = False
-    gameVars.SETcsr(True) #Manually choose CSR or non-CSR mode.
     gameLength = "Loading mid point for testing."
     blitzTesting = False
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 41 #Manually choose seed here.
+    #rngSeedNum = 224 #Manually choose seed here.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -217,11 +221,11 @@ if Gamestate != "none" :
     if Gamestate == "Luca" and StepCounter == 5: # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(5)
     if Gamestate == "Miihen" and StepCounter == 1: #After the talk with Auron
-        FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
-        #FFX_LoadGame.loadSaveNum(16) #With laughing scene
-        FFX_LoadGame.LoadMiihenStart()
-        #FFX_LoadGame.LoadMiihenStart_Laugh()
-        FFX_memory.setEncounterRate(0)
+        #FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
+        FFX_LoadGame.loadSaveNum(16) #With laughing scene
+        #FFX_LoadGame.LoadMiihenStart()
+        FFX_LoadGame.LoadMiihenStart_Laugh()
+        #FFX_memory.setEncounterRate(0)
     if Gamestate == "MRR" and StepCounter == 1: #Mi'ihen North after meeting Seymour
         
         FFX_LoadGame.loadSaveNum(38)
@@ -304,7 +308,16 @@ if Gamestate != "none" :
         FFX_LoadGame.loadSaveNum(48)
         specialZanLoad = True
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
-        FFX_LoadGame.loadSaveNum(49)
+        #FFX_LoadGame.loadSaveNum(49)
+        FFX_LoadGame.loadSaveNum(70) #Nemesis logic, double friend sphere drops from B&Y
+        while FFX_memory.oakaGilCursor() != 20:
+            if FFX_memory.userControl():
+                import FFX_targetPathing
+                FFX_targetPathing.setMovement([-251,340])
+            else:
+                FFXC.set_neutral()
+            FFX_Xbox.menuB()
+        FFX_memory.checkNEArmor()
     if Gamestate == "Sin" and StepCounter == 3: #Start of "Sea of Sorrows" section
         FFX_LoadGame.loadSaveNum(50)
     if Gamestate == "Sin" and StepCounter == 4: #Before point of no return
@@ -317,24 +330,51 @@ if Gamestate != "none" :
     #Nemesis run loads
     if Gamestate == "Nem_Farm" and StepCounter == 1:
         FFX_LoadGame.loadSaveNum(66)
-        #FFXC.set_movement(1,-1)
-        #FFX_memory.waitFrames(20)
-        #FFXC.set_neutral()
+    if Gamestate == "Nem_Farm" and StepCounter == 2:
+        FFX_LoadGame.loadSaveNum(69)
+    if Gamestate == "Nem_Farm" and StepCounter == 3:
+        FFX_LoadGame.loadSaveNum(84)
+        gameVars.setNemChecpointAP(3) #See FFX_nem_menu
+        #import FFX_nem_arenaPrep
+        FFX_nem_arenaPrep.arenaReturn()
+    if Gamestate == "Nem_Farm" and StepCounter == 5:
+        FFX_LoadGame.loadSaveNum(71)
+    if Gamestate == "Nem_Farm" and StepCounter == 6:
+        FFX_LoadGame.loadSaveNum(72)
+    if Gamestate == "Nem_Farm" and StepCounter == 8:
+        FFX_LoadGame.loadSaveNum(73)
+    if Gamestate == "Nem_Farm" and StepCounter == 9:
+        FFX_LoadGame.loadSaveNum(75)
+        gameVars.setNemChecpointAP(3) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 14:
+        FFX_LoadGame.loadSaveNum(76)
+        gameVars.setNemChecpointAP(11) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 17:
+        FFX_LoadGame.loadSaveNum(77)
+        gameVars.setNemChecpointAP(20) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 21:
+        FFX_LoadGame.loadSaveNum(79)
+        FFX_nem_arenaPrep.arenaReturn()
+        gameVars.setNemChecpointAP(27) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 22:
+        FFX_LoadGame.loadSaveNum(82)
+        import FFX_nem_menu
+        FFX_nem_menu.rikkuHaste()
+        gameVars.setNemChecpointAP(30) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 23:
+        FFX_LoadGame.loadSaveNum(80)
+        gameVars.setNemChecpointAP(30) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 24:
+        FFX_LoadGame.loadSaveNum(81)
+        gameVars.setNemChecpointAP(30)
+        gameVars.setNemChecpointAP(30) #See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 20:
+        FFX_LoadGame.loadSaveNum(85)
+        gameVars.setNemChecpointAP(30)
     
-    #if FFX_memory.getStoryProgress() >= 80:
-    #    if Gamestate == "Luca" and StepCounter == 5:
-    #        noMemCursor = True
-    #    elif Gamestate == "Besaid" and StepCounter == 3:
-    #        noMemCursor = True
-    #    elif Gamestate == "Boat3":
-    #        noMemCursor = True
-    #    elif Gamestate == "Sin" and StepCounter == 4:
-    #        noMemCursor = True
-    #    else:
-    #        print("Setting memory cursor")
-    #        FFX_LoadGame.loadMemCursor()
-    #    print("Done with memory cursor")
-
+    if Gamestate == "Nem_Farm":
+        FFX_memory.checkNEArmor()
+    
 
 #Movement files - moved to FFX_compileAll.py
 
@@ -863,8 +903,6 @@ while Gamestate != "End":
         reportGamestate()
         FFX_Zanarkand.yunalesca()
         StepCounter = 5
-        #Gamestate = "End" # Used for testing only.
-
 
     if Gamestate == "Zanarkand" and StepCounter == 5:
         FFX_Zanarkand.post_Yunalesca()
@@ -874,18 +912,20 @@ while Gamestate != "End":
     if Gamestate == "Sin" and StepCounter == 1:
         reportGamestate()
         FFX_Sin.makingPlans()
+        StepCounter = 2
+
+    if Gamestate == "Sin" and StepCounter == 2:
+        reportGamestate()
+        print("Test 1")
+        FFX_Sin.Shedinja()
+        print("Test 2")
+        FFX_Sin.facingSin()
+        print("Test 3")
         if gameVars.nemesis():
             Gamestate = "Nem_Farm"
             StepCounter = 1
         else:
-            StepCounter = 2
-
-    if Gamestate == "Sin" and StepCounter == 2:
-        reportGamestate()
-        FFX_Sin.Shedinja()
-        #FFX_Sin.auronWeap()
-        FFX_Sin.facingSin()
-        StepCounter = 3
+            StepCounter = 3
 
     if Gamestate == "Sin" and StepCounter == 3:
         reportGamestate()
@@ -894,45 +934,204 @@ while Gamestate != "End":
     
     if Gamestate == "Sin" and StepCounter == 4:
         FFX_Sin.eggHunt(autoEggHunt)
-        FFX_Battle.BFA()
-        FFX_Battle.yuYevon()
+        if gameVars.nemesis():
+            FFX_Battle.BFA_nem()
+        else:
+            FFX_Battle.BFA()
+            FFX_Battle.yuYevon()
         Gamestate = "End"
         
     #Nemesis logic only:
     if Gamestate == "Gagazet" and StepCounter == 10:
-        FFX_nemesisChanges.calmLands()
-        StepCounter += 1
+        #FFX_nemesisChanges.calmLands()
+        FFX_nemesisChanges.calmLands_1()
+        #StepCounter += 1
+        StepCounter = 12
     
     if Gamestate == "Gagazet" and StepCounter == 11:
         FFX_nemesisChanges.remiemRaces()
         StepCounter += 1
         
     if Gamestate == "Gagazet" and StepCounter == 12:
-        FFX_nemesisChanges.templeToArena()
+        #FFX_nemesisChanges.templeToArena()
+        print("MAAAAARK")
+        FFX_memory.awaitControl()
         FFX_nemesisChanges.arenaPurchase()
         FFX_Gagazet.defenderX()
         StepCounter = 2
     
     if Gamestate == "Nem_Farm" and StepCounter == 1:
         reportGamestate()
-        FFX_nem_arenaPrep.tPlains(capNum=1)
+        FFX_nem_arenaPrep.transition()
+        while not FFX_nem_arenaPrep.tPlains(capNum=1):
+            pass
         StepCounter = 2
         
     if Gamestate == "Nem_Farm" and StepCounter == 2:
         reportGamestate()
-        FFX_nem_arenaPrep.calm(capNum=1)
+        while not FFX_nem_arenaPrep.calm(capNum=1,airshipReturn=False):
+            pass
         StepCounter = 3
         
     if Gamestate == "Nem_Farm" and StepCounter == 3:
         reportGamestate()
-        #FFX_nem_arenaPrep.tPlainsEarly()
+        FFX_nem_arenaPrep.kilikaShop()
         StepCounter = 4
-        
+    
     if Gamestate == "Nem_Farm" and StepCounter == 4:
         reportGamestate()
-        FFX_nem_arenaPrep.besaidFarm()
+        FFX_nem_arenaPrep.besaidFarm(capNum=1)
         StepCounter = 5
-        Gamestate = "End" #For Testing
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 5:
+        reportGamestate()
+        FFX_nem_arenaPrep.kilikaFarm(capNum=1)
+        StepCounter = 6
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 6:
+        reportGamestate()
+        FFX_nem_arenaPrep.miihenFarm(capNum=1)
+        StepCounter = 7
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 7:
+        reportGamestate()
+        FFX_nem_arenaPrep.mrrFarm(capNum=1)
+        StepCounter = 8
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 8:
+        reportGamestate()
+        FFX_nem_arenaPrep.apToXP()
+        StepCounter = 9
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 9:
+        reportGamestate()
+        FFX_nem_arenaPrep.besaidFarm(capNum=10)
+        StepCounter = 10
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 10:
+        reportGamestate()
+        FFX_nem_arenaPrep.kilikaFarm(capNum=10)
+        StepCounter = 11
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 11:
+        reportGamestate()
+        FFX_nem_arenaPrep.miihenFarm(capNum=10)
+        StepCounter = 12
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 12:
+        reportGamestate()
+        FFX_nem_arenaPrep.mrrFarm(capNum=10)
+        StepCounter = 13
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 13:
+        reportGamestate()
+        FFX_nem_arenaPrep.djoseFarm(capNum=10)
+        StepCounter = 14
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 14:
+        reportGamestate()
+        FFX_nem_arenaPrep.tPlains(capNum=10,autoHaste=True)
+        StepCounter = 15
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 15:
+        reportGamestate()
+        FFX_nem_arenaPrep.macWoods(capNum=10)
+        StepCounter = 16
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 16:
+        reportGamestate()
+        FFX_nem_arenaPrep.bikanel(capNum=10)
+        StepCounter = 17
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 17:
+        reportGamestate()
+        FFX_nem_arenaPrep.arenaReturn()
+        FFX_nem_arenaPrep.autoPhoenix()
+        StepCounter = 18
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 18:
+        reportGamestate()
+        FFX_nem_arenaPrep.stolenFaythCave()
+        StepCounter = 19
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 19:
+        reportGamestate()
+        FFX_nem_arenaPrep.gagazet1()
+        FFX_nem_arenaPrep.gagazet2()
+        FFX_nem_arenaPrep.gagazet3()
+        #Gamestate = "End" #Testing only
+        StepCounter = 20
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 20:
+        reportGamestate()
+        FFX_nem_arenaPrep.calm(capNum=10,airshipReturn = False)
+        StepCounter = 21
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 21:
+        reportGamestate()
+        FFX_nem_arenaPrep.oneMpWeapon()
+        StepCounter = 22
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 22:
+        reportGamestate()
+        FFX_nem_arenaPrep.insideSin(capNum=10)
+        StepCounter = 23
+        
+    if Gamestate == "Nem_Farm" and StepCounter == 23:
+        reportGamestate()
+        FFX_nem_arenaPrep.unlockOmega()
+        FFX_nem_arenaPrep.omegaRuins()
+        StepCounter = 24
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 24:
+        FFX_nem_arenaPrep.kilikaFinalShop()
+        #FFX_nem_arenaPrep.rinEquipDump(buyWeapon=True)
+        StepCounter = 25
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 25:
+        FFX_nem_arenaPrep.arenaReturn()
+        FFX_nem_arenaPrep.finalWeapon()
+        Gamestate = "Nem_Arena"
+        StepCounter = 1
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 1:
+        FFX_nem_arenaBattles.battles1()
+        gameVars.printArenaStatus()
+        StepCounter = 2
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 2:
+        FFX_nem_arenaBattles.battles2()
+        gameVars.printArenaStatus()
+        StepCounter = 3
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 3:
+        FFX_nem_arenaBattles.juggernautFarm()
+        gameVars.printArenaStatus()
+        StepCounter = 4
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 4:
+        FFX_nem_arenaBattles.battles3()
+        gameVars.printArenaStatus()
+        StepCounter = 5
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 5:
+        FFX_nem_arenaBattles.battles4()
+        gameVars.printArenaStatus()
+        StepCounter = 6
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 6:
+        FFX_nem_arenaBattles.nemesisBattle()
+        StepCounter = 7
+    
+    if Gamestate == "Nem_Arena" and StepCounter == 7:
+        FFX_nem_arenaBattles.returnToSin()
+        Gamestate = "Sin"
+        StepCounter = 3
+    
+    print("--------------------------------")
+    print("Looping")
+    print(Gamestate, " | ", StepCounter)
+    print("--------------------------------")
 
 #print("Waiting for Yu Yevon to die.")
 #FFX_memory.waitFrames(30 * 6)
@@ -968,7 +1167,7 @@ if FFX_memory.getStoryProgress() > 3210:
 
 
     while FFX_memory.getMap() != 23:
-        if FFX_memory.getMap() == 292:
+        if FFX_memory.getMap() in [292,349]:
             FFX_Xbox.tapStart()
         elif FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.skipScene()

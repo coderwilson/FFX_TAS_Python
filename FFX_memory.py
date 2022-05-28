@@ -95,6 +95,12 @@ def battleComplete():
     else:
         return False
 
+def battleArenaResults():
+    global baseValue
+    if process.readBytes(baseValue + 0x00D2C9F1,1) == 2:
+        return True
+    return False
+
 def gameOverReset():
     global baseValue
     key = baseValue + 0x00D2C9F1
@@ -291,9 +297,19 @@ def clickToControlSpecial():
     return True
 
 def clickToEvent():
+    FFXC = FFX_Xbox.controllerHandle()
     while userControl():
-        FFX_Xbox.tapB()
-    waitFrames(30 * 0.2)
+        FFXC.set_value('BtnB', 1)
+        if gameVars.usePause():
+            waitFrames(2)
+        else:
+            waitFrames(1)
+        FFXC.set_value('BtnB', 0)
+        if gameVars.usePause():
+            waitFrames(3)
+        else:
+            waitFrames(1)
+    waitFrames(6)
 
 def clickToEventTemple(direction):
     FFXC = FFX_Xbox.controllerHandle()
@@ -446,6 +462,18 @@ def getMaxHP():
     HP_Rikku = process.read(coord)
 
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
+
+def getTidusMP():
+    global baseValue
+    retVal = process.read(baseValue + 0xD3207C)
+    #print("|||| Yuna MP: ", retVal)
+    return retVal
+
+def getYunaMP():
+    global baseValue
+    retVal = process.read(baseValue + 0xD32110)
+    #print("|||| Yuna MP: ", retVal)
+    return retVal
 
 def getOrder():
     global baseValue
@@ -618,9 +646,9 @@ def getActiveBattleFormation():
     char3 = process.readBytes(key, 1)
 
     battleForm = [char1, char2, char3]
-    if 255 in battleForm:
-        while 255 in battleForm:
-            battleForm.remove(255)
+    #if 255 in battleForm:
+    #    while 255 in battleForm:
+    #        battleForm.remove(255)
     return battleForm
 
 def getBattleFormation():
@@ -711,7 +739,7 @@ def itemAddress(num):
 
 def getItemsOrder():
     items = []
-    for x in range(60):
+    for x in range(100):
         items.append(process.readBytes(itemAddress(x),1))
     #print(items)
     return items
@@ -1031,6 +1059,23 @@ def confusedState(character):
         return True
     else:
         print("Character %d is not confused" % character)
+        return False
+
+def autoLifeState(character:int=0):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character)+0x617
+
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key,1)
+
+    if retVal % 4 >= 2:
+        print("Character autolife is active", character)
+        return True
+    else:
+        print("Character autolife is not active", character)
         return False
 
 def confusedStateByPos(position):
@@ -1459,7 +1504,11 @@ def partySize():
     return len(getBattleFormation())
 
 def activepartySize():
-    return len(getActiveBattleFormation())
+    battleForm = getActiveBattleFormation()
+    if 255 in battleForm:
+        while 255 in battleForm:
+            battleForm.remove(255)
+    return len(battleForm)
 
 def getCharacterIndexInMainMenu(character):
     res = getMenuDisplayCharacters().index(character)
@@ -1645,7 +1694,7 @@ def getPartyFormatFromText(frontLine):
     elif frontLine == 'yuna':
         orderFinal = [0,1,2,6,4,5,3]
     elif frontLine == 'kilikawoods1':
-        orderFinal = [0,1,4,3,5]
+        orderFinal = [0,1,4,3,5,6,2]
     elif frontLine == 'gauntlet':
         orderFinal = [0,1,3,2,4,5,6]
     elif frontLine == 'miihen':
@@ -1702,6 +1751,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0, 4, 3, 6, 1, 2, 5]
     elif frontLine == 'nemlulu':
         orderFinal = [0,1,5,2,3,4,6]
+    elif frontLine == 'initiative':
+        orderFinal = [0,4,6,1,2,3,5]
     else:
         orderFinal = [6,5,4,3,2,1,0]
     return orderFinal
@@ -2577,10 +2628,67 @@ def checkZombieStrike():
     
     return False
 
+def checkAbility(ability = 0x8032):
+    gameVars = FFX_vars.varsHandle()
+    results = [False,False,False,False,False,False,False]
+    
+    charWeaps = weaponArrayCharacter(0) #Tidus
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[0] = True
+    
+    charWeaps = weaponArrayCharacter(1) #Yuna
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[1] = True
+    
+    charWeaps = weaponArrayCharacter(2) #Auron
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[2] = True
+    
+    charWeaps = weaponArrayCharacter(3) #Kimahri
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[3] = True
+    
+    charWeaps = weaponArrayCharacter(4) #Wakka
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[4] = True
+    
+    charWeaps = weaponArrayCharacter(5) #Lulu
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[5] = True
+    
+    charWeaps = weaponArrayCharacter(6) #Rikku
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[6] = True
+    
+    return results
+
 def weapon_armor_cursor():
     global baseValue
     return process.readBytes(baseValue + 0x0146A5E4,1)
 
+def customizeMenuArray():
+    retArray = []
+    global baseValue
+    for x in range(60):
+        offset = 0x1197730 + (x * 4)
+        retArray.append(process.readBytes(baseValue + offset, 2))
+    print("Customize menu: ")
+    print(retArray)
+    return retArray
 
 def checkNEArmor():
     ability = 0x801D
@@ -2920,6 +3028,11 @@ def getSaveSphereDetails():
         x = 48
         y = -910
         diag = 40
+    if mapVal == 59 and getStoryProgress() > 1000:
+        #Miihen last screen, late game
+        x = 15
+        y = 125
+        diag = 121
     if mapVal == 92:
         #MRR
         x = 5
@@ -2997,6 +3110,21 @@ def getSaveSphereDetails():
         x = -45
         y = -870
         diag = 77
+    if mapVal == 327:
+        #Sin, end zone (only used in Nemesis)
+        x = -37
+        y = -508
+        diag = 10
+    if mapVal == 258:
+        #Omega (only used in Nemesis)
+        x = -112
+        y = -1066
+        diag = 23
+    if mapVal == 307:
+        #Monster Arena (only used in Nemesis)
+        x = 2
+        y = 5
+        diag = 166
     
     print("Values: [", x, ",", y, "] - ", diag)
     return [x,y,diag]
@@ -3485,14 +3613,59 @@ def arenaArray():
     return retArray
 
 def arenaFarmCheck(zone:str="besaid",endGoal:int=10,report=False):
+    import FFX_nem_menu
     complete = True
     zone = zone.lower()
     if zone == "besaid":
         zoneIndexes = [8,15,27]
+    if zone == "kilika":
+        zoneIndexes = [21,30,38,61]
+    if zone == "miihen1":
+        zoneIndexes = [0,9,34,62,85]
+    if zone == "miihen2":
+        zoneIndexes = [16,22,47,50]
+    if zone == "mrr":
+        zoneIndexes = [5,23,40,51,63,91]
+    if zone == "djose1":
+        zoneIndexes = [1,10,17,28,79]
+    if zone == "djose2":
+        zoneIndexes = [1,10,17,28,31,79,83]
     if zone == "tplains":
         zoneIndexes = [6,24,35,52,64,76,89,87]
+    if zone == "maclake":
+        zoneIndexes = [3,11,18,36]
+    if zone == "macwoods":
+        zoneIndexes = [2,25,32,65,71,94]
+    if zone == "bikanel1":
+        zoneIndexes = [41,42,88]
+    if zone == "bikanel2":
+        zoneIndexes = [12,29,42,53,88]
     if zone == "calm":
-        zoneIndexes = [4,13,33,55,57,72,73,80]
+        zoneIndexes = [55,57,72,73,80]
+    if zone == "calm2":
+        zoneIndexes = [4,13,19,33]
+    if zone == "calm3":
+        zoneIndexes = [4,13,19,33,55,57,72,73,80]
+    if zone == "gagazet1": #Swimming in cave
+        zoneIndexes = [45,46,60]
+    if zone == "gagazet2": #Mountain trail
+        zoneIndexes = [14,39,86]
+    if zone == "gagazet3": #Zanarkand
+        zoneIndexes = [20,49,58,69,84]
+    if zone == "stolenfayth1": #White area
+        zoneIndexes = [7,26,54,92]
+    if zone == "stolenfayth2": #South area
+        zoneIndexes = [44,48,55,66,98]
+    if zone == "stolenfayth3": #Inside, green area
+        zoneIndexes = [68]
+    if zone == "justtonberry":
+        zoneIndexes = [98]
+    if zone == "sin1":
+        zoneIndexes = [37]
+    if zone == "sin2":
+        zoneIndexes = [56,70,77,78,81,93,90,97]
+    if zone == "omega":
+        zoneIndexes = [67,74,75,82,95,96,99,100,101,102,103]
     
     testArray = arenaArray()
     resultArray = []
@@ -3503,7 +3676,18 @@ def arenaFarmCheck(zone:str="besaid",endGoal:int=10,report=False):
         if testArray[zoneIndexes[i]] < endGoal:
             complete = False
     if report:
+        print("############")
+        print("Next Sphere Grid checkpoint: ", gameVars.nemCheckpointAP())
+        print("Tidus S.levels: ", getTidusSlvl(), " - need levels: ", FFX_nem_menu.nextAPneeded(gameVars.nemCheckpointAP()))
         print("Number of captures in this zone: ")
         print(resultArray)
         print("End goal is ", endGoal, " minimum before leaving this zone for each index.")
+        print("############")
     return complete
+    
+def arenaCursor():
+    global baseValue
+
+    key = baseValue + 0x00D2A084
+    status = process.readBytes(key, 2)
+    return status

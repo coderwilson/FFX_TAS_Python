@@ -129,19 +129,22 @@ def ABboat1():
     print("Control restored.")
     FFXC.set_neutral()
     FFX_memory.waitFrames(4)
-    FFX_memory.csrBaajSaveClear()
     FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFXC.set_movement(0, -1)
-    if not gameVars.csr():
+    FFX_memory.clickToEvent()
+    print("If not CSR, do extra stuff")
+    print("CSR value: ", gameVars.csr())
+    if gameVars.csr():
+        FFX_memory.csrBaajSaveClear()
+    else:
         FFX_Xbox.SkipDialog(4) #Start Sphere Grid tutorial
         FFXC.set_neutral()
         FFX_memory.clickToControl()
         FFXC.set_movement(0, -1)
-    FFX_memory.waitFrames(2)
-    FFX_memory.clickToEvent() #Talk to Rikku a second time.
-    
-    FFX_memory.clearSaveMenuCursor2()
+        FFX_memory.waitFrames(2)
+        FFX_memory.clickToEvent() #Talk to Rikku a second time.
+        
+        FFX_memory.clearSaveMenuCursor2()
+    print("Done with extra stuff")
     FFXC.set_movement(0, -1)
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()

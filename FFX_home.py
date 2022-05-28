@@ -180,9 +180,11 @@ def desert():
                 #Finally, check for other factors and report to console.
                 if FFX_memory.overdriveState()[6] == 100:
                     chargeState = True
-                if FFX_memory.getSpeed() >= 5:
+                #if FFX_memory.getSpeed() >= 5:
+                if FFX_memory.getSpeed() >= 9:
                     needSpeed = False
-                if FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
+                #if FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
+                if FFX_memory.getPower() >= 23:
                     needPower = False
                 print("-----------------------------Flag statuses")
                 print("Rikku is charged up: ", chargeState)

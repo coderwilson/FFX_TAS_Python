@@ -30,6 +30,7 @@ def arrival():
             #Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
                 if gameVars.csr():
+                    print("CSR logic - ", checkpoint)
                     #Only run this branch if CSR is online.
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()
@@ -48,13 +49,18 @@ def arrival():
                         print("Checkpoint reached: ", checkpoint)
                     
                 else:
+                    print("any% logic - ", checkpoint)
                     #Run this branch on a noraml Any% run, no CSR
-                    if checkpoint in [4,5,6,7,8,9] and FFX_memory.miihenGuyCoords()[1] < 1370:
-                        checkpoint = 10
+                    tidusCoords = FFX_memory.getCoords()
+                    hunterCoords = FFX_memory.miihenGuyCoords()
+                    if hunterCoords[1] < tidusCoords[1]:
+                        checkpoint = 11
                         print("**Late for Mi'ihen skip, forcing recovery.")
                     elif checkpoint == 6:
                         FFXC.set_neutral()
-                        FFX_memory.waitFrames(30 * 0.3)
+                        FFX_memory.waitFrames(9)
+                        print("Updating checkpoint due to late skip.")
+                        print("Checkpoint reached: ", checkpoint)
                         checkpoint += 1
                     elif checkpoint == 7:
                         if FFX_memory.getCoords()[1] > 1356.5: #Into position
@@ -69,14 +75,14 @@ def arrival():
                             print(FFX_memory.getCoords())
                         elif FFX_memory.getCoords()[0] < -43.5: #Into position
                             FFXC.set_movement(1, 1)
-                            FFX_memory.waitFrames(30 * 0.06)
+                            FFX_memory.waitFrames(2)
                             FFXC.set_neutral()
-                            FFX_memory.waitFrames(30 * 0.09)
+                            FFX_memory.waitFrames(3)
                         else:
                             FFXC.set_movement(0, 1)
-                            FFX_memory.waitFrames(30 * 0.06)
+                            FFX_memory.waitFrames(2)
                             FFXC.set_neutral()
-                            FFX_memory.waitFrames(30 * 0.09)
+                            FFX_memory.waitFrames(3)
                     elif checkpoint == 8:
                         if FFX_memory.getCoords()[0] > -43.5: #Into position
                             checkpoint += 1
@@ -84,9 +90,9 @@ def arrival():
                             print(FFX_memory.getCoords())
                         else:
                             FFXC.set_movement(1, 0)
-                            FFX_memory.waitFrames(30 * 0.06)
+                            FFX_memory.waitFrames(2)
                             FFXC.set_neutral()
-                            FFX_memory.waitFrames(30 * 0.09)
+                            FFX_memory.waitFrames(3)
                     elif checkpoint == 9:
                         if FFX_memory.getCoords()[1] > 1358.5: #Into position
                             checkpoint = 10
@@ -103,7 +109,10 @@ def arrival():
                             #Greater number for spear guy's position means we will start moving faster.
                             #Smaller number means moving later.
                             FFXC.set_movement(0, 1)
-                            FFX_memory.waitFrames(3)
+                            if gameVars.usePause():
+                                FFX_memory.waitFrames(2)
+                            else:
+                                FFX_memory.waitFrames(3)
                             FFX_Xbox.SkipDialog(0.3) #Walk into the guy mashing B (or X, or whatever the key is)
                             FFXC.set_neutral() #Stop trying to move. (recommended by Crimson)
                             print("Starting special skipping.")
@@ -142,12 +151,20 @@ def arrival():
             FFXC.set_neutral()
             if FFX_memory.turnReady():
                 if checkpoint < 4: #Tutorial battle with Auron
+                    while FFX_memory.battleActive():
+                        FFX_Xbox.tapB()
                     FFXC.set_movement(0, 1)
-                    FFX_memory.clickToControl()
+                    while not FFX_memory.userControl():
+                        FFXC.set_value('BtnB',1)
+                        FFX_memory.waitFrames(2)
+                        FFXC.set_value('BtnB',0)
+                        FFX_memory.waitFrames(3)
                     
-                    FFXC.set_neutral()
-                    FFXC.set_value('BtnY',1)
-                    FFX_memory.waitFrames(30 * 0.035)
+                    while not FFX_memory.menuOpen():
+                        FFXC.set_value('BtnY',1)
+                        FFX_memory.waitFrames(2)
+                        FFXC.set_value('BtnY',0)
+                        FFX_memory.waitFrames(3)
                     FFXC.set_neutral()
                     FFX_memory.fullPartyFormat('miihen')
                 elif checkpoint == 25 and FFX_memory.battleActive() == False: #Shelinda dialog
@@ -162,13 +179,19 @@ def arrival():
                 
                 #Kimahri manip
                 print("||| Next Kimahri Crit vs Gui: ", FFX_memory.nextCrit(character=6, charLuck=18, enemyLuck=15))
-                FFX_memory.waitFrames(180)
+                #FFX_memory.waitFrames(180)
             else:
                 FFXC.set_movement(1, 1)
                 if FFX_memory.menuOpen():
-                    FFX_Xbox.tapB()
+                    FFXC.set_value('BtnB',1)
+                    FFX_memory.waitFrames(2)
+                    FFXC.set_value('BtnB',0)
+                    FFX_memory.waitFrames(3)
                 elif FFX_memory.diagSkipPossible():
-                    FFX_Xbox.tapB()
+                    FFXC.set_value('BtnB',1)
+                    FFX_memory.waitFrames(2)
+                    FFXC.set_value('BtnB',0)
+                    FFX_memory.waitFrames(3)
     print("Miihen skip status: ", miihenSkip)
     return [gameVars.selfDestructGet(), battleCount, SDbattleNum, miihenSkip]
 

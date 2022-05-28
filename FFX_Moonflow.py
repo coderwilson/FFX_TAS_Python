@@ -26,9 +26,11 @@ def arrival():
                 FFX_memory.clickToControl()
                 checkpoint += 1
             elif checkpoint == 43: #Moonflow chest
-                print("Moonflow chest")
-                FFX_memory.clickToEventTemple(7)
-                checkpoint += 1
+                if FFX_memory.getItemSlot(90) < 200:
+                    checkpoint += 1
+                else:
+                    FFX_targetPathing.setMovement([-1796,-480])
+                    FFX_Xbox.tapB()
             
             #Map changes
             elif checkpoint < 6 and FFX_memory.getMap() == 76:

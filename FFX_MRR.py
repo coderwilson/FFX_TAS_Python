@@ -137,6 +137,12 @@ def mainPath():
                 FFX_Xbox.SkipDialog(1)
                 print("Up the final lift")
                 checkpoint += 1
+            elif checkpoint == 68:
+                FFXC.set_movement(0,-1)
+                FFX_memory.waitFrames(9)
+                FFXC.set_movement(-1,-1)
+                FFX_memory.waitFrames(9)
+                checkpoint += 1
             elif checkpoint < 71 and FFX_memory.getMap() == 79:
                 checkpoint = 71 #Into Battle Site zone (upper, cannon area)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True:

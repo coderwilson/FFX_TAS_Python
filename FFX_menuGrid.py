@@ -153,6 +153,8 @@ def useFirst():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
+    #if gameVars.usePause():
+    #    FFX_memory.waitFrames(6)
     return True
 
 def moveFirst():
@@ -165,7 +167,8 @@ def moveFirst():
             FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
-    #FFX_memory.waitFrames(30 * 0.2)
+    #if gameVars.usePause():
+    #    FFX_memory.waitFrames(6)
     return True
 
 def moveAndUse():
@@ -180,7 +183,8 @@ def moveAndUse():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.2)
+    #if gameVars.usePause():
+    #    FFX_memory.waitFrames(6)
     return True
 
 def useAndMove():
@@ -197,7 +201,8 @@ def useAndMove():
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.2)
+    #if gameVars.usePause():
+    #    FFX_memory.waitFrames(6)
     return True
 
 def useAndUseAgain():
@@ -212,7 +217,8 @@ def useAndUseAgain():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.2)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(6)
     return True
 
 def useShiftLeft(toon):

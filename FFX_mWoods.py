@@ -10,7 +10,7 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
- 
+
 def arrival(rikkucharged):
     FFX_memory.clickToControl()
     if rikkucharged == True:

@@ -56,21 +56,22 @@ def Shedinja():
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
     
-    if gameVars.csr():
-        print("All of Shelinda is skipped.")
-        FFXC.set_neutral()
-        FFX_memory.awaitControl()
-    else:
-        FFXC.set_neutral()
+    #if gameVars.csr():
+    #    print("All of Shelinda is skipped.")
+    #    FFXC.set_neutral()
+    #    FFX_memory.awaitControl()
+    #else:
+    FFXC.set_neutral()
+    if not gameVars.csr():
         FFX_memory.clickToDiagProgress(100)
-        FFX_memory.clickToDiagProgress(76) #Have you found a way? Well?
-        FFX_memory.waitFrames(20)
-        FFX_Xbox.tapDown()
-        FFX_Xbox.menuB() #We fight Yu Yevon.
-        
-        FFX_memory.clickToDiagProgress(74)
-        FFX_memory.clickToDiagProgress(28)
-        FFX_memory.clickToControl3()
+    FFX_memory.clickToDiagProgress(76) #Have you found a way? Well?
+    FFX_memory.waitFrames(20)
+    FFX_Xbox.tapDown()
+    FFX_Xbox.menuB() #We fight Yu Yevon.
+    
+    FFX_memory.clickToDiagProgress(74)
+    FFX_memory.clickToDiagProgress(28)
+    FFX_memory.clickToControl3()
 
 def exitCockpit():
     print("Attempting to exit cockpit")
@@ -201,6 +202,14 @@ def eggHunt(autoEggHunt):
     FFX_Logs.writeStats("Egg hunt duration:")
     FFX_Logs.writeStats(str(eggDuration))
     print("Done with the egg hunt. Final prep for BFA.")
-    if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
-        FFX_menu.equipWeapon(character=gameVars.zombieWeapon(),ability=0x8032, fullMenuClose=False)
-    FFX_menu.BFA()
+    if gameVars.nemesis():
+        FFX_memory.awaitControl()
+        FFX_menu.equipWeapon(character=0,ability=0x8019, fullMenuClose=True)
+        FFXC.set_movement(1,1)
+        FFX_memory.waitFrames(5)
+        FFX_memory.awaitEvent()
+        FFXC.set_neutral()
+    else:
+        if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
+            FFX_menu.equipWeapon(character=gameVars.zombieWeapon(),ability=0x8032, fullMenuClose=False)
+        FFX_menu.BFA()
