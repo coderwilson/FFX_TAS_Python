@@ -721,7 +721,7 @@ def KilikaWoods(valeforCharge):
     # elif bNum == 37: #Ragora and two bees, reverse
 
     # These battles we want nothing to do with.
-    if bNum == 32 or bNum == 35 or bNum == 36:
+    if bNum == 32 or bNum == 36:
         skipCharge = True
 
     print("Kilika battle")
@@ -767,10 +767,8 @@ def KilikaWoods(valeforCharge):
                         aeonSpell(2)
                     elif FFX_Screen.turnAeon():
                         aeonSpellDirection(2, 'right')
-                        #valeforCharge = True
                     else:
                         defend()
-                    #valeforCharge = True
                 elif bNum == 33:
                     print("Logic for battle number 33")
                     currentCharge = True
@@ -790,7 +788,7 @@ def KilikaWoods(valeforCharge):
                         #valeforCharge = True
                     else:
                         defend()
-                        
+                
                 elif bNum == 34:
                     print("Logic for battle number 34")
                     currentCharge = True
@@ -808,10 +806,29 @@ def KilikaWoods(valeforCharge):
                         aeonSpellDirection(1, 'right')
                     elif FFX_Screen.turnAeon():
                         aeonSpell2(2, 'left')
-                        #valeforCharge = True
                     else:
                         defend()
-                    #valeforCharge = True
+                elif bNum == 35:
+                    print("Logic for battle number 35")
+                    currentCharge = True
+                    if FFX_Screen.turnTidus():
+                        defend()
+                    elif FFX_Screen.turnYuna():
+                        aeonSummon(0)
+                        FFX_Screen.awaitTurn()
+                        if aeonTurn == False:
+                            aeonTurn = True
+                            if FFX_memory.getNextTurn() < 20:
+                                aeonShield()
+                        aeonBoost()
+                        FFX_Screen.awaitTurn()
+                        sonicWings()
+                        FFX_Screen.awaitTurn()
+                        aeonSpell(0)
+                    elif FFX_Screen.turnAeon():
+                        aeonSpell(0)
+                    else:
+                        defend()
                 elif bNum == 37:
                     print("Logic for battle number 37 - two bees and a plant thingey")
                     currentCharge = True
@@ -925,6 +942,18 @@ def KilikaWoods(valeforCharge):
         valeforCharge = True
     print("Returning Valefor Charge value: ", valeforCharge)
     return valeforCharge
+
+def sonicWings():
+    print("Valefor attempting to use Sonic Wings - 1")
+    while FFX_memory.battleMenuCursor() != 204:
+        if FFX_memory.battleMenuCursor() == 203:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
+    print("Valefor attempting to use Sonic Wings - 2")
+    
+    FFX_Xbox.SkipDialog(2)
+    
 
 def Geneaux():
     FFX_Logs.writeLog("Fight start: Sinspawn Geneaux")
@@ -1360,7 +1389,7 @@ def MRRbattle(status):
     elif battle == 102: #Garuda, flee no matter what.
         fleeAll()
     elif status[5] == 0: #Phase zero - use Valefor overdrive to overkill for levels
-        if status[3] < 3: #Battle number (zero-index)
+        if status[3] < 3 and FFX_memory.rngSeed() != 160: #Battle number (zero-index)
             if battle == 100 or battle == 101: #The two battles with Funguar
                 while not FFX_memory.menuOpen(): #end of battle screen
                     if FFX_Screen.BattleScreen():

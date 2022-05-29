@@ -12,7 +12,7 @@ class allVars:
         #----Most important values to review
         self.artificialPauses = True #Set depending on hardware. True = less powerful hardware.
         self.csrValue = True #Default True
-        self.nemesisValue = True #Set based on if you're doing any% (False) or Nemesis% (True)
+        self.nemesisValue = False #Set based on if you're doing any% (False) or Nemesis% (True)
         
         
         #----Blitzball
