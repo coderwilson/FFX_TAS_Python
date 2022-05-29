@@ -166,9 +166,9 @@ def gameStage():
     #Stage 5: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 0, 4, 142, 156, tidusShotTiming()]
+        stages = [0, 0, 4, 140, 159, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
-        stages = [0, 0, 40, 264, 278, 278]
+        stages = [0, 0, 230, 264, 278, 278]
     else: #Used for any non-story blitzing.
         stages = [0, 0, 0, 0, 0, 270]
     
@@ -206,8 +206,8 @@ def gameStage():
             if FFX_memory.getStoryProgress() >= 570 and FFX_memory.getStoryProgress() < 700:
                 if gameClock() < 20 and not gameVars.getBlitzOT():
                     gameVars.setBlitzOT(True)
-                if gameVars.getBlitzOT() and currentStage < 3:
-                    currentStage = 3
+            if gameVars.getBlitzOT() and currentStage < 3:
+                currentStage = 3
             
             #Logic if we're in defensive zone trying to move forward
             if currentStage == 3 and playerArray[controllingPlayer()].getCoords()[1] < -150:

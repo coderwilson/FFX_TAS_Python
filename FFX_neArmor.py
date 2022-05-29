@@ -19,7 +19,7 @@ def toHiddenCave():
         if FFX_memory.userControl():
             if checkpoint < 5 and FFX_memory.getMap() == 266:
                 checkpoint = 5
-            if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1:
+            if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1):
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
