@@ -26,11 +26,11 @@ def getSavedFiles():
     saveFilesFull = sorted(Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime)
     saveFiles = [ os.path.basename(i) for i in saveFilesFull]
     saveFiles = saveFiles[::-1]
-    print("----Save File List")
-    print("----Save File List")
-    print(saveFiles)
-    print("----Save File List")
-    print("----Save File List")
+    #print("----Save File List")
+    #print("----Save File List")
+    #print(saveFiles)
+    #print("----Save File List")
+    #print("----Save File List")
     #time.sleep(90)
     return saveFiles
 

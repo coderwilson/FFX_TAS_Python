@@ -2300,6 +2300,11 @@ def blitzMenuNum():
         status = 24
     return status
 
+def resetBlitzMenuNum():
+    global baseValue
+    key = baseValue + 0x014765DA
+    process.writeBytes(key, 1, 1)
+
 def blitzCurrentPlayer():
     global baseValue
 
@@ -3393,6 +3398,16 @@ def advanceRNG01():
     key = baseValue + 0xD35EDC
     process.write(key, rng01Array()[2])
     #print("Value advanced.")
+
+def rng02():
+    global baseValue
+    return process.read(baseValue + 0xD35EE0)
+
+def rng02Array():
+    retVal = [rng02()] #First value is the current value
+    for x in range(200000): #Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x],2))
+    return retVal
 
 def rng10():
     global baseValue

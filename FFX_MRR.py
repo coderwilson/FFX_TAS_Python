@@ -114,11 +114,14 @@ def mainPath():
                 checkpoint += 1
                 print("Lift checkpoint: ", checkpoint)
             elif checkpoint == 48: #X-potion for safety
-                FFX_memory.clickToEventTemple(7)
-                print("Got X-potion")
+                if FFX_memory.rngSeed() != 160:
+                    FFX_memory.clickToEventTemple(7)
+                    print("Got X-potion")
                 checkpoint += 1
             elif checkpoint >= 54 and checkpoint <= 56: #400 gil guy
-                if FFX_memory.getGilvalue() != lastGilValue: #check if we got the 400 from the guy
+                if FFX_memory.rngSeed() != 160:
+                    checkpoint = 57
+                elif FFX_memory.getGilvalue() != lastGilValue: #check if we got the 400 from the guy
                     if FFX_memory.getGilvalue() == lastGilValue + 400:
                         print("We've procured the 400 gil from the guy.")
                         checkpoint = 57 #now to the actual lift

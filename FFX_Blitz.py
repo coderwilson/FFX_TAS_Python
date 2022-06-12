@@ -151,10 +151,10 @@ def cursor1():
     return FFX_memory.blitzCursor()
 
 def tidusShotTiming() -> int:
-    baseTiming = int(169)
+    baseTiming = int(170)
     for x in range(5):
         if distance(0,x+6) < 180:
-            baseTiming = int(baseTiming - 3)
+            baseTiming = int(baseTiming - 4)
     return baseTiming
 
 def gameStage():
@@ -166,7 +166,7 @@ def gameStage():
     #Stage 5: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 0, 4, 140, 159, tidusShotTiming()]
+        stages = [0, 110, 110, 140, 159, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
         stages = [0, 0, 230, 264, 278, 278]
     else: #Used for any non-story blitzing.
@@ -210,7 +210,7 @@ def gameStage():
                 currentStage = 3
             
             #Logic if we're in defensive zone trying to move forward
-            if currentStage == 3 and playerArray[controllingPlayer()].getCoords()[1] < -150:
+            if currentStage == 3 and playerArray[controllingPlayer()].getCoords()[1] < -200:
                 currentStage = 2
             
             #Finally, if the defender is too far forward
@@ -242,7 +242,7 @@ def workingForward():
     elif cPlayer[1] < -360:
         FFX_blitzPathing.setMovement([-462,-354])
     else:
-        FFX_blitzPathing.setMovement([-572, -123])
+        FFX_blitzPathing.setMovement([-574, -135])
 
 def findSafePlace():
     #current player
@@ -289,12 +289,12 @@ def findSafePlace():
     #Now attempt to move to the target.
     #If we're at the target, return True.
     #Decision-making will be based on if we're at the target, dealt with in parent function.
-    if forwardSpecial == True:
-        if playerArray[controllingPlayer()].getCoords()[1] < -380:
-            workingForward()
-        else:
-            FFX_blitzPathing.setMovement([-521,-266])
-    elif FFX_blitzPathing.setMovement(targetCoords):
+    #if forwardSpecial == True:
+    #    if playerArray[controllingPlayer()].getCoords()[1] < -380:
+    #        workingForward()
+    #    else:
+    #        FFX_blitzPathing.setMovement([-521,-266])
+    if FFX_blitzPathing.setMovement(targetCoords):
         return True
     else:
         return False
@@ -527,18 +527,16 @@ def tidusMove():
     
     goalDistance = distance(0,11)
     otherDistance = 0
-    if distance(0,6) < 280:
+    if distance(0,6) < 180:
         otherDistance += 1
-    if distance(0,7) < 280:
+    if distance(0,7) < 180:
         otherDistance += 1
-    if graavDistance < 280:
+    if distance(0,9) < 180:
         otherDistance += 1
-    if distance(0,9) < 280:
-        otherDistance += 1
-    if distance(0,10) < 280:
+    if distance(0,10) < 180:
         otherDistance += 1
     
-    shootTarget = [-100, 582]
+    shootTarget = [-170, 584]
     
     if currentStage > 15:
         targetCoords = playerArray[3].getCoords()
@@ -657,13 +655,13 @@ def lettyMove():
         findSafePlace()
     else:
         if distance(3,8) < 340 or distance(3,7) < 340:
-            findSafePlace()
+            if findSafePlace() and graavDistance < 280:
+                FFX_Xbox.tapX()
         elif playerArray[2].currentHP() < 10:
             print("Letty out of HP. Passing to Jassu.")
             FFX_Xbox.tapX()
         else:
-            if findSafePlace() and graavDistance < 320:
-                FFX_Xbox.tapX()
+            findSafePlace()
 
 def lettyAct():
     currentStage = gameStage()

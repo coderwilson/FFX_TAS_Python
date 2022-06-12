@@ -8,14 +8,6 @@ import math
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
-#import FFX_memory
-#import FFX_Battle
-#import FFX_Screen
-
-#FFXC = pyxinput.vController()
-#FFXC = pyxinput.rController(0)
-#FFXCread = pyxinput.rController(0)
-
 class vgTranslator:
     def __init__(self):
         self.gamepad = vg.VX360Gamepad()

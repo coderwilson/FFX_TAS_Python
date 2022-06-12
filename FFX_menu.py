@@ -354,13 +354,19 @@ def battleSiteOaka1():
             FFX_memory.waitFrames(2)
     
     itemOrder = FFX_memory.getItemsOrder()
-    items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2, 8]]
+    if FFX_memory.rngSeed() != 160:
+        items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2, 8]]
+    else:
+        items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2]]
     print(items_to_sell)
     for slot, cur_item in items_to_sell:
         print(slot, cur_item)
         _navigate_to_position(slot, FFX_memory.equipSellRow)
         cur_amount = FFX_memory.getItemCountSlot(slot)
-        amount_to_sell = max(cur_amount - {0:0, 1:0, 2:0, 8:0}[cur_item], 0)
+        if FFX_memory.rngSeed() == 160:
+            amount_to_sell = max(cur_amount - {0:0, 1:0, 2:0}[cur_item], 0)
+        else:
+            amount_to_sell = max(cur_amount - {0:0, 1:0, 2:0, 8:0}[cur_item], 0)
         print("Selling from ", cur_amount, " to ", amount_to_sell)
         while FFX_memory.itemShopMenu() != 27:
             FFX_Xbox.tapB()

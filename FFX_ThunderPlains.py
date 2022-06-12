@@ -80,11 +80,11 @@ def southPathing():
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.menuB()
     FFXC.set_neutral()
+    FFX_menu.autoSortEquipment()
     complete = 1
 
 def agencyShop():
     speedCount = FFX_memory.getSpeed()
-    
     
     speedNeeded = max(0, min(2, 14 - speedCount)) #15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     grenade_slot = FFX_memory.getItemSlot(35)

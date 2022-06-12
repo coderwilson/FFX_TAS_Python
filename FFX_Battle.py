@@ -443,6 +443,9 @@ def Klikk():
                 elif grenadeCount < 3:
                     print("Attempting to steal from Klikk")
                     Steal()
+                elif FFX_memory.rngSeed() == 160 and grenadeCount < 4:
+                    print("Attempting to steal from Klikk")
+                    Steal()
                 else:
                     attack('none')
                     klikkAttacks += 1
@@ -605,12 +608,12 @@ def SinFin():
                 print("Tidus defend")
             elif FFX_Screen.turnYuna():
                 buddySwapLulu() # Yuna out, Lulu in
-                thunderTarget(target=23, direction='u')
+                thunderTarget(target=23, direction='r')
             elif FFX_Screen.turnKimahri():
-                lancetTarget(target=23, direction='u')
+                lancetTarget(target=23, direction='r')
                 kimTurn = True
             elif FFX_Screen.turnLulu():
-                thunderTarget(target=23, direction='u')
+                thunderTarget(target=23, direction='r')
             else:
                 defend()
         if finTurns >= 3 and kimTurn == True:
@@ -624,9 +627,9 @@ def SinFin():
             turnCounter += 1
             if FFX_Screen.turnKimahri():
                 FFX_Screen.awaitTurn()
-                lancetTarget(23, 'u')
+                lancetTarget(23, 'r')
             elif FFX_Screen.turnLulu():
-                thunderTarget(23, 'u')
+                thunderTarget(23, 'r')
             elif FFX_Screen.turnTidus():
                 if turnCounter < 4:
                     defend()
@@ -663,9 +666,12 @@ def Echuilles():
                     print("Tidus attack")
                     attack('none')
             elif FFX_Screen.turnWakka():
-                if tidusCounter == 1:
+                if tidusCounter == 1 and FFX_memory.rngSeed() != 160:
                     print("Dark Attack")
                     useSkill(0)  #Dark Attack
+                elif FFX_memory.getEnemyCurrentHP()[0] <= 558:
+                    print("Ready for Tidus Overdrive. Wakka defends.")
+                    defend()
                 else:
                     print("Wakka attack")
                     attack('none')
@@ -950,9 +956,14 @@ def sonicWings():
             FFX_Xbox.tapDown()
         else:
             FFX_Xbox.tapUp()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
     print("Valefor attempting to use Sonic Wings - 2")
-    
-    FFX_Xbox.SkipDialog(2)
     
 
 def Geneaux():
@@ -1052,7 +1063,7 @@ def Oblitzerator(earlyHaste):
         #First turn is always Tidus. Haste Lulu if we've got the levels.
         tidusHaste(direction='left', character=5)
 
-    while not FFX_memory.menuOpen(): #AKA end of battle screen
+    while not FFX_memory.battleComplete(): #AKA end of battle screen
         if FFX_memory.turnReady():
             if crane < 3:
                 if FFX_Screen.turnLulu():
@@ -1081,7 +1092,7 @@ def Oblitzerator(earlyHaste):
                 if FFX_Screen.turnLulu():
                     thunder('none')
                 elif FFX_Screen.turnTidus():
-                    attack('none')
+                    attackOblitzEnd()
                 else:
                     defend()
         elif FFX_memory.diagSkipPossible():
@@ -1090,6 +1101,8 @@ def Oblitzerator(earlyHaste):
             #print("Waiting for turn, Oblitzerator fight")
     print("End of fight, Oblitzerator")
     FFX_memory.clickToControl()
+    FFX_Logs.writeStats("RNG02 after battle:")
+    FFX_Logs.writeStats(FFX_memory.rng02())
 
 def afterBlitz1(earlyHaste):
     FFX_Logs.writeLog("Fight start: After Blitzball (the fisheys)")
@@ -3274,6 +3287,14 @@ def sandragora(version):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Screen.awaitTurn()
+        elif FFX_memory.rngSeed() == 31:
+                print("Manipulating known seed 31")
+                fleeAll()
+                FFX_memory.clickToControl()
+                FFXC.set_movement(0, 1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                FFX_Screen.awaitTurn()
         else:
             print("DO NOT Swap odd/even seeds on RNG01")
     
@@ -3628,7 +3649,7 @@ def guards(groupNum, sleepingPowders):
                         useItem(FFX_memory.getUseItemsSlot(27))
                     elif FFX_memory.getUseItemsSlot(39) != 255:
                         useItem(FFX_memory.getUseItemsSlot(39))
-                    elif FFX_memory.faintCheck() >= 1:
+                    elif FFX_Screen.faintCheck() >= 1:
                         revive()
                     else:
                         defend()
@@ -3782,13 +3803,14 @@ def seymourNatus_neTesting():
     FFX_Logs.writeLog("Fight start: Highbridge")
     fight = 0
     turn = 0
+    aeonSummoned = False
     rng12Manip = FFX_memory.nextChanceRNG12(beforeNatus=True)
     rng10Next = FFX_memory.nextChanceRNG10(30)
     while FFX_memory.battleActive():
         if FFX_memory.getBattleNum() == 272:  # Seymour Natus
             print("Seymour Natus engaged")
             while not FFX_memory.menuOpen():
-                if FFX_memory.turnReady():
+                if FFX_memory.turnReady() and not aeonSummoned:
                     if FFX_Screen.turnTidus():
                         if FFX_memory.getLuluSlvl() < 35:
                             buddySwapLulu()
@@ -3803,8 +3825,11 @@ def seymourNatus_neTesting():
                         attack('none')
                     elif FFX_Screen.turnYuna():
                         aeonSummon(4)
+                        aeonSummoned = True
                     elif FFX_Screen.turnAeon():
-                        FFX_Xbox.SkipDialog(3) #Finishes the fight.
+                        FFX_Xbox.SkipDialog(3) #Finishes the fight
+                elif FFX_memory.turnReady():
+                    attack('none')
             return 1
         else:
             if rng12Manip == 0:
@@ -3832,12 +3857,13 @@ def seymourNatus():
     FFX_Logs.writeLog("Fight start: Seymour Natus")
     fight = 0
     turn = 0
+    aeonSummoned = False
     while not FFX_memory.userControl():
         if FFX_memory.getBattleNum() == 272:  # Seymour Natus
             print("Seymour Natus engaged")
             fight = 1
             while not FFX_memory.menuOpen():
-                if FFX_memory.turnReady():
+                if FFX_memory.turnReady() and not aeonSummoned:
                     if FFX_Screen.turnTidus():
                         if FFX_memory.getLuluSlvl() < 35:
                             buddySwapLulu()
@@ -3852,8 +3878,11 @@ def seymourNatus():
                         attack('none')
                     elif FFX_Screen.turnYuna():
                         aeonSummon(4)
+                        aeonSummoned = True
                     elif FFX_Screen.turnAeon():
                         FFX_Xbox.SkipDialog(3) #Finishes the fight.
+                elif FFX_memory.turnReady():
+                    attack('none')
             return 1
             #if FFX_memory.diagSkipPossible():
             #    FFX_Xbox.tapB()  # In case there's any dialog skipping
@@ -3993,7 +4022,7 @@ def seymourFlux():
                         attack('none')
                     else:
                         impulse()
-                elif FFX_memory.faintCheck() >= 1:
+                elif FFX_Screen.faintCheck() >= 1:
                     revive()
                 else:
                     defend()
@@ -4431,7 +4460,56 @@ def attackSelfTanker():
             FFX_Xbox.tapLeft()
     tapTargeting()
 
-def attack(direction):
+def oblitzRngWait():
+    if FFX_memory.rngSeed() != 31:
+        return False
+    if gameVars.usePause():
+        fullRngList = [-936146351, 783164740, -433527773, 298578755, 1709935847, -928539788, 566589561, -348814187, -1953896653, 1467711668, 2021978880, 1051281977, 58046422, -49080059, 832181030, -582803672, -919546980, -944931993, -1691878525, -676599964, 190150946, -635005377, -1472231111, 980825690, 1748967869, 2131880750, -1777695758, -577305152, 1072229501, -263086907, 735722232, 98610709, -787863605, 1876162930, 253163151, -55561781, -2116790766, -457792397, -1960937765, 1900305980, 332190114, -291030536, 2095135700, -257601274, -1516062954, -556593345, 155185062, -1916624866, 681247051, 1163128705, 1006522324, -1935370802, -1045783984, 580455735, 1033351229, -1450036323, -596521206, 617577836, 1377642898, -1003061117, -2069128403, 174192090, -1279316923, 794425718, -5042938, 1503882547, 763110694, 1061375372, -1891856333, 1081850723, -359912819, -2134745985, -402660695, -716858602, 1523757657, -803832703, 1358833959, -144149980, -1013659464, 1361125441, 1782454472, 1280391322, -855716004, -1309857057, 501223935, -1719675399, -323599442, -1165299850, 1169366007, -1831316087, 849721475, -1666466051, 248624608, 1955148740, 1312079881, 556171044, -124467772, 674570695]
+        goodRngList = [-1472231111, 980825690, 1782454472]
+        # 980825690 > 2131880750 is not so good.
+        # 980825690 > 1748967869 is not so good.
+    else:
+        goodRngList = [0]
+    
+    waitCounter = 0
+    lastRng02 = FFX_memory.rng02()
+    FFX_Logs.writeStats("====================================")
+    while waitCounter != 100 and not FFX_memory.s32(FFX_memory.rng02()) in goodRngList:
+        print(waitCounter, " | ", FFX_memory.s32(lastRng02))
+        if FFX_memory.s32(FFX_memory.rng02()) != FFX_memory.s32(lastRng02):
+            FFX_Logs.writeStats(str(waitCounter) + " | " + str(FFX_memory.s32(FFX_memory.rng02())))
+            lastRng02 = FFX_memory.rng02()
+            waitCounter += 1
+    FFX_Logs.writeStats("====================================")
+    if waitCounter < 100:
+        return True
+    return False
+
+def attackOblitzEnd():
+    print("Attack")
+    if not FFX_memory.turnReady():
+        while not FFX_memory.turnReady():
+            pass
+    while FFX_memory.mainBattleMenu():
+        if not FFX_memory.battleMenuCursor() in [0, 203, 210, 216]:
+            print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
+            FFX_Xbox.tapUp()
+        elif FFX_Screen.BattleComplete():
+            return
+        else:
+            FFX_Xbox.menuB()
+    FFX_memory.waitFrames(1)
+    rngWaitResults = oblitzRngWait()
+    FFX_memory.waitFrames(1)
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    print("Oblitz RNG wait results: ", oblitzRngWait)
+    FFX_Logs.writeStats("RNG02 on attack:")
+    FFX_Logs.writeStats(FFX_memory.s32(FFX_memory.rng02()))
+
+def attack(direction="none"):
     print("Attack")
     direction = direction.lower()
     if not FFX_memory.turnReady():
@@ -4461,7 +4539,6 @@ def attack(direction):
     if direction == "down":
         FFX_Xbox.tapDown()
     tapTargeting()
-    FFX_Xbox.tapB()
 
 def _steal(direction=None):
     if not FFX_memory.mainBattleMenu():
@@ -5724,6 +5801,11 @@ def calmLandsManip():
     if checkGems() < 2:
         print("++Calm Lands battle, looking for gems.")
         calmLandsGems()
+    #elif FFX_memory.nextChanceRNG13() == 1 and FFX_memory.nextChanceRNG12() == 1:
+    #    if FFX_memory.nextChanceRNG10() != 3:
+    #        advanceRNG10(FFX_memory.nextChanceRNG10Calm2())
+    #    else:
+    #        fleeAll()
     elif FFX_memory.nextChanceRNG12() != 0:
         print("Not ready for NE armor drop. Apply logic to try to drop something else.")
         #NE armor too far ahead. Need to drop armors.
