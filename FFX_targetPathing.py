@@ -5,8 +5,8 @@ import FFX_memory
 
 from math import copysign
 import numpy as np
-
 FFXC = FFX_Xbox.controllerHandle()
+
 #FFXC = FFX_Xbox.FFXC
 
 def setMovement(target) -> bool:

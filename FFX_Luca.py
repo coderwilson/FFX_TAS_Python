@@ -187,7 +187,7 @@ def blitzStart():
                 FFX_Xbox.tapB()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                #print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -199,7 +199,7 @@ def afterBlitz():
     checkpoint = 0
     while checkpoint < 36:
         if FFX_memory.userControl():
-            print("Checkpoint: ", checkpoint)
+            #print("Checkpoint: ", checkpoint)
             #Events
             if checkpoint == 8: #First chest
                 if gameVars.earlyHaste() == -1:
