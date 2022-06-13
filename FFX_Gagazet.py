@@ -28,7 +28,6 @@ def checkGems():
 def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
-    FFX_menu.prepCalmLands()
     FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
     
@@ -64,6 +63,7 @@ def calmLands():
 
 def defenderX():
     FFX_memory.awaitControl()
+    FFX_menu.prepCalmLands()
     FFX_memory.fullPartyFormat('kimahri')
     while FFX_targetPathing.setMovement([67,-255]) == False:
         pass

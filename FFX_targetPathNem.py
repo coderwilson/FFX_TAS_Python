@@ -927,26 +927,26 @@ def calm(checkpoint):
         x = -620
         y = -142
     if checkpoint == 1:
-        x = -562
-        y = -147
+        x = -519
+        y = -301
     if checkpoint == 2:
-        x = -476
-        y = -31
+        x = -435
+        y = -568
     if checkpoint == 3: #First farm position
-        x = -321
-        y = 676
+        x = -351
+        y = -706
     if checkpoint == 4:
-        x = -464
-        y = 723
+        x = -370
+        y = -902
     if checkpoint == 5: #Onward to next area
         x = -201
         y = 143
     if checkpoint == 6:
-        x = 417
-        y = -137
+        x = 266
+        y = -559
     if checkpoint == 7:
-        x = 575
-        y = -116
+        x = 969
+        y = -253
     if checkpoint == 8:
         x = 1179
         y = -212

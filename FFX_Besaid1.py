@@ -76,10 +76,11 @@ def Beach():
             elif checkpoint < 22 and FFX_memory.getMap() == 69:
                 checkpoint = 22
             elif checkpoint < 29 and FFX_memory.getMap() == 133:
-                FFX_memory.clickToDiagProgress(9) #You do remember the prayer?
-                FFX_memory.waitFrames(20)
-                FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
+                if not gameVars.csr():
+                    FFX_memory.clickToDiagProgress(9) #You do remember the prayer?
+                    FFX_memory.waitFrames(20)
+                    FFX_Xbox.menuDown()
+                    FFX_Xbox.menuB()
                 checkpoint = 29
             elif checkpoint == 36 and FFX_memory.getMap() == 17:
                 checkpoint = 37
@@ -269,8 +270,11 @@ def leaving():
                         battleHP = FFX_memory.getBattleHP()
                         enemyHP = FFX_memory.getEnemyCurrentHP()
                         if not gameVars.earlyTidusGrid() and battleHP[0] < 120 and enemyHP[0] > 119:
-                            FFX_Battle.usePotionCharacter(0, 'l')
-                            healCount += 1
+                            if FFX_memory.rngSeed() == 31:
+                                FFX_Battle.attack('none')
+                            else:
+                                FFX_Battle.usePotionCharacter(0, 'l')
+                                healCount += 1
                         else:
                             FFX_Battle.attack('none')
                     elif FFX_memory.diagSkipPossible():

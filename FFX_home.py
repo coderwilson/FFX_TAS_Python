@@ -17,13 +17,13 @@ def desert():
     
     #Speed sphere stuff. Improve this later.
     needSpeed = False
-    if FFX_memory.getSpeed() < 9:
+    if FFX_memory.getSpeed() < 5:
         needSpeed = True
         #FFX_memory.setSpeed(9)
         #Reprogram battle logic to throw some kind of grenades.
     
     #Same for Power spheres
-    if FFX_memory.getPower() < 23:
+    if FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
         needPower = True
     
     #Logic for finding Teleport Spheres x2 (only chest in this area)

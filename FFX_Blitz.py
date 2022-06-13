@@ -168,7 +168,8 @@ def gameStage():
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
         stages = [0, 110, 110, 140, 159, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
-        stages = [0, 0, 230, 264, 278, 278]
+        #stages = [0, 0, 230, 264, 278, 278]
+        stages = [0, 6, 6, 264, 278, 278]
     else: #Used for any non-story blitzing.
         stages = [0, 0, 0, 0, 0, 270]
     
@@ -242,7 +243,7 @@ def workingForward():
     elif cPlayer[1] < -360:
         FFX_blitzPathing.setMovement([-462,-354])
     else:
-        FFX_blitzPathing.setMovement([-574, -135])
+        FFX_blitzPathing.setMovement([-574, -165])
 
 def findSafePlace():
     #current player
@@ -562,10 +563,13 @@ def tidusMove():
             #Too many players closing in.
             FFXC.set_movement(-1, -1)
             FFX_Xbox.tapX()
-        else:
-            FFX_blitzPathing.setMovement(shootTarget)
+        elif FFX_blitzPathing.setMovement(shootTarget) and FFX_memory.getStoryProgress() >= 570:
+            FFXC.set_movement(-1, -1)
+            FFX_Xbox.tapX()
     else: #stages 3 and 4 only. All other stages we try to pass, or just shoot.
-        FFX_blitzPathing.setMovement(shootTarget)
+        if FFX_blitzPathing.setMovement(shootTarget) and FFX_memory.getStoryProgress() >= 570:
+            FFXC.set_movement(-1, -1)
+            FFX_Xbox.tapX()
 
 def tidusAct():
     currentStage = gameStage()

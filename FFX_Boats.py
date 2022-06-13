@@ -130,6 +130,37 @@ def ssWinno2():
         FFX_memory.clickToDiagProgress(142)
         FFX_Xbox.clearSavePopup(0)
 
+def jechtShotSuccess():
+    FFXC.set_value('Dpad', 1) #Up
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 1) #Up
+    FFXC.set_value('Dpad', 8) #Right
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 8) #Right
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 8) #Right
+    FFXC.set_value('Dpad', 2) #Down
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 2) #Down
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 2) #Down
+    FFXC.set_value('Dpad', 4) #Left
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 4) #Left
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFXC.set_value('Dpad', 4) #Left
+    FFXC.set_value('Dpad', 1) #Up
+    FFX_Xbox.tapB()
+    FFXC.set_neutral()
+    FFX_Xbox.tapB()
+
 def jechtShot():
     #Jecht shot tutorial
     print("Ready for Jecht Shot")
@@ -150,7 +181,12 @@ def jechtShot():
             FFX_Xbox.tapB()
         FFXC.set_neutral()
     
-    #Let's attempt the jecht shot!
+    #Failure logic
     FFX_Xbox.SkipDialog(2)
     print("End Jecht Shot")
     print("We are intentionally failing the Jecht shot. Save the frames!")
+    
+    #Success logic
+    #for i in range(15):
+    #    jechtShotSuccess()
+    #Does not work with CSR version 1.2.0
