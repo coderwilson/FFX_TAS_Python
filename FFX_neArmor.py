@@ -34,6 +34,8 @@ def toHiddenCave():
                         FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
                     else:
                         FFX_Battle.advanceRNG12()
+                elif FFX_memory.nextChanceRNG10() >= 1:
+                    FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
                 else:
                     FFX_Battle.fleeAll()
                 FFX_memory.fullPartyFormat('yuna')

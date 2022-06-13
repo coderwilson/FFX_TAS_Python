@@ -675,11 +675,14 @@ def getBattleFormation():
     key = baseValue + 0x00D2C8A9
     char10 = process.readBytes(key,1)
 
-    battleForm = [char1, char2, char3, char4, char5, char6, char7, char8, char9, char10]
+    battleForm = [char4, char5, char6, char7, char8, char9, char10]
     print(battleForm)
     if 255 in battleForm:
         while 255 in battleForm:
             battleForm.remove(255)
+    battleForm.insert(0,char3)
+    battleForm.insert(0,char2)
+    battleForm.insert(0,char1)
     print(battleForm)
     return battleForm
 
@@ -701,7 +704,7 @@ def getBattleCharSlot(charNum):
         if battleForm[6] == charNum:
             return 6
     except:
-        return 0
+        return 255
 
 def getBattleCharTurn():
     global baseValue
@@ -1028,6 +1031,9 @@ def berserkstate(character):
         return False
 
 def petrifiedstate(character):
+    if not character in getActiveBattleFormation():
+        return False
+    
     global process
     global baseValue
     basePointer = baseValue + 0xD334CC
@@ -1117,26 +1123,6 @@ def getEnemyCurrentHP():
     print("Enemy HP current values:")
     print(currentHP)
     return currentHP
-
-def setEnemyCurrentHP(numToSet, newHP):
-    getEnemyCurrentHP()
-    global process
-    global baseValue
-    numToSet = numToSet + 20
-    enemyNum = 20
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
-
-    while enemyNum < 25:
-        offset1 = (0xf90 * enemyNum)+0x594
-        key1 = basePointerAddress + offset1
-        offset2 = (0xf90 * enemyNum)+0x5D0
-        key2 = basePointerAddress + offset2
-        if enemyNum == numToSet:
-            currentHP = [process.writeBytes(key2, newHP,4)]
-            print("HP value has been changed.")
-        enemyNum += 1
-    getEnemyCurrentHP()
 
 def getEnemyMaxHP():
     global process
@@ -1501,7 +1487,11 @@ def desertFormat(rikkuCharge):
         fullPartyFormat('desert2')
 
 def partySize():
-    return len(getBattleFormation())
+    battleForm = getBattleFormation()
+    if 255 in battleForm:
+        while 255 in battleForm:
+            battleForm.remove(255)
+    return len(battleForm)
 
 def activepartySize():
     battleForm = getActiveBattleFormation()
@@ -3656,9 +3646,9 @@ def arenaFarmCheck(zone:str="besaid",endGoal:int=10,report=False):
     if zone == "bikanel2":
         zoneIndexes = [12,29,42,53,88]
     if zone == "calm":
-        zoneIndexes = [55,57,72,73,80]
-    if zone == "calm2":
         zoneIndexes = [4,13,19,33]
+    if zone == "calm2":
+        zoneIndexes = [55,57,72,73,80]
     if zone == "calm3":
         zoneIndexes = [4,13,19,33,55,57,72,73,80]
     if zone == "gagazet1": #Swimming in cave
