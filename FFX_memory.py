@@ -688,6 +688,8 @@ def getBattleFormation():
 
 def getBattleCharSlot(charNum):
     battleForm = getBattleFormation()
+    if not charNum in battleForm:
+        return 255
     try:
         if battleForm[0] == charNum:
             return 0
