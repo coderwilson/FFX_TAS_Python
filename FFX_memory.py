@@ -1905,14 +1905,14 @@ def overdriveState2():
     print("Overdrive values: ", retVal)
     return retVal
 
-def dodgeLightning(lDodgeNum): #Not working yet
+def dodgeLightning(lDodgeNum):
     global baseValue
     
     if lStrikeCount() != lDodgeNum or (lStrikeCount() == 1 and lDodgeNum == 0):
-        waitFrames(3)
+        waitFrames(1)
         FFX_Xbox.tapB()
         FFX_Xbox.tapB()
-        waitFrames(3)
+        waitFrames(1)
         return True
     else:
         return False
