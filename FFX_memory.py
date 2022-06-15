@@ -616,7 +616,7 @@ def getBattleHP():
     key = baseValue + 0x00F3F8C4
     hp3 = process.read(key)
     hpArray = [hp1, hp2, hp3]
-    print("HP values: ", hpArray)
+    #print("HP values: ", hpArray)
     return hpArray
 
 def getBattleNum():
@@ -1907,9 +1907,10 @@ def dodgeLightning(lDodgeNum): #Not working yet
     global baseValue
     
     if lStrikeCount() != lDodgeNum or (lStrikeCount() == 1 and lDodgeNum == 0):
-        waitFrames(30 * 0.07)
-        FFX_Xbox.menuB()
-        waitFrames(30 * 0.07)
+        waitFrames(3)
+        FFX_Xbox.tapB()
+        FFX_Xbox.tapB()
+        waitFrames(3)
         return True
     else:
         return False

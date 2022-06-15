@@ -92,8 +92,8 @@ StepCounter = 5 #Can pick regular run vs nemesis below.
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -399,21 +399,21 @@ while Gamestate != "End":
     if Gamestate == "none" and StepCounter == 1:
         reportGamestate()
         FFX_DreamZan.NewGame(Gamestate)
-        rngSeed = FFX_memory.rngSeed()
-        print("---RNG seed: ", rngSeed)
-        FFX_Logs.nextStats(rngSeed)
-        FFX_Logs.writeStats("RNG seed:")
-        FFX_Logs.writeStats(rngSeed)
 
         gameVars.setStartVars()
         Gamestate = "DreamZan"
         FFX_memory.waitFrames(30 * 0.5)
         FFX_DreamZan.NewGame2()
         startTime = FFX_Logs.timeStamp()
-        FFX_Logs.writeStats("Start time:")
-        FFX_Logs.writeStats(str(startTime))
         print("Timer starts now.")
         FFX_DreamZan.listenStory()
+        rngSeed = FFX_memory.rngSeed()
+        print("---RNG seed: ", rngSeed)
+        FFX_Logs.nextStats(rngSeed)
+        FFX_Logs.writeStats("RNG seed:")
+        FFX_Logs.writeStats(rngSeed)
+        FFX_Logs.writeStats("Start time:")
+        FFX_Logs.writeStats(str(startTime))
         #Start of the game, up through the start of Sinspawn Ammes fight
         StepCounter = 2
         FFX_DreamZan.ammesBattle()

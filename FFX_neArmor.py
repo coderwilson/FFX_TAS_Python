@@ -13,12 +13,17 @@ FFXC = FFX_Xbox.controllerHandle()
 def toHiddenCave():
     FFX_memory.fullPartyFormat('yuna')
     FFX_memory.printManipInfo()
+    firstSave = False
     checkpoint = 0
     while FFX_memory.getMap() != 56:
         #print(FFX_memory.getMap())
         if FFX_memory.userControl():
             if checkpoint < 5 and FFX_memory.getMap() == 266:
                 checkpoint = 5
+            if checkpoint == 6 and not firstSave:
+                if FFX_memory.getTidusMP() < 8:
+                    FFX_memory.touchSaveSphere()
+                firstSave = True
             if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1):
                 checkpoint -= 2
             elif checkpoint == 9:
