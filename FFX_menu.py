@@ -1060,7 +1060,7 @@ def seymourNatusBlitzLoss():
 
 def prepCalmLands():
     openGrid(character=1)
-    if gameVars.getBlitzWin() == True:
+    if gameVars.getBlitzWin():
         FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()

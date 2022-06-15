@@ -3291,14 +3291,14 @@ def sandragora(version):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Screen.awaitTurn()
-        elif FFX_memory.rngSeed() == 31:
-                print("Manipulating known seed 31")
-                fleeAll()
-                FFX_memory.clickToControl()
-                FFXC.set_movement(0, 1)
-                FFX_memory.awaitEvent()
-                FFXC.set_neutral()
-                FFX_Screen.awaitTurn()
+        #elif FFX_memory.rngSeed() == 31:
+        #        print("Manipulating known seed 31")
+        #        fleeAll()
+        #        FFX_memory.clickToControl()
+        #        FFXC.set_movement(0, 1)
+        #        FFX_memory.awaitEvent()
+        #        FFXC.set_neutral()
+        #        FFX_Screen.awaitTurn()
         else:
             print("DO NOT Swap odd/even seeds on RNG01")
     
@@ -3557,21 +3557,23 @@ def guards(groupNum, sleepingPowders):
                     attack('none')
                 elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri() and num_throws < 2:
                     silenceSlot = FFX_memory.getUseItemsSlot(39)
-                    if num_throws == 0:
+                    if num_throws == 0 and FFX_memory.getUseItemsSlot(37) < 200:
                         useItem(FFX_memory.getUseItemsSlot(37))
                     else:
                         if FFX_memory.getUseItemsSlot(40) != 255:
                             useItem(FFX_memory.getUseItemsSlot(40))
-                        elif FFX_memory.getUseItemsSlot(27) != 255:
-                            useItem(FFX_memory.getUseItemsSlot(27))
                         elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
                             #Save one for later if possible
                             useItem(FFX_memory.getUseItemsSlot(39))
                         elif FFX_memory.getUseItemsSlot(37) != 255:
                             useItem(FFX_memory.getUseItemsSlot(37))
+                        elif FFX_memory.getUseItemsSlot(27) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(27))
                         elif silenceSlot != 255:
                             #Throw last Silence grenade as a last resort.
                             useItem(FFX_memory.getUseItemsSlot(39))
+                        else:
+                            defend()
                     num_throws += 1
                 else:
                     defend()
@@ -3586,16 +3588,16 @@ def guards(groupNum, sleepingPowders):
                         attackByNum(22,'r')
                 elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
                     silenceSlot = FFX_memory.getUseItemsSlot(39)
-                    if FFX_memory.getUseItemsSlot(37) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(37))
-                    elif FFX_memory.getUseItemsSlot(40) != 255:
+                    if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
+                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
+                        #Save one for later if possible
+                        useItem(FFX_memory.getUseItemsSlot(39))
+                    elif FFX_memory.getUseItemsSlot(37) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(37))
                     elif FFX_memory.getUseItemsSlot(27) != 255:
                         useItem(FFX_memory.getUseItemsSlot(27))
                     elif FFX_memory.getUseItemsSlot(39) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(39))
-                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
-                        #Save one for later if possible
                         useItem(FFX_memory.getUseItemsSlot(39))
                     else:
                         defend()
@@ -3631,10 +3633,17 @@ def guards(groupNum, sleepingPowders):
                 elif FFX_Screen.turnKimahri():
                     if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
+                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
+                        #Save one for later if possible
+                        useItem(FFX_memory.getUseItemsSlot(39))
+                    elif FFX_memory.getUseItemsSlot(37) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(37))
                     elif FFX_memory.getUseItemsSlot(27) != 255:
                         useItem(FFX_memory.getUseItemsSlot(27))
                     elif FFX_memory.getUseItemsSlot(39) != 255:
                         useItem(FFX_memory.getUseItemsSlot(39))
+                    else:
+                        defend()
                 elif FFX_Screen.turnRikku():
                     buddySwapTidus()
                 else:
@@ -3649,12 +3658,15 @@ def guards(groupNum, sleepingPowders):
                 elif FFX_Screen.turnRikku():
                     if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
+                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
+                        #Save one for later if possible
+                        useItem(FFX_memory.getUseItemsSlot(39))
+                    elif FFX_memory.getUseItemsSlot(37) != 255:
+                        useItem(FFX_memory.getUseItemsSlot(37))
                     elif FFX_memory.getUseItemsSlot(27) != 255:
                         useItem(FFX_memory.getUseItemsSlot(27))
                     elif FFX_memory.getUseItemsSlot(39) != 255:
                         useItem(FFX_memory.getUseItemsSlot(39))
-                    elif FFX_Screen.faintCheck() >= 1:
-                        revive()
                     else:
                         defend()
                 elif FFX_Screen.turnKimahri():
@@ -3866,8 +3878,8 @@ def seymourNatus():
         if FFX_memory.getBattleNum() == 272:  # Seymour Natus
             print("Seymour Natus engaged")
             fight = 1
-            while not FFX_memory.menuOpen():
-                if FFX_memory.turnReady() and not aeonSummoned:
+            while not FFX_memory.battleComplete():
+                if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         if FFX_memory.getLuluSlvl() < 35:
                             buddySwapLulu()
@@ -3881,15 +3893,16 @@ def seymourNatus():
                         FFX_Xbox.tapUp()
                         attack('none')
                     elif FFX_Screen.turnYuna():
-                        aeonSummon(4)
-                        aeonSummoned = True
+                        if not aeonSummoned:
+                            aeonSummon(4)
+                            aeonSummoned = True
+                        else:
+                            attack('none')
                     elif FFX_Screen.turnAeon():
                         FFX_Xbox.SkipDialog(3) #Finishes the fight.
-                elif FFX_memory.turnReady():
-                    attack('none')
+                    else:
+                        defend()
             return 1
-            #if FFX_memory.diagSkipPossible():
-            #    FFX_Xbox.tapB()  # In case there's any dialog skipping
         elif FFX_memory.getBattleNum() == 270:  # YAT-63 x2
             fight = 4
             while FFX_memory.battleActive():
@@ -4468,9 +4481,9 @@ def oblitzRngWait():
     if FFX_memory.rngSeed() != 31:
         return False
     if gameVars.usePause():
-        goodRngList = [-1472231111, 980825690, 1782454472]
+        goodRngList = [1467711668, 190150946, 1782454472]
     else:
-        goodRngList = [-613775323]
+        goodRngList = [527494414]
     
     waitCounter = 0
     lastRng02 = FFX_memory.rng02()
@@ -5058,12 +5071,12 @@ def fleeAll():
                 print("Tidus Position: ", tidus_position)
                 if FFX_Screen.turnTidus():
                     tidusFlee()
-                elif checkTidusOk() and tidus_position >= 3 and tidus_position != 255:
+                elif tidus_position >= 3 and tidus_position != 255:
                     buddySwapTidus()
                 elif not checkTidusOk() or tidus_position == 255 or FFX_memory.tidusEscapedState():
                     escapeOne()
                 else:
-                    defend()  
+                    defend()
     FFX_memory.clickToControl3()
     print("Flee complete")
 
@@ -5894,19 +5907,35 @@ def advanceRNG10(numAdvances:int):
     print("#################")
     print("###RNG10 logic###")
     print("##    ", numAdvances, "      ##")
+    print("##    ", FFX_Screen.faintCheck(), "      ##")
     print("#################")
     while FFX_memory.battleActive():
-        if FFX_memory.battleType() == 2:
+        if FFX_Screen.faintCheck() >= 1:
+            currentParty = FFX_memory.getActiveBattleFormation()
+            if 255 in [currentParty[0], currentParty[1], currentParty[2]] and numAdvances >= 6:
+                if FFX_memory.turnReady():
+                    print("+++Registering character fainted, advances: ", numAdvances)
+                    print("+++Registering turn, defend for more advances")
+                    defend()
+            else:
+                print("+++Registering character fainted, advances: ", numAdvances)
+                print("+++Registering turn, flee")
+                fleeAll()
+        elif FFX_memory.battleType() == 2:
+            print("+++Registering ambush")
             fleeAll()
         elif FFX_memory.getBattleNum() == 321:
+            print("+++Registering evil jar guy")
             print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
             fleeAll()
-        elif FFX_memory.getBattleNum() == 319:
-            advanceRNG10Ghost(numAdvances)
-        elif numAdvances in [1,2] and FFX_memory.getNextTurn() < 20 and FFX_memory.getBattleNum() != 287:
+        #elif FFX_memory.getBattleNum() == 319:
+        #    advanceRNG10Ghost(numAdvances)
+        elif numAdvances in [1,2] and FFX_memory.getBattleNum() != 287:
             if FFX_memory.turnReady():
+                print("+++Registering advances: ", numAdvances)
                 if not advanceComplete:
                     if FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
+                        print("+++Registering turn, steal character")
                         if FFX_memory.getBattleNum() == 313:
                             _steal('down')
                             numAdvances -= 1
@@ -5922,14 +5951,16 @@ def advanceRNG10(numAdvances:int):
                     elif FFX_memory.getBattleCharSlot(3) >= 3:
                         buddySwapKimahri()
                     else:
+                        print("+++Registering turn, someone defending")
                         defend()
                 else:
+                    print("+++Registering turn, Flee All turn")
                     fleeAll()
         elif numAdvances >= 3:
             if FFX_memory.turnReady():
-                if FFX_Screen.faintCheck() >= 1:
-                    fleeAll()
-                elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
+                print("+++Registering advances: ", numAdvances)
+                if FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
+                    print("+++Registering turn, steal character")
                     #Most convenient since overdrive is needed for Flux.
                     if numAdvances % 3 != 0:
                         if FFX_memory.getBattleNum() == 313:
@@ -5944,6 +5975,7 @@ def advanceRNG10(numAdvances:int):
                     else:
                         defend()
                 elif FFX_Screen.turnTidus():
+                    print("+++Registering turn, Tidus")
                     if FFX_memory.getBattleCharSlot(6) >= 3 and FFX_memory.overdriveState()[6] != 100:
                         buddySwapRikku()
                     elif FFX_memory.getBattleCharSlot(3) >= 3:
@@ -5951,8 +5983,10 @@ def advanceRNG10(numAdvances:int):
                     else:
                         escapeOne()
                 else:
+                    print("+++Registering turn, other character")
                     escapeOne()
         else: #any other scenarios, ready to advance.
+            print("+++Registering other event, forcing flee.")
             fleeAll()
     FFX_memory.clickToControl()
     healUp(3)
@@ -5963,7 +5997,7 @@ def rng12Attack():
             attackByNum(21,'u') #Second target
         if FFX_memory.getBattleNum() in [284]:
             attackByNum(22,'u') #Third target
-        if FFX_memory.getBattleNum() in [286]:
+        if FFX_memory.getBattleNum() in [286,289]:
             attackByNum(21,'r') #Second target, aim right (aeon only)
         if FFX_memory.getBattleNum() in [303]:
             attackByNum(21,'l') #Second target
@@ -5988,11 +6022,11 @@ def advanceRNG12():
                 else:
                     aeonSummon(4)
             elif FFX_Screen.turnAeon():
-                if advances == 0:
-                    print("GTFO this battle.")
+                if aeonTurn:
                     aeonDismiss()
-                elif advances >= 2:
+                elif advances >= 2 and not attackCount:
                     impulse()
+                    attackCount = True
                 elif advances == 1 and not attackCount:
                     attackCount = True
                     rng12Attack()
@@ -6006,10 +6040,10 @@ def advanceRNG12():
                     buddySwapYuna()
                 else:
                     defend()
-        FFX_memory.clickToControl3()
-        #FFX_memory.fullPartyFormat('rikku')
-    if FFX_memory.getMap() == 223:
-        healUp(3)
+    FFX_memory.clickToControl3()
+    #FFX_memory.fullPartyFormat('rikku')
+    #if FFX_memory.getMap() == 223:
+    #    healUp(3)
 
 def ghostKill():
     silenceSlot = FFX_memory.getUseItemsSlot(39)
@@ -6027,6 +6061,7 @@ def ghostKill():
                     itemThrown = True
                 elif not selfHaste:
                     tidusHaste('none')
+                    selfHaste = True
                 else:
                     attack('none')
             elif FFX_Screen.turnRikku():

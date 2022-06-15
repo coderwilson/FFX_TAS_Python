@@ -166,10 +166,11 @@ def gameStage():
     #Stage 5: Shoot for goal
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
-        stages = [0, 110, 110, 140, 159, tidusShotTiming()]
+        #stages = [0, 110, 110, 140, 159, tidusShotTiming()]
+        stages = [0, 2, 2, 141, 160, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
-        #stages = [0, 0, 230, 264, 278, 278]
-        stages = [0, 6, 6, 264, 278, 278]
+        stages = [0, 0, 230, 264, 278, 278]
+        #stages = [0, 6, 6, 264, 278, 278]
     else: #Used for any non-story blitzing.
         stages = [0, 0, 0, 0, 0, 270]
     
