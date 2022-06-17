@@ -686,8 +686,10 @@ def getBattleFormation():
     print(battleForm)
     return battleForm
 
-def getBattleCharSlot(charNum):
+def getBattleCharSlot(charNum) -> int:
     battleForm = getBattleFormation()
+    if not charNum in battleForm:
+        return 255
     try:
         if battleForm[0] == charNum:
             return 0
@@ -1903,7 +1905,7 @@ def overdriveState2():
     print("Overdrive values: ", retVal)
     return retVal
 
-def dodgeLightning(lDodgeNum): #Not working yet
+def dodgeLightning(lDodgeNum):
     global baseValue
     
     if lStrikeCount() != lDodgeNum or (lStrikeCount() == 1 and lDodgeNum == 0):
