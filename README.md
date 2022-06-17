@@ -17,6 +17,9 @@ pip install ReadWriteMemory
 pip install pyautogui
 pip install pyxinput
 
+Step 1.1, install the 4gb patch on speedruncom:
+https://www.speedrun.com/ffx/guide/oyi9n
+
 -------------------------------------------------------------------
 Virtual Gamepad stuff:
 Premise: vgamepad installed from previous steps
