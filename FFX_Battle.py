@@ -6014,7 +6014,11 @@ def advanceRNG12():
     attackCount = False
     aeonTurn = False
     while FFX_memory.battleActive():
-        if FFX_memory.turnReady():
+        if FFX_memory.getBattleNum() == 321:
+            print("+++Registering evil jar guy")
+            print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
+            fleeAll()
+        elif FFX_memory.turnReady():
             advances = FFX_memory.nextChanceRNG12()
             if FFX_Screen.turnYuna():
                 if aeonTurn:
@@ -6054,20 +6058,19 @@ def ghostKill():
         #Try to get NEA on Tidus
         if FFX_memory.turnReady():
             if FFX_Screen.turnTidus():
-                if not itemThrown:
-                    buddySwapRikku()
-                    FFX_Screen.awaitTurn()
-                    useItem(silenceSlot)
-                    itemThrown = True
-                elif not selfHaste:
+                if not selfHaste:
                     tidusHaste('none')
                     selfHaste = True
                 else:
                     attack('none')
+            elif FFX_Screen.faintCheck():
+                revive()
             elif FFX_Screen.turnRikku():
-                buddySwapTidus()
-            elif FFX_Screen.turnKimahri():
-                buddySwapYuna()
+                if not itemThrown:
+                    useItem(silenceSlot)
+                    itemThrown = True
+                else:
+                    buddySwapYuna()
             elif FFX_Screen.turnYuna():
                 if FFX_memory.getEnemyCurrentHP()[0] > 3000:
                     attack('none')

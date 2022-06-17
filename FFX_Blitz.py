@@ -151,7 +151,7 @@ def cursor1():
     return FFX_memory.blitzCursor()
 
 def tidusShotTiming() -> int:
-    baseTiming = int(170)
+    baseTiming = int(169)
     for x in range(5):
         if distance(0,x+6) < 180:
             baseTiming = int(baseTiming - 4)
@@ -167,7 +167,7 @@ def gameStage():
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
         #stages = [0, 110, 110, 140, 159, tidusShotTiming()]
-        stages = [0, 2, 2, 141, 160, tidusShotTiming()]
+        stages = [0, 2, 2, 143, 160, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700: #End of the storyline game
         stages = [0, 0, 230, 264, 278, 278]
         #stages = [0, 6, 6, 264, 278, 278]
@@ -244,7 +244,7 @@ def workingForward():
     elif cPlayer[1] < -360:
         FFX_blitzPathing.setMovement([-462,-354])
     else:
-        FFX_blitzPathing.setMovement([-574, -165])
+        FFX_blitzPathing.setMovement([-585, -80]) #range -125 to -140 doesn't work
 
 def findSafePlace():
     #current player

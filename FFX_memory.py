@@ -686,7 +686,7 @@ def getBattleFormation():
     print(battleForm)
     return battleForm
 
-def getBattleCharSlot(charNum):
+def getBattleCharSlot(charNum) -> int:
     battleForm = getBattleFormation()
     if not charNum in battleForm:
         return 255

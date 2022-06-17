@@ -45,7 +45,7 @@ def desert():
     #    itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
     #else:
     #    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
-    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
+    itemsNeeded = 8 - (stealItems[1] + stealItems[2] + stealItems[3])
     
     FFX_menu.equipSonicSteel()
     FFX_memory.closeMenu()
@@ -175,7 +175,7 @@ def desert():
                 print("-----------------------------")
                 print("Items status: ", stealItems)
                 print("-----------------------------")
-                itemsNeeded = 7 - sum(stealItems)
+                itemsNeeded = 8 - sum(stealItems)
                 
                 #Finally, check for other factors and report to console.
                 if FFX_memory.overdriveState()[6] == 100:

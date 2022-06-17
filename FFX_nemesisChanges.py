@@ -83,7 +83,7 @@ def calmLands():
 
 def calmLands_1():
     #Enter the cutscene that starts Calm Lands
-    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
+    FFX_memory.fullPartyFormat('yuna', fullMenuClose=True)
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
         if FFX_memory.userControl():
             FFXC.set_movement(0, 1)

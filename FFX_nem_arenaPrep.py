@@ -231,7 +231,7 @@ def returnToAirship():
 def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
     print("### Battle Start: ", FFX_memory.getBattleNum())
     FFXC.set_neutral()
-    if faythCave==True and FFX_memory.battleType == 2:
+    if faythCave==True and FFX_memory.battleType() == 2:
         FFX_Screen.awaitTurn()
         FFX_Battle.fleeAll()
     else:
@@ -498,10 +498,13 @@ def bribeBattle(spareChangeValue:int=12000):
                         FFX_Xbox.tapDown()
                     else:
                         FFX_Xbox.tapUp()
+                    if gameVars.usePause():
+                        FFX_memory.waitFrames(6)
+                FFX_memory.waitFrames(30)
                 FFX_Xbox.tapB()
-                FFX_memory.waitFrames(9)
+                FFX_memory.waitFrames(30)
                 FFX_Xbox.tapB()
-                FFX_memory.waitFrames(9)
+                FFX_memory.waitFrames(30)
                 FFX_Battle.calculateSpareChangeMovement(spareChangeValue)
                 while FFX_memory.spareChangeOpen():
                     FFX_Xbox.tapB()
@@ -513,7 +516,7 @@ def bribeBattle(spareChangeValue:int=12000):
     while not FFX_memory.menuOpen():
         pass
     FFXC.set_value("BtnB", 1)
-    FFX_memory.waitFrames(120)
+    FFX_memory.waitFrames(150)
     FFXC.set_value("BtnB", 0)
     print("Now back in control.")
 
@@ -1734,6 +1737,8 @@ def stolenFaythCave(capNum:int=10):
             elif checkpoint == 41 and not FFX_memory.arenaFarmCheck(zone="stolenfayth2",endGoal=capNum,report=False):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
+            elif checkpoint > 26 and FFX_memory.getCoords()[1] < 300:
+                checkpoint = 22
             elif checkpoint in [5,14]:
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
