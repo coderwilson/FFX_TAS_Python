@@ -69,7 +69,17 @@ def forest1():
     else:
         checkpoint = 2
     while FFX_memory.getMap() != 108: #All the way into the trials
-        if FFX_memory.userControl():
+        if checkpoint == 101: #Into the trials
+            if not FFX_memory.userControl():
+                FFXC.set_neutral()
+                FFX_Xbox.tapB()
+            elif FFX_memory.getCoords()[0] > 3:
+                FFXC.set_movement(-1, 1)
+            elif FFX_memory.getCoords()[0] < -3:
+                FFXC.set_movement(1, 1)
+            else:
+                FFXC.set_movement(0, 1)
+        elif FFX_memory.userControl():
             if checkpoint == 81 or checkpoint == 82:
                 #print("Valefor charge state: ", valeforCharge)
                 if valeforCharge == True:
@@ -104,12 +114,6 @@ def forest1():
             #elif checkpoint == 97 and gameVars.csr():
             #    #FFX_memory.clickToEventTemple(0)
             #    checkpoint = 100
-            elif checkpoint == 101: #Into the trials
-                FFXC.set_movement(0, 1)
-                FFX_memory.awaitEvent()
-                FFXC.set_neutral()
-                FFX_memory.clickToControl()
-                #Do not increment checkpoint. Just repeat this logic until entering the trials.
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika2(checkpoint)) == True:

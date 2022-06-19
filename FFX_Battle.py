@@ -2193,23 +2193,28 @@ def spherimorph():
                 else:
                     defend()
             elif turnchar == 5:
-                if spellNum == 1:
-                    fire()
-                elif spellNum == 2:
-                    ice()
-                elif spellNum == 3:
-                    thunder()
+                if not spheriSpellItemReady():
+                    if spellNum == 1:
+                        fire()
+                    elif spellNum == 2:
+                        ice()
+                    elif spellNum == 3:
+                        thunder()
+                    else:
+                        water()
+                    FFX_Screen.awaitTurn()
+                    if FFX_memory.getCharWeakness(20) == 1:
+                        spellNum = 4 #Ice
+                    elif FFX_memory.getCharWeakness(20) == 2:
+                        spellNum = 1 #Fire
+                    elif FFX_memory.getCharWeakness(20) == 4:
+                        spellNum = 3 #Water
+                    elif FFX_memory.getCharWeakness(20) == 8:
+                        spellNum = 2 #Thunder
+                elif FFX_memory.getBattleCharSlot(5) < 3 and rikkuslotnum >= 3:
+                    buddySwapRikku()
                 else:
-                    water()
-                FFX_Screen.awaitTurn()
-                if FFX_memory.getCharWeakness(20) == 1:
-                    spellNum = 4 #Ice
-                elif FFX_memory.getCharWeakness(20) == 2:
-                    spellNum = 1 #Fire
-                elif FFX_memory.getCharWeakness(20) == 4:
-                    spellNum = 3 #Water
-                elif FFX_memory.getCharWeakness(20) == 8:
-                    spellNum = 2 #Thunder
+                    defend()
                 
             elif turnchar == 6:
                 if rikkuturns == 0:
@@ -2226,6 +2231,11 @@ def spherimorph():
                         spellNum = 2 #Thunder
                         
                     #spellNum = FFX_Screen.spherimorphSpell()
+                elif not spheriSpellItemReady():
+                    if FFX_memory.getBattleCharSlot(6) >= 3:
+                        buddySwapLulu()
+                    else:
+                        defend()
                 else:
                     print("Starting Rikku's overdrive")
                     FFX_Logs.writeStats("Spherimorph spell used:")
@@ -6069,6 +6079,8 @@ def ghostKill():
                 if not itemThrown:
                     useItem(silenceSlot)
                     itemThrown = True
+                elif FFX_memory.rngSeed() == 31:
+                    buddySwapLulu()
                 else:
                     buddySwapYuna()
             elif FFX_Screen.turnYuna():

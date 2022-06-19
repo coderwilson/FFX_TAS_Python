@@ -1653,11 +1653,11 @@ def Luca1(checkpoint):
     if checkpoint == 8:
         print("Upside down T section")
     if checkpoint == 9:
-        x = 203
-        y = 23
+        x = 195
+        y = -26
     if checkpoint == 10:
         x = 250
-        y = 23
+        y = -15
     if checkpoint == 11:
         x = 51
         y = -49
