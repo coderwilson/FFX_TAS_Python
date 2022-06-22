@@ -73,10 +73,10 @@ if gameVars.nemesis():
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-Gamestate = "rescueYuna"
+#Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-StepCounter = 5 #Can pick regular run vs nemesis below.
+#StepCounter = 5 #Can pick regular run vs nemesis below.
 #Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
@@ -110,7 +110,7 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 255 #New seed number, only used if doing seed hunt.
-rngSelectArray = [31,41,157,182,224]
+rngSelectArray = [31,41,157,224]
 goodSeeds = [31,41,157,160,182,224]
 #160 is WR for both categories, but otherwise rather unimpressive.
 #182, needs improved Spherimorph logic.
@@ -126,10 +126,12 @@ elif Gamestate != "none":
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
+    #gameVars.SETcsr(True)
 elif seedHunt == False: #Below logic for full runs only.
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     rngSeedNum = 31 #Manually choose seed here.
     #Current WR is on seed 160 for both any% and CSR%
+    #TAS PB is on seed 31
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
