@@ -515,6 +515,7 @@ def seymourNatus():
                     FFX_Battle.fleeAll()
                 else:
                     complete = FFX_Battle.seymourNatus()
+                    FFX_memory.printManipInfo()
     
     #Movement for make-out scene
     FFX_memory.clickToControl()

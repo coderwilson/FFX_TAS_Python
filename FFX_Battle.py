@@ -6062,12 +6062,19 @@ def advanceRNG12():
 def ghostKill():
     silenceSlot = FFX_memory.getUseItemsSlot(39)
     itemThrown = silenceSlot >= 200
+    summonChad = silenceSlot >= 200
     selfHaste = False
     print("++Silence slot: ", silenceSlot)
     while FFX_memory.battleActive():
         #Try to get NEA on Tidus
         if FFX_memory.turnReady():
-            if FFX_Screen.turnTidus():
+            if summonChad and not 1 in FFX_memory.getActiveBattleFormation():
+                print("+++No silence grenade. Summon Chad!!!")
+                buddySwapYuna()
+            elif not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
+                print("+++Silence grenade, Rikku to throw item.")
+                buddySwapRikku()
+            elif FFX_Screen.turnTidus():
                 if not selfHaste:
                     tidusHaste('none')
                     selfHaste = True
@@ -6084,10 +6091,14 @@ def ghostKill():
                 else:
                     buddySwapYuna()
             elif FFX_Screen.turnYuna():
-                if FFX_memory.getEnemyCurrentHP()[0] > 3000:
+                if summonChad:
+                    aeonSummon(4)
+                elif FFX_memory.getEnemyCurrentHP()[0] > 3000:
                     attack('none')
                 else:
                     defend()
+            elif FFX_Screen.turnAeon():
+                attack('none')
             else:
                 defend()
     FFX_memory.clickToControl3()
