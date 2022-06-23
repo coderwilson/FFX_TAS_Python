@@ -26,28 +26,28 @@ def halftimeDialog():
     return FFX_memory.diagProgressFlag() in [45,46]
 
 def selectMovement():
-    return FFX_memory.blitzMenuNum() == 146
+    return FFX_memory.blitzMenuNum() in [145,146]
 
 def selectFormation():
-    return FFX_memory.blitzMenuNum() == 133
+    return FFX_memory.blitzMenuNum() in [122,133]
 
 def selectFormation2():
     return FFX_memory.blitzMenuNum() == 144
 
 def selectBreakthrough():
-    if FFX_memory.blitzMenuNum() >= 0 and FFX_memory.blitzMenuNum() <= 46:
+    if (FFX_memory.blitzMenuNum() >= 0 and FFX_memory.blitzMenuNum() <= 46) or FFX_memory.blitzMenuNum() == 246:
         return True
     else:
         return False
 
 def selectAction():
-    return FFX_memory.blitzMenuNum() == 52
+    return FFX_memory.blitzMenuNum() in [47,52]
 
 def selectPassTarget():
-    return FFX_memory.blitzMenuNum() == 226
+    return FFX_memory.blitzMenuNum() in [226,236]
 
 def selectShotType():
-    return FFX_memory.blitzMenuNum() == 117
+    return FFX_memory.blitzMenuNum() in [113,117]
 
 def targettedPlayer():
     retVal = FFX_memory.blitzTargetPlayer() - 2

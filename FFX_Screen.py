@@ -33,6 +33,8 @@ def faintCheck():
     charHP = FFX_memory.getBattleHP()
     frontParty = FFX_memory.getActiveBattleFormation()
     partySize = FFX_memory.activepartySize()
+    print("## ", frontParty, " ##")
+    print("## ", charHP, " ##")
     if turnAeon():
         return 0
     if frontParty[0] != 255 and charHP[0] == 0:
@@ -41,8 +43,7 @@ def faintCheck():
         faints += 1
     if frontParty[2] != 255 and charHP[2] == 0:
         faints += 1
-    if faints > 0:
-        FFX_Logs.writeLog("Num of characters have fainted: " + str(faints))
+    print("## Num of characters have fainted: ", faints, " ##")
     return faints
 
 def BattleComplete():
