@@ -4493,7 +4493,7 @@ def oblitzRngWait():
     if gameVars.usePause():
         goodRngList = [1467711668, 190150946, 1782454472]
     else:
-        goodRngList = [527494414]
+        goodRngList = [527494414, 562491965, 463558997, 2040111393, 281000320, 85955655]
     
     waitCounter = 0
     lastRng02 = FFX_memory.rng02()
@@ -5862,7 +5862,7 @@ def calmLandsManip():
     healUp(fullMenuClose=True)
     FFX_memory.printManipInfo()
 
-def advanceRNG10Ghost(numAdvances:int):
+def advanceRNG10Ghost(numAdvances:int): #unused
     silenceGrenade = False
     hasteRikku = False
     hasteSelf = False
@@ -5938,8 +5938,6 @@ def advanceRNG10(numAdvances:int):
             print("+++Registering evil jar guy")
             print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
             fleeAll()
-        #elif FFX_memory.getBattleNum() == 319:
-        #    advanceRNG10Ghost(numAdvances)
         elif numAdvances in [1,2] and FFX_memory.getBattleNum() != 287:
             if FFX_memory.turnReady():
                 print("+++Registering advances: ", numAdvances)
@@ -5984,6 +5982,8 @@ def advanceRNG10(numAdvances:int):
                             numAdvances -= 1
                     else:
                         defend()
+                elif 255 in [currentParty[0], currentParty[1], currentParty[2]] and numAdvances >= 6:
+                    defend()
                 elif FFX_Screen.turnTidus():
                     print("+++Registering turn, Tidus")
                     if FFX_memory.getBattleCharSlot(6) >= 3 and FFX_memory.overdriveState()[6] != 100:
@@ -6007,7 +6007,7 @@ def rng12Attack():
             attackByNum(21,'u') #Second target
         if FFX_memory.getBattleNum() in [284]:
             attackByNum(22,'u') #Third target
-        if FFX_memory.getBattleNum() in [286,289]:
+        if FFX_memory.getBattleNum() in [275,286,289]:
             attackByNum(21,'r') #Second target, aim right (aeon only)
         if FFX_memory.getBattleNum() in [303]:
             attackByNum(21,'l') #Second target
@@ -6068,7 +6068,9 @@ def ghostKill():
     while FFX_memory.battleActive():
         #Try to get NEA on Tidus
         if FFX_memory.turnReady():
-            if summonChad and not 1 in FFX_memory.getActiveBattleFormation():
+            if FFX_Screen.turnAeon():
+                attack('none')
+            elif summonChad and not 1 in FFX_memory.getActiveBattleFormation():
                 print("+++No silence grenade. Summon Chad!!!")
                 buddySwapYuna()
             elif not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
@@ -6097,8 +6099,6 @@ def ghostKill():
                     attack('none')
                 else:
                     defend()
-            elif FFX_Screen.turnAeon():
-                attack('none')
             else:
                 defend()
     FFX_memory.clickToControl3()

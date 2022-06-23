@@ -50,9 +50,9 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -92,8 +92,8 @@ if gameVars.nemesis():
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -400,11 +400,15 @@ while Gamestate != "End":
     #Start of the game, start of Dream Zanarkand section
     if Gamestate == "none" and StepCounter == 1:
         reportGamestate()
+        print("New Game 1 function initiated.")
         FFX_DreamZan.NewGame(Gamestate)
+        print("New Game 1 function complete.")
 
         gameVars.setStartVars()
+        print("Variables initialized.")
         Gamestate = "DreamZan"
         FFX_memory.waitFrames(30 * 0.5)
+        print("New Game 2 function initiated.")
         FFX_DreamZan.NewGame2()
         startTime = FFX_Logs.timeStamp()
         print("Timer starts now.")

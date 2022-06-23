@@ -51,25 +51,27 @@ def NewGame(Gamestate):
     
     #New version
     while FFX_memory.getMap() != 0:
-        if FFX_memory.diagSkipPossible():
-            if Gamestate == 'none':
-                if FFX_memory.saveMenuCursor() == 1:
-                    FFX_Xbox.menuDown()
-                else:
-                    FFX_memory.waitFrames(2)
-                    FFX_Xbox.menuB()
-            else:
-                if FFX_memory.saveMenuCursor() == 0:
-                    FFX_Xbox.menuDown()
-                else:
-                    FFX_Xbox.menuB()
-                    FFX_Xbox.menuB()
-                    break
-        elif FFX_memory.getMap() != 23:
+        #print(FFX_memory.diagSkipPossible())
+        #FFX_Xbox.menuDown()
+        #if FFX_memory.diagSkipPossible():
+        if FFX_memory.getMap() != 23:
             FFXC.set_value('BtnStart', 1)
             FFX_memory.waitFrames(1)
             FFXC.set_value('BtnStart', 0)
             FFX_memory.waitFrames(1)
+        elif Gamestate == 'none':
+            if FFX_memory.saveMenuCursor() == 1:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_memory.waitFrames(2)
+                FFX_Xbox.menuB()
+        else:
+            if FFX_memory.saveMenuCursor() == 0:
+                FFX_Xbox.menuDown()
+            else:
+                FFX_Xbox.menuB()
+                FFX_Xbox.menuB()
+                break
     FFX_memory.clearNameAeonReady()
     
 def NewGame2():

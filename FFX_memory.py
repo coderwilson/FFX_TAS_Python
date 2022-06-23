@@ -1909,10 +1909,9 @@ def dodgeLightning(lDodgeNum):
     global baseValue
     
     if lStrikeCount() != lDodgeNum or (lStrikeCount() == 1 and lDodgeNum == 0):
-        waitFrames(1)
-        FFX_Xbox.tapB()
-        FFX_Xbox.tapB()
         waitFrames(3)
+        FFX_Xbox.tapB()
+        waitFrames(5)
         return True
     else:
         return False
