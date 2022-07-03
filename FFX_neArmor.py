@@ -117,7 +117,9 @@ def dropHunt():
                         FFX_memory.nextChanceRNG01()
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-    print("The NE armor hunt is complete.")
+    print("The NE armor hunt is complete. Char: ", gameVars.neArmor())
+    FFX_Logs.writeStats("NEA char:")
+    FFX_Logs.writeStats(gameVars.neArmor())
 
 def returnToGagazet():
     unequip = False

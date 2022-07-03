@@ -77,18 +77,20 @@ def touchSave(realSave=False):
     arenaNPC()
 
 def airShipDestination(destNum=0): #Default to Sin.
-    while FFX_memory.oakaGilCursor() != 20:
+    while FFX_memory.getMap() != 382:
         if FFX_memory.userControl():
             FFX_targetPathNem.setMovement([-251,340])
         else:
             FFXC.set_neutral()
         FFX_Xbox.menuB()
+    while FFX_memory.diagProgressFlag() != 4:
+        FFX_Xbox.menuB()
     print("Destination select on screen now.")
     while FFX_memory.mapCursor() != destNum:
-        if destNum == 7:
+        if destNum < 8:
             FFX_Xbox.tapDown()
         else:
-            FFX_memory.menuDirection(FFX_memory.mapCursor(), destNum, 13)
+            FFX_Xbox.tapUp()
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(2)
     FFX_Xbox.tapB()

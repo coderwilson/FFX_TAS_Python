@@ -144,7 +144,9 @@ def lakeRoad2():
                     checkpoint += 1
     
     else:
-        FFX_memory.waitFrames(30 * 6)
+        FFXC.set_movement(0, -1)
+        FFX_memory.waitFrames(3)
+        FFX_memory.awaitEvent()
         FFXC.set_neutral()
         
         FFX_memory.clickToControl() #Auron's musings.

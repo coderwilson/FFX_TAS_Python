@@ -60,14 +60,19 @@ def NewGame(Gamestate):
             FFXC.set_value('BtnStart', 0)
             FFX_memory.waitFrames(1)
         elif Gamestate == 'none':
+            FFX_memory.waitFrames(60)
             if FFX_memory.saveMenuCursor() == 1:
-                FFX_Xbox.menuDown()
+                while FFX_memory.saveMenuCursor() != 0:
+                    FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
             else:
-                FFX_memory.waitFrames(2)
                 FFX_Xbox.menuB()
         else:
+            FFX_memory.waitFrames(60)
             if FFX_memory.saveMenuCursor() == 0:
-                FFX_Xbox.menuDown()
+                while FFX_memory.saveMenuCursor() != 1:
+                    FFX_Xbox.menuDown()
+                FFX_Xbox.menuB()
             else:
                 FFX_Xbox.menuB()
                 FFX_Xbox.menuB()

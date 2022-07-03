@@ -23,7 +23,15 @@ def desert():
         #Reprogram battle logic to throw some kind of grenades.
     
     #Same for Power spheres
-    if FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
+    if gameVars.nemesis():
+        if FFX_memory.getPower() >= 26 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (20 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 20):
+            needPower = False
+        else:
+            needPower = True
+        
+    elif FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
+        needPower = False
+    else:
         needPower = True
     
     #Logic for finding Teleport Spheres x2 (only chest in this area)
@@ -183,8 +191,13 @@ def desert():
                 #if FFX_memory.getSpeed() >= 5:
                 if FFX_memory.getSpeed() >= 9:
                     needSpeed = False
-                #if FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
-                if FFX_memory.getPower() >= 23:
+                if gameVars.nemesis():
+                    if FFX_memory.getPower() >= 26 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (20 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 20):
+                        needPower = False
+                    else:
+                        needPower = True
+                elif FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
+                #if FFX_memory.getPower() >= 23:
                     needPower = False
                 print("-----------------------------Flag statuses")
                 print("Rikku is charged up: ", chargeState)
@@ -297,10 +310,21 @@ def findSummoners():
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("Let's go get that airship!")
+    FFX_memory.clickToDiagProgress(27)
+    #FFX_memory.waitFrames(30)
+    #FFX_Xbox.tapB()
+    while not FFX_memory.cutsceneSkipPossible():
+        FFX_Xbox.tapB()
+    FFX_Xbox.skipScene()
+    FFX_memory.clickToDiagProgress(105)
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(15)
+    FFX_Xbox.skipScene()
+    
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         elif FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.skipScene()
-            FFX_Xbox.SkipDialog(3)
     print("Airship is good to go. Now for Yuna.")

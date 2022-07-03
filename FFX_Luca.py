@@ -183,7 +183,7 @@ def blitzStart():
                 and checkpoint >= 5:
                 checkpoint = 4
             elif checkpoint == 8:
-                FFX_targetPathing.setMovement([-103, -4])
+                FFX_targetPathing.setMovement([-111, -4])
                 FFX_Xbox.tapB()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)) == True:
                 checkpoint += 1
