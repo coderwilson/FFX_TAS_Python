@@ -30,6 +30,7 @@ def preEvrae():
                 checkpoint += 1
             elif checkpoint == 13:
                 FFX_memory.touchSaveSphere()
+                FFX_memory.fullPartyFormat('evrae')
                 checkpoint += 1
             elif checkpoint == 18:
                 FFX_memory.clickToEventTemple(4)
@@ -64,38 +65,42 @@ def guards():
 
     
     guardNum = 1
-    csSkips = 0
-    while FFX_memory.getStoryProgress() < 2085:
+    while FFX_memory.getMap() != 182:
         if FFX_memory.userControl():
-            FFX_targetPathing.setMovement([0, -200])
+            #print("TEST*Movement")
+            if FFX_memory.getMap() == 180:
+                FFX_memory.clickToEventTemple(6) #Take the spiral lift down
+            elif FFX_memory.getMap() == 181:
+                while not FFX_targetPathing.setMovement([-110,0]):
+                    pass
+                FFX_memory.clickToEventTemple(0) #Through the water door
+            else:
+                FFX_targetPathing.setMovement([0, -200])
         else:
+            #print("TEST*Action")
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Battle.guards(guardNum, sleepingPowders)
+                if guardNum == 2:
+                    FFX_memory.clickToControl()
+                    FFX_memory.fullPartyFormat('guards_lulu')
+                elif guardNum == 5:
+                    pass
+                else:
+                    FFX_memory.clickToControl()
+                    FFX_memory.fullPartyFormat('guards_no_lulu')
                 guardNum += 1
-            elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+            elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
-                csSkips += 1
-                if csSkips == 1:
-                    FFX_Xbox.skipStoredScene(3)
+                if FFX_memory.diagProgressFlag() == 12:
+                    FFX_Xbox.tapX()
                 else:
                     FFX_Xbox.skipScene()
-    print("End of Bevelle guards")
+            elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
+    print("-------End of Bevelle guards")
     
-    FFXC.set_neutral()
-    while not FFX_memory.userControl():
-        if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
-            FFX_Xbox.tapB()
-    print("User control re-gained.")
-    
-    while FFX_memory.getMap() != 182:
-        if FFX_memory.getMap() == 180:
-            FFX_memory.clickToEventTemple(6) #Take the spiral lift down
-        elif FFX_memory.getMap() == 181:
-            while not FFX_targetPathing.setMovement([-110,0]):
-                pass
-            FFX_memory.clickToEventTemple(0) #Through the water door
     
     checkpoint = 0
     while checkpoint < 8:

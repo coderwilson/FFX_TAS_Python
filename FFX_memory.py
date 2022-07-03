@@ -1120,10 +1120,9 @@ def getEnemyCurrentHP():
                 maxHP.append(nextHP)
                 currentHP.append(process.readBytes(key2,4))
         enemyNum += 1
-    print("Enemy HP max values:")
-    print(maxHP)
-    print("Enemy HP current values:")
-    print(currentHP)
+    #print("Enemy HP max values:")
+    #print(maxHP)
+    print("Enemy HP current values: ", currentHP)
     return currentHP
 
 def getEnemyMaxHP():

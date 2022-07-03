@@ -387,5 +387,7 @@ def leavingDjose():
                 FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
+            elif FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
         
     FFXC.set_neutral()

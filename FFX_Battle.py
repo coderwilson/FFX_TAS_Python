@@ -1104,7 +1104,7 @@ def Oblitzerator(earlyHaste):
     print("End of fight, Oblitzerator")
     FFX_memory.clickToControl()
     FFX_Logs.writeStats("RNG02 after battle:")
-    FFX_Logs.writeStats(FFX_memory.rng02())
+    FFX_Logs.writeStats(FFX_memory.s32(FFX_memory.rng02()))
 
 def afterBlitz1(earlyHaste):
     FFX_Logs.writeLog("Fight start: After Blitzball (the fisheys)")
@@ -1832,6 +1832,39 @@ def fleePathing():
                 escapeOne()
 
 
+def wakkaOD():
+    print("Wakka overdrive activating")
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapLeft()
+    while not FFX_memory.interiorBattleMenu():
+        #print("A")
+        FFX_Xbox.tapB()
+    while FFX_memory.interiorBattleMenu():
+        #print("B")
+        FFX_Xbox.tapB()
+    
+    FFX_memory.waitFrames(1)
+    FFX_Xbox.tapB()
+    
+    #while not FFX_memory.overdriveMenuActive():
+    #    print("C")
+    #    FFX_Xbox.tapB()
+    FFX_memory.waitFrames(95)
+    print("Hit Overdrive")
+    FFX_Xbox.tapB() #First reel
+    FFX_memory.waitFrames(13)
+    FFX_Xbox.tapB() #Second reel
+    FFX_memory.waitFrames(5)
+    FFX_Xbox.tapB() #Third reel
+    
+    FFX_memory.waitFrames(68) #In case there is a slow animation
+    print("Hit Overdrive backup")
+    FFX_Xbox.tapB() #First reel
+    FFX_memory.waitFrames(25)
+    FFX_Xbox.tapB() #Second reel
+    FFX_memory.waitFrames(5)
+    FFX_Xbox.tapB() #Third reel
+
 def extractor():
     print("Fight start: Extractor")
     FFXC.set_neutral()
@@ -1858,13 +1891,26 @@ def extractor():
         if FFX_memory.specialTextOpen():
             FFX_Xbox.tapB()
         elif FFX_memory.turnReady():
-            if FFX_Screen.faintCheck() > 0:
+            if FFX_Screen.faintCheck() > 0 and FFX_memory.getEnemyCurrentHP()[0] > 1100:
                 revive()
-            elif FFX_Screen.turnTidus() and ((gameVars.getLStrike() % 2 == 0 and cheerCount < 4) or (gameVars.getLStrike() % 2 == 1 and cheerCount < 1)): 
-                cheerCount += 1
-                cheer()
+            elif FFX_Screen.turnTidus():
+                print(FFX_memory.getActorCoords(3))
+                if FFX_memory.getActorCoords(3)[2] < -155:
+                    attack('none')
+                elif tidusCheer:
+                    cheerCount += 1
+                    cheer()
+                elif FFX_memory.getEnemyCurrentHP()[0] < 1400 and not FFX_Screen.faintCheck():
+                    defend()
+                else:
+                    attack('none')
             else:
-                attack('none')
+                if FFX_memory.getEnemyCurrentHP()[0] < 1900 and FFX_memory.getOverdriveBattle(4) == 100:
+                    wakkaOD()
+                #elif FFX_memory.getBattleHP()[1] < 250 and FFX_memory.getEnemyCurrentHP()[0] > 1000:
+                #    revive(itemNum = 1) #Safety hi-potion
+                else:
+                    attack('none')
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
     FFX_memory.clickToControl()
@@ -3611,7 +3657,6 @@ def guards(groupNum, sleepingPowders):
                         useItem(FFX_memory.getUseItemsSlot(39))
                     else:
                         defend()
-        FFX_memory.clickToControl()
     else: # We do not have sleeping powders
         while not FFX_memory.battleComplete():
             if groupNum in [1, 3]:
@@ -3641,6 +3686,7 @@ def guards(groupNum, sleepingPowders):
                     else:
                         attack('none')
                 elif FFX_Screen.turnKimahri():
+                    silenceSlot = FFX_memory.getUseItemsSlot(39)
                     if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
                     elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
@@ -3666,6 +3712,7 @@ def guards(groupNum, sleepingPowders):
                     else:
                         attackByNum(22, 'l')
                 elif FFX_Screen.turnRikku():
+                    silenceSlot = FFX_memory.getUseItemsSlot(39)
                     if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
                     elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
@@ -3683,11 +3730,6 @@ def guards(groupNum, sleepingPowders):
                     buddySwapTidus()
                 else:
                     defend()
-        FFX_memory.clickToControl()
-        if groupNum == 2:
-            FFX_memory.fullPartyFormat('guards_lulu')
-        else:
-            FFX_memory.fullPartyFormat('guards_no_lulu')
 
 def isaaru():
     FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")
@@ -3891,7 +3933,7 @@ def seymourNatus():
             while not FFX_memory.battleComplete():
                 if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
-                        if FFX_memory.getLuluSlvl() < 35:
+                        if FFX_memory.getLuluSlvl() < 35 or gameVars.nemesis():
                             buddySwapLulu()
                             FFX_Screen.awaitTurn()
                             FFX_Xbox.weapSwap(0)
@@ -4491,23 +4533,26 @@ def oblitzRngWait():
     if FFX_memory.rngSeed() != 31:
         return False
     if gameVars.usePause():
-        goodRngList = [1467711668, 190150946, 1782454472]
+        goodRngList = [1103903145, 886305782, -1640850005]
+        # 1467711668, Graav engages for no reason
     else:
-        goodRngList = [527494414, 562491965, 463558997, 2040111393, 281000320, 85955655]
+        goodRngList = [345511282, 41645750, 323111951, 1827503098, 330516972, 562491965, 2040111393, 281000320, 351049783]
+        # re-add 345511282 later
+        #345511282 is interesting, if we can get Botta to pass the ball straight to Jassu in second half.
     
     waitCounter = 0
     lastRng02 = FFX_memory.rng02()
     FFX_Logs.writeStats("====================================")
-    while waitCounter != 100 and not FFX_memory.s32(FFX_memory.rng02()) in goodRngList:
-        print(waitCounter, " | ", FFX_memory.s32(lastRng02))
-        if FFX_memory.s32(FFX_memory.rng02()) != FFX_memory.s32(lastRng02):
-            FFX_Logs.writeStats(str(waitCounter) + " | " + str(FFX_memory.s32(FFX_memory.rng02())))
-            lastRng02 = FFX_memory.rng02()
+    nextRng02 = FFX_memory.rng02()
+    while waitCounter != 100 and not FFX_memory.s32(nextRng02) in goodRngList:
+        print(waitCounter, " | ", lastRng02)
+        if nextRng02 != lastRng02:
+            FFX_Logs.writeStats(str(waitCounter) + " | " + str(FFX_memory.s32(nextRng02)))
+            lastRng02 = nextRng02
             waitCounter += 1
+        nextRng02 = FFX_memory.rng02()
     FFX_Logs.writeStats("====================================")
-    if waitCounter < 100:
-        return True
-    return False
+    return nextRng02
 
 def attackOblitzEnd():
     print("Attack")
@@ -4527,11 +4572,9 @@ def attackOblitzEnd():
     FFX_memory.waitFrames(1)
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
-    FFX_Xbox.tapB()
-    print("Oblitz RNG wait results: ", oblitzRngWait)
+    print("Oblitz RNG wait results: ", FFX_memory.s32(rngWaitResults))
     FFX_Logs.writeStats("RNG02 on attack:")
-    FFX_Logs.writeStats(FFX_memory.s32(FFX_memory.rng02()))
+    FFX_Logs.writeStats(FFX_memory.s32(rngWaitResults))
 
 def attack(direction="none"):
     print("Attack")
@@ -5920,8 +5963,8 @@ def advanceRNG10(numAdvances:int):
     print("##    ", FFX_Screen.faintCheck(), "      ##")
     print("#################")
     while FFX_memory.battleActive():
+        currentParty = FFX_memory.getActiveBattleFormation()
         if FFX_Screen.faintCheck() >= 1:
-            currentParty = FFX_memory.getActiveBattleFormation()
             if 255 in [currentParty[0], currentParty[1], currentParty[2]] and numAdvances >= 6:
                 if FFX_memory.turnReady():
                     print("+++Registering character fainted, advances: ", numAdvances)

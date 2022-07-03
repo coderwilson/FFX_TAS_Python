@@ -62,11 +62,11 @@ def arrival():
                 FFX_Xbox.tapB()
     print("End of approaching section, should now be talking to Lucille/Elma/etc.")
 
-def southBank():
+def southBank(checkpoint:int=0):
     #Arrive at the south bank of the moonflow.
     print("South bank, Save sphere screen")
     
-    checkpoint = 0
+    
     FFX_memory.clickToControl3() # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
     FFX_memory.waitFrames(30 * 1)
@@ -87,7 +87,7 @@ def southBank():
                 FFX_memory.clickToEvent()
                 FFX_memory.waitFrames(18)
                 FFX_Xbox.menuB() #Ride ze Shoopuff?
-                FFX_memory.waitFrames(18)
+                FFX_memory.waitFrames(10)
                 FFX_Xbox.menuDown()
                 FFX_Xbox.menuB() #All aboardz!
                 FFX_Xbox.SkipDialog(3) #Just to clear some dialog

@@ -43,16 +43,21 @@ def makingPlans():
     
 def Shedinja():
     print("The hymn is the key")
-    while FFX_memory.oakaGilCursor() != 20:
+    while FFX_memory.getMap() != 382:
+        print("Mark 1")
+        FFX_Xbox.tapB()
+    while not FFX_memory.diagProgressFlag() in [4,255]:
+        print("Mark 2")
         FFX_Xbox.tapB()
     while FFX_memory.mapCursor() != 10:
+        print("The destination is the key")
         FFX_memory.menuDirection(FFX_memory.mapCursor(), 10, 13)
     FFX_memory.clickToControl()
     
     FFX_memory.awaitControl()
     print("Moving to Shedinja")
     FFXC.set_movement(1, 1)
-    FFX_memory.waitFrames(30 * 0.25)
+    FFX_memory.waitFrames(45)
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
     

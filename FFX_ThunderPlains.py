@@ -188,7 +188,7 @@ def agency():
                 FFX_memory.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 7:
-                if gameVars.csr():
+                if not gameVars.csr():
                     kimahriAffection = FFX_memory.affectionArray()[3]
                     print("Kimahri affection, ", kimahriAffection)
                     while FFX_memory.affectionArray()[3] == kimahriAffection:

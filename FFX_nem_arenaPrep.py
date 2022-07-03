@@ -54,17 +54,20 @@ def airShipDestination(destNum=0, forceOmega=False): #Default to Besaid. Maybe b
         elif destNum >= 2: #Adjust for Omega
             destNum += 3
     
-    while FFX_memory.oakaGilCursor() != 20:
+    while not FFX_memory.getMap() in [382,999]:
         if FFX_memory.userControl():
             FFX_targetPathNem.setMovement([-251,340])
         else:
             FFXC.set_neutral()
         FFX_Xbox.menuB()
+    while FFX_memory.diagProgressFlag() != 4:
+        FFX_Xbox.tapB()
     print("Destination select on screen now.")
     while FFX_memory.mapCursor() != destNum:
-        FFX_Xbox.tapDown()
-        #not working FFX_memory.menuDirection(FFX_memory.mapCursor(), destNum, 13)
-        #If it's the middle-most destination, it gets stuck hopping between top and bottom of the list
+        if destNum < 8:
+            FFX_Xbox.tapDown()
+        else:
+            FFX_Xbox.tapUp()
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(2)
     FFX_Xbox.tapB()
@@ -78,35 +81,43 @@ def unlockOmega():
     if gameVars.csr():
         return
         
-    while FFX_memory.oakaGilCursor() != 39:
+    while not FFX_memory.getMap() in [382,999]:
         if FFX_memory.userControl():
             FFX_targetPathNem.setMovement([-251,340])
         else:
             FFXC.set_neutral()
-        if FFX_memory.oakaGilCursor() == 20:
+        if FFX_memory.diagProgressFlag() == 4:
             FFX_Xbox.menuA()
         else:
             FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(15)
+    while FFX_memory.diagProgressFlag() != 3:
+        FFX_Xbox.tapUp()
+    while FFX_memory.diagProgressFlag() != 0:
+        FFX_Xbox.tapB()
     
-    while FFX_memory.oakaGilCursor() == 19:
+    while FFX_memory.diagProgressFlag() == 0:
         print(FFX_memory.getCoords())
+        if FFX_memory.getCoords()[0] < 65:
+            FFX_Xbox.set_value("Dpad", 8)
         if FFX_memory.getCoords()[0] < 70:
             FFX_nem_menu.gridRight()
+        elif FFX_memory.getCoords()[0] > 78:
+            FFX_Xbox.set_value("Dpad", 4)
         elif FFX_memory.getCoords()[0] > 73:
             FFX_nem_menu.gridLeft()
+        elif FFX_memory.getCoords()[1] > -28:
+            FFX_Xbox.set_value("Dpad", 2)
         elif FFX_memory.getCoords()[1] > -34:
             FFX_nem_menu.gridDown()
+        elif FFX_memory.getCoords()[1] < -40:
+            FFX_Xbox.set_value("Dpad", 1)
         elif FFX_memory.getCoords()[1] < -37:
             FFX_nem_menu.gridUp()
         else:
             FFX_Xbox.menuB()
     FFX_memory.waitFrames(30)
     FFX_Xbox.menuB()
-    while FFX_memory.getMap() != 374:
+    while not FFX_memory.getMap() in [194,374]:
         FFX_Xbox.menuA()
 
 def getSaveSphereDetails():
@@ -1723,6 +1734,12 @@ def gagazet3(capNum:int=10):
 
 def stolenFaythCave(capNum:int=10):
     airShipDestination(destNum=13)
+    if gameVars.neArmor() == 0:
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
+    elif gameVars.neArmor() in [4,6]:
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
+    else:
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
     
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:

@@ -50,9 +50,9 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-Gamestate = "Luca"
+#Gamestate = "Luca"
 #StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -176,7 +176,7 @@ reportGamestate()
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 #Next, check if we are loading to a save file
 if Gamestate != "none" :
@@ -311,7 +311,7 @@ if Gamestate != "none" :
     if Gamestate == "Sin" and StepCounter == 2: #Save sphere on the Highbridge before talking to Shedinja
         #FFX_LoadGame.loadSaveNum(49)
         FFX_LoadGame.loadSaveNum(70) #Nemesis logic, double friend sphere drops from B&Y
-        while FFX_memory.oakaGilCursor() != 20:
+        while not FFX_memory.oakaGilCursor() in [8,20]:
             if FFX_memory.userControl():
                 import FFX_targetPathing
                 FFX_targetPathing.setMovement([-251,340])
@@ -1179,7 +1179,7 @@ if FFX_memory.getStoryProgress() > 3210:
 
 
     while FFX_memory.getMap() != 23:
-        if FFX_memory.getMap() in [292,349]:
+        if FFX_memory.getMap() in [348,349]:
             FFX_Xbox.tapStart()
         elif FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.skipScene()
