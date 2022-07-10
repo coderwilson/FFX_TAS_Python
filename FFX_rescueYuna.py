@@ -62,7 +62,7 @@ def guards():
     if FFX_memory.getItemSlot(3) < 200 and FFX_memory.getHP() != FFX_memory.getMaxHP():
         FFX_menu.beforeGuards()
     FFX_memory.closeMenu()
-
+    FFX_memory.waitFrames(2)
     
     guardNum = 1
     while FFX_memory.getMap() != 182:
