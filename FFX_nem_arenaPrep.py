@@ -774,12 +774,12 @@ def autoPhoenix(): #Calm Lands items
         FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
     FFX_memory.fullPartyFormat('initiative')
     
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
-    else:
+    #FFX_menu.equipArmor(character=0,ability=0x8056) #Auto-Haste
+    FFX_menu.equipArmor(character=4,ability=0x800A) #Auto-Phoenix
+    FFX_menu.equipArmor(character=6,ability=0x800A) #Auto-Phoenix
+    if not gameVars.neArmor() in [0,4,6]:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_memory.closeMenu()
 
 def restockDowns():
     print("Restocking phoenix downs")
@@ -1737,7 +1737,7 @@ def stolenFaythCave(capNum:int=10):
     if gameVars.neArmor() == 0:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
     elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
     else:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
     
@@ -1754,8 +1754,8 @@ def stolenFaythCave(capNum:int=10):
             elif checkpoint == 41 and not FFX_memory.arenaFarmCheck(zone="stolenfayth2",endGoal=capNum,report=False):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint > 26 and FFX_memory.getCoords()[1] < 300:
-                checkpoint = 22
+            #elif checkpoint > 26 and FFX_memory.getCoords()[1] < 300:
+            #    checkpoint = 22
             elif checkpoint in [5,14]:
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
@@ -1819,7 +1819,7 @@ def insideSin(capNum:int=10):
     if gameVars.neArmor() == 0:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
     elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
     else:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
     
@@ -1894,7 +1894,7 @@ def omegaRuins(capNum:int=10):
     if gameVars.neArmor() == 0:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
     elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
     else:
         FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
     
@@ -1930,7 +1930,7 @@ def omegaRuins(capNum:int=10):
     #if gameVars.neArmor() == 0:
     #    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
     #elif gameVars.neArmor() in [4,6]:
-    #    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
+    #    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
     #else:
     #    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
 
