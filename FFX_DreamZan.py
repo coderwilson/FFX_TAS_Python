@@ -11,40 +11,6 @@ import FFX_Logs
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def NamingTidus_slow():
-    #Clear Tidus
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB() # Delete all but T
-    
-    #Replace with TAS
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() # A
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() # S
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() # Confirm
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() # Confirm again
-
-def NamingTidus():
-    while FFX_memory.equipSellRow() != 1:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipSellRow() != 0:
-        FFX_Xbox.tapUp()
-    while FFX_memory.nameConfirmOpen():
-        FFX_Xbox.tapB()
-
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate: ", Gamestate)
