@@ -6,6 +6,7 @@ import FFX_Screen
 import pyautogui
 import math
 import FFX_vars
+import json
 gameVars = FFX_vars.varsHandle()
 
 class vgTranslator:
@@ -531,16 +532,125 @@ def clickToBattle():
         elif FFX_memory.diagSkipPossible():
             menuB()
 
-def nameAeon():
+characterMapping = {
+    "A":0,
+    "B":1,
+    "C":2,
+    "D":3,
+    "E":4,
+    "F":5,
+    "G":6,
+    "H":7,
+    "I":8,
+    "J":9,
+    "K":10,
+    "L":11,
+    "M":12,
+    "N":13,
+    "O":14,
+    "P":15,
+    "Q":16,
+    "R":17,
+    "S":18,
+    "T":19,
+    "U":20,
+    "V":21,
+    "W":22,
+    "X":23,
+    "Y":24,
+    "Z":25,
+    " ":26,
+    "a":30,
+    "b":31,
+    "c":32,
+    "d":33,
+    "e":34,
+    "f":35,
+    "g":36,
+    "h":37,
+    "i":38,
+    "j":39,
+    "k":40,
+    "l":41,
+    "m":42,
+    "n":43,
+    "o":44,
+    "p":45,
+    "q":46,
+    "r":47,
+    "s":48,
+    "t":49,
+    "u":50,
+    "v":51,
+    "w":52,
+    "x":53,
+    "y":54,
+    "z":55,
+    "1":60,
+    "2":61,
+    "3":62,
+    "4":63,
+    "5":64,
+    "6":65,
+    "7":66,
+    "8":67,
+    "9":68,
+    "0":69,
+    "!":70,
+    "?":71,
+    '"':72,
+    "+":73,
+    "-":74,
+    "*":75,
+    "/":76,
+    "%":77,
+    "&":78,
+    "=":79,
+    ".":80,
+    ",":81,
+    ":":82,
+    ";":83,
+    "[":85,
+    "]":86,
+    "(":87,
+    ")":88
+}
+
+def navigateToCharacter(curCharacter):
+    positionTarget = characterMapping[curCharacter]
+    while positionTarget != FFX_memory.getNamingIndex():        
+        if positionTarget - FFX_memory.getNamingIndex() >= 15:
+            tapDown()
+        elif FFX_memory.getNamingIndex() - positionTarget >= 15:
+            tapUp()
+        elif FFX_memory.getNamingIndex() < positionTarget:
+            tapRight()
+        elif FFX_memory.getNamingIndex() > positionTarget:
+            tapLeft()   
+        
+
+def nameAeon(character=""):
     print("Waiting for aeon naming screen to come up")
     
     while not FFX_memory.nameAeonReady():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             tapB()
-    
+    if character:
+        with open("character_names.json") as fp:
+            customName = json.load(fp)[character]
+        if customName:
+            customName = customName[:8]
+            while FFX_memory.getNamingMenu():
+                tapRight()
+            while FFX_memory.nameHasCharacters():
+                tapA()
+            for curCharacter in customName:
+                navigateToCharacter(curCharacter)
+                tapB()
+        
     print("Naming screen is up.")
     while FFX_memory.equipSellRow() != 1:
-        tapB()
+        tapStart()
     while FFX_memory.equipSellRow() != 0:
         tapUp()
     while FFX_memory.nameConfirmOpen():

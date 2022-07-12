@@ -390,7 +390,7 @@ def trialsEnd():
     FFXC.set_neutral()
     
     #Name for Bahamut
-    FFX_Xbox.nameAeon()
+    FFX_Xbox.nameAeon("Bahamut")
     if not gameVars.csr():
         FFX_Xbox.awaitSave(index=29)
 

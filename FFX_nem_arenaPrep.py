@@ -1088,7 +1088,7 @@ def yojimboDialog():
     #FFX_Xbox.tapUp()
     #FFX_Xbox.tapB()
     print("Fayth accepts the contract.")
-    FFX_Xbox.nameAeon()
+    FFX_Xbox.nameAeon("Yojimbo")
     print("Naming complete.")
 
 def yojimbo():

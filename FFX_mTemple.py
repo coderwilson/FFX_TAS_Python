@@ -161,7 +161,7 @@ def seymourFight():
     FFX_Battle.seymourGuado()
     
     #Name for Shiva
-    FFX_Xbox.nameAeon()
+    FFX_Xbox.nameAeon("Shiva")
     
     #FFX_memory.waitFrames(30 * 1)
     #FFX_Xbox.menuB()
