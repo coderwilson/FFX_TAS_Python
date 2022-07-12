@@ -1995,6 +1995,18 @@ def clearNameAeonReady():
     key = baseValue + 0x0146A22C
     process.writeBytes(key, 0, 1)
     
+    
+# Naming
+
+def getNamingMenu():
+    return readVal(0x0146A22C)
+    
+def getNamingIndex():
+    return readVal(0x0146A228)
+
+def nameHasCharacters():
+    return readVal(0x0146A240)
+
 
 #-------------------------------------------------------
 #Egg hunt section
