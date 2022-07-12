@@ -6,6 +6,7 @@ import FFX_Screen
 import pyautogui
 import math
 import FFX_vars
+import json
 gameVars = FFX_vars.varsHandle()
 
 class vgTranslator:
@@ -628,21 +629,24 @@ def navigateToCharacter(curCharacter):
             tapLeft()   
         
 
-def nameAeon(customName=""):
+def nameAeon(character=""):
     print("Waiting for aeon naming screen to come up")
     
     while not FFX_memory.nameAeonReady():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             tapB()
-    if customName:
-        customName = customName[:8]
-        while FFX_memory.getNamingMenu():
-            tapRight()
-        while FFX_memory.nameHasCharacters():
-            tapA()
-        for curCharacter in customName:
-            navigateToCharacter(curCharacter)
-            tapB()
+    if character:
+        with open("character_names.json") as fp:
+            customName = json.load(fp)[character]
+        if customName:
+            customName = customName[:8]
+            while FFX_memory.getNamingMenu():
+                tapRight()
+            while FFX_memory.nameHasCharacters():
+                tapA()
+            for curCharacter in customName:
+                navigateToCharacter(curCharacter)
+                tapB()
         
     print("Naming screen is up.")
     while FFX_memory.equipSellRow() != 1:

@@ -234,7 +234,7 @@ def trials():
                 FFX_memory.waitFrames(2)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_Xbox.nameAeon() #Set Ifrit name
+                FFX_Xbox.nameAeon("Ifrit") #Set Ifrit name
                 checkpoint = 55
             elif checkpoint == 54 and not gameVars.csr(): #Talk to Wakka
                 FFX_memory.clickToEventTemple(7)
@@ -243,7 +243,7 @@ def trials():
                 FFXC.set_movement(0, -1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                FFX_Xbox.nameAeon() #Set Ifrit name
+                FFX_Xbox.nameAeon("Ifrit") #Set Ifrit name
                 checkpoint += 1
             elif checkpoint == 57: #Leaving the temple
                 FFX_memory.clickToEventTemple(4)

@@ -88,7 +88,7 @@ def listenStory():
                 FFXC.set_neutral()
                 
                 #Name Tidus
-                FFX_Xbox.nameAeon()
+                FFX_Xbox.nameAeon("Tidus")
                 
                 checkpoint += 1
             elif checkpoint == 4:

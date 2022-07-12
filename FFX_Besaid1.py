@@ -164,7 +164,7 @@ def trials():
             
             elif checkpoint == 32 and FFX_memory.menuOpen():
                 #Name for Valefor
-                FFX_Xbox.nameAeon()
+                FFX_Xbox.nameAeon("Valefor")
                 checkpoint += 1 #To the night scene
                 
             

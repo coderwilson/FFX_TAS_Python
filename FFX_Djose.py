@@ -354,7 +354,7 @@ def trials():
         FFX_memory.awaitEvent()
         FFXC.set_neutral()
     
-    FFX_Xbox.nameAeon()
+    FFX_Xbox.nameAeon("Ixion")
 
 def leavingDjose():
     FFX_memory.awaitControl()
