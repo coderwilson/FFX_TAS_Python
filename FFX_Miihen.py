@@ -18,7 +18,7 @@ def arrival():
     FFX_memory.clickToControl()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
     
-    #FFX_memory.fullPartyFormat('miihen')
+    FFX_memory.fullPartyFormat('djose')
     miihenSkip = False
     battleCount = 0
     SDbattleNum = 0
@@ -166,7 +166,8 @@ def arrival():
                         FFXC.set_value('BtnY',0)
                         FFX_memory.waitFrames(3)
                     FFXC.set_neutral()
-                    FFX_memory.fullPartyFormat('miihen')
+                    FFX_memory.fullPartyFormat('djose')
+                    FFX_memory.closeMenu()
                 elif checkpoint == 25 and FFX_memory.battleActive() == False: #Shelinda dialog
                     FFXC.set_neutral()
                     FFX_Xbox.tapB()

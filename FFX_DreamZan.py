@@ -11,40 +11,6 @@ import FFX_Logs
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def NamingTidus_slow():
-    #Clear Tidus
-    FFX_memory.waitFrames(30 * 0.1)
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB() # Delete all but T
-    
-    #Replace with TAS
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() # A
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuRight()
-    FFX_Xbox.menuB() # S
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuLeft()
-    FFX_Xbox.menuDown()
-    FFX_Xbox.menuB() # Confirm
-    FFX_Xbox.menuUp()
-    FFX_Xbox.menuB() # Confirm again
-
-def NamingTidus():
-    while FFX_memory.equipSellRow() != 1:
-        FFX_Xbox.tapB()
-    while FFX_memory.equipSellRow() != 0:
-        FFX_Xbox.tapUp()
-    while FFX_memory.nameConfirmOpen():
-        FFX_Xbox.tapB()
-
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate: ", Gamestate)
@@ -81,17 +47,10 @@ def NewGame(Gamestate):
     
 def NewGame2():
     #New game selected. Next, select options.
-    FFX_memory.waitFrames(30)
-    print("Default Sphere Grid")
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(20)
-    print("Confirm sphere grid")
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(20)
-    print("Orchestrated soundtrack.")
-    FFX_Xbox.menuB()
+    FFX_memory.clickToDiagProgress(7)
     FFX_memory.waitFrames(20)
     print("Confirm Orchestrated soundtrack.")
+    FFX_Xbox.menuB()
     FFX_Xbox.menuB()
 
 def listenStory():
@@ -122,7 +81,7 @@ def listenStory():
                 FFXC.set_neutral()
                 
                 #Name Tidus
-                FFX_Xbox.nameAeon()
+                FFX_Xbox.nameAeon("Tidus")
                 
                 checkpoint += 1
             elif checkpoint == 4:

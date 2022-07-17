@@ -138,7 +138,7 @@ def afterSpeech(checkpoint = 0):
                 FFX_Xbox.tapB()
 
 def guadoSkip():
-    FFX_memory.clickToControl()
+    FFX_memory.clickToControl3()
     FFXC.set_movement(-1, -1)
     pos = FFX_memory.getCoords()
     while pos[0] > -85:
