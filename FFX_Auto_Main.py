@@ -50,9 +50,9 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -68,8 +68,8 @@ if gameVars.nemesis():
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
-#StepCounter = 4 #Not working on Seymour fight
-#StepCounter = 6 #Blitz loss, unsure if proper Thunder Plains purchase
+#StepCounter = 4 #Seymour fight, CSR, Blitz Win
+#StepCounter = 6 #Before escape sequence
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
@@ -110,24 +110,24 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 255 #New seed number, only used if doing seed hunt.
-rngSelectArray = [31,41,157,224]
-goodSeeds = [31,41,157,160,182,224]
-#160 is WR for both categories, but otherwise rather unimpressive.
-#182, needs improved Spherimorph logic.
-#224 do not switch on Sandragora.
-secondLook = [18,24,44,52,96,105,138,200,232,254]
+rngSelectArray = [41,144,157,160,172,177,182,183,200,224,254]
+goodSeeds = [31,41,144,157,160,172,177,182,183,200,224,254]
+#160 is WR for both categories, just has a bad start
+#Need review on the others
+
 ####################################################################################################
 
 if Gamestate == "Luca" and StepCounter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
-elif Gamestate != "none":
-    rngSeedNum = 255 #Select a specific seed.
+    rngSeedNum = 31 #Select a specific seed.
+elif Gamestate != "none": #Loading a save file, no RNG manip here
+    rngSeedNum = 31 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
     #gameVars.SETcsr(True)
-elif seedHunt == False: #Below logic for full runs only.
+elif seedHunt == False: #Full run starting from New Game
     rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     rngSeedNum = 31 #Manually choose seed here.
     #Current WR is on seed 160 for both any% and CSR%
@@ -135,7 +135,7 @@ elif seedHunt == False: #Below logic for full runs only.
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
-else: #Just to make sure we're running from new game for seed finding.
+else: #Don't use this.
     StepCounter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"
@@ -178,17 +178,20 @@ FFX_Screen.clearMouse(0)
 
 FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
+rngSeed = FFX_memory.rngSeed()
+print("---RNG seed: ", rngSeed)
+FFX_Logs.nextStats(rngSeed)
+FFX_Logs.writeStats("RNG seed:")
+FFX_Logs.writeStats(rngSeed)
+
 #Next, check if we are loading to a save file
 if Gamestate != "none" :
     if not (Gamestate == "Luca" and StepCounter == 3):
 
         FFX_DreamZan.NewGame(Gamestate)
-        rngSeed = FFX_memory.rngSeed()
-        print("---RNG seed: ", rngSeed)
-        FFX_Logs.nextStats(rngSeed)
-        FFX_Logs.writeStats("RNG seed:")
-        FFX_Logs.writeStats(rngSeed)
         startTime = FFX_Logs.timeStamp()
+        FFX_Logs.writeStats("Start time:")
+        FFX_Logs.writeStats(str(startTime))
         reportGamestate()
     import FFX_LoadGame
     
@@ -247,13 +250,14 @@ if Gamestate != "none" :
     if Gamestate == "Macalania" and StepCounter == 2: #1 = south, 2 = north
         FFX_LoadGame.loadSaveNum(7)
     if Gamestate == "Macalania" and StepCounter == 4: #Right before Jyscal skip
-        FFX_LoadGame.loadSaveNum(10) #No remedy in inventory, likely game over.
+        FFX_LoadGame.loadSaveNum(10)
         FFX_LoadGame.loadMacTemple()
     if Gamestate == "Macalania" and StepCounter == 6: #Outside temple, before escaping.
-        FFX_LoadGame.loadSaveNum(41)
-        FFX_LoadGame.loadMacTemple2()
+        FFX_LoadGame.loadSaveNum(71)
+        #FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadSaveNum(60)
+        #FFX_memory.setEncounterRate(0)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadSaveNum(11)
     if Gamestate == "rescueYuna" and StepCounter == 1: # Airship, first movement.
@@ -262,8 +266,8 @@ if Gamestate != "none" :
     if Gamestate == "rescueYuna" and StepCounter == 2: # Bevelle trials
         FFX_LoadGame.loadSaveNum(15)
     if Gamestate == "rescueYuna" and StepCounter == 5: # Highbridge before Seymour Natus
-        #FFX_LoadGame.loadSaveNum(42) #Regular
-        FFX_LoadGame.loadSaveNum(67) #Nemesis
+        FFX_LoadGame.loadSaveNum(42) #Regular
+        #FFX_LoadGame.loadSaveNum(67) #Nemesis
     if Gamestate == "Gagazet" and StepCounter == 1: # Just before Calm Lands
         FFX_LoadGame.loadSaveNum(43)
         FFX_LoadGame.loadCalm()
@@ -411,15 +415,10 @@ while Gamestate != "End":
         print("New Game 2 function initiated.")
         FFX_DreamZan.NewGame2()
         startTime = FFX_Logs.timeStamp()
-        print("Timer starts now.")
-        FFX_DreamZan.listenStory()
-        rngSeed = FFX_memory.rngSeed()
-        print("---RNG seed: ", rngSeed)
-        FFX_Logs.nextStats(rngSeed)
-        FFX_Logs.writeStats("RNG seed:")
-        FFX_Logs.writeStats(rngSeed)
         FFX_Logs.writeStats("Start time:")
         FFX_Logs.writeStats(str(startTime))
+        print("Timer starts now.")
+        FFX_DreamZan.listenStory()
         #Start of the game, up through the start of Sinspawn Ammes fight
         StepCounter = 2
         FFX_DreamZan.ammesBattle()

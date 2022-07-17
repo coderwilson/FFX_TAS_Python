@@ -125,7 +125,36 @@ def desert():
             elif checkpoint == 12 and firstFormat == False:
                 firstFormat = True
                 FFX_memory.fullPartyFormat('desert9')
-            elif checkpoint == 59:
+                
+            #Sandragora skip logic
+            elif checkpoint == 57:
+                #FFXC.set_neutral()
+                #FFX_memory.waitFrames(10)
+                checkpoint += 1
+            elif checkpoint == 60:
+                while FFX_memory.getCoords()[1] < 810:
+                    if FFX_memory.battleActive():
+                        checkpoint = 56
+                        FFX_Battle.fleeAll()
+                        FFX_memory.clickToControl()
+                        break
+                    else:
+                        FFXC.set_movement(0,1)
+                FFXC.set_neutral()
+                if checkpoint == 60:
+                    while FFX_memory.getCoords()[1] < 840:
+                        if FFX_memory.battleActive():
+                            checkpoint -= 1
+                            FFX_Battle.fleeAll()
+                            FFX_memory.clickToControl()
+                            break
+                        else:
+                            pass
+                    if checkpoint == 60 and FFX_memory.getCoords()[1] >= 840:
+                        checkpoint += 1
+            
+            #After Sandy2 logic
+            elif checkpoint == 64:
                 if itemsNeeded >= 1: #Cannot move on if we're short on throwable items
                     checkpoint -= 2
                 elif needSpeed == True: #Cannot move on if we're short on speed spheres
@@ -310,17 +339,19 @@ def findSummoners():
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("Let's go get that airship!")
-    FFX_memory.clickToDiagProgress(27)
-    #FFX_memory.waitFrames(30)
-    #FFX_Xbox.tapB()
-    while not FFX_memory.cutsceneSkipPossible():
+    FFXC.set_neutral()
+    if not gameVars.csr():
+        FFX_memory.clickToDiagProgress(27)
+        #FFX_memory.waitFrames(30)
+        #FFX_Xbox.tapB()
+        while not FFX_memory.cutsceneSkipPossible():
+            FFX_Xbox.tapB()
+        FFX_Xbox.skipScene()
+        FFX_memory.clickToDiagProgress(105)
+        FFX_memory.waitFrames(15)
         FFX_Xbox.tapB()
-    FFX_Xbox.skipScene()
-    FFX_memory.clickToDiagProgress(105)
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(15)
-    FFX_Xbox.skipScene()
+        FFX_memory.waitFrames(15)
+        FFX_Xbox.skipScene()
     
     while not FFX_memory.userControl():
         if FFX_memory.diagSkipPossible():

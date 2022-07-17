@@ -198,7 +198,7 @@ def auronOD(style="dragon fang"):
         FFX_Xbox.tapRight()
         FFX_Xbox.tapB()
 
-def tidusOD(direction = None,version:int=0):
+def tidusOD(direction = None,version:int=0, character=99):
     print("Tidus overdrive activating")
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapLeft()
@@ -209,9 +209,13 @@ def tidusOD(direction = None,version:int=0):
         FFX_Xbox.menuRight()
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
-    if direction:
+    if character != 99:
+        while character != FFX_memory.battleTargetId():
+            FFX_Xbox.tapLeft()
+    elif direction:
         if direction == 'left':
             FFX_Xbox.tapLeft()
+    
     while not FFX_memory.overdriveMenuActive():
         FFX_Xbox.tapB()
     FFX_memory.waitFrames(12)
@@ -1818,6 +1822,7 @@ def djose(stoneBreath):
         healUp(3)
     else:
         print("Djose: No need to heal.")
+    FFX_memory.fullPartyFormat('djose')
     return stoneBreath
 
 
@@ -1849,7 +1854,9 @@ def wakkaOD():
     #while not FFX_memory.overdriveMenuActive():
     #    print("C")
     #    FFX_Xbox.tapB()
-    FFX_memory.waitFrames(95)
+    while FFX_memory.overdriveMenuActiveWakka() == 0:
+        pass
+    FFX_memory.waitFrames(76)
     print("Hit Overdrive")
     FFX_Xbox.tapB() #First reel
     FFX_memory.waitFrames(13)
@@ -1857,14 +1864,6 @@ def wakkaOD():
     FFX_memory.waitFrames(5)
     FFX_Xbox.tapB() #Third reel
     
-    FFX_memory.waitFrames(68) #In case there is a slow animation
-    print("Hit Overdrive backup")
-    FFX_Xbox.tapB() #First reel
-    FFX_memory.waitFrames(25)
-    FFX_Xbox.tapB() #Second reel
-    FFX_memory.waitFrames(5)
-    FFX_Xbox.tapB() #Third reel
-
 def extractor():
     print("Fight start: Extractor")
     FFXC.set_neutral()
@@ -1900,15 +1899,16 @@ def extractor():
                 elif tidusCheer:
                     cheerCount += 1
                     cheer()
-                elif FFX_memory.getEnemyCurrentHP()[0] < 1400 and not FFX_Screen.faintCheck():
+                elif FFX_memory.getEnemyCurrentHP()[0] < 1400 and not FFX_Screen.faintCheck() \
+                     and FFX_memory.getOverdriveBattle(4) == 100:
                     defend()
                 else:
                     attack('none')
             else:
                 if FFX_memory.getEnemyCurrentHP()[0] < 1900 and FFX_memory.getOverdriveBattle(4) == 100:
                     wakkaOD()
-                #elif FFX_memory.getBattleHP()[1] < 250 and FFX_memory.getEnemyCurrentHP()[0] > 1000:
-                #    revive(itemNum = 1) #Safety hi-potion
+                elif FFX_memory.getBattleHP()[1] < 250 and FFX_memory.getEnemyCurrentHP()[0] > 1000:
+                    revive(itemNum = 1) #Safety hi-potion
                 else:
                     attack('none')
         elif FFX_memory.diagSkipPossible():
@@ -2388,7 +2388,6 @@ def getAnimaItemSlot():
 # Process written by CrimsonInferno
 def seymourGuado_blitzWin():
     FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
-    FFX_Screen.awaitTurn()
 
     tidushaste = False
     kimahriconfused = False
@@ -2404,8 +2403,11 @@ def seymourGuado_blitzWin():
     rikkuturns = 0
     animahits = 0
     animamiss = 0
-
-    while not FFX_memory.battleComplete(): #AKA end of battle screen
+    
+    while not FFX_memory.battleActive():
+        pass
+    FFX_Screen.awaitTurn()
+    while FFX_memory.battleActive(): #AKA end of battle screen
         if FFX_memory.turnReady():
             turnchar = FFX_memory.getBattleCharTurn()
             for i in range(0, 3):
@@ -2419,18 +2421,12 @@ def seymourGuado_blitzWin():
                     elif FFX_memory.getBattleCharSlot(4) == i:
                         print("Wakka is dead")
                         wakkadead = True
-            if FFX_memory.getEnemyCurrentHP()[1] < 2999 and turnchar == 0:
-                attack('none')
-                print("Should be last attack of the fight.")
-            elif turnchar == 0:
+            if turnchar == 0:
                 if tidusturns == 0:
-                    print("Swap to Brotherhood")
-                    equipInBattle(special = 'brotherhood')
-                elif tidusturns == 1:
                     print("Tidus Haste self")
                     tidusHaste('none')
                     tidushaste = True
-                elif tidusturns == 2:
+                elif tidusturns == 1:
                     print("Talk to Seymour")
                     while not FFX_memory.otherBattleMenu():
                         FFX_Xbox.tapLeft()
@@ -2440,8 +2436,10 @@ def seymourGuado_blitzWin():
                         FFX_Xbox.tapB()
                     FFX_Xbox.tapLeft()
                     tapTargeting()
+                elif tidusturns == 2:
+                    defend()
                 elif tidusturns == 3:
-                    tidusODSeymour()
+                    attack('none')
                 elif tidusturns == 4:
                     buddySwapWakka()
                 elif animahits + animamiss == 3 and animamiss > 0 and missbackup == False:
@@ -2480,19 +2478,22 @@ def seymourGuado_blitzWin():
                     elif rikkuposition >= 3:
                         buddySwapRikku()
                 elif kimahriturns == 0:
-                    print("Confused states:")
-                    print("Yuna confusion: ", FFX_memory.confusedState(1))
-                    print("Tidus confusion: ", FFX_memory.confusedState(0))
-                    print("Kimahri confusion: ", FFX_memory.confusedState(3))
-                    print("Auron confusion: ", FFX_memory.confusedState(2))
-                    if FFX_memory.confusedState(0) == True:
-                        remedy(character = 0,
-                               direction="l")
-                    elif FFX_memory.confusedState(1) == True:
-                        remedy(character = 1,
-                               direction="l")
-                    else:
-                        defend()
+                    kimahriOD(3)
+                    
+                    #Old logic, based on not using Stone Breath
+                    #print("Confused states:")
+                    #print("Yuna confusion: ", FFX_memory.confusedState(1))
+                    #print("Tidus confusion: ", FFX_memory.confusedState(0))
+                    #print("Kimahri confusion: ", FFX_memory.confusedState(3))
+                    #print("Auron confusion: ", FFX_memory.confusedState(2))
+                    #if FFX_memory.confusedState(0) == True:
+                    #    remedy(character = 0,
+                    #           direction="l")
+                    #elif FFX_memory.confusedState(1) == True:
+                    #    remedy(character = 1,
+                    #           direction="l")
+                    #else:
+                    #    defend()
                 elif kimahriturns == 1:
                     Steal()
                 elif animamiss > 0 and (missbackup == False or FFX_Screen.faintCheck() == 0):
@@ -2521,6 +2522,8 @@ def seymourGuado_blitzWin():
                         kimahriconfused = True
                     else:
                         defend()
+                elif auronturns == 1: #Stone Breath logic
+                    defend()
                 elif animamiss > 0 and (missbackup == False or FFX_Screen.faintCheck() == 0):
                     if kimahridead == True and rikkuturns == 0:
                         buddySwapRikku()
@@ -2923,8 +2926,8 @@ def fullheal(target: int, direction: str):
 # Process written by CrimsonInferno
 def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     print("Wendigo Res/Heal function")
-    if FFX_memory.getEnemyCurrentHP().count(0) == 2 and FFX_memory.getNextTurn() < 20:
-        return 0
+    #if FFX_memory.getEnemyCurrentHP().count(0) == 2 and FFX_memory.getNextTurn() < 20:
+    #    return False
     healCount = 0
     partyHP = FFX_memory.getBattleHP()
     if FFX_Screen.faintCheck() == 2:
@@ -2957,12 +2960,10 @@ def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
         print("Reviving non-Tidus")
         revive()
     else:
-        return 0
+        return False
 
-    return 1
+    return True
 
-
-# Process written by CrimsonInferno
 def wendigo():
     phase = 0
     curtain = False
@@ -3030,6 +3031,8 @@ def wendigo():
                         reviveAll()
                     elif FFX_memory.getThrowItemsSlot(6) < 255:
                         revive()
+                elif FFX_memory.getEnemyCurrentHP()[1] < 6000 and FFX_memory.getOverdriveBattle(0) == 100:
+                    tidusOD('left', character=21)
                 elif tidushealself == True:
                     if partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
                         print("Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
@@ -3327,11 +3330,11 @@ def sandyManip() -> bool:
 
 def sandragora(version):
     FFX_Screen.awaitTurn()
-    if version == 1: #Kimahri's turn
+    if version != 1: #Kimahri's turn
         if FFX_memory.getBattleCharSlot(3) >= 3:
             buddySwapKimahri()
         else:
-            tidusHaste('l',character=3)
+            tidusHaste('u',character=3)
         FFX_Screen.awaitTurn()
         print("Now Kimahri will use his overdrive.")
         kimahriOD(3)
@@ -3358,7 +3361,7 @@ def sandragora(version):
         else:
             print("DO NOT Swap odd/even seeds on RNG01")
     
-        tidusHaste('d',character=2)
+        tidusHaste('l',character=2)
         FFX_Screen.awaitTurn()
         if FFX_Screen.turnKimahri() or FFX_Screen.turnRikku():
             print("Kimahri/Rikku taking a spare turn. Just defend.")
@@ -3611,7 +3614,7 @@ def guards(groupNum, sleepingPowders):
             elif groupNum in [2, 4]:
                 if FFX_Screen.turnTidus():
                     attack('none')
-                elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri() and num_throws < 2:
+                elif (FFX_Screen.turnRikku() or FFX_Screen.turnKimahri()) and num_throws < 2:
                     silenceSlot = FFX_memory.getUseItemsSlot(39)
                     if num_throws == 0 and FFX_memory.getUseItemsSlot(37) < 200:
                         useItem(FFX_memory.getUseItemsSlot(37))
@@ -3644,17 +3647,18 @@ def guards(groupNum, sleepingPowders):
                         attackByNum(22,'r')
                 elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
                     silenceSlot = FFX_memory.getUseItemsSlot(39)
-                    if FFX_memory.getUseItemsSlot(40) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(40))
-                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
-                        #Save one for later if possible
-                        useItem(FFX_memory.getUseItemsSlot(39))
-                    elif FFX_memory.getUseItemsSlot(37) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(37))
-                    elif FFX_memory.getUseItemsSlot(27) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(27))
-                    elif FFX_memory.getUseItemsSlot(39) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(39))
+                    if num_throws < 2:
+                        if FFX_memory.getUseItemsSlot(40) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(40))
+                        elif FFX_memory.getUseItemsSlot(37) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(37))
+                        elif FFX_memory.getUseItemsSlot(27) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(27))
+                        elif FFX_memory.getUseItemsSlot(39) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(39))
+                        else:
+                            defend()
+                        num_throws += 1
                     else:
                         defend()
     else: # We do not have sleeping powders
@@ -3689,7 +3693,7 @@ def guards(groupNum, sleepingPowders):
                     silenceSlot = FFX_memory.getUseItemsSlot(39)
                     if FFX_memory.getUseItemsSlot(40) != 255:
                         useItem(FFX_memory.getUseItemsSlot(40))
-                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
+                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) >= 2:
                         #Save one for later if possible
                         useItem(FFX_memory.getUseItemsSlot(39))
                     elif FFX_memory.getUseItemsSlot(37) != 255:
@@ -3711,21 +3715,22 @@ def guards(groupNum, sleepingPowders):
                         tidusWent = True
                     else:
                         attackByNum(22, 'l')
-                elif FFX_Screen.turnRikku():
+                elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
                     silenceSlot = FFX_memory.getUseItemsSlot(39)
-                    if FFX_memory.getUseItemsSlot(40) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(40))
-                    elif silenceSlot != 255 and FFX_memory.getItemCountSlot(silenceSlot) > 1:
-                        #Save one for later if possible
-                        useItem(FFX_memory.getUseItemsSlot(39))
-                    elif FFX_memory.getUseItemsSlot(37) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(37))
-                    elif FFX_memory.getUseItemsSlot(27) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(27))
-                    elif FFX_memory.getUseItemsSlot(39) != 255:
-                        useItem(FFX_memory.getUseItemsSlot(39))
+                    if num_throws < 2:
+                        if FFX_memory.getUseItemsSlot(40) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(40))
+                        elif FFX_memory.getUseItemsSlot(37) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(37))
+                        elif FFX_memory.getUseItemsSlot(27) != 255:
+                            useItem(FFX_memory.getUseItemsSlot(27))
+                        elif FFX_memory.getUseItemsSlot(39) != 255 and num_throws < 2:
+                            useItem(FFX_memory.getUseItemsSlot(39))
+                        else:
+                            defend()
                     else:
                         defend()
+                    num_throws += 1
                 elif FFX_Screen.turnKimahri():
                     buddySwapTidus()
                 else:
@@ -3937,6 +3942,8 @@ def seymourNatus():
                             buddySwapLulu()
                             FFX_Screen.awaitTurn()
                             FFX_Xbox.weapSwap(0)
+                        elif aeonSummoned:
+                            tidusHaste('d', character=1)
                         else:
                             attack('none')
                     elif FFX_Screen.turnLulu():
@@ -3949,8 +3956,9 @@ def seymourNatus():
                             aeonSummon(4)
                             aeonSummoned = True
                         else:
-                            attack('none')
+                            aeonSummon(2)
                     elif FFX_Screen.turnAeon():
+                        #aeonDismiss() #Just for testing
                         FFX_Xbox.SkipDialog(3) #Finishes the fight.
                     else:
                         defend()
@@ -4535,8 +4543,11 @@ def oblitzRngWait():
     if gameVars.usePause():
         goodRngList = [1103903145, 886305782, -1640850005]
         # 1467711668, Graav engages for no reason
+    elif gameVars.csr() and FFX_memory.rngSeed() == 31:
+        goodRngList = [330516972, -1773455057]
+        # 527494414
     else:
-        goodRngList = [345511282, 41645750, 323111951, 1827503098, 330516972, 562491965, 2040111393, 281000320, 351049783]
+        goodRngList = [345511282, 41645750, 323111951, 1827503098, 562491965, 2040111393, 281000320, 351049783]
         # re-add 345511282 later
         #345511282 is interesting, if we can get Botta to pass the ball straight to Jassu in second half.
     
@@ -5776,7 +5787,7 @@ def calculateSpareChangeMovement(gilAmount):
     return
 
 def chargeRikkuOD():
-    if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 378, 384]:
+    if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 376, 378, 381, 384, 386]:
         if checkPetrifyTidus() or not checkRikkuOk():
             print("Tidus or Rikku incapacitated, fleeing")
             fleeAll()

@@ -149,10 +149,13 @@ def insideSin():
     FFXC.set_neutral()
     
     if FFX_memory.overdriveState()[6] != 100:
+        reEquipNE = True
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
     else:
+        reEquipNE = False
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     FFX_memory.closeMenu()
+    
     
     checkpoint = 0
     while FFX_memory.getMap() != 324: #All the way to the egg hunt.
@@ -183,6 +186,10 @@ def insideSin():
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Battle.chargeRikkuOD()
+                if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
+                    reEquipNE = False
+                    FFX_memory.clickToControl()
+                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     

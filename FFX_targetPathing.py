@@ -4902,17 +4902,26 @@ def desert(checkpoint):
         x = -160
         y = 614
     if checkpoint == 56:
-        x = -267
-        y = 762
-    if checkpoint == 57: #Sandragora #2
-        x = -294
-        y = 820
-    if checkpoint == 58:
+        x = -228
+        y = 764
+    if checkpoint == 58: #Lining up for Sandy skip
+        x = -230
+        y = 796
+    if checkpoint == 59: #Lining up for Sandy skip
+        x = -244
+        y = 797
+    if checkpoint == 61: #Past Sandy
+        x = -273
+        y = 850
+    if checkpoint == 62:
+        x = -273
+        y = 850
+    if checkpoint == 63:
         x = -294
         y = 886
-    if checkpoint == 59:
+    if checkpoint == 64:
         print("Test for area completion")
-    if checkpoint == 60:
+    if checkpoint == 65:
         x = -300
         y = 1000
     if checkpoint == 70: #Nemesis logic

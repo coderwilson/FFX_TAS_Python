@@ -101,7 +101,6 @@ def guards():
                 FFX_Xbox.tapB()
     print("-------End of Bevelle guards")
     
-    
     checkpoint = 0
     while checkpoint < 8:
         if FFX_memory.userControl():

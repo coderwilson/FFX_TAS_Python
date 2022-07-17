@@ -626,6 +626,9 @@ def macTemple():
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
     FFX_menuGrid.useAndQuit()
+    
+    if gameVars.getBlitzWin():
+        equipWeapon(character=0,special='brotherhood')
     FFX_memory.closeMenu()
 
 def afterSeymour():
@@ -960,16 +963,19 @@ def seymourNatusBlitzWin():
     FFX_menuGrid.selSphere('power','u','none') #Def +3
     
     FFX_menuGrid.useAndMove()
-    gridUp()
-    gridUp()
     if gameVars.nemesis():
+        gridUp()
+        gridUp()
         gridLeft()
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('power','u','none')
         FFX_menuGrid.useAndMove()
         gridUp()
-    gridDown()
-    gridDown()
+        gridDown()
+        gridDown()
+    else:
+        gridLeft()
+        gridLeft()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('speed','d','none')
     FFX_menuGrid.useAndUseAgain()
@@ -1062,6 +1068,8 @@ def prepCalmLands():
     openGrid(character=1)
     if gameVars.getBlitzWin():
         FFX_menuGrid.moveFirst()
+        gridLeft()
+        gridLeft()
         gridUp()
         gridUp()
         if gameVars.nemesis():

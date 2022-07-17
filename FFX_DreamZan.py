@@ -47,17 +47,10 @@ def NewGame(Gamestate):
     
 def NewGame2():
     #New game selected. Next, select options.
-    FFX_memory.waitFrames(30)
-    print("Default Sphere Grid")
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(20)
-    print("Confirm sphere grid")
-    FFX_Xbox.menuB()
-    FFX_memory.waitFrames(20)
-    print("Orchestrated soundtrack.")
-    FFX_Xbox.menuB()
+    FFX_memory.clickToDiagProgress(7)
     FFX_memory.waitFrames(20)
     print("Confirm Orchestrated soundtrack.")
+    FFX_Xbox.menuB()
     FFX_Xbox.menuB()
 
 def listenStory():

@@ -167,6 +167,11 @@ def overdriveMenuActive():
     key = baseValue + 0x00F3D6F4
     return process.readBytes(key, 1) == 4
     
+def overdriveMenuActiveWakka():
+    global baseValue
+    key = baseValue + 0x00DA0BD0
+    return process.readBytes(key, 1)
+    
 def auronOverdriveActive():
     global baseValue
     key = baseValue + 0x00F3D6B4
@@ -1735,7 +1740,7 @@ def getPartyFormatFromText(frontLine):
     elif frontLine == 'highbridge':
         orderFinal = [0,1,2,6,4,5]
     elif frontLine == 'guards_no_lulu':
-        orderFinal = [0, 2, 6]
+        orderFinal = [0, 3, 6]
     elif frontLine == 'guards_lulu':
         orderFinal = [0, 5, 6]
     elif frontLine == 'tidkimwak':
