@@ -5880,7 +5880,7 @@ def calculateSpareChangeMovement(gilAmount):
 
 def chargeRikkuOD():
     if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 376, 378, 381, 384, 386]:
-        if (not FFX_memory.tidusEscapedState() and not FFX_memory.checkTidusOk()) or not checkRikkuOk():
+        if (not FFX_memory.tidusEscapedState() and not checkTidusOk()) or not checkRikkuOk():
             print("Tidus or Rikku incapacitated, fleeing")
             fleeAll()
         else:
