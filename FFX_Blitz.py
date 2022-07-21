@@ -168,7 +168,8 @@ def gameStage():
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
         #stages = [0, 110, 110, 140, 159, tidusShotTiming()]
         if gameVars.csr() and FFX_memory.rngSeed() == 31:
-            stages = [0, 2, 121, 141, 157, tidusShotTiming()]
+            stages = [0, 2, 115, 143, 156, tidusShotTiming()]
+            #previously 141 for defender manip, 157 for force pass to Tidus.
         else:
             stages = [0, 2, 2, 142, 155, tidusShotTiming()]
     elif FFX_memory.getStoryProgress() < 700 and not gameVars.getBlitzOT(): #End of the storyline game

@@ -18,7 +18,7 @@ def arrival():
     reEquipNE = False
     if FFX_memory.overdriveState2()[6] != 100:
         FFX_memory.fullPartyFormat('rikku')
-        if gameVars.neArmor() != 255:
+        if gameVars.neArmor() != 255 and FFX_memory.rngSeed() != 31:
             FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
             reEquipNE = True
     else:
@@ -96,6 +96,10 @@ def arrival():
     else:
         luckCount = FFX_memory.getItemCountSlot(luckSlot)
     
+    if FFX_memory.rngSeed() == 31:
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
+        reEquipNE = True
+    
     checkpoint = 0
     if not gameVars.fluxOverkill():
         FFX_memory.fullPartyFormat('yuna')
@@ -131,16 +135,8 @@ def arrival():
                         FFXC.set_movement(1, 1)
                         FFX_Xbox.tapB()
             elif checkpoint == 29: #Save sphere
-                FFXC.set_movement(0, 1)
-                FFX_memory.waitFrames(30 * 0.2)
-                FFX_Xbox.tapB()
-                FFXC.set_neutral()
-                FFX_memory.waitFrames(30 * 1)
-                FFX_Xbox.menuA()
-                FFX_Xbox.tapB()
+                FFX_memory.touchSaveSphere()
                 checkpoint += 1
-                FFXC.set_movement(1, 0)
-                FFX_memory.waitFrames(30 * 0.6)
             elif FFX_memory.getMap() == 316 and checkpoint < 21: #Final room before trials
                 print("Final room before trials")
                 checkpoint = 21

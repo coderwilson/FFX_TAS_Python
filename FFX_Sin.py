@@ -151,6 +151,7 @@ def insideSin():
     if FFX_memory.overdriveState()[6] != 100:
         reEquipNE = True
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
+        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
     else:
         reEquipNE = False
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)

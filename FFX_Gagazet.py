@@ -32,6 +32,9 @@ def calmLands():
     FFX_Battle.healUp(fullMenuClose=True)
     
     FFX_memory.printManipInfo()
+    print("RNG10: ", FFX_memory.rng10())
+    print("RNG12: ", FFX_memory.rng12())
+    print("RNG13: ", FFX_memory.rng13())
     #Enter the cutscene where Yuna muses about ending her journey.
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
         if FFX_memory.userControl():
@@ -193,15 +196,52 @@ def Flux():
                 FFX_Xbox.tapB()
         FFX_Xbox.skipScene()
 
-def dream():
+def dream(checkpoint:int=0):
     FFX_memory.clickToControl()
     print("*********")
     print("Dream sequence")
     print("*********")
-    FFX_memory.waitFrames(30 * 0.2)
+    FFX_memory.waitFrames(3)
+    
+    while FFX_memory.getMap() != 309:
+        if FFX_memory.userControl():
+            if checkpoint == 11:
+                FFXC.set_movement(-1,1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 15:
+                FFXC.set_movement(0,1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 19:
+                FFXC.set_movement(-1,-1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetDreamSeq(checkpoint)) == True:
+                checkpoint += 1
+                print("Checkpoint reached: ", checkpoint)
+            
+            #Start the final dialog
+            if checkpoint == 25:
+                FFX_Xbox.tapB()
+        else:
+            FFX_Xbox.tapB() #Skip all dialog
+    print("*********")
+    print("Dream sequence over")
+    print("*********")
+
+def dream_old():
+    FFX_memory.clickToControl()
+    print("*********")
+    print("Dream sequence")
+    print("*********")
+    FFX_memory.waitFrames(3)
     pos = FFX_memory.getCoords()
     while pos[1] > 180:
-        FFXC.set_movement(1, 1)
+        FFXC.set_movement(0.4, 1)
         pos = FFX_memory.getCoords()
 
     while pos[0] < -1:
@@ -260,11 +300,14 @@ def dream():
     
 def cave():
     checkpoint = 0
-    
-    checkpoint = 0
     while FFX_memory.getMap() != 272:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.gagazetDream(checkpoint)) == True:
+            if FFX_memory.getMap() == 309 and FFX_memory.getCoords()[0] > 1160:
+                FFXC.set_movement(0.5,1)
+                FFX_memory.waitFrames(3)
+                FFXC.set_movement(0,1)
+                FFX_memory.waitFrames(6)
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPostDream(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:

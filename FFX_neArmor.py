@@ -24,7 +24,8 @@ def toHiddenCave():
                 if FFX_memory.getTidusMP() < 8:
                     FFX_memory.touchSaveSphere()
                 firstSave = True
-            if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1):
+            if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1) \
+                and FFX_memory.rngSeed() != 31:
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
@@ -91,16 +92,21 @@ def dropHunt():
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if FFX_memory.nextChanceRNG12() == 0 and FFX_memory.nextChanceRNG10() == 0:
+                if FFX_memory.nextChanceRNG12() == 0:
                     if FFX_memory.getBattleNum() in [319,323]:
                         FFX_Battle.ghostKill()
-                        FFX_memory.clickToControl3()
                     else:
-                        FFX_Battle.fleeAll()
+                        if FFX_memory.nextChanceRNG10() != 0:
+                            FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
+                        else:
+                            FFX_Battle.fleeAll()
                         FFX_memory.clickToControl3()
                     FFX_memory.checkNEArmor()
                 else:
-                    FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
+                    if FFX_memory.nextChanceRNG10() != 0:
+                        FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
+                    else:
+                        FFX_Battle.advanceRNG12()
                     FFX_memory.clickToControl3()
                 FFX_Battle.healUp(fullMenuClose=True)
                 if gameVars.neArmor() == 255:
