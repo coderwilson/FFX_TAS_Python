@@ -4539,6 +4539,10 @@ def usePotionCharacter(num, direction):
     _useHealingItem(num=num, direction=direction, itemID=0)
 
 def attackByNum(num, direction='u'):
+    if num < 20:
+        friendlyTarget = True
+    else:
+        friendlyTarget = False
     print("Attacking specific character, ", num)
     direction = direction.lower()
     if not FFX_memory.turnReady():
@@ -4555,7 +4559,25 @@ def attackByNum(num, direction='u'):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     
-    if FFX_memory.getEnemyCurrentHP()[num - 20] != 0:
+    if not friendlyTarget and FFX_memory.getEnemyCurrentHP()[num - 20] != 0:
+        while FFX_memory.battleTargetId() != num:
+            if direction == 'l':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'u'
+                FFX_Xbox.tapLeft()
+            elif direction == 'r':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'd'
+                FFX_Xbox.tapRight()
+            elif direction == 'u':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'l'
+                FFX_Xbox.tapUp()
+            elif direction == 'd':
+                if FFX_memory.battleTargetId() < 20:
+                    direction = 'r'
+                FFX_Xbox.tapDown()
+    elif friendlyTarget:
         while FFX_memory.battleTargetId() != num:
             if direction == 'l':
                 if FFX_memory.battleTargetId() < 20:
