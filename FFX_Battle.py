@@ -4577,7 +4577,7 @@ def attackByNum(num, direction='u'):
                 if FFX_memory.battleTargetId() < 20:
                     direction = 'r'
                 FFX_Xbox.tapDown()
-    else:
+    elif friendlyTarget:
         while FFX_memory.battleTargetId() != num:
             if direction == 'l':
                 if FFX_memory.battleTargetId() < 20:
