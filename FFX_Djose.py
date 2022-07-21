@@ -367,6 +367,8 @@ def leavingDjose():
                     FFXC.set_movement(1, 0)
                     FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
+            elif checkpoint == 11: #No longer do we pick up the Remedy
+                checkpoint = 13
             elif checkpoint in [3,9,12]:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1

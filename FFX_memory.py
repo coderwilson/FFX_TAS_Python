@@ -3113,6 +3113,11 @@ def getSaveSphereDetails():
         x = 140
         y = -640
         diag = 84
+    if mapVal == 316:
+        #Just before Zan trials
+        x = -20
+        y = 358
+        diag = 25
     if mapVal == 318:
         #Before Yunalesca
         x = -5

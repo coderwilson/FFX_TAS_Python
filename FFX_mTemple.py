@@ -36,10 +36,11 @@ def approach():
                 FFX_Xbox.tapB()
     FFXC.set_neutral()
 
-def arrival():
+def arrival(doGrid=True):
     print("Starting Macalania Temple section")
     FFX_memory.awaitControl()
-    FFX_menu.macTemple()
+    if doGrid:
+        FFX_menu.macTemple()
     
     #Movement:
     jyscalSkipStatus = False
@@ -258,6 +259,10 @@ def escape():
     FFX_menu.equipSonicSteel(fullMenuClose=True)
     
     print("Now to escape the Guado")
+    if FFX_memory.rngSeed() == 31:
+        forceBattle = True
+    else:
+        forceBattle = False
     
     checkpoint = 0
     while FFX_memory.getBattleNum() != 195:
@@ -267,6 +272,8 @@ def escape():
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
                 print("Touching save sphere. Update checkpoint: ", checkpoint)
+            elif checkpoint == 18 and forceBattle:
+                FFXC.set_neutral()
             
             #Map changes
             elif checkpoint < 19 and FFX_memory.getMap() == 192:
@@ -281,7 +288,10 @@ def escape():
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Screen.awaitTurn()
-                if not menuDone:
+                if checkpoint < 19:
+                    FFX_Battle.fleeAll()
+                    forceBattle = False
+                elif not menuDone:
                     FFX_Battle.escapeWithXP()
                     FFX_menu.afterSeymour()
                     menuDone = True

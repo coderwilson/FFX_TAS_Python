@@ -113,10 +113,7 @@ def desert():
             elif checkpoint == 53:
                 print("Going for first Sandragora and chest")
                 teleSlot = FFX_memory.getItemSlot(98)
-                if teleSlot == 255:
-                    FFX_targetPathing.setMovement([-44,446])
-                    FFX_Xbox.tapB()
-                elif teleCount == FFX_memory.getItemCountSlot(teleSlot):
+                if teleSlot == 255 or teleCount == FFX_memory.getItemCountSlot(teleSlot):
                     FFX_targetPathing.setMovement([-44,446])
                     FFX_Xbox.tapB()
                 else:
@@ -132,26 +129,19 @@ def desert():
                 #FFX_memory.waitFrames(10)
                 checkpoint += 1
             elif checkpoint == 60:
-                while FFX_memory.getCoords()[1] < 810:
-                    if FFX_memory.battleActive():
-                        checkpoint = 56
-                        FFX_Battle.fleeAll()
-                        FFX_memory.clickToControl()
-                        break
-                    else:
-                        FFXC.set_movement(0,1)
-                FFXC.set_neutral()
-                if checkpoint == 60:
-                    while FFX_memory.getCoords()[1] < 840:
-                        if FFX_memory.battleActive():
-                            checkpoint -= 1
-                            FFX_Battle.fleeAll()
-                            FFX_memory.clickToControl()
-                            break
-                        else:
-                            pass
-                    if checkpoint == 60 and FFX_memory.getCoords()[1] >= 840:
-                        checkpoint += 1
+                if FFX_memory.getCoords()[1] < 810:
+                    FFXC.set_movement(0,1)
+                else:
+                    FFXC.set_neutral()
+                    checkpoint += 1
+            elif checkpoint == 61:
+                if FFX_memory.getCoords()[1] < 810:
+                    #Accidentally encountered Sandragora, must re-position.
+                    checkpoint -= 2
+                elif FFX_memory.getCoords()[1] < 840:
+                    FFXC.set_neutral()
+                else:
+                    checkpoint += 1
             
             #After Sandy2 logic
             elif checkpoint == 64:

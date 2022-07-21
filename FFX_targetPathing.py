@@ -2993,11 +2993,11 @@ def djoseExit(checkpoint):
         x = 0
         y = 0
     if checkpoint == 10:
-        x = -13
-        y = -4
+        x = 13
+        y = -1
     if checkpoint == 11:
-        x = -19
-        y = 18
+        x = 13
+        y = -1
     if checkpoint == 12: #Remedy
         x = 0
         y = 0
@@ -4896,24 +4896,26 @@ def desert(checkpoint):
     if checkpoint == 53: #Sandragora #1
         print("Sandragora #1")
     if checkpoint == 54:
-        x = -61
-        y = 443
+        x = -57
+        y = 439
     if checkpoint == 55:
-        x = -160
-        y = 614
+        x = -228
+        y = 764
     if checkpoint == 56:
         x = -228
         y = 764
     if checkpoint == 58: #Lining up for Sandy skip
-        x = -230
-        y = 796
+        x = -228
+        y = 764
+        #x = -230
+        #y = 796
     if checkpoint == 59: #Lining up for Sandy skip
         x = -244
         y = 797
-    if checkpoint == 61: #Past Sandy
+    if checkpoint == 61: #Waiting to be pushed
         x = -273
         y = 850
-    if checkpoint == 62:
+    if checkpoint == 62: #Past Sandy
         x = -273
         y = 850
     if checkpoint == 63:
@@ -6100,33 +6102,122 @@ def Flux(checkpoint):
         y = -619
     return [x,y]
 
-def gagazetDream(checkpoint):
+def gagazetDreamSeq(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = 1140
-        y = 87
+        x = -62
+        y = 180
     if checkpoint == 1:
-        x = 1027
-        y = 407
+        x = -29
+        y = 134
     if checkpoint == 2:
-        x = 1027
-        y = 407
+        x = -20
+        y = 113
     if checkpoint == 3:
-        x = 1008
-        y = 503
+        x = 15
+        y = 21
     if checkpoint == 4:
-        x = 985
-        y = 549
+        x = 23
+        y = 9
     if checkpoint == 5:
-        x = 1001
-        y = 593
+        x = 58
+        y = 3
     if checkpoint == 6:
-        x = 1043
-        y = 640
+        x = 123
+        y = 1
     if checkpoint == 7:
-        x = 1070
-        y = 640
+        x = 149
+        y = 0
+    if checkpoint == 8:
+        x = 173
+        y = 1
+    if checkpoint == 9:
+        x = 205
+        y = 3
+    if checkpoint == 10:
+        x = 239
+        y = 18
+    if checkpoint == 11: #Into the door
+        x = 0
+        y = 0
+    if checkpoint == 12:
+        x = 62
+        y = -35
+    if checkpoint == 13:
+        x = 63
+        y = -14
+    if checkpoint == 14:
+        x = 52
+        y = -12
+    if checkpoint == 15: #Start first conversation
+        x = 0
+        y = 0
+    if checkpoint == 16:
+        x = 64
+        y = -12
+    if checkpoint == 17:
+        x = 64
+        y = -25
+    if checkpoint == 18:
+        x = 64
+        y = -46
+    if checkpoint == 19: #Back to outdoor area
+        x = 0
+        y = 0
+    if checkpoint == 20:
+        x = 235
+        y = 8
+    if checkpoint == 21:
+        x = 234
+        y = -18
+    if checkpoint == 22:
+        x = 238
+        y = -26
+    if checkpoint == 23:
+        x = 269
+        y = -30
+    if checkpoint == 24:
+        x = 288
+        y = -25
+    if checkpoint == 25:
+        x = 326
+        y = -1
+    return [x,y]
+
+def gagazetPostDream(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 1143
+        y = 73
+    if checkpoint == 1:
+        x = 1054
+        y = 289
+    if checkpoint == 2:
+        x = 1016
+        y = 383
+    if checkpoint == 3:
+        x = 1023
+        y = 404
+    if checkpoint == 4:
+        x = 1019
+        y = 494
+    if checkpoint == 5:
+        x = 990
+        y = 529
+    if checkpoint == 6:
+        x = 991
+        y = 585
+    if checkpoint == 7:
+        x = 1020
+        y = 620
+    if checkpoint == 8:
+        x = 1046
+        y = 643
+    if checkpoint == 9:
+        x = 1200
+        y = 643
     return [x,y]
 
 def gagazetCave(checkpoint):

@@ -208,6 +208,8 @@ def LucaWorkers():
 def lateHaste():
     openGrid(character=0)
     FFX_menuGrid.moveFirst()
+    gridRight()
+    gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability','d','none') # Haste
@@ -1068,8 +1070,6 @@ def prepCalmLands():
     openGrid(character=1)
     if gameVars.getBlitzWin():
         FFX_menuGrid.moveFirst()
-        gridLeft()
-        gridLeft()
         gridUp()
         gridUp()
         if gameVars.nemesis():
