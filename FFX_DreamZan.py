@@ -16,7 +16,7 @@ def NewGame(Gamestate):
     print("Gamestate: ", Gamestate)
     
     #New version
-    if Gamestate == 'none':
+    if Gamestate == 'none': #New Game
         while FFX_memory.getMap() != 0:
             if FFX_memory.getMap() != 23:
                 FFXC.set_value('BtnStart', 1)
@@ -31,7 +31,7 @@ def NewGame(Gamestate):
                 FFX_Xbox.menuB()
         FFX_memory.clickToDiagProgress(7)
     
-    else:
+    else: #Load Game
         while not FFX_memory.saveMenuOpen():
             if FFX_memory.getMap() != 23:
                 FFXC.set_value('BtnStart', 1)

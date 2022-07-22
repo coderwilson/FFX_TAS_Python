@@ -1132,20 +1132,20 @@ def afterRonso():
     gridDown()
     
     if gameVars.endGameVersion() in [1,2]: #Two of each
-        FFX_menuGrid.moveShiftRight('yuna')
+        FFX_menuGrid.moveShiftLeft('yuna')
         FFX_menuGrid.useFirst()
         FFX_menuGrid.selSphere('friend','d','d2')
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power','u','none')
-        FFX_menuGrid.useShiftLeft('Lulu')
+        FFX_menuGrid.useShiftRight('Lulu')
         FFX_menuGrid.moveFirst()
         gridUp()
         gridUp()
         gridUp()
         gridUp()
-        FFX_menuGrid.moveShiftRight('Yuna')
+        FFX_menuGrid.moveShiftLeft('Yuna')
         FFX_menuGrid.useFirst()
         FFX_menuGrid.selSphere('friend','d','none')
         FFX_menuGrid.useAndUseAgain()
@@ -1156,7 +1156,7 @@ def afterRonso():
         FFX_menuGrid.selSphere('power','u','none')
     
     elif gameVars.endGameVersion() == 4: #Four return spheres
-        FFX_menuGrid.moveShiftRight('yuna')
+        FFX_menuGrid.moveShiftLeft('yuna')
         FFX_menuGrid.useFirst()
         if gameVars.getBlitzWin() == True:
             FFX_menuGrid.selSphere('ret','d','yunaspec')

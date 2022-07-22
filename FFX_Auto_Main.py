@@ -85,7 +85,7 @@ if gameVars.nemesis():
 #StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
 Gamestate = "Zanarkand"
-StepCounter = 1 #Blitz win, end game version 1 or 2
+StepCounter = 1 #Campfire, version 1
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
@@ -93,8 +93,8 @@ StepCounter = 1 #Blitz win, end game version 1 or 2
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -276,15 +276,17 @@ if Gamestate != "none" :
     if Gamestate == "Gagazet" and StepCounter == 2: # NE armor save
         FFX_LoadGame.loadSaveNum(57)
     if Gamestate == "Gagazet" and StepCounter == 3: # Gagazet gates, after B&Y
-        #FFX_LoadGame.loadSaveNum(138) #Blitz Win
-        FFX_LoadGame.loadSaveNum(53) #Blitz Loss
-        gameVars.endGameVersionSet(3)
+        FFX_LoadGame.loadSaveNum(138) #Blitz Win
+        #FFX_LoadGame.loadSaveNum(53) #Blitz Loss
+        gameVars.endGameVersionSet(4)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 6: # After the dream
         #FFX_LoadGame.loadSaveNum(47)
         #gameVars.endGameVersionSet(4)
-        FFX_LoadGame.loadSaveNum(52)
-        gameVars.endGameVersionSet(3)
+        #FFX_LoadGame.loadSaveNum(52)
+        #gameVars.endGameVersionSet(3)
+        FFX_LoadGame.loadSaveNum(98)
+        gameVars.endGameVersionSet(1)
         FFX_LoadGame.loadGagazetDream()
     if Gamestate == "Gagazet" and StepCounter == 10: # Calm Lands, but Nemesis version
         FFX_LoadGame.loadSaveNum(43)
@@ -299,10 +301,11 @@ if Gamestate != "none" :
         import FFX_menu
         FFX_menu.prepCalmLands()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
-        #FFX_LoadGame.loadOffset(19) #Coderwilson save
-        FFX_LoadGame.loadOffset(47) #Glacierwulf save
-        gameVars.endGameVersionSet(4)
-        FFX_LoadGame.zanEntrance()
+        FFX_LoadGame.loadSaveNum(99) #Coderwilson save
+        gameVars.endGameVersionSet(1)
+        #FFX_LoadGame.loadSaveNum(47) #Glacierwulf save
+        #gameVars.endGameVersionSet(4)
+        #FFX_LoadGame.zanEntrance()
     if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
         FFX_LoadGame.loadOffset(35)
         FFX_LoadGame.zanTrials()
@@ -382,6 +385,7 @@ if Gamestate != "none" :
     
     if Gamestate == "Nem_Farm":
         FFX_memory.checkNEArmor()
+    FFX_memory.checkNEArmor()
     
 
 #Movement files - moved to FFX_compileAll.py
