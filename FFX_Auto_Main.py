@@ -50,9 +50,9 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-Gamestate = "Luca"
+#Gamestate = "Luca"
 #StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -84,7 +84,8 @@ StepCounter = 3
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
-#Gamestate = "Zanarkand"
+Gamestate = "Zanarkand"
+StepCounter = 1 #Blitz win, end game version 1 or 2
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
@@ -92,8 +93,8 @@ StepCounter = 3
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -298,7 +299,9 @@ if Gamestate != "none" :
         import FFX_menu
         FFX_menu.prepCalmLands()
     if Gamestate == "Zanarkand" and StepCounter == 1: # Intro scene revisited
-        FFX_LoadGame.loadOffset(19)
+        #FFX_LoadGame.loadOffset(19) #Coderwilson save
+        FFX_LoadGame.loadOffset(47) #Glacierwulf save
+        gameVars.endGameVersionSet(4)
         FFX_LoadGame.zanEntrance()
     if Gamestate == "Zanarkand" and StepCounter == 2: # Just before the trials.
         FFX_LoadGame.loadOffset(35)
