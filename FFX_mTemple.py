@@ -259,10 +259,9 @@ def escape():
     FFX_menu.equipSonicSteel(fullMenuClose=True)
     
     print("Now to escape the Guado")
-    if FFX_memory.rngSeed() == 31:
-        forceBattle = True
-    else:
-        forceBattle = False
+    forceBattle = False
+    #if FFX_memory.rngSeed() == 31:
+    #    forceBattle = True
     
     checkpoint = 0
     while FFX_memory.getBattleNum() != 195:

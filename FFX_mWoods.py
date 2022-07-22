@@ -59,6 +59,10 @@ def arrival(rikkucharged):
                 print("variable check 1: ",woodsVars)
                 woodsVars = FFX_Battle.mWoods(woodsVars)
                 print("variable check 2: ",woodsVars)
+                if FFX_memory.overdriveState()[6] == 100:
+                    FFX_memory.fullPartyFormat("mwoodsgotcharge")
+                else:
+                    FFX_memory.fullPartyFormat("mwoodsneedcharge")
             elif not FFX_memory.battleActive() and FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     

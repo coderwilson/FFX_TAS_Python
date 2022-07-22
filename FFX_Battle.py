@@ -5901,6 +5901,7 @@ def calculateSpareChangeMovement(gilAmount):
     return
 
 def chargeRikkuOD():
+    print("#####Battle Number: ", FFX_memory.getBattleNum())
     if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 376, 378, 381, 384, 386]:
         if (not FFX_memory.tidusEscapedState() and not checkTidusOk()) or not checkRikkuOk():
             print("Tidus or Rikku incapacitated, fleeing")
@@ -5913,6 +5914,8 @@ def chargeRikkuOD():
                         attackByNum(6, direction='u')
                     elif FFX_memory.getOverdriveBattle(6) == 100:
                         fleeAll()
+                    elif not 6 in FFX_memory.getActiveBattleFormation():
+                        buddySwapRikku()
                     else:
                         escapeOne()
         FFX_memory.clickToControl3()
@@ -6093,25 +6096,24 @@ def advanceRNG10(numAdvances:int):
     print("#################")
     while FFX_memory.battleActive():
         currentParty = FFX_memory.getActiveBattleFormation()
-        if FFX_Screen.faintCheck() >= 1:
-            if 255 in [currentParty[0], currentParty[1], currentParty[2]] and numAdvances >= 6:
-                if FFX_memory.turnReady():
+        if FFX_memory.turnReady():
+            if FFX_Screen.faintCheck() >= 1:
+                if 255 in [currentParty[0], currentParty[1], currentParty[2]] and numAdvances >= 6:
                     print("+++Registering character fainted, advances: ", numAdvances)
                     print("+++Registering turn, defend for more advances")
                     defend()
-            else:
-                print("+++Registering character fainted, advances: ", numAdvances)
-                print("+++Registering turn, flee")
+                else:
+                    print("+++Registering character fainted, advances: ", numAdvances)
+                    print("+++Registering turn, flee")
+                    fleeAll()
+            elif FFX_memory.battleType() == 2:
+                print("+++Registering ambush")
                 fleeAll()
-        elif FFX_memory.battleType() == 2:
-            print("+++Registering ambush")
-            fleeAll()
-        elif FFX_memory.getBattleNum() == 321:
-            print("+++Registering evil jar guy")
-            print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
-            fleeAll()
-        elif numAdvances in [1,2] and FFX_memory.getBattleNum() != 287:
-            if FFX_memory.turnReady():
+            elif FFX_memory.getBattleNum() == 321:
+                print("+++Registering evil jar guy")
+                print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
+                fleeAll()
+            elif numAdvances in [1,2] and FFX_memory.getBattleNum() != 287:
                 print("+++Registering advances: ", numAdvances)
                 if not advanceComplete:
                     if FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
@@ -6136,8 +6138,7 @@ def advanceRNG10(numAdvances:int):
                 else:
                     print("+++Registering turn, Flee All turn")
                     fleeAll()
-        elif numAdvances >= 3:
-            if FFX_memory.turnReady():
+            elif numAdvances >= 3:
                 print("+++Registering advances: ", numAdvances)
                 if FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
                     print("+++Registering turn, steal character")
@@ -6167,9 +6168,9 @@ def advanceRNG10(numAdvances:int):
                 else:
                     print("+++Registering turn, other character")
                     escapeOne()
-        else: #any other scenarios, ready to advance.
-            print("+++Registering other event, forcing flee.")
-            fleeAll()
+            else: #any other scenarios, ready to advance.
+                print("+++Registering other event, forcing flee.")
+                fleeAll()
     FFX_memory.clickToControl()
     healUp(3)
 
