@@ -35,7 +35,7 @@ def getSavedFiles():
     return saveFiles
 
 def loadSaveNum(number):
-    FFX_memory.waitFrames(10)
+    #FFX_memory.waitFrames(10)
     saveFiles = getSavedFiles()
     testString = "ffx_" + str(number).zfill(3)
     print("Searching for string: ", testString)
@@ -500,12 +500,11 @@ def loadGagaGates():
     FFXC.set_neutral()
 
 def zanEntrance():
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_movement(1, 1)
     FFX_memory.waitFrames(30 * 2.5)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_neutral()
 
 def zanTrials():
     FFXC.set_movement(1,1)
