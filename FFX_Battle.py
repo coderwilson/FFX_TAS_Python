@@ -4580,19 +4580,19 @@ def attackByNum(num, direction='u'):
     elif friendlyTarget:
         while FFX_memory.battleTargetId() != num:
             if direction == 'l':
-                if FFX_memory.battleTargetId() < 20:
+                if FFX_memory.battleTargetId() >= 20:
                     direction = 'u'
                 FFX_Xbox.tapLeft()
             elif direction == 'r':
-                if FFX_memory.battleTargetId() < 20:
+                if FFX_memory.battleTargetId() >= 20:
                     direction = 'd'
                 FFX_Xbox.tapRight()
             elif direction == 'u':
-                if FFX_memory.battleTargetId() < 20:
+                if FFX_memory.battleTargetId() >= 20:
                     direction = 'l'
                 FFX_Xbox.tapUp()
             elif direction == 'd':
-                if FFX_memory.battleTargetId() < 20:
+                if FFX_memory.battleTargetId() >= 20:
                     direction = 'r'
                 FFX_Xbox.tapDown()
     tapTargeting()
