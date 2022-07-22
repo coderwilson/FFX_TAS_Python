@@ -16,58 +16,57 @@ def NewGame(Gamestate):
     print("Gamestate: ", Gamestate)
     
     #New version
-    while FFX_memory.getMap() != 0:
-        #print(FFX_memory.diagSkipPossible())
-        #FFX_Xbox.menuDown()
-        #if FFX_memory.diagSkipPossible():
-        if FFX_memory.getMap() != 23:
-            FFXC.set_value('BtnStart', 1)
-            FFX_memory.waitFrames(1)
-            FFXC.set_value('BtnStart', 0)
-            FFX_memory.waitFrames(1)
-        elif Gamestate == 'none':
-            FFX_memory.waitFrames(60)
-            if FFX_memory.saveMenuCursor() == 1:
-                while FFX_memory.saveMenuCursor() != 0:
-                    FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
+    if Gamestate == 'none':
+        while FFX_memory.getMap() != 0:
+            if FFX_memory.getMap() != 23:
+                FFXC.set_value('BtnStart', 1)
+                FFX_memory.waitFrames(1)
+                FFXC.set_value('BtnStart', 0)
+                FFX_memory.waitFrames(1)
+            elif FFX_memory.saveMenuOpen():
+                FFX_Xbox.tapA()
+            elif FFX_memory.saveMenuCursor() == 1:
+                FFX_Xbox.menuDown()
             else:
                 FFX_Xbox.menuB()
-        else:
-            FFX_memory.waitFrames(60)
-            if FFX_memory.saveMenuCursor() == 0:
-                while FFX_memory.saveMenuCursor() != 1:
-                    FFX_Xbox.menuDown()
-                FFX_Xbox.menuB()
+        FFX_memory.clickToDiagProgress(7)
+    
+    else:
+        while not FFX_memory.saveMenuOpen():
+            if FFX_memory.getMap() != 23:
+                FFXC.set_value('BtnStart', 1)
+                FFX_memory.waitFrames(1)
+                FFXC.set_value('BtnStart', 0)
+                FFX_memory.waitFrames(1)
+            elif FFX_memory.saveMenuCursor() == 0:
+                FFX_Xbox.menuDown()
             else:
                 FFX_Xbox.menuB()
-                FFX_Xbox.menuB()
-                break
+        #FFX_memory.waitFrames(3)
     FFX_memory.clearNameAeonReady()
     
 def NewGame2():
     #New game selected. Next, select options.
-    FFX_memory.clickToDiagProgress(7)
-    FFX_memory.waitFrames(20)
+    timeBuffer = 13
     print("=======================================")
     print("Countdown timer!!!")
     print("=======================================")
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(timeBuffer)
     print("5")
     print("=======================================")
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(timeBuffer)
     print("4")
     print("=======================================")
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(timeBuffer)
     print("3")
     print("=======================================")
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(timeBuffer)
     print("2")
     print("=======================================")
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(timeBuffer)
     print("1")
     print("=======================================")
-    FFX_memory.waitFrames(30)
+    FFX_memory.waitFrames(timeBuffer)
     print("GO!!! Good fortune!")
     print("=======================================")
     FFX_Xbox.menuB()
