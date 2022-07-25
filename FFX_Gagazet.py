@@ -28,7 +28,7 @@ def checkGems():
 def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
-    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
+    FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
     
     FFX_memory.printManipInfo()

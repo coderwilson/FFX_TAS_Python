@@ -350,7 +350,9 @@ def useShiftRight(toon):
 
 def moveShiftLeft(toon):
     print("Move and shift, left")
+    FFX_memory.waitFrames(2)
     FFX_Xbox.menuB()
+    FFX_memory.waitFrames(2)
     toon = toon.lower()
     if toon == 'yuna':
         while not gridYuna():

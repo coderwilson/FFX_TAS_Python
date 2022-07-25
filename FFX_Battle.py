@@ -59,6 +59,29 @@ def tidusFlee():
             FFX_Xbox.tapB()
         tapTargeting()
 
+def yunaCureOmnis():
+    while FFX_memory.battleMenuCursor() != 22:
+        if FFX_Screen.turnYuna() == False:
+            print("Attempting Cure, but it's not Yuna's turn")
+            return
+        if FFX_memory.battleMenuCursor() == 1:
+            FFX_Xbox.tapUp()
+        else:
+            FFX_Xbox.tapDown()
+    while not FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()
+    _navigate_to_position(0)
+    while FFX_memory.otherBattleMenu():
+        FFX_Xbox.tapB()
+    while FFX_memory.battleTargetId() <= 20:
+        if FFX_memory.battleTargetId() < 20:
+            FFX_Xbox.tapDown()
+        elif FFX_memory.battleTargetId() == 20:
+            FFX_Xbox.tapLeft()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+    FFX_Xbox.tapB()
+
 def tidusHaste(direction, character=255):
     direction = direction.lower()
     while FFX_memory.battleMenuCursor() != 22:
@@ -2276,13 +2299,13 @@ def spherimorph():
             elif turnchar == 5:
                 if not spheriSpellItemReady():
                     if spellNum == 1:
-                        fire()
-                    elif spellNum == 2:
                         ice()
+                    elif spellNum == 2:
+                        fire()
                     elif spellNum == 3:
-                        thunder()
-                    else:
                         water()
+                    else:
+                        thunder()
                     FFX_Screen.awaitTurn()
                     if FFX_memory.getCharWeakness(20) == 1:
                         spellNum = 4 #Ice
@@ -5480,6 +5503,7 @@ def omnis():
     FFX_Xbox.clickToBattle()
     defend() #Yuna defends
     rikkuIn = False
+    backupCure = False
     
     while FFX_memory.getEnemyMaxHP()[0] == FFX_memory.getEnemyCurrentHP()[0]:
         if FFX_memory.turnReady():
@@ -5489,8 +5513,12 @@ def omnis():
                 buddySwapRikku()
                 rikkuFullOD(battle='omnis')
                 rikkuIn = True
-            elif FFX_Screen.turnYuna() and rikkuIn():
-                FFX_Xbox.weapSwap(0)
+            elif FFX_Screen.turnYuna() and rikkuIn:
+                if backupCure == False:
+                    yunaCureOmnis()
+                    backupCure = True
+                else:
+                    FFX_Xbox.weapSwap(0)
             else:
                 defend()
     
@@ -6033,7 +6061,7 @@ def calmLandsManip():
             fleeAll()
             #FFX_memory.setEncounterRate(0) #Testing only
     FFX_memory.clickToControl3()
-    FFX_memory.fullPartyFormat('yuna',fullMenuClose=False)
+    FFX_memory.fullPartyFormat('rikku',fullMenuClose=False)
     healUp(fullMenuClose=True)
     FFX_memory.printManipInfo()
 
@@ -6171,7 +6199,8 @@ def advanceRNG10(numAdvances:int):
             else: #any other scenarios, ready to advance.
                 print("+++Registering other event, forcing flee.")
                 fleeAll()
-    FFX_memory.clickToControl()
+    FFX_memory.clickToControl3()
+    FFX_memory.fullPartyFormat('rikku')
     healUp(3)
 
 def rng12Attack():
@@ -6223,12 +6252,12 @@ def advanceRNG12():
             else:
                 if aeonTurn:
                     fleeAll()
-                elif FFX_memory.getBattleCharSlot(1) >= 3:
+                elif not 1 in FFX_memory.getActiveBattleFormation():
                     buddySwapYuna()
                 else:
                     defend()
     FFX_memory.clickToControl3()
-    #FFX_memory.fullPartyFormat('rikku')
+    FFX_memory.fullPartyFormat('rikku')
     #if FFX_memory.getMap() == 223:
     #    healUp(3)
 
@@ -6247,10 +6276,9 @@ def ghostKill():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif FFX_Screen.turnTidus():
-                    if not selfHaste:
-                        tidusHaste('none')
-                        selfHaste = True
-                    elif FFX_memory.getEnemyCurrentHP()[0] <= 2500 and advances >= 1:
+                    if FFX_memory.getEnemyCurrentHP()[0] > 3800:
+                        buddySwapYuna()
+                    elif FFX_memory.getEnemyCurrentHP()[0] <= 2800 and FFX_memory.getOverdriveBattle(0) == 100:
                         defend()
                     else:
                         attack('none')
@@ -6271,33 +6299,40 @@ def ghostKill():
             else:
                 if FFX_Screen.turnAeon():
                     attack('none')
-                elif summonChad and not 1 in FFX_memory.getActiveBattleFormation():
-                    print("+++No silence grenade. Summon Chad!!!")
-                    buddySwapYuna()
+                elif summonChad:
+                    if not 1 in FFX_memory.getActiveBattleFormation():
+                        print("+++No silence grenade. Summon Chad!!!")
+                        buddySwapYuna()
+                        aeonSummon(4)
+                    elif FFX_Screen.turnYuna():
+                        print("+++No silence grenade. Summon Chad!!!")
+                        aeonSummon(4)
+                    else:
+                        defend()
                 elif not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
+                elif FFX_Screen.turnRikku() and not itemThrown:
+                    useItem(FFX_memory.getUseItemsSlot(39))
+                    itemThrown = True
+                elif not 0 in FFX_memory.getActiveBattleFormation():
+                    print("+++Get Tidus back in")
+                    buddySwapTidus()
                 elif FFX_Screen.turnTidus():
-                    if not selfHaste:
+                    if not selfHaste and FFX_memory.getEnemyCurrentHP()[0] <= 3800:
                         tidusHaste('none')
                         selfHaste = True
+                    elif FFX_memory.getEnemyCurrentHP()[0] <= 2800 and FFX_memory.getOverdriveBattle(0) == 100:
+                        tidusOD()
                     else:
                         attack('none')
                 elif FFX_Screen.faintCheck():
                     revive()
-                elif FFX_Screen.turnRikku():
-                    if not itemThrown:
-                        useItem(FFX_memory.getUseItemsSlot(39))
-                        itemThrown = True
-                    else:
-                        buddySwapYuna()
-                elif FFX_Screen.turnYuna():
-                    if summonChad:
-                        aeonSummon(4)
-                    elif FFX_memory.getEnemyCurrentHP()[0] > 3000:
-                        attack('none')
-                    else:
-                        defend()
+                elif not 1 in FFX_memory.getActiveBattleFormation() and FFX_memory.getEnemyCurrentHP()[0] > 4000:
+                    print("+++Get Yuna in for extra smacks")
+                    buddySwapYuna()
+                elif FFX_Screen.turnYuna() and FFX_memory.getEnemyCurrentHP()[0] > 3000:
+                    attack('none')
                 else:
                     defend()
     FFX_memory.clickToControl3()

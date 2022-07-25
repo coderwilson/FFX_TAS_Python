@@ -27,6 +27,8 @@ def toHiddenCave():
             if checkpoint == 8 and (FFX_memory.nextChanceRNG12() >= 1 or FFX_memory.nextChanceRNG10() >= 1) \
                 and FFX_memory.rngSeed() != 31:
                 checkpoint -= 2
+            if checkpoint == 8 and FFX_memory.nextChanceRNG12() >= 1 and FFX_memory.rngSeed() == 31:
+                checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.neApproach(checkpoint)) == True:

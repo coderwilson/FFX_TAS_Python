@@ -184,6 +184,9 @@ def engage():
     duration = endTime - startTime
     print("Duration: ", str(duration))
     print("Battle count: ", battleCount)
+    while FFX_memory.getMap() != 325:
+        if FFX_memory.battleActive():
+            FFX_Battle.fleeAll()
     try:
         FFX_Logs.writeStats("Egg hunt duration in seconds:")
         FFX_Logs.writeStats(str(round(duration,2)))
