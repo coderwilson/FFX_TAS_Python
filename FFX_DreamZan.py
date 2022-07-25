@@ -47,7 +47,7 @@ def NewGame(Gamestate):
     
 def NewGame2():
     #New game selected. Next, select options.
-    timeBuffer = 13
+    timeBuffer = 17
     print("=======================================")
     print("Countdown timer!!!")
     print("=======================================")
@@ -69,6 +69,7 @@ def NewGame2():
     FFX_memory.waitFrames(timeBuffer)
     print("GO!!! Good fortune!")
     print("=======================================")
+    print("Reminder seed number: ", FFX_memory.rngSeed())
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
 
