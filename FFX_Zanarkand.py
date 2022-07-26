@@ -293,8 +293,6 @@ def sanctuaryKeeper():
     ver = gameVars.endGameVersion()
     print("Now prepping for Sanctuary Keeper fight")
     
-    FFX_Logs.writeStats("Sanctuary Keeper sphere grid, pattern: " + str(ver))
-    
     if ver == 4:
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skReturn()")
         print("Pattern for four return spheres off of the B&Y fight")
@@ -363,12 +361,8 @@ def yunalesca():
     
     #Now to check for zombie strike and then report to logs.
     print("Ready to check for Zomibe Strike")
-    if FFX_memory.checkZombieStrike():
-        FFX_Logs.writeStats("Zombiestrike True:")
-        FFX_Logs.writeStats(gameVars.zombieWeapon())
-    else:
-        FFX_Logs.writeStats("Zombiestrike False:")
-        FFX_Logs.writeStats(gameVars.zombieWeapon())
+    FFX_Logs.writeStats("Zombiestrike:")
+    FFX_Logs.writeStats(gameVars.zombieWeapon())
     print("++Zombiestrike:")
     print("++",gameVars.zombieWeapon())
     

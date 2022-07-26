@@ -115,8 +115,23 @@ def toTheRonso():
 
 def gagazetGates():
     #Should appear on the map just before the Ronso hymn
-    print("Grid version: " + str(gameVars.endGameVersion()))
-    FFX_Logs.writeLog("Grid version: " + str(gameVars.endGameVersion()))
+    endVer = gameVars.endGameVersion()
+    print("Grid version: " + str(endVer))
+    FFX_Logs.writeLog("Grid version: " + str(endVer))
+    FFX_Logs.writeStats("B&Y Return spheres:")
+    if endVer == 4:
+        FFX_Logs.writeStats("4")
+    elif endVer == 3:
+        FFX_Logs.writeStats("0")
+    else:
+        FFX_Logs.writeStats("2")
+    #FFX_Logs.writeStats("B&Y Friend spheres:")
+    #if endVer == 4:
+    #    FFX_Logs.writeStats("0")
+    #elif endVer == 3:
+    #    FFX_Logs.writeStats("4")
+    #else:
+    #    FFX_Logs.writeStats("2")
     FFX_memory.awaitControl()
     if FFX_memory.overdriveState()[6] == 100:
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)

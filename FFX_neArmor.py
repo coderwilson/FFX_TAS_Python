@@ -15,6 +15,7 @@ def toHiddenCave():
     FFX_memory.printManipInfo()
     firstSave = False
     checkpoint = 0
+    prepBattles = 0
     while FFX_memory.getMap() != 56:
         #print(FFX_memory.getMap())
         if FFX_memory.userControl():
@@ -46,12 +47,14 @@ def toHiddenCave():
                     FFX_Battle.advanceRNG10(FFX_memory.nextChanceRNG10())
                 else:
                     FFX_Battle.fleeAll()
+                prepBattles += 1
                 FFX_memory.fullPartyFormat('yuna')
                 FFX_memory.touchSaveSphere()
                 FFX_memory.printManipInfo()
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-        
+    FFX_Logs.writeStats("NEA extra manip battles:")
+    FFX_Logs.writeStats(prepBattles)
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
@@ -77,6 +80,7 @@ def dropHunt():
     else:
         FFX_memory.nextChanceRNG01()
     checkpoint = 0
+    preGhostBattles = 0
     while gameVars.neArmor() == 255:
         if FFX_memory.userControl():
             if goGreen:
@@ -123,9 +127,12 @@ def dropHunt():
                         FFX_memory.nextChanceRNG01(version='green')
                     else:
                         FFX_memory.nextChanceRNG01()
+                    preGhostBattles += 1
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     print("The NE armor hunt is complete. Char: ", gameVars.neArmor())
+    FFX_Logs.writeStats("Pre-Ghost battles:")
+    FFX_Logs.writeStats(preGhostBattles)
     FFX_Logs.writeStats("NEA char:")
     FFX_Logs.writeStats(gameVars.neArmor())
 
