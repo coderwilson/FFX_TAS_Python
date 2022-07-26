@@ -392,7 +392,7 @@ def battleSiteOaka2():
         for cur in other_slots:
             sellWeapon(cur)
             if FFX_memory.getGilvalue() >= 10890: break
-    buyWeapon(2, equip=True)    
+    buyWeapon(2, equip=True)
     FFX_memory.closeMenu()
 
 def buyWeapon(location, equip=False):
