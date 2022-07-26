@@ -2342,25 +2342,20 @@ def spherimorph():
                 else:
                     print("Starting Rikku's overdrive")
                     FFX_Logs.writeStats("Spherimorph spell used:")
-                    FFX_Logs.writeStats(str(spellNum))
                     if spellNum == 1:
-                        FFX_Logs.writeStats("Creating Ice to counter Fire")
-                        FFX_Logs.writeLog("Creating Ice to counter Fire")
+                        FFX_Logs.writeStats("Fire")
                         print("Creating Ice")
                         rikkuFullOD('spherimorph1')
                     elif spellNum == 2:
-                        FFX_Logs.writeStats("Creating Thunder to counter Water")
-                        FFX_Logs.writeLog("Creating Thunder to counter Water")
+                        FFX_Logs.writeStats("Water")
                         print("Creating Water")
                         rikkuFullOD('spherimorph2')
                     elif spellNum == 3:
-                        FFX_Logs.writeStats("Creating Water to counter Thunder")
-                        FFX_Logs.writeLog("Creating Water to counter Thunder")
+                        FFX_Logs.writeStats("Thunder")
                         print("Creating Thunder")
                         rikkuFullOD('spherimorph3')
                     elif spellNum == 4:
-                        FFX_Logs.writeStats("Creating Fire to counter Ice")
-                        FFX_Logs.writeLog("Creating Fire to counter Ice")
+                        FFX_Logs.writeStats("Ice")
                         print("Creating Fire")
                         rikkuFullOD('spherimorph4')
 

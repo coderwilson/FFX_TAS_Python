@@ -86,6 +86,7 @@ def mainPath():
     print("Resetting checkpoint.")
     lastGilValue = 0
     checkpoint = 0
+    battleCount = 0
     while FFX_memory.getMap() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
             status[2] = 2 #No need to do Valefor's overdrive and recharge.
@@ -167,6 +168,7 @@ def mainPath():
                 if FFX_memory.getSLVLWakka() >= 7:
                     FFX_menu.mrrGrid2()
                 FFX_memory.closeMenu()
+                battleCount += 1
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():
@@ -178,7 +180,8 @@ def mainPath():
         
         if FFX_memory.gameOver():
             return
-        
+    FFX_Logs.writeStats("MRR Battles:")
+    FFX_Logs.writeStats(battleCount)
     print("End of MRR section. Status:")
     print(status)
 

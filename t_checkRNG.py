@@ -2,7 +2,7 @@ import FFX_memory
 import time
 FFX_memory.start()
 
-readVals = True
+readVals = False
 
 print("------------------")
 if readVals:

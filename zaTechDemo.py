@@ -1,6 +1,6 @@
 import time
-import FFX_Xbox
 import FFX_memory
+import FFX_Xbox
 import FFX_Logs
 import FFX_LoadGame
 import FFX_Screen
@@ -17,6 +17,8 @@ import FFX_home
 import FFX_Zanarkand
 import FFX_Sin
 import FFX_targetPathing
+import FFX_vars
+gameVars = FFX_vars.varsHandle()
 
 #Plug in controller
 FFXC = FFX_Xbox.controllerHandle()
@@ -33,13 +35,13 @@ startTime = FFX_Logs.timeStamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
+gameVars.SETcsr(False)
 
-
-attempts = 4 #Determines where in the showcase we start
+attempts = 0 #Determines where in the showcase we start
 cycles = 0
 jyscalRetry = False
 while attempts < 20 and cycles < 50:
-    #attempts += 1
+    attempts += 1
     cycles += 1
     print("Cycle number: ", cycles)
     print(FFXC)
@@ -53,9 +55,9 @@ while attempts < 20 and cycles < 50:
     #Now to run the appropriate section depending on attempt number.
     if attempts == 1:
         print("Demo - Mi'ihen skip")
-        FFX_LoadGame.loadOffset(21) #Donation incentive not met
+        FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
         FFX_LoadGame.LoadMiihenStart()
-        #FFX_LoadGame.loadOffset(34) #Donation incentive met
+        #FFX_LoadGame.loadSaveNum(16) #With laughing scene
         #FFX_LoadGame.LoadMiihenStart_Laugh()
         FFXC.set_neutral()
         FFX_memory.setEncounterRate(0)
@@ -73,12 +75,12 @@ while attempts < 20 and cycles < 50:
         print("-----------------------------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
-        FFX_LoadGame.loadOffset(19)
+        FFX_LoadGame.loadSaveNum(38)
+        FFX_memory.setGilvalue(4000) #Fixes a low gil state for this save file.
         FFX_LoadGame.LoadMRR()
         wakkaLateMenu = FFX_MRR.arrival()
-        FFX_MRR.mainPath(wakkaLateMenu[0])
-        if wakkaLateMenu[1] == True:
-            SkipCount += 1
+        #FFX_MRR.mainPath(wakkaLateMenu[0])
+        SkipCount += 1
         SkipAttempts += 1
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
@@ -88,9 +90,8 @@ while attempts < 20 and cycles < 50:
         print("-----------------------------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
-        FFX_LoadGame.loadOffset(4)
+        FFX_LoadGame.loadSaveNum(3)
         FFX_LoadGame.loadGuadoSkip()
-        time.sleep(3)
         SkipAttempts += 1
         guadoSkipStatus = FFX_Guadosalam.guadoSkip()
         if guadoSkipStatus == True:
@@ -103,10 +104,10 @@ while attempts < 20 and cycles < 50:
         print("-----------------------------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
-        FFX_LoadGame.loadOffset(24)
+        FFX_LoadGame.loadSaveNum(97) #No remedy in inventory, likely game over.
         FFX_LoadGame.loadMacTemple()
         SkipAttempts += 1
-        jyscalSkipStatus = FFX_mTemple.arrival(True)
+        jyscalSkipStatus = FFX_mTemple.arrival(doGrid=False)
         if jyscalSkipStatus == True:
             SkipCount += 1
         #elif jyscalRetry == False:
@@ -118,133 +119,133 @@ while attempts < 20 and cycles < 50:
         print("Success: ", SkipCount)
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
-    elif attempts == 5:
-        print("Demo - Gagazet Cave")
-        FFX_LoadGame.loadOffset(6)
-        FFX_LoadGame.loadGagazetDream()
-        #FFX_memory.setEncounterRate(0)
-        FFX_Gagazet.cave()
-    elif attempts == 6:
-        print("Demo - Egg Hunt")
-        FFX_LoadGame.loadOffset(3)
+    #elif attempts == 5:
+    #    print("Demo - Gagazet Cave")
+    #    FFX_LoadGame.loadOffset(6)
+    #    FFX_LoadGame.loadGagazetDream()
+    #    #FFX_memory.setEncounterRate(0)
+    #    FFX_Gagazet.cave()
+    #elif attempts == 5:
+    #    print("Demo - Egg Hunt")
+    #    FFX_LoadGame.loadOffset(3)
 
-        FFXC.set_movement(1, 1)
-        time.sleep(0.7)
-        FFXC.set_movement(0, 1)
-        time.sleep(34)
-        FFXC.set_neutral()
+    #    FFXC.set_movement(1, 1)
+    #    time.sleep(0.7)
+    #    FFXC.set_movement(0, 1)
+    #    time.sleep(34)
+    #    FFXC.set_neutral()
 
-        print("Start egg hunt only program")
-        print("--------------------------No-control method")
+    #    print("Start egg hunt only program")
+    #    print("--------------------------No-control method")
 
-        FFX_Sin.eggHunt(True)
-        FFX_Battle.BFA() #If an extra 20-30 minutes is needed
-    elif attempts == 7:
-        print("Demo - Lightning Dodging, no set duration")
-        FFX_LoadGame.loadOffset(12)
-        FFX_memory.awaitControl()
-        FFXC.set_movement(0, -1)
-        time.sleep(1)
-        FFX_memory.setEncounterRate(0)
-        FFX_memory.awaitEvent()
-        FFXC.set_neutral()
+    #    FFX_Sin.eggHunt(True)
+    #    FFX_Battle.BFA() #If an extra 20-30 minutes is needed
+    #elif attempts == 7:
+    #    print("Demo - Lightning Dodging, no set duration")
+    #    FFX_LoadGame.loadOffset(12)
+    #    FFX_memory.awaitControl()
+    #    FFXC.set_movement(0, -1)
+    #    time.sleep(1)
+    #    FFX_memory.setEncounterRate(0)
+    #    FFX_memory.awaitEvent()
+    #    FFXC.set_neutral()
+    #    
+    #    lStrikeCount = FFX_memory.lStrikeCount()
+    #    #print("Starting count of lightning strikes: ", lStrikeCount)
+    #    lStrikeStart = lStrikeCount
+    #    complete = False
+    #    while lStrikeCount - lStrikeStart < 200:
+    #        if FFX_memory.dodgeLightning(lStrikeCount):
+    #            FFX_memory.awaitControl()
+    #            lStrikeCount = FFX_memory.lStrikeCount()
+    #            print("Dodge count, ", lStrikeCount - lStrikeStart)
+    #        elif FFX_memory.userControl():
+    #            FFX_targetPathing.setMovement([62,780])
+    #        else:
+    #            FFXC.set_neutral()
+    #            if FFX_Screen.BattleScreen():
+    #                print("Battle is now online.")
+    #                FFX_Screen.awaitTurn()
+    #                FFX_Battle.fleeAll()
+    #                print("Battle complete")
+    #                FFX_memory.clickToControl()
         
-        lStrikeCount = FFX_memory.lStrikeCount()
-        #print("Starting count of lightning strikes: ", lStrikeCount)
-        lStrikeStart = lStrikeCount
-        complete = False
-        while lStrikeCount - lStrikeStart < 200:
-            if FFX_memory.dodgeLightning(lStrikeCount):
-                FFX_memory.awaitControl()
-                lStrikeCount = FFX_memory.lStrikeCount()
-                print("Dodge count, ", lStrikeCount - lStrikeStart)
-            elif FFX_memory.userControl():
-                FFX_targetPathing.setMovement([62,780])
-            else:
-                FFXC.set_neutral()
-                if FFX_Screen.BattleScreen():
-                    print("Battle is now online.")
-                    FFX_Screen.awaitTurn()
-                    FFX_Battle.fleeAll()
-                    print("Battle complete")
-                    FFX_memory.clickToControl()
-        
-        checkpoint = 0
-        while FFX_memory.getMap() != 256:
-            if FFX_memory.dodgeLightning(lStrikeCount):
-                FFX_memory.awaitControl()
-                lStrikeCount = FFX_memory.lStrikeCount()
-                print("Dodge count, ", lStrikeCount - lStrikeStart)
-            elif FFX_memory.userControl():
-                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsDodging(checkpoint)) == True:
-                    checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
-            else:
-                FFXC.set_neutral()
-                if FFX_Screen.BattleScreen():
-                    print("Battle is now online.")
-                    FFX_Screen.awaitTurn()
-                    FFX_Battle.fleeAll()
-                    print("Battle complete")
-                    FFX_memory.clickToControl()
+    #    checkpoint = 0
+    #    while FFX_memory.getMap() != 256:
+    #        if FFX_memory.dodgeLightning(lStrikeCount):
+    #            FFX_memory.awaitControl()
+    #            lStrikeCount = FFX_memory.lStrikeCount()
+    #            print("Dodge count, ", lStrikeCount - lStrikeStart)
+    #        elif FFX_memory.userControl():
+    #            if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsDodging(checkpoint)) == True:
+    #                checkpoint += 1
+    #                print("Checkpoint reached: ", checkpoint)
+    #        else:
+    #            FFXC.set_neutral()
+    #            if FFX_Screen.BattleScreen():
+    #                print("Battle is now online.")
+    #                FFX_Screen.awaitTurn()
+    #                FFX_Battle.fleeAll()
+    #                print("Battle complete")
+    #                FFX_memory.clickToControl()
             
-        #To the chest
-        print("Positioning for chest")
-        while FFX_targetPathing.setMovement([-64,53]) == False:
-            moving = True
-        FFX_memory.setEncounterRate(1)
-        FFXC.set_movement(-1, 0)
-        FFX_memory.clickToEvent()
-        FFXC.set_neutral()
-        print("Advertisement for the Travel Agency")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    #To the chest
+    #    print("Positioning for chest")
+    #    while FFX_targetPathing.setMovement([-64,53]) == False:
+    #        moving = True
+    #    FFX_memory.setEncounterRate(1)
+    #    FFXC.set_movement(-1, 0)
+    #    FFX_memory.clickToEvent()
+    #    FFXC.set_neutral()
+    #    print("Advertisement for the Travel Agency")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
+    #    
+    #    FFX_memory.clickToEvent()
+    #    print("(extra event, not sure)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
+    #    
+    #    FFX_memory.clickToEvent()
+    #    print("X-potion x2 (5)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
         
-        FFX_memory.clickToEvent()
-        print("(extra event, not sure)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    FFX_memory.clickToEvent()
+    #    print("Mega-Potion x2 (10)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
         
-        FFX_memory.clickToEvent()
-        print("X-potion x2 (5)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    FFX_memory.clickToEvent()
+    #    print("MP Sphere x2 (20)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
         
-        FFX_memory.clickToEvent()
-        print("Mega-Potion x2 (10)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    FFX_memory.clickToEvent()
+    #    print("Strength sphere x3 (50)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
         
-        FFX_memory.clickToEvent()
-        print("MP Sphere x2 (20)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    FFX_memory.clickToEvent()
+    #    print("HP Sphere x3 (100)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
         
-        FFX_memory.clickToEvent()
-        print("Strength sphere x3 (50)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    FFX_memory.clickToEvent()
+    #    print("Megalixir x4 (150)")
+    #    FFX_memory.clickToControl3()
+    #    time.sleep(0.07)
         
-        FFX_memory.clickToEvent()
-        print("HP Sphere x3 (100)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
+    #    FFX_memory.clickToEvent()
+    #    print("Venus Sigil (200)")
         
-        FFX_memory.clickToEvent()
-        print("Megalixir x4 (150)")
-        FFX_memory.clickToControl3()
-        time.sleep(0.07)
-        
-        FFX_memory.clickToEvent()
-        print("Venus Sigil (200)")
-        
-        time.sleep(5)
-        FFX_Xbox.tapB()
-        time.sleep(5)
-        FFX_Xbox.tapB()
-        time.sleep(5)
-        #attempts -= 1
-        attempts = 100
+    #    time.sleep(5)
+    #    FFX_Xbox.tapB()
+    #    time.sleep(5)
+    #    FFX_Xbox.tapB()
+    #    time.sleep(5)
+    #    #attempts -= 1
+    #    attempts = 100
         
     #elif attempts < 30: #Testing loop
     #    FFX_LoadGame.loadOffset(15)

@@ -212,8 +212,8 @@ def eggHunt(autoEggHunt):
                 print("Still waiting on user to do this section. ", waitCount / 10)
     eggEnd = FFX_Logs.timeStamp()
     eggDuration = eggEnd - eggStart
-    FFX_Logs.writeStats("Egg hunt duration:")
-    FFX_Logs.writeStats(str(eggDuration))
+    #FFX_Logs.writeStats("Egg hunt duration:")
+    #FFX_Logs.writeStats(str(eggDuration))
     print("Done with the egg hunt. Final prep for BFA.")
     if gameVars.nemesis():
         FFX_menu.equipWeapon(character=0,ability=0x8019, fullMenuClose=True)

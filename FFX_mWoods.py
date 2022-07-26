@@ -21,6 +21,7 @@ def arrival(rikkucharged):
     
     lastGil = 0 #for first chest
     checkpoint = 0
+    totalBattles = 0
     while FFX_memory.getMap() != 221: #All the way to O'aka
         if FFX_memory.userControl():
             #Events
@@ -60,18 +61,18 @@ def arrival(rikkucharged):
                     FFX_memory.fullPartyFormat("mwoodsgotcharge")
                 else:
                     FFX_memory.fullPartyFormat("mwoodsneedcharge")
+                totalBattles += 1
             elif not FFX_memory.battleActive() and FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     
+    FFX_Logs.writeStats("Mac Woods battles:")
+    FFX_Logs.writeStats(totalBattles)
     #Save sphere
-    FFX_memory.waitFrames(30 * 0.1)
+    FFXC.set_movement(-1, 1)
+    FFX_memory.waitFrames(2)
     FFX_memory.awaitControl()
-    FFXC.set_movement(-1, 0)
-    FFX_memory.waitFrames(30 * 0.3)
-    FFXC.set_neutral()
+    FFX_memory.waitFrames(1)
     FFX_memory.touchSaveSphere()
-    #FFXC.set_movement(1, 1)
-    #FFX_memory.waitFrames(30 * 0.4)
     FFXC.set_neutral()
 
 def lakeRoad():

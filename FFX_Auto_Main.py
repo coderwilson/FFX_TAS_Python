@@ -1163,8 +1163,6 @@ print("Time! The game is now over.")
 #    FFX_memory.waitFrames(30 * 20)
 
 endTime = FFX_Logs.timeStamp()
-FFX_Logs.writeStats("End time:")
-FFX_Logs.writeStats(str(endTime))
 
 if FFX_memory.getStoryProgress() > 3210:
     totalTime = endTime - startTime
