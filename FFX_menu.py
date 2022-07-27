@@ -1104,7 +1104,10 @@ def afterRonso():
         FFX_memory.openMenu()
         yunaFirstStrike()
         auronFirstStrike()
-        equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
+        if not FFX_memory.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
+            equipWeapon(character=1, ability=0x8001, fullMenuClose=False)
+        if not FFX_memory.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
+            equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
         if gameVars.usePause():
             FFX_memory.waitFrames(5)
     
@@ -1624,7 +1627,10 @@ def skFriend():
     FFX_memory.openMenu()
     yunaFirstStrike()
     auronFirstStrike()
-    equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
+    if not FFX_memory.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
+        equipWeapon(character=1, ability=0x8001, fullMenuClose=False)
+    if not FFX_memory.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
+        equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
     if gameVars.usePause():
         FFX_memory.waitFrames(5)
     

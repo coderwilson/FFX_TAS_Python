@@ -2569,6 +2569,19 @@ def weaponArrayCharacter(charNum):
                 charWeaps.append(currentHandle)
     return charWeaps
 
+def equippedWeaponHasAbility(charNum:int=1, abilityNum:int=32769):
+    equipHandles = weaponArrayCharacter(charNum)
+    while len(equipHandles) > 0:
+        currentHandle = equipHandles.pop(0)
+        if currentHandle.isEquipped() == charNum:
+            print("## Owner: ", currentHandle.owner())
+            print("## Equipped: ", currentHandle.isEquipped())
+            print("## Has Ability: ", currentHandle.hasAbility(abilityNum))
+            if currentHandle.hasAbility(abilityNum):
+                return True
+            else:
+                return False
+
 def checkThunderStrike() -> int:
     results = 0
     tidusWeaps = weaponArrayCharacter(0)

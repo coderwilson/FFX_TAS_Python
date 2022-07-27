@@ -510,7 +510,7 @@ def seymourNatus():
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
-            FFX_targetPathing.setMovement([2, FFX_memory.getCoords()[1] -80])
+            FFX_targetPathing.setMovement([2, FFX_memory.getCoords()[1] -50])
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():

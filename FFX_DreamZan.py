@@ -15,22 +15,36 @@ def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate: ", Gamestate)
     
+    lastMessage = 0
     #New version
     if Gamestate == 'none': #New Game
         while FFX_memory.getMap() != 0:
             if FFX_memory.getMap() != 23:
+                if lastMessage != 1:
+                    lastMessage = 1
+                    print("Attempting to get to New Game screen")
                 FFXC.set_value('BtnStart', 1)
                 FFX_memory.waitFrames(1)
                 FFXC.set_value('BtnStart', 0)
                 FFX_memory.waitFrames(1)
             elif FFX_memory.saveMenuOpen():
+                if lastMessage != 2:
+                    lastMessage = 2
+                    print("Load Game menu is open. Backing out.")
                 FFX_Xbox.tapA()
             elif FFX_memory.saveMenuCursor() == 1:
-                FFX_Xbox.menuDown()
+                if lastMessage != 3:
+                    lastMessage = 3
+                    print("New Game is not selected. Switching.")
+                #else:
+                #    print(FFX_memory.saveMenuCursor())
+                FFX_Xbox.menuUp()
             else:
+                if lastMessage != 4:
+                    lastMessage = 4
+                    print("New Game is selected. Starting game.")
                 FFX_Xbox.menuB()
         FFX_memory.clickToDiagProgress(7)
-    
     else: #Load Game
         while not FFX_memory.saveMenuOpen():
             if FFX_memory.getMap() != 23:
@@ -44,7 +58,7 @@ def NewGame(Gamestate):
                 FFX_Xbox.menuB()
         #FFX_memory.waitFrames(3)
     FFX_memory.clearNameAeonReady()
-    
+
 def NewGame2():
     #New game selected. Next, select options.
     timeBuffer = 17
