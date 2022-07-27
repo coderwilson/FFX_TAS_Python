@@ -3607,7 +3607,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and tidusAttacks < 3:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and (tidusAttacks < 3 or not gameVars.getBlitzWin()):
                     print("Rikku should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -3626,7 +3626,7 @@ def Evrae():
                     lunarSlot = FFX_memory.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and tidusAttacks < 3:
+                elif FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(0)] < 1520 and (tidusAttacks < 3 or not gameVars.getBlitzWin()):
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target = 0,
@@ -6202,15 +6202,15 @@ def rng12Attack():
     if FFX_Screen.turnAeon():
         if FFX_memory.getBattleNum() in [283,309,313]:
             attackByNum(21,'u') #Second target
-        if FFX_memory.getBattleNum() in [284]:
+        elif FFX_memory.getBattleNum() in [284]:
             attackByNum(22,'u') #Third target
-        if FFX_memory.getBattleNum() in [275,286,289]:
+        elif FFX_memory.getBattleNum() in [275,289]:
             attackByNum(21,'r') #Second target, aim right (aeon only)
-        if FFX_memory.getBattleNum() in [303]:
+        elif FFX_memory.getBattleNum() in [303]:
             attackByNum(21,'l') #Second target
-        if FFX_memory.getBattleNum() in [304]:
+        elif FFX_memory.getBattleNum() in [304]:
             attackByNum(23,'u') #fourth target
-        if FFX_memory.getBattleNum() in [314]:
+        elif FFX_memory.getBattleNum() in [314]:
             attackByNum(21,'r')
         else:
             attack('none')

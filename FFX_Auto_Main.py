@@ -73,10 +73,10 @@ if gameVars.nemesis():
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-#Gamestate = "rescueYuna"
+Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-#StepCounter = 5 #Can pick regular run vs nemesis below.
+StepCounter = 5 #Can pick regular run vs nemesis below.
 #Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
@@ -84,8 +84,8 @@ if gameVars.nemesis():
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
-Gamestate = "Zanarkand"
-StepCounter = 1 #Campfire, version 1
+#Gamestate = "Zanarkand"
+#StepCounter = 1 #Campfire, version 1
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
@@ -93,8 +93,8 @@ StepCounter = 1 #Campfire, version 1
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -113,6 +113,8 @@ seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 255 #New seed number, only used if doing seed hunt.
 rngSelectArray = [41,144,157,160,172,177,182,183,200,224,254]
 goodSeeds = [31,41,144,157,160,172,177,182,183,200,224,254]
+rngSeedNum = 106 #yeah, I'm moving it here.
+#TAS PB is on seed 31
 #160 is WR for both categories, just has a bad start
 #Need review on the others
 
@@ -121,18 +123,14 @@ goodSeeds = [31,41,144,157,160,172,177,182,183,200,224,254]
 if Gamestate == "Luca" and StepCounter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
-    rngSeedNum = 31 #Select a specific seed.
 elif Gamestate != "none": #Loading a save file, no RNG manip here
-    rngSeedNum = 31 #Select a specific seed.
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
     #gameVars.SETcsr(True)
 elif seedHunt == False: #Full run starting from New Game
-    rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
-    rngSeedNum = 31 #Manually choose seed here.
+    #rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
     #Current WR is on seed 160 for both any% and CSR%
-    #TAS PB is on seed 31
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False

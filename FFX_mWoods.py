@@ -6,6 +6,7 @@ import FFX_menu
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
+import FFX_Logs
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
