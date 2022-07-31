@@ -635,6 +635,7 @@ def nameAeon(character=""):
     while not FFX_memory.nameAeonReady():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             tapB()
+    FFX_memory.waitFrames(2)
     if character:
         with open("character_names.json") as fp:
             customName = json.load(fp)[character]

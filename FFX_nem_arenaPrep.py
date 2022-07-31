@@ -98,19 +98,19 @@ def unlockOmega():
     while FFX_memory.diagProgressFlag() == 0:
         print(FFX_memory.getCoords())
         if FFX_memory.getCoords()[0] < 65:
-            FFX_Xbox.set_value("Dpad", 8)
+            FFXC.set_value("Dpad", 8)
         if FFX_memory.getCoords()[0] < 70:
             FFX_nem_menu.gridRight()
         elif FFX_memory.getCoords()[0] > 78:
-            FFX_Xbox.set_value("Dpad", 4)
+            FFXC.set_value("Dpad", 4)
         elif FFX_memory.getCoords()[0] > 73:
             FFX_nem_menu.gridLeft()
         elif FFX_memory.getCoords()[1] > -28:
-            FFX_Xbox.set_value("Dpad", 2)
+            FFXC.set_value("Dpad", 2)
         elif FFX_memory.getCoords()[1] > -34:
             FFX_nem_menu.gridDown()
         elif FFX_memory.getCoords()[1] < -40:
-            FFX_Xbox.set_value("Dpad", 1)
+            FFXC.set_value("Dpad", 1)
         elif FFX_memory.getCoords()[1] < -37:
             FFX_nem_menu.gridUp()
         else:
@@ -1613,13 +1613,7 @@ def calm(capNum:int=1,autoHaste = False,airshipReturn = True):
 def gagazet1(capNum:int=10):
     rinEquipDump()
     airShipDestination(destNum=13)
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
-    
+    FFX_menu.removeAllNEA()
     checkpoint = 0
     while not (FFX_memory.getMap() == 259 and checkpoint == 20):
         if FFX_memory.userControl():
@@ -1661,6 +1655,7 @@ def gagazet2(capNum:int=10):
     if FFX_memory.getMap() in [194,374]:
         airShipDestination(destNum=13)
     
+    FFX_menu.removeAllNEA()
     checkpoint = 0
     while not checkpoint == 11:
         if FFX_memory.userControl():
@@ -1690,6 +1685,7 @@ def gagazet3(capNum:int=10):
     if FFX_memory.getMap() in [194,374]:
         airShipDestination(destNum=13)
     
+    FFX_menu.removeAllNEA()
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:
         if FFX_memory.userControl():
@@ -1734,12 +1730,7 @@ def gagazet3(capNum:int=10):
 
 def stolenFaythCave(capNum:int=10):
     airShipDestination(destNum=13)
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:
@@ -1816,12 +1807,7 @@ def stolenFaythCave(capNum:int=10):
 
 def insideSin(capNum:int=10):
     airShipDestination(destNum=0)
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     while FFX_memory.getMap() != 203:
         FFXC.set_movement(0,-1)
@@ -1891,12 +1877,7 @@ def insideSin(capNum:int=10):
 
 def omegaRuins(capNum:int=10):
     FFX_nem_menu.rikkuProvoke()
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     #rinEquipDump()
     #FFX_menu.autoSortEquipment()

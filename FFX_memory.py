@@ -2807,6 +2807,19 @@ def armorArrayCharacter(charNum):
     except:
         return []
 
+def equippedArmorHasAbility(charNum:int, abilityNum:int=0x801D):
+    equipHandles = armorArrayCharacter(charNum)
+    while len(equipHandles) > 0:
+        currentHandle = equipHandles.pop(0)
+        if currentHandle.isEquipped() == charNum:
+            print("## Owner: ", currentHandle.owner())
+            print("## Equipped: ", currentHandle.isEquipped())
+            print("## Has Ability: ", currentHandle.hasAbility(abilityNum))
+            if currentHandle.hasAbility(abilityNum):
+                return True
+            else:
+                return False
+
 def equipWeapCursor():
     global baseValue
     

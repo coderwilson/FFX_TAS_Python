@@ -28,7 +28,10 @@ def checkGems():
 def calmLands():
     FFX_memory.awaitControl()
     #Start by getting away from the save sphere
-    FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
+    if FFX_memory.nextChanceRNG10() >= 6:
+        FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
+    else:
+        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
     
     FFX_memory.printManipInfo()
@@ -59,6 +62,13 @@ def calmLands():
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.calmLandsManip()
+                FFX_memory.clickToControl3()
+                if FFX_memory.nextChanceRNG10() >= 6:
+                    FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
+                else:
+                    FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+                healUp(fullMenuClose=True)
+                FFX_memory.printManipInfo()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():

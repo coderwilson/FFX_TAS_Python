@@ -50,9 +50,9 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -73,10 +73,10 @@ if gameVars.nemesis():
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-Gamestate = "rescueYuna"
+#Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-StepCounter = 5 #Can pick regular run vs nemesis below.
+#StepCounter = 5 #Can pick regular run vs nemesis below.
 #Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
@@ -93,8 +93,8 @@ StepCounter = 5 #Can pick regular run vs nemesis below.
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -113,7 +113,7 @@ seedHunt = False #Update this to decide new seed or known seed
 rngSeedNum = 255 #New seed number, only used if doing seed hunt.
 rngSelectArray = [41,144,157,160,172,177,182,183,200,224,254]
 goodSeeds = [31,41,144,157,160,172,177,182,183,200,224,254]
-rngSeedNum = 106 #yeah, I'm moving it here.
+rngSeedNum = 31 #yeah, I'm moving it here.
 #TAS PB is on seed 31
 #160 is WR for both categories, just has a bad start
 #Need review on the others

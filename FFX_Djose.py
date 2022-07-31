@@ -16,7 +16,7 @@ FFXC = FFX_Xbox.controllerHandle()
 def path():
     FFX_memory.clickToControl()
     FFX_memory.closeMenu()
-    FFX_memory.waitFrames(30 * 1)
+    #FFX_memory.waitFrames(30 * 1)
     FFX_memory.fullPartyFormat('djose')
     FFX_memory.closeMenu()
     
@@ -321,7 +321,7 @@ def trials():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         elif FFX_memory.nameAeonReady():
-            break
+            FFX_memory.clearNameAeonReady()
     
     FFXC.set_neutral()
     if not gameVars.csr():

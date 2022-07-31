@@ -284,11 +284,18 @@ def leaving():
                 FFX_memory.clickToControl()
             elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
                 FFX_Xbox.clickToBattle()
-                FFX_Battle.buddySwapYuna()
-                FFX_Xbox.clickToBattle()
-                FFX_Battle.aeonSummon(0)
-                while not FFX_memory.menuOpen():
-                    if FFX_Screen.BattleScreen():
+                while not FFX_Screen.turnAeon():
+                    if FFX_memory.turnReady():
+                        if FFX_Screen.turnYuna():
+                            FFX_Battle.aeonSummon(0)
+                        elif FFX_Screen.turnAeon():
+                            pass
+                        elif not 1 in FFX_memory.getActiveBattleFormation():
+                            FFX_Battle.buddySwapYuna()
+                        else:
+                            defend()
+                while FFX_memory.battleActive():
+                    if FFX_memory.turnReady():
                         FFX_Battle.aeonSpell(1)
                 print("Now to open the menu")
                 FFX_memory.clickToControl()

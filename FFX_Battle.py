@@ -964,7 +964,7 @@ def KilikaWoods(valeforCharge):
                         fleeAll()
                     else:
                         defend()
-
+    FFXC.set_neutral()
     FFX_memory.clickToControl()  # Rewards screen
     hpCheck = FFX_memory.getHP()
     if hpCheck[0] < 250 or hpCheck[1] < 250 or hpCheck[4] < 250:
@@ -1783,16 +1783,16 @@ def battleGui():
             break
     
     #In between battles
-    while not FFX_memory.battleActive():
+    FFX_memory.waitFrames(12)
+    while FFX_memory.turnReady():
         if FFX_memory.getStoryProgress() >= 865 and FFX_memory.cutsceneSkipPossible():
-            FFX_memory.waitFrames(12)
+            FFX_memory.waitFrames(10)
             FFX_Xbox.skipScene()
             print("Skipping scene")
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
     
     #Second Gui battle
-    FFX_Screen.awaitTurn()
     turn = 1
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
@@ -6055,10 +6055,6 @@ def calmLandsManip():
             print("--Perfectly set up and good to go.")
             fleeAll()
             #FFX_memory.setEncounterRate(0) #Testing only
-    FFX_memory.clickToControl3()
-    FFX_memory.fullPartyFormat('rikku',fullMenuClose=False)
-    healUp(fullMenuClose=True)
-    FFX_memory.printManipInfo()
 
 def advanceRNG10Ghost(numAdvances:int): #unused
     silenceGrenade = False
@@ -6271,7 +6267,7 @@ def ghostKill():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif FFX_Screen.turnTidus():
-                    if FFX_memory.getEnemyCurrentHP()[0] > 3800:
+                    if FFX_memory.getEnemyCurrentHP()[0] > 3800 and not 6 in FFX_memory.getActiveBattleFormation():
                         buddySwapYuna()
                     elif FFX_memory.getEnemyCurrentHP()[0] <= 2800 and FFX_memory.getOverdriveBattle(0) == 100:
                         defend()
