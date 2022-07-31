@@ -1784,7 +1784,7 @@ def battleGui():
     
     #In between battles
     FFX_memory.waitFrames(12)
-    while FFX_memory.turnReady():
+    while not FFX_memory.turnReady():
         if FFX_memory.getStoryProgress() >= 865 and FFX_memory.cutsceneSkipPossible():
             FFX_memory.waitFrames(10)
             FFX_Xbox.skipScene()
@@ -1794,15 +1794,13 @@ def battleGui():
     
     #Second Gui battle
     turn = 1
-    while FFX_memory.battleActive():
+    while not FFX_memory.userControl():
         if FFX_memory.turnReady():
             if FFX_Screen.turnSeymour():
                 seymourSpell()
             else:
                 defend()
-    
-    while not FFX_memory.userControl():
-        if FFX_memory.cutsceneSkipPossible():
+        elif FFX_memory.cutsceneSkipPossible():
             print("Intentional delay to get the cutscene skip to work.")
             FFX_memory.waitFrames(30 * 0.07)
             FFX_Xbox.skipSceneSpec()
@@ -2163,7 +2161,9 @@ def mWoods(woodsVars):
                             fleeAll()
                     else:
                         if FFX_memory.rngSeed() == 31 and battleNum == 172:
-                            if FFX_Screen.turnTidus():
+                            if not 6 in FFX_memory.getActiveBattleFormation():
+                                buddySwapRikku()
+                            elif not 3 in FFX_memory.getActiveBattleFormation():
                                 buddySwapKimahri()
                             else:
                                 escapeOne()
@@ -2174,6 +2174,8 @@ def mWoods(woodsVars):
                                 defend()
                             else:
                                 fleeAll()
+                        elif not 6 in FFX_memory.getActiveBattleFormation():
+                            buddySwapRikku()
                         else:
                             escapeOne()
                 else:

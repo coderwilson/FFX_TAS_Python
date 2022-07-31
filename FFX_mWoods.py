@@ -58,7 +58,7 @@ def arrival(rikkucharged):
                 print("variable check 1: ",woodsVars)
                 woodsVars = FFX_Battle.mWoods(woodsVars)
                 print("variable check 2: ",woodsVars)
-                if FFX_memory.overdriveState()[6] == 100 and woodsVars[1] and woodsVars[2]:
+                if FFX_memory.overdriveState()[6] == 100:
                     FFX_memory.fullPartyFormat("mwoodsgotcharge")
                 else:
                     FFX_memory.fullPartyFormat("mwoodsneedcharge")
