@@ -1992,15 +1992,18 @@ def getFrameCount():
 
 def nameAeonReady():
     global baseValue
-    key = baseValue + 0x0146A22C
+    #key = baseValue + 0x0146A22C #Cursor number, let's find a better way.
+    key = baseValue + 0x01440A30
+    #key = baseValue + 0x01465E95
+    #key = baseValue + 0x014714F8
     return process.readBytes(key, 1)
 
 def clearNameAeonReady():
-    global baseValue
-    key = baseValue + 0x0146A22C
-    process.writeBytes(key, 0, 1)
-    
-    
+    #global baseValue
+    #key = baseValue + 0x0146A22C
+    #process.writeBytes(key, 0, 1)
+    return
+
 # Naming
 
 def getNamingMenu():
