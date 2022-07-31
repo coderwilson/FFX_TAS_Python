@@ -167,7 +167,7 @@ def gameStage():
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570: #Second half, before Tidus/Wakka swap
         #stages = [0, 110, 110, 140, 159, tidusShotTiming()]
-        if gameVars.csr() and FFX_memory.rngSeed() == 31:
+        if FFX_memory.rngSeed() == 31:
             stages = [0, 2, 115, 143, 156, tidusShotTiming()]
             #previously 141 for defender manip, 157 for force pass to Tidus.
         else:
@@ -458,7 +458,9 @@ def passBall(target=0, breakThrough = 5):
             FFX_Xbox.menuDown()
             FFX_memory.waitFrames(3)
         else:
-            FFX_Xbox.menuB()
+            FFX_Xbox.tapB()
+    else:
+        FFX_Xbox.tapB()
 
 def shootBall(breakThrough = 5):
     if FFX_memory.getStoryProgress() < 570 and controllingPlayer() == 0:
@@ -481,7 +483,9 @@ def shootBall(breakThrough = 5):
                 FFX_memory.waitFrames(1)
             else:
                 FFX_Xbox.menuB()
+                FFX_Xbox.menuB()
         else:
+            FFX_Xbox.menuB()
             FFX_Xbox.menuB()
     elif selectAction():
         if cursor1() != 1: #Shoot

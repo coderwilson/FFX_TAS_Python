@@ -1747,3 +1747,13 @@ def arenaPurchase1():
     FFX_memory.waitFrames(15)
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(60)
+
+def removeAllNEA():
+    for i in range(7):
+        if FFX_memory.equippedArmorHasAbility(charNum=i): #Defaults to NEA
+            if i == 0:
+                equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
+            elif i in [4,6]:
+                equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
+            else:
+                equipArmor(character=gameVars.neArmor(),ability=99) #Unequip

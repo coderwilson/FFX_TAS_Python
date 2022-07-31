@@ -59,7 +59,7 @@ def toHiddenCave():
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
     #FFX_memory.setEncounterRate(1) #Testing only
-    FFX_memory.fullPartyFormat('rikku')
+    FFX_memory.fullPartyFormat('yuna')
     
     #Prep work:
     goGreen = False
@@ -116,7 +116,7 @@ def dropHunt():
                     FFX_memory.clickToControl3()
                 FFX_Battle.healUp(fullMenuClose=True)
                 if gameVars.neArmor() == 255:
-                    FFX_memory.fullPartyFormat('rikku')
+                    FFX_memory.fullPartyFormat('yuna')
                     nextGreen = FFX_memory.nextChanceRNG01(version='green')[0][0]
                     nextWhite = FFX_memory.nextChanceRNG01()[0][0]
                     if not goGreen and nextGreen < nextWhite and FFX_memory.nextChanceRNG10() == 0:
