@@ -67,7 +67,7 @@ def calmLands():
                     FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
                 else:
                     FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
-                healUp(fullMenuClose=True)
+                FFX_Battle.healUp(fullMenuClose=True)
                 FFX_memory.printManipInfo()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()

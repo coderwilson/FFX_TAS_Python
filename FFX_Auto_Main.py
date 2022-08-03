@@ -359,8 +359,8 @@ if Gamestate != "none" :
         FFX_LoadGame.loadSaveNum(76)
         gameVars.setNemChecpointAP(11) #See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 17:
-        FFX_LoadGame.loadSaveNum(77)
-        gameVars.setNemChecpointAP(20) #See FFX_nem_menu
+        FFX_LoadGame.loadSaveNum(111)
+        gameVars.setNemChecpointAP(14) #See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 21:
         FFX_LoadGame.loadSaveNum(79)
         FFX_nem_arenaPrep.arenaReturn()

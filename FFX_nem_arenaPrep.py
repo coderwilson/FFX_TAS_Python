@@ -276,7 +276,10 @@ def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
                     else:
                         FFX_Battle.escapeOne()
                 elif FFX_Screen.turnRikku() or FFX_Screen.turnWakka():
-                    FFX_Battle.defend()
+                    if not FFX_Battle.checkTidusOk():
+                        FFX_Battle.escapeOne()
+                    else:
+                        FFX_Battle.defend()
                 else:
                     FFX_Battle.escapeOne()
     FFX_memory.clickToControl()
@@ -511,11 +514,11 @@ def bribeBattle(spareChangeValue:int=12000):
                         FFX_Xbox.tapUp()
                     if gameVars.usePause():
                         FFX_memory.waitFrames(6)
-                FFX_memory.waitFrames(30)
+                FFX_memory.waitFrames(8)
                 FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30)
+                FFX_memory.waitFrames(8)
                 FFX_Xbox.tapB()
-                FFX_memory.waitFrames(30)
+                FFX_memory.waitFrames(8)
                 FFX_Battle.calculateSpareChangeMovement(spareChangeValue)
                 while FFX_memory.spareChangeOpen():
                     FFX_Xbox.tapB()
@@ -721,6 +724,41 @@ def apToXP(): #Calm Lands purchases
     FFX_memory.waitFrames(30)
     returnToAirship()
 
+def farmFeathers():
+    arenaNPC()
+    FFX_nem_arenaSelect.arenaMenuSelect(1)
+    FFX_nem_arenaSelect.startFight(areaIndex=7,monsterIndex=5)
+    FFX_memory.waitFrames(1)
+    waitCounter = 0
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnRikku():
+                print("+++ Qactar steal command")
+                FFX_Battle.Steal()
+                print("+++ Qactar steal command done")
+            elif FFX_Screen.turnTidus():
+                print("+++ Qactar flee command")
+                FFX_Battle.tidusFlee()
+                print("+++ Qactar flee command done")
+            else:
+                print("+++ Qactar defend command")
+                FFX_Battle.defend()
+                print("+++ Qactar defend command done")
+        waitCounter += 1
+        if waitCounter % 10 == 0:
+            print("Waiting for next turn: ", waitCounter)
+    print("Battle is complete.")
+    
+    while not FFX_memory.menuOpen():
+        pass
+    #FFX_memory.waitFrames(300)
+    
+    FFXC.set_value("BtnB", 1)
+    FFX_memory.waitFrames(150)
+    FFXC.set_value("BtnB", 0)
+    print("Now back in control.")
+    FFX_nem_arenaSelect.arenaMenuSelect(4)
+
 def autoPhoenix(): #Calm Lands items
     FFX_menu.autoSortEquipment()
     FFX_nem_menu.luluBribe()
@@ -743,10 +781,10 @@ def autoPhoenix(): #Calm Lands items
     FFX_nem_arenaSelect.arenaMenuSelect(4)
     FFX_memory.fullPartyFormat('initiative')
     arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
+    while FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(7)) != 99:
+        FFX_nem_arenaSelect.arenaMenuSelect(4)
+        arenaNPC()
+        print("Mega-Phoenix Downs:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(7)))
     FFX_nem_arenaSelect.arenaMenuSelect(2) #Equipment menu
     FFX_memory.waitFrames(90)
     FFX_Xbox.tapRight()
@@ -761,18 +799,32 @@ def autoPhoenix(): #Calm Lands items
     FFX_Xbox.tapB()
     FFX_menu.autoSortEquipment() #This to make sure equipment is in the right place
     FFX_menu.addAbility(owner=4, equipment_type=1, ability_array=[0x8072,255,255,255], ability_index=0x800A, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=False)
-    FFX_menu.addAbility(owner=6, equipment_type=1, ability_array=[0x8072,255,255,255], ability_index=0x800A, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
-    FFX_memory.closeMenu()
+    
+    FFX_memory.waitFrames(30)
+    initArray = FFX_memory.checkAbility(ability = 0x8002)
+    print("Initiative weapons: ", initArray)
+    if initArray[4]:
+        FFX_menu.addAbility(owner=6, equipment_type=1, ability_array=[0x8072,255,255,255], ability_index=0x800A, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=False)
+        FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
+        FFX_memory.closeMenu()
+    else:
+        FFX_menu.addAbility(owner=6, equipment_type=1, ability_array=[0x8072,255,255,255], ability_index=0x800A, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
+        FFX_memory.closeMenu()
+        featherSlot = FFX_memory.getItemSlot(itemNum=54)
+        if featherSlot == 255 or FFX_memory.getItemCountSlot(featherSlot) < 6:
+            while featherSlot == 255 or FFX_memory.getItemCountSlot(featherSlot) < 6:
+                farmFeathers()
+                featherSlot = FFX_memory.getItemSlot(itemNum=54)
+        FFX_menu.addAbility(owner=6, equipment_type=0, ability_array=[0x800B,0x8000,0x8001,255], ability_index=0x8002, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
+        
+    
     FFXC.set_movement(-1,0)
     FFX_memory.waitFrames(15)
     FFXC.set_movement(0,1)
     FFX_memory.waitFrames(15)
     FFXC.set_neutral()
-    returnToAirship()
-    initArray = FFX_memory.checkAbility(ability = 0x8002)
-    if initArray[4]:
-        FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
     FFX_memory.fullPartyFormat('initiative')
+    returnToAirship()
     
     #FFX_menu.equipArmor(character=0,ability=0x8056) #Auto-Haste
     FFX_menu.equipArmor(character=4,ability=0x800A) #Auto-Phoenix

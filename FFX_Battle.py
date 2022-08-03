@@ -2143,7 +2143,9 @@ def mWoods(woodsVars):
                 fleeAll()
             elif not woodsVars[1] or not woodsVars[2]:
                 if battleNum in [171, 172, 175]:
-                    if turnchar == 6:
+                    if not 6 in FFX_memory.getActiveBattleFormation():
+                        buddySwapRikku()
+                    elif turnchar == 6:
                         if battleNum == 175 and FFX_memory.getUseItemsSlot(24) == 255:
                             print("Marker 2")
                             Steal()
@@ -2174,8 +2176,6 @@ def mWoods(woodsVars):
                                 defend()
                             else:
                                 fleeAll()
-                        elif not 6 in FFX_memory.getActiveBattleFormation():
-                            buddySwapRikku()
                         else:
                             escapeOne()
                 else:
@@ -4089,20 +4089,31 @@ def seymourNatus():
     return 0
 
 def calmLandsGems():
-    FFX_Logs.writeLog("Fight start: Calm Lands Gems")
-    print(FFX_memory.getBattleNum())
-    print(FFX_memory.getBattleNum())
-    print(FFX_memory.getBattleNum())
     FFX_Screen.awaitTurn()
-    if FFX_memory.getBattleNum() == [273,281]:  # Red element in center slot, with machina and dog
-        print("Grabbing a gem here.")
-        buddySwapKimahri()
-        StealLeft()
-    elif FFX_memory.getBattleNum() in [275,283]:  # Red element in top slot, with bee and tank
-        print("Grabbing a gem here.")
-        buddySwapKimahri()
-        StealDown()
-    fleeAll()
+    stealComplete = False
+    if not FFX_memory.getBattleNum() in [273,275,281,283]:
+        fleeAll()
+    else:
+        while FFX_memory.battleActive():
+            if FFX_memory.turnReady():
+                if not 3 in FFX_memory.getActiveBattleFormation():
+                    buddySwapKimahri()
+                elif stealComplete:
+                    fleeAll()
+                elif FFX_Screen.turnKimahri():
+                    if FFX_memory.getBattleNum() == [273,281]:  # Red element in center slot, with machina and dog
+                        print("Grabbing a gem here.")
+                        buddySwapKimahri()
+                        StealLeft()
+                    elif FFX_memory.getBattleNum() in [275,283]:  # Red element in top slot, with bee and tank
+                        print("Grabbing a gem here.")
+                        buddySwapKimahri()
+                        StealDown()
+                    else:
+                        defend()
+                    stealComplete = True
+                else:
+                    defend()
     FFX_memory.clickToControl()
 
 def gagazetPath():

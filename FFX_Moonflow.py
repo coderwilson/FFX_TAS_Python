@@ -97,6 +97,8 @@ def southBank(checkpoint:int=0):
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
+            if FFX_memory.diagSkipPossible():
+                FFX_Xbox.tapB()
     
     
     FFX_Battle.extractor()
