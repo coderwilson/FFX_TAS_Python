@@ -73,10 +73,10 @@ StepCounter = 3
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
-Gamestate = "rescueYuna"
+#Gamestate = "rescueYuna"
 #StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-StepCounter = 5 #Can pick regular run vs nemesis below.
+#StepCounter = 5 #Can pick regular run vs nemesis below.
 #Gamestate = "Gagazet"
 #StepCounter = 1 #Blitz Win, no end game version selected
 #StepCounter = 2 #NE armor testing
@@ -93,8 +93,8 @@ StepCounter = 5 #Can pick regular run vs nemesis below.
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
