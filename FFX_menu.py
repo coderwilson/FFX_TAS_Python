@@ -154,16 +154,47 @@ def Liki():
     FFX_menuGrid.moveFirst()
     gridUp()
     gridUp()
-    gridLeft()
-    FFX_menuGrid.moveAndUse()
-    
-    #Activate Str and Cheeer nodes
-    FFX_menuGrid.selSphere('power','d','left')
-    FFX_menuGrid.useAndUseAgain() #Str +1 node
+    if FFX_memory.getTidusSlvl() >= 3:
+        gridLeft()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('power','d','left')
+        FFX_menuGrid.useAndUseAgain() #Str +1 node
     FFX_menuGrid.selSphere('ability','d','none') # Cheer
     FFX_Xbox.menuB()
     FFX_menuGrid.useAndQuit()
     FFX_Xbox.menuA()
+
+def woodsMenuing():
+    #Tidus learning Flee
+    FFX_menu.openGrid(character=0)
+    FFX_Xbox.menuB()
+    FFX_Xbox.menuB() #Sphere grid on Tidus
+    FFX_menuGrid.moveFirst()
+    startNode = FFX_memory.sGridNodeSelected()[0]
+    if startNode == 242:
+        agiNeed = 2
+    else:
+        agiNeed = 3
+    
+    FFX_menuGrid.gridLeft()
+    if agiNeed == 3:
+        FFX_menuGrid.gridLeft()
+    fullMenu = False
+    if FFX_memory.getTidusSlvl() >= agiNeed:
+        fullMenu = True
+        FFX_menuGrid.gridLeft()
+        
+    FFX_menuGrid.moveAndUse()
+    FFX_menuGrid.selSphere('ability', 'd', 'none')
+    if fullMenu:
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('speed', 'd', 'none')
+        gameVars.completeFullKilikMenu()
+    FFX_menuGrid.useAndQuit()
+    #Reorder the party
+    
+    FFX_memory.fullPartyFormat('kilikawoods1', fullMenuClose=False)
+    equipScout(fullMenuClose=True)
 
 def Geneaux():
     openGrid(character=0)

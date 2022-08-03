@@ -139,13 +139,14 @@ def facingSin():
     print("End of battle with Sin's face.")
 
 def insideSin():
-    FFXC.set_movement(0, -1)
     while FFX_memory.getMap() != 203: #Skip dialog and run to the sea of sorrows map
-        if FFX_memory.getStoryProgress() == 3160 and FFX_memory.cutsceneSkipPossible():
-            FFX_memory.waitFrames(15)
+        if FFX_memory.cutsceneSkipPossible():
+            FFXC.set_neutral()
+            FFX_memory.waitFrames(3)
             FFX_Xbox.skipScene()
         else:
-            FFX_Xbox.menuB()
+            FFXC.set_movement(0, -1)
+            FFX_Xbox.tapB()
     FFXC.set_neutral()
     
     if FFX_memory.overdriveState()[6] != 100:

@@ -247,7 +247,8 @@ def northPathing():
             elif gameVars.csr() and checkpoint == 14:
                 checkpoint = 16
             elif checkpoint == 17 and not gameVars.getBlitzWin() and not lunarSlot:
-                checkpoint = 16
+                checkpoint -= 2
+                print("No lunar curtain. Checkpoint: ", checkpoint)
             
             #General pathing
             elif FFX_memory.userControl():
@@ -260,6 +261,7 @@ def northPathing():
                 FFX_Xbox.menuB()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.thunderPlains(1)
+                lunarSlot = FFX_memory.getItemSlot(56) != 255
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     

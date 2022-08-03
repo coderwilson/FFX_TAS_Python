@@ -90,7 +90,7 @@ def forest1():
             #events
             if checkpoint == 9: #Chest with Wakka's weapon Scout
                 FFX_memory.clickToEventTemple(0)
-                woodsMenuing()
+                FFX_menu.woodsMenuing()
                 checkpoint += 1
             elif checkpoint == 47: #Luck sphere chest
                 luckSlot = FFX_memory.getItemSlot(94)
@@ -146,29 +146,6 @@ def forest1():
     FFX_Logs.writeStats(str(kilikaBattles))
     FFX_Logs.writeStats("Kilika optimal battles (North):")
     FFX_Logs.writeStats(str(optimalBattles))
-
-def woodsMenuing():
-    #Tidus learning Flee
-    FFX_menu.openGrid(character=0)
-    FFX_Xbox.menuB()
-    FFX_Xbox.menuB() #Sphere grid on Tidus
-    FFX_menuGrid.moveFirst()
-    FFX_menuGrid.gridLeft()
-    fullMenu = False
-    if FFX_memory.getTidusSlvl() >= 2:
-        fullMenu = True
-        FFX_menuGrid.gridLeft()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability', 'd', 'none')
-    if fullMenu:
-        FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('speed', 'd', 'none')
-        gameVars.completeFullKilikMenu()
-    FFX_menuGrid.useAndQuit()
-    #Reorder the party
-    
-    FFX_memory.fullPartyFormat('kilikawoods1', fullMenuClose=False)
-    FFX_menu.equipScout(fullMenuClose=True)
 
 def forest2():
     print("forest2 function no longer used")

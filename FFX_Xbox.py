@@ -483,7 +483,7 @@ def awaitSave_old() :
         if FFX_memory.diagProgressFlag() != 0 and FFX_memory.diagSkipPossible():
             tapB()
         
-        elif diagSkipPossible():
+        elif FFX_memory.diagSkipPossible():
             if FFX_memory.savePopupCursor() == 0:
                 menuUp()
             else:
@@ -635,7 +635,6 @@ def nameAeon(character=""):
     while not FFX_memory.nameAeonReady():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             tapB()
-    FFX_memory.waitFrames(2)
     if character:
         with open("character_names.json") as fp:
             customName = json.load(fp)[character]
