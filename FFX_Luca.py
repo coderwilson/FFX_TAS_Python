@@ -69,7 +69,7 @@ def arrival():
                 FFX_Battle.LucaWorkers()
                 checkpoint += 1
             elif checkpoint == 34: #Third battle
-                print("Tidus's XP: ", FFX_memory.getTidusXP())
+                print("Tidus XP:", FFX_memory.getTidusXP())
                 if FFX_memory.getTidusXP() >= 312:
                     FFXC.set_neutral()
                     earlyHaste = FFX_menu.LucaWorkers()
@@ -80,7 +80,7 @@ def arrival():
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Battle.LucaWorkers2(earlyHaste)
-                print("Tidus's XP: ", FFX_memory.getTidusXP())
+                print("Tidus XP:", FFX_memory.getTidusXP())
                 FFX_memory.clickToControl()
                 if earlyHaste == 0 and FFX_memory.getTidusXP() >= 312:
                     earlyHaste = FFX_menu.LucaWorkers()
@@ -111,7 +111,7 @@ def arrival():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -122,12 +122,12 @@ def arrival():
             #Map changes
             elif checkpoint < 3 and FFX_memory.getMap() == 268:
                 checkpoint = 3
-                print("Map change: ", checkpoint)
+                print("Map change:", checkpoint)
             elif checkpoint < 6 and FFX_memory.getMap() == 123: #Front of the Blitz dome
-                print("Map change: ", checkpoint)
+                print("Map change:", checkpoint)
                 checkpoint = 6
             elif checkpoint < 11 and FFX_memory.getMap() == 104:
-                print("Map change: ", checkpoint)
+                print("Map change:", checkpoint)
                 checkpoint = 11
     
     FFX_Logs.writeStats("Early Haste:")
@@ -162,12 +162,6 @@ def arrival():
         #    FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=True)
     gameVars.setLStrike(thunderStrike)
 
-def followYuna():
-    print("followYuna function no longer used")
-
-def preBlitz():
-    print("preBlitz function is no longer used.")
-
 def blitzStart():
     print("Starting the Blitzball game via lots of storyline.")
     checkpoint = 0
@@ -187,7 +181,7 @@ def blitzStart():
                 FFX_Xbox.tapB()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)) == True:
                 checkpoint += 1
-                #print("Checkpoint reached: ", checkpoint)
+                #print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -199,7 +193,7 @@ def afterBlitz():
     checkpoint = 0
     while checkpoint < 36:
         if FFX_memory.userControl():
-            #print("Checkpoint: ", checkpoint)
+            #print("Checkpoint:", checkpoint)
             #Events
             if checkpoint == 8: #First chest
                 if gameVars.earlyHaste() == -1:
@@ -239,13 +233,13 @@ def afterBlitz():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca3(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 battleNum += 1
-                print("After-Blitz Battle Number: ", battleNum)
+                print("After-Blitz Battle Number:", battleNum)
                 if battleNum == 1:
                     FFX_Battle.afterBlitz1(gameVars.earlyHaste())
                 elif battleNum == 2:
@@ -273,13 +267,13 @@ def afterBlitz():
             #Map changes
             elif checkpoint < 23 and FFX_memory.getMap() == 123:
                 checkpoint = 23
-                print("Map change: ", checkpoint)
+                print("Map change:", checkpoint)
             elif checkpoint < 26 and FFX_memory.getMap() == 77:
                 checkpoint = 26
-                print("Map change: ", checkpoint)
+                print("Map change:", checkpoint)
             elif checkpoint < 31 and FFX_memory.getMap() == 104:
                 checkpoint = 31
-                print("Map change: ", checkpoint)
+                print("Map change:", checkpoint)
     FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()

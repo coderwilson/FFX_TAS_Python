@@ -43,7 +43,7 @@ def faintCheck():
         faints += 1
     if frontParty[2] != 255 and charHP[2] == 0:
         faints += 1
-    print("## Num of characters have fainted: ", faints, " ##")
+    print("## Num of characters have fainted:", faints, " ##")
     return faints
 
 def BattleComplete():
@@ -63,7 +63,7 @@ def awaitTurn() :
             pass
         counter += 1;
         if counter % 100000 == 0:
-            print("Waiting for player turn: ", counter / 10000)
+            print("Waiting for player turn:", counter / 10000)
         if FFX_memory.gameOver():
             return False
     while not FFX_memory.mainBattleMenu():
@@ -158,7 +158,7 @@ def MRRbattle():
     return 1
 
 def mrrCompletion(status):
-    openMenu()
+    FFX_memory.openMenu()
     if status[0] == 0:
         if FFX_memory.getSLVLYuna() > 573:
             status[0] = 1
@@ -178,7 +178,7 @@ def imgSearch(img, conf):
     img = 'img\\' + str(img)
     try:
         imgTest = pyautogui.locateOnScreen(img, confidence=conf)
-        print("Results for searching '",img,": ", imgTest)
+        print("Results for searching '",img,":", imgTest)
         if imgTest[1] > 1:
             return True
     except Exception as errorMsg:
@@ -188,14 +188,12 @@ def imgSearch(img, conf):
 
 def imgSearch2(img, conf):
     print("########################################")
-    print("########################################")
     print("IMAGE SEARCH, FIX THIS LATER")
-    print("########################################")
     print("########################################")
     #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     try:
         imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
-        print("Results for searching '",img,": ", imgTest)
+        print("Results for searching '",img,":", imgTest)
         if imgTest[1] > 1:
             return True
     except Exception as errorMsg:

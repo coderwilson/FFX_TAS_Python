@@ -38,11 +38,11 @@ def loadSaveNum(number):
     #FFX_memory.waitFrames(10)
     saveFiles = getSavedFiles()
     testString = "ffx_" + str(number).zfill(3)
-    print("Searching for string: ", testString)
+    print("Searching for string:", testString)
     savePos = 255
     for x in range(len(saveFiles)):
         if saveFiles[x] == testString:
-            print("Save file is in position: ", x)
+            print("Save file is in position:", x)
             savePos = x
     FFX_memory.waitFrames(20)
     if savePos != 255:

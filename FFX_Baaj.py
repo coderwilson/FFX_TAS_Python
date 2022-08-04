@@ -12,7 +12,6 @@ FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
  
- 
 def Entrance():
     FFX_memory.awaitControl()
     print("Starting Baaj exterior area")
@@ -23,7 +22,7 @@ def Entrance():
     checkpoint = 0
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
-            #print("Baaj movement: ", checkpoint)
+            #print("Baaj movement:", checkpoint)
             if checkpoint == 6:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
@@ -31,7 +30,7 @@ def Entrance():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.baajRamp(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
     FFXC.set_neutral()
     
@@ -58,7 +57,7 @@ def Entrance():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.baajHallway(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -99,7 +98,7 @@ def Baaj_puzzle():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.baajPuzzle(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             #print("Awaiting control - Baaj puzzle")
@@ -132,7 +131,7 @@ def ABboat1():
     FFXC.set_movement(0, -1)
     FFX_memory.clickToEvent()
     print("If not CSR, do extra stuff")
-    print("CSR value: ", gameVars.csr())
+    print("CSR value:", gameVars.csr())
     if gameVars.csr():
         FFX_memory.csrBaajSaveClear()
     else:
@@ -240,8 +239,8 @@ def ABswimming2() :
     FFXC.set_neutral()
     while FFX_memory.getStoryProgress() < 111:
         if FFX_memory.userControl():
-            print("Map          : ", FFX_memory.getMap())
-            print("Diag progress: ", FFX_memory.diagProgressFlag())
+            print("Map          :", FFX_memory.getMap())
+            print("Diag progress:", FFX_memory.diagProgressFlag())
             if FFX_memory.diagProgressFlag() == 109 and not FFX_memory.userControl():
                 FFXC.set_neutral()
                 if FFX_memory.saveMenuCursor2() == 0:

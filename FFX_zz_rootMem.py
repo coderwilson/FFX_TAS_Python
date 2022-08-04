@@ -88,7 +88,7 @@ def ListProcessModules( ProcessID ):
             print("   Adjusted address   = 0x%08X", hex(ctypes.addressof(me32.modBaseAddr.contents)))
             retVal = ctypes.addressof(me32.modBaseAddr.contents)
         except Exception as x:
-            print("adjusted 3 error: ", x)
+            print("adjusted 3 error:", x)
         print( "   base size      = %d",             me32.modBaseSize )
 
         if me32.szModule == b'FFX.exe':

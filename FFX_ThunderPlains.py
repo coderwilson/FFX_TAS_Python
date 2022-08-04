@@ -33,7 +33,7 @@ def southPathing():
                 gameVars.setLStrike(FFX_memory.lStrikeCount())
                 if checkpoint == 34:
                     count50 += 1
-                    print("Dodge: ", count50)
+                    print("Dodge:", count50)
             elif checkpoint == 2 and gameVars.nemesis():
                 checkpoint = 20
             elif checkpoint == 21:
@@ -62,7 +62,7 @@ def southPathing():
             elif FFX_memory.userControl():
                 if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsSouth(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
@@ -145,11 +145,11 @@ def agencyShop():
         FFX_Xbox.tapDown()
     all_equipment = FFX_memory.allEquipment()    
     tidus_longsword = [i for i, handle in enumerate(all_equipment) if (handle.abilities() == [255, 255, 255, 255] and handle.owner() == 0)][0]
-    print("Tidus Longsword in slot: ", tidus_longsword)
+    print("Tidus Longsword in slot:", tidus_longsword)
     auron_katana = [i for i, handle in enumerate(all_equipment) if (handle.abilities() == [0x800B, 255, 255, 255] and handle.owner() == 2)][0]
-    print("Auron Katana in slot: ", auron_katana)
+    print("Auron Katana in slot:", auron_katana)
     other_slots = [i for i, handle in enumerate(all_equipment) if (i not in [tidus_longsword, auron_katana] and handle.equipStatus == 255 and not handle.isBrotherhood())]
-    print("Sellable Items in : ", other_slots)
+    print("Sellable Items in :", other_slots)
     FFX_menu.sellWeapon(tidus_longsword)
     FFX_menu.sellWeapon(auron_katana)
     if gameVars.getBlitzWin() and FFX_memory.getGilvalue() < 8725:
@@ -224,7 +224,7 @@ def agency():
             
             elif FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsAgency(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -248,13 +248,13 @@ def northPathing():
                 checkpoint = 16
             elif checkpoint == 17 and not gameVars.getBlitzWin() and not lunarSlot:
                 checkpoint -= 2
-                print("No lunar curtain. Checkpoint: ", checkpoint)
+                print("No lunar curtain. Checkpoint:", checkpoint)
             
             #General pathing
             elif FFX_memory.userControl():
                 if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsNorth(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():

@@ -44,8 +44,8 @@ def pathAround(player, circle, target, radius = 11):
     # Create two points rotated 90 degrees from player -> circle intersection
     newAngle1 = angle + 0.5 * np.pi
     newAngle2 = angle - 0.5 * np.pi
-    p1 = circle +  [radius * np.cos(newAngle1), radius * np.sin(newAngle1)]
-    p2 = circle +  [radius * np.cos(newAngle2), radius * np.sin(newAngle2)]
+    p1 = circle + [radius * np.cos(newAngle1), radius * np.sin(newAngle1)]
+    p2 = circle + [radius * np.cos(newAngle2), radius * np.sin(newAngle2)]
     # Find which of two possible points gives shortest path
     p1length = np.linalg.norm(p1 - player) + np.linalg.norm(target - p1)
     p2length = np.linalg.norm(p2 - player) + np.linalg.norm(target - p2)
@@ -86,7 +86,7 @@ def engage():
                         activeEgg = marker
                         target = [eggArray[marker].x, eggArray[marker].y]
                         clickTimer = currentTime + 8 #We will hunt for this egg for this many seconds.
-                        #print("New target egg: ", target)
+                        #print("New target egg:", target)
             elif eggArray[activeEgg].goForEgg == False:
                 activeEgg = 99
             elif eggArray[activeEgg].eggLife == 150:
@@ -103,7 +103,7 @@ def engage():
                     target = [-20, 20]
                 elif checkpoint >= 4:
                     checkpoint = 0
-                #print(lookingCount, " | ", target)
+                #print(lookingCount, "|", target)
             
             #And now the code to move to the target.
             oldTarget = target
@@ -182,8 +182,8 @@ def engage():
     print("End egg hunt")
     FFXC.set_neutral()
     duration = endTime - startTime
-    print("Duration: ", str(duration))
-    print("Battle count: ", battleCount)
+    print("Duration:", str(duration))
+    print("Battle count:", battleCount)
     while FFX_memory.getMap() != 325:
         if FFX_memory.battleActive():
             FFX_Battle.fleeAll()

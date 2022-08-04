@@ -25,7 +25,7 @@ def arrival():
             if gameVars.csr() and checkpoint == 1:
                 print("CSR, skipping forward")
                 checkpoint = 4
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 FFX_memory.waitFrames(30 * 0.7)
@@ -65,7 +65,7 @@ def arrival():
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrStart(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -113,7 +113,7 @@ def mainPath():
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 checkpoint += 1
-                print("Lift checkpoint: ", checkpoint)
+                print("Lift checkpoint:", checkpoint)
             elif checkpoint == 48: #X-potion for safety
                 if not FFX_memory.rngSeed() in [31,160]:
                     FFX_memory.clickToEventTemple(7)
@@ -151,19 +151,19 @@ def mainPath():
                 checkpoint = 71 #Into Battle Site zone (upper, cannon area)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 print("Starting battle MRR")
                 status = FFX_Battle.MRRbattle(status)
-                print("Status update: ", status)
+                print("Status update:", status)
                 status[3] += 1
                 
                 if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
                     print("Yuna has enough levels now. Going to do her grid.")
                     FFX_menu.mrrGridYuna()
-                    print("Yuna's gridding is complete for now.")
+                    print("Yunas gridding is complete for now.")
                     status[4] = 1
                 if FFX_memory.getSLVLWakka() >= 7:
                     FFX_menu.mrrGrid2()
@@ -223,7 +223,7 @@ def battleSite():
                 checkpoint = 100
             elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSite(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -256,7 +256,7 @@ def guiAndAftermath():
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSiteAftermath(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             FFX_memory.clickToControl3()

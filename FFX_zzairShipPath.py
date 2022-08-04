@@ -19,7 +19,7 @@ def airShipPath(version):
     while complete == False:
         if FFX_memory.userControl():
             #print(gameVars.csr()) #Testing only
-            #print("Checkpoint: ", checkpoint)
+            #print("Checkpoint:", checkpoint)
             #Map changes
             if checkpoint == 2:
                 FFX_memory.clickToEventTemple(3)
@@ -88,7 +88,7 @@ def airShipPath(version):
             elif checkpoint == 14 and version == 2:
                 print("Talking to Yuna/Kimahri in the gallery")
                 checkpoint = 23
-                print("Checkpoint update: ", checkpoint)
+                print("Checkpoint update:", checkpoint)
             elif checkpoint == 16:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
@@ -184,7 +184,7 @@ def airShipPath(version):
             #General Pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.airShip(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():

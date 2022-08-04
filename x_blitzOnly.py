@@ -181,8 +181,8 @@ while attempts < 20:
     attempts += 1
     print("------------------------------")
     print("------------------------------")
-    print("Attempts: ", attempts)
-    print("Success: ", success)
+    print("Attempts:", attempts)
+    print("Success:", success)
     print("All attempts results:")
     print(rngSuccessArray)
     print("------------------------------")
@@ -195,7 +195,7 @@ while attempts < 20:
     
     #---------End of the actual movement/code/logic/etc---------------
     #endTime = FFX_Logs.timeStamp()
-    #print("Duration: ", endTime - startTime)
+    #print("Duration:", endTime - startTime)
     
     if attempts < 20:
         #print("Clicking to control so we can reset. ", attempts)
@@ -205,7 +205,7 @@ while attempts < 20:
         #print("---------------------------------------------------")
         #print("---------------------------------------------------")
         #print("Test number ", attempts, "is complete.")
-        #print("Blitzball wins: ", success)
+        #print("Blitzball wins:", success)
         #print("---------------------------------------------------")
         #print("---------------------------------------------------")
         #time.sleep(5)
@@ -219,8 +219,8 @@ while attempts < 20:
         print("Final Results:")
         print("------------------------------")
         print("------------------------------")
-        print("Attempts: ", attempts)
-        print("Success: ", success)
+        print("Attempts:", attempts)
+        print("Success:", success)
         print("All attempts results:")
         print(rngSuccessArray)
         print("------------------------------")
@@ -230,8 +230,8 @@ while attempts < 20:
 
 time.sleep(5)
 
-#print("Skip attempts: ", miihenSkipAttempts)
-#print("Successful skips: ", miihenSkipCount)
+#print("Skip attempts:", miihenSkipAttempts)
+#print("Successful skips:", miihenSkipCount)
 FFX_memory.end()
 
 time.sleep(5)

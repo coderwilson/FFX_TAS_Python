@@ -118,7 +118,7 @@ def desert():
                     FFX_Xbox.tapB()
                 else:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
             elif checkpoint == 12 and firstFormat == False:
                 firstFormat = True
                 FFX_memory.fullPartyFormat('desert9')
@@ -156,7 +156,7 @@ def desert():
             elif FFX_memory.userControl():
                 if FFX_targetPathing.setMovement(FFX_targetPathing.desert(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
@@ -200,7 +200,7 @@ def desert():
                 #Next, figure out how many items we need.
                 stealItems = FFX_Battle.updateStealItemsDesert()
                 print("-----------------------------")
-                print("Items status: ", stealItems)
+                print("Items status:", stealItems)
                 print("-----------------------------")
                 itemsNeeded = 8 - sum(stealItems)
                 
@@ -219,16 +219,13 @@ def desert():
                 #if FFX_memory.getPower() >= 23:
                     needPower = False
                 print("-----------------------------Flag statuses")
-                print("Rikku is charged up: ", chargeState)
-                print("Need more Speed spheres: ", needSpeed)
-                print("Need more Power spheres: ", needPower)
-                print("Number of additional items needed before Home: ", itemsNeeded)
+                print("Rikku is charged up:", chargeState)
+                print("Need more Speed spheres:", needSpeed)
+                print("Need more Power spheres:", needPower)
+                print("Number of additional items needed before Home:", itemsNeeded)
                 print("-----------------------------Flag statuses (end)")
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-
-def desert1():
-    print("desert1 function no longer used.")
 
 def findSummoners():
     print("Desert complete. Starting Home section")
@@ -304,7 +301,7 @@ def findSummoners():
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Home(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -324,7 +321,7 @@ def findSummoners():
                     FFX_Battle.home4()
                     FFX_memory.fullPartyFormat('evrae')
                 else:
-                    print("Flee from battle: ", FFX_memory.getBattleNum())
+                    print("Flee from battle:", FFX_memory.getBattleNum())
                     FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()

@@ -35,7 +35,7 @@ startTime = FFX_Logs.timeStamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
-gameVars.SETcsr(False)
+gameVars.setCSR(False)
 
 attempts = 0 #Determines where in the showcase we start
 cycles = 0
@@ -43,7 +43,7 @@ jyscalRetry = False
 while attempts < 20 and cycles < 50:
     attempts += 1
     cycles += 1
-    print("Cycle number: ", cycles)
+    print("Cycle number:", cycles)
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     #---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
@@ -69,8 +69,8 @@ while attempts < 20 and cycles < 50:
             SkipCount += 1
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
-        print("Attempts: ", SkipAttempts)
-        print("Success: ", SkipCount)
+        print("Attempts:", SkipAttempts)
+        print("Success:", SkipCount)
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
     elif attempts == 2:
@@ -84,8 +84,8 @@ while attempts < 20 and cycles < 50:
         SkipAttempts += 1
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
-        print("Attempts: ", SkipAttempts)
-        print("Success: ", SkipCount)
+        print("Attempts:", SkipAttempts)
+        print("Success:", SkipCount)
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
     elif attempts == 3:
@@ -98,8 +98,8 @@ while attempts < 20 and cycles < 50:
             SkipCount += 1
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
-        print("Attempts: ", SkipAttempts)
-        print("Success: ", SkipCount)
+        print("Attempts:", SkipAttempts)
+        print("Success:", SkipCount)
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
     elif attempts == 4:
@@ -115,8 +115,8 @@ while attempts < 20 and cycles < 50:
             #jyscalRetry = True
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
-        print("Attempts: ", SkipAttempts)
-        print("Success: ", SkipCount)
+        print("Attempts:", SkipAttempts)
+        print("Success:", SkipCount)
         print("-----------------------------------------------------")
         print("-----------------------------------------------------")
     #elif attempts == 5:
@@ -151,7 +151,7 @@ while attempts < 20 and cycles < 50:
     #    FFXC.set_neutral()
     #    
     #    lStrikeCount = FFX_memory.lStrikeCount()
-    #    #print("Starting count of lightning strikes: ", lStrikeCount)
+    #    #print("Starting count of lightning strikes:", lStrikeCount)
     #    lStrikeStart = lStrikeCount
     #    complete = False
     #    while lStrikeCount - lStrikeStart < 200:
@@ -179,7 +179,7 @@ while attempts < 20 and cycles < 50:
     #        elif FFX_memory.userControl():
     #            if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsDodging(checkpoint)) == True:
     #                checkpoint += 1
-    #                print("Checkpoint reached: ", checkpoint)
+    #                print("Checkpoint reached:", checkpoint)
     #        else:
     #            FFXC.set_neutral()
     #            if FFX_Screen.BattleScreen():
@@ -279,7 +279,7 @@ endTime = FFX_Logs.timeStamp()
 print("-----------------------------------------------------")
 print("-----------------------------------------------------")
 totalTime = endTime - startTime
-print("The program duration (real time) was: ", str(totalTime))
+print("The program duration (real time) was:", str(totalTime))
 print("-----------------------------------------------------")
 print("-----------------------------------------------------")
 

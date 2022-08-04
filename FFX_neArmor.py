@@ -34,7 +34,7 @@ def toHiddenCave():
                 FFXC.set_movement(-1, 1)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.neApproach(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -88,13 +88,13 @@ def dropHunt():
                     checkpoint -= 2
                 elif FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersGreen(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
             else:
                 if FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersWhite(checkpoint)) == True:
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not goGreen:
                         checkpoint = 0
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -130,7 +130,7 @@ def dropHunt():
                     preGhostBattles += 1
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-    print("The NE armor hunt is complete. Char: ", gameVars.neArmor())
+    print("The NE armor hunt is complete. Char:", gameVars.neArmor())
     FFX_Logs.writeStats("Pre-Ghost battles:")
     FFX_Logs.writeStats(preGhostBattles)
     FFX_Logs.writeStats("NEA char:")
@@ -157,7 +157,7 @@ def returnToGagazet():
                     checkpoint = 0
                 elif FFX_targetPathing.setMovement(FFX_targetPathing.neReturnGreen(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
             elif checkpoint < 1 and FFX_memory.getMap() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
@@ -170,7 +170,7 @@ def returnToGagazet():
                 checkpoint = 7
             elif FFX_targetPathing.setMovement(FFX_targetPathing.neReturn(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():

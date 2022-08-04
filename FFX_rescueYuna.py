@@ -38,7 +38,7 @@ def preEvrae():
             
             elif FFX_targetPathing.setMovement(FFX_targetPathing.rescueAirship(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -107,11 +107,11 @@ def guards():
             #Map changes
             if checkpoint < 2 and FFX_memory.getMap() == 182:
                 checkpoint = 2
-            #print("Checkpoint: ", checkpoint)
+            #print("Checkpoint:", checkpoint)
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -359,7 +359,7 @@ def trials():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             #print("No control")
             #FFXC.set_neutral()
@@ -377,7 +377,7 @@ def trialsEnd():
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         elif checkpoint == 58:
@@ -436,7 +436,7 @@ def evraeAltana():
     lastCP = 0
     while checkpoint < 100:
         if lastCP != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
+            print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         if FFX_memory.getStoryProgress() > 2220:
             print("End of Evrae Altana section.")
@@ -554,7 +554,7 @@ def seymourNatus():
             
             elif FFX_targetPathing.setMovement(FFX_targetPathing.sutekiDaNe(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():

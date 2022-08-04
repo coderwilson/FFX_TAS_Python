@@ -77,7 +77,7 @@ def arrival():
         while not FFX_targetPathing.setMovement([27,-37]):
             pass
         print("Mark4")
-        while FFX_memory.userControl(): # Yuna's turn
+        while FFX_memory.userControl(): # Yunas turn
             FFX_targetPathing.setMovement([39,-33])
             FFX_Xbox.tapB()
         FFXC.set_neutral()
@@ -99,7 +99,7 @@ def arrival():
 def afterSpeech(checkpoint = 0):
     FFX_memory.clickToControl() #Skips through the long cutscene
     print("Starting movement.")
-    print("Starting checkpoint: ", checkpoint)
+    print("Starting checkpoint:", checkpoint)
     
     if checkpoint == 0:
         FFX_memory.clickToEventTemple(4)
@@ -131,7 +131,7 @@ def afterSpeech(checkpoint = 0):
                 
             elif FFX_targetPathing.setMovement(FFX_targetPathing.guadoStoryline(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -272,7 +272,7 @@ def guadoSkip():
             elif FFX_memory.userControl():
                 if FFX_targetPathing.setMovement(FFX_targetPathing.guadoSkip(checkpoint)) == True:
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():

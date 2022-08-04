@@ -22,9 +22,9 @@ def makingPlans():
     while not FFX_targetPathing.setMovement([-267,347]):
         pass
     
-    #print("Cursor test 2: ", FFX_memory.saveMenuCursor())
+    #print("Cursor test 2:", FFX_memory.saveMenuCursor())
     #FFX_memory.touchSaveSphere()
-    #print("Cursor test 3: ", FFX_memory.saveMenuCursor())
+    #print("Cursor test 3:", FFX_memory.saveMenuCursor())
     #Fix this later.
     #FFX_memory.waitFrames(60)
     #FFX_Xbox.menuA()
@@ -183,7 +183,7 @@ def insideSin():
             #General Pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.insideSin(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():

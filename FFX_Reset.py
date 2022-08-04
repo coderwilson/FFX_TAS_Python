@@ -21,7 +21,7 @@ def resetToMainMenu():
         FFX_memory.waitFrames(30 * 0.07)
         while not FFX_memory.getMap() in [23,348,349]:
             print("----------Attempting reset")
-            print("FFX map: ", FFX_memory.getMap())
+            print("FFX map:", FFX_memory.getMap())
             print("----------")
             FFX_memory.setMapReset()
             FFX_memory.waitFrames(30 * 0.1)

@@ -22,7 +22,7 @@ def checkGems():
     gemSlot = FFX_memory.getItemSlot(28)
     if gemSlot < 200:
         gems += FFX_memory.getItemCountSlot(gemSlot)
-    print("Total gems: ", gems)
+    print("Total gems:", gems)
     return gems
 
 def calmLands():
@@ -35,9 +35,9 @@ def calmLands():
     FFX_Battle.healUp(fullMenuClose=True)
     
     FFX_memory.printManipInfo()
-    print("RNG10: ", FFX_memory.rng10())
-    print("RNG12: ", FFX_memory.rng12())
-    print("RNG13: ", FFX_memory.rng13())
+    print("RNG10:", FFX_memory.rng10())
+    print("RNG12:", FFX_memory.rng12())
+    print("RNG13:", FFX_memory.rng13())
     #Enter the cutscene where Yuna muses about ending her journey.
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
         if FFX_memory.userControl():
@@ -57,7 +57,7 @@ def calmLands():
                         checkpoint -= 1
                         FFXC.set_movement(-1, 0)
                         FFX_memory.waitFrames(60)
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -103,7 +103,7 @@ def toTheRonso():
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.defenderX(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -115,7 +115,7 @@ def toTheRonso():
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.kelkRonso(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.turnReady():
@@ -156,7 +156,7 @@ def gagazetGates():
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.gagazetSnow(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.menuOpen():
@@ -200,7 +200,7 @@ def Flux():
                 FFXC.set_neutral()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Flux(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -247,7 +247,7 @@ def dream(checkpoint:int=0):
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetDreamSeq(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             
             #Start the final dialog
             if checkpoint == 25:
@@ -334,7 +334,7 @@ def cave():
                 FFX_memory.waitFrames(6)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPostDream(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -424,7 +424,7 @@ def cave():
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetCave(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if checkpoint == 35 and FFX_memory.diagProgressFlag() == 2:
@@ -495,7 +495,7 @@ def wrapUp():
                     FFX_targetPathing.setMovement([786,-819])
                     FFX_Xbox.tapB()
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint == 6:
                 if FFX_memory.getMap() == 312:
                     print("Final path before making camp.")
@@ -505,7 +505,7 @@ def wrapUp():
                     FFXC.set_movement(1, 1)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPeak(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():

@@ -509,11 +509,9 @@ def sphereNum(sType) -> int:
         return 99
     return 255
 
-def selSphere(sType, direction, shift):
-    #The direction variable is no longer used.
+def selSphere(sType, shift):
     sNum = 255
     menuPos = 0
-    print("-----------------------------------")
     print("-----------------------------------")
     print(sType)
     sNum = sphereNum(sType)
@@ -521,9 +519,8 @@ def selSphere(sType, direction, shift):
     menuPos = FFX_memory.getGridItemsSlot(sNum)
     print(menuPos)
     print("-----------------------------------")
-    print("-----------------------------------")
     if menuPos == 255:
-        print("Sphere ", sType, "is not in inventory.")
+        print("Sphere", sType, "is not in inventory.")
         return
     while menuPos != FFX_memory.getGridCursorPos():
         if menuPos > FFX_memory.getGridCursorPos():

@@ -7,7 +7,6 @@ def toCoords(items):
 # def distance(a, b):
 #     return sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
 
-
 checkpoints = [[467,-122],[500,64],[860,19],[1015,54], # Move into next area
 # First half of area
 [-243, -739],
@@ -42,22 +41,22 @@ checkpoints = [[467,-122],[500,64],[860,19],[1015,54], # Move into next area
 [337.63330078125, 593.2178344726562],
 [375.4143981933594, 619.3798828125],
 [450.011474609375, 656.1323852539062],
-# [442.06561279296875, 651.6763305664062], # Attempt to turn back
+#[442.06561279296875, 651.6763305664062], # Attempt to turn back
 [495.8471374511719, 700.2091064453125],
 [546.3902587890625, 745.9745483398438],
 
-# More possible stops
-# [565.3033447265625, 763.1240234375],
+#More possible stops
+#[565.3033447265625, 763.1240234375],
 #[552.0641479492188, 751.1195068359375],
 #[542.6076049804688, 742.5446166992188],
-]  # [431.89208984375, 656.8260498046875], [639.948486328125, 829.5191040039062]]
+]#[431.89208984375, 656.8260498046875], [639.948486328125, 829.5191040039062]]
 
 def lucillePush():
     buttonPressed = False
     delta = [0, 0]
     lucille = [0, 0]
     target = checkpoints.pop(0)
-    print("Target: ", target)
+    print("Target:", target)
     player = FFX_memory.getCoords()
     lucille = FFX_memory.lucilleDjoseCoords()
     lucilleCheckpoints = [[0, 0]]

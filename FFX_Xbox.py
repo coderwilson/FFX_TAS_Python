@@ -76,9 +76,7 @@ class vgTranslator:
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - ", xKey)
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
@@ -147,11 +145,10 @@ def skipSceneSpec():
 def skipStoredScene(skipTimer):
     print("Mashing skip button")
     currentTime = time.time()
-    print("Current Time: ", currentTime)
+    print("Current Time:", currentTime)
     clickTimer = currentTime + skipTimer
-    print("Click Until: ", clickTimer)
+    print("Click Until:", clickTimer)
     while currentTime < clickTimer :
-        
         FFXC.set_value('BtnX', 1) #Perform the skip
         FFX_memory.waitFrames(30 * 0.035)
         FFXC.set_value('BtnX', 0)
@@ -420,7 +417,7 @@ def tidusOD():
     menuB()
 
 def weapSwap(position):
-    print("Weapon swap, weapon in position: ", position)
+    print("Weapon swap, weapon in position:", position)
     while FFX_memory.mainBattleMenu():
         tapRight()
     while FFX_memory.otherBattleMenu():
@@ -431,7 +428,7 @@ def weapSwap(position):
         tapB()
 
 def armorSwap(position):
-    print("Armor swap, armor in position: ", position)
+    print("Armor swap, armor in position:", position)
     menuRight()
     FFX_memory.waitFrames(30 * 0.5)
     menuDown()
@@ -455,7 +452,7 @@ def clearSavePopup(clickToDiagNum=0):
     while complete == 0:
         counter += 1;
         if counter % 100 == 0:
-            print("Waiting for Save dialog: ", counter / 100)
+            print("Waiting for Save dialog:", counter / 100)
         
         if FFX_memory.diagProgressFlag() != clickToDiagNum and FFX_memory.diagSkipPossible():
             tapB()
@@ -470,25 +467,6 @@ def clearSavePopup(clickToDiagNum=0):
 
 def awaitSave(index=0):
     clearSavePopup(clickToDiagNum = index)
-
-def awaitSave_old() :
-    #FFX_Logs.writeLog("Awaiting save dialog to pop up")
-    counter = 0
-    complete = 0
-    while complete == 0:
-        counter += 1;
-        if counter % 100 == 0:
-            print("Waiting for Save dialog: ", counter / 100)
-        
-        if FFX_memory.diagProgressFlag() != 0 and FFX_memory.diagSkipPossible():
-            tapB()
-        
-        elif FFX_memory.diagSkipPossible():
-            if FFX_memory.savePopupCursor() == 0:
-                menuUp()
-            else:
-                menuB()
-                complete = 1
 
 def remove():
     print("Controller may freeze the program here. If so, please restart your PC.")
@@ -630,7 +608,7 @@ def navigateToCharacter(curCharacter):
         
 
 def nameAeon(character=""):
-    print("Waiting for aeon naming screen to come up")
+    print("Waiting for aeon naming screen")
     
     while not FFX_memory.nameAeonReady():
         if FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():

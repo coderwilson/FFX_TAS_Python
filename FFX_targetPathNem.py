@@ -10,7 +10,6 @@ FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
 def setMovement(target) -> bool:
-
     player = FFX_memory.getCoords()
     (forward, right) = FFX_memory.getMovementVectors()
 
@@ -41,7 +40,6 @@ def setMovement(target) -> bool:
         Lx = copysign(Lx/Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
     
-    
     FFXC.set_movement(Lx, Ly)
     #FFX_memory.waitFrames(frames=1)
     
@@ -51,7 +49,7 @@ def setMovement(target) -> bool:
         return False
 
 def calmLands1(checkpoint):
-    #print("CKP: ", checkpoint)
+    #print("CKP:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -90,7 +88,7 @@ def calmLands1(checkpoint):
     return [x,y]
 
 def calmLands2(checkpoint):
-    #print("CKP2: ", checkpoint)
+    #print("CKP2:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -961,7 +959,6 @@ def calm(checkpoint):
         y = -200
     return [x,y]
 
-
 def besaidFarm(checkpoint):
     x = 999
     y = 999
@@ -1614,7 +1611,6 @@ def arenaReturn(checkpoint):
         x = 0
         y = 0
     return [x,y]
-
 
 def yojimbo(checkpoint):
     x = 999

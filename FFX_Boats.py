@@ -35,7 +35,7 @@ def ssLiki():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.liki(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
         else:
             FFXC.set_neutral()
@@ -117,15 +117,13 @@ def ssWinno2():
             elif checkpoint == 11:
                 jechtShot()
                 checkpoint += 1
-            
             elif FFX_targetPathing.setMovement(FFX_targetPathing.winno(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
     if not gameVars.csr():
         FFX_memory.clickToDiagProgress(142)
         FFX_Xbox.clearSavePopup(0)

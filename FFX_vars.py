@@ -56,13 +56,13 @@ class allVars:
     
     def printArenaStatus(self):
         print("##############################################")
-        print("Area: ", self.areaResults)
-        print("Species: ", self.speciesResults)
-        print("Original: ", self.originalResults)
+        print("Area:", self.areaResults)
+        print("Species:", self.speciesResults)
+        print("Original:", self.originalResults)
         print("##############################################")
     
     def arenaSuccess(self,arrayNum,index):
-        print(arrayNum, " | ", index)
+        print(arrayNum, "|", index)
         if arrayNum == 0:
             self.areaResults[index] = 1
         if arrayNum == 1:
@@ -83,7 +83,7 @@ class allVars:
     def nemCheckpointAP(self):
         return self.nemAPVal
         
-    def setNemChecpointAP(self, value):
+    def setNemCheckpointAP(self, value):
         self.nemAPVal = value
     
     def neExtraBattles(self):
@@ -131,8 +131,8 @@ class allVars:
     def csr(self):
         return self.csrValue
     
-    def SETcsr(self, value):
-        print("Setting CSR: ", value)
+    def setCSR(self, value):
+        print("Setting CSR:", value)
         self.csrValue = value
     
     def completeFullKilikMenu(self):
