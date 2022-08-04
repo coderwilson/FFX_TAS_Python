@@ -24,7 +24,7 @@ def arrival():
             if checkpoint == 4: #Move into Yuna's dance
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            if checkpoint == 6: #Move into Yuna's dance
+            elif checkpoint == 6: #Move into Yuna's dance
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 8: #Exit the inn
