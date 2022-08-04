@@ -166,7 +166,7 @@ def Liki():
 
 def woodsMenuing():
     #Tidus learning Flee
-    FFX_menu.openGrid(character=0)
+    openGrid(character=0)
     FFX_Xbox.menuB()
     FFX_Xbox.menuB() #Sphere grid on Tidus
     FFX_menuGrid.moveFirst()
