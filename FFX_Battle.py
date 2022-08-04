@@ -145,6 +145,19 @@ def useSkill(position):
     _navigate_to_position(position)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
+    if target != 20:
+        direction = 'l'
+        while FFX_memory.battleTargetId() != target:
+            if direction == 'l':
+                FFX_Xbox.tapLeft()
+                if FFX_memory.battleTargetId() < 20:
+                    FFX_Xbox.tapRight()
+                    direction = 'd'
+            else:
+                FFX_Xbox.tapDown()
+                if FFX_memory.battleTargetId() < 20:
+                    FFX_Xbox.tapUp()
+                    direction = 'l'
     tapTargeting()
 
 def useSpecial(position, target:int=20, direction:int='u'):
@@ -178,16 +191,6 @@ def useSpecial(position, target:int=20, direction:int='u'):
                     FFX_Xbox.tapDown()
                     direction = 'r'
     tapTargeting()
-
-#def wakkaOD():
-#    print("Wakka overdrive activating")
-#    while not FFX_memory.otherBattleMenu():
-#        FFX_Xbox.tapLeft()
-#    FFX_Xbox.SkipDialog(2)
-#    
-#    FFX_memory.waitFrames(30 * 3) #Replace with memory reading later.
-#    FFX_Xbox.SkipDialog(4)
-
 
 def auronOD(style="dragon fang"):
     while not FFX_memory.otherBattleMenu():
@@ -473,6 +476,8 @@ def Klikk():
                 elif FFX_memory.rngSeed() == 160 and grenadeCount < 4:
                     print("Attempting to steal from Klikk")
                     Steal()
+                elif FFX_memory.rngSeed() == 31 and FFX_memory.getEnemyCurrentHP()[0] < 250:
+                    defend()
                 else:
                     attack('none')
                     klikkAttacks += 1
@@ -3132,14 +3137,7 @@ def wendigo():
             elif turnchar == 2:
                 if usepowerbreak == True:
                     print("Using Power Break")
-                    FFX_Xbox.tapDown()
-                    FFX_Xbox.tapB()
-                    FFX_memory.waitFrames(30 * 0.6)
-                    FFX_Xbox.tapB()
-                    FFX_memory.waitFrames(30 * 0.6)
-                    FFX_Xbox.tapLeft()
-                    FFX_Xbox.tapB()  # Auron uses Armor Break
-                    FFX_memory.waitFrames(30 * 1)
+                    useSkill(position=0,target=21)
                     powerbreakused = True
                     usepowerbreak = False
                 else:

@@ -865,10 +865,10 @@ def oneMpWeapon(): #Break Damage Limit, or One MP cost
     FFX_menu.autoSortEquipment()
     arenaNPC()
     FFX_nem_arenaSelect.arenaMenuSelect(4)
-    initArray = FFX_memory.checkAbility(ability = 0x8002)
-    if not initArray[4]:
-        FFX_menu.addAbility(owner=4, equipment_type=0, ability_array=[255,255,255,255], ability_index=0x8002, slotcount=1, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
-    FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
+    #initArray = FFX_memory.checkAbility(ability = 0x8002)
+    #if not initArray[4]:
+    #    FFX_menu.addAbility(owner=4, equipment_type=0, ability_array=[255,255,255,255], ability_index=0x8002, slotcount=1, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
+    #FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
     arenaNPC()
     FFX_nem_arenaSelect.arenaMenuSelect(4)
     arenaNPC()
