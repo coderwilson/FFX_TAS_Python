@@ -201,20 +201,20 @@ def touchSaveSphere():
 def SkipDialog( Keystrokes ):
     # 2 frames per button mash
     num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
-    print(f"Mashing B {num_repetitions} number of times.")
+    print(f"Mashing B {num_repetitions} times.")
     for _ in range(num_repetitions):
         tapB()
     print("Mashing B - Complete")
     
 def MashNTimes( num_repetitions ):
-    print(f"Mashing B {num_repetitions} number of times.")
+    print(f"Mashing B {num_repetitions} times.")
     for _ in range(num_repetitions):
         tapB()
     print("Mashing B - Complete")
 
 def SkipDialogSpecial( Keystrokes ):
     num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
-    print(f"Mashing A and B {num_repetitions} number of times.")
+    print(f"Mashing A and B {num_repetitions} times.")
     for _ in range(num_repetitions) :
         FFXC.set_value('BtnB', 1)
         FFXC.set_value('BtnA', 1)

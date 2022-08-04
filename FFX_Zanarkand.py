@@ -360,7 +360,7 @@ def yunalesca():
     FFX_memory.clickToControl() #This does all the attacking and dialog skipping
     
     #Now to check for zombie strike and then report to logs.
-    print("Ready to check for Zomibe Strike")
+    print("Ready to check for Zombiestrike")
     FFX_Logs.writeStats("Zombiestrike:")
     FFX_Logs.writeStats(gameVars.zombieWeapon())
     print("++Zombiestrike:")

@@ -5298,7 +5298,7 @@ def buddySwap_char(character):
             FFX_Xbox.lBumper()
         position -= 3
         reserveposition = position % 4
-        print("Character is in position ", reserveposition)
+        print("Character is in position", reserveposition)
         if reserveposition == 3:  # Swap with last slot
             direction = 'up'
         else:
@@ -5856,7 +5856,7 @@ def equipInBattle(equipType = 'weap', abilityNum = 0, character = 0, special = '
         FFX_Xbox.tapB()
     
     print("@@@@@")
-    print("Character ", character)
+    print("Character:", character)
     print("Equipment type:", equipType)
     print("Number of items:", len(equipHandles))
     print("Special:", special)

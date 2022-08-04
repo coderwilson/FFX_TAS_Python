@@ -810,7 +810,7 @@ def getThrowItemsSlot(itemNum):
     while x < len(items):
         #print(items[x + 1], "|", itemNum)
         if items[x] == itemNum:
-            print("Desired item ", itemNum, " is in slot ", x)
+            print("Desired item", itemNum, "is in slot", x)
             return x
         x += 1
     return 255
@@ -838,7 +838,7 @@ def getGridItemsSlot(itemNum) -> int:
     while x < len(items):
         #print(items[x + 1], "|", itemNum)
         if items[x] == itemNum:
-            print("Desired item ", itemNum, " is in slot ", x)
+            print("Desired item", itemNum, "is in slot", x)
             return x
         x += 1
     return 255
@@ -1508,7 +1508,7 @@ def activepartySize():
 
 def getCharacterIndexInMainMenu(character):
     res = getMenuDisplayCharacters().index(character)
-    print("Char is in position ", res)
+    print("Char is in position", res)
     return res
     
 
@@ -1560,7 +1560,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                     startPos += 1
                     if startPos == partyMembers:
                         startPos = 0
-            print("Character ", nameFromNumber(orderFinal[startPos]), " should be in position ", startPos)
+            print("Character", nameFromNumber(orderFinal[startPos]), "should be in position", startPos)
             
             #Set target, end position
             print("Selecting destination position.")
@@ -1569,7 +1569,7 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                 while orderFinal[startPos] != order[endPos] and order != orderFinal:
                     endPos += 1
             
-            print("Character ", nameFromNumber(order[endPos]), " found in position ", endPos)
+            print("Character", nameFromNumber(order[endPos]), "found in position", endPos)
             
             print("Looking for character.")
             if startPos < 3 and endPos < 3:            
@@ -3161,7 +3161,7 @@ def getSaveSphereDetails():
         y = 5
         diag = 166
     
-    print("Values: [", x, ",", y, "] - ", diag)
+    print("Values: [", x, ",", y, "] -", diag)
     return [x,y,diag]
 
 def touchSaveSphere():
@@ -3723,10 +3723,10 @@ def arenaFarmCheck(zone:str="besaid",endGoal:int=10,report=False):
     if report:
         print("############")
         print("Next Sphere Grid checkpoint:", gameVars.nemCheckpointAP())
-        print("Tidus S.levels:", getTidusSlvl(), " - need levels:", FFX_nem_menu.nextAPneeded(gameVars.nemCheckpointAP()))
-        print("Number of captures in this zone: ")
+        print("Tidus S.levels:", getTidusSlvl(), "- need levels:", FFX_nem_menu.nextAPneeded(gameVars.nemCheckpointAP()))
+        print("Number of captures in this zone:")
         print(resultArray)
-        print("End goal is ", endGoal, " minimum before leaving this zone for each index.")
+        print("End goal is", endGoal, "minimum before leaving this zone for each index.")
         print("############")
     return complete
     

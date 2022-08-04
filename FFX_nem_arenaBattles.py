@@ -169,7 +169,7 @@ def getSaveSphereDetails():
         y = -1066
         diag = 23
     
-    print("Values: [", x, ",", y, "] - ", diag)
+    print("Values: [", x, ",", y, "] -", diag)
     return [x,y,diag]
 
 def returnToAirship():
