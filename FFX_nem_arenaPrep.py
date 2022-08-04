@@ -23,7 +23,7 @@ def autoLife():
                 FFX_Battle.defend()
     while FFX_memory.battleMenuCursor() != 22:
         if FFX_Screen.turnTidus() == False:
-            print("Attempting Auto-life, but it's not Tidus's turn")
+            print("Attempting Auto-life, but it's not Tidus' turn")
             FFX_Xbox.tapUp()
             FFX_Xbox.tapUp()
             return
@@ -123,7 +123,7 @@ def unlockOmega():
 def getSaveSphereDetails():
     mapVal = FFX_memory.getMap()
     storyVal = FFX_memory.getStoryProgress()
-    print("Map and story: ", mapVal, " | ", storyVal)
+    print("Map and story:", mapVal, "|", storyVal)
     x = 0
     y = 0
     diag = 0
@@ -224,7 +224,7 @@ def returnToAirship():
             if FFX_memory.saveMenuOpen():
                 FFX_Xbox.tapA()
             elif FFX_memory.diagProgressFlag() == ssDetails[2]:
-                #print("Cursor test: ", FFX_memory.saveMenuCursor())
+                #print("Cursor test:", FFX_memory.saveMenuCursor())
                 if FFX_memory.saveMenuCursor() != 1:
                     FFX_Xbox.menuDown()
                 else:
@@ -240,7 +240,7 @@ def returnToAirship():
     FFX_memory.clearSaveMenuCursor2()
 
 def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
-    print("### Battle Start: ", FFX_memory.getBattleNum())
+    print("### Battle Start:", FFX_memory.getBattleNum())
     FFXC.set_neutral()
     if faythCave==True and FFX_memory.battleType() == 2:
         FFX_Screen.awaitTurn()
@@ -296,90 +296,90 @@ def advancedCompleteCheck():
     
     #Inside Sin
     elif battleNum == 374: #Ahriman
-        print("For this battle, count: ", arenaArray[37])
+        print("For this battle, count:", arenaArray[37])
         if arenaArray[37] == 10:
             return True
     elif battleNum in [375,380]: #Exoray (with a bonus Ahriman)
-        print("For this battle, count: ", arenaArray[93])
+        print("For this battle, count:", arenaArray[93])
         if arenaArray[93] == 10 and arenaArray[37] == 10:
             return True
     elif battleNum in [376,381]: #Adamantoise
-        print("For this battle, count: ", arenaArray[81])
+        print("For this battle, count:", arenaArray[81])
         if arenaArray[81] == 10:
             return True
     elif battleNum in [377,382]: #Both kinds of Gemini
-        print("For this battle, count: ", arenaArray[77])
-        print("For this battle, count: ", arenaArray[78])
+        print("For this battle, count:", arenaArray[77])
+        print("For this battle, count:", arenaArray[78])
         if arenaArray[77] == 10 and arenaArray[78] == 10:
             return True
     elif battleNum in [378,384]: #Behemoth King
-        print("For this battle, count: ", arenaArray[70])
+        print("For this battle, count:", arenaArray[70])
         if arenaArray[70] == 10:
             return True
     elif battleNum == 383: #Demonolith
-        print("For this battle, count: ", arenaArray[75])
+        print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
     elif battleNum == 385: #Great Malboro
-        print("For this battle, count: ", arenaArray[56])
+        print("For this battle, count:", arenaArray[56])
         if arenaArray[56] == 10:
             return True
     elif battleNum == 386: #Barbatos
-        print("For this battle, count: ", arenaArray[90])
+        print("For this battle, count:", arenaArray[90])
         if arenaArray[90] == 10:
             return True
     elif battleNum == 387: #Wraith
-        print("For this battle, count: ", arenaArray[97])
+        print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
         
     #Omega dungeon
     elif battleNum == 421: #Master Coeurl and Floating Death
-        print("For this battle, count: ", arenaArray[74])
-        print("For this battle, count: ", arenaArray[102])
+        print("For this battle, count:", arenaArray[74])
+        print("For this battle, count:", arenaArray[102])
         if arenaArray[74] == 10 and arenaArray[102] == 10:
             return True
     elif battleNum == 422: #Halma and Spirit
-        print("For this battle, count: ", arenaArray[96])
-        print("For this battle, count: ", arenaArray[101])
+        print("For this battle, count:", arenaArray[96])
+        print("For this battle, count:", arenaArray[101])
         if arenaArray[96] == 10 and arenaArray[101] == 10:
             return True
     elif battleNum == 423: #Zaurus and Floating Death
-        print("For this battle, count: ", arenaArray[100])
-        print("For this battle, count: ", arenaArray[102])
+        print("For this battle, count:", arenaArray[100])
+        print("For this battle, count:", arenaArray[102])
         if arenaArray[100] == 10 and arenaArray[102] == 10:
             return True
     elif battleNum == 424: #Black Element and Spirit
-        print("For this battle, count: ", arenaArray[67])
-        print("For this battle, count: ", arenaArray[96])
+        print("For this battle, count:", arenaArray[67])
+        print("For this battle, count:", arenaArray[96])
         if arenaArray[67] == 10 and arenaArray[96] == 10:
             return True
     elif battleNum == 425: #Varuna
-        print("For this battle, count: ", arenaArray[82])
+        print("For this battle, count:", arenaArray[82])
         if arenaArray[82] == 10:
             return True
     elif battleNum == 426: #Master Tonberry
-        print("For this battle, count: ", arenaArray[99])
+        print("For this battle, count:", arenaArray[99])
         if arenaArray[99] == 10:
             return True
     elif battleNum == 428: #Machea (blade thing)
-        print("For this battle, count: ", arenaArray[103])
+        print("For this battle, count:", arenaArray[103])
         if arenaArray[103] == 10:
             return True
     elif battleNum == 430: #Demonolith x2
-        print("For this battle, count: ", arenaArray[75])
+        print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
     elif battleNum in [432,433,434,435,436]: #Just Zaurus
-        print("For this battle, count: ", arenaArray[100])
+        print("For this battle, count:", arenaArray[100])
         if arenaArray[100] == 10:
             return True
     elif battleNum == 437: #Puroboros
-        print("For this battle, count: ", arenaArray[95])
+        print("For this battle, count:", arenaArray[95])
         if arenaArray[95] == 10:
             return True
     elif battleNum == 438: #Wraith
-        print("For this battle, count: ", arenaArray[97])
+        print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
     
@@ -398,8 +398,8 @@ def advancedCompleteCheck():
     return False
 
 def advancedBattleLogic():
-    print("### Battle Start: ", FFX_memory.getBattleNum())
-    print("### Ambush flag (2 is bad): ", FFX_memory.battleType())
+    print("### Battle Start:", FFX_memory.getBattleNum())
+    print("### Ambush flag (2 is bad):", FFX_memory.battleType())
     autoLifeUsed = False
     FFXC.set_neutral()
     
@@ -573,7 +573,7 @@ def arenaReturn():
                 checkpoint += 1
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.arenaReturn(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -746,7 +746,7 @@ def farmFeathers():
                 print("+++ Qactar defend command done")
         waitCounter += 1
         if waitCounter % 10 == 0:
-            print("Waiting for next turn: ", waitCounter)
+            print("Waiting for next turn:", waitCounter)
     print("Battle is complete.")
     
     while not FFX_memory.menuOpen():
@@ -802,7 +802,7 @@ def autoPhoenix(): #Calm Lands items
     
     FFX_memory.waitFrames(30)
     initArray = FFX_memory.checkAbility(ability = 0x8002)
-    print("Initiative weapons: ", initArray)
+    print("Initiative weapons:", initArray)
     if initArray[4]:
         FFX_menu.addAbility(owner=6, equipment_type=1, ability_array=[0x8072,255,255,255], ability_index=0x800A, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=False)
         FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
@@ -1177,7 +1177,7 @@ def yojimbo():
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.yojimbo(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1204,7 +1204,7 @@ def besaidFarm(capNum:int=1):
                 checkpoint = 15
             elif checkpoint == 15 and not FFX_memory.arenaFarmCheck(zone="besaid",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 1:
                 FFX_memory.clickToEventTemple(4)
@@ -1221,7 +1221,7 @@ def besaidFarm(capNum:int=1):
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.besaidFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1247,7 +1247,7 @@ def kilikaFarm(capNum:int=1):
                 checkpoint = 14
             elif checkpoint == 14 and not FFX_memory.arenaFarmCheck(zone="kilika",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 4:
                 FFX_memory.clickToEventTemple(7)
@@ -1265,7 +1265,7 @@ def kilikaFarm(capNum:int=1):
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.kilikaFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1297,7 +1297,7 @@ def miihenFarm(capNum:int=1):
                 checkpoint = 30
             elif checkpoint == 31 and not FFX_memory.arenaFarmCheck(zone="miihen1",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 2:
                 FFX_memory.clickToEventTemple(4)
@@ -1320,14 +1320,14 @@ def miihenFarm(capNum:int=1):
                 checkpoint = 41
             elif checkpoint == 42 and not FFX_memory.arenaFarmCheck(zone="miihen2",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint == 50:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.miihenFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1376,13 +1376,13 @@ def mrrFarm(capNum:int=1):
                 checkpoint = 2
             elif checkpoint == 3 and not FFX_memory.arenaFarmCheck(zone="mrr",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             
             elif checkpoint == 4:
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.mrrFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1410,12 +1410,12 @@ def djoseFarm(capNum:int=10):
                 checkpoint = 24
             elif checkpoint == 24 and not FFX_memory.arenaFarmCheck(zone="djose1",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             if FFX_memory.arenaFarmCheck(zone="djose2",endGoal=capNum,report=False) and checkpoint < 27:
                 checkpoint = 27
             elif checkpoint == 27 and not FFX_memory.arenaFarmCheck(zone="djose2",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 7:
                 FFX_memory.clickToEventTemple(7)
@@ -1433,7 +1433,7 @@ def djoseFarm(capNum:int=10):
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.djoseFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1489,7 +1489,7 @@ def tPlains(capNum:int=1,autoHaste:bool=False):
             #General pathing
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.tpFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1539,7 +1539,7 @@ def macWoods(capNum:int=10):
             #General pathing
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.macFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1582,7 +1582,7 @@ def bikanel(capNum:int=10):
             #General pathing
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.bikanelFarm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1627,7 +1627,7 @@ def calm(capNum:int=1,autoHaste = False,airshipReturn = True):
                 checkpoint -= 2
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.calm(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             allCounts = FFX_memory.arenaArray()
@@ -1673,7 +1673,7 @@ def gagazet1(capNum:int=10):
                 checkpoint = 12
             elif checkpoint == 12 and not FFX_memory.arenaFarmCheck(zone="gagazet1",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 2:
                 while FFX_memory.userControl():
@@ -1690,7 +1690,7 @@ def gagazet1(capNum:int=10):
                 checkpoint += 1
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.gagazet1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1715,7 +1715,7 @@ def gagazet2(capNum:int=10):
                 checkpoint = 7
             elif checkpoint == 7 and not FFX_memory.arenaFarmCheck(zone="gagazet2",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 4 and FFX_memory.getMap() == 244:
                 checkpoint += 1
@@ -1723,7 +1723,7 @@ def gagazet2(capNum:int=10):
                 checkpoint += 1
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.gagazet2(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1745,7 +1745,7 @@ def gagazet3(capNum:int=10):
                 checkpoint = 8
             elif checkpoint == 8 and not FFX_memory.arenaFarmCheck(zone="gagazet3",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
             elif checkpoint == 2:
                 while FFX_memory.userControl():
@@ -1766,7 +1766,7 @@ def gagazet3(capNum:int=10):
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.gagazet3(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1791,12 +1791,12 @@ def stolenFaythCave(capNum:int=10):
                 checkpoint = 33
             elif checkpoint == 33 and not FFX_memory.arenaFarmCheck(zone="stolenfayth1",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif FFX_memory.arenaFarmCheck(zone="stolenfayth2",endGoal=capNum,report=False) and checkpoint < 41:
                 checkpoint = 41
             elif checkpoint == 41 and not FFX_memory.arenaFarmCheck(zone="stolenfayth2",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             #elif checkpoint > 26 and FFX_memory.getCoords()[1] < 300:
             #    checkpoint = 22
             elif checkpoint in [5,14]:
@@ -1831,7 +1831,7 @@ def stolenFaythCave(capNum:int=10):
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.yojimbo(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1884,7 +1884,7 @@ def insideSin(capNum:int=10):
                 checkpoint = 40
             elif checkpoint == 40 and not FFX_memory.arenaFarmCheck(zone="sin1",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 41 and FFX_memory.getMap() == 204:
                 checkpoint = 41
             
@@ -1893,7 +1893,7 @@ def insideSin(capNum:int=10):
                 checkpoint = 67
             elif checkpoint == 67 and not FFX_memory.arenaFarmCheck(zone="sin2",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 68 and FFX_memory.getMap() == 327:
                 checkpoint = 68
             elif checkpoint == 69:
@@ -1913,7 +1913,7 @@ def insideSin(capNum:int=10):
             #General Pathing
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.sin(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -1942,14 +1942,14 @@ def omegaRuins(capNum:int=10):
                 checkpoint = 2
             elif checkpoint == 2 and not FFX_memory.arenaFarmCheck(zone="omega",endGoal=capNum,report=False):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif FFX_memory.getTidusMP() < 20:
                 FFX_memory.touchSaveSphere()
             elif checkpoint == 3:
                 returnToAirship()
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.omega(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():

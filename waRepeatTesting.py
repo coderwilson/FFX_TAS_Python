@@ -25,7 +25,7 @@ FFX_memory.start()
 attempts = 0
 success = 0
 while attempts < 20:
-    #print("RNG seed for this attempt: ", rngSeed)
+    #print("RNG seed for this attempt:", rngSeed)
     attempts += 1
     
     FFX_DreamZan.NewGame('Luca')
@@ -49,7 +49,7 @@ while attempts < 20:
     
     #---------End of the actual movement/code/logic/etc---------------
     endTime = FFX_Logs.timeStamp()
-    print("Duration: ", endTime - startTime)
+    print("Duration:", endTime - startTime)
     
     if attempts < 20:
         #print("Clicking to control so we can reset. ", attempts)
@@ -59,7 +59,7 @@ while attempts < 20:
         print("---------------------------------------------------")
         print("---------------------------------------------------")
         print("Test number ", attempts, "is complete.")
-        print("Blitzball wins: ", success)
+        print("Blitzball wins:", success)
         print("---------------------------------------------------")
         print("---------------------------------------------------")
         time.sleep(5)
@@ -73,8 +73,8 @@ while attempts < 20:
         print("---------------------------------------------------")
         print("---------------------------------------------------")
         print("Testing is complete.")
-        print("Attempts: ", attempts)
-        print("Success count: ", success)
+        print("Attempts:", attempts)
+        print("Success count:", success)
         print("---------------------------------------------------")
         print("---------------------------------------------------")
     
@@ -82,8 +82,8 @@ while attempts < 20:
 
 time.sleep(5)
 
-#print("Skip attempts: ", miihenSkipAttempts)
-#print("Successful skips: ", miihenSkipCount)
+#print("Skip attempts:", miihenSkipAttempts)
+#print("Successful skips:", miihenSkipCount)
 FFX_memory.end()
 
 time.sleep(5)

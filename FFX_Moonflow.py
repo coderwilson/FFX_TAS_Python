@@ -43,15 +43,15 @@ def arrival():
                 checkpoint = 49
             elif checkpoint < 54 and FFX_memory.getStoryProgress() == 1045:
                 checkpoint = 54
-                print("Updating checkpoint based on story/map progress: ", checkpoint)
+                print("Updating checkpoint based on story/map progress:", checkpoint)
             elif checkpoint == 54 and FFX_memory.getMap() == 188:
                 checkpoint = 55
-                print("Updating checkpoint based on story/map progress: ", checkpoint)
+                print("Updating checkpoint based on story/map progress:", checkpoint)
                 
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflow(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -94,7 +94,7 @@ def southBank(checkpoint:int=0):
         
             elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankSouth(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -138,7 +138,7 @@ def northBank():
                 checkpoint += 1
             elif FFX_memory.getStoryProgress() >= 1085 and checkpoint < 4:
                 checkpoint = 4
-                print("Rikku scene, updating checkpoint: ", checkpoint)
+                print("Rikku scene, updating checkpoint:", checkpoint)
                 
             #Map changes
             elif checkpoint < 2 and FFX_memory.getMap() == 109:
@@ -149,7 +149,7 @@ def northBank():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankNorth(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():

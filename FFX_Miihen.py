@@ -26,7 +26,7 @@ def arrival():
     checkpoint = 0
     while FFX_memory.getMap() != 120:
         if FFX_memory.userControl():
-            #print("Checkpoint: ", checkpoint)
+            #print("Checkpoint:", checkpoint)
             #Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
                 if gameVars.csr():
@@ -46,7 +46,7 @@ def arrival():
                     
                     elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
                         checkpoint += 1
-                        print("Checkpoint reached: ", checkpoint)
+                        print("Checkpoint reached:", checkpoint)
                     
                 else:
                     print("any% logic - ", checkpoint)
@@ -60,7 +60,7 @@ def arrival():
                         FFXC.set_neutral()
                         FFX_memory.waitFrames(9)
                         print("Updating checkpoint due to late skip.")
-                        print("Checkpoint reached: ", checkpoint)
+                        print("Checkpoint reached:", checkpoint)
                         checkpoint += 1
                     elif checkpoint == 7:
                         if FFX_memory.getCoords()[1] > 1356.5: #Into position
@@ -131,11 +131,11 @@ def arrival():
                                     FFX_memory.clickToControl3()
                             except:
                                 miihenSkip = False
-                            print("Skip successful: ", miihenSkip)
+                            print("Skip successful:", miihenSkip)
                             checkpoint += 1
                     elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
                         checkpoint += 1
-                        print("Checkpoint reached: ", checkpoint)
+                        print("Checkpoint reached:", checkpoint)
             elif checkpoint == 11 and FFX_memory.hunterSpear() == False:
                 FFX_targetPathing.setMovement([FFX_memory.miihenGuyCoords()[0], FFX_memory.miihenGuyCoords()[1]])
                 FFX_Xbox.tapB()
@@ -146,7 +146,7 @@ def arrival():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.turnReady():
@@ -179,7 +179,7 @@ def arrival():
                     print("Battle complete")
                 
                 #Kimahri manip
-                print("||| Next Kimahri Crit vs Gui: ", FFX_memory.nextCrit(character=6, charLuck=18, enemyLuck=15))
+                print("||| Next Kimahri Crit vs Gui:", FFX_memory.nextCrit(character=6, charLuck=18, enemyLuck=15))
                 #FFX_memory.waitFrames(180)
             else:
                 FFXC.set_movement(1, 1)
@@ -193,7 +193,7 @@ def arrival():
                     FFX_memory.waitFrames(2)
                     FFXC.set_value('BtnB',0)
                     FFX_memory.waitFrames(3)
-    print("Miihen skip status: ", miihenSkip)
+    print("Miihen skip status:", miihenSkip)
     return [gameVars.selfDestructGet(), battleCount, SDbattleNum, miihenSkip]
 
 def arrival2(selfDestruct, battleCount, SDbattleNum):
@@ -217,7 +217,7 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -263,7 +263,7 @@ def midPoint():
                 checkpoint = 4
             elif FFX_targetPathing.setMovement(FFX_targetPathing.miihenAgency(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -304,7 +304,7 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.lowRoad(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint == 25: #Shelinda dialog
                 FFX_Xbox.tapB()
         else:

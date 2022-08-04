@@ -29,7 +29,7 @@ def approach():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleApproach(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -107,7 +107,7 @@ def arrival(doGrid=True):
                     jyscalSkipStatus = False
                     checkpoint = 20
                     skipStatus = False
-                print("Jyscal Skip results: ", skipStatus)
+                print("Jyscal Skip results:", skipStatus)
             elif checkpoint == 14 and gameVars.csr():
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
@@ -140,7 +140,7 @@ def arrival(doGrid=True):
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.templeFoyer(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -212,7 +212,7 @@ def trials():
             elif checkpoint == 23: # Grab glyph sphere
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-                print("Checkpoint: ", checkpoint)
+                print("Checkpoint:", checkpoint)
             elif checkpoint == 29: #Push pedestol - 3
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
@@ -242,7 +242,7 @@ def trials():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
 
@@ -270,19 +270,19 @@ def escape():
             if checkpoint == 2:
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
-                print("Touching save sphere. Update checkpoint: ", checkpoint)
+                print("Touching save sphere. Update checkpoint:", checkpoint)
             elif checkpoint == 18 and forceBattle:
                 FFXC.set_neutral()
             
             #Map changes
             elif checkpoint < 19 and FFX_memory.getMap() == 192:
                 checkpoint = 19
-                print("Map change. Update checkpoint: ", checkpoint)
+                print("Map change. Update checkpoint:", checkpoint)
             
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleEscape(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -307,9 +307,6 @@ def escape():
     print("Done pathing. Now for the Wendigo fight.")
     FFX_Battle.wendigo()
     print("Wendigo fight over")
-
-def wendigoFight():
-    print("wendigoFight function is no longer used.")
 
 def underLake():
     FFX_memory.clickToControl()
@@ -341,7 +338,7 @@ def underLake():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.underMacTemple(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():

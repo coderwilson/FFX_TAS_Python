@@ -13,7 +13,6 @@ fileStats = "none"
 filePlot = "none"
 fileMemChange = "none"
 
-
 def writeLog(message):
     # print("Function no longer used")
     #global logFile

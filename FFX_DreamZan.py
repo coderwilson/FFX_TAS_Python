@@ -13,7 +13,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 def NewGame(Gamestate):
     print("Starting the game")
-    print("Gamestate: ", Gamestate)
+    print("Gamestate:", Gamestate)
     
     lastMessage = 0
     #New version
@@ -62,28 +62,23 @@ def NewGame(Gamestate):
 def NewGame2():
     #New game selected. Next, select options.
     timeBuffer = 17
-    print("=======================================")
+    print("====================================")
     print("Countdown timer!!!")
-    print("=======================================")
     FFX_memory.waitFrames(timeBuffer)
     print("5")
-    print("=======================================")
     FFX_memory.waitFrames(timeBuffer)
     print("4")
-    print("=======================================")
     FFX_memory.waitFrames(timeBuffer)
     print("3")
-    print("=======================================")
     FFX_memory.waitFrames(timeBuffer)
     print("2")
-    print("=======================================")
     FFX_memory.waitFrames(timeBuffer)
     print("1")
-    print("=======================================")
+    print("====================================")
     FFX_memory.waitFrames(timeBuffer)
     print("GO!!! Good fortune!")
-    print("=======================================")
-    print("Reminder seed number: ", FFX_memory.rngSeed())
+    print("====================================")
+    print("Reminder seed number:", FFX_memory.rngSeed())
     FFX_Xbox.menuB()
     FFX_Xbox.menuB()
 
@@ -96,7 +91,7 @@ def listenStory():
     while not FFX_memory.userControl():
         if FFX_memory.getMap() == 132:
             if FFX_memory.diagProgressFlag() == 1:
-                csModVar.SETcsr(False)
+                csModVar.setCSR(False)
                 FFX_memory.awaitControl()
             FFXC.set_value('BtnBack', 1)
             FFX_memory.waitFrames(1)
@@ -145,7 +140,7 @@ def listenStory():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.tidusHome(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -163,7 +158,6 @@ def listenStory():
                         FFX_memory.waitFrames(1)
                     FFX_Xbox.skipScene(fast_mode=True)
                     FFX_Xbox.SkipDialog(3)
-
 
 def ammesBattle():
     print("Starting ammes")
@@ -206,7 +200,7 @@ def AfterAmmes():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.allStartsHere(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.turnReady():

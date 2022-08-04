@@ -21,10 +21,10 @@ def arrival():
     while FFX_memory.getMap() != 18:
         if FFX_memory.userControl():
             #events
-            if checkpoint == 4: #Move into Yuna's dance
+            if checkpoint == 4: #Move into Yunas dance
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            if checkpoint == 6: #Move into Yuna's dance
+            if checkpoint == 6: #Move into Yunas dance
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 8: #Exit the inn
@@ -46,7 +46,7 @@ def arrival():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
         else:
             FFXC.set_neutral()
@@ -81,14 +81,14 @@ def forest1():
                 FFXC.set_movement(0, 1)
         elif FFX_memory.userControl():
             if checkpoint == 81 or checkpoint == 82:
-                #print("Valefor charge state: ", valeforCharge)
+                #print("Valefor charge state:", valeforCharge)
                 if valeforCharge == True:
                     checkpoint = 83
             if checkpoint == 83 and valeforCharge == False:
                 checkpoint = 81
             
             #events
-            if checkpoint == 9: #Chest with Wakka's weapon Scout
+            if checkpoint == 9: #Chest with Wakkas weapon Scout
                 FFX_memory.clickToEventTemple(0)
                 FFX_menu.woodsMenuing()
                 checkpoint += 1
@@ -118,7 +118,7 @@ def forest1():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika2(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
                 
         else:
             FFXC.set_neutral()
@@ -146,12 +146,6 @@ def forest1():
     FFX_Logs.writeStats(str(kilikaBattles))
     FFX_Logs.writeStats("Kilika optimal battles (North):")
     FFX_Logs.writeStats(str(optimalBattles))
-
-def forest2():
-    print("forest2 function no longer used")
-
-def Geneaux():
-    print("Geneaux function no longer used")
 
 def trials():
     FFX_memory.clickToControl()
@@ -229,7 +223,7 @@ def trials():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.KilikaTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -263,7 +257,7 @@ def forest3():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika3(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -283,7 +277,3 @@ def forest3():
     FFX_Logs.writeStats(str(kilikaBattles))
     FFX_Logs.writeStats("Kilika optimal battles (South):")
     FFX_Logs.writeStats(str(optimalBattles))
-
-def departure():
-    print("departure function no longer used")
-

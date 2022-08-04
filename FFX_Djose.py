@@ -29,7 +29,7 @@ def path():
     
     while FFX_memory.getMap() != 81: #All the way into the temple
         if lastCP != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
+            print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         
         if FFX_memory.userControl():
@@ -83,7 +83,6 @@ def path():
                 FFX_Xbox.menuB()
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
-        
     
     FFX_Logs.writeStats("Djose battles:")
     FFX_Logs.writeStats(countBattles)
@@ -282,7 +281,7 @@ def trials():
                     FFXC.set_neutral()
                     FFX_memory.waitFrames(30 * 0.2)
                     checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                    print("Checkpoint reached:", checkpoint)
             elif checkpoint == 88:
                 print("Pedestol 1")
                 FFX_memory.clickToEventTemple(6)
@@ -319,7 +318,7 @@ def trials():
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         elif FFX_memory.nameAeonReady():
             FFX_memory.clearNameAeonReady()
     
@@ -339,11 +338,10 @@ def trials():
         while FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.djoseDance(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             
             if checkpoint == 8:
                 checkpoint = 0
-        
         
         FFX_memory.clickToControl()
         print("Leaving the fayth room")

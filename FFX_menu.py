@@ -50,7 +50,7 @@ def awaitUse():
     complete = False
     while complete == False:
         menuVal = FFX_memory.sGridMenu()
-        print("Menu value: ", menuVal)
+        print("Menu value:", menuVal)
         if menuVal == 7:
             cursorLoc = FFX_memory.cursorLocation()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:
@@ -157,16 +157,16 @@ def Liki():
     if FFX_memory.getTidusSlvl() >= 3:
         gridLeft()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','d','left')
+        FFX_menuGrid.selSphere('power','left')
         FFX_menuGrid.useAndUseAgain() #Str +1 node
-    FFX_menuGrid.selSphere('ability','d','none') # Cheer
+    FFX_menuGrid.selSphere('ability','none') # Cheer
     FFX_Xbox.menuB()
     FFX_menuGrid.useAndQuit()
     FFX_Xbox.menuA()
 
 def woodsMenuing():
     #Tidus learning Flee
-    FFX_menu.openGrid(character=0)
+    openGrid(character=0)
     FFX_Xbox.menuB()
     FFX_Xbox.menuB() #Sphere grid on Tidus
     FFX_menuGrid.moveFirst()
@@ -202,7 +202,7 @@ def Geneaux():
     FFX_menuGrid.moveFirst()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -218,19 +218,19 @@ def LucaWorkers():
     gridRight()
     
     FFX_menuGrid.moveAndUse()
-    print("+++ sGridNodes: ", FFX_memory.sGridNodeSelected())
+    print("+++ sGridNodes:", FFX_memory.sGridNodeSelected())
     if FFX_memory.sGridNodeSelected()[0] == 2:
         print("No early haste")
         earlyHaste = 0
     else:
         print("Early haste, can haste for Oblitzerator")
         earlyHaste = 1
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     if earlyHaste == 1:
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('ability','d','none') # Haste
+        FFX_menuGrid.selSphere('ability','none') # Haste
         
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
@@ -243,7 +243,7 @@ def lateHaste():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability','d','none') # Haste
+    FFX_menuGrid.selSphere('ability','none') # Haste
     FFX_menuGrid.useAndQuit()
 
 def mrrGrid1():
@@ -253,24 +253,24 @@ def mrrGrid1():
     gridRight()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     print("Determining state of Wakka late menu")
     #FFX_memory.waitFrames(30 * 60) #Use for testing only!
     if FFX_memory.getSLVLWakka() < 3:
         wakkaLateMenu = True
-        print("Deferring Wakka's remaining grid for later.")
+        print("Deferring Wakkas remaining grid for later.")
         #FFX_memory.waitFrames(30 * 60) #Use for testing only!
     else:
         wakkaLateMenu = False
-        print("Completing Wakka's remaining grid now.")
+        print("Completing Wakkas remaining grid now.")
         #FFX_memory.waitFrames(30 * 60) #Use for testing only!
         FFX_menuGrid.useAndMove()
         gridDown()
         gridDown()
         gridRight()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','d','none')
-    print("Wakka late menu (before): ", wakkaLateMenu)
+        FFX_menuGrid.selSphere('power','none')
+    print("Wakka late menu (before):", wakkaLateMenu)
     
     FFX_menuGrid.useAndQuit()
     
@@ -281,7 +281,7 @@ def mrrGrid1():
 def mrrGrid2():
     #if gameVars.wakkaLateMenu():
     if FFX_memory.getSLVLWakka() >= 3:
-        print("Catching up Wakka's sphere grid.")
+        print("Catching up Wakkas sphere grid.")
         openGrid(character=4)
         
         FFX_menuGrid.moveFirst()
@@ -291,10 +291,10 @@ def mrrGrid2():
         gridDown()
         gridRight()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndQuit()
         gameVars.wakkaLateMenuSet(False)
-        print("Wakka late menu updated: ", gameVars.wakkaLateMenu())
+        print("Wakka late menu updated:", gameVars.wakkaLateMenu())
     else:
         print("Not enough sphere levels yet.")
 
@@ -302,20 +302,20 @@ def mrrGridYuna():
     print("Yuna levels good to level up.")
     openGrid(character=1)
     FFX_menuGrid.useFirst() #Sphere grid on Yuna first
-    FFX_menuGrid.selSphere('magic','d','none')
+    FFX_menuGrid.selSphere('magic','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('mana','u','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndQuit()
 
 def battleSiteGrid():
@@ -326,30 +326,30 @@ def battleSiteGrid():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     
     FFX_menuGrid.useShiftLeft('Kimahri') #Sphere grid on Kimahri
     FFX_menuGrid.moveFirst()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
     
     #Sort items
     #sortItems(fullMenuClose=False)
     
-    #Wakka's weapon
+    #Wakkas weapon
     if gameVars.getLStrike() >= 2:
         equipWeapon(character=4, ability=0x8026, fullMenuClose=False)
     else:
@@ -360,7 +360,7 @@ def _navigate_to_position(position, battleCursor):
     while battleCursor() == 255:
         pass
     if battleCursor() != position:
-        print("Wrong position targetted", battleCursor() % 2, position % 2)
+        print("Wrong position targeted", battleCursor() % 2, position % 2)
         while battleCursor() % 2 != position % 2:
             if battleCursor() % 2 < position % 2:
                 FFX_Xbox.tapRight()
@@ -493,11 +493,11 @@ def djoseTemple():
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse() #Move to Str sphere near Lv.2 lock
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain() #Str +1
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain() #HP +200
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     #Now sphere grid on Wakka
     
     if FFX_memory.getSLVLWakka() >= 5:
@@ -508,7 +508,7 @@ def djoseTemple():
         gridLeft()
         gridLeft()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','u','up')
+        FFX_menuGrid.selSphere('power','up')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -530,30 +530,30 @@ def mLakeGrid():
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
     FFX_Xbox.menuDown()
-    FFX_menuGrid.selSphere('Lv2','d','none')
+    FFX_menuGrid.selSphere('Lv2','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useShiftLeft('rikku') #Shift to Rikku
     FFX_menuGrid.moveFirst()
     
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','u','none')
+    FFX_menuGrid.selSphere('speed','none')
     
     FFX_menuGrid.useShiftRight('kimahri') #And last is Yuna
     FFX_menuGrid.moveFirst()
@@ -565,24 +565,24 @@ def mLakeGrid():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('Lv1','d','none')
+    FFX_menuGrid.selSphere('Lv1','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('Lv1','d','none')
+    FFX_menuGrid.selSphere('Lv1','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability','u','none') #Steal
+    FFX_menuGrid.selSphere('ability','none') #Steal
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('ability','u','none') #Use
+    FFX_menuGrid.selSphere('ability','none') #Use
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -590,35 +590,35 @@ def macTemple():
     openGrid(character=0)
     
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('Lv2','d','none')
+    FFX_menuGrid.selSphere('Lv2','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
     if gameVars.getBlitzWin() == True:
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('strength','d','none')
+        FFX_menuGrid.selSphere('strength','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
@@ -627,37 +627,37 @@ def macTemple():
         gridLeft()
         gridUp()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('strength','u','none')
+        FFX_menuGrid.selSphere('strength','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndMove()
         gridDown()
         gridRight()
         gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     if gameVars.nemesis():
         gridRight()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('strength','u','none')
+        FFX_menuGrid.selSphere('strength','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndMove()
         gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     if gameVars.nemesis():
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('strength','u','none')
+        FFX_menuGrid.selSphere('strength','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
     
     if gameVars.getBlitzWin():
@@ -699,7 +699,7 @@ def homeGrid():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
     
     FFX_memory.fullPartyFormat('desert1')
@@ -917,14 +917,14 @@ def viaPurifico():
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('Lv2','d','none')
+    FFX_menuGrid.selSphere('Lv2','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('Lv2','d','none')
+    FFX_menuGrid.selSphere('Lv2','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
@@ -934,15 +934,15 @@ def viaPurifico():
         gridUp()
         gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('mana','u','none')
+    FFX_menuGrid.selSphere('mana','none')
     
     FFX_menuGrid.useShiftRight('yuna')
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('tele','d','up')
+    FFX_menuGrid.selSphere('tele','up')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('mana','u','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     
     FFX_menuGrid.useAndMove()
     gridRight()
@@ -950,20 +950,20 @@ def viaPurifico():
     gridRight()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     
     FFX_menuGrid.useAndMove()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     
     FFX_menuGrid.useAndMove()
     gridLeft()
@@ -971,14 +971,14 @@ def viaPurifico():
     gridLeft()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     
     FFX_menuGrid.useAndMove()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -986,14 +986,14 @@ def seymourNatusBlitzWin():
     openGrid(character=1)
     
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('tele','d','up2')
+    FFX_menuGrid.selSphere('tele','up2')
     FFX_menuGrid.useAndUseAgain()
     
-    FFX_menuGrid.selSphere('power','u','none') #Str
+    FFX_menuGrid.selSphere('power','none') #Str
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none') #Str
+    FFX_menuGrid.selSphere('power','none') #Str
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none') #Def +3
+    FFX_menuGrid.selSphere('power','none') #Def +3
     
     FFX_menuGrid.useAndMove()
     if gameVars.nemesis():
@@ -1001,7 +1001,7 @@ def seymourNatusBlitzWin():
         gridUp()
         gridLeft()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndMove()
         gridUp()
         gridDown()
@@ -1010,91 +1010,91 @@ def seymourNatusBlitzWin():
         gridLeft()
         gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     
     FFX_menuGrid.useAndMove()
     if gameVars.nemesis():
         gridRight()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndMove()
         gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     if gameVars.nemesis():
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     if gameVars.nemesis():
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('mana','d','none')
+        FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndQuit()
 
 def seymourNatusBlitzLoss():
     openGrid(character=1)
     
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('tele','d','left')
+    FFX_menuGrid.selSphere('tele','left')
     FFX_menuGrid.useAndUseAgain()
     
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('friend','d','left')
+    FFX_menuGrid.selSphere('friend','left')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','u','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     if gameVars.nemesis():
         FFX_menuGrid.useAndMove()
         gridUp()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('mana','d','none')
+        FFX_menuGrid.selSphere('mana','none')
         
     FFX_menuGrid.useAndMove()
     
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     if gameVars.nemesis():
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('mana','d','none')
+        FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','none')
+    FFX_menuGrid.selSphere('power','none')
     if gameVars.nemesis():
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     if gameVars.nemesis():
         gridRight()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndMove()
         gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','d','left')
+    FFX_menuGrid.selSphere('power','left')
     FFX_menuGrid.useAndQuit()
 
 def prepCalmLands():
@@ -1105,12 +1105,12 @@ def prepCalmLands():
         gridUp()
         if gameVars.nemesis():
             FFX_menuGrid.moveAndUse()
-            FFX_menuGrid.selSphere('mana','d','none')
+            FFX_menuGrid.selSphere('mana','none')
             FFX_menuGrid.useAndMove()
         gridDown()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
     else:
         FFX_menuGrid.moveFirst()
         if gameVars.nemesis():
@@ -1118,15 +1118,15 @@ def prepCalmLands():
             gridUp()
             gridLeft()
             FFX_menuGrid.moveAndUse()
-            FFX_menuGrid.selSphere('power','d','none')
+            FFX_menuGrid.selSphere('power','none')
             FFX_menuGrid.useAndMove()
             gridUp()
         gridRight()
         gridRight()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','d','none')
+        FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -1147,7 +1147,7 @@ def afterRonso():
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('Lv2','d','none')
+    FFX_menuGrid.selSphere('Lv2','none')
     FFX_menuGrid.useAndMove()
     gridDown()
     gridDown()
@@ -1159,7 +1159,7 @@ def afterRonso():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('Lv3','d','none')
+    FFX_menuGrid.selSphere('Lv3','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridDown()
@@ -1168,11 +1168,11 @@ def afterRonso():
     if gameVars.endGameVersion() in [1,2]: #Two of each
         FFX_menuGrid.moveShiftLeft('yuna')
         FFX_menuGrid.useFirst()
-        FFX_menuGrid.selSphere('friend','d','d2')
+        FFX_menuGrid.selSphere('friend','d2')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useShiftRight('Lulu')
         FFX_menuGrid.moveFirst()
         gridUp()
@@ -1181,35 +1181,35 @@ def afterRonso():
         gridUp()
         FFX_menuGrid.moveShiftLeft('Yuna')
         FFX_menuGrid.useFirst()
-        FFX_menuGrid.selSphere('friend','d','none')
+        FFX_menuGrid.selSphere('friend','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
     
     elif gameVars.endGameVersion() == 4: #Four return spheres
         FFX_menuGrid.moveShiftLeft('yuna')
         FFX_menuGrid.useFirst()
         if gameVars.getBlitzWin() == True:
-            FFX_menuGrid.selSphere('ret','d','yunaspec')
+            FFX_menuGrid.selSphere('ret','yunaspec')
         else:
-            FFX_menuGrid.selSphere('ret','d','d5')
+            FFX_menuGrid.selSphere('ret','d5')
         FFX_menuGrid.useAndMove()
         gridLeft()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('Lv1','d','none')
+        FFX_menuGrid.selSphere('Lv1','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('mana','u','none')
+        FFX_menuGrid.selSphere('mana','none')
         FFX_menuGrid.useAndMove()
         gridRight()
         gridDown()
         gridRight()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('speed','d','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
 
     elif gameVars.endGameVersion() == 3: #Four friend spheres
         if gameVars.getBlitzWin():
@@ -1225,16 +1225,16 @@ def afterRonso():
             gridRight()
             FFX_menuGrid.moveShiftRight('yuna')
             FFX_menuGrid.useFirst()
-            FFX_menuGrid.selSphere('friend','d','afterBYSpec')
+            FFX_menuGrid.selSphere('friend','afterBYSpec')
             FFX_menuGrid.useAndUseAgain()
-            FFX_menuGrid.selSphere('power','u','none')
+            FFX_menuGrid.selSphere('power','none')
             FFX_menuGrid.useShiftLeft('tidus')
             FFX_menuGrid.moveFirst()
             gridDown()
             gridLeft()
             gridLeft()
             FFX_menuGrid.moveAndUse()
-            FFX_menuGrid.selSphere('ability','d','none')
+            FFX_menuGrid.selSphere('ability','none')
             FFX_menuGrid.moveShiftRight('yuna')
         else:
             print("Four friend spheres, Blitz Loss")
@@ -1251,24 +1251,24 @@ def afterRonso():
             gridRight()
             gridDown()
             FFX_menuGrid.moveAndUse()
-            FFX_menuGrid.selSphere('ability','d','none')
+            FFX_menuGrid.selSphere('ability','none')
             FFX_menuGrid.useAndMove()
             gridRight()
             gridRight()
             gridDown()
             FFX_menuGrid.moveShiftRight('yuna')
             FFX_menuGrid.useFirst()
-            FFX_menuGrid.selSphere('friend','d','afterBYSpec')
+            FFX_menuGrid.selSphere('friend','afterBYSpec')
             FFX_menuGrid.useAndUseAgain()
-            FFX_menuGrid.selSphere('power','u','left')
+            FFX_menuGrid.selSphere('power','left')
         
         #Now to replicate the 2/2 split grid
         FFX_menuGrid.useFirst()
-        FFX_menuGrid.selSphere('friend','d','d2')
+        FFX_menuGrid.selSphere('friend','d2')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useShiftLeft('Lulu')
         FFX_menuGrid.moveFirst()
         gridUp()
@@ -1277,13 +1277,13 @@ def afterRonso():
         gridUp()
         FFX_menuGrid.moveShiftRight('Yuna')
         FFX_menuGrid.useFirst()
-        FFX_menuGrid.selSphere('friend','d','none')
+        FFX_menuGrid.selSphere('friend','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         
         #Last, to get some Rikku stuff early.
         FFX_menuGrid.moveShiftRight('Rikku')
@@ -1296,16 +1296,16 @@ def afterRonso():
         gridLeft()
         FFX_menuGrid.moveShiftRight('Yuna')
         FFX_menuGrid.useFirst()
-        FFX_menuGrid.selSphere('friend','d','l2')
+        FFX_menuGrid.selSphere('friend','l2')
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         if gameVars.getBlitzWin():
             FFX_menuGrid.useAndUseAgain()
-            FFX_menuGrid.selSphere('mana','u','none')
+            FFX_menuGrid.selSphere('mana','none')
         FFX_menuGrid.useAndMove()
         gridLeft()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
     
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
@@ -1316,13 +1316,13 @@ def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
     if not ability_array:
         ability_array = [255, 255, 255, 255]
     # auron baroque sword - [0x800B, 0x8063, 255, 255]
-    print("Looking for: ", ability_array)
+    print("Looking for:", ability_array)
     for current_index, currentHandle in enumerate(equipArray):
-        print("Slot: ", current_index, " | Owner: ", currentHandle.owner(), " | Abilities: ", currentHandle.abilities(), " | Slots: ",  currentHandle.slotCount())
+        print("Slot:", current_index, " | Owner:", currentHandle.owner(), " | Abilities:", currentHandle.abilities(), " | Slots:", currentHandle.slotCount())
         if currentHandle.owner() == owner and currentHandle.equipmentType() == equipment_type \
             and currentHandle.abilities() == ability_array \
             and currentHandle.slotCount() == slotcount:
-            print("Equipment found in slot: ", current_index)
+            print("Equipment found in slot:", current_index)
             return current_index
 
 def abilityToCustomizeRef(ability_index):
@@ -1474,7 +1474,7 @@ def afterFlux():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability','d','none')
+    FFX_menuGrid.selSphere('ability','none')
     FFX_menuGrid.useAndQuit()
 
 def gagazetCave():
@@ -1507,11 +1507,11 @@ def zombieStrikeBackup():
     gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('lv4','d','none')
+    FFX_menuGrid.selSphere('lv4','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability','u','none')
+    FFX_menuGrid.selSphere('ability','none')
     FFX_menuGrid.useAndQuit()
     #FFX_memory.closeMenu()
 
@@ -1523,13 +1523,13 @@ def BFA():
     FFX_menuGrid.useFirst()
     
     if gameVars.endGameVersion() == 3:
-        FFX_menuGrid.selSphere('attribute','d','none')
+        FFX_menuGrid.selSphere('attribute','none')
         FFX_menuGrid.useAndUseAgain()
     else:
-        FFX_menuGrid.selSphere('attribute','d','l5')
+        FFX_menuGrid.selSphere('attribute','l5')
         FFX_memory.waitFrames(30 * 0.07)
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('ret','d','torikku')
+        FFX_menuGrid.selSphere('ret','torikku')
         FFX_memory.waitFrames(30 * 0.07)
         FFX_menuGrid.useAndMove()
         gridDown()
@@ -1537,17 +1537,17 @@ def BFA():
         gridLeft()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndMove()
         gridDown()
         gridDown()
         gridDown()
         FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('ability','d','none')
+    FFX_menuGrid.selSphere('ability','none')
     FFX_menuGrid.useAndMove()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','u','left')
+    FFX_menuGrid.selSphere('speed','left')
     
     if gameVars.endGameVersion() == 3:
         FFX_menuGrid.useAndMove()
@@ -1559,16 +1559,16 @@ def BFA():
         gridRight()
         gridRight()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
         FFX_menuGrid.useAndMove()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('speed','u','none')
+        FFX_menuGrid.selSphere('speed','none')
     
     if FFX_memory.overdriveState()[6] != 100:
         FFX_menuGrid.useShiftLeft('Rikku')
         FFX_menuGrid.useFirst()
-        FFX_menuGrid.selSphere('skill','d','up')
+        FFX_menuGrid.selSphere('skill','up')
     
     if gameVars.zombieWeapon() == 255:
         FFX_menuGrid.useShiftLeft('tidus')
@@ -1579,28 +1579,28 @@ def BFA():
         gridUp()
         gridUp()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('lv4','d','none')
+        FFX_menuGrid.selSphere('lv4','none')
         FFX_menuGrid.useAndMove()
         gridUp()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('ability','u','none')
+        FFX_menuGrid.selSphere('ability','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
 def skReturn():
     openGrid(character=1)
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('friend','d','d2')
+    FFX_menuGrid.selSphere('friend','d2')
     FFX_menuGrid.useAndUseAgain() #Friend sphere to Lulu
-    FFX_menuGrid.selSphere('luck','d','none')
+    FFX_menuGrid.selSphere('luck','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('fortune','d','none')
+    FFX_menuGrid.selSphere('fortune','none')
     if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
     if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndUseAgain()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridUp()
     gridUp()
@@ -1608,49 +1608,49 @@ def skReturn():
     gridUp()
     FFX_menuGrid.moveAndUse()
     if FFX_memory.getPower() >= 1:
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndQuit()
 
 def skMixed():
     openGrid(character=1)
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('ret','d','r2')
-    FFX_menuGrid.useAndMove() #Return to Wakka's grid
+    FFX_menuGrid.selSphere('ret','r2')
+    FFX_menuGrid.useAndMove() #Return to Wakkas grid
     gridLeft()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('mana','d','none')
+    FFX_menuGrid.selSphere('mana','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('lv1','d','none')
+    FFX_menuGrid.selSphere('lv1','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('luck','d','none')
+    FFX_menuGrid.selSphere('luck','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('fortune','d','none')
+    FFX_menuGrid.selSphere('fortune','none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridDown()
     gridRight()
     FFX_menuGrid.moveAndUse()
     if FFX_memory.getPower() >= 1:
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     FFX_menuGrid.moveAndUse()
     if FFX_memory.getPower() >= 1:
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
         FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('speed','d','none')
+    FFX_menuGrid.selSphere('speed','none')
     if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndMove()
         gridDown()
         FFX_menuGrid.moveAndUse()
-        FFX_menuGrid.selSphere('power','u','none')
+        FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
 
 def skFriend():
@@ -1671,9 +1671,9 @@ def skFriend():
     gridDown()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('luck','d','none')
+    FFX_menuGrid.selSphere('luck','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('fortune','d','none')
+    FFX_menuGrid.selSphere('fortune','none')
     FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
 
@@ -1681,18 +1681,18 @@ def skReturn2():
     openGrid(character=1)
     
     FFX_menuGrid.useFirst()
-    FFX_menuGrid.selSphere('ret','d','aftersk')
+    FFX_menuGrid.selSphere('ret','aftersk')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('speed','u','none')
+    FFX_menuGrid.selSphere('speed','none')
     FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndMove()
     gridDown()
     FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('power','u','none')
+    FFX_menuGrid.selSphere('power','none')
     FFX_menuGrid.useAndQuit()
 
 

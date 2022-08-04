@@ -12,13 +12,13 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-def arrival(rikkucharged):
+def arrival(rikkuCharged):
     FFX_memory.clickToControl()
     FFX_memory.fullPartyFormat("mwoodsneedcharge")
     FFX_memory.closeMenu()
     
-    woodsVars = [False, False, False] #Rikku's charge, Fish Scales, and Arctic Winds
-    woodsVars[0] = rikkucharged
+    woodsVars = [False, False, False] #Rikkus charge, Fish Scales, and Arctic Winds
+    woodsVars[0] = rikkuCharged
     
     lastGil = 0 #for first chest
     checkpoint = 0
@@ -30,7 +30,7 @@ def arrival(rikkucharged):
                 if lastGil != FFX_memory.getGilvalue():
                     if lastGil == FFX_memory.getGilvalue() - 2000:
                         checkpoint += 1
-                        print("Chest obtained. Updating checkpoint: ", checkpoint)
+                        print("Chest obtained. Updating checkpoint:", checkpoint)
                     else:
                         lastGil = FFX_memory.getGilvalue()
                 else:
@@ -51,13 +51,13 @@ def arrival(rikkucharged):
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mWoods(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                print("variable check 1: ",woodsVars)
+                print("variable check 1:",woodsVars)
                 woodsVars = FFX_Battle.mWoods(woodsVars)
-                print("variable check 2: ",woodsVars)
+                print("variable check 2:",woodsVars)
                 if FFX_memory.overdriveState()[6] == 100:
                     FFX_memory.fullPartyFormat("mwoodsgotcharge")
                 else:
@@ -153,14 +153,14 @@ def lakeRoad2():
         FFXC.set_neutral()
         
         FFX_memory.clickToControl() #Auron's musings.
-        print("Affection (before): ", FFX_memory.affectionArray())
+        print("Affection (before):", FFX_memory.affectionArray())
         FFX_memory.waitFrames(30 * 0.2)
         auronAffection = FFX_memory.affectionArray()[2]
         while FFX_memory.affectionArray()[2] == auronAffection: #Make sure we get Auron affection
             auronCoords = FFX_memory.getActorCoords(3)
             FFX_targetPathing.setMovement(auronCoords)
             FFX_Xbox.tapB()
-        print("Affection (after): ", FFX_memory.affectionArray())
+        print("Affection (after):", FFX_memory.affectionArray())
     while FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
     FFXC.set_neutral()
@@ -186,7 +186,7 @@ def lake():
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.mLake(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive() and FFX_memory.getBattleNum() != 194:
@@ -219,7 +219,7 @@ def afterCrawler():
     lastCP = 0
     while checkpoint != 100:
         if lastCP != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
+            print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         pos = FFX_memory.getCoords()
         if checkpoint == 0:

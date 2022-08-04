@@ -49,7 +49,7 @@ def selectPassTarget():
 def selectShotType():
     return FFX_memory.blitzMenuNum() in [113,117]
 
-def targettedPlayer():
+def targetedPlayer():
     retVal = FFX_memory.blitzTargetPlayer() - 2
     #print("++ ", retVal)
     return retVal
@@ -231,7 +231,7 @@ def gameStage():
     if currentStage < 3 and controllingPlayer() == 0:
         currentStage = 30
     #if reportState:
-    #    print("Stage: ", currentStage)
+    #    print("Stage:", currentStage)
     return currentStage
 
 def distanceSpecial():
@@ -239,10 +239,10 @@ def distanceSpecial():
         player1 = playerArray[6].getCoords()
         player2 = [222,-238] #Formerly 230,-260
         totalDistance = (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
-        #print("Distance test: ", totalDistance)
+        #print("Distance test:", totalDistance)
         return totalDistance
     except Exception as x:
-        print("Exception: ", x)
+        print("Exception:", x)
         return 999
 
 def workingForward():
@@ -286,7 +286,7 @@ def findSafePlace():
         safeSpot = 3
     
     #if safeSpot != 255:
-    #    print("safeSpot value: ", safeSpot)
+    #    print("safeSpot value:", safeSpot)
         
     if safeSpot == 1:
         targetCoords = [-521,-266]
@@ -454,7 +454,7 @@ def passBall(target=0, breakThrough = 5):
         else:
             FFX_Xbox.menuB()
     elif selectPassTarget():
-        if targettedPlayer() != target:
+        if targetedPlayer() != target:
             FFX_Xbox.menuDown()
             FFX_memory.waitFrames(3)
         else:
@@ -749,7 +749,7 @@ def jassuMove():
     moveForward = False
     #if reportState == True:
     #    print("Jassu movement")
-    #    print("Stage: ", currentStage)
+    #    print("Stage:", currentStage)
     graavDistance = distance(3,8)
     otherDistance = 0
     if distance(3,6) < 350:
@@ -824,7 +824,7 @@ def jassuAct():
     currentStage = gameStage()
     if reportState == True:
         print("Jassu Action")
-        print("Stage: ", currentStage)
+        print("Stage:", currentStage)
     graavDistance = distance(3,8)
     otherDistance = 0
     if distance(3,6) < 350:
@@ -886,7 +886,7 @@ def otherAct():
     
     if reportState == True:
         print("Botta/Datto action")
-        print("Stage: ", currentStage)
+        print("Stage:", currentStage)
     
     if FFX_memory.getStoryProgress() > 700:
         if controllingPlayer() == 1:
@@ -942,7 +942,7 @@ def distance(n1, n2):
         player2 = playerArray[n2].getCoords()
         return (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
     except Exception as x:
-        print("Exception: ", x)
+        print("Exception:", x)
         return 999
 
 def updatePlayerArray():
@@ -965,11 +965,9 @@ def blitzMain(forceBlitzWin):
         try:
             if lastPhase != gameStage() and gameClock() > 0 and gameClock() < 301:
                 lastPhase = gameStage()
-                print("--------------------------------------")
-                print("--------------------------------------")
+                print("------------------------------------")
                 print("New phase reached. ", lastPhase)
-                print("--------------------------------------")
-                print("--------------------------------------")
+                print("------------------------------------")
             if goersScoreFirst() or halftimeDialog():
                 if lastMenu != 3:
                     print("Dialog on-screen")
@@ -1080,12 +1078,12 @@ def blitzMain(forceBlitzWin):
         
     print("Blitz game has completed.")
     #Set the blitzWin flag for the rest of the run.
-    print("Final scores: Aurochs: ", FFX_memory.blitzOwnScore(), \
-        ", Opponent score: ", FFX_memory.blitzOppScore())
+    print("Final scores: Aurochs:", FFX_memory.blitzOwnScore(), \
+        ", Opponent score:", FFX_memory.blitzOppScore())
     FFXC.set_neutral()
     if FFX_memory.blitzOwnScore() > FFX_memory.blitzOppScore():
         gameVars.setBlitzWin(True)
     else:
         gameVars.setBlitzWin(False)
     
-    print("--Blitz Win value: ", gameVars.getBlitzWin())
+    print("--Blitz Win value:", gameVars.getBlitzWin())

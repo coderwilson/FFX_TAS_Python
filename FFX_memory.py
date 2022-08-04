@@ -62,7 +62,7 @@ def start():
         baseValue = FFX_zz_rootMem.ListProcessModules(process.pid)
         print("Process Modules complete")
         #testValue = FFX_zz_rootMem.GetBaseAddr(process.pid,b'FFX.exe')
-        print("Dynamically determined memory address: ",hex(baseValue))
+        print("Dynamically determined memory address:",hex(baseValue))
     except Exception as errCode:
         print("Could not get memory address dynamically. ", errCode)
         baseValue = 0x00FF0000
@@ -206,7 +206,7 @@ def battleTargetId():
     global baseValue
     key = baseValue + 0x00F3D1B4
     retVal = process.readBytes(key,1)
-    print("Battle Target ID: ", retVal)
+    print("Battle Target ID:", retVal)
     return retVal
     
 def battleLineTarget():
@@ -216,7 +216,7 @@ def battleTargetActive():
     global baseValue
     key = baseValue + 0x00F3D1B4
     retVal = process.readBytes(key,1)
-    print("Battle Target ID: ", retVal)
+    print("Battle Target ID:", retVal)
     return retVal != 255
 
 def userControl():
@@ -236,7 +236,7 @@ def awaitControl():
     while not userControl():
         waitCounter += 1
         if waitCounter % 10000000 == 0:
-            print("Awaiting control - ", waitCounter / 100000)
+            print("Awaiting control -", waitCounter / 100000)
     waitFrames(30 * 0.05)
     return True
 
@@ -248,7 +248,7 @@ def clickToControl():
         FFX_Xbox.tapB()
         waitCounter += 1
         if waitCounter % 1000 == 0:
-            print("Awaiting control - ", waitCounter / 1000)
+            print("Awaiting control -", waitCounter / 1000)
     print("Control restored.")
     return True
 
@@ -259,7 +259,7 @@ def clickToControl2():
         FFX_Xbox.tapB()
         waitCounter += 1
         if waitCounter % 1000 == 0:
-            print("Awaiting control - ", waitCounter / 1000)
+            print("Awaiting control -", waitCounter / 1000)
     return True
 
 def clickToControl3():
@@ -280,7 +280,7 @@ def clickToControl3():
             pass
         waitCounter += 1
         if waitCounter % 10000 == 0:
-            print("Awaiting control - ", waitCounter / 10000)
+            print("Awaiting control -", waitCounter / 10000)
     print("User control restored.")
     return True
 
@@ -297,7 +297,7 @@ def clickToControlSpecial():
         waitFrames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 10000 == 0:
-            print("Awaiting control - ", waitCounter / 10000)
+            print("Awaiting control -", waitCounter / 10000)
     waitFrames(30 * 0.05)
     return True
 
@@ -369,7 +369,7 @@ def extractorHeight():
     height = getActorCoords(3)[2]
     #key = baseValue + 0x01fc44e4
     #height = float_from_integer(process.read(key + 0x1990))
-    print("^^Extractor Height: ", height)
+    print("^^Extractor Height:", height)
     return height
 
 def getHeight():
@@ -411,7 +411,7 @@ def getCamera():
     angleVal2 = round(float_from_integer(process.read(key)),2)
 
     retVal = [angleVal,xVal,yVal,zVal, angleVal2]
-    #print("Camera details: ", retVal)
+    #print("Camera details:", retVal)
     return retVal
 
 def getHP():
@@ -471,13 +471,13 @@ def getMaxHP():
 def getTidusMP():
     global baseValue
     retVal = process.read(baseValue + 0xD3207C)
-    #print("|||| Yuna MP: ", retVal)
+    #print("|||| Yuna MP:", retVal)
     return retVal
 
 def getYunaMP():
     global baseValue
     retVal = process.read(baseValue + 0xD32110)
-    #print("|||| Yuna MP: ", retVal)
+    #print("|||| Yuna MP:", retVal)
     return retVal
 
 def getOrder():
@@ -500,7 +500,7 @@ def getOrder():
     pos7 = process.readBytes(coord,1)
 
     formation = [255, pos1, pos2, pos3, pos4, pos5, pos6, pos7]
-    print("Party formation: ", formation)
+    print("Party formation:", formation)
     return formation
 
 def getOrderSix():
@@ -526,7 +526,7 @@ def getOrderSix():
     print(formation)
     while 255 in formation:
         formation.remove(255)
-    #print("Party formation: ", formation)
+    #print("Party formation:", formation)
     return formation
 
 def getOrderSeven():
@@ -556,7 +556,7 @@ def getOrderSeven():
     #print("Party formation, non-clean:", formation)
     while 255 in formation:
         formation.remove(255)
-    #print("Party formation, cleaned: ", formation)
+    #print("Party formation, cleaned:", formation)
     return formation
 
 def getCharFormationSlot(charNum):
@@ -574,7 +574,7 @@ def getPhoenix():
 
     key = getItemSlot(6)
     pDowns = getItemCountSlot(key)
-    print("Phoenix Down count: ", pDowns)
+    print("Phoenix Down count:", pDowns)
     return pDowns
 
 def getPower():
@@ -582,7 +582,7 @@ def getPower():
 
     key = getItemSlot(70)
     power = getItemCountSlot(key)
-    print("Power spheres: ", power)
+    print("Power spheres:", power)
     return power
 
 def setPower(qty):
@@ -599,7 +599,7 @@ def getSpeed():
 
     key = getItemSlot(72)
     speed = getItemCountSlot(key)
-    print("Speed spheres: ", speed)
+    print("Speed spheres:", speed)
     return speed
 
 def setSpeed(qty):
@@ -621,7 +621,7 @@ def getBattleHP():
     key = baseValue + 0x00F3F8C4
     hp3 = process.read(key)
     hpArray = [hp1, hp2, hp3]
-    #print("HP values: ", hpArray)
+    #print("HP values:", hpArray)
     return hpArray
 
 def getBattleNum():
@@ -630,7 +630,7 @@ def getBattleNum():
     key = baseValue + 0x00D2A8EC
     formation = process.read(key)
 
-    #print("Battle Number: ", formation)
+    #print("Battle Number:", formation)
     return formation
 
 def clearBattleNum():
@@ -779,7 +779,7 @@ def getUseItemsSlot(itemNum):
     items = getUseItemsOrder()
     x = 0
     for x in range(len(items)):
-        print(items[x], " | ", itemNum, " | ", x)
+        print(items[x], "|", itemNum, "|", x)
         if items[x] == itemNum:
             return x
         x += 1
@@ -808,7 +808,7 @@ def getThrowItemsSlot(itemNum):
     items = getThrowItemsOrder()
     x = 0
     while x < len(items):
-        #print(items[x + 1], " | ", itemNum)
+        #print(items[x + 1], "|", itemNum)
         if items[x] == itemNum:
             print("Desired item ", itemNum, " is in slot ", x)
             return x
@@ -836,7 +836,7 @@ def getGridItemsSlot(itemNum) -> int:
     items = getGridItemsOrder()
     x = 0
     while x < len(items):
-        #print(items[x + 1], " | ", itemNum)
+        #print(items[x + 1], "|", itemNum)
         if items[x] == itemNum:
             print("Desired item ", itemNum, " is in slot ", x)
             return x
@@ -874,9 +874,9 @@ def getItemSlot(itemNum):
     #print(getItemsOrder())
     #print("---",len(items))
     for x in range(len(items)):
-        #print(items[x + 1], " | ", itemNum)
+        #print(items[x + 1], "|", itemNum)
         if items[x] == itemNum:
-            #print("Item slot: ", x)
+            #print("Item slot:", x)
             return (x)
     return 255
 
@@ -914,7 +914,7 @@ def checkItemsMacalania():
         maxSpot = bombCore
 
     retVal = [bombCore, lMarble, fScale, aWind, grenade, lunar, light, maxSpot]
-    print("Returning values: ", retVal)
+    print("Returning values:", retVal)
     return retVal
 
 def itemCountAddr(num):
@@ -976,7 +976,7 @@ def getOverdriveBattle(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5bc
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    print("In-Battle Overdrive values: ", retVal)
+    print("In-Battle Overdrive values:", retVal)
     return retVal
 
 def getCharWeakness(character):
@@ -987,7 +987,7 @@ def getCharWeakness(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5dd
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    print("In-Battle Overdrive values: ", retVal)
+    print("In-Battle Overdrive values:", retVal)
     return retVal
 
 def getOverdriveValue(character): #Older function, I think Crimson wrote this one.
@@ -1000,7 +1000,7 @@ def tidusEscapedState():
     basePointerAddress = process.read(basePointer)
     offset = 0xDC8
     retVal = not process.readBytes(basePointerAddress + offset, 1)
-    print("Tidus Escaped State: ", retVal)
+    print("Tidus Escaped State:", retVal)
     return retVal
 
 def deadstate(character):
@@ -1127,7 +1127,7 @@ def getEnemyCurrentHP():
         enemyNum += 1
     #print("Enemy HP max values:")
     #print(maxHP)
-    print("Enemy HP current values: ", currentHP)
+    print("Enemy HP current values:", currentHP)
     return currentHP
 
 def getEnemyMaxHP():
@@ -1292,7 +1292,7 @@ def getStoryProgress():
 
     key = baseValue + 0x00D2D67C
     progress = process.readBytes(key,2)
-    #print("Story progress: ", progress)
+    #print("Story progress:", progress)
     return progress
 
 def getMap():
@@ -1462,13 +1462,13 @@ def awaitMenuControl():
     while not menuControl():
         counter += 1
         if counter % 100000 == 0:
-            print("Waiting for menu control. ", counter)
+            print("Waiting for menu control.", counter)
 
 def clickToStoryProgress(destination):
     FFXC = FFX_Xbox.controllerHandle()
     counter = 0
     currentState = getStoryProgress()
-    print("Story goal: ", destination," | Awaiting progress state: ", currentState)
+    print("Story goal:", destination,"| Awaiting progress state:", currentState)
     while currentState < destination:
         if menuControl():
             FFXC.set_value('BtnB',1)
@@ -1478,10 +1478,10 @@ def clickToStoryProgress(destination):
             FFXC.set_value('BtnA',0)
             waitFrames(1)
         if counter % 100000 == 0:
-            print("Story goal: ", destination," | Awaiting progress state: ", currentState, " | counter: ", counter / 100000)
+            print("Story goal:", destination,"| Awaiting progress state:", currentState, "| counter:", counter / 100000)
         counter += 1
         currentState = getStoryProgress()
-    print("Story progress has reached destination. Value: ", destination)
+    print("Story progress has reached destination. Value:", destination)
 
 def desertFormat(rikkuCharge):
     order = getOrderSix()
@@ -1620,7 +1620,7 @@ def menuDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
     distanceUnsigned = currentmenuposition - targetmenuposition
-    #print("Menu Size: ", menusize)
+    #print("Menu Size:", menusize)
     halfmenusize = menusize / 2
     if distance == halfmenusize:
      #   print("Marker 1")
@@ -1644,7 +1644,7 @@ def sideToSideDirection(currentmenuposition, targetmenuposition, menusize):
     #print("Menu move (new)")
     distance = abs(currentmenuposition - targetmenuposition)
     distanceUnsigned = currentmenuposition - targetmenuposition
-    print("Menu Size: ", menusize)
+    print("Menu Size:", menusize)
     halfmenusize = menusize / 2
     if distance == halfmenusize:
         print("Marker 1")
@@ -1670,7 +1670,7 @@ def partyFormatCursor1():
 
     coord = baseValue + 0x0147151C
     retVal = process.readBytes(coord, 1)
-    #print("cursor identify: ", retVal)
+    #print("cursor identify:", retVal)
     return retVal
 
 def partyFormatCursor2():
@@ -1678,11 +1678,11 @@ def partyFormatCursor2():
 
     coord = baseValue + 0x01471520
     retVal = process.readBytes(coord, 1)
-    #print("cursor identify: ", retVal)
+    #print("cursor identify:", retVal)
     return retVal
 
 def getPartyFormatFromText(frontLine):
-    print("||||||||||||| FRONT LINE VARIABLE: ", frontLine)
+    print("||||||||||||| FRONT LINE VARIABLE:", frontLine)
     if frontLine == 'kimahri':
         orderFinal = [0,3,2,6,4,5,1]
     elif frontLine == 'rikku':
@@ -1820,10 +1820,10 @@ def miihenGuyCoords():
     spearGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        #print("Actor ", x, ": ", hex(actorNum))
+        #print("Actor ", x, ":", hex(actorNum))
         if actorNum == 0x202D:
             spearGuy = x
-    #print("+++Spear guy in position: ", spearGuy)
+    #print("+++Spear guy in position:", spearGuy)
     return getActorCoords(spearGuy)
 
 def mrrGuyCoords():
@@ -1831,10 +1831,10 @@ def mrrGuyCoords():
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        print("Actor ", x, ": ", hex(actorNum))
+        print("Actor ", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
-    print("+++MRR guy in position: ", mrrGuy)
+    print("+++MRR guy in position:", mrrGuy)
     mrrGuyPos = getActorCoords(mrrGuy)
     return [mrrGuyPos[0],mrrGuyPos[1]]
 
@@ -1892,7 +1892,7 @@ def overdriveState():
     for x in range(20):
         offset = (0x94 * x) + 0x39
         retVal[x] = process.readBytes(basePointerAddress + offset, 1)
-    print("Overdrive values: ", retVal)
+    print("Overdrive values:", retVal)
     return retVal
 
 def overdriveState2():
@@ -1906,7 +1906,7 @@ def overdriveState2():
     for x in range(7):
         offset = (0x94 * x) + 0x39
         retVal[x] = process.readBytes(basePointerAddress + offset, 1)
-    print("Overdrive values: ", retVal)
+    print("Overdrive values:", retVal)
     return retVal
 
 def dodgeLightning(lDodgeNum):
@@ -1945,7 +1945,7 @@ def diagProgressFlag():
     return process.readBytes(key, 4)
 
 def clickToDiagProgress(num):
-    print("Clicking to dialog progress: ", num)
+    print("Clicking to dialog progress:", num)
     lastNum = diagProgressFlag()
     while diagProgressFlag() != num:
         if userControl():
@@ -1954,7 +1954,7 @@ def clickToDiagProgress(num):
             FFX_Xbox.tapB()
             if diagProgressFlag() != lastNum:
                 lastNum = diagProgressFlag()
-                print("Dialog change: ", diagProgressFlag(), " - clicking to ", num)
+                print("Dialog change:", diagProgressFlag(), "- clicking to", num)
     return True
 
 def setEncounterRate(setVal):
@@ -1976,7 +1976,7 @@ def printRNG36():
     retVal = process.readBytes(coord, 1)
     print("--------------------------------------------")
     print("--------------------------------------------")
-    print("RNG36 value: ",retVal)
+    print("RNG36 value:",retVal)
     print("--------------------------------------------")
     print("--------------------------------------------")
 
@@ -2028,7 +2028,7 @@ def eggX(eggNum):
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x0C
     retVal = float_from_integer(process.read(key))
-    #print("Egg ", eggNum," X value: ", retVal)
+    #print("Egg ", eggNum," X value:", retVal)
     return retVal
 
 def eggY(eggNum):
@@ -2039,7 +2039,7 @@ def eggY(eggNum):
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x14
     retVal = float_from_integer(process.read(key))
-    #print("Egg ", eggNum," Y value: ", retVal)
+    #print("Egg ", eggNum," Y value:", retVal)
     return retVal
 
 def getEggDistance(eggNum):
@@ -2321,7 +2321,7 @@ def blitzCurrentPlayer():
 
     key = baseValue + 0x00F25B6A
     player = process.readBytes(key, 1)
-    #print("Target Player number: ", player)
+    #print("Target Player number:", player)
     #print("12 = Opposing team")
     #print("18 = non-controlled ball (shot or pass)")
     return player
@@ -2331,7 +2331,7 @@ def blitzTargetPlayer():
 
     key = baseValue + 0x00D3761C
     player = process.readBytes(key, 1)
-    #print("Target Player number: ", player)
+    #print("Target Player number:", player)
     #print("12 = Opposing team")
     #print("18 = non-controlled ball (shot or pass)")
     return player
@@ -2350,18 +2350,6 @@ def blitzGameActive():
     if getMap() == 62:
         return True
     else:
-        return False
-
-def blitzBallControl():
-    try:
-        if blitzClockMenu() == 24:
-            if blitzCurrPlayer() >= 2 and blitzCurrPlayer <= 6:
-                return True
-            else:
-                return False
-        else:
-            return False
-    except:
         return False
 
 def blitzClock():
@@ -2542,9 +2530,9 @@ def allEquipment():
         currentHandle = equipment(i)
         #if getBattleNum() == 180 and False:
             #print("----")
-            #print("Exists: ", currentHandle.equipExists())
-            #print("Abilities: ", currentHandle.abilities())
-            #print("Legit: ", getEquipLegit(i))
+            #print("Exists:", currentHandle.equipExists())
+            #print("Abilities:", currentHandle.abilities())
+            #print("Legit:", getEquipLegit(i))
         if getEquipLegit(i) and currentHandle.equipExists():
             if firstEquipment:
                 equipHandleArray = [equipment(i)]
@@ -2563,7 +2551,7 @@ def weaponArrayCharacter(charNum):
     firstEquipment = True
     while len(equipHandles) > 0:
         currentHandle = equipHandles.pop(0)
-        #print("Abilities: ", currentHandle.abilities())
+        #print("Abilities:", currentHandle.abilities())
         if currentHandle.owner() == charNum and currentHandle.equipmentType() == 0:
             if firstEquipment:
                 charWeaps = [currentHandle]
@@ -2577,9 +2565,9 @@ def equippedWeaponHasAbility(charNum:int=1, abilityNum:int=32769):
     while len(equipHandles) > 0:
         currentHandle = equipHandles.pop(0)
         if currentHandle.isEquipped() == charNum:
-            print("## Owner: ", currentHandle.owner())
-            print("## Equipped: ", currentHandle.isEquipped())
-            print("## Has Ability: ", currentHandle.hasAbility(abilityNum))
+            print("## Owner:", currentHandle.owner())
+            print("## Equipped:", currentHandle.isEquipped())
+            print("## Has Ability:", currentHandle.hasAbility(abilityNum))
             if currentHandle.hasAbility(abilityNum):
                 return True
             else:
@@ -2798,7 +2786,7 @@ def armorArrayCharacter(charNum):
     while len(equipHandles) > 0:
         #print(len(equipHandles))
         currentHandle = equipHandles.pop(0)
-        #print("Owner: ", currentHandle.owner())
+        #print("Owner:", currentHandle.owner())
         if currentHandle.owner() == charNum and currentHandle.equipmentType() == 1:
             if firstEquipment:
                 charWeaps = [currentHandle]
@@ -2815,9 +2803,9 @@ def equippedArmorHasAbility(charNum:int, abilityNum:int=0x801D):
     while len(equipHandles) > 0:
         currentHandle = equipHandles.pop(0)
         if currentHandle.isEquipped() == charNum:
-            print("## Owner: ", currentHandle.owner())
-            print("## Equipped: ", currentHandle.isEquipped())
-            print("## Has Ability: ", currentHandle.hasAbility(abilityNum))
+            print("## Owner:", currentHandle.owner())
+            print("## Equipped:", currentHandle.isEquipped())
+            print("## Has Ability:", currentHandle.hasAbility(abilityNum))
             if currentHandle.hasAbility(abilityNum):
                 return True
             else:
@@ -3016,7 +3004,7 @@ def GTinnerRing():
 def getSaveSphereDetails():
     mapVal = getMap()
     storyVal = getStoryProgress()
-    print("Map and story: ", mapVal, " | ", storyVal)
+    print("Map and story:", mapVal, "|", storyVal)
     x = 0
     y = 0
     diag = 0
@@ -3198,7 +3186,7 @@ def touchSaveSphere():
         if saveMenuOpen():
             FFX_Xbox.tapA()
         elif diagProgressFlag() == ssDetails[2]:
-            print("Cursor test: ", saveMenuCursor())
+            print("Cursor test:", saveMenuCursor())
             if saveMenuCursor() == 0 and saveMenuCursor2() == 0:
                 FFX_Xbox.menuA()
                 #waitFrames(80)
@@ -3314,7 +3302,7 @@ def lastHitInit():
     try:
         for x in range(8):
             lastHitVals[x] = process.read( ptrVal + ((x+20)*0xF90) + 0x7AC)
-            print("Val: ", lastHitVals[x])
+            print("Val:", lastHitVals[x])
         print(lastHitVals)
         gameVars.firstHitsSet(lastHitVals)
         return True
@@ -3338,7 +3326,7 @@ def lastHitCheckChange():
     #time.sleep(3)
     
     if changeFound:
-        print("**Registered hit: ", changeValue)
+        print("**Registered hit:", changeValue)
         FFX_Logs.writeStats(changeValue)
         lastHitInit()
         return True
@@ -3419,7 +3407,7 @@ def nextChanceRNG01(version='white'):
     else:
         modulo = 10
         battleIndex = 0
-    #print("TEST-TEST-TEST: ", (testArray[((i+1)*2)+1] & 0x7fffffff) % 7)
+    #print("TEST-TEST-TEST:", (testArray[((i+1)*2)+1] & 0x7fffffff) % 7)
     for i in range(rangeVal):
         #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
         #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
@@ -3429,9 +3417,9 @@ def nextChanceRNG01(version='white'):
             evenArray.append(i)
         
     print("--------------------------------")
-    print("Next event will appear on the odd array without manip. Area: ", version)
-    print("oddArray: ", oddArray)
-    print("evenArray: ", evenArray)
+    print("Next event will appear on the odd array without manip. Area:", version)
+    print("oddArray:", oddArray)
+    print("evenArray:", evenArray)
     print("--------------------------------")
     return([oddArray, evenArray])
 
@@ -3469,7 +3457,7 @@ def nextChanceRNG10(dropChanceVal:int=60) -> int:
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
-            #print("The next scenario where Wraith will drop an equipment is position: ", i-3)
+            #print("The next scenario where Wraith will drop an equipment is position:", i-3)
             #print("Please advance RNG10 that many times.")
             return (i-3)
 
@@ -3479,7 +3467,7 @@ def nextChanceRNG10Calm() -> int:
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 >= 60 and (testArray[i+3] & 0x7fffffff) % 255 < 60:
-            #print("The next scenario where Wraith will drop an equipment is position: ", i-3)
+            #print("The next scenario where Wraith will drop an equipment is position:", i-3)
             #print("Please advance RNG10 that many times.")
             return (i-3)
 
@@ -3490,7 +3478,7 @@ def noChanceX3RNG10Highbridge() -> int:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < 30 and (testArray[i+3] & 0x7fffffff) % 255 < 30 \
             and (testArray[i] & 0x7fffffff) % 255 < 30:
-            #print("The next scenario where Wraith will drop an equipment is position: ", i-3)
+            #print("The next scenario where Wraith will drop an equipment is position:", i-3)
             #print("Please advance RNG10 that many times.")
             return (i-3)
 
@@ -3536,9 +3524,9 @@ def nextChanceRNG12(beforeNatus:bool=False) -> int:
             baseMod = (abilityMod + ((testArray[ptr+3] & 0x7fffffff) & 7)) - 4
             abilities = (baseMod + ((baseMod >> 31) & 7)) >> 3
             
-            #print("User: ", user)
-            #print("Slots: ", slots)
-            #print("Mods: ", abilities)
+            #print("User:", user)
+            #print("Slots:", slots)
+            #print("Mods:", abilities)
             if ptr == 1:
                 if nextDropRNG13(abilities, beforeNatus):
                     neWillDrop = True
@@ -3554,11 +3542,11 @@ def nextChanceRNG12(beforeNatus:bool=False) -> int:
             user = 256
     if beforeNatus:
         nextChance -= 1
-    #print("Next armor drop: ", nextChance)
+    #print("Next armor drop:", nextChance)
     #if neWillDrop:
         #print("You're all set! This is your chance!")
     #else:
-        #print("The next value where Wraith will drop an equipment is position: ", nextChance)
+        #print("The next value where Wraith will drop an equipment is position:", nextChance)
         #print("Please advance RNG12 that many times.")
     return int(nextChance)
 
@@ -3597,7 +3585,7 @@ def nextDropRNG13(aSlots:int, beforeNatus:bool=False) -> int:
                 filledSlots.append(outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
         except:
             pass
-        #print("T: ", filledSlots)
+        #print("T:", filledSlots)
         ptr += 1
         
     if 1 in filledSlots:
@@ -3619,7 +3607,7 @@ def nextChanceRNG13() -> int:
         else:
             ptr += 1
 
-    #print("The next scenario where Wraith can drop No Encounters: ", nextChance)
+    #print("The next scenario where Wraith can drop No Encounters:", nextChance)
     #if nextChance != 1:
         #print("Please advance RNG10 that many times.")
     #else:
@@ -3650,10 +3638,10 @@ def rollNextRNG(lastRNG:int, index:int) -> int:
 def printManipInfo():
     print("--------------------------")
     print("The next state for drops:")
-    print("RNG13 manip: ", nextChanceRNG13() - 1)
-    print("RNG12 manip: ", nextChanceRNG12(), " | supercedes RNG13 above")
-    print("RNG10 manip: ", nextChanceRNG10(), " | literal next")
-    print("RNG10 manip: ", nextChanceRNG10Calm(), " | perfect world next (accounts for Defender X)")
+    print("RNG13 manip:", nextChanceRNG13() - 1)
+    print("RNG12 manip:", nextChanceRNG12(), " | supercedes RNG13 above")
+    print("RNG10 manip:", nextChanceRNG10(), " | literal next")
+    print("RNG10 manip:", nextChanceRNG10Calm(), " | perfect world next (accounts for Defender X)")
     print("--------------------------")
     print("Best case state: 0/1, 0, ?, 0")
     print("Acceptable state: 0/1, 0, ?, not-0")
@@ -3734,8 +3722,8 @@ def arenaFarmCheck(zone:str="besaid",endGoal:int=10,report=False):
             complete = False
     if report:
         print("############")
-        print("Next Sphere Grid checkpoint: ", gameVars.nemCheckpointAP())
-        print("Tidus S.levels: ", getTidusSlvl(), " - need levels: ", FFX_nem_menu.nextAPneeded(gameVars.nemCheckpointAP()))
+        print("Next Sphere Grid checkpoint:", gameVars.nemCheckpointAP())
+        print("Tidus S.levels:", getTidusSlvl(), " - need levels:", FFX_nem_menu.nextAPneeded(gameVars.nemCheckpointAP()))
         print("Number of captures in this zone: ")
         print(resultArray)
         print("End goal is ", endGoal, " minimum before leaving this zone for each index.")

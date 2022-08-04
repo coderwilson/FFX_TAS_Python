@@ -30,10 +30,10 @@ def Beach():
     lastCP = 0
     while FFX_memory.getMap() != 122:
         if checkpoint != lastCP:
-            print("Checkpoint reached: ", checkpoint)
+            print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         if FFX_memory.userControl():
-            #print("Checkpoint (testing): ", checkpoint)
+            #print("Checkpoint (testing):", checkpoint)
             #Events
             if checkpoint == 34: #Into the temple for the first time
                 FFX_memory.clickToEventTemple(0)
@@ -56,7 +56,7 @@ def Beach():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -156,7 +156,7 @@ def trials():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaidTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -171,14 +171,6 @@ def trials():
             #map changes
             elif checkpoint < 29 and FFX_memory.getMap() == 83:
                 checkpoint = 29
-
-def aeonAndSleep():
-    print("Function no longer used.")
-    return
-
-def waterfalls():
-    print("Function no longer used.")
-    return
 
 def leaving():
     print("Ready to leave Besaid")
@@ -221,7 +213,7 @@ def leaving():
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
             elif checkpoint == 18: #First tutorial
-                print("Tuturial - Tidus and Wakka")
+                print("Tutorial - Tidus and Wakka")
                 FFXC.set_movement(1, -1)
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
@@ -240,7 +232,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 24: #Hilltop
                 FFX_memory.clickToEventTemple(2)
-                print("Ready for SS Liki menu - (var) ", gameVars.earlyTidusGrid())
+                print("Ready for SS Liki menu - (var)", gameVars.earlyTidusGrid())
                 if FFX_memory.getTidusSlvl() >= 3:
                     FFX_menu.Liki()
                     gameVars.earlyTidusGridSetTrue()
@@ -255,7 +247,7 @@ def leaving():
             #General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid2(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -293,7 +285,7 @@ def leaving():
                         elif not 1 in FFX_memory.getActiveBattleFormation():
                             FFX_Battle.buddySwapYuna()
                         else:
-                            defend()
+                            FFX_Battle.defend()
                 while FFX_memory.battleActive():
                     if FFX_memory.turnReady():
                         FFX_Battle.aeonSpell(1)

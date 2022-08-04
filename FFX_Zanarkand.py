@@ -60,7 +60,7 @@ def arrival():
                         FFX_Xbox.tapB()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandOutdoors(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
 
@@ -129,7 +129,7 @@ def arrival():
                 else:
                     if FFX_memory.getItemCountSlot(luckSlot) > luckCount:
                         checkpoint += 1
-                        print("Updating checkpoint: ", checkpoint)
+                        print("Updating checkpoint:", checkpoint)
                         FFX_memory.clickToControl()
                     else:
                         FFXC.set_movement(1, 1)
@@ -142,7 +142,7 @@ def arrival():
                 checkpoint = 21
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandDome(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -185,7 +185,7 @@ def trials0(checkpoint):
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
     return checkpoint
 
 def trials1(checkpoint):
@@ -215,7 +215,7 @@ def trials1(checkpoint):
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
     return checkpoint
 
 def trials2(checkpoint):
@@ -238,7 +238,7 @@ def trials2(checkpoint):
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
     return checkpoint
 
 def trials3(checkpoint):
@@ -261,7 +261,7 @@ def trials3(checkpoint):
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
     return checkpoint
 
 def trials4(checkpoint):
@@ -285,7 +285,7 @@ def trials4(checkpoint):
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
     FFXC.set_neutral()
     return checkpoint
 
@@ -343,10 +343,10 @@ def yunalesca():
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalesca(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             FFXC.set_value('BtnB',1)
@@ -376,28 +376,28 @@ def post_Yunalesca(checkpoint=0):
         if FFX_memory.userControl():
             if checkpoint < 2 and FFX_memory.getMap() == 319: #Back to room before Yunalesca
                 checkpoint = 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 4 and FFX_memory.getMap() == 318: #Exit to room with the inert Aeon
                 checkpoint = 4
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint == 7:
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 10 and FFX_memory.getMap() == 320: #Back to larger of the puzzle rooms
                 checkpoint = 10
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 18 and FFX_memory.getMap() == 316: #Hallway before puzzle rooms
                 checkpoint = 18
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 25 and FFX_memory.getMap() == 315: #Hallway before puzzle rooms
                 checkpoint = 25
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint == 26:
                 FFXC.set_neutral()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalescaToAirship(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():

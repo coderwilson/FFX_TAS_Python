@@ -848,7 +848,7 @@ def Kilika1(checkpoint):
         x = -59
         y = -195
     if checkpoint == 4:
-        print("Enter cutscene, Yuna's dance")
+        print("Enter cutscene, Yunas dance")
     if checkpoint == 5:
         x = 80
         y = -22
@@ -4177,7 +4177,6 @@ def mLake(checkpoint):
         y = 0
     return [x,y]
 
-
 def mTempleApproach(checkpoint):
     x = 999
     y = 999
@@ -4732,7 +4731,6 @@ def underMacTemple(checkpoint):
         x = 0
         y = 0
     return [x,y]
-
 
 def desert(checkpoint):
     x = 999
@@ -5294,7 +5292,6 @@ def rescueAirship(checkpoint):
         x = 0
         y = 0
     return [x,y]
-
 
 def bevellePreTrials(checkpoint):
     x = 999
@@ -5879,7 +5876,6 @@ def neReturnGreen(checkpoint):
         x = 0
         y = 0
     return [x,y]
-
 
 def neReturn(checkpoint):
     x = 999
@@ -7346,7 +7342,7 @@ def insideSin(checkpoint):
     return [x,y]
 
 def airShip(checkpoint):
-    #print("Airship pathing checkpoint: ", checkpoint)
+    #print("Airship pathing checkpoint:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
