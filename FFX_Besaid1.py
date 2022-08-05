@@ -12,6 +12,7 @@ FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def Beach():
     print("Starting Besaid section. Beach")
     if gameVars.csr():
@@ -22,8 +23,8 @@ def Beach():
         FFX_memory.awaitControl()
         FFX_memory.waitFrames(30 * 4.5)
         FFXC.set_neutral()
-    
-    #Pathing, lots of pathing.
+
+    # Pathing, lots of pathing.
     besaidBattles = 0
     goodBattles = 0
     checkpoint = 0
@@ -34,26 +35,26 @@ def Beach():
             lastCP = checkpoint
         if FFX_memory.userControl():
             #print("Checkpoint (testing):", checkpoint)
-            #Events
-            if checkpoint == 34: #Into the temple for the first time
+            # Events
+            if checkpoint == 34:  # Into the temple for the first time
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 43: #Wakka tent
+            elif checkpoint == 43:  # Wakka tent
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-            elif checkpoint == 44: #Talk to Wakka
+            elif checkpoint == 44:  # Talk to Wakka
                 while FFX_memory.userControl():
-                    FFX_targetPathing.setMovement([15,16])
+                    FFX_targetPathing.setMovement([15, 16])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
                 checkpoint += 1
-            elif checkpoint == 45: #Exiting tent
+            elif checkpoint == 45:  # Exiting tent
                 print("Exiting tent")
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            
-            #General pathing
+
+            # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid1(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -67,8 +68,8 @@ def Beach():
                     goodBattles += 1
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-            
-            #map changes
+
+            # map changes
             elif checkpoint < 2 and FFX_memory.getMap() == 20:
                 checkpoint = 2
             elif checkpoint < 6 and FFX_memory.getMap() == 41:
@@ -77,7 +78,8 @@ def Beach():
                 checkpoint = 22
             elif checkpoint < 29 and FFX_memory.getMap() == 133:
                 if not gameVars.csr():
-                    FFX_memory.clickToDiagProgress(9) #You do remember the prayer?
+                    # You do remember the prayer?
+                    FFX_memory.clickToDiagProgress(9)
                     FFX_memory.waitFrames(20)
                     FFX_Xbox.menuDown()
                     FFX_Xbox.menuB()
@@ -92,37 +94,37 @@ def Beach():
 
 def trials():
     checkpoint = 0
-    
+
     while FFX_memory.getMap() != 69:
         if FFX_memory.userControl():
-            #Spheres, glyphs, and pedestals
-            if checkpoint == 1: #First glyph
+            # Spheres, glyphs, and pedestals
+            if checkpoint == 1:  # First glyph
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 3: #Second glyph
+            elif checkpoint == 3:  # Second glyph
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-            elif checkpoint == 7: #First Besaid sphere
+            elif checkpoint == 7:  # First Besaid sphere
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-            elif checkpoint == 12: #Insert Besaid sphere
+            elif checkpoint == 12:  # Insert Besaid sphere
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 20: #Touch the hidden door glyph
+            elif checkpoint == 20:  # Touch the hidden door glyph
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-13, -33])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 23: #Second Besaid sphere
+            elif checkpoint == 23:  # Second Besaid sphere
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-14, 31])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 26: #Insert Besaid sphere, and push to completion
+            elif checkpoint == 26:  # Insert Besaid sphere, and push to completion
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-13, -60])
                     FFX_Xbox.tapB()
@@ -134,26 +136,26 @@ def trials():
                     FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint == 34: #Night, talk to Yuna and Wakka
+            elif checkpoint == 34:  # Night, talk to Yuna and Wakka
                 FFXC.set_movement(-1, -1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
-                
-                FFX_memory.clickToDiagProgress(47) #Wakka, "She's cute, ya?"
+
+                FFX_memory.clickToDiagProgress(47)  # Wakka, "She's cute, ya?"
                 while FFX_memory.shopMenuDialogueRow() != 1:
                     FFX_Xbox.tapDown()
                 FFX_Xbox.tapB()
                 checkpoint += 1
-            elif checkpoint == 36: #Sleep tight
+            elif checkpoint == 36:  # Sleep tight
                 FFX_memory.clickToEventTemple(3)
                 checkpoint += 1
             elif checkpoint > 15 and checkpoint < 37 and FFX_memory.getMap() == 252:
                 checkpoint = 37
-            elif checkpoint == 39: #Dream about girls
+            elif checkpoint == 39:  # Dream about girls
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
 
-            #General pathing
+            # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaidTrials(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -161,33 +163,33 @@ def trials():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-            
+
             elif checkpoint == 32 and FFX_memory.menuOpen():
-                #Name for Valefor
+                # Name for Valefor
                 FFX_Xbox.nameAeon("Valefor")
-                checkpoint += 1 #To the night scene
-                
-            
-            #map changes
+                checkpoint += 1  # To the night scene
+
+            # map changes
             elif checkpoint < 29 and FFX_memory.getMap() == 83:
                 checkpoint = 29
+
 
 def leaving():
     print("Ready to leave Besaid")
     FFX_memory.clickToControl()
     checkpoint = 0
     escapeAttempts = 0
-    
+
     while FFX_memory.getMap() != 301:
         if FFX_memory.userControl():
-            #Events
-            if checkpoint == 0: #Back into the village
+            # Events
+            if checkpoint == 0:  # Back into the village
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 3: #Tent 1
+            elif checkpoint == 3:  # Tent 1
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 5: #Shopkeeper
+            elif checkpoint == 5:  # Shopkeeper
                 FFXC.set_movement(-1, -1)
                 FFX_memory.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
@@ -197,29 +199,29 @@ def leaving():
                 FFX_Xbox.tapB()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 7: #Exit tent
+            elif checkpoint == 7:  # Exit tent
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 9: #Tent 2
+            elif checkpoint == 9:  # Tent 2
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 11: #Good doggo
+            elif checkpoint == 11:  # Good doggo
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-            elif checkpoint == 13: #Exit tent
+            elif checkpoint == 13:  # Exit tent
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 16: #Exit the front gates
+            elif checkpoint == 16:  # Exit the front gates
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
-            elif checkpoint == 18: #First tutorial
+            elif checkpoint == 18:  # First tutorial
                 print("Tutorial - Tidus and Wakka")
                 FFXC.set_movement(1, -1)
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl()
                 checkpoint += 1
-            elif checkpoint == 23: #Second tutorial
+            elif checkpoint == 23:  # Second tutorial
                 print("Tutorial - Lulu magic")
                 while FFX_memory.userControl():
                     FFXC.set_movement(1, 0)
@@ -230,21 +232,22 @@ def leaving():
                 FFX_Battle.thunder('none')
                 FFX_memory.clickToControl()
                 checkpoint += 1
-            elif checkpoint == 24: #Hilltop
+            elif checkpoint == 24:  # Hilltop
                 FFX_memory.clickToEventTemple(2)
-                print("Ready for SS Liki menu - (var)", gameVars.earlyTidusGrid())
+                print("Ready for SS Liki menu - (var)",
+                      gameVars.earlyTidusGrid())
                 if FFX_memory.getTidusSlvl() >= 3:
                     FFX_menu.Liki()
                     gameVars.earlyTidusGridSetTrue()
                 checkpoint += 1
-            elif checkpoint in [59,60]: #Beach, save sphere
-                #FFXC.set_neutral()
-                #FFX_memory.touchSaveSphere()
+            elif checkpoint in [59, 60]:  # Beach, save sphere
+                # FFXC.set_neutral()
+                # FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
                 checkpoint -= 2
-            
-            #General pathing
+
+            # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid2(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -254,7 +257,7 @@ def leaving():
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 FFX_Xbox.skipScene(fast_mode=True)
-            elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen(): #Kimahri fight
+            elif checkpoint > 25 and checkpoint < 30 and FFX_Screen.BattleScreen():  # Kimahri fight
                 FFXC.set_neutral()
                 healCount = 0
                 while FFX_memory.battleActive():
@@ -274,7 +277,8 @@ def leaving():
                 FFX_Logs.writeStats("Kimahri heal count:")
                 FFX_Logs.writeStats(healCount)
                 FFX_memory.clickToControl()
-            elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen(): #Valefor summon tutorial
+            # Valefor summon tutorial
+            elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen():
                 FFX_Xbox.clickToBattle()
                 while not FFX_Screen.turnAeon():
                     if FFX_memory.turnReady():
@@ -293,19 +297,19 @@ def leaving():
                 FFX_memory.clickToControl()
                 FFX_memory.fullPartyFormat('Besaid')
                 checkpoint += 1
-            elif checkpoint == 39 and FFX_Screen.BattleScreen(): #Dark Attack tutorial
+            elif checkpoint == 39 and FFX_Screen.BattleScreen():  # Dark Attack tutorial
                 escapeAttempts = 0
                 FFX_Battle.escapeAll()
                 FFX_memory.clickToControl()
                 FFX_memory.fullPartyFormat('Besaid2')
                 checkpoint += 1
-            elif checkpoint > 39 and FFX_Screen.BattleScreen(): #One forced battle on the way out of Besaid
+            elif checkpoint > 39 and FFX_Screen.BattleScreen():  # One forced battle on the way out of Besaid
                 FFX_Battle.besaid()
-            
-            #Map changes
-            elif checkpoint > 10 and checkpoint < 24 and FFX_memory.getMap() == 67: #Hilltop
+
+            # Map changes
+            elif checkpoint > 10 and checkpoint < 24 and FFX_memory.getMap() == 67:  # Hilltop
                 checkpoint = 24
-            elif checkpoint < 27 and FFX_memory.getMap() == 21: #Kimahri map
+            elif checkpoint < 27 and FFX_memory.getMap() == 21:  # Kimahri map
                 checkpoint = 27
             elif checkpoint < 32 and FFX_memory.getMap() == 22:
                 checkpoint = 32

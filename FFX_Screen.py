@@ -7,9 +7,10 @@ import FFX_memory
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
+
 def clearMouse(counter):
     try:
-        #pyautogui.moveTo(1598,898)
+        # pyautogui.moveTo(1598,898)
         return
     except:
         if counter > 10:
@@ -18,15 +19,17 @@ def clearMouse(counter):
             #clearMouse(counter + 1)
             return
 
+
 def BattleScreen():
     if FFX_memory.turnReady():
-        #if gameVars.usePause():
+        # if gameVars.usePause():
         #    FFX_memory.waitFrames(12)
-        #else:
+        # else:
         #    FFX_memory.waitFrames(6)
         return True
     else:
         return False
+
 
 def faintCheck():
     faints = 0
@@ -46,22 +49,24 @@ def faintCheck():
     print("## Num of characters have fainted:", faints, "##")
     return faints
 
+
 def BattleComplete():
     if FFX_memory.battleActive() == False:
         return True
-    else :
+    else:
         return False
 
-def awaitTurn() :
+
+def awaitTurn():
     counter = 0
     print("Waiting for next turn in combat.")
-    #Just to make sure there's no overlap from the previous character's turn
-    
-    #Now let's do this.
+    # Just to make sure there's no overlap from the previous character's turn
+
+    # Now let's do this.
     while not BattleScreen() or FFX_memory.userControl():
         if FFX_memory.battleActive() == False:
             pass
-        counter += 1;
+        counter += 1
         if counter % 100000 == 0:
             print("Waiting for player turn:", counter / 10000)
         if FFX_memory.gameOver():
@@ -70,65 +75,76 @@ def awaitTurn() :
         pass
     return True
 
-def turnRikkuRed() :
+
+def turnRikkuRed():
     return turnRikku()
-    
-def turnRikku() :
+
+
+def turnRikku():
     if FFX_memory.getBattleCharTurn() == 6:
         return True
     else:
         return False
 
-def turnTidus() :
+
+def turnTidus():
     if FFX_memory.getBattleCharTurn() == 0:
         return True
     else:
         return False
 
-def turnWakka() :
+
+def turnWakka():
     if FFX_memory.getBattleCharTurn() == 4:
         return True
     else:
         return False
 
-def turnLulu() :
+
+def turnLulu():
     if FFX_memory.getBattleCharTurn() == 5:
         return True
     else:
         return False
 
-def turnKimahri() :
+
+def turnKimahri():
     if FFX_memory.getBattleCharTurn() == 3:
         return True
     else:
         return False
 
-def turnAuron() :
+
+def turnAuron():
     if FFX_memory.getBattleCharTurn() == 2:
         return True
     else:
         return False
 
-def turnYuna() :
+
+def turnYuna():
     if FFX_memory.getBattleCharTurn() == 1:
         return True
     else:
         return False
 
-def turnSeymour() :
+
+def turnSeymour():
     if FFX_memory.getBattleCharTurn() == 7:
         FFX_Logs.writeLog("Seymour's turn:")
         return True
-    else :
+    else:
         return False
+
 
 def turnAeon():
     turn = FFX_memory.getBattleCharTurn()
     if turn > 7 and turn <= 19:
         print("Aeon's turn:")
         return True
-    else :
+    else:
         return False
+
 
 def MRRbattle():
     bNum = FFX_memory.getBattleNum()
@@ -154,8 +170,9 @@ def MRRbattle():
         return 1
     if bNum == 113:
         return 1
-    #If none of the pre-determined screens show up, just return the Flee option.
+    # If none of the pre-determined screens show up, just return the Flee option.
     return 1
+
 
 def mrrCompletion(status):
     FFX_memory.openMenu()
@@ -165,8 +182,9 @@ def mrrCompletion(status):
     if status[1] == 0:
         if FFX_memory.getSLVLKim() > 495:
             status[1] = 1
-    
+
     return status
+
 
 def imgSearch(img, conf):
     print("########################################")
@@ -174,26 +192,27 @@ def imgSearch(img, conf):
     print("IMAGE SEARCH, FIX THIS LATER")
     print("########################################")
     print("########################################")
-    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
+    # playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     img = 'img\\' + str(img)
     try:
         imgTest = pyautogui.locateOnScreen(img, confidence=conf)
-        print("Results for searching '",img,":", imgTest)
+        print("Results for searching '", img, ":", imgTest)
         if imgTest[1] > 1:
             return True
     except Exception as errorMsg:
         print("Something went wrong. Could not find image.")
         print(errorMsg)
         return False
+
 
 def imgSearch2(img, conf):
     print("########################################")
     print("IMAGE SEARCH, FIX THIS LATER")
     print("########################################")
-    #playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
+    # playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
     try:
         imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
-        print("Results for searching '",img,":", imgTest)
+        print("Results for searching '", img, ":", imgTest)
         if imgTest[1] > 1:
             return True
     except Exception as errorMsg:
@@ -201,8 +220,9 @@ def imgSearch2(img, conf):
         print(errorMsg)
         return False
 
+
 def desertCharge():
-    chargeState = [False,False]
+    chargeState = [False, False]
     chargeState[0] = checkCharge(1)
     chargeState[1] = checkCharge(2)
     return chargeState

@@ -1,3 +1,5 @@
+import FFX_Blitz
+import FFX_Luca
 import pyxinput
 import time
 import FFX_memory
@@ -42,8 +44,6 @@ rngMod17Array = [0] * 200
 rngMod18Array = [0] * 200
 rngMod19Array = [0] * 200
 rngMod20Array = [0] * 200
-import FFX_Luca
-import FFX_Blitz
 
 while attempts < 20:
     FFX_DreamZan.NewGame("BlitzballTesting")
@@ -52,35 +52,35 @@ while attempts < 20:
     rngRootArray[attempts] = FFX_memory.rng02()
     offset = 1
     blitzoffWin = False
-    
+
     #print("Game start screen")
     FFX_Screen.clearMouse(0)
-    
+
     #startTime = FFX_Logs.timeStamp()
     #print("Timer starts now.")
-    #---------This is the actual movement/code/logic/etc---------------
-    
+    # ---------This is the actual movement/code/logic/etc---------------
+
     rolledArray = FFX_memory.rng02Array()
-    
+
     FFX_Luca.blitzStart()
-    while not FFX_memory.blitzClock() in [1,2]:
+    while not FFX_memory.blitzClock() in [1, 2]:
         FFXC.set_neutral()
     while not (FFX_Blitz.selectFormation() or FFX_Blitz.selectMovement()):
-        #if FFX_Blitz.selectBreakthrough():
+        # if FFX_Blitz.selectBreakthrough():
         #    FFX_Xbox.tapA()
         #    FFX_Xbox.tapA()
         #    FFX_Xbox.tapB()
-        #elif FFX_Blitz.selectAction():
+        # elif FFX_Blitz.selectAction():
         #    FFX_Xbox.tapB()
-        #else:
+        # else:
         FFX_Xbox.tapY()
-    
+
     FFXC.set_neutral()
     if FFX_Blitz.selectMovement():
         blitzoffWin = True
     else:
         blitzoffWin = False
-    
+
     rngMod2Array[attempts] = rolledArray[offset] % 2
     rngMod3Array[attempts] = rolledArray[offset] % 3
     rngMod4Array[attempts] = rolledArray[offset] % 4
@@ -100,7 +100,7 @@ while attempts < 20:
     rngMod18Array[attempts] = rolledArray[offset] % 18
     rngMod19Array[attempts] = rolledArray[offset] % 19
     rngMod20Array[attempts] = rolledArray[offset] % 20
-    
+
     if blitzoffWin and rngMod2Array[attempts]:
         rngSuccessArray[2] += 1
     elif not blitzoffWin and not rngMod2Array[attempts]:
@@ -177,7 +177,7 @@ while attempts < 20:
         rngSuccessArray[20] += 1
     elif not blitzoffWin and not rngMod20Array[attempts]:
         rngSuccessArray[20] += 1
-    
+
     attempts += 1
     print("------------------------------")
     print("------------------------------")
@@ -190,29 +190,29 @@ while attempts < 20:
     time.sleep(5)
     if blitzoffWin == True:
         success += 1
-    
+
     #attempts = 100
-    
-    #---------End of the actual movement/code/logic/etc---------------
+
+    # ---------End of the actual movement/code/logic/etc---------------
     #endTime = FFX_Logs.timeStamp()
     #print("Duration:", endTime - startTime)
-    
+
     if attempts < 20:
         #print("Clicking to control so we can reset. ", attempts)
-        #FFXC.set_neutral()
-        #FFX_memory.clickToControl()
+        # FFXC.set_neutral()
+        # FFX_memory.clickToControl()
         #print(" ")
-        #print("---------------------------------------------------")
-        #print("---------------------------------------------------")
+        # print("---------------------------------------------------")
+        # print("---------------------------------------------------")
         #print("Test number ", attempts, "is complete.")
         #print("Blitzball wins:", success)
-        #print("---------------------------------------------------")
-        #print("---------------------------------------------------")
-        #time.sleep(5)
-        
+        # print("---------------------------------------------------")
+        # print("---------------------------------------------------")
+        # time.sleep(5)
+
         print("Resetting.")
-        #FFX_memory.end()
-        
+        # FFX_memory.end()
+
         FFX_memory.resetBlitzMenuNum()
         FFX_Reset.resetToMainMenu()
     else:
@@ -225,7 +225,7 @@ while attempts < 20:
         print(rngSuccessArray)
         print("------------------------------")
         print("------------------------------")
-    
+
     #rngSeedNum += 1
 
 time.sleep(5)

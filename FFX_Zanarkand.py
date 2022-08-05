@@ -11,41 +11,42 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
- 
+
+
 def arrival():
     FFX_memory.awaitControl()
-    #Starts from the map just after the fireplace chat.
+    # Starts from the map just after the fireplace chat.
     reEquipNE = False
     if FFX_memory.overdriveState2()[6] != 100:
         FFX_memory.fullPartyFormat('rikku')
         if gameVars.neArmor() != 255 and FFX_memory.rngSeed() != 31:
-            FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
+            FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
             reEquipNE = True
     else:
         FFX_memory.fullPartyFormat('kimahri')
-    
+
     print("Outdoor Zanarkand pathing section")
     while FFX_memory.getMap() != 225:
         if FFX_memory.userControl():
             if FFX_memory.getCoords()[1] > -52:
-                FFX_targetPathing.setMovement([103,-54])
+                FFX_targetPathing.setMovement([103, -54])
             elif FFX_memory.getCoords()[0] < 172:
-                FFX_targetPathing.setMovement([176,-118])
+                FFX_targetPathing.setMovement([176, -118])
             else:
                 FFXC.set_movement(-1, 1)
         else:
             FFXC.set_neutral()
-    
+
     fortuneSlot = FFX_memory.getItemSlot(74)
     if fortuneSlot == 255:
         fortuneCount = 0
     else:
         fortuneCount = FFX_memory.getItemCountSlot(fortuneSlot)
-    
+
     checkpoint = 0
     while FFX_memory.getMap() != 314:
         if FFX_memory.userControl():
-            if checkpoint == 4: #First chest
+            if checkpoint == 4:  # First chest
                 fortuneSlot = FFX_memory.getItemSlot(74)
                 if fortuneSlot == 255:
                     fortuneCount = 0
@@ -69,47 +70,48 @@ def arrival():
                 if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False
                     FFX_memory.clickToControl()
-                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
+                    FFX_menu.equipArmor(
+                        character=gameVars.neArmor(), ability=0x801D)
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-    
-    #Outside the dome
+
+    # Outside the dome
     print("Now approaching the Blitz dome.")
     print("Close observation will reveal this is the same blitz dome")
     print("as the one from the opening of the game.")
     while FFX_memory.getMap() != 222:
         FFXC.set_movement(0, 1)
         FFX_Xbox.tapB()
-    
+
     print("Start of Zanarkand Dome section")
     friendSlot = FFX_memory.getItemSlot(97)
     if friendSlot == 255:
         friendCount = 0
     else:
         friendCount = FFX_memory.getItemCountSlot(friendSlot)
-    
+
     luckSlot = FFX_memory.getItemSlot(94)
     if luckSlot == 255:
         friendCount = 0
     else:
         luckCount = FFX_memory.getItemCountSlot(luckSlot)
-    
+
     if FFX_memory.rngSeed() == 31:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
+        FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
-    
+
     checkpoint = 0
     if not gameVars.fluxOverkill():
         FFX_memory.fullPartyFormat('yuna')
     while FFX_memory.getMap() != 320:
         if FFX_memory.userControl():
-            if checkpoint == 13: #Second chest
+            if checkpoint == 13:  # Second chest
                 friendSlot = FFX_memory.getItemSlot(97)
                 if friendSlot == 255:
                     friendCount = 0
-                    FFX_targetPathing.setMovement([8,90])
+                    FFX_targetPathing.setMovement([8, 90])
                     FFX_memory.waitFrames(1)
                     FFX_Xbox.tapB()
                 else:
@@ -117,10 +119,10 @@ def arrival():
                         checkpoint += 1
                         FFX_memory.clickToControl()
                     else:
-                        FFX_targetPathing.setMovement([8,90])
+                        FFX_targetPathing.setMovement([8, 90])
                         FFX_memory.waitFrames(1)
                         FFX_Xbox.tapB()
-            elif checkpoint == 24: #Third chest
+            elif checkpoint == 24:  # Third chest
                 luckSlot = FFX_memory.getItemSlot(94)
                 if luckSlot == 255:
                     luckCount = 0
@@ -134,10 +136,10 @@ def arrival():
                     else:
                         FFXC.set_movement(1, 1)
                         FFX_Xbox.tapB()
-            elif checkpoint == 29: #Save sphere
+            elif checkpoint == 29:  # Save sphere
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
-            elif FFX_memory.getMap() == 316 and checkpoint < 21: #Final room before trials
+            elif FFX_memory.getMap() == 316 and checkpoint < 21:  # Final room before trials
                 print("Final room before trials")
                 checkpoint = 21
             elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandDome(checkpoint)) == True:
@@ -153,13 +155,15 @@ def arrival():
                 if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False
                     FFX_memory.clickToControl()
-                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
+                    FFX_menu.equipArmor(
+                        character=gameVars.neArmor(), ability=0x801D)
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
 
-def trials():    
+
+def trials():
     checkpoint = 0
     while checkpoint < 89:
         checkpoint = trials0(checkpoint)
@@ -168,9 +172,10 @@ def trials():
         checkpoint = trials3(checkpoint)
         checkpoint = trials4(checkpoint)
 
+
 def trials0(checkpoint):
     FFX_memory.awaitControl()
-    
+
     while checkpoint < 9:
         if FFX_memory.userControl():
             if checkpoint == 8:
@@ -188,9 +193,10 @@ def trials0(checkpoint):
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
 
+
 def trials1(checkpoint):
     FFX_memory.awaitControl()
-    
+
     while checkpoint < 31:
         if FFX_memory.userControl():
             if checkpoint == 20:
@@ -218,9 +224,10 @@ def trials1(checkpoint):
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
 
+
 def trials2(checkpoint):
     FFX_memory.awaitControl()
-    
+
     while checkpoint < 49:
         if FFX_memory.userControl():
             if checkpoint == 46:
@@ -241,9 +248,10 @@ def trials2(checkpoint):
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
 
+
 def trials3(checkpoint):
     FFX_memory.awaitControl()
-    
+
     while checkpoint < 69:
         if FFX_memory.userControl():
             if checkpoint == 66:
@@ -264,9 +272,10 @@ def trials3(checkpoint):
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
 
+
 def trials4(checkpoint):
     FFX_memory.awaitControl()
-    
+
     while checkpoint < 89:
         if FFX_memory.userControl():
             if checkpoint == 81:
@@ -278,7 +287,7 @@ def trials4(checkpoint):
                 checkpoint += 1
             elif checkpoint == 87:
                 while FFX_memory.userControl():
-                    FFX_targetPathing.setMovement([141,1])
+                    FFX_targetPathing.setMovement([141, 1])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
@@ -289,10 +298,11 @@ def trials4(checkpoint):
     FFXC.set_neutral()
     return checkpoint
 
+
 def sanctuaryKeeper():
     ver = gameVars.endGameVersion()
     print("Now prepping for Sanctuary Keeper fight")
-    
+
     if ver == 4:
         FFX_Logs.writeLog("Starting pattern, FFX_menu.skReturn()")
         print("Pattern for four return spheres off of the B&Y fight")
@@ -305,8 +315,8 @@ def sanctuaryKeeper():
         FFX_menu.skMixed()
     FFX_memory.fullPartyFormat('yuna')
     FFX_memory.closeMenu()
-    
-    while not FFX_targetPathing.setMovement([110,20]):
+
+    while not FFX_targetPathing.setMovement([110, 20]):
         pass
     FFXC.set_movement(-1, 1)
     FFX_memory.awaitEvent()
@@ -314,32 +324,34 @@ def sanctuaryKeeper():
     if FFX_Screen.turnTidus():
         FFX_Battle.defend()
         FFX_Xbox.clickToBattle()
-    FFX_Battle.aeonSummon(4) #This is the whole fight. Kinda sad.
+    FFX_Battle.aeonSummon(4)  # This is the whole fight. Kinda sad.
     FFX_memory.clickToControl()
+
 
 def yunalesca():
     ver = gameVars.endGameVersion()
-    while not FFX_targetPathing.setMovement([-2,-179]):
+    while not FFX_targetPathing.setMovement([-2, -179]):
         if FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
-    
+
     if ver == 4:
         print("Final pattern for four return spheres off of the B&Y fight")
         FFX_menu.skReturn2()
         FFX_memory.closeMenu()
     else:
         print("No further sphere gridding needed at this time.")
-    
+
     print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
-    
+
     FFX_memory.touchSaveSphere()
-    
+
     checkpoint = 0
-    while not FFX_memory.battleActive(): #Gets us to Yunalesca battle through multiple rooms.
+    # Gets us to Yunalesca battle through multiple rooms.
+    while not FFX_memory.battleActive():
         if FFX_memory.menuOpen():
             FFX_memory.closeMenu()
         elif FFX_memory.userControl():
-            if checkpoint in [2,4]:
+            if checkpoint in [2, 4]:
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 checkpoint += 1
@@ -349,23 +361,24 @@ def yunalesca():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            FFXC.set_value('BtnB',1)
-            FFXC.set_value('BtnA',1)
+            FFXC.set_value('BtnB', 1)
+            FFXC.set_value('BtnA', 1)
             FFX_memory.waitFrames(1)
-            FFXC.set_value('BtnB',0)
-            FFXC.set_value('BtnA',0)
+            FFXC.set_value('BtnB', 0)
+            FFXC.set_value('BtnA', 0)
             FFX_memory.waitFrames(1)
     FFX_Xbox.clickToBattle()
-    FFX_Battle.aeonSummon(4) #Summon Bahamut and attack.
-    FFX_memory.clickToControl() #This does all the attacking and dialog skipping
-    
-    #Now to check for zombie strike and then report to logs.
+    FFX_Battle.aeonSummon(4)  # Summon Bahamut and attack.
+    FFX_memory.clickToControl()  # This does all the attacking and dialog skipping
+
+    # Now to check for zombie strike and then report to logs.
     print("Ready to check for Zombiestrike")
     FFX_Logs.writeStats("Zombiestrike:")
     FFX_Logs.writeStats(gameVars.zombieWeapon())
     print("++Zombiestrike:")
-    print("++",gameVars.zombieWeapon())
-    
+    print("++", gameVars.zombieWeapon())
+
+
 def post_Yunalesca(checkpoint=0):
     print("Heading back outside.")
     FFXC.set_neutral()
@@ -374,23 +387,23 @@ def post_Yunalesca(checkpoint=0):
     FFX_memory.waitFrames(2)
     while FFX_memory.getMap() != 194:
         if FFX_memory.userControl():
-            if checkpoint < 2 and FFX_memory.getMap() == 319: #Back to room before Yunalesca
+            if checkpoint < 2 and FFX_memory.getMap() == 319:  # Back to room before Yunalesca
                 checkpoint = 2
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 4 and FFX_memory.getMap() == 318: #Exit to room with the inert Aeon
+            elif checkpoint < 4 and FFX_memory.getMap() == 318:  # Exit to room with the inert Aeon
                 checkpoint = 4
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 7:
                 FFX_memory.touchSaveSphere()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 10 and FFX_memory.getMap() == 320: #Back to larger of the puzzle rooms
+            elif checkpoint < 10 and FFX_memory.getMap() == 320:  # Back to larger of the puzzle rooms
                 checkpoint = 10
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 18 and FFX_memory.getMap() == 316: #Hallway before puzzle rooms
+            elif checkpoint < 18 and FFX_memory.getMap() == 316:  # Hallway before puzzle rooms
                 checkpoint = 18
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 25 and FFX_memory.getMap() == 315: #Hallway before puzzle rooms
+            elif checkpoint < 25 and FFX_memory.getMap() == 315:  # Hallway before puzzle rooms
                 checkpoint = 25
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 26:
@@ -406,7 +419,6 @@ def post_Yunalesca(checkpoint=0):
                 FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 print(FFX_memory.getCutsceneID())
-                if FFX_memory.getCutsceneID() == (5673,2850,3):
+                if FFX_memory.getCutsceneID() == (5673, 2850, 3):
                     FFX_memory.waitFrames(10)
                     FFX_Xbox.skipScene()
-

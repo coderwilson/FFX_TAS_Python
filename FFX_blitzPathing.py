@@ -9,6 +9,7 @@ import numpy as np
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def setMovement(target) -> bool:
     #print("Blitz movement target:", target)
     player = FFX_memory.getCoords()
@@ -41,11 +42,11 @@ def setMovement(target) -> bool:
     elif abs(Ly) > abs(Lx):
         Lx = copysign(Lx/Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
-    
+
     FFXC.set_movement(Lx, Ly)
-    #FFX_memory.waitFrames(frames=1)
-    
+    # FFX_memory.waitFrames(frames=1)
+
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
-        return True #Checkpoint reached
+        return True  # Checkpoint reached
     else:
         return False

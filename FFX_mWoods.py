@@ -12,21 +12,23 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def arrival(rikkuCharged):
     FFX_memory.clickToControl()
     FFX_memory.fullPartyFormat("mwoodsneedcharge")
     FFX_memory.closeMenu()
-    
-    woodsVars = [False, False, False] #Rikkus charge, Fish Scales, and Arctic Winds
+
+    # Rikkus charge, Fish Scales, and Arctic Winds
+    woodsVars = [False, False, False]
     woodsVars[0] = rikkuCharged
-    
-    lastGil = 0 #for first chest
+
+    lastGil = 0  # for first chest
     checkpoint = 0
     totalBattles = 0
-    while FFX_memory.getMap() != 221: #All the way to O'aka
+    while FFX_memory.getMap() != 221:  # All the way to O'aka
         if FFX_memory.userControl():
-            #Events
-            if checkpoint == 14: #First chest
+            # Events
+            if checkpoint == 14:  # First chest
                 if lastGil != FFX_memory.getGilvalue():
                     if lastGil == FFX_memory.getGilvalue() - 2000:
                         checkpoint += 1
@@ -39,25 +41,25 @@ def arrival(rikkuCharged):
             elif checkpoint == 59:
                 if woodsVars[0] == False or (woodsVars[1] == False and woodsVars[2] == False):
                     checkpoint = 57
-                else: #All good to proceed
+                else:  # All good to proceed
                     checkpoint += 1
-            
-            #Map changes
+
+            # Map changes
             elif checkpoint < 18 and FFX_memory.getMap() == 241:
                 checkpoint = 18
             elif checkpoint < 40 and FFX_memory.getMap() == 242:
                 checkpoint = 40
-            
-            #General pathing
+
+            # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mWoods(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                print("variable check 1:",woodsVars)
+                print("variable check 1:", woodsVars)
                 woodsVars = FFX_Battle.mWoods(woodsVars)
-                print("variable check 2:",woodsVars)
+                print("variable check 2:", woodsVars)
                 if FFX_memory.overdriveState()[6] == 100:
                     FFX_memory.fullPartyFormat("mwoodsgotcharge")
                 else:
@@ -65,10 +67,10 @@ def arrival(rikkuCharged):
                 totalBattles += 1
             elif not FFX_memory.battleActive() and FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
+
     FFX_Logs.writeStats("Mac Woods battles:")
     FFX_Logs.writeStats(totalBattles)
-    #Save sphere
+    # Save sphere
     FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(2)
     FFX_memory.awaitControl()
@@ -76,54 +78,56 @@ def arrival(rikkuCharged):
     FFX_memory.touchSaveSphere()
     FFXC.set_neutral()
 
+
 def lakeRoad():
-    #if FFX_memory.getSpeed() < 12:
+    # if FFX_memory.getSpeed() < 12:
     #    FFX_memory.setSpeed(12)
     FFX_memory.awaitControl()
-    while not FFX_targetPathing.setMovement([174,-96]):
+    while not FFX_targetPathing.setMovement([174, -96]):
         pass
-    while not FFX_targetPathing.setMovement([138,-83]):
+    while not FFX_targetPathing.setMovement([138, -83]):
         pass
-    while not FFX_targetPathing.setMovement([101,-82]):
+    while not FFX_targetPathing.setMovement([101, -82]):
         pass
     while FFX_memory.userControl():
         FFXC.set_movement(0, 1)
         FFX_Xbox.tapB()
     FFXC.set_neutral()
-    FFX_menu.mWoods() #Selling and buying, item sorting, etc
+    FFX_menu.mWoods()  # Selling and buying, item sorting, etc
     FFX_memory.fullPartyFormat('spheri')
-    while not FFX_targetPathing.setMovement([101,-72]):
+    while not FFX_targetPathing.setMovement([101, -72]):
         pass
-    
+
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
             mapVal = FFX_memory.getMap()
             tidusPos = FFX_memory.getCoords()
             if mapVal == 221:
                 if tidusPos[0] > 35:
-                    FFX_targetPathing.setMovement([33,-35])
+                    FFX_targetPathing.setMovement([33, -35])
                 else:
-                    FFX_targetPathing.setMovement([-4,15])
+                    FFX_targetPathing.setMovement([-4, 15])
             elif mapVal == 248:
                 if tidusPos[0] < -131:
-                    FFX_targetPathing.setMovement([-129,-343])
+                    FFX_targetPathing.setMovement([-129, -343])
                 elif tidusPos[1] < -235:
-                    FFX_targetPathing.setMovement([-49,-233])
+                    FFX_targetPathing.setMovement([-49, -233])
                 elif tidusPos[1] < -95:
-                    FFX_targetPathing.setMovement([-1,-93])
+                    FFX_targetPathing.setMovement([-1, -93])
                 else:
-                    FFX_targetPathing.setMovement([-1,100])
+                    FFX_targetPathing.setMovement([-1, 100])
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-            
-    FFXC.set_neutral() #Engage Spherimorph
-    
+
+    FFXC.set_neutral()  # Engage Spherimorph
+
     FFX_Battle.spherimorph()
     print("Battle is over.")
-    FFX_memory.clickToControl() #Jecht's memories
-    
+    FFX_memory.clickToControl()  # Jecht's memories
+
+
 def lakeRoad2():
     FFXC.set_movement(0, -1)
     if gameVars.csr():
@@ -131,32 +135,33 @@ def lakeRoad2():
         tidusPos = FFX_memory.getCoords()
         while checkpoint < 5:
             if checkpoint == 0:
-                if FFX_targetPathing.setMovement([-6,25]):
+                if FFX_targetPathing.setMovement([-6, 25]):
                     checkpoint += 1
             elif checkpoint == 1:
-                if FFX_targetPathing.setMovement([-4,-50]):
+                if FFX_targetPathing.setMovement([-4, -50]):
                     checkpoint += 1
             elif checkpoint == 2:
-                if FFX_targetPathing.setMovement([-45,-212]):
+                if FFX_targetPathing.setMovement([-45, -212]):
                     checkpoint += 1
             elif checkpoint == 3:
-                if FFX_targetPathing.setMovement([-49,-245]):
+                if FFX_targetPathing.setMovement([-49, -245]):
                     checkpoint += 1
             else:
-                if FFX_targetPathing.setMovement([-145,-358]):
+                if FFX_targetPathing.setMovement([-145, -358]):
                     checkpoint += 1
-    
+
     else:
         FFXC.set_movement(0, -1)
         FFX_memory.waitFrames(3)
         FFX_memory.awaitEvent()
         FFXC.set_neutral()
-        
-        FFX_memory.clickToControl() #Auron's musings.
+
+        FFX_memory.clickToControl()  # Auron's musings.
         print("Affection (before):", FFX_memory.affectionArray())
         FFX_memory.waitFrames(30 * 0.2)
         auronAffection = FFX_memory.affectionArray()[2]
-        while FFX_memory.affectionArray()[2] == auronAffection: #Make sure we get Auron affection
+        # Make sure we get Auron affection
+        while FFX_memory.affectionArray()[2] == auronAffection:
             auronCoords = FFX_memory.getActorCoords(3)
             FFX_targetPathing.setMovement(auronCoords)
             FFX_Xbox.tapB()
@@ -164,23 +169,24 @@ def lakeRoad2():
     while FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
     FFXC.set_neutral()
-    
-    FFX_memory.clickToControl() #Last map in the woods
+
+    FFX_memory.clickToControl()  # Last map in the woods
     FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(2)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
+
 
 def lake():
     print("Now to the frozen lake")
     FFX_memory.fullPartyFormat('crawler', fullMenuClose=False)
     FFX_menu.mLakeGrid()
     FFX_memory.awaitControl()
-    
+
     print("------------------------------------------Affection array:")
     print(FFX_memory.affectionArray())
     print("------------------------------------------")
-    
+
     checkpoint = 0
     while FFX_memory.getBattleNum() != 194:
         if FFX_memory.userControl():
@@ -190,11 +196,12 @@ def lake():
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive() and FFX_memory.getBattleNum() != 194:
-                    FFX_Battle.fleeAll()
+                FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.menuB()
     FFX_Xbox.clickToBattle()
     FFX_Battle.negator()
+
 
 def afterCrawler():
     print("------------------------------------------Affection array:")
@@ -214,7 +221,7 @@ def afterCrawler():
             FFXC.set_neutral()
 
     FFX_memory.clickToControl()
-    
+
     checkpoint = 0
     lastCP = 0
     while checkpoint != 100:
@@ -268,4 +275,3 @@ def afterCrawler():
                 else:
                     FFXC.set_movement(0, 1)
     print("End of Macalania Woods section. Next is temple section.")
-

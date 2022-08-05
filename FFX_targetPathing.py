@@ -9,6 +9,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 #FFXC = FFX_Xbox.FFXC
 
+
 def setMovement(target) -> bool:
 
     player = FFX_memory.getCoords()
@@ -40,15 +41,15 @@ def setMovement(target) -> bool:
     elif abs(Ly) > abs(Lx):
         Lx = copysign(Lx/Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
-    
-    
+
     FFXC.set_movement(Lx, Ly)
-    #FFX_memory.waitFrames(frames=1)
-    
+    # FFX_memory.waitFrames(frames=1)
+
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
-        return True #Checkpoint reached
+        return True  # Checkpoint reached
     else:
         return False
+
 
 def tidusHome(checkpoint):
     x = 999
@@ -102,7 +103,8 @@ def tidusHome(checkpoint):
     if checkpoint == 16:
         x = 32
         y = 1038
-    return [x,y]
+    return [x, y]
+
 
 def allStartsHere(checkpoint):
     x = 999
@@ -169,7 +171,8 @@ def allStartsHere(checkpoint):
     if checkpoint == 20:
         x = -80
         y = 680
-    return [x,y]
+    return [x, y]
+
 
 def baajRamp(checkpoint):
     x = 999
@@ -192,11 +195,12 @@ def baajRamp(checkpoint):
     if checkpoint == 5:
         x = -28
         y = 17
-    #Checkpoint == 6: transition
+    # Checkpoint == 6: transition
     if checkpoint == 7:
         x = 300
         y = 300
-    return [x,y]
+    return [x, y]
+
 
 def baajHallway(checkpoint):
     x = 999
@@ -228,7 +232,8 @@ def baajHallway(checkpoint):
     if checkpoint == 8:
         x = -2
         y = 250
-    return [x,y]
+    return [x, y]
+
 
 def baajPuzzle(checkpoint):
     x = 999
@@ -325,7 +330,8 @@ def baajPuzzle(checkpoint):
         y = 90
     if checkpoint == 32:
         print("Back to main room")
-    return [x,y]
+    return [x, y]
+
 
 def besaid1(checkpoint):
     x = 999
@@ -351,7 +357,7 @@ def besaid1(checkpoint):
     if checkpoint == 6:
         x = -601
         y = -411
-    if checkpoint == 7: #Wakka pushes Tidus
+    if checkpoint == 7:  # Wakka pushes Tidus
         x = -229
         y = -359
     if checkpoint == 8:
@@ -387,16 +393,16 @@ def besaid1(checkpoint):
     if checkpoint == 18:
         x = 488
         y = -459
-    if checkpoint == 19: #Pillar, before the big open area.
+    if checkpoint == 19:  # Pillar, before the big open area.
         x = 498
         y = -414
-    if checkpoint == 20: #Adjust to best trigger for pirhanas
+    if checkpoint == 20:  # Adjust to best trigger for pirhanas
         x = 480
         y = -37
-    if checkpoint == 21: #Adjust to best trigger for pirhanas
+    if checkpoint == 21:  # Adjust to best trigger for pirhanas
         x = 480
         y = 100
-    if checkpoint == 22: #Hilltop
+    if checkpoint == 22:  # Hilltop
         x = 73
         y = -49
     if checkpoint == 23:
@@ -417,7 +423,7 @@ def besaid1(checkpoint):
     if checkpoint == 28:
         x = 75
         y = -700
-    if checkpoint == 29: #Enter Besaid village
+    if checkpoint == 29:  # Enter Besaid village
         x = -18
         y = 444
     if checkpoint == 30:
@@ -432,7 +438,7 @@ def besaid1(checkpoint):
     if checkpoint == 33:
         x = -5
         y = -179
-    if checkpoint == 34: #Temple
+    if checkpoint == 34:  # Temple
         print("Temple")
     if checkpoint == 35:
         x = 38
@@ -458,7 +464,7 @@ def besaid1(checkpoint):
     if checkpoint == 42:
         x = -79
         y = 292
-    if checkpoint == 43: #Into Wakka's tent
+    if checkpoint == 43:  # Into Wakka's tent
         print("Into Wakka's tent")
     if checkpoint == 44:
         print("Sleep tight.")
@@ -479,10 +485,11 @@ def besaid1(checkpoint):
     if checkpoint == 50:
         x = 0
         y = -200
-    if checkpoint == 51: #The Precepts must be obeyed!
+    if checkpoint == 51:  # The Precepts must be obeyed!
         x = 0
         y = 30
-    return [x,y]
+    return [x, y]
+
 
 def besaidTrials(checkpoint):
     x = 999
@@ -561,7 +568,7 @@ def besaidTrials(checkpoint):
         y = -50
     if checkpoint == 26:
         print("Insert Besaid sphere, and push to completion")
-    if checkpoint == 27: #Back from the temple
+    if checkpoint == 27:  # Back from the temple
         x = 0
         y = -107
     if checkpoint == 28:
@@ -576,10 +583,10 @@ def besaidTrials(checkpoint):
     if checkpoint == 31:
         x = -13
         y = 76
-    if checkpoint == 32: #Approach Valefor's first scene
+    if checkpoint == 32:  # Approach Valefor's first scene
         x = 0
         y = 200
-    if checkpoint == 33: #Night scene
+    if checkpoint == 33:  # Night scene
         x = 15
         y = 194
     if checkpoint == 34:
@@ -597,7 +604,7 @@ def besaidTrials(checkpoint):
         y = 105
     if checkpoint == 39:
         print("Dream about girls")
-    if checkpoint == 40: #Ready to leave village.
+    if checkpoint == 40:  # Ready to leave village.
         x = 7
         y = 24
     if checkpoint == 41:
@@ -606,7 +613,8 @@ def besaidTrials(checkpoint):
     if checkpoint == 42:
         x = 0
         y = -200
-    return [x,y]
+    return [x, y]
+
 
 def besaid2(checkpoint):
     x = 999
@@ -654,7 +662,7 @@ def besaid2(checkpoint):
         y = 502
     if checkpoint == 16:
         print("Exit the front gates")
-    if checkpoint == 17: #Outside village
+    if checkpoint == 17:  # Outside village
         x = 63
         y = -469
     if checkpoint == 18:
@@ -696,7 +704,7 @@ def besaid2(checkpoint):
     if checkpoint == 31:
         x = -40
         y = 300
-    if checkpoint == 32: #Waterfalls
+    if checkpoint == 32:  # Waterfalls
         x = -803
         y = 39
     if checkpoint == 33:
@@ -753,7 +761,7 @@ def besaid2(checkpoint):
     if checkpoint == 50:
         x = 490
         y = 300
-    if checkpoint == 51: # Weird T screen
+    if checkpoint == 51:  # Weird T screen
         x = -23
         y = 48
     if checkpoint == 52:
@@ -777,10 +785,10 @@ def besaid2(checkpoint):
     if checkpoint == 58:
         x = 80
         y = -150
-    if checkpoint == 59: #Beach
+    if checkpoint == 59:  # Beach
         x = -318
         y = -472
-    if checkpoint == 60: #Save sphere, but no longer used.
+    if checkpoint == 60:  # Save sphere, but no longer used.
         print("Save sphere")
     if checkpoint == 61:
         x = -283
@@ -809,7 +817,8 @@ def besaid2(checkpoint):
     if checkpoint == 69:
         x = 425
         y = 90
-    return [x,y]
+    return [x, y]
+
 
 def liki(checkpoint):
     x = 999
@@ -830,7 +839,8 @@ def liki(checkpoint):
     if checkpoint == 5:
         x = 0
         y = 350
-    return [x,y]
+    return [x, y]
+
 
 def Kilika1(checkpoint):
     x = 999
@@ -904,7 +914,8 @@ def Kilika1(checkpoint):
     if checkpoint == 24:
         x = -155
         y = 350
-    return [x,y]
+    return [x, y]
+
 
 def Kilika2(checkpoint):
     x = 999
@@ -1156,7 +1167,7 @@ def Kilika2(checkpoint):
     if checkpoint == 82:
         x = -95
         y = 415
-    if checkpoint == 83: #Into next area
+    if checkpoint == 83:  # Into next area
         x = -80
         y = 500
     if checkpoint == 84:
@@ -1165,7 +1176,7 @@ def Kilika2(checkpoint):
     if checkpoint == 85:
         x = -20
         y = 172
-    if checkpoint == 86: #Stairs save sphere
+    if checkpoint == 86:  # Stairs save sphere
         print("Stairs")
     if checkpoint == 87:
         x = -10
@@ -1191,24 +1202,25 @@ def Kilika2(checkpoint):
     if checkpoint == 94:
         x = 2
         y = 270
-    if checkpoint == 95: #Into the temple
+    if checkpoint == 95:  # Into the temple
         x = 2
         y = 500
     if checkpoint == 96:
         x = -1
         y = -56
-    if checkpoint == 97: #non-CSR, slight left
+    if checkpoint == 97:  # non-CSR, slight left
         x = -22
         y = 6
-    if checkpoint == 98: #non-CSR, past Lulu
+    if checkpoint == 98:  # non-CSR, past Lulu
         x = -30
         y = 33
-    if checkpoint == 99: #non-CSR, pray to O'holland
+    if checkpoint == 99:  # non-CSR, pray to O'holland
         print("non-CSR, pray to O'holland")
     if checkpoint == 100:
         x = 2
         y = 54
-    return [x,y]
+    return [x, y]
+
 
 def KilikaTrials(checkpoint):
     x = 999
@@ -1361,15 +1373,16 @@ def KilikaTrials(checkpoint):
     if checkpoint == 52:
         x = 0
         y = 400
-    if checkpoint == 53: #Inner sanctum
+    if checkpoint == 53:  # Inner sanctum
         x = -13
         y = -10
-    if checkpoint == 54: #Talk to Wakka
+    if checkpoint == 54:  # Talk to Wakka
         print("Talk to Wakka")
     if checkpoint == 55:
         x = -6
         y = -20
-    return [x,y]
+    return [x, y]
+
 
 def Kilika3(checkpoint):
     x = 999
@@ -1467,10 +1480,10 @@ def Kilika3(checkpoint):
     if checkpoint == 30:
         x = -242
         y = -54
-    if checkpoint == 31: #Before crossing log, between two trees.
+    if checkpoint == 31:  # Before crossing log, between two trees.
         x = -241
         y = -80
-    if checkpoint == 32: #Right before stepping on the log
+    if checkpoint == 32:  # Right before stepping on the log
         x = -246
         y = -122
     if checkpoint == 33:
@@ -1530,7 +1543,7 @@ def Kilika3(checkpoint):
     if checkpoint == 51:
         x = -85
         y = -525
-    if checkpoint == 52: #Back to the docks
+    if checkpoint == 52:  # Back to the docks
         x = -70
         y = -600
     if checkpoint == 53:
@@ -1575,10 +1588,11 @@ def Kilika3(checkpoint):
     if checkpoint == 66:
         x = -84
         y = -213
-    if checkpoint == 67: #Just before the boat, after the hammer guy
+    if checkpoint == 67:  # Just before the boat, after the hammer guy
         x = -161
         y = -241
-    return [x,y]
+    return [x, y]
+
 
 def winno(checkpoint):
     x = 999
@@ -1601,7 +1615,7 @@ def winno(checkpoint):
     if checkpoint == 5:
         x = -26
         y = -67
-    if checkpoint == 6: #Start Lulu/Wakka conversation
+    if checkpoint == 6:  # Start Lulu/Wakka conversation
         x = 0
         y = 0
     if checkpoint == 7:
@@ -1622,7 +1636,8 @@ def winno(checkpoint):
     if checkpoint == 12:
         x = 22
         y = 104
-    return [x,y]
+    return [x, y]
+
 
 def Luca1(checkpoint):
     x = 999
@@ -1639,12 +1654,12 @@ def Luca1(checkpoint):
     if checkpoint == 3:
         x = 346
         y = 63
-    if checkpoint == 4: #Seymour intro scene
+    if checkpoint == 4:  # Seymour intro scene
         print("Seymour intro scene")
     if checkpoint == 5:
         x = 0
         y = -200
-    if checkpoint == 6: #Luca stadium front
+    if checkpoint == 6:  # Luca stadium front
         x = -256
         y = -76
     if checkpoint == 7:
@@ -1676,7 +1691,7 @@ def Luca1(checkpoint):
     if checkpoint == 16:
         x = 1
         y = 188
-    if checkpoint == 17: #Into the bar
+    if checkpoint == 17:  # Into the bar
         print("Into the bar")
     if checkpoint == 18:
         x = 37
@@ -1712,17 +1727,17 @@ def Luca1(checkpoint):
     if checkpoint == 29:
         x = -195
         y = 203
-    if checkpoint == 30: #First battle
+    if checkpoint == 30:  # First battle
         print("First battle")
     if checkpoint == 31:
         x = 185
         y = 240
-    if checkpoint == 32: #Second battle
+    if checkpoint == 32:  # Second battle
         print("Second battle")
     if checkpoint == 33:
         x = 281
         y = -75
-    if checkpoint == 34: #Third battle
+    if checkpoint == 34:  # Third battle
         print("Third battle")
     if checkpoint == 35:
         x = 167
@@ -1732,7 +1747,7 @@ def Luca1(checkpoint):
     if checkpoint == 37:
         x = 150
         y = -337
-    if checkpoint == 38: #Start of Oblitzerator fight
+    if checkpoint == 38:  # Start of Oblitzerator fight
         print("Start of Oblitzerator fight")
     if checkpoint == 39:
         x = -8
@@ -1750,9 +1765,10 @@ def Luca1(checkpoint):
     if checkpoint == 44:
         x = -275
         y = -50
-    if checkpoint == 45: #Save sphere and end of section
+    if checkpoint == 45:  # Save sphere and end of section
         print("Save sphere and end of section")
-    return [x,y]
+    return [x, y]
+
 
 def LucaPreBlitz(checkpoint):
     x = 999
@@ -1781,7 +1797,8 @@ def LucaPreBlitz(checkpoint):
     if checkpoint == 7:
         x = -108
         y = -10
-    return [x,y]
+    return [x, y]
+
 
 def Luca3(checkpoint):
     x = 999
@@ -1810,12 +1827,12 @@ def Luca3(checkpoint):
     if checkpoint == 7:
         x = -632
         y = -403
-    if checkpoint == 6: #First chest
+    if checkpoint == 6:  # First chest
         print("First chest")
     if checkpoint == 9:
         x = -621
         y = -417
-    if checkpoint == 10: #Second chest
+    if checkpoint == 10:  # Second chest
         print("Second chest")
     if checkpoint == 11:
         x = -627
@@ -1844,12 +1861,12 @@ def Luca3(checkpoint):
     if checkpoint == 19:
         x = -316
         y = -144
-    if checkpoint == 20: #Target Auron
+    if checkpoint == 20:  # Target Auron
         print("Target Auron")
     if checkpoint == 21:
         x = -294
         y = -42
-    if checkpoint == 22: #Into registration map
+    if checkpoint == 22:  # Into registration map
         x = -220
         y = -10
     if checkpoint == 23:
@@ -1861,7 +1878,7 @@ def Luca3(checkpoint):
     if checkpoint == 25:
         x = -500
         y = -32
-    if checkpoint == 26: #Upside down T map
+    if checkpoint == 26:  # Upside down T map
         x = -63
         y = -18
     if checkpoint == 27:
@@ -1876,7 +1893,7 @@ def Luca3(checkpoint):
     if checkpoint == 30:
         x = 300
         y = 0
-    if checkpoint == 31: #Carnival screen
+    if checkpoint == 31:  # Carnival screen
         x = 29
         y = -87
     if checkpoint == 32:
@@ -1888,9 +1905,10 @@ def Luca3(checkpoint):
     if checkpoint == 34:
         x = 140
         y = 92
-    if checkpoint == 35: #Bring the party together
+    if checkpoint == 35:  # Bring the party together
         print("Bring the party together")
-    return [x,y]
+    return [x, y]
+
 
 def miihen(checkpoint):
     x = 999
@@ -1913,7 +1931,7 @@ def miihen(checkpoint):
     if checkpoint == 5:
         x = -47
         y = 1351
-    if checkpoint in [6,7,8,9,10]:
+    if checkpoint in [6, 7, 8, 9, 10]:
         print("Attempting Mi'ihen skip")
     if checkpoint == 11:
         x = 17
@@ -1963,7 +1981,7 @@ def miihen(checkpoint):
     if checkpoint == 26:
         x = -22
         y = 2783
-    if checkpoint == 27: #Shelinda
+    if checkpoint == 27:  # Shelinda
         print("Shelinda")
     if checkpoint == 28:
         x = 5
@@ -1977,7 +1995,8 @@ def miihen(checkpoint):
     if checkpoint == 31:
         x = 0
         y = -227
-    return [x,y]
+    return [x, y]
+
 
 def miihenAgency(checkpoint):
     x = 999
@@ -1988,10 +2007,10 @@ def miihenAgency(checkpoint):
     if checkpoint == 1:
         x = 15
         y = -30
-    if checkpoint == 2: #Go for P.downs if less than 10.
+    if checkpoint == 2:  # Go for P.downs if less than 10.
         x = -2
         y = -27
-    if checkpoint == 3: #Talk to lady and purchase downs.
+    if checkpoint == 3:  # Talk to lady and purchase downs.
         x = -2
         y = -27
     if checkpoint == 4:
@@ -2000,7 +2019,8 @@ def miihenAgency(checkpoint):
     if checkpoint == 5:
         x = -15
         y = -90
-    return [x,y]
+    return [x, y]
+
 
 def lowRoad(checkpoint):
     x = 999
@@ -2055,7 +2075,7 @@ def lowRoad(checkpoint):
     if checkpoint == 16:
         x = 100
         y = 100
-    if checkpoint == 17: #Second low road map
+    if checkpoint == 17:  # Second low road map
         x = 357
         y = 120
     if checkpoint == 18:
@@ -2079,7 +2099,7 @@ def lowRoad(checkpoint):
     if checkpoint == 24:
         x = 715
         y = 378
-    if checkpoint == 25: #Last checkpoint before reviewing for Self Destruct
+    if checkpoint == 25:  # Last checkpoint before reviewing for Self Destruct
         x = 732
         y = 448
     if checkpoint == 26:
@@ -2088,7 +2108,7 @@ def lowRoad(checkpoint):
     if checkpoint == 27:
         x = 780
         y = 530
-    if checkpoint == 28: #Final map, meeting Seymour
+    if checkpoint == 28:  # Final map, meeting Seymour
         x = 158
         y = -209
     if checkpoint == 29:
@@ -2114,7 +2134,8 @@ def lowRoad(checkpoint):
     if checkpoint == 36:
         x = -50
         y = 400
-    return [x,y]
+    return [x, y]
+
 
 def mrrStart(checkpoint):
     x = 999
@@ -2151,7 +2172,8 @@ def mrrStart(checkpoint):
     if checkpoint == 10:
         x = -206
         y = -300
-    return [x,y]
+    return [x, y]
+
 
 def mrrMain(checkpoint):
     x = 999
@@ -2314,7 +2336,7 @@ def mrrMain(checkpoint):
     if checkpoint == 53:
         x = 112
         y = 100
-    if checkpoint == 54: #Lining up with the guy for 400 gil
+    if checkpoint == 54:  # Lining up with the guy for 400 gil
         x = 61
         y = 140
     if checkpoint == 55:
@@ -2340,7 +2362,7 @@ def mrrMain(checkpoint):
     if checkpoint == 62:
         x = 219
         y = 202
-    if checkpoint == 63: #Diagonal towards the save sphere
+    if checkpoint == 63:  # Diagonal towards the save sphere
         x = 226
         y = 170
     if checkpoint == 64:
@@ -2363,7 +2385,7 @@ def mrrMain(checkpoint):
     if checkpoint == 70:
         x = 450
         y = 160
-    if checkpoint == 71: #Into Battle Site zone (upper, cannon area)
+    if checkpoint == 71:  # Into Battle Site zone (upper, cannon area)
         x = 47
         y = 513
     if checkpoint == 72:
@@ -2381,7 +2403,8 @@ def mrrMain(checkpoint):
     if checkpoint == 99:
         x = 77
         y = 872
-    return [x,y]
+    return [x, y]
+
 
 def battleSite(checkpoint):
     x = 999
@@ -2427,7 +2450,8 @@ def battleSite(checkpoint):
         y = 3134
     if checkpoint == 14:
         print("Start of fight, Sinspawn Gui")
-    return [x,y]
+    return [x, y]
+
 
 def battleSiteAftermath(checkpoint):
     x = 999
@@ -2438,7 +2462,7 @@ def battleSiteAftermath(checkpoint):
     if checkpoint == 1:
         x = 75
         y = 2992
-    if checkpoint == 2: #Clasko position
+    if checkpoint == 2:  # Clasko position
         x = 50
         y = 3092
     if checkpoint == 4:
@@ -2475,7 +2499,8 @@ def battleSiteAftermath(checkpoint):
         y = 77
     if checkpoint == 15:
         print("Towards Djose section.")
-    return [x,y]
+    return [x, y]
+
 
 def djosePath(checkpoint):
     x = 999
@@ -2603,25 +2628,25 @@ def djosePath(checkpoint):
     if checkpoint == 40:
         x = 440
         y = 650
-    if checkpoint in [41,42,43]:
+    if checkpoint in [41, 42, 43]:
         x = 449
         y = 652
     if checkpoint == 44:
         x = 495
         y = 700
-    if checkpoint == 45: #Point of deferral 1
+    if checkpoint == 45:  # Point of deferral 1
         x = 550
         y = 730
-    if checkpoint == 46: #Point of deferral 2
+    if checkpoint == 46:  # Point of deferral 2
         x = 489
         y = 730
-    if checkpoint == 47: #Point of continuation
+    if checkpoint == 47:  # Point of continuation
         x = 604
         y = 836
     if checkpoint == 48:
         x = 734
         y = 859
-    if checkpoint == 49: #Transition to next map
+    if checkpoint == 49:  # Transition to next map
         x = 0
         y = 0
     if checkpoint == 50:
@@ -2636,16 +2661,17 @@ def djosePath(checkpoint):
     if checkpoint == 53:
         x = 9
         y = 151
-    if checkpoint == 54: #Transition to temple map
+    if checkpoint == 54:  # Transition to temple map
         x = 0
         y = 0
     if checkpoint == 55:
         x = -4
         y = -87
-    if checkpoint == 56: #Transition into temple
+    if checkpoint == 56:  # Transition into temple
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def djoseTrials(checkpoint):
     x = 999
@@ -2829,7 +2855,7 @@ def djoseTrials(checkpoint):
         y = 5
     if checkpoint == 67:
         x = 9
-        y = 19 #Dial in
+        y = 19  # Dial in
     if checkpoint == 68:
         print("Right sphere")
     if checkpoint == 69:
@@ -2864,7 +2890,7 @@ def djoseTrials(checkpoint):
     if checkpoint == 79:
         x = -54
         y = 25
-    if checkpoint == 80: #Destro glyph
+    if checkpoint == 80:  # Destro glyph
         print("Destruction Glyph")
     if checkpoint == 81:
         x = -62
@@ -2928,7 +2954,8 @@ def djoseTrials(checkpoint):
         y = 37
     if checkpoint == 104:
         print("End of Trials")
-    return [x,y]
+    return [x, y]
+
 
 def djoseDance(checkpoint):
     x = 999
@@ -2957,7 +2984,8 @@ def djoseDance(checkpoint):
     if checkpoint == 7:
         x = -8
         y = -16
-    return [x,y]
+    return [x, y]
+
 
 def djoseExit(checkpoint):
     x = 999
@@ -2965,13 +2993,13 @@ def djoseExit(checkpoint):
     if checkpoint == 0:
         x = 11
         y = -149
-    if checkpoint == 1: #Talk to Auron
+    if checkpoint == 1:  # Talk to Auron
         x = 0
         y = 0
     if checkpoint == 2:
         x = -1
         y = -88
-    if checkpoint == 3: #Enter temple
+    if checkpoint == 3:  # Enter temple
         x = 0
         y = 0
     if checkpoint == 4:
@@ -2989,7 +3017,7 @@ def djoseExit(checkpoint):
     if checkpoint == 8:
         x = -52
         y = 94
-    if checkpoint == 9: #Enter room where Yuna is resting
+    if checkpoint == 9:  # Enter room where Yuna is resting
         x = 0
         y = 0
     if checkpoint == 10:
@@ -2998,13 +3026,13 @@ def djoseExit(checkpoint):
     if checkpoint == 11:
         x = 13
         y = -1
-    if checkpoint == 12: #Remedy
+    if checkpoint == 12:  # Remedy
         x = 0
         y = 0
     if checkpoint == 13:
         x = 11
         y = 28
-    if checkpoint == 14: #Wake up Yuna
+    if checkpoint == 14:  # Wake up Yuna
         x = 0
         y = 0
     if checkpoint == 15:
@@ -3016,7 +3044,7 @@ def djoseExit(checkpoint):
     if checkpoint == 17:
         x = -178
         y = -261
-    if checkpoint == 18: #4k gold chest
+    if checkpoint == 18:  # 4k gold chest
         x = 0
         y = 0
     if checkpoint == 19:
@@ -3028,7 +3056,7 @@ def djoseExit(checkpoint):
     if checkpoint == 21:
         x = -40
         y = -360
-    if checkpoint == 22: #Switch maps, to Bridge
+    if checkpoint == 22:  # Switch maps, to Bridge
         x = 0
         y = 0
     if checkpoint == 23:
@@ -3049,7 +3077,7 @@ def djoseExit(checkpoint):
     if checkpoint == 28:
         x = -9
         y = -333
-    if checkpoint == 29: #Switch map, to Djose road
+    if checkpoint == 29:  # Switch map, to Djose road
         x = 0
         y = 0
     if checkpoint == 30:
@@ -3115,7 +3143,8 @@ def djoseExit(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def moonflow(checkpoint):
     x = 999
@@ -3152,7 +3181,7 @@ def moonflow(checkpoint):
     if checkpoint == 10:
         x = -20
         y = -400
-    if checkpoint == 11: #Map - Fork in the road
+    if checkpoint == 11:  # Map - Fork in the road
         x = 610
         y = 843
     if checkpoint == 12:
@@ -3161,7 +3190,7 @@ def moonflow(checkpoint):
     if checkpoint == 13:
         x = 567
         y = 1200
-    if checkpoint == 14: #Start of the long Moonflow path/map
+    if checkpoint == 14:  # Start of the long Moonflow path/map
         x = -988
         y = 1678
     if checkpoint == 15:
@@ -3182,7 +3211,7 @@ def moonflow(checkpoint):
     if checkpoint == 20:
         x = -1317
         y = 783
-    if checkpoint == 21: #Ronso discussion
+    if checkpoint == 21:  # Ronso discussion
         x = -1317
         y = 783
     if checkpoint == 22:
@@ -3248,7 +3277,7 @@ def moonflow(checkpoint):
     if checkpoint == 42:
         x = -1812
         y = -476
-    if checkpoint == 43: #Moonflow chest
+    if checkpoint == 43:  # Moonflow chest
         print("Moonflow chest")
     if checkpoint == 44:
         x = -1862
@@ -3265,11 +3294,11 @@ def moonflow(checkpoint):
     if checkpoint == 48:
         x = -1970
         y = -900
-    if checkpoint == 49: #Actual Moonflow map
+    if checkpoint == 49:  # Actual Moonflow map
         x = -1190
         y = 193
     if checkpoint == 50:
-        x = -1118 #Can be used for tuning later.
+        x = -1118  # Can be used for tuning later.
         y = -614
     if checkpoint == 51:
         x = -1118
@@ -3277,7 +3306,7 @@ def moonflow(checkpoint):
     if checkpoint == 52:
         x = -1034
         y = -566
-    if checkpoint == 53: #Last before "Whoa a Shoopuff"
+    if checkpoint == 53:  # Last before "Whoa a Shoopuff"
         x = -960
         y = -500
     if checkpoint == 54:
@@ -3286,7 +3315,8 @@ def moonflow(checkpoint):
     if checkpoint == 55:
         x = -30
         y = 180
-    return [x,y]
+    return [x, y]
+
 
 def moonflowBankSouth(checkpoint):
     x = 999
@@ -3303,7 +3333,8 @@ def moonflowBankSouth(checkpoint):
     if checkpoint == 3:
         x = -71
         y = 48
-    return [x,y]
+    return [x, y]
+
 
 def moonflowBankNorth(checkpoint):
     x = 999
@@ -3317,7 +3348,7 @@ def moonflowBankNorth(checkpoint):
     if checkpoint == 2:
         x = -1001
         y = -767
-    if checkpoint == 3: #Rikku scene
+    if checkpoint == 3:  # Rikku scene
         x = -1135
         y = -807
     if checkpoint == 4:
@@ -3329,7 +3360,7 @@ def moonflowBankNorth(checkpoint):
     if checkpoint == 6:
         x = -1125
         y = -627
-    if checkpoint == 7: #Rikku steal/mix tutorial.
+    if checkpoint == 7:  # Rikku steal/mix tutorial.
         print("Rikku steal/mix tutorial.")
     if checkpoint == 8:
         x = -1076
@@ -3340,7 +3371,7 @@ def moonflowBankNorth(checkpoint):
     if checkpoint == 10:
         x = -892
         y = -327
-    if checkpoint == 11: #Into the Guadosalam entrance map
+    if checkpoint == 11:  # Into the Guadosalam entrance map
         x = -800
         y = -270
     if checkpoint == 12:
@@ -3364,7 +3395,8 @@ def moonflowBankNorth(checkpoint):
     if checkpoint == 18:
         x = 70
         y = 200
-    return [x,y]
+    return [x, y]
+
 
 def guadoStoryline(checkpoint):
     x = 999
@@ -3372,7 +3404,7 @@ def guadoStoryline(checkpoint):
     if checkpoint == 0:
         x = -8
         y = 109
-    if checkpoint == 1: #Dialog with party
+    if checkpoint == 1:  # Dialog with party
         x = 0
         y = 0
     if checkpoint == 2:
@@ -3405,22 +3437,22 @@ def guadoStoryline(checkpoint):
     if checkpoint == 11:
         x = 120
         y = 92
-    if checkpoint == 12: #Towards the farplane
+    if checkpoint == 12:  # Towards the farplane
         x = 0
         y = 0
     if checkpoint == 13:
         x = -9
         y = 11
-    if checkpoint == 14: #Chest
+    if checkpoint == 14:  # Chest
         x = 0
         y = 0
     if checkpoint == 15:
         x = -5
         y = 101
-    if checkpoint == 16: #Screen to screen
+    if checkpoint == 16:  # Screen to screen
         x = 0
         y = 0
-    if checkpoint == 17: #Approach party
+    if checkpoint == 17:  # Approach party
         x = 0
         y = 0
     if checkpoint == 18:
@@ -3432,19 +3464,19 @@ def guadoStoryline(checkpoint):
     if checkpoint == 20:
         x = -4
         y = 152
-    if checkpoint == 21: #Into the farplane
+    if checkpoint == 21:  # Into the farplane
         x = 0
         y = 0
     if checkpoint == 22:
         x = -44
         y = 0
-    if checkpoint == 23: #Wakka convo
+    if checkpoint == 23:  # Wakka convo
         x = 0
         y = 0
     if checkpoint == 24:
         x = -26
         y = -65
-    if checkpoint == 25: #Yuna convo
+    if checkpoint == 25:  # Yuna convo
         x = 0
         y = 0
     if checkpoint == 26:
@@ -3522,7 +3554,8 @@ def guadoStoryline(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def guadoSkip(checkpoint):
     x = 999
@@ -3603,7 +3636,8 @@ def guadoSkip(checkpoint):
     if checkpoint == 31:
         x = -70
         y = 250
-    return [x,y]
+    return [x, y]
+
 
 def tPlainsSouth(checkpoint):
     x = 999
@@ -3623,7 +3657,7 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 4:
         x = -3
         y = -663
-    if checkpoint == 5: #Past crater
+    if checkpoint == 5:  # Past crater
         x = -7
         y = -635
     if checkpoint == 6:
@@ -3650,10 +3684,10 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 13:
         x = 54
         y = 1200
-    if checkpoint == 20: #Nemesis route changes significantly.
+    if checkpoint == 20:  # Nemesis route changes significantly.
         x = -44
         y = -887
-    if checkpoint == 21: #Touch save sphere
+    if checkpoint == 21:  # Touch save sphere
         x = 0
         y = 0
     if checkpoint == 22:
@@ -3665,7 +3699,7 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 24:
         x = -170
         y = -491
-    if checkpoint == 25: #Touch cactuar stone 1
+    if checkpoint == 25:  # Touch cactuar stone 1
         x = 0
         y = 0
     if checkpoint == 26:
@@ -3689,10 +3723,10 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 32:
         x = 204
         y = 166
-    if checkpoint == 33: #Touch cactuar stone 2
+    if checkpoint == 33:  # Touch cactuar stone 2
         x = 0
         y = 0
-    if checkpoint == 34: #Count 50 dodges
+    if checkpoint == 34:  # Count 50 dodges
         x = 0
         y = 0
     if checkpoint == 35:
@@ -3707,7 +3741,8 @@ def tPlainsSouth(checkpoint):
     if checkpoint == 38:
         x = 58
         y = 380
-    return [x,y]
+    return [x, y]
+
 
 def tPlainsAgency(checkpoint):
     x = 999
@@ -3715,7 +3750,7 @@ def tPlainsAgency(checkpoint):
     if checkpoint == 0:
         x = 4
         y = -36
-    if checkpoint == 1: #Agency shop
+    if checkpoint == 1:  # Agency shop
         x = 0
         y = 0
     if checkpoint == 2:
@@ -3724,7 +3759,7 @@ def tPlainsAgency(checkpoint):
     if checkpoint == 3:
         x = 29
         y = -10
-    if checkpoint == 4: #Scene with Yuna
+    if checkpoint == 4:  # Scene with Yuna
         x = 0
         y = 0
     if checkpoint == 5:
@@ -3733,10 +3768,10 @@ def tPlainsAgency(checkpoint):
     if checkpoint == 6:
         x = 25
         y = -36
-    if checkpoint == 7: #Talk to Kimahri, affection manip
+    if checkpoint == 7:  # Talk to Kimahri, affection manip
         x = 0
         y = 0
-    if checkpoint == 8: #Talk to Rikku to leave the agency
+    if checkpoint == 8:  # Talk to Rikku to leave the agency
         x = 0
         y = 0
     if checkpoint == 9:
@@ -3745,10 +3780,11 @@ def tPlainsAgency(checkpoint):
     if checkpoint == 10:
         x = -44
         y = 99
-    if checkpoint == 11: #Lightning shield, and exit to North pathing.
+    if checkpoint == 11:  # Lightning shield, and exit to North pathing.
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def tPlainsNorth(checkpoint):
     x = 999
@@ -3795,13 +3831,13 @@ def tPlainsNorth(checkpoint):
     if checkpoint == 13:
         x = 52
         y = 123
-    if checkpoint == 14: #any% only (non-CSR)
+    if checkpoint == 14:  # any% only (non-CSR)
         x = -52
         y = 414
     if checkpoint == 15:
         x = -26
         y = 451
-    if checkpoint == 16: #Both back on track
+    if checkpoint == 16:  # Both back on track
         x = -1
         y = 739
     if checkpoint == 17:
@@ -3819,7 +3855,8 @@ def tPlainsNorth(checkpoint):
     if checkpoint == 21:
         x = -73
         y = 1300
-    return [x,y]
+    return [x, y]
+
 
 def mWoods(checkpoint):
     x = 999
@@ -3866,7 +3903,7 @@ def mWoods(checkpoint):
     if checkpoint == 13:
         x = -131
         y = 234
-    if checkpoint == 14: #First chest
+    if checkpoint == 14:  # First chest
         print("First chest")
     if checkpoint == 15:
         x = -154
@@ -3877,7 +3914,7 @@ def mWoods(checkpoint):
     if checkpoint == 17:
         x = -250
         y = 200
-    if checkpoint == 18: #Second map - with the loop
+    if checkpoint == 18:  # Second map - with the loop
         x = 57
         y = 60
     if checkpoint == 19:
@@ -3919,7 +3956,7 @@ def mWoods(checkpoint):
     if checkpoint == 31:
         x = 160
         y = 6
-    if checkpoint == 32: #Bartello
+    if checkpoint == 32:  # Bartello
         x = 178
         y = -46
     if checkpoint == 33:
@@ -3931,10 +3968,10 @@ def mWoods(checkpoint):
     if checkpoint == 35:
         x = -28
         y = -188
-    if checkpoint == 36: #Butterfly guy
+    if checkpoint == 36:  # Butterfly guy
         x = -97
         y = -214
-    if checkpoint == 37: #Touch butterfly
+    if checkpoint == 37:  # Touch butterfly
         x = -146
         y = -204
     if checkpoint == 38:
@@ -3943,7 +3980,7 @@ def mWoods(checkpoint):
     if checkpoint == 39:
         x = -250
         y = -50
-    if checkpoint == 40: #Into next screen
+    if checkpoint == 40:  # Into next screen
         x = -505
         y = 36
     if checkpoint == 41:
@@ -4000,7 +4037,7 @@ def mWoods(checkpoint):
     if checkpoint == 58:
         x = -612
         y = 144
-    if checkpoint == 59: # Check for completion status
+    if checkpoint == 59:  # Check for completion status
         print("Check for completion status")
     if checkpoint == 60:
         x = -601
@@ -4017,7 +4054,8 @@ def mWoods(checkpoint):
     if checkpoint == 64:
         x = -750
         y = -200
-    return [x,y]
+    return [x, y]
+
 
 def mLake(checkpoint):
     x = 999
@@ -4175,7 +4213,8 @@ def mLake(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def mTempleApproach(checkpoint):
     x = 999
@@ -4186,7 +4225,7 @@ def mTempleApproach(checkpoint):
     if checkpoint == 1:
         x = 30
         y = 650
-    if checkpoint == 2: #From snowmobile screen to curve screen
+    if checkpoint == 2:  # From snowmobile screen to curve screen
         x = 39
         y = 86
     if checkpoint == 3:
@@ -4228,10 +4267,11 @@ def mTempleApproach(checkpoint):
     if checkpoint == 15:
         x = 815
         y = -455
-    if checkpoint == 16: #Into the door (dial in)
+    if checkpoint == 16:  # Into the door (dial in)
         x = 801
         y = -500
-    return [x,y]
+    return [x, y]
+
 
 def templeFoyer(checkpoint):
     x = 999
@@ -4275,13 +4315,13 @@ def templeFoyer(checkpoint):
         y = 103
     if checkpoint == 14:
         print("Check if pause necessary")
-    if checkpoint == 15: #Into the room before Seymour
+    if checkpoint == 15:  # Into the room before Seymour
         x = 0
         y = 300
-    if checkpoint == 16: #Into Seymour's room
+    if checkpoint == 16:  # Into Seymour's room
         x = 0
         y = -300
-    if checkpoint == 20: #Skip fail, use this path instead.
+    if checkpoint == 20:  # Skip fail, use this path instead.
         x = 16
         y = 30
     if checkpoint == 21:
@@ -4300,7 +4340,8 @@ def templeFoyer(checkpoint):
     if checkpoint == 26:
         x = 15
         y = 31
-    return [x,y]
+    return [x, y]
+
 
 def mTempleTrials(checkpoint):
     x = 999
@@ -4374,13 +4415,13 @@ def mTempleTrials(checkpoint):
     if checkpoint == 24:
         x = -8
         y = 4
-    if checkpoint == 25: #Spot next to the ramp-sphere
+    if checkpoint == 25:  # Spot next to the ramp-sphere
         x = -77
         y = 54
     if checkpoint == 26:
         x = -80
         y = 24
-    if checkpoint == 27: #Bottom of the ramp
+    if checkpoint == 27:  # Bottom of the ramp
         x = -15
         y = 7
     if checkpoint == 28:
@@ -4455,7 +4496,7 @@ def mTempleTrials(checkpoint):
         y = 4
     if checkpoint == 53:
         print("Third Mac sphere")
-    if checkpoint == 54: #Ready to get out of here
+    if checkpoint == 54:  # Ready to get out of here
         x = -68
         y = -17
     if checkpoint == 55:
@@ -4469,7 +4510,8 @@ def mTempleTrials(checkpoint):
         y = -106
     if checkpoint == 58:
         print("Trials - end")
-    return [x,y]
+    return [x, y]
+
 
 def mTempleEscape(checkpoint):
     x = 999
@@ -4488,7 +4530,7 @@ def mTempleEscape(checkpoint):
     if checkpoint == 4:
         x = 815
         y = -206
-    if checkpoint == 5: #Start of turn
+    if checkpoint == 5:  # Start of turn
         x = 801
         y = -45
     if checkpoint == 6:
@@ -4530,7 +4572,7 @@ def mTempleEscape(checkpoint):
     if checkpoint == 18:
         x = -50
         y = -100
-    if checkpoint == 19: #Back to the snowmobiles
+    if checkpoint == 19:  # Back to the snowmobiles
         x = -13
         y = 410
     if checkpoint == 20:
@@ -4572,7 +4614,8 @@ def mTempleEscape(checkpoint):
     if checkpoint == 32:
         x = 33
         y = -700
-    return [x,y]
+    return [x, y]
+
 
 def underMacTemple(checkpoint):
     x = 999
@@ -4589,7 +4632,7 @@ def underMacTemple(checkpoint):
     if checkpoint == 3:
         x = 0
         y = 80
-    if checkpoint == 4: #Talk to Rikku then Yuna
+    if checkpoint == 4:  # Talk to Rikku then Yuna
         x = 0
         y = 0
     if checkpoint == 5:
@@ -4610,7 +4653,7 @@ def underMacTemple(checkpoint):
     if checkpoint == 10:
         x = -41
         y = 95
-    if checkpoint == 11: #Open chest
+    if checkpoint == 11:  # Open chest
         x = 0
         y = 0
     if checkpoint == 12:
@@ -4622,10 +4665,10 @@ def underMacTemple(checkpoint):
     if checkpoint == 14:
         x = -5
         y = 13
-    if checkpoint == 15: #Talk to Auron
+    if checkpoint == 15:  # Talk to Auron
         x = 0
         y = 0
-    if checkpoint == 16: #Back down to next scene
+    if checkpoint == 16:  # Back down to next scene
         x = 0
         y = 73
     if checkpoint == 17:
@@ -4730,7 +4773,8 @@ def underMacTemple(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def desert(checkpoint):
     x = 999
@@ -4825,7 +4869,7 @@ def desert(checkpoint):
     if checkpoint == 30:
         x = 352
         y = 126
-    if checkpoint == 31: #Machina battle mid-path
+    if checkpoint == 31:  # Machina battle mid-path
         x = 478
         y = 139
     if checkpoint == 32:
@@ -4849,7 +4893,7 @@ def desert(checkpoint):
     if checkpoint == 38:
         x = 800
         y = 1000
-    if checkpoint == 39: #Large open map with two directions
+    if checkpoint == 39:  # Large open map with two directions
         x = 333
         y = -501
     if checkpoint == 40:
@@ -4861,10 +4905,10 @@ def desert(checkpoint):
     if checkpoint == 42:
         x = -278
         y = 360
-    if checkpoint == 43: #Extra spots for future precision if needed
+    if checkpoint == 43:  # Extra spots for future precision if needed
         x = -278
         y = 360
-    if checkpoint == 44: #Extra spots for future precision if needed
+    if checkpoint == 44:  # Extra spots for future precision if needed
         x = -278
         y = 360
     if checkpoint == 45:
@@ -4882,7 +4926,7 @@ def desert(checkpoint):
     if checkpoint == 49:
         x = -680
         y = 850
-    if checkpoint == 50: #Final map before Home
+    if checkpoint == 50:  # Final map before Home
         x = -252
         y = -101
     if checkpoint == 51:
@@ -4891,7 +4935,7 @@ def desert(checkpoint):
     if checkpoint == 52:
         x = -41
         y = 419
-    if checkpoint == 53: #Sandragora #1
+    if checkpoint == 53:  # Sandragora #1
         print("Sandragora #1")
     if checkpoint == 54:
         x = -57
@@ -4902,18 +4946,18 @@ def desert(checkpoint):
     if checkpoint == 56:
         x = -228
         y = 764
-    if checkpoint == 58: #Lining up for Sandy skip
+    if checkpoint == 58:  # Lining up for Sandy skip
         x = -228
         y = 764
         #x = -230
         #y = 796
-    if checkpoint == 59: #Lining up for Sandy skip
+    if checkpoint == 59:  # Lining up for Sandy skip
         x = -244
         y = 797
-    if checkpoint == 61: #Waiting to be pushed
+    if checkpoint == 61:  # Waiting to be pushed
         x = -273
         y = 850
-    if checkpoint == 62: #Past Sandy
+    if checkpoint == 62:  # Past Sandy
         x = -273
         y = 850
     if checkpoint == 63:
@@ -4924,25 +4968,26 @@ def desert(checkpoint):
     if checkpoint == 65:
         x = -300
         y = 1000
-    if checkpoint == 70: #Nemesis logic
+    if checkpoint == 70:  # Nemesis logic
         x = -457
         y = 521
     if checkpoint == 71:
         x = -446
         y = 458
-    if checkpoint == 72: #Chest, lv.2 key sphere
+    if checkpoint == 72:  # Chest, lv.2 key sphere
         x = 0
         y = 0
     if checkpoint == 73:
         x = -474
         y = 476
-    if checkpoint == 74: #Chest, 10k gil
+    if checkpoint == 74:  # Chest, 10k gil
         x = 0
         y = 0
     if checkpoint == 75:
         x = -481
         y = 505
-    return [x,y]
+    return [x, y]
+
 
 def Home(checkpoint):
     x = 999
@@ -4962,13 +5007,13 @@ def Home(checkpoint):
     if checkpoint == 4:
         x = 67
         y = 89
-    if checkpoint == 5: #Extra in case we need refactoring later.
+    if checkpoint == 5:  # Extra in case we need refactoring later.
         x = 67
         y = 89
-    if checkpoint == 6: #Extra in case we need refactoring later.
+    if checkpoint == 6:  # Extra in case we need refactoring later.
         x = 67
         y = 89
-    if checkpoint == 7: #Touch save sphere
+    if checkpoint == 7:  # Touch save sphere
         x = 0
         y = 0
     if checkpoint == 8:
@@ -4989,7 +5034,7 @@ def Home(checkpoint):
     if checkpoint == 13:
         x = 0
         y = -5
-    if checkpoint == 14: #First battle
+    if checkpoint == 14:  # First battle
         x = 0
         y = -5
     if checkpoint == 15:
@@ -5001,13 +5046,13 @@ def Home(checkpoint):
     if checkpoint == 17:
         x = 161
         y = 125
-    if checkpoint == 18: #Into second battle and new map
+    if checkpoint == 18:  # Into second battle and new map
         x = 0
         y = 220
     if checkpoint == 19:
         x = 0
         y = 220
-    if checkpoint == 20: #Branch based on blitz win
+    if checkpoint == 20:  # Branch based on blitz win
         x = 0
         y = 0
     if checkpoint == 21:
@@ -5019,7 +5064,7 @@ def Home(checkpoint):
     if checkpoint == 23:
         x = -13
         y = 330
-    if checkpoint == 24: #Right next to door
+    if checkpoint == 24:  # Right next to door
         x = -70
         y = 359
     if checkpoint == 25:
@@ -5028,7 +5073,7 @@ def Home(checkpoint):
     if checkpoint == 26:
         x = -184
         y = 253
-    if checkpoint == 27: #Screen change before next battle
+    if checkpoint == 27:  # Screen change before next battle
         x = -184
         y = 253
     if checkpoint == 28:
@@ -5040,7 +5085,7 @@ def Home(checkpoint):
     if checkpoint == 30:
         x = -184
         y = 210
-    if checkpoint == 31: #Down the stairs, storyline.
+    if checkpoint == 31:  # Down the stairs, storyline.
         x = -234
         y = 162
     if checkpoint == 32:
@@ -5064,7 +5109,7 @@ def Home(checkpoint):
     if checkpoint == 38:
         x = -352
         y = 265
-    if checkpoint == 39: #Open chest
+    if checkpoint == 39:  # Open chest
         x = 0
         y = 0
     if checkpoint == 40:
@@ -5073,7 +5118,7 @@ def Home(checkpoint):
     if checkpoint == 41:
         x = -414
         y = 211
-    if checkpoint == 42: #Big Reveal room
+    if checkpoint == 42:  # Big Reveal room
         x = 0
         y = 0
     if checkpoint == 43:
@@ -5082,7 +5127,7 @@ def Home(checkpoint):
     if checkpoint == 44:
         x = 124
         y = -50
-    if checkpoint == 45: ##Stairs to airship
+    if checkpoint == 45:  # Stairs to airship
         x = 0
         y = 0
     if checkpoint == 46:
@@ -5100,7 +5145,7 @@ def Home(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    if checkpoint == 60: #Nemesis, extra chest.
+    if checkpoint == 60:  # Nemesis, extra chest.
         x = -343
         y = 189
     if checkpoint == 61:
@@ -5109,7 +5154,7 @@ def Home(checkpoint):
     if checkpoint == 62:
         x = -311
         y = 146
-    if checkpoint == 63: #Nemesis, extra chest.
+    if checkpoint == 63:  # Nemesis, extra chest.
         x = 0
         y = 0
     if checkpoint == 81:
@@ -5127,13 +5172,14 @@ def Home(checkpoint):
     if checkpoint == 85:
         x = 6
         y = 44
-    if checkpoint == 86: #Open chest
+    if checkpoint == 86:  # Open chest
         x = 0
         y = 0
     if checkpoint == 87:
         x = 1
         y = 157
-    return [x,y]
+    return [x, y]
+
 
 def rescueAirship(checkpoint):
     x = 999
@@ -5150,7 +5196,7 @@ def rescueAirship(checkpoint):
     if checkpoint == 3:
         x = -240
         y = 80
-    if checkpoint == 4: #After leaving and re-entering the cockpit
+    if checkpoint == 4:  # After leaving and re-entering the cockpit
         x = -240
         y = 324
     if checkpoint == 5:
@@ -5165,7 +5211,7 @@ def rescueAirship(checkpoint):
     if checkpoint == 8:
         x = -242
         y = 407
-    if checkpoint == 9: #Talk to Brother
+    if checkpoint == 9:  # Talk to Brother
         x = 0
         y = 0
     if checkpoint == 10:
@@ -5177,7 +5223,7 @@ def rescueAirship(checkpoint):
     if checkpoint == 12:
         x = -269
         y = 353
-    if checkpoint == 13: #Touch save sphere
+    if checkpoint == 13:  # Touch save sphere
         x = 0
         y = 0
     if checkpoint == 14:
@@ -5291,7 +5337,8 @@ def rescueAirship(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def bevellePreTrials(checkpoint):
     x = 999
@@ -5320,7 +5367,8 @@ def bevellePreTrials(checkpoint):
     if checkpoint == 7:
         x = 71
         y = 150
-    return [x,y]
+    return [x, y]
+
 
 def bevelleTrials(checkpoint):
     x = 999
@@ -5465,7 +5513,7 @@ def bevelleTrials(checkpoint):
         y = 364
     if checkpoint == 52:
         print("Back on track, to the exit")
-    if checkpoint == 53: #Final map with chests.
+    if checkpoint == 53:  # Final map with chests.
         x = 95
         y = 271
     if checkpoint == 54:
@@ -5488,12 +5536,14 @@ def bevelleTrials(checkpoint):
     if checkpoint == 60:
         x = -5
         y = 400
-    return [x,y]
+    return [x, y]
 
-def seymourNatus(): #First checkpoint ever written. :D
+
+def seymourNatus():  # First checkpoint ever written. :D
     x = 15
     y = 150
-    return [x,y]
+    return [x, y]
+
 
 def sutekiDaNe(checkpoint):
     x = 999
@@ -5511,7 +5561,7 @@ def sutekiDaNe(checkpoint):
     if checkpoint == 4:
         x = 208
         y = 51
-    if checkpoint == 5: #Enjoy scene
+    if checkpoint == 5:  # Enjoy scene
         print("Enjoy this very long scene")
     if checkpoint == 6:
         mapChange = True
@@ -5568,7 +5618,8 @@ def sutekiDaNe(checkpoint):
     if checkpoint == 24:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def calmLands(checkpoint):
     x = 999
@@ -5603,7 +5654,8 @@ def calmLands(checkpoint):
     if checkpoint == 9:
         x = 1650
         y = 1170
-    return [x,y]
+    return [x, y]
+
 
 def defenderX(checkpoint):
     x = 999
@@ -5623,7 +5675,8 @@ def defenderX(checkpoint):
     if checkpoint == 4:
         x = 12
         y = 350
-    return [x,y]
+    return [x, y]
+
 
 def neApproach(checkpoint):
     x = 999
@@ -5658,7 +5711,8 @@ def neApproach(checkpoint):
     if checkpoint == 9:
         x = -250
         y = 10
-    return [x,y]
+    return [x, y]
+
 
 def neForceEncountersWhite(checkpoint):
     x = 0
@@ -5667,7 +5721,8 @@ def neForceEncountersWhite(checkpoint):
         y = 70
     if checkpoint % 2 == 1:
         y = 20
-    return [x,y]
+    return [x, y]
+
 
 def neForceEncountersGreen(checkpoint):
     x = 999
@@ -5711,13 +5766,14 @@ def neForceEncountersGreen(checkpoint):
     if checkpoint == 12:
         x = 430
         y = 438
-    if checkpoint == 13: #Light area 1
+    if checkpoint == 13:  # Light area 1
         x = 431
         y = 484
-    if checkpoint == 14: #Light area 2
+    if checkpoint == 14:  # Light area 2
         x = 458
         y = 505
-    return [x,y]
+    return [x, y]
+
 
 def neReturnGreen(checkpoint):
     x = 999
@@ -5875,7 +5931,8 @@ def neReturnGreen(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def neReturn(checkpoint):
     x = 999
@@ -5940,13 +5997,14 @@ def neReturn(checkpoint):
     if checkpoint == 20:
         x = 4
         y = 290
-    if checkpoint == 21: #Through the trigger to Gagazet gates
+    if checkpoint == 21:  # Through the trigger to Gagazet gates
         x = 30
         y = 350
-    if checkpoint == 22: #Safety
+    if checkpoint == 22:  # Safety
         x = 100
         y = 600
-    return [x,y]
+    return [x, y]
+
 
 def kelkRonso(checkpoint):
     x = 999
@@ -5972,7 +6030,8 @@ def kelkRonso(checkpoint):
     if checkpoint == 6:
         x = 80
         y = 550
-    return [x,y]
+    return [x, y]
+
 
 def gagazetSnow(checkpoint):
     x = 999
@@ -6070,7 +6129,8 @@ def gagazetSnow(checkpoint):
     if checkpoint == 30:
         x = -1365
         y = -85
-    return [x,y]
+    return [x, y]
+
 
 def Flux(checkpoint):
     x = 999
@@ -6096,7 +6156,8 @@ def Flux(checkpoint):
     if checkpoint == 6:
         x = 150
         y = -619
-    return [x,y]
+    return [x, y]
+
 
 def gagazetDreamSeq(checkpoint):
     x = 999
@@ -6134,7 +6195,7 @@ def gagazetDreamSeq(checkpoint):
     if checkpoint == 10:
         x = 239
         y = 18
-    if checkpoint == 11: #Into the door
+    if checkpoint == 11:  # Into the door
         x = 0
         y = 0
     if checkpoint == 12:
@@ -6146,7 +6207,7 @@ def gagazetDreamSeq(checkpoint):
     if checkpoint == 14:
         x = 52
         y = -12
-    if checkpoint == 15: #Start first conversation
+    if checkpoint == 15:  # Start first conversation
         x = 0
         y = 0
     if checkpoint == 16:
@@ -6158,7 +6219,7 @@ def gagazetDreamSeq(checkpoint):
     if checkpoint == 18:
         x = 64
         y = -46
-    if checkpoint == 19: #Back to outdoor area
+    if checkpoint == 19:  # Back to outdoor area
         x = 0
         y = 0
     if checkpoint == 20:
@@ -6179,7 +6240,8 @@ def gagazetDreamSeq(checkpoint):
     if checkpoint == 25:
         x = 326
         y = -1
-    return [x,y]
+    return [x, y]
+
 
 def gagazetPostDream(checkpoint):
     x = 999
@@ -6214,7 +6276,8 @@ def gagazetPostDream(checkpoint):
     if checkpoint == 9:
         x = 1200
         y = 643
-    return [x,y]
+    return [x, y]
+
 
 def gagazetCave(checkpoint):
     x = 999
@@ -6349,7 +6412,7 @@ def gagazetCave(checkpoint):
     if checkpoint == 45:
         x = 197
         y = -435
-    if checkpoint == 46: #Turn to go up the new stairs
+    if checkpoint == 46:  # Turn to go up the new stairs
         x = 184
         y = -445
     if checkpoint == 47:
@@ -6391,7 +6454,8 @@ def gagazetCave(checkpoint):
     if checkpoint == 60:
         x = -260
         y = 200
-    return [x,y]
+    return [x, y]
+
 
 def gagazetPeak(checkpoint):
     x = 999
@@ -6445,7 +6509,8 @@ def gagazetPeak(checkpoint):
     if checkpoint == 16:
         x = -320
         y = 450
-    return [x,y]
+    return [x, y]
+
 
 def zanarkandOutdoors(checkpoint):
     x = 999
@@ -6473,7 +6538,7 @@ def zanarkandOutdoors(checkpoint):
     if checkpoint == 7:
         x = -190
         y = -100
-    if checkpoint == 8: #Weird cutscene where we don't lose control immediately
+    if checkpoint == 8:  # Weird cutscene where we don't lose control immediately
         x = -133
         y = 8
     if checkpoint == 9:
@@ -6494,7 +6559,8 @@ def zanarkandOutdoors(checkpoint):
     if checkpoint == 14:
         x = -750
         y = 1083
-    return [x,y]
+    return [x, y]
+
 
 def zanarkandDome(checkpoint):
     x = 999
@@ -6523,13 +6589,13 @@ def zanarkandDome(checkpoint):
     if checkpoint == 7:
         x = -186
         y = -109
-    if checkpoint == 8: #Near save sphere
+    if checkpoint == 8:  # Near save sphere
         x = -144
         y = -124
     if checkpoint == 9:
         x = -132
         y = -105
-    if checkpoint == 10: #Seymour scene
+    if checkpoint == 10:  # Seymour scene
         x = -126
         y = 49
     if checkpoint == 11:
@@ -6549,7 +6615,7 @@ def zanarkandDome(checkpoint):
     if checkpoint == 16:
         x = -154
         y = 195
-    if checkpoint == 17: #Mini-bridge, running with Braska/Jecht
+    if checkpoint == 17:  # Mini-bridge, running with Braska/Jecht
         x = -73
         y = 232
     if checkpoint == 18:
@@ -6592,7 +6658,8 @@ def zanarkandDome(checkpoint):
     if checkpoint == 31:
         x = 1
         y = 500
-    return [x,y]
+    return [x, y]
+
 
 def zanarkandTrials(checkpoint):
     x = 999
@@ -6623,7 +6690,7 @@ def zanarkandTrials(checkpoint):
         y = 25
     if checkpoint == 8:
         print("First pedetsol, no direction from here.")
-    if checkpoint == 9: #First pattern in big room
+    if checkpoint == 9:  # First pattern in big room
         x = -1
         y = 11
     if checkpoint == 10:
@@ -6685,7 +6752,7 @@ def zanarkandTrials(checkpoint):
         y = 43
     if checkpoint == 30:
         print("Moving into next room.")
-    if checkpoint == 31: #Second pattern in big room
+    if checkpoint == 31:  # Second pattern in big room
         x = -5
         y = 74
     if checkpoint == 32:
@@ -6737,7 +6804,7 @@ def zanarkandTrials(checkpoint):
         y = 45
     if checkpoint == 48:
         print("Moving into next room.")
-    if checkpoint == 49: #Third pattern in main room, start.
+    if checkpoint == 49:  # Third pattern in main room, start.
         x = -5
         y = 74
     if checkpoint == 50:
@@ -6795,7 +6862,7 @@ def zanarkandTrials(checkpoint):
         y = 45
     if checkpoint == 68:
         print("Moving into next room.")
-    if checkpoint == 69: #Last pattern in main room.
+    if checkpoint == 69:  # Last pattern in main room.
         x = -6
         y = 75
     if checkpoint == 70:
@@ -6831,7 +6898,7 @@ def zanarkandTrials(checkpoint):
     if checkpoint == 80:
         x = -68
         y = 110
-    if checkpoint == 81: #Pick up Besaid sphere
+    if checkpoint == 81:  # Pick up Besaid sphere
         print("Picking up Besaid sphere")
     if checkpoint == 82:
         x = -67
@@ -6853,7 +6920,8 @@ def zanarkandTrials(checkpoint):
     if checkpoint == 88:
         x = 110
         y = 20
-    return [x,y]
+    return [x, y]
+
 
 def yunalesca(checkpoint):
     x = 999
@@ -7011,7 +7079,8 @@ def yunalesca(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def yunalescaToAirship(checkpoint):
     x = 999
@@ -7095,7 +7164,8 @@ def yunalescaToAirship(checkpoint):
     if checkpoint == 25:
         x = 125
         y = 1423
-    return [x,y]
+    return [x, y]
+
 
 def tPlainsDodging(checkpoint):
     x = 999
@@ -7121,7 +7191,8 @@ def tPlainsDodging(checkpoint):
     if checkpoint == 6:
         x = -120
         y = -1300
-    return [x,y]
+    return [x, y]
+
 
 def insideSin(checkpoint):
     x = 999
@@ -7339,7 +7410,8 @@ def insideSin(checkpoint):
     if checkpoint == 70:
         x = 0
         y = 10
-    return [x,y]
+    return [x, y]
+
 
 def airShip(checkpoint):
     #print("Airship pathing checkpoint:", checkpoint)
@@ -7351,10 +7423,10 @@ def airShip(checkpoint):
     if checkpoint == 1:
         x = 25
         y = 32
-    if checkpoint == 2: #Room to room
+    if checkpoint == 2:  # Room to room
         x = 0
         y = 0
-    if checkpoint == 3: #Screen with guardians
+    if checkpoint == 3:  # Screen with guardians
         x = -7
         y = 72
     if checkpoint == 4:
@@ -7363,7 +7435,7 @@ def airShip(checkpoint):
     if checkpoint == 5:
         x = 10
         y = -100
-    if checkpoint == 6: #Screen with Isaaru
+    if checkpoint == 6:  # Screen with Isaaru
         x = 33
         y = 53
     if checkpoint == 7:
@@ -7372,7 +7444,7 @@ def airShip(checkpoint):
     if checkpoint == 8:
         x = -10
         y = -10
-    if checkpoint == 9: #Gallery
+    if checkpoint == 9:  # Gallery
         x = 0
         y = -9
     if checkpoint == 10:
@@ -7390,19 +7462,19 @@ def airShip(checkpoint):
     if checkpoint == 14:
         x = -35
         y = 7
-    if checkpoint == 15: #Split to specific pattern here if necessary
+    if checkpoint == 15:  # Split to specific pattern here if necessary
         x = -11
         y = 70
-    if checkpoint == 16: #Map change
+    if checkpoint == 16:  # Map change
         x = 999
         y = 999
     if checkpoint == 17:
         x = -4
         y = -8
-    if checkpoint == 18: #Up the lift
+    if checkpoint == 18:  # Up the lift
         x = 999
         y = 999
-    if checkpoint == 19: #Completion states
+    if checkpoint == 19:  # Completion states
         x = 999
         y = 999
     if checkpoint == 23:
@@ -7426,7 +7498,7 @@ def airShip(checkpoint):
     if checkpoint == 30:
         x = 0
         y = -9
-    if checkpoint == 31: #Transition to next map
+    if checkpoint == 31:  # Transition to next map
         x = 0
         y = 0
     if checkpoint == 32:
@@ -7435,7 +7507,7 @@ def airShip(checkpoint):
     if checkpoint == 33:
         x = 76
         y = 83
-    if checkpoint == 34: #Transition to next map
+    if checkpoint == 34:  # Transition to next map
         x = 0
         y = 0
     if checkpoint == 35:
@@ -7444,7 +7516,7 @@ def airShip(checkpoint):
     if checkpoint == 36:
         x = 3
         y = 167
-    if checkpoint == 37: #Transition to next map
+    if checkpoint == 37:  # Transition to next map
         x = 0
         y = 0
     if checkpoint == 38:
@@ -7453,7 +7525,7 @@ def airShip(checkpoint):
     if checkpoint == 39:
         x = 52
         y = 113
-    if checkpoint == 40: #Back into cockpit
+    if checkpoint == 40:  # Back into cockpit
         x = 0
         y = 0
     if checkpoint == 41:
@@ -7465,16 +7537,17 @@ def airShip(checkpoint):
     if checkpoint == 43:
         x = -245
         y = 327
-    if checkpoint == 44: #Cid
+    if checkpoint == 44:  # Cid
         x = 0
         y = 0
-    if checkpoint == 45: #non-CSR
+    if checkpoint == 45:  # non-CSR
         x = -245
         y = 327
-    if checkpoint == 46: #non-CSR Cid
+    if checkpoint == 46:  # non-CSR Cid
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
+
 
 def template(checkpoint):
     x = 999
@@ -7632,4 +7705,4 @@ def template(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    return [x,y]
+    return [x, y]
