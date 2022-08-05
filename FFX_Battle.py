@@ -128,7 +128,7 @@ def tidusHasteLate(direction):
 def lateHaste(direction):
     tidusHaste(direction)
 
-def useSkill(position):
+def useSkill(position:int=0,target:int=20):
     print("Using skill in position:", position)
     while FFX_memory.battleMenuCursor() != 19:
         print(FFX_memory.battleMenuCursor())
