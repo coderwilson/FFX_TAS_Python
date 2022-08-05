@@ -95,7 +95,7 @@ def trials():
     
     while FFX_memory.getMap() != 69:
         if FFX_memory.userControl():
-            #Spheres, glyphs, and pedestols
+            #Spheres, glyphs, and pedestals
             if checkpoint == 1: #First glyph
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1

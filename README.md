@@ -1,8 +1,8 @@
 # FFX_TAS_Python
 
-Please find more detailed notes here: https://docs.google.com/presentation/d/14NzxMQo_wRyvMf88i0pJpWNiEynn0LAjW3SAcitERuA/edit?usp=sharing
+Please find more detailed notes here: <https://docs.google.com/presentation/d/14NzxMQo_wRyvMf88i0pJpWNiEynn0LAjW3SAcitERuA/edit?usp=sharing>
 
-Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from the ground up. This repository is a large sample of that code that is intended to demonstrate my skills as a programmer and also provide a jumping-off-point if anyone wanted to try to compete with me in programming a TAS for this game (see speed running community for TAS definition. Here are some of the notes pertinent to this sample of code - this will serve as an FAQ
+Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from the ground up. This repository is a large sample of that code that is intended to demonstrate my skills as a programmer and also provide a jumping-off-point if anyone wanted to try to compete with me in programming a TAS for this game (see speedrunning community for TAS definition. Here are some of the notes pertinent to this sample of code - this will serve as an FAQ
 
 1. Is this code complete? - As of Nov 2021, yes this is the complete project without missing files.
 2. Is this code licensed? - Nope. You're free to take this sample and do with it what you will. I ask that you do not sell it in this state, but beyond that it's up to you.
@@ -12,8 +12,8 @@ Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from
 
 Update as of 11/18/2021:
 We have changed the controller to use a new gamepad, proven to be more stable than the first one. See these links for more details.
-https://github.com/ViGEm/ViGEmBus (installer to set up the virtual port to plug in to)
-https://pypi.org/project/vgamepad/ (new virtual game pad to be plugged in)
+<https://github.com/ViGEm/ViGEmBus> (installer to set up the virtual port to plug in to)
+<https://pypi.org/project/vgamepad/> (new virtual game pad to be plugged in)
 
 References:
 twitch.tv/coderwilson
@@ -22,7 +22,7 @@ coderwilson@gmail.com - no solicitations please.
 
 -------------------------------------------------------------------
 Also, this may be helpful:
-https://github.com/shauleiz/ScpVBus/releases/tag/v1.7.1.2
+<https://github.com/shauleiz/ScpVBus/releases/tag/v1.7.1.2>
 
 -------------------------------------------------------------------
 Notes concerning readBytes and writeBytes

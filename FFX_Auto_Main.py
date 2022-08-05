@@ -12,7 +12,7 @@ import FFX_memory
 import FFX_Xbox
 FFXC = FFX_Xbox.controllerHandle()
 
-#Speed run sectional files
+#Speedrun sectional files
 import FFX_DreamZan
 import FFX_Baaj
 import FFX_Besaid1
@@ -616,7 +616,7 @@ while Gamestate != "End":
         returnArray = FFX_Miihen.arrival()
         selfDestruct = FFX_Miihen.arrival2(returnArray[0], returnArray[1], returnArray[2])
         FFX_Miihen.midPoint()
-        print("End of Miihen mid point section.")
+        print("End of Mi'ihen mid point section.")
         FFX_Miihen.lowRoad(returnArray[0], returnArray[1], returnArray[2])
         StepCounter = 2
 
@@ -1134,13 +1134,13 @@ if FFX_memory.getStoryProgress() > 3210:
     print("Please do not use this as your submitted time.")
     FFX_memory.waitFrames(30)
     print("--------")
-    print("In order to conform with speed run standards,")
+    print("In order to conform with speedrun standards,")
     FFX_memory.waitFrames(60)
     print("we now wait until the end of the credits and stuff")
     FFX_memory.waitFrames(60)
     print("and then will open up the list of saves.")
     FFX_memory.waitFrames(60)
-    print("This will show the autosave values, which conforms to the speed run rules.")
+    print("This will show the autosave values, which conforms to the speedrun rules.")
 
 
     while FFX_memory.getMap() != 23:

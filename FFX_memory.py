@@ -274,7 +274,7 @@ def clickToControl3():
             #print("Skip dialog")
             FFX_Xbox.tapB()
         elif menuOpen():
-            print("Menu open (after battle)")
+            print("Post-battle menu open")
             FFX_Xbox.tapB()
         else:
             pass
@@ -1196,18 +1196,18 @@ def openMenu():
     menuCounter = 0
     while not (userControl() and menuOpen() and menuNumber() == 5):
         if menuOpen() and not userControl():
-            print("After battle summary screen is open. Attempting close. ",menuCounter)
+            print("Post-Battle summary screen is open. Attempting close.", menuCounter)
             FFX_Xbox.menuB()
         elif userControl() and not menuOpen():
-            print("Menu is not open, attempting to open. ",menuCounter)
+            print("Menu is not open, attempting to open.", menuCounter)
             FFX_Xbox.tapY()
             menuCounter += 1
         elif menuOpen() and userControl() and menuNumber() > 5:
-            print("The wrong menu is open. ",menuCounter)
+            print("The wrong menu is open.", menuCounter)
             FFX_Xbox.tapA()
             menuCounter += 1
         elif battleActive():
-            print("Can't open menu during battle. ",menuCounter)
+            print("Can't open menu during battle.", menuCounter)
             return False
         else:
             pass #print("The menu is now open. Waiting for it to be on menu 5. ", menuNumber())
@@ -1223,7 +1223,7 @@ def sGridActive():
     global baseValue
 
     key = baseValue + 0x0085B30C
-    menuOpen = process.readBytes(key,1)
+    menuOpen = process.readBytes(key, 1)
     #print(menuOpen)
     if menuOpen == 1:
         return True
@@ -1234,32 +1234,32 @@ def sGridMenu():
     global baseValue
 
     key = baseValue + 0x0012AD860
-    menuOpen = process.readBytes(key,1)
+    menuOpen = process.readBytes(key, 1)
     return menuOpen
 
 def sGridChar():
     global baseValue
 
     key = baseValue + 0x0012BEE2C
-    character = process.readBytes(key,1)
+    character = process.readBytes(key, 1)
     return character
 
 def sGridNodeSelected():
     global baseValue
     
     key = baseValue + 0x0012BEB7E
-    nodeNumber = process.readBytes(key,1)
+    nodeNumber = process.readBytes(key, 1)
     key = baseValue + 0x0012BEB7F
-    nodeRegion = process.readBytes(key,1)
+    nodeRegion = process.readBytes(key, 1)
     return [nodeNumber, nodeRegion]
 
 def cursorLocation():
     global baseValue
 
     key = baseValue + 0x0021D09A4
-    menu1 = process.readBytes(key,1)
+    menu1 = process.readBytes(key, 1)
     key = baseValue + 0x0021D09A6
-    menu2 = process.readBytes(key,1)
+    menu2 = process.readBytes(key, 1)
 
     return [menu1,menu2]
 
@@ -1291,7 +1291,7 @@ def getStoryProgress():
     global baseValue
 
     key = baseValue + 0x00D2D67C
-    progress = process.readBytes(key,2)
+    progress = process.readBytes(key, 2)
     #print("Story progress:", progress)
     return progress
 
@@ -1299,14 +1299,14 @@ def getMap():
     global baseValue
 
     key = baseValue + 0x00D2CA90
-    progress = process.readBytes(key,2)
+    progress = process.readBytes(key, 2)
     return progress
 
 def touchingSaveSphere():
     global baseValue
 
     key = baseValue + 0x0021D09A6
-    value = process.readBytes(key,1)
+    value = process.readBytes(key, 1)
     if value != 0:
         return True
     else:
@@ -1316,7 +1316,7 @@ def saveMenuCursor():
     global baseValue
 
     key = baseValue + 0x001467942
-    return process.readBytes(key,1)
+    return process.readBytes(key, 1)
     
 def mapCursor():
     global baseValue
@@ -3639,9 +3639,9 @@ def printManipInfo():
     print("--------------------------")
     print("The next state for drops:")
     print("RNG13 manip:", nextChanceRNG13() - 1)
-    print("RNG12 manip:", nextChanceRNG12(), " | supercedes RNG13 above")
-    print("RNG10 manip:", nextChanceRNG10(), " | literal next")
-    print("RNG10 manip:", nextChanceRNG10Calm(), " | perfect world next (accounts for Defender X)")
+    print("RNG12 manip:", nextChanceRNG12(), "| supersedes RNG13 above")
+    print("RNG10 manip:", nextChanceRNG10(), "| literal next")
+    print("RNG10 manip:", nextChanceRNG10Calm(), "| perfect world next (accounts for Defender X)")
     print("--------------------------")
     print("Best case state: 0/1, 0, ?, 0")
     print("Acceptable state: 0/1, 0, ?, not-0")

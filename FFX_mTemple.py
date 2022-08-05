@@ -188,13 +188,13 @@ def trials():
             elif checkpoint < 2 and FFX_memory.getMap() == 239:
                 checkpoint = 2
             
-            #Spheres and Pedestols
+            #Spheres and Pedestals
             elif checkpoint == 2:
                 FFX_memory.awaitControl()
                 print("Activate the trials")
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 9: #Push pedestol - 1
+            elif checkpoint == 9: #Push pedestal - 1
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
@@ -206,14 +206,14 @@ def trials():
             elif checkpoint == 17: # Place first Mac Sphere
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-            elif checkpoint == 20: #Push pedestol - 2
+            elif checkpoint == 20: #Push pedestal - 2
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 23: # Grab glyph sphere
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
                 print("Checkpoint:", checkpoint)
-            elif checkpoint == 29: #Push pedestol - 3
+            elif checkpoint == 29: #Push pedestal - 3
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()

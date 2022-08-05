@@ -1914,7 +1914,7 @@ def miihen(checkpoint):
         x = -47
         y = 1351
     if checkpoint in [6,7,8,9,10]:
-        print("Attempting Miihen skip")
+        print("Attempting Mi'ihen skip")
     if checkpoint == 11:
         x = 17
         y = 1536
@@ -2710,7 +2710,7 @@ def djoseTrials(checkpoint):
         x = -7
         y = 24
     if checkpoint == 22:
-        print("Pushing pedestol")
+        print("Pushing pedestal")
     if checkpoint == 23:
         x = 56
         y = 33
@@ -2886,27 +2886,27 @@ def djoseTrials(checkpoint):
         x = -21
         y = 115
     if checkpoint == 88:
-        print("Pedestol 1")
+        print("Pedestal 1")
     if checkpoint == 89:
         x = -22
         y = 144
     if checkpoint == 90:
-        print("Pedestol 2")
+        print("Pedestal 2")
     if checkpoint == 91:
         x = -3
         y = 157
     if checkpoint == 92:
-        print("Pedestol 3")
+        print("Pedestal 3")
     if checkpoint == 93:
         x = 19
         y = 146
     if checkpoint == 94:
-        print("Pedestol 4")
+        print("Pedestal 4")
     if checkpoint == 95:
         x = 20
         y = 117
     if checkpoint == 96:
-        print("Pedestol 5")
+        print("Pedestal 5")
     if checkpoint == 97:
         x = 9
         y = 106
@@ -4332,7 +4332,7 @@ def mTempleTrials(checkpoint):
         x = 31
         y = 4
     if checkpoint == 9:
-        print("Push pedestol")
+        print("Push pedestal")
     if checkpoint == 10:
         x = 18
         y = 52
@@ -4362,7 +4362,7 @@ def mTempleTrials(checkpoint):
         x = 42
         y = 49
     if checkpoint == 20:
-        print("Push pedestol")
+        print("Push pedestal")
     if checkpoint == 21:
         x = 12
         y = 2
@@ -4387,7 +4387,7 @@ def mTempleTrials(checkpoint):
         x = 0
         y = 4
     if checkpoint == 29:
-        print("Push pedestol")
+        print("Push pedestal")
     if checkpoint == 30:
         x = -11
         y = -27
@@ -5335,7 +5335,7 @@ def bevelleTrials(checkpoint):
         x = -19
         y = -62
     if checkpoint == 3:
-        print("First pedestol.")
+        print("First pedestal.")
     if checkpoint == 4:
         print("Missed first alcove, recovering.")
     if checkpoint == 5:
@@ -6406,7 +6406,7 @@ def gagazetPeak(checkpoint):
         x = 787
         y = -839
     if checkpoint == 3:
-        print("Miihen agency scene, no target from this function.")
+        print("Mi'ihen agency scene, no target from this function.")
     if checkpoint == 4:
         x = 779
         y = -695
@@ -6679,7 +6679,7 @@ def zanarkandTrials(checkpoint):
         x = 72
         y = -12
     if checkpoint == 28:
-        print("Activating second pedestol")
+        print("Activating second pedestal")
     if checkpoint == 29:
         x = 77
         y = 43
@@ -6731,7 +6731,7 @@ def zanarkandTrials(checkpoint):
         x = 137
         y = 23
     if checkpoint == 46:
-        print("Activating second pedestol")
+        print("Activating second pedestal")
     if checkpoint == 47:
         x = 84
         y = 45
@@ -6789,7 +6789,7 @@ def zanarkandTrials(checkpoint):
         x = 137
         y = -22
     if checkpoint == 66:
-        print("Activating second pedestol")
+        print("Activating second pedestal")
     if checkpoint == 67:
         x = 84
         y = 45

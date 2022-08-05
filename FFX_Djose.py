@@ -148,7 +148,7 @@ def trials():
                 FFX_memory.clickToEventTemple(1)
                 checkpoint += 1
             elif checkpoint == 22:
-                print("Pushing pedestol")
+                print("Pushing pedestal")
                 FFXC.set_movement(1, 0)
                 FFX_memory.awaitEvent()
                 while FFX_memory.getActorCoords(0)[0] < 62:
@@ -195,7 +195,7 @@ def trials():
                 FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
             elif checkpoint == 48: #All of the hidden room stuff at once
-                print("Pushing pedestol")
+                print("Pushing pedestal")
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 FFX_memory.waitFrames(30 * 9)
@@ -206,7 +206,7 @@ def trials():
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.5)
                 FFX_memory.awaitControl()
-                print("Extra pedestol")
+                print("Extra pedestal")
                 FFXC.set_movement(0, 1)
                 FFX_Xbox.SkipDialog(2)
                 FFXC.set_neutral()
@@ -283,23 +283,23 @@ def trials():
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             elif checkpoint == 88:
-                print("Pedestol 1")
+                print("Pedestal 1")
                 FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
             elif checkpoint == 90:
-                print("Pedestol 2")
+                print("Pedestal 2")
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
             elif checkpoint == 92:
-                print("Pedestol 3")
+                print("Pedestal 3")
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 94:
-                print("Pedestol 4")
+                print("Pedestal 4")
                 FFX_memory.clickToEventTemple(1)
                 checkpoint += 1
             elif checkpoint == 96:
-                print("Pedestol 5")
+                print("Pedestal 5")
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 100:

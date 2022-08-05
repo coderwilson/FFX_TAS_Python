@@ -30,7 +30,7 @@ def arrival():
             #Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
                 if gameVars.csr():
-                    print("CSR logic - ", checkpoint)
+                    print("CSR logic -", checkpoint)
                     #Only run this branch if CSR is online.
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()
@@ -193,7 +193,7 @@ def arrival():
                     FFX_memory.waitFrames(2)
                     FFXC.set_value('BtnB',0)
                     FFX_memory.waitFrames(3)
-    print("Miihen skip status:", miihenSkip)
+    print("Mi'ihen skip status:", miihenSkip)
     return [gameVars.selfDestructGet(), battleCount, SDbattleNum, miihenSkip]
 
 def arrival2(selfDestruct, battleCount, SDbattleNum):
@@ -269,9 +269,9 @@ def midPoint():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
                 
-    print("Miihen - ready for Chocobo Eater")
+    print("Mi'ihen - ready for Chocobo Eater")
     FFX_Battle.chocoEater()
-    print("Miihen - Chocobo Eater complete")
+    print("Mi'ihen - Chocobo Eater complete")
 
 
 def lowRoad(selfDestruct, battleCount, SDbattleNum): #Starts just after the save sphere.

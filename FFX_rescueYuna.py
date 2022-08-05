@@ -132,10 +132,10 @@ def trials():
             if checkpoint < 2 and FFX_memory.getMap() == 306:
                 checkpoint = 2
             
-            #Spheres, Pedestols, and gliding across glowing paths.
-            elif checkpoint == 3: #Pedestol that starts it all.
+            #Spheres, Pedestals, and gliding across glowing paths.
+            elif checkpoint == 3: #Pedestal that starts it all.
                 FFXC.set_movement(0, 1)
-                FFX_memory.awaitEvent() #Pedestol - START!!!
+                FFX_memory.awaitEvent() #Pedestal - START!!!
                 FFXC.set_neutral()
                 
                 while not FFX_memory.userControl():

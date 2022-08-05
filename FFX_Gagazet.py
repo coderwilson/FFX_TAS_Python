@@ -559,7 +559,7 @@ def wrapUp():
         FFX_memory.waitFrames(30 * sleepTime)
         print("You will see Inverted's work right before the final bosses.")
         FFX_memory.waitFrames(30 * sleepTime)
-        print("Next, some people from the FFX speed-running community.")
+        print("Next, some people from the FFX speedrunning community.")
         FFX_memory.waitFrames(30 * sleepTime)
         print("CrimsonInferno, current world record holder for this category. Dude knows everything about this run!")
         FFX_memory.waitFrames(30 * sleepTime)
