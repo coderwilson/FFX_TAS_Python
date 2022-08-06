@@ -1,5 +1,4 @@
 # Libraries and Core Files
-import Reset_Controller
 import FFX_Logs
 import FFX_Sin
 import FFX_Zanarkand
@@ -1167,5 +1166,4 @@ if FFX_memory.getStoryProgress() > 3210:
 
 FFX_memory.end()
 
-print("Automation complete. Unplugging controller.")
-print("Unplugging complete. Shutting it down! Have a great day!")
+print("Automation complete. Shutting down now. Have a great day!")
