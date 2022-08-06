@@ -28,8 +28,8 @@ Also, this may be helpful:
 Notes concerning readBytes and writeBytes
 Make sure to instal (via pip) the library ReadWriteMemory.
 The file to fix is located in the python base folder, in this location.  
-`C:\Users\yourUserNameHere\AppData\Local\Programs\Python\Python39\Lib\site-packages\ReadWriteMemory
-file name: __init__.py`
+`C:\Users\yourUserNameHere\AppData\Local\Programs\Python\Python39\Lib\site-packages\ReadWriteMemory`  
+File name: `__init__.py`
 
 Copy/paste a duplicate of each of the functions "read" and "write", so that you have two copies of each, then add Bytes to the function name, so "readBytes" and "writeBytes"
 Then add a variable for size, so it looks like this:  
