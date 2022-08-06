@@ -61,7 +61,7 @@ def Beach():
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                FFX_Battle.pirhanas()
+                FFX_Battle.piranhas()
                 besaidBattles += 1
                 battleNum = FFX_memory.getBattleNum()
                 if battleNum == 11 or (battleNum == 12 and FFX_memory.battleType() == 1):
@@ -86,9 +86,9 @@ def Beach():
                 checkpoint = 29
             elif checkpoint == 36 and FFX_memory.getMap() == 17:
                 checkpoint = 37
-    FFX_Logs.writeStats("Pirhanas battles:")
+    FFX_Logs.writeStats("piranha battles:")
     FFX_Logs.writeStats(str(besaidBattles))
-    FFX_Logs.writeStats("Optimal pirhana battles:")
+    FFX_Logs.writeStats("Optimal piranha battles:")
     FFX_Logs.writeStats(str(goodBattles))
 
 

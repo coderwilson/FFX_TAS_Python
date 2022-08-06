@@ -67,12 +67,12 @@ while attempts < 20 and cycles < 50:
         SkipAttempts += 1
         if returnVal[3] == True:
             SkipCount += 1
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Attempts:", SkipAttempts)
         print("Success:", SkipCount)
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
         FFX_LoadGame.loadSaveNum(38)
@@ -83,12 +83,12 @@ while attempts < 20 and cycles < 50:
         # FFX_MRR.mainPath(wakkaLateMenu[0])
         SkipCount += 1
         SkipAttempts += 1
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Attempts:", SkipAttempts)
         print("Success:", SkipCount)
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
         FFX_LoadGame.loadSaveNum(3)
@@ -97,12 +97,12 @@ while attempts < 20 and cycles < 50:
         guadoSkipStatus = FFX_Guadosalam.guadoSkip()
         if guadoSkipStatus == True:
             SkipCount += 1
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Attempts:", SkipAttempts)
         print("Success:", SkipCount)
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
         # No remedy in inventory, likely game over.
@@ -115,12 +115,12 @@ while attempts < 20 and cycles < 50:
         # elif jyscalRetry == False:
             #attempts -= 1
             #jyscalRetry = True
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Attempts:", SkipAttempts)
         print("Success:", SkipCount)
-        print("-----------------------------------------------------")
-        print("-----------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
     # elif attempts == 5:
     #    print("Demo - Gagazet Cave")
     #    FFX_LoadGame.loadOffset(6)
@@ -272,18 +272,18 @@ while attempts < 20 and cycles < 50:
         FFX_Reset.resetToMainMenu()
     else:
         print(" ")
-        print("---------------------------------------------------")
-        print("---------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Final demo is complete. Thanks for playing.")
 
 
 endTime = FFX_Logs.timeStamp()
-print("-----------------------------------------------------")
-print("-----------------------------------------------------")
+print("------------------------------")
+print("------------------------------")
 totalTime = endTime - startTime
 print("The program duration (real time) was:", str(totalTime))
-print("-----------------------------------------------------")
-print("-----------------------------------------------------")
+print("------------------------------")
+print("------------------------------")
 
 #print("--------TASgiving, please stop the timer-------------")
 # print("--------------------------")

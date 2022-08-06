@@ -569,10 +569,10 @@ def Tros():
                     print("Rikku turn")
                     grenadeSlot = FFX_memory.getItemSlot(35)
                     grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
-                    print("------------------------------------------------")
+                    print("------------------------------")
                     print("Current grenade count:", grenadeCount)
                     print("Grenades used:", Grenades)
-                    print("------------------------------------------------")
+                    print("------------------------------")
                     totalNades = grenadeCount + Grenades
                     if totalNades < 6:
                         if trosPos == 1:
@@ -613,12 +613,12 @@ def Tros():
     FFX_Logs.writeStats(str(Steals))
 
 
-def pirhanas():
+def piranhas():
     battleNum = FFX_memory.getBattleNum()
     print("#########Seed:", FFX_memory.rngSeed())
-    # 11 = two pirhanas
-    # 12 = three pirhanas with one being a triple formation (takes two hits)
-    # 13 = four pirhanas
+    # 11 = two piranhas
+    # 12 = three piranhas with one being a triple formation (takes two hits)
+    # 13 = four piranhas
 
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
@@ -799,7 +799,7 @@ def KilikaWoods(valeforCharge):
     while FFX_memory.battleActive():  # AKA end of battle screen
         if valeforCharge == False and skipCharge == False:  # Still to charge Valefor
             if FFX_memory.turnReady():
-                print("--------------------------------")
+                print("------------------------------")
                 print("Battle Turn")
                 print("Battle Number:", bNum)
                 print("Valefor charge state:", valeforCharge)
@@ -925,7 +925,7 @@ def KilikaWoods(valeforCharge):
                     print("Not going to charge Valefor. Battle num:", bNum)
         else:
             if FFX_memory.turnReady():
-                print("--------------------------------")
+                print("------------------------------")
                 print("Battle Turn")
                 print("Battle Number:", bNum)
                 print("Valefor charge state:", valeforCharge)
@@ -1442,8 +1442,8 @@ def aeonDismiss():
 def MRRbattle(status):
     gameVars = FFX_vars.varsHandle()
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
-    print("---------------------------------------------------------")
-    print("---------------------------------------------------------")
+    print("------------------------------")
+    print("------------------------------")
     print("Fight start: MRR")
     battle = FFX_memory.getBattleNum()
     print("Battle number:", battle)
@@ -3565,9 +3565,9 @@ def home3():
     rikkuItemThrown = 0
     while not FFX_memory.battleComplete():  # AKA end of battle screen
         if FFX_memory.turnReady():
-            print("---------Turn:")
+            print("- Turn:")
             if FFX_Screen.turnTidus():
-                print("---------Tidus")
+                print("  Tidus")
                 if FFX_memory.getUseItemsSlot(49) != 255:
                     defend()
                 # elif not equipBrotherhood:
@@ -3576,15 +3576,15 @@ def home3():
                 else:
                     attack('none')
             elif FFX_Screen.turnRikku() and rikkuItemThrown < 1 and home3item() != 255:
-                print("---------Rikku")
+                print("  Rikku")
                 useItemSlot = home3item()
                 useItem(useItemSlot, 'none')
                 rikkuItemThrown += 1
             elif FFX_Screen.faintCheck() > 0:
-                print("---------any, revive")
+                print("  any, revive")
                 revive()
             else:
-                print("---------any, defend")
+                print("  any, defend")
                 defend()
     FFXC.set_neutral()
     print("Home 3 shows as fight complete.")
@@ -4318,12 +4318,12 @@ def seymourFlux():
     FFX_memory.clickToControl()
     if FFX_memory.getSLVLYuna() - yunaXP == 15000:
         gameVars.fluxOverkillSuccess()
-    print("------------------------------------")
-    print("------------------------------------")
+    print("------------------------------")
+    print("------------------------------")
     print("Flux Overkill:", gameVars.fluxOverkill())
     print("Seymour Flux battle complete.")
-    print("------------------------------------")
-    print("------------------------------------")
+    print("------------------------------")
+    print("------------------------------")
     # time.sleep(60) #Testing only
 
 
@@ -5480,7 +5480,7 @@ def buddySwapRikku():
 
 def kimahriOD(pos):
     FFX_Logs.writeLog("Kimahri using Overdrive")
-    print("Kimahri using Overdrive, pos - ", pos)
+    print("Kimahri using Overdrive, pos -", pos)
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapLeft()
     while FFX_memory.otherBattleMenu():

@@ -1010,9 +1010,9 @@ def blitzMain(forceBlitzWin):
         try:
             if lastPhase != gameStage() and gameClock() > 0 and gameClock() < 301:
                 lastPhase = gameStage()
-                print("------------------------------------")
-                print("New phase reached. ", lastPhase)
-                print("------------------------------------")
+                print("------------------------------")
+                print("New phase reached.", lastPhase)
+                print("------------------------------")
             if goersScoreFirst() or halftimeDialog():
                 if lastMenu != 3:
                     print("Dialog on-screen")

@@ -553,9 +553,9 @@ while Gamestate != "End":
             FFX_memory.waitFrames(30 * 2)
             FFXC.set_neutral()
             import FFX_Reset
-            print("------------------------------------------")
+            print("------------------------------")
             print("Resetting")
-            print("------------------------------------------")
+            print("------------------------------")
             # FFX_memory.clickToControl()
 
             #FFX_Logs.writeStats("Test duration:")
@@ -593,9 +593,9 @@ while Gamestate != "End":
 
         if blitzTesting == True:  # Used to run multiple tests, Blitzball only
             FFXC.set_neutral()
-            print("------------------------------------------")
+            print("------------------------------")
             print("Resetting")
-            print("------------------------------------------")
+            print("------------------------------")
             FFX_Screen.awaitTurn()
             import FFX_Reset
             # FFX_memory.clickToControl()
@@ -608,9 +608,9 @@ while Gamestate != "End":
             FFX_Reset.resetToMainMenu()
             time.sleep(3)
         else:
-            print("------------------------------------------")
+            print("------------------------------")
             print("Post-Blitz")
-            print("------------------------------------------")
+            print("------------------------------")
             StepCounter = 5
 
     if Gamestate == "Luca" and StepCounter == 5:
@@ -649,9 +649,9 @@ while Gamestate != "End":
             Gamestate = "none"
             StepCounter = 1
             import FFX_Reset
-            print("------------------------------------------")
+            print("------------------------------")
             print("Resetting")
-            print("------------------------------------------")
+            print("------------------------------")
             FFXC.set_neutral()
             FFX_memory.clickToControl()
 
@@ -1120,20 +1120,20 @@ while Gamestate != "End":
         Gamestate = "Sin"
         StepCounter = 3
 
-    print("--------------------------------")
+    print("------------------------------")
     print("Looping")
     print(Gamestate, "|", StepCounter)
-    print("--------------------------------")
+    print("------------------------------")
 
 #print("Waiting for Yu Yevon to die.")
 #FFX_memory.waitFrames(30 * 6)
 print("Time! The game is now over.")
 
 # except Exception as errMsg:
-#    print("--------------------------------------------------")
+#    print("------------------------------")
 #    print("Something went wrong during the run. Error:")
 #    print(errMsg)
-#    print("--------------------------------------------------")
+#    print("------------------------------")
 #    FFX_memory.waitFrames(30 * 20)
 
 endTime = FFX_Logs.timeStamp()

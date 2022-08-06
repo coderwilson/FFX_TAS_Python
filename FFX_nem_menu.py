@@ -129,7 +129,7 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
 
-# ------------------------------------------------------------
+# ------------------------------
 # Nemesis Control functions
 
 
@@ -262,7 +262,7 @@ def nextAPneeded(checkpoint):
         return 42
     return 100  # If no further grids are possible, continue indefinitely.
 
-# ------------------------------------------------------------
+# ------------------------------
 # Nemesis menus
 
 

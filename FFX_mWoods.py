@@ -183,9 +183,9 @@ def lake():
     FFX_menu.mLakeGrid()
     FFX_memory.awaitControl()
 
-    print("------------------------------------------Affection array:")
+    print("------------------------------Affection array:")
     print(FFX_memory.affectionArray())
-    print("------------------------------------------")
+    print("------------------------------")
 
     checkpoint = 0
     while FFX_memory.getBattleNum() != 194:
@@ -204,9 +204,9 @@ def lake():
 
 
 def afterCrawler():
-    print("------------------------------------------Affection array:")
+    print("------------------------------Affection array:")
     print(FFX_memory.affectionArray())
-    print("------------------------------------------")
+    print("------------------------------")
     FFX_memory.clickToControl()
     while FFX_memory.getMap() != 153:
         pos = FFX_memory.getCoords()

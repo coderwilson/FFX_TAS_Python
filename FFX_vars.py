@@ -3,11 +3,11 @@ class allVars:
         self.setStartVars()
 
     def setStartVars(self):
-        # ------------------------------------------------------------------
+        # ------------------------------
         # The default values assume starting from the beginning of the game.
         # If you are starting from a loaded save, you may need to change one or more
         # of the values below.
-        # ------------------------------------------------------------------
+        # ------------------------------
 
         # ----Most important values to review
         # Set depending on hardware. True = less powerful hardware.

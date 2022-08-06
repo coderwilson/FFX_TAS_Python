@@ -225,7 +225,7 @@ def ABswimming2():
     FFXC.set_neutral()
 
     FFX_Screen.awaitTurn()
-    # Final group of Pirhanas
+    # Final group of Piranhas
     FFX_Battle.stealAndAttackPreTros()
     FFX_memory.awaitControl()
     FFXC.set_movement(0, 1)

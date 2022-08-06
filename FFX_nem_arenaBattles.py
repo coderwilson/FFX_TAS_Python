@@ -324,7 +324,7 @@ def basicAttack(megaPhoenix=False, odVersion: int = 0, useOD=False, yunaAutos=Fa
                 else:
                     FFX_Battle.attack('none')
             elif FFX_Screen.turnYuna() and yunaAutos:
-                attack('none')
+                FFX_Battle.attack('none')
             else:
                 FFX_Battle.defend()
 

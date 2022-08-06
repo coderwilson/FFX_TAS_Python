@@ -396,10 +396,10 @@ def besaid1(checkpoint):
     if checkpoint == 19:  # Pillar, before the big open area.
         x = 498
         y = -414
-    if checkpoint == 20:  # Adjust to best trigger for pirhanas
+    if checkpoint == 20:  # Adjust to best trigger for piranhas
         x = 480
         y = -37
-    if checkpoint == 21:  # Adjust to best trigger for pirhanas
+    if checkpoint == 21:  # Adjust to best trigger for piranhas
         x = 480
         y = 100
     if checkpoint == 22:  # Hilltop

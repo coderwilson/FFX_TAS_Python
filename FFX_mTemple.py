@@ -14,9 +14,9 @@ FFXC = FFX_Xbox.controllerHandle()
 
 
 def approach():
-    print("------------------------------------------Affection array:")
+    print("------------------------------Affection array:")
     print(FFX_memory.affectionArray())
-    print("------------------------------------------")
+    print("------------------------------")
     FFX_memory.clickToControl()
     print("Approaching Macalania Temple")
 

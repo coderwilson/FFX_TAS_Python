@@ -547,13 +547,13 @@ def sphereNum(sType) -> int:
 def selSphere(sType, shift):
     sNum = 255
     menuPos = 0
-    print("-----------------------------------")
+    print("------------------------------")
     print(sType)
     sNum = sphereNum(sType)
     print(sNum)
     menuPos = FFX_memory.getGridItemsSlot(sNum)
     print(menuPos)
-    print("-----------------------------------")
+    print("------------------------------")
     if menuPos == 255:
         print("Sphere", sType, "is not in inventory.")
         return

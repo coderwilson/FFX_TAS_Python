@@ -20,22 +20,21 @@ twitch.tv/coderwilson
 youtube.com/coderwilson (I don't use this too much any more, but it has some old stuff that's kinda fun)
 coderwilson@gmail.com - no solicitations please.
 
--------------------------------------------------------------------
+---
 Also, this may be helpful:
 <https://github.com/shauleiz/ScpVBus/releases/tag/v1.7.1.2>
 
--------------------------------------------------------------------
+---
 Notes concerning readBytes and writeBytes
 Make sure to instal (via pip) the library ReadWriteMemory.
-The file to fix is located in the python base folder, in this location.
-C:\Users\yourUserNameHere\AppData\Local\Programs\Python\Python39\Lib\site-packages\ReadWriteMemory
-file name: __init__.py
+The file to fix is located in the python base folder, in this location.  
+`C:\Users\yourUserNameHere\AppData\Local\Programs\Python\Python39\Lib\site-packages\ReadWriteMemory
+file name: __init__.py`
 
 Copy/paste a duplicate of each of the functions "read" and "write", so that you have two copies of each, then add Bytes to the function name, so "readBytes" and "writeBytes"
-Then add a variable for size, so it looks like this:
----  def readBytes(self, lp_base_address: int, size) -> Any:
+Then add a variable for size, so it looks like this:  
+`---  def readBytes(self, lp_base_address: int, size) -> Any:`
 
-Then find the line with ReadProcessMemory and add the size variable where the static 4 is located, so it looks like this:
----  ReadProcessMemory(self.handle, lp_base_address, lp_buffer,
-                                                     size, lp_number_of_bytes_read)
+Then find the line with ReadProcessMemory and add the size variable where the static 4 is located, so it looks like this:  
+`---  ReadProcessMemory(self.handle, lp_base_address, lp_buffer, size, lp_number_of_bytes_read)`  
 Do this for both readBytes and writeBytes. Save and you're good to go.

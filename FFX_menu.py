@@ -1803,7 +1803,7 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
 
-# ------------------------------------------------------------
+# ------------------------------
 # Nemesis menus
 
 

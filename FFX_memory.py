@@ -516,14 +516,14 @@ def getMaxHP():
 def getTidusMP():
     global baseValue
     retVal = process.read(baseValue + 0xD3207C)
-    #print("|||| Yuna MP:", retVal)
+    #print("||| Yuna MP:", retVal)
     return retVal
 
 
 def getYunaMP():
     global baseValue
     retVal = process.read(baseValue + 0xD32110)
-    #print("|||| Yuna MP:", retVal)
+    #print("||| Yuna MP:", retVal)
     return retVal
 
 
@@ -1061,7 +1061,7 @@ def getOverdriveBattle(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5bc
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    print("In-Battle Overdrive values:", retVal)
+    print("In-Battle Overdrive values:\n", retVal)
     return retVal
 
 
@@ -1073,7 +1073,7 @@ def getCharWeakness(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5dd
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    print("In-Battle Overdrive values:", retVal)
+    print("In-Battle Overdrive values:\n", retVal)
     return retVal
 
 
@@ -1828,7 +1828,7 @@ def partyFormatCursor2():
 
 
 def getPartyFormatFromText(frontLine):
-    print("||||||||||||| FRONT LINE VARIABLE:", frontLine)
+    print("||| FRONT LINE VARIABLE:", frontLine)
     if frontLine == 'kimahri':
         orderFinal = [0, 3, 2, 6, 4, 5, 1]
     elif frontLine == 'rikku':
@@ -2049,7 +2049,7 @@ def overdriveState():
     for x in range(20):
         offset = (0x94 * x) + 0x39
         retVal[x] = process.readBytes(basePointerAddress + offset, 1)
-    print("Overdrive values:", retVal)
+    print("Overdrive values:\n", retVal)
     return retVal
 
 
@@ -2064,7 +2064,7 @@ def overdriveState2():
     for x in range(7):
         offset = (0x94 * x) + 0x39
         retVal[x] = process.readBytes(basePointerAddress + offset, 1)
-    print("Overdrive values:", retVal)
+    print("Overdrive values:\n", retVal)
     return retVal
 
 
@@ -2141,11 +2141,11 @@ def printRNG36():
 
     coord = baseValue + 0x00D35F68
     retVal = process.readBytes(coord, 1)
-    print("--------------------------------------------")
-    print("--------------------------------------------")
+    print("------------------------------")
+    print("------------------------------")
     print("RNG36 value:", retVal)
-    print("--------------------------------------------")
-    print("--------------------------------------------")
+    print("------------------------------")
+    print("------------------------------")
 
 
 def end():
@@ -2190,7 +2190,7 @@ def nameHasCharacters():
     return readVal(0x0146A240)
 
 
-# -------------------------------------------------------
+# ------------------------------
 # Egg hunt section
 
 
@@ -2361,7 +2361,7 @@ def buildIcicles():
     return retArray
 
 
-# -------------------------------------------------------
+# ------------------------------
 # Soft reset section
 
 def setMapReset():
@@ -2391,7 +2391,7 @@ def setRNG2():
     process.writeBytes(key, 0x7E9F20D2, 4)
 
 
-# ---------------------------------------------
+# ------------------------------
 # Blitzball!
 
 class blitzActor:
@@ -2589,7 +2589,7 @@ def blitzCursor():
     cursor = process.readBytes(key, 1)
     return cursor
 
-# -------------------------------------------------------
+# ------------------------------
 # Function for logging
 
 
@@ -2597,7 +2597,7 @@ def readBytes(key, size):
     return process.readBytes(key, size)
 
 
-# -------------------------------------------------------
+# ------------------------------
 # Equipment array
 
 # 0x0 - ushort - name/group (?)
@@ -3055,7 +3055,7 @@ def assignAbilityToEquipCursor():
     retVal = process.readBytes(key, 1)
     return retVal
 
-# -------------------------------------------------
+# ------------------------------
 # Shopping related stuff
 
 
@@ -3230,7 +3230,7 @@ def movingPromptOpen():
     retVal = process.readBytes(key, 1)
     return retVal
 
-# -------------------------------------------------------
+# ------------------------------
 # Bevelle Trials indicators
 
 
@@ -3243,7 +3243,7 @@ def btTriDirectionMain():
     key = baseValue + 0x0092E1ED
     return process.readBytes(key, 1)
 
-# -------------------------------------------------------
+# ------------------------------
 # Gagazet trials
 
 
@@ -3260,7 +3260,7 @@ def GTinnerRing():
     height = float_from_integer(process.read(key))
     return height
 
-# -------------------------------------------------------
+# ------------------------------
 # Save spheres
 
 
@@ -3487,7 +3487,7 @@ def csrBaajSaveClear():
     clearSaveMenuCursor()
     clearSaveMenuCursor2()
 
-# -------------------------------------------------------
+# ------------------------------
 # Testing
 
 
@@ -3510,7 +3510,7 @@ def memTestVal3():
     key = baseValue + 0x00D35EE3
     return process.readBytes(key, 1)
 
-# -------------------------------------------------------
+# ------------------------------
 
 
 def printMemoryLog():
@@ -3542,7 +3542,7 @@ def printMemoryLog_backup():
     coord4 = process.read(baseValue + 0x00D2A00C)
     FFX_Logs.writeStats("Temp Value 4: " + str(coord1))
 
-# -------------------------------------------------------
+# ------------------------------
 # Load game functions
 
 
@@ -3567,7 +3567,7 @@ def loadGamePos():
 def lucaWorkersBattleID():
     return readVal(0x01466DCC)
 
-# -------------------------------------------------------
+# ------------------------------
 # RNG tracking based on the first six hits
 
 
@@ -3613,7 +3613,7 @@ def lastHitCheckChange():
         return False
 
 
-# -------------------------------------------------------
+# ------------------------------
 # NE armor manip
 RNG_CONSTANTS_1 = (
     2100005341, 1700015771, 247163863, 891644838, 1352476256, 1563244181,
@@ -3701,11 +3701,11 @@ def nextChanceRNG01(version='white'):
         if (testArray[(i+1)*2] & 0x7fffffff) % modulo == battleIndex:
             evenArray.append(i)
 
-    print("--------------------------------")
+    print("------------------------------")
     print("Next event will appear on the odd array without manip. Area:", version)
     print("oddArray:", oddArray)
     print("evenArray:", evenArray)
-    print("--------------------------------")
+    print("------------------------------")
     return([oddArray, evenArray])
 
 
