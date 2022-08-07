@@ -142,6 +142,8 @@ def Storyline(forceBlitzWin):
         elif current == 560 and FFX_memory.diagProgressFlag() > 1:
             print("Wakka story happening.")
             FFX_memory.clickToDiagProgress(11)
+            while not activeClock():
+                FFX_Xbox.tapB()
         #First half is 535
         #Hype halftime is 540
         #Second half starts on 560

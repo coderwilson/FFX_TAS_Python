@@ -2168,9 +2168,7 @@ def mWoods(woodsVars):
                             fleeAll()
                     else:
                         if FFX_memory.rngSeed() == 31 and battleNum == 172:
-                            if not 6 in FFX_memory.getActiveBattleFormation():
-                                buddySwapRikku()
-                            elif not 3 in FFX_memory.getActiveBattleFormation():
+                            if FFX_Screen.turnAuron() and not 3 in FFX_memory.getActiveBattleFormation():
                                 buddySwapKimahri()
                             else:
                                 escapeOne()
@@ -3413,14 +3411,14 @@ def sandragora(version):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Screen.awaitTurn()
-        #elif FFX_memory.rngSeed() == 31:
-        #        print("Manipulating known seed 31")
-        #        fleeAll()
-        #        FFX_memory.clickToControl()
-        #        FFXC.set_movement(0, 1)
-        #        FFX_memory.awaitEvent()
-        #        FFXC.set_neutral()
-        #        FFX_Screen.awaitTurn()
+        elif FFX_memory.rngSeed() == 31:
+                print("Manipulating known seed 31")
+                fleeAll()
+                FFX_memory.clickToControl()
+                FFXC.set_movement(0, 1)
+                FFX_memory.awaitEvent()
+                FFXC.set_neutral()
+                FFX_Screen.awaitTurn()
         else:
             print("DO NOT Swap odd/even seeds on RNG01")
     
@@ -4657,7 +4655,7 @@ def oblitzRngWait():
         goodRngList = [330516972, -1773455057]
         # 527494414
     else:
-        goodRngList = [345511282, 41645750, 323111951, 1827503098, 562491965, 2040111393, 281000320, 351049783]
+        goodRngList = [345511282, 85955655]
         # re-add 345511282 later
         #345511282 is interesting, if we can get Botta to pass the ball straight to Jassu in second half.
     
@@ -5649,6 +5647,22 @@ def BFA():
         elif FFX_memory.battleActive() == False:
             FFX_Xbox.tapB()
 
+def yuYevonItem():
+    if FFX_memory.getItemSlot(6) < 200:
+        return 6
+    elif FFX_memory.getItemSlot(7) < 200:
+        return 7
+    elif FFX_memory.getItemSlot(8) < 200:
+        return 8
+    elif FFX_memory.getItemSlot(2) < 200:
+        return 2
+    elif FFX_memory.getItemSlot(1) < 200:
+        return 1
+    elif FFX_memory.getItemSlot(0) < 200:
+        return 0
+    else:
+        return 99
+
 def yuYevon():
     print("Ready for Yu Yevon.")
     FFX_Screen.awaitTurn()  # No need for skipping dialog
@@ -5658,7 +5672,7 @@ def yuYevon():
     #if zaChar in [0,1,2,6]:
     weapSwap = False
     story = FFX_memory.getStoryProgress()
-    while story < 3400:
+    while FFX_memory.getStoryProgress() < 3400:
         if FFX_memory.turnReady():
             print("-----------------------")
             print("-----------------------")
@@ -5715,17 +5729,20 @@ def yuYevon():
                 else:
                     defend()
             elif zombieAttack: #Throw P.down to end game
-                while FFX_memory.battleMenuCursor() != 1:
-                    FFX_Xbox.tapDown()
-                while FFX_memory.mainBattleMenu():
-                    FFX_Xbox.tapB()
-                itemPos = FFX_memory.getThrowItemsSlot(6)
-                _navigate_to_position(itemPos)
-                while FFX_memory.otherBattleMenu():
-                    FFX_Xbox.tapB()
-                while FFX_memory.battleTargetId() < 20:
-                    FFX_Xbox.tapUp()
-                tapTargeting()
+                if yuYevonItem() == 99:
+                    attack('none')
+                else:
+                    while FFX_memory.battleMenuCursor() != 1:
+                        FFX_Xbox.tapDown()
+                    while FFX_memory.mainBattleMenu():
+                        FFX_Xbox.tapB()
+                    itemPos = FFX_memory.getThrowItemsSlot(yuYevonItem())
+                    _navigate_to_position(itemPos)
+                    while FFX_memory.otherBattleMenu():
+                        FFX_Xbox.tapB()
+                    while FFX_memory.battleTargetId() < 20:
+                        FFX_Xbox.tapUp()
+                    tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
             elif FFX_Screen.turnTidus() and zaChar == 255:
                 #Tidus to use Zombie Strike ability
