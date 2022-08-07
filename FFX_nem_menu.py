@@ -1192,7 +1192,9 @@ def rikkuHaste():
 def rikkuProvoke():
     openGrid(6)
     FFX_menuGrid.moveFirst()
-    gridRight()
+    gridUp()
+    gridUp()
+    gridUp()
     gridUp()
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability', 'none')

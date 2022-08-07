@@ -225,6 +225,12 @@ def aeonStart():
     FFX_Screen.awaitTurn()
     FFX_Battle.buddySwapYuna()
     FFX_Battle.aeonSummon(4)
+    while not FFX_Screen.turnTidus():
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnAeon():
+                FFX_Battle.attack('none')
+            else:
+                FFX_Battle.defend()
 
 
 def yojimboBattle():
@@ -249,6 +255,7 @@ def yojimboBattle():
     # After battle stuff
     while not FFX_memory.menuOpen():
         FFX_Xbox.tapB()
+    print("Battle is complete.")
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(180)
     FFXC.set_neutral()
@@ -297,7 +304,9 @@ def basicQuickAttacks(megaPhoenix=False, odVersion: int = 0, yunaAutos=False):
                 elif FFX_memory.getOverdriveBattle(0) == 100:
                     FFX_Battle.tidusOD(version=odVersion)
                 else:
-                    FFX_Battle.useSkill(1)  # Quick hit
+                    FFX_Battle.useSkill(1) #Quick hit
+            elif FFX_Screen.turnAeon():
+                FFX_Battle.attack('none')
             else:
                 FFX_Battle.defend()
 
@@ -324,7 +333,9 @@ def basicAttack(megaPhoenix=False, odVersion: int = 0, useOD=False, yunaAutos=Fa
                 else:
                     FFX_Battle.attack('none')
             elif FFX_Screen.turnYuna() and yunaAutos:
-                FFX_Battle.attack('none')
+                attack('none')
+            elif FFX_Screen.turnAeon():
+                attack('none')
             else:
                 FFX_Battle.defend()
 
@@ -359,11 +370,10 @@ def arenaNPC():
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuA()
-                FFX_Xbox.menuA()
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    FFX_memory.waitFrames(3)
+    FFX_memory.waitFrames(20) #This buffer can be improved later.
 
 
 def restockDowns():
@@ -422,6 +432,7 @@ def battles1():
         restockDowns()
         FFX_nem_arenaSelect.arenaMenuSelect(4)
         FFX_memory.fullPartyFormat('kilikawoods1')
+        touchSave()
         arenaNPC()
         FFX_nem_arenaSelect.arenaMenuSelect(1)
         FFX_nem_arenaSelect.startFight(areaIndex=13, monsterIndex=1)
@@ -815,7 +826,8 @@ def checkYojimboPossible():
         itemDump()
 
     if FFX_memory.overdriveState2()[1] == 100 and FFX_memory.getGilvalue() >= 300000:
-        # Save game in preparation for the Yojimbo attempt
+        #Save game in preparation for the Yojimbo attempt
+        FFX_memory.waitFrames(20)
         FFX_nem_arenaSelect.arenaMenuSelect(4)
         FFX_memory.fullPartyFormat('kilikawoods1')
         if gameVars.yojimboGetIndex() == 1:
