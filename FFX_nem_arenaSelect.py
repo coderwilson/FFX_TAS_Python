@@ -32,8 +32,12 @@ def arenaCursor():
 
 def arenaMenuSelect(choice:int=2):
     print("Selecting menu option: ", choice)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(2)
     while not FFX_memory.blitzCursor() == choice:
-        if choice >= 3:
+        if choice == 4:
+            FFX_Xbox.menuA()
+        elif choice == 3:
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuDown()

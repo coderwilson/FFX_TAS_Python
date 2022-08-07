@@ -428,11 +428,12 @@ def advancedBattleLogic():
                     else:
                         FFX_Battle.defend()
         else:
+            print("---Regular battle:", FFX_memory.getBattleNum())
             sleepPowder = False
             while FFX_memory.battleActive():
                 battleNum = FFX_memory.getBattleNum()
                 if FFX_memory.turnReady():
-                    if battleNum in [431,442]:
+                    if battleNum in [442]:
                         #Damned malboros in Omega
                         FFX_Battle.buddySwapYuna()
                         FFX_Battle.aeonSummon(4)
@@ -442,32 +443,56 @@ def advancedBattleLogic():
                             autoLife()
                             autoLifeUsed = True
                         elif battleNum == 383 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
-                            FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                            if FFX_memory.getUseItemsSlot(41) < 100:
+                                FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                            else:
+                                FFX_Battle.useSkill(1)
                         elif battleNum == 426 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
                             else:
-                                FFX_Battle.attack('none')
+                                FFX_Battle.useSkill(1)
                         elif battleNum == 430 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
-                            FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                            if FFX_memory.getUseItemsSlot(41) < 100:
+                                FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                            else:
+                                FFX_Battle.useSkill(1)
                         elif battleNum == 437 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
-                            FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                            if FFX_memory.getUseItemsSlot(41) < 100:
+                                FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                            else:
+                                FFX_Battle.useSkill(1)
+                        elif battleNum == 431:
+                            FFX_Battle.tidusFlee()
                         else:
                             FFX_Battle.useSkill(1) #Quick hit
                     elif FFX_Screen.turnRikku():
                         if battleNum in [377,382]:
+                            print("Shining Gems for Gemini, better to save other items for other enemies.")
                             #Double Gemini, two different locations
-                            FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
+                            if FFX_memory.getUseItemsSlot(42) < 100:
+                                FFX_Battle.useItem(FFX_memory.getUseItemsSlot(42), rikkuFlee=True)
+                            else:
+                                FFX_Battle.defend()
                         elif battleNum == 386:
                             #Armor bomber guys
-                            FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
+                            if FFX_memory.getUseItemsSlot(41) < 100:
+                                FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
+                            else:
+                                FFX_Battle.defend()
                         elif battleNum in [383,430]:
                             #Demonolith
-                            FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
+                            if FFX_memory.getUseItemsSlot(41) < 100:
+                                FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
+                            else:
+                                FFX_Battle.defend()
                         elif battleNum == 422:
                             #Provoke on Spirit
                             FFX_Battle.useSpecial(position=3, target=21, direction='u')
-                            FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41))
+                            if FFX_memory.getUseItemsSlot(41) < 100:
+                                FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
+                            else:
+                                FFX_Battle.defend()
                         elif battleNum == 424:
                             #Provoke on Spirit
                             FFX_Battle.useSpecial(position=3, target=21, direction='r')
@@ -484,15 +509,15 @@ def advancedBattleLogic():
                                 else:
                                     FFX_Battle.defend()
                         elif battleNum == 431:
-                            FFX_Battle.buddySwapYuna()
-                            FFX_Battle.aeonSummon(4)
-                            while not FFX_memory.battleComplete():
-                                if FFX_Screen.turnReady():
-                                    FFX_Battle.attack('none')
+                            FFX_Battle.tidusFlee()
                         elif battleNum == 437 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
-                            FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=True)
-                        #elif FFX_memory.getHP()[6] < 100 or FFX_memory.getHP()[0] < 7000:
-                        #    FFX_Battle.useItem(FFX_memory.getUseItemsSlot(20), rikkuFlee=True) #Safety potions are fun.
+                            if not sleepPowder:
+                                FFX_Battle.useItem(FFX_memory.getUseItemsSlot(37), rikkuFlee=True)
+                            else:
+                                if FFX_memory.getUseItemsSlot(41) < 100:
+                                    FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
+                                else:
+                                    FFX_Battle.defend()
                         else:
                             FFX_Battle.defend()
                     else:
@@ -549,7 +574,6 @@ def arenaNPC():
         else:
             FFXC.set_neutral()
             if FFX_memory.diagProgressFlag() == 59:
-                FFX_Xbox.menuA()
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuA()
                 FFX_Xbox.menuA()
@@ -782,9 +806,9 @@ def autoPhoenix(): #Calm Lands items
     FFX_memory.fullPartyFormat('initiative')
     arenaNPC()
     while FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(7)) != 99:
+        print("Trying to obtain mega-phoenix downs")
         FFX_nem_arenaSelect.arenaMenuSelect(4)
         arenaNPC()
-        print("Mega-Phoenix Downs:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(7)))
     FFX_nem_arenaSelect.arenaMenuSelect(2) #Equipment menu
     FFX_memory.waitFrames(90)
     FFX_Xbox.tapRight()
@@ -861,35 +885,38 @@ def restockDowns():
     FFX_memory.waitFrames(6)
     FFX_Xbox.menuA()
 
+def oneMpReady():
+    print("Slot, Gambler:", FFX_memory.getItemSlot(41))
+    if FFX_memory.getItemSlot(41) > 200:
+        return False
+    print("Count, Gambler:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(41)))
+    if FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(41)) < 99:
+        return False
+    print("Slot, Salt:", FFX_memory.getItemSlot(63))
+    if FFX_memory.getItemSlot(63) > 200:
+        return False
+    print("Count, Salt:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(63)))
+    if FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(63)) < 20:
+        return False
+    return True
+
 def oneMpWeapon(): #Break Damage Limit, or One MP cost
     FFX_menu.autoSortEquipment()
+    FFX_memory.fullPartyFormat('initiative')
     arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    #initArray = FFX_memory.checkAbility(ability = 0x8002)
-    #if not initArray[4]:
-    #    FFX_menu.addAbility(owner=4, equipment_type=0, ability_array=[255,255,255,255], ability_index=0x8002, slotcount=1, navigateToEquipMenu=True, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
-    #FFX_menu.equipWeapon(character=4,ability=0x8002) #Initiative
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
+    print("###Sleeping powder count:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(37)))
+    while FFX_memory.getItemSlot(37) > 200 or FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(37)) < 41:
+        FFX_nem_arenaSelect.arenaMenuSelect(1)
+        FFX_nem_arenaSelect.startFight(areaIndex=7,monsterIndex=0)
+        bribeBattle()
+        FFX_nem_arenaSelect.arenaMenuSelect(4)
+        FFX_memory.fullPartyFormat('initiative')
+        arenaNPC()
+        print("###Sleeping powder count:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(37)))
+    while not oneMpReady():
+        print("Trying to obtain Gambler's Soul and Purifying Salt items")
+        FFX_nem_arenaSelect.arenaMenuSelect(4)
+        arenaNPC()
     FFX_nem_arenaSelect.arenaMenuSelect(2)
     FFX_memory.waitFrames(60)
     FFX_Xbox.menuB() #Buy
@@ -1006,26 +1033,10 @@ def kilikaFinalShop():
 
 def finalWeapon():
     arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
-    FFX_nem_arenaSelect.arenaMenuSelect(4)
-    arenaNPC()
+    while FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(53)) < 99:
+        print("Trying to obtain Dark Matter for BDL weapon")
+        FFX_nem_arenaSelect.arenaMenuSelect(4)
+        arenaNPC()
     FFX_nem_arenaSelect.arenaMenuSelect(4)
     
     FFX_menu.addAbility(owner=0, equipment_type=0, ability_array=[0x800B,0x8000,255,255], ability_index=0x800D, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=False, closeMenu=False, fullMenuClose=False)
