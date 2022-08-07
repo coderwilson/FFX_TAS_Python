@@ -77,10 +77,11 @@ def ssWinno():
     FFX_Logs.writeStats(FFX_memory.getSpeed())
 
     while FFX_memory.userControl():
-        FFX_targetPathing.setMovement([28, -36])
-    FFXC.set_movement(1, -1)
+        FFX_targetPathing.setMovement([28, -36]) #Through first door
+    #FFXC.set_movement(1, -1)
     FFX_memory.waitFrames(2)
-    FFX_memory.awaitControl()
+    FFX_memory.clickToControl()
+    FFXC.set_movement(1, -1)
     FFX_memory.waitFrames(2)
 
     # Talk to O'akaXXIII
