@@ -9,11 +9,13 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def gridUp():
     FFXC.set_value('Dpad', 1)
     FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(3)
+
 
 def gridDown():
     FFXC.set_value('Dpad', 2)
@@ -21,11 +23,13 @@ def gridDown():
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(3)
 
+
 def gridLeft():
     FFXC.set_value('Dpad', 4)
     FFX_memory.waitFrames(2)
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(3)
+
 
 def gridRight():
     FFXC.set_value('Dpad', 8)
@@ -33,41 +37,48 @@ def gridRight():
     FFXC.set_value('Dpad', 0)
     FFX_memory.waitFrames(3)
 
+
 def gridTidus():
     if FFX_memory.sGridChar() == 0:
         return True
     else:
         return False
-    
+
+
 def gridKimahri():
     if FFX_memory.sGridChar() == 3:
         return True
     else:
         return False
-    
+
+
 def gridAuron():
     if FFX_memory.sGridChar() == 2:
         return True
     else:
         return False
-    
+
+
 def gridLulu():
     if FFX_memory.sGridChar() == 5:
         return True
     else:
         return False
-    
+
+
 def gridWakka():
     if FFX_memory.sGridChar() == 4:
         return True
     else:
         return False
-    
+
+
 def gridYuna():
     if FFX_memory.sGridChar() == 1:
         return True
     else:
         return False
+
 
 def gridRikku():
     if FFX_memory.sGridChar() == 6:
@@ -75,19 +86,23 @@ def gridRikku():
     else:
         return False
 
+
 def firstPosition():
     if FFX_memory.sGridMenu() == 255:
         if FFX_memory.getGridMoveActive():
             return False
         else:
             return True
-    else: return False
+    else:
+        return False
+
 
 def moveUseMenu():
     if FFX_memory.sGridMenu() == 7:
         return True
     else:
         return False
+
 
 def moveReady():
     if moveUseMenu():
@@ -97,7 +112,9 @@ def moveReady():
             return False
     elif readyUseSphere() or moveActive():
         FFX_Xbox.menuA()
-    else: return False
+    else:
+        return False
+
 
 def moveActive():
     if FFX_memory.getGridMoveActive() and FFX_memory.sGridMenu() == 255:
@@ -105,13 +122,14 @@ def moveActive():
     else:
         return False
 
+
 def moveComplete():
     if FFX_memory.getGridMoveActive() and FFX_memory.sGridMenu() == 11:
         return True
     else:
         return False
 
-    
+
 def useReady():
     if moveUseMenu():
         if FFX_memory.getGridMoveUsePos() == 1:
@@ -120,7 +138,9 @@ def useReady():
             return False
     elif readyUseSphere() or moveActive():
         FFX_Xbox.menuA()
-    else: return False
+    else:
+        return False
+
 
 def readySelectSphere():
     if FFX_memory.sGridMenu() == 8:
@@ -128,12 +148,14 @@ def readySelectSphere():
     else:
         return False
 
+
 def readyUseSphere():
     if FFX_memory.getGridUseActive():
         return True
     else:
         return False
-    
+
+
 def quitGridReady():
     if FFX_memory.sGridMenu() == 11:
         if useReady():
@@ -142,7 +164,9 @@ def quitGridReady():
             return False
         else:
             return True
-    else: return False
+    else:
+        return False
+
 
 def useFirst():
     print("use first")
@@ -153,9 +177,10 @@ def useFirst():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #if gameVars.usePause():
+    # if gameVars.usePause():
     #    FFX_memory.waitFrames(6)
     return True
+
 
 def moveFirst():
     print("move first")
@@ -167,9 +192,10 @@ def moveFirst():
             FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
-    #if gameVars.usePause():
+    # if gameVars.usePause():
     #    FFX_memory.waitFrames(6)
     return True
+
 
 def moveAndUse():
     print("move and use")
@@ -183,9 +209,10 @@ def moveAndUse():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    #if gameVars.usePause():
+    # if gameVars.usePause():
     #    FFX_memory.waitFrames(6)
     return True
+
 
 def useAndMove():
     print("use and move")
@@ -201,9 +228,10 @@ def useAndMove():
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuB()
-    #if gameVars.usePause():
+    # if gameVars.usePause():
     #    FFX_memory.waitFrames(6)
     return True
+
 
 def useAndUseAgain():
     print("use and use again")
@@ -220,6 +248,7 @@ def useAndUseAgain():
     if gameVars.usePause():
         FFX_memory.waitFrames(6)
     return True
+
 
 def useShiftLeft(toon):
     print("use and shift")
@@ -283,6 +312,7 @@ def useShiftLeft(toon):
             elif firstPosition():
                 FFX_Xbox.shoulderLeft()
     print("Ready for grid: " + toon)
+
 
 def useShiftRight(toon):
     print("use and shift")
@@ -348,6 +378,7 @@ def useShiftRight(toon):
                 FFX_Xbox.shoulderRight()
     print("Ready for grid: " + toon)
 
+
 def moveShiftLeft(toon):
     print("Move and shift, left")
     FFX_memory.waitFrames(2)
@@ -387,6 +418,7 @@ def moveShiftLeft(toon):
             elif firstPosition():
                 FFX_Xbox.shoulderLeft()
     print("Ready for grid: " + toon)
+
 
 def moveShiftRight(toon):
     print("Move and shift, right")
@@ -428,6 +460,7 @@ def moveShiftRight(toon):
                 FFX_Xbox.shoulderRight()
     print("Ready for grid: " + toon)
 
+
 def useAndQuit():
     FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuB()
@@ -444,6 +477,7 @@ def useAndQuit():
     while FFX_memory.menuNumber() != 5:
         pass
     return True
+
 
 def sphereNum(sType) -> int:
     sType = sType.lower()
@@ -509,28 +543,26 @@ def sphereNum(sType) -> int:
         return 99
     return 255
 
-def selSphere(sType, direction, shift):
-    #The direction variable is no longer used.
+
+def selSphere(sType, shift):
     sNum = 255
     menuPos = 0
-    print("-----------------------------------")
-    print("-----------------------------------")
+    print("------------------------------")
     print(sType)
     sNum = sphereNum(sType)
     print(sNum)
     menuPos = FFX_memory.getGridItemsSlot(sNum)
     print(menuPos)
-    print("-----------------------------------")
-    print("-----------------------------------")
+    print("------------------------------")
     if menuPos == 255:
-        print("Sphere ", sType, "is not in inventory.")
+        print("Sphere", sType, "is not in inventory.")
         return
     while menuPos != FFX_memory.getGridCursorPos():
         if menuPos > FFX_memory.getGridCursorPos():
             if gameVars.usePause():
                 FFX_Xbox.tapDown()
             else:
-                if menuPos - FFX_memory.getGridCursorPos() >=3 and len(FFX_memory.getGridItemsOrder()) > 4:
+                if menuPos - FFX_memory.getGridCursorPos() >= 3 and len(FFX_memory.getGridItemsOrder()) > 4:
                     if menuPos - FFX_memory.getGridCursorPos() == 3 and menuPos == len(FFX_memory.getGridItemsOrder())-1:
                         FFX_Xbox.tapDown()
                     else:
@@ -541,7 +573,7 @@ def selSphere(sType, direction, shift):
             if gameVars.usePause():
                 FFX_Xbox.tapUp()
             else:
-                if FFX_memory.getGridCursorPos() - menuPos >=3:
+                if FFX_memory.getGridCursorPos() - menuPos >= 3:
                     if (menuPos == 0 and FFX_memory.getGridCursorPos() - menuPos == 3) or len(FFX_memory.getGridItemsOrder()) <= 4:
                         FFX_Xbox.tapUp()
                     else:
@@ -587,7 +619,7 @@ def selSphere(sType, direction, shift):
         gridRight()
         gridDown()
         FFX_memory.waitFrames(4)
-        if FFX_memory.sGridNodeSelected() == [248,195]:
+        if FFX_memory.sGridNodeSelected() == [248, 195]:
             gridDown()
     if shift == 'aftersk2':
         gridRight()
@@ -605,7 +637,7 @@ def selSphere(sType, direction, shift):
         gridLeft()
         gridLeft()
     if shift == 'yunaspec':
-        #Yuna Special
+        # Yuna Special
         gridDown()
         gridRight()
         gridRight()

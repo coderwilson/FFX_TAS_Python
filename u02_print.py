@@ -4,7 +4,7 @@ FFX_memory.start()
 counter = 0
 print("-----------")
 print("-----------")
-#while counter < 1000:
+# while counter < 1000:
 #    print(FFX_memory.rng02())
 #    counter += 1
 #    FFX_memory.waitFrames(1)
@@ -14,6 +14,6 @@ for i in range(20):
 print("-----------")
 for j in range(200000):
     if powerArray[j] == 0x85498AC8:
-        print("Value found at position: ", j)
+        print("Value found at position:", j)
 print("-----------")
 print("-----------")

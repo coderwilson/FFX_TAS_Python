@@ -17,7 +17,7 @@ else:
         FFX_memory.advanceRNG12()
     print("Mark 2")
     while FFX_memory.nextChanceRNG10():
-        FFX_memory.advanceRNG10()    
+        FFX_memory.advanceRNG10()
     print("------------------")
     print("Should now drop NE armor.")
 print("------------------")

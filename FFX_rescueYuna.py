@@ -14,6 +14,7 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def preEvrae():
     FFXC.set_neutral()
     FFX_memory.clickToControl()
@@ -35,10 +36,10 @@ def preEvrae():
             elif checkpoint == 18:
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
-            
+
             elif FFX_targetPathing.setMovement(FFX_targetPathing.rescueAirship(checkpoint)) == True:
-                    checkpoint += 1
-                    print("Checkpoint reached: ", checkpoint)
+                checkpoint += 1
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -46,13 +47,14 @@ def preEvrae():
 
     FFX_zzairShipPath.airShipPath(1)
 
+
 def guards():
     print("Start, Guards")
     FFX_memory.clickToControl()
-    
+
     if not gameVars.getBlitzWin():
         FFX_menu.equipSonicSteel(fullMenuClose=False)
-    
+
     sleepingPowders = FFX_memory.getItemSlot(37) != 255
     if not sleepingPowders:
         if FFX_memory.getLuluSlvl() < 35:
@@ -63,21 +65,21 @@ def guards():
         FFX_menu.beforeGuards()
     FFX_memory.closeMenu()
     FFX_memory.waitFrames(2)
-    
+
     guardNum = 1
     while FFX_memory.getMap() != 182:
         if FFX_memory.userControl():
-            #print("TEST*Movement")
+            # print("TEST*Movement")
             if FFX_memory.getMap() == 180:
-                FFX_memory.clickToEventTemple(6) #Take the spiral lift down
+                FFX_memory.clickToEventTemple(6)  # Take the spiral lift down
             elif FFX_memory.getMap() == 181:
-                while not FFX_targetPathing.setMovement([-110,0]):
+                while not FFX_targetPathing.setMovement([-110, 0]):
                     pass
-                FFX_memory.clickToEventTemple(0) #Through the water door
+                FFX_memory.clickToEventTemple(0)  # Through the water door
             else:
                 FFX_targetPathing.setMovement([0, -200])
         else:
-            #print("TEST*Action")
+            # print("TEST*Action")
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Battle.guards(guardNum, sleepingPowders)
@@ -100,44 +102,45 @@ def guards():
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("-------End of Bevelle guards")
-    
+
     checkpoint = 0
     while checkpoint < 8:
         if FFX_memory.userControl():
-            #Map changes
+            # Map changes
             if checkpoint < 2 and FFX_memory.getMap() == 182:
                 checkpoint = 2
-            #print("Checkpoint: ", checkpoint)
-            #General pathing
+            #print("Checkpoint:", checkpoint)
+            # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-            
-            #Map changes
+
+            # Map changes
             elif checkpoint < 2 and FFX_memory.getMap() == 182:
                 checkpoint = 2
 
+
 def trials():
     print("Starting Bevelle trials section.")
-    
+
     checkpoint = 0
     testCounter = 0
     while checkpoint < 53:
         if FFX_memory.userControl():
-            #Map changes
+            # Map changes
             if checkpoint < 2 and FFX_memory.getMap() == 306:
                 checkpoint = 2
-            
-            #Spheres, Pedestols, and gliding across glowing paths.
-            elif checkpoint == 3: #Pedestol that starts it all.
+
+            # Spheres, Pedestals, and gliding across glowing paths.
+            elif checkpoint == 3:  # Pedestal that starts it all.
                 FFXC.set_movement(0, 1)
-                FFX_memory.awaitEvent() #Pedestol - START!!!
+                FFX_memory.awaitEvent()  # Pedestal - START!!!
                 FFXC.set_neutral()
-                
+
                 while not FFX_memory.userControl():
                     if FFX_memory.getActorCoords(0)[1] < -100:
                         if FFX_memory.btBiDirection() == 1:
@@ -155,14 +158,14 @@ def trials():
                 else:
                     print("Incorrect alcove. Recovering.")
                     checkpoint += 1
-            elif checkpoint == 4: #Recovery
+            elif checkpoint == 4:  # Recovery
                 FFXC.set_movement(1, 0)
                 FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_movement(-1, 0)
                 FFX_memory.waitFrames(30 * 1.5)
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 10.5)
-                
+
                 FFX_Xbox.SkipDialog(2)
                 FFX_memory.waitFrames(30 * 3)
                 cam = FFX_memory.getCamera()
@@ -175,7 +178,7 @@ def trials():
                     checkpoint += 1
                 else:
                     print("Incorrect alcove. Recovering.")
-            elif checkpoint == 7: #First Bevelle sphere, and then more gliding.
+            elif checkpoint == 7:  # First Bevelle sphere, and then more gliding.
                 print("Bevelle sphere")
                 FFX_memory.clickToEventTemple(7)
                 while FFX_memory.getActorCoords(0)[0] < -25:
@@ -191,23 +194,23 @@ def trials():
                 print("Mark 3")
                 FFXC.set_value('BtnB', 0)
                 checkpoint += 1
-            elif checkpoint == 10: #Insert Bevelle sphere. Activate lower areas.
+            elif checkpoint == 10:  # Insert Bevelle sphere. Activate lower areas.
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 13: #Down to the lower areas.
+            elif checkpoint == 13:  # Down to the lower areas.
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(2)
                 FFXC.set_movement(-1, 0)
                 FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
-                
+
                 while not FFX_memory.userControl():
                     if FFX_memory.getActorCoords(0)[0] < 40:
                         if FFX_memory.getActorCoords(0)[1] > 100 or FFX_memory.getActorCoords(0)[1] < 10:
                             FFXC.set_value('BtnB', 1)
                         else:
                             FFXC.set_value('BtnB', 0)
-                
+
                     elif FFX_memory.getActorCoords(0)[1] < -10:
                         if FFX_memory.btBiDirection() == 1 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_memory.waitFrames(2)
@@ -221,10 +224,10 @@ def trials():
                             FFXC.set_value('BtnB', 0)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint == 16: #Take Glyph sphere from second alcove
+            elif checkpoint == 16:  # Take Glyph sphere from second alcove
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 18: #To third alcove
+            elif checkpoint == 18:  # To third alcove
                 FFXC.set_movement(1, -1)
                 FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
@@ -235,43 +238,44 @@ def trials():
                             FFXC.set_value('BtnB', 1)
                         else:
                             FFXC.set_value('BtnB', 0)
-                
+
                     elif FFX_memory.getActorCoords(0)[1] > 425:
                         FFXC.set_value('BtnB', 1)
                     elif FFX_memory.getActorCoords(0)[1] < -30 and \
-                        FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
-                            FFX_memory.waitFrames(2)
-                            if FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
-                                FFX_Xbox.menuB()
-                                FFX_memory.waitFrames(20)
+                            FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
+                        FFX_memory.waitFrames(2)
+                        if FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
+                            FFX_Xbox.menuB()
+                            FFX_memory.waitFrames(20)
                     else:
                         FFXC.set_value('BtnB', 0)
-                FFX_memory.clickToEventTemple(0) #Go ahead and insert Glyph sphere.
+                # Go ahead and insert Glyph sphere.
+                FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 22: #Remove Bevelle sphere
+            elif checkpoint == 22:  # Remove Bevelle sphere
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
-            elif checkpoint == 24: #Insert Bevelle sphere
+            elif checkpoint == 24:  # Insert Bevelle sphere
                 FFX_memory.clickToEventTemple(5)
                 checkpoint += 1
-            elif checkpoint == 28: #Take Glyph sphere
+            elif checkpoint == 28:  # Take Glyph sphere
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.07)
                 FFX_memory.clickToEvent()
                 FFX_memory.waitFrames(30 * 0.035)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 32: #Insert Glyph sphere
+            elif checkpoint == 32:  # Insert Glyph sphere
                 while FFX_memory.userControl():
-                    FFX_targetPathing.setMovement([450,525])
+                    FFX_targetPathing.setMovement([450, 525])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 34: #Take Destro sphere
+            elif checkpoint == 34:  # Take Destro sphere
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 37: #Insert Destro sphere
+            elif checkpoint == 37:  # Insert Destro sphere
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 0.1)
                 FFXC.set_movement(0, 1)
@@ -280,15 +284,14 @@ def trials():
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 39: #Take Bevelle sphere
+            elif checkpoint == 39:  # Take Bevelle sphere
                 FFX_memory.clickToEventTemple(5)
                 checkpoint += 1
-            elif checkpoint == 41: #back on the track.
+            elif checkpoint == 41:  # back on the track.
                 FFXC.set_movement(0, -1)
                 FFX_memory.waitFrames(30 * 3)
                 FFXC.set_neutral()
-                
-                
+
                 FFX_memory.waitFrames(30 * 10)
                 while not FFX_memory.userControl():
                     if FFX_memory.getActorCoords(0)[0] < 40:
@@ -296,7 +299,7 @@ def trials():
                             FFXC.set_value('BtnB', 1)
                         else:
                             FFXC.set_value('BtnB', 0)
-                
+
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 1 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_memory.waitFrames(2)
@@ -310,20 +313,20 @@ def trials():
                 FFXC.set_neutral()
                 print("Arriving in the second alcove again.")
                 checkpoint += 1
-            elif checkpoint == 43: #Place Bevelle sphere (second alcove)
+            elif checkpoint == 43:  # Place Bevelle sphere (second alcove)
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 47: #Take Destro sphere
+            elif checkpoint == 47:  # Take Destro sphere
                 FFXC.set_movement(1, -1)
                 FFX_memory.waitFrames(30 * 0.1)
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif checkpoint == 50: #Insert Destro sphere
+            elif checkpoint == 50:  # Insert Destro sphere
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 52: #Back on track, to the exit
+            elif checkpoint == 52:  # Back on track, to the exit
                 FFXC.set_movement(1, -1)
                 FFX_memory.waitFrames(30 * 2)
                 FFXC.set_neutral()
@@ -334,7 +337,7 @@ def trials():
                             FFXC.set_value('BtnB', 1)
                         else:
                             FFXC.set_value('BtnB', 0)
-                
+
                     elif FFX_memory.getActorCoords(0)[1] < -30:
                         if FFX_memory.btBiDirection() == 0 and FFX_memory.btTriDirectionMain() == 0:
                             FFX_memory.waitFrames(2)
@@ -355,20 +358,21 @@ def trials():
             elif checkpoint == 58:
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
-                
-            #General pathing
+
+            # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             #print("No control")
-            #FFXC.set_neutral()
+            # FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             if checkpoint < 3:
                 FFXC.set_neutral()
 
     FFXC.set_neutral()
+
 
 def trialsEnd():
     checkpoint = 53
@@ -377,7 +381,7 @@ def trialsEnd():
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
         elif checkpoint == 58:
@@ -385,13 +389,14 @@ def trialsEnd():
             checkpoint += 1
         else:
             FFXC.set_neutral()
-                
+
     FFXC.set_neutral()
-    
-    #Name for Bahamut
+
+    # Name for Bahamut
     FFX_Xbox.nameAeon("Bahamut")
     if not gameVars.csr():
         FFX_Xbox.awaitSave(index=29)
+
 
 def ViaPurifico():
     FFX_memory.clickToControl()
@@ -402,16 +407,16 @@ def ViaPurifico():
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 5)
     FFXC.set_neutral()
-    
+
     if not gameVars.csr():
-        FFX_memory.waitFrames(30 * 5.7) #Wait for the right direction
+        FFX_memory.waitFrames(30 * 5.7)  # Wait for the right direction
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
-    
+
     FFX_memory.clickToControl()
     FFX_menu.viaPurifico()
-    
+
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
@@ -426,17 +431,18 @@ def ViaPurifico():
             FFXC.set_neutral()
             FFX_Xbox.tapB()
 
+
 def evraeAltana():
     FFX_memory.clickToControl()
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 2)
     FFXC.set_neutral()
-    
+
     checkpoint = 0
     lastCP = 0
     while checkpoint < 100:
         if lastCP != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
+            print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         if FFX_memory.getStoryProgress() > 2220:
             print("End of Evrae Altana section.")
@@ -473,8 +479,8 @@ def evraeAltana():
                     FFXC.set_movement(-1, 1)
                 else:
                     FFXC.set_movement(0, 1)
-            
-            elif checkpoint == 40: #Diagonal with swinging camera
+
+            elif checkpoint == 40:  # Diagonal with swinging camera
                 if pos[1] > -540:
                     checkpoint = 50
                 if pos[1] < ((-9.83 * pos[0]) + 4840):
@@ -496,21 +502,22 @@ def evraeAltana():
             if checkpoint == 50:
                 FFX_Xbox.tapB()
     return 0
-    
+
+
 def seymourNatus():
     FFX_memory.clickToControl()
-    
+
     if gameVars.getBlitzWin():
         FFX_menu.seymourNatusBlitzWin()
     else:
         FFX_menu.seymourNatusBlitzLoss()
-    
+
     FFX_memory.fullPartyFormat('highbridge')
     FFX_memory.touchSaveSphere()
     complete = 0
     while complete == 0:
         if FFX_memory.userControl():
-            FFX_targetPathing.setMovement([2, FFX_memory.getCoords()[1] -50])
+            FFX_targetPathing.setMovement([2, FFX_memory.getCoords()[1] - 50])
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -520,14 +527,14 @@ def seymourNatus():
                 else:
                     complete = FFX_Battle.seymourNatus()
                     FFX_memory.printManipInfo()
-    
-    #Movement for make-out scene
+
+    # Movement for make-out scene
     FFX_memory.clickToControl()
-    
+
     checkpoint = 0
     while checkpoint < 13:
         if FFX_memory.userControl():
-            #Events and map changes
+            # Events and map changes
             if checkpoint == 1 or checkpoint == 3:
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
@@ -551,10 +558,10 @@ def seymourNatus():
                 print("Checkpoint 12")
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
-            
+
             elif FFX_targetPathing.setMovement(FFX_targetPathing.sutekiDaNe(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():

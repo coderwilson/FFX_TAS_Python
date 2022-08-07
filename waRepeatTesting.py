@@ -25,65 +25,65 @@ FFX_memory.start()
 attempts = 0
 success = 0
 while attempts < 20:
-    #print("RNG seed for this attempt: ", rngSeed)
+    #print("RNG seed for this attempt:", rngSeed)
     attempts += 1
-    
+
     FFX_DreamZan.NewGame('Luca')
     FFX_LoadGame.loadOffset(1)
-    
+
     print("Game start screen")
     FFX_Screen.clearMouse(0)
-    
+
     startTime = FFX_Logs.timeStamp()
     print("Timer starts now.")
-    #---------This is the actual movement/code/logic/etc---------------
+    # ---------This is the actual movement/code/logic/etc---------------
     import FFX_Luca
     import FFX_Blitz
-    
+
     FFX_Luca.blitzStart()
     blitzWin = FFX_Blitz.blitzMain(False)
     if blitzWin == True:
         success += 1
-    
+
     #attempts = 100
-    
-    #---------End of the actual movement/code/logic/etc---------------
+
+    # ---------End of the actual movement/code/logic/etc---------------
     endTime = FFX_Logs.timeStamp()
-    print("Duration: ", endTime - startTime)
-    
+    print("Duration:", endTime - startTime)
+
     if attempts < 20:
         #print("Clicking to control so we can reset. ", attempts)
-        #FFXC.set_neutral()
-        #FFX_memory.clickToControl()
+        # FFXC.set_neutral()
+        # FFX_memory.clickToControl()
         print(" ")
-        print("---------------------------------------------------")
-        print("---------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Test number ", attempts, "is complete.")
-        print("Blitzball wins: ", success)
-        print("---------------------------------------------------")
-        print("---------------------------------------------------")
+        print("Blitzball wins:", success)
+        print("------------------------------")
+        print("------------------------------")
         time.sleep(5)
-        
+
         print("Resetting.")
-        #FFX_memory.end()
+        # FFX_memory.end()
 
         FFX_Reset.resetToMainMenu()
     else:
         print(" ")
-        print("---------------------------------------------------")
-        print("---------------------------------------------------")
+        print("------------------------------")
+        print("------------------------------")
         print("Testing is complete.")
-        print("Attempts: ", attempts)
-        print("Success count: ", success)
-        print("---------------------------------------------------")
-        print("---------------------------------------------------")
-    
+        print("Attempts:", attempts)
+        print("Success count:", success)
+        print("------------------------------")
+        print("------------------------------")
+
     #rngSeedNum += 1
 
 time.sleep(5)
 
-#print("Skip attempts: ", miihenSkipAttempts)
-#print("Successful skips: ", miihenSkipCount)
+#print("Skip attempts:", miihenSkipAttempts)
+#print("Successful skips:", miihenSkipCount)
 FFX_memory.end()
 
 time.sleep(5)
