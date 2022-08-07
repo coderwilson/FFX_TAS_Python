@@ -12,13 +12,14 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def arrival():
     FFX_memory.clickToControl()
     FFX_memory.closeMenu()
     FFX_memory.fullPartyFormat('mrr1')
     FFX_memory.closeMenu()
     claskoSkip = True
-    
+
     checkpoint = 0
     while FFX_memory.getMap() != 92:
         if FFX_memory.userControl():
@@ -48,10 +49,11 @@ def arrival():
                     FFX_memory.waitFrames(30 * 0.3)
                 print("Attempting skip.")
                 FFX_Xbox.menuB()
-                
-                #Now to wait for the skip to happen, or 60 second maximum limit
+
+                # Now to wait for the skip to happen, or 60 second maximum limit
                 startTime = time.time()
-                timeLimit = 60 #Max number of seconds that we will wait for the skip to occur.
+                # Max number of seconds that we will wait for the skip to occur.
+                timeLimit = 60
                 maxTime = startTime + timeLimit
                 cam = FFX_memory.getCamera()
                 while FFX_memory.getActorCoords(6)[0] < -50:
@@ -79,9 +81,10 @@ def arrival():
     print("Done with perlim MRR area, now for the real deal.")
     return claskoSkip
 
+
 def mainPath():
     FFX_memory.awaitControl()
-    #Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
+    # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
     print("Resetting checkpoint.")
     lastGilValue = 0
@@ -89,9 +92,10 @@ def mainPath():
     battleCount = 0
     while FFX_memory.getMap() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
-            status[2] = 2 #No need to do Valefor's overdrive and recharge.
+            status[2] = 2  # No need to do Valefor's overdrive and recharge.
         if status[0] == 1 and status[1] == 1 and status[2] == 2:
-            status[5] = 3 #All pieces are complete. Move phase to final phase.
+            # All pieces are complete. Move phase to final phase.
+            status[5] = 3
         if FFX_memory.userControl():
             if checkpoint == 1:
                 FFX_memory.touchSaveSphere()
@@ -107,25 +111,25 @@ def mainPath():
                 else:
                     if FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(45)) == True:
                         checkpoint += 1
-                
+
             elif checkpoint == 46:
                 print("Up the second lift.")
                 FFXC.set_neutral()
                 FFX_Xbox.SkipDialog(1)
                 checkpoint += 1
                 print("Lift checkpoint:", checkpoint)
-            elif checkpoint == 48: #X-potion for safety
-                if not FFX_memory.rngSeed() in [31,160]:
+            elif checkpoint == 48:  # X-potion for safety
+                if not FFX_memory.rngSeed() in [31, 160]:
                     FFX_memory.clickToEventTemple(7)
                     print("Got X-potion")
                 checkpoint += 1
-            elif checkpoint >= 54 and checkpoint <= 56: #400 gil guy
-                if FFX_memory.rngSeed() in [160,31]:
+            elif checkpoint >= 54 and checkpoint <= 56:  # 400 gil guy
+                if FFX_memory.rngSeed() in [160, 31]:
                     checkpoint = 57
-                elif FFX_memory.getGilvalue() != lastGilValue: #check if we got the 400 from the guy
+                elif FFX_memory.getGilvalue() != lastGilValue:  # check if we got the 400 from the guy
                     if FFX_memory.getGilvalue() == lastGilValue + 400:
                         print("We've procured the 400 gil from the guy.")
-                        checkpoint = 57 #now to the actual lift
+                        checkpoint = 57  # now to the actual lift
                     else:
                         lastGilValue = FFX_memory.getGilvalue()
                 else:
@@ -134,7 +138,7 @@ def mainPath():
             elif checkpoint == 58:
                 print("Up the third lift")
                 while FFX_memory.userControl():
-                    FFX_targetPathing.setMovement([29,227])
+                    FFX_targetPathing.setMovement([29, 227])
                     FFX_Xbox.tapB()
                 checkpoint += 1
             elif checkpoint == 66:
@@ -142,13 +146,13 @@ def mainPath():
                 print("Up the final lift")
                 checkpoint += 1
             elif checkpoint == 68:
-                FFXC.set_movement(0,-1)
+                FFXC.set_movement(0, -1)
                 FFX_memory.waitFrames(9)
-                FFXC.set_movement(-1,-1)
+                FFXC.set_movement(-1, -1)
                 FFX_memory.waitFrames(9)
                 checkpoint += 1
             elif checkpoint < 71 and FFX_memory.getMap() == 79:
-                checkpoint = 71 #Into Battle Site zone (upper, cannon area)
+                checkpoint = 71  # Into Battle Site zone (upper, cannon area)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -159,7 +163,7 @@ def mainPath():
                 status = FFX_Battle.MRRbattle(status)
                 print("Status update:", status)
                 status[3] += 1
-                
+
                 if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
                     print("Yuna has enough levels now. Going to do her grid.")
                     FFX_menu.mrrGridYuna()
@@ -173,11 +177,11 @@ def mainPath():
                 FFX_Xbox.tapB()
             elif FFX_memory.diagSkipPossible():
                 FFX_memory.clickToControl3()
-            
-            #Map changes
+
+            # Map changes
             elif checkpoint < 47 and FFX_memory.getMap() == 128:
                 checkpoint = 47
-        
+
         if FFX_memory.gameOver():
             return
     FFX_Logs.writeStats("MRR Battles:")
@@ -185,12 +189,13 @@ def mainPath():
     print("End of MRR section. Status:")
     print(status)
 
+
 def battleSite():
     FFX_memory.awaitControl()
     if gameVars.getLStrike() >= 2:
-        FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=False)
+        FFX_menu.equipWeapon(character=4, ability=0x8026, fullMenuClose=False)
     FFX_menu.battleSiteGrid()
-    
+
     checkpoint = 0
     while checkpoint < 99:
         if FFX_memory.userControl():
@@ -215,7 +220,7 @@ def battleSite():
                 FFX_memory.clickToEvent()
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(9)
-                FFX_Xbox.tapB() #Tell me when you're ready.
+                FFX_Xbox.tapB()  # Tell me when you're ready.
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(15)
                 FFX_Xbox.menuDown()
@@ -229,14 +234,15 @@ def battleSite():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
+
 def guiAndAftermath():
     status = FFX_Battle.battleGui()
-    #FFX_Xbox.SkipDialog(10)
-    #while not FFX_memory.cutsceneSkipPossible():
+    # FFX_Xbox.SkipDialog(10)
+    # while not FFX_memory.cutsceneSkipPossible():
     #    FFX_Xbox.tapB()
-    #FFX_Xbox.skipSceneSpec()
-    #FFX_memory.clickToControl()
-    
+    # FFX_Xbox.skipSceneSpec()
+    # FFX_memory.clickToControl()
+
     checkpoint = 0
     while FFX_memory.getMap() != 93:
         if FFX_memory.userControl():

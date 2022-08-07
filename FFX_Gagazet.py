@@ -12,33 +12,35 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+
 def checkGems():
     gemSlot = FFX_memory.getItemSlot(34)
     if gemSlot < 200:
         gems = FFX_memory.getItemCountSlot(gemSlot)
     else:
         gems = 0
-    
+
     gemSlot = FFX_memory.getItemSlot(28)
     if gemSlot < 200:
         gems += FFX_memory.getItemCountSlot(gemSlot)
     print("Total gems:", gems)
     return gems
 
+
 def calmLands():
     FFX_memory.awaitControl()
-    #Start by getting away from the save sphere
+    # Start by getting away from the save sphere
     if FFX_memory.nextChanceRNG10() >= 6:
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
     else:
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
     FFX_Battle.healUp(fullMenuClose=True)
-    
+
     FFX_memory.printManipInfo()
     print("RNG10:", FFX_memory.rng10())
     print("RNG12:", FFX_memory.rng12())
     print("RNG13:", FFX_memory.rng13())
-    #Enter the cutscene where Yuna muses about ending her journey.
+    # Enter the cutscene where Yuna muses about ending her journey.
     while not (FFX_memory.getCoords()[1] >= -1650 and FFX_memory.userControl()):
         if FFX_memory.userControl():
             FFXC.set_movement(0, 1)
@@ -46,7 +48,7 @@ def calmLands():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
+
     checkpoint = 0
     while FFX_memory.getMap() != 279:
         if FFX_memory.userControl():
@@ -74,16 +76,17 @@ def calmLands():
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
 
+
 def defenderX():
     FFX_memory.awaitControl()
     FFX_menu.prepCalmLands()
     FFX_memory.fullPartyFormat('kimahri')
-    while FFX_targetPathing.setMovement([67,-255]) == False:
+    while FFX_targetPathing.setMovement([67, -255]) == False:
         pass
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
-    
+
     FFX_Xbox.clickToBattle()
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
@@ -93,10 +96,11 @@ def defenderX():
                 FFX_Battle.aeonSummon(4)
             else:
                 FFX_Battle.attack('none')
-    FFXC.set_movement(0,1)
+    FFXC.set_movement(0, 1)
     FFX_memory.clickToControl()
     FFX_memory.printManipInfo()
-    
+
+
 def toTheRonso():
     checkpoint = 2
     while FFX_memory.getMap() != 259:
@@ -108,8 +112,8 @@ def toTheRonso():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
-    #Now in screen with Ronso
+
+    # Now in screen with Ronso
     checkpoint = 0
     while FFX_memory.getMap() != 244:
         if FFX_memory.userControl():
@@ -123,8 +127,9 @@ def toTheRonso():
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
+
 def gagazetGates():
-    #Should appear on the map just before the Ronso hymn
+    # Should appear on the map just before the Ronso hymn
     endVer = gameVars.endGameVersion()
     print("Grid version: " + str(endVer))
     FFX_Logs.writeLog("Grid version: " + str(endVer))
@@ -136,11 +141,11 @@ def gagazetGates():
     else:
         FFX_Logs.writeStats("2")
     #FFX_Logs.writeStats("B&Y Friend spheres:")
-    #if endVer == 4:
+    # if endVer == 4:
     #    FFX_Logs.writeStats("0")
-    #elif endVer == 3:
+    # elif endVer == 3:
     #    FFX_Logs.writeStats("4")
-    #else:
+    # else:
     #    FFX_Logs.writeStats("2")
     FFX_memory.awaitControl()
     if FFX_memory.overdriveState()[6] == 100:
@@ -148,8 +153,8 @@ def gagazetGates():
     else:
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
     FFX_menu.afterRonso()
-    FFX_memory.closeMenu() #just in case
-    
+    FFX_memory.closeMenu()  # just in case
+
     print("Gagazet path section")
     checkpoint = 0
     while FFX_memory.getMap() != 285:
@@ -162,7 +167,7 @@ def gagazetGates():
             if FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
             elif FFX_memory.battleActive():
-                #Charge Rikku until full, otherwise flee all
+                # Charge Rikku until full, otherwise flee all
                 if FFX_memory.overdriveState()[6] == 100:
                     FFX_Battle.fleeAll()
                     FFX_memory.clickToControl()
@@ -171,15 +176,17 @@ def gagazetGates():
                     FFX_memory.clickToControl()
                     if FFX_memory.overdriveState()[6] == 100:
                         FFX_memory.fullPartyFormat('kimahri')
-                        #FFX_memory.setEncounterRate(0)
+                        # FFX_memory.setEncounterRate(0)
                     else:
                         FFX_memory.fullPartyFormat('rikku')
                 FFX_memory.clickToControl()
                 if FFX_memory.overdriveState2()[6] == 100 and gameVars.neArmor() != 255:
-                    FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
+                    FFX_menu.equipArmor(
+                        character=gameVars.neArmor(), ability=0x801D)
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("Should now be on the map with Seymour Flux.")
+
 
 def Flux():
     print("Flux screen - ready for Seymour again.")
@@ -206,7 +213,7 @@ def Flux():
             if FFX_memory.battleActive():
                 print("Flux battle start")
                 FFX_Battle.seymourFlux()
-                #FFXC.set_movement(0,1)
+                # FFXC.set_movement(0,1)
                 FFX_memory.clickToControl3()
                 if gameVars.endGameVersion() != 3:
                     FFX_menu.afterFlux()
@@ -221,42 +228,44 @@ def Flux():
                 FFX_Xbox.tapB()
         FFX_Xbox.skipScene()
 
-def dream(checkpoint:int=0):
+
+def dream(checkpoint: int = 0):
     FFX_memory.clickToControl()
     print("*********")
     print("Dream sequence")
     print("*********")
     FFX_memory.waitFrames(3)
-    
+
     while FFX_memory.getMap() != 309:
         if FFX_memory.userControl():
             if checkpoint == 11:
-                FFXC.set_movement(-1,1)
+                FFXC.set_movement(-1, 1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 15:
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 19:
-                FFXC.set_movement(-1,-1)
+                FFXC.set_movement(-1, -1)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetDreamSeq(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-            
-            #Start the final dialog
+
+            # Start the final dialog
             if checkpoint == 25:
                 FFX_Xbox.tapB()
         else:
-            FFX_Xbox.tapB() #Skip all dialog
+            FFX_Xbox.tapB()  # Skip all dialog
     print("*********")
     print("Dream sequence over")
     print("*********")
+
 
 def dream_old():
     FFX_memory.clickToControl()
@@ -272,12 +281,12 @@ def dream_old():
     while pos[0] < -1:
         FFXC.set_movement(0, 1)
         pos = FFX_memory.getCoords()
-        
+
     while pos[1] > 20:
         FFXC.set_movement(1, 1)
         pos = FFX_memory.getCoords()
     print("Onto the gangway")
-        
+
     while pos[0] < 235:
         if pos[1] < -6:
             FFXC.set_movement(-1, 0)
@@ -285,52 +294,53 @@ def dream_old():
             FFXC.set_movement(-1, 1)
         pos = FFX_memory.getCoords()
 
-    while FFX_memory.userControl(): #Into the boathouse.
+    while FFX_memory.userControl():  # Into the boathouse.
         FFXC.set_movement(-1, 0)
     print("Now inside the boathouse.")
-    
+
     FFX_memory.awaitControl()
     FFXC.set_movement(1, 0)
     FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_movement(0, 1)
     FFX_memory.waitFrames(30 * 1)
-    FFXC.set_neutral() #Start convo with Bahamut child
+    FFXC.set_neutral()  # Start convo with Bahamut child
     print("First talk with Bahamut child")
     FFX_memory.clickToControl()
-    
+
     if not gameVars.csr():
-        FFXC.set_movement(0, -1) #End of conversation
+        FFXC.set_movement(0, -1)  # End of conversation
         FFX_memory.waitFrames(30 * 0.7)
         FFXC.set_movement(-1, 0)
         FFX_memory.waitFrames(30 * 0.7)
         FFXC.set_movement(0, -1)
         FFX_memory.waitFrames(30 * 0.7)
         FFXC.set_neutral()
-        
+
         FFX_memory.clickToControl()
         pos = FFX_memory.getCoords()
         while pos[1] > -20:
             FFXC.set_movement(1, 0)
             pos = FFX_memory.getCoords()
-        
+
         while pos[0] < 300:
             FFXC.set_movement(0, 1)
             pos = FFX_memory.getCoords()
         FFXC.set_movement(-1, 0)
         FFX_Xbox.SkipDialog(2)
-        FFXC.set_neutral() #Second/last convo with kid
+        FFXC.set_neutral()  # Second/last convo with kid
         print("Second talk with Bahamut child")
-        
+
         FFX_memory.clickToControl()
-    
+
+
 def cave():
     checkpoint = 0
     while FFX_memory.getMap() != 272:
         if FFX_memory.userControl():
             if FFX_memory.getMap() == 309 and FFX_memory.getCoords()[0] > 1160:
-                FFXC.set_movement(0.5,1)
+                FFXC.set_movement(0.5, 1)
                 FFX_memory.waitFrames(3)
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 FFX_memory.waitFrames(6)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPostDream(checkpoint)) == True:
                 checkpoint += 1
@@ -341,12 +351,11 @@ def cave():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
-    
-    
+
     FFX_memory.awaitControl()
     print("Gagazet cave section")
-    #FFX_menu.gagazetCave()
-    
+    # FFX_menu.gagazetCave()
+
     checkpoint = 0
     lastCP = 0
     powerNeeded = 6
@@ -365,12 +374,12 @@ def cave():
                 while FFX_memory.userControl():
                     FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
-                
+
                 print("Now the trial has started.")
                 FFX_Xbox.SkipDialog(2)
-                
-                #Need logic here for when to start the trial
-                
+
+                # Need logic here for when to start the trial
+
                 FFXC.set_neutral()
                 while not FFX_memory.userControl():
                     if FFX_memory.GTouterRing() < 2.3 and FFX_memory.GTouterRing() > 2.05:
@@ -383,8 +392,7 @@ def cave():
                             FFX_Xbox.tapB()
                         elif FFX_memory.GTinnerRing() < 0.1 and FFX_memory.GTinnerRing() > -1.6:
                             FFX_Xbox.tapB()
-                    
-                    
+
                 print("First trial complete")
                 checkpoint += 1
             elif checkpoint == 17:
@@ -408,7 +416,7 @@ def cave():
                     FFXC.set_movement(-1, 1)
                 else:
                     FFXC.set_neutral()
-                    
+
             elif checkpoint == 42:
                 print("Out of swimming map, second trial.")
                 if FFX_memory.getMap() == 272:
@@ -417,7 +425,7 @@ def cave():
                 else:
                     FFXC.set_movement(0, -1)
                     FFX_memory.waitFrames(30 * 0.5)
-            elif checkpoint == 58: #Just before sanctuary keeper
+            elif checkpoint == 58:  # Just before sanctuary keeper
                 FFXC.set_neutral()
                 print("Prepping for Sanctuary Keeper")
                 FFX_memory.fullPartyFormat('yuna')
@@ -439,7 +447,7 @@ def cave():
                 checkpoint += 1
                 print("Second trial is complete")
             elif checkpoint == 35 and FFX_memory.diagProgressFlag() == 3:
-                #CSR second trial
+                # CSR second trial
                 FFX_memory.waitFrames(10)
                 FFXC.set_value('Dpad', 8)
                 FFX_memory.waitFrames(45)
@@ -448,14 +456,14 @@ def cave():
                 checkpoint += 1
             elif FFX_memory.battleActive():
                 if FFX_memory.getPower() < powerNeeded:
-                    if FFX_memory.getBattleNum() == 351: #Two maelstroms and a splasher
+                    if FFX_memory.getBattleNum() == 351:  # Two maelstroms and a splasher
                         FFX_Battle.gagazetCave('down')
-                    elif FFX_memory.getBattleNum() == 353: #Two glowey guys, two splashers.
+                    elif FFX_memory.getBattleNum() == 353:  # Two glowey guys, two splashers.
                         FFX_Battle.gagazetCave('right')
-                    elif FFX_memory.getBattleNum() == 354: #Four groups of splashers
+                    elif FFX_memory.getBattleNum() == 354:  # Four groups of splashers
                         FFX_Battle.gagazetCave('none')
                     elif FFX_memory.overdriveState2()[6] != 100:
-                        if FFX_memory.getBattleNum() in [351,352,353,354]:
+                        if FFX_memory.getBattleNum() in [351, 352, 353, 354]:
                             FFX_Battle.caveChargeRikku()
                         else:
                             FFX_Battle.fleeAll()
@@ -468,21 +476,22 @@ def cave():
             elif checkpoint == 6 or checkpoint == 54:
                 if FFX_memory.battleActive():
                     FFX_Battle.fleeAll()
-                elif FFX_memory.diagSkipPossible(): #So we don't override the second trial
+                elif FFX_memory.diagSkipPossible():  # So we don't override the second trial
                     FFX_Xbox.tapB()
-                
-                #if FFX_memory.getPower() < powerNeeded and checkpoint >= 30 and checkpoint < 60:
+
+                # if FFX_memory.getPower() < powerNeeded and checkpoint >= 30 and checkpoint < 60:
                 #    FFX_Battle.gagazetCave()
-                #elif FFX_memory.getPower() < powerNeeded and checkpoint >= 90 and checkpoint < 110:
+                # elif FFX_memory.getPower() < powerNeeded and checkpoint >= 90 and checkpoint < 110:
                 #    FFX_Battle.gagazetCave()
-                #else:
+                # else:
     FFX_Xbox.clickToBattle()
     FFX_Battle.sKeeper()
+
 
 def wrapUp():
     print("Cave section complete and Sanctuary Keeper is down.")
     print("Now onward to Zanarkand.")
-    
+
     checkpoint = 0
     while FFX_memory.getMap() != 132:
         if FFX_memory.userControl():
@@ -490,9 +499,9 @@ def wrapUp():
                 print("Move forward to next map. Final path before making camp.")
                 checkpoint = 7
             elif checkpoint == 3:
-                #Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
+                # Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
                 while FFX_memory.getStoryProgress() < 2651:
-                    FFX_targetPathing.setMovement([786,-819])
+                    FFX_targetPathing.setMovement([786, -819])
                     FFX_Xbox.tapB()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -510,18 +519,17 @@ def wrapUp():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-    
-    
-    #Resting point before Zanarkand
+
+    # Resting point before Zanarkand
     FFXC.set_neutral()
     FFX_memory.awaitControl()
     FFX_memory.waitFrames(30 * 0.07)
-    
+
     if not gameVars.csr():
-        FFXC.set_movement(0, 1) #Start of the sadness cutscene.
+        FFXC.set_movement(0, 1)  # Start of the sadness cutscene.
         FFX_memory.awaitEvent()
         FFXC.set_neutral()
-        
+
         sleepTime = 4
         print("Sadness cutscene")
         FFX_memory.waitFrames(30 * sleepTime)
@@ -559,7 +567,7 @@ def wrapUp():
         FFX_memory.waitFrames(30 * sleepTime)
         print("You will see Inverted's work right before the final bosses.")
         FFX_memory.waitFrames(30 * sleepTime)
-        print("Next, some people from the FFX speed-running community.")
+        print("Next, some people from the FFX speedrunning community.")
         FFX_memory.waitFrames(30 * sleepTime)
         print("CrimsonInferno, current world record holder for this category. Dude knows everything about this run!")
         FFX_memory.waitFrames(30 * sleepTime)
@@ -579,7 +587,7 @@ def wrapUp():
         FFX_memory.waitFrames(30 * sleepTime)
         print("OK that wraps it up for this bit. I'll catch you when it's done.")
         FFX_memory.waitFrames(30 * sleepTime)
-        
+
         FFX_memory.clickToControl()
         print("OMG finally! Let's get to it! (Do kids say that any more?)")
         FFXC.set_movement(0, 1)

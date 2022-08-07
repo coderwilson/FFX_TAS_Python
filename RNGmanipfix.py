@@ -1,10 +1,13 @@
-import sys, shutil
+import sys
+import shutil
 
-test = input("Drag and drop your FFX.exe file into this window: ").strip('\"').strip('&').strip(' ').strip("\'")
+test = input("Drag and drop your FFX.exe file into this window: ").strip(
+    '\"').strip('&').strip(' ').strip("\'")
 copiedfile = test[:-4] + "RNGMOD.exe"
 shutil.copyfile(test, copiedfile)
 
-seed = int(input("FFXRNGMOD.exe created. Which seed would you like to use? 0-255: "))
+seed = int(
+    input("FFXRNGMOD.exe created. Which seed would you like to use? 0-255: "))
 
 seed = seed.to_bytes(1, byteorder="big")
 

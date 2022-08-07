@@ -1,8 +1,8 @@
 # FFX_TAS_Python
 
-Please find more detailed notes here: https://docs.google.com/presentation/d/14NzxMQo_wRyvMf88i0pJpWNiEynn0LAjW3SAcitERuA/edit?usp=sharing
+Please find more detailed notes here: <https://docs.google.com/presentation/d/14NzxMQo_wRyvMf88i0pJpWNiEynn0LAjW3SAcitERuA/edit?usp=sharing>
 
-Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from the ground up. This repository is a large sample of that code that is intended to demonstrate my skills as a programmer and also provide a jumping-off-point if anyone wanted to try to compete with me in programming a TAS for this game (see speed running community for TAS definition. Here are some of the notes pertinent to this sample of code - this will serve as an FAQ
+Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from the ground up. This repository is a large sample of that code that is intended to demonstrate my skills as a programmer and also provide a jumping-off-point if anyone wanted to try to compete with me in programming a TAS for this game (see speedrunning community for TAS definition. Here are some of the notes pertinent to this sample of code - this will serve as an FAQ
 
 1. Is this code complete? - As of Nov 2021, yes this is the complete project without missing files.
 2. Is this code licensed? - Nope. You're free to take this sample and do with it what you will. I ask that you do not sell it in this state, but beyond that it's up to you.
@@ -12,30 +12,29 @@ Hello and greetings! I am coderwilson and I wrote the code for this FFX TAS from
 
 Update as of 11/18/2021:
 We have changed the controller to use a new gamepad, proven to be more stable than the first one. See these links for more details.
-https://github.com/ViGEm/ViGEmBus (installer to set up the virtual port to plug in to)
-https://pypi.org/project/vgamepad/ (new virtual game pad to be plugged in)
+<https://github.com/ViGEm/ViGEmBus> (installer to set up the virtual port to plug in to)
+<https://pypi.org/project/vgamepad/> (new virtual game pad to be plugged in)
 
 References:
 twitch.tv/coderwilson
 youtube.com/coderwilson (I don't use this too much any more, but it has some old stuff that's kinda fun)
 coderwilson@gmail.com - no solicitations please.
 
--------------------------------------------------------------------
+---
 Also, this may be helpful:
-https://github.com/shauleiz/ScpVBus/releases/tag/v1.7.1.2
+<https://github.com/shauleiz/ScpVBus/releases/tag/v1.7.1.2>
 
--------------------------------------------------------------------
+---
 Notes concerning readBytes and writeBytes
 Make sure to instal (via pip) the library ReadWriteMemory.
-The file to fix is located in the python base folder, in this location.
-C:\Users\yourUserNameHere\AppData\Local\Programs\Python\Python39\Lib\site-packages\ReadWriteMemory
-file name: __init__.py
+The file to fix is located in the python base folder, in this location.  
+`C:\Users\yourUserNameHere\AppData\Local\Programs\Python\Python39\Lib\site-packages\ReadWriteMemory`  
+File name: `__init__.py`
 
 Copy/paste a duplicate of each of the functions "read" and "write", so that you have two copies of each, then add Bytes to the function name, so "readBytes" and "writeBytes"
-Then add a variable for size, so it looks like this:
----  def readBytes(self, lp_base_address: int, size) -> Any:
+Then add a variable for size, so it looks like this:  
+`---  def readBytes(self, lp_base_address: int, size) -> Any:`
 
-Then find the line with ReadProcessMemory and add the size variable where the static 4 is located, so it looks like this:
----  ReadProcessMemory(self.handle, lp_base_address, lp_buffer,
-                                                     size, lp_number_of_bytes_read)
+Then find the line with ReadProcessMemory and add the size variable where the static 4 is located, so it looks like this:  
+`---  ReadProcessMemory(self.handle, lp_base_address, lp_buffer, size, lp_number_of_bytes_read)`  
 Do this for both readBytes and writeBytes. Save and you're good to go.

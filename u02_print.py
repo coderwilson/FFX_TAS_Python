@@ -4,7 +4,7 @@ FFX_memory.start()
 counter = 0
 print("-----------")
 print("-----------")
-#while counter < 1000:
+# while counter < 1000:
 #    print(FFX_memory.rng02())
 #    counter += 1
 #    FFX_memory.waitFrames(1)
