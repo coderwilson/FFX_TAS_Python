@@ -51,7 +51,7 @@ def arrival():
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
-                FFX_Xbox.menuB()
+                FFX_Xbox.tapB()
             elif FFX_memory.cutsceneSkipPossible():
                 FFX_Xbox.skipSceneSpec()
                 
