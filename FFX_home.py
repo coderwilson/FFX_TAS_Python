@@ -129,8 +129,8 @@ def desert():
                 # FFX_memory.waitFrames(10)
                 checkpoint += 1
             elif checkpoint == 60:
-                if FFX_memory.getCoords()[1] < 810:
-                    FFXC.set_movement(0, 1)
+                if FFX_memory.getCoords()[1] < 815: #Dialing in. 810 works 95%, but was short once.
+                    FFXC.set_movement(0,1)
                 else:
                     FFXC.set_neutral()
                     checkpoint += 1
