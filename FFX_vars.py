@@ -26,7 +26,7 @@ class allVars:
         self.earlyTidusGridVal = False  # Default False
         self.earlyHasteVal = -1  # Default -1
         self.wakkaLateMenuVal = False  # Default False
-        self.endGameVersionVal = 0  # Default 0
+        self.endGameVersionVal = 1  # Default 0
 
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
@@ -41,6 +41,7 @@ class allVars:
         self.firstHits = [0] * 8
         self.neArmorVal = 255  # Default 255
         self.neBattles = 0  # Default to 0
+        self.neaZone = 0 #Decides which zone we charge Rikku in after reaching Zanarkand.
 
         # ----Nemesis variables, unused in any%
         self.nemAPVal = 1  # Default to 1
@@ -80,6 +81,12 @@ class allVars:
 
     def nemesis(self):
         return self.nemesisValue
+
+    def getNEAzone(self):
+        return self.neaZone
+
+    def setNEAzone(self, value):
+        self.neaZone = value
 
     def nemCheckpointAP(self):
         return self.nemAPVal

@@ -12,18 +12,51 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
+def printNEAzone(battles:int):
+    print("#### Charging Rikku zone:", gameVars.getNEAzone())
+    print("#### This will take", battles, "number of battles (99 means unknown)")
+
+def decideNEA():
+    import FFX_rngBattles
+    maxBattles = 1
+    zanOutdoors = FFX_rngBattles.comingBattles(area=69, battleCount=maxBattles)
+    zanIndoors = FFX_rngBattles.comingBattles(area=70, battleCount=maxBattles)
+    seaSorrows = FFX_rngBattles.comingBattles(area=77, battleCount=maxBattles, extraAdvances=6)
+    
+    #Try to determine best zone out of the next five battles for each of the zones.
+    # [360, 361, 376, 378, 381, 384, 386]
+    for i in range(maxBattles):
+        if seaSorrows[i] == 378:
+            gameVars.setNEAzone(3)
+            printNEAzone(i+1)
+            return
+        elif zanOutdoors[i] == 360:
+            gameVars.setNEAzone(1)
+            printNEAzone(i+1)
+            return
+        elif zanIndoors[i] == 361:
+            gameVars.setNEAzone(2)
+            printNEAzone(i+1)
+            return
+        elif seaSorrows[i] == 376:
+            gameVars.setNEAzone(3)
+            printNEAzone(i+1)
+            return
+    #If we won't get it in next five per zone, default to Inside Sin. The most possible battles there.
+    gameVars.setNEAzone(99)
+    printNEAzone(99)
+    return
 
 def arrival():
     FFX_memory.awaitControl()
+    decideNEA()
     # Starts from the map just after the fireplace chat.
     reEquipNE = False
-    if FFX_memory.overdriveState2()[6] != 100:
-        FFX_memory.fullPartyFormat('rikku')
-        if gameVars.neArmor() != 255 and FFX_memory.rngSeed() != 31:
-            FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
-            reEquipNE = True
-    else:
-        FFX_memory.fullPartyFormat('kimahri')
+    if FFX_memory.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 1:
+        FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
+        #if gameVars.neArmor() != 255 and FFX_memory.rngSeed() != 31:
+        FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
+        reEquipNE = True
 
     print("Outdoor Zanarkand pathing section")
     while FFX_memory.getMap() != 225:
@@ -70,8 +103,10 @@ def arrival():
                 if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False
                     FFX_memory.clickToControl()
+                    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
                     FFX_menu.equipArmor(
                         character=gameVars.neArmor(), ability=0x801D)
+                    FFX_memory.closeMenu()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
@@ -98,13 +133,14 @@ def arrival():
     else:
         luckCount = FFX_memory.getItemCountSlot(luckSlot)
 
-    if FFX_memory.rngSeed() == 31:
+    if FFX_memory.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 2:
+        FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
         FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
     checkpoint = 0
-    if not gameVars.fluxOverkill():
-        FFX_memory.fullPartyFormat('yuna')
+    #if not gameVars.fluxOverkill():
+    #    FFX_memory.fullPartyFormat('yuna')
     while FFX_memory.getMap() != 320:
         if FFX_memory.userControl():
             if checkpoint == 13:  # Second chest
@@ -148,15 +184,17 @@ def arrival():
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                if not gameVars.fluxOverkill():
-                    FFX_Battle.farmDome()
-                else:
-                    FFX_Battle.chargeRikkuOD()
+                #if not gameVars.fluxOverkill():
+                #    FFX_Battle.farmDome()
+                #else:
+                FFX_Battle.chargeRikkuOD()
                 if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False
                     FFX_memory.clickToControl()
+                    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
                     FFX_menu.equipArmor(
                         character=gameVars.neArmor(), ability=0x801D)
+                    FFX_memory.closeMenu()
             elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():

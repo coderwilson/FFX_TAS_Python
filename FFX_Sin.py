@@ -154,13 +154,13 @@ def insideSin():
             FFX_Xbox.tapB()
     FFXC.set_neutral()
 
-    if FFX_memory.overdriveState()[6] != 100:
+    if FFX_memory.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 3:
         reEquipNE = True
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
         FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
     else:
         reEquipNE = False
-        FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
+        FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
     FFX_memory.closeMenu()
 
     checkpoint = 0
@@ -175,10 +175,6 @@ def insideSin():
                 FFXC.set_neutral()
                 FFX_Battle.omnis()
                 FFX_memory.clickToControl()
-                if FFX_memory.overdriveState()[6] != 100:
-                    FFX_memory.fullPartyFormat('rikku')
-                else:
-                    FFX_memory.fullPartyFormat('kimahri')
             elif checkpoint < 41 and FFX_memory.getMap() == 204:
                 checkpoint = 41
             elif checkpoint < 68 and FFX_memory.getMap() == 327:
@@ -190,11 +186,12 @@ def insideSin():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if FFX_memory.battleActive():
+            if FFX_memory.battleActive() and FFX_memory.turnReady():
                 FFX_Battle.chargeRikkuOD()
                 if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False
                     FFX_memory.clickToControl()
+                    FFX_memory.fullPartyFormat('yuna', fullMenuClose=False)
                     FFX_menu.equipArmor(
                         character=gameVars.neArmor(), ability=0x801D)
             elif FFX_memory.menuOpen():
