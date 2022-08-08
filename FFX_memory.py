@@ -3679,6 +3679,13 @@ def rng01Array():
         retVal.append(rollNextRNG(retVal[x], 1))
     return retVal
 
+def rng01Advances(advanceCount:int=50):
+    testArray = rng01Array()
+    rangeVal = advanceCount
+    #print("TEST-TEST-TEST:", (testArray[((i+1)*2)+1] & 0x7fffffff) % 7)
+    for i in range(rangeVal):
+        testArray.append(testArray[i] & 0x7fffffff)
+    return testArray
 
 def nextChanceRNG01(version='white'):
     testArray = rng01Array()

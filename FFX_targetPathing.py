@@ -6539,24 +6539,27 @@ def zanarkandOutdoors(checkpoint):
         x = -190
         y = -100
     if checkpoint == 8:  # Weird cutscene where we don't lose control immediately
-        x = -133
-        y = 8
+        x = -94
+        y = 81
     if checkpoint == 9:
-        x = -161
-        y = 368
+        x = -121
+        y = 301
     if checkpoint == 10:
+        x = -187
+        y = 424
+    if checkpoint == 11:
         x = -365
         y = 565
-    if checkpoint == 11:
+    if checkpoint == 12:
         x = -523
         y = 656
-    if checkpoint == 12:
+    if checkpoint == 13:
         x = -564
         y = 801
-    if checkpoint == 13:
+    if checkpoint == 14:
         x = -628
         y = 936
-    if checkpoint == 14:
+    if checkpoint == 15:
         x = -750
         y = 1083
     return [x, y]
@@ -7433,7 +7436,7 @@ def airShip(checkpoint):
         x = -3
         y = 11
     if checkpoint == 5:
-        x = 10
+        x = 20 #Adjusted, previously 10
         y = -100
     if checkpoint == 6:  # Screen with Isaaru
         x = 33
@@ -7446,7 +7449,7 @@ def airShip(checkpoint):
         y = -10
     if checkpoint == 9:  # Gallery
         x = 0
-        y = -9
+        y = -40
     if checkpoint == 10:
         x = -10
         y = -79
