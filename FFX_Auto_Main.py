@@ -48,8 +48,8 @@ if gameVars.nemesis():
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-#Gamestate = "Kilika"
-#StepCounter = 1
+Gamestate = "Kilika"
+StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
@@ -68,41 +68,41 @@ if gameVars.nemesis():
 #StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
-# StepCounter = 4 #Seymour fight, CSR, Blitz Win
-# StepCounter = 6 #Before escape sequence
+#StepCounter = 4 #Seymour fight, CSR, Blitz Win
+#StepCounter = 6 #Before escape sequence
 #Gamestate = "Home"
 #StepCounter = 1
 #StepCounter = 2
 #Gamestate = "rescueYuna"
-# StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
+#StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
 #StepCounter = 2
-# StepCounter = 5 #Can pick regular run vs nemesis below.
+#StepCounter = 5 #Can pick regular run vs nemesis below.
 #Gamestate = "Gagazet"
-# StepCounter = 1 #Blitz Win, no end game version selected
-# StepCounter = 2 #NE armor testing
-# StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
-# StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
-# StepCounter = 10 #Nemesis variant, blitz win logic (not working)
-# StepCounter = 11 #Remiem racing
-#Gamestate = "Zanarkand"
-# StepCounter = 1 #Campfire, version 1
-# StepCounter = 3 #Blitz win, end game version 1 or 2
-# StepCounter = 4 #Before Yunalesca
-# StepCounter = 5 #After Yunalesca
+#StepCounter = 1 #Blitz Win, no end game version selected
+#StepCounter = 2 #NE armor testing
+#StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
+#StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
+#StepCounter = 10 #Nemesis variant, blitz win logic (not working)
+#StepCounter = 11 #Remiem racing
+Gamestate = "Zanarkand"
+StepCounter = 1 #Campfire, version 1
+#StepCounter = 3 #Blitz win, end game version 1 or 2
+#StepCounter = 4 #Before Yunalesca
+#StepCounter = 5 #After Yunalesca
 #Gamestate = "Sin"
-# StepCounter = 2 #Shedinja Highbridge
-# StepCounter = 3 #Before Sea of Sorrows
-# StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
+#StepCounter = 2 #Shedinja Highbridge
+#StepCounter = 3 #Before Sea of Sorrows
+#StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
 StepCounter = 1
 
-# Nemesis load testing
+#Nemesis load testing
 #Gamestate = "Nem_Farm"
-# StepCounter = 2 #Start of Calm Lands (only one each)
+#StepCounter = 2 #Start of Calm Lands (only one each)
 #StepCounter = 3
-# StepCounter = 20 #After Gagazet, before Calm Lands farm
-# StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
-# StepCounter = 24 #Final Prep before arena bosses
+#StepCounter = 20 #After Gagazet, before Calm Lands farm
+#StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
+#StepCounter = 24 #Final Prep before arena bosses
 
 ####################################################################################################
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
@@ -288,6 +288,7 @@ if Gamestate != "none":
         FFX_LoadGame.loadSaveNum(98)
         gameVars.endGameVersionSet(1)
         FFX_LoadGame.loadGagazetDream()
+        gameVars.fluxOverkillSuccess()
     if Gamestate == "Gagazet" and StepCounter == 10:  # Calm Lands, but Nemesis version
         FFX_LoadGame.loadSaveNum(43)
         FFX_LoadGame.loadCalm()
@@ -306,6 +307,7 @@ if Gamestate != "none":
         # FFX_LoadGame.loadSaveNum(47) #Glacierwulf save
         # gameVars.endGameVersionSet(4)
         # FFX_LoadGame.zanEntrance()
+        gameVars.fluxOverkillSuccess()
     if Gamestate == "Zanarkand" and StepCounter == 2:  # Just before the trials.
         FFX_LoadGame.loadOffset(35)
         FFX_LoadGame.zanTrials()
@@ -918,6 +920,7 @@ while Gamestate != "End":
             StepCounter = 1
         else:
             StepCounter = 3
+        #Gamestate = "End" #Testing only
 
     if Gamestate == "Sin" and StepCounter == 3:
         reportGamestate()

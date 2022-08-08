@@ -766,7 +766,7 @@ def lancetTutorial():
     FFX_memory.clickToControl()
 
 
-def KilikaWoods(valeforCharge):
+def KilikaWoods(valeforCharge, bestCharge:int=99):
     FFX_Logs.writeLog("Fight start: Kilika general")
     print("Fight start: Kilika battle")
     BattleComplete = 0
@@ -790,14 +790,16 @@ def KilikaWoods(valeforCharge):
     # elif bNum == 37: #Ragora and two bees, reverse
 
     # These battles we want nothing to do with.
-    if bNum == 32 or bNum == 36:
+    if bNum == 32:
         skipCharge = True
+    elif bestCharge == 99: #Only occurs if no best charge possible in the first three battles.
+        bestCharge = bNum
 
     print("Kilika battle")
     aeonTurn = False
     yunaWent = False
     while FFX_memory.battleActive():  # AKA end of battle screen
-        if valeforCharge == False and skipCharge == False:  # Still to charge Valefor
+        if valeforCharge == False and skipCharge == False and bestCharge == bNum:  # Still to charge Valefor
             if FFX_memory.turnReady():
                 print("------------------------------")
                 print("Battle Turn")
@@ -6110,6 +6112,9 @@ def chargeRikkuOD():
     if FFX_memory.getOverdriveBattle(6) != 100 and FFX_memory.getBattleNum() in [360, 361, 376, 378, 381, 384, 386]:
         if (not FFX_memory.tidusEscapedState() and not checkTidusOk()) or not checkRikkuOk():
             print("Tidus or Rikku incapacitated, fleeing")
+            print("--", not FFX_memory.tidusEscapedState())
+            print("--", not checkTidusOk())
+            print("--", not checkRikkuOk())
             fleeAll()
         else:
             while not FFX_memory.battleComplete():
@@ -6124,11 +6129,6 @@ def chargeRikkuOD():
                     else:
                         escapeOne()
         FFX_memory.clickToControl3()
-        if FFX_memory.overdriveState()[6] == 100:
-            FFX_memory.fullPartyFormat('kimahri')
-        else:
-            FFX_memory.fullPartyFormat('rikku')
-            healUp()
     else:
         fleeAll()
 

@@ -61,10 +61,21 @@ def arrival():
             elif checkpoint < 7 and FFX_memory.getMap() == 152:
                 checkpoint = 7
 
+def selectBestOfThree(comingBattles):
+    if comingBattles == [32, 32, 32]:
+        return 99
+    priority = [34, 33, 31, 37, 35, 36]
+    for i in range(len(priority)):
+        if priority[i] in comingBattles:
+            print("--------------Best charge, battle num:", priority[i])
+            return priority[i]
+    return 99
 
 def forest1():
     kilikaBattles = 0
     optimalBattles = 0
+    nextThree = []
+    import FFX_rngBattles
 
     valeforCharge = False
     if gameVars.csr():
@@ -128,10 +139,14 @@ def forest1():
             if FFX_memory.battleActive():
                 if checkpoint < 9:
                     FFX_Battle.lancetTutorial()
+                    nextThree = FFX_rngBattles.comingBattles(area=10, battleCount=3)
+                    bestOfThree = selectBestOfThree(nextThree)
                 elif checkpoint > 86:
                     FFX_Battle.Geneaux()
                 else:
-                    valeforCharge = FFX_Battle.KilikaWoods(valeforCharge)
+                    print("---------------This should be battle number:", kilikaBattles)
+                    print("---------------Reminder (north-bound only):", nextThree)
+                    valeforCharge = FFX_Battle.KilikaWoods(valeforCharge, bestOfThree)
                     kilikaBattles += 1
                     if FFX_memory.getBattleNum() in [32, 34, 37]:
                         optimalBattles += 1
