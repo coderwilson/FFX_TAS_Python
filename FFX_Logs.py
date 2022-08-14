@@ -12,7 +12,7 @@ fileName = "none"
 fileStats = "none"
 filePlot = "none"
 fileMemChange = "none"
-
+fileRNG = "none"
 
 def writeLog(message):
     # print("Function no longer used")
@@ -116,26 +116,35 @@ def writeMemChange(message):
     memChangeFile.close()
 
 
-def nextMemChange():
-    global fileMemChange
+def openRNGTrack():
+    global fileRNG
     global game
     global ext
     timeNow = datetime.datetime.now()
-    fileMemChange = "Logs/" + game + "MemChange_ " + str(timeNow.year) + str(timeNow.month) + str(
+    fileRNG = "Logs/" + game + "RNG_ " + str(timeNow.year) + str(timeNow.month) + str(
         timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
-    global memChangeFile
+    global RNGFile
     try:
-        memChangeFile = open(fileMemChange, "a")
+        RNGFile = open(fileRNG, "a")
     except:
-        memChangeFile = open(fileMemChange, "x")
-    memChangeFile.close()
+        RNGFile = open(fileRNG, "x")
+    RNGFile.close()
 
-    memChangeFile = open(fileMemChange, "a")
-    memChangeFile.write("Memory change log is ready for writing!\n")
-    memChangeFile.write("\n")
-    memChangeFile.close()
-    print("Memory change log is ready for writing!\n")
+    RNGFile = open(fileRNG, "a")
+    RNGFile.write("RNG log is ready for writing!\n")
+    RNGFile.write("\n")
+    RNGFile.close()
+    print("RNG log is ready for writing!\n")
+
+def writeRNGTrack(message):
+    global RNGFile
+    global fileRNG
+
+    RNGFile = open(fileRNG, "a")
+    RNGFile.write(str(message))
+    RNGFile.write("\n")
+    RNGFile.close()
 
 
 class memChangeMonitor:

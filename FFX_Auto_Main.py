@@ -48,8 +48,8 @@ if gameVars.nemesis():
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-Gamestate = "Kilika"
-StepCounter = 1
+#Gamestate = "Kilika"
+#StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
@@ -64,8 +64,8 @@ StepCounter = 1
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-#Gamestate = "Macalania"
-#StepCounter = 1
+Gamestate = "Macalania"
+StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Seymour fight, CSR, Blitz Win
@@ -84,8 +84,8 @@ StepCounter = 1
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
-Gamestate = "Zanarkand"
-StepCounter = 1 #Campfire, version 1
+#Gamestate = "Zanarkand"
+#StepCounter = 1 #Campfire, version 1
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
@@ -93,8 +93,8 @@ StepCounter = 1 #Campfire, version 1
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -128,7 +128,7 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     # gameVars.setCSR(True)
 elif seedHunt == False:  # Full run starting from New Game
-    # rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly
+    rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
     # Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
@@ -175,7 +175,7 @@ reportGamestate()
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-# FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed:", rngSeed)
@@ -216,8 +216,8 @@ if Gamestate != "none":
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1:  # Just after entering the woods
         FFX_LoadGame.loadSaveNum(22)
-        FFXC.set_movement(0, 1)
-        FFX_memory.waitFrames(30 * 5)
+        #FFXC.set_movement(0, 1)
+        #FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1:  # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(112)
@@ -281,10 +281,10 @@ if Gamestate != "none":
         gameVars.endGameVersionSet(4)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 6:  # After the dream
-        # FFX_LoadGame.loadSaveNum(47)
-        # gameVars.endGameVersionSet(4)
-        # FFX_LoadGame.loadSaveNum(52)
-        # gameVars.endGameVersionSet(3)
+        #FFX_LoadGame.loadSaveNum(47)
+        #gameVars.endGameVersionSet(4)
+        #FFX_LoadGame.loadSaveNum(52)
+        #gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadSaveNum(98)
         gameVars.endGameVersionSet(1)
         FFX_LoadGame.loadGagazetDream()
@@ -579,6 +579,7 @@ while Gamestate != "End":
             FFX_Logs.writeStats(rngSeed)
         else:
             StepCounter = 3
+        Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Luca" and StepCounter == 3:
         reportGamestate()
@@ -620,7 +621,6 @@ while Gamestate != "End":
         FFX_Luca.afterBlitz()
         StepCounter = 1
         Gamestate = "Miihen"
-        # Gamestate = "manualBreak" # Used for testing only.
 
     # Just to make sure we set this variable somewhere.
     if Gamestate == "Miihen" and StepCounter == 1:

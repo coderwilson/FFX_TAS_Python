@@ -13,7 +13,6 @@ FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
 #FFXC = FFX_Xbox.FFXC
 
-
 def arrival():
     print("Arrived at Kilika docks.")
     FFX_memory.clickToControl()
@@ -62,9 +61,15 @@ def arrival():
                 checkpoint = 7
 
 def selectBestOfThree(comingBattles):
-    if comingBattles == [32, 32, 32]:
+    if comingBattles == [["dinonix", "killer_bee"],["dinonix", "killer_bee"],["dinonix", "killer_bee"]]:
         return 99
-    priority = [34, 33, 31, 37, 35, 36]
+    priority = [
+        ["dinonix", "yellow_element", "killer_bee"],
+        ["yellow_element", "killer_bee"],
+        ["dinonix", "yellow_element"],
+        ["ragora", "killer_bee", "killer_bee"],
+        ["ragora"],
+        ["ragora", "ragora"]]
     for i in range(len(priority)):
         if priority[i] in comingBattles:
             print("--------------Best charge, battle num:", priority[i])
@@ -75,7 +80,8 @@ def forest1():
     kilikaBattles = 0
     optimalBattles = 0
     nextThree = []
-    import FFX_rngBattles
+    nextBattle = []
+    import FFX_rngTrack
 
     valeforCharge = False
     if gameVars.csr():
@@ -139,17 +145,21 @@ def forest1():
             if FFX_memory.battleActive():
                 if checkpoint < 9:
                     FFX_Battle.lancetTutorial()
-                    nextThree = FFX_rngBattles.comingBattles(area=10, battleCount=3)
+                    nextThree = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=3)
                     bestOfThree = selectBestOfThree(nextThree)
+                    nextBattle = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
+                    print("################# Next Battle:",nextBattle)
                 elif checkpoint > 86:
                     FFX_Battle.Geneaux()
                 else:
                     print("---------------This should be battle number:", kilikaBattles)
                     print("---------------Reminder (north-bound only):", nextThree)
-                    valeforCharge = FFX_Battle.KilikaWoods(valeforCharge, bestOfThree)
+                    valeforCharge = FFX_Battle.KilikaWoods(valeforCharge, bestOfThree, nextBattle)
+                    nextBattle = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
+                    print("##########################",nextBattle)
                     kilikaBattles += 1
-                    if FFX_memory.getBattleNum() in [32, 34, 37]:
-                        optimalBattles += 1
+                    #if FFX_memory.getBattleNum() in [32, 34, 37]:
+                    #    optimalBattles += 1
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
