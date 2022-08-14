@@ -1,0 +1,38 @@
+# Usage:
+# death
+# compatibility [(+/-)amount]
+# [action] [target] (overdrive)
+# actions:
+# daigoro, kozuka, wakizashi_st,
+# wakizashi_mt, zanmato,
+# dismiss, autodismiss,
+# first_turn_dismiss
+///
+zanmato seymour_flux overdrive
+
+zanmato sanctuary_keeper overdrive
+
+zanmato yunalesca overdrive
+zanmato yunalesca overdrive
+# yunalesca inflicts curse
+# with her first attack
+# in third phase
+zanmato yunalesca
+
+zanmato left_fin overdrive
+
+zanmato right_fin overdrive
+
+# not sure if both core and genais
+# die from the first zanmato
+zanmato sinspawn_genais overdrive
+# sin core
+zanmato sin_2 overdrive
+
+# overdrive sin
+zanmato sin_3 overdrive
+
+zanmato seymour_omnis overdrive
+
+zanmato braska's_final_aeon overdrive
+zanmato braska's_final_aeon overdrive

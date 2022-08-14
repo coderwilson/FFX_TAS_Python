@@ -1,0 +1,1226 @@
+{   
+    "bosses": {
+        "dummy": {
+            "name" : "Boss",
+            "formation": [],
+            "forced_condition": "normal"
+        },
+        "dummy_preemptive": {
+            "name" : "Boss",
+            "formation": [],
+            "forced_condition": "preemptive"
+        },
+        "dummy_ambush": {
+            "name" : "Boss",
+            "formation": [],
+            "forced_condition": "ambush"
+        },
+        "sinscales": {
+            "name": "Sinscales",
+            "formation": ["sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6"],
+            "forced_condition": "normal"
+        },
+        "ammes": {
+            "name": "Ammes",
+            "formation": ["sinspawn_ammes", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6"],
+            "forced_condition": "normal"
+        },
+        "tanker": {
+            "name": "Tanker",
+            "formation": ["tanker", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6", "sinscale_6"],
+            "forced_condition": "normal"
+        },
+        "sahagins": {
+            "name": "Sahagins",
+            "formation": ["sahagin_4", "sahagin_4", "sahagin_4"],
+            "forced_condition": ""
+        },
+        "geosgaeno": {
+            "name": "Geosgaeno",
+            "formation": ["geosgaeno"],
+            "forced_condition": ""
+        },
+        "klikk_1": {
+            "name": "Klikk 1",
+            "formation": ["klikk"],
+            "forced_condition": "normal"
+        },
+        "klikk_2": {
+            "name": "Klikk 2",
+            "formation": ["klikk"],
+            "forced_condition": "normal"
+        },
+        "piranhas": {
+            "name": "Piranhas",
+            "formation": ["piranha_3", "piranha_3"],
+            "forced_condition": ""
+        },
+        "tros": {
+            "name": "Tros",
+            "formation": ["tros"],
+            "forced_condition": ""
+        },
+        "wakka_tutorial": {
+            "name": "Wakka tutorial",
+            "formation": ["dingo", "condor"],
+            "forced_condition": "normal"
+        },
+        "elements_tutorial": {
+            "name": "Elements tutorial",
+            "formation": ["water_flan"],
+            "forced_condition": "normal"
+        },
+        "kimahri": {
+            "name": "Kimahri",
+            "formation": ["???"],
+            "forced_condition": "normal"
+        },
+        "garuda_1": {
+            "name": "Garuda 1",
+            "formation": ["garuda_3"],
+            "forced_condition": "normal"
+        },
+        "garuda_2": {
+            "name": "Garuda 2",
+            "formation": ["garuda_3"],
+            "forced_condition": "normal"
+        },
+        "besaid_forced_encounter": {
+            "name": "Besaid forced encounter",
+            "formation": ["condor_2", "dingo_2", "water_flan_2"],
+            "forced_condition": "normal"
+        },
+        "sin_fin": {
+            "name": "Sin Fin",
+            "formation": ["sinscale", "sinscale", "sinscale", "sin"],
+            "forced_condition": "normal"
+        },
+        "echuilles": {
+            "name": "Echuilles",
+            "formation": ["sinspawn_echuilles", "sinscale_3", "sinscale_3", "sinscale_3", "sinscale_3"],
+            "forced_condition": "normal"
+        },
+        "lancet_tutorial": {
+            "name": "Lancet tutorial",
+            "formation": ["ragora"],
+            "forced_condition": "normal"
+        },
+        "lord_ochu": {
+            "name": "Lord Ochu",
+            "formation": ["lord_ochu"],
+            "forced_condition": "normal"
+        },
+        "geneaux": {
+            "name": "Geneaux",
+            "formation": ["sinspawn_geneaux", "geneaux's_tentacle", "geneaux's_tentacle"],
+            "forced_condition": "normal"
+        },
+        "machina_1": {
+            "name": "Machina 1",
+            "formation": ["worker", "worker"],
+            "forced_condition": "normal"
+        },
+        "machina_2": {
+            "name": "Machina 2",
+            "formation": ["worker", "worker"],
+            "forced_condition": "normal"
+        },
+        "machina_3": {
+            "name": "Machina 3",
+            "formation": ["worker", "worker"],
+            "forced_condition": "normal"
+        },
+        "oblitzerator": {
+            "name": "Oblitzerator",
+            "formation": ["oblitzerator"],
+            "forced_condition": "normal"
+        },
+        "sahagin_chiefs": {
+            "name": "Sahagin Chiefs",
+            "formation": ["sahagin_chief", "sahagin_chief", "sahagin_chief", "sahagin_chief"],
+            "forced_condition": "normal"
+        },
+        "vouivre": {
+            "name": "Vouivre",
+            "formation": ["vouivre_2"],
+            "forced_condition": "normal"
+        },
+        "garuda": {
+            "name": "Garuda",
+            "formation": ["garuda_2"],
+            "forced_condition": "normal"
+        },
+        "pierce_tutorial": {
+            "name": "Pierce tutorial",
+            "formation": ["raldo"],
+            "forced_condition": "normal"
+        },
+        "chocobo_eater": {
+            "name": "Chocobo Eater",
+            "formation": ["chocobo_eater"],
+            "forced_condition": "normal"
+        },
+        "sinspawn_gui_1": {
+            "name": "Sinspawn Gui 1",
+            "formation": ["sinspawn_gui", "head", "arm", "arm"],
+            "forced_condition": "normal"
+        },
+        "sinspawn_gui_2": {
+            "name": "Sinspawn Gui 2",
+            "formation": ["sinspawn_gui", "head", "arm", "arm"],
+            "forced_condition": "normal"
+        },
+        "extractor": {
+            "name": "Extractor",
+            "formation": ["extractor"],
+            "forced_condition": "normal"
+        },
+        "rikku_tutorial": {
+            "name": "Rikku tutorial",
+            "formation": ["???_3", "bunyip"],
+            "forced_condition": "normal"
+        },
+        "spherimorph": {
+            "name": "Spherimorph",
+            "formation": ["spherimorph"],
+            "forced_condition": "normal"
+        },
+        "crawler": {
+            "name": "Crawler",
+            "formation": ["crawler", "negator"],
+            "forced_condition": "normal"
+        },
+        "seymour": {
+            "name": "Seymour",
+            "formation": ["guado_guardian", "seymour", "guado_guardian", "anima"],
+            "forced_condition": "normal"
+        },
+        "guado_encounter": {
+            "name": "Guado Encounter",
+            "formation": ["guado_guardian_2"],
+            "forced_condition": "normal"
+        },
+        "wendigo": {
+            "name": "Wendigo",
+            "formation": ["guado_guardian_2", "wendigo", "guado_guardian_2"],
+            "forced_condition": "normal"
+        },
+        "zu": {
+            "name": "Zu",
+            "formation": ["zu_2"],
+            "forced_condition": "normal"
+        },
+        "machina_steal_tutorial": {
+            "name": "Machina Steal tutorial",
+            "formation": ["mech_guard", "mech_guard"],
+            "forced_condition": ""
+        },
+        "sandragora": {
+            "name": "Sandragora",
+            "formation": ["sandragora"],
+            "forced_condition": ""
+        },
+        "guado_+_3_bomb": {
+            "name": "Guado + 3 Bomb",
+            "formation": ["guado_guardian_3", "bomb_2", "bomb_2", "bomb_2"],
+            "forced_condition": ""
+        },
+        "guado_+_2_dual_horn": {
+            "name": "Guado + 2 Dual Horn",
+            "formation": ["dual_horn_2", "dual_horn_2", "guado_guardian_3"],
+            "forced_condition": ""
+        },
+        "guado_+_2_chimera": {
+            "name": "Guado + 2 Chimera",
+            "formation": ["chimera_2", "chimera_2", "guado_guardian_3"],
+            "forced_condition": ""
+        },
+        "evrae": {
+            "name": "Evrae",
+            "formation": ["evrae"],
+            "forced_condition": "normal"
+        },
+        "bevelle_guards_1": {
+            "name": "Bevelle Guards 1",
+            "formation": ["warrior_monk", "warrior_monk_2", "warrior_monk"],
+            "forced_condition": "normal"
+        },
+        "bevelle_guards_2": {
+            "name": "Bevelle Guards 2",
+            "formation": ["ykt-63", "warrior_monk", "warrior_monk"],
+            "forced_condition": "normal"
+        },
+        "bevelle_guards_3": {
+            "name": "Bevelle Guards 3",
+            "formation": ["warrior_monk", "warrior_monk_2", "warrior_monk"],
+            "forced_condition": "normal"
+        },
+        "bevelle_guards_4": {
+            "name": "Bevelle Guards 4",
+            "formation": ["ykt-63", "warrior_monk", "warrior_monk"],
+            "forced_condition": "normal"
+        },
+        "bevelle_guards_5": {
+            "name": "Bevelle Guards 5",
+            "formation": ["warrior_monk", "yat-99", "warrior_monk"],
+            "forced_condition": "normal"
+        },
+        "isaaru_grothia": {
+            "name": "Isaaru Grothia",
+            "formation": ["ifrit_2"],
+            "forced_condition": "normal"
+        },
+        "isaaru_pterya": {
+            "name": "Isaaru Pterya",
+            "formation": ["valefor"],
+            "forced_condition": "normal"
+        },
+        "isaaru_spathi": {
+            "name": "Isaaru Spathi",
+            "formation": ["bahamut"],
+            "forced_condition": "normal"
+        },
+        "evrae_altana": {
+            "name": "Evrae Altana",
+            "formation": ["evrae_altana"],
+            "forced_condition": "normal"
+        },
+        "seymour_natus": {
+            "name": "Seymour Natus",
+            "formation": ["seymour_natus", "mortibody"],
+            "forced_condition": "normal"
+        },
+        "defender_x": {
+            "name": "Defender X",
+            "formation": ["defender_x"],
+            "forced_condition": "normal"
+        },
+        "biran_&_yenke": {
+            "name": "Biran & Yenke",
+            "formation": ["biran_ronso", "yenke_ronso"],
+            "forced_condition": "normal"
+        },
+        "seymour_flux": {
+            "name": "Seymour Flux",
+            "formation": ["seymour_flux", "mortiorchis"],
+            "forced_condition": "normal"
+        },
+        "sanctuary_keeper": {
+            "name": "Sanctuary Keeper",
+            "formation": ["sanctuary_keeper"],
+            "forced_condition": "normal"
+        },
+        "spectral_keeper": {
+            "name": "Spectral Keeper",
+            "formation": ["spectral_keeper"],
+            "forced_condition": "normal"
+        },
+        "yunalesca": {
+            "name": "Yunalesca",
+            "formation": ["yunalesca"],
+            "forced_condition": "normal"
+        },
+        "left_fin": {
+            "name": "Left Fin",
+            "formation": ["left_fin"],
+            "forced_condition": "normal"
+        },
+        "right_fin": {
+            "name": "Right Fin",
+            "formation": ["right_fin"],
+            "forced_condition": "normal"
+        },
+        "sin_core": {
+            "name": "Sin Core",
+            "formation": ["sinspawn_genais", "sin_2"],
+            "forced_condition": "normal"
+        },
+        "overdrive_sin": {
+            "name": "Overdrive Sin",
+            "formation": ["sin_3"],
+            "forced_condition": "normal"
+        },
+        "seymour_omnis": {
+            "name": "Seymour Omnis",
+            "formation": ["seymour_omnis", "mortiphasm", "mortiphasm", "mortiphasm", "mortiphasm"],
+            "forced_condition": "normal"
+        }
+    },
+    "simulation": {
+        "simulation_(dummy)": {
+            "name": "Simulation",
+            "monsters": [],
+            "forced_condition": "normal"
+        },
+        "simulation_(mi'ihen)": {
+            "name": "Simulation (Mi'ihen)",
+            "monsters": ["bomb", "dual_horn"],
+            "forced_condition": "normal"
+        },
+        "simulation_(old_road)": {
+            "name": "Simulation (Old Road)",
+            "monsters": ["funguar", "garuda", "basilisk"],
+            "forced_condition": "normal"
+        },
+        "simulation_(guadosalam)": {
+            "name": "Simulation (Guadosalam)",
+            "monsters": ["larva", "iron_giant"],
+            "forced_condition": "normal"
+        },
+        "simulation_(thunder plains)": {
+            "name": "Simulation (Thunder Plains)",
+            "monsters": ["larva", "iron_giant", "chimera", "xiphos"],
+            "forced_condition": "normal"
+        },
+        "simulation_(calm_lands)": {
+            "name": "Simulation (Calm Lands)",
+            "monsters": ["coeurl", "malboro", "bashura", "ghost"],
+            "forced_condition": "normal"
+        }
+    },
+    "random": {
+        "underwater_ruins": {
+            "name": "Underwater Ruins",
+            "formations": [
+                ["piranha", "piranha_2"],
+                ["piranha_3"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "besaid_lagoon": {
+            "name": "Besaid Lagoon",
+            "formations": [
+                ["piranha", "piranha_2"],
+                ["piranha", "piranha_2"],
+                ["piranha_2", "piranha", "piranha_3"],
+                ["piranha_2", "piranha", "piranha", "piranha"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "besaid_road": {
+            "name": "Besaid Road",
+            "formations": [
+                ["dingo_2", "water_flan_2"],
+                ["dingo_2", "condor_2"],
+                ["condor_2", "water_flan_2"],
+                ["dingo_2", "water_flan_2", "condor_2"]
+            ],
+            "forced_condition": "",
+            "danger_value": 70
+        },
+        "kilika_woods": {
+            "name": "Kilika Woods",
+            "formations": [
+                ["dinonix", "yellow_element"],
+                ["dinonix", "yellow_element"],
+                ["dinonix", "killer_bee"],
+                ["dinonix", "killer_bee"],
+                ["yellow_element", "killer_bee"],
+                ["yellow_element", "killer_bee"],
+                ["dinonix", "yellow_element", "killer_bee"],
+                ["dinonix", "yellow_element", "killer_bee"],
+                ["ragora"],
+                ["ragora"],
+                ["ragora"],
+                ["ragora", "ragora"],
+                ["ragora", "killer_bee", "killer_bee"]
+            ],
+            "forced_condition": "",
+            "danger_value": 65
+        },
+        "mi'ihen_screen_1": {
+            "name": "Mi'ihen Screen 1",
+            "formations": [
+                ["mi'ihen_fang", "white_element", "floating_eye"],
+                ["mi'ihen_fang", "white_element", "raldo_2"],
+                ["floating_eye", "mi'ihen_fang", "raldo_2"],
+                ["raldo_2", "white_element", "floating_eye"],
+                ["bomb"],
+                ["dual_horn"]
+            ],
+            "forced_condition": "",
+            "danger_value": 50
+        },
+        "mi'ihen_screen_1_(ledge)": {
+            "name": "Mi'ihen Screen 1 (Ledge)",
+            "formations": [
+                ["mi'ihen_fang"],
+                ["mi'ihen_fang", "mi'ihen_fang"],
+                ["mi'ihen_fang", "dual_horn"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "mi'ihen_screen_2-3": {
+            "name": "Mi'ihen Screen 2-3",
+            "formations": [
+                ["white_element", "mi'ihen_fang", "floating_eye"],
+                ["white_element", "mi'ihen_fang", "floating_eye"],
+                ["white_element", "mi'ihen_fang", "floating_eye"],
+                ["mi'ihen_fang", "white_element", "raldo_2"],
+                ["mi'ihen_fang", "white_element", "raldo_2"],
+                ["mi'ihen_fang", "white_element", "raldo_2"],
+                ["mi'ihen_fang", "raldo_2", "floating_eye"],
+                ["mi'ihen_fang", "raldo_2", "floating_eye"],
+                ["mi'ihen_fang", "raldo_2", "floating_eye"],
+                ["raldo_2", "white_element", "floating_eye"],
+                ["raldo_2", "white_element", "floating_eye"],
+                ["raldo_2", "white_element", "floating_eye"],
+                ["dual_horn", "mi'ihen_fang"],
+                ["dual_horn", "mi'ihen_fang"],
+                ["bomb", "bomb", "dual_horn"],
+                ["floating_eye", "bomb", "floating_eye"],
+                ["floating_eye", "bomb", "floating_eye"],
+                ["bomb", "bomb", "bomb"]
+            ],
+            "forced_condition": "",
+            "danger_value": 50
+        },
+        "mi'ihen_screen_2-3_(ledge)": {
+            "name": "Mi'ihen Screen 2-3 (Ledge)",
+            "formations": [
+                ["mi'ihen_fang", "mi'ihen_fang"],
+                ["mi'ihen_fang", "mi'ihen_fang", "mi'ihen_fang"],
+                ["mi'ihen_fang", "dual_horn"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "mi'ihen_(newroad)": {
+            "name": "Mi'ihen (Newroad)",
+            "formations": [
+                ["mi'ihen_fang", "white_element", "floating_eye"],
+                ["mi'ihen_fang", "white_element", "raldo"],
+                ["mi'ihen_fang", "raldo", "floating_eye"],
+                ["raldo", "white_element", "floating_eye"],
+                ["dual_horn", "raldo"],
+                ["dual_horn", "raldo"],
+                ["bomb", "bomb", "dual_horn"],
+                ["bomb", "bomb", "dual_horn"],
+                ["bomb", "floating_eye", "floating_eye"],
+                ["bomb", "floating_eye", "floating_eye"],
+                ["bomb", "bomb", "bomb"],
+                ["bomb", "bomb", "bomb"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "old_road": {
+            "name": "Old Road",
+            "formations": [
+                ["vouivre", "ipiria", "thunder_flan"],
+                ["vouivre", "ipiria", "thunder_flan"],
+                ["vouivre", "ipiria", "thunder_flan"],
+                ["ipiria", "vouivre", "floating_eye"],
+                ["ipiria", "vouivre", "floating_eye"],
+                ["ipiria", "vouivre", "floating_eye"],
+                ["vouivre", "floating_eye", "thunder_flan"],
+                ["vouivre", "floating_eye", "thunder_flan"],
+                ["vouivre", "floating_eye", "thunder_flan"],
+                ["vouivre", "thunder_flan"],
+                ["vouivre", "thunder_flan"],
+                ["vouivre", "thunder_flan"],
+                ["thunder_flan", "bomb", "bomb"],
+                ["thunder_flan", "bomb", "bomb"],
+                ["dual_horn", "thunder_flan"],
+                ["dual_horn", "thunder_flan"],
+                ["vouivre", "dual_horn", "dual_horn"],
+                ["vouivre", "dual_horn", "dual_horn"],
+                ["bomb", "dual_horn", "bomb"],
+                ["bomb", "dual_horn", "bomb"]
+            ],
+            "forced_condition": "",
+            "danger_value": 40
+        },
+        "clasko_skip_screen": {
+            "name": "Clasko Skip Screen",
+            "formations": [
+                ["vouivre", "ipiria", "thunder_flan"],
+                ["vouivre", "ipiria", "floating_eye"],
+                ["thunder_flan", "floating_eye", "vouivre"],
+                ["thunder_flan", "bomb", "bomb"],
+                ["bomb", "bomb", "dual_horn"],
+                ["dual_horn", "vouivre", "dual_horn"]
+            ],
+            "forced_condition": "",
+            "danger_value": 35
+        },
+        "mrr_-_valley": {
+            "name": "MRR - Valley",
+            "formations": [
+                ["red_element", "raptor", "lamashtu"],
+                ["lamashtu", "gandarewa", "red_element"],
+                ["raptor", "red_element", "gandarewa"],
+                ["raptor", "funguar", "red_element"],
+                ["funguar", "red_element", "gandarewa"],
+                ["garuda"]
+            ],
+            "forced_condition": "",
+            "danger_value": 50
+        },
+        "mrr_-_precipice": {
+            "name": "MRR - Precipice",
+            "formations": [
+                ["raptor", "funguar", "funguar"],
+                ["raptor", "funguar", "funguar"],
+                ["raptor", "funguar", "red_element"],
+                ["raptor", "funguar", "red_element"],
+                ["funguar", "red_element", "gandarewa"],
+                ["funguar", "red_element", "gandarewa"],
+                ["garuda"],
+                ["garuda"],
+                ["garuda", "funguar", "funguar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 65
+        },
+        "mrr_-_aftermath": {
+            "name": "MRR - Aftermath",
+            "formations": [
+                ["lamashtu", "raptor", "red_element"],
+                ["lamashtu", "raptor", "red_element"],
+                ["lamashtu", "raptor", "red_element"],
+                ["lamashtu", "gandarewa", "red_element"],
+                ["lamashtu", "gandarewa", "red_element"],
+                ["lamashtu", "gandarewa", "red_element"],
+                ["raptor", "red_element", "gandarewa"],
+                ["raptor", "red_element", "gandarewa"],
+                ["raptor", "red_element", "gandarewa"],
+                ["raptor", "funguar", "funguar"],
+                ["raptor", "funguar", "funguar"],
+                ["raptor", "funguar", "funguar"],
+                ["raptor", "funguar", "red_element"],
+                ["raptor", "funguar", "red_element"],
+                ["funguar", "red_element", "gandarewa"],
+                ["funguar", "red_element", "gandarewa"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "djose_highroad_(front_half)": {
+            "name": "Djose Highroad (Front Half)",
+            "formations": [
+                ["bite_bug", "bite_bug", "funguar"],
+                ["bite_bug", "basilisk", "bite_bug"],
+                ["basilisk", "basilisk"],
+                ["lamashtu", "raptor", "funguar"],
+                ["lamashtu", "raptor", "funguar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 40
+        },
+        "djose_highroad_(back_half)": {
+            "name": "Djose Highroad (Back Half)",
+            "formations": [
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "simurgh"],
+                ["garm", "bunyip_2", "simurgh"],
+                ["gandarewa", "funguar", "gandarewa"],
+                ["gandarewa", "gandarewa", "snow_flan"],
+                ["basilisk", "funguar", "funguar"],
+                ["basilisk", "funguar", "funguar"],
+                ["basilisk", "funguar", "funguar"],
+                ["simurgh", "bite_bug", "bite_bug"],
+                ["basilisk", "basilisk"],
+                ["basilisk", "basilisk"],
+                ["basilisk", "basilisk"]
+            ],
+            "forced_condition": "",
+            "danger_value": 40
+        },
+        "moonflow_(south)": {
+            "name": "Moonflow (South)",
+            "formations": [
+                ["bunyip_2", "garm", "bite_bug"],
+                ["ochu", "bite_bug", "bite_bug"],
+                ["ochu", "bite_bug", "bite_bug"],
+                ["ochu", "garm"],
+                ["ochu", "garm"],
+                ["ochu"],
+                ["ochu"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["garm", "bunyip_2", "snow_flan"],
+                ["gandarewa", "funguar", "gandarewa"]
+            ],
+            "forced_condition": "",
+            "danger_value": 40
+        },
+        "moonflow_(north)": {
+            "name": "Moonflow (North)",
+            "formations": [
+                ["???_2", "garm", "bunyip_2"],
+                ["???_2", "bite_bug", "bite_bug"],
+                ["???_2", "bunyip_2", "bite_bug", "bite_bug"],
+                ["ochu", "garm"],
+                ["garm", "bunyip_2", "snow_flan"]
+            ],
+            "forced_condition": "",
+            "danger_value": 35
+        },
+        "thunder_plains_(south)": {
+            "name": "Thunder Plains (South)",
+            "formations": [
+                ["larva", "gold_element"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "melusine"],
+                ["larva", "aerouge", "aerouge"],
+                ["gold_element", "buer", "aerouge"]
+            ],
+            "forced_condition": "",
+            "danger_value": 35
+        },
+        "thunder_plains_(south)_(1_stone)": {
+            "name": "Thunder Plains (South) (1 stone)",
+            "formations": [
+                ["larva", "gold_element"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "melusine"],
+                ["larva", "aerouge", "aerouge"],
+                ["gold_element", "buer", "aerouge"],
+                ["qactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "thunder_plains_(south)_(2_stones)": {
+            "name": "Thunder Plains (South) (2 stones)",
+            "formations": [
+                ["larva", "gold_element"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "melusine"],
+                ["larva", "aerouge", "aerouge"],
+                ["gold_element", "buer", "aerouge"],
+                ["qactuar", "qactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "thunder_plains_(south)_(3_stones)": {
+            "name": "Thunder Plains (South) (3 stones)",
+            "formations": [
+                ["larva", "gold_element"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "melusine"],
+                ["larva", "aerouge", "aerouge"],
+                ["gold_element", "buer", "aerouge"],
+                ["qactuar", "qactuar"],
+                ["qactuar", "qactuar", "qactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "thunder_plains_(north)": {
+            "name": "Thunder Plains (North)",
+            "formations": [
+                ["iron_giant"],
+                ["iron_giant", "buer", "buer"],
+                ["larva", "larva"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "kusariqqu"]
+            ],
+            "forced_condition": "",
+            "danger_value": 30
+        },
+        "thunder_plains_(north)_(1_stone)": {
+            "name": "Thunder Plains (North) (1 stone)",
+            "formations": [
+                ["iron_giant"],
+                ["iron_giant", "buer", "buer"],
+                ["larva", "larva"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "kusariqqu"],
+                ["qactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "thunder_plains_(north)_(2_stones)": {
+            "name": "Thunder Plains (North) (2 stones)",
+            "formations": [
+                ["iron_giant"],
+                ["iron_giant", "buer", "buer"],
+                ["larva", "larva"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "kusariqqu"],
+                ["qactuar"],
+                ["qactuar", "qactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "thunder_plains_(north)_(3_stones)": {
+            "name": "Thunder Plains (North) (3 stones)",
+            "formations": [
+                ["iron_giant"],
+                ["iron_giant", "buer", "buer"],
+                ["larva", "larva"],
+                ["melusine", "kusariqqu", "aerouge"],
+                ["gold_element", "buer", "kusariqqu"],
+                ["qactuar", "qactuar", "qactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "macalania_woods": {
+            "name": "Macalania Woods",
+            "formations": [
+                ["iguion", "murussu", "wasp"],
+                ["iguion", "murussu", "blue_element"],
+                ["wasp", "blue_element", "blue_element"],
+                ["xiphos"],
+                ["wasp", "wasp", "xiphos"],
+                ["chimera"],
+                ["chimera"]
+            ],
+            "forced_condition": "normal",
+            "danger_value": 40
+        },
+        "lake_macalania": {
+            "name": "Lake Macalania",
+            "formations": [
+                ["evil_eye", "ice_flan", "snow_wolf"],
+                ["snow_wolf", "ice_flan", "mafdet"],
+                ["snow_wolf", "ice_flan", "snow_wolf"]
+            ],
+            "forced_condition": "",
+            "danger_value": 30
+        },
+        "crevasse": {
+            "name": "Crevasse",
+            "formations": [
+                ["evil_eye", "snow_wolf", "ice_flan"],
+                ["mafdet", "snow_wolf", "ice_flan"],
+                ["mafdet", "evil_eye", "evil_eye"]
+            ],
+            "forced_condition": "",
+            "danger_value": 50
+        },
+        "sanubia_desert_(east)": {
+            "name": "Sanubia Desert (East)",
+            "formations": [
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "alcyone", "alcyone"],
+                ["sand_wolf", "alcyone", "alcyone"],
+                ["sand_wolf", "alcyone", "alcyone"],
+                ["mech_guard", "mech_guard"],
+                ["mech_guard", "mech_guard"],
+                ["mech_guard", "mech_guard"],
+                ["zu"],
+                ["sand_worm"],
+                ["cactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "sanubia_desert_(central)": {
+            "name": "Sanubia Desert (Central)",
+            "formations": [
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["sand_wolf", "mushussu", "alcyone"],
+                ["alcyone", "sand_wolf", "alcyone"],
+                ["alcyone", "sand_wolf", "alcyone"],
+                ["alcyone", "sand_wolf", "alcyone"],
+                ["mech_guard", "mech_guard"],
+                ["mech_guard", "mech_guard"],
+                ["mech_guard", "mech_guard"],
+                ["zu"],
+                ["sand_worm"],
+                ["cactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "sanubia_desert_(ruins)": {
+            "name": "Sanubia Desert (Ruins)",
+            "formations": [
+                ["sand_worm"],
+                ["sand_worm"],
+                ["sand_worm"],
+                ["zu", "???_2"],
+                ["zu", "???_2"],
+                ["zu", "???_2", "???_2"],
+                ["zu", "???_2", "???_2"],
+                ["sand_wolf", "sand_wolf", "sand_wolf", "???_2"],
+                ["sand_wolf", "sand_wolf", "sand_wolf", "???_2"],
+                ["cactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "sanubia_desert_(west)": {
+            "name": "Sanubia Desert (West)",
+            "formations": [
+                ["mushussu", "sand_wolf", "alcyone"],
+                ["mushussu", "sand_wolf", "alcyone"],
+                ["mushussu", "alcyone", "alcyone"],
+                ["mushussu", "alcyone", "alcyone"],
+                ["mech_guard", "mech_guard"],
+                ["mech_guard", "mech_guard"],
+                ["mech_gunner", "mech_guard", "mech_guard"],
+                ["mech_gunner", "mech_guard", "mech_guard"],
+                ["zu"],
+                ["sand_worm"],
+                ["cactuar"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "home": {
+            "name": "Home",
+            "formations": [
+                ["guado_guardian_3", "bomb_2", "bomb_2", "bomb_2"],
+                ["guado_guardian_3", "evil_eye_2", "evil_eye_2"],
+                ["dual_horn_2", "dual_horn_2", "guado_guardian_3"],
+                ["chimera_2", "chimera_2", "guado_guardian_3"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "airship": {
+            "name": "Airship",
+            "formations": [
+                ["bomb_2", "bomb_2", "bomb_2"],
+                ["evil_eye_2", "evil_eye_2"],
+                ["dual_horn_2", "dual_horn_2"]
+            ],
+            "forced_condition": "",
+            "danger_value": 30
+        },
+        "via_purifico_(maze)": {
+            "name": "Via Purifico (Maze)",
+            "formations": [
+                ["sahagin", "sahagin", "sahagin"],
+                ["cave_iguion", "sahagin", "cave_iguion"],
+                ["bat_eye", "bat_eye"],
+                ["aqua_flan", "sahagin", "sahagin"],
+                ["aqua_flan", "cave_iguion", "cave_iguion"],
+                ["swamp_mafdet", "bat_eye"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "via_purifico_(corridor)": {
+            "name": "Via Purifico (Corridor)",
+            "formations": [
+                ["maze_larva"]
+            ],
+            "forced_condition": "",
+            "danger_value": 20
+        },
+        "via_purifico_(underwater)": {
+            "name": "Via Purifico (Underwater)",
+            "formations": [
+                ["phlegyas", "phlegyas"],
+                ["remora", "phlegyas", "remora"],
+                ["remora", "sahagin_3", "remora", "sahagin_3"],
+                ["sahagin_3", "octopus", "sahagin_3"],
+                ["octopus", "octopus"]
+            ],
+            "forced_condition": "",
+            "danger_value": 40
+        },
+        "highbridge": {
+            "name": "Highbridge",
+            "formations": [
+                ["ykt-63", "warrior_monk_2", "warrior_monk_2"],
+                ["ykt-63", "yat-99", "ykt-63"],
+                ["ykt-63", "yat-99", "ykt-63"],
+                ["yat-99", "ykt-63", "yat-99"],
+                ["yat-99", "ykt-63", "yat-99"]
+            ],
+            "forced_condition": "",
+            "danger_value": 35
+        },
+        "calm_lands_(south)_(before_defender_x)": {
+            "name": "Calm Lands (South) (before Defender X)",
+            "formations": [
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["nebiros", "shred", "flame_flan"],
+                ["nebiros", "shred", "flame_flan"],
+                ["mech_scouter", "nebiros", "nebiros", "skoll"],
+                ["mech_scouter", "nebiros", "nebiros", "skoll"]
+            ],
+            "forced_condition": "",
+            "danger_value": 50
+        },
+        "calm_lands_(south)": {
+            "name": "Calm Lands (South)",
+            "formations": [
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["nebiros", "shred", "flame_flan"],
+                ["mech_scouter", "nebiros", "nebiros", "skoll"],
+                ["chimera_brain", "chimera_brain"],
+                ["anacondaur", "anacondaur"],
+                ["anacondaur", "anacondaur"],
+                ["ogre", "skoll", "skoll"],
+                ["mech_scouter_2", "coeurl", "mech_scouter_2"],
+                ["mech_scouter_2", "coeurl", "mech_scouter_2"],
+                ["coeurl", "coeurl"],
+                ["coeurl", "coeurl"],
+                ["coeurl", "coeurl"],
+                ["coeurl", "coeurl"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "calm_lands_(central-north-east)": {
+            "name": "Calm Lands (Central-North-East)",
+            "formations": [
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["nebiros", "shred", "flame_flan"],
+                ["nebiros", "shred", "flame_flan"],
+                ["nebiros", "shred", "flame_flan"],
+                ["nebiros", "shred", "flame_flan"],
+                ["nebiros", "shred", "flame_flan"],
+                ["nebiros", "nebiros", "skoll", "mech_scouter"],
+                ["nebiros", "nebiros", "skoll", "mech_scouter"],
+                ["nebiros", "nebiros", "skoll", "mech_scouter"],
+                ["nebiros", "nebiros", "skoll", "mech_scouter"],
+                ["nebiros", "nebiros", "skoll", "mech_scouter"],
+                ["chimera_brain", "chimera_brain"],
+                ["malboro"],
+                ["anacondaur", "anacondaur"],
+                ["ogre", "skoll", "skoll"],
+                ["mech_scouter_2", "coeurl", "mech_scouter_2"],
+                ["coeurl", "coeurl"]
+            ],
+            "forced_condition": "",
+            "danger_value": 60
+        },
+        "calm_lands_(north-west)": {
+            "name": "Calm Lands (North-West)",
+            "formations": [
+                ["skoll", "flame_flan", "mech_scouter"],
+                ["nebiros", "shred", "flame_flan"],
+                ["mech_scouter", "nebiros", "skoll"],
+                ["chimera_brain", "chimera_brain"],
+                ["chimera_brain", "chimera_brain"],
+                ["chimera_brain", "chimera_brain"],
+                ["chimera_brain", "chimera_brain"],
+                ["chimera_brain", "chimera_brain"],
+                ["malboro"],
+                ["malboro"],
+                ["malboro"],
+                ["malboro"],
+                ["malboro"],
+                ["anacondaur", "anacondaur"],
+                ["anacondaur", "anacondaur"],
+                ["anacondaur", "anacondaur"],
+                ["anacondaur", "anacondaur"],
+                ["ogre", "skoll", "skoll"],
+                ["ogre", "skoll", "skoll"],
+                ["ogre", "skoll", "skoll"],
+                ["ogre", "skoll", "skoll"],
+                ["mech_scouter_2", "coeurl", "mech_scouter_2"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "calm_lands_(gorge)": {
+            "name": "Calm Lands (Gorge)",
+            "formations": [
+                ["epaaj", "epaaj"],
+                ["mech_scouter_2", "epaaj", "mech_scouter_2"],
+                ["mech_scouter", "epaaj", "mech_scouter"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "cave_(white_zone)": {
+            "name": "Cave (White Zone)",
+            "formations": [
+                ["yowie", "yowie", "yowie"],
+                ["yowie", "yowie", "yowie"],
+                ["nidhogg", "dark_element", "dark_element"],
+                ["nidhogg", "dark_element", "dark_element"],
+                ["imp", "mech_hunter", "epaaj"],
+                ["imp", "mech_hunter", "epaaj"],
+                ["thorn", "thorn", "thorn"],
+                ["thorn", "thorn", "thorn"],
+                ["ghost"],
+                ["valaha", "epaaj"],
+                ["magic_urn"],
+                ["magic_urn"],
+                ["magic_urn"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "cave_(green_zone)": {
+            "name": "Cave (Green Zone)",
+            "formations": [
+                ["ghost"],
+                ["valaha", "epaaj"],
+                ["malboro"],
+                ["defender"],
+                ["tonberry"],
+                ["coeurl", "coeurl"],
+                ["magic_urn"],
+                ["magic_urn"],
+                ["magic_urn"],
+                ["magic_urn"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "gagazet_(mountain)": {
+            "name": "Gagazet (Mountain)",
+            "formations": [
+                ["bandersnatch", "nidhogg", "mech_leader"],
+                ["grenade", "grenade", "imp"],
+                ["mech_defender", "mech_leader", "mech_defender"],
+                ["grat", "grat", "bashura"],
+                ["grat", "grat", "grenade"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "gagazet_(cave)": {
+            "name": "Gagazet (Cave)",
+            "formations": [
+                ["bandersnatch", "mech_leader", "nidhogg"],
+                ["mech_defender", "mech_defender", "mech_leader"],
+                ["dark_flan"],
+                ["dark_flan"],
+                ["mandragora"],
+                ["mandragora"],
+                ["grendel", "ahriman"],
+                ["grendel", "ahriman"],
+                ["bashura", "bashura"],
+                ["bashura", "bashura"],
+                ["behemoth"],
+                ["behemoth"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "gagazet_(underwater)": {
+            "name": "Gagazet (Underwater)",
+            "formations": [
+                ["maelspike", "maelspike", "splasher_3"],
+                ["maelspike", "achelous", "achelous"],
+                ["achelous", "achelous", "splasher_2", "splasher_3"],
+                ["splasher_2", "splasher_3", "splasher", "splasher_3"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "zanarkand_(overpass)": {
+            "name": "Zanarkand (Overpass)",
+            "formations": [
+                ["dark_flan"],
+                ["mandragora"],
+                ["grendel", "ahriman"],
+                ["bashura", "ahriman"],
+                ["behemoth"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "zanarkand_(dome)": {
+            "name": "Zanarkand (Dome)",
+            "formations": [
+                ["defender_z"],
+                ["defender_z"],
+                ["defender_z"],
+                ["fallen_monk", "fallen_monk_2", "fallen_monk"],
+                ["fallen_monk", "yat-97", "fallen_monk"],
+                ["ykt-11", "fallen_monk_2", "fallen_monk_2"],
+                ["ykt-11", "yat-97", "ykt-11"],
+                ["yat-97", "ykt-11", "yat-97"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "omega_ruins_(lower)": {
+            "name": "Omega Ruins (Lower)",
+            "formations": [
+                ["master_coeurl", "floating_death", "master_coeurl"],
+                ["halma", "spirit", "halma"],
+                ["zaurus", "floating_death", "zaurus"],
+                ["black_element", "spirit", "black_element"],
+                ["varuna"],
+                ["master_tonberry"],
+                ["adamantoise"],
+                ["machea", "machea"],
+                ["defender_z", "defender_z"],
+                ["demonolith", "demonolith"],
+                ["great_malboro"],
+                ["zaurus", "???_2"],
+                ["zaurus", "???_2"],
+                ["zaurus", "???_2"],
+                ["zaurus", "mimic"],
+                ["zaurus", "mimic_2"],
+                ["zaurus", "mimic_3"],
+                ["zaurus", "mimic_4"],
+                ["puroboros", "puroboros", "puroboros"],
+                ["wraith"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "omega_ruins_(upper)": {
+            "name": "Omega Ruins (Upper)",
+            "formations": [
+                ["demonolith", "demonolith"],
+                ["varuna"],
+                ["great_malboro"],
+                ["master_tonberry"],
+                ["gemini", "gemini_3"],
+                ["defender_z", "defender_z"],
+                ["puroboros", "puroboros", "puroboros"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "inside_sin_(front)": {
+            "name": "Inside Sin (Front)",
+            "formations": [
+                ["ahriman", "ahriman", "ahriman"],
+                ["ahriman", "ahriman", "ahriman"],
+                ["exoray", "ahriman", "exoray"],
+                ["exoray", "ahriman", "exoray"],
+                ["adamantoise"],
+                ["adamantoise"],
+                ["adamantoise"],
+                ["gemini", "gemini_3"],
+                ["gemini", "gemini_3"],
+                ["behemoth_king"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "inside_sin_(back)": {
+            "name": "Inside Sin (Back)",
+            "formations": [
+                ["exoray", "ahriman", "exoray"],
+                ["adamantoise"],
+                ["gemini", "gemini_3"],
+                ["demonolith"],
+                ["behemoth_king"],
+                ["great_malboro"],
+                ["barbatos"],
+                ["wraith"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        }
+    }
+}
