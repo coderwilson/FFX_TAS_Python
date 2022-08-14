@@ -335,6 +335,7 @@ def dream_old():
 
 def cave():
     checkpoint = 0
+    
     while FFX_memory.getMap() != 272:
         if FFX_memory.userControl():
             if FFX_memory.getMap() == 309 and FFX_memory.getCoords()[0] > 1160:
@@ -425,11 +426,17 @@ def cave():
                 else:
                     FFXC.set_movement(0, -1)
                     FFX_memory.waitFrames(30 * 0.5)
-            elif checkpoint == 58:  # Just before sanctuary keeper
+            elif checkpoint == 59:  # Just before sanctuary keeper
                 FFXC.set_neutral()
                 print("Prepping for Sanctuary Keeper")
                 FFX_memory.fullPartyFormat('yuna')
                 checkpoint += 1
+                
+                #Determine drops from Yunalesca
+                #FFX_Logs.openRNGTrack()
+                #import FFX_rngTrack
+                #zombieResults = FFX_rngTrack.zombieTrack(report=True)
+                #FFX_Logs.writeRNGTrack("Final results:"+str(zombieResults))
             elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetCave(checkpoint)) == True:
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)

@@ -6448,7 +6448,7 @@ def gagazetCave(checkpoint):
     if checkpoint == 57:
         x = 7
         y = 99
-    if checkpoint == 59:
+    if checkpoint == 58:
         x = -208
         y = 240
     if checkpoint == 60:

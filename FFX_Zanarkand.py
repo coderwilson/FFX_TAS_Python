@@ -16,29 +16,29 @@ def printNEAzone(battles:int):
     print("#### Charging Rikku zone:", gameVars.getNEAzone())
     print("#### This will take", battles, "number of battles (99 means unknown)")
 
-def decideNEA():
-    import FFX_rngBattles
+def decideNEA(bonusAdvance:int=0):
+    import FFX_rngTrack
     maxBattles = 1
-    zanOutdoors = FFX_rngBattles.comingBattles(area=69, battleCount=maxBattles)
-    zanIndoors = FFX_rngBattles.comingBattles(area=70, battleCount=maxBattles)
-    seaSorrows = FFX_rngBattles.comingBattles(area=77, battleCount=maxBattles, extraAdvances=6)
+    zanOutdoors = FFX_rngTrack.comingBattles(area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonusAdvance)
+    zanIndoors = FFX_rngTrack.comingBattles(area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonusAdvance)
+    seaSorrows = FFX_rngTrack.comingBattles(area="inside_sin_(front)", battleCount=maxBattles, extraAdvances=bonusAdvance+6)
     
     #Try to determine best zone out of the next five battles for each of the zones.
     # [360, 361, 376, 378, 381, 384, 386]
     for i in range(maxBattles):
-        if seaSorrows[i] == 378:
-            gameVars.setNEAzone(3)
-            printNEAzone(i+1)
-            return
-        elif zanOutdoors[i] == 360:
+        if "behemoth" in zanOutdoors[i]:
             gameVars.setNEAzone(1)
             printNEAzone(i+1)
             return
-        elif zanIndoors[i] == 361:
+        elif "defender_z" in zanIndoors[i]:
             gameVars.setNEAzone(2)
             printNEAzone(i+1)
             return
-        elif seaSorrows[i] == 376:
+        elif "behemoth_king" in seaSorrows[i]:
+            gameVars.setNEAzone(3)
+            printNEAzone(i+1)
+            return
+        elif "adamantoise" in seaSorrows[i]:
             gameVars.setNEAzone(3)
             printNEAzone(i+1)
             return
