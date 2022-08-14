@@ -1,0 +1,3283 @@
+{
+    "#defaults": {
+        "name": "",
+        "has_target": true,
+        "multitarget": false,
+        "random_targeting": false,
+        "can_miss": true,
+        "accuracy": 90,
+        "does_damage": true,
+        "hits": 1,
+        "can_crit": true,
+        "uses_bonus_crit": true,
+        "bonus_crit": 0,
+        "damage_type": "Strength",
+        "base_damage": 0,
+        "element": null,
+        "statuses": {},
+        "rank": 3
+    },
+    "attack": {
+        "name": "Attack"
+    },
+    "stand_by": {
+        "name": "Stand By",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 50,
+        "rank": 2
+    },
+    "defend": {
+        "name": "Defend",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "#summon": {
+        "name": "Summon",
+        "has_target": false,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "#skill": {
+        "name": "Skill",
+        "has_target": false,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "sleep_attack": {
+        "name": "Sleep Attack",
+        "statuses": {
+            "Sleep": 100
+        }
+    },
+    "silence_attack": {
+        "name": "Silence Attack",
+        "statuses": {
+            "Silence": 100
+        }
+    },
+    "dark_attack": {
+        "name": "Dark Attack",
+        "statuses": {
+            "Dark": 100
+        }
+    },
+    "sleep_buster": {
+        "name": "Sleep Buster",
+        "statuses": {
+            "Sleep": 254
+        }
+    },
+    "silence_buster": {
+        "name": "Silence Buster",
+        "statuses": {
+            "Silence": 254
+        }
+    },
+    "dark_buster": {
+        "name": "Dark Buster",
+        "statuses": {
+            "Dark": 254
+        }
+    },
+    "zombie_attack": {
+        "name": "Zombie Attack",
+        "statuses": {
+            "Zombie": 100
+        }
+    },
+    "triple_foul": {
+        "name": "Triple Foul",
+        "statuses": {
+            "Sleep": 100,
+            "Silence": 100,
+            "Dark": 100
+        }
+    },
+    "delay_attack": {
+        "name": "Delay Attack",
+        "rank": 6
+    },
+    "delay_buster": {
+        "name": "Delay Buster",
+        "rank": 8
+    },
+    "power_break": {
+        "name": "Power Break",
+        "statuses": {
+            "Power Break": 100
+        },
+        "rank": 4
+    },
+    "magic_break": {
+        "name": "Magic Break",
+        "statuses": {
+            "Magic Break": 100
+        },
+        "rank": 4
+    },
+    "armor_break": {
+        "name": "Armor Break",
+        "statuses": {
+            "Armor Break": 100
+        },
+        "rank": 4
+    },
+    "mental_break": {
+        "name": "Mental Break",
+        "statuses": {
+            "Mental Break": 100
+        },
+        "rank": 4
+    },
+    "extract_power": {
+        "name": "Extract Power"
+    },
+    "extract_mana": {
+        "name": "Extract Mana"
+    },
+    "extract_speed": {
+        "name": "Extract Speed"
+    },
+    "extract_ability": {
+        "name": "Extract Ability"
+    },
+    "full_break": {
+        "name": "Full Break",
+        "statuses": {
+            "Power Break": 100,
+            "Magic Break": 100,
+            "Armor Break": 100,
+            "Mental Break": 100
+        },
+        "rank": 5
+    },
+    "mug": {
+        "name": "Mug"
+    },
+    "nab_gil": {
+        "name": "Nab Gil"
+    },
+    "quick_hit": {
+        "name": "Quick Hit",
+        "rank": 2
+    },
+    "quick_hit_og": {
+        "name": "Quick Hit OG",
+        "rank": 1
+    },
+    "#special": {
+        "name": "Special",
+        "has_target": false,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "flee": {
+        "name": "Flee",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "steal": {
+        "name": "Steal",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "#use": {
+        "name": "Use",
+        "has_target": false,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "al'bhed_potion": {
+        "name": "Al Bhed Potion",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 1000,
+        "rank": 2
+    },
+    "healing_water": {
+        "name": "Healing Water",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 2
+    },
+    "tetra_element": {
+        "name": "Tetra Element",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "statuses": {
+            "NulBlaze": 254,
+            "NulShock": 254,
+            "NulTide": 254,
+            "NulFrost": 254
+        },
+        "rank": 2
+    },
+    "antarctic_wind": {
+        "name": "Antarctic Wind",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Ice",
+        "rank": 2
+    },
+    "arctic_wind": {
+        "name": "Arctic Wind",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "element": "Ice",
+        "rank": 2
+    },
+    "ice_gem": {
+        "name": "Ice Gem",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Ice",
+        "rank": 2
+    },
+    "bomb_fragment": {
+        "name": "Bomb Fragment",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Fire",
+        "rank": 2
+    },
+    "bomb_core": {
+        "name": "Bomb Core",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "element": "Fire",
+        "rank": 2
+    },
+    "fire_gem": {
+        "name": "Fire Gem",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Fire",
+        "rank": 2
+    },
+    "electro_marble": {
+        "name": "Electro Marble",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Thunder",
+        "rank": 2
+    },
+    "lightning_marble": {
+        "name": "Lightning Marble",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "element": "Thunder",
+        "rank": 2
+    },
+    "lightning_gem": {
+        "name": "Lightning Gem",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Thunder",
+        "rank": 2
+    },
+    "fish_scale": {
+        "name": "Fish Scale",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Water",
+        "rank": 2
+    },
+    "dragon_scale": {
+        "name": "Dragon Scale",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "element": "Water",
+        "rank": 2
+    },
+    "water_gem": {
+        "name": "Water Gem",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 12,
+        "element": "Water",
+        "rank": 2
+    },
+    "grenade": {
+        "name": "Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 7,
+        "rank": 2
+    },
+    "frag_grenade": {
+        "name": "Frag Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "statuses": {
+            "Armor Break": 254
+        },
+        "rank": 2
+    },
+    "sleeping_powder": {
+        "name": "Sleeping Powder",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 15,
+        "statuses": {
+            "Sleep": 254
+        },
+        "rank": 2
+    },
+    "dream_powder": {
+        "name": "Dream Powder",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "statuses": {
+            "Sleep": 254
+        },
+        "rank": 2
+    },
+    "silence_grenade": {
+        "name": "Silence Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 15,
+        "statuses": {
+            "Silence": 254
+        },
+        "rank": 2
+    },
+    "smoke_bomb": {
+        "name": "Smoke Bomb",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 15,
+        "statuses": {
+            "Dark": 254
+        },
+        "rank": 2
+    },
+    "shadow_gem": {
+        "name": "Shadow Gem",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Current)",
+        "base_damage": 8,
+        "rank": 2
+    },
+    "shining_gem": {
+        "name": "Shining Gem",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 120,
+        "rank": 2
+    },
+    "blessed_gem": {
+        "name": "Blessed Gem",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 160,
+        "element": "Holy",
+        "rank": 2
+    },
+    "supreme_gem": {
+        "name": "Supreme Gem",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 200,
+        "rank": 2
+    },
+    "poison_fang": {
+        "name": "Poison Fang",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 40,
+        "statuses": {
+            "Poison": 254
+        },
+        "rank": 2
+    },
+    "silver_hourglass": {
+        "name": "Silver Hourglass",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Slow": 254
+        },
+        "rank": 2
+    },
+    "gold_hourglass": {
+        "name": "Gold Hourglass",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "statuses": {
+            "Slow": 254
+        },
+        "rank": 2
+    },
+    "candle_of_life": {
+        "name": "Candle of Life",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "petrify_grenade": {
+        "name": "Petrify Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Petrify": 254
+        },
+        "rank": 2
+    },
+    "farplane_shadow": {
+        "name": "Farplane Shadow",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Death": 100
+        },
+        "rank": 2
+    },
+    "farplane_wind": {
+        "name": "Farplane Wind",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": 4,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Death": 100
+        },
+        "rank": 2
+    },
+    "dark_matter": {
+        "name": "Dark Matter",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 255,
+        "rank": 2
+    },
+    "chocobo_feather": {
+        "name": "Chocobo Feather",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0,
+        "statuses": {
+            "Haste": 254
+        },
+        "rank": 2
+    },
+    "chocobo_wing": {
+        "name": "Chocobo Wing",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0,
+        "statuses": {
+            "Haste": 254
+        },
+        "rank": 2
+    },
+    "lunar_curtain": {
+        "name": "Lunar Curtain",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Shell": 254
+        },
+        "rank": 2
+    },
+    "light_curtain": {
+        "name": "Light Curtain",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254
+        },
+        "rank": 2
+    },
+    "star_curtain": {
+        "name": "Star Curtain",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Reflect": 254
+        },
+        "rank": 2
+    },
+    "healing_spring": {
+        "name": "Healing Spring",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Regen": 254
+        },
+        "rank": 2
+    },
+    "mana_spring": {
+        "name": "Mana Spring",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 20,
+        "rank": 2
+    },
+    "stamina_spring": {
+        "name": "Stamina Spring",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "rank": 2
+    },
+    "soul_spring": {
+        "name": "Soul Spring",
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 30,
+        "rank": 2
+    },
+    "purifying_salt": {
+        "name": "Purifying Salt",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 22,
+        "rank": 2
+    },
+    "stamina_tablet": {
+        "name": "Stamina Tablet",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "mana_tablet": {
+        "name": "Mana Tablet",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "twin_stars": {
+        "name": "Twin Stars",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "stamina_tonic": {
+        "name": "Stamina Tonic",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "mana_tonic": {
+        "name": "Mana Tonic",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "three_stars": {
+        "name": "Three Stars",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "pray": {
+        "name": "Pray",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Healing",
+        "base_damage": 8
+    },
+    "cheer": {
+        "name": "Cheer",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "aim": {
+        "name": "Aim",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "focus": {
+        "name": "Focus",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "reflex": {
+        "name": "Reflex",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "luck": {
+        "name": "Luck",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "jinx": {
+        "name": "Jinx",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "lancet": {
+        "name": "Lancet",
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 6,
+        "rank": 2
+    },
+    "guard": {
+        "name": "Guard",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "sentinel": {
+        "name": "Sentinel",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "spare_change": {
+        "name": "Spare Change",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Gil",
+        "base_damage": 10
+    },
+    "threaten": {
+        "name": "Threaten",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "provoke": {
+        "name": "Provoke",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Provoke": 100
+        }
+    },
+    "entrust": {
+        "name": "Entrust",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "#copycat": {
+        "name": "Copycat",
+        "has_target": false,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "#pilfer_gil": {
+        "name": "Pilfer Gil",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": ""
+    },
+    "#quick_pockets": {
+        "name": "Quick Pockets",
+        "has_target": false,
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 1
+    },
+    "#doublecast": {
+        "name": "Doublecast",
+        "has_target": "-",
+        "multitarget": "-",
+        "can_miss": "-",
+        "does_damage": "-",
+        "hits": "",
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "bribe": {
+        "name": "Bribe",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0
+    },
+    "#blk_magic": {
+        "name": "Blk Magic",
+        "has_target": "-",
+        "multitarget": "-",
+        "can_miss": "-",
+        "does_damage": "-",
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": ""
+    },
+    "fire": {
+        "name": "Fire",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 12,
+        "element": "Fire"
+    },
+    "thunder": {
+        "name": "Thunder",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 12,
+        "element": "Thunder"
+    },
+    "water": {
+        "name": "Water",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 12,
+        "element": "Water"
+    },
+    "blizzard": {
+        "name": "Blizzard",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 12,
+        "element": "Ice"
+    },
+    "fira": {
+        "name": "Fira",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 24,
+        "element": "Fire"
+    },
+    "thundara": {
+        "name": "Thundara",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 24,
+        "element": "Thunder"
+    },
+    "watera": {
+        "name": "Watera",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 24,
+        "element": "Water"
+    },
+    "blizzara": {
+        "name": "Blizzara",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 24,
+        "element": "Ice"
+    },
+    "firaga": {
+        "name": "Firaga",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 42,
+        "element": "Fire"
+    },
+    "thundaga": {
+        "name": "Thundaga",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 42,
+        "element": "Thunder"
+    },
+    "waterga": {
+        "name": "Waterga",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 42,
+        "element": "Water"
+    },
+    "blizzaga": {
+        "name": "Blizzaga",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 42,
+        "element": "Ice"
+    },
+    "bio": {
+        "name": "Bio",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Poison": 254
+        }
+    },
+    "demi": {
+        "name": "Demi",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Current)",
+        "base_damage": 4
+    },
+    "death": {
+        "name": "Death",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Death": 80
+        }
+    },
+    "drain": {
+        "name": "Drain",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 20,
+        "rank": 2
+    },
+    "osmose": {
+        "name": "Osmose",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 10,
+        "rank": 2
+    },
+    "flare": {
+        "name": "Flare",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 60,
+        "rank": 5
+    },
+    "ultima": {
+        "name": "Ultima",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 70,
+        "rank": 6
+    },
+    "#wht_magic": {
+        "name": "Wht Magic",
+        "has_target": "-",
+        "multitarget": "-",
+        "can_miss": "-",
+        "does_damage": "-",
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": ""
+    },
+    "cure": {
+        "name": "Cure",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Healing",
+        "base_damage": 24
+    },
+    "cura": {
+        "name": "Cura",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Healing",
+        "base_damage": 40
+    },
+    "curaga": {
+        "name": "Curaga",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Healing",
+        "base_damage": 80
+    },
+    "scan": {
+        "name": "Scan",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "nulblaze": {
+        "name": "NulBlaze",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulBlaze": 254
+        },
+        "rank": 2
+    },
+    "nulshock": {
+        "name": "NulShock",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulShock": 254
+        },
+        "rank": 2
+    },
+    "nultide": {
+        "name": "NulTide",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulTide": 254
+        },
+        "rank": 2
+    },
+    "nulfrost": {
+        "name": "NulFrost",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulFrost": 254
+        },
+        "rank": 2
+    },
+    "esuna": {
+        "name": "Esuna",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "life": {
+        "name": "Life",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 8
+    },
+    "full-life": {
+        "name": "Full-Life",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16
+    },
+    "haste": {
+        "name": "Haste",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0,
+        "statuses": {
+            "Haste": 254
+        },
+        "rank": 4
+    },
+    "hastega": {
+        "name": "Hastega",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0,
+        "statuses": {
+            "Haste": 254
+        },
+        "rank": 6
+    },
+    "slow": {
+        "name": "Slow",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0,
+        "statuses": {
+            "Slow": 100
+        }
+    },
+    "slowga": {
+        "name": "Slowga",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 0,
+        "statuses": {
+            "Slow": 100
+        },
+        "rank": 4
+    },
+    "shell": {
+        "name": "Shell",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Shell": 254
+        }
+    },
+    "protect": {
+        "name": "Protect",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254
+        }
+    },
+    "reflect": {
+        "name": "Reflect",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Reflect": 254
+        }
+    },
+    "dispel": {
+        "name": "Dispel",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "regen": {
+        "name": "Regen",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Regen": 100
+        }
+    },
+    "holy": {
+        "name": "Holy",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 100,
+        "element": "Holy",
+        "rank": 4
+    },
+    "auto-life": {
+        "name": "Auto-Life",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "#item": {
+        "name": "Item",
+        "has_target": "-",
+        "multitarget": "-",
+        "can_miss": "-",
+        "does_damage": "-",
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "potion": {
+        "name": "Potion",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 200,
+        "rank": 2
+    },
+    "hi-potion": {
+        "name": "Hi-Potion",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 1000,
+        "rank": 2
+    },
+    "x-potion": {
+        "name": "X-Potion",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 2
+    },
+    "mega-potion": {
+        "name": "Mega-Potion",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 2000,
+        "rank": 2
+    },
+    "ether": {
+        "name": "Ether",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 100,
+        "rank": 2
+    },
+    "turbo_ether": {
+        "name": "Turbo Ether",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 500,
+        "rank": 2
+    },
+    "phoenix_down": {
+        "name": "Phoenix Down",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 8,
+        "rank": 2
+    },
+    "mega_phoenix": {
+        "name": "Mega Phoenix",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 2
+    },
+    "elixir": {
+        "name": "Elixir",
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 2
+    },
+    "megalixir": {
+        "name": "Megalixir",
+        "multitarget": true,
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 2
+    },
+    "antidote": {
+        "name": "Antidote",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "soft": {
+        "name": "Soft",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "eye_drops": {
+        "name": "Eye Drops",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "echo_screen": {
+        "name": "Echo Screen",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "holy_water": {
+        "name": "Holy Water",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "remedy": {
+        "name": "Remedy",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "power_distiller": {
+        "name": "Power Distiller",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "mana_distiller": {
+        "name": "Mana Distiller",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "speed_distiller": {
+        "name": "Speed Distiller",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "ability_distiller": {
+        "name": "Ability Distiller",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 2
+    },
+    "shield": {
+        "name": "Shield",
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "boost": {
+        "name": "Boost",
+        "can_miss": false,
+        "does_damage": false,
+        "hits": null,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "sonic_wings": {
+        "name": "Sonic Wings",
+        "can_miss": false,
+        "base_damage": 8,
+        "rank": 2
+    },
+    "meteor_strike": {
+        "name": "Meteor Strike",
+        "can_miss": false,
+        "base_damage": 17,
+        "rank": 4
+    },
+    "aerospark": {
+        "name": "Aerospark",
+        "can_miss": false,
+        "rank": 4
+    },
+    "heavenly_strike": {
+        "name": "Heavenly Strike",
+        "can_miss": false,
+        "base_damage": 17,
+        "rank": 4
+    },
+    "impulse": {
+        "name": "Impulse",
+        "multitarget": true,
+        "can_miss": false,
+        "rank": 6
+    },
+    "pain": {
+        "name": "Pain",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 20,
+        "statuses": {
+            "Death": 100
+        },
+        "rank": 6
+    },
+    "daigoro": {
+        "name": "Daigoro",
+        "can_miss": false,
+        "base_damage": 10
+    },
+    "kozuka": {
+        "name": "Kozuka",
+        "can_miss": false,
+        "base_damage": 13
+    },
+    "wakizashi_(st)": {
+        "name": "Wakizashi (ST)",
+        "can_miss": false,
+        "base_damage": 18
+    },
+    "wakizashi_(mt)": {
+        "name": "Wakizashi (MT)",
+        "multitarget": true,
+        "can_miss": false,
+        "base_damage": 18
+    },
+    "zanmato": {
+        "name": "Zanmato",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Death": 255
+        },
+        "rank": 8
+    },
+    "#taking_a_break": {
+        "name": "Taking a break",
+        "has_target": "",
+        "multitarget": "",
+        "can_miss": "",
+        "does_damage": "",
+        "hits": "",
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "damage_type": "",
+        "base_damage": "",
+        "element": ""
+    },
+    "#camisade": {
+        "name": "Camisade",
+        "multitarget": "",
+        "can_miss": false,
+        "hits": "",
+        "base_damage": 21,
+        "rank": 5
+    },
+    "#razzia": {
+        "name": "Razzia",
+        "multitarget": "",
+        "can_miss": false,
+        "hits": "",
+        "base_damage": 21,
+        "rank": 5
+    },
+    "#passado": {
+        "name": "Passado",
+        "multitarget": "",
+        "can_miss": false,
+        "hits": "",
+        "base_damage": 2,
+        "rank": 5
+    },
+    "spiral_cut": {
+        "name": "Spiral Cut",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 32
+    },
+    "spiral_cut_fail": {
+        "name": "Spiral Cut fail",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 24
+    },
+    "slice_&_dice": {
+        "name": "Slice & Dice",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 6,
+        "uses_bonus_crit": false,
+        "base_damage": 6,
+        "rank": 4
+    },
+    "slice_&_dice_fail": {
+        "name": "Slice & Dice fail",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "uses_bonus_crit": false,
+        "base_damage": 8,
+        "rank": 4
+    },
+    "energy_rain": {
+        "name": "Energy Rain",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 26,
+        "rank": 5
+    },
+    "energy_rain_fail": {
+        "name": "Energy Rain fail",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 20,
+        "rank": 5
+    },
+    "blitz_ace": {
+        "name": "Blitz Ace",
+        "can_miss": false,
+        "hits": 10,
+        "uses_bonus_crit": false,
+        "base_damage": 4,
+        "rank": 7
+    },
+    "blitz_ace_fail": {
+        "name": "Blitz Ace fail",
+        "can_miss": false,
+        "hits": 9,
+        "uses_bonus_crit": false,
+        "base_damage": 4,
+        "rank": 7
+    },
+    "#grand_summon": {
+        "name": "Grand Summon",
+        "has_target": "-",
+        "multitarget": "-",
+        "can_miss": "-",
+        "does_damage": "-",
+        "hits": "",
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 5
+    },
+    "dragon_fang": {
+        "name": "Dragon Fang",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 17,
+        "rank": 5
+    },
+    "shooting_star": {
+        "name": "Shooting Star",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 24,
+        "rank": 5
+    },
+    "#banishing_blade": {
+        "name": "Banishing Blade",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 28,
+        "element": "",
+        "statuses": {
+            "Power Break": 254,
+            "Magic Break": 254,
+            "Armor Break": 254,
+            "Mental Break": 254
+        },
+        "rank": 6
+    },
+    "#banishing_blade_fail": {
+        "name": "Banishing Blade fail",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 28,
+        "element": "",
+        "rank": 6
+    },
+    "#tornado": {
+        "name": "Tornado",
+        "multitarget": "",
+        "can_miss": "",
+        "does_damage": "",
+        "hits": "",
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "damage_type": "",
+        "base_damage": 20,
+        "element": "",
+        "rank": 7
+    },
+    "#tornado_fail": {
+        "name": "Tornado fail",
+        "has_target": "",
+        "multitarget": "",
+        "can_miss": "",
+        "does_damage": "",
+        "hits": "",
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "damage_type": "",
+        "base_damage": 20,
+        "element": "",
+        "rank": 7
+    },
+    "jump": {
+        "name": "Jump",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 32
+    },
+    "fire_breath": {
+        "name": "Fire Breath",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 24,
+        "element": "Fire"
+    },
+    "seed_cannon": {
+        "name": "Seed Cannon",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 33
+    },
+    "self-destruct": {
+        "name": "Self-Destruct",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "HP",
+        "base_damage": 300
+    },
+    "thrust_kick": {
+        "name": "Thrust Kick",
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "base_damage": 33
+    },
+    "stone_breath": {
+        "name": "Stone Breath",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Petrify": 254
+        }
+    },
+    "aqua_breath": {
+        "name": "Aqua Breath",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 26,
+        "element": "Water"
+    },
+    "doom": {
+        "name": "Doom",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null
+    },
+    "white_wind": {
+        "name": "White Wind",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Healing",
+        "base_damage": 40
+    },
+    "bad_breath": {
+        "name": "Bad Breath",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Poison": 100,
+            "Sleep": 100,
+            "Silence": 100,
+            "Dark": 100
+        },
+        "rank": 4
+    },
+    "mighty_guard": {
+        "name": "Mighty Guard",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254,
+            "Shell": 254,
+            "NulBlaze": 254,
+            "NulFrost": 254,
+            "NulShock": 254,
+            "NulTide": 254
+        },
+        "rank": 4
+    },
+    "nova": {
+        "name": "Nova",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 70,
+        "rank": 7
+    },
+    "element_reels": {
+        "name": "Element Reels",
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "base_damage": 34,
+        "rank": 4
+    },
+    "#attack_reels": {
+        "name": "Attack Reels",
+        "has_target": "",
+        "multitarget": "",
+        "can_miss": "",
+        "does_damage": "",
+        "hits": "",
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "base_damage": 10,
+        "element": "",
+        "rank": 4
+    },
+    "#status_reels": {
+        "name": "Status Reels",
+        "has_target": "",
+        "multitarget": "",
+        "can_miss": "",
+        "does_damage": "",
+        "hits": "",
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "base_damage": 34,
+        "element": "",
+        "rank": 4
+    },
+    "#aurochs_reels": {
+        "name": "Aurochs Reels",
+        "has_target": "",
+        "multitarget": "",
+        "can_miss": "",
+        "does_damage": "",
+        "hits": "",
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "base_damage": 72,
+        "element": "",
+        "rank": 4
+    },
+    "fire_fury": {
+        "name": "Fire Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 5,
+        "element": "Fire",
+        "rank": 5
+    },
+    "thunder_fury": {
+        "name": "Thunder Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 5,
+        "element": "Thunder",
+        "rank": 5
+    },
+    "water_fury": {
+        "name": "Water Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 5,
+        "element": "Water",
+        "rank": 5
+    },
+    "blizzard_fury": {
+        "name": "Blizzard Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 5,
+        "element": "Ice",
+        "rank": 5
+    },
+    "fira_fury": {
+        "name": "Fira Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 10,
+        "element": "Fire",
+        "rank": 5
+    },
+    "thundara_fury": {
+        "name": "Thundara Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 10,
+        "element": "Thunder",
+        "rank": 5
+    },
+    "watera_fury": {
+        "name": "Watera Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 10,
+        "element": "Water",
+        "rank": 5
+    },
+    "blizzara_fury": {
+        "name": "Blizzara Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 10,
+        "element": "Ice",
+        "rank": 5
+    },
+    "firaga_fury": {
+        "name": "Firaga Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 18,
+        "element": "Fire",
+        "rank": 5
+    },
+    "thundaga_fury": {
+        "name": "Thundaga Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 18,
+        "element": "Thunder",
+        "rank": 5
+    },
+    "waterga_fury": {
+        "name": "Waterga Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 18,
+        "element": "Water",
+        "rank": 5
+    },
+    "blizzaga_fury": {
+        "name": "Blizzaga Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 18,
+        "element": "Ice",
+        "rank": 5
+    },
+    "bio_fury": {
+        "name": "Bio Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Poison": 80
+        },
+        "rank": 5
+    },
+    "#demi_fury": {
+        "name": "Demi Fury",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Current)",
+        "base_damage": 2,
+        "rank": 6
+    },
+    "death_fury": {
+        "name": "Death Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Death": 80
+        },
+        "rank": 5
+    },
+    "drain_fury": {
+        "name": "Drain Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 9,
+        "rank": 4
+    },
+    "osmose_fury": {
+        "name": "Osmose Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 4,
+        "rank": 4
+    },
+    "flare_fury": {
+        "name": "Flare Fury",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 22,
+        "rank": 7
+    },
+    "ultima_fury": {
+        "name": "Ultima Fury",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Magic",
+        "base_damage": 26,
+        "rank": 10
+    },
+    "#mix": {
+        "name": "Mix",
+        "has_target": "-",
+        "multitarget": "-",
+        "can_miss": "-",
+        "does_damage": "-",
+        "hits": "-",
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": ""
+    },
+    "ultra_potion": {
+        "name": "Ultra Potion",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "panacea": {
+        "name": "Panacea",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "ultra_cure": {
+        "name": "Ultra Cure",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 8,
+        "rank": 6
+    },
+    "mix_mega_phoenix": {
+        "name": "Mega Phoenix",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "final_phoenix": {
+        "name": "Final Phoenix",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "mix_elixir": {
+        "name": "Elixir",
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "mix_megalixir": {
+        "name": "Megalixir",
+        "multitarget": true,
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "super_elixir": {
+        "name": "Super Elixir",
+        "multitarget": true,
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "final_elixir": {
+        "name": "Final Elixir",
+        "multitarget": true,
+        "can_miss": false,
+        "hits": 2,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Total)",
+        "base_damage": 16,
+        "rank": 6
+    },
+    "nulall": {
+        "name": "NulAll",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulBlaze": 254,
+            "NulShock": 254,
+            "NulTide": 254,
+            "NulFrost": 254
+        },
+        "rank": 6
+    },
+    "mega_nulall": {
+        "name": "Mega NulAll",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulBlaze": 254,
+            "NulShock": 254,
+            "NulTide": 254,
+            "NulFrost": 254
+        },
+        "rank": 6
+    },
+    "hyper_nulall": {
+        "name": "Hyper NulAll",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulBlaze": 254,
+            "NulShock": 254,
+            "NulTide": 254,
+            "NulFrost": 254
+        },
+        "rank": 6
+    },
+    "ultra_nulall": {
+        "name": "Ultra NulAll",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "NulBlaze": 254,
+            "NulShock": 254,
+            "NulTide": 254,
+            "NulFrost": 254
+        },
+        "rank": 6
+    },
+    "vitality": {
+        "name": "Vitality",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "mega_vitality": {
+        "name": "Mega Vitality",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "hyper_vitality": {
+        "name": "Hyper Vitality",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "mana": {
+        "name": "Mana",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "mega_mana": {
+        "name": "Mega Mana",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "hyper_mana": {
+        "name": "Hyper Mana",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "mighty_wall": {
+        "name": "Mighty Wall",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254,
+            "Shell": 254
+        },
+        "rank": 6
+    },
+    "mighty_g": {
+        "name": "Mighty G",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254,
+            "Shell": 254,
+            "Haste": 254
+        },
+        "rank": 6
+    },
+    "super_mighty_g": {
+        "name": "Super Mighty G",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254,
+            "Shell": 254,
+            "Haste": 254,
+            "Regen": 254
+        },
+        "rank": 6
+    },
+    "hyper_mighty_g": {
+        "name": "Hyper Mighty G",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Protect": 254,
+            "Shell": 254,
+            "Haste": 254,
+            "Regen": 254
+        },
+        "rank": 6
+    },
+    "freedom": {
+        "name": "Freedom",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "freedom_x": {
+        "name": "Freedom X",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "hero_drink": {
+        "name": "Hero Drink",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "miracle_drink": {
+        "name": "Miracle Drink",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "quartet_of_9": {
+        "name": "Quartet of 9",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "trio_of_9999": {
+        "name": "Trio of 9999",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "hot_spurs": {
+        "name": "Hot Spurs",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "eccentrick": {
+        "name": "Eccentrick",
+        "multitarget": true,
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "rank": 6
+    },
+    "mix_grenade": {
+        "name": "Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 7,
+        "rank": 6
+    },
+    "mix_frag_grenade": {
+        "name": "Frag Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "statuses": {
+            "Armor Break": 254
+        },
+        "rank": 6
+    },
+    "blaster_mine": {
+        "name": "Blaster Mine",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 22,
+        "statuses": {
+            "Dark": 150,
+            "Silence": 150,
+            "Sleep": 150
+        },
+        "rank": 6
+    },
+    "hazardous_shell": {
+        "name": "Hazardous Shell",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 45,
+        "statuses": {
+            "Poison": 150,
+            "Dark": 254,
+            "Silence": 254,
+            "Sleep": 254
+        },
+        "rank": 6
+    },
+    "pineapple": {
+        "name": "Pineapple",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 27,
+        "rank": 6
+    },
+    "calamity_bomb": {
+        "name": "Calamity Bomb",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 72,
+        "statuses": {
+            "Poison": 254,
+            "Power Break": 50,
+            "Magic Break": 50,
+            "Armor Break": 50,
+            "Mental Break": 50,
+            "Sleep": 254,
+            "Silence": 254,
+            "Dark": 254
+        },
+        "rank": 6
+    },
+    "cluster_bomb": {
+        "name": "Cluster Bomb",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 100,
+        "rank": 6
+    },
+    "potato_masher": {
+        "name": "Potato Masher",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 54,
+        "rank": 6
+    },
+    "tallboy": {
+        "name": "Tallboy",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 180,
+        "rank": 6
+    },
+    "chaos_grenade": {
+        "name": "Chaos Grenade",
+        "multitarget": true,
+        "can_miss": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 146,
+        "statuses": {
+            "Poison": 254,
+            "Power Break": 50,
+            "Magic Break": 50,
+            "Armor Break": 50,
+            "Mental Break": 50,
+            "Sleep": 254,
+            "Silence": 254,
+            "Dark": 254,
+            "Slow": 254
+        },
+        "rank": 6
+    },
+    "nega_burst": {
+        "name": "Nega Burst",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Current)",
+        "base_damage": 12,
+        "rank": 6
+    },
+    "black_hole": {
+        "name": "Black Hole",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Percentage (Current)",
+        "base_damage": 15,
+        "rank": 6
+    },
+    "sunburst": {
+        "name": "Sunburst",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Fixed",
+        "base_damage": 19998,
+        "rank": 6
+    },
+    "heat_blaster": {
+        "name": "Heat Blaster",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Fire",
+        "rank": 6
+    },
+    "firestorm": {
+        "name": "Firestorm",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 6,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 14,
+        "element": "Fire",
+        "rank": 6
+    },
+    "burning_soul": {
+        "name": "Burning Soul",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 9,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Fire",
+        "rank": 6
+    },
+    "brimstone": {
+        "name": "Brimstone",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Fire",
+        "statuses": {
+            "Poison": 150,
+            "Dark": 150,
+            "Silence": 150,
+            "Sleep": 150
+        },
+        "rank": 6
+    },
+    "abaddon_flame": {
+        "name": "Abaddon Flame",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Fire",
+        "statuses": {
+            "Poison": 254,
+            "Power Break": 50,
+            "Magic Break": 50,
+            "Armor Break": 50,
+            "Mental Break": 50,
+            "Sleep": 254,
+            "Silence": 254,
+            "Dark": 254
+        },
+        "rank": 6
+    },
+    "thunderbolt": {
+        "name": "Thunderbolt",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Thunder",
+        "rank": 6
+    },
+    "rolling_thunder": {
+        "name": "Rolling Thunder",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 6,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 14,
+        "element": "Thunder",
+        "rank": 6
+    },
+    "lightning_bolt": {
+        "name": "Lightning Bolt",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 9,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Thunder",
+        "rank": 6
+    },
+    "electroshock": {
+        "name": "Electroshock",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Thunder",
+        "statuses": {
+            "Poison": 150,
+            "Dark": 150,
+            "Silence": 150,
+            "Sleep": 150
+        },
+        "rank": 6
+    },
+    "thunderblast": {
+        "name": "Thunderblast",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Thunder",
+        "statuses": {
+            "Poison": 254,
+            "Power Break": 50,
+            "Magic Break": 50,
+            "Armor Break": 50,
+            "Mental Break": 50,
+            "Sleep": 254,
+            "Silence": 254,
+            "Dark": 254
+        },
+        "rank": 6
+    },
+    "waterfall": {
+        "name": "Waterfall",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Water",
+        "rank": 6
+    },
+    "flash_flood": {
+        "name": "Flash Flood",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 6,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 14,
+        "element": "Water",
+        "rank": 6
+    },
+    "tidal_wave": {
+        "name": "Tidal Wave",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 9,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Water",
+        "rank": 6
+    },
+    "aqua_toxin": {
+        "name": "Aqua Toxin",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Water",
+        "statuses": {
+            "Poison": 150,
+            "Dark": 150,
+            "Silence": 150,
+            "Sleep": 150
+        },
+        "rank": 6
+    },
+    "dark_rain": {
+        "name": "Dark Rain",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Water",
+        "statuses": {
+            "Poison": 254,
+            "Power Break": 50,
+            "Magic Break": 50,
+            "Armor Break": 50,
+            "Mental Break": 50,
+            "Sleep": 254,
+            "Silence": 254,
+            "Dark": 254
+        },
+        "rank": 6
+    },
+    "snow_flurry": {
+        "name": "Snow Flurry",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 5,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Ice",
+        "rank": 6
+    },
+    "icefall": {
+        "name": "Icefall",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 6,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 14,
+        "element": "Ice",
+        "rank": 6
+    },
+    "winter_storm": {
+        "name": "Winter Storm",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 9,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Ice",
+        "rank": 6
+    },
+    "black_ice": {
+        "name": "Black Ice",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 8,
+        "element": "Ice",
+        "statuses": {
+            "Poison": 150,
+            "Dark": 150,
+            "Silence": 150,
+            "Sleep": 150
+        },
+        "rank": 6
+    },
+    "krysta": {
+        "name": "Krysta",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 3,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Item",
+        "base_damage": 18,
+        "element": "Ice",
+        "statuses": {
+            "Poison": 254,
+            "Power Break": 50,
+            "Magic Break": 50,
+            "Armor Break": 50,
+            "Mental Break": 50,
+            "Sleep": 254,
+            "Silence": 254,
+            "Dark": 254
+        },
+        "rank": 6
+    },
+    "#requiem": {
+        "name": "Requiem",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": "",
+        "uses_bonus_crit": "",
+        "damage_type": "Magic",
+        "base_damage": 40,
+        "rank": 6
+    },
+    "energy_ray": {
+        "name": "Energy Ray",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 55,
+        "rank": 6
+    },
+    "energy_blast": {
+        "name": "Energy Blast",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 75,
+        "rank": 6
+    },
+    "hellfire": {
+        "name": "Hellfire",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 58,
+        "element": "Fire",
+        "rank": 6
+    },
+    "thor's_hammer": {
+        "name": "Thor's Hammer",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 60,
+        "element": "Thunder",
+        "rank": 6
+    },
+    "diamond_dust": {
+        "name": "Diamond Dust",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 60,
+        "element": "Ice",
+        "rank": 6
+    },
+    "mega_flare": {
+        "name": "Mega Flare",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": "Special Magic",
+        "base_damage": 72,
+        "rank": 6
+    },
+    "oblivion": {
+        "name": "Oblivion",
+        "multitarget": true,
+        "random_targeting": true,
+        "can_miss": false,
+        "hits": 16,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "base_damage": 4,
+        "rank": 6
+    },
+    "delta_attack": {
+        "name": "Delta Attack",
+        "multitarget": true,
+        "can_miss": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "base_damage": 10,
+        "rank": 6
+    },
+    "doom_expire": {
+        "name": "Doom Expire",
+        "can_miss": false,
+        "does_damage": false,
+        "can_crit": false,
+        "uses_bonus_crit": false,
+        "damage_type": null,
+        "base_damage": null,
+        "statuses": {
+            "Death": 255
+        },
+        "rank": 6
+    },
+    "attacknocrit": {
+        "name": "Attack (NoCrit)",
+        "can_crit": false
+    }
+}

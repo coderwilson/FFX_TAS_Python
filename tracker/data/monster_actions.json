@@ -1,0 +1,1021 @@
+{
+    "generic_actions": {
+        "#defaults": {
+            "name": "",
+            "has_target": true,
+            "multitarget": false,
+            "random_targeting": false,
+            "can_miss": true,
+            "accuracy": 90,
+            "does_damage": true,
+            "hits": 1,
+            "can_crit": true,
+            "uses_bonus_crit": true,
+            "bonus_crit": 0,
+            "damage_type": "Strength",
+            "base_damage": 16,
+            "element": null,
+            "statuses": {},
+            "rank": 3
+        },
+        "attack": {
+            "name": "Attack"
+        },
+        "nocrit": {
+            "name": "NoCrit",
+            "can_crit": false
+        },
+        "nomiss": {
+            "name": "NoMiss",
+            "can_miss": false
+        },
+        "nomissnocrit": {
+            "name": "NoMissNoCrit",
+            "can_miss": false,
+            "can_crit": false
+        },
+        "aoe": {
+            "name": "AOE",
+            "multitarget": true
+        },
+        "aoenocrit": {
+            "name": "AOENoCrit",
+            "multitarget": true,
+            "can_crit": false
+        },
+        "aoenomiss": {
+            "name": "AOENoMiss",
+            "multitarget": true,
+            "can_miss": false
+        },
+        "aoenomissnocrit": {
+            "name": "AOENoMissNoCrit",
+            "multitarget": true,
+            "can_miss": false,
+            "can_crit": false
+        }    
+    },
+    "monster_0": {
+    },
+    "raldo": {
+    },
+    "bunyip": {
+    },
+    "murussu": {
+    },
+    "mafdet": {
+    },
+    "shred": {
+    },
+    "gandarewa": {
+    },
+    "aerouge": {
+    },
+    "imp": {
+    },
+    "dingo": {
+    },
+    "mi'ihen_fang": {
+    },
+    "garm": {
+    },
+    "snow_wolf": {
+    },
+    "sand_wolf": {
+    },
+    "skoll": {
+    },
+    "bandersnatch": {
+    },
+    "water_flan": {
+    },
+    "thunder_flan": {
+    },
+    "snow_flan": {
+    },
+    "ice_flan": {
+        "blizzara": {
+            "name": "Blizzara",
+            "can_miss": false,
+            "can_crit": false,
+            "damage_type": "Magic",
+            "base_damage": 24,
+            "element": "Ice"
+        },
+        "blizzara_silence": {
+            "name": "Blizzara (Silence)",
+            "has_target": true,
+            "can_miss": false,
+            "does_damage": false
+        }
+    },
+    "flame_flan": {
+    },
+    "dark_flan": {
+    },
+    "dinonix": {
+    },
+    "ipiria": {
+    },
+    "raptor": {
+    },
+    "melusine": {
+    },
+    "iguion": {
+        "attack_a": {
+            "name": "Attack A",
+            "accuracy": 120,
+            "statuses": {
+                "Petrify": 30,
+                "Silence": 30
+            }
+        },
+        "attack_b": {
+            "name": "Attack B",
+            "accuracy": 120
+        },
+        "attack_c": {
+            "name": "Attack C",
+            "accuracy": 90
+        }
+    },
+    "yowie": {
+    },
+    "condor": {
+    },
+    "simurgh": {
+    },
+    "alcyone": {
+    },
+    "killer_bee": {
+        "poison_dart": {
+            "name" : "Poison Dart",
+            "accuracy": 100,
+            "statuses": {
+                "Poison": 40
+            }
+        }
+    },
+    "bite_bug": {
+    },
+    "wasp": {
+    },
+    "nebiros": {
+    },
+    "floating_eye": {
+    },
+    "buer": {
+    },
+    "evil_eye": {
+    },
+    "ahriman": {
+    },
+    "ragora": {
+        "seed_cannon": {
+            "name": "Seed Cannon",
+            "accuracy": 85,
+            "can_crit": false
+        }
+    },
+    "grat": {
+    },
+    "sahagin": {
+    },
+    "sahagin_2": {
+    },
+    "sahagin_3": {
+    },
+    "garuda": {
+        "attack": {
+            "name": "Attack",
+            "statuses": {
+                "Dark": 10
+            }
+        },
+        "sonic_boom": {
+            "name": "Sonic Boom",
+            "multitarget": true,
+            "accuracy": 130,
+            "can_crit": false,
+            "base_damage": 8
+        }
+    },
+    "zu": {
+    },
+    "sand_worm": {
+    },
+    "land_worm": {
+    },
+    "defender": {
+    },
+    "defender_z": {
+    },
+    "ghost": {
+    },
+    "phlegyas": {
+    },
+    "achelous": {
+    },
+    "remora": {
+    },
+    "maelspike": {
+    },
+    "dual_horn": {
+        "attack": {
+            "name": "Attack"
+        },
+        "gore": {
+            "name": "Gore",
+            "accuracy": 150,
+            "base_damage": 25
+        }
+    },
+    "valaha": {
+    },
+    "grendel": {
+    },
+    "octopus": {
+    },
+    "vouivre": {
+    },
+    "lamashtu": {
+    },
+    "kusariqqu": {
+    },
+    "mushussu": {
+    },
+    "nidhogg": {
+    },
+    "malboro": {
+    },
+    "great_malboro": {
+    },
+    "ogre": {
+    },
+    "bashura": {
+    },
+    "piranha": {
+        "attack": {
+            "name": "Attack"
+        }
+    },
+    "piranha_2": {
+        "gnaw": {
+            "name": "GNAW",
+            "can_miss": false,
+            "can_crit": false
+        }
+    },
+    "piranha_3": {
+        "gnaw": {
+            "name": "GNAW",
+            "can_miss": false,
+            "can_crit": false
+        }
+    },
+    "splasher": {
+    },
+    "splasher_2": {
+    },
+    "splasher_3": {
+    },
+    "vepar": {
+    },
+    "vepar_2": {
+    },
+    "vepar_3": {
+    },
+    "yellow_element": {
+    },
+    "white_element": {
+    },
+    "red_element": {
+    },
+    "gold_element": {
+    },
+    "blue_element": {
+    },
+    "dark_element": {
+    },
+    "black_element": {
+    },
+    "epaaj": {
+    },
+    "behemoth": {
+    },
+    "behemoth_king": {
+    },
+    "chimera": {
+    },
+    "chimera_brain": {
+    },
+    "coeurl": {
+    },
+    "master_coeurl": {
+    },
+    "mech_guard": {
+    },
+    "mech_scouter": {
+    },
+    "mech_scouter_2": {
+    },
+    "mech_leader": {
+    },
+    "demonolith": {
+    },
+    "mech_gunner": {
+    },
+    "mech_hunter": {
+    },
+    "mech_defender": {
+    },
+    "ultima_weapon": {
+    },
+    "omega_weapon": {
+    },
+    "tros": {
+        "attack": {
+            "name": "Attack",
+            "can_crit": false
+        },
+        "tentacles": {
+            "name": "Tentacles",
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 24
+        },
+        "nautilus_charge": {
+            "name": "Nautilus Charge",
+            "multitarget": true,
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 48
+        }
+    },
+    "sinspawn_geneaux": {
+        "sigh": {
+            "name": "Sigh",
+            "multitarget": true,
+            "can_miss": false,
+            "can_crit": false,
+            "damage_type": "Magic"
+        },
+        "venom": {
+            "name": "Venom",
+            "can_miss": false,
+            "damage_type": "Magic",
+            "statuses": {
+                "Poison": 100
+            }
+        },
+        "staccato": {
+            "name": "Staccato",
+            "multitarget": true,
+            "can_miss": false
+        },
+        "water": {
+            "name": "Water",
+            "can_miss": false,
+            "can_crit": false,
+            "damage_type": "Magic",
+            "base_damage": 12,
+            "element": "Water"
+        }
+    },
+    "geneaux's_tentacle": {
+    },
+    "chocobo_eater": {
+    },
+    "neslug": {
+    },
+    "mortiphasm": {
+    },
+    "sinscale": {
+    },
+    "sinscale_2": {
+    },
+    "geosgaeno": {
+    },
+    "oblitzerator": {
+        "blitzball_rush": {
+            "name": "Blitzball Rush",
+            "multitarget": true,
+            "random_targeting": true,
+            "can_miss": false,
+            "hits": 10,
+            "can_crit": false,
+            "bonus_crit": 0,
+            "base_damage": 4
+        },
+        "blind_ball": {
+            "name": "Blind Ball",
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 10,
+            "statuses": {
+                "Dark": 254
+            }
+        },
+        "mute_ball": {
+            "name": "Mute Ball",
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 7,
+            "statuses": {
+                "Silence": 254
+            }
+        },
+        "doze_ball": {
+            "name": "Doze Ball",
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 7,
+            "statuses": {
+                "Sleep": 254
+            }
+        }
+    },
+    "extractor": {
+    },
+    "???": {
+    },
+    "sin": {
+    },
+    "sinspawn_echuilles": {
+        "drain_touch": {
+            "name": "Drain Touch",
+            "can_crit": false
+        },
+        "drain_touch_dark": {
+            "name": "Drain Touch (Dark)",
+            "accuracy": 10,
+            "can_crit": false
+        },
+        "blender": {
+            "name": "Blender",
+            "multitarget": true,
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 10
+        }
+    },
+    "sinscale_3": {
+    },
+    "sinscale_4": {
+    },
+    "sinspawn_gui": {
+    },
+    "mortiphasm_2": {
+    },
+    "evrae": {
+    },
+    "evrae_altana": {
+    },
+    "spherimorph": {
+    },
+    "crawler": {
+    },
+    "negator": {
+    },
+    "seymour": {
+    },
+    "anima": {
+    },
+    "seymour_natus": {
+    },
+    "mortibody": {
+    },
+    "sanctuary_keeper": {
+    },
+    "spectral_keeper": {
+    },
+    "yunalesca": {
+    },
+    "seymour_omnis": {
+    },
+    "braska's_final_aeon": {
+    },
+    "crane": {
+    },
+    "biran_ronso": {
+    },
+    "yenke_ronso": {
+    },
+    "left_fin": {
+    },
+    "right_fin": {
+    },
+    "sin_2": {
+    },
+    "sinspawn_genais": {
+    },
+    "sin_3": {
+    },
+    "guado_guardian": {
+    },
+    "seymour_flux": {
+    },
+    "mortiorchis": {
+    },
+    "kimahri_weapon": {
+    },
+    "sinscale_5": {
+    },
+    "circle": {
+    },
+    "sinscale_6": {
+        "attack": {
+            "name": "Attack",
+            "can_crit": false
+        },
+        "spines": {
+            "name": "Spines",
+            "can_miss": false,
+            "base_damage": 40
+        },
+        "wings_flicker": {
+            "name": "Wings Flicker",
+            "has_target": false,
+            "does_damage": false
+        }
+    },
+    "sinscale_7": {
+    },
+    "cid": {
+    },
+    "mortiphasm_3": {
+    },
+    "vouivre_2": {
+    },
+    "worker": {
+    },
+    "lord_ochu": {
+    },
+    "mortiphasm_4": {
+    },
+    "sahagin_4": {
+    },
+    "sahagin_chief": {
+        "attack": {
+            "name": "Attack",
+            "can_crit": false
+        }
+    },
+    "garuda_2": {
+        "attack": {
+            "name": "Attack",
+            "can_crit": false,
+            "uses_bonus_crit": false
+        },
+        "sonic_boom": {
+            "name": "Sonic Boom",
+            "multitarget": true,
+            "accuracy": 130,
+            "can_crit": false,
+            "base_damage": 12
+        }
+    },
+    "klikk": {
+    },
+    "sinspawn_ammes": {
+    },
+    "head": {
+    },
+    "arm": {
+    },
+    "gate_lock": {
+    },
+    "[0x13]8": {
+    },
+    "[0x13]9": {
+    },
+    "[0x13]_": {
+    },
+    "[0x13]!": {
+    },
+    "[0x13]\"": {
+    },
+    "[0x13]#": {
+    },
+    "[0x13]$": {
+    },
+    "tanker": {
+    },
+    "gate_lock_2": {
+    },
+    "monster_172": {
+    },
+    "yu_pagoda": {
+    },
+    "yu_pagoda_2": {
+    },
+    "tentacle": {
+    },
+    "yu_yevon": {
+    },
+    "mortiphasm_5": {
+    },
+    "cindy": {
+    },
+    "sandy": {
+    },
+    "mindy": {
+    },
+    "iron_giant": {
+        "attack": {
+            "name": "Attack",
+            "accuracy": 110
+        },
+        "leaping_swing": {
+            "name": "Leaping Swing",
+            "accuracy": 95,
+            "base_damage": 25
+        },
+        "reaper": {
+            "name": "Reaper",
+            "multitarget": true,
+            "can_miss": false,
+            "can_crit": false,
+            "base_damage": 13
+        }
+    },
+    "gemini": {
+    },
+    "gemini_2": {
+    },
+    "gemini_3": {
+    },
+    "basilisk": {
+    },
+    "anacondaur": {
+    },
+    "adamantoise": {
+    },
+    "varuna": {
+    },
+    "ochu": {
+    },
+    "mandragora": {
+    },
+    "yat-99": {
+    },
+    "yat-97": {
+    },
+    "bomb": {
+        "rush": {
+            "name": "RUSH",
+            "accuracy": 120,
+            "element": "Fire"
+        },
+        "fire": {
+            "name": "Fire",
+            "can_miss": false,
+            "can_crit": false,
+            "damage_type": "Magic",
+            "base_damage": 12,
+            "element": "Fire"
+        },
+        "self_destruct": {
+            "name": "Self Destruct",
+            "can_miss": false,
+            "damage_type": "Item",
+            "base_damage": 12,
+            "element": "Fire"
+        }
+    },
+    "grenade": {
+    },
+    "ykt-63": {
+    },
+    "ykt-11": {
+    },
+    "warrior_monk": {
+    },
+    "fallen_monk": {
+    },
+    "warrior_monk_2": {
+    },
+    "fallen_monk_2": {
+    },
+    "pupu": {
+    },
+    "magic_urn": {
+    },
+    "magic_urn_2": {
+    },
+    "magic_urn_3": {
+    },
+    "magic_urn_4": {
+    },
+    "magic_urn_5": {
+    },
+    "qactuar": {
+    },
+    "cactuar": {
+    },
+    "larva": {
+    },
+    "barbatos": {
+    },
+    "???_2": {
+    },
+    "wendigo": {
+    },
+    "guado_guardian_2": {
+    },
+    "funguar": {
+    },
+    "thorn": {
+    },
+    "exoray": {
+    },
+    "xiphos": {
+    },
+    "puroboros": {
+    },
+    "spirit": {
+    },
+    "wraith": {
+    },
+    "sandragora": {
+    },
+    "guado_guardian_3": {
+    },
+    "tonberry": {
+    },
+    "master_tonberry": {
+    },
+    "evil_eye_2": {
+    },
+    "bomb_2": {
+        "rush": {
+            "name": "RUSH",
+            "accuracy": 120,
+            "element": "Fire"
+        },
+        "fire": {
+            "name": "Fire",
+            "can_miss": false,
+            "can_crit": false,
+            "damage_type": "Magic",
+            "base_damage": 12,
+            "element": "Fire"
+        },
+        "self_destruct": {
+            "name": "Self Destruct",
+            "can_miss": false,
+            "damage_type": "Item",
+            "base_damage": 20,
+            "element": "Fire"
+        }
+    },
+    "chimera_2": {
+    },
+    "dual_horn_2": {
+    },
+    "defender_x": {
+    },
+    "garuda_3": {
+        "attack": {
+            "name": "Attack"
+        },
+        "sonic_boom": {
+            "name": "Sonic Boom",
+            "multitarget": true,
+            "accuracy": 130,
+            "can_crit": false,
+            "base_damage": 8
+        }
+    },
+    "dingo_2": {
+    },
+    "water_flan_2": {
+    },
+    "condor_2": {
+    },
+    "ragora_2": {
+        "seed_cannon": {
+            "name": "Seed Cannon",
+            "accuracy": 85,
+            "can_crit": false
+        }
+    },
+    "raldo_2": {
+    },
+    "bunyip_2": {
+    },
+    "???_3": {
+    },
+    "zu_2": {
+    },
+    "zaurus": {
+    },
+    "halma": {
+    },
+    "aqua_flan": {
+    },
+    "floating_death": {
+    },
+    "maze_larva": {
+    },
+    "machea": {
+    },
+    "cave_iguion": {
+    },
+    "swamp_mafdet": {
+    },
+    "bat_eye": {
+    },
+    "isaaru": {
+    },
+    "mira": {
+    },
+    "belgemine": {
+    },
+    "mimic": {
+    },
+    "mimic_2": {
+    },
+    "mimic_3": {
+    },
+    "valefor": {
+    },
+    "dummy": {
+    },
+    "mimic_4": {
+    },
+    "mimic_parts": {
+    },
+    "valefor_2": {
+    },
+    "ifrit": {
+    },
+    "mimic_parts_2": {
+    },
+    "mimic_parts_3": {
+    },
+    "mimic_parts_4": {
+    },
+    "rifle": {
+    },
+    "fire_rifle": {
+    },
+    "anima_2": {
+    },
+    "koma_inu": {
+    },
+    "anima_3": {
+    },
+    "anima_4": {
+    },
+    "katana": {
+    },
+    "kozuka": {
+    },
+    "shuriken": {
+    },
+    "head_2": {
+    },
+    "arm_2": {
+    },
+    "nishida": {
+    },
+    "sword": {
+    },
+    "nemesis": {
+    },
+    "catastrophe": {
+    },
+    "none": {
+    },
+    "earth_eater": {
+    },
+    "ultima_buster": {
+    },
+    "greater_sphere": {
+    },
+    "th'uban": {
+    },
+    "shinryu": {
+    },
+    "ifrit_2": {
+    },
+    "ixion": {
+    },
+    "shiva": {
+    },
+    "bahamut": {
+    },
+    "yojimbo": {
+    },
+    "sandy_2": {
+    },
+    "cindy_2": {
+    },
+    "mindy_2": {
+    },
+    "tanket": {
+    },
+    "vidatu": {
+    },
+    "fenrir": {
+    },
+    "jumbo_flan": {
+    },
+    "ornitholestes": {
+    },
+    "pteryx": {
+    },
+    "hornet": {
+    },
+    "one-eye": {
+    },
+    "stratoavis": {
+    },
+    "abyss_worm": {
+    },
+    "juggernaut": {
+    },
+    "fafnir": {
+    },
+    "malboro_menace": {
+    },
+    "kottos": {
+    },
+    "nega_elemental": {
+    },
+    "catoblepas": {
+    },
+    "chimerageist": {
+    },
+    "coeurlregina": {
+    },
+    "ironclad": {
+    },
+    "jormungand": {
+    },
+    "abaddon": {
+    },
+    "bomb_king": {
+    },
+    "cactuar_king": {
+    },
+    "vorban": {
+    },
+    "sleep_sprout": {
+    },
+    "don_tonberry": {
+    },
+    "espada": {
+    },
+    "bomb_3": {
+    },
+    "dual_horn_3": {
+    },
+    "vulture": {
+    },
+    "basilisk_2": {
+    },
+    "ochu_2": {
+    },
+    "larva_2": {
+    },
+    "iron_giant_2": {
+    },
+    "chimera_3": {
+    },
+    "monster_84": {
+    },
+    "qactuar_2": {
+    },
+    "zu_3": {
+    },
+    "sand_worm_2": {
+    },
+    "ghost_2": {
+    },
+    "malboro_2": {
+    },
+    "bashura_2": {
+    },
+    "valefor_3": {
+    },
+    "ifrit_3": {
+    },
+    "ixion_2": {
+    },
+    "shiva_2": {
+    },
+    "bahamut_2": {
+    },
+    "anima_5": {
+    },
+    "yojimbo_2": {
+    },
+    "cindy_3": {
+    },
+    "sandy_3": {
+    },
+    "mindy_3": {
+    }
+}

@@ -1,0 +1,269 @@
+# Usage:
+# party [party members initials]
+# (kill) [monster_name] [killer] (overkill/ok)
+# steal [monster_name] (successful steals)
+# death (character)
+# bribe [monster_name] [user]
+#
+# add comments with a # at the start
+# of the line
+#
+# blank lines create a blank line
+#
+# type /// to hide everything
+# above that line
+#
+///
+# Zanarkand
+party ta
+sinscale_2 auron
+sinscale_2 tidus
+sinscale_2 auron
+sinscale_2 tidus
+sinscale_2 auron
+sinscale_2 tidus
+
+sinscale_2 auron
+sinscale_2 auron
+sinscale_2 auron
+sinscale_2 auron
+sinscale_2 auron
+sinspawn_ammes auron
+
+tanker tidus
+
+# Baaj Temple
+party t
+sahagin_4 tidus
+sahagin_4 tidus
+
+# Geosgaeno doesn't roll RNG
+///
+party tr
+klikk tidus
+
+# Forced fight
+piranha_3 tidus
+piranha_3 tidus
+
+tros rikku
+
+# Besaid
+party tw
+
+# Forced encounters
+party tywl
+dingo tidus
+condor wakka
+water_flan lulu
+??? tidus
+garuda_3 valefor
+dingo_2 tidus
+condor_2 wakka
+water_flan_2 lulu
+
+# S.S. Liki
+party tykwl
+sin wakka
+sinspawn_echuilles tidus
+sinscale_3 tidus
+sinscale_3 tidus
+sinscale_3 tidus
+sinscale_3 tidus
+
+# Kilika
+geneaux's_tentacle valefor
+geneaux's_tentacle valefor
+sinspawn_geneaux valefor
+
+# Luca
+# Fight 1
+worker tidus
+worker tidus
+
+# Fight 2
+worker tidus
+worker tidus
+
+# Fight 3
+worker tidus
+worker tidus
+worker tidus
+worker tidus
+worker tidus
+worker tidus
+
+oblitzerator tidus
+
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+
+# Forced encounters
+party tyakwl
+vouivre_2 auron
+garuda_2 tidus
+
+# Mi'ihen Highroad
+# Piercing tutorial
+raldo_2 auron
+
+# Mushroom Rock Road
+# Gui 1 (drops are disabled)
+roll rng10 12
+
+# Gui 2
+roll rng10 9
+sinspawn_gui seymour
+
+# Moonflow
+extractor wakka
+
+party tyakwlr
+# ??? n.3 is the tutorial chest
+# it dies when you steal from it
+steal ???_3
+???_3 rikku
+
+# Thunder Plains
+
+# Macalania Woods
+spherimorph wakka
+
+# Lake Macalania
+negator negator
+crawler rikku
+
+# Seymour 1
+guado_guardian wakka
+guado_guardian wakka
+anima wakka
+seymour wakka
+
+# Wendigo
+wendigo wakka
+guado_guardian_2 wakka
+guado_guardian_2 wakka
+
+# Bikanel Desert
+party takwlr
+
+# Home
+# Fight 1
+guado_guardian_3 tidus
+bomb_2 tidus
+bomb_2 tidus
+bomb_2 tidus
+
+# In the next 2 fights the order
+# is random (w/ Stone Breath)
+# Fight 2
+guado_guardian_3 kimahri
+dual_horn_2 kimahri
+dual_horn_2 kimahri
+
+# Fight 3
+guado_guardian_3 kimahri
+chimera_2 kimahri
+chimera_2 kimahri
+
+# Airship
+evrae wakka
+
+# Bevelle
+# Fight 1
+warrior_monk tidus
+warrior_monk_2 tidus
+warrior_monk tidus
+rifle tidus
+fire_rifle tidus
+rifle tidus
+
+# Fight 2
+ykt-63 tidus
+warrior_monk_2 kimahri
+warrior_monk_2 kimahri
+fire_rifle kimahri
+fire_rifle kimahri
+
+# Fight 3
+warrior_monk tidus
+warrior_monk_2 tidus
+warrior_monk tidus
+rifle tidus
+fire_rifle tidus
+rifle tidus
+
+# Fight 4
+ykt-63 tidus
+warrior_monk_2 kimahri
+warrior_monk_2 kimahri
+fire_rifle kimahri
+fire_rifle kimahri
+
+# Fight 5
+warrior_monk rikku
+yat-99 rikku
+warrior_monk rikku
+rifle rikku
+rifle rikku
+
+# Via Purifico
+party ya
+
+# isaaru summons
+ifrit_2 bahamut
+valefor bahamut
+bahamut ixion
+# bahamut drops 2 items
+# but the items are both nothing
+roll rng11 2
+
+# Via Purifico underwater
+party twr
+
+evrae_altana tidus
+
+# Highbridge
+party tyakwlr
+seymour_natus wakka
+
+# Calm Lands
+defender_x wakka
+
+# Mt. Gagazet
+yenke_ronso kimahri
+biran_ronso kimahri
+
+seymour_flux wakka
+
+sanctuary_keeper wakka
+
+# Zanarkand
+spectral_keeper wakka
+
+yunalesca wakka
+
+left_fin wakka
+
+right_fin wakka
+
+sin_2 wakka
+
+sin_3 wakka
+
+seymour_omnis wakka

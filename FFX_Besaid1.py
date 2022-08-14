@@ -215,6 +215,9 @@ def leaving():
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
             elif checkpoint == 18:  # First tutorial
+                FFX_Logs.writeRNGTrack("###########################")
+                FFX_Logs.writeRNGTrack("Pre-tutorial array")
+                FFX_Logs.writeRNGTrack(FFX_memory.rng10Array(arrayLen=1))
                 print("Tutorial - Tidus and Wakka")
                 FFXC.set_movement(1, -1)
                 FFX_memory.clickToEvent()
@@ -239,8 +242,16 @@ def leaving():
                 if FFX_memory.getTidusSlvl() >= 3:
                     FFX_menu.Liki()
                     gameVars.earlyTidusGridSetTrue()
+                FFX_Logs.writeRNGTrack("###########################")
+                FFX_Logs.writeRNGTrack("Pre-Kimahri array")
+                FFX_Logs.writeRNGTrack(FFX_memory.rng10Array(arrayLen=1))
                 checkpoint += 1
-            elif checkpoint in [59, 60]:  # Beach, save sphere
+            elif checkpoint in [59]:  # Beach, save sphere
+                FFX_Logs.writeRNGTrack("###########################")
+                FFX_Logs.writeRNGTrack("Pre-Sin array")
+                FFX_Logs.writeRNGTrack(FFX_memory.rng10Array(arrayLen=1))
+                checkpoint += 1
+            elif checkpoint in [60]:  # Beach, save sphere
                 # FFXC.set_neutral()
                 # FFX_memory.touchSaveSphere()
                 checkpoint += 1

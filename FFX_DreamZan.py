@@ -7,6 +7,7 @@ import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 import FFX_Logs
+import FFX_rngTrack
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -15,7 +16,10 @@ FFXC = FFX_Xbox.controllerHandle()
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate:", Gamestate)
-
+    #FFX_Logs.openRNGTrack()
+    #FFX_rngTrack.tStrikeTracking()
+    #FFX_memory.waitFrames(300)
+    
     lastMessage = 0
     # New version
     if Gamestate == 'none':  # New Game
@@ -64,6 +68,7 @@ def NewGame(Gamestate):
 def NewGame2():
     # New game selected. Next, select options.
     timeBuffer = 17
+    #FFX_memory.waitFrames(120)
     print("====================================")
     print("Countdown timer!!!")
     FFX_memory.waitFrames(timeBuffer)
@@ -76,7 +81,6 @@ def NewGame2():
     print("2")
     FFX_memory.waitFrames(timeBuffer)
     print("1")
-    print("====================================")
     FFX_memory.waitFrames(timeBuffer)
     print("GO!!! Good fortune!")
     print("====================================")

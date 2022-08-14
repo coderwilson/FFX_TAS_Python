@@ -1,0 +1,435 @@
+# Usage:
+# party [party members initials]
+# (kill) [monster_name] [killer] (overkill/ok)
+# steal [monster_name] (successful steals)
+# death (character)
+# bribe [monster_name] [user]
+#
+# add comments with a # at the start
+# of the line
+#
+# blank lines create a blank line
+#
+# type /// to hide everything
+# above that line
+#
+///
+# Zanarkand
+party ta
+sinscale_2 auron
+sinscale_2 tidus
+sinscale_2 auron
+sinscale_2 tidus
+sinscale_2 auron
+sinscale_2 tidus
+
+sinscale_2 auron
+sinscale_2 auron
+sinscale_2 auron
+sinscale_2 auron
+sinscale_2 auron
+sinspawn_ammes auron
+
+tanker tidus
+
+# Baaj Temple
+party t
+sahagin_4 tidus
+sahagin_4 tidus
+
+# Geosgaeno doesn't roll RNG
+///
+party tr
+steal klikk
+steal klikk 1
+# steal klikk 1
+# steal klikk 1
+klikk tidus
+
+# Chain encounter
+# 2 Piranhas encounter
+steal piranha
+piranha tidus
+steal piranha_2
+piranha_2 tidus
+
+# Single Piranha encounter
+# steal piranha_3
+# steal piranha_3 1
+# piranha_3 tidus
+
+# Forced fight
+steal piranha_3
+steal piranha_3
+piranha_3 tidus
+piranha_3 tidus
+
+# steal tros
+tros rikku
+
+# Besaid
+party tw
+piranha tidus
+piranha_2 wakka
+# piranha_3 wakka
+
+# Forced encounters
+party tywl
+dingo tidus
+condor wakka
+water_flan lulu
+??? tidus
+garuda_3 valefor
+dingo_2 tidus
+condor_2 wakka
+water_flan_2 lulu
+
+# S.S. Liki
+party tykwl
+sin valefor
+sinspawn_echuilles tidus
+sinscale_3 tidus
+sinscale_3 tidus
+# sinscale_3 tidus
+# sinscale_3 tidus
+
+# Kilika
+# forced fight
+ragora_2 lulu
+
+geneaux's_tentacle valefor
+geneaux's_tentacle valefor
+sinspawn_geneaux valefor
+
+# Luca
+# Fight 1
+worker lulu
+worker lulu
+
+# Fight 2
+worker lulu
+worker lulu
+
+# Fight 3
+worker lulu
+worker kimahri
+worker lulu
+worker lulu
+worker lulu
+worker tidus
+
+oblitzerator tidus
+
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+sahagin_chief tidus
+
+# Forced encounters
+party tyakwl
+vouivre_2 auron
+garuda_2 auron
+
+# Mi'ihen Highroad
+# Piercing tutorial
+raldo_2 auron
+
+# death
+# death
+# death
+
+# Mushroom Rock Road
+# death
+# death
+# death
+
+# Gui 1 (drops are disabled)
+roll rng10 18
+
+# If Valefor dies
+# death valefor
+
+# Gui 2
+# Head always dies
+roll rng10 3
+
+sinspawn_gui seymour
+
+# Moonflow
+# death
+extractor wakka
+
+party tyakwlr
+# ??? n.3 is the tutorial chest
+# it dies when you steal from it
+steal ???_3
+???_3 rikku
+
+# steal bite_bug
+# steal garm
+
+# Thunder Plains
+# steal aerouge
+# steal melusine
+steal gold_element
+steal larva
+steal larva
+steal qactuar
+steal iron_giant
+steal iron_giant
+death rikku
+death yuna
+
+# Macalania Woods
+# steal iguion
+steal chimera
+steal blue_element
+spherimorph rikku
+
+# Lake Macalania
+# If Gatling Gun
+# death rikku
+# negator kimahri
+
+# If no Gatling Gun
+negator rikku
+death rikku
+death rikku
+death tidus
+crawler rikku
+
+# Seymour 1
+guado_guardian kimahri
+guado_guardian kimahri
+steal anima
+death ???
+anima shiva
+seymour shiva
+
+# steal ice_flan
+steal snow_wolf
+death yuna
+
+# Wendigo
+guado_guardian_2 rikku
+guado_guardian_2 rikku
+wendigo shiva
+
+# Bikanel Desert
+party takwlr
+
+# steal alcyone
+# steal cactuar
+steal zu_2
+steal sand_wolf
+steal sand_worm
+
+# Home
+# Guado Guardian n.3 is in Home
+# and Airship encounters
+
+# Fight 1
+steal bomb_2
+steal bomb_2
+steal bomb_2
+guado_guardian_3 rikku
+bomb_2 rikku
+bomb_2 rikku
+bomb_2 rikku
+
+# In the next 2 fights the order
+# is random (w/ Stone Breath)
+# Fight 2
+guado_guardian_3 kimahri
+dual_horn_2 kimahri
+dual_horn_2 kimahri
+
+# Fight 3
+guado_guardian_3 kimahri
+chimera_2 kimahri
+chimera_2 kimahri
+
+# Airship
+steal evrae
+steal evrae 1
+# poison breath 1
+death rikku
+death kimahri
+# poison breath 2
+death rikku
+death kimahri
+evrae rikku
+
+# Bevelle
+# Fight 1
+warrior_monk rikku
+warrior_monk_2 rikku
+warrior_monk rikku
+rifle rikku
+fire_rifle rikku
+rifle rikku
+
+# Fight 2
+# death rikku
+ykt-63 rikku
+warrior_monk_2 rikku
+warrior_monk_2 rikku
+fire_rifle rikku
+fire_rifle rikku
+
+# Fight 3
+warrior_monk rikku
+warrior_monk_2 rikku
+warrior_monk rikku
+rifle rikku
+fire_rifle rikku
+rifle rikku
+
+# Fight 4
+# death rikku
+ykt-63 rikku
+warrior_monk_2 rikku
+warrior_monk_2 rikku
+fire_rifle rikku
+fire_rifle rikku
+
+# Fight 5
+# Using AoE throwables
+warrior_monk rikku
+warrior_monk rikku
+rifle rikku
+rifle rikku
+yat-99 rikku
+
+# Via Purifico
+party ya
+# death auron
+# death yuna
+
+maze_larva valefor
+maze_larva shiva
+# maze_larva auron
+
+# isaaru summons
+ifrit_2 shiva
+valefor shiva
+bahamut shiva
+# bahamut drops 2 items
+# but the items are both nothing
+roll rng11 2
+
+# Via Purifico underwater
+party twr
+death ???
+evrae_altana tidus
+
+# Highbridge
+party tyawlr
+death yuna
+death rikku
+death yuna
+death rikku
+death yuna
+death rikku
+
+party tyakwlr
+death valefor
+# death rikku
+# death kimahri
+seymour_natus shiva
+
+# Calm Lands
+# steal flame_flan
+# steal nebiros
+# death rikku
+
+death ???
+defender_x lulu
+
+# If you need more equipment drops
+# Biran and Yenke always drop equipment
+# steal biran_ronso
+# yenke_ronso kimahri
+# biran_ronso kimahri
+
+# Malboros can drop equipment with 2 abilities
+# malboro bahamut
+
+# Epaajs always spawn outside the cave
+# They have 50% chance to drop equipment
+# epaaj ixion
+
+# Cavern of the Stolen Fayth
+# Killing enemies with a party member
+# Might change the equipment owner
+# ghost rikku
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+ghost shiva
+
+# Mt. Gagazet
+yenke_ronso kimahri
+biran_ronso kimahri
+
+# steal imp
+steal grenade
+steal grenade
+steal grenade
+steal grenade
+steal grenade
+
+seymour_flux lulu
+
+sanctuary_keeper tidus
+
+# Zanarkand
+spectral_keeper auron
+
+yunalesca lulu
+
+left_fin lulu
+
+right_fin lulu
+
+sinspawn_genais tidus
+sin_2 rikku
+
+sin_3 rikku
+
+seymour_omnis lulu

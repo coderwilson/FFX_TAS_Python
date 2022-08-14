@@ -2706,12 +2706,23 @@ class equipment:
         self.num = equipNum
         self.equipType = getEquipType(equipNum)
         self.equipOwner = getEquipOwner(equipNum)
+        self.equipOwnerAlt = getEquipOwner(equipNum)
         self.equipAbilities = getEquipAbilities(equipNum)
         self.equipStatus = getEquipCurrentlyEquipped(equipNum)
         self.slots = getEquipSlotCount(equipNum)
         self.exists = getEquipExists(equipNum)
         self.brotherhood = isEquipBrotherhood(equipNum)
-
+    
+    def createCustom(self, eType:int, eOwner1:int, eOwner2:int, eSlots:int, eAbilities):
+        self.equipType = eType
+        self.equipOwner = eOwner1
+        self.equipOwnerAlt = eOwner2
+        self.equipAbilities = eAbilities
+        self.equipStatus = 0
+        self.slots = eSlots
+        self.exists = 1
+        self.brotherhood = False
+    
     def equipmentType(self):
         return self.equipType
 
@@ -3673,9 +3684,9 @@ def rng01():
     return process.read(baseValue + 0xD35EDC)
 
 
-def rng01Array():
+def rng01Array(arrayLen:int=600):
     retVal = [rng01()]  # First value is the current value
-    for x in range(600):  # Subsequent values are based on first value.
+    for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], 1))
     return retVal
 
@@ -3740,10 +3751,10 @@ def rng10():
     return process.read(baseValue + 0xD35F00)
 
 
-def rng10Array():
+def rng10Array(arrayLen:int=256):
     retVal = [rng10()]  # First value is the current value
-    for x in range(256):  # Subsequent values are based on first value.
-        retVal.append(rollNextRNG(retVal[x], 10))
+    for x in range(arrayLen):  # Subsequent values are based on first value.
+        retVal.append(rollNextRNG(lastRNG=retVal[x], index=10))
     return retVal
 
 
@@ -3755,8 +3766,6 @@ def nextChanceRNG10(dropChanceVal: int = 60) -> int:
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
-            #print("The next scenario where Wraith will drop an equipment is position:", i-3)
-            #print("Please advance RNG10 that many times.")
             return (i-3)
 
 
@@ -3795,9 +3804,9 @@ def rng12():
     return process.read(baseValue + 0xD35F08)
 
 
-def rng12Array():
+def rng12Array(advances:int=255):
     retVal = [rng12()]  # First value is the current value
-    for x in range(255):  # Subsequent values are based on first value.
+    for x in range(advances):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], 12))
     return retVal
 
@@ -3807,7 +3816,7 @@ def nextChanceRNG12(beforeNatus: bool = False) -> int:
     slotChances = [2, 2, 2, 2, 3, 3, 3, 3]
     abilityMod = 13
     abilityCountChances = [1, 1, 1, 1, 1, 1, 1, 2]
-
+    
     user = 256
     nextChance = 256
     neWillDrop = False
@@ -3818,7 +3827,8 @@ def nextChanceRNG12(beforeNatus: bool = False) -> int:
     testArray = rng12Array()
     while nextChance == 256:
         # Assume killer is aeon
-        user = (testArray[ptr] & 0x7fffffff) % 7
+        user1 = (testArray[ptr] & 0x7fffffff) % 7
+        user2 = (testArray[ptr] & 0x7fffffff) % 10
         if ptr > 250:
             return 256
         elif (testArray[ptr+1] & 0x7fffffff) % 2 == 1:  # equipment
@@ -3867,9 +3877,9 @@ def rng13():
     return process.read(baseValue + 0xD35F0C)
 
 
-def rng13Array():
+def rng13Array(arrayLen:int=20):
     retVal = [rng13()]  # First value is the current value
-    for x in range(20):  # Subsequent values are based on first value.
+    for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], 13))
     # print(retVal)
     return retVal

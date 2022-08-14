@@ -31,6 +31,9 @@ class allVars:
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
         self.lStrikeCount = 0  # Default 0
+        
+        # ----RNG Manip
+        self.yellows = 0
 
         # ----Other
         self.selfDestruct = False  # Default False
@@ -72,7 +75,13 @@ class allVars:
         if arrayNum == 2:
             self.originalResults[index] = 1
         self.printArenaStatus()
-
+    
+    def getYellows(self):
+        return self.yellows
+    
+    def setYellows(self, newVals):
+        self.yellows = newVals
+    
     def yojimboGetIndex(self):
         return self.yojimboIndex
 
