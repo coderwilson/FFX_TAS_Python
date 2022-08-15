@@ -251,7 +251,7 @@ def guadoSkip():
         if FFX_memory.userControl():
             if checkpoint == 5:
                 print(FFX_memory.getCamera())
-                if FFX_memory.getCamera()[1] < -10:
+                if FFX_memory.getCamera()[1] < -9:
                     print("Guado skip success.")
                     if gameVars.csr():
                         guadoSkipStatus = False
