@@ -211,6 +211,8 @@ def itemToBeDropped(enemy:str='ghost', preAdvance12:int=0, preAdvance13:int=0, p
 def abilityToBeDropped(enemy:str='ghost', equipType:int=0, slots:int=1, advances:int=0):
     nextChance = 256
     outcomes = dropAbilityList(enemy=enemy, equipType=equipType)
+    if slots == 0:
+        slots = 1
     filledSlots = [99] * slots
     
     ptr = 0 #Pointer that indicates how many advances needed for this evaluation
