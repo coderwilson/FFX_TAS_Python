@@ -93,8 +93,8 @@ StepCounter = 1
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -579,7 +579,7 @@ while Gamestate != "End":
             FFX_Logs.writeStats(rngSeed)
         else:
             StepCounter = 3
-        Gamestate = "End" # Used for testing only.
+        #Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Luca" and StepCounter == 3:
         reportGamestate()
