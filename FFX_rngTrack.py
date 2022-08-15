@@ -546,27 +546,28 @@ def tStrikeTracking(tros=False, report=False):
     advance10 += 3
     advance01 += 1
     
+    enemy = "ragora"
     partySize=5
     #Lancet tutorial
-    dropChances = trackDrops(enemy="lancet_tutorial", battles=1, extraAdvances=advance10)
+    dropChances = trackDrops(enemy=enemy, battles=1, extraAdvances=advance10)
     #print(dropChances)
     if len(dropChances[0]) >= 1:
-        finalItem, advance13[0] = itemToBeDropped(enemy="lancet_tutorial", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
+        finalItem, advance13[0] = itemToBeDropped(enemy=enemy, preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
         #print("Garuda [0]")
-        if reportDroppedItem(enemy="lancet_tutorial", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
+        if reportDroppedItem(enemy=enemy, drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
-        finalItem, advance13[1] = itemToBeDropped(enemy="lancet_tutorial", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
+        finalItem, advance13[1] = itemToBeDropped(enemy=enemy, preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
         #print("Garuda [1]")
-        if reportDroppedItem(enemy="lancet_tutorial", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
+        if reportDroppedItem(enemy=enemy, drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
-        finalItem, advance13[2] = itemToBeDropped(enemy="lancet_tutorial", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
+        finalItem, advance13[2] = itemToBeDropped(enemy=enemy, preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
         #print("Garuda [2]")
-        if reportDroppedItem(enemy="lancet_tutorial", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
+        if reportDroppedItem(enemy=enemy, drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
     advance01 += 1

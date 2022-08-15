@@ -579,7 +579,7 @@ while Gamestate != "End":
             FFX_Logs.writeStats(rngSeed)
         else:
             StepCounter = 3
-        Gamestate = "End" # Used for testing only.
+        #Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Luca" and StepCounter == 3:
         reportGamestate()
