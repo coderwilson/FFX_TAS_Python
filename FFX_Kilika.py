@@ -64,10 +64,10 @@ def selectBestOfThree(comingBattles):
     if comingBattles == [["dinonix", "killer_bee"],["dinonix", "killer_bee"],["dinonix", "killer_bee"]]:
         return 99
     priority = [
+        ["ragora", "killer_bee", "killer_bee"],
         ["dinonix", "yellow_element", "killer_bee"],
         ["yellow_element", "killer_bee"],
         ["dinonix", "yellow_element"],
-        ["ragora", "killer_bee", "killer_bee"],
         ["ragora"],
         ["ragora", "ragora"]]
     for i in range(len(priority)):

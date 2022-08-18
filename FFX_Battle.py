@@ -4809,9 +4809,7 @@ def oblitzRngWait():
         goodRngList = [330516972, -1773455057]
         # 527494414
     else:
-        goodRngList = [345511282, 85955655]
-        # re-add 345511282 later
-        # 345511282 is interesting, if we can get Botta to pass the ball straight to Jassu in second half.
+        goodRngList = [-643494119,281000320]
 
     waitCounter = 0
     lastRng02 = FFX_memory.rng02()
@@ -6253,7 +6251,7 @@ def calmLandsManip():
     midArray = [277, 279, 285, 287, 289, 290]
     rng10nextChanceHigh = FFX_memory.nextChanceRNG10(128)
     highArray = [278, 286, 288]
-
+    print("++Gems: ", checkGems())
     if checkGems() < 2:
         print("++Calm Lands battle, looking for gems.")
         calmLandsGems()
@@ -6497,10 +6495,33 @@ def advanceRNG12():
 
 
 def ghostKill():
+    import FFX_rngTrack
+    nextDrop, _ = FFX_rngTrack.itemToBeDropped()
+    owner1 = nextDrop.equipOwner
+    owner2 = nextDrop.equipOwnerAlt
     silenceSlot = FFX_memory.getItemSlot(39)
-    itemThrown = silenceSlot >= 200
-    summonChad = silenceSlot >= 200
+    if owner2 in [0,4,6]:
+        print("Aeon kill results in NEA on char: ", owner2)
+        ghostKillAeon()
+    elif silenceSlot > 200:
+        print("No silence grenade, going with aeon kill: ", owner2)
+        ghostKillAeon()
+    elif owner1 in [0,4,6]:
+        print("Any character kill results in NEA on char: ", owner1)
+        ghostKillAny()
+    elif owner1 == 9:
+        print("Has to be Tidus kill: ", owner1)
+        ghostKillTidus()
+    else:
+        print("No way to get an optimal drop. Resorting to aeon: ", owner2)
+        ghostKillAeon()
+    
+    FFX_memory.clickToControl3()
+
+def ghostKillTidus():
+    silenceSlot = FFX_memory.getItemSlot(39)
     selfHaste = False
+    itemThrown = silenceSlot >= 200
     print("++Silence slot:", silenceSlot)
     while FFX_memory.battleActive():
         # Try to get NEA on Tidus
@@ -6532,19 +6553,7 @@ def ghostKill():
                 else:
                     defend()
             else:
-                if FFX_Screen.turnAeon():
-                    attack('none')
-                elif summonChad:
-                    if not 1 in FFX_memory.getActiveBattleFormation():
-                        print("+++No silence grenade. Summon Chad!!!")
-                        buddySwapYuna()
-                        aeonSummon(4)
-                    elif FFX_Screen.turnYuna():
-                        print("+++No silence grenade. Summon Chad!!!")
-                        aeonSummon(4)
-                    else:
-                        defend()
-                elif not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
+                if not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif FFX_Screen.turnRikku() and not itemThrown:
@@ -6554,7 +6563,7 @@ def ghostKill():
                     print("+++Get Tidus back in")
                     buddySwapTidus()
                 elif FFX_Screen.turnTidus():
-                    if not selfHaste and FFX_memory.getEnemyCurrentHP()[0] <= 3800:
+                    if not selfHaste:
                         tidusHaste('none')
                         selfHaste = True
                     elif FFX_memory.getEnemyCurrentHP()[0] <= 2800 and FFX_memory.getOverdriveBattle(0) == 100:
@@ -6563,11 +6572,88 @@ def ghostKill():
                         attack('none')
                 elif FFX_Screen.faintCheck():
                     revive()
-                elif not 1 in FFX_memory.getActiveBattleFormation() and FFX_memory.getEnemyCurrentHP()[0] > 4000:
+                elif not 1 in FFX_memory.getActiveBattleFormation():
                     print("+++Get Yuna in for extra smacks")
                     buddySwapYuna()
                 elif FFX_Screen.turnYuna() and FFX_memory.getEnemyCurrentHP()[0] > 3000:
                     attack('none')
                 else:
                     defend()
-    FFX_memory.clickToControl3()
+
+def ghostKillAny():
+    silenceSlot = FFX_memory.getItemSlot(39)
+    selfHaste = False
+    yunaHaste = False
+    itemThrown = silenceSlot >= 200
+    print("++Silence slot:", silenceSlot)
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            advances = FFX_memory.nextChanceRNG10()
+            if advances >= 1:
+                if not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
+                    print("+++Silence grenade, Rikku to throw item.")
+                    buddySwapRikku()
+                elif FFX_Screen.turnTidus():
+                    if FFX_memory.getEnemyCurrentHP()[0] > 3800 and not 6 in FFX_memory.getActiveBattleFormation():
+                        buddySwapYuna()
+                    elif FFX_memory.getEnemyCurrentHP()[0] <= 2800 and FFX_memory.getOverdriveBattle(0) == 100:
+                        defend()
+                    else:
+                        attack('none')
+                elif FFX_Screen.turnRikku() or FFX_Screen.turnKimahri():
+                    if not itemThrown:
+                        useItem(FFX_memory.getUseItemsSlot(39))
+                        itemThrown = True
+                    elif advances >= 1:
+                        Steal()
+                    else:
+                        buddySwapYuna()
+                elif not 6 in FFX_memory.getActiveBattleFormation():
+                    buddySwapRikku()
+                elif not 3 in FFX_memory.getActiveBattleFormation():
+                    buddySwapKimahri()
+                else:
+                    defend()
+            else:
+                if not itemThrown and not 6 in FFX_memory.getActiveBattleFormation():
+                    print("+++Silence grenade, Rikku to throw item.")
+                    buddySwapRikku()
+                elif FFX_Screen.turnRikku() and not itemThrown:
+                    useItem(FFX_memory.getUseItemsSlot(39))
+                    itemThrown = True
+                elif not 0 in FFX_memory.getActiveBattleFormation():
+                    print("+++Get Tidus back in")
+                    buddySwapTidus()
+                elif FFX_Screen.turnTidus():
+                    if not selfHaste:
+                        tidusHaste('none')
+                        selfHaste = True
+                    elif 1 in FFX_memory.getActiveBattleFormation() and not yunaHaste:
+                        tidusHaste(direction='l', character=1)
+                        yunaHaste = True
+                    elif FFX_memory.getEnemyCurrentHP()[0] <= 2800 and FFX_memory.getOverdriveBattle(0) == 100:
+                        tidusOD()
+                    else:
+                        attack('none')
+                elif FFX_Screen.faintCheck():
+                    revive()
+                elif not 1 in FFX_memory.getActiveBattleFormation():
+                    print("+++Get Yuna in for extra smacks")
+                    buddySwapYuna()
+                elif FFX_Screen.turnYuna():
+                    attack('none')
+                else:
+                    defend()
+
+
+def ghostKillAeon():
+    while FFX_memory.battleActive():
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnAeon():
+                attack('none')
+            elif not 1 in FFX_memory.getActiveBattleFormation():
+                buddySwapYuna()
+            elif FFX_Screen.turnYuna():
+                aeonSummon(4)
+            else:
+                defend()
