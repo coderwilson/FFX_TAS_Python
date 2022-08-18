@@ -137,7 +137,7 @@ def shortAeons():
     gameVars = FFX_vars.varsHandle()
     FFX_memory.openMenu()
     cursorTarget = 4
-    print("Aiming at ", cursorTarget)
+    print("Aiming at", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())
         FFX_Xbox.tapUp()

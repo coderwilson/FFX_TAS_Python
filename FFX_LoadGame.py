@@ -120,7 +120,7 @@ def loadMemCursor():
         cursorTarget = 5
     else:
         cursorTarget = 8  # if FFX_memory.getStoryProgress() > 3000 else 9
-    print("Aiming at ", cursorTarget)
+    print("Aiming at", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())
         FFX_Xbox.tapUp()
