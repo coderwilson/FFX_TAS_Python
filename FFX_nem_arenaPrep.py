@@ -1071,7 +1071,7 @@ def rinEquipDump(buyWeapon=False):
     FFX_memory.waitFrames(30)
     FFX_Xbox.tapRight()
     FFX_Xbox.menuB()
-        
+    
     FFX_menu.sellAll()
     if buyWeapon:
         FFX_memory.waitFrames(60)
