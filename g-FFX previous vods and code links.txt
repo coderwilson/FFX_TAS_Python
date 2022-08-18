@@ -1,0 +1,8 @@
+Showcase (Q4G HH2) Nov 2021:
+https://www.twitch.tv/videos/1205160940
+
+Showcase (TASgiving) Nov 2021:
+https://www.youtube.com/watch?v=Gvz-XdiNuKI
+
+Code:
+https://github.com/coderwilson/FFX_TAS_Python
