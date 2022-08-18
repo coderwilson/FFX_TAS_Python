@@ -64,8 +64,8 @@ if gameVars.nemesis():
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Seymour fight, CSR, Blitz Win
@@ -175,7 +175,7 @@ reportGamestate()
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed:", rngSeed)
