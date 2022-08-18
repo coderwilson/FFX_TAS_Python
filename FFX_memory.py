@@ -2202,7 +2202,7 @@ def eggX(eggNum):
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x0C
     retVal = float_from_integer(process.read(key))
-    #print("Egg ", eggNum," X value:", retVal)
+    #print("Egg", eggNum, "X value:", retVal)
     return retVal
 
 
@@ -2214,7 +2214,7 @@ def eggY(eggNum):
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x14
     retVal = float_from_integer(process.read(key))
-    #print("Egg ", eggNum," Y value:", retVal)
+    #print("Egg", eggNum, "Y value:", retVal)
     return retVal
 
 
