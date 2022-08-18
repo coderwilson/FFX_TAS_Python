@@ -12,7 +12,7 @@ FFXC = FFX_Xbox.controllerHandle()
 
 
 def toHiddenCave():
-    FFX_memory.fullPartyFormat('yuna')
+    FFX_memory.fullPartyFormat('rikku')
     FFX_memory.printManipInfo()
     firstSave = False
     checkpoint = 0
@@ -49,7 +49,7 @@ def toHiddenCave():
                 else:
                     FFX_Battle.fleeAll()
                 prepBattles += 1
-                FFX_memory.fullPartyFormat('yuna')
+                FFX_memory.fullPartyFormat('rikku')
                 FFX_memory.touchSaveSphere()
                 FFX_memory.printManipInfo()
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
@@ -61,7 +61,7 @@ def toHiddenCave():
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
     # FFX_memory.setEncounterRate(1) #Testing only
-    FFX_memory.fullPartyFormat('yuna')
+    FFX_memory.fullPartyFormat('rikku')
 
     # Prep work:
     goGreen = False
@@ -119,7 +119,7 @@ def dropHunt():
                     FFX_memory.clickToControl3()
                 FFX_Battle.healUp(fullMenuClose=True)
                 if gameVars.neArmor() == 255:
-                    FFX_memory.fullPartyFormat('yuna')
+                    FFX_memory.fullPartyFormat('rikku')
                     nextGreen = FFX_memory.nextChanceRNG01(version='green')[
                         0][0]
                     nextWhite = FFX_memory.nextChanceRNG01()[0][0]

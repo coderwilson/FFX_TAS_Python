@@ -12,10 +12,7 @@ gameVars = FFX_vars.varsHandle()
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
 
-
-def desert():
-    FFX_memory.clickToControl()
-
+def checkSpheres():
     # Speed sphere stuff. Improve this later.
     needSpeed = False
     if FFX_memory.getSpeed() < 5:
@@ -25,16 +22,21 @@ def desert():
 
     # Same for Power spheres
     if gameVars.nemesis():
-        if FFX_memory.getPower() >= 26 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (20 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 20):
+        if FFX_memory.getPower() >= 28 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (23 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 23):
             needPower = False
         else:
             needPower = True
 
-    elif FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
+    elif FFX_memory.getPower() >= 19 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (15 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 15):
         needPower = False
     else:
         needPower = True
+    return needSpeed, needPower
 
+def desert():
+    FFX_memory.clickToControl()
+
+    needSpeed, needPower = checkSpheres()
     # Logic for finding Teleport Spheres x2 (only chest in this area)
     teleSlot = FFX_memory.getItemSlot(98)
     if teleSlot == 255:
@@ -42,7 +44,7 @@ def desert():
     else:
         teleCount = FFX_memory.getItemCountSlot(teleSlot)
 
-    chargeState = False  # Rikku charge, speed spheres
+    chargeState = FFX_memory.overdriveState()[6] == 100
     # Bomb cores, sleeping powders, smoke bombs, silence grenades
     stealItems = [0, 0, 0, 0]
     itemsNeeded = 0
@@ -125,8 +127,8 @@ def desert():
 
             # Sandragora skip logic
             elif checkpoint == 57:
-                # FFXC.set_neutral()
-                # FFX_memory.waitFrames(10)
+                #FFXC.set_neutral()
+                #FFX_memory.waitFrames(10)
                 checkpoint += 1
             elif checkpoint == 60:
                 if FFX_memory.getCoords()[1] < 812: #Dialing in. 810 works 95%, but was short once.
@@ -175,6 +177,7 @@ def desert():
                             FFX_Battle.fleeAll()
                     else:
                         FFX_Battle.sandragora(2)
+                        checkpoint = 59
                 else:
                     FFX_Battle.bikanelBattleLogic(
                         [chargeState, needSpeed, needPower, itemsNeeded])
@@ -206,19 +209,8 @@ def desert():
                 itemsNeeded = 8 - sum(stealItems)
 
                 # Finally, check for other factors and report to console.
-                if FFX_memory.overdriveState()[6] == 100:
-                    chargeState = True
-                # if FFX_memory.getSpeed() >= 5:
-                if FFX_memory.getSpeed() >= 9:
-                    needSpeed = False
-                if gameVars.nemesis():
-                    if FFX_memory.getPower() >= 26 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (20 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 20):
-                        needPower = False
-                    else:
-                        needPower = True
-                elif FFX_memory.getPower() >= 18 or (FFX_memory.getSpeed() < 9 and FFX_memory.getPower() >= (14 + math.ceil((9 - FFX_memory.getSpeed()) / 2))) or (FFX_memory.getSpeed() >= 9 and FFX_memory.getPower() >= 14):
-                    # if FFX_memory.getPower() >= 23:
-                    needPower = False
+                chargeState = FFX_memory.overdriveState()[6] == 100
+                needSpeed, needPower = checkSpheres()
                 print("-----------------------------Flag statuses")
                 print("Rikku is charged up:", chargeState)
                 print("Need more Speed spheres:", needSpeed)
