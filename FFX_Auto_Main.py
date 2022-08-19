@@ -64,8 +64,8 @@ if gameVars.nemesis():
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Seymour fight, CSR, Blitz Win
@@ -128,7 +128,7 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     # gameVars.setCSR(True)
 elif seedHunt == False:  # Full run starting from New Game
-    rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
+    #rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
     # Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"

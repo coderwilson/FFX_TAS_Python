@@ -5,6 +5,7 @@ import FFX_Logs
 import FFX_memory
 import random
 import FFX_vars
+import FFX_rngTrack
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -2273,12 +2274,7 @@ def mWoods(woodsVars):
                             print("Escaping")
                             fleeAll()
                     else:
-                        if FFX_memory.rngSeed() == 31 and battleNum == 172:
-                            if FFX_Screen.turnAuron() and not 3 in FFX_memory.getActiveBattleFormation():
-                                buddySwapKimahri()
-                            else:
-                                escapeOne()
-                        elif woodsVars[0] or FFX_memory.getOverdriveBattle(6) == 100:
+                        if woodsVars[0] or FFX_memory.getOverdriveBattle(6) == 100:
                             if battleNum in [171, 172] and FFX_memory.getUseItemsSlot(32) == 255:
                                 defend()
                             elif battleNum == 175 and FFX_memory.getUseItemsSlot(24) == 255:
@@ -2590,6 +2586,7 @@ def seymourGuado_blitzWin():
                         print("Wakka is dead")
                         wakkadead = True
             if turnchar == 0:
+                nextHit = FFX_rngTrack.nextActionHitMiss(character=FFX_memory.getCurrentTurn(),enemy=enemy)
                 if tidusturns == 0:
                     print("Tidus Haste self")
                     tidusHaste('none')
@@ -2607,7 +2604,7 @@ def seymourGuado_blitzWin():
                 elif tidusturns == 2:
                     defend()
                 elif tidusturns == 3:
-                    attack('none')
+                    attack(direction="none")
                 elif tidusturns == 4:
                     buddySwapWakka()
                 elif animahits + animamiss == 3 and animamiss > 0 and missbackup == False:
@@ -2618,7 +2615,7 @@ def seymourGuado_blitzWin():
                     tidushaste = True
                 elif animahits < 4:
                     oldHP = FFX_memory.getEnemyCurrentHP()[3]
-                    attack('none')
+                    attack(direction="none")
                     newHP = FFX_memory.getEnemyCurrentHP()[3]
                     if newHP < oldHP:
                         print("Hit Anima")
@@ -2627,7 +2624,7 @@ def seymourGuado_blitzWin():
                         print("Miss Anima")
                         animamiss += 1
                 else:
-                    attack('none')
+                    attack(direction="none")
                 tidusturns += 1
                 print("Tidus turns: %d" % tidusturns)
             elif turnchar == 1:
@@ -2810,8 +2807,9 @@ def seymourGuado_blitzLoss():
                         print("Wakka is dead")
                         wakkadead = True
             if turnchar == 0:
+                nextHit = FFX_rngTrack.nextActionHitMiss(character=FFX_memory.getCurrentTurn(),enemy=enemy)
                 if FFX_memory.getEnemyCurrentHP()[1] < 2999:
-                    attack('none')
+                    attack(direction="none")
                     print("Should be last attack of the fight.")
                 elif tidusturns == 0:
                     print("Tidus Haste self")
@@ -2846,7 +2844,7 @@ def seymourGuado_blitzLoss():
                     tidushaste = True
                 elif animahits < 4:
                     oldHP = FFX_memory.getEnemyCurrentHP()[3]
-                    attack('none')
+                    attack(direction="none")
                     newHP = FFX_memory.getEnemyCurrentHP()[3]
                     if newHP < oldHP:
                         print("Hit Anima")
@@ -2856,7 +2854,7 @@ def seymourGuado_blitzLoss():
                         animamiss += 1
                 else:
                     print("Plain Attacking")
-                    attack('none')
+                    attack(direction="none")
                 tidusturns += 1
                 print("Tidus turns: %d" % tidusturns)
             elif turnchar == 1:
@@ -2882,7 +2880,7 @@ def seymourGuado_blitzLoss():
                         remedy(character=3, direction="l")
                 else:
                     buddySwapTidus()
-                    attack('none')
+                    attack(direction="none")
             elif turnchar == 3:
                 if kimahriconfused == True:
                     tidusposition = FFX_memory.getBattleCharSlot(0)
@@ -3015,12 +3013,12 @@ def seymourGuado_nemesis():
     # Anima uses Pain
     FFX_Screen.awaitTurn()
     buddySwapTidus()
-    attack('none')
+    attack(direction="none")
 
     while not FFX_memory.battleComplete():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnTidus():
-                attack('none')
+                attack(direction="none")
             elif FFX_Screen.turnRikku():
                 Steal()
             elif FFX_Screen.turnLulu():
@@ -3035,8 +3033,8 @@ def seymourGuado_nemesis():
 
 
 def seymourGuado():
-    # if gameVars.nemesis():
-    #    seymourGuado_nemesis()
+    #if gameVars.nemesis():
+    #   seymourGuado_nemesis()
     if gameVars.getBlitzWin():
         seymourGuado_blitzWin()
     else:
@@ -4809,7 +4807,7 @@ def oblitzRngWait():
         goodRngList = [330516972, -1773455057]
         # 527494414
     else:
-        goodRngList = [-643494119,281000320]
+        goodRngList = [-643494119,281000320,-1926806676,-1492670653]
 
     waitCounter = 0
     lastRng02 = FFX_memory.rng02()
@@ -5429,28 +5427,53 @@ def escapeAll():
 
 
 def escapeOne():
-    FFX_Logs.writeLog("Character attempting escape")
-    print("Attempting escape, one person")
-    while FFX_memory.mainBattleMenu():
-        if FFX_memory.battleComplete():
-            break
-        else:
-            FFX_Xbox.tapRight()
-    print("In other battle menu")
-    while FFX_memory.battleCursor2() != 2:
-        if FFX_memory.battleComplete():
-            break
-        else:
-            FFX_Xbox.tapDown()
-    print("Targeted Escape")
-    while FFX_memory.otherBattleMenu():
-        if FFX_memory.battleComplete():
-            break
-        else:
-            FFX_Xbox.tapB()
-    if FFX_memory.battleActive():
-        print("Selected Escaping")
-        tapTargeting()
+    print("##### The next character will escape: ", FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()))
+    if not FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()):
+        print("Character will not escape. Looking for a replacement.")
+        replacement = 255
+        replaceArray = FFX_memory.getBattleFormation()
+        for i in range(len(replaceArray)):
+            if replacement != 255:
+                pass
+            elif replaceArray[i] == 255:
+                pass
+            elif replaceArray[i] in FFX_memory.getActiveBattleFormation():
+                pass
+            elif FFX_rngTrack.nextActionEscape(replaceArray[i]):
+                print("Character ", replaceArray[i], " can escape. Swapping.")
+                replacement = replaceArray[i]
+                buddySwap_char(replacement)
+                escapeOne()
+            else:
+                pass
+        if replacement == 255:
+            print("No character could be found.")
+            if FFX_memory.getCurrentTurn() == 0:
+                tidusFlee()
+            else:
+                defend()
+    else:
+        print("Attempting escape, one person")
+        while FFX_memory.mainBattleMenu():
+            if FFX_memory.battleComplete():
+                break
+            else:
+                FFX_Xbox.tapRight()
+        print("In other battle menu")
+        while FFX_memory.battleCursor2() != 2:
+            if FFX_memory.battleComplete():
+                break
+            else:
+                FFX_Xbox.tapDown()
+        print("Targeted Escape")
+        while FFX_memory.otherBattleMenu():
+            if FFX_memory.battleComplete():
+                break
+            else:
+                FFX_Xbox.tapB()
+        if FFX_memory.battleActive():
+            print("Selected Escaping")
+            tapTargeting()
 
 
 def buddySwap_char(character):

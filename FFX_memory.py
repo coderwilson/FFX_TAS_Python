@@ -123,6 +123,12 @@ def battleActive():
     return process.readBytes(key, 1) == 0
 
 
+def getCurrentTurn():
+    global baseValue
+    key = baseValue + 0x00D2AA00
+    return process.readBytes(key, 1)
+
+
 def getNextTurn():
     global baseValue
     key = baseValue + 0x00D2AA04
@@ -2065,6 +2071,30 @@ def overdriveState2():
         offset = (0x94 * x) + 0x39
         retVal[x] = process.readBytes(basePointerAddress + offset, 1)
     print("Overdrive values:\n", retVal)
+    return retVal
+
+def charLuck(character:int=0):
+    global process
+    global baseValue
+
+    basePointer = baseValue + 0x003AB9B0
+    basePointerAddress = process.read(basePointer)
+    offset = (0x94 * character) + 0x34
+    retVal = process.readBytes(basePointerAddress + offset, 1)
+    #print("Character: ", character)
+    #print("Character luck value:\n", retVal)
+    return retVal
+
+def charAccuracy(character:int=0):
+    global process
+    global baseValue
+
+    basePointer = baseValue + 0x003AB9B0
+    basePointerAddress = process.read(basePointer)
+    offset = (0x94 * character) + 0x36
+    retVal = process.readBytes(basePointerAddress + offset, 1)
+    #print("Character: ", character)
+    #print("Character accuracy value:\n", retVal)
     return retVal
 
 
@@ -4066,3 +4096,18 @@ def arenaCursor():
     key = baseValue + 0x00D2A084
     status = process.readBytes(key, 2)
     return status
+
+# Escape logic, and used for others
+
+def rngFromIndex(index:int=20):
+    memTarget = 0xD35ED8 + (index * 0x4)
+    global baseValue
+    return process.read(baseValue + memTarget)
+
+
+def rngArrayFromIndex(index:int=20,arrayLen:int=20):
+    retVal = [rngFromIndex(index)]  # First value is the current value
+    for x in range(arrayLen):  # Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x], index))
+    # print(retVal)
+    return retVal
