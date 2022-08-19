@@ -546,7 +546,6 @@ def gridRight():
 
 
 def clickToBattle():
-    #FFX_Logs.writeLog("Clicking until it's someone's turn in battle")
     print("Clicking until it's someone's turn in battle")
     FFXC.set_neutral()
     complete = 0
