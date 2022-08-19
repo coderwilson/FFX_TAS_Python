@@ -2622,7 +2622,7 @@ def seymourGuado_blitzWin():
                         print("Wakka is dead")
                         wakkadead = True
             if turnchar == 0:
-                nextHit = FFX_rngTrack.nextActionHitMiss(character=FFX_memory.getCurrentTurn(),enemy=enemy)
+                nextHit = FFX_rngTrack.nextActionHitMiss(character=FFX_memory.getCurrentTurn(),enemy="anima")
                 if tidusturns == 0:
                     print("Tidus Haste self")
                     tidusHaste('none')
