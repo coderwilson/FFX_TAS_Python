@@ -454,7 +454,6 @@ def selfPot():
 def Ammes():
     BattleComplete = 0
     countAttacks = 0
-    countRevives = 0
 
     tidusODflag = False
 
@@ -476,7 +475,6 @@ def Ammes():
 
 def Tanker():
     print("Fight start: Tanker")
-    BattleComplete = 0
     countAttacks = 0
     tidusCount = 0
     auronCount = 0
@@ -1142,7 +1140,6 @@ def Geneaux():
 
 def LucaWorkers():
     print("Fight start: Workers in Luca")
-    BattleComplete = 0
     FFX_Xbox.clickToBattle()
 
     while not FFX_memory.menuOpen():  # AKA end of battle screen
@@ -4960,7 +4957,6 @@ def stealAndAttack():
 
 def stealAndAttackPreTros():
     print("Steal/Attack function before Tros")
-    BattleComplete = 0
     turnCounter = 0
     advances = getAdvances(tros=False)
     FFXC.set_neutral()
