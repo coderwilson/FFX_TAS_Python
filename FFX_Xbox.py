@@ -183,8 +183,7 @@ def touchSaveSphere():
     print("Touching the save sphere")
     while FFX_memory.userControl():
         tapB()
-        FFX_memory.waitFrames(3)
-    FFX_memory.waitFrames(15)
+    FFX_memory.waitFrames(14)
     while not FFX_memory.userControl():
         if FFX_memory.menuControl():
             if not FFX_memory.saveMenuCursor():
