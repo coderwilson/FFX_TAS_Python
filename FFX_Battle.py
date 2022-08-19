@@ -5464,7 +5464,7 @@ def escapeAll():
 
 def escapeOne():
     print("##### The next character will escape: ", FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()))
-    if not FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()):
+    if not FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()) and not FFX_memory.getBattleNum() == 26:
         print("Character will not escape. Looking for a replacement.")
         replacement = 255
         replaceArray = FFX_memory.getBattleFormation()
