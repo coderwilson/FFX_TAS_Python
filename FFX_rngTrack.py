@@ -861,3 +861,65 @@ def zombieTrack(report=False):
     advance01 += 1
     
     return zombieResults
+
+def nextActionEscape(character:int=0):
+    index = 20 + character
+    escapeRoll = FFX_memory.s32(FFX_memory.rngArrayFromIndex(index=index, arrayLen=1)[1]) & 255
+    return escapeRoll < 191
+
+def nextActionHitMiss(character:int=0, enemy:str="anima"):
+    print("=========================")
+    print("Checking hit chance - character: ", character)
+    #Need more work on this. There are a lot of variables we still need from memory.
+    #Character info, get these from memory
+    index = 36 + character
+    hit_rng = FFX_memory.rngArrayFromIndex(index=index)[1]
+    luck = FFX_memory.charLuck(character) #Need this out of memory
+    print("Luck: ", luck)
+    accuracy = FFX_memory.charAccuracy(character) #Need this out of memory
+    print("Accuracy: ", accuracy)
+    
+    #Data directly from the tracker
+    target_luck = MONSTERS[enemy].stats['Luck']
+    print("Enemy luck: ", target_luck)
+    target_evasion = MONSTERS[enemy].stats['Evasion']
+    print("Enemy evasion: ", target_evasion)
+    
+    #Unused, but technically part of the formula
+    aims = 0
+    target_reflexes = 0
+    
+    hit_chance = accuracy * 2
+    hit_chance = (hit_chance * 0x66666667) // 0xffffffff
+    hit_chance = hit_chance // 2
+    hit_chance_index = hit_chance // 0x80000000
+    hit_chance_index += hit_chance - target_evasion + 10
+    if hit_chance_index < 0:
+        hit_chance_index = 0
+    elif hit_chance_index > 8:
+        hit_chance_index = 8
+    hit_chance = hitChanceTable(hit_chance_index) + luck
+    hit_chance += (aims - target_reflexes) * 10 - target_luck
+    print("Hit results: ", hit_chance > (FFX_memory.s32(hit_rng) % 101))
+    print("=========================")
+    return hit_chance > (FFX_memory.s32(hit_rng) % 101)
+
+def hitChanceTable(index:int):
+    if index == 0:
+        return 25
+    elif index in [1,2]:
+        return 30
+    elif index in [3,4]:
+        return 40
+    elif index in [5,6]:
+        return 50
+    elif index == 7:
+        return 80
+    elif index == 8:
+        return 100
+
+#Testing only:
+#print("Monster test")
+#print(MONSTERS["anima"].stats['Luck'])
+#print(MONSTERS["anima"].stats['Evasion'])
+#end
