@@ -132,7 +132,6 @@ def gagazetGates():
     # Should appear on the map just before the Ronso hymn
     endVer = gameVars.endGameVersion()
     print("Grid version: " + str(endVer))
-    FFX_Logs.writeLog("Grid version: " + str(endVer))
     FFX_Logs.writeStats("B&Y Return spheres:")
     if endVer == 4:
         FFX_Logs.writeStats("4")
