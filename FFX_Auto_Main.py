@@ -96,7 +96,7 @@ if gameVars.nemesis():
 Gamestate = "none"
 StepCounter = 1
 
-#Nemesis load testing
+# Nemesis load testing
 #Gamestate = "Nem_Farm"
 #StepCounter = 2 #Start of Calm Lands (only one each)
 #StepCounter = 3
@@ -156,8 +156,6 @@ specialZanLoad = False
 def reportGamestate():
     global Gamestate
     global StepCounter
-    #logText = "Gamestate: " + Gamestate + " : StepCounter: " + str(StepCounter)
-    #FFX_Logs.writeLog(logText + "\n")
     FFX_Screen.clearMouse(0)
 
 
@@ -175,7 +173,7 @@ reportGamestate()
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed:", rngSeed)
@@ -395,11 +393,9 @@ if Gamestate != "none":
 rikkuCharged = 0
 
 while Gamestate != "End":
-
     # Blitzball testing logic
     if Gamestate == "Luca" and StepCounter == 3:
         FFX_DreamZan.NewGame(Gamestate)
-        FFX_Logs.writeLog("Loading to a specific gamestate.\n")
         FFX_LoadGame.loadSaveNum(37)
         # FFX_memory.setRNG2()
 
