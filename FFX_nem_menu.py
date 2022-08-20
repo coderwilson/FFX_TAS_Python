@@ -189,8 +189,8 @@ def performNextGrid(limit:int=255):
             print("----------------------------")
             print("End of sphere grid, no further grid logic programmed.")
             print("----------------------------")
-            gameVars.setNemChecpointAP(gameVars.nemCheckpointAP() - 1) #Decrement
-        gameVars.setNemChecpointAP(gameVars.nemCheckpointAP() + 1) #Increment
+            gameVars.setNemCheckpointAP(gameVars.nemCheckpointAP() - 1) #Decrement
+        gameVars.setNemCheckpointAP(gameVars.nemCheckpointAP() + 1) #Increment
     
 def nextAPneeded(checkpoint):
     if checkpoint == 1:
@@ -252,7 +252,7 @@ def nextAPneeded(checkpoint):
 
 def nemGridding1():
     if FFX_memory.getPower() < 4 or FFX_memory.getSpeed() < 4:
-        gameVars.setNemChecpointAP(value=0)
+        gameVars.setNemCheckpointAP(value=0)
         return
     #Requires X levels
     FFX_menu.autoSortItems()

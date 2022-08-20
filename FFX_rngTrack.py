@@ -53,8 +53,6 @@ def comingBattleType(extraAdvances:int=0, initiative=False):
     else:
         return 2
 
-    
-
 def singlesBattles(area:str="kilika_woods", battleCount:int=10, extraAdvances:int=0):
     formations = areaFormations(area=area)
     advances = FFX_memory.rng01Advances((battleCount) + extraAdvances)
