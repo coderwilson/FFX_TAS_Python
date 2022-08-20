@@ -4952,7 +4952,7 @@ def desert(checkpoint):
         #x = -230
         #y = 796
     if checkpoint == 59:  # Lining up for Sandy skip
-        x = -244
+        x = -235 #previously -244
         y = 797
     if checkpoint == 61:  # Waiting to be pushed
         x = -273

@@ -152,8 +152,6 @@ def ABboat1():
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()
 
-    FFX_memory.waitFrames(60)
-
 
 def ABswimming1():
     complete = 0

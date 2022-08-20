@@ -2232,7 +2232,7 @@ def eggX(eggNum):
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x0C
     retVal = float_from_integer(process.read(key))
-    #print("Egg ", eggNum," X value:", retVal)
+    #print("Egg", eggNum, "X value:", retVal)
     return retVal
 
 
@@ -2244,7 +2244,7 @@ def eggY(eggNum):
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * eggNum) + 0x14
     retVal = float_from_integer(process.read(key))
-    #print("Egg ", eggNum," Y value:", retVal)
+    #print("Egg", eggNum, "Y value:", retVal)
     return retVal
 
 
@@ -3798,6 +3798,19 @@ def nextChanceRNG10(dropChanceVal: int = 60) -> int:
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
             return (i-3)
 
+def nextChanceRNG10Full(dropChanceVal: int = 60) -> int:
+    testArray = rng10Array()
+    resultsArray = [False,False,False]
+    for i in range(len(testArray)):
+        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
+        if i < 3:
+            pass
+        elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
+            resultsArray.append(True)
+        else:
+            resultsArray.append(False)
+    return resultsArray
 
 def nextChanceRNG10Calm() -> int:
     testArray = rng10Array()
@@ -3991,17 +4004,10 @@ def rollNextRNG(lastRNG: int, index: int) -> int:
 
 def printManipInfo():
     print("--------------------------")
-    print("The next state for drops:")
-    print("RNG13 manip:", nextChanceRNG13() - 1)
-    print("RNG12 manip:", nextChanceRNG12(), "| supersedes RNG13 above")
-    print("RNG10 manip:", nextChanceRNG10(), "| literal next")
-    print("RNG10 manip:", nextChanceRNG10Calm(),
-          "| perfect world next (accounts for Defender X)")
+    print("Upcoming RNGs:")
+    print("RNG12:", nextChanceRNG12(), "| RNG13: ", nextChanceRNG13() - 1)
+    print("RNG10:", nextChanceRNG10(), "| Pre Defender X: ", nextChanceRNG10Calm())
     print("--------------------------")
-    print("Best case state: 0/1, 0, ?, 0")
-    print("Acceptable state: 0/1, 0, ?, not-0")
-    print("--------------------------")
-
 
 def arenaArray():
     global baseValue
