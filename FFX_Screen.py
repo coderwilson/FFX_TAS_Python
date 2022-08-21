@@ -185,41 +185,6 @@ def mrrCompletion(status):
     return status
 
 
-def imgSearch(img, conf):
-    print("########################################")
-    print("########################################")
-    print("IMAGE SEARCH, FIX THIS LATER")
-    print("########################################")
-    print("########################################")
-    # playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    img = 'img\\' + str(img)
-    try:
-        imgTest = pyautogui.locateOnScreen(img, confidence=conf)
-        print("Results for searching '", img, ":", imgTest)
-        if imgTest[1] > 1:
-            return True
-    except Exception as errorMsg:
-        print("Something went wrong. Could not find image.")
-        print(errorMsg)
-        return False
-
-
-def imgSearch2(img, conf):
-    print("########################################")
-    print("IMAGE SEARCH, FIX THIS LATER")
-    print("########################################")
-    # playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    try:
-        imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
-        print("Results for searching '", img, ":", imgTest)
-        if imgTest[1] > 1:
-            return True
-    except Exception as errorMsg:
-        print("Something went wrong. Could not find image.")
-        print(errorMsg)
-        return False
-
-
 def desertCharge():
     chargeState = [False, False]
     chargeState[0] = checkCharge(1)
