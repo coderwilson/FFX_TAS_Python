@@ -198,13 +198,13 @@ while attempts < 20:
     #print("Duration:", endTime - startTime)
 
     if attempts < 20:
-        #print("Clicking to control so we can reset. ", attempts)
+        #print("Clicking to control so we can reset.", attempts)
         # FFXC.set_neutral()
         # FFX_memory.clickToControl()
         #print(" ")
         # print("------------------------------")
         # print("------------------------------")
-        #print("Test number ", attempts, "is complete.")
+        #print("Test number", attempts, "is complete.")
         #print("Blitzball wins:", success)
         # print("------------------------------")
         # print("------------------------------")

@@ -77,7 +77,7 @@ class vgTranslator:
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - ", xKey)
+            print("ERROR -", xKey)
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")
             print("ERROR - OLD MOVEMENT COMMAND FOUND")

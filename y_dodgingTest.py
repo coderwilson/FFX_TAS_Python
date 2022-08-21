@@ -20,7 +20,7 @@ complete = False
 while lStrikeCount - lStrikeStart < 250:
     if FFX_memory.dodgeLightning(lStrikeCount):
         lStrikeCount = FFX_memory.lStrikeCount()
-        print("Dodge, ", lStrikeCount - lStrikeStart)
+        print("Dodge,", lStrikeCount - lStrikeStart)
     elif FFX_memory.userControl():
         FFX_targetPathing.setMovement([62, 780])
 

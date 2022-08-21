@@ -50,7 +50,7 @@ def arrival():
                         print("Checkpoint reached:", checkpoint)
 
                 else:
-                    print("any% logic - ", checkpoint)
+                    print("any% logic -", checkpoint)
                     # Run this branch on a noraml Any% run, no CSR
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()

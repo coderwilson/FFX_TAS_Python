@@ -4666,7 +4666,7 @@ def seymourSpell():
 
 
 def _useHealingItem(num=None, direction='l', itemID=0):
-    print("Healing character, ", num)
+    print("Healing character:", num)
     direction = direction.lower()
     while not FFX_memory.turnReady():
         print("Battle menu isn't up.")
@@ -4718,7 +4718,7 @@ def _useHealingItem(num=None, direction='l', itemID=0):
 
 
 def usePotionCharacter(num, direction):
-    print("Healing character, ", num)
+    print("Healing character:", num)
     _useHealingItem(num=num, direction=direction, itemID=0)
 
 
@@ -5126,7 +5126,7 @@ def thunderTarget(target, direction):
 
 
 def aeonSummon(position):
-    print("Aeon is being summoned. " + str(position) + "")
+    print("Aeon is being summoned." + str(position))
     while not FFX_memory.mainBattleMenu():
         pass
     while FFX_memory.battleMenuCursor() != 23:
@@ -5208,10 +5208,10 @@ def healUp(chars=3, *, fullMenuClose=True):
     FFXC = FFX_Xbox.controllerHandle()
     FFXC.set_neutral()
     while FFX_memory.getMenuCursorPos() != 2:
-        print("Selecting Ability command - ", FFX_memory.getMenuCursorPos())
+        print("Selecting Ability command -", FFX_memory.getMenuCursorPos())
         FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 2, 11)
     while FFX_memory.menuNumber() == 5:
-        print("Select Ability - ", FFX_memory.menuNumber())
+        print("Select Ability -", FFX_memory.menuNumber())
         FFX_Xbox.tapB()
     print("Mark 1")
     target_pos = FFX_memory.getCharacterIndexInMainMenu(1)
@@ -5418,7 +5418,7 @@ def escapeAll():
 
 
 def escapeOne():
-    print("##### The next character will escape: ", FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()))
+    print("##### The next character will escape:", FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()))
     if not FFX_rngTrack.nextActionEscape(character=FFX_memory.getCurrentTurn()) and not FFX_memory.getBattleNum() == 26:
         if FFX_memory.getStoryProgress() < 154:
             print("Character cannot escape (Lagoon). Attacking instead.")
@@ -5435,7 +5435,7 @@ def escapeOne():
                 elif replaceArray[i] in FFX_memory.getActiveBattleFormation():
                     pass
                 elif FFX_rngTrack.nextActionEscape(replaceArray[i]):
-                    print("Character ", replaceArray[i], " can escape. Swapping.")
+                    print("Character", replaceArray[i], "can escape. Swapping.")
                     replacement = replaceArray[i]
                     buddySwap_char(replacement)
                     return escapeOne()
@@ -5482,7 +5482,7 @@ def buddySwap_char(character):
     position = FFX_memory.getBattleCharSlot(character)
 
     if position < 3:
-        print("Cannot swap with character ", FFX_memory.nameFromNumber(character),
+        print("Cannot swap with character", FFX_memory.nameFromNumber(character),
               ", that character is in the front party.")
         return
     else:
@@ -6120,7 +6120,7 @@ def equipInBattle(equipType='weap', abilityNum=0, character=0, special='none'):
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
 
-    print("Desired equipment is in slot ", equipNum)
+    print("Desired equipment is in slot", equipNum)
 
 
 def checkCharacterOk(charNum):
@@ -6273,7 +6273,7 @@ def calmLandsManip():
     midArray = [277, 279, 285, 287, 289, 290]
     rng10nextChanceHigh = FFX_memory.nextChanceRNG10(128)
     highArray = [278, 286, 288]
-    print("++Gems: ", checkGems())
+    print("++Gems:", checkGems())
     if checkGems() < 2:
         print("++Calm Lands battle, looking for gems.")
         calmLandsGems()
@@ -6454,10 +6454,10 @@ def advanceRNG12():
                     aeonSummon(4)
             elif FFX_Screen.turnAeon():
                 numEnemies = len(FFX_memory.getEnemyCurrentHP())
-                print("+++ ", FFX_memory.getEnemyCurrentHP())
-                print("+++ ", numEnemies)
+                print("+++", FFX_memory.getEnemyCurrentHP())
+                print("+++", numEnemies)
                 checkAhead = numEnemies * 3
-                print("+++ ", checkAhead)
+                print("+++", checkAhead)
                 aheadArray = FFX_memory.nextChanceRNG10Full()
                 for h in range(checkAhead):
                     if h == 3:
@@ -6506,19 +6506,19 @@ def ghostKill():
     owner2 = nextDrop.equipOwnerAlt
     silenceSlot = FFX_memory.getItemSlot(39)
     if owner2 in [0,4,6]:
-        print("Aeon kill results in NEA on char: ", owner2)
+        print("Aeon kill results in NEA on char:", owner2)
         ghostKillAeon()
     elif silenceSlot > 200:
-        print("No silence grenade, going with aeon kill: ", owner2)
+        print("No silence grenade, going with aeon kill:", owner2)
         ghostKillAeon()
     elif owner1 in [0,4,6]:
-        print("Any character kill results in NEA on char: ", owner1)
+        print("Any character kill results in NEA on char:", owner1)
         ghostKillAny()
     elif owner1 == 9:
-        print("Has to be Tidus kill: ", owner1)
+        print("Has to be Tidus kill:", owner1)
         ghostKillTidus()
     else:
-        print("No way to get an optimal drop. Resorting to aeon: ", owner2)
+        print("No way to get an optimal drop. Resorting to aeon:", owner2)
         ghostKillAeon()
     
     FFX_memory.clickToControl3()
