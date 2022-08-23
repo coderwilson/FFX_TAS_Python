@@ -31,7 +31,7 @@ def arrival():
             # Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
                 if gameVars.csr():
-                    print("CSR logic -", checkpoint)
+                    #print("CSR logic -", checkpoint)
                     # Only run this branch if CSR is online.
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()
@@ -50,8 +50,8 @@ def arrival():
                         print("Checkpoint reached:", checkpoint)
 
                 else:
-                    print("any% logic -", checkpoint)
-                    # Run this branch on a noraml Any% run, no CSR
+                    #print("any% logic -", checkpoint)
+                    # Run this branch on a normal Any% run, no CSR
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()
                     if hunterCoords[1] < tidusCoords[1]:
@@ -160,16 +160,9 @@ def arrival():
                         FFX_Xbox.tapB()
                     FFXC.set_movement(0, 1)
                     while not FFX_memory.userControl():
-                        FFXC.set_value('BtnB', 1)
-                        FFX_memory.waitFrames(2)
-                        FFXC.set_value('BtnB', 0)
-                        FFX_memory.waitFrames(3)
-
+                        FFX_Xbox.tapB()
                     while not FFX_memory.menuOpen():
-                        FFXC.set_value('BtnY', 1)
-                        FFX_memory.waitFrames(2)
-                        FFXC.set_value('BtnY', 0)
-                        FFX_memory.waitFrames(3)
+                        FFX_Xbox.tapY()
                     FFXC.set_neutral()
                     FFX_memory.fullPartyFormat('djose')
                     FFX_memory.closeMenu()
@@ -184,9 +177,8 @@ def arrival():
                     print("Battle complete")
 
                 # Kimahri manip
-                print("||| Next Kimahri Crit vs Gui:", FFX_memory.nextCrit(
-                    character=6, charLuck=18, enemyLuck=15))
-                # FFX_memory.waitFrames(180)
+                nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+                print("#### Next Kimahri crit: ", nextCritKim)
             else:
                 FFXC.set_movement(1, 1)
                 if FFX_memory.menuOpen():
@@ -253,6 +245,7 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
 
 def midPoint():
     checkpoint = 0
+    FFX_memory.fullPartyFormat('tidkimwak')
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
             pDownSlot = FFX_memory.getItemSlot(6)
@@ -285,6 +278,7 @@ def midPoint():
 # Starts just after the save sphere.
 def lowRoad(selfDestruct, battleCount, SDbattleNum):
     checkpoint = 0
+    FFX_memory.fullPartyFormat('djose')
     while FFX_memory.getMap() != 79:
         if FFX_memory.userControl():
             # Utility stuff

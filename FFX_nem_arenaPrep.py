@@ -1410,11 +1410,7 @@ def mrrFarm(capNum:int=1):
 def djoseFarm(capNum:int=10):
     rinEquipDump()
     airShipDestination(destNum=5)
-    
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:
@@ -1463,13 +1459,7 @@ def djoseFarm(capNum:int=10):
 def tPlains(capNum:int=1,autoHaste:bool=False):
     rinEquipDump()
     airShipDestination(destNum=8)
-    
-    FFX_memory.fullPartyFormat('yuna',fullMenuClose=False)
-    FFX_menu.equipWeapon(character=1,ability=0x807A, fullMenuClose=False)
-    if gameVars.neArmor() == 0 and autoHaste:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:
@@ -1518,11 +1508,7 @@ def tPlains(capNum:int=1,autoHaste:bool=False):
 
 def macWoods(capNum:int=10):
     airShipDestination(destNum=9)
-    
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:
@@ -1566,11 +1552,7 @@ def macWoods(capNum:int=10):
 
 def bikanel(capNum:int=10):
     airShipDestination(destNum=10)
-    
-    if gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     checkpoint = 0
     while not FFX_memory.getMap() in [194,374]:
@@ -1613,14 +1595,7 @@ def bikanel(capNum:int=10):
 
 def calm(capNum:int=1,autoHaste = False,airshipReturn = True):
     airShipDestination(destNum=12)
-    if capNum == 1:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99)
-    elif gameVars.neArmor() == 0:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    elif gameVars.neArmor() in [4,6]:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=0x801D) #Auto-Phoenix
-    else:
-        FFX_menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
+    FFX_menu.removeAllNEA()
     
     neArmor = False
     
