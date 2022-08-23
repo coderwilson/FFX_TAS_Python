@@ -3682,7 +3682,7 @@ RNG_CONSTANTS_2 = (
 )
 
 
-def buildRNGarray(index: int, arraySize: int = 255):
+def buildRNGarray(index: int, arraySize:int = 255):
     global baseValue
     offset = baseValue + 0xD35ED8 + (index * 4)
     arrayVal = [process.read(offset)]
@@ -3692,20 +3692,21 @@ def buildRNGarray(index: int, arraySize: int = 255):
 
 
 def nextCrit(character: int, charLuck: int, enemyLuck: int) -> int:
-    # Returns the next time the character will critically strike.
-    # If 255 is returned, there will not be a next crit in the foreseeable future.
+    #Returns the next time the character will critically strike.
+    #If 255 is returned, there will not be a next crit in the foreseeable future.
     rngIndex = min(20+character, 27)
-    rngArray = buildRNGarray(index=rngIndex)
-    x = 2  # 1 for first roll, 2 for second roll. Damage rolled before crit.
-    nextCritCount = 0
-    while x < len(rngArray) - 1:
-        crit_roll = rngArray[x] % 101
+    #print("### Index: ", rngIndex)
+    rngArray = rngArrayFromIndex(index=rngIndex,arrayLen=200)
+    del rngArray[0]
+    del rngArray[0]
+    for x in range(len(rngArray)):
+        crit_roll = s32(rngArray[x]) % 101
         crit_chance = charLuck - enemyLuck
         if crit_roll < crit_chance:
-            return nextCritCount
-        else:
-            nextCritCount += 1
-            x += 2
+            if x == 0:
+                pass
+            else:
+                return x
     return 255
 
 
@@ -3982,6 +3983,23 @@ def advanceRNG13():
     global baseValue
     key = baseValue + 0xD35F0C
     process.write(key, rng13Array()[4])
+    #print("Value advanced.")
+
+def rng23():
+    global baseValue
+    return process.read(baseValue + 0xD35F16)
+
+def rng23Array(arrayLen:int=200):
+    retVal = [rng23()]  # First value is the current value
+    for x in range(arrayLen):  # Subsequent values are based on first value.
+        retVal.append(rollNextRNG(retVal[x], 13))
+    # print(retVal)
+    return retVal
+
+def advanceRNG23():
+    global baseValue
+    key = baseValue + 0xD35F16
+    process.write(key, rng23Array()[1])
     #print("Value advanced.")
 
 

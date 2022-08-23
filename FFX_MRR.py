@@ -154,15 +154,27 @@ def mainPath():
             elif checkpoint < 71 and FFX_memory.getMap() == 79:
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True:
-                checkpoint += 1
+                if checkpoint == 62:
+                    if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2,3,4,5,6,7,8,9,10]:
+                        print("+++++++++++ We can manip: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                        checkpoint = 90
+                    else:
+                        checkpoint += 1
+                elif checkpoint == 90:
+                    checkpoint = 62
+                else:
+                    checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 print("Starting battle MRR")
-                status = FFX_Battle.MRRbattle(status)
-                print("Status update:", status)
-                status[3] += 1
+                if checkpoint < 47:
+                    status = FFX_Battle.MRRbattle(status)
+                    print("Status update:", status)
+                    status[3] += 1
+                else:
+                    FFX_Battle.MRRmanip(kimMaxAdvance=9)
 
                 if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
                     print("Yuna has enough levels now. Going to do her grid.")
@@ -172,6 +184,8 @@ def mainPath():
                 if FFX_memory.getSLVLWakka() >= 7:
                     FFX_menu.mrrGrid2()
                 FFX_memory.closeMenu()
+                print("MRR battle complete")
+                print("======== Next Kimahri crit: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                 battleCount += 1
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()

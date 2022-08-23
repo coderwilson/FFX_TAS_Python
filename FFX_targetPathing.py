@@ -2400,6 +2400,9 @@ def mrrMain(checkpoint):
     if checkpoint == 75:
         x = -67
         y = 830
+    if checkpoint == 90:
+        x = 204
+        y = 136
     if checkpoint == 99:
         x = 77
         y = 872
