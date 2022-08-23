@@ -1460,10 +1460,10 @@ def chocoEater():
             if FFX_Screen.faintCheck() > 1:
                 print("Attempting revive")
                 revive()
-            elif FFX_memory.getNextTurn() >= 20 and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(2)] == 0:
-                print("Special defend to avoid soft lock")
-                FFX_memory.waitFrames(90)
-                defend()
+            #elif FFX_memory.getNextTurn() >= 20 and FFX_memory.getBattleHP()[FFX_memory.getBattleCharSlot(2)] == 0:
+            #    print("Special defend to avoid soft lock")
+            #    FFX_memory.waitFrames(90)
+            #    defend()
             else:
                 print("Attempting defend")
                 defend()
