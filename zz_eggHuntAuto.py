@@ -175,16 +175,16 @@ def engage():
             if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
                 time.sleep(0.15)
                 FFXC.set_neutral()
-                #print("Studder-step to egg. | ",lookingCount)
-                print("Studder-step to egg. | ", checkpoint)
+                #print("Stutter-step to egg. |",lookingCount)
+                print("Stutter-step to egg. |", checkpoint)
                 FFX_Xbox.tapB()
             elif activeEgg == 99:
-                #print("Looking for a new egg. | ",lookingCount)
-                print("Looking for a new egg. | ", checkpoint)
+                #print("Looking for a new egg. |",lookingCount)
+                print("Looking for a new egg. |", checkpoint)
                 FFX_Xbox.tapB()
             else:
-                #print("Targetting egg: | ",target)
-                print("Targetting egg: | ", checkpoint)
+                #print("Targeting egg: |",target)
+                print("Targeting egg: |", checkpoint)
             FFX_Xbox.tapB()
     endTime = time.time()
     print("End egg hunt")

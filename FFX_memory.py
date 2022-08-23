@@ -3682,7 +3682,7 @@ RNG_CONSTANTS_2 = (
 )
 
 
-def buildRNGarray(index: int, arraySize:int = 255):
+def buildRNGarray(index: int, arraySize: int = 255):
     global baseValue
     offset = baseValue + 0xD35ED8 + (index * 4)
     arrayVal = [process.read(offset)]
