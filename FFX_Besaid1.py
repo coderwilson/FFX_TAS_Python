@@ -57,7 +57,7 @@ def Beach():
             # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                #print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -289,7 +289,7 @@ def leaving():
                 FFX_Logs.writeStats(healCount)
                 FFX_memory.clickToControl()
             # Valefor summon tutorial
-            elif checkpoint in [33, 34, 35] and FFX_Screen.BattleScreen():
+            elif checkpoint in [31,32,33,34,35,36,37,38] and FFX_Screen.BattleScreen():
                 FFX_Xbox.clickToBattle()
                 while not FFX_Screen.turnAeon():
                     if FFX_memory.turnReady():

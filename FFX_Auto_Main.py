@@ -96,7 +96,7 @@ if gameVars.nemesis():
 Gamestate = "none"
 StepCounter = 1
 
-# Nemesis load testing
+#Nemesis load testing
 #Gamestate = "Nem_Farm"
 #StepCounter = 2 #Start of Calm Lands (only one each)
 #StepCounter = 3
@@ -110,9 +110,9 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False  # Update this to decide new seed or known seed
 rngSeedNum = 255  # New seed number, only used if doing seed hunt.
-rngSelectArray = [41, 144, 157, 160, 172, 177, 182, 183, 200, 224, 254]
-goodSeeds = [31, 41, 144, 157, 160, 172, 177, 182, 183, 200, 224, 254]
-rngSeedNum = 31  # yeah, I'm moving it here.
+rngSelectArray = [41, 160, 172, 177, 182, 183, 224, 254]
+goodSeeds = [2, 31, 41, 157, 160, 172, 177, 182, 183, 200, 224, 254]
+rngSeedNum = 2  # yeah, I'm moving it here.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -126,10 +126,10 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
-    # gameVars.setCSR(True)
+    #gameVars.setCSR(True)
 elif seedHunt == False:  # Full run starting from New Game
-    #rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
-    # Current WR is on seed 160 for both any% and CSR%
+    rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
+    #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -156,6 +156,8 @@ specialZanLoad = False
 def reportGamestate():
     global Gamestate
     global StepCounter
+    #logText = "Gamestate: " + Gamestate + " : StepCounter: " + str(StepCounter)
+    #FFX_Logs.writeLog(logText + "\n")
     FFX_Screen.clearMouse(0)
 
 
@@ -222,11 +224,11 @@ if Gamestate != "none":
     if Gamestate == "Luca" and StepCounter == 5:  # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(5)
     if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
-        # FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
-        FFX_LoadGame.loadSaveNum(16)  # With laughing scene
-        # FFX_LoadGame.LoadMiihenStart()
-        FFX_LoadGame.LoadMiihenStart_Laugh()
-        # FFX_memory.setEncounterRate(0)
+        FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
+        FFX_LoadGame.LoadMiihenStart()
+        #FFX_LoadGame.loadSaveNum(16)  # With laughing scene
+        #FFX_LoadGame.LoadMiihenStart_Laugh()
+        #FFX_memory.setEncounterRate(0)
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
@@ -393,9 +395,11 @@ if Gamestate != "none":
 rikkuCharged = 0
 
 while Gamestate != "End":
+
     # Blitzball testing logic
     if Gamestate == "Luca" and StepCounter == 3:
         FFX_DreamZan.NewGame(Gamestate)
+        FFX_Logs.writeLog("Loading to a specific gamestate.\n")
         FFX_LoadGame.loadSaveNum(37)
         # FFX_memory.setRNG2()
 
