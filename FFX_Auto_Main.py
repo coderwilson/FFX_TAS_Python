@@ -43,9 +43,9 @@ if gameVars.nemesis():
 # Gamestate, "none" for new game, or set to a specific section to start from the first save.
 # See the if statement tree below to determine starting position for Gamestate.
 # These are the popular ones. New Game ('none') is the last one.
-#Gamestate = "Baaj"
+Gamestate = "Baaj"
 #StepCounter = 1
-#StepCounter = 6
+StepCounter = 4
 #Gamestate = "Besaid"
 #StepCounter = 3
 #Gamestate = "Kilika"
@@ -110,9 +110,10 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False  # Update this to decide new seed or known seed
 rngSeedNum = 255  # New seed number, only used if doing seed hunt.
-rngSelectArray = [41, 160, 172, 177, 182, 183, 224, 254]
-goodSeeds = [2, 31, 41, 157, 160, 172, 177, 182, 183, 200, 224, 254]
-rngSeedNum = 2  # yeah, I'm moving it here.
+rngSelectArray = [41, 160, 177, 182, 224, 254]
+maybeGoodSeeds = [2, 31, 41, 157, 160, 172, 177, 182, 183, 200, 224, 254]
+favoriteSeeds = [31,183]
+rngSeedNum = 31 # yeah, I'm moving it here.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -175,7 +176,7 @@ reportGamestate()
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed:", rngSeed)
@@ -198,6 +199,8 @@ if Gamestate != "none":
     if Gamestate == "Baaj" and StepCounter == 1:
         FFX_LoadGame.loadSaveNum(40)
         # FFX_LoadGame.LoadBaaj()
+    if Gamestate == "Baaj" and StepCounter == 4:
+        FFX_LoadGame.loadSaveNum(100)
     if Gamestate == "Besaid" and StepCounter == 1:  # Save pop-up after falling off of Rikkus boat
         FFX_LoadGame.loadSaveNum(111)
     if Gamestate == "Besaid" and StepCounter == 3:  # Crusader's lodge after "Enough, Wakka!"
