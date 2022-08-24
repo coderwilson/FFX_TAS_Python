@@ -311,7 +311,7 @@ def useShiftLeft(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderLeft()
-    print("Ready for grid: " + toon)
+    print("Ready for grid:" + toon)
 
 
 def useShiftRight(toon):
@@ -376,7 +376,7 @@ def useShiftRight(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderRight()
-    print("Ready for grid: " + toon)
+    print("Ready for grid:" + toon)
 
 
 def moveShiftLeft(toon):
@@ -417,7 +417,7 @@ def moveShiftLeft(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderLeft()
-    print("Ready for grid: " + toon)
+    print("Ready for grid:" + toon)
 
 
 def moveShiftRight(toon):
@@ -458,7 +458,7 @@ def moveShiftRight(toon):
                 FFX_Xbox.menuBack()
             elif firstPosition():
                 FFX_Xbox.shoulderRight()
-    print("Ready for grid: " + toon)
+    print("Ready for grid:" + toon)
 
 
 def useAndQuit():

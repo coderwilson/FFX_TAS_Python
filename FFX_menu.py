@@ -262,7 +262,7 @@ def lateHaste():
 
 
 def mrrGrid1():
-    print("Menuing: start of MRR ")
+    print("Menuing: start of MRR")
     openGrid(character=4)
     FFX_menuGrid.moveFirst()
     gridRight()
@@ -423,7 +423,7 @@ def battleSiteOaka1():
         else:
             amount_to_sell = max(
                 cur_amount - {0: 0, 1: 0, 2: 0, 8: 0}[cur_item], 0)
-        print("Selling from ", cur_amount, " to ", amount_to_sell)
+        print("Selling from", cur_amount, "to", amount_to_sell)
         while FFX_memory.itemShopMenu() != 27:
             FFX_Xbox.tapB()
         while FFX_memory.equipBuyRow() != amount_to_sell:
@@ -794,7 +794,7 @@ def sortItems(fullMenuClose=True):
 
 
 def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
-    print("Equipping Weapon with ability ", ability)
+    print("Equipping Weapon with ability", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
 
@@ -823,7 +823,7 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
         elif all(currentWeapon.hasAbility(cur_ability) for cur_ability in abilityarray):
             weaponNum = index
             break
-    print("Weapon is in slot ", weaponNum)
+    print("Weapon is in slot", weaponNum)
     if weaponNum == 255:
         if fullMenuClose:
             FFX_memory.closeMenu()
@@ -873,7 +873,7 @@ def equipScout(fullMenuClose=True):
 
 
 def equipArmor(*, character, ability=255, fullMenuClose=True):
-    print("Equipping Armor with ability ", ability)
+    print("Equipping Armor with ability", ability)
     FFX_memory.awaitControl()
     gameVars = FFX_vars.varsHandle()
 
@@ -905,7 +905,7 @@ def equipArmor(*, character, ability=255, fullMenuClose=True):
     else:
         armorNum = 0
 
-    print("Armor is in slot ", armorNum)
+    print("Armor is in slot", armorNum)
     if FFX_memory.menuNumber() != 26:
         if not FFX_memory.menuOpen():
             FFX_memory.openMenu()
@@ -1362,8 +1362,8 @@ def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
     # auron baroque sword - [0x800B, 0x8063, 255, 255]
     print("Looking for:", ability_array)
     for current_index, currentHandle in enumerate(equipArray):
-        print("Slot:", current_index, " | Owner:", currentHandle.owner(
-        ), " | Abilities:", currentHandle.abilities(), " | Slots:", currentHandle.slotCount())
+        print("Slot:", current_index, "| Owner:", currentHandle.owner(
+        ), "| Abilities:", currentHandle.abilities(), "| Slots:", currentHandle.slotCount())
         if currentHandle.owner() == owner and currentHandle.equipmentType() == equipment_type \
                 and currentHandle.abilities() == ability_array \
                 and currentHandle.slotCount() == slotcount:

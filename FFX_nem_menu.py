@@ -51,7 +51,7 @@ def awaitUse():
     complete = False
     while complete == False:
         menuVal = FFX_memory.sGridMenu()
-        print("Menu value: ", menuVal)
+        print("Menu value:", menuVal)
         if menuVal == 7:
             cursorLoc = FFX_memory.cursorLocation()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:

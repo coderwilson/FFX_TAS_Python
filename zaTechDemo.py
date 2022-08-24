@@ -160,7 +160,7 @@ while attempts < 20 and cycles < 50:
     #        if FFX_memory.dodgeLightning(lStrikeCount):
     #            FFX_memory.awaitControl()
     #            lStrikeCount = FFX_memory.lStrikeCount()
-    #            print("Dodge count, ", lStrikeCount - lStrikeStart)
+    #            print("Dodge count,", lStrikeCount - lStrikeStart)
     #        elif FFX_memory.userControl():
     #            FFX_targetPathing.setMovement([62,780])
     #        else:
@@ -177,7 +177,7 @@ while attempts < 20 and cycles < 50:
     #        if FFX_memory.dodgeLightning(lStrikeCount):
     #            FFX_memory.awaitControl()
     #            lStrikeCount = FFX_memory.lStrikeCount()
-    #            print("Dodge count, ", lStrikeCount - lStrikeStart)
+    #            print("Dodge count,", lStrikeCount - lStrikeStart)
     #        elif FFX_memory.userControl():
     #            if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsDodging(checkpoint)) == True:
     #                checkpoint += 1
@@ -259,7 +259,7 @@ while attempts < 20 and cycles < 50:
     # Clean-up for next round, or process termination.
     FFXC.set_neutral()
     if attempts < 100:
-        print("Demo complete. Now clicking to control so we can reset. ", attempts)
+        print("Demo complete. Now clicking to control so we can reset.", attempts)
         if FFX_memory.getStoryProgress() < 3380:
             FFX_memory.clickToControl()
             time.sleep(2)
@@ -312,7 +312,7 @@ print("------------------------------")
 #print("-Rossy__ from the FFX Speed-running community")
 # time.sleep(1.5)
 #print("-CrimsonInferno from the FFX Speed-running community")
-#print("(current WR holder, multiple categories) ")
+#print("(current WR holder, multiple categories)")
 # time.sleep(1.5)
 #print("-Highspirits from QfG staff, amazing work on the event!")
 # time.sleep(1.5)
