@@ -1850,10 +1850,14 @@ def removeAllNEA():
     for i in range(7):
         if FFX_memory.equippedArmorHasAbility(charNum=i):  # Defaults to NEA
             if i == 0:
-                equipArmor(character=gameVars.neArmor(),
-                           ability=0x8056)  # Auto-Haste
+                if FFX_memory.checkAbility(ability=0x8056)[i]:
+                    equipArmor(character=gameVars.neArmor(), ability=0x8056)  # Auto-Haste
+                else:
+                    equipArmor(character=gameVars.neArmor(), ability=99)  # Remove equipment
             elif i in [4, 6]:
-                equipArmor(character=gameVars.neArmor(),
-                           ability=0x801D)  # Auto-Phoenix
+                if FFX_memory.checkAbility(ability=0x801D)[i]:
+                    equipArmor(character=gameVars.neArmor(), ability=0x801D)  # Auto-Phoenix
+                else:
+                    equipArmor(character=gameVars.neArmor(), ability=99)  # Remove equipment
             else:
                 equipArmor(character=gameVars.neArmor(), ability=99)  # Unequip

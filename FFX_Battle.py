@@ -3595,11 +3595,11 @@ def sandragora(version):
     #    print("Now Kimahri will use his overdrive.")
     #    kimahriOD(3)
     #    FFX_memory.clickToControl()
-    if version != 1:  # Kimahri's turn
+    if version != 1: #Kimahri's turn, replaced by Sandy Skip
         fleeAll()
         FFX_memory.clickToControl()
-    else:  # Auron's turn
-        # Manip for NE armor
+    else: #Auron's turn
+        #Manip for NE armor
         if FFX_memory.battleType() == 2:
             while FFX_memory.battleType() == 2:
                 print("Ambushed, swapping out.")
@@ -3609,7 +3609,7 @@ def sandragora(version):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Screen.awaitTurn()
-        elif FFX_memory.rngSeed() == 31:
+        elif FFX_memory.rngSeed() in [31]:
             print("Manipulating known seed 31")
             fleeAll()
             FFX_memory.clickToControl()
@@ -6557,7 +6557,7 @@ def advanceRNG12():
                     if aheadArray[i+checkAhead] and not attackCount:
                         useImpulse = True
                 if not attackCount:
-                    if FFX_memory.getBattleNum() in [314]:
+                    if FFX_memory.getBattleNum() in [289, 314]:
                         impulse()
                         attackCount = True
                     elif advances >= 2:
