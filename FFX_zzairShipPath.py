@@ -1,10 +1,8 @@
 import FFX_Xbox
 import FFX_memory
-import FFX_Screen
 import FFX_Battle
 import FFX_targetPathing
 import math
-import time
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
@@ -19,8 +17,6 @@ def airShipPath(version):
     checkpoint = 0
     while complete == False:
         if FFX_memory.userControl():
-            # print(gameVars.csr()) #Testing only
-            #print("Checkpoint:", checkpoint)
             # Map changes
             if checkpoint == 2:
                 FFX_memory.clickToEventTemple(3)
@@ -194,29 +190,6 @@ def airShipPath(version):
                 FFX_Xbox.tapB()
 
     print("End of section, Airship pathing")
-
-
-def notes():
-    if version == 1:
-        print("Pre-Evrae pathing")
-        checkpoint = 60
-    elif version == 2:
-        print("Talking to Yuna/Kimahri in the gallery")
-        checkpoint = 120
-    elif version == 3:
-        print("Straight to the deck, three skips.")
-        checkpoint = 150
-    elif version == 4:
-        print("Straight to the deck, talking to Yuna.")
-        checkpoint = 180
-    elif version == 5:
-        print("Final pathing. Sin's face.")
-        checkpoint = 200
-    elif version == 6:
-        print("Final pathing. Sin's face.")
-        checkpoint = 70
-    else:
-        print("Something maybe went wrong?")
 
 
 def airShipReturn():

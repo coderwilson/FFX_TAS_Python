@@ -1,6 +1,4 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_Logs
@@ -8,16 +6,13 @@ import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
-#import FFX_Djose_Skip_Path
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def path():
     FFX_memory.clickToControl()
     FFX_memory.closeMenu()
-    #FFX_memory.waitFrames(30 * 1)
     FFX_memory.fullPartyFormat('djose')
     FFX_memory.closeMenu()
 
@@ -26,7 +21,6 @@ def path():
     lastCP = 0
     stoneBreath = 0
     print("Starting Djose pathing section")
-    # FFX_memory.setEncounterRate(0) #TESTING ONLY!!! MAKE SURE TO COMMENT OUT THIS COMMAND!!!
 
     while FFX_memory.getMap() != 81:  # All the way into the temple
         if lastCP != checkpoint:
@@ -38,22 +32,6 @@ def path():
                 checkpoint = 47
             elif checkpoint == 47 and stoneBreath == 0:
                 checkpoint = 45
-
-            # This is for the attempted Djose skip. It is not viable. Feel free to re-try this.
-            # elif checkpoint == 33:# and stoneBreath == 0: #Turn/talk
-            #    FFXC.set_movement(-1, 1)
-            #    FFX_memory.waitFrames(4)
-            #    while FFX_memory.userControl() and FFX_memory.getActorCoords(11)[1] < 790:
-            #        FFX_Xbox.tapB()
-            #    FFXC.set_neutral()
-            #    checkpoint += 1
-            # elif checkpoint == 34:# and stoneBreath == 0:
-            #    while FFX_memory.getActorCoords(0)[1] < 790 and \
-            #        FFX_memory.getActorCoords(11)[1] < 790:
-            #
-            #        FFX_memory.waitFrames(1)
-            #    FFX_memory.clickToControl3()
-            #    checkpoint += 1
 
             else:
                 # Map changes
@@ -237,7 +215,6 @@ def trials():
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
-                # FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 63:
                 print("Final insert Left sphere")
@@ -254,7 +231,6 @@ def trials():
                     FFX_memory.waitFrames(3)
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
-                # FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
             elif checkpoint == 73:
                 print("Final insert Right sphere")
@@ -349,8 +325,6 @@ def trials():
         FFX_memory.clickToControl()
         print("Leaving the fayth room")
 
-        while FFX_targetPathing.setMovement([-1, -60]) == False:
-            movingToExit = True
         FFXC.set_movement(1, 1)
         FFX_memory.awaitEvent()
         FFXC.set_neutral()

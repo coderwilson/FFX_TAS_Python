@@ -1,12 +1,8 @@
-import pyxinput
-import pyautogui
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_memory
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def resetToMainMenu():

@@ -1,4 +1,3 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -10,7 +9,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 def printNEAzone(battles:int):
     print("#### Charging Rikku zone:", gameVars.getNEAzone())
@@ -23,8 +21,6 @@ def decideNEA(bonusAdvance:int=0):
     zanIndoors = FFX_rngTrack.comingBattles(area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonusAdvance)
     seaSorrows = FFX_rngTrack.comingBattles(area="inside_sin_(front)", battleCount=maxBattles, extraAdvances=bonusAdvance+6)
     
-    #Try to determine best zone out of the next five battles for each of the zones.
-    # [360, 361, 376, 378, 381, 384, 386]
     for i in range(maxBattles):
         if "behemoth" in zanOutdoors[i]:
             gameVars.setNEAzone(1)
@@ -54,7 +50,6 @@ def arrival():
     reEquipNE = False
     if FFX_memory.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 1:
         FFX_memory.fullPartyFormat('rikku', fullMenuClose=False)
-        #if gameVars.neArmor() != 255 and FFX_memory.rngSeed() != 31:
         FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
@@ -139,8 +134,6 @@ def arrival():
         reEquipNE = True
 
     checkpoint = 0
-    #if not gameVars.fluxOverkill():
-    #    FFX_memory.fullPartyFormat('yuna')
     while FFX_memory.getMap() != 320:
         if FFX_memory.userControl():
             if checkpoint == 13:  # Second chest
@@ -184,9 +177,6 @@ def arrival():
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
-                #if not gameVars.fluxOverkill():
-                #    FFX_Battle.farmDome()
-                #else:
                 FFX_Battle.chargeRikkuOD()
                 if reEquipNE and FFX_memory.overdriveState2()[6] == 100:
                     reEquipNE = False

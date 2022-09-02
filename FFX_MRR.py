@@ -10,7 +10,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def arrival():
@@ -250,12 +249,7 @@ def battleSite():
 
 
 def guiAndAftermath():
-    status = FFX_Battle.battleGui()
-    # FFX_Xbox.SkipDialog(10)
-    # while not FFX_memory.cutsceneSkipPossible():
-    #    FFX_Xbox.tapB()
-    # FFX_Xbox.skipSceneSpec()
-    # FFX_memory.clickToControl()
+    FFX_Battle.battleGui()
 
     checkpoint = 0
     while FFX_memory.getMap() != 93:

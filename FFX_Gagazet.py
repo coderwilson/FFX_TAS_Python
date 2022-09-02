@@ -1,4 +1,3 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -10,7 +9,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def checkGems():
@@ -133,13 +131,6 @@ def gagazetGates():
         FFX_Logs.writeStats("0")
     else:
         FFX_Logs.writeStats("2")
-    #FFX_Logs.writeStats("B&Y Friend spheres:")
-    # if endVer == 4:
-    #    FFX_Logs.writeStats("0")
-    # elif endVer == 3:
-    #    FFX_Logs.writeStats("4")
-    # else:
-    #    FFX_Logs.writeStats("2")
     FFX_memory.awaitControl()
     if FFX_memory.overdriveState()[6] == 100:
         FFX_memory.fullPartyFormat('kimahri', fullMenuClose=False)
@@ -169,7 +160,6 @@ def gagazetGates():
                     FFX_memory.clickToControl()
                     if FFX_memory.overdriveState()[6] == 100:
                         FFX_memory.fullPartyFormat('kimahri')
-                        # FFX_memory.setEncounterRate(0)
                     else:
                         FFX_memory.fullPartyFormat('rikku')
                 FFX_memory.clickToControl()
@@ -348,10 +338,8 @@ def cave():
 
     FFX_memory.awaitControl()
     print("Gagazet cave section")
-    # FFX_menu.gagazetCave()
 
     checkpoint = 0
-    lastCP = 0
     powerNeeded = 6
     while FFX_memory.getMap() != 311:
         if FFX_memory.userControl():
@@ -479,11 +467,6 @@ def cave():
                 elif FFX_memory.diagSkipPossible():  # So we don't override the second trial
                     FFX_Xbox.tapB()
 
-                # if FFX_memory.getPower() < powerNeeded and checkpoint >= 30 and checkpoint < 60:
-                #    FFX_Battle.gagazetCave()
-                # elif FFX_memory.getPower() < powerNeeded and checkpoint >= 90 and checkpoint < 110:
-                #    FFX_Battle.gagazetCave()
-                # else:
     FFX_Xbox.clickToBattle()
     FFX_Battle.sKeeper()
 

@@ -1,31 +1,22 @@
-import pyxinput
 import time
 import FFX_Xbox
 import FFX_DreamZan
-import FFX_Battle
 import FFX_Screen
-import FFX_core
 import FFX_memory
 import FFX_Reset
 import FFX_LoadGame
 import FFX_Logs
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 selfAuto = True
 print("Looping section: Bevelle Trials")
 
 FFX_memory.start()
 
-#miihenSkipCount = 0
-#miihenSkipAttempts = 0
-#rngSeedNum = 6
-
 attempts = 0
 success = 0
 while attempts < 20:
-    #print("RNG seed for this attempt:", rngSeed)
     attempts += 1
 
     FFX_DreamZan.NewGame('Luca')
@@ -45,16 +36,11 @@ while attempts < 20:
     if blitzWin == True:
         success += 1
 
-    #attempts = 100
-
     # ---------End of the actual movement/code/logic/etc---------------
     endTime = FFX_Logs.timeStamp()
     print("Duration:", endTime - startTime)
 
     if attempts < 20:
-        #print("Clicking to control so we can reset. ", attempts)
-        # FFXC.set_neutral()
-        # FFX_memory.clickToControl()
         print(" ")
         print("------------------------------")
         print("------------------------------")
@@ -65,7 +51,6 @@ while attempts < 20:
         time.sleep(5)
 
         print("Resetting.")
-        # FFX_memory.end()
 
         FFX_Reset.resetToMainMenu()
     else:
@@ -78,12 +63,8 @@ while attempts < 20:
         print("------------------------------")
         print("------------------------------")
 
-    #rngSeedNum += 1
-
 time.sleep(5)
 
-#print("Skip attempts:", miihenSkipAttempts)
-#print("Successful skips:", miihenSkipCount)
 FFX_memory.end()
 
 time.sleep(5)

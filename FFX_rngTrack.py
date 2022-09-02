@@ -10,10 +10,7 @@ gameVars = FFX_vars.varsHandle()
 def areaFormations(area:str):
     f = open('tracker/data/formations.json')
     allFormations = json.load(f)
-    #print("#########################",area)
-    #print(allFormations["random"][area]["formations"])
     f.close()
-    #print(allFormations["random"].keys())
     if area in allFormations["random"].keys():
         return allFormations["random"][area]["formations"]
     elif area in allFormations["bosses"].keys():
@@ -32,8 +29,6 @@ def comingBattles(area:str="kilika_woods", battleCount:int=10, extraAdvances:int
     for i in range(battleCount):
         nextValue = formations[(advances[(i*2)+1] & 0x7fffffff) % len(formations)]
         battles.append(nextValue)
-    #print("Upcoming battles:", battles)
-    #print("=========================")
     return battles
 
 def comingBattleType(extraAdvances:int=0, initiative=False):
@@ -64,8 +59,6 @@ def singlesBattles(area:str="kilika_woods", battleCount:int=10, extraAdvances:in
     for i in range(battleCount):
         nextValue = formations[(advances[i+1] & 0x7fffffff) % len(formations)]
         battles.append(nextValue)
-    #print("Upcoming battles:", battles)
-    #print("=========================")
     return battles
 
 def dropChance(enemy:str='ghost'):
@@ -101,8 +94,6 @@ def earlyBattleCount():
     with open('csv\\Seed_Battle_Variance.csv', 'r', newline='') as csvFile:
         reader = csv.DictReader(csvFile)
         for row in reader:
-            #print(FFX_memory.rngSeed())
-            #print(row)
             if int(row['Seed']) == FFX_memory.rngSeed():
                 return row
 
@@ -131,9 +122,7 @@ def trackDrops(enemy:str='ghost', battles:int=20, extraAdvances:int=0):
 
 def itemToBeDropped(enemy:str='ghost', preAdvance12:int=0, preAdvance13:int=0, partySize:int=7):
     slotMod = SlotMod(enemy=enemy)
-    slotChances = dropSlots(enemy=enemy)
     abilityMod = AbilityMod(enemy=enemy)
-    abilityCountChances = dropAbilityCount(enemy=enemy)
     
     if partySize == 2:
         partyChars = [0,4]
@@ -150,9 +139,6 @@ def itemToBeDropped(enemy:str='ghost', preAdvance12:int=0, preAdvance13:int=0, p
     else:
         partyChars = [0]
     
-    user = 256
-    nextChance = 256
-    neWillDrop = False
     advance12 = 4 + preAdvance12
     testArray12 = FFX_memory.rng12Array(advance12)
     del testArray12[0]
@@ -160,24 +146,17 @@ def itemToBeDropped(enemy:str='ghost', preAdvance12:int=0, preAdvance13:int=0, p
         while preAdvance12 >= 1:
             del testArray12[0]
             preAdvance12 -= 1
-    #print(testArray12)
-    #FFX_memory.waitFrames(300)
         
     # Assume killer is aeon
     user2 = partyChars[(testArray12[0] & 0x7fffffff) % len(partyChars)]
     partyChars.append(9)
     partyChars.append(9)
     partyChars.append(9)
-    #print(partyChars,"|",(testArray12[0] & 0x7fffffff) % len(partyChars))
     # Assume user == killer
     user1 = partyChars[(testArray12[0] & 0x7fffffff) % len(partyChars)]
     
     #Type
     equipType = (testArray12[1] & 0x7fffffff) % 2
-    if equipType == 0:
-        equipText = "Weapon"
-    else:
-        equipText = "Armor"
     
     #Slots
     baseSlots = (slotMod + ((testArray12[2] & 0x7fffffff) & 7)) - 4
@@ -196,18 +175,12 @@ def itemToBeDropped(enemy:str='ghost', preAdvance12:int=0, preAdvance13:int=0, p
     abilityList = newAbilities[0]
     preAdvance13 += newAbilities[1]
     
-    #print("+Enemy:", enemy)
-    #print("+Type:", equipText)
-    #print("+Ability count:", abilityCount)
-    #print("+Resulting Abilities:", abilityList)
-    
     finalItem = FFX_memory.equipment(equipNum=0)
     finalItem.createCustom(eType=equipType, eOwner1=user1, eOwner2=user2, eSlots=slots, eAbilities=abilityList)
     
     return finalItem, preAdvance13
 
 def abilityToBeDropped(enemy:str='ghost', equipType:int=0, slots:int=1, advances:int=0):
-    nextChance = 256
     outcomes = dropAbilityList(enemy=enemy, equipType=equipType)
     if slots == 0:
         slots = 1
@@ -246,21 +219,14 @@ def abilityToBeDropped(enemy:str='ghost', equipType:int=0, slots:int=1, advances
 def reportDroppedItem(enemy:str, drop=FFX_memory.equipment, prefType:int=99, prefAbility:int=255, needAdv:int=0, report=False):
     abiStr = str(prefAbility)
     prefType
-    #print(prefAbility)
-    #print(drop.equipAbilities)
-    #print(prefType)
-    #print(drop.equipType)
     report = True
     if prefAbility != 255 and not abiStr in drop.equipAbilities:
         report = False
-        #print("NoDrop: Abilities")
     elif prefType != 99 and prefType != drop.equipType:
         print(prefType)
         print(drop.equipType)
-        #print("NoDrop: Type")
         report = False
     
-    #print("+++++++++++++++++")
     if report == True:
         FFX_Logs.writeRNGTrack("+Item drop off of:"+str(enemy)+" | advances:"+str(needAdv))
         FFX_Logs.writeRNGTrack("+Owner, char-killed (9 = killer): "+str(drop.equipOwner))
@@ -309,8 +275,6 @@ def tStrikeTracking(tros=False, report=False):
     
     #Lagoon
     lagoonBattles = comingBattles(area="besaid_lagoon", battleCount=lagoonCount, extraAdvances=advance01)
-    #print(lagoonBattles)
-    #FFX_memory.waitFrames(6000)
     for i in range(len(lagoonBattles)):
         FFX_Logs.writeRNGTrack("Lagoon battle:")
         FFX_Logs.writeRNGTrack(str(lagoonBattles[i]))
@@ -328,169 +292,137 @@ def tStrikeTracking(tros=False, report=False):
     
     #Besaid tutorials
     dropChances = trackDrops(enemy="dingo", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="dingo", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Dingo will drop an item [0]")
         if reportDroppedItem(enemy="dingo", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="dingo", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Dingo will drop an item [1]")
         if reportDroppedItem(enemy="dingo", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="dingo", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Dingo will drop an item [2]")
         if reportDroppedItem(enemy="dingo", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
     
     dropChances = trackDrops(enemy="condor", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="condor", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Condor [0]")
         if reportDroppedItem(enemy="condor", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="condor", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Condor [2]")
         if reportDroppedItem(enemy="condor", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="condor", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Condor [2]")
         if reportDroppedItem(enemy="condor", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
         
     dropChances = trackDrops(enemy="water_flan", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="water_flan", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
-        #print("water_flan [0]")
         reportDroppedItem(enemy="water_flan", drop=finalItem, prefType=0, prefAbility=0x8026, report=report)
         advance12[0] += 4
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="water_flan", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
-        #print("water_flan [1]")
         reportDroppedItem(enemy="water_flan", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report)
         advance12[1] += 4
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="water_flan", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
-        #print("water_flan [2]")
         reportDroppedItem(enemy="water_flan", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report)
         advance12[2] += 4
     advance10 += 3
     
     # Kimahri drops something guaranteed.
     dropChances = trackDrops(enemy="???", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="???", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
-        #print("water_flan [0]")
         reportDroppedItem(enemy="???", drop=finalItem, prefType=0, prefAbility=0x8026, report=report)
         advance12[0] += 4
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="???", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
-        #print("water_flan [1]")
         reportDroppedItem(enemy="???", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report)
         advance12[1] += 4
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="???", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
-        #print("water_flan [2]")
         reportDroppedItem(enemy="???", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report)
         advance12[2] += 4
     advance10 += 3
     
     dropChances = trackDrops(enemy="garuda_3", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="garuda_3", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Garuda [0]")
         if reportDroppedItem(enemy="garuda_3", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="garuda_3", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Garuda [1]")
         if reportDroppedItem(enemy="garuda_3", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="garuda_3", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Garuda [2]")
         if reportDroppedItem(enemy="garuda_3", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
     
     dropChances = trackDrops(enemy="dingo", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="dingo", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Dingo will drop an item [0]")
         if reportDroppedItem(enemy="dingo", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="dingo", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Dingo will drop an item [1]")
         if reportDroppedItem(enemy="dingo", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="dingo", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Dingo will drop an item [2]")
         if reportDroppedItem(enemy="dingo", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
     
     dropChances = trackDrops(enemy="condor", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="condor", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Condor [0]")
         if reportDroppedItem(enemy="condor", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="condor", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Condor [2]")
         if reportDroppedItem(enemy="condor", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="condor", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Condor [2]")
         if reportDroppedItem(enemy="condor", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
         
     dropChances = trackDrops(enemy="water_flan", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="water_flan", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
-        #print("water_flan [0]")
         reportDroppedItem(enemy="water_flan", drop=finalItem, prefType=0, prefAbility=0x8026, report=report)
         advance12[0] += 4
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="water_flan", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
-        #print("water_flan [1]")
         reportDroppedItem(enemy="water_flan", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report)
         advance12[1] += 4
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="water_flan", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
-        #print("water_flan [2]")
         reportDroppedItem(enemy="water_flan", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report)
         advance12[2] += 4
     advance10 += 3
@@ -499,23 +431,19 @@ def tStrikeTracking(tros=False, report=False):
     partySize=5
     #Sin's Fin
     dropChances = trackDrops(enemy="sin", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="sin", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Garuda [0]")
         if reportDroppedItem(enemy="sin-fin", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="sin", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Garuda [1]")
         if reportDroppedItem(enemy="sin-fin", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="sin", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Garuda [2]")
         if reportDroppedItem(enemy="sin-fin", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
@@ -524,23 +452,19 @@ def tStrikeTracking(tros=False, report=False):
     partySize=2
     #Sinspawn Echuilles
     dropChances = trackDrops(enemy="sinspawn_echuilles", battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy="sinspawn_echuilles", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Garuda [0]")
         if reportDroppedItem(enemy="sinspawn_echuilles", drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy="sinspawn_echuilles", preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Garuda [1]")
         if reportDroppedItem(enemy="sinspawn_echuilles", drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy="sinspawn_echuilles", preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Garuda [2]")
         if reportDroppedItem(enemy="sinspawn_echuilles", drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
@@ -550,23 +474,19 @@ def tStrikeTracking(tros=False, report=False):
     partySize=5
     #Lancet tutorial
     dropChances = trackDrops(enemy=enemy, battles=1, extraAdvances=advance10)
-    #print(dropChances)
     if len(dropChances[0]) >= 1:
         finalItem, advance13[0] = itemToBeDropped(enemy=enemy, preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
         advance12[0] += 4
-        #print("Garuda [0]")
         if reportDroppedItem(enemy=enemy, drop=finalItem, prefType=0, prefAbility=0x8026, report=report):
             thunderCount[0] += 1
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = itemToBeDropped(enemy=enemy, preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
         advance12[1] += 4
-        #print("Garuda [1]")
         if reportDroppedItem(enemy=enemy, drop=finalItem, prefType=0, needAdv=1, prefAbility=0x8026, report=report):
             thunderCount[1] += 1
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = itemToBeDropped(enemy=enemy, preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
         advance12[2] += 4
-        #print("Garuda [2]")
         if reportDroppedItem(enemy=enemy, drop=finalItem, prefType=0, needAdv=2, prefAbility=0x8026, report=report):
             thunderCount[2] += 1
     advance10 += 3
@@ -590,8 +510,6 @@ def tStrikeTracking(tros=False, report=False):
     
     for bCount in (range(kilikaCount)):
         if bCount == 3 and geneauxTrack==False:
-            #print("===================")
-            #print("Geneaux drops:")
             advance10 += 3 #Tentacles
             finalItem, advance13[0] = itemToBeDropped(enemy="sinspawn_geneaux", preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
             advance12[0] += 4
@@ -609,7 +527,6 @@ def tStrikeTracking(tros=False, report=False):
         battleFormations = comingBattles(area="kilika_woods", battleCount=1, extraAdvances=advance01)
         FFX_Logs.writeRNGTrack(str(battleFormations))
         for x in range(len(battleFormations)):
-            #print("Kilika battle:",battleFormations[x])
             for i in range(len(battleFormations[x])):
                 thisBattle = battleFormations[x]
                 if thisBattle == ["ragora"] and ragoraKills[0] == 0:
@@ -619,8 +536,6 @@ def tStrikeTracking(tros=False, report=False):
                     if len(dropChances[0]) >= 1:
                         finalItem, advance13[0] = itemToBeDropped(enemy=thisBattle[i], preAdvance12=advance12[0], preAdvance13=advance13[0], partySize=partySize)
                         advance12[0] += 4
-                        #print("Kilika battle [0], kill on", thisBattle[i])
-                        #print("Battle number:", bCount+1)
                         if thisBattle == "ragora":
                             ragoraKills[0] -= 1
                         elif thisBattle == "yellow_element":
@@ -639,8 +554,6 @@ def tStrikeTracking(tros=False, report=False):
                     if len(dropChances[1]) >= 1:
                         finalItem, advance13[1] = itemToBeDropped(enemy=thisBattle[i], preAdvance12=advance12[1], preAdvance13=advance13[1], partySize=partySize)
                         advance12[1] += 4
-                        #print("Kilika battle [1], kill on", thisBattle[i])
-                        #print("Battle number:", bCount+1)
                         if thisBattle == "ragora":
                             ragoraKills[1] -= 1
                         elif thisBattle == "yellow_element":
@@ -659,8 +572,6 @@ def tStrikeTracking(tros=False, report=False):
                     if len(dropChances[2]) >= 1:
                         finalItem, advance13[2] = itemToBeDropped(enemy=thisBattle[i], preAdvance12=advance12[2], preAdvance13=advance13[2], partySize=partySize)
                         advance12[2] += 4
-                        #print("Kilika battle [2], kill on", thisBattle[i])
-                        #print("Battle number:", bCount+1)
                         if thisBattle == "ragora":
                             ragoraKills[2] -= 1
                         elif thisBattle == "yellow_element":
@@ -678,7 +589,6 @@ def tStrikeTracking(tros=False, report=False):
                                 thunderCount[2] += 1
                     advance10 += 3
             advance01 += 2
-    #print("End of Kilika battles")
     
     partySize=5
     #Workers
@@ -686,7 +596,6 @@ def tStrikeTracking(tros=False, report=False):
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
             thisBattle = battleFormations[x]
-            #print(thisBattle)
             dropChances = trackDrops(enemy=thisBattle, battles=1, extraAdvances=advance10)
             if len(dropChances[0]) >= 1:
                 if trackDrops(enemy=thisBattle, battles=1, extraAdvances=advance10):
@@ -712,7 +621,6 @@ def tStrikeTracking(tros=False, report=False):
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
             thisBattle = battleFormations[x]
-            #print(thisBattle)
             dropChances = trackDrops(enemy=thisBattle, battles=1, extraAdvances=advance10)
             if len(dropChances[0]) >= 1:
                 if trackDrops(enemy=thisBattle, battles=1, extraAdvances=advance10):
@@ -738,7 +646,6 @@ def tStrikeTracking(tros=False, report=False):
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
             thisBattle = battleFormations[x]
-            #print(thisBattle)
             dropChances = trackDrops(enemy=thisBattle, battles=1, extraAdvances=advance10)
             if len(dropChances[0]) >= 1:
                 if trackDrops(enemy=thisBattle, battles=1, extraAdvances=advance10):
@@ -915,9 +822,3 @@ def hitChanceTable(index:int):
         return 80
     elif index == 8:
         return 100
-
-#Testing only:
-#print("Monster test")
-#print(MONSTERS["anima"].stats['Luck'])
-#print(MONSTERS["anima"].stats['Evasion'])
-#end

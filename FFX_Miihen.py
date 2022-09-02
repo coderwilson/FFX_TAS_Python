@@ -1,8 +1,6 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
-import FFX_menu
 import FFX_memory
 import FFX_Logs
 import FFX_targetPathing
@@ -10,7 +8,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def arrival():
@@ -27,11 +24,9 @@ def arrival():
     checkpoint = 0
     while FFX_memory.getMap() != 120:
         if FFX_memory.userControl():
-            #print("Checkpoint:", checkpoint)
             # Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
                 if gameVars.csr():
-                    #print("CSR logic -", checkpoint)
                     # Only run this branch if CSR is online.
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()
@@ -50,7 +45,6 @@ def arrival():
                         print("Checkpoint reached:", checkpoint)
 
                 else:
-                    #print("any% logic -", checkpoint)
                     # Run this branch on a normal Any% run, no CSR
                     tidusCoords = FFX_memory.getCoords()
                     hunterCoords = FFX_memory.miihenGuyCoords()

@@ -1,5 +1,3 @@
-import pyxinput
-import time
 import FFX_Xbox
 import FFX_memory
 
@@ -7,7 +5,6 @@ from math import copysign
 import numpy as np
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def setMovement(target) -> bool:
@@ -51,7 +48,6 @@ def setMovement(target) -> bool:
 
 
 def calmLands1(checkpoint):
-    #print("CKP:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -91,7 +87,6 @@ def calmLands1(checkpoint):
 
 
 def calmLands2(checkpoint):
-    #print("CKP2:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -736,36 +731,6 @@ def leaveRemiem(checkpoint):
     if checkpoint == 40:
         x = 0
         y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -833,96 +798,6 @@ def tpFarm(checkpoint):
         x = 0
         y = 0
     if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -1066,66 +941,6 @@ def besaidFarm(checkpoint):
     if checkpoint == 30:
         x = 0
         y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -1223,66 +1038,6 @@ def kilikaFarm(checkpoint):
         x = 0
         y = 0
     if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -1444,7 +1199,6 @@ def miihenFarm(checkpoint):
     if checkpoint == 50:  # To MRR start area
         x = 0
         y = 0
-    #print("Dest: [", x, ", ", y, "]")
     return [x, y]
 
 
@@ -1503,126 +1257,6 @@ def arenaReturn(checkpoint):
         x = 0
         y = 0
     if checkpoint == 10:
-        x = 0
-        y = 0
-    if checkpoint == 11:
-        x = 0
-        y = 0
-    if checkpoint == 12:
-        x = 0
-        y = 0
-    if checkpoint == 13:
-        x = 0
-        y = 0
-    if checkpoint == 14:
-        x = 0
-        y = 0
-    if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -1916,36 +1550,6 @@ def djoseFarm(checkpoint):
     if checkpoint == 40:
         x = 0
         y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -2013,96 +1617,6 @@ def macFarm(checkpoint):
         x = 0
         y = 0
     if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -2234,36 +1748,6 @@ def bikanelFarm(checkpoint):
     if checkpoint == 40:
         x = 0
         y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -2348,81 +1832,6 @@ def gagazet1(checkpoint):
     if checkpoint == 25:
         x = 0
         y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -2477,111 +1886,6 @@ def gagazet2(checkpoint):
     if checkpoint == 15:
         x = 0
         y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -2634,111 +1938,6 @@ def gagazet3(checkpoint):
         x = 0
         y = 0
     if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -2991,165 +2190,6 @@ def omega(checkpoint):
         x = 0
         y = 0
     if checkpoint == 10:
-        x = 0
-        y = 0
-    return [x, y]
-
-
-def template(checkpoint):
-    x = 999
-    y = 999
-    if checkpoint == 0:
-        x = 0
-        y = 0
-    if checkpoint == 1:
-        x = 0
-        y = 0
-    if checkpoint == 2:
-        x = 0
-        y = 0
-    if checkpoint == 3:
-        x = 0
-        y = 0
-    if checkpoint == 4:
-        x = 0
-        y = 0
-    if checkpoint == 5:
-        x = 0
-        y = 0
-    if checkpoint == 6:
-        x = 0
-        y = 0
-    if checkpoint == 7:
-        x = 0
-        y = 0
-    if checkpoint == 8:
-        x = 0
-        y = 0
-    if checkpoint == 9:
-        x = 0
-        y = 0
-    if checkpoint == 10:
-        x = 0
-        y = 0
-    if checkpoint == 11:
-        x = 0
-        y = 0
-    if checkpoint == 12:
-        x = 0
-        y = 0
-    if checkpoint == 13:
-        x = 0
-        y = 0
-    if checkpoint == 14:
-        x = 0
-        y = 0
-    if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]

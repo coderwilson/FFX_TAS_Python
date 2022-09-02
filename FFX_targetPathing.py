@@ -1,5 +1,3 @@
-import pyxinput
-import time
 import FFX_Xbox
 import FFX_memory
 
@@ -7,16 +5,11 @@ from math import copysign
 import numpy as np
 FFXC = FFX_Xbox.controllerHandle()
 
-#FFXC = FFX_Xbox.FFXC
-
 
 def setMovement(target) -> bool:
 
     player = FFX_memory.getCoords()
     (forward, right) = FFX_memory.getMovementVectors()
-
-    targetPos = np.array([target[0], target[1]])
-    playerPos = np.array(player)
 
     # Calculate forward and right directions relative to camera space
     pX = player[0]
@@ -43,7 +36,6 @@ def setMovement(target) -> bool:
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
-    # FFX_memory.waitFrames(frames=1)
 
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
         return True  # Checkpoint reached
@@ -195,7 +187,6 @@ def baajRamp(checkpoint):
     if checkpoint == 5:
         x = -28
         y = 17
-    # Checkpoint == 6: transition
     if checkpoint == 7:
         x = 300
         y = 300
@@ -3116,36 +3107,6 @@ def djoseExit(checkpoint):
     if checkpoint == 40:
         x = 0
         y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -3525,36 +3486,6 @@ def guadoStoryline(checkpoint):
         x = 0
         y = 0
     if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -4096,126 +4027,6 @@ def mLake(checkpoint):
     if checkpoint == 10:
         x = 0
         y = 0
-    if checkpoint == 11:
-        x = 0
-        y = 0
-    if checkpoint == 12:
-        x = 0
-        y = 0
-    if checkpoint == 13:
-        x = 0
-        y = 0
-    if checkpoint == 14:
-        x = 0
-        y = 0
-    if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -4686,96 +4497,6 @@ def underMacTemple(checkpoint):
     if checkpoint == 20:
         x = 0
         y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -4952,10 +4673,8 @@ def desert(checkpoint):
     if checkpoint == 58:  # Lining up for Sandy skip
         x = -228
         y = 764
-        #x = -230
-        #y = 796
     if checkpoint == 59:  # Lining up for Sandy skip
-        x = -235 #previously -244
+        x = -235
         y = 797
     if checkpoint == 61:  # Waiting to be pushed
         x = -273
@@ -5250,96 +4969,6 @@ def rescueAirship(checkpoint):
     if checkpoint == 20:
         x = 0
         y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -5554,25 +5183,17 @@ def sutekiDaNe(checkpoint):
     if checkpoint == 0:
         x = -3
         y = 17
-    if checkpoint == 1:
-        mapChange = True
     if checkpoint == 2:
         x = 42
         y = -55
-    if checkpoint == 3:
-        mapChange = True
     if checkpoint == 4:
         x = 208
         y = 51
     if checkpoint == 5:  # Enjoy scene
         print("Enjoy this very long scene")
-    if checkpoint == 6:
-        mapChange = True
     if checkpoint == 7:
         x = 93
         y = -9
-    if checkpoint == 8:
-        mapChange = True
     if checkpoint == 9:
         x = -55
         y = -29
@@ -5592,33 +5213,6 @@ def sutekiDaNe(checkpoint):
         x = 0
         y = 0
     if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
         x = 0
         y = 0
     return [x, y]
@@ -5812,126 +5406,6 @@ def neReturnGreen(checkpoint):
         x = 6
         y = 177
     if checkpoint == 10:
-        x = 0
-        y = 0
-    if checkpoint == 11:
-        x = 0
-        y = 0
-    if checkpoint == 12:
-        x = 0
-        y = 0
-    if checkpoint == 13:
-        x = 0
-        y = 0
-    if checkpoint == 14:
-        x = 0
-        y = 0
-    if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -6965,126 +6439,6 @@ def yunalesca(checkpoint):
     if checkpoint == 10:
         x = 0
         y = 0
-    if checkpoint == 11:
-        x = 0
-        y = 0
-    if checkpoint == 12:
-        x = 0
-        y = 0
-    if checkpoint == 13:
-        x = 0
-        y = 0
-    if checkpoint == 14:
-        x = 0
-        y = 0
-    if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
-        x = 0
-        y = 0
     return [x, y]
 
 
@@ -7420,7 +6774,6 @@ def insideSin(checkpoint):
 
 
 def airShip(checkpoint):
-    #print("Airship pathing checkpoint:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -7439,7 +6792,7 @@ def airShip(checkpoint):
         x = -3
         y = 11
     if checkpoint == 5:
-        x = 20 #Adjusted, previously 10
+        x = 20
         y = -100
     if checkpoint == 6:  # Screen with Isaaru
         x = 33
@@ -7550,165 +6903,6 @@ def airShip(checkpoint):
         x = -245
         y = 327
     if checkpoint == 46:  # non-CSR Cid
-        x = 0
-        y = 0
-    return [x, y]
-
-
-def template(checkpoint):
-    x = 999
-    y = 999
-    if checkpoint == 0:
-        x = 0
-        y = 0
-    if checkpoint == 1:
-        x = 0
-        y = 0
-    if checkpoint == 2:
-        x = 0
-        y = 0
-    if checkpoint == 3:
-        x = 0
-        y = 0
-    if checkpoint == 4:
-        x = 0
-        y = 0
-    if checkpoint == 5:
-        x = 0
-        y = 0
-    if checkpoint == 6:
-        x = 0
-        y = 0
-    if checkpoint == 7:
-        x = 0
-        y = 0
-    if checkpoint == 8:
-        x = 0
-        y = 0
-    if checkpoint == 9:
-        x = 0
-        y = 0
-    if checkpoint == 10:
-        x = 0
-        y = 0
-    if checkpoint == 11:
-        x = 0
-        y = 0
-    if checkpoint == 12:
-        x = 0
-        y = 0
-    if checkpoint == 13:
-        x = 0
-        y = 0
-    if checkpoint == 14:
-        x = 0
-        y = 0
-    if checkpoint == 15:
-        x = 0
-        y = 0
-    if checkpoint == 16:
-        x = 0
-        y = 0
-    if checkpoint == 17:
-        x = 0
-        y = 0
-    if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
-    if checkpoint == 20:
-        x = 0
-        y = 0
-    if checkpoint == 21:
-        x = 0
-        y = 0
-    if checkpoint == 22:
-        x = 0
-        y = 0
-    if checkpoint == 23:
-        x = 0
-        y = 0
-    if checkpoint == 24:
-        x = 0
-        y = 0
-    if checkpoint == 25:
-        x = 0
-        y = 0
-    if checkpoint == 26:
-        x = 0
-        y = 0
-    if checkpoint == 27:
-        x = 0
-        y = 0
-    if checkpoint == 28:
-        x = 0
-        y = 0
-    if checkpoint == 29:
-        x = 0
-        y = 0
-    if checkpoint == 30:
-        x = 0
-        y = 0
-    if checkpoint == 31:
-        x = 0
-        y = 0
-    if checkpoint == 32:
-        x = 0
-        y = 0
-    if checkpoint == 33:
-        x = 0
-        y = 0
-    if checkpoint == 34:
-        x = 0
-        y = 0
-    if checkpoint == 35:
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
-    if checkpoint == 37:
-        x = 0
-        y = 0
-    if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
-    if checkpoint == 40:
-        x = 0
-        y = 0
-    if checkpoint == 41:
-        x = 0
-        y = 0
-    if checkpoint == 42:
-        x = 0
-        y = 0
-    if checkpoint == 43:
-        x = 0
-        y = 0
-    if checkpoint == 44:
-        x = 0
-        y = 0
-    if checkpoint == 45:
-        x = 0
-        y = 0
-    if checkpoint == 46:
-        x = 0
-        y = 0
-    if checkpoint == 47:
-        x = 0
-        y = 0
-    if checkpoint == 48:
-        x = 0
-        y = 0
-    if checkpoint == 49:
-        x = 0
-        y = 0
-    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]

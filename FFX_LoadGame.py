@@ -1,12 +1,8 @@
 # Libraries and Core Files
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_memory
-import FFX_menu
-import FFX_menuGrid
 import FFX_zzairShipPath
-import pyautogui
 import FFX_targetPathing
 import os
 from os import listdir
@@ -17,28 +13,19 @@ from pathlib import Path
 # This assumes that the save is the first non-auto-save in the list of saves.
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def getSavedFiles():
     import FFX_vars
     gameVars = FFX_vars.varsHandle()
-    #saveFiles = [f for f in listdir(path)]
     saveFilesFull = sorted(
         Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime)
     saveFiles = [os.path.basename(i) for i in saveFilesFull]
     saveFiles = saveFiles[::-1]
-    #print("----Save File List")
-    #print("----Save File List")
-    # print(saveFiles)
-    #print("----Save File List")
-    #print("----Save File List")
-    # time.sleep(90)
     return saveFiles
 
 
 def loadSaveNum(number):
-    # FFX_memory.waitFrames(10)
     saveFiles = getSavedFiles()
     testString = "ffx_" + str(number).zfill(3)
     print("Searching for string:", testString)
@@ -84,8 +71,6 @@ def LoadFirst():
 def loadOffset(offset):
     print("Loading to save file in position", offset)
     totalOffset = offset
-    #FFX_memory.waitFrames(30 * 0.2)
-    # FFX_Xbox.menuB()
     FFX_memory.waitFrames(30 * 2.5)
     for _ in range(totalOffset):
         FFX_Xbox.tapDown()
@@ -119,7 +104,7 @@ def loadMemCursor():
     if FFX_memory.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
         cursorTarget = 5
     else:
-        cursorTarget = 8  # if FFX_memory.getStoryProgress() > 3000 else 9
+        cursorTarget = 8
     print("Aiming at", cursorTarget)
     while FFX_memory.getMenuCursorPos() != cursorTarget:
         print(FFX_memory.getMenuCursorPos())
@@ -265,31 +250,31 @@ def KilikaTrials():
 def LoadMiihenStart_Laugh():
     import FFX_targetPathing
     while not FFX_targetPathing.setMovement([-440, 0]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(4)
 
     # Reverse T screen
     FFX_memory.awaitControl()
     while not FFX_targetPathing.setMovement([-39, 18]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([3, 31]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([64, 15]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([163, 0]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(2)
 
     # Carnival vendor screen
     FFX_memory.awaitControl()
     while not FFX_targetPathing.setMovement([30, -86]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([60, -24]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([101, 72]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([129, 101]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(1)
     FFX_memory.waitFrames(30 * 1)
     FFX_memory.clickToControl()
@@ -302,49 +287,49 @@ def LoadMiihenStart_Laugh():
 def LoadMiihenStart():
     import FFX_targetPathing
     while not FFX_targetPathing.setMovement([-440, 0]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(4)
 
     # Reverse T screen
     FFX_memory.awaitControl()
     while not FFX_targetPathing.setMovement([-39, 18]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([3, 31]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([64, 15]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([163, 0]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(2)
 
     # Carnival vendor screen
     FFX_memory.awaitControl()
     while not FFX_targetPathing.setMovement([30, -86]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([60, -24]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([101, 72]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([129, 101]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(1)
 
     # -----Use this if you've already done the laughing scene.
     FFX_memory.clickToControl()
     while not FFX_targetPathing.setMovement([2, 57]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([108, 59]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([108, 26]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([78, -3]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([-68, -7]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([-99, 24]):
-        doNothing = True
+        pass
     while not FFX_targetPathing.setMovement([-126, 117]):
-        doNothing = True
+        pass
     FFX_memory.clickToEventTemple(1)
 
     print("Load complete. Now for Mi'ihen area.")
@@ -473,16 +458,6 @@ def loadMacTemple2():
 
 def loadWendigo():
     import FFX_Battle
-    # FFX_memory.awaitControl()
-    # while FFX_memory.getBattleNum() < 195:
-    #    if FFX_Screen.BattleScreen():
-    #        FFXC.set_neutral()
-    #        FFX_Battle.fleeAll()
-    #    elif FFX_memory.userControl():
-    #        set_movement(0, -1)
-    #    else:
-    #        FFXC.set_neutral()
-
     FFX_Battle.wendigo()
     print("Wendigo fight over - end of loading game to Wendigo fight")
 
@@ -493,12 +468,11 @@ def loadRescue():
     FFX_memory.waitFrames(30 * 0.7)
     FFXC.set_movement(0, -1)
     while FFX_memory.userControl():
-        doNothing = True
+        pass
     FFXC.set_neutral()
     FFX_memory.waitFrames(30 * 1)
     FFX_memory.awaitControl()
     FFX_memory.fullPartyFormat('evrae')
-    # FFX_menu.weddingPrep()
 
     FFX_zzairShipPath.airShipPath(1)  # The run from cockpit to the deck
 

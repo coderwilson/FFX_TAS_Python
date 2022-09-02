@@ -1,5 +1,3 @@
-import pyxinput
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -10,7 +8,6 @@ import FFX_vars
 
 FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def Entrance():
@@ -23,7 +20,6 @@ def Entrance():
     checkpoint = 0
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
-            #print("Baaj movement:", checkpoint)
             if checkpoint == 6:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
@@ -103,7 +99,6 @@ def Baaj_puzzle():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            #print("Awaiting control - Baaj puzzle")
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
@@ -114,7 +109,6 @@ def Klikk_fight():
     while not FFX_Screen.turnRikku():
         FFX_Xbox.tapB()
 
-    #print("Doing Use tutorial")
     FFX_Xbox.clickToBattle()
     FFX_Battle.useItem(0, 'none')
 
@@ -170,7 +164,6 @@ def ABboat1():
     print("Control restored.")
     print("On the boat!")
     while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
-        #print("Coords[0]: ", FFX_memory.getActorCoords(actorNumber=0)[0])
         target = FFX_memory.getActorCoords(actorNumber=3)
         FFX_targetPathing.setMovement(target)
         if distance(0,3) < 10:
@@ -181,11 +174,8 @@ def ABboat1():
     FFX_memory.waitFrames(20)
     
     while FFX_memory.getMap() != 288:
-        #print("Story flag: ", FFX_memory.getStoryProgress())
-        #print("Actor zero: ", FFX_memory.getActorCoords(actorNumber=0))
         FFXC.set_value('BtnA', 1)
         FFXC.set_movement(0,-1)
-        #FFX_targetPathing.setMovement(target)
         if FFX_memory.battleActive():
             FFXC.set_neutral()
             print("Battle Start (Al Bhed swimming section)")
@@ -196,7 +186,6 @@ def ABboat1():
             FFX_Xbox.tapB()
 
 def ABswimming1():
-    complete = 0
 
     print("Swimming towards airship")
     while FFX_memory.getMap() != 64:
@@ -214,9 +203,7 @@ def ABswimming1():
                 FFXC.set_movement(0, -1)
                 FFXC.set_value('BtnA', 1)
             else:
-                checkpoint = 1
                 FFXC.set_value('BtnA', 0)
-                #print(pos)
                 if pos[1] > -230:
                     FFX_targetPathing.setMovement([-343,-284])
                 elif pos[1] > -410:
@@ -271,8 +258,6 @@ def ABswimming2():
     FFXC.set_neutral()
     while FFX_memory.getStoryProgress() < 111:
         if FFX_memory.userControl():
-            #print("Map          :", FFX_memory.getMap())
-            #print("Diag progress:", FFX_memory.diagProgressFlag())
             if FFX_memory.diagProgressFlag() == 109 and not FFX_memory.userControl():
                 FFXC.set_neutral()
                 if FFX_memory.saveMenuCursor2() == 0:

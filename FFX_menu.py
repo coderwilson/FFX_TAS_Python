@@ -1,15 +1,10 @@
-import time
-import math
 import FFX_Xbox
-import FFX_Screen
 import FFX_menuGrid
-import FFX_Logs
 import FFX_memory
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def gridUp():
@@ -134,7 +129,6 @@ def autoSortEquipment(manual='n'):
 
 def shortAeons():
     FFX_memory.printMemoryLog()
-    gameVars = FFX_vars.varsHandle()
     FFX_memory.openMenu()
     cursorTarget = 4
     print("Aiming at", cursorTarget)
@@ -270,15 +264,12 @@ def mrrGrid1():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power', 'none')
     print("Determining state of Wakka late menu")
-    # FFX_memory.waitFrames(30 * 60) #Use for testing only!
     if FFX_memory.getSLVLWakka() < 3:
         wakkaLateMenu = True
         print("Deferring Wakkas remaining grid for later.")
-        # FFX_memory.waitFrames(30 * 60) #Use for testing only!
     else:
         wakkaLateMenu = False
         print("Completing Wakkas remaining grid now.")
-        # FFX_memory.waitFrames(30 * 60) #Use for testing only!
         FFX_menuGrid.useAndMove()
         gridDown()
         gridDown()
@@ -295,7 +286,6 @@ def mrrGrid1():
 
 
 def mrrGrid2():
-    # if gameVars.wakkaLateMenu():
     if FFX_memory.getSLVLWakka() >= 3:
         print("Catching up Wakkas sphere grid.")
         openGrid(character=4)
@@ -363,9 +353,6 @@ def battleSiteGrid():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('power', 'none')
     FFX_menuGrid.useAndQuit()
-
-    # Sort items
-    # sortItems(fullMenuClose=False)
 
     # Wakkas weapon
     if gameVars.getLStrike() >= 2:
@@ -1402,11 +1389,6 @@ def addAbility(*, owner, equipment_type, ability_array=[], ability_index=255, sl
         FFX_Xbox.tapB()
     while not abilityToCustomizeRef(ability_index):  # Find the right ability
         FFX_Xbox.tapDown()
-    # while FFX_memory.assignAbilityToEquipCursor() != ability_index:
-    #    if FFX_memory.assignAbilityToEquipCursor() < ability_index:
-    #        FFX_Xbox.tapDown()
-    #    else:
-    #        FFX_Xbox.tapUp()
         if gameVars.usePause():
             FFX_memory.waitFrames(3)
     while FFX_memory.informationActive():
@@ -1480,7 +1462,6 @@ def sellAll(NEA=False):
     while FFX_memory.equipSellRow() + 1 < len(fullArray):
         FFX_Xbox.menuDown()
         FFX_memory.waitFrames(9)
-        # print(fullArray[FFX_memory.equipSellRow()].isEquipped())
         if fullArray[FFX_memory.equipSellRow()].isEquipped() != 255:
             # Currently equipped
             sellItem = False
@@ -1497,9 +1478,6 @@ def sellAll(NEA=False):
             # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
             if fullArray[FFX_memory.equipSellRow()].owner() in [1, 2, 4, 6]:
                 sellItem = False
-        # if fullArray[FFX_memory.equipSellRow()].hasAbility(0x8032):
-        #    #ZombieStrike for Yu Yevon
-        #    sellItem = False
         if NEA == False and fullArray[FFX_memory.equipSellRow()].hasAbility(0x801D):
             # No-Encounters
             sellItem = False
@@ -1571,7 +1549,6 @@ def zombieStrikeBackup():
     FFX_menuGrid.moveAndUse()
     FFX_menuGrid.selSphere('ability', 'none')
     FFX_menuGrid.useAndQuit()
-    # FFX_memory.closeMenu()
 
 
 def BFA():
@@ -1764,15 +1741,11 @@ def openGrid(character):
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
     while not FFX_memory.sGridActive():
-        #print("Attempting to open Sphere Grid")
         if FFX_memory.userControl() and not FFX_memory.menuOpen():
-         #   print("Menu is not open at all")
             FFX_Xbox.tapY()
         elif FFX_memory.menuNumber() == 5:  # Cursor on main menu
-          #  print("Main menu cursor")
             while FFX_memory.getMenuCursorPos() != 0:
                 FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 0, 11)
-           # print("Done with menu cursor")
             while FFX_memory.menuNumber() == 5:
                 FFX_Xbox.tapB()
         elif FFX_memory.menuNumber() == 7:  # Cursor selecting party member
@@ -1786,8 +1759,6 @@ def openGrid(character):
                 elif FFX_memory.partySize() < 3:
                     FFX_Xbox.menuDown()
                 else:
-                    #FFX_memory.menuDirection(FFX_memory.getCharCursorPos(), target_pos, FFX_memory.partySize())
-                    # Not working. Use this instead.
                     FFX_memory.menuDirection(
                         FFX_memory.getCharCursorPos(), target_pos, 7)
             while FFX_memory.menuNumber() == 7:
@@ -1808,14 +1779,6 @@ def openGrid(character):
 
 
 def arenaPurchase1():
-    # FFX_Xbox.tapRight()
-    # FFX_Xbox.tapB()
-    # FFX_memory.waitFrames(60)
-    #all_equipment = FFX_memory.allEquipment()
-    #other_slots = [i for i, handle in enumerate(all_equipment) if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
-    # for cur in other_slots:
-    #    sellWeapon(cur)
-    #buyWeapon(2, equip=True)
     FFX_memory.waitFrames(60)
     FFX_Xbox.tapB()
     FFX_memory.waitFrames(15)

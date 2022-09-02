@@ -1,16 +1,13 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
 import FFX_menu
-import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def approach():
@@ -118,8 +115,6 @@ def arrival(doGrid=True):
             elif checkpoint == 14:  # Pause so we don't mess up the skip
                 if skipStatus == True:
                     FFXC.set_neutral()
-                    # while FFX_memory.getCamera()[3] > -20:
-                    #    FFX_Xbox.tapB()
                     FFX_Xbox.SkipDialog(5)
                     FFXC.set_movement(0, -1)
                     FFX_memory.awaitEvent()
@@ -152,7 +147,7 @@ def arrival(doGrid=True):
 def startSeymourFight():
     FFX_memory.clickToControl()
     while FFX_targetPathing.setMovement([9, -53]) == False:
-        doNothing = True  # Allows us to move to the Seymour fight.
+        pass  # Allows us to move to the Seymour fight.
     FFXC.set_movement(1, 0)
     FFX_memory.awaitEvent()
     FFXC.set_neutral()
@@ -163,12 +158,6 @@ def seymourFight():
 
     # Name for Shiva
     FFX_Xbox.nameAeon("Shiva")
-
-    #FFX_memory.waitFrames(30 * 1)
-    # FFX_Xbox.menuB()
-    #FFX_memory.waitFrames(30 * 0.2)
-    # FFX_Xbox.menuUp()
-    # FFX_Xbox.menuB()
 
     FFX_memory.awaitControl()
     FFXC.set_movement(-1, -1)
@@ -266,8 +255,6 @@ def escape():
 
     print("Now to escape the Guado")
     forceBattle = False
-    # if FFX_memory.rngSeed() == 31:
-    #    forceBattle = True
 
     checkpoint = 0
     while FFX_memory.getBattleNum() != 195:
@@ -350,8 +337,6 @@ def underLake():
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
-            # elif FFX_memory.cutsceneSkipPossible():
-            #    FFX_Xbox.skipScene()
     FFXC.set_neutral()
     FFX_memory.clickToControl()
 

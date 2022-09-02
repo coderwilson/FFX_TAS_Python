@@ -24,7 +24,6 @@ import FFX_Xbox
 import FFX_memory
 import FFX_Battle
 import FFX_Screen
-import FFX_core
 import random
 import time
 import FFX_vars
@@ -43,9 +42,9 @@ if gameVars.nemesis():
 # Gamestate, "none" for new game, or set to a specific section to start from the first save.
 # See the if statement tree below to determine starting position for Gamestate.
 # These are the popular ones. New Game ('none') is the last one.
-Gamestate = "Baaj"
+#Gamestate = "Baaj"
 #StepCounter = 1
-StepCounter = 4
+#StepCounter = 4
 #Gamestate = "Besaid"
 #StepCounter = 3
 #Gamestate = "Kilika"
@@ -152,8 +151,6 @@ autoEggHunt = True
 specialZanLoad = False
 
 # Main functions
-
-
 def reportGamestate():
     global Gamestate
     global StepCounter
@@ -167,14 +164,12 @@ FFX_memory.start()
 # Main
 print("FFX automation starting")
 print("Please launch the game now.")
-#FFX_memory.waitFrames(30 * 5)
-#print("Now attempting to activate FFX window")
 reportGamestate()
 
 print("Game start screen")
 FFX_Screen.clearMouse(0)
 
-FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+#FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed:", rngSeed)
@@ -196,7 +191,6 @@ if Gamestate != "none":
 
     if Gamestate == "Baaj" and StepCounter == 1:
         FFX_LoadGame.loadSaveNum(40)
-        # FFX_LoadGame.LoadBaaj()
     if Gamestate == "Baaj" and StepCounter == 4:
         FFX_LoadGame.loadSaveNum(100)
     if Gamestate == "Besaid" and StepCounter == 1:  # Save pop-up after falling off of Rikkus boat
@@ -217,8 +211,6 @@ if Gamestate != "none":
         FFX_LoadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1:  # Just after entering the woods
         FFX_LoadGame.loadSaveNum(22)
-        #FFXC.set_movement(0, 1)
-        #FFX_memory.waitFrames(30 * 5)
         FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1:  # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(112)
@@ -227,9 +219,6 @@ if Gamestate != "none":
     if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
         FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
         FFX_LoadGame.LoadMiihenStart()
-        #FFX_LoadGame.loadSaveNum(16)  # With laughing scene
-        #FFX_LoadGame.LoadMiihenStart_Laugh()
-        #FFX_memory.setEncounterRate(0)
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
@@ -238,7 +227,6 @@ if Gamestate != "none":
     if Gamestate == "Djose" and StepCounter == 1:  # Aftermath, after talking to Seymour and then Auron
         FFX_LoadGame.loadSaveNum(27)
         FFX_LoadGame.AfterGui()
-        # FFX_memory.setEncounterRate(0)
     if Gamestate == "Moonflow" and StepCounter == 2:  # North bank, before Rikku
         FFX_LoadGame.loadSaveNum(2)
         FFX_LoadGame.moonflow2()
@@ -255,14 +243,11 @@ if Gamestate != "none":
     # Outside temple, before escaping.
     if Gamestate == "Macalania" and StepCounter == 6:
         FFX_LoadGame.loadSaveNum(71)
-        # FFX_LoadGame.loadMacTemple2()
     if Gamestate == "Home" and StepCounter == 1:
         FFX_LoadGame.loadSaveNum(60)
-        # FFX_memory.setEncounterRate(0)
     if Gamestate == "Home" and StepCounter == 2:
         FFX_LoadGame.loadSaveNum(11)
     if Gamestate == "rescueYuna" and StepCounter == 1:  # Airship, first movement.
-        # FFX_LoadGame.loadSaveNum(55) #Blitz Win, normal save.
         # Blitz Win, save less speed/power spheres
         FFX_LoadGame.loadSaveNum(56)
     if Gamestate == "rescueYuna" and StepCounter == 2:  # Bevelle trials
@@ -278,14 +263,10 @@ if Gamestate != "none":
         FFX_LoadGame.loadSaveNum(57)
     if Gamestate == "Gagazet" and StepCounter == 3:  # Gagazet gates, after B&Y
         FFX_LoadGame.loadSaveNum(138)  # Blitz Win
-        # FFX_LoadGame.loadSaveNum(53) #Blitz Loss
+        # FFX_LoadGame.loadSaveNum(53) # Blitz Loss
         gameVars.endGameVersionSet(4)
         FFX_LoadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 6:  # After the dream
-        #FFX_LoadGame.loadSaveNum(47)
-        #gameVars.endGameVersionSet(4)
-        #FFX_LoadGame.loadSaveNum(52)
-        #gameVars.endGameVersionSet(3)
         FFX_LoadGame.loadSaveNum(98)
         gameVars.endGameVersionSet(1)
         FFX_LoadGame.loadGagazetDream()
@@ -305,9 +286,6 @@ if Gamestate != "none":
     if Gamestate == "Zanarkand" and StepCounter == 1:  # Intro scene revisited
         FFX_LoadGame.loadSaveNum(99)  # Coderwilson save
         gameVars.endGameVersionSet(1)
-        # FFX_LoadGame.loadSaveNum(47) #Glacierwulf save
-        # gameVars.endGameVersionSet(4)
-        # FFX_LoadGame.zanEntrance()
         gameVars.fluxOverkillSuccess()
     if Gamestate == "Zanarkand" and StepCounter == 2:  # Just before the trials.
         FFX_LoadGame.loadOffset(35)
@@ -390,9 +368,6 @@ if Gamestate != "none":
         FFX_memory.checkNEArmor()
     FFX_memory.checkNEArmor()
 
-# Movement files - moved to FFX_compileAll.py
-
-# try:
 rikkuCharged = 0
 
 while Gamestate != "End":
@@ -401,7 +376,6 @@ while Gamestate != "End":
     if Gamestate == "Luca" and StepCounter == 3:
         FFX_DreamZan.NewGame(Gamestate)
         FFX_LoadGame.loadSaveNum(37)
-        # FFX_memory.setRNG2()
 
     if rngSeedNum >= 256:
         Gamestate = "End"
@@ -450,7 +424,6 @@ while Gamestate != "End":
         reportGamestate()
         FFX_Baaj.Baaj_puzzle()
         StepCounter = 3
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Baaj" and StepCounter == 3:
         FFX_Baaj.Klikk_fight()
@@ -498,13 +471,11 @@ while Gamestate != "End":
         FFX_Boats.ssLiki()
         FFX_Kilika.arrival()
         Gamestate = "Kilika"
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Kilika" and StepCounter == 1:
         reportGamestate()
         FFX_Kilika.forest1()
         reportGamestate()
-        #print ("Speed spheres:",speedCount)
         StepCounter = 3
 
     if Gamestate == "Kilika" and StepCounter == 3:
@@ -521,7 +492,6 @@ while Gamestate != "End":
         reportGamestate()
         StepCounter = 1
         Gamestate = "Boat2"
-        FFX_Logs.nextFile()
 
     if Gamestate == "Boat2":
         reportGamestate()
@@ -558,10 +528,7 @@ while Gamestate != "End":
             print("------------------------------")
             print("Resetting")
             print("------------------------------")
-            # FFX_memory.clickToControl()
 
-            #FFX_Logs.writeStats("Test duration:")
-            # FFX_Logs.writeStats(totalTime)
             FFX_memory.waitFrames(30 * 2)
 
             FFX_Reset.resetToMainMenu()
@@ -579,7 +546,6 @@ while Gamestate != "End":
             FFX_Logs.writeStats(rngSeed)
         else:
             StepCounter = 3
-        #Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Luca" and StepCounter == 3:
         reportGamestate()
@@ -604,8 +570,6 @@ while Gamestate != "End":
             # FFX_memory.clickToControl()
             StepCounter = 3
 
-            #FFX_Logs.writeStats("Test duration:")
-            # FFX_Logs.writeStats(totalTime)
             FFX_memory.waitFrames(30 * 2)
 
             FFX_Reset.resetToMainMenu()
@@ -680,7 +644,6 @@ while Gamestate != "End":
         if FFX_memory.gameOver():
             Gamestate = "gameOverError"
         StepCounter = 2
-        # Gamestate = "End" # Used for testing only.
 
     if Gamestate == "MRR" and StepCounter == 2:
         reportGamestate()
@@ -688,7 +651,6 @@ while Gamestate != "End":
         FFX_MRR.guiAndAftermath()
         Gamestate = "Djose"
         StepCounter = 1
-        # Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Djose" and StepCounter == 1:
         reportGamestate()
@@ -730,7 +692,6 @@ while Gamestate != "End":
         FFX_Guadosalam.guadoSkip()
         StepCounter = 1
         Gamestate = "ThunderPlains"
-        FFX_Logs.nextFile()
 
     if Gamestate == "ThunderPlains" and StepCounter == 1:
         reportGamestate()
@@ -760,10 +721,8 @@ while Gamestate != "End":
     if Gamestate == "Macalania" and StepCounter == 3:
         reportGamestate()
         FFX_mWoods.lake()
-        # FFX_mWoods.afterCrawler()
         FFX_mTemple.approach()
         StepCounter = 4
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Macalania" and StepCounter == 4:
         reportGamestate()
@@ -775,33 +734,28 @@ while Gamestate != "End":
     if Gamestate == "Macalania" and StepCounter == 5:
         reportGamestate()
         FFX_mTemple.trials()
-        # Gamestate = "manualBreak" # Used for testing only.
         StepCounter = 6
 
     if Gamestate == "Macalania" and StepCounter == 6:
         reportGamestate()
         FFX_mTemple.escape()
         StepCounter = 7
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Macalania" and StepCounter == 7:
         FFX_mTemple.underLake()
         StepCounter = 1
         Gamestate = "Home"
-        # Gamestate = "End" # Used for testing only.
 
     if Gamestate == "Home" and StepCounter == 1:
         reportGamestate()
         FFX_home.desert()
         StepCounter = 2
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "Home" and StepCounter == 2:
         reportGamestate()
         FFX_home.findSummoners()
         StepCounter = 1
         Gamestate = "rescueYuna"
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "rescueYuna" and StepCounter == 1:
         reportGamestate()
@@ -809,7 +763,6 @@ while Gamestate != "End":
         FFX_Battle.Evrae()
         FFX_rescueYuna.guards()
         StepCounter = 2
-        # Gamestate = "manualBreak" # Used for testing only.
 
     if Gamestate == "rescueYuna" and StepCounter == 2:
         reportGamestate()
@@ -825,7 +778,6 @@ while Gamestate != "End":
     if Gamestate == "rescueYuna" and StepCounter == 4:
         reportGamestate()
         FFX_rescueYuna.evraeAltana()
-        # Gamestate = "manualBreak" # Used for testing only.
         StepCounter = 5
 
     if Gamestate == "rescueYuna" and StepCounter == 5:
@@ -920,7 +872,6 @@ while Gamestate != "End":
             StepCounter = 1
         else:
             StepCounter = 3
-        #Gamestate = "End" #Testing only
 
     if Gamestate == "Sin" and StepCounter == 3:
         reportGamestate()
@@ -938,9 +889,7 @@ while Gamestate != "End":
 
     # Nemesis logic only:
     if Gamestate == "Gagazet" and StepCounter == 10:
-        # FFX_nemesisChanges.calmLands()
         FFX_nemesisChanges.calmLands_1()
-        #StepCounter += 1
         StepCounter = 12
 
     if Gamestate == "Gagazet" and StepCounter == 11:
@@ -948,7 +897,6 @@ while Gamestate != "End":
         StepCounter += 1
 
     if Gamestate == "Gagazet" and StepCounter == 12:
-        # FFX_nemesisChanges.templeToArena()
         print("MAAAAARK")
         FFX_memory.awaitControl()
         FFX_nemesisChanges.arenaPurchase()
@@ -1054,7 +1002,6 @@ while Gamestate != "End":
         FFX_nem_arenaPrep.gagazet1()
         FFX_nem_arenaPrep.gagazet2()
         FFX_nem_arenaPrep.gagazet3()
-        # Gamestate = "End" #Testing only
         StepCounter = 20
 
     if Gamestate == "Nem_Farm" and StepCounter == 20:
@@ -1080,7 +1027,6 @@ while Gamestate != "End":
 
     if Gamestate == "Nem_Farm" and StepCounter == 24:
         FFX_nem_arenaPrep.kilikaFinalShop()
-        # FFX_nem_arenaPrep.rinEquipDump(buyWeapon=True)
         StepCounter = 25
 
     if Gamestate == "Nem_Farm" and StepCounter == 25:
@@ -1128,16 +1074,7 @@ while Gamestate != "End":
     print(Gamestate, "|", StepCounter)
     print("------------------------------")
 
-#print("Waiting for Yu Yevon to die.")
-#FFX_memory.waitFrames(30 * 6)
 print("Time! The game is now over.")
-
-# except Exception as errMsg:
-#    print("------------------------------")
-#    print("Something went wrong during the run. Error:")
-#    print(errMsg)
-#    print("------------------------------")
-#    FFX_memory.waitFrames(30 * 20)
 
 endTime = FFX_Logs.timeStamp()
 
