@@ -58,7 +58,7 @@ while attempts < 20:
         print(" ")
         print("------------------------------")
         print("------------------------------")
-        print("Test number ", attempts, "is complete.")
+        print("Test number", attempts,"is complete.")
         print("Blitzball wins:", success)
         print("------------------------------")
         print("------------------------------")

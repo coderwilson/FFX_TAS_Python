@@ -213,7 +213,7 @@ def eggHunt(autoEggHunt):
             FFX_memory.waitFrames(30 * 1)
             waitCount += 1
             if waitCount % 10 == 0:
-                print("Still waiting on user to do this section. ", waitCount / 10)
+                print("Still waiting on user to do this section.", waitCount / 10)
     eggEnd = FFX_Logs.timeStamp()
     eggDuration = eggEnd - eggStart
     #FFX_Logs.writeStats("Egg hunt duration:")

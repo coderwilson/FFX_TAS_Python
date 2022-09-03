@@ -1318,7 +1318,7 @@ def openMenu():
             print("Can't open menu during battle.", menuCounter)
             return False
         else:
-            # print("The menu is now open. Waiting for it to be on menu 5. ", menuNumber())
+            # print("The menu is now open. Waiting for it to be on menu 5.", menuNumber())
             pass
     FFXC.set_neutral()
     print("Menu open returning")
@@ -1977,7 +1977,7 @@ def miihenGuyCoords():
     spearGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        #print("Actor ", x, ":", hex(actorNum))
+        #print("Actor", x, ":", hex(actorNum))
         if actorNum == 0x202D:
             spearGuy = x
     #print("+++Spear guy in position:", spearGuy)
@@ -1989,7 +1989,7 @@ def mrrGuyCoords():
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        print("Actor ", x, ":", hex(actorNum))
+        print("Actor", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
     print("+++MRR guy in position:", mrrGuy)
@@ -2081,7 +2081,7 @@ def charLuck(character:int=0):
     basePointerAddress = process.read(basePointer)
     offset = (0x94 * character) + 0x34
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    #print("Character: ", character)
+    #print("Character:", character)
     #print("Character luck value:\n", retVal)
     return retVal
 
@@ -2093,7 +2093,7 @@ def charAccuracy(character:int=0):
     basePointerAddress = process.read(basePointer)
     offset = (0x94 * character) + 0x36
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    #print("Character: ", character)
+    #print("Character:", character)
     #print("Character accuracy value:\n", retVal)
     return retVal
 
@@ -2967,7 +2967,7 @@ def customizeMenuArray():
     for x in range(60):
         offset = 0x1197730 + (x * 4)
         retArray.append(process.readBytes(baseValue + offset, 2))
-    print("Customize menu: ")
+    print("Customize menu:")
     print(retArray)
     return retArray
 
@@ -3682,7 +3682,7 @@ RNG_CONSTANTS_2 = (
 )
 
 
-def buildRNGarray(index: int, arraySize:int = 255):
+def buildRNGarray(index: int, arraySize: int = 255):
     global baseValue
     offset = baseValue + 0xD35ED8 + (index * 4)
     arrayVal = [process.read(offset)]
@@ -3743,8 +3743,8 @@ def nextChanceRNG01(version='white'):
         battleIndex = 0
     #print("TEST-TEST-TEST:", (testArray[((i+1)*2)+1] & 0x7fffffff) % 7)
     for i in range(rangeVal):
-        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
-        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
+        #print(i, "||", hex(testArray[i]), "||", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, "||", (testArray[i] & 0x7fffffff) % 255)
         if (testArray[((i+1)*2)-1] & 0x7fffffff) % modulo == battleIndex:
             oddArray.append(i)
         if (testArray[(i+1)*2] & 0x7fffffff) % modulo == battleIndex:
@@ -3792,8 +3792,8 @@ def rng10Array(arrayLen:int=256):
 def nextChanceRNG10(dropChanceVal: int = 60) -> int:
     testArray = rng10Array()
     for i in range(len(testArray)):
-        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
-        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
+        #print(i, "||", hex(testArray[i]), "||", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, "||", (testArray[i] & 0x7fffffff) % 255)
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
@@ -3803,8 +3803,8 @@ def nextChanceRNG10Full(dropChanceVal: int = 60) -> int:
     testArray = rng10Array()
     resultsArray = [False,False,False]
     for i in range(len(testArray)):
-        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
-        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
+        #print(i, "||", hex(testArray[i]), "||", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, "||", (testArray[i] & 0x7fffffff) % 255)
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
@@ -4023,8 +4023,8 @@ def rollNextRNG(lastRNG: int, index: int) -> int:
 def printManipInfo():
     print("--------------------------")
     print("Upcoming RNGs:")
-    print("RNG12:", nextChanceRNG12(), "| RNG13: ", nextChanceRNG13() - 1)
-    print("RNG10:", nextChanceRNG10(), "| Pre Defender X: ", nextChanceRNG10Calm())
+    print("RNG12:", nextChanceRNG12(), "| RNG13:", nextChanceRNG13() - 1)
+    print("RNG10:", nextChanceRNG10(), "| Pre Defender X:", nextChanceRNG10Calm())
     print("--------------------------")
 
 def arenaArray():

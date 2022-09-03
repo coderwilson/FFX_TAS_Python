@@ -131,7 +131,6 @@ def turnYuna():
 
 def turnSeymour():
     if FFX_memory.getBattleCharTurn() == 7:
-        FFX_Logs.writeLog("Seymour's turn:")
         return True
     else:
         return False
@@ -184,41 +183,6 @@ def mrrCompletion(status):
             status[1] = 1
 
     return status
-
-
-def imgSearch(img, conf):
-    print("########################################")
-    print("########################################")
-    print("IMAGE SEARCH, FIX THIS LATER")
-    print("########################################")
-    print("########################################")
-    # playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    img = 'img\\' + str(img)
-    try:
-        imgTest = pyautogui.locateOnScreen(img, confidence=conf)
-        print("Results for searching '", img, ":", imgTest)
-        if imgTest[1] > 1:
-            return True
-    except Exception as errorMsg:
-        print("Something went wrong. Could not find image.")
-        print(errorMsg)
-        return False
-
-
-def imgSearch2(img, conf):
-    print("########################################")
-    print("IMAGE SEARCH, FIX THIS LATER")
-    print("########################################")
-    # playsound('audio/Final_Fantasy_X_(USA)_00012.wav')
-    try:
-        imgTest = pyautogui.locateOnScreen(str(img), confidence=conf)
-        print("Results for searching '", img, ":", imgTest)
-        if imgTest[1] > 1:
-            return True
-    except Exception as errorMsg:
-        print("Something went wrong. Could not find image.")
-        print(errorMsg)
-        return False
 
 
 def desertCharge():

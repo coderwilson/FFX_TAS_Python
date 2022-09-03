@@ -14,17 +14,6 @@ filePlot = "none"
 fileMemChange = "none"
 fileRNG = "none"
 
-def writeLog(message):
-    # print("Function no longer used")
-    #global logFile
-    #global fileName
-
-    #logFile = open(fileName, "a")
-    # logFile.write(message)
-    # logFile.write("\n")
-    # logFile.close()
-    return
-
 
 def nextFile():
     # print("Function no longer used")
@@ -62,7 +51,7 @@ def nextStats(rngSeedNum):
     global game
     global ext
     timeNow = datetime.datetime.now()
-    fileStats = "Logs/" + game + "Stats_ " + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
+    fileStats = "Logs/" + game + "Stats_" + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
         timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
     global statsFile
@@ -92,7 +81,7 @@ def nextPlot():
     global ext
     if filePlot == "none":
         timeNow = datetime.datetime.now()
-        filePlot = "Logs/" + game + "Plot_ " + str(timeNow.year) + str(timeNow.month) + str(
+        filePlot = "Logs/" + game + "Plot_" + str(timeNow.year) + str(timeNow.month) + str(
             timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
         global plotFile
@@ -121,7 +110,7 @@ def openRNGTrack():
     global game
     global ext
     timeNow = datetime.datetime.now()
-    fileRNG = "Logs/" + game + "RNG_ " + str(timeNow.year) + str(timeNow.month) + str(
+    fileRNG = "Logs/" + game + "RNG_" + str(timeNow.year) + str(timeNow.month) + str(
         timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
     global RNGFile
