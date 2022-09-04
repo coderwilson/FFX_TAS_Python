@@ -12,15 +12,15 @@ class vgTranslator:
         self.gamepad = vg.VX360Gamepad()
 
     def set_value(self, xKey, value):
-        #Buttons, pressing
+        # Buttons, pressing
         if xKey == "BtnBack" and value == 1:
             self.gamepad.press_button(button=0x0020)
         elif xKey == "BtnStart" and value == 1:
             self.gamepad.press_button(button=0x0010)
         elif xKey == "BtnA" and value == 1:
-            self.gamepad.press_button(button=0x1000)
-        elif xKey == "BtnB" and value == 1:
             self.gamepad.press_button(button=0x2000)
+        elif xKey == "BtnB" and value == 1:
+            self.gamepad.press_button(button=0x1000)
         elif xKey == "BtnX" and value == 1:
             self.gamepad.press_button(button=0x4000)
         elif xKey == "BtnY" and value == 1:
@@ -42,15 +42,15 @@ class vgTranslator:
         elif xKey == "TriggerR" and value == 1:
             self.gamepad.right_trigger_float(value_float=1.0)
 
-        #Buttons, releasing
+        # Buttons, releasing
         elif xKey == "BtnBack" and value == 0:
             self.gamepad.release_button(button=0x0020)
         elif xKey == "BtnStart" and value == 0:
             self.gamepad.release_button(button=0x0010)
         elif xKey == "BtnA" and value == 0:
-            self.gamepad.release_button(button=0x1000)
-        elif xKey == "BtnB" and value == 0:
             self.gamepad.release_button(button=0x2000)
+        elif xKey == "BtnB" and value == 0:
+            self.gamepad.release_button(button=0x1000)
         elif xKey == "BtnX" and value == 0:
             self.gamepad.release_button(button=0x4000)
         elif xKey == "BtnY" and value == 0:
@@ -495,8 +495,6 @@ def awaitSave(index=0):
 
 def remove():
     print("Controller may freeze the program here. If so, please restart your PC.")
-    #FFX_memory.waitFrames(30 * 2)
-    # FFXC.UnPlug(FFXC)
 
 
 def gridUp():
@@ -528,10 +526,8 @@ def gridRight():
 
 
 def clickToBattle():
-    #FFX_Logs.writeLog("Clicking until it's someone's turn in battle")
     print("Clicking until it's someone's turn in battle")
     FFXC.set_neutral()
-    complete = 0
     while not (FFX_memory.battleActive() and FFX_memory.turnReady()):
         if FFX_memory.userControl():
             break
@@ -665,6 +661,3 @@ def nameAeon(character=""):
         tapUp()
     while FFX_memory.nameConfirmOpen():
         tapB()
-
-    print("Now clearing the value so we're ready for the next aeon later.")
-    FFX_memory.clearNameAeonReady()

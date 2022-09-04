@@ -1,0 +1,195 @@
+Lagoon battle:
+['piranha_2', 'piranha', 'piranha_3']
+Battle type: 0
+Lagoon battle:
+['piranha', 'piranha_2']
+Battle type: 0
+===================
+Looking ahead for thunder strike drops
+-Undesirable item dropped by: ??? | advances:0
+-Owner, char-killed: 9
+-Owner, aeon-killed: 0
+-Type: Armor
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: ??? | advances:1
+-Owner, char-killed: 9
+-Owner, aeon-killed: 0
+-Type: Armor
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: ??? | advances:2
+-Owner, char-killed: 9
+-Owner, aeon-killed: 0
+-Type: Armor
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: garuda_3 | advances:0
+-Owner, char-killed: 9
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: garuda_3 | advances:1
+-Owner, char-killed: 9
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: garuda_3 | advances:2
+-Owner, char-killed: 9
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: sin-fin | advances:0
+-Owner, char-killed: 1
+-Owner, aeon-killed: 0
+-Type: Armor
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: sin-fin | advances:1
+-Owner, char-killed: 1
+-Owner, aeon-killed: 0
+-Type: Armor
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: sin-fin | advances:2
+-Owner, char-killed: 1
+-Owner, aeon-killed: 0
+-Type: Armor
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: sinspawn_echuilles | advances:0
+-Owner, char-killed: 0
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: sinspawn_echuilles | advances:1
+-Owner, char-killed: 0
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: sinspawn_echuilles | advances:2
+-Owner, char-killed: 0
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+Kilika battles:
+[['dinonix', 'yellow_element', 'killer_bee']]
+-Undesirable item dropped by: dinonix | advances:1
+-Owner, char-killed: 9
+-Owner, aeon-killed: 4
+-Type: Armor
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+[['ragora']]
+[['ragora', 'killer_bee', 'killer_bee']]
+-Undesirable item dropped by: ragora | advances:1
+-Owner, char-killed: 5
+-Owner, aeon-killed: 3
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: geneaux | advances:0
+-Owner, char-killed: 9
+-Owner, aeon-killed: 4
+-Type: Armor
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: geneaux | advances:1
+-Owner, char-killed: 1
+-Owner, aeon-killed: 1
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: geneaux | advances:2
+-Owner, char-killed: 9
+-Owner, aeon-killed: 4
+-Type: Armor
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+[['dinonix', 'yellow_element']]
+-Undesirable item dropped by: dinonix | advances:1
+-Owner, char-killed: 5
+-Owner, aeon-killed: 3
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+[['ragora']]
+-Undesirable item dropped by: ragora | advances:1
+-Owner, char-killed: 1
+-Owner, aeon-killed: 1
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: worker | advances:0
+-Owner, char-killed: 5
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: worker | advances:2
+-Owner, char-killed: 5
+-Owner, aeon-killed: 3
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: worker | advances:1
+-Owner, char-killed: 5
+-Owner, aeon-killed: 0
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: Oblitzerator | advances:0
+-Owner, char-killed: 1
+-Owner, aeon-killed: 4
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: Oblitzerator | advances:1
+-Owner, char-killed: 1
+-Owner, aeon-killed: 4
+-Type: Weapon
+-Open Slots: 2
+-Abilities: [255, 255, 255, 255]
+===================
+-Undesirable item dropped by: Oblitzerator | advances:2
+-Owner, char-killed: 1
+-Owner, aeon-killed: 1
+-Type: Weapon
+-Open Slots: 1
+-Abilities: [255, 255, 255, 255]
+===================
+End: thunder strike drops
+===================
+The following values are per advance.
+Drops possible:[0, 0, 0]
+Weapon drops on Oblitzerator:[False, False, False]
+Kill Yellow ele on Kilika battles:[0, 0, 0]

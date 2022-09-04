@@ -9,6 +9,7 @@ import FFX_vars
 FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
 
+
 def arrival():
     print("Arrived at Kilika docks.")
     FFX_memory.clickToControl()
@@ -41,7 +42,7 @@ def arrival():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika1(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika1(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -56,8 +57,9 @@ def arrival():
             elif checkpoint < 7 and FFX_memory.getMap() == 152:
                 checkpoint = 7
 
+
 def selectBestOfThree(comingBattles):
-    if comingBattles == [["dinonix", "killer_bee"],["dinonix", "killer_bee"],["dinonix", "killer_bee"]]:
+    if comingBattles == [["dinonix", "killer_bee"], ["dinonix", "killer_bee"], ["dinonix", "killer_bee"]]:
         return 99
     priority = [
         ["ragora", "killer_bee", "killer_bee"],
@@ -71,6 +73,7 @@ def selectBestOfThree(comingBattles):
             print("--------------Best charge, battle num:", priority[i])
             return priority[i]
     return 99
+
 
 def forest1():
     kilikaBattles = 0
@@ -97,9 +100,9 @@ def forest1():
                 FFXC.set_movement(0, 1)
         elif FFX_memory.userControl():
             if checkpoint == 81 or checkpoint == 82:
-                if valeforCharge == True:
+                if valeforCharge:
                     checkpoint = 83
-            if checkpoint == 83 and valeforCharge == False:
+            if checkpoint == 83 and not valeforCharge:
                 checkpoint = 81
             if checkpoint == 83 and FFX_memory.getMap() == 65:
                 checkpoint = 84
@@ -121,7 +124,7 @@ def forest1():
                 if not gameVars.didFullKilikMenu():
                     FFX_menu.Geneaux()
                 checkpoint += 1
-            elif checkpoint == 99:  #Lord O'holland
+            elif checkpoint == 99:  # Lord O'holland
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-30, 45])
                     FFX_Xbox.tapB()
@@ -130,7 +133,7 @@ def forest1():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika2(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika2(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -142,7 +145,7 @@ def forest1():
                     nextThree = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=3)
                     bestOfThree = selectBestOfThree(nextThree)
                     nextBattle = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
-                    print("################# Next Battle:",nextBattle)
+                    print("################# Next Battle:", nextBattle)
                 elif checkpoint > 86:
                     FFX_Battle.Geneaux()
                 else:
@@ -150,7 +153,7 @@ def forest1():
                     print("---------------Reminder (north-bound only):", nextThree)
                     valeforCharge = FFX_Battle.KilikaWoods(valeforCharge, bestOfThree, nextBattle)
                     nextBattle = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
-                    print("##########################",nextBattle)
+                    print("##########################", nextBattle)
                     kilikaBattles += 1
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
@@ -173,7 +176,7 @@ def trials():
     checkpoint = 0
     while FFX_memory.getMap() != 18:
         if FFX_memory.userControl():
-            #Spheres and glyphs
+            # Spheres and glyphs
             if checkpoint == 2:  # First sphere
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
@@ -242,7 +245,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.KilikaTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.KilikaTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -277,7 +280,7 @@ def forest3():
                 checkpoint = 64
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika3(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika3(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -285,7 +288,7 @@ def forest3():
             if FFX_memory.battleActive():
                 FFX_Battle.KilikaWoods(True)
                 kilikaBattles += 1
-                if FFX_memory.getBattleNum() in [32, 34, 37]:
+                if FFX_memory.getEncounterID() in [32, 34, 37]:
                     optimalBattles += 1
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()

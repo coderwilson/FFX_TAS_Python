@@ -14,7 +14,7 @@ attempts = 0
 while attempts < 10:
     attempts += 1
 
-    if selfAuto == True:
+    if selfAuto is True:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------

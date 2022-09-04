@@ -162,7 +162,7 @@ def insideSin():
                 checkpoint = 68
 
             # General Pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.insideSin(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.insideSin(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -184,7 +184,7 @@ def eggHunt(autoEggHunt):
     while not FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 0.5)
-    if autoEggHunt == True:
+    if autoEggHunt:
         zz_eggHuntAuto.engage()
     else:
         print("Start of egg hunt. User control expected.")
@@ -194,10 +194,6 @@ def eggHunt(autoEggHunt):
             waitCount += 1
             if waitCount % 10 == 0:
                 print("Still waiting on user to do this section. ", waitCount / 10)
-    eggEnd = FFX_Logs.timeStamp()
-    eggDuration = eggEnd - eggStart
-    #FFX_Logs.writeStats("Egg hunt duration:")
-    # FFX_Logs.writeStats(str(eggDuration))
     print("Done with the egg hunt. Final prep for BFA.")
     if gameVars.nemesis():
         FFX_menu.equipWeapon(character=0, ability=0x8019, fullMenuClose=True)

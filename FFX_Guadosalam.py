@@ -119,7 +119,7 @@ def afterSpeech(checkpoint=0):
                 FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
 
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.guadoStoryline(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.guadoStoryline(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -166,7 +166,7 @@ def guadoSkip():
         pos = FFX_memory.getCoords()
         recovery = False
         print("Adjustment 2")
-        while pos[0] > 8 and recovery == False:
+        while pos[0] > 8 and not recovery:
             tidusPos = FFX_memory.getCoords()
             guadoPos = FFX_memory.getActorCoords(17)
             if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
@@ -181,7 +181,7 @@ def guadoSkip():
                 FFX_memory.waitFrames(5)
                 pos = FFX_memory.getCoords()
         print("Adjustment 3")
-        while pos[1] < -8.5 and recovery == False:
+        while pos[1] < -8.5 and not recovery:
             tidusPos = FFX_memory.getCoords()
             guadoPos = FFX_memory.getActorCoords(17)
             if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
@@ -202,7 +202,7 @@ def guadoSkip():
         FFXC.set_neutral()  # Face downward
         FFX_memory.waitFrames(4)
         skipActivate = False
-        while not skipActivate and recovery == False:
+        while not skipActivate and not recovery:
             tidusPos = FFX_memory.getCoords()
             guadoPos = FFX_memory.getActorCoords(17)
             if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
@@ -217,7 +217,7 @@ def guadoSkip():
                 FFX_memory.waitFrames(5)
                 pos = FFX_memory.getCoords()
 
-        if recovery == False:
+        if not recovery:
             # Time limit for safety
             startTime = time.time()
             # Max number of seconds that we will wait for the skip to occur.
@@ -262,7 +262,7 @@ def guadoSkip():
 
             # General pathing
             elif FFX_memory.userControl():
-                if FFX_targetPathing.setMovement(FFX_targetPathing.guadoSkip(checkpoint)) == True:
+                if FFX_targetPathing.setMovement(FFX_targetPathing.guadoSkip(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:

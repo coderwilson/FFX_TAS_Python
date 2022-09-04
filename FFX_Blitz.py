@@ -5,6 +5,7 @@ import FFX_blitzPathing
 import FFX_vars
 import math
 import FFX_rngTrack
+import FFX_Logs
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -158,10 +159,10 @@ def Storyline(forceBlitzWin):
             FFX_memory.clickToDiagProgress(11)
             while not activeClock():
                 FFX_Xbox.tapB()
-        #First half is 535
-        #Hype halftime is 540
-        #Second half starts on 560
-        #575 - 9
+        # First half is 535
+        # Hype halftime is 540
+        # Second half starts on 560
+        # 575 - 9
 
 
 def cursor1():
@@ -171,7 +172,7 @@ def cursor1():
 def tidusShotTiming() -> int:
     baseTiming = int(170)
     for x in range(5):
-        if distance(0, x+6) < 180:
+        if distance(0, x + 6) < 180:
             baseTiming = int(baseTiming - 4)
     return baseTiming
 
@@ -321,15 +322,13 @@ def jassuCircle():
                 nextY = tarPlayer[1] - 100
         else:
             nextY = jassuCoords[1] + 30
-            nextX = abs(math.sqrt((radius * radius) -
-                        (jassuCoords[1] * jassuCoords[1])))
+            nextX = abs(math.sqrt((radius * radius) - (jassuCoords[1] * jassuCoords[1])))
             if nextX < jassuCoords[0]:
                 nextX = jassuCoords[0] + 50
     elif jassuCoords[0] < -150:  # Lower section
         version = "C"
         nextY = jassuCoords[1] - 20
-        nextX = math.sqrt((radius * radius) -
-                          (jassuCoords[1] * jassuCoords[1]))
+        nextX = math.sqrt((radius * radius) - (jassuCoords[1] * jassuCoords[1]))
         nextX *= -1
     elif jassuCoords[1] < -100:  # Near own goal
         version = "D"
@@ -365,7 +364,7 @@ def jassuTrain():
             nextY = tarPlayer[1] - 200
             nextX = tarPlayer[0] - 100
             version = "9"
-        elif math.sqrt((jassuCoords[0]*jassuCoords[0])+(jassuCoords[1]*jassuCoords[1])) < 480:
+        elif math.sqrt((jassuCoords[0] * jassuCoords[0]) + (jassuCoords[1] * jassuCoords[1])) < 480:
             # Too close to center. Get to own goal near full radius.
             if jassuCoords[1] > -300:
                 nextX = -10
@@ -377,7 +376,7 @@ def jassuTrain():
         else:
             version = jassuCircle()
             useCircle = True
-    elif playerArray[6].aggro() == False:
+    elif not playerArray[6].aggro():
         tarPlayer = playerArray[6].getCoords()
         nextY = tarPlayer[1] - 300
         nextX = tarPlayer[0] + 100
@@ -404,7 +403,7 @@ def jassuTrain():
         version = "10"
     elif jassuCoords[0] < -450 and jassuCoords[1] > bufferRight - 5:
         nextY = bufferRight - 10
-        nextX = math.sqrt((radius*radius)-(nextY*nextY)) * -1
+        nextX = math.sqrt((radius * radius) - (nextY * nextY)) * -1
         version = "L"
     elif jassuCoords[1] >= bufferRight and jassuCoords[1] < bufferLeft:
         # Buffer zone
@@ -422,7 +421,7 @@ def jassuTrain():
         nextY = jassuCoords[1]
         version = "T"
 
-    if useCircle == False:
+    if not useCircle:
         targetCoords = [int(nextX), int(nextY)]
         if reportState:
             print(version[0], " - ", targetCoords)
@@ -538,11 +537,10 @@ def playerGuarded(playerNum):
 
 def tidusMove():
     currentStage = gameStage()
-    if reportState == True:
+    if reportState:
         print("Tidus movement")
     graavDistance = distance(0, 8)
 
-    goalDistance = distance(0, 11)
     otherDistance = 0
     if distance(0, 6) < 180:
         otherDistance += 1
@@ -590,7 +588,7 @@ def tidusMove():
 
 def tidusAct():
     currentStage = gameStage()
-    if reportState == True:
+    if reportState:
         print("Tidus act")
 
     otherDistance = 0
@@ -631,7 +629,7 @@ def tidusAct():
 
 
 def lettyMove():
-    if reportState == True:
+    if reportState:
         print("Letty movement")
     currentStage = gameStage()
     graavDistance = distance(2, 8)
@@ -692,11 +690,11 @@ def lettyAct():
             passBall(target=1, breakThrough=0)
     elif currentStage >= 4:
         passBall(target=0)
-        if reportState == True:
+        if reportState:
             print("Letty Action 1")
     elif currentStage == 3:
         passBall(target=3)
-        if reportState == True:
+        if reportState:
             print("Letty Action 2")
     elif playerArray[2].currentHP() < 10:
         passBall(target=3)
@@ -727,7 +725,7 @@ def lettyAct():
             passBall(target=3)
     else:
         dribbleBall()
-        if reportState == True:
+        if reportState:
             print("Letty Action 5")
 
 
@@ -813,7 +811,7 @@ def jassuMove():
 
 def jassuAct():
     currentStage = gameStage()
-    if reportState == True:
+    if reportState:
         print("Jassu Action")
         print("Stage:", currentStage)
     graavDistance = distance(3, 8)
@@ -875,7 +873,7 @@ def otherMove():
 def otherAct():
     currentStage = gameStage()
 
-    if reportState == True:
+    if reportState:
         print("Botta/Datto action")
         print("Stage:", currentStage)
 
@@ -892,7 +890,6 @@ def otherAct():
 
 
 def blitzMovement():
-    FFXC = FFX_Xbox.controllerHandle()
     updatePlayerArray()
 
     if controllingPlayer() == 0:
@@ -969,7 +966,7 @@ def blitzMain(forceBlitzWin):
                         if lastMenu != 2:
                             print("Camera focusing Aurochs player")
                             lastMenu = 2
-                        if movementSetFlag == False:
+                        if not movementSetFlag:
                             FFX_Xbox.tapY()
                         else:
                             blitzMovement()

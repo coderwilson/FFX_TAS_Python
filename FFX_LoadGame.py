@@ -5,8 +5,6 @@ import FFX_memory
 import FFX_zzairShipPath
 import FFX_targetPathing
 import os
-from os import listdir
-from os.path import isfile, join
 from pathlib import Path
 
 # This file is intended to load the game to a saved file.

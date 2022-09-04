@@ -25,7 +25,7 @@ def Entrance():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajRamp(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajRamp(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -34,7 +34,7 @@ def Entrance():
     # Battles
     while FFX_memory.getStoryProgress() < 48:
         if FFX_Screen.BattleScreen():
-            if FFX_memory.getBattleNum() == 2:
+            if FFX_memory.getEncounterID() == 2:
                 FFX_Battle.attack('none')
             else:
                 FFX_Battle.defend()
@@ -52,7 +52,7 @@ def Entrance():
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajHallway(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajHallway(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -65,7 +65,7 @@ def Baaj_puzzle():
     FFX_memory.clickToControl()
     print("Ready for the main puzzle.")
     checkpoint = 0
-    while FFX_memory.battleActive() == False:
+    while not FFX_memory.battleActive():
         if FFX_memory.userControl():
             # Events
             if checkpoint == 3:
@@ -94,7 +94,7 @@ def Baaj_puzzle():
                 FFX_Xbox.menuB()
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajPuzzle(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.baajPuzzle(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -116,6 +116,7 @@ def Klikk_fight():
     FFX_Screen.awaitTurn()
     FFX_Battle.Klikk()
 
+
 def distance(n1, n2):
     try:
         player1 = FFX_memory.getActorCoords(actorNumber=n1)
@@ -124,6 +125,7 @@ def distance(n1, n2):
     except Exception as x:
         print("Exception:", x)
         return 999
+
 
 def ABboat1():
     print("Start of Al Bhed boat section.")
@@ -136,16 +138,16 @@ def ABboat1():
     while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
         target = FFX_memory.getActorCoords(actorNumber=3)
         FFX_targetPathing.setMovement(target)
-        if distance(0,3) < 10:
+        if distance(0, 3) < 10:
             FFX_Xbox.tapB()
     print("In the water!")
     FFXC.set_value('BtnA', 1)
-    FFXC.set_movement(-1,-1)
+    FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(20)
-    
+
     while FFX_memory.getMap() != 288:
         FFXC.set_value('BtnA', 1)
-        FFXC.set_movement(0,-1)
+        FFXC.set_movement(0, -1)
         if FFX_memory.battleActive():
             FFXC.set_neutral()
             print("Battle Start (Al Bhed swimming section)")
@@ -155,8 +157,8 @@ def ABboat1():
             print("Battle Complete screen")
             FFX_Xbox.tapB()
 
-def ABswimming1():
 
+def ABswimming1():
     print("Swimming down from the boat")
     while FFX_memory.getMap() != 288:
         if FFX_memory.userControl():
@@ -183,9 +185,9 @@ def ABswimming1():
             else:
                 FFXC.set_value('BtnA', 0)
                 if pos[1] > -230:
-                    FFX_targetPathing.setMovement([-343,-284])
+                    FFX_targetPathing.setMovement([-343, -284])
                 elif pos[1] > -410:
-                    FFX_targetPathing.setMovement([-421,-463])
+                    FFX_targetPathing.setMovement([-421, -463])
                 else:
                     FFXC.set_movement(0, 1)
         else:

@@ -285,7 +285,7 @@ def autoLife():
     FFX_Xbox.tapB()
 
 def basicQuickAttacks(megaPhoenix = False, odVersion:int=0, yunaAutos=False):
-    print("### Battle Start: ", FFX_memory.getBattleNum())
+    print("### Battle Start:", FFX_memory.getEncounterID())
     FFXC.set_neutral()
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
@@ -311,7 +311,7 @@ def basicQuickAttacks(megaPhoenix = False, odVersion:int=0, yunaAutos=False):
     return FFX_memory.battleArenaResults()
 
 def basicAttack(megaPhoenix = False, odVersion:int=0,useOD=False, yunaAutos=False):
-    print("### Battle Start: ", FFX_memory.getBattleNum())
+    print("### Battle Start:", FFX_memory.getEncounterID())
     FFXC.set_neutral()
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():

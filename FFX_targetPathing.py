@@ -2,7 +2,6 @@ import FFX_Xbox
 import FFX_memory
 
 from math import copysign
-import numpy as np
 FFXC = FFX_Xbox.controllerHandle()
 
 
@@ -21,18 +20,18 @@ def setMovement(target) -> bool:
     rX = right[0]
     rY = right[1]
 
-    Ly = fX * (eX-pX) + rX * (eY-pY)
-    Lx = fY * (eX-pX) + rY * (eY-pY)
-    sumsUp = abs(Lx)+abs(Ly)
+    Ly = fX * (eX - pX) + rX * (eY - pY)
+    Lx = fY * (eX - pX) + rY * (eY - pY)
+    sumsUp = abs(Lx) + abs(Ly)
     if sumsUp == 0:
         sumsUp = 0.01
     Lx /= sumsUp
     Ly /= sumsUp
     if abs(Lx) > abs(Ly):
-        Ly = copysign(Ly/Lx if Lx else 0, Ly)
+        Ly = copysign(Ly / Lx if Lx else 0, Ly)
         Lx = copysign(1, Lx)
     elif abs(Ly) > abs(Lx):
-        Lx = copysign(Lx/Ly if Ly else 0, Lx)
+        Lx = copysign(Lx / Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
@@ -74,10 +73,10 @@ def tidusHome(checkpoint):
     if checkpoint == 9:
         x = 6
         y = -1
-    if checkpoint == 10: #Finish the first section
+    if checkpoint == 10:  # Finish the first section
         x = -30
         y = -1
-    if checkpoint == 11: #Start of second section
+    if checkpoint == 11:  # Start of second section
         x = 426
         y = -3
     if checkpoint == 12:
@@ -92,7 +91,7 @@ def tidusHome(checkpoint):
     if checkpoint == 15:
         x = 426
         y = -3
-    if checkpoint == 16: #Ready for bridge
+    if checkpoint == 16:  # Ready for bridge
         x = 426
         y = -3
     if checkpoint == 17:

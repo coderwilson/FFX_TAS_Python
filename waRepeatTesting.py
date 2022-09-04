@@ -33,7 +33,7 @@ while attempts < 20:
 
     FFX_Luca.blitzStart()
     blitzWin = FFX_Blitz.blitzMain(False)
-    if blitzWin == True:
+    if blitzWin:
         success += 1
 
     # ---------End of the actual movement/code/logic/etc---------------
@@ -44,7 +44,7 @@ while attempts < 20:
         print(" ")
         print("------------------------------")
         print("------------------------------")
-        print("Test number", attempts,"is complete.")
+        print("Test number", attempts, "is complete.")
         print("Blitzball wins:", success)
         print("------------------------------")
         print("------------------------------")

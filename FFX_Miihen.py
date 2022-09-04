@@ -19,7 +19,7 @@ def arrival():
     FFX_memory.fullPartyFormat('djose')
     miihenSkip = False
     battleCount = 0
-    SDbattleNum = 0
+    SDencounterID = 0
 
     checkpoint = 0
     while FFX_memory.getMap() != 120:
@@ -40,7 +40,7 @@ def arrival():
                         FFX_targetPathing.setMovement(hunterCoords)
                         FFX_Xbox.tapB()
 
-                    elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
+                    elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)):
                         checkpoint += 1
                         print("Checkpoint reached:", checkpoint)
 
@@ -131,10 +131,10 @@ def arrival():
                                 miihenSkip = False
                             print("Skip successful:", miihenSkip)
                             checkpoint += 1
-                    elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
+                    elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)):
                         checkpoint += 1
                         print("Checkpoint reached:", checkpoint)
-            elif checkpoint == 11 and FFX_memory.hunterSpear() == False:
+            elif checkpoint == 11 and not FFX_memory.hunterSpear():
                 FFX_targetPathing.setMovement(
                     [FFX_memory.miihenGuyCoords()[0], FFX_memory.miihenGuyCoords()[1]])
                 FFX_Xbox.tapB()
@@ -143,7 +143,7 @@ def arrival():
             elif checkpoint < 15 and FFX_memory.getMap() == 120:
                 checkpoint = 15
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -160,7 +160,7 @@ def arrival():
                     FFXC.set_neutral()
                     FFX_memory.fullPartyFormat('djose')
                     FFX_memory.closeMenu()
-                elif checkpoint == 25 and FFX_memory.battleActive() == False:  # Shelinda dialog
+                elif checkpoint == 25 and not FFX_memory.battleActive():  # Shelinda dialog
                     FFXC.set_neutral()
                     FFX_Xbox.tapB()
                 else:
@@ -186,10 +186,10 @@ def arrival():
                     FFXC.set_value('BtnB', 0)
                     FFX_memory.waitFrames(3)
     print("Mi'ihen skip status:", miihenSkip)
-    return [gameVars.selfDestructGet(), battleCount, SDbattleNum, miihenSkip]
+    return [gameVars.selfDestructGet(), battleCount, SDencounterID, miihenSkip]
 
 
-def arrival2(selfDestruct, battleCount, SDbattleNum):
+def arrival2(selfDestruct, battleCount, SDencounterID):
     print("Start of the second map")
     checkpoint = 15
     while FFX_memory.getMap() != 171:
@@ -208,14 +208,14 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
                     checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.miihen(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 battleCount += 1
-                if checkpoint == 27 and FFX_memory.battleActive() == False:  # Shelinda dialog
+                if checkpoint == 27 and not FFX_memory.battleActive():  # Shelinda dialog
                     FFX_Xbox.tapB()
                 else:
                     print("Starting battle")
@@ -234,7 +234,7 @@ def arrival2(selfDestruct, battleCount, SDbattleNum):
                 checkpoint = 20
             elif checkpoint < 31 and FFX_memory.getMap() == 58:
                 checkpoint = 31
-    return [gameVars.selfDestructGet(), battleCount, SDbattleNum]
+    return [gameVars.selfDestructGet(), battleCount, SDencounterID]
 
 
 def midPoint():
@@ -256,7 +256,7 @@ def midPoint():
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.miihenAgency(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.miihenAgency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -270,7 +270,7 @@ def midPoint():
 
 
 # Starts just after the save sphere.
-def lowRoad(selfDestruct, battleCount, SDbattleNum):
+def lowRoad(selfDestruct, battleCount, SDencounterID):
     checkpoint = 0
     FFX_memory.fullPartyFormat('djose')
     while FFX_memory.getMap() != 79:
@@ -299,7 +299,7 @@ def lowRoad(selfDestruct, battleCount, SDbattleNum):
                 checkpoint = 28
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.lowRoad(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.lowRoad(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 25:  # Shelinda dialog

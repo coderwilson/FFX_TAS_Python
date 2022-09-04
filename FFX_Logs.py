@@ -12,17 +12,6 @@ filePlot = "none"
 fileMemChange = "none"
 fileRNG = "none"
 
-def writeLog(message):
-    # print("Function no longer used")
-    #global logFile
-    #global fileName
-
-    #logFile = open(fileName, "a")
-    # logFile.write(message)
-    # logFile.write("\n")
-    # logFile.close()
-    return
-
 
 def writeStats(message):
     global statsFile
@@ -52,6 +41,7 @@ def nextStats(rngSeedNum):
     statsFile.close()
     print("Stats file is ready for writing!\n")
 
+
 def writePlot(message):
     global plotFile
     global filePlot
@@ -60,6 +50,7 @@ def writePlot(message):
     plotFile.write(str(message))
     plotFile.write("\n")
     plotFile.close()
+
 
 def nextPlot():
     global filePlot
@@ -111,6 +102,7 @@ def openRNGTrack():
     RNGFile.write("\n")
     RNGFile.close()
     print("RNG log is ready for writing!\n")
+
 
 def writeRNGTrack(message):
     global RNGFile
@@ -182,8 +174,7 @@ class memChangeMonitor:
             writeMemChange("Updated value: " + self.getNewValue())
             writeMemChange("Time of change: " + timeStamp())
             writeMemChange("?? Game state ??")
-            writeMemChange("Story progress: " +
-                           str(FFX_memory.getStoryProgress()))
+            writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
             writeMemChange("Current map: " + str(FFX_memory.getMap()))
             writeMemChange("Battle Active: " + str(FFX_memory.battleActive()))
 

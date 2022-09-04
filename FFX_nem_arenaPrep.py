@@ -262,7 +262,7 @@ def returnToAirship():
     FFX_memory.clearSaveMenuCursor2()
 
 def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
-    print("### Battle Start: ", FFX_memory.getBattleNum())
+    print("### Battle Start:", FFX_memory.getEncounterID())
     FFXC.set_neutral()
     if faythCave==True and FFX_memory.battleType() == 2:
         FFX_Screen.awaitTurn()
@@ -271,27 +271,27 @@ def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
         while FFX_memory.battleActive():
             if FFX_memory.turnReady():
                 if FFX_Screen.turnTidus():
-                    if FFX_memory.getBattleNum() in [154,156,164]:
+                    if FFX_memory.getEncounterID() in [154,156,164]:
                         #Confusion is a dumb mechanic in this game.
                         FFX_Battle.attackByNum(22,'l')
-                    elif FFX_memory.getBattleNum() == 281:
+                    elif FFX_memory.getEncounterID() == 281:
                         FFX_Battle.attackByNum(22,'r')
-                    elif FFX_memory.getBattleNum() == 283:
+                    elif FFX_memory.getEncounterID() == 283:
                         FFX_Battle.attackByNum(21,'u')
-                    elif FFX_memory.getBattleNum() == 284:
+                    elif FFX_memory.getEncounterID() == 284:
                         FFX_Battle.attackByNum(23,'d')
                     else:
                         FFX_Battle.attack('none')
                 elif FFX_Screen.turnYuna():
                     if yunaAttack:
-                        if FFX_memory.getBattleNum() in [154,156,164]:
+                        if FFX_memory.getEncounterID() in [154,156,164]:
                             #Confusion is a dumb mechanic in this game.
                             FFX_Battle.attackByNum(22,'l')
-                        elif FFX_memory.getBattleNum() == 281:
+                        elif FFX_memory.getEncounterID() == 281:
                             FFX_Battle.attackByNum(21,'l')
-                        elif FFX_memory.getBattleNum() == 283:
+                        elif FFX_memory.getEncounterID() == 283:
                             FFX_Battle.attackByNum(22,'d')
-                        elif FFX_memory.getBattleNum() == 284:
+                        elif FFX_memory.getEncounterID() == 284:
                             FFX_Battle.attackByNum(22,'d')
                         else:
                             FFX_Battle.attack('none')
@@ -300,7 +300,7 @@ def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
                 elif FFX_Screen.turnRikku() or FFX_Screen.turnWakka():
                     if not FFX_Battle.checkTidusOk():
                         FFX_Battle.escapeOne()
-                    elif FFX_memory.getBattleNum() == 219:
+                    elif FFX_memory.getEncounterID() == 219:
                         FFX_Battle.escapeOne()
                     else:
                         FFX_Battle.defend()
@@ -312,118 +312,118 @@ def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
     FFX_nem_menu.performNextGrid(limit=apCpLimit)
 
 def advancedCompleteCheck():
-    battleNum = FFX_memory.getBattleNum()
+    encounterID = FFX_memory.getEncounterID()
     arenaArray = FFX_memory.arenaArray()
     #Common monsters
     if False:
         pass
     
     #Inside Sin
-    elif battleNum == 374: #Ahriman
-        print("For this battle, count: ", arenaArray[37])
+    elif encounterID == 374: #Ahriman
+        print("For this battle, count:", arenaArray[37])
         if arenaArray[37] == 10:
             return True
-    elif battleNum in [375,380]: #Exoray (with a bonus Ahriman)
-        print("For this battle, count: ", arenaArray[93])
+    elif encounterID in [375,380]: #Exoray (with a bonus Ahriman)
+        print("For this battle, count:", arenaArray[93])
         if arenaArray[93] == 10 and arenaArray[37] == 10:
             return True
-    elif battleNum in [376,381]: #Adamantoise
-        print("For this battle, count: ", arenaArray[81])
+    elif encounterID in [376,381]: #Adamantoise
+        print("For this battle, count:", arenaArray[81])
         if arenaArray[81] == 10:
             return True
-    elif battleNum in [377,382]: #Both kinds of Gemini
-        print("For this battle, count: ", arenaArray[77])
-        print("For this battle, count: ", arenaArray[78])
+    elif encounterID in [377,382]: #Both kinds of Gemini
+        print("For this battle, count:", arenaArray[77])
+        print("For this battle, count:", arenaArray[78])
         if arenaArray[77] == 10 and arenaArray[78] == 10:
             return True
-    elif battleNum in [378,384]: #Behemoth King
-        print("For this battle, count: ", arenaArray[70])
+    elif encounterID in [378,384]: #Behemoth King
+        print("For this battle, count:", arenaArray[70])
         if arenaArray[70] == 10:
             return True
-    elif battleNum == 383: #Demonolith
-        print("For this battle, count: ", arenaArray[75])
+    elif encounterID == 383: #Demonolith
+        print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
-    elif battleNum == 385: #Great Malboro
-        print("For this battle, count: ", arenaArray[56])
+    elif encounterID == 385: #Great Malboro
+        print("For this battle, count:", arenaArray[56])
         if arenaArray[56] == 10:
             return True
-    elif battleNum == 386: #Barbatos
-        print("For this battle, count: ", arenaArray[90])
+    elif encounterID == 386: #Barbatos
+        print("For this battle, count:", arenaArray[90])
         if arenaArray[90] == 10:
             return True
-    elif battleNum == 387: #Wraith
-        print("For this battle, count: ", arenaArray[97])
+    elif encounterID == 387: #Wraith
+        print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
         
     #Omega dungeon
-    elif battleNum == 421: #Master Coeurl and Floating Death
-        print("For this battle, count: ", arenaArray[74])
-        print("For this battle, count: ", arenaArray[102])
+    elif encounterID == 421: #Master Coeurl and Floating Death
+        print("For this battle, count:", arenaArray[74])
+        print("For this battle, count:", arenaArray[102])
         if arenaArray[74] == 10 and arenaArray[102] == 10:
             return True
-    elif battleNum == 422: #Halma and Spirit
-        print("For this battle, count: ", arenaArray[96])
-        print("For this battle, count: ", arenaArray[101])
+    elif encounterID == 422: #Halma and Spirit
+        print("For this battle, count:", arenaArray[96])
+        print("For this battle, count:", arenaArray[101])
         if arenaArray[96] == 10 and arenaArray[101] == 10:
             return True
-    elif battleNum == 423: #Zaurus and Floating Death
-        print("For this battle, count: ", arenaArray[100])
-        print("For this battle, count: ", arenaArray[102])
+    elif encounterID == 423: #Zaurus and Floating Death
+        print("For this battle, count:", arenaArray[100])
+        print("For this battle, count:", arenaArray[102])
         if arenaArray[100] == 10 and arenaArray[102] == 10:
             return True
-    elif battleNum == 424: #Black Element and Spirit
-        print("For this battle, count: ", arenaArray[67])
-        print("For this battle, count: ", arenaArray[96])
+    elif encounterID == 424: #Black Element and Spirit
+        print("For this battle, count:", arenaArray[67])
+        print("For this battle, count:", arenaArray[96])
         if arenaArray[67] == 10 and arenaArray[96] == 10:
             return True
-    elif battleNum == 425: #Varuna
-        print("For this battle, count: ", arenaArray[82])
+    elif encounterID == 425: #Varuna
+        print("For this battle, count:", arenaArray[82])
         if arenaArray[82] == 10:
             return True
-    elif battleNum == 426: #Master Tonberry
-        print("For this battle, count: ", arenaArray[99])
+    elif encounterID == 426: #Master Tonberry
+        print("For this battle, count:", arenaArray[99])
         if arenaArray[99] == 10:
             return True
-    elif battleNum == 428: #Machea (blade thing)
-        print("For this battle, count: ", arenaArray[103])
+    elif encounterID == 428: #Machea (blade thing)
+        print("For this battle, count:", arenaArray[103])
         if arenaArray[103] == 10:
             return True
-    elif battleNum == 430: #Demonolith x2
-        print("For this battle, count: ", arenaArray[75])
+    elif encounterID == 430: #Demonolith x2
+        print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
-    elif battleNum in [432,433,434,435,436]: #Just Zaurus
-        print("For this battle, count: ", arenaArray[100])
+    elif encounterID in [432,433,434,435,436]: #Just Zaurus
+        print("For this battle, count:", arenaArray[100])
         if arenaArray[100] == 10:
             return True
-    elif battleNum == 437: #Puroboros
-        print("For this battle, count: ", arenaArray[95])
+    elif encounterID == 437: #Puroboros
+        print("For this battle, count:", arenaArray[95])
         if arenaArray[95] == 10:
             return True
-    elif battleNum == 438: #Wraith
-        print("For this battle, count: ", arenaArray[97])
+    elif encounterID == 438: #Wraith
+        print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
     
     
     #Other
-    if battleNum in [429,445]:
+    if encounterID in [429,445]:
         #Rock monsters, just leave.
         return True
-    if battleNum == 383:
+    if encounterID == 383:
         #Demonolith inside Sin, not worth.
         return True
-    if battleNum == 427:
+    if encounterID == 427:
         #Adamantoise in Omega, dealt with inside Sin
         return True
     
     return False
 
 def advancedBattleLogic():
-    print("### Battle Start: ", FFX_memory.getBattleNum())
-    print("### Ambush flag (2 is bad): ", FFX_memory.battleType())
+    print("### Battle Start:", FFX_memory.getEncounterID())
+    print("### Ambush flag (2 is bad):", FFX_memory.battleType())
     while not FFX_memory.turnReady():
         pass
     autoLifeUsed = False
@@ -436,7 +436,7 @@ def advancedBattleLogic():
         print(">>>>Complete collecting this monster.")
         FFX_Battle.tidusFlee()
     else:
-        if FFX_memory.getBattleNum() == 449:
+        if FFX_memory.getEncounterID() == 449:
             #Omega himself, not yet working.
             aeonComplete = False
             while FFX_memory.battleActive():
@@ -454,78 +454,78 @@ def advancedBattleLogic():
                     else:
                         FFX_Battle.defend()
         else:
-            print("---Regular battle:", FFX_memory.getBattleNum())
+            print("---Regular battle:", FFX_memory.getEncounterID())
             sleepPowder = False
             while FFX_memory.battleActive():
-                battleNum = FFX_memory.getBattleNum()
+                encounterID = FFX_memory.getEncounterID()
                 if FFX_memory.turnReady():
-                    if battleNum in [442]:
+                    if encounterID in [442]:
                         #Damned malboros in Omega
                         FFX_Battle.buddySwapYuna()
                         FFX_Battle.aeonSummon(4)
                         FFX_Battle.attack('none')
                     elif FFX_Screen.turnTidus():
-                        if FFX_memory.getBattleNum() in [386] and not autoLifeUsed:
+                        if FFX_memory.getEncounterID() in [386] and not autoLifeUsed:
                             autoLife()
                             autoLifeUsed = True
-                        elif battleNum == 383 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
+                        elif encounterID == 383 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
                             else:
                                 FFX_Battle.useSkill(1)
-                        elif battleNum == 426 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
+                        elif encounterID == 426 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
                             else:
                                 FFX_Battle.useSkill(1)
-                        elif battleNum == 430 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
+                        elif encounterID == 430 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
                             else:
                                 FFX_Battle.useSkill(1)
-                        elif battleNum == 437 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
+                        elif encounterID == 437 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
                             else:
                                 FFX_Battle.useSkill(1)
-                        elif battleNum == 431:
+                        elif encounterID == 431:
                             FFX_Battle.tidusFlee()
                         else:
                             FFX_Battle.useSkill(1) #Quick hit
                     elif FFX_Screen.turnRikku():
-                        if battleNum in [377,382]:
+                        if encounterID in [377,382]:
                             print("Shining Gems for Gemini, better to save other items for other enemies.")
                             #Double Gemini, two different locations
                             if FFX_memory.getUseItemsSlot(42) < 100:
                                 FFX_Battle.useItem(FFX_memory.getUseItemsSlot(42), rikkuFlee=False)
                             else:
                                 FFX_Battle.defend()
-                        elif battleNum == 386:
+                        elif encounterID == 386:
                             #Armor bomber guys
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=False)
                             else:
                                 FFX_Battle.defend()
-                        elif battleNum in [430]:
+                        elif encounterID in [430]:
                             #Demonolith
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=False)
                             else:
                                 FFX_Battle.defend()
-                        elif battleNum == 422:
+                        elif encounterID == 422:
                             #Provoke on Spirit
                             FFX_Battle.useSpecial(position=3, target=21, direction='u')
                             if FFX_memory.getUseItemsSlot(41) < 100:
                                 FFX_Battle.useItem(FFX_memory.getUseItemsSlot(41), rikkuFlee=False)
                             else:
                                 FFX_Battle.defend()
-                        elif battleNum == 424:
+                        elif encounterID == 424:
                             #Provoke on Spirit
                             FFX_Battle.useSpecial(position=3, target=21, direction='r')
-                        elif battleNum == 425 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
+                        elif encounterID == 425 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             #Varuna, use purifying salt to remove haste
                             FFX_Battle.useItem(FFX_memory.getUseItemsSlot(63), rikkuFlee=False) #Safety potions are fun.
-                        elif battleNum == 426:
+                        elif encounterID == 426:
                             #Master Tonberry
                             if not sleepPowder:
                                 FFX_Battle.useItem(FFX_memory.getUseItemsSlot(37), rikkuFlee=False)
@@ -534,9 +534,9 @@ def advancedBattleLogic():
                                     FFX_Battle.useItemTidus(FFX_memory.getUseItemsSlot(41))
                                 else:
                                     FFX_Battle.defend()
-                        elif battleNum == 431:
+                        elif encounterID == 431:
                             FFX_Battle.tidusFlee()
-                        elif battleNum == 437 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
+                        elif encounterID == 437 and FFX_memory.getEnemyCurrentHP()[0] > 9999:
                             if not sleepPowder:
                                 FFX_Battle.useItem(FFX_memory.getUseItemsSlot(37), rikkuFlee=False)
                             else:
@@ -1535,7 +1535,7 @@ def miihenFarm(capNum:int=1):
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 78 and FFX_memory.arenaArray()[34] == 10:
+                if FFX_memory.getEncounterID() == 78 and FFX_memory.arenaArray()[34] == 10:
                     FFX_Battle.fleeAll()
                 else:
                     if capNum == 10:
@@ -1602,7 +1602,7 @@ def miihenFarm_old(capNum:int=1):
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 78 and FFX_memory.arenaArray()[34] == 10:
+                if FFX_memory.getEncounterID() == 78 and FFX_memory.arenaArray()[34] == 10:
                     FFX_Battle.fleeAll()
                 else:
                     if capNum == 10:
@@ -1771,7 +1771,7 @@ def djoseFarm(capNum:int=10):
                 if FFX_memory.getHP()[0] < 800:
                     FFX_Battle.healUp(3)
                 prefArea = djoseNext(endGoal=capNum)
-                print("Next area: ", prefArea)
+                print("Next area:", prefArea)
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
@@ -1908,7 +1908,7 @@ def tPlains(capNum:int=1,autoHaste:bool=False):
                     battleFarmAll()
                 FFX_Battle.healUp(3)
                 prefArea = plainsNext(endGoal=capNum)
-                print("Next area: ", prefArea)
+                print("Next area:", prefArea)
                 FFX_memory.arenaFarmCheck(zone="tPlains",endGoal=capNum,report=True)
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
@@ -2330,17 +2330,17 @@ def calm(capNum:int=1,autoHaste = False,airshipReturn = True, forceLevels = 0):
             FFXC.set_neutral()
             allCounts = FFX_memory.arenaArray()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 281 and gameVars.nemCheckpointAP() < 8:
+                if FFX_memory.getEncounterID() == 281 and gameVars.nemCheckpointAP() < 8:
                     if min(allCounts[13], allCounts[19]) >= capNum:
                         FFX_Battle.fleeAll()
                     else:
                         battleFarmAll()
-                elif FFX_memory.getBattleNum() == 283 and gameVars.nemCheckpointAP() < 8:
+                elif FFX_memory.getEncounterID() == 283 and gameVars.nemCheckpointAP() < 8:
                     if min(allCounts[4], allCounts[19],allCounts[33]) >= capNum:
                         FFX_Battle.fleeAll()
                     else:
                         battleFarmAll()
-                elif FFX_memory.getBattleNum() == 284 and allCounts[33] >= capNum and gameVars.nemCheckpointAP() < 8:
+                elif FFX_memory.getEncounterID() == 284 and allCounts[33] >= capNum and gameVars.nemCheckpointAP() < 8:
                     FFX_Battle.fleeAll()
                 else:
                     if capNum == 10:
@@ -2387,17 +2387,17 @@ def calm_old(capNum:int=1,autoHaste = False,airshipReturn = True):
             FFXC.set_neutral()
             allCounts = FFX_memory.arenaArray()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 281 and gameVars.nemCheckpointAP() < 8:
+                if FFX_memory.getEncounterID() == 281 and gameVars.nemCheckpointAP() < 8:
                     if min(allCounts[13], allCounts[19]) >= capNum:
                         FFX_Battle.fleeAll()
                     else:
                         battleFarmAll()
-                elif FFX_memory.getBattleNum() == 283 and gameVars.nemCheckpointAP() < 8:
+                elif FFX_memory.getEncounterID() == 283 and gameVars.nemCheckpointAP() < 8:
                     if min(allCounts[4], allCounts[19],allCounts[33]) >= capNum:
                         FFX_Battle.fleeAll()
                     else:
                         battleFarmAll()
-                elif FFX_memory.getBattleNum() == 284 and allCounts[33] >= capNum and gameVars.nemCheckpointAP() < 8:
+                elif FFX_memory.getEncounterID() == 284 and allCounts[33] >= capNum and gameVars.nemCheckpointAP() < 8:
                     FFX_Battle.fleeAll()
                 else:
                     if capNum == 10:
@@ -2859,10 +2859,10 @@ def stolenFaythCave(capNum:int=10):
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() in[321,329]:
+                if FFX_memory.getEncounterID() in[321,329]:
                     #Do not engage the jar boys.
                     FFX_Battle.fleeAll()
-                elif FFX_memory.getBattleNum() == 327 and FFX_memory.arenaFarmCheck(zone="justtonberry",endGoal=capNum,report=False):
+                elif FFX_memory.getEncounterID() == 327 and FFX_memory.arenaFarmCheck(zone="justtonberry",endGoal=capNum,report=False):
                     #No need to die extra times on tonberries.
                     FFX_Battle.fleeAll()
                 else:

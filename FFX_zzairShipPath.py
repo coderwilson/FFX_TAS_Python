@@ -15,13 +15,13 @@ def airShipPath(version):
 
     complete = False
     checkpoint = 0
-    while complete == False:
+    while not complete:
         if FFX_memory.userControl():
             # Map changes
             if checkpoint == 2:
                 FFX_memory.clickToEventTemple(3)
                 checkpoint += 1
-            elif version == 1 and distillerPurchase == False and checkpoint == 5 and \
+            elif version == 1 and not distillerPurchase and checkpoint == 5 and \
                     (FFX_memory.getSpeed() < 9 or FFX_memory.getPower() < 23):
 
                 # Tyton to update this with the actual purchase.
@@ -178,7 +178,7 @@ def airShipPath(version):
                 complete = True
 
             # General Pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.airShip(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.airShip(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

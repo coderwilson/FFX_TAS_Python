@@ -10,38 +10,41 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 
-def printNEAzone(battles:int):
+
+def printNEAzone(battles: int):
     print("#### Charging Rikku zone:", gameVars.getNEAzone())
     print("#### This will take", battles, "number of battles (99 means unknown)")
 
-def decideNEA(bonusAdvance:int=0):
+
+def decideNEA(bonusAdvance: int = 0):
     import FFX_rngTrack
     maxBattles = 1
     zanOutdoors = FFX_rngTrack.comingBattles(area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonusAdvance)
     zanIndoors = FFX_rngTrack.comingBattles(area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonusAdvance)
-    seaSorrows = FFX_rngTrack.comingBattles(area="inside_sin_(front)", battleCount=maxBattles, extraAdvances=bonusAdvance+6)
-    
+    seaSorrows = FFX_rngTrack.comingBattles(area="inside_sin_(front)", battleCount=maxBattles, extraAdvances=bonusAdvance + 6)
+
     for i in range(maxBattles):
         if "behemoth" in zanOutdoors[i]:
             gameVars.setNEAzone(1)
-            printNEAzone(i+1)
+            printNEAzone(i + 1)
             return
         elif "defender_z" in zanIndoors[i]:
             gameVars.setNEAzone(2)
-            printNEAzone(i+1)
+            printNEAzone(i + 1)
             return
         elif "behemoth_king" in seaSorrows[i]:
             gameVars.setNEAzone(3)
-            printNEAzone(i+1)
+            printNEAzone(i + 1)
             return
         elif "adamantoise" in seaSorrows[i]:
             gameVars.setNEAzone(3)
-            printNEAzone(i+1)
+            printNEAzone(i + 1)
             return
-    #If we won't get it in next five per zone, default to Inside Sin. The most possible battles there.
+    # If we won't get it in next five per zone, default to Inside Sin. The most possible battles there.
     gameVars.setNEAzone(99)
     printNEAzone(99)
     return
+
 
 def arrival():
     FFX_memory.awaitControl()
@@ -87,7 +90,7 @@ def arrival():
                     else:
                         FFXC.set_movement(-1, 1)
                         FFX_Xbox.tapB()
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandOutdoors(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandOutdoors(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -171,7 +174,7 @@ def arrival():
             elif FFX_memory.getMap() == 316 and checkpoint < 21:  # Final room before trials
                 print("Final room before trials")
                 checkpoint = 21
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandDome(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandDome(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -216,7 +219,7 @@ def trials0(checkpoint):
                 FFX_memory.waitFrames(30 * 1.3)
                 FFXC.set_movement(0, 1)
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -247,7 +250,7 @@ def trials1(checkpoint):
                 FFX_memory.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -271,7 +274,7 @@ def trials2(checkpoint):
                 FFX_memory.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -295,7 +298,7 @@ def trials3(checkpoint):
                 FFX_memory.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -320,7 +323,7 @@ def trials4(checkpoint):
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.zanarkandTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     FFXC.set_neutral()
@@ -332,14 +335,11 @@ def sanctuaryKeeper():
     print("Now prepping for Sanctuary Keeper fight")
 
     if ver == 4:
-        FFX_Logs.writeLog("Starting pattern, FFX_menu.skReturn()")
         print("Pattern for four return spheres off of the B&Y fight")
         FFX_menu.skReturn()
     elif ver == 3:
-        FFX_Logs.writeLog("Starting pattern, FFX_menu.skFriend()")
         FFX_menu.skFriend()
     else:
-        FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
     FFX_memory.fullPartyFormat('yuna')
     FFX_memory.closeMenu()
@@ -384,7 +384,7 @@ def yunalesca():
                 FFX_memory.awaitEvent()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalesca(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalesca(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -436,7 +436,7 @@ def post_Yunalesca(checkpoint=0):
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 26:
                 FFXC.set_neutral()
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalescaToAirship(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.yunalescaToAirship(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

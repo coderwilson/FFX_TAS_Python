@@ -25,7 +25,7 @@ def approach():
                 checkpoint = 2
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleApproach(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleApproach(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -113,7 +113,7 @@ def arrival(doGrid=True):
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 14:  # Pause so we don't mess up the skip
-                if skipStatus == True:
+                if skipStatus:
                     FFXC.set_neutral()
                     FFX_Xbox.SkipDialog(5)
                     FFXC.set_movement(0, -1)
@@ -134,7 +134,7 @@ def arrival(doGrid=True):
                 checkpoint = 12
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.templeFoyer(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.templeFoyer(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -146,7 +146,7 @@ def arrival(doGrid=True):
 
 def startSeymourFight():
     FFX_memory.clickToControl()
-    while FFX_targetPathing.setMovement([9, -53]) == False:
+    while not FFX_targetPathing.setMovement([9, -53]):
         pass  # Allows us to move to the Seymour fight.
     FFXC.set_movement(1, 0)
     FFX_memory.awaitEvent()
@@ -181,7 +181,7 @@ def trials():
             elif checkpoint < 2 and FFX_memory.getMap() == 239:
                 checkpoint = 2
 
-            #Spheres and Pedestals
+            # Spheres and Pedestals
             elif checkpoint == 2:
                 FFX_memory.awaitControl()
                 print("Activate the trials")
@@ -234,7 +234,7 @@ def trials():
                 FFX_memory.clickToEventTemple(4)
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -257,7 +257,7 @@ def escape():
     forceBattle = False
 
     checkpoint = 0
-    while FFX_memory.getBattleNum() != 195:
+    while FFX_memory.getEncounterID() != 195:
         if FFX_memory.userControl():
             # Events
             if checkpoint == 2:
@@ -273,7 +273,7 @@ def escape():
                 print("Map change. Update checkpoint:", checkpoint)
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleEscape(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mTempleEscape(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -288,7 +288,7 @@ def escape():
                     FFX_menu.afterSeymour()
                     menuDone = True
                     FFX_memory.fullPartyFormat('macalaniaescape')
-                elif FFX_memory.getBattleNum() == 195:
+                elif FFX_memory.getEncounterID() == 195:
                     break
                 else:
                     FFX_Battle.fleeAll()
@@ -330,7 +330,7 @@ def underLake():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.underMacTemple(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.underMacTemple(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

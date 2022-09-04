@@ -35,7 +35,7 @@ def arrival():
                 FFX_memory.waitFrames(30 * 0.035)
                 FFXC.set_neutral()
                 FFX_memory.waitFrames(30 * 2.3)
-                if FFX_memory.userControl() == False:
+                if not FFX_memory.userControl():
                     FFX_Battle.fleeAll()
                     FFX_Battle.wrapUp()
                     FFXC.set_movement(-1, 0)
@@ -54,7 +54,6 @@ def arrival():
                 # Max number of seconds that we will wait for the skip to occur.
                 timeLimit = 60
                 maxTime = startTime + timeLimit
-                cam = FFX_memory.getCamera()
                 while FFX_memory.getActorCoords(6)[0] < -50:
                     currentTime = time.time()
                     if currentTime > maxTime:
@@ -64,7 +63,7 @@ def arrival():
                 FFX_memory.clickToControl()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrStart(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrStart(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -105,10 +104,10 @@ def mainPath():
                 checkpoint += 1
             elif checkpoint == 45:
                 if status[0] == 0 or status[1] == 0 or status[2] != 2:
-                    if FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(99)) == True:
+                    if FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(99)):
                         checkpoint -= 1
                 else:
-                    if FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(45)) == True:
+                    if FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(45)):
                         checkpoint += 1
 
             elif checkpoint == 46:
@@ -152,9 +151,9 @@ def mainPath():
                 checkpoint += 1
             elif checkpoint < 71 and FFX_memory.getMap() == 79:
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)):
                 if checkpoint == 61:
-                    if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2,3,4,5,7]:
+                    if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2, 3, 4, 5, 7]:
                         print("+++++++++++ We can manip: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                         checkpoint = 60
                     else:
@@ -239,7 +238,7 @@ def battleSite():
                 FFX_Xbox.menuDown()
                 FFX_Xbox.tapB()
                 checkpoint = 100
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSite(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSite(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -268,7 +267,7 @@ def guiAndAftermath():
                 FFXC.set_movement(0, 1)
                 FFX_memory.awaitEvent()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSiteAftermath(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.battleSiteAftermath(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

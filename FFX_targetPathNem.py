@@ -2,7 +2,6 @@ import FFX_Xbox
 import FFX_memory
 
 from math import copysign
-import numpy as np
 
 FFXC = FFX_Xbox.controllerHandle()
 
@@ -10,9 +9,6 @@ FFXC = FFX_Xbox.controllerHandle()
 def setMovement(target) -> bool:
     player = FFX_memory.getCoords()
     (forward, right) = FFX_memory.getMovementVectors()
-
-    targetPos = np.array([target[0], target[1]])
-    playerPos = np.array(player)
 
     # Calculate forward and right directions relative to camera space
     pX = player[0]
@@ -24,18 +20,18 @@ def setMovement(target) -> bool:
     rX = right[0]
     rY = right[1]
 
-    Ly = fX * (eX-pX) + rX * (eY-pY)
-    Lx = fY * (eX-pX) + rY * (eY-pY)
-    sumsUp = abs(Lx)+abs(Ly)
+    Ly = fX * (eX - pX) + rX * (eY - pY)
+    Lx = fY * (eX - pX) + rY * (eY - pY)
+    sumsUp = abs(Lx) + abs(Ly)
     if sumsUp == 0:
         sumsUp = 0.01
     Lx /= sumsUp
     Ly /= sumsUp
     if abs(Lx) > abs(Ly):
-        Ly = copysign(Ly/Lx if Lx else 0, Ly)
+        Ly = copysign(Ly / Lx if Lx else 0, Ly)
         Lx = copysign(1, Lx)
     elif abs(Ly) > abs(Lx):
-        Lx = copysign(Lx/Ly if Ly else 0, Lx)
+        Lx = copysign(Lx / Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
@@ -45,6 +41,7 @@ def setMovement(target) -> bool:
         return True  # Checkpoint reached
     else:
         return False
+
 
 def toRemiem(checkpoint):
     x = 999
@@ -665,7 +662,6 @@ def leaveRemiem(checkpoint):
 
 
 def tpFarm(checkpoint):
-    #print("Path: ", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -674,40 +670,40 @@ def tpFarm(checkpoint):
     if checkpoint == 1:
         x = 10
         y = -200
-    if checkpoint == 2: #Outside agency
+    if checkpoint == 2:  # Outside agency
         x = -48
         y = 54
-    if checkpoint == 3: #To North
+    if checkpoint == 3:  # To North
         x = 0
         y = 300
-    if checkpoint == 4: #North pos 1
+    if checkpoint == 4:  # North pos 1
         x = -127
         y = -1083
-    if checkpoint == 5: #North pos 2
+    if checkpoint == 5:  # North pos 2
         x = -106
         y = -1185
-    if checkpoint == 6: #Back to agency front
+    if checkpoint == 6:  # Back to agency front
         x = -115
         y = -1400
     if checkpoint == 7:
         x = -55
         y = 27
-    if checkpoint == 8: #To South
+    if checkpoint == 8:  # To South
         x = -50
         y = -200
-    if checkpoint == 9: #South pos 1
+    if checkpoint == 9:  # South pos 1
         x = -44
         y = 1075
-    if checkpoint == 10: #South pos 2
+    if checkpoint == 10:  # South pos 2
         x = 16
         y = 1116
-    if checkpoint == 11: #Back to agency front
+    if checkpoint == 11:  # Back to agency front
         x = 4
         y = 1300
     if checkpoint == 12:
         x = -56
         y = 51
-    if checkpoint == 13: #Back to north
+    if checkpoint == 13:  # Back to north
         x = 0
         y = 300
     if checkpoint == 14:

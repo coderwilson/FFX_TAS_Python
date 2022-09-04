@@ -16,14 +16,14 @@ def lineSphereIntersect(start, end, circle, radius=11):
     a = np.dot(direction, direction)
     b = 2 * np.dot(sphereToStart, direction)
     c = np.dot(sphereToStart, sphereToStart) - radius**2
-    d = b**2 - 4*a*c
+    d = b**2 - 4 * a * c
     if d < 0:  # no intersection
         return (numHits, hits)
 
     d = np.sqrt(d)
     # Solve quadratic equation
-    t1 = (-b - d)/(2*a)
-    t2 = (-b + d)/(2*a)
+    t1 = (-b - d) / (2 * a)
+    t2 = (-b + d) / (2 * a)
 
     if t1 >= 0 and t1 <= 1:
         numHits += 1
@@ -59,7 +59,6 @@ def engage():
     checkpoint = 0
     battleCount = 0
     lookingCount = 0
-    camCount = 0
     print("Generating Plot file (the X/Y kind)")
     activeEgg = 99
     target = [10, -10]
@@ -77,14 +76,13 @@ def engage():
         else:  # User control is different for this section.
             eggArray = FFX_memory.buildEggs()
             iceArray = FFX_memory.buildIcicles()  # Added for additional pathing needs
-            currentTime = time.time()
             if activeEgg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
-                    if activeEgg == 99 and eggArray[marker].goForEgg == True and eggArray[marker].eggLife < 150:
+                    if activeEgg == 99 and eggArray[marker].goForEgg and eggArray[marker].eggLife < 150:
                         activeEgg = marker
                         target = [eggArray[marker].x, eggArray[marker].y]
                         # We will hunt for this egg for this many seconds.
-            elif eggArray[activeEgg].goForEgg == False:
+            elif not eggArray[activeEgg].goForEgg:
                 activeEgg = 99
             elif eggArray[activeEgg].eggLife == 150:
                 activeEgg = 99
@@ -137,18 +135,18 @@ def engage():
             rX = right[0]
             rY = right[1]
 
-            Ly = fX * (eX-pX) + rX * (eY-pY)
-            Lx = fY * (eX-pX) + rY * (eY-pY)
-            sumsUp = abs(Lx)+abs(Ly)
+            Ly = fX * (eX - pX) + rX * (eY - pY)
+            Lx = fY * (eX - pX) + rY * (eY - pY)
+            sumsUp = abs(Lx) + abs(Ly)
             if sumsUp == 0:
                 sumsUp = 0.01
             Lx /= sumsUp
             Ly /= sumsUp
             if abs(Lx) > abs(Ly):
-                Ly = copysign(Ly/Lx if Lx else 0, Ly)
+                Ly = copysign(Ly / Lx if Lx else 0, Ly)
                 Lx = copysign(1, Lx)
             elif abs(Ly) > abs(Lx):
-                Lx = copysign(Lx/Ly if Ly else 0, Lx)
+                Lx = copysign(Lx / Ly if Ly else 0, Lx)
                 Ly = copysign(1, Ly)
 
             try:

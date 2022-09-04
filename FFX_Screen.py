@@ -39,7 +39,7 @@ def faintCheck():
 
 
 def BattleComplete():
-    if FFX_memory.battleActive() == False:
+    if not FFX_memory.battleActive():
         return True
     else:
         return False
@@ -52,7 +52,7 @@ def awaitTurn():
 
     # Now let's do this.
     while not BattleScreen() or FFX_memory.userControl():
-        if FFX_memory.battleActive() == False:
+        if not FFX_memory.battleActive():
             pass
         counter += 1
         if counter % 100000 == 0:
@@ -119,7 +119,6 @@ def turnYuna():
 
 def turnSeymour():
     if FFX_memory.getBattleCharTurn() == 7:
-        FFX_Logs.writeLog("Seymour's turn:")
         return True
     else:
         return False

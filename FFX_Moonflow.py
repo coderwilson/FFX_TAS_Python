@@ -47,7 +47,7 @@ def arrival():
                 print("Updating checkpoint based on story/map progress:", checkpoint)
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflow(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -90,7 +90,7 @@ def southBank(checkpoint: int = 0):
                 FFX_Xbox.menuB()  # All aboardz!
                 FFX_Xbox.SkipDialog(3)  # Just to clear some dialog
 
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankSouth(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankSouth(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -145,14 +145,14 @@ def northBank():
                 checkpoint = 12
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankNorth(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.moonflowBankNorth(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.fleeAll()
-            elif FFX_memory.diagSkipPossible() and FFX_memory.battleActive() == False:
+            elif FFX_memory.diagSkipPossible() and not FFX_memory.battleActive():
                 FFX_Xbox.tapB()
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
