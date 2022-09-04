@@ -9,6 +9,7 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 
+
 # The following functions replace the default ones from the regular Bahamut run.
 
 def arenaNPC():
@@ -18,10 +19,10 @@ def arenaNPC():
     while not (FFX_memory.diagProgressFlag() == 74 and FFX_memory.diagSkipPossible()):
         if FFX_memory.userControl():
             if FFX_memory.getCoords()[1] > -12:
-                FFXC.set_movement(0,-1)
+                FFXC.set_movement(0, -1)
                 FFX_memory.waitFrames(1)
             else:
-                FFX_targetPathNem.setMovement([2,-15])
+                FFX_targetPathNem.setMovement([2, -15])
                 FFX_Xbox.tapB()
         else:
             FFXC.set_neutral()
@@ -35,11 +36,13 @@ def arenaNPC():
                 FFX_Xbox.tapB()
     FFX_memory.waitFrames(3)
 
+
 def nextRace():
     FFXC.set_neutral()
     FFX_memory.clickToDiagProgress(28)
     FFX_memory.waitFrames(9)
     FFX_Xbox.tapB()
+
 
 def calmLands():
     #Start chocobo races

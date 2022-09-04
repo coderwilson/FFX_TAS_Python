@@ -116,6 +116,7 @@ def Klikk_fight():
     FFX_Screen.awaitTurn()
     FFX_Battle.Klikk()
 
+
 def distance(n1, n2):
     try:
         player1 = FFX_memory.getActorCoords(actorNumber=n1)

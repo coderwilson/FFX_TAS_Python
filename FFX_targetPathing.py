@@ -73,10 +73,10 @@ def tidusHome(checkpoint):
     if checkpoint == 9:
         x = 6
         y = -1
-    if checkpoint == 10: #Finish the first section
+    if checkpoint == 10:  # Finish the first section
         x = -30
         y = -1
-    if checkpoint == 11: #Start of second section
+    if checkpoint == 11:  # Start of second section
         x = 426
         y = -3
     if checkpoint == 12:
@@ -91,7 +91,7 @@ def tidusHome(checkpoint):
     if checkpoint == 15:
         x = 426
         y = -3
-    if checkpoint == 16: #Ready for bridge
+    if checkpoint == 16:  # Ready for bridge
         x = 426
         y = -3
     if checkpoint == 17:

@@ -2405,7 +2405,6 @@ def blitzballPatriotsStyle():
     global baseValue
 
     key = baseValue + 0x00D2E0CE
-    progress = process.writeBytes(key, 50, 1)
 
 
 def blitzClockMenu():
@@ -2786,7 +2785,6 @@ def checkZombieStrike():
 
 
 def checkAbility(ability=0x8032):
-    gameVars = FFX_vars.varsHandle()
     results = [False, False, False, False, False, False, False]
 
     charWeaps = weaponArrayCharacter(0)  # Tidus
@@ -2833,8 +2831,8 @@ def checkAbility(ability=0x8032):
 
     return results
 
-def checkAbilityArmor(ability=0x8032, slotCount:int=99):
-    gameVars = FFX_vars.varsHandle()
+
+def checkAbilityArmor(ability=0x8032, slotCount: int = 99):
     results = [False, False, False, False, False, False, False]
 
     charWeaps = armorArrayCharacter(0)  # Tidus
@@ -3415,67 +3413,67 @@ def getSaveSphereDetails():
         x = -45
         y = -870
         diag = 77
-    if mapVal == 322: #Nemesis run
-        #Inside Sin, next to airship
+    if mapVal == 322:  # Nemesis run
+        # Inside Sin, next to airship
         x = 225
         y = -250
         diag = 15
-    if mapVal == 19: #Nemesis run
-        #Besaid beach
+    if mapVal == 19:  # Nemesis run
+        # Besaid beach
         x = -310
         y = -475
         diag = 55
-    if mapVal == 263: #Nemesis run
-        #Thunder Plains agency
+    if mapVal == 263:  # Nemesis run
+        # Thunder Plains agency
         x = -30
         y = -10
         diag = 114
-    if mapVal == 307: #Nemesis run
-        #Monster Arena
+    if mapVal == 307:  # Nemesis run
+        # Monster Arena
         x = 4
         y = 5
         diag = 166
-    if mapVal == 98: #Nemesis run
-        #Kilika docks
+    if mapVal == 98:  # Nemesis run
+        # Kilika docks
         x = 46
         y = -252
         diag = 34
-    if mapVal == 92: #Nemesis run
-        #MRR start
+    if mapVal == 92:  # Nemesis run
+        # MRR start
         x = -1
         y = -740
         diag = 43
-    if mapVal == 266: #Nemesis run
-        #Calm Lands Gorge
+    if mapVal == 266:  # Nemesis run
+        # Calm Lands Gorge
         x = -310
         y = 190
         diag = 43
-    if mapVal == 82: #Nemesis run
-        #Djose temple
+    if mapVal == 82:  # Nemesis run
+        # Djose temple
         x = 100
         y = -240
         diag = 89
-    if mapVal == 221: #Nemesis run
+    if mapVal == 221:  # Nemesis run
         x = 197
         y = -120
         diag = 23
-    if mapVal == 137: #Nemesis run
-        #Bikanel Desert
+    if mapVal == 137:  # Nemesis run
+        # Bikanel Desert
         x = -15
         y = 240
         diag = 31
-    if mapVal == 313: #Nemesis run
-        #Zanarkand campfire
+    if mapVal == 313:  # Nemesis run
+        # Zanarkand campfire
         x = 135
         y = -1
         diag = 4
-    if mapVal == 327: #Nemesis run
-        #Sin, end zone
+    if mapVal == 327:  # Nemesis run
+        # Sin, end zone
         x = -37
         y = -508
         diag = 10
-    if mapVal == 258: #Nemesis run
-        #Omega (only used in Nemesis)
+    if mapVal == 258:  # Nemesis run
+        # Omega (only used in Nemesis)
         x = -112
         y = -1066
         diag = 23
@@ -3484,18 +3482,18 @@ def getSaveSphereDetails():
         x = 2
         y = 5
         diag = 166
-    if mapVal == 259: #Nemesis run
-        #Gagazet (only used in Nemesis)
+    if mapVal == 259:  # Nemesis run
+        # Gagazet (only used in Nemesis)
         x = -59
         y = 99
         diag = 219
     if mapVal == 82:
-        #Djose temple (only used in Nemesis)
+        # Djose temple (only used in Nemesis)
         x = 97
         y = -241
         diag = 89
-    if mapVal == 128: #Nemesis run
-        #MRR upper lift (only used in Nemesis)
+    if mapVal == 128:  # Nemesis run
+        # MRR upper lift (only used in Nemesis)
         x = 230
         y = 140
         diag = 68
@@ -3507,7 +3505,7 @@ def touchSaveSphere():
     print("MEM - Touch Save Sphere")
 
     ssDetails = getSaveSphereDetails()
-
+    FFXC = FFX_Xbox.controllerHandle()
     if userControl():
         while userControl():
             FFX_targetPathing.setMovement([ssDetails[0], ssDetails[1]])
@@ -3516,7 +3514,6 @@ def touchSaveSphere():
     try:
         FFXC.set_neutral()
     except:
-        FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
     FFXC.set_neutral()
 
@@ -3540,10 +3537,10 @@ def csrBaajSaveClear():
         print("No need to clear. User is in control.")
     else:
         print("Save dialog has popped up for some reason. Attempting clear.")
+        FFXC = FFX_Xbox.controllerHandle()
         try:
             FFXC.set_neutral()
         except:
-            FFXC = FFX_Xbox.controllerHandle()
             FFXC.set_neutral()
         while not userControl():
             if saveMenuOpen():
@@ -3708,7 +3705,7 @@ RNG_CONSTANTS_2 = (
 )
 
 
-def buildRNGarray(index: int, arraySize:int = 255):
+def buildRNGarray(index: int, arraySize: int = 255):
     global baseValue
     offset = baseValue + 0xD35ED8 + (index * 4)
     arrayVal = [process.read(offset)]
@@ -3791,17 +3788,17 @@ def rng02():
     return process.read(baseValue + 0xD35EE0)
 
 
-def rng02Array(arrayLen:int=200000):
+def rng02Array(arrayLen: int = 200000):
     retVal = [rng02()]  # First value is the current value
     for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], 2))
     return retVal
 
+
 def setTestRNG02():
     global baseValue
     key = baseValue + 0xD35EE0
     process.write(key, 3777588919)
-    #print("Value advanced.")
 
 
 def rng10():
@@ -4024,6 +4021,7 @@ def arenaArray():
         retArray.append(process.readBytes(key, 1))
     return retArray
 
+
 def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, returnArray=False):
     import FFX_nem_menu
     complete = True
@@ -4063,7 +4061,7 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, return
 
     testArray = arenaArray()
     resultArray = []
-    
+
     for i in range(len(zoneIndexes)):
         resultArray.append(testArray[zoneIndexes[i]])
         if testArray[zoneIndexes[i]] < endGoal:
@@ -4082,6 +4080,7 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, return
         return resultArray
     else:
         return complete
+
 
 def arenaCursor():
     global baseValue

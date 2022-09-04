@@ -42,6 +42,7 @@ def setMovement(target) -> bool:
     else:
         return False
 
+
 def toRemiem(checkpoint):
     x = 999
     y = 999
@@ -661,7 +662,6 @@ def leaveRemiem(checkpoint):
 
 
 def tpFarm(checkpoint):
-    #print("Path: ", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -670,40 +670,40 @@ def tpFarm(checkpoint):
     if checkpoint == 1:
         x = 10
         y = -200
-    if checkpoint == 2: #Outside agency
+    if checkpoint == 2:  # Outside agency
         x = -48
         y = 54
-    if checkpoint == 3: #To North
+    if checkpoint == 3:  # To North
         x = 0
         y = 300
-    if checkpoint == 4: #North pos 1
+    if checkpoint == 4:  # North pos 1
         x = -127
         y = -1083
-    if checkpoint == 5: #North pos 2
+    if checkpoint == 5:  # North pos 2
         x = -106
         y = -1185
-    if checkpoint == 6: #Back to agency front
+    if checkpoint == 6:  # Back to agency front
         x = -115
         y = -1400
     if checkpoint == 7:
         x = -55
         y = 27
-    if checkpoint == 8: #To South
+    if checkpoint == 8:  # To South
         x = -50
         y = -200
-    if checkpoint == 9: #South pos 1
+    if checkpoint == 9:  # South pos 1
         x = -44
         y = 1075
-    if checkpoint == 10: #South pos 2
+    if checkpoint == 10:  # South pos 2
         x = 16
         y = 1116
-    if checkpoint == 11: #Back to agency front
+    if checkpoint == 11:  # Back to agency front
         x = 4
         y = 1300
     if checkpoint == 12:
         x = -56
         y = 51
-    if checkpoint == 13: #Back to north
+    if checkpoint == 13:  # Back to north
         x = 0
         y = 300
     if checkpoint == 14:

@@ -5,6 +5,7 @@ import FFX_blitzPathing
 import FFX_vars
 import math
 import FFX_rngTrack
+import FFX_Logs
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()

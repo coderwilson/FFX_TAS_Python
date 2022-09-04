@@ -858,7 +858,7 @@ def equipScout(fullMenuClose=True):
     return equipWeapon(character=4, ability=0x8022, fullMenuClose=fullMenuClose)
 
 
-def equipArmor(*, character, ability=255, slotCount = 99, fullMenuClose=True):
+def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
     print("Equipping Armor with ability ", ability)
     FFX_memory.awaitControl()
 
@@ -1824,7 +1824,7 @@ def removeAllNEA():
                 if FFX_memory.checkAbilityArmor(ability=0x801D)[i]:
                     equipArmor(character=i, ability=0x801D)  # Auto-Phoenix
                 elif FFX_memory.checkAbilityArmor(ability=0x8072, slotCount=4)[i]:
-                    equipArmor(character=i, ability=0x8072, slotCount = 4)
+                    equipArmor(character=i, ability=0x8072, slotCount=4)
                 else:
                     equipArmor(character=i, ability=99)  # Remove equipment
             else:

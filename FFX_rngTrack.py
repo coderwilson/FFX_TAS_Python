@@ -245,8 +245,8 @@ def reportDroppedItem(enemy: str, drop=FFX_memory.equipment, prefType: int = 99,
         print(prefType)
         print(drop.equipType)
         report = False
-    
-    if report == True:
+
+    if report:
         FFX_Logs.writeRNGTrack("+Item drop off of:" + str(enemy) + "| advances:" + str(needAdv))
         FFX_Logs.writeRNGTrack("+Owner, char-killed (9 = killer):" + str(drop.equipOwner))
         FFX_Logs.writeRNGTrack("+Owner, aeon-killed:" + str(drop.equipOwnerAlt))
@@ -948,17 +948,20 @@ def hitChanceTable(index: int):
     elif index == 8:
         return 100
 
+
 def oblitzHistory():
     filepath = "oblitzRNG\\results.json"
     with open(filepath, 'r') as fp:
         rngValues = json.load(fp)
     return rngValues
 
+
 def saveOblitzHistory(rngVals):
     writing = dict(rngVals)
     filepath = "oblitzRNG\\results.json"
     with open(filepath, 'w') as fp:
         json.dump(writing, fp)
+
 
 def recordBlitzResults_Tyton(duration, testMode=False):
     records = oblitzHistory()
@@ -976,19 +979,18 @@ def recordBlitzResults_Tyton(duration, testMode=False):
                 return
             if records[seed][sub_key]['victory'] == victory and duration >= records[str(seed)][str(sub_key)]['duration']:
                 return
-    
+
     records[seed][sub_key]['duration'] = duration
     records[seed][sub_key]['victory'] = victory
     saveOblitzHistory(records)
+
 
 def recordBlitzResults(duration, testMode=False):
     filepath = "oblitzRNG\\results.json"
     records = oblitzHistory()
     print("========================")
-    #if not gameVars.newGameCheck():
-    #    return
     if testMode:
-        newVal = { 31: { 9999: { "duration": duration, "victory": False } } }
+        newVal = {31: {9999: {"duration": duration, "victory": False}}}
         if str(31) in records.keys():
             print(newVal[31].keys())
             if 9999 in newVal[31].keys():
@@ -999,7 +1001,7 @@ def recordBlitzResults(duration, testMode=False):
         else:
             records.update(newVal)
     else:
-        newVal = { FFX_memory.rngSeed(): { gameVars.oblitzRNGCheck(): { "duration": duration, "victory": gameVars.getBlitzWin() } } }
+        newVal = {FFX_memory.rngSeed(): {gameVars.oblitzRNGCheck(): {"duration": duration, "victory": gameVars.getBlitzWin()}}}
         if str(FFX_memory.rngSeed()) in records.keys():
             if gameVars.oblitzRNGCheck() in records[str(FFX_memory.rngSeed())].keys():
                 if gameVars.getBlitzWin() and not records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
@@ -1014,16 +1016,9 @@ def recordBlitzResults(duration, testMode=False):
         else:
             records.update(newVal)
     print(newVal)
-    
+
     print("========================")
-    #records.update(newVal)
     print(records)
-    
+
     with open(filepath, 'w') as fp:
         json.dump(records, fp)
-
-#Testing only:
-#print("Monster test")
-#print(MONSTERS["anima"].stats['Luck'])
-#print(MONSTERS["anima"].stats['Evasion'])
-#end

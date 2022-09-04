@@ -300,7 +300,7 @@ def battleFarmAll(apCpLimit:int=255, yunaAttack = True, faythCave=True):
                 elif FFX_Screen.turnRikku() or FFX_Screen.turnWakka():
                     if not FFX_Battle.checkTidusOk():
                         FFX_Battle.escapeOne()
-                    elif FFX_memory.getBattleNum() == 219:
+                    elif FFX_memory.getEncounterID() == 219:
                         FFX_Battle.escapeOne()
                     else:
                         FFX_Battle.defend()
@@ -1535,7 +1535,7 @@ def miihenFarm(capNum:int=1):
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 78 and FFX_memory.arenaArray()[34] == 10:
+                if FFX_memory.getEncounterID() == 78 and FFX_memory.arenaArray()[34] == 10:
                     FFX_Battle.fleeAll()
                 else:
                     if capNum == 10:
@@ -2330,17 +2330,17 @@ def calm(capNum:int=1,autoHaste = False,airshipReturn = True, forceLevels = 0):
             FFXC.set_neutral()
             allCounts = FFX_memory.arenaArray()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 281 and gameVars.nemCheckpointAP() < 8:
+                if FFX_memory.getEncounterID() == 281 and gameVars.nemCheckpointAP() < 8:
                     if min(allCounts[13], allCounts[19]) >= capNum:
                         FFX_Battle.fleeAll()
                     else:
                         battleFarmAll()
-                elif FFX_memory.getBattleNum() == 283 and gameVars.nemCheckpointAP() < 8:
+                elif FFX_memory.getEncounterID() == 283 and gameVars.nemCheckpointAP() < 8:
                     if min(allCounts[4], allCounts[19],allCounts[33]) >= capNum:
                         FFX_Battle.fleeAll()
                     else:
                         battleFarmAll()
-                elif FFX_memory.getBattleNum() == 284 and allCounts[33] >= capNum and gameVars.nemCheckpointAP() < 8:
+                elif FFX_memory.getEncounterID() == 284 and allCounts[33] >= capNum and gameVars.nemCheckpointAP() < 8:
                     FFX_Battle.fleeAll()
                 else:
                     if capNum == 10:

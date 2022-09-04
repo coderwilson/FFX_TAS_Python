@@ -12,17 +12,6 @@ filePlot = "none"
 fileMemChange = "none"
 fileRNG = "none"
 
-def writeLog(message):
-    # print("Function no longer used")
-    #global logFile
-    #global fileName
-
-    #logFile = open(fileName, "a")
-    # logFile.write(message)
-    # logFile.write("\n")
-    # logFile.close()
-    return
-
 
 def writeStats(message):
     global statsFile
@@ -52,6 +41,7 @@ def nextStats(rngSeedNum):
     statsFile.close()
     print("Stats file is ready for writing!\n")
 
+
 def writePlot(message):
     global plotFile
     global filePlot
@@ -60,6 +50,7 @@ def writePlot(message):
     plotFile.write(str(message))
     plotFile.write("\n")
     plotFile.close()
+
 
 def nextPlot():
     global filePlot

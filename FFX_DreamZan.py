@@ -4,7 +4,6 @@ import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 import FFX_Logs
-import FFX_rngTrack
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -82,7 +81,6 @@ def listenStory():
     FFX_memory.waitFrames(10)
     print("Skipping intro scene, we'll watch this properly in about 8 hours.")
     FFX_vars.initVars()
-    x = 0
     while not FFX_memory.userControl():
         if FFX_memory.getMap() == 132:
             if FFX_memory.diagProgressFlag() == 1:
@@ -122,9 +120,6 @@ def listenStory():
             elif checkpoint < 21 and FFX_memory.getMap() == 371:
                 checkpoint = 21
             elif checkpoint < 25 and FFX_memory.getMap() == 370:
-                #if gameVars.csr():
-                #    checkpoint = 27
-                #else:
                 checkpoint = 25
             elif checkpoint == 27:  # Don't cry.
                 while FFX_memory.userControl():

@@ -495,8 +495,6 @@ def awaitSave(index=0):
 
 def remove():
     print("Controller may freeze the program here. If so, please restart your PC.")
-    #FFX_memory.waitFrames(30 * 2)
-    # FFXC.UnPlug(FFXC)
 
 
 def gridUp():
@@ -528,10 +526,8 @@ def gridRight():
 
 
 def clickToBattle():
-    #FFX_Logs.writeLog("Clicking until it's someone's turn in battle")
     print("Clicking until it's someone's turn in battle")
     FFXC.set_neutral()
-    complete = 0
     while not (FFX_memory.battleActive() and FFX_memory.turnReady()):
         if FFX_memory.userControl():
             break

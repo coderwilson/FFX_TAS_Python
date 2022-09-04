@@ -119,7 +119,6 @@ def turnYuna():
 
 def turnSeymour():
     if FFX_memory.getBattleCharTurn() == 7:
-        FFX_Logs.writeLog("Seymour's turn:")
         return True
     else:
         return False
