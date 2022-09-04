@@ -1,16 +1,11 @@
-import time
-import math
 import FFX_Xbox
-import FFX_Screen
 import FFX_menuGrid
-import FFX_Logs
 import FFX_memory
 import FFX_vars
 import FFX_menu
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 def gridUp():
     FFX_menuGrid.gridUp()
@@ -190,8 +185,6 @@ def performNextGrid(limit:int=255):
             nemGridding25()
         elif gameVars.nemCheckpointAP() == 26:
             nemGridding26()
-        elif gameVars.nemCheckpointAP() == 27:
-            nemGridding27()
         else:
             print("----------------------------")
             print("End of sphere grid, no further grid logic programmed.")

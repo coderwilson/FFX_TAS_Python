@@ -1,13 +1,9 @@
-import pyxinput
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_memory
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def gridUp():
@@ -177,8 +173,6 @@ def useFirst():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    # if gameVars.usePause():
-    #    FFX_memory.waitFrames(6)
     return True
 
 
@@ -192,8 +186,6 @@ def moveFirst():
             FFX_memory.waitFrames(3)
         elif useReady():
             FFX_Xbox.menuUp()
-    # if gameVars.usePause():
-    #    FFX_memory.waitFrames(6)
     return True
 
 
@@ -209,8 +201,6 @@ def moveAndUse():
             FFX_Xbox.menuDown()
         elif useReady():
             FFX_Xbox.menuB()
-    # if gameVars.usePause():
-    #    FFX_memory.waitFrames(6)
     return True
 
 
@@ -228,8 +218,6 @@ def useAndMove():
             FFX_Xbox.menuUp()
         else:
             FFX_Xbox.menuB()
-    # if gameVars.usePause():
-    #    FFX_memory.waitFrames(6)
     return True
 
 
@@ -316,7 +304,6 @@ def useShiftLeft(toon):
 
 def useShiftRight(toon):
     print("use and shift")
-    #FFX_memory.waitFrames(30 * 0.1)
     FFX_Xbox.menuB()
     toon = toon.lower()
     if toon == 'yuna':

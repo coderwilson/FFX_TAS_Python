@@ -1,9 +1,7 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
 import FFX_menu
-import FFX_Logs
 import FFX_memory
 import FFX_menu
 import FFX_targetPathing
@@ -12,7 +10,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def preEvrae():
@@ -69,7 +66,6 @@ def guards():
     guardNum = 1
     while FFX_memory.getMap() != 182:
         if FFX_memory.userControl():
-            # print("TEST*Movement")
             if FFX_memory.getMap() == 180:
                 FFX_memory.clickToEventTemple(6)  # Take the spiral lift down
             elif FFX_memory.getMap() == 181:
@@ -79,7 +75,6 @@ def guards():
             else:
                 FFX_targetPathing.setMovement([0, -200])
         else:
-            # print("TEST*Action")
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 FFX_Battle.guards(guardNum, sleepingPowders)
@@ -109,7 +104,6 @@ def guards():
             # Map changes
             if checkpoint < 2 and FFX_memory.getMap() == 182:
                 checkpoint = 2
-            #print("Checkpoint:", checkpoint)
             # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
                 checkpoint += 1
@@ -128,7 +122,6 @@ def trials():
     print("Starting Bevelle trials section.")
 
     checkpoint = 0
-    testCounter = 0
     while checkpoint < 53:
         if FFX_memory.userControl():
             # Map changes
@@ -364,8 +357,6 @@ def trials():
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
-            #print("No control")
-            # FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
             if checkpoint < 3:
@@ -376,7 +367,6 @@ def trials():
 
 def trialsEnd():
     checkpoint = 53
-    testCounter = 0
     while FFX_memory.getMap() != 226:
         if FFX_memory.userControl():
             if FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:

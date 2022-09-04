@@ -1,10 +1,6 @@
-import pyautogui
-import pyxinput
 import time
 import FFX_Xbox
 import FFX_Battle
-import FFX_Screen
-import FFX_core
 import FFX_memory
 import FFX_Logs
 from math import copysign
@@ -67,7 +63,6 @@ def engage():
     print("Generating Plot file (the X/Y kind)")
     activeEgg = 99
     target = [10, -10]
-    moveVersion = 0
     checkpoint = 0
     print("Ready for movement.")
     while FFX_memory.getStoryProgress() < 3251:
@@ -80,7 +75,6 @@ def engage():
             FFX_Battle.fleeAll()
             battleCount += 1
         else:  # User control is different for this section.
-            #print("Building egg array")
             eggArray = FFX_memory.buildEggs()
             iceArray = FFX_memory.buildIcicles()  # Added for additional pathing needs
             currentTime = time.time()
@@ -90,8 +84,6 @@ def engage():
                         activeEgg = marker
                         target = [eggArray[marker].x, eggArray[marker].y]
                         # We will hunt for this egg for this many seconds.
-                        clickTimer = currentTime + 8
-                        #print("New target egg:", target)
             elif eggArray[activeEgg].goForEgg == False:
                 activeEgg = 99
             elif eggArray[activeEgg].eggLife == 150:
@@ -108,7 +100,6 @@ def engage():
                     target = [-20, 20]
                 elif checkpoint >= 4:
                     checkpoint = 0
-                #print(lookingCount, "|", target)
 
             # And now the code to move to the target.
             oldTarget = target
@@ -166,24 +157,16 @@ def engage():
                 pass
             target = oldTarget
 
-            #camCount += 1
-            # print(camCount)
-            # if camCount % 20 == 0:
-            #    FFX_Logs.writePlot("TEST")
-
             # Now if we're close, we want to slow down a bit.
             if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
                 time.sleep(0.15)
                 FFXC.set_neutral()
-                #print("Stutter-step to egg. |",lookingCount)
                 print("Stutter-step to egg. |", checkpoint)
                 FFX_Xbox.tapB()
             elif activeEgg == 99:
-                #print("Looking for a new egg. |",lookingCount)
                 print("Looking for a new egg. |", checkpoint)
                 FFX_Xbox.tapB()
             else:
-                #print("Targeting egg: |",target)
                 print("Targeting egg: |", checkpoint)
             FFX_Xbox.tapB()
     endTime = time.time()

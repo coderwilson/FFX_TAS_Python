@@ -3,8 +3,6 @@ from collections import Counter
 import FFX_Logs
 import struct
 import FFX_Xbox
-import time
-import FFX_Screen
 import FFX_targetPathing
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
@@ -3715,7 +3713,7 @@ def memTestVal3():
 
 
 def printMemoryLog():
-    doNothing = True
+    pass
 
 
 def printMemoryLog_backup():

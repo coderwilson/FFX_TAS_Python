@@ -1,9 +1,6 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
-import FFX_menuGrid
 import FFX_memory
 import FFX_Logs
 import FFX_targetPathing
@@ -11,7 +8,6 @@ import FFX_vars
 
 FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
-#FFXC = FFX_Xbox.FFXC
 
 def arrival():
     print("Arrived at Kilika docks.")
@@ -101,7 +97,6 @@ def forest1():
                 FFXC.set_movement(0, 1)
         elif FFX_memory.userControl():
             if checkpoint == 81 or checkpoint == 82:
-                #print("Valefor charge state:", valeforCharge)
                 if valeforCharge == True:
                     checkpoint = 83
             if checkpoint == 83 and valeforCharge == False:
@@ -126,16 +121,13 @@ def forest1():
                 if not gameVars.didFullKilikMenu():
                     FFX_menu.Geneaux()
                 checkpoint += 1
-            elif checkpoint == 99:  # and not gameVars.csr(): #Lord O'holland
+            elif checkpoint == 99:  #Lord O'holland
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-30, 45])
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
                 FFX_memory.clickToControl3()
                 checkpoint += 1
-            # elif checkpoint == 97 and gameVars.csr():
-            #    #FFX_memory.clickToEventTemple(0)
-            #    checkpoint = 100
 
             # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.Kilika2(checkpoint)) == True:
@@ -160,8 +152,6 @@ def forest1():
                     nextBattle = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
                     print("##########################",nextBattle)
                     kilikaBattles += 1
-                    #if FFX_memory.getBattleNum() in [32, 34, 37]:
-                    #    optimalBattles += 1
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 

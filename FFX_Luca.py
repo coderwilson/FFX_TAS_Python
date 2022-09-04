@@ -1,6 +1,4 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_Logs
@@ -11,7 +9,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def arrival():
@@ -36,7 +33,6 @@ def arrival():
 
                     FFX_memory.clickToDiagProgress(
                         82)  # Let's go over the basics
-                    # FFX_memory.clickToDiagProgress(39)
                     FFX_Xbox.SkipDialog(1)
                 while FFX_memory.blitzCursor() != 12:
                     FFX_Xbox.tapA()
@@ -95,7 +91,6 @@ def arrival():
             elif checkpoint == 38:  # Oblitzerator
                 print("Event: Oblitzerator fight")
                 FFXC.set_movement(1, 0)
-                #FFX_memory.waitFrames(30 * 2)
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Battle.Oblitzerator(earlyHaste)
@@ -153,16 +148,9 @@ def arrival():
     if thunderStrike != 0:
         if thunderStrike % 2 == 1:
             print("Equipping Tidus")
-            # if thunderStrike >= 2:
-            #    fullClose = False
-            # else:
             fullClose = True
             FFX_menu.equipWeapon(
                 character=0, ability=0x8026, fullMenuClose=fullClose)
-        # if thunderStrike >= 2:
-            # After review, this does not deal enough damage.
-        #    print("Equipping Wakka")
-        #    FFX_menu.equipWeapon(character=4,ability=0x8026, fullMenuClose=True)
     gameVars.setLStrike(thunderStrike)
 
 
@@ -170,7 +158,6 @@ def blitzStart():
     print("Starting the Blitzball game via lots of storyline.")
     checkpoint = 0
     while FFX_memory.getStoryProgress() < 519:
-        # print(checkpoint)
         if FFX_memory.userControl():
             if FFX_memory.getMap() == 72 and checkpoint < 3:
                 checkpoint = 3
@@ -185,7 +172,6 @@ def blitzStart():
                 FFX_Xbox.tapB()
             elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)) == True:
                 checkpoint += 1
-                #print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.diagSkipPossible():
@@ -198,15 +184,11 @@ def afterBlitz():
     checkpoint = 0
     while checkpoint < 36:
         if FFX_memory.userControl():
-            #print("Checkpoint:", checkpoint)
             # Events
             if checkpoint == 8:  # First chest
                 if gameVars.earlyHaste() == -1:
                     FFX_menu.lateHaste()
                     FFX_memory.closeMenu()
-                # if gameVars.getLStrike() >= 2:
-                #    FFX_menu.equipWeapon(character=4,ability=0x8022, fullMenuClose=False)
-                # FFX_menu.mrrGrid1()
                 print("First chest")
                 while FFX_memory.userControl():
                     FFX_targetPathing.setMovement([-635, -410])

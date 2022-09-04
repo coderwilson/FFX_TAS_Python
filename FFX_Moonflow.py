@@ -1,15 +1,12 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
-import FFX_menu
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def arrival():

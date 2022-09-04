@@ -1,4 +1,3 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -10,7 +9,6 @@ import FFX_menu
 
 FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def Beach():
@@ -34,7 +32,6 @@ def Beach():
             print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         if FFX_memory.userControl():
-            #print("Checkpoint (testing):", checkpoint)
             # Events
             if checkpoint == 34:  # Into the temple for the first time
                 FFX_memory.clickToEventTemple(0)
@@ -57,7 +54,6 @@ def Beach():
             # General pathing
             elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid1(checkpoint)) == True:
                 checkpoint += 1
-                #print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
@@ -178,7 +174,6 @@ def leaving():
     print("Ready to leave Besaid")
     FFX_memory.clickToControl()
     checkpoint = 0
-    escapeAttempts = 0
 
     while FFX_memory.getMap() != 301:
         if FFX_memory.userControl():
@@ -252,8 +247,6 @@ def leaving():
                 FFX_Logs.writeRNGTrack(FFX_memory.rng10Array(arrayLen=1))
                 checkpoint += 1
             elif checkpoint in [60]:  # Beach, save sphere
-                # FFXC.set_neutral()
-                # FFX_memory.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint == 70:
                 checkpoint -= 2
@@ -309,7 +302,6 @@ def leaving():
                 FFX_memory.fullPartyFormat('Besaid')
                 checkpoint += 1
             elif checkpoint == 39 and FFX_Screen.BattleScreen():  # Dark Attack tutorial
-                escapeAttempts = 0
                 FFX_Battle.escapeAll()
                 FFX_memory.clickToControl()
                 FFX_memory.fullPartyFormat('Besaid2')

@@ -1,4 +1,3 @@
-import os.path
 import ctypes
 import ctypes.wintypes
 from ctypes import *

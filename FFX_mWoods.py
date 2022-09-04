@@ -1,4 +1,3 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -10,7 +9,6 @@ import FFX_Logs
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def arrival(rikkuCharged):
@@ -82,8 +80,6 @@ def arrival(rikkuCharged):
 
 
 def lakeRoad():
-    # if FFX_memory.getSpeed() < 12:
-    #    FFX_memory.setSpeed(12)
     FFX_memory.awaitControl()
     while not FFX_targetPathing.setMovement([174, -96]):
         pass

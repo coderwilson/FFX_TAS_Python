@@ -1,5 +1,4 @@
 import FFX_Xbox
-import FFX_Screen
 import FFX_menu
 import FFX_memory
 import FFX_Battle
@@ -18,7 +17,6 @@ def toHiddenCave():
     checkpoint = 0
     prepBattles = 0
     while FFX_memory.getMap() != 56:
-        # print(FFX_memory.getMap())
         if FFX_memory.userControl():
             if checkpoint < 5 and FFX_memory.getMap() == 266:
                 checkpoint = 5
@@ -60,7 +58,6 @@ def toHiddenCave():
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
-    # FFX_memory.setEncounterRate(1) #Testing only
     FFX_memory.fullPartyFormat('rikku')
 
     # Prep work:
@@ -72,8 +69,6 @@ def dropHunt():
             goGreen = True
 
     FFX_memory.printManipInfo()
-    print("#####################")
-    print("#####################")
     print("#####################")
     print("#####################")
     print("#####################")

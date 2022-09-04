@@ -1,7 +1,4 @@
-import pyxinput
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_memory
 import FFX_targetPathing
@@ -11,15 +8,11 @@ import FFX_rngTrack
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate:", Gamestate)
-    #FFX_Logs.openRNGTrack()
-    #FFX_rngTrack.tStrikeTracking()
-    #FFX_memory.waitFrames(300)
     
     lastMessage = 0
     # New version
@@ -42,8 +35,6 @@ def NewGame(Gamestate):
                 if lastMessage != 3:
                     lastMessage = 3
                     print("New Game is not selected. Switching.")
-                # else:
-                #    print(FFX_memory.saveMenuCursor())
                 FFX_Xbox.menuUp()
             else:
                 if lastMessage != 4:
@@ -62,14 +53,12 @@ def NewGame(Gamestate):
                 FFX_Xbox.menuDown()
             else:
                 FFX_Xbox.menuB()
-        # FFX_memory.waitFrames(3)
     FFX_memory.clearNameAeonReady()
 
 
 def NewGame2():
     # New game selected. Next, select options.
     timeBuffer = 17
-    #FFX_memory.waitFrames(120)
     print("====================================")
     print("Countdown timer!!!")
     FFX_memory.waitFrames(timeBuffer)
@@ -105,7 +94,6 @@ def listenStory():
             FFXC.set_value('BtnBack', 0)
             FFX_memory.waitFrames(1)
 
-    skips = 0
     checkpoint = 0
     while FFX_memory.getBattleNum() != 414:  # Sinspawn Ammes
         if FFX_memory.userControl():
@@ -223,9 +211,6 @@ def AfterAmmes():
 
 
 def SwimToJecht():
-    # FFX_memory.awaitControl()
-
-    #FFX_memory.waitFrames(30 * 1.5)
     print("Swimming to Jecht")
 
     FFXC.set_value('BtnA', 1)
@@ -255,7 +240,6 @@ def SwimToJecht():
     FFX_memory.waitFrames(30 * 1.5)  # Line up with stairs
 
     FFXC.set_movement(0, 1)
-    #FFX_memory.waitFrames(30 * 600)
     FFX_memory.waitFrames(30 * 3)
 
     while FFX_memory.getMap() == 48:

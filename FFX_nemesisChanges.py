@@ -1,9 +1,6 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
-import FFX_Logs
 import FFX_memory
 import FFX_targetPathNem
 import FFX_vars

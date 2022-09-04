@@ -1,10 +1,8 @@
-import pyxinput
 import time
 import FFX_Xbox
 import FFX_DreamZan
 import FFX_Battle
 import FFX_Screen
-import FFX_core
 import FFX_memory
 import FFX_Reset
 

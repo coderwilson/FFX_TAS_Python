@@ -1,5 +1,3 @@
-import pyxinput
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -10,7 +8,6 @@ import FFX_vars
 
 FFXC = FFX_Xbox.controllerHandle()
 gameVars = FFX_vars.varsHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def Entrance():
@@ -23,7 +20,6 @@ def Entrance():
     checkpoint = 0
     while not FFX_memory.battleActive():
         if FFX_memory.userControl():
-            #print("Baaj movement:", checkpoint)
             if checkpoint == 6:
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
@@ -103,7 +99,6 @@ def Baaj_puzzle():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            #print("Awaiting control - Baaj puzzle")
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
@@ -114,7 +109,6 @@ def Klikk_fight():
     while not FFX_Screen.turnRikku():
         FFX_Xbox.tapB()
 
-    #print("Doing Use tutorial")
     FFX_Xbox.clickToBattle()
     FFX_Battle.useItem(0, 'none')
 
@@ -122,39 +116,46 @@ def Klikk_fight():
     FFX_Screen.awaitTurn()
     FFX_Battle.Klikk()
 
+def distance(n1, n2):
+    try:
+        player1 = FFX_memory.getActorCoords(actorNumber=n1)
+        player2 = FFX_memory.getActorCoords(actorNumber=n2)
+        return (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
+    except Exception as x:
+        print("Exception:", x)
+        return 999
 
 def ABboat1():
     print("Start of Al Bhed boat section.")
     FFX_memory.clearSaveMenuCursor2()
     FFXC.set_neutral()
     if gameVars.csr():
-        FFX_memory.waitFrames(30)
+        FFX_memory.waitFrames(10)
     print("Control restored.")
-    FFXC.set_neutral()
-    FFX_memory.waitFrames(4)
-    FFXC.set_movement(0, -1)
-    FFX_memory.clickToEvent()
-    print("If not CSR, do extra stuff")
-    print("CSR value:", gameVars.csr())
-    if gameVars.csr():
-        FFX_memory.csrBaajSaveClear()
-    else:
-        FFX_Xbox.SkipDialog(4)  # Start Sphere Grid tutorial
-        FFXC.set_neutral()
-        FFX_memory.clickToControl()
-        FFXC.set_movement(0, -1)
-        FFX_memory.waitFrames(2)
-        FFX_memory.clickToEvent()  # Talk to Rikku a second time.
-
-        FFX_memory.clearSaveMenuCursor2()
-    print("Done with extra stuff")
-    FFXC.set_movement(0, -1)
+    print("On the boat!")
+    while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
+        target = FFX_memory.getActorCoords(actorNumber=3)
+        FFX_targetPathing.setMovement(target)
+        if distance(0,3) < 10:
+            FFX_Xbox.tapB()
+    print("In the water!")
     FFXC.set_value('BtnA', 1)
-    FFX_memory.clickToControl()
-
+    FFXC.set_movement(-1,-1)
+    FFX_memory.waitFrames(20)
+    
+    while FFX_memory.getMap() != 288:
+        FFXC.set_value('BtnA', 1)
+        FFXC.set_movement(0,-1)
+        if FFX_memory.battleActive():
+            FFXC.set_neutral()
+            print("Battle Start (Al Bhed swimming section)")
+            FFX_Battle.stealAndAttack()
+            print("Battle End (Al Bhed swimming section)")
+        elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
+            print("Battle Complete screen")
+            FFX_Xbox.tapB()
 
 def ABswimming1():
-    complete = 0
 
     print("Swimming down from the boat")
     while FFX_memory.getMap() != 288:
@@ -180,10 +181,11 @@ def ABswimming1():
                 FFXC.set_movement(0, -1)
                 FFXC.set_value('BtnA', 1)
             else:
-                checkpoint = 1
                 FFXC.set_value('BtnA', 0)
-                if pos[1] < ((2.56 * pos[0]) + 583.79):
-                    FFXC.set_movement(1, 1)
+                if pos[1] > -230:
+                    FFX_targetPathing.setMovement([-343,-284])
+                elif pos[1] > -410:
+                    FFX_targetPathing.setMovement([-421,-463])
                 else:
                     FFXC.set_movement(0, 1)
         else:
@@ -243,8 +245,6 @@ def ABswimming2():
     FFXC.set_neutral()
     while FFX_memory.getStoryProgress() < 111:
         if FFX_memory.userControl():
-            #print("Map          :", FFX_memory.getMap())
-            #print("Diag progress:", FFX_memory.diagProgressFlag())
             if FFX_memory.diagProgressFlag() == 109 and not FFX_memory.userControl():
                 FFXC.set_neutral()
                 if FFX_memory.saveMenuCursor2() == 0:

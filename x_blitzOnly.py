@@ -1,25 +1,16 @@
 import FFX_Blitz
 import FFX_Luca
-import pyxinput
 import time
 import FFX_memory
 import FFX_Xbox
 import FFX_DreamZan
-import FFX_Battle
 import FFX_Screen
-import FFX_core
 import FFX_Reset
 import FFX_LoadGame
-#import FFX_Logs
 FFXC = FFX_Xbox.controllerHandle()
 
-#FFXC = FFX_Xbox.FFXC
 
 FFX_memory.start()
-
-#miihenSkipCount = 0
-#miihenSkipAttempts = 0
-#rngSeedNum = 6
 
 attempts = 0
 success = 0
@@ -56,8 +47,6 @@ while attempts < 20:
     #print("Game start screen")
     FFX_Screen.clearMouse(0)
 
-    #startTime = FFX_Logs.timeStamp()
-    #print("Timer starts now.")
     # ---------This is the actual movement/code/logic/etc---------------
 
     rolledArray = FFX_memory.rng02Array()
@@ -66,13 +55,6 @@ while attempts < 20:
     while not FFX_memory.blitzClock() in [1, 2]:
         FFXC.set_neutral()
     while not (FFX_Blitz.selectFormation() or FFX_Blitz.selectMovement()):
-        # if FFX_Blitz.selectBreakthrough():
-        #    FFX_Xbox.tapA()
-        #    FFX_Xbox.tapA()
-        #    FFX_Xbox.tapB()
-        # elif FFX_Blitz.selectAction():
-        #    FFX_Xbox.tapB()
-        # else:
         FFX_Xbox.tapY()
 
     FFXC.set_neutral()
@@ -191,27 +173,10 @@ while attempts < 20:
     if blitzoffWin == True:
         success += 1
 
-    #attempts = 100
-
     # ---------End of the actual movement/code/logic/etc---------------
-    #endTime = FFX_Logs.timeStamp()
-    #print("Duration:", endTime - startTime)
 
     if attempts < 20:
-        #print("Clicking to control so we can reset.", attempts)
-        # FFXC.set_neutral()
-        # FFX_memory.clickToControl()
-        #print(" ")
-        # print("------------------------------")
-        # print("------------------------------")
-        #print("Test number", attempts, "is complete.")
-        #print("Blitzball wins:", success)
-        # print("------------------------------")
-        # print("------------------------------")
-        # time.sleep(5)
-
         print("Resetting.")
-        # FFX_memory.end()
 
         FFX_memory.resetBlitzMenuNum()
         FFX_Reset.resetToMainMenu()
@@ -226,12 +191,8 @@ while attempts < 20:
         print("------------------------------")
         print("------------------------------")
 
-    #rngSeedNum += 1
-
 time.sleep(5)
 
-#print("Skip attempts:", miihenSkipAttempts)
-#print("Successful skips:", miihenSkipCount)
 FFX_memory.end()
 
 time.sleep(5)

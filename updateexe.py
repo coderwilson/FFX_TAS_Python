@@ -1,4 +1,3 @@
-import sys
 import shutil
 
 test = input("Drag and drop your FFX.exe file into this window: ").strip(

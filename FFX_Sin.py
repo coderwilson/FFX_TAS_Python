@@ -1,9 +1,6 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
-import FFX_Logs
 import FFX_memory
 import FFX_zzairShipPath
 import FFX_targetPathing
@@ -12,7 +9,6 @@ import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def makingPlans():
@@ -22,14 +18,6 @@ def makingPlans():
     # Start by touching the save sphere
     while not FFX_targetPathing.setMovement([-267, 347]):
         pass
-
-    #print("Cursor test 2:", FFX_memory.saveMenuCursor())
-    # FFX_memory.touchSaveSphere()
-    #print("Cursor test 3:", FFX_memory.saveMenuCursor())
-    # Fix this later.
-    # FFX_memory.waitFrames(60)
-    # FFX_Xbox.menuA()
-    # FFX_Xbox.menuB()
 
     target = [[-242, 312], [-239, 258], [-243, 145], [-243, 10]]
     checkpoint = 0
@@ -62,11 +50,6 @@ def Shedinja():
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
 
-    # if gameVars.csr():
-    #    print("All of Shelinda is skipped.")
-    #    FFXC.set_neutral()
-    #    FFX_memory.awaitControl()
-    # else:
     FFXC.set_neutral()
     if not gameVars.csr():
         FFX_memory.clickToDiagProgress(100)
@@ -94,8 +77,6 @@ def exitCockpit():
 
 
 def facingSin():
-    #FFX_memory.waitFrames(30 * 1.5)
-    # FFX_Xbox.menuB() #Open the airship travelling menu
     while not FFX_targetPathing.setMovement([-245, 321]):
         pass
 
@@ -134,7 +115,7 @@ def facingSin():
     FFXC.set_neutral()
     FFX_memory.clickToControl()
 
-    print("To the deck, Sin'se face battle.")
+    print("To the deck, Sin's face battle.")
     if FFX_memory.getMap() in [255, 374]:
         exitCockpit()
     FFXC.set_neutral()
@@ -200,7 +181,6 @@ def insideSin():
 
 def eggHunt(autoEggHunt):
     # Done with pathing, now for egg hunt.
-    eggStart = FFX_Logs.timeStamp()
     while not FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 0.5)

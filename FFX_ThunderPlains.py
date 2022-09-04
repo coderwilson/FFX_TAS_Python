@@ -1,4 +1,3 @@
-import time
 import FFX_Xbox
 import FFX_Screen
 import FFX_Battle
@@ -16,16 +15,9 @@ def southPathing():
 
     gameVars.setLStrike(FFX_memory.lStrikeCount())
 
-    #speedcount = FFX_memory.getSpeed()
-    # if speedcount >= 14:
-    #    status[3] = True
-
     FFX_memory.fullPartyFormat('postbunyip')
     FFX_memory.closeMenu()
-    lStrikeCount = FFX_memory.lStrikeCount()
     count50 = 0
-    # if gameVars.getBlitzWin():
-    #    status[4] = True
     checkpoint = 0
     while FFX_memory.getMap() != 256:
         if FFX_memory.userControl():
@@ -112,7 +104,6 @@ def agencyShop():
             FFX_Xbox.tapUp()
     while not FFX_memory.itemShopMenu() == 16:
         FFX_Xbox.tapB()
-    # FFX_Xbox.tapUp() #sets to 11
     while FFX_memory.purchasingAmountItems() != 4:
         if FFX_memory.purchasingAmountItems() < 4:
             FFX_Xbox.tapRight()

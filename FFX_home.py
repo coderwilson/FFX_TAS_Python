@@ -1,6 +1,4 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
@@ -10,14 +8,12 @@ import math
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 def checkSpheres():
     # Speed sphere stuff. Improve this later.
     needSpeed = False
     if FFX_memory.getSpeed() < 5:
         needSpeed = True
-        # FFX_memory.setSpeed(9)
         # Reprogram battle logic to throw some kind of grenades.
 
     # Same for Power spheres
@@ -51,10 +47,6 @@ def desert():
 
     # Now to figure out how many items we need.
     stealItems = FFX_Battle.updateStealItemsDesert()
-    # if stealItems[0] == 2: #Bomb Cores aren't working right.
-    #    itemsNeeded = 5 - (stealItems[1] + stealItems[2] + stealItems[3])
-    # else:
-    #    itemsNeeded = 7 - (stealItems[1] + stealItems[2] + stealItems[3])
     itemsNeeded = 8 - (stealItems[1] + stealItems[2] + stealItems[3])
 
     FFX_menu.equipSonicSteel()
@@ -127,8 +119,6 @@ def desert():
 
             # Sandragora skip logic
             elif checkpoint == 57:
-                #FFXC.set_neutral()
-                #FFX_memory.waitFrames(10)
                 checkpoint += 1
             elif checkpoint == 60:
                 if FFX_memory.getCoords()[1] < 812: #Dialing in. 810 works 95%, but was short once.
@@ -199,7 +189,6 @@ def desert():
                         FFX_memory.fullPartyFormat('desert1')
                     else:  # Catchall
                         FFX_memory.fullPartyFormat('desert1')
-                        # formerly desert2, but it works out better to have Kimahri in the fourth slot
 
                 # Next, figure out how many items we need.
                 stealItems = FFX_Battle.updateStealItemsDesert()
@@ -280,8 +269,6 @@ def findSummoners():
                     checkpoint = 21
                 else:
                     checkpoint = 81
-            # elif checkpoint < 27 and FFX_memory.getMap() == 280:
-            #    checkpoint = 27
             elif checkpoint == 31 and not gameVars.csr():
                 FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
@@ -324,8 +311,6 @@ def findSummoners():
     FFXC.set_neutral()
     if not gameVars.csr():
         FFX_memory.clickToDiagProgress(27)
-        # FFX_memory.waitFrames(30)
-        # FFX_Xbox.tapB()
         while not FFX_memory.cutsceneSkipPossible():
             FFX_Xbox.tapB()
         FFX_Xbox.skipScene()

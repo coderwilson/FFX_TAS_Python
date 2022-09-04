@@ -1,11 +1,9 @@
 import datetime
-import time
 import FFX_memory
 try:
     from FFX_memory import baseValue
 except:
     baseValue = 0x0
-from ReadWriteMemory import ReadWriteMemory
 game = "FFX_"
 ext = ".txt"
 fileName = "none"
@@ -23,27 +21,6 @@ def writeLog(message):
     # logFile.write(message)
     # logFile.write("\n")
     # logFile.close()
-    return
-
-
-def nextFile():
-    # print("Function no longer used")
-    #global fileName
-    #global game
-    #global ext
-    # if fileName == "none":
-    #    timeNow = datetime.datetime.now()
-    #    fileName = "Logs/" + game + str(timeNow.year) + str(timeNow.month) + str(timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
-    #
-    #    global logFile
-    #    logFile = open(fileName, "x")
-    #    logFile.close()
-    #
-    #    logFile = open(fileName, "a")
-    #    logFile.write("New file is ready for writing!\n")
-    #    logFile.write("\n")
-    #    logFile.close()
-    #    print("New file is ready for writing!\n")
     return
 
 
@@ -208,7 +185,7 @@ class memChangeMonitor:
             writeMemChange("Story progress: " +
                            str(FFX_memory.getStoryProgress()))
             writeMemChange("Current map: " + str(FFX_memory.getMap()))
-            writeMemChange("Battle Active: " + str(battleActive()))
+            writeMemChange("Battle Active: " + str(FFX_memory.battleActive()))
 
             writeMemChange("----------------------------")
             if self.reportOnChild:
@@ -228,7 +205,7 @@ class memChangeMonitor:
         writeMemChange("?? Game state ??")
         writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
         writeMemChange("Current map: " + str(FFX_memory.getMap()))
-        writeMemChange("Battle Active: " + str(battleActive()))
+        writeMemChange("Battle Active: " + str(FFX_memory.battleActive()))
         writeMemChange("----------------------------")
         self.setLastValue()
 
@@ -245,7 +222,7 @@ class memChangeMonitor:
         writeMemChange("?? Game state ??")
         writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
         writeMemChange("Current map: " + str(FFX_memory.getMap()))
-        writeMemChange("Battle Active: " + str(battleActive()))
+        writeMemChange("Battle Active: " + str(FFX_memory.battleActive()))
         writeMemChange("----------------------------")
         self.setLastValue()
 
@@ -299,7 +276,6 @@ def memChangeHandle():
     firstEle = True
     memRefList = memChangeList()
 
-    complete = False
     while len(baseArray) != 0:
         if firstEle:
             firstEle = False

@@ -1,9 +1,6 @@
-#import pyxinput
 import vgamepad as vg
 import time
 import FFX_memory
-import FFX_Screen
-import pyautogui
 import math
 import FFX_vars
 import json
@@ -132,7 +129,6 @@ def skipScene(fast_mode: bool = False):
         processed_cutscenes.add(cutsceneID)
     if not fast_mode:
         FFX_memory.waitFrames(60)
-    # SkipDialog(2)
 
 
 def skipSceneSpec():
@@ -192,20 +188,6 @@ def touchSaveSphere():
                 FFX_memory.waitFrames(1)
             else:
                 tapB()
-    # while not FFX_memory.touchingSaveSphere():
-    #    if FFX_memory.userControl():
-    #        menuB()
-    #    elif FFX_memory.diagSkipPossible() and not FFX_memory.touchingSaveSphere():
-    #        menuB()
-    #print("Save Mark 1")
-
-    # while not FFX_memory.saveMenuCursor() >= 1:
-    #    menuDown()
-    #print("Save Mark 2")
-    # while not FFX_memory.userControl():
-    #    tapB()
-    #    FFX_memory.waitFrames(30 * 0.7)
-    # FFX_memory.awaitControl()
     FFXC.set_neutral()
     FFX_memory.waitFrames(30 * 0.035)
 

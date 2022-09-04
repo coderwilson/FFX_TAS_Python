@@ -1,6 +1,4 @@
-import time
 import FFX_Xbox
-import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
@@ -10,7 +8,6 @@ import FFX_Logs
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def boatDance():
@@ -78,7 +75,6 @@ def ssWinno():
 
     while FFX_memory.userControl():
         FFX_targetPathing.setMovement([28, -36]) #Through first door
-    #FFXC.set_movement(1, -1)
     FFX_memory.waitFrames(2)
     FFX_memory.clickToControl()
     FFXC.set_movement(1, -1)

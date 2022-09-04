@@ -1,16 +1,11 @@
 import time
 import FFX_Xbox
-import FFX_Screen
-import FFX_Battle
-import FFX_menu
-import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
-#FFXC = FFX_Xbox.FFXC
 
 
 def arrival():
@@ -43,8 +38,6 @@ def arrival():
         while not FFX_targetPathing.setMovement([4, -114]):
             pass
         print("Mark1")
-        #FFXC.set_movement(-1, 1)
-        # FFX_memory.clickToEvent()
         while FFX_memory.userControl():  # Talk to Auron (first for affection)
             FFX_targetPathing.setMovement([18, -119])
             FFX_Xbox.tapB()
@@ -54,8 +47,6 @@ def arrival():
         while not FFX_targetPathing.setMovement([-39, -77]):
             pass
         print("Mark2")
-        #FFXC.set_movement(1, -1)
-        # FFX_memory.clickToEvent()
         while FFX_memory.userControl():  # Start conversation with Wakka
             FFX_targetPathing.setMovement([-49, -61])
             FFX_Xbox.tapB()
@@ -65,8 +56,6 @@ def arrival():
         while not FFX_targetPathing.setMovement([-13, -67]):
             pass
         print("Mark3")
-        #FFXC.set_movement(-1, -1)
-        # FFX_memory.clickToEvent()
         while FFX_memory.userControl():  # Lulu conversation
             FFX_targetPathing.setMovement([-11, -55])
             FFX_Xbox.tapB()
@@ -107,7 +96,6 @@ def afterSpeech(checkpoint=0):
         FFX_memory.clickToEventTemple(4)
 
     while checkpoint != 34:
-        # print(FFX_targetPathing.guadoStoryline(checkpoint))
         if FFX_memory.userControl():
             if checkpoint > 17 and checkpoint < 26 and FFX_memory.getMap() == 135:
                 checkpoint = 26
