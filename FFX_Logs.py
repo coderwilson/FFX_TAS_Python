@@ -103,6 +103,7 @@ def openRNGTrack():
     RNGFile.close()
     print("RNG log is ready for writing!\n")
 
+
 def writeRNGTrack(message):
     global RNGFile
     global fileRNG
@@ -173,8 +174,7 @@ class memChangeMonitor:
             writeMemChange("Updated value: " + self.getNewValue())
             writeMemChange("Time of change: " + timeStamp())
             writeMemChange("?? Game state ??")
-            writeMemChange("Story progress: " +
-                           str(FFX_memory.getStoryProgress()))
+            writeMemChange("Story progress: " + str(FFX_memory.getStoryProgress()))
             writeMemChange("Current map: " + str(FFX_memory.getMap()))
             writeMemChange("Battle Active: " + str(FFX_memory.battleActive()))
 

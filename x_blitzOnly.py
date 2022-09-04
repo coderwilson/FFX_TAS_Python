@@ -44,7 +44,6 @@ while attempts < 20:
     offset = 1
     blitzoffWin = False
 
-    #print("Game start screen")
     FFX_Screen.clearMouse(0)
 
     # ---------This is the actual movement/code/logic/etc---------------
@@ -170,7 +169,7 @@ while attempts < 20:
     print("------------------------------")
     print("------------------------------")
     time.sleep(5)
-    if blitzoffWin == True:
+    if blitzoffWin:
         success += 1
 
     # ---------End of the actual movement/code/logic/etc---------------

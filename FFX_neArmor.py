@@ -31,7 +31,7 @@ def toHiddenCave():
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.neApproach(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.neApproach(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -83,11 +83,11 @@ def dropHunt():
             if goGreen:
                 if checkpoint == 15:
                     checkpoint -= 2
-                elif FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersGreen(checkpoint)) == True:
+                elif FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersGreen(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             else:
-                if FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersWhite(checkpoint)) == True:
+                if FFX_targetPathing.setMovement(FFX_targetPathing.neForceEncountersWhite(checkpoint)):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not goGreen:
                         checkpoint = 0
@@ -96,7 +96,7 @@ def dropHunt():
             FFXC.set_neutral()
             if FFX_memory.battleActive():
                 if FFX_memory.nextChanceRNG12() == 0:
-                    if FFX_memory.getBattleNum() in [319, 323]:
+                    if FFX_memory.getEncounterID() in [319, 323]:
                         FFX_Battle.ghostKill()
                     else:
                         if FFX_memory.nextChanceRNG10() != 0:
@@ -151,11 +151,11 @@ def returnToGagazet():
     checkpoint = 0
     while FFX_memory.getMap() != 259:
         if FFX_memory.userControl():
-            if goGreen == True:
+            if goGreen:
                 if checkpoint == 10:
                     goGreen = False
                     checkpoint = 0
-                elif FFX_targetPathing.setMovement(FFX_targetPathing.neReturnGreen(checkpoint)) == True:
+                elif FFX_targetPathing.setMovement(FFX_targetPathing.neReturnGreen(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             elif checkpoint < 1 and FFX_memory.getMap() == 266:
@@ -168,7 +168,7 @@ def returnToGagazet():
                 checkpoint += 1
             elif checkpoint < 7 and FFX_memory.getMap() == 279:
                 checkpoint = 7
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.neReturn(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.neReturn(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

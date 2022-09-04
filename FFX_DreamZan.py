@@ -11,7 +11,7 @@ FFXC = FFX_Xbox.controllerHandle()
 def NewGame(Gamestate):
     print("Starting the game")
     print("Gamestate:", Gamestate)
-    
+
     lastMessage = 0
     # New version
     if Gamestate == 'none':  # New Game
@@ -51,7 +51,6 @@ def NewGame(Gamestate):
                 FFX_Xbox.menuDown()
             else:
                 FFX_Xbox.menuB()
-    FFX_memory.clearNameAeonReady()
 
 
 def NewGame2():
@@ -93,7 +92,7 @@ def listenStory():
             FFX_memory.waitFrames(1)
 
     checkpoint = 0
-    while FFX_memory.getBattleNum() != 414:  # Sinspawn Ammes
+    while FFX_memory.getEncounterID() != 414:  # Sinspawn Ammes
         if FFX_memory.userControl():
             # Events
             if checkpoint == 2:
@@ -131,7 +130,7 @@ def listenStory():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.tidusHome(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.tidusHome(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -194,7 +193,7 @@ def AfterAmmes():
                 checkpoint = 11
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.allStartsHere(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.allStartsHere(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

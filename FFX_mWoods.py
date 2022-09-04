@@ -37,9 +37,9 @@ def arrival(rikkuCharged):
                     FFXC.set_movement(1, 1)
                     FFX_Xbox.tapB()
             elif checkpoint == 59:
-                if woodsVars[0] == False:
+                if not woodsVars[0]:
                     checkpoint -= 2
-                elif woodsVars[1] == False and woodsVars[2] == False:
+                elif not woodsVars[1] and not woodsVars[2]:
                     checkpoint -= 2
                 else:  # All good to proceed
                     checkpoint += 1
@@ -51,7 +51,7 @@ def arrival(rikkuCharged):
                 checkpoint = 40
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.mWoods(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.mWoods(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -130,7 +130,6 @@ def lakeRoad2():
     FFXC.set_movement(0, -1)
     if gameVars.csr():
         checkpoint = 0
-        tidusPos = FFX_memory.getCoords()
         while checkpoint < 5:
             if checkpoint == 0:
                 if FFX_targetPathing.setMovement([-6, 25]):
@@ -186,14 +185,14 @@ def lake():
     print("------------------------------")
 
     checkpoint = 0
-    while FFX_memory.getBattleNum() != 194:
+    while FFX_memory.getEncounterID() != 194:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.mLake(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.mLake(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if FFX_memory.battleActive() and FFX_memory.getBattleNum() != 194:
+            if FFX_memory.battleActive() and FFX_memory.getEncounterID() != 194:
                 FFX_Battle.fleeAll()
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.menuB()

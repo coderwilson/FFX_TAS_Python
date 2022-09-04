@@ -12,7 +12,7 @@ class vgTranslator:
         self.gamepad = vg.VX360Gamepad()
 
     def set_value(self, xKey, value):
-        #Buttons, pressing
+        # Buttons, pressing
         if xKey == "BtnBack" and value == 1:
             self.gamepad.press_button(button=0x0020)
         elif xKey == "BtnStart" and value == 1:
@@ -42,7 +42,7 @@ class vgTranslator:
         elif xKey == "TriggerR" and value == 1:
             self.gamepad.right_trigger_float(value_float=1.0)
 
-        #Buttons, releasing
+        # Buttons, releasing
         elif xKey == "BtnBack" and value == 0:
             self.gamepad.release_button(button=0x0020)
         elif xKey == "BtnStart" and value == 0:
@@ -627,6 +627,3 @@ def nameAeon(character=""):
         tapUp()
     while FFX_memory.nameConfirmOpen():
         tapB()
-
-    print("Now clearing the value so we're ready for the next aeon later.")
-    FFX_memory.clearNameAeonReady()

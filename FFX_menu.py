@@ -25,11 +25,11 @@ def gridRight():
 
 def awaitMove():
     print("Sphere Grid: Waiting for Move command to be highlighted")
-    while FFX_memory.sGridActive() == False:
+    while not FFX_memory.sGridActive():
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
         FFX_memory.waitFrames(30 * 1)
     complete = False
-    while complete == False:
+    while not complete:
         menuVal = FFX_memory.sGridMenu()
         if menuVal == 11 or menuVal == 255:
             FFX_Xbox.menuB()
@@ -45,11 +45,11 @@ def awaitMove():
 
 def awaitUse():
     print("Sphere Grid: Waiting for Use command to be highlighted")
-    while FFX_memory.sGridActive() == False:
+    while not FFX_memory.sGridActive():
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
         FFX_memory.waitFrames(30 * 1)
     complete = False
-    while complete == False:
+    while not complete:
         menuVal = FFX_memory.sGridMenu()
         print("Menu value:", menuVal)
         if menuVal == 7:
@@ -631,7 +631,7 @@ def macTemple():
     FFX_menuGrid.useAndMove()
     gridRight()
     gridRight()
-    if gameVars.getBlitzWin() == True:
+    if gameVars.getBlitzWin():
         FFX_menuGrid.moveAndUse()
         FFX_menuGrid.selSphere('strength', 'none')
         FFX_menuGrid.useAndUseAgain()
@@ -735,7 +735,7 @@ def beforeGuards():
         FFX_Xbox.tapB()
     megaPotSlot = FFX_memory.getItemSlot(3)
     column = megaPotSlot % 2
-    row = (megaPotSlot-column) / 2
+    row = (megaPotSlot - column) / 2
     print(megaPotSlot, column, row)
 
     while FFX_memory.itemMenuColumn() != column:
@@ -783,7 +783,6 @@ def sortItems(fullMenuClose=True):
 def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
     print("Equipping Weapon with ability", ability)
     FFX_memory.awaitControl()
-    gameVars = FFX_vars.varsHandle()
 
     weaponHandles = FFX_memory.weaponArrayCharacter(character)
     print("@@@@@")
@@ -862,7 +861,6 @@ def equipScout(fullMenuClose=True):
 def equipArmor(*, character, ability=255, fullMenuClose=True):
     print("Equipping Armor with ability", ability)
     FFX_memory.awaitControl()
-    gameVars = FFX_vars.varsHandle()
 
     armorHandles = FFX_memory.armorArrayCharacter(character)
     print("@@@@@")
@@ -1222,7 +1220,7 @@ def afterRonso():
     elif gameVars.endGameVersion() == 4:  # Four return spheres
         FFX_menuGrid.moveShiftLeft('yuna')
         FFX_menuGrid.useFirst()
-        if gameVars.getBlitzWin() == True:
+        if gameVars.getBlitzWin():
             FFX_menuGrid.selSphere('ret', 'yunaspec')
         else:
             FFX_menuGrid.selSphere('ret', 'd5')
@@ -1478,7 +1476,7 @@ def sellAll(NEA=False):
             # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
             if fullArray[FFX_memory.equipSellRow()].owner() in [1, 2, 4, 6]:
                 sellItem = False
-        if NEA == False and fullArray[FFX_memory.equipSellRow()].hasAbility(0x801D):
+        if not NEA and fullArray[FFX_memory.equipSellRow()].hasAbility(0x801D):
             # No-Encounters
             sellItem = False
         if fullArray[FFX_memory.equipSellRow()].abilities() == [0x8063, 0x8064, 0x802A, 0x8000]:
@@ -1735,10 +1733,10 @@ def skReturn2():
 
 
 def openGrid(character):
+    FFXC = FFX_Xbox.controllerHandle()
     try:
         FFXC.set_neutral()
     except:
-        FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
     while not FFX_memory.sGridActive():
         if FFX_memory.userControl() and not FFX_memory.menuOpen():

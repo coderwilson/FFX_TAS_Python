@@ -4,7 +4,6 @@ import FFX_menu
 import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
-import FFX_Xbox
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
@@ -106,7 +105,7 @@ def arrival():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca1(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca1(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -170,7 +169,7 @@ def blitzStart():
             elif checkpoint == 8:
                 FFX_targetPathing.setMovement([-111, -4])
                 FFX_Xbox.tapB()
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.LucaPreBlitz(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -180,7 +179,7 @@ def blitzStart():
 
 def afterBlitz():
     FFX_Xbox.clickToBattle()
-    battleNum = 0
+    encounterID = 0
     checkpoint = 0
     while checkpoint < 36:
         if FFX_memory.userControl():
@@ -218,23 +217,23 @@ def afterBlitz():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca3(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Luca3(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                battleNum += 1
-                print("After-Blitz Battle Number:", battleNum)
-                if battleNum == 1:
+                encounterID += 1
+                print("After-Blitz Battle Number:", encounterID)
+                if encounterID == 1:
                     FFX_Battle.afterBlitz1(gameVars.earlyHaste())
-                elif battleNum == 2:
+                elif encounterID == 2:
                     FFX_Xbox.clickToBattle()
                     FFX_Battle.attack('none')  # Hardest boss in the game.
                     print("Well that boss was difficult.")
                     FFX_memory.waitFrames(30 * 6)
-                elif battleNum == 3:
+                elif encounterID == 3:
                     if gameVars.earlyHaste() == -1:
                         FFX_Battle.afterBlitz3LateHaste(gameVars.earlyHaste())
                     else:

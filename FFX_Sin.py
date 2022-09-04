@@ -162,7 +162,7 @@ def insideSin():
                 checkpoint = 68
 
             # General Pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.insideSin(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.insideSin(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -184,7 +184,7 @@ def eggHunt(autoEggHunt):
     while not FFX_memory.userControl():
         FFXC.set_movement(-1, -1)
     FFX_memory.waitFrames(30 * 0.5)
-    if autoEggHunt == True:
+    if autoEggHunt:
         zz_eggHuntAuto.engage()
     else:
         print("Start of egg hunt. User control expected.")

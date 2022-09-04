@@ -9,6 +9,7 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 
+
 def checkSpheres():
     # Speed sphere stuff. Improve this later.
     needSpeed = False
@@ -28,6 +29,7 @@ def checkSpheres():
     else:
         needPower = True
     return needSpeed, needPower
+
 
 def desert():
     FFX_memory.clickToControl()
@@ -113,7 +115,7 @@ def desert():
                 else:
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
-            elif checkpoint == 12 and firstFormat == False:
+            elif checkpoint == 12 and not firstFormat:
                 firstFormat = True
                 FFX_memory.fullPartyFormat('desert9')
 
@@ -121,8 +123,8 @@ def desert():
             elif checkpoint == 57:
                 checkpoint += 1
             elif checkpoint == 60:
-                if FFX_memory.getCoords()[1] < 812: #Dialing in. 810 works 95%, but was short once.
-                    FFXC.set_movement(0,1)
+                if FFX_memory.getCoords()[1] < 812:  # Dialing in. 810 works 95%, but was short once.
+                    FFXC.set_movement(0, 1)
                 else:
                     FFXC.set_neutral()
                     checkpoint += 1
@@ -139,14 +141,14 @@ def desert():
             elif checkpoint == 64:
                 if itemsNeeded >= 1:  # Cannot move on if we're short on throwable items
                     checkpoint -= 2
-                elif needSpeed == True:  # Cannot move on if we're short on speed spheres
+                elif needSpeed:  # Cannot move on if we're short on speed spheres
                     checkpoint -= 2
                 else:
                     checkpoint += 1
 
             # General pathing
             elif FFX_memory.userControl():
-                if FFX_targetPathing.setMovement(FFX_targetPathing.desert(checkpoint)) == True:
+                if FFX_targetPathing.setMovement(FFX_targetPathing.desert(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
@@ -155,12 +157,12 @@ def desert():
                 FFX_Xbox.menuB()
             if FFX_memory.battleActive():  # Lots of battle logic here.
                 FFX_Xbox.clickToBattle()
-                if checkpoint < 7 and FFX_memory.getBattleNum() == 197:  # First battle in desert
+                if checkpoint < 7 and FFX_memory.getEncounterID() == 197:  # First battle in desert
                     FFX_Battle.zu()
-                elif FFX_memory.getBattleNum() == 234:  # Sandragora logic
+                elif FFX_memory.getEncounterID() == 234:  # Sandragora logic
                     print("Sandragora fight")
                     if checkpoint < 55:
-                        if sandy1 == False:
+                        if not sandy1:
                             FFX_Battle.sandragora(1)
                             sandy1 = True
                         else:
@@ -179,11 +181,11 @@ def desert():
                 if checkpoint > 10:
                     if checkpoint < 23 and checkpoint > 10:
                         FFX_memory.fullPartyFormat('desert9')
-                    elif chargeState == False:
+                    elif not chargeState:
                         FFX_memory.fullPartyFormat('desert1')
-                    elif needPower == True:
+                    elif needPower:
                         FFX_memory.fullPartyFormat('desert1')
-                    elif needSpeed == True:
+                    elif needSpeed:
                         FFX_memory.fullPartyFormat('desert1')
                     elif itemsNeeded >= 1:
                         FFX_memory.fullPartyFormat('desert1')
@@ -281,16 +283,16 @@ def findSummoners():
             elif checkpoint == 45:
                 FFX_memory.clickToEventTemple(1)
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Home(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Home(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
-                if FFX_memory.getBattleNum() == 417:
+                if FFX_memory.getEncounterID() == 417:
                     print("Home, battle 1")
                     FFX_Battle.home1()
-                elif FFX_memory.getBattleNum() == 419:
+                elif FFX_memory.getEncounterID() == 419:
                     if FFX_memory.getMap() == 280:
                         print("Home, battle 2")
                         FFX_Battle.home2()
@@ -298,12 +300,12 @@ def findSummoners():
                     else:
                         print("Home, bonus battle for Blitz loss")
                         FFX_Battle.home3()
-                elif FFX_memory.getBattleNum() == 420:
+                elif FFX_memory.getEncounterID() == 420:
                     print("Home, final battle")
                     FFX_Battle.home4()
                     FFX_memory.fullPartyFormat('evrae')
                 else:
-                    print("Flee from battle:", FFX_memory.getBattleNum())
+                    print("Flee from battle:", FFX_memory.getEncounterID())
                     FFX_Battle.fleeAll()
             elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()

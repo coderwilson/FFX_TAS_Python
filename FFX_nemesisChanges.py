@@ -9,7 +9,7 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 
-#The following functions replace the default ones from the regular Bahamut run.
+# The following functions replace the default ones from the regular Bahamut run.
 
 def arenaNPC():
     FFX_memory.awaitControl()

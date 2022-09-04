@@ -53,7 +53,7 @@ def southPathing():
 
             # General pathing
             elif FFX_memory.userControl():
-                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsSouth(checkpoint)) == True:
+                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsSouth(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
@@ -74,7 +74,6 @@ def southPathing():
             FFX_Xbox.menuB()
     FFXC.set_neutral()
     FFX_menu.autoSortEquipment()
-    complete = 1
 
 
 def agencyShop():
@@ -223,7 +222,7 @@ def agency():
                 FFXC.set_movement(0, 1)
                 FFX_memory.clickToEvent()
 
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsAgency(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsAgency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -253,7 +252,7 @@ def northPathing():
 
             # General pathing
             elif FFX_memory.userControl():
-                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsNorth(checkpoint)) == True:
+                if FFX_targetPathing.setMovement(FFX_targetPathing.tPlainsNorth(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:

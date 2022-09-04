@@ -31,7 +31,7 @@ class allVars:
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
         self.lStrikeCount = 0  # Default 0
-        
+
         # ----RNG Manip
         self.yellows = 0
 
@@ -44,18 +44,18 @@ class allVars:
         self.firstHits = [0] * 8
         self.neArmorVal = 255  # Default 255
         self.neBattles = 0  # Default to 0
-        self.neaZone = 0 #Decides which zone we charge Rikku in after reaching Zanarkand.
+        self.neaZone = 0  # Decides which zone we charge Rikku in after reaching Zanarkand.
 
         # ----Nemesis variables, unused in any%
         self.nemAPVal = 1  # Default to 1
-        self.areaResults = [0]*13
-        self.speciesResults = [0]*14
-        self.originalResults = [0]*7
+        self.areaResults = [0] * 13
+        self.speciesResults = [0] * 14
+        self.originalResults = [0] * 7
         self.yojimboIndex = 1
 
         # ----Path for save files, used for loading a specific save
         # coderwilson automation PC
-        #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
 
@@ -75,13 +75,13 @@ class allVars:
         if arrayNum == 2:
             self.originalResults[index] = 1
         self.printArenaStatus()
-    
+
     def getYellows(self):
         return self.yellows
-    
+
     def setYellows(self, newVals):
         self.yellows = newVals
-    
+
     def yojimboGetIndex(self):
         return self.yojimboIndex
 

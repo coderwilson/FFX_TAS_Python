@@ -1,14 +1,14 @@
 import FFX_memory
 import FFX_Zanarkand
-FFX_memory.start()
 import FFX_vars
+FFX_memory.start()
 gameVars = FFX_vars.varsHandle()
 
 FFX_memory.advanceRNG01()
 forceBreak = 0
 FFX_Zanarkand.decideNEA()
 
-while gameVars.getNEAzone() in [0,1,2,99]:
+while gameVars.getNEAzone() in [0, 1, 2, 99]:
     FFX_memory.advanceRNG01()
     FFX_Zanarkand.decideNEA()
     print("Updating:", gameVars.getNEAzone())

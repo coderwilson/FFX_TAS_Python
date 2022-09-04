@@ -3,7 +3,6 @@ import FFX_Screen
 import FFX_Battle
 import FFX_menu
 import FFX_memory
-import FFX_menu
 import FFX_targetPathing
 import FFX_zzairShipPath
 import FFX_vars
@@ -34,7 +33,7 @@ def preEvrae():
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
 
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.rescueAirship(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.rescueAirship(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -105,7 +104,7 @@ def guards():
             if checkpoint < 2 and FFX_memory.getMap() == 182:
                 checkpoint = 2
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.bevellePreTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -353,7 +352,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -369,7 +368,7 @@ def trialsEnd():
     checkpoint = 53
     while FFX_memory.getMap() != 226:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.bevelleTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         elif FFX_memory.diagSkipPossible():
@@ -549,7 +548,7 @@ def seymourNatus():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
 
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.sutekiDaNe(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.sutekiDaNe(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

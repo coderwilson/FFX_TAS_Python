@@ -14,7 +14,7 @@ import FFX_mTemple
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
 
-#Plug in controller
+# Plug in controller
 FFXC = FFX_Xbox.controllerHandle()
 
 print("Test 2")
@@ -55,7 +55,7 @@ while attempts < 20 and cycles < 50:
         returnVal = FFX_Miihen.arrival()
         print(returnVal)
         SkipAttempts += 1
-        if returnVal[3] == True:
+        if returnVal[3]:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")
@@ -84,7 +84,7 @@ while attempts < 20 and cycles < 50:
         FFX_LoadGame.loadGuadoSkip()
         SkipAttempts += 1
         guadoSkipStatus = FFX_Guadosalam.guadoSkip()
-        if guadoSkipStatus == True:
+        if guadoSkipStatus:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")
@@ -99,7 +99,7 @@ while attempts < 20 and cycles < 50:
         FFX_LoadGame.loadMacTemple()
         SkipAttempts += 1
         jyscalSkipStatus = FFX_mTemple.arrival(doGrid=False)
-        if jyscalSkipStatus == True:
+        if jyscalSkipStatus:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")
@@ -138,41 +138,41 @@ print("The program duration (real time) was:", str(totalTime))
 print("------------------------------")
 print("------------------------------")
 
-#print("--------TASgiving, please stop the timer-------------")
+# print("--------TASgiving, please stop the timer-------------")
 # print("--------------------------")
-#print("Questing for Glory: Hope & Healing II")
-# print("--------------------------")
-# time.sleep(2)
-#print("Thank you to the event organizers, planning staff, and volunteers that made this possible.")
+# print("Questing for Glory: Hope & Healing II")
 # print("--------------------------")
 # time.sleep(2)
-#print("For this FFX project, thank you also to")
-#print("these individuals:")
+# print("Thank you to the event organizers, planning staff, and volunteers that made this possible.")
+# print("--------------------------")
+# time.sleep(2)
+# print("For this FFX project, thank you also to")
+# print("these individuals:")
 # time.sleep(1.5)
-#print("-Blueaurora - my wife - for putting up with")
-#print("me for literal years")
+# print("-Blueaurora - my wife - for putting up with")
+# print("me for literal years")
 # time.sleep(1.5)
-#print("-My wife is the best!")
+# print("-My wife is the best!")
 # time.sleep(1.5)
 # print("--------------------------")
 # time.sleep(1.5)
-#print("-DwangoAC and the TASbot community")
+# print("-DwangoAC and the TASbot community")
 # time.sleep(1.5)
-#print("-Inverted from the TASbot community")
+# print("-Inverted from the TASbot community")
 # time.sleep(1.5)
-#print("-TheAxeMan from the TASbot community")
+# print("-TheAxeMan from the TASbot community")
 # time.sleep(1.5)
-#print("-Rossy__ from the FFX Speed-running community")
+# print("-Rossy__ from the FFX Speed-running community")
 # time.sleep(1.5)
-#print("-CrimsonInferno from the FFX Speed-running community")
-#print("(current WR holder, multiple categories)")
+# print("-CrimsonInferno from the FFX Speed-running community")
+# print("(current WR holder, multiple categories)")
 # time.sleep(1.5)
-#print("-Highspirits from QfG staff, amazing work on the event!")
+# print("-Highspirits from QfG staff, amazing work on the event!")
 # time.sleep(1.5)
-#print("-And countless other people who have supported me along")
-#print("the way on this project.")
+# print("-And countless other people who have supported me along")
+# print("the way on this project.")
 # time.sleep(1.5)
-#print("-May the rest of QfG:HH2 be a major success!")
+# print("-May the rest of QfG:HH2 be a major success!")
 
 time.sleep(5)
 FFX_memory.end()

@@ -23,7 +23,7 @@ def resetToMainMenu():
         FFX_memory.resetBattleEnd()
         while not FFX_memory.getMap() in [23, 348, 349]:
             FFX_Xbox.menuB()
-    
+
     else:
         FFX_memory.waitFrames(30 * 0.07)
         while not FFX_memory.getMap() in [23, 348, 349]:

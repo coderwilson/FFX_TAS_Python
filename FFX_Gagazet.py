@@ -47,7 +47,7 @@ def calmLands():
     checkpoint = 0
     while FFX_memory.getMap() != 279:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.calmLands(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.calmLands(checkpoint)):
                 checkpoint += 1
                 if checkpoint == 9:
                     if checkGems() < 2:
@@ -73,7 +73,7 @@ def defenderX():
     FFX_memory.awaitControl()
     FFX_menu.prepCalmLands()
     FFX_memory.fullPartyFormat('postbunyip')
-    while FFX_targetPathing.setMovement([67, -255]) == False:
+    while not FFX_targetPathing.setMovement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
     FFX_memory.awaitEvent()
@@ -97,7 +97,7 @@ def toTheRonso():
     checkpoint = 2
     while FFX_memory.getMap() != 259:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.defenderX(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.defenderX(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -109,7 +109,7 @@ def toTheRonso():
     checkpoint = 0
     while FFX_memory.getMap() != 244:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.kelkRonso(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.kelkRonso(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -143,7 +143,7 @@ def gagazetGates():
     checkpoint = 0
     while FFX_memory.getMap() != 285:
         if FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.gagazetSnow(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.gagazetSnow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -188,7 +188,7 @@ def Flux():
                 while FFX_memory.userControl():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.Flux(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.Flux(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -236,7 +236,7 @@ def dream(checkpoint: int = 0):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetDreamSeq(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetDreamSeq(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -318,7 +318,7 @@ def dream_old():
 
 def cave():
     checkpoint = 0
-    
+
     while FFX_memory.getMap() != 272:
         if FFX_memory.userControl():
             if FFX_memory.getMap() == 309 and FFX_memory.getCoords()[0] > 1160:
@@ -326,7 +326,7 @@ def cave():
                 FFX_memory.waitFrames(3)
                 FFXC.set_movement(0, 1)
                 FFX_memory.waitFrames(6)
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPostDream(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPostDream(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -412,13 +412,13 @@ def cave():
                 print("Prepping for Sanctuary Keeper")
                 FFX_memory.fullPartyFormat('yuna')
                 checkpoint += 1
-                
-                #Determine drops from Yunalesca
-                #FFX_Logs.openRNGTrack()
-                #import FFX_rngTrack
-                #zombieResults = FFX_rngTrack.zombieTrack(report=True)
-                #FFX_Logs.writeRNGTrack("Final results:"+str(zombieResults))
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetCave(checkpoint)) == True:
+
+                # Determine drops from Yunalesca
+                # FFX_Logs.openRNGTrack()
+                # import FFX_rngTrack
+                # zombieResults = FFX_rngTrack.zombieTrack(report=True)
+                # FFX_Logs.writeRNGTrack("Final results:"+str(zombieResults))
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetCave(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -444,14 +444,14 @@ def cave():
                 checkpoint += 1
             elif FFX_memory.battleActive():
                 if FFX_memory.getPower() < powerNeeded:
-                    if FFX_memory.getBattleNum() == 351:  # Two maelstroms and a splasher
+                    if FFX_memory.getEncounterID() == 351:  # Two maelstroms and a splasher
                         FFX_Battle.gagazetCave('down')
-                    elif FFX_memory.getBattleNum() == 353:  # Two glowey guys, two splashers.
+                    elif FFX_memory.getEncounterID() == 353:  # Two glowey guys, two splashers.
                         FFX_Battle.gagazetCave('right')
-                    elif FFX_memory.getBattleNum() == 354:  # Four groups of splashers
+                    elif FFX_memory.getEncounterID() == 354:  # Four groups of splashers
                         FFX_Battle.gagazetCave('none')
                     elif FFX_memory.overdriveState2()[6] != 100:
-                        if FFX_memory.getBattleNum() in [351, 352, 353, 354]:
+                        if FFX_memory.getEncounterID() in [351, 352, 353, 354]:
                             FFX_Battle.caveChargeRikku()
                         else:
                             FFX_Battle.fleeAll()
@@ -495,7 +495,7 @@ def wrapUp():
                     checkpoint += 1
                 else:
                     FFXC.set_movement(1, 1)
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPeak(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.gagazetPeak(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

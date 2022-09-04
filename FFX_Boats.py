@@ -33,7 +33,7 @@ def ssLiki():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.liki(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.liki(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -74,7 +74,7 @@ def ssWinno():
     FFX_Logs.writeStats(FFX_memory.getSpeed())
 
     while FFX_memory.userControl():
-        FFX_targetPathing.setMovement([28, -36]) #Through first door
+        FFX_targetPathing.setMovement([28, -36])  # Through first door
     FFX_memory.waitFrames(2)
     FFX_memory.clickToControl()
     FFXC.set_movement(1, -1)
@@ -123,7 +123,7 @@ def ssWinno2():
             elif checkpoint == 11:
                 jechtShot()
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.winno(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.winno(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

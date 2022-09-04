@@ -52,15 +52,15 @@ def Beach():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid1(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid1(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
             if FFX_Screen.BattleScreen():
                 FFX_Battle.piranhas()
                 besaidBattles += 1
-                battleNum = FFX_memory.getBattleNum()
-                if battleNum == 11 or (battleNum == 12 and FFX_memory.battleType() == 1):
+                encounterID = FFX_memory.getEncounterID()
+                if encounterID == 11 or (encounterID == 12 and FFX_memory.battleType() == 1):
                     goodBattles += 1
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
@@ -152,7 +152,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.besaidTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.besaidTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -252,7 +252,7 @@ def leaving():
                 checkpoint -= 2
 
             # General pathing
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid2(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.besaid2(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -282,7 +282,7 @@ def leaving():
                 FFX_Logs.writeStats(healCount)
                 FFX_memory.clickToControl()
             # Valefor summon tutorial
-            elif checkpoint in [31,32,33,34,35,36,37,38] and FFX_Screen.BattleScreen():
+            elif checkpoint in [31, 32, 33, 34, 35, 36, 37, 38] and FFX_Screen.BattleScreen():
                 FFX_Xbox.clickToBattle()
                 while not FFX_Screen.turnAeon():
                     if FFX_memory.turnReady():
@@ -290,7 +290,7 @@ def leaving():
                             FFX_Battle.aeonSummon(0)
                         elif FFX_Screen.turnAeon():
                             pass
-                        elif not 1 in FFX_memory.getActiveBattleFormation():
+                        elif 1 not in FFX_memory.getActiveBattleFormation():
                             FFX_Battle.buddySwapYuna()
                         else:
                             FFX_Battle.defend()

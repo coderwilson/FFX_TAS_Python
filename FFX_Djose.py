@@ -47,7 +47,7 @@ def path():
                         and checkpoint < 46 and checkpoint > 18:
                     checkpoint += 1
                 # General pathing
-                elif FFX_targetPathing.setMovement(FFX_targetPathing.djosePath(checkpoint)) == True:
+                elif FFX_targetPathing.setMovement(FFX_targetPathing.djosePath(checkpoint)):
                     checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -85,7 +85,7 @@ def temple():
             FFX_memory.clickToEventTemple(0)
             checkpoint += 1
         elif FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(target[checkpoint]) == True:
+            if FFX_targetPathing.setMovement(target[checkpoint]):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -256,7 +256,7 @@ def trials():
                 FFX_memory.clickToEventTemple(0)
                 checkpoint += 1
             elif checkpoint == 85:  # Lift
-                if FFX_targetPathing.setMovement([0, 30]) == True:
+                if FFX_targetPathing.setMovement([0, 30]):
                     FFXC.set_neutral()
                     FFX_memory.waitFrames(30 * 0.2)
                     checkpoint += 1
@@ -295,11 +295,9 @@ def trials():
                 else:
                     FFX_memory.clickToEventTemple(7)
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseTrials(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseTrials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-        elif FFX_memory.nameAeonReady():
-            FFX_memory.clearNameAeonReady()
 
     FFXC.set_neutral()
     if not gameVars.csr():
@@ -315,7 +313,7 @@ def trials():
         # Dance
         checkpoint = 0
         while FFX_memory.userControl():
-            if FFX_targetPathing.setMovement(FFX_targetPathing.djoseDance(checkpoint)) == True:
+            if FFX_targetPathing.setMovement(FFX_targetPathing.djoseDance(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -357,7 +355,7 @@ def leavingDjose():
             elif checkpoint in [22, 29]:
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
-            elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseExit(checkpoint)) == True:
+            elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseExit(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
