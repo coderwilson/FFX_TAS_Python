@@ -335,11 +335,14 @@ def sanctuaryKeeper():
     print("Now prepping for Sanctuary Keeper fight")
 
     if ver == 4:
+        FFX_Logs.writeLog("Starting pattern, FFX_menu.skReturn()")
         print("Pattern for four return spheres off of the B&Y fight")
         FFX_menu.skReturn()
     elif ver == 3:
+        FFX_Logs.writeLog("Starting pattern, FFX_menu.skFriend()")
         FFX_menu.skFriend()
     else:
+        FFX_Logs.writeLog("Starting pattern, FFX_menu.skMixed()")
         FFX_menu.skMixed()
     FFX_memory.fullPartyFormat('yuna')
     FFX_memory.closeMenu()

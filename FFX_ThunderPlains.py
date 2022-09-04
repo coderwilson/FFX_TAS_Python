@@ -190,7 +190,7 @@ def agency():
             elif checkpoint == 7:
                 if not gameVars.csr():
                     kimahriAffection = FFX_memory.affectionArray()[3]
-                    print("Kimahri affection:", kimahriAffection)
+                    print("Kimahri affection, ", kimahriAffection)
                     while FFX_memory.affectionArray()[3] == kimahriAffection:
                         FFX_targetPathing.setMovement([27, -44])
                         FFX_Xbox.tapB()

@@ -42,76 +42,6 @@ def setMovement(target) -> bool:
     else:
         return False
 
-
-def calmLands1(checkpoint):
-    x = 999
-    y = 999
-    if checkpoint == 0:
-        x = -332
-        y = -1612
-    if checkpoint == 1:
-        x = -437
-        y = -1603
-    if checkpoint == 2:
-        x = -640
-        y = -1591
-    if checkpoint == 3:
-        x = -757
-        y = -1530
-    if checkpoint == 4:
-        x = -777
-        y = -1478
-    if checkpoint == 5:  # First divergence from the standard path
-        x = -761
-        y = -1433
-    if checkpoint == 6:
-        x = -253
-        y = -1038
-    if checkpoint == 7:
-        x = 581
-        y = -464
-    if checkpoint == 8:
-        x = 1223
-        y = -187
-    if checkpoint == 9:
-        x = 1345
-        y = -129
-    if checkpoint == 10:
-        x = 1500
-        y = -125
-    return [x, y]
-
-
-def calmLands2(checkpoint):
-    x = 999
-    y = 999
-    if checkpoint == 0:
-        x = 1336
-        y = -101
-    if checkpoint == 1:
-        x = 1349
-        y = 160
-    if checkpoint == 2:
-        x = 1429
-        y = 486
-    if checkpoint == 3:
-        x = 1480
-        y = 646
-    if checkpoint == 4:
-        x = 1494
-        y = 878
-    if checkpoint == 5:
-        x = 1542
-        y = 1021
-    if checkpoint == 6:
-        x = 1561
-        y = 1112
-    if checkpoint == 7:
-        x = 1600
-        y = 1300
-    return [x, y]
-
-
 def toRemiem(checkpoint):
     x = 999
     y = 999
@@ -731,6 +661,7 @@ def leaveRemiem(checkpoint):
 
 
 def tpFarm(checkpoint):
+    #print("Path: ", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -739,48 +670,48 @@ def tpFarm(checkpoint):
     if checkpoint == 1:
         x = 10
         y = -200
-    if checkpoint == 2:  # Outside agency
+    if checkpoint == 2: #Outside agency
         x = -48
         y = 54
-    if checkpoint == 3:
+    if checkpoint == 3: #To North
         x = 0
         y = 300
-    if checkpoint == 4:  # North thunder plains
-        x = -97
-        y = -1056
-    if checkpoint == 5:
-        x = -99
-        y = -974
-    if checkpoint == 6:  # Beneath tower
-        x = -65
-        y = -901
+    if checkpoint == 4: #North pos 1
+        x = -127
+        y = -1083
+    if checkpoint == 5: #North pos 2
+        x = -106
+        y = -1185
+    if checkpoint == 6: #Back to agency front
+        x = -115
+        y = -1400
     if checkpoint == 7:
-        x = -38
-        y = -833
-    if checkpoint == 8:  # Beneath tower
-        x = -65
-        y = -901
-    if checkpoint == 9:
-        x = -99
-        y = -974
-    if checkpoint == 10:
-        x = -97
-        y = -1056
-    if checkpoint == 11:  # Back to agency
-        x = -97
-        y = -1500
-    if checkpoint == 12:
         x = -55
-        y = 39
-    if checkpoint == 13:
-        x = -72
-        y = 42
-    if checkpoint == 14:  # Into the agency
+        y = 27
+    if checkpoint == 8: #To South
+        x = -50
+        y = -200
+    if checkpoint == 9: #South pos 1
+        x = -44
+        y = 1075
+    if checkpoint == 10: #South pos 2
+        x = 16
+        y = 1116
+    if checkpoint == 11: #Back to agency front
+        x = 4
+        y = 1300
+    if checkpoint == 12:
+        x = -56
+        y = 51
+    if checkpoint == 13: #Back to north
+        x = 0
+        y = 300
+    if checkpoint == 14:
         x = 0
         y = 0
     if checkpoint == 15:
-        x = -36
-        y = -21
+        x = 0
+        y = 0
     if checkpoint == 16:
         x = 0
         y = 0
@@ -794,12 +725,102 @@ def tpFarm(checkpoint):
         x = 0
         y = 0
     if checkpoint == 20:
+        x = -84
+        y = 32
+    if checkpoint == 21: #Into agency
+        x = -150
+        y = 35
+    if checkpoint == 22:
+        x = -31
+        y = -17
+    if checkpoint == 23:
+        x = 0
+        y = 0
+    if checkpoint == 24:
+        x = 0
+        y = 0
+    if checkpoint == 25:
+        x = 0
+        y = 0
+    if checkpoint == 26:
+        x = 0
+        y = 0
+    if checkpoint == 27:
+        x = 0
+        y = 0
+    if checkpoint == 28:
+        x = 0
+        y = 0
+    if checkpoint == 29:
+        x = 0
+        y = 0
+    if checkpoint == 30:
+        x = 0
+        y = 0
+    if checkpoint == 31:
+        x = 0
+        y = 0
+    if checkpoint == 32:
+        x = 0
+        y = 0
+    if checkpoint == 33:
+        x = 0
+        y = 0
+    if checkpoint == 34:
+        x = 0
+        y = 0
+    if checkpoint == 35:
+        x = 0
+        y = 0
+    if checkpoint == 36:
+        x = 0
+        y = 0
+    if checkpoint == 37:
+        x = 0
+        y = 0
+    if checkpoint == 38:
+        x = 0
+        y = 0
+    if checkpoint == 39:
+        x = 0
+        y = 0
+    if checkpoint == 40:
+        x = 0
+        y = 0
+    if checkpoint == 41:
+        x = 0
+        y = 0
+    if checkpoint == 42:
+        x = 0
+        y = 0
+    if checkpoint == 43:
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
 
 
-def calm(checkpoint):
+def calmLands1_old(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -838,6 +859,112 @@ def calm(checkpoint):
     if checkpoint == 11:
         x = 1500
         y = -200
+    return [x, y]
+
+def calmLands1(checkpoint):
+    #print("CKP:", checkpoint)
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -332
+        y = -1612
+    if checkpoint == 1:
+        x = -437
+        y = -1603
+    if checkpoint == 2:
+        x = -640
+        y = -1591
+    if checkpoint == 3:
+        x = -757
+        y = -1530
+    if checkpoint == 4:
+        x = -777
+        y = -1478
+    if checkpoint == 5:  # First divergence from the standard path
+        x = -761
+        y = -1433
+    if checkpoint == 6:
+        x = -253
+        y = -1038
+    if checkpoint == 7:
+        x = 581
+        y = -464
+    if checkpoint == 8:
+        x = 1223
+        y = -187
+    if checkpoint == 9:
+        x = 1345
+        y = -129
+    if checkpoint == 10:
+        x = 1500
+        y = -125
+    return [x, y]
+
+def calmFarm(checkpoint):
+    #print("CKP:", checkpoint)
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = -634
+        y = -126
+    if checkpoint == 1:
+        x = -605
+        y = -144
+    if checkpoint == 2: #Zone 1 position 1
+        x = -579
+        y = -178
+    if checkpoint == 3: #Zone 1 position 2
+        x = -561
+        y = -99
+    if checkpoint == 4: #Zone 2 position 1
+        x = -503
+        y = -60
+    if checkpoint == 5: #Zone 2 position 2
+        x = -521
+        y = 10
+    if checkpoint == 6: #Zone 3 position 1
+        x = -548
+        y = 22
+    if checkpoint == 7: #Zone 3 position 2
+        x = -620
+        y = 26
+    if checkpoint == 8:
+        x = -521
+        y = 3
+    if checkpoint == 9:
+        x = -550
+        y = -97
+    return [x, y]
+
+
+def calmLands2(checkpoint):
+    #print("CKP2:", checkpoint)
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 1336
+        y = -101
+    if checkpoint == 1:
+        x = 1349
+        y = 160
+    if checkpoint == 2:
+        x = 1429
+        y = 486
+    if checkpoint == 3:
+        x = 1480
+        y = 646
+    if checkpoint == 4:
+        x = 1494
+        y = 878
+    if checkpoint == 5:
+        x = 1542
+        y = 1021
+    if checkpoint == 6:
+        x = 1561
+        y = 1112
+    if checkpoint == 7:
+        x = 1600
+        y = 1300
     return [x, y]
 
 
@@ -1132,43 +1259,43 @@ def miihenFarm(checkpoint):
     if checkpoint == 29:
         x = 610
         y = 411
-    if checkpoint == 30:
+    if checkpoint == 30: #Farm zone 1
         x = 593
         y = 552
-    if checkpoint == 31:  # To the "meeting Seymour" screen
+    if checkpoint == 31: #To the "meeting Seymour" screen
         x = 500
         y = 700
     if checkpoint == 32:
-        x = -59
-        y = -84
-    if checkpoint == 33:
-        x = 16
-        y = 97
-    if checkpoint == 34:  # Touch Save Sphere
-        x = 0
-        y = 0
-    if checkpoint == 35:
+        x = -62
+        y = -98
+    if checkpoint == 33: #Branch to zone 2 vs zones >= 3
+        x = -31
+        y = -81
+    if checkpoint == 34:
         x = 14
-        y = -40
+        y = -75
+    if checkpoint == 35: #Entrance towards area 2
+        x = 86
+        y = -143
     if checkpoint == 36:
-        x = 47
-        y = -107
+        x = 185
+        y = -223
     if checkpoint == 37:
-        x = 172
-        y = -219
-    if checkpoint == 38:
-        x = 220
-        y = -275
-    if checkpoint == 39:  # Into lower area
-        x = 0
-        y = 0
+        x = 227
+        y = -274
+    if checkpoint == 38: #Into lower area
+        x = 270
+        y = -320
+    if checkpoint == 39: #Into lower area
+        x = 270
+        y = -320
     if checkpoint == 40:
         x = 708
         y = 335
     if checkpoint == 41:
         x = 740
         y = 450
-    if checkpoint == 42:  # Return to sender
+    if checkpoint == 42: #Return to map
         x = 800
         y = 550
     if checkpoint == 43:
@@ -1177,24 +1304,314 @@ def miihenFarm(checkpoint):
     if checkpoint == 44:
         x = 47
         y = -107
-    if checkpoint == 45:
+    if checkpoint == 45: #Branch to zone 1 vs zones >= 3
         x = 14
         y = -40
     if checkpoint == 46:
         x = 2
         y = 109
-    if checkpoint == 47:  # Touch again
-        x = 0
-        y = 0
+    if checkpoint == 47: #Save sphere, touch if needed.
+        x = 2
+        y = 109
     if checkpoint == 48:
         x = -45
         y = 193
     if checkpoint == 49:
         x = -42
         y = 318
-    if checkpoint == 50:  # To MRR start area
+    if checkpoint == 50: #To MRR start area
+        x = -42
+        y = 500
+    if checkpoint == 51: #Farm area 3(A)
+        x = -87
+        y = -911
+    if checkpoint == 52: #Farm area 3(A)
+        x = -78
+        y = -861
+    if checkpoint == 53:
+        x = -46
+        y = -757
+    if checkpoint == 54:
+        x = -44
+        y = -716
+    if checkpoint == 55:
+        x = -48
+        y = -643
+    if checkpoint == 56:
+        x = -23
+        y = -571
+    if checkpoint == 57:
+        x = -38
+        y = -492
+    if checkpoint == 58: #Farm area 3(B)
+        x = -115
+        y = -476
+    if checkpoint == 59: #Farm area 3(B)
+        x = -209
+        y = -420
+    if checkpoint == 60: #To MRR map
+        x = -300
+        y = -350
+    if checkpoint == 61: #Farm area 4
+        x = 3
+        y = -732
+    if checkpoint == 62: #Farm area 4 and save sphere
+        x = 44
+        y = -705
+    if checkpoint == 63: #Back to Clasko map
+        x = 66
+        y = -850
+    if checkpoint == 64:
+        x = -118
+        y = -469
+    if checkpoint == 65:
+        x = -52
+        y = -487
+    if checkpoint == 66:
+        x = -17
+        y = -562
+    if checkpoint == 67:
+        x = -43
+        y = -639
+    if checkpoint == 68:
+        x = -53
+        y = -694
+    if checkpoint == 69:
+        x = -43
+        y = -722
+    if checkpoint == 70:
+        x = -56
+        y = -850
+    if checkpoint == 71:
+        x = -79
+        y = -950
+    if checkpoint == 72: #Back to transition map
+        x = -90
+        y = -1100
+    if checkpoint == 73:
+        x = -56
+        y = 255
+    if checkpoint == 74:
+        x = -32
+        y = 174
+    if checkpoint == 75:
+        x = 4
+        y = 132
+    if checkpoint == 76: #Save sphere, and back towards areas 1/2
+        x = -3
+        y = 22
+    if checkpoint == 77: #Back towards area 1
+        x = -58
+        y = -105
+    if checkpoint == 78:
+        x = -144
+        y = -247
+    if checkpoint == 79: #Map change
+        x = -230
+        y = -330
+    if checkpoint == 90: #Area 6 back to 5 logic
+        x = -39
+        y = -236
+    if checkpoint == 91: #Area 6 back to 5 logic
+        x = -53
+        y = -274
+    if checkpoint == 92: #Area 6 back to 5 logic
+        #Down the lift
+        x = -53
+        y = -274
+    if checkpoint == 93: #Area 6 back to 5 logic
+        x = 66
+        y = 874
+    if checkpoint == 100: #Start, area 5/6 logic
+        x = 12
+        y = -738
+    if checkpoint == 101:
+        x = 12
+        y = -738
+    if checkpoint == 102:
+        x = -28
+        y = -663
+    if checkpoint == 103:
+        x = -37
+        y = -601
+    if checkpoint == 104: #First lift
+        print("First lift")
+    if checkpoint == 105:
+        x = -48
+        y = -571
+    if checkpoint == 106:
+        x = -108
+        y = -463
+    if checkpoint == 107:
+        x = -108
+        y = -428
+    if checkpoint == 108:
+        x = -85
+        y = -391
+    if checkpoint == 109:
+        x = -87
+        y = -372
+    if checkpoint == 110:
+        x = -78
+        y = -361
+    if checkpoint == 111:
+        x = -38
+        y = -367
+    if checkpoint == 112:
+        x = -6
+        y = -381
+    if checkpoint == 113:
+        x = 38
+        y = -414
+    if checkpoint == 114:
+        x = 63
+        y = -398
+    if checkpoint == 115:
+        x = 109
+        y = -339
+    if checkpoint == 116:
+        x = 127
+        y = -198
+    if checkpoint == 117:
+        x = 122
+        y = -166
+    if checkpoint == 118:
+        x = 91
+        y = -176
+    if checkpoint == 119:
         x = 0
-        y = 0
+        y = -215
+    if checkpoint == 120:
+        x = -63
+        y = -189
+    if checkpoint == 121:
+        x = -88
+        y = -141
+    if checkpoint == 122:
+        x = -104
+        y = 54
+    if checkpoint == 123:
+        x = -102
+        y = 73
+    if checkpoint == 124:
+        x = -86
+        y = 87
+    if checkpoint == 125:
+        x = 25
+        y = 138
+    if checkpoint == 126:
+        x = 32
+        y = 151
+    if checkpoint == 127:
+        x = 23
+        y = 233
+    if checkpoint == 128:
+        x = -89
+        y = 295
+    if checkpoint == 129:
+        x = -91
+        y = 321
+    if checkpoint == 130:
+        x = -87
+        y = 368
+    if checkpoint == 131:
+        x = -68
+        y = 402
+    if checkpoint == 132:
+        x = -48
+        y = 425
+    if checkpoint == 133:
+        x = 35
+        y = 461
+    if checkpoint == 134:
+        x = 92
+        y = 515
+    if checkpoint == 135:
+        x = 51
+        y = 543
+    if checkpoint == 136:
+        x = -20
+        y = 568
+    if checkpoint == 137:
+        x = -71
+        y = 593
+    if checkpoint == 138:
+        x = -109
+        y = 604
+    if checkpoint == 139:
+        x = -115
+        y = 687
+    if checkpoint == 140:
+        x = -71
+        y = 775
+    if checkpoint == 141:
+        x = -39
+        y = 829
+    if checkpoint == 142:
+        x = -12
+        y = 838
+    if checkpoint == 143:
+        x = 26
+        y = 828
+    if checkpoint == 144:
+        x = 44
+        y = 834
+    if checkpoint == 145:
+        x = 59
+        y = 898
+    if checkpoint == 146: #Second lift
+        print("Up the second lift")
+    if checkpoint == 147:
+        x = -36
+        y = -194
+    if checkpoint == 148:
+        x = -36
+        y = -194
+    if checkpoint == 149:
+        x = 24
+        y = -157
+    if checkpoint == 150:
+        x = 52
+        y = -135
+    if checkpoint == 151:
+        x = 116
+        y = 4
+    if checkpoint == 152:
+        x = 121
+        y = 50
+    if checkpoint == 153:
+        x = 112
+        y = 100
+    if checkpoint == 154:
+        x = 29
+        y = 227
+    if checkpoint == 155:
+        x = 29
+        y = 227
+    if checkpoint == 156:
+        x = 29
+        y = 227
+    if checkpoint == 157:
+        x = 29
+        y = 227
+    if checkpoint == 158:
+        print("Up the third lift")
+    if checkpoint == 159:
+        x = 59
+        y = 244
+    if checkpoint == 160:
+        x = 99
+        y = 254
+    if checkpoint == 161:
+        x = 198
+        y = 251
+    if checkpoint == 162:
+        x = 219
+        y = 202
+    if checkpoint == 163:  # Diagonal towards the save sphere
+        x = 226
+        y = 170
+    #print("Dest: [", x, ", ", y, "]")
     return [x, y]
 
 
@@ -1336,85 +1753,115 @@ def yojimbo(checkpoint):
     if checkpoint == 24:
         x = 392
         y = 326
-    if checkpoint == 25:
-        x = 433
-        y = 522
-    if checkpoint == 26:  # Conversation with the party
+    if checkpoint == 25: #White 1
+        x = 418
+        y = 385
+    if checkpoint == 26: #White 2
+        x = 430
+        y = 440
+    if checkpoint == 27: #Green 1
+        x = 424
+        y = 481
+    if checkpoint == 28: #Green 2
+        x = 451
+        y = 507
+    if checkpoint == 29: #Green 3
+        x = 453
+        y = 469
+    if checkpoint == 30: #Onward
+        x = 435
+        y = 510
+    if checkpoint == 31:
+        x = 435
+        y = 510
+    if checkpoint == 32:
+        x = 435
+        y = 510
+    if checkpoint == 33:
+        x = 435
+        y = 510
+    if checkpoint == 34:
+        x = 435
+        y = 510
+    if checkpoint == 35:
+        x = 435
+        y = 510
+    if checkpoint == 36:  # Conversation with the party
         x = 426
         y = 805
-    if checkpoint == 27:
+    if checkpoint == 37:
         x = 420
         y = 912
-    if checkpoint == 28:
+    if checkpoint == 38:
         x = 387
         y = 934
-    if checkpoint == 29:
+    if checkpoint == 39:
         x = 320
         y = 956
-    if checkpoint == 30:
+    if checkpoint == 40:
         x = 262
         y = 1038
-    if checkpoint == 31:
+    if checkpoint == 41:
         x = 267
         y = 1162
-    if checkpoint == 32:
+    if checkpoint == 42:
         x = 251
         y = 1291
-    if checkpoint == 33:
+    if checkpoint == 43:
         x = 190
         y = 1291
-    if checkpoint == 34:
+    if checkpoint == 44:
         x = 10
         y = 1304
-    if checkpoint == 35:
+    if checkpoint == 45:
         x = -64
         y = 1399
-    if checkpoint == 36:  # Near the chest, hard right.
+    if checkpoint == 46:  # Near the chest, hard right.
         x = -67
         y = 1501
-    if checkpoint == 37:  # Save sphere
+    if checkpoint == 47:  # Save sphere
         x = 36
         y = 1536
-    if checkpoint == 38:
+    if checkpoint == 48:
         x = 106
         y = 1633
-    if checkpoint == 39:
+    if checkpoint == 49:
         x = 94
         y = 1823
-    if checkpoint == 40:
+    if checkpoint == 50:
         x = 93
         y = 1927
-    if checkpoint == 41:  # On the platform.
+    if checkpoint == 51:  # On the platform.
         x = 93
         y = 1961
-    if checkpoint == 42:  # Teleport to boss room
+    if checkpoint == 52:  # Teleport to boss room
         x = 0
         y = 0
-    if checkpoint == 43:  # Talking to Yojimbo's fayth
+    if checkpoint == 53:  # Talking to Yojimbo's fayth
         x = 0
         y = 0
-    if checkpoint == 44:
+    if checkpoint == 54:
         x = 93
         y = 1961
-    if checkpoint == 45:  # Teleport to start.
+    if checkpoint == 55:  # Teleport to start.
         x = 0
         y = 0
-    if checkpoint == 46:
+    if checkpoint == 56:
         x = 0
         y = 164
-    if checkpoint == 47:
+    if checkpoint == 57:
         x = 5
         y = 88
-    if checkpoint == 48:
+    if checkpoint == 58:
         x = -8
         y = 11
-    if checkpoint == 49:  # Back to gorge map
+    if checkpoint == 59:  # Back to gorge map
         x = 0
         y = 0
-    if checkpoint == 50:
+    if checkpoint == 60:
         x = -378
         y = 132
-    if checkpoint == 51:
+    if checkpoint == 61:
         x = -313
         y = 163
     return [x, y]
@@ -1445,8 +1892,8 @@ def djoseFarm(checkpoint):
         x = 1040
         y = 150
     if checkpoint == 7:  # Map to map
-        x = 0
-        y = 0
+        x = 1300
+        y = 300
     if checkpoint == 8:
         x = -238
         y = -771
@@ -1490,11 +1937,11 @@ def djoseFarm(checkpoint):
         x = 642
         y = 847
     if checkpoint == 22:
-        x = 617
-        y = 884
+        x = 615
+        y = 983
     if checkpoint == 23:
-        x = 590
-        y = 979
+        x = 536
+        y = 967
     if checkpoint == 24:  # To next zone
         x = 550
         y = 1100
@@ -1530,20 +1977,50 @@ def djoseFarm(checkpoint):
         y = 164
     if checkpoint == 35:  # Map to map
         x = 0
-        y = 0
+        y = 300
     if checkpoint == 36:
         x = 88
         y = -263
     if checkpoint == 37:
         x = 0
         y = 0
-    if checkpoint == 38:
+    if checkpoint == 38: #Start heading back
+        x = 20
+        y = -353
+    if checkpoint == 39: #Back to bridge map
         x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
+        y = -450
     if checkpoint == 40:
+        x = 43
+        y = 73
+    if checkpoint == 41:
+        x = 45
+        y = 16
+    if checkpoint == 42:
+        x = 58
+        y = -30
+    if checkpoint == 43:
+        x = 53
+        y = -124
+    if checkpoint == 44:
+        x = -2
+        y = -277
+    if checkpoint == 45: #Back to area 1
+        x = -50
+        y = -440
+    if checkpoint == 46:
+        x = 623
+        y = 850
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
@@ -1559,8 +2036,8 @@ def macFarm(checkpoint):
         x = -9
         y = -61
     if checkpoint == 2:  # Exit agency
-        x = 0
-        y = 0
+        x = -14
+        y = -150
     if checkpoint == 3:
         x = 52
         y = -34
@@ -1598,20 +2075,20 @@ def macFarm(checkpoint):
         x = -700
         y = -150
     if checkpoint == 15:
-        x = 0
-        y = 0
+        x = 214
+        y = -111
     if checkpoint == 16:
-        x = 0
-        y = 0
+        x = 146
+        y = -84
     if checkpoint == 17:
-        x = 0
-        y = 0
+        x = 95
+        y = -57
     if checkpoint == 18:
-        x = 0
-        y = 0
-    if checkpoint == 19:
-        x = 0
-        y = 0
+        x = 33
+        y = -34
+    if checkpoint == 19: #North to lake
+        x = -150
+        y = -150
     if checkpoint == 20:
         x = 0
         y = 0
@@ -1705,49 +2182,237 @@ def bikanelFarm(checkpoint):
     if checkpoint == 27:
         x = -263
         y = 305
-    if checkpoint == 28:  # Into the danger zone
-        x = -488
-        y = 288
-    if checkpoint == 29:
-        x = -492
-        y = 363
-    if checkpoint == 30:  # Back towards save sphere
-        x = -263
-        y = 305
-    if checkpoint == 31:
-        x = -120
-        y = 263
+    if checkpoint == 28: #Just before the danger zone
+        x = -312
+        y = 387
+    if checkpoint == 29: #Now in the danger zone
+        x = -350
+        y = 470
+    if checkpoint == 30: #Danger zone 2
+        x = -363
+        y = 583
+    if checkpoint == 31: #Onward (if needed) to the other zone
+        x = -522
+        y = 649
     if checkpoint == 32:
-        x = -27
-        y = 240
-    if checkpoint == 33:
-        x = -50
-        y = 134
+        x = -656
+        y = 752
+    if checkpoint == 33: #Into the West zone
+        x = -660
+        y = 900
     if checkpoint == 34:
-        x = -27
-        y = 240
-    if checkpoint == 35:  # Back to airship
-        x = 0
-        y = 0
-    if checkpoint == 36:
-        x = 0
-        y = 0
+        x = -310
+        y = -235
+    if checkpoint == 35:
+        x = -447
+        y = -188
+    if checkpoint == 36: #Back to ruins
+        x = -700
+        y = -300
     if checkpoint == 37:
-        x = 0
-        y = 0
+        x = -587
+        y = 632
     if checkpoint == 38:
-        x = 0
-        y = 0
-    if checkpoint == 39:
-        x = 0
-        y = 0
+        x = -439
+        y = 547
+    if checkpoint == 39: #Around danger zone 2
+        x = -343
+        y = 461
     if checkpoint == 40:
+        x = -305
+        y = 399
+    if checkpoint == 41:
+        x = -266
+        y = 341
+    if checkpoint == 42:
+        x = -149
+        y = 293
+    if checkpoint == 43:
+        x = -30
+        y = 249
+    if checkpoint == 44: #Back to airship
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
         x = 0
         y = 0
     return [x, y]
 
 
-def gagazet1(checkpoint):
+def gagazet(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0: #Arrival, start of sections 2/4
+        x = 39
+        y = 99
+    if checkpoint == 1: #Platform, to cave
+        x = 54
+        y = 105
+    if checkpoint == 2: #Activate platform
+        x = 0
+        y = 0
+    if checkpoint == 3:
+        x = 95
+        y = -946
+    if checkpoint == 4:
+        x = 27
+        y = -830
+    if checkpoint == 5:
+        x = 24
+        y = -658
+    if checkpoint == 6:
+        x = 15
+        y = -553
+    if checkpoint == 7:
+        x = 61
+        y = -482
+    if checkpoint == 8:
+        x = 178
+        y = -363
+    if checkpoint == 9: #To Wakka trials zone
+        x = 250
+        y = -190
+    if checkpoint == 10:
+        x = -55
+        y = -414
+    if checkpoint == 11:
+        x = -82
+        y = -475
+    if checkpoint == 12: #Return when complete
+        x = -55
+        y = -600
+    if checkpoint == 13:
+        x = 65
+        y = -484
+    if checkpoint == 14:
+        x = 19
+        y = -555
+    if checkpoint == 15:
+        x = 18
+        y = -659
+    if checkpoint == 16:
+        x = 42
+        y = -785
+    if checkpoint == 17:
+        x = 69
+        y = -906
+    if checkpoint == 18:
+        x = 124
+        y = -964
+    if checkpoint == 19:
+        x = 109
+        y = -1021
+    if checkpoint == 20: #Platform, back to ronso
+        x = 113
+        y = -1034
+    if checkpoint == 21: #Activate platform - end of sections 2/4
+        x = 0
+        y = 0
+    if checkpoint == 22: #Start of Zanarkand Overpass section (after platform)
+        x = 106
+        y = -63
+    if checkpoint == 23: #To next map
+        x = 240
+        y = -200
+    if checkpoint == 24:
+        x = 12
+        y = -855
+    if checkpoint == 25:
+        x = 0
+        y = -961
+    if checkpoint == 26: #Back to campfire map
+        x = 0
+        y = -1100
+    if checkpoint == 27:
+        x = 97
+        y = -56
+    if checkpoint == 28:
+        x = 111
+        y = 28
+    if checkpoint == 29: #End of Zanarkand Overpass section
+        x = 0
+        y = 0
+    if checkpoint == 30: #Start of Mountain Path
+        x = 36
+        y = 85
+    if checkpoint == 31:
+        x = 20
+        y = 165
+    if checkpoint == 32:
+        x = 42
+        y = 266
+    if checkpoint == 33:
+        x = 59
+        y = 369
+    if checkpoint == 34: #To mountain path
+        x = 70
+        y = 600
+    if checkpoint == 35:
+        x = -10
+        y = -60
+    if checkpoint == 36:
+        x = 7
+        y = -146
+    if checkpoint == 37: #Return when complete
+        x = 7
+        y = -300
+    if checkpoint == 38:
+        x = 52
+        y = 329
+    if checkpoint == 39:
+        x = 34
+        y = 218
+    if checkpoint == 40: #End of Mountain Path
+        x = 21
+        y = 125
+    if checkpoint == 41: #Back towards save sphere
+        x = 30
+        y = 83
+    if checkpoint == 42:
+        x = -37
+        y = 87
+    if checkpoint == 43: #Return to airship, or touch sphere and start over
+        x = 0
+        y = 0
+    if checkpoint == 44:
+        x = 0
+        y = 0
+    if checkpoint == 45:
+        x = 0
+        y = 0
+    if checkpoint == 46:
+        x = 0
+        y = 0
+    if checkpoint == 47:
+        x = 0
+        y = 0
+    if checkpoint == 48:
+        x = 0
+        y = 0
+    if checkpoint == 49:
+        x = 0
+        y = 0
+    if checkpoint == 50:
+        x = 0
+        y = 0
+    return [x, y]
+
+def gagazet1(checkpoint): #No longer used
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1831,7 +2496,7 @@ def gagazet1(checkpoint):
     return [x, y]
 
 
-def gagazet2(checkpoint):
+def gagazet2(checkpoint): #No longer used
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1885,7 +2550,7 @@ def gagazet2(checkpoint):
     return [x, y]
 
 
-def gagazet3(checkpoint):
+def gagazet3(checkpoint): #No longer used
     x = 999
     y = 999
     if checkpoint == 0:

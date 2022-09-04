@@ -2,8 +2,12 @@ import FFX_Xbox
 import FFX_Screen
 import FFX_Logs
 import FFX_memory
+=======
+from FFX_memory import s32
+import random
 import FFX_vars
 import FFX_rngTrack
+import json
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -445,8 +449,10 @@ def selfPot():
 
 
 def Ammes():
+    FFX_Logs.writeLog("Fight start: Ammes")
     BattleComplete = 0
     countAttacks = 0
+    countRevives = 0
 
     tidusODflag = False
 
@@ -467,7 +473,9 @@ def Ammes():
 
 
 def Tanker():
+    FFX_Logs.writeLog("Fight start: Tanker")
     print("Fight start: Tanker")
+    BattleComplete = 0
     countAttacks = 0
     tidusCount = 0
     auronCount = 0
@@ -576,6 +584,7 @@ def getAdvances(tros=True, report=False):
 def Tros():
     FFXC = FFX_Xbox.controllerHandle()
     FFX_Logs.openRNGTrack()
+    FFX_Logs.writeLog("Fight start: Tros")
     print("Fight start: Tros")
     FFXC.set_neutral()
     battleClock = 0
@@ -706,6 +715,7 @@ def besaid():
 
 
 def SinFin():
+    FFX_Logs.writeLog("Fight start: Sin's Fin")
     print("Fight start: Sin's Fin")
     FFX_Screen.awaitTurn()
     finTurns = 0
@@ -757,6 +767,7 @@ def SinFin():
 
 
 def Echuilles():
+    FFX_Logs.writeLog("Fight start: Sinspawn Echuilles")
     print("Fight start: Sinspawn Echuilles")
     FFX_Screen.awaitTurn()
     print("Sinspawn Echuilles fight start")
@@ -802,6 +813,7 @@ def Echuilles():
 
 
 def lancetTutorial():
+    FFX_Logs.writeLog("Fight start: Lancet tutorial fight (Kilika)")
     print("Fight start: Lancet tutorial fight (Kilika)")
     FFX_Xbox.clickToBattle()
     lancet('none')
@@ -821,8 +833,12 @@ def lancetTutorial():
 
 
 def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
+    FFX_Logs.writeLog("Fight start: Kilika general")
     print("Fight start: Kilika battle")
     print("Formation:", nextBattle)
+    BattleComplete = 0
+    speedSpheres = 0
+    currentCharge = False
     skipCharge = False
     turnCounter = 0
     encID = FFX_memory.getEncounterID()
@@ -975,6 +991,8 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                     break
                 elif FFX_Screen.faintCheck():
                     revive()
+                elif FFX_memory.getSpeed() >= 16:
+                    fleeAll()
                 elif FFX_Screen.turnKimahri():
                     if FFX_memory.getBattleCharSlot(4) >= 3:
                         buddySwapWakka()
@@ -1030,13 +1048,16 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                 elif encID == 35 or encID == 36:
                     fleeAll()
                 elif encID == 37:
-                    if FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
-                        attackByNum(22, 'l')
-                    elif FFX_Screen.turnYuna() and not yunaWent:
-                        yunaWent = True
-                        defend()
+                    if FFX_memory.getSpeed() >= 16:
+                        fleeAll()
                     elif yunaWent:
                         fleeAll()
+                    elif FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
+                        attackByNum(22, 'l')
+                        yunaWent = True
+                    elif FFX_Screen.turnYuna():
+                        buddySwapLulu()
+                        thunderTarget(target=21, direction='l')
                     else:
                         defend()
     FFXC.set_neutral()
@@ -1070,6 +1091,7 @@ def sonicWings():
 
 
 def Geneaux():
+    FFX_Logs.writeLog("Fight start: Sinspawn Geneaux")
     print("Fight start: Sinspawn Geneaux")
     FFX_Xbox.clickToBattle()
 
@@ -1101,7 +1123,9 @@ def Geneaux():
 
 
 def LucaWorkers():
+    FFX_Logs.writeLog("Fight start: Workers in Luca")
     print("Fight start: Workers in Luca")
+    BattleComplete = 0
     FFX_Xbox.clickToBattle()
 
     while not FFX_memory.menuOpen():  # AKA end of battle screen
@@ -1119,6 +1143,7 @@ def LucaWorkers():
 
 
 def LucaWorkers2(earlyHaste):
+    FFX_Logs.writeLog("Fight start: Workers in Luca")
     print("Fight start: Workers in Luca")
     hasted = False
     FFX_Xbox.clickToBattle()
@@ -1156,6 +1181,7 @@ def LucaWorkers2(earlyHaste):
 
 
 def Oblitzerator(earlyHaste):
+    FFX_Logs.writeLog("Fight start: Oblitzerator")
     print("Fight start: Oblitzerator")
     FFX_Xbox.clickToBattle()
     crane = 0
@@ -1169,10 +1195,7 @@ def Oblitzerator(earlyHaste):
             if crane < 3:
                 if FFX_Screen.turnLulu():
                     crane += 1
-                    if crane == 1:
-                        thunder('right')
-                    else:
-                        thunder('none')
+                    thunderTarget(target=21, direction='r')
                 else:
                     defend()
             elif crane == 3:
@@ -1205,6 +1228,7 @@ def Oblitzerator(earlyHaste):
 
 
 def afterBlitz1(earlyHaste):
+    FFX_Logs.writeLog("Fight start: After Blitzball (the fisheys)")
     print("Fight start: After Blitzball (the fisheys)")
     print(earlyHaste)
     if earlyHaste != -1:
@@ -1340,6 +1364,7 @@ def afterBlitz3LateHaste(earlyHaste):
 
 
 def MiihenRoad(selfDestruct=False):
+    FFX_Logs.writeLog("Fight start: Mi'ihen Road")
     print("Fight start: Mi'ihen Road")
     print("Mi'ihen battle. Self-destruct: ", gameVars.selfDestructGet())
     battle = FFX_memory.getEncounterID()
@@ -1369,7 +1394,10 @@ def MiihenRoad(selfDestruct=False):
 
     FFXC.set_movement(0, 1)
     while not FFX_memory.userControl():
-        FFX_Xbox.tapB()
+        FFXC.set_value('BtnB', 1)
+        FFX_memory.waitFrames(2)
+        FFXC.set_value('BtnB', 0)
+        FFX_memory.waitFrames(3)
     hpCheck = FFX_memory.getHP()
     print("------------------ HP check:", hpCheck)
     if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
@@ -1383,6 +1411,7 @@ def MiihenRoad(selfDestruct=False):
 
 
 def chocoEater():
+    FFX_Logs.writeLog("Fight start: Chocobo Eater")
     print("Fight start: Chocobo Eater")
     FFX_Xbox.clickToBattle()
     tidusHaste('right')  # First turn, haste the chocobo eater
@@ -1454,6 +1483,25 @@ def aeonDismiss():
             FFX_Xbox.tapDown()
     tapTargeting()
 
+def mrrTarget():
+    bNum = FFX_memory.getBattleNum()
+    if bNum == 96:
+        attackByNum(22, 'r')
+    if bNum == 97:
+        attackByNum(20, 'r')
+    if bNum == 98:
+        lancetTarget(target=21, direction='d')
+    if bNum == 101:
+        lancetTarget(target=22, direction='l')
+    if bNum in [100,110]:
+        attackByNum(22, 'l')
+    elif bNum in [102,112,113]:
+        attackByNum(20, 'l')
+    elif bNum in [109,111]:
+        lancetTarget(target=20, direction='l')
+    else:
+        defend()
+    return FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
 def MRRbattle(status):
     gameVars = FFX_vars.varsHandle()
@@ -1463,6 +1511,7 @@ def MRRbattle(status):
     print("Fight start: MRR")
     battle = FFX_memory.getEncounterID()
     print("Battle number:", battle)
+    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
     if battle == 102:
         print("Garuda battle, we want nothing to do with this.")
@@ -1502,7 +1551,12 @@ def MRRbattle(status):
                     if FFX_Screen.BattleScreen():
                         if FFX_Screen.turnTidus():
                             buddySwapKimahri()
-                        elif FFX_Screen.turnKimahri() or FFX_Screen.turnWakka():
+                        elif FFX_Screen.turnKimahri():
+                            if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                                nextCritKim = mrrTarget()
+                            else:
+                                defend()
+                        elif FFX_Screen.turnWakka():
                             defend()
                         else:
                             buddySwapYuna()
@@ -1518,7 +1572,12 @@ def MRRbattle(status):
                 if FFX_Screen.BattleScreen():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                    if FFX_Screen.turnKimahri() or FFX_Screen.turnWakka():
+                    elif FFX_Screen.turnKimahri():
+                        if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                            nextCritKim = mrrTarget()
+                        else:
+                            defend()
+                    elif FFX_Screen.turnWakka():
                         defend()
                     else:
                         buddySwapYuna()
@@ -1545,7 +1604,7 @@ def MRRbattle(status):
                         print("No petrify issues.")
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        attackByNum(22, 'r')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         wakkaTurns += 1
                         if wakkaTurns == 1:
@@ -1574,7 +1633,7 @@ def MRRbattle(status):
                 if FFX_Screen.BattleScreen():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        attack('none')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         defend()
                     elif FFX_Screen.turnAuron():
@@ -1606,7 +1665,7 @@ def MRRbattle(status):
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
                     elif FFX_Screen.turnKimahri():
-                        lancet('down')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         attack('none')
                     elif FFX_Screen.turnAuron():
@@ -1635,7 +1694,10 @@ def MRRbattle(status):
                         print("No petrify issues.")
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        defend()
+                        if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                            nextCritKim = mrrTarget()
+                        else:
+                            defend()
                     elif FFX_Screen.turnWakka():
                         attack('none')
                     elif FFX_memory.getEnemyCurrentHP()[0] != 0:
@@ -1663,7 +1725,7 @@ def MRRbattle(status):
                 if FFX_Screen.BattleScreen():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        lancet('left')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         attackByNum(22, 'l')
                     elif FFX_memory.getEnemyCurrentHP()[2] != 0:
@@ -1705,7 +1767,10 @@ def MRRbattle(status):
                         buddySwapTidus()
                     elif FFX_Screen.turnKimahri():
                         if FFX_memory.getKimahriSlvl() >= 6 and yunaTurnCount:
-                            fleeAll()
+                            if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                                nextCritKim = mrrTarget()
+                            else:
+                                fleeAll()
                         else:
                             defend()
                     elif FFX_Screen.turnYuna():
@@ -1765,12 +1830,13 @@ def MRRbattle(status):
     print("Clean-up is now complete.")
     return status
 
-
 def MRRmanip(kimMaxAdvance: int = 6):
+    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    kimTurn = nextCritKim >= 3
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
             nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-            kimTurn = nextCritKim >= 3
+            print("||| Manip - Battle number: ", FFX_memory.getBattleNum())
             print("||| Next Kimahri Crit vs Gui:", nextCritKim)
             if nextCritKim > kimMaxAdvance:
                 fleeAll()
@@ -1778,16 +1844,22 @@ def MRRmanip(kimMaxAdvance: int = 6):
                 if 3 not in FFX_memory.getActiveBattleFormation():
                     buddySwapKimahri()
                 elif FFX_Screen.turnKimahri():
-                    attack('none')
-                    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+                    nextCritKim = mrrTarget()
                     kimTurn = False
                 else:
                     defend()
             else:
                 fleeAll()
+    wrapUp()
+    # Now checking health values
+    hpCheck = FFX_memory.getHP()
+    print("HP values:", hpCheck)
+    if hpCheck != [520, 475, 1030, 644, 818, 380]:
+        healUp(fullMenuClose=False)
 
 
 def battleGui():
+    FFX_Logs.writeLog("Fight start: Sinspawn Gui")
     print("Fight start: Sinspawn Gui")
     FFX_Xbox.clickToBattle()
     print("Engaging Gui")
@@ -1893,6 +1965,7 @@ def battleGui():
 
 
 def djose(stoneBreath):
+    FFX_Logs.writeLog("Fight start: Djose road")
     print("Fight start: Djose road")
     while not FFX_memory.battleComplete():  # AKA end of battle screen
         encounterID = FFX_memory.getEncounterID()
@@ -2021,6 +2094,7 @@ def extractor():
 
 
 def mixTutorial():
+    FFX_Logs.writeLog("Fight start: Mix Tutorial")
     FFX_Xbox.clickToBattle()
     Steal()
     FFX_Xbox.clickToBattle()
@@ -2029,6 +2103,7 @@ def mixTutorial():
 
 
 def chargeRikku():
+    FFX_Logs.writeLog("Fight start: Charging Rikku (before Guadosalam)")
     while not FFX_memory.menuOpen():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnRikku():
@@ -2187,6 +2262,7 @@ def thunderPlains(section):
 
 
 def mWoods(woodsVars):
+    FFX_Logs.writeLog("Fight start: Macalania Woods")
     print("Logic depends on completion of specific goals. In Order:")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
     print(woodsVars)
@@ -2290,6 +2366,7 @@ def spheriSpellItemReady():
 
 
 def spherimorph():
+    FFX_Logs.writeLog("Fight start: Spherimorph")
     FFX_Xbox.clickToBattle()
 
     FFXC.set_neutral()
@@ -2417,6 +2494,7 @@ def spherimorph():
 
 
 def negator():  # AKA crawler
+    FFX_Logs.writeLog("Fight start: Crawler/Negator")
     print("Starting battle with Crawler")
     FFX_Xbox.clickToBattle()
 
@@ -2489,10 +2567,14 @@ def getAnimaItemSlot():
 
 
 def seymourGuado_blitzWin():
+    FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
+
     tidushaste = False
     kimahriconfused = False
     missbackup = False
     kimahridead = False
+    aurondead = False
+    wakkadead = False
     tidusturns = 0
     yunaturns = 0
     kimahriturns = 0
@@ -2693,15 +2775,19 @@ def seymourGuado_blitzWin():
 
 
 def seymourGuado_blitzLoss():
+    FFX_Logs.writeLog("Fight start: Seymour (Macalania)")
     FFX_Screen.awaitTurn()
 
     tidushaste = False
     kimahriconfused = False
     missbackup = False
     kimahridead = False
+    aurondead = False
+    wakkadead = False
     tidusturns = 0
     yunaturns = 0
     kimahriturns = 0
+    auronturns = 0
     wakkaturns = 0
     rikkuturns = 0
     animahits = 0
@@ -3005,6 +3091,7 @@ def fullheal(target: int, direction: str):
         itemnum = -1
         itemname = "noitemfound"
     if itemnum >= 0:
+        FFX_Logs.writeLog("Using %s" % itemname)
         print("Using %s" % itemname)
         _useHealingItem(target, direction, itemnum)
         return 1
@@ -3064,6 +3151,7 @@ def wendigo():
     tidusmaxHP = 1520
     tidushaste = False
     luluSwap = False
+    FFX_Logs.writeLog("Fight start: Wendigo")
 
     FFX_Screen.awaitTurn()
 
@@ -3425,7 +3513,7 @@ def sandyManip() -> bool:
 
 def sandragora(version):
     FFX_Screen.awaitTurn()
-    if version != 1:  # Kimahri's turn, replaced by Sandy Skip
+    if version != 1:  # Kimahri's turn
         fleeAll()
         FFX_memory.clickToControl()
     else:  # Auron's turn
@@ -3439,7 +3527,7 @@ def sandragora(version):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Screen.awaitTurn()
-        elif FFX_memory.rngSeed() in [31]:
+        elif FFX_memory.rngSeed() == 31:
             print("Manipulating known seed 31")
             fleeAll()
             FFX_memory.clickToControl()
@@ -3462,6 +3550,7 @@ def sandragora(version):
 
 
 def home1():
+    FFX_Logs.writeLog("Fight start: Home 1")
     FFXC.set_neutral()
     FFX_Xbox.clickToBattle()
     print("Tidus vs Bombs")
@@ -3481,6 +3570,7 @@ def home1():
 
 
 def home2():
+    FFX_Logs.writeLog("Fight start: Home 2")
     FFX_Xbox.clickToBattle()
 
     print("Kimahri vs dual horns")
@@ -3548,6 +3638,7 @@ def home3item():
 
 
 def home4():
+    FFX_Logs.writeLog("Fight start: Home 4")
     FFX_Xbox.clickToBattle()
 
     print("Kimahri vs Chimera")
@@ -3566,6 +3657,7 @@ def home4():
 
 # Process written by CrimsonInferno
 def Evrae():
+    FFX_Logs.writeLog("Fight start: Evrae")
     tidusPrep = 0
     tidusAttacks = 0
     rikkuTurns = 0
@@ -3667,6 +3759,10 @@ def Evrae():
 
 
 def guards(groupNum, sleepingPowders):
+    rikkuHeal = False
+    turnNum = 0
+    rikkuTurns = 0
+    items = updateStealItemsDesert()
     FFX_Xbox.clickToBattle()
     throw_distiller = FFX_memory.getItemSlot(
         16) != 255 or FFX_memory.getItemSlot(18) != 255
@@ -3825,6 +3921,7 @@ def guards(groupNum, sleepingPowders):
 
 
 def isaaru():
+    FFX_Logs.writeLog("Fight start: Isaaru (Via Purifico)")
     FFX_Xbox.clickToBattle()
     confirm = 0
     counter = 0
@@ -3878,6 +3975,7 @@ def altanaheal():
         itemnum = -1
         itemname = "noitemfound"
     if itemnum >= 0:
+        FFX_Logs.writeLog("Using %s" % itemname)
         print("Using %s" % itemname)
         while not FFX_memory.turnReady():
             pass
@@ -3928,6 +4026,7 @@ def altanaheal():
 
 
 def evraeAltana():
+    FFX_Logs.writeLog("Fight start: Evrae Altana")
     FFX_Xbox.clickToBattle()
     if FFX_memory.getEncounterID() == 266:
         print("Evrae Altana fight start")
@@ -3962,6 +4061,8 @@ def attackHighbridge():
 
 
 def seymourNatus_neTesting():
+    fight = 0
+    turn = 0
     aeonSummoned = False
     rng12Manip = FFX_memory.nextChanceRNG12(beforeNatus=True)
     rng10Next = FFX_memory.nextChanceRNG10(30)
@@ -4014,6 +4115,8 @@ def seymourNatus_neTesting():
 
 
 def seymourNatus():
+    fight = 0
+    turn = 0
     aeonSummoned = False
     while not FFX_memory.userControl():
         if FFX_memory.getEncounterID() == 272:  # Seymour Natus
@@ -4133,6 +4236,7 @@ def gagazetPath():
 
 
 def biranYenke():
+    FFX_Logs.writeLog("Fight start: Biran and Yenke")
     FFX_Xbox.clickToBattle()
     Steal()
 
@@ -4313,32 +4417,43 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
     print("Direction:", direction)
     while not FFX_memory.mainBattleMenu():
         pass
-    print("Mark 1")
+    print("Mark 1, turn is active.")
     while FFX_memory.battleMenuCursor() != 20:
         if not FFX_Screen.turnRikku() and not FFX_Screen.turnKimahri():
             return
-        if FFX_memory.battleMenuCursor() == 1:
+        if FFX_memory.battleMenuCursor() in [0,19]:
+            FFX_Xbox.tapDown()
+        elif FFX_memory.battleMenuCursor() == 1:
             FFX_Xbox.tapUp()
         elif FFX_memory.battleMenuCursor() > 20:
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
-    print("Mark 2")
+    if rikkuFlee:
+        print("Mark 2, selecting 'Use' command in position ", 2)
+    else:
+        print("Mark 2, selecting 'Use' command in position ", 1)
     if rikkuFlee:
         _navigate_to_position(2)
     else:
         _navigate_to_position(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
-    print("Mark 3")
+    print("Mark 3, navigating to item slot")
     _navigate_to_position(slot, FFX_memory.battleCursor3)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
     if target != 255:
         try:
-            print("Targeting based on character number")
+            print("Targetting based on character number")
             if target >= 20 and FFX_memory.getEnemyCurrentHP()[target - 20] != 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != target:
@@ -4393,7 +4508,6 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
             FFX_Xbox.tapDown()
         tapTargeting()
 
-
 def useItemTidus(slot: int, direction='none', target=255):
     print("Using items via the Use command")
     print("Item slot:", slot)
@@ -4410,19 +4524,27 @@ def useItemTidus(slot: int, direction='none', target=255):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     print("Mark 2")
     _navigate_to_position(2)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     print("Mark 3")
     _navigate_to_position(slot, FFX_memory.battleCursor3)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
     if target != 255:
         try:
-            print("Targeting based on character number")
+            print("Targetting based on character number")
             if target >= 20 and FFX_memory.getEnemyCurrentHP()[target - 20] != 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != target:
@@ -4479,6 +4601,7 @@ def useItemTidus(slot: int, direction='none', target=255):
 
 
 def cheer():
+    FFX_Logs.writeLog("Cheer command")
     print("Cheer command")
     while FFX_memory.battleMenuCursor() != 20:
         if not FFX_Screen.turnTidus():
@@ -4523,7 +4646,7 @@ def seymourSpell():
 
 
 def _useHealingItem(num=None, direction='l', itemID=0):
-    print("Healing character:", num)
+    print("Healing character, ", num)
     direction = direction.lower()
     while not FFX_memory.turnReady():
         print("Battle menu isn't up.")
@@ -4575,7 +4698,7 @@ def _useHealingItem(num=None, direction='l', itemID=0):
 
 
 def usePotionCharacter(num, direction):
-    print("Healing character:", num)
+    print("Healing character, ", num)
     _useHealingItem(num=num, direction=direction, itemID=0)
 
 
@@ -4660,10 +4783,86 @@ def attackSelfTanker():
             FFX_Xbox.tapLeft()
     tapTargeting()
 
-
 def oblitzRngWait():
-    if FFX_memory.rngSeed() != 31:
-        return False
+    rngValues = FFX_rngTrack.oblitzHistory()
+    print(rngValues)
+    lastRNG = FFX_memory.rngFromIndex(index=2)
+    comingSeeds = FFX_memory.rngArrayFromIndex(index=2,arrayLen=15)
+    seedNum = str(FFX_memory.rngSeed())
+    print(comingSeeds)
+    pos = 0
+    
+    if not seedNum in rngValues:
+        print("## No values for this RNG seed")
+        firstResult = [comingSeeds[1],0,True,1]
+        secondResult = [comingSeeds[2],0,True,2]
+    else:
+        print("## Scanning values for this RNG seed")
+        firstResult = [0,9999,False,0]
+        secondResult = [0,9999,False,0]
+        for i in range(len(comingSeeds)):
+            #Set up duration and victory values
+            if str(comingSeeds[i]) in rngValues[seedNum]:
+                duration = int(rngValues[seedNum][str(comingSeeds[i])]['duration'])
+                print(duration)
+                victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
+                print(victory)
+            else:
+                duration = 0
+                victory = 0
+            #Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
+            if i == 0:
+                pass
+            elif firstResult[3] == 0:
+                firstResult = [comingSeeds[i], duration, victory, pos]
+                print("Initial value for first: ", firstResult)
+            elif secondResult[3] == 0:
+                secondResult = [comingSeeds[i], duration, victory, pos]
+                print("Initial value for second: ", secondResult)
+            elif firstResult[2] and not secondResult[2]:
+                if duration < secondResult[1]:
+                    secondResult = [comingSeeds[i], duration, victory, pos]
+            elif secondResult[2] and not firstResult[2]:
+                if duration < firstResult[1]:
+                    firstResult = [comingSeeds[i], duration, victory, pos]
+            elif secondResult[1] < firstResult[1]:
+                if duration < secondResult[1]:
+                    secondResult = [comingSeeds[i], duration, victory, pos]
+            else:
+                if duration < firstResult[1]:
+                    firstResult = [comingSeeds[i], duration, victory, pos]
+            pos += 1
+    if firstResult[3] > secondResult[3]:
+        best = secondResult
+    else:
+        best = firstResult
+    nextRNG = lastRNG
+    j = 0
+    print("====================================")
+    print("Desired results (RNG, duration, victory, waits):")
+    print(best)
+    #print(firstResult)
+    #print(secondResult)
+    print("====================================")
+    #Now wait for one of the two results to come up
+    while s32(nextRNG) != s32(best[0]) and j < 15:
+        nextRNG = FFX_memory.rngFromIndex(index=2)
+        if lastRNG != nextRNG:
+            print(j, " | ", s32(nextRNG), " | ", s32(FFX_memory.rngFromIndex(index=2)), " | ", s32(best[0]))
+            j += 1
+            lastRNG = nextRNG
+    print("====================================")
+    print("Success. Attacking. ", j, " | ", nextRNG)
+    gameVars.setOblitzRNG(value=nextRNG)
+    return nextRNG
+
+def oblitzRngWait_old():
+    #Oblitz tracking/writing goes here
+    if not FFX_memory.rngSeed() in [31,41]:
+        FFX_Logs.writeStats("====================================")
+        FFX_Logs.writeStats(FFX_memory.rng02())
+        FFX_Logs.writeStats("====================================")
+        return FFX_memory.rng02()
     if gameVars.usePause():
         goodRngList = [1103903145, 886305782, -1640850005]
         # 1467711668, Graav engages for no reason
@@ -4687,7 +4886,6 @@ def oblitzRngWait():
     FFX_Logs.writeStats("====================================")
     return nextRng02
 
-
 def attackOblitzEnd():
     print("Attack")
     if not FFX_memory.turnReady():
@@ -4703,13 +4901,11 @@ def attackOblitzEnd():
             FFX_Xbox.menuB()
     FFX_memory.waitFrames(1)
     rngWaitResults = oblitzRngWait()
-    FFX_memory.waitFrames(1)
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
-    print("Oblitz RNG wait results:", FFX_memory.s32(rngWaitResults))
+    #print("Oblitz RNG wait results:", FFX_memory.s32(rngWaitResults))
     FFX_Logs.writeStats("RNG02 on attack:")
     FFX_Logs.writeStats(FFX_memory.s32(rngWaitResults))
-
 
 def attack(direction="none"):
     print("Attack")
@@ -4776,6 +4972,7 @@ def _steal(direction=None):
 
 
 def Steal():
+    FFX_Logs.writeLog("Basic Steal command")
     print("Steal")
     if not FFX_memory.getEncounterID() in [273, 274, 276, 279, 281, 282, 284, 289]:
         _steal()
@@ -4788,21 +4985,25 @@ def Steal():
 
 
 def StealDown():
+    FFX_Logs.writeLog("Steal, but press Down")
     print("Steal Down")
     _steal('down')
 
 
 def StealUp():
+    FFX_Logs.writeLog("Steal, but press Up")
     print("Steal Up")
     _steal('up')
 
 
 def StealRight():
+    FFX_Logs.writeLog("Steal, but press Right")
     print("Steal Right")
     _steal('right')
 
 
 def StealLeft():
+    FFX_Logs.writeLog("Steal, but press Left")
     print("Steal Left")
     _steal('left')
 
@@ -4829,6 +5030,7 @@ def stealAndAttack():
 
 def stealAndAttackPreTros():
     print("Steal/Attack function before Tros")
+    BattleComplete = 0
     turnCounter = 0
     advances = getAdvances(tros=False)
     FFXC.set_neutral()
@@ -4911,26 +5113,31 @@ def castSpell(direction, spellID):
 
 
 def thunder(direction="none"):
+    FFX_Logs.writeLog("Lulu cast Thunder")
     print("Black magic - Thunder")
     castSpell(direction, 1)
 
 
 def fire(direction="none"):
+    FFX_Logs.writeLog("Lulu cast Fire")
     print("Black magic - Fire")
     castSpell(direction, 0)
 
 
 def water(direction="none"):
+    FFX_Logs.writeLog("Lulu cast Water")
     print("Black magic - Water")
     castSpell(direction, 2)
 
 
 def ice(direction="none"):
+    FFX_Logs.writeLog("Lulu cast Ice")
     print("Black magic - Ice")
     castSpell(direction, 3)
 
 
 def thunderTarget(target, direction):
+    FFX_Logs.writeLog("Lulu cast Thunder")
     print("Black magic - Thunder")
     if not FFX_Screen.turnLulu():
         print("Lulu is not the current person. Deferring turn.")
@@ -4982,7 +5189,8 @@ def thunderTarget(target, direction):
 
 
 def aeonSummon(position):
-    print("Aeon is being summoned." + str(position))
+    FFX_Logs.writeLog("Aeon is being summoned. " + str(position) + "")
+    print("Aeon is being summoned. " + str(position) + "")
     while not FFX_memory.mainBattleMenu():
         pass
     while FFX_memory.battleMenuCursor() != 23:
@@ -5021,7 +5229,9 @@ def aeonSpell2(position, direction):
 
 
 def aeonSpellDirection(position, direction):
-    print("Aeon casting spell. Direction:", direction)
+    FFX_Logs.writeLog(
+        "Aeon casting a spell. Special direction: " + str(direction))
+    print("Aeon casting a spell. Special direction:", direction)
     while FFX_memory.battleMenuCursor() != 21:
         FFX_Xbox.tapDown()
     while FFX_memory.mainBattleMenu():
@@ -5049,6 +5259,7 @@ def healUp_New(chars, menusize):
 
 
 def healUp(chars=3, *, fullMenuClose=True):
+    FFX_Logs.writeLog("Healing characters post-battle")
     print("Menuing, healing characters:", chars)
     if FFX_memory.getHP() == FFX_memory.getMaxHP():
         print("No need to heal. Exiting menu.")
@@ -5064,10 +5275,10 @@ def healUp(chars=3, *, fullMenuClose=True):
     FFXC = FFX_Xbox.controllerHandle()
     FFXC.set_neutral()
     while FFX_memory.getMenuCursorPos() != 2:
-        print("Selecting Ability command -", FFX_memory.getMenuCursorPos())
+        print("Selecting Ability command - ", FFX_memory.getMenuCursorPos())
         FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 2, 11)
     while FFX_memory.menuNumber() == 5:
-        print("Select Ability -", FFX_memory.menuNumber())
+        print("Select Ability - ", FFX_memory.menuNumber())
         FFX_Xbox.tapB()
     print("Mark 1")
     target_pos = FFX_memory.getCharacterIndexInMainMenu(1)
@@ -5241,6 +5452,7 @@ def lancetHome(direction):
 
 
 def fleeAll():
+    FFX_Logs.writeLog("Fleeing from battle, prior to Mt Gagazet")
     print("Attempting escape (all party members and end screen)")
     if FFX_memory.battleActive():
         while FFX_memory.battleActive():
@@ -5286,7 +5498,7 @@ def escapeOne():
                 elif replaceArray[i] in FFX_memory.getActiveBattleFormation():
                     pass
                 elif FFX_rngTrack.nextActionEscape(replaceArray[i]):
-                    print("Character", replaceArray[i], "can escape. Swapping.")
+                    print("Character ", replaceArray[i], " can escape. Swapping.")
                     replacement = replaceArray[i]
                     buddySwap_char(replacement)
                     return escapeOne()
@@ -5329,11 +5541,12 @@ def escapeOne():
 
 def buddySwap_char(character):
     FFX_memory.waitFrames(6)
+    FFX_Logs.writeLog("Swapping characters (in battle)")
     print("Swapping characters (in battle) - by char num")
     position = FFX_memory.getBattleCharSlot(character)
 
     if position < 3:
-        print("Cannot swap with character", FFX_memory.nameFromNumber(character),
+        print("Cannot swap with character ", FFX_memory.nameFromNumber(character),
               ", that character is in the front party.")
         return
     else:
@@ -5396,6 +5609,7 @@ def buddySwapRikku():
 
 
 def kimahriOD(pos):
+    FFX_Logs.writeLog("Kimahri using Overdrive")
     print("Kimahri using Overdrive, pos -", pos)
     while not FFX_memory.otherBattleMenu():
         FFX_Xbox.tapLeft()
@@ -5441,6 +5655,7 @@ def impulse(direction=None, targetFarLine=False):
 
 
 def SinArms():
+    FFX_Logs.writeLog("Fight start: Sin's Arms")
     print("Fight start: Sin's Arms")
     # Area for improvement later. Multiple skippable FMVs
     FFX_Xbox.clickToBattle()
@@ -5498,6 +5713,7 @@ def SinArms():
 
 
 def SinFace():
+    FFX_Logs.writeLog("Fight start: Sin's Face")
     print("Fight start: Sin's Face")
     FFX_Xbox.clickToBattle()
     FFXC.set_neutral()
@@ -5555,6 +5771,7 @@ def omnisItems():
 
 
 def omnis():
+    FFX_Logs.writeLog("Fight start: Seymour Omnis")
     print("Fight start: Seymour Omnis")
     FFX_Xbox.clickToBattle()
     defend()  # Yuna defends
@@ -5574,7 +5791,7 @@ def omnis():
                     yunaCureOmnis()
                     backupCure = True
                 else:
-                    FFX_Xbox.weapSwap(0)
+                    equipInBattle(equipType='weap', abilityNum=0x8001, character=1)
             else:
                 defend()
 
@@ -5605,6 +5822,7 @@ def BFA_nem():
     FFXC.set_neutral()
     tidusFirstTurn = False
 
+    FFX_Logs.writeLog("Fight start: BFA and final boss")
     FFX_Xbox.clickToBattle()
 
     while FFX_memory.battleActive():
@@ -5648,6 +5866,7 @@ def BFA():
     FFX_memory.waitFrames(30 * 3)
     FFXC.set_neutral()
 
+    FFX_Logs.writeLog("Fight start: BFA and final boss")
     FFX_Xbox.clickToBattle()
     buddySwapRikku()
     if FFX_memory.overdriveState()[6] == 100:
@@ -5968,7 +6187,7 @@ def equipInBattle(equipType='weap', abilityNum=0, character=0, special='none'):
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
 
-    print("Desired equipment is in slot", equipNum)
+    print("Desired equipment is in slot ", equipNum)
 
 
 def checkCharacterOk(charNum):
@@ -6119,7 +6338,7 @@ def calmLandsManip():
     midArray = [277, 279, 285, 287, 289, 290]
     rng10nextChanceHigh = FFX_memory.nextChanceRNG10(128)
     highArray = [278, 286, 288]
-    print("++Gems:", checkGems())
+    print("++Gems: ", checkGems())
     if checkGems() < 2:
         print("++Calm Lands battle, looking for gems.")
         calmLandsGems()
@@ -6297,10 +6516,10 @@ def advanceRNG12():
                     aeonSummon(4)
             elif FFX_Screen.turnAeon():
                 numEnemies = len(FFX_memory.getEnemyCurrentHP())
-                print("+++", FFX_memory.getEnemyCurrentHP())
-                print("+++", numEnemies)
+                print("+++ ", FFX_memory.getEnemyCurrentHP())
+                print("+++ ", numEnemies)
                 checkAhead = numEnemies * 3
-                print("+++", checkAhead)
+                print("+++ ", checkAhead)
                 aheadArray = FFX_memory.nextChanceRNG10Full()
                 for h in range(checkAhead):
                     if h == 3:
@@ -6311,7 +6530,7 @@ def advanceRNG12():
                     if aheadArray[i + checkAhead] and not attackCount:
                         useImpulse = True
                 if not attackCount:
-                    if FFX_memory.getEncounterID() in [289, 314]:
+                    if FFX_memory.getEncounterID() in [314]:
                         impulse()
                         attackCount = True
                     elif advances >= 2:
@@ -6349,16 +6568,16 @@ def ghostKill():
         print("Aeon kill results in NEA on char:", owner2)
         ghostKillAeon()
     elif silenceSlot > 200:
-        print("No silence grenade, going with aeon kill:", owner2)
+        print("No silence grenade, going with aeon kill: ", owner2)
         ghostKillAeon()
     elif owner1 in [0, 4, 6]:
         print("Any character kill results in NEA on char:", owner1)
         ghostKillAny()
     elif owner1 == 9:
-        print("Has to be Tidus kill:", owner1)
+        print("Has to be Tidus kill: ", owner1)
         ghostKillTidus()
     else:
-        print("No way to get an optimal drop. Resorting to aeon:", owner2)
+        print("No way to get an optimal drop. Resorting to aeon: ", owner2)
         ghostKillAeon()
 
     FFX_memory.clickToControl3()
