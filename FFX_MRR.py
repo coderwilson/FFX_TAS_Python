@@ -153,10 +153,10 @@ def mainPath():
             elif checkpoint < 71 and FFX_memory.getMap() == 79:
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)) == True:
-                if checkpoint == 62:
-                    if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2,3,4,5,6,7,8,9,10]:
+                if checkpoint == 61:
+                    if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2,3,4,5,7]:
                         print("+++++++++++ We can manip: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
-                        checkpoint = 90
+                        checkpoint = 60
                     else:
                         checkpoint += 1
                 elif checkpoint == 90:

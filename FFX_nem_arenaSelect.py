@@ -31,7 +31,7 @@ def arenaCursor():
     return 255
 
 def arenaMenuSelect(choice:int=2):
-    print("Selecting menu option:", choice)
+    print("Selecting menu option: ", choice)
     if gameVars.usePause():
         FFX_memory.waitFrames(2)
     while not FFX_memory.blitzCursor() == choice:
@@ -45,7 +45,7 @@ def arenaMenuSelect(choice:int=2):
     FFX_memory.waitFrames(15)
 
 def startFight(areaIndex:int,monsterIndex:int=0):
-    print("Starting fight:", areaIndex, "|", monsterIndex)
+    print("Starting fight: ", areaIndex, " | ", monsterIndex)
     arenaCursor = 0
     FFX_memory.waitFrames(90)
     while arenaCursor != areaIndex:

@@ -28,6 +28,7 @@ import random
 import time
 import FFX_vars
 gameVars = FFX_vars.varsHandle()
+gameVars.setStartVars()
 
 #Plug in controller
 FFXC = FFX_Xbox.controllerHandle()
@@ -45,6 +46,7 @@ if gameVars.nemesis():
 #Gamestate = "Baaj"
 #StepCounter = 1
 #StepCounter = 4
+#StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
 #Gamestate = "Kilika"
@@ -96,9 +98,15 @@ Gamestate = "none"
 StepCounter = 1
 
 #Nemesis load testing
-#Gamestate = "Nem_Farm"
+Gamestate = "Nem_Farm"
 #StepCounter = 2 #Start of Calm Lands (only one each)
 #StepCounter = 3
+#StepCounter = 6 #First Miihen farm
+StepCounter = 13 #Just before Djose farm
+#StepCounter = 14 #Just before Thunder Plains farm
+#StepCounter = 16 #Just before Bikanel farm
+#StepCounter = 18 #Just before Fayth Cave farm
+#StepCounter = 19 #Gagazet farm
 #StepCounter = 20 #After Gagazet, before Calm Lands farm
 #StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
 #StepCounter = 24 #Final Prep before arena bosses
@@ -109,8 +117,8 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False  # Update this to decide new seed or known seed
 rngSeedNum = 255  # New seed number, only used if doing seed hunt.
-rngSelectArray = [41, 160, 177, 182, 224, 254]
-maybeGoodSeeds = [2, 31, 41, 157, 160, 172, 177, 182, 183, 200, 224, 254]
+rngSelectArray = [142]
+maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 favoriteSeeds = [31,183]
 rngSeedNum = 31 # yeah, I'm moving it here.
 # TAS PB is on seed 31
@@ -128,7 +136,7 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     #gameVars.setCSR(True)
 elif seedHunt == False:  # Full run starting from New Game
-    rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
+    #rngSeedNum = random.choice(rngSelectArray) #Select a favorite seed randomly, overrules the set seed above.
     #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
@@ -140,7 +148,7 @@ else:  # Don't use this.
     blitzTesting = False
 
 print("Game type will be:", gameLength)
-maxLoops = 25
+maxLoops = 12
 
 # Other variables
 rngSeedOrig = rngSeedNum
@@ -154,6 +162,8 @@ specialZanLoad = False
 def reportGamestate():
     global Gamestate
     global StepCounter
+    #logText = "Gamestate: " + Gamestate + " : StepCounter: " + str(StepCounter)
+    #FFX_Logs.writeLog(logText + "\n")
     FFX_Screen.clearMouse(0)
 
 
@@ -193,6 +203,7 @@ if Gamestate != "none":
         FFX_LoadGame.loadSaveNum(40)
     if Gamestate == "Baaj" and StepCounter == 4:
         FFX_LoadGame.loadSaveNum(100)
+        # FFX_LoadGame.LoadBaaj()
     if Gamestate == "Besaid" and StepCounter == 1:  # Save pop-up after falling off of Rikkus boat
         FFX_LoadGame.loadSaveNum(111)
     if Gamestate == "Besaid" and StepCounter == 3:  # Crusader's lodge after "Enough, Wakka!"
@@ -217,8 +228,11 @@ if Gamestate != "none":
     if Gamestate == "Luca" and StepCounter == 5:  # Approaching Luca via boat
         FFX_LoadGame.loadSaveNum(5)
     if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
-        FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
-        FFX_LoadGame.LoadMiihenStart()
+        #FFX_LoadGame.loadSaveNum(26) #W/O laughing scene
+        FFX_LoadGame.loadSaveNum(16)  # With laughing scene
+        #FFX_LoadGame.LoadMiihenStart()
+        FFX_LoadGame.LoadMiihenStart_Laugh()
+        #FFX_memory.setEncounterRate(0)
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
         FFX_LoadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
@@ -334,26 +348,39 @@ if Gamestate != "none":
         FFX_LoadGame.loadSaveNum(71)
     if Gamestate == "Nem_Farm" and StepCounter == 6:
         FFX_LoadGame.loadSaveNum(72)
+        gameVars.setNemCheckpointAP(2)  # See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 8:
         FFX_LoadGame.loadSaveNum(73)
     if Gamestate == "Nem_Farm" and StepCounter == 9:
         FFX_LoadGame.loadSaveNum(75)
         gameVars.setNemCheckpointAP(3)  # See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 13:
+        FFX_LoadGame.loadSaveNum(116)
+        gameVars.setNemCheckpointAP(7)  # See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 14:
         FFX_LoadGame.loadSaveNum(76)
-        gameVars.setNemCheckpointAP(11)  # See FFX_nem_menu
+        gameVars.setNemCheckpointAP(10)  # See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 16:
+        FFX_LoadGame.loadSaveNum(113)
+        gameVars.setNemCheckpointAP(12)  # See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 17:
         FFX_LoadGame.loadSaveNum(111)
         gameVars.setNemCheckpointAP(14)  # See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 18:
+        FFX_LoadGame.loadSaveNum(114)
+        gameVars.setNemCheckpointAP(15)  # See FFX_nem_menu
+    if Gamestate == "Nem_Farm" and StepCounter == 19: #Gagazet
+        FFX_LoadGame.loadSaveNum(115)
+        gameVars.setNemCheckpointAP(19)  # See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 21:
         FFX_LoadGame.loadSaveNum(79)
         FFX_nem_arenaPrep.arenaReturn()
         gameVars.setNemCheckpointAP(27)  # See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 22:
         FFX_LoadGame.loadSaveNum(82)
-        import FFX_nem_menu
-        FFX_nem_menu.rikkuHaste()
-        gameVars.setNemCheckpointAP(30)  # See FFX_nem_menu
+        #import FFX_nem_menu
+        #FFX_nem_menu.rikkuHaste()
+        gameVars.setNemCheckpointAP(24)  # See FFX_nem_menu
     if Gamestate == "Nem_Farm" and StepCounter == 23:
         FFX_LoadGame.loadSaveNum(80)
         gameVars.setNemCheckpointAP(30)  # See FFX_nem_menu
@@ -369,12 +396,14 @@ if Gamestate != "none":
     FFX_memory.checkNEArmor()
 
 rikkuCharged = 0
+blitzLoops = 0
 
 while Gamestate != "End":
 
     # Blitzball testing logic
     if Gamestate == "Luca" and StepCounter == 3:
         FFX_DreamZan.NewGame(Gamestate)
+        FFX_Logs.writeLog("Loading to a specific gamestate.\n")
         FFX_LoadGame.loadSaveNum(37)
 
     if rngSeedNum >= 256:
@@ -386,7 +415,9 @@ while Gamestate != "End":
         print("New Game 1 function initiated.")
         FFX_DreamZan.NewGame(Gamestate)
         print("New Game 1 function complete.")
-        gameVars.setStartVars()
+        #gameVars.setStartVars() #Moved to start of Auto_Main
+        gameVars.setNewGame()
+        gameVars.setCSR(True)
         print("Variables initialized.")
         Gamestate = "DreamZan"
         FFX_memory.waitFrames(30 * 0.5)
@@ -518,7 +549,7 @@ while Gamestate != "End":
         if rngSeedNum == 255:
             StepCounter = 3
         # Used to run multiple tests via a single execution
-        elif rngReviewOnly == True and rngSeedNum - rngSeedOrig < maxLoops:
+        elif gameVars.loopBlitz() and rngSeedNum - rngSeedOrig < maxLoops:
             Gamestate = 'none'
             StepCounter = 1
             FFXC.set_movement(0, -1)  # Step away from the save sphere
@@ -560,20 +591,20 @@ while Gamestate != "End":
         if not gameVars.csr():
             FFX_Xbox.awaitSave()
 
-        if blitzTesting == True:  # Used to run multiple tests, Blitzball only
+        if gameVars.loopBlitz() and blitzLoops < maxLoops:
             FFXC.set_neutral()
             print("------------------------------")
             print("Resetting")
             print("------------------------------")
             FFX_Screen.awaitTurn()
             import FFX_Reset
-            # FFX_memory.clickToControl()
-            StepCounter = 3
-
+            Gamestate = "none"
+            StepCounter = 1
             FFX_memory.waitFrames(30 * 2)
-
+            
             FFX_Reset.resetToMainMenu()
             time.sleep(3)
+            blitzLoops += 1
         else:
             print("------------------------------")
             print("Post-Blitz")
@@ -937,13 +968,13 @@ while Gamestate != "End":
         StepCounter = 7
 
     if Gamestate == "Nem_Farm" and StepCounter == 7:
-        reportGamestate()
-        FFX_nem_arenaPrep.mrrFarm(capNum=1)
+        #reportGamestate()
+        #FFX_nem_arenaPrep.mrrFarm(capNum=1)
         StepCounter = 8
 
     if Gamestate == "Nem_Farm" and StepCounter == 8:
         reportGamestate()
-        FFX_nem_arenaPrep.apToXP()
+        FFX_nem_arenaPrep.odToAP()
         StepCounter = 9
 
     if Gamestate == "Nem_Farm" and StepCounter == 9:
@@ -962,8 +993,8 @@ while Gamestate != "End":
         StepCounter = 12
 
     if Gamestate == "Nem_Farm" and StepCounter == 12:
-        reportGamestate()
-        FFX_nem_arenaPrep.mrrFarm(capNum=10)
+        #reportGamestate()
+        #FFX_nem_arenaPrep.mrrFarm(capNum=10)
         StepCounter = 13
 
     if Gamestate == "Nem_Farm" and StepCounter == 13:
@@ -978,18 +1009,18 @@ while Gamestate != "End":
 
     if Gamestate == "Nem_Farm" and StepCounter == 15:
         reportGamestate()
-        FFX_nem_arenaPrep.macWoods(capNum=10)
+        FFX_nem_arenaPrep.bikanel(capNum=10)
         StepCounter = 16
 
     if Gamestate == "Nem_Farm" and StepCounter == 16:
         reportGamestate()
-        FFX_nem_arenaPrep.bikanel(capNum=10)
-        StepCounter = 17
-
-    if Gamestate == "Nem_Farm" and StepCounter == 17:
-        reportGamestate()
         FFX_nem_arenaPrep.arenaReturn()
         FFX_nem_arenaPrep.autoPhoenix()
+        StepCounter = 17
+    
+    if Gamestate == "Nem_Farm" and StepCounter == 17:
+        reportGamestate()
+        FFX_nem_arenaPrep.macWoods(capNum=10)
         StepCounter = 18
 
     if Gamestate == "Nem_Farm" and StepCounter == 18:
@@ -999,14 +1030,16 @@ while Gamestate != "End":
 
     if Gamestate == "Nem_Farm" and StepCounter == 19:
         reportGamestate()
-        FFX_nem_arenaPrep.gagazet1()
-        FFX_nem_arenaPrep.gagazet2()
-        FFX_nem_arenaPrep.gagazet3()
+        FFX_nem_arenaPrep.gagazet()
+        #FFX_nem_arenaPrep.gagazet1()
+        #FFX_nem_arenaPrep.gagazet2()
+        #FFX_nem_arenaPrep.gagazet3()
+        # Gamestate = "End" #Testing only
         StepCounter = 20
 
     if Gamestate == "Nem_Farm" and StepCounter == 20:
         reportGamestate()
-        FFX_nem_arenaPrep.calm(capNum=10, airshipReturn=False)
+        FFX_nem_arenaPrep.calm(capNum=10, airshipReturn=False, forceLevels=27)
         StepCounter = 21
 
     if Gamestate == "Nem_Farm" and StepCounter == 21:
@@ -1068,6 +1101,55 @@ while Gamestate != "End":
         FFX_nem_arenaBattles.returnToSin()
         Gamestate = "Sin"
         StepCounter = 3
+    
+    if Gamestate == "End" and gameVars.loopSeeds() and rngSeedNum - rngSeedOrig < maxLoops:
+        #End of seed logic.
+        endTime = FFX_Logs.timeStamp()
+        totalTime = endTime - startTime
+        FFX_Logs.writeStats("Total time:")
+        FFX_Logs.writeStats(str(totalTime))
+        print("The game duration was:", str(totalTime))
+        print("This duration is intended for comparison reference only, not as a true timer.")
+        print("Please do not use this as your submitted time.")
+        FFX_memory.waitFrames(30)
+        print("--------")
+        print("In order to conform with speedrun standards,")
+        FFX_memory.waitFrames(60)
+        print("we now wait until the end of the credits and stuff")
+        FFX_memory.waitFrames(60)
+        print("and then will open up the list of saves.")
+        FFX_memory.waitFrames(60)
+        print("This will show the autosave values, which conforms to the speedrun rules.")
+        
+        #Bring up auto-save
+        while FFX_memory.getMap() != 23:
+            if FFX_memory.getMap() in [348, 349]:
+                FFX_Xbox.tapStart()
+            elif FFX_memory.cutsceneSkipPossible():
+                FFX_Xbox.skipScene()
+        FFX_memory.waitFrames(180)
+        while not FFX_memory.saveMenuOpen():
+            FFX_Xbox.tapB()
+        
+        #Now to re-start
+        FFX_memory.waitFrames(180)
+        FFX_Xbox.menuA()
+        FFX_Xbox.menuA()
+        FFX_Xbox.menuA()
+        Gamestate = 'none'
+        StepCounter = 1
+        #rngSeedNum += 1
+        #if rngSeedNum in rngSelectArray:
+        #    while rngSeedNum in rngSelectArray:
+        #        rngSeedNum += 1
+        FFX_Logs.nextStats(rngSeedNum) #Start next stats file
+        # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+        rngSeed = FFX_memory.rngSeed()
+        FFX_memory.setRngSeed(rngSeedNum)
+        print("-------------This game will be using RNG seed:", rngSeed)
+        FFX_Logs.nextStats(rngSeedNum)
+        FFX_Logs.writeStats("RNG seed:")
+        FFX_Logs.writeStats(rngSeed)
 
     print("------------------------------")
     print("Looping")

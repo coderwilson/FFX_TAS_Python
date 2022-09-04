@@ -4,6 +4,7 @@ import FFX_memory
 import FFX_blitzPathing
 import FFX_vars
 import math
+import FFX_rngTrack
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -168,7 +169,7 @@ def cursor1():
 
 
 def tidusShotTiming() -> int:
-    baseTiming = int(169)
+    baseTiming = int(170)
     for x in range(5):
         if distance(0, x+6) < 180:
             baseTiming = int(baseTiming - 4)
@@ -185,7 +186,7 @@ def gameStage():
     currentStage = 0
     if FFX_memory.getStoryProgress() < 570:  # Second half, before Tidus/Wakka swap
         if FFX_memory.rngSeed() == 31:
-            stages = [0, 2, 115, 143, 156, tidusShotTiming()]
+            stages = [0, 2, 115, 144, 157, tidusShotTiming()]
             # previously 141 for defender manip, 157 for force pass to Tidus.
         else:
             stages = [0, 2, 2, 142, 155, tidusShotTiming()]
@@ -424,7 +425,7 @@ def jassuTrain():
     if useCircle == False:
         targetCoords = [int(nextX), int(nextY)]
         if reportState:
-            print(version[0], "-", targetCoords)
+            print(version[0], " - ", targetCoords)
         FFX_blitzPathing.setMovement(targetCoords)
     else:
         if reportState:
@@ -938,6 +939,7 @@ def blitzMain(forceBlitzWin):
     print("-First, clicking to the start of the match.")
     FFX_memory.clickToStoryProgress(535)
     print("-Match is now starting.")
+    startTime = FFX_Logs.timeStamp()
 
     FFXC = FFX_Xbox.controllerHandle()
     gameVars.blitzFirstShotReset()
@@ -1068,4 +1070,8 @@ def blitzMain(forceBlitzWin):
     else:
         gameVars.setBlitzWin(False)
 
+    endTime = FFX_Logs.timeStamp()
+    timeDiff = endTime - startTime
+    totalTime = int(timeDiff.total_seconds())
+    FFX_rngTrack.recordBlitzResults(duration=totalTime)
     print("--Blitz Win value:", gameVars.getBlitzWin())
