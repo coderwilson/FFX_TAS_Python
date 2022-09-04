@@ -8,6 +8,7 @@ import FFX_targetPathing
 import FFX_vars
 import FFX_Logs
 import FFX_rngTrack
+gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 #FFXC = FFX_Xbox.FFXC
@@ -93,12 +94,11 @@ def listenStory():
     FFX_memory.waitFrames(10)
     print("Skipping intro scene, we'll watch this properly in about 8 hours.")
     FFX_vars.initVars()
-    csModVar = FFX_vars.varsHandle()
     x = 0
     while not FFX_memory.userControl():
         if FFX_memory.getMap() == 132:
             if FFX_memory.diagProgressFlag() == 1:
-                csModVar.setCSR(False)
+                gameVars.setCSR(False)
                 FFX_memory.awaitControl()
             FFXC.set_value('BtnBack', 1)
             FFX_memory.waitFrames(1)
@@ -110,9 +110,9 @@ def listenStory():
     while FFX_memory.getBattleNum() != 414:  # Sinspawn Ammes
         if FFX_memory.userControl():
             # Events
-            if checkpoint == 2:
+            if checkpoint == 5:
+                FFXC.set_movement(0, -1)
                 while FFX_memory.userControl():
-                    FFXC.set_movement(0, -1)
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
 
@@ -120,25 +120,26 @@ def listenStory():
                 FFX_Xbox.nameAeon("Tidus")
 
                 checkpoint += 1
-            elif checkpoint == 4:
-                if not csModVar.csr():
-                    while FFX_memory.userControl():
-                        FFXC.set_movement(1, -1)
-                        FFX_Xbox.tapB()
-                    FFXC.set_neutral()
-                    FFX_memory.waitFrames(6)
-                    while not FFX_memory.userControl():
-                        if FFX_memory.diagSkipPossible():
-                            FFX_Xbox.tapB()
-                    print("Done clicking")
+            elif checkpoint == 7 and gameVars:
+                checkpoint = 9
+            elif checkpoint == 8:
+                while FFX_memory.userControl():
+                    FFXC.set_movement(1, 0)
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl3()
+                print("Done clicking")
                 checkpoint += 1
-            elif checkpoint < 6 and FFX_memory.getStoryProgress() >= 5:
-                checkpoint = 6
-            elif checkpoint < 11 and FFX_memory.getMap() == 371:
+            elif checkpoint < 11 and FFX_memory.getStoryProgress() >= 5:
                 checkpoint = 11
-            elif checkpoint < 15 and FFX_memory.getMap() == 370:
-                checkpoint = 15
-            elif checkpoint == 17:  # Don't cry.
+            elif checkpoint < 21 and FFX_memory.getMap() == 371:
+                checkpoint = 21
+            elif checkpoint < 25 and FFX_memory.getMap() == 370:
+                #if gameVars.csr():
+                #    checkpoint = 27
+                #else:
+                checkpoint = 25
+            elif checkpoint == 27:  # Don't cry.
                 while FFX_memory.userControl():
                     FFXC.set_movement(1, -1)
                 FFXC.set_neutral()
@@ -162,7 +163,7 @@ def listenStory():
                     FFXC.set_value('BtnStart', 0)
                     FFX_Xbox.SkipDialog(10)
                 else:
-                    if csModVar.usePause():
+                    if gameVars.usePause():
                         FFX_memory.waitFrames(1)
                     FFX_Xbox.skipScene(fast_mode=True)
                     FFX_Xbox.SkipDialog(3)

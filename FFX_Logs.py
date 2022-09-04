@@ -75,7 +75,6 @@ def nextStats(rngSeedNum):
     statsFile.close()
     print("Stats file is ready for writing!\n")
 
-
 def writePlot(message):
     global plotFile
     global filePlot
@@ -84,7 +83,6 @@ def writePlot(message):
     plotFile.write(str(message))
     plotFile.write("\n")
     plotFile.close()
-
 
 def nextPlot():
     global filePlot

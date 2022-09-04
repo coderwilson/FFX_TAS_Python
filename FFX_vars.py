@@ -14,12 +14,16 @@ class allVars:
         self.artificialPauses = True
         self.csrValue = False #Default True
         # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesisValue = True
+        self.nemesisValue = False
+        self.forceLoop = False #After game is finished, start again on next seed.
+        self.blitzLoop = False #Loop on the same seed immediately after Blitzball.
+        self.newGame = False
 
         # ----Blitzball
         self.blitzWinValue = True  # No default value required
         self.blitzOvertime = False  # Set to False, no need to change ever.
         self.blitzFirstShotVal = False
+        self.oblitzAttackVal = "255" #Used for RNG manip tracking
 
         # ----Sphere grid
         self.fullKilikMenu = False #Default to False
@@ -75,6 +79,24 @@ class allVars:
         if arrayNum == 2:
             self.originalResults[index] = 1
         self.printArenaStatus()
+    
+    def loopBlitz(self):
+        return self.blitzLoop
+    
+    def loopSeeds(self):
+        return self.forceLoop
+    
+    def setNewGame(self):
+        self.newGame = True
+    
+    def newGameCheck(self):
+        return self.newGame
+    
+    def setOblitzRNG(self, value):
+        self.oblitzAttackVal = str(value)
+    
+    def oblitzRNGCheck(self):
+        return self.oblitzAttackVal
     
     def getYellows(self):
         return self.yellows

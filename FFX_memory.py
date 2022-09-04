@@ -3605,11 +3605,21 @@ def getSaveSphereDetails():
         x = -112
         y = -1066
         diag = 23
+    if mapVal == 307:
+        # Monster Arena (only used in Nemesis)
+        x = 2
+        y = 5
+        diag = 166
     if mapVal == 259: #Nemesis run
         #Gagazet (only used in Nemesis)
         x = -59
         y = 99
         diag = 219
+    if mapVal == 82:
+        #Djose temple (only used in Nemesis)
+        x = 97
+        y = -241
+        diag = 89
     if mapVal == 128: #Nemesis run
         #MRR upper lift (only used in Nemesis)
         x = 230
@@ -3920,11 +3930,17 @@ def rng02():
     return process.read(baseValue + 0xD35EE0)
 
 
-def rng02Array():
+def rng02Array(arrayLen:int=200000):
     retVal = [rng02()]  # First value is the current value
-    for x in range(200000):  # Subsequent values are based on first value.
+    for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], 2))
     return retVal
+
+def setTestRNG02():
+    global baseValue
+    key = baseValue + 0xD35EE0
+    process.write(key, 3777588919)
+    #print("Value advanced.")
 
 
 def rng10():
@@ -4187,7 +4203,6 @@ def arenaArray():
     # print(retArray)
     return retArray
 
-
 def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, returnArray=False):
     import FFX_nem_menu
     complete = True
@@ -4227,7 +4242,7 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, return
 
     testArray = arenaArray()
     resultArray = []
-
+    
     for i in range(len(zoneIndexes)):
         # print(testArray[zoneIndexes[i]])
         resultArray.append(testArray[zoneIndexes[i]])
@@ -4247,7 +4262,6 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, return
         return resultArray
     else:
         return complete
-
 
 def arenaCursor():
     global baseValue
