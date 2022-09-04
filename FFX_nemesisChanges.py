@@ -102,7 +102,7 @@ def calmLands_1():
             #        checkpoint -= 2
             if FFX_targetPathNem.setMovement(FFX_targetPathNem.calmLands1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -124,9 +124,9 @@ def chocoTame1():
     FFX_memory.clickToDiagProgress(43)
     while not FFX_memory.diagProgressFlag() in [44,74]:
         angle = FFX_memory.getActorAngle(0)
-        #print("Angle:", retVal)
+        #print("Angle: ", retVal)
         position = FFX_memory.getActorCoords(0)
-        #print("Position:", position)
+        #print("Position: ", position)
         if position[0] < -110: #Need to move right
             if angle > 1.4:
                 FFXC.set_value('Dpad', 8)
@@ -413,7 +413,7 @@ def toRemiem():
                 checkpoint += 1
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.toRemiem(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
 
 def remiemRaces():
     print("Ready to start races")
@@ -436,7 +436,7 @@ def chocoRace1():
         if FFX_memory.userControl():
             if FFX_targetPathNem.setMovement(FFX_targetPathNem.race1(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -469,7 +469,7 @@ def chocoRace2():
                 checkpoint += 1
             if FFX_targetPathNem.setMovement(FFX_targetPathNem.race2(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -513,7 +513,7 @@ def chocoRace3():
             #    break
             if FFX_targetPathNem.setMovement(FFX_targetPathNem.race3(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
@@ -551,7 +551,7 @@ def templeToArena():
                 checkpoint += 1
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.leaveRemiem(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
 
 def arenaPurchase():
     FFX_memory.clickToControl()
@@ -592,7 +592,7 @@ def arenaPurchase():
                 checkpoint -= 2
             elif FFX_targetPathNem.setMovement(FFX_targetPathNem.calmLands2(checkpoint)) == True:
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if FFX_memory.battleActive():
