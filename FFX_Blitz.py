@@ -60,7 +60,7 @@ def selectShotType():
 
 def targetedPlayer():
     retVal = FFX_memory.blitzTargetPlayer() - 2
-    #print("++", retVal)
+    #print("++ ", retVal)
     return retVal
 
 
@@ -460,7 +460,7 @@ def jassuTrain():
     if useCircle == False:
         targetCoords = [int(nextX), int(nextY)]
         if reportState:
-            print(version[0], "- ", targetCoords)
+            print(version[0], " - ", targetCoords)
         FFX_blitzPathing.setMovement(targetCoords)
     else:
         if reportState:

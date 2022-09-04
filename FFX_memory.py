@@ -167,6 +167,8 @@ def turnReady():
         while not mainBattleMenu():
             pass
         waitFrames(1)
+        if gameVars.usePause():
+            waitFrames(2)
         return True
 
 
@@ -1318,7 +1320,7 @@ def openMenu():
             print("Can't open menu during battle.", menuCounter)
             return False
         else:
-            # print("The menu is now open. Waiting for it to be on menu 5.", menuNumber())
+            # print("The menu is now open. Waiting for it to be on menu 5. ", menuNumber())
             pass
     FFXC.set_neutral()
     print("Menu open returning")
@@ -1977,7 +1979,7 @@ def miihenGuyCoords():
     spearGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        #print("Actor", x, ":", hex(actorNum))
+        #print("Actor ", x, ":", hex(actorNum))
         if actorNum == 0x202D:
             spearGuy = x
     #print("+++Spear guy in position:", spearGuy)
@@ -1989,7 +1991,7 @@ def mrrGuyCoords():
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        print("Actor", x, ":", hex(actorNum))
+        print("Actor ", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
     print("+++MRR guy in position:", mrrGuy)
@@ -2081,7 +2083,7 @@ def charLuck(character:int=0):
     basePointerAddress = process.read(basePointer)
     offset = (0x94 * character) + 0x34
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    #print("Character:", character)
+    #print("Character: ", character)
     #print("Character luck value:\n", retVal)
     return retVal
 
@@ -2093,7 +2095,7 @@ def charAccuracy(character:int=0):
     basePointerAddress = process.read(basePointer)
     offset = (0x94 * character) + 0x36
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    #print("Character:", character)
+    #print("Character: ", character)
     #print("Character accuracy value:\n", retVal)
     return retVal
 
@@ -2955,6 +2957,96 @@ def checkAbility(ability=0x8032):
 
     return results
 
+def checkAbilityArmor(ability=0x8032, slotCount:int=99):
+    gameVars = FFX_vars.varsHandle()
+    results = [False, False, False, False, False, False, False]
+
+    charWeaps = armorArrayCharacter(0)  # Tidus
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[0] = False
+                else:
+                    results[0] = True
+            else:
+                results[0] = True
+
+    charWeaps = armorArrayCharacter(1)  # Yuna
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[1] = False
+                else:
+                    results[1] = True
+            else:
+                results[1] = True
+
+    charWeaps = armorArrayCharacter(2)  # Auron
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[2] = False
+                else:
+                    results[2] = True
+            else:
+                results[2] = True
+
+    charWeaps = armorArrayCharacter(3)  # Kimahri
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[3] = False
+                else:
+                    results[3] = True
+            else:
+                results[3] = True
+
+    charWeaps = armorArrayCharacter(4)  # Wakka
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[4] = False
+                else:
+                    results[4] = True
+            else:
+                results[4] = True
+
+    charWeaps = armorArrayCharacter(5)  # Lulu
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[5] = False
+                else:
+                    results[5] = True
+            else:
+                results[5] = True
+
+    charWeaps = armorArrayCharacter(6)  # Rikku
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            if slotCount != 99:
+                if currentHandle.slotCount() != slotCount:
+                    results[6] = False
+                else:
+                    results[6] = True
+            else:
+                results[6] = True
+
+    return results
+
 
 def weapon_armor_cursor():
     global baseValue
@@ -2967,7 +3059,7 @@ def customizeMenuArray():
     for x in range(60):
         offset = 0x1197730 + (x * 4)
         retArray.append(process.readBytes(baseValue + offset, 2))
-    print("Customize menu:")
+    print("Customize menu: ")
     print(retArray)
     return retArray
 
@@ -3449,22 +3541,80 @@ def getSaveSphereDetails():
         x = -45
         y = -870
         diag = 77
-    if mapVal == 327:
-        # Sin, end zone (only used in Nemesis)
+    if mapVal == 322: #Nemesis run
+        #Inside Sin, next to airship
+        x = 225
+        y = -250
+        diag = 15
+    if mapVal == 19: #Nemesis run
+        #Besaid beach
+        x = -310
+        y = -475
+        diag = 55
+    if mapVal == 263: #Nemesis run
+        #Thunder Plains agency
+        x = -30
+        y = -10
+        diag = 114
+    if mapVal == 307: #Nemesis run
+        #Monster Arena
+        x = 4
+        y = 5
+        diag = 166
+    if mapVal == 98: #Nemesis run
+        #Kilika docks
+        x = 46
+        y = -252
+        diag = 34
+    if mapVal == 92: #Nemesis run
+        #MRR start
+        x = -1
+        y = -740
+        diag = 43
+    if mapVal == 266: #Nemesis run
+        #Calm Lands Gorge
+        x = -310
+        y = 190
+        diag = 43
+    if mapVal == 82: #Nemesis run
+        #Djose temple
+        x = 100
+        y = -240
+        diag = 89
+    if mapVal == 221: #Nemesis run
+        x = 197
+        y = -120
+        diag = 23
+    if mapVal == 137: #Nemesis run
+        #Bikanel Desert
+        x = -15
+        y = 240
+        diag = 31
+    if mapVal == 313: #Nemesis run
+        #Zanarkand campfire
+        x = 135
+        y = -1
+        diag = 4
+    if mapVal == 327: #Nemesis run
+        #Sin, end zone
         x = -37
         y = -508
         diag = 10
-    if mapVal == 258:
-        # Omega (only used in Nemesis)
+    if mapVal == 258: #Nemesis run
+        #Omega (only used in Nemesis)
         x = -112
         y = -1066
         diag = 23
-    if mapVal == 307:
-        # Monster Arena (only used in Nemesis)
-        x = 2
-        y = 5
-        diag = 166
-
+    if mapVal == 259: #Nemesis run
+        #Gagazet (only used in Nemesis)
+        x = -59
+        y = 99
+        diag = 219
+    if mapVal == 128: #Nemesis run
+        #MRR upper lift (only used in Nemesis)
+        x = 230
+        y = 140
+        diag = 68
     print("Values: [", x, ",", y, "] -", diag)
     return [x, y, diag]
 
@@ -3682,7 +3832,7 @@ RNG_CONSTANTS_2 = (
 )
 
 
-def buildRNGarray(index: int, arraySize: int = 255):
+def buildRNGarray(index: int, arraySize:int = 255):
     global baseValue
     offset = baseValue + 0xD35ED8 + (index * 4)
     arrayVal = [process.read(offset)]
@@ -3743,8 +3893,8 @@ def nextChanceRNG01(version='white'):
         battleIndex = 0
     #print("TEST-TEST-TEST:", (testArray[((i+1)*2)+1] & 0x7fffffff) % 7)
     for i in range(rangeVal):
-        #print(i, "||", hex(testArray[i]), "||", hex(testArray[i] & 0x7fffffff))
-        #print("      ", testArray[i]% 255, "||", (testArray[i] & 0x7fffffff) % 255)
+        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
         if (testArray[((i+1)*2)-1] & 0x7fffffff) % modulo == battleIndex:
             oddArray.append(i)
         if (testArray[(i+1)*2] & 0x7fffffff) % modulo == battleIndex:
@@ -3792,8 +3942,8 @@ def rng10Array(arrayLen:int=256):
 def nextChanceRNG10(dropChanceVal: int = 60) -> int:
     testArray = rng10Array()
     for i in range(len(testArray)):
-        #print(i, "||", hex(testArray[i]), "||", hex(testArray[i] & 0x7fffffff))
-        #print("      ", testArray[i]% 255, "||", (testArray[i] & 0x7fffffff) % 255)
+        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
@@ -3803,8 +3953,8 @@ def nextChanceRNG10Full(dropChanceVal: int = 60) -> int:
     testArray = rng10Array()
     resultsArray = [False,False,False]
     for i in range(len(testArray)):
-        #print(i, "||", hex(testArray[i]), "||", hex(testArray[i] & 0x7fffffff))
-        #print("      ", testArray[i]% 255, "||", (testArray[i] & 0x7fffffff) % 255)
+        #print(i, " || ", hex(testArray[i]), " || ", hex(testArray[i] & 0x7fffffff))
+        #print("      ", testArray[i]% 255, " || ", (testArray[i] & 0x7fffffff) % 255)
         if i < 3:
             pass
         elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
@@ -4023,8 +4173,8 @@ def rollNextRNG(lastRNG: int, index: int) -> int:
 def printManipInfo():
     print("--------------------------")
     print("Upcoming RNGs:")
-    print("RNG12:", nextChanceRNG12(), "| RNG13:", nextChanceRNG13() - 1)
-    print("RNG10:", nextChanceRNG10(), "| Pre Defender X:", nextChanceRNG10Calm())
+    print("RNG12:", nextChanceRNG12(), "| RNG13: ", nextChanceRNG13() - 1)
+    print("RNG10:", nextChanceRNG10(), "| Pre Defender X: ", nextChanceRNG10Calm())
     print("--------------------------")
 
 def arenaArray():
@@ -4038,7 +4188,7 @@ def arenaArray():
     return retArray
 
 
-def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
+def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, returnArray=False):
     import FFX_nem_menu
     complete = True
     zone = zone.lower()
@@ -4046,15 +4196,11 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
         zoneIndexes = [8, 15, 27]
     if zone == "kilika":
         zoneIndexes = [21, 30, 38, 61]
-    if zone == "miihen1":
-        zoneIndexes = [0, 9, 34, 62, 85]
-    if zone == "miihen2":
-        zoneIndexes = [16, 22, 47, 50]
+    if zone == "miihen":
+        zoneIndexes = [0, 9, 16, 22, 34, 47, 50, 62, 85]
     if zone == "mrr":
         zoneIndexes = [5, 23, 40, 51, 63, 91]
-    if zone == "djose1":
-        zoneIndexes = [1, 10, 17, 28, 79]
-    if zone == "djose2":
+    if zone == "djose":
         zoneIndexes = [1, 10, 17, 28, 31, 79, 83]
     if zone == "tplains":
         zoneIndexes = [6, 24, 35, 52, 64, 76, 89, 87]
@@ -4062,28 +4208,14 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
         zoneIndexes = [3, 11, 18, 36]
     if zone == "macwoods":
         zoneIndexes = [2, 25, 32, 65, 71, 94]
-    if zone == "bikanel1":
-        zoneIndexes = [41, 42, 88]
-    if zone == "bikanel2":
-        zoneIndexes = [12, 29, 42, 53, 88]
+    if zone == "bikanel":
+        zoneIndexes = [12, 29, 41, 42, 53, 88]
     if zone == "calm":
-        zoneIndexes = [4, 13, 19, 33]
-    if zone == "calm2":
-        zoneIndexes = [55, 57, 72, 73, 80]
-    if zone == "calm3":
         zoneIndexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
-    if zone == "gagazet1":  # Swimming in cave
-        zoneIndexes = [45, 46, 60]
-    if zone == "gagazet2":  # Mountain trail
-        zoneIndexes = [14, 39, 86]
-    if zone == "gagazet3":  # Zanarkand
-        zoneIndexes = [20, 49, 58, 69, 84]
-    if zone == "stolenfayth1":  # White area
-        zoneIndexes = [7, 26, 54, 92]
-    if zone == "stolenfayth2":  # South area
-        zoneIndexes = [44, 48, 55, 66, 98]
-    if zone == "stolenfayth3":  # Inside, green area
-        zoneIndexes = [68]
+    if zone == "gagazet":
+        zoneIndexes = [14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86]
+    if zone == "stolenfayth":
+        zoneIndexes = [7, 26, 44, 48, 54, 66, 68, 92, 98]
     if zone == "justtonberry":
         zoneIndexes = [98]
     if zone == "sin1":
@@ -4111,7 +4243,10 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
         print("End goal is", endGoal,
               "minimum before leaving this zone for each index.")
         print("############")
-    return complete
+    if returnArray:
+        return resultArray
+    else:
+        return complete
 
 
 def arenaCursor():

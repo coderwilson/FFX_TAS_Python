@@ -99,7 +99,7 @@ def airShipDestination(destNum=0): #Default to Sin.
 def getSaveSphereDetails():
     mapVal = FFX_memory.getMap()
     storyVal = FFX_memory.getStoryProgress()
-    print("Map and story:", mapVal, "|", storyVal)
+    print("Map and story: ", mapVal, " | ", storyVal)
     x = 0
     y = 0
     diag = 0
@@ -169,7 +169,7 @@ def getSaveSphereDetails():
         y = -1066
         diag = 23
     
-    print("Values: [", x, ",", y, "] -", diag)
+    print("Values: [", x, ",", y, "] - ", diag)
     return [x,y,diag]
 
 def returnToAirship():
@@ -200,7 +200,7 @@ def returnToAirship():
             if FFX_memory.saveMenuOpen():
                 FFX_Xbox.tapA()
             elif FFX_memory.diagProgressFlag() == ssDetails[2]:
-                #print("Cursor test:", FFX_memory.saveMenuCursor())
+                #print("Cursor test: ", FFX_memory.saveMenuCursor())
                 if FFX_memory.saveMenuCursor() != 1:
                     FFX_Xbox.menuDown()
                 else:
@@ -285,7 +285,7 @@ def autoLife():
     FFX_Xbox.tapB()
 
 def basicQuickAttacks(megaPhoenix = False, odVersion:int=0, yunaAutos=False):
-    print("### Battle Start:", FFX_memory.getBattleNum())
+    print("### Battle Start: ", FFX_memory.getBattleNum())
     FFXC.set_neutral()
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
@@ -311,7 +311,7 @@ def basicQuickAttacks(megaPhoenix = False, odVersion:int=0, yunaAutos=False):
     return FFX_memory.battleArenaResults()
 
 def basicAttack(megaPhoenix = False, odVersion:int=0,useOD=False, yunaAutos=False):
-    print("### Battle Start:", FFX_memory.getBattleNum())
+    print("### Battle Start: ", FFX_memory.getBattleNum())
     FFXC.set_neutral()
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
@@ -633,11 +633,11 @@ def battles2():
     checkYojimboPossible()
 
 def jugFarmDone():
-    print("||| Slot:", FFX_memory.getItemSlot(87))
+    print("||| Slot: ", FFX_memory.getItemSlot(87))
     if FFX_memory.getItemSlot(87) > 250:
         return False
     else:
-        print("Count:", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(87)))
+        print("Count: ", FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(87)))
         if FFX_memory.getItemCountSlot(FFX_memory.getItemSlot(87)) < 6:
             return False
     return True
@@ -867,7 +867,7 @@ def shinryuBattle():
     return FFX_memory.battleArenaResults()
 
 def battles5(completionVersion:int):
-    print("Yojimbo battle number:", completionVersion)
+    print("Yojimbo battle number: ", completionVersion)
     if completionVersion >= 12 and completionVersion != 99:
         return True #These battles are complete at this point.
     yojimboSuccess = False
