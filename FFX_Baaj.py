@@ -123,14 +123,14 @@ def Klikk_fight():
     FFX_Battle.Klikk()
 
 
-def ABboat1_old():
+def ABboat1():
     print("Start of Al Bhed boat section.")
     FFX_memory.clearSaveMenuCursor2()
     FFXC.set_neutral()
     if gameVars.csr():
-        FFX_memory.waitFrames(10)
+        FFX_memory.waitFrames(30)
     print("Control restored.")
-    
+    FFXC.set_neutral()
     FFX_memory.waitFrames(4)
     FFXC.set_movement(0, -1)
     FFX_memory.clickToEvent()
@@ -152,77 +152,49 @@ def ABboat1_old():
     FFXC.set_value('BtnA', 1)
     FFX_memory.clickToControl()
 
-def distance(n1, n2):
-    try:
-        player1 = FFX_memory.getActorCoords(actorNumber=n1)
-        player2 = FFX_memory.getActorCoords(actorNumber=n2)
-        return (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
-    except Exception as x:
-        print("Exception:", x)
-        return 999
-
-def ABboat1():
-    print("Start of Al Bhed boat section.")
-    FFX_memory.clearSaveMenuCursor2()
-    FFXC.set_neutral()
-    if gameVars.csr():
-        FFX_memory.waitFrames(10)
-    print("Control restored.")
-    print("On the boat!")
-    while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
-        #print("Coords[0]: ", FFX_memory.getActorCoords(actorNumber=0)[0])
-        target = FFX_memory.getActorCoords(actorNumber=3)
-        FFX_targetPathing.setMovement(target)
-        if distance(0,3) < 10:
-            FFX_Xbox.tapB()
-    print("In the water!")
-    FFXC.set_value('BtnA', 1)
-    FFXC.set_movement(-1,-1)
-    FFX_memory.waitFrames(20)
-    
-    while FFX_memory.getMap() != 288:
-        #print("Story flag: ", FFX_memory.getStoryProgress())
-        #print("Actor zero: ", FFX_memory.getActorCoords(actorNumber=0))
-        FFXC.set_value('BtnA', 1)
-        FFXC.set_movement(0,-1)
-        #FFX_targetPathing.setMovement(target)
-        if FFX_memory.battleActive():
-            FFXC.set_neutral()
-            print("Battle Start (Al Bhed swimming section)")
-            FFX_Battle.stealAndAttack()
-            print("Battle End (Al Bhed swimming section)")
-        elif FFX_memory.menuOpen() or FFX_memory.diagSkipPossible():
-            print("Battle Complete screen")
-            FFX_Xbox.tapB()
 
 def ABswimming1():
     complete = 0
 
+    print("Swimming down from the boat")
+    while FFX_memory.getMap() != 288:
+        if FFX_memory.userControl():
+            FFX_targetPathing.setMovement([-300, -300])
+            FFXC.set_value('BtnA', 1)
+        else:
+            FFXC.set_neutral()
+            if FFX_Screen.BattleScreen():
+                print("Battle Start (Al Bhed swimming section)")
+                FFX_Battle.stealAndAttack()
+                print("Battle End (Al Bhed swimming section)")
+            elif FFX_memory.menuOpen():
+                print("Battle Complete screen")
+                FFX_Xbox.menuB()
+
+    FFXC.set_neutral()
     print("Swimming towards airship")
     while FFX_memory.getMap() != 64:
-        pos = FFX_memory.getActorCoords(0)
-        if FFX_Screen.BattleScreen():
-            FFXC.set_neutral()
-            print("Battle Start (Al Bhed swimming section)")
-            FFX_Battle.stealAndAttack()
-            print("Battle End (Al Bhed swimming section)")
-        elif FFX_memory.menuOpen():
-            print("Battle Complete screen")
-            FFX_Xbox.menuB()
-        else:
+        pos = FFX_memory.getCoords()
+        if FFX_memory.userControl():
             if FFX_memory.getMap() == 71:
                 FFXC.set_movement(0, -1)
                 FFXC.set_value('BtnA', 1)
             else:
                 checkpoint = 1
                 FFXC.set_value('BtnA', 0)
-                #print(pos)
-                if pos[1] > -230:
-                    FFX_targetPathing.setMovement([-343,-284])
-                elif pos[1] > -410:
-                    FFX_targetPathing.setMovement([-421,-463])
+                if pos[1] < ((2.56 * pos[0]) + 583.79):
+                    FFXC.set_movement(1, 1)
                 else:
-                    FFX_targetPathing.setMovement([-500,-640])
+                    FFXC.set_movement(0, 1)
+        else:
+            FFXC.set_neutral()
+            if FFX_Screen.BattleScreen():
+                print("Battle Start (Al Bhed swimming section)")
+                FFX_Battle.stealAndAttack()
+                print("Battle End (Al Bhed swimming section)")
+            elif FFX_memory.menuOpen():
+                print("Battle Complete screen")
+                FFX_Xbox.menuB()
 
 
 def ABswimming2():

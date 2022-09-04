@@ -262,7 +262,7 @@ def reportDroppedItem(enemy:str, drop=FFX_memory.equipment, prefType:int=99, pre
     
     #print("+++++++++++++++++")
     if report == True:
-        FFX_Logs.writeRNGTrack("+Item drop off of:"+str(enemy)+" | advances:"+str(needAdv))
+        FFX_Logs.writeRNGTrack("+Item drop off of: "+str(enemy)+" | advances:"+str(needAdv))
         FFX_Logs.writeRNGTrack("+Owner, char-killed (9 = killer): "+str(drop.equipOwner))
         FFX_Logs.writeRNGTrack("+Owner, aeon-killed: "+str(drop.equipOwnerAlt))
         if drop.equipType == 0:
@@ -867,21 +867,21 @@ def nextActionEscape(character:int=0):
 
 def nextActionHitMiss(character:int=0, enemy:str="anima"):
     print("=========================")
-    print("Checking hit chance - character:", character)
+    print("Checking hit chance - character: ", character)
     #Need more work on this. There are a lot of variables we still need from memory.
     #Character info, get these from memory
     index = 36 + character
     hit_rng = FFX_memory.rngArrayFromIndex(index=index)[1]
     luck = FFX_memory.charLuck(character) #Need this out of memory
-    print("Luck:", luck)
+    print("Luck: ", luck)
     accuracy = FFX_memory.charAccuracy(character) #Need this out of memory
-    print("Accuracy:", accuracy)
+    print("Accuracy: ", accuracy)
     
     #Data directly from the tracker
     target_luck = MONSTERS[enemy].stats['Luck']
-    print("Enemy luck:", target_luck)
+    print("Enemy luck: ", target_luck)
     target_evasion = MONSTERS[enemy].stats['Evasion']
-    print("Enemy evasion:", target_evasion)
+    print("Enemy evasion: ", target_evasion)
     
     #Unused, but technically part of the formula
     aims = 0
@@ -898,7 +898,7 @@ def nextActionHitMiss(character:int=0, enemy:str="anima"):
         hit_chance_index = 8
     hit_chance = hitChanceTable(hit_chance_index) + luck
     hit_chance += (aims - target_reflexes) * 10 - target_luck
-    print("Hit results:", hit_chance > (FFX_memory.s32(hit_rng) % 101))
+    print("Hit results: ", hit_chance > (FFX_memory.s32(hit_rng) % 101))
     print("=========================")
     return hit_chance > (FFX_memory.s32(hit_rng) % 101)
 

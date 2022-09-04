@@ -51,7 +51,7 @@ def awaitUse():
     complete = False
     while complete == False:
         menuVal = FFX_memory.sGridMenu()
-        print("Menu value:", menuVal)
+        print("Menu value: ", menuVal)
         if menuVal == 7:
             cursorLoc = FFX_memory.cursorLocation()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:
@@ -123,14 +123,21 @@ def openGrid(character):
 # Nemesis Control functions
 def performNextGrid(limit:int=255):
     #Conditions to hard disregard further evaluations.
+    print("###   Next Version: ", gameVars.nemCheckpointAP())
+    print("### Current S.lvls: ", FFX_memory.getTidusSlvl())
+    print("### Needed  S.lvls: ", nextAPneeded(gameVars.nemCheckpointAP()))
+    if limit != 255:
+        print("###          Limit: ", limit)
     if gameVars.nemCheckpointAP() == 0:
+        print("###Something wrong: ", gameVars.nemCheckpointAP())
         return False
     if gameVars.nemCheckpointAP() > limit:
+        print("### Limit exceeded: ", limit)
         return False
     
     #If the above checks are passed, check Tidus level and do sphere grid.
     if FFX_memory.getTidusSlvl() >= nextAPneeded(gameVars.nemCheckpointAP()):
-        print("Attemping Nemesis Grid #", gameVars.nemCheckpointAP())
+        print("##### Attemping Nemesis Grid #", gameVars.nemCheckpointAP())
         if gameVars.nemCheckpointAP() == 1:
             nemGridding1()
         elif gameVars.nemCheckpointAP() == 2:
@@ -191,7 +198,10 @@ def performNextGrid(limit:int=255):
             print("----------------------------")
             gameVars.setNemCheckpointAP(gameVars.nemCheckpointAP() - 1) #Decrement
         gameVars.setNemCheckpointAP(gameVars.nemCheckpointAP() + 1) #Increment
-    
+    #else:
+        #print("###Not enough Slvl: ", FFX_memory.getTidusSlvl() - nextAPneeded(gameVars.nemCheckpointAP()))
+        
+
 def nextAPneeded(checkpoint):
     if checkpoint == 1:
         return 13
@@ -409,7 +419,7 @@ def nemGridding6():
     FFX_menuGrid.selSphere('power','right')
     #FFX_menuGrid.useAndUseAgain()
     #FFX_menuGrid.selSphere('power','none')
-    if gameVars.endGameVersion() == 2:
+    if gameVars.endGameVersion() in [1,2]:
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('lv1','none')
     #FFX_menuGrid.useAndUseAgain()

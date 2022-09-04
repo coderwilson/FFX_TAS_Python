@@ -11,8 +11,8 @@ class allVars:
 
         # ----Most important values to review
         # Set depending on hardware. True = less powerful hardware.
-        self.artificialPauses = False
-        self.csrValue = True  # Default True
+        self.artificialPauses = True
+        self.csrValue = False #Default True
         # Set based on if you're doing any% (False) or Nemesis% (True)
         self.nemesisValue = False
         self.forceLoop = False #After game is finished, start again on next seed.
@@ -26,11 +26,11 @@ class allVars:
         self.oblitzAttackVal = "255" #Used for RNG manip tracking
 
         # ----Sphere grid
-        self.fullKilikMenu = False  # Default to False
-        self.earlyTidusGridVal = False  # Default False
-        self.earlyHasteVal = -1  # Default -1
-        self.wakkaLateMenuVal = False  # Default False
-        self.endGameVersionVal = 1  # Default 0
+        self.fullKilikMenu = False #Default to False
+        self.earlyTidusGridVal = False #Default False
+        self.earlyHasteVal = -1 #Default -1
+        self.wakkaLateMenuVal = False #Default False
+        self.endGameVersionVal = 2 #Default 0
 
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
@@ -59,10 +59,10 @@ class allVars:
 
         # ----Path for save files, used for loading a specific save
         # coderwilson automation PC
-        #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
-        self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-    
+        #self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+
     def printArenaStatus(self):
         print("##############################################")
         print("Area:", self.areaResults)
