@@ -2955,6 +2955,54 @@ def checkAbility(ability=0x8032):
 
     return results
 
+def checkAbilityArmor(ability=0x8032):
+    gameVars = FFX_vars.varsHandle()
+    results = [False, False, False, False, False, False, False]
+
+    charWeaps = armorArrayCharacter(0)  # Tidus
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[0] = True
+
+    charWeaps = armorArrayCharacter(1)  # Yuna
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[1] = True
+
+    charWeaps = armorArrayCharacter(2)  # Auron
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[2] = True
+
+    charWeaps = armorArrayCharacter(3)  # Kimahri
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[3] = True
+
+    charWeaps = armorArrayCharacter(4)  # Wakka
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[4] = True
+
+    charWeaps = armorArrayCharacter(5)  # Lulu
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[5] = True
+
+    charWeaps = armorArrayCharacter(6)  # Rikku
+    while len(charWeaps) > 0:
+        currentHandle = charWeaps.pop(0)
+        if currentHandle.hasAbility(ability):
+            results[6] = True
+
+    return results
+
 
 def weapon_armor_cursor():
     global baseValue
@@ -3464,6 +3512,16 @@ def getSaveSphereDetails():
         x = 2
         y = 5
         diag = 166
+    if mapVal == 259:
+        #Gagazet (only used in Nemesis)
+        x = -59
+        y = 99
+        diag = 219
+    if mapVal == 82:
+        #Djose temple (only used in Nemesis)
+        x = 97
+        y = -241
+        diag = 89
 
     print("Values: [", x, ",", y, "] -", diag)
     return [x, y, diag]
@@ -3770,11 +3828,17 @@ def rng02():
     return process.read(baseValue + 0xD35EE0)
 
 
-def rng02Array():
+def rng02Array(arrayLen:int=200000):
     retVal = [rng02()]  # First value is the current value
-    for x in range(200000):  # Subsequent values are based on first value.
+    for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], 2))
     return retVal
+
+def setTestRNG02():
+    global baseValue
+    key = baseValue + 0xD35EE0
+    process.write(key, 3777588919)
+    #print("Value advanced.")
 
 
 def rng10():
@@ -4037,8 +4101,7 @@ def arenaArray():
     # print(retArray)
     return retArray
 
-
-def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
+def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, returnArray=False):
     import FFX_nem_menu
     complete = True
     zone = zone.lower()
@@ -4046,15 +4109,11 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
         zoneIndexes = [8, 15, 27]
     if zone == "kilika":
         zoneIndexes = [21, 30, 38, 61]
-    if zone == "miihen1":
-        zoneIndexes = [0, 9, 34, 62, 85]
-    if zone == "miihen2":
-        zoneIndexes = [16, 22, 47, 50]
+    if zone == "miihen":
+        zoneIndexes = [0, 9, 16, 22, 34, 47, 50, 62, 85]
     if zone == "mrr":
         zoneIndexes = [5, 23, 40, 51, 63, 91]
-    if zone == "djose1":
-        zoneIndexes = [1, 10, 17, 28, 79]
-    if zone == "djose2":
+    if zone == "djose":
         zoneIndexes = [1, 10, 17, 28, 31, 79, 83]
     if zone == "tplains":
         zoneIndexes = [6, 24, 35, 52, 64, 76, 89, 87]
@@ -4062,14 +4121,12 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
         zoneIndexes = [3, 11, 18, 36]
     if zone == "macwoods":
         zoneIndexes = [2, 25, 32, 65, 71, 94]
-    if zone == "bikanel1":
-        zoneIndexes = [41, 42, 88]
-    if zone == "bikanel2":
-        zoneIndexes = [12, 29, 42, 53, 88]
+    if zone == "bikanel":
+        zoneIndexes = [12, 29, 41, 42, 53, 88]
     if zone == "calm":
-        zoneIndexes = [4, 13, 19, 33]
+        zoneIndexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
     if zone == "calm2":
-        zoneIndexes = [55, 57, 72, 73, 80]
+        zoneIndexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
     if zone == "calm3":
         zoneIndexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
     if zone == "gagazet1":  # Swimming in cave
@@ -4095,7 +4152,7 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
 
     testArray = arenaArray()
     resultArray = []
-
+    
     for i in range(len(zoneIndexes)):
         # print(testArray[zoneIndexes[i]])
         resultArray.append(testArray[zoneIndexes[i]])
@@ -4111,8 +4168,10 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False):
         print("End goal is", endGoal,
               "minimum before leaving this zone for each index.")
         print("############")
-    return complete
-
+    if returnArray:
+        return resultArray
+    else:
+        return complete
 
 def arenaCursor():
     global baseValue

@@ -3,9 +3,11 @@ import FFX_Screen
 import time
 import FFX_Logs
 import FFX_memory
+from FFX_memory import s32
 import random
 import FFX_vars
 import FFX_rngTrack
+import json
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -1009,6 +1011,8 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                     break
                 elif FFX_Screen.faintCheck():
                     revive()
+                elif FFX_memory.getSpeed() >= 16:
+                    fleeAll()
                 elif FFX_Screen.turnKimahri():
                     if FFX_memory.getBattleCharSlot(4) >= 3:
                         buddySwapWakka()
@@ -1064,13 +1068,16 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                 elif bNum == 35 or bNum == 36:
                     fleeAll()
                 elif bNum == 37:
-                    if FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
-                        attackByNum(22, 'l')
-                    elif FFX_Screen.turnYuna() and not yunaWent:
-                        yunaWent = True
-                        defend()
+                    if FFX_memory.getSpeed() >= 16:
+                        fleeAll()
                     elif yunaWent:
                         fleeAll()
+                    elif FFX_Screen.turnWakka() and FFX_memory.getEnemyCurrentHP()[2] != 0:
+                        attackByNum(22, 'l')
+                        yunaWent = True
+                    elif FFX_Screen.turnYuna():
+                        buddySwapLulu()
+                        thunderTarget(target=21, direction='l')
                     else:
                         defend()
     FFXC.set_neutral()
@@ -1204,10 +1211,7 @@ def Oblitzerator(earlyHaste):
             if crane < 3:
                 if FFX_Screen.turnLulu():
                     crane += 1
-                    if crane == 1:
-                        thunder('right')
-                    else:
-                        thunder('none')
+                    thunderTarget(target=21, direction='r')
                 else:
                     defend()
             elif crane == 3:
@@ -1501,6 +1505,25 @@ def aeonDismiss():
             FFX_Xbox.tapDown()
     tapTargeting()
 
+def mrrTarget():
+    bNum = FFX_memory.getBattleNum()
+    if bNum == 96:
+        attackByNum(22, 'r')
+    if bNum == 97:
+        attackByNum(20, 'r')
+    if bNum == 98:
+        lancetTarget(target=21, direction='d')
+    if bNum == 101:
+        lancetTarget(target=22, direction='l')
+    if bNum in [100,110]:
+        attackByNum(22, 'l')
+    elif bNum in [102,112,113]:
+        attackByNum(20, 'l')
+    elif bNum in [109,111]:
+        lancetTarget(target=20, direction='l')
+    else:
+        defend()
+    return FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
 def MRRbattle(status):
     gameVars = FFX_vars.varsHandle()
@@ -1510,6 +1533,7 @@ def MRRbattle(status):
     print("Fight start: MRR")
     battle = FFX_memory.getBattleNum()
     print("Battle number:", battle)
+    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
     if battle == 102:
         print("Garuda battle, we want nothing to do with this.")
@@ -1549,7 +1573,12 @@ def MRRbattle(status):
                     if FFX_Screen.BattleScreen():
                         if FFX_Screen.turnTidus():
                             buddySwapKimahri()
-                        elif FFX_Screen.turnKimahri() or FFX_Screen.turnWakka():
+                        elif FFX_Screen.turnKimahri():
+                            if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                                nextCritKim = mrrTarget()
+                            else:
+                                defend()
+                        elif FFX_Screen.turnWakka():
                             defend()
                         else:
                             buddySwapYuna()
@@ -1565,7 +1594,12 @@ def MRRbattle(status):
                 if FFX_Screen.BattleScreen():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                    if FFX_Screen.turnKimahri() or FFX_Screen.turnWakka():
+                    elif FFX_Screen.turnKimahri():
+                        if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                            nextCritKim = mrrTarget()
+                        else:
+                            defend()
+                    elif FFX_Screen.turnWakka():
                         defend()
                     else:
                         buddySwapYuna()
@@ -1593,7 +1627,7 @@ def MRRbattle(status):
                         print("No petrify issues.")
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        attackByNum(22, 'r')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         wakkaTurns += 1
                         if wakkaTurns == 1:
@@ -1622,7 +1656,7 @@ def MRRbattle(status):
                 if FFX_Screen.BattleScreen():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        attack('none')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         defend()
                     elif FFX_Screen.turnAuron():
@@ -1655,7 +1689,7 @@ def MRRbattle(status):
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
                     elif FFX_Screen.turnKimahri():
-                        lancet('down')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         attack('none')
                     elif FFX_Screen.turnAuron():
@@ -1685,7 +1719,10 @@ def MRRbattle(status):
                         print("No petrify issues.")
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        defend()
+                        if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                            nextCritKim = mrrTarget()
+                        else:
+                            defend()
                     elif FFX_Screen.turnWakka():
                         attack('none')
                     elif FFX_memory.getEnemyCurrentHP()[0] != 0:
@@ -1714,7 +1751,7 @@ def MRRbattle(status):
                 if FFX_Screen.BattleScreen():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
-                        lancet('left')
+                        nextCritKim = mrrTarget()
                     elif FFX_Screen.turnWakka():
                         attackByNum(22, 'l')
                     elif FFX_memory.getEnemyCurrentHP()[2] != 0:
@@ -1756,7 +1793,10 @@ def MRRbattle(status):
                         buddySwapTidus()
                     elif FFX_Screen.turnKimahri():
                         if FFX_memory.getKimahriSlvl() >= 6 and yunaTurnCount:
-                            fleeAll()
+                            if nextCritKim > 9-status[3] and nextCritKim < 23-(status[3]*2):
+                                nextCritKim = mrrTarget()
+                            else:
+                                fleeAll()
                         else:
                             defend()
                     elif FFX_Screen.turnYuna():
@@ -1817,10 +1857,12 @@ def MRRbattle(status):
     return status
 
 def MRRmanip(kimMaxAdvance:int=6):
+    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    kimTurn = nextCritKim >= 3
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
             nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-            kimTurn = nextCritKim >= 3
+            print("||| Manip - Battle number: ", FFX_memory.getBattleNum())
             print("||| Next Kimahri Crit vs Gui:", nextCritKim)
             if nextCritKim > kimMaxAdvance:
                 fleeAll()
@@ -1828,13 +1870,18 @@ def MRRmanip(kimMaxAdvance:int=6):
                 if not 3 in FFX_memory.getActiveBattleFormation():
                     buddySwapKimahri()
                 elif FFX_Screen.turnKimahri():
-                    attack('none')
-                    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+                    nextCritKim = mrrTarget()
                     kimTurn = False
                 else:
                     defend()
             else:
                 fleeAll()
+    wrapUp()
+    # Now checking health values
+    hpCheck = FFX_memory.getHP()
+    print("HP values:", hpCheck)
+    if hpCheck != [520, 475, 1030, 644, 818, 380]:
+        healUp(fullMenuClose=False)
 
 def battleGui():
     print("Fight start: Sinspawn Gui")
@@ -4475,22 +4522,32 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     print("Mark 2")
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     if rikkuFlee:
         _navigate_to_position(2)
     else:
         _navigate_to_position(1)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     print("Mark 3")
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     _navigate_to_position(slot, FFX_memory.battleCursor3)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
     if target != 255:
         try:
-            print("Targeting based on character number")
+            print("Targetting based on character number")
             if target >= 20 and FFX_memory.getEnemyCurrentHP()[target - 20] != 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != target:
@@ -4545,7 +4602,6 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
             FFX_Xbox.tapDown()
         tapTargeting()
 
-
 def useItemTidus(slot: int, direction='none', target=255):
     print("Using items via the Use command")
     print("Item slot:", slot)
@@ -4562,19 +4618,27 @@ def useItemTidus(slot: int, direction='none', target=255):
             FFX_Xbox.tapUp()
         else:
             FFX_Xbox.tapDown()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     print("Mark 2")
     _navigate_to_position(2)
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     print("Mark 3")
     _navigate_to_position(slot, FFX_memory.battleCursor3)
+    if gameVars.usePause():
+        FFX_memory.waitFrames(3)
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
     if target != 255:
         try:
-            print("Targeting based on character number")
+            print("Targetting based on character number")
             if target >= 20 and FFX_memory.getEnemyCurrentHP()[target - 20] != 0:
                 direction = 'l'
                 while FFX_memory.battleTargetId() != target:
@@ -4812,10 +4876,86 @@ def attackSelfTanker():
             FFX_Xbox.tapLeft()
     tapTargeting()
 
-
 def oblitzRngWait():
-    if FFX_memory.rngSeed() != 31:
-        return False
+    rngValues = FFX_rngTrack.oblitzHistory()
+    print(rngValues)
+    lastRNG = FFX_memory.rngFromIndex(index=2)
+    comingSeeds = FFX_memory.rngArrayFromIndex(index=2,arrayLen=15)
+    seedNum = str(FFX_memory.rngSeed())
+    print(comingSeeds)
+    pos = 0
+    
+    if not seedNum in rngValues:
+        print("## No values for this RNG seed")
+        firstResult = [comingSeeds[1],0,True,1]
+        secondResult = [comingSeeds[2],0,True,2]
+    else:
+        print("## Scanning values for this RNG seed")
+        firstResult = [0,9999,False,0]
+        secondResult = [0,9999,False,0]
+        for i in range(len(comingSeeds)):
+            #Set up duration and victory values
+            if str(comingSeeds[i]) in rngValues[seedNum]:
+                duration = int(rngValues[seedNum][str(comingSeeds[i])]['duration'])
+                print(duration)
+                victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
+                print(victory)
+            else:
+                duration = 0
+                victory = 0
+            #Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
+            if i == 0:
+                pass
+            elif firstResult[3] == 0:
+                firstResult = [comingSeeds[i], duration, victory, pos]
+                print("Initial value for first: ", firstResult)
+            elif secondResult[3] == 0:
+                secondResult = [comingSeeds[i], duration, victory, pos]
+                print("Initial value for second: ", secondResult)
+            elif firstResult[2] and not secondResult[2]:
+                if duration < secondResult[1]:
+                    secondResult = [comingSeeds[i], duration, victory, pos]
+            elif secondResult[2] and not firstResult[2]:
+                if duration < firstResult[1]:
+                    firstResult = [comingSeeds[i], duration, victory, pos]
+            elif secondResult[1] < firstResult[1]:
+                if duration < secondResult[1]:
+                    secondResult = [comingSeeds[i], duration, victory, pos]
+            else:
+                if duration < firstResult[1]:
+                    firstResult = [comingSeeds[i], duration, victory, pos]
+            pos += 1
+    if firstResult[3] > secondResult[3]:
+        best = secondResult
+    else:
+        best = firstResult
+    nextRNG = lastRNG
+    j = 0
+    print("====================================")
+    print("Desired results (RNG, duration, victory, waits):")
+    print(best)
+    #print(firstResult)
+    #print(secondResult)
+    print("====================================")
+    #Now wait for one of the two results to come up
+    while s32(nextRNG) != s32(best[0]) and j < 15:
+        nextRNG = FFX_memory.rngFromIndex(index=2)
+        if lastRNG != nextRNG:
+            print(j, " | ", s32(nextRNG), " | ", s32(FFX_memory.rngFromIndex(index=2)), " | ", s32(best[0]))
+            j += 1
+            lastRNG = nextRNG
+    print("====================================")
+    print("Success. Attacking. ", j, " | ", nextRNG)
+    gameVars.setOblitzRNG(value=nextRNG)
+    return nextRNG
+
+def oblitzRngWait_old():
+    #Oblitz tracking/writing goes here
+    if not FFX_memory.rngSeed() in [31,41]:
+        FFX_Logs.writeStats("====================================")
+        FFX_Logs.writeStats(FFX_memory.rng02())
+        FFX_Logs.writeStats("====================================")
+        return FFX_memory.rng02()
     if gameVars.usePause():
         goodRngList = [1103903145, 886305782, -1640850005]
         # 1467711668, Graav engages for no reason
@@ -4840,7 +4980,6 @@ def oblitzRngWait():
     FFX_Logs.writeStats("====================================")
     return nextRng02
 
-
 def attackOblitzEnd():
     print("Attack")
     if not FFX_memory.turnReady():
@@ -4856,13 +4995,11 @@ def attackOblitzEnd():
             FFX_Xbox.menuB()
     FFX_memory.waitFrames(1)
     rngWaitResults = oblitzRngWait()
-    FFX_memory.waitFrames(1)
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
-    print("Oblitz RNG wait results:", FFX_memory.s32(rngWaitResults))
+    #print("Oblitz RNG wait results:", FFX_memory.s32(rngWaitResults))
     FFX_Logs.writeStats("RNG02 on attack:")
     FFX_Logs.writeStats(FFX_memory.s32(rngWaitResults))
-
 
 def attack(direction="none"):
     print("Attack")
@@ -5732,7 +5869,7 @@ def omnis():
                     yunaCureOmnis()
                     backupCure = True
                 else:
-                    FFX_Xbox.weapSwap(0)
+                    equipInBattle(equipType='weap', abilityNum=0x8001, character=1)
             else:
                 defend()
 

@@ -106,6 +106,8 @@ def forest1():
                     checkpoint = 83
             if checkpoint == 83 and valeforCharge == False:
                 checkpoint = 81
+            if checkpoint == 83 and FFX_memory.getMap() == 65:
+                checkpoint = 84
 
             # events
             if checkpoint == 9:  # Chest with Wakkas weapon Scout

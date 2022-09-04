@@ -55,54 +55,90 @@ def tidusHome(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = 150
-        y = -4
+        x = 181
+        y = -1
     if checkpoint == 1:
-        x = 58
-        y = 0
+        x = 146
+        y = 1
     if checkpoint == 2:
-        print("Talk to the kids")
+        x = 115
+        y = 1
     if checkpoint == 3:
-        x = 13
-        y = -6
+        x = 60
+        y = 6
     if checkpoint == 4:
-        print("Talk to the girls")
+        x = 28
+        y = 5
     if checkpoint == 5:
-        x = -16
-        y = 11
+        print("Talk to the kids")
     if checkpoint == 6:
+        x = 13
+        y = 3
+    if checkpoint == 7:
+        x = 10
+        y = -5
+    if checkpoint == 8:
+        print("Talk to the girls")
+    if checkpoint == 9:
+        x = 6
+        y = -1
+    if checkpoint == 10: #Finish the first section
+        x = -30
+        y = -1
+    if checkpoint == 11: #Start of second section
         x = 426
         y = -3
-    if checkpoint == 7:
+    if checkpoint == 12:
+        x = 426
+        y = -3
+    if checkpoint == 13:
+        x = 426
+        y = -3
+    if checkpoint == 14:
+        x = 426
+        y = -3
+    if checkpoint == 15:
+        x = 426
+        y = -3
+    if checkpoint == 16: #Ready for bridge
+        x = 426
+        y = -3
+    if checkpoint == 17:
         x = 147
         y = -30
-    if checkpoint == 8:
+    if checkpoint == 18:
         x = 54
         y = -33
-    if checkpoint == 9:
+    if checkpoint == 19:
         x = -62
         y = -62
-    if checkpoint == 10:
+    if checkpoint == 20:
         x = -200
         y = -100
-    if checkpoint == 11:
+    if checkpoint == 21:
         x = 0
         y = 880
-    if checkpoint == 12:
+    if checkpoint == 22:
         x = 0
         y = 830
-    if checkpoint == 13:
+    if checkpoint == 23:
         x = 0
         y = 700
-    if checkpoint == 14:
+    if checkpoint == 24:
         x = 2
         y = 838
-    if checkpoint == 15:
+    if checkpoint == 25:
         x = 14
         y = 940
-    if checkpoint == 16:
+    if checkpoint == 26:
         x = 32
-        y = 1038
+        y = 1200
+    if checkpoint == 27:
+        x = 2
+        y = 940
+    if checkpoint == 28:
+        x = 2
+        y = 1200
     return [x, y]
 
 
