@@ -1022,3 +1022,14 @@ def recordBlitzResults(duration, testMode=False):
 
     with open(filepath, 'w') as fp:
         json.dump(records, fp)
+
+def hitsToSeed(hitsArray:int):
+    with open('csv\\hits_to_seed.csv', 'r', newline='') as csvFile:
+        reader = csv.DictReader(csvFile)
+        for row in reader:
+            if row['hit0'] == '':
+                pass
+            elif int(row['hit0']) == hitsArray[0] and int(row['hit1']) == hitsArray[1] and int(row['hit2']) == hitsArray[2] and \
+                int(row['hit3']) == hitsArray[3] and int(row['hit4']) == hitsArray[4] and int(row['hit5']) == hitsArray[5]:
+                return row['seed']
+    return "Err_seed_not_found"

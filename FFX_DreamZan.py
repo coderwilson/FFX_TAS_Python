@@ -4,6 +4,7 @@ import FFX_memory
 import FFX_targetPathing
 import FFX_vars
 import FFX_Logs
+import FFX_rngTrack
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -79,12 +80,12 @@ def NewGame2():
 
 def listenStory():
     FFX_memory.waitFrames(10)
-    print("Skipping intro scene, we'll watch this properly in about 8 hours.")
     FFX_vars.initVars()
     while not FFX_memory.userControl():
         if FFX_memory.getMap() == 132:
             if FFX_memory.diagProgressFlag() == 1:
                 gameVars.setCSR(False)
+                print("Skipping intro scene, we'll watch this properly in about 8 hours.")
                 FFX_memory.awaitControl()
             FFXC.set_value('BtnBack', 1)
             FFX_memory.waitFrames(1)
@@ -157,14 +158,28 @@ def ammesBattle():
     FFX_memory.lastHitInit()
     FFX_Battle.defend()
     FFX_Logs.writeStats("First Six Hits:")
-    print("First Six Hits:")
+    hitsArray = []
 
     print("Killing Sinspawn")
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
             FFX_Battle.attack('none')
-            while not FFX_memory.lastHitCheckChange():
-                pass
+            lastHit = FFX_memory.lastHitCheckChange()
+            while lastHit == 9999:
+                lastHit = FFX_memory.lastHitCheckChange()
+            print("Confirm - last hit: ", lastHit)
+            hitsArray.append(lastHit)
+            print(hitsArray)
+    print("#####################################")
+    print("### Unconfirmed seed check:", FFX_memory.rngSeed())
+    correctSeed = FFX_rngTrack.hitsToSeed(hitsArray=hitsArray)
+    FFX_Logs.writeStats("Corrected RNG seed:")
+    FFX_Logs.writeStats(correctSeed)
+    print("### Corrected RNG seed:", correctSeed)
+    if correctSeed != "Err_seed_not_found":
+        gameVars.setConfirmedSeed(correctSeed)
+    print("Confirming RNG seed: ", FFX_memory.rngSeed())
+    print("#####################################")
     print("Done Killing Sinspawn")
     FFX_memory.waitFrames(6)  # Just for no overlap
     print("Clicking to battle.")

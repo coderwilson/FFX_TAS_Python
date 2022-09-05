@@ -687,9 +687,11 @@ def piranhas():
 def besaid():
     print("Fight start: Besaid battle")
     FFXC.set_neutral()
+    while not FFX_memory.turnReady():
+        pass
     battleFormat = FFX_memory.getEncounterID()
     print("Besaid battle format number:", battleFormat)
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             enemyHP = FFX_memory.getEnemyCurrentHP()
             print("Enemy HP:", enemyHP)
@@ -955,7 +957,7 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                         aeonSpellDirection(1, 'right')
                     elif FFX_Screen.turnAeon():
                         while not FFX_memory.battleComplete():
-                            if FFX_Screen.BattleScreen():
+                            if FFX_memory.turnReady():
                                 aeonSpell(0)
                     else:
                         defend()
@@ -1109,7 +1111,7 @@ def LucaWorkers():
     print("Fight start: Workers in Luca")
     FFX_Xbox.clickToBattle()
 
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnKimahri() or FFX_Screen.turnTidus():
                 if FFX_Screen.faintCheck() >= 1:
@@ -1128,7 +1130,7 @@ def LucaWorkers2(earlyHaste):
     hasted = False
     FFX_Xbox.clickToBattle()
 
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.faintCheck() >= 1:
                 revive()
@@ -1469,7 +1471,7 @@ def mrrTarget():
     if encID == 98:
         lancetTarget(target=21, direction='d')
     if encID == 101:
-        lancetTarget(target=22, direction='l')
+        lancetTarget(target=21, direction='l')
     if encID in [100, 110]:
         attackByNum(22, 'l')
     elif encID in [102, 112, 113]:
@@ -1525,8 +1527,8 @@ def MRRbattle(status):
     elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
         if status[3] < 3 and FFX_memory.rngSeed() != 160:  # Battle number (zero-index)
             if battle == 100 or battle == 101:  # The two battles with Funguar
-                while not FFX_memory.menuOpen():  # end of battle screen
-                    if FFX_Screen.BattleScreen():
+                while FFX_memory.battleActive():  # end of battle screen
+                    if FFX_memory.turnReady():
                         if FFX_Screen.turnTidus():
                             buddySwapKimahri()
                         elif FFX_Screen.turnKimahri():
@@ -1546,8 +1548,8 @@ def MRRbattle(status):
             else:
                 fleeAll()
         else:  # Starting with fourth battle, overdrive on any battle that isn't Garuda.
-            while not FFX_memory.menuOpen():  # end of battle screen
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
                     elif FFX_Screen.turnKimahri():
@@ -1572,8 +1574,8 @@ def MRRbattle(status):
                 defend()
         if battle == 96:  # Gandarewa, Red Element, Raptor (camera front)
             wakkaTurns = 0
-            while not FFX_memory.menuOpen():  # end of battle screen
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     if checkPetrify():
                         print("Someone is pretrified. Escaping battle.")
                         fleeAll()
@@ -1607,8 +1609,8 @@ def MRRbattle(status):
                         else:
                             aeonSpell2(3, 'none')
         elif battle == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
-            while not FFX_memory.menuOpen():  # end of battle screen
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
                         nextCritKim = mrrTarget()
@@ -1632,8 +1634,8 @@ def MRRbattle(status):
                         else:
                             aeonSpell(3)
         elif battle == 98:  # Raptor, Red Element, Gandarewa (camera side)
-            while not FFX_memory.menuOpen():  # end of battle screen
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     if checkPetrify():
                         print("Someone is pretrified. Escaping battle.")
                         fleeAll()
@@ -1662,8 +1664,8 @@ def MRRbattle(status):
                             aeonSpell2(3, 'right')
         # battle 99 is never used.
         elif battle == 100:  # Raptor, Funguar, Red Element (camera front)
-            while not FFX_memory.menuOpen():  # end of battle screen
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     if checkPetrify():
                         print("Someone is pretrified. Escaping battle.")
                         fleeAll()
@@ -1699,8 +1701,8 @@ def MRRbattle(status):
                             aeonSpell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
         elif battle == 101:
-            while not FFX_memory.menuOpen():  # end of battle screen
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
                         nextCritKim = mrrTarget()
@@ -1731,13 +1733,13 @@ def MRRbattle(status):
         # Both Yuna and Kimahri have levels, good to go.
         if status[0] == 1 and status[1] == 1:
             status[5] = 3
-            while not FFX_memory.menuOpen():
-                if FFX_Screen.BattleScreen():
+            while FFX_memory.battleActive():  # end of battle screen
+                if FFX_memory.turnReady():
                     fleeAll()
         else:
             # Wakka attack Raptors and Gandarewas for Yuna AP.
             yunaTurnCount = 0
-            while not FFX_memory.battleComplete():
+            while FFX_memory.battleActive():  # end of battle screen
                 if FFX_memory.turnReady():
                     if FFX_Screen.turnTidus():
                         tidusFlee()
@@ -2079,7 +2081,7 @@ def mixTutorial():
 
 
 def chargeRikku():
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnRikku():
                 attack('none')
@@ -2349,7 +2351,7 @@ def spherimorph():
     rikkuturns = 0
     yunaTurn = False
     kimTurn = False
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if gameVars.usePause():
                 FFX_memory.waitFrames(2)
@@ -3118,7 +3120,7 @@ def wendigo():
 
     FFX_Screen.awaitTurn()
 
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             partyHP = FFX_memory.getBattleHP()
             turnchar = FFX_memory.getBattleCharTurn()
@@ -3233,7 +3235,7 @@ def zu():
     FFX_Screen.awaitTurn()
     attack('none')
     while not FFX_memory.battleComplete():
-        if FFX_Screen.BattleScreen():
+        if FFX_memory.turnReady():
             if FFX_memory.partySize() <= 2:
                 defend()
             else:
@@ -3517,7 +3519,7 @@ def home1():
     FFX_Xbox.clickToBattle()
     print("Tidus vs Bombs")
     tidusHaste('none')
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.faintCheck() > 0:
                 revive()
@@ -3535,7 +3537,7 @@ def home2():
     FFX_Xbox.clickToBattle()
 
     print("Kimahri vs dual horns")
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
 
             if FFX_Screen.turnKimahri():
@@ -3602,7 +3604,7 @@ def home4():
     FFX_Xbox.clickToBattle()
 
     print("Kimahri vs Chimera")
-    while not FFX_memory.menuOpen():  # AKA end of battle screen
+    while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnKimahri():
                 kimahriOD(4)
@@ -3879,37 +3881,23 @@ def isaaru():
     FFX_Xbox.clickToBattle()
     confirm = 0
     counter = 0
-    while confirm == 0:
-        counter += 1
-        if FFX_memory.getEncounterID() >= 258 and FFX_memory.getEncounterID() <= 260:  # Now fighting Isaaru
-            confirm = 2
-        else:
-            confirm = 1
-
-    if confirm == 1:  # Larvae battle
+    if FFX_memory.getEncounterID() < 258:
         gameVars.addRescueCount()
-        aeonSummon(2)
-        while FFX_memory.battleActive():
-            FFX_Xbox.tapB()
-    else:  # Isaaru/aeon battle
-        while not FFX_memory.menuOpen():
-            if FFX_memory.turnReady():
-                if FFX_Screen.turnYuna():
-                    if FFX_memory.getEncounterID() == 260:
-                        aeonSummon(2)
-                    else:
-                        aeonSummon(4)
+    
+    while FFX_memory.battleActive():  # AKA end of battle screen
+        if FFX_memory.turnReady():
+            if FFX_Screen.turnYuna():
+                if FFX_memory.getEncounterID() in [257,260]:
+                    aeonSummon(2) #Summon Ixion for Bahamut
                 else:
-                    attack('none')
-            elif FFX_memory.diagSkipPossible():
-                FFX_Xbox.tapB()
+                    aeonSummon(4) #Summon Bahamut for other aeons
+            else:
+                attack('none') #Aeon turn
+        elif FFX_memory.diagSkipPossible():
+            FFX_Xbox.tapB()
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
-
-    confirm -= 1
-    return confirm
-
 
 def altanaheal():
     direction = 'd'
@@ -4019,7 +4007,7 @@ def seymourNatus_neTesting():
     while FFX_memory.battleActive():
         if FFX_memory.getEncounterID() == 272:  # Seymour Natus
             print("Seymour Natus engaged")
-            while not FFX_memory.menuOpen():
+            while FFX_memory.battleActive():  # AKA end of battle screen
                 if FFX_memory.turnReady() and not aeonSummoned:
                     if FFX_Screen.turnTidus():
                         if FFX_memory.getLuluSlvl() < 35:
@@ -4173,8 +4161,8 @@ def calmLandsGems():
 
 def gagazetPath():
     if FFX_memory.getEncounterID() == 337:
-        while not FFX_memory.menuOpen():
-            if FFX_Screen.BattleScreen():
+        while FFX_memory.battleActive():
+            if FFX_memory.turnReady():
                 if FFX_Screen.turnRikku():
                     StealRight()
                 else:
@@ -5302,7 +5290,7 @@ def lancet(direction):
     tapTargeting()
 
 
-def lancetTarget(target, direction):
+def lancetTarget(target, direction): #something
     print("Casting Lancet with variation:", direction)
     while FFX_memory.battleMenuCursor() != 20:
         if FFX_memory.battleMenuCursor() == 255:
@@ -5318,41 +5306,42 @@ def lancetTarget(target, direction):
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     retry = 0
-    while FFX_memory.battleTargetId() != target:
-        if direction == 'l':
-            if retry > 5:
-                retry = 0
-                print("Wrong battle line targeted.")
-                FFX_Xbox.tapRight()
-                direction = 'u'
-                retry = 0
-            else:
-                FFX_Xbox.tapLeft()
-        elif direction == 'r':
-            if retry > 5:
-                retry = 0
-                print("Wrong character targeted.")
-                FFX_Xbox.tapLeft()
-                direction = 'd'
-            else:
-                FFX_Xbox.tapRight()
-        elif direction == 'u':
-            if retry > 5:
-                retry = 0
-                print("Wrong character targeted.")
-                FFX_Xbox.tapDown()
-                direction = 'l'
-            else:
-                FFX_Xbox.tapUp()
-        elif direction == 'd':
-            if retry > 5:
-                retry = 0
-                print("Wrong character targeted.")
-                FFX_Xbox.tapUp()
-                direction = 'r'
-            else:
-                FFX_Xbox.tapDown()
-        retry += 1
+    if FFX_memory.getEnemyCurrentHP()[target - 20] != 0: #Only lancet living targets.
+        while FFX_memory.battleTargetId() != target:
+            if direction == 'l':
+                if retry > 5:
+                    retry = 0
+                    print("Wrong battle line targeted.")
+                    FFX_Xbox.tapRight()
+                    direction = 'u'
+                    retry = 0
+                else:
+                    FFX_Xbox.tapLeft()
+            elif direction == 'r':
+                if retry > 5:
+                    retry = 0
+                    print("Wrong character targeted.")
+                    FFX_Xbox.tapLeft()
+                    direction = 'd'
+                else:
+                    FFX_Xbox.tapRight()
+            elif direction == 'u':
+                if retry > 5:
+                    retry = 0
+                    print("Wrong character targeted.")
+                    FFX_Xbox.tapDown()
+                    direction = 'l'
+                else:
+                    FFX_Xbox.tapUp()
+            elif direction == 'd':
+                if retry > 5:
+                    retry = 0
+                    print("Wrong character targeted.")
+                    FFX_Xbox.tapUp()
+                    direction = 'r'
+                else:
+                    FFX_Xbox.tapDown()
+            retry += 1
 
     tapTargeting()
 
