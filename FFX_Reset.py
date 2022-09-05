@@ -19,7 +19,8 @@ def resetToMainMenu():
             FFX_memory.waitFrames(30 * 1)
     elif FFX_memory.battleActive():
         print("Battle is active. Forcing battle to end so we can soft reset.")
-        FFX_Screen.awaitTurn()
+        while not FFX_memory.turnReady():
+            FFX_Xbox.menuA()
         FFX_memory.resetBattleEnd()
         while not FFX_memory.getMap() in [23, 348, 349]:
             FFX_Xbox.menuB()

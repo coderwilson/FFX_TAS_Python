@@ -70,10 +70,11 @@ def start():
 
 
 def rngSeed():
-    global baseValue
-    key = baseValue + 0x003988a5
-    return process.readBytes(key, 1)
-
+    if int(gameVars.confirmedSeed()) == 999:
+        global baseValue
+        key = baseValue + 0x003988a5
+        return process.readBytes(key, 1)
+    return int(gameVars.confirmedSeed())
 
 def setRngSeed(value):
     global baseValue
@@ -3653,29 +3654,25 @@ def lastHitInit():
         return False
 
 
-def lastHitCheckChange():
+def lastHitCheckChange() -> int:
     global baseValue
     key = baseValue + 0xd334cc
     ptrVal = process.read(key)
     changeFound = False
+    changeValue = 9999
     for x in range(8):
-        try:
-            memVal = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-            print(memVal)
-            if memVal != gameVars.firstHitsValue(x) and not changeFound:
-                changeFound = True
-                changeValue = memVal
-        except:
-            pass
-
-    if changeFound:
-        print("**Registered hit:", changeValue)
-        FFX_Logs.writeStats(changeValue)
-        lastHitInit()
-        return True
-    else:
-        return False
-
+        memVal = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
+        #print(memVal)
+        if memVal != gameVars.firstHitsValue(x) and not changeFound:
+            changeFound = True
+            changeValue = memVal
+            print("**Registered hit:", changeValue)
+            FFX_Logs.writeStats(changeValue)
+            lastHitInit()
+            print("Mark 1")
+            return int(changeValue)
+            print("Mark 2")
+    return 9999
 
 # ------------------------------
 # NE armor manip

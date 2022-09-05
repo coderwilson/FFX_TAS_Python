@@ -407,7 +407,7 @@ def ViaPurifico():
     FFX_menu.viaPurifico()
 
     complete = 0
-    while complete == 0:
+    while FFX_memory.getMap() != 209: #Map number for Altana
         if FFX_memory.userControl():
             if FFX_memory.getSLVLYuna() < 15 and FFX_memory.getCoords()[1] > 1460:
                 FFXC.set_movement(0, -1)
@@ -415,7 +415,7 @@ def ViaPurifico():
             else:
                 FFXC.set_movement(0, 1)
         elif FFX_Screen.BattleScreen():
-            complete = FFX_Battle.isaaru()
+            FFX_Battle.isaaru()
         else:
             FFXC.set_neutral()
             FFX_Xbox.tapB()
