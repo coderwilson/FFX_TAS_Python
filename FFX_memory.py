@@ -3274,7 +3274,7 @@ def GTinnerRing():
 def getSaveSphereDetails():
     mapVal = getMap()
     storyVal = getStoryProgress()
-    print("Map and story:", mapVal, "|", storyVal)
+    print("Map:", mapVal, "Story:", storyVal)
     x = 0
     y = 0
     diag = 0

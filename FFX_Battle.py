@@ -4907,7 +4907,7 @@ def thunderTarget(target, direction):
 
 
 def aeonSummon(position):
-    print("Aeon is being summoned. " + str(position) + "")
+    print("Summoning Aeon" + str(position))
     while not FFX_memory.mainBattleMenu():
         pass
     while FFX_memory.battleMenuCursor() != 23:
