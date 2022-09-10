@@ -128,10 +128,6 @@ def tidusHaste(direction, character=255):
     tapTargeting()
 
 
-def tidusHasteLate(direction):
-    tidusHaste(direction)
-
-
 def lateHaste(direction):
     tidusHaste(direction)
 
@@ -434,15 +430,6 @@ def reviveTarget(itemNum=6, target=0):
 
 def reviveAll():
     revive(itemNum=7)
-
-
-def selfPot():
-    print("Self potion")
-    FFX_Xbox.tapDown()
-    FFX_Xbox.tapDown()
-    FFX_Xbox.tapDown()
-    FFX_Xbox.tapB()
-    FFX_Xbox.SkipDialog(2)
 
 
 def Ammes():
@@ -2075,17 +2062,6 @@ def mixTutorial():
     FFX_memory.clickToControl()
 
 
-def chargeRikku():
-    while FFX_memory.battleActive():  # AKA end of battle screen
-        if FFX_memory.turnReady():
-            if FFX_Screen.turnRikku():
-                attack('none')
-            else:
-                escapeOne()
-    FFX_memory.clickToControl()
-    healUp(3)
-
-
 def thunderPlains(section):
     encID = FFX_memory.getEncounterID()
     nadeSlot = FFX_memory.getItemSlot(35)
@@ -2333,9 +2309,8 @@ def spheriSpellItemReady():
             return False
     return True
 
+
 # Process written by CrimsonInferno
-
-
 def spherimorph():
     FFX_Xbox.clickToBattle()
 
@@ -2532,9 +2507,8 @@ def getAnimaItemSlot():
         useableSlot = 255
     return useableSlot
 
+
 # Process written by CrimsonInferno
-
-
 def seymourGuado_blitzWin():
 
     tidushaste = False
@@ -2953,56 +2927,6 @@ def seymourGuado_blitzLoss():
     FFXC.set_value('BtnB', 0)
 
 
-def seymourGuado_nemesis():
-    FFX_Screen.awaitTurn()
-    tidusHaste('none')
-    FFX_Screen.awaitTurn()
-    equipInBattle(special='brotherhood')
-    FFX_memory.waitFrames(5)
-    FFX_Screen.awaitTurn()
-    tidusODSeymour()
-    FFX_Screen.awaitTurn()
-    yunaDefend = False
-    while not FFX_Screen.turnTidus():
-        if FFX_memory.turnReady():
-            if FFX_Screen.turnYuna():
-                if not yunaDefend:
-                    FFX_Xbox.weapSwap(0)
-                    yunaDefend = True
-                else:
-                    buddySwapAuron()
-                    equipInBattle(abilityNum=0x8002, character=2)
-            elif FFX_Screen.turnKimahri():
-                Steal()
-            elif FFX_Screen.turnLulu():
-                buddySwapAuron()
-            else:
-                defend()
-    FFX_Screen.awaitTurn()
-    buddySwapWakka()
-    FFX_Xbox.weapSwap(0)
-    # Anima uses Pain
-    FFX_Screen.awaitTurn()
-    buddySwapTidus()
-    attack(direction="none")
-
-    while not FFX_memory.battleComplete():  # AKA end of battle screen
-        if FFX_memory.turnReady():
-            if FFX_Screen.turnTidus():
-                attack(direction="none")
-            elif FFX_Screen.turnRikku():
-                Steal()
-            elif FFX_Screen.turnLulu():
-                buddySwapRikku()
-            else:
-                buddySwapLulu()
-                FFX_Xbox.weapSwap(0)
-    print("Battle summary screen")
-    FFXC.set_value('BtnB', 1)
-    FFX_memory.waitFrames(30 * 2.8)
-    FFXC.set_value('BtnB', 0)
-
-
 def seymourGuado():
     if gameVars.getBlitzWin():
         seymourGuado_blitzWin()
@@ -3296,7 +3220,7 @@ def bikanelBattleLogic(status):
     zuBattles = [202, 211, 216, 225]
     if encounterID in zuBattles:  # Zu battles
         stealDirection = 'none'
-    if encounterID == 217:  # Specal Zu battle
+    if encounterID == 217:  # Special Zu battle
         stealDirection = 'up'  # Not confirmed
     # Flee from these battles
     fleeBattles = [201, 203, 204, 205, 210, 212,
@@ -3427,48 +3351,6 @@ def updateStealItemsDesert():
         itemArray[3] = FFX_memory.getItemCountSlot(index)
 
     return itemArray
-
-
-def sandyManip() -> bool:
-    if gameVars.getBlitzWin():
-        blitzBuffer = 31
-    else:
-        blitzBuffer = 32
-    whiteVals = FFX_memory.nextChanceRNG01()
-    greenVals = FFX_memory.nextChanceRNG01(version='green')
-
-    whiteOdd = whiteVals[0]
-    whiteEven = whiteVals[1]
-    greenOdd = greenVals[0]
-    greenEven = greenVals[1]
-
-    x = 0
-    while x < len(whiteOdd):
-        if whiteOdd[x] < blitzBuffer:
-            whiteOdd.remove(whiteOdd[x])
-        else:
-            x += 1
-    x = 0
-    while x < len(whiteEven):
-        if whiteEven[x] < blitzBuffer:
-            whiteEven.remove(whiteEven[x])
-        else:
-            x += 1
-    x = 0
-    blitzBuffer += 2
-    while x < len(greenOdd):
-        if greenOdd[x] < blitzBuffer:
-            greenOdd.remove(greenOdd[x])
-        else:
-            x += 1
-    x = 0
-    while x < len(greenEven):
-        if greenEven[x] < blitzBuffer:
-            greenEven.remove(greenEven[x])
-        else:
-            x += 1
-    # If the lowest Even value is less than the lowest Odd value, worth switching.
-    return min(greenEven[0], whiteEven[0]) < min(greenOdd[0], whiteOdd[0])
 
 
 def sandragora(version):
@@ -3992,58 +3874,6 @@ def attackHighbridge():
         attackByNum(21, 'l')
     else:
         attack('none')
-
-
-def seymourNatus_neTesting():
-    aeonSummoned = False
-    rng12Manip = FFX_memory.nextChanceRNG12(beforeNatus=True)
-    rng10Next = FFX_memory.nextChanceRNG10(30)
-    while FFX_memory.battleActive():
-        if FFX_memory.getEncounterID() == 272:  # Seymour Natus
-            print("Seymour Natus engaged")
-            while FFX_memory.battleActive():  # AKA end of battle screen
-                if FFX_memory.turnReady() and not aeonSummoned:
-                    if FFX_Screen.turnTidus():
-                        if FFX_memory.getLuluSlvl() < 35:
-                            buddySwapLulu()
-                            FFX_Screen.awaitTurn()
-                            FFX_Xbox.weapSwap(0)
-                        else:
-                            attack('none')
-                    elif FFX_Screen.turnLulu():
-                        buddySwapTidus()
-                        FFX_Screen.awaitTurn()
-                        FFX_Xbox.tapUp()
-                        attack('none')
-                    elif FFX_Screen.turnYuna():
-                        aeonSummon(4)
-                        aeonSummoned = True
-                    elif FFX_Screen.turnAeon():
-                        FFX_Xbox.SkipDialog(3)  # Finishes the fight
-                elif FFX_memory.turnReady():
-                    attack('none')
-            return 1
-        else:
-            if rng12Manip == 0:
-                if FFX_memory.noChanceX3RNG10Highbridge():
-                    advanceRNG12()
-                elif FFX_memory.nextChanceRNG10(30) >= 1:
-                    if FFX_Screen.turnTidus() or FFX_Screen.turnYuna():
-                        attackHighbridge()
-                    else:
-                        fleeAll()
-                else:
-                    buddySwapRikku()
-                    Steal()
-                    fleeAll()
-            elif rng12Manip >= 1 and rng10Next == 0:
-                advanceRNG12()
-            else:
-                advanceRNG10(FFX_memory.nextChanceRNG10(30))
-
-    FFX_memory.clickToControl()
-    FFX_memory.printManipInfo()
-    return 0
 
 
 def seymourNatus():
@@ -4785,37 +4615,6 @@ def oblitzRngWait():
     return nextRNG
 
 
-def oblitzRngWait_old():
-    # Oblitz tracking/writing goes here
-    if not FFX_memory.rngSeed() in [31, 41]:
-        FFX_Logs.writeStats("====================================")
-        FFX_Logs.writeStats(FFX_memory.rng02())
-        FFX_Logs.writeStats("====================================")
-        return FFX_memory.rng02()
-    if gameVars.usePause():
-        goodRngList = [1103903145, 886305782, -1640850005]
-        # 1467711668, Graav engages for no reason
-    elif gameVars.csr() and FFX_memory.rngSeed() == 31:
-        goodRngList = [330516972, -1773455057]
-        # 527494414
-    else:
-        goodRngList = [-643494119, 281000320, -1926806676, -1492670653]
-
-    waitCounter = 0
-    lastRng02 = FFX_memory.rng02()
-    FFX_Logs.writeStats("====================================")
-    nextRng02 = FFX_memory.rng02()
-    while waitCounter != 30 and not FFX_memory.s32(nextRng02) in goodRngList:
-        print(waitCounter, "|", lastRng02)
-        if nextRng02 != lastRng02:
-            FFX_Logs.writeStats(str(waitCounter) + "|" + str(FFX_memory.s32(nextRng02)))
-            lastRng02 = nextRng02
-            waitCounter += 1
-        nextRng02 = FFX_memory.rng02()
-    FFX_Logs.writeStats("====================================")
-    return nextRng02
-
-
 def attackOblitzEnd():
     print("Attack")
     if not FFX_memory.turnReady():
@@ -5168,10 +4967,6 @@ def aeonSpellDirection(position, direction):
         FFX_Xbox.tapDown()
     tapTargeting()
     print("Aeon casting spell")
-
-
-def healUp_New(chars, menusize):
-    healUp(chars)
 
 
 def healUp(chars=3, *, fullMenuClose=True):
@@ -6171,45 +5966,6 @@ def chargeRikkuOD():
                     else:
                         escapeOne()
         FFX_memory.clickToControl3()
-    else:
-        fleeAll()
-
-
-def farmDome():
-    if FFX_memory.getEncounterID() in [361, 364, 366]:
-        if FFX_memory.battleType() == 2:
-            fleeAll()
-        elif FFX_memory.getEncounterID() == 361:  # Defender Z
-            while not FFX_memory.battleComplete():
-                if FFX_Screen.turnYuna():
-                    aeonSummon(4)
-                elif FFX_Screen.turnAeon():
-                    attack('none')
-                else:
-                    defend()
-            gameVars.addYTKFarm()
-            gameVars.addYTKFarm()
-        # YAT-97	YKT-11	YAT-97
-        elif FFX_memory.getEncounterID() in [364, 365, 366]:
-            while not FFX_memory.battleComplete():
-                if 0 in FFX_memory.getEnemyCurrentHP() or not checkTidusOk() or not checkYunaOk():
-                    fleeAll()
-                elif FFX_Screen.turnYuna():
-                    attack('left' if FFX_memory.getEncounterID() == 366 else 'none')
-                elif FFX_Screen.turnTidus():
-                    attack('left' if FFX_memory.getEncounterID() == 366 else 'none')
-                else:
-                    defend()
-            gameVars.addYTKFarm()
-        FFX_memory.clickToControl3()
-        if gameVars.completedYTKFarm():
-            gameVars.fluxOverkillSuccess()
-            if FFX_memory.overdriveState()[6] != 100:
-                FFX_memory.fullPartyFormat('rikku')
-            else:
-                FFX_memory.fullPartyFormat('kimahri')
-        else:
-            healUp()
     else:
         fleeAll()
 
