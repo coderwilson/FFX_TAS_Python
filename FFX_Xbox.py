@@ -408,35 +408,6 @@ def tapStart():
     FFX_memory.waitFrames(2)
 
 
-def tidusOD():
-    # This function has primarily moved to the FFX_Battle library. Leaving this version live in case
-    # it continues to be used from other files outside of that library.
-    print("Tidus overdrive activating")
-    menuLeft()
-    FFX_memory.waitFrames(30 * 0.8)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    menuB()  # Activate overdrive
-    FFX_memory.waitFrames(30 * 3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.25)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.35)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.25)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    menuB()
-
-
 def weapSwap(position):
     print("Weapon swap, weapon in position:", position)
     while FFX_memory.mainBattleMenu():

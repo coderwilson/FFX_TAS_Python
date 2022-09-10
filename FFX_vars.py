@@ -10,11 +10,9 @@ class allVars:
         # ------------------------------
 
         # ----Most important values to review
-        # Set depending on hardware. True = less powerful hardware.
-        self.artificialPauses = False
+        self.artificialPauses = False  # Set depending on hardware. True = less powerful hardware.
         self.csrValue = True  # Default True
-        # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesisValue = False
+        self.nemesisValue = False  # Set based on if you're doing any% (False) or Nemesis% (True)
         self.forceLoop = True  # After game is finished, start again on next seed.
         self.blitzLoop = False  # Loop on the same seed immediately after Blitzball.
         self.newGame = False
@@ -58,10 +56,10 @@ class allVars:
         self.originalResults = [0] * 7
         self.yojimboIndex = 1
 
-        #----Path for save files, used for loading a specific save
-        #coderwilson automation PC
-        #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        #coderwilson main PC
+        # ----Path for save files, used for loading a specific save
+        # coderwilson automation PC
+        # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
 
     def printArenaStatus(self):
@@ -86,13 +84,13 @@ class allVars:
 
     def loopSeeds(self):
         return self.forceLoop
-    
+
     def confirmedSeed(self):
         return self.confirmedSeedNum
-    
+
     def setConfirmedSeed(self, value):
         self.confirmedSeedNum = value
-    
+
     def setNewGame(self):
         self.newGame = True
 

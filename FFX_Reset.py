@@ -1,5 +1,4 @@
 import FFX_Xbox
-import FFX_Screen
 import FFX_memory
 
 FFXC = FFX_Xbox.controllerHandle()

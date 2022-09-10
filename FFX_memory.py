@@ -76,6 +76,7 @@ def rngSeed():
         return process.readBytes(key, 1)
     return int(gameVars.confirmedSeed())
 
+
 def setRngSeed(value):
     global baseValue
     key = baseValue + 0x003988a5
@@ -3662,7 +3663,6 @@ def lastHitCheckChange() -> int:
     changeValue = 9999
     for x in range(8):
         memVal = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-        #print(memVal)
         if memVal != gameVars.firstHitsValue(x) and not changeFound:
             changeFound = True
             changeValue = memVal
@@ -3673,6 +3673,7 @@ def lastHitCheckChange() -> int:
             return int(changeValue)
             print("Mark 2")
     return 9999
+
 
 # ------------------------------
 # NE armor manip

@@ -3879,25 +3879,24 @@ def guards(groupNum, sleepingPowders):
 
 def isaaru():
     FFX_Xbox.clickToBattle()
-    confirm = 0
-    counter = 0
     if FFX_memory.getEncounterID() < 258:
         gameVars.addRescueCount()
-    
+
     while FFX_memory.battleActive():  # AKA end of battle screen
         if FFX_memory.turnReady():
             if FFX_Screen.turnYuna():
-                if FFX_memory.getEncounterID() in [257,260]:
-                    aeonSummon(2) #Summon Ixion for Bahamut
+                if FFX_memory.getEncounterID() in [257, 260]:
+                    aeonSummon(2)  # Summon Ixion for Bahamut
                 else:
-                    aeonSummon(4) #Summon Bahamut for other aeons
+                    aeonSummon(4)  # Summon Bahamut for other aeons
             else:
-                attack('none') #Aeon turn
+                attack('none')  # Aeon turn
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
     FFXC.set_value('BtnB', 1)
     FFX_memory.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
+
 
 def altanaheal():
     direction = 'd'
@@ -5290,7 +5289,7 @@ def lancet(direction):
     tapTargeting()
 
 
-def lancetTarget(target, direction): #something
+def lancetTarget(target, direction):  # something
     print("Casting Lancet with variation:", direction)
     while FFX_memory.battleMenuCursor() != 20:
         if FFX_memory.battleMenuCursor() == 255:
@@ -5306,7 +5305,7 @@ def lancetTarget(target, direction): #something
     while FFX_memory.otherBattleMenu():
         FFX_Xbox.tapB()
     retry = 0
-    if FFX_memory.getEnemyCurrentHP()[target - 20] != 0: #Only lancet living targets.
+    if FFX_memory.getEnemyCurrentHP()[target - 20] != 0:  # Only lancet living targets.
         while FFX_memory.battleTargetId() != target:
             if direction == 'l':
                 if retry > 5:
