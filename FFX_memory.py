@@ -242,6 +242,9 @@ def battleTargetId():
 def battleLineTarget():
     return readVal(0x00F3CA42)
 
+def enemyTargetted():
+    return readVal(0x00F3D1C0)
+
 
 def battleTargetActive():
     global baseValue
@@ -1922,13 +1925,21 @@ def miihenGuyCoords():
             spearGuy = x
     return getActorCoords(spearGuy)
 
+def actorIndex(actorNum:int=41):
+    actorIndex = 255
+    for x in range(getActorArraySize()):
+        actorMem = getActorID(x)
+        if actorNum == actorMem:
+            actorIndex = x
+    return actorIndex
+
 
 def mrrGuyCoords():
     print("+++Searching for MRR guy")
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        print("Actor ", x, ":", hex(actorNum))
+        #print("Actor ", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
     print("+++MRR guy in position:", mrrGuy)
@@ -3646,8 +3657,8 @@ def lastHitInit():
     try:
         for x in range(8):
             lastHitVals[x] = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-            print("Val:", lastHitVals[x])
-        print(lastHitVals)
+            #print("Val:", lastHitVals[x])
+        #print(lastHitVals)
         gameVars.firstHitsSet(lastHitVals)
         return True
     except:
