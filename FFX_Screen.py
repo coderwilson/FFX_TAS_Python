@@ -34,7 +34,7 @@ def faintCheck():
         faints += 1
     if frontParty[2] != 255 and charHP[2] == 0:
         faints += 1
-    print("## Num of characters have fainted:", faints, "##")
+    print("## Fainted Characters:", faints, "##")
     return faints
 
 

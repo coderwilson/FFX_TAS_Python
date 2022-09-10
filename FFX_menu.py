@@ -410,7 +410,7 @@ def battleSiteOaka1():
         else:
             amount_to_sell = max(
                 cur_amount - {0: 0, 1: 0, 2: 0, 8: 0}[cur_item], 0)
-        print("Selling from ", cur_amount, " to ", amount_to_sell)
+        print("Selling from", cur_amount, "to", amount_to_sell)
         while FFX_memory.itemShopMenu() != 27:
             FFX_Xbox.tapB()
         while FFX_memory.equipBuyRow() != amount_to_sell:

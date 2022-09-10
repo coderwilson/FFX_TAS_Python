@@ -201,13 +201,6 @@ def SkipDialog(Keystrokes):
     print("Mashing B - Complete")
 
 
-def MashNTimes(num_repetitions):
-    print(f"Mashing B {num_repetitions} times.")
-    for _ in range(num_repetitions):
-        tapB()
-    print("Mashing B - Complete")
-
-
 def SkipDialogSpecial(Keystrokes):
     num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
     print(f"Mashing A and B {num_repetitions} times.")
@@ -497,7 +490,7 @@ def gridRight():
 
 
 def clickToBattle():
-    print("Clicking until it's someone's turn in battle")
+    print("Mashing B until first turn in battle")
     FFXC.set_neutral()
     while not (FFX_memory.battleActive() and FFX_memory.turnReady()):
         if FFX_memory.userControl():

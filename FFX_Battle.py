@@ -1812,7 +1812,7 @@ def MRRmanip(kimMaxAdvance: int = 6):
     while FFX_memory.battleActive():
         if FFX_memory.turnReady():
             nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-            print("||| Manip - Battle number: ", FFX_memory.getEncounterID())
+            print("||| Manip - Battle number:", FFX_memory.getEncounterID())
             print("||| Next Kimahri Crit vs Gui:", nextCritKim)
             if nextCritKim > kimMaxAdvance:
                 fleeAll()
@@ -5190,10 +5190,10 @@ def healUp(chars=3, *, fullMenuClose=True):
     FFXC = FFX_Xbox.controllerHandle()
     FFXC.set_neutral()
     while FFX_memory.getMenuCursorPos() != 2:
-        print("Selecting Ability command - ", FFX_memory.getMenuCursorPos())
+        print("Selecting Ability command -", FFX_memory.getMenuCursorPos())
         FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 2, 11)
     while FFX_memory.menuNumber() == 5:
-        print("Select Ability - ", FFX_memory.menuNumber())
+        print("Select Ability -", FFX_memory.menuNumber())
         FFX_Xbox.tapB()
     print("Mark 1")
     target_pos = FFX_memory.getCharacterIndexInMainMenu(1)

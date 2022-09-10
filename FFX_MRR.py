@@ -183,7 +183,7 @@ def mainPath():
                     FFX_menu.mrrGrid2()
                 FFX_memory.closeMenu()
                 print("MRR battle complete")
-                print("======== Next Kimahri crit: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                print("======== Next Kimahri crit:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                 battleCount += 1
             elif FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
