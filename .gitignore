@@ -2,4 +2,4 @@
 *.pyc
 *.txt
 none
-oblitzRNG\results.json
+oblitzRNG/*

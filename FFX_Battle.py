@@ -536,14 +536,9 @@ def Klikk():
     FFX_Logs.writeStats(str(klikkAttacks))
     FFX_Logs.writeStats("Klikk items used:")
     FFX_Logs.writeStats(str(klikkRevives))
-    FFXC = FFX_Xbox.controllerHandle()
     if gameVars.csr():
-        while not FFX_memory.menuOpen():
+        while not FFX_memory.userControl():
             FFX_Xbox.tapB()
-        FFXC.set_value('BtnB', 1)
-        # Dial in further. Necessary to avoid save dialog.
-        FFX_memory.waitFrames(150)
-        FFXC.set_neutral()
     else:
         # Maybe not skippable dialog, but whatever.
         FFX_memory.clickToControl()
