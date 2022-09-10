@@ -92,6 +92,7 @@ def listenStory():
             FFXC.set_value('BtnBack', 0)
             FFX_memory.waitFrames(1)
 
+    print("### CSR check:", gameVars.csr())
     checkpoint = 0
     while FFX_memory.getEncounterID() != 414:  # Sinspawn Ammes
         if FFX_memory.userControl():
@@ -106,14 +107,14 @@ def listenStory():
                 FFX_Xbox.nameAeon("Tidus")
 
                 checkpoint += 1
-            elif checkpoint == 7 and gameVars:
+            elif checkpoint == 7 and gameVars.csr():
                 checkpoint = 9
             elif checkpoint == 8:
                 while FFX_memory.userControl():
                     FFXC.set_movement(1, 0)
                     FFX_Xbox.tapB()
                 FFXC.set_neutral()
-                FFX_memory.clickToControl3()
+                FFX_memory.awaitControl()
                 print("Done clicking")
                 checkpoint += 1
             elif checkpoint < 11 and FFX_memory.getStoryProgress() >= 5:

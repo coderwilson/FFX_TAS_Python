@@ -136,9 +136,10 @@ def ABboat1():
     print("Control restored.")
     print("On the boat!")
     while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
-        target = FFX_memory.getActorCoords(actorNumber=3)
+        rikkuNum = FFX_memory.actorIndex(actorNum=41)
+        target = FFX_memory.getActorCoords(actorNumber=rikkuNum)
         FFX_targetPathing.setMovement(target)
-        if distance(0, 3) < 10:
+        if distance(0, rikkuNum) < 10:
             FFX_Xbox.tapB()
     print("In the water!")
     FFXC.set_value('BtnA', 1)
@@ -262,12 +263,9 @@ def ABswimming2():
             elif FFX_memory.getMap() == 380:
                 FFX_targetPathing.setMovement([700, 300])
             elif FFX_memory.getMap() == 71:
-                rikkuPos = FFX_memory.getActorCoords(3)
-                tidusPos = FFX_memory.getCoords()
-                distance = abs(tidusPos[1] - rikkuPos[1]) + \
-                    abs(tidusPos[0] - rikkuPos[0])
-                FFX_targetPathing.setMovement([-14, -19])
-                if distance < 30:
+                rikkuNum = FFX_memory.actorIndex(actorNum=41)
+                FFX_targetPathing.setMovement(FFX_memory.getActorCoords(rikkuNum))
+                if distance(0,rikkuNum) < 30:
                     FFX_Xbox.tapB()
         else:
             FFXC.set_neutral()
