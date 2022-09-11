@@ -1,0 +1,3 @@
+numpy==1.22.3
+ReadWriteMemory==0.1.5
+vgamepad==0.0.8
