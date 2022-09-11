@@ -127,7 +127,7 @@ def arrival():
                                     miihenSkip = True
                                 else:
                                     FFX_memory.clickToControl3()
-                            except:
+                            except Exception:
                                 miihenSkip = False
                             print("Skip successful:", miihenSkip)
                             checkpoint += 1

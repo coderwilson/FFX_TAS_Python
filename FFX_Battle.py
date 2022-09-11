@@ -4330,7 +4330,7 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
                         FFX_Xbox.tapLeft()
 
             tapTargeting()
-        except:
+        except Exception:
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
@@ -4422,7 +4422,7 @@ def useItemTidus(slot: int, direction='none', target=255):
                         FFX_Xbox.tapLeft()
 
             tapTargeting()
-        except:
+        except Exception:
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()

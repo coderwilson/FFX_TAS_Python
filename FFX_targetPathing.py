@@ -3124,10 +3124,10 @@ def djoseExit(checkpoint):
     if checkpoint == 34:
         x = 0
         y = 0
-    if checkpoint == 35: #Remedy logic
+    if checkpoint == 35:  # Remedy logic
         x = -18
         y = 19
-    if checkpoint == 36: #Pick up Remedy
+    if checkpoint == 36:  # Pick up Remedy
         x = 0
         y = 0
     if checkpoint == 37:
@@ -4902,7 +4902,7 @@ def Home(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    if checkpoint == 60: #Used for kilikaSkip and Nemesis, extra chest.
+    if checkpoint == 60:  # Used for kilikaSkip and Nemesis, extra chest.
         x = -343
         y = 189
     if checkpoint == 61:

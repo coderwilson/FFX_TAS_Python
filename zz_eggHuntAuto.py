@@ -151,7 +151,7 @@ def engage():
 
             try:
                 FFXC.set_movement(Lx, Ly)
-            except:
+            except Exception:
                 pass
             target = oldTarget
 
@@ -181,5 +181,5 @@ def engage():
         FFX_Logs.writeStats(str(round(duration, 2)))
         FFX_Logs.writeStats("Egg hunt battles:")
         FFX_Logs.writeStats(str(battleCount))
-    except:
+    except Exception:
         print("No log file.")

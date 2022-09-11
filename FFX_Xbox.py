@@ -97,7 +97,7 @@ class vgTranslator:
         try:
             self.gamepad.left_joystick_float(x_value_float=x, y_value_float=y)
             self.gamepad.update()
-        except:
+        except Exception:
             pass
 
     def set_neutral(self):
