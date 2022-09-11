@@ -4735,7 +4735,7 @@ def attack(direction="none"):
             pass
     while FFX_memory.mainBattleMenu():
         if not FFX_memory.battleMenuCursor() in [0, 203, 210, 216]:
-            print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
+            print("Battle Menu Cursor:", FFX_memory.battleMenuCursor())
             FFX_Xbox.tapUp()
         elif FFX_Screen.BattleComplete():
             return
