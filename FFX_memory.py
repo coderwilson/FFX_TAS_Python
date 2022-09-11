@@ -5,11 +5,14 @@ import struct
 import FFX_Xbox
 import FFX_targetPathing
 import FFX_vars
-gameVars = FFX_vars.varsHandle()
-from typing import Any,  List, NewType
 import os.path
 import ctypes
 import ctypes.wintypes
+from typing import Any, List, NewType
+from ReadWriteMemory import ReadWriteMemory
+from ReadWriteMemory import Process
+gameVars = FFX_vars.varsHandle()
+
 # Process Permissions
 PROCESS_QUERY_INFORMATION = 0x0400
 PROCESS_VM_OPERATION = 0x0008
@@ -20,14 +23,12 @@ MAX_PATH = 260
 
 baseValue = 0
 
-from ReadWriteMemory import ReadWriteMemory
-from ReadWriteMemory import Process
 
 class LocProcess(Process):
     def __init__(self, *args, **kwargs):
         super(LocProcess, self).__init__(*args, **kwargs)
-    
-    def readBytes(self, lp_base_address: int, size:int=4):
+
+    def readBytes(self, lp_base_address: int, size: int = 4):
         """
         See the original ReadWriteMemory values for details on how this works. This version allows us to pass
         the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
@@ -47,8 +48,8 @@ class LocProcess(Process):
             error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
                      'Name': self.name, 'ErrorCode': self.error_code}
             ReadWriteMemoryError(error)
-    
-    def writeBytes(self, lp_base_address: int, value: int, size:int=4) -> bool:
+
+    def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
         """
         Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
         """
@@ -102,7 +103,6 @@ class FFXMemory(ReadWriteMemory):
         raise ReadWriteMemoryError(f'Process "{self.process.name}" not found!')
 
 
-
 def start():
     global process
     global xPtr
@@ -110,7 +110,7 @@ def start():
     global coordsCounter
     coordsCounter = 0
 
-    #rwm = ReadWriteMemory()
+    # rwm = ReadWriteMemory()
     rwm = FFXMemory()
     print("#############")
     print(type(rwm))
@@ -130,7 +130,6 @@ def start():
     except Exception as errCode:
         print("Could not get memory address dynamically.", errCode)
         baseValue = 0x00FF0000
-    
 
 
 def float_from_integer(integer):
@@ -159,6 +158,7 @@ def waitFrames(frames: int):
         previous = current
         current = process.readBytes(key, 4)
     return
+
 
 def rngSeed():
     if int(gameVars.confirmedSeed()) == 999:

@@ -15,7 +15,7 @@ class allVars:
         self.nemesisValue = False  # Set based on if you're doing any% (False) or Nemesis% (True)
         self.forceLoop = False  # After game is finished, start again on next seed. DOES NOT WORK WITH CSR
         self.blitzLoop = False  # Loop on the same seed immediately after Blitzball.
-        self.setSeed = False  # If you are using Rossy's patch, set to True. Otherwise set to False
+        self.setSeed = True  # If you are using Rossy's patch, set to True. Otherwise set to False
         self.kilikaSkip = True  # True == Tidus OD on Evrae instead of Seymour. New strat.
         self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
 
