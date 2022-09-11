@@ -110,9 +110,7 @@ def Klikk_fight():
         FFX_Xbox.tapB()
 
     FFX_Xbox.clickToBattle()
-    FFX_Battle.useItem(0, 'none')
-
-    # Tidus self-potion
+    FFX_Battle.useItem(0, 'none')  # Tidus self-potion
     FFX_Screen.awaitTurn()
     FFX_Battle.Klikk()
 

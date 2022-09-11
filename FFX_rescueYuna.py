@@ -406,8 +406,7 @@ def ViaPurifico():
     FFX_memory.clickToControl()
     FFX_menu.viaPurifico()
 
-    complete = 0
-    while FFX_memory.getMap() != 209: #Map number for Altana
+    while FFX_memory.getMap() != 209:  # Map number for Altana
         if FFX_memory.userControl():
             if FFX_memory.getSLVLYuna() < 15 and FFX_memory.getCoords()[1] > 1460:
                 FFXC.set_movement(0, -1)

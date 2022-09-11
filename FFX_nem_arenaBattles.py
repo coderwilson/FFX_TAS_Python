@@ -99,7 +99,7 @@ def airShipDestination(destNum=0): #Default to Sin.
 def getSaveSphereDetails():
     mapVal = FFX_memory.getMap()
     storyVal = FFX_memory.getStoryProgress()
-    print("Map and story: ", mapVal, " | ", storyVal)
+    print("Map:", mapVal, "Story:", storyVal)
     x = 0
     y = 0
     diag = 0

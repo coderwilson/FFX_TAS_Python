@@ -172,7 +172,7 @@ def arrival():
 
                 # Kimahri manip
                 nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-                print("#### Next Kimahri crit: ", nextCritKim)
+                print("#### Next Kimahri crit:", nextCritKim)
             else:
                 FFXC.set_movement(1, 1)
                 if FFX_memory.menuOpen():

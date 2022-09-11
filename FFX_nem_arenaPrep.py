@@ -127,7 +127,7 @@ def getSaveSphereDetails():
 def getSaveSphereDetails_old():
     mapVal = FFX_memory.getMap()
     storyVal = FFX_memory.getStoryProgress()
-    print("Map and story: ", mapVal, " | ", storyVal)
+    print("Map:", mapVal, "Story:", storyVal)
     x = 0
     y = 0
     diag = 0

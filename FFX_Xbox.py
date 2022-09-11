@@ -201,13 +201,6 @@ def SkipDialog(Keystrokes):
     print("Mashing B - Complete")
 
 
-def MashNTimes(num_repetitions):
-    print(f"Mashing B {num_repetitions} times.")
-    for _ in range(num_repetitions):
-        tapB()
-    print("Mashing B - Complete")
-
-
 def SkipDialogSpecial(Keystrokes):
     num_repetitions = math.ceil(round(Keystrokes * 30) / 2)
     print(f"Mashing A and B {num_repetitions} times.")
@@ -408,35 +401,6 @@ def tapStart():
     FFX_memory.waitFrames(2)
 
 
-def tidusOD():
-    # This function has primarily moved to the FFX_Battle library. Leaving this version live in case
-    # it continues to be used from other files outside of that library.
-    print("Tidus overdrive activating")
-    menuLeft()
-    FFX_memory.waitFrames(30 * 0.8)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.4)
-    menuB()  # Activate overdrive
-    FFX_memory.waitFrames(30 * 3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.25)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.35)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.3)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.25)
-    menuB()
-    FFX_memory.waitFrames(30 * 0.2)
-    menuB()
-
-
 def weapSwap(position):
     print("Weapon swap, weapon in position:", position)
     while FFX_memory.mainBattleMenu():
@@ -526,7 +490,7 @@ def gridRight():
 
 
 def clickToBattle():
-    print("Clicking until it's someone's turn in battle")
+    print("Mashing B until first turn in battle")
     FFXC.set_neutral()
     while not (FFX_memory.battleActive() and FFX_memory.turnReady()):
         if FFX_memory.userControl():

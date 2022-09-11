@@ -59,10 +59,10 @@ class allVars:
         self.originalResults = [0] * 7
         self.yojimboIndex = 1
 
-        #----Path for save files, used for loading a specific save
-        #coderwilson automation PC
-        #self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        #coderwilson main PC
+        # ----Path for save files, used for loading a specific save
+        # coderwilson automation PC
+        # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
     
     def useSetSeed(self):
@@ -96,13 +96,13 @@ class allVars:
 
     def loopSeeds(self):
         return self.forceLoop
-    
+
     def confirmedSeed(self):
         return self.confirmedSeedNum
-    
+
     def setConfirmedSeed(self, value):
         self.confirmedSeedNum = value
-    
+
     def setNewGame(self):
         self.newGame = True
 

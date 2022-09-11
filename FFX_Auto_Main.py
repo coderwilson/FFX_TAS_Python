@@ -413,7 +413,6 @@ while Gamestate != "End":
         print("New Game 1 function initiated.")
         FFX_DreamZan.NewGame(Gamestate)
         print("New Game 1 function complete.")
-        # gameVars.setStartVars() #Moved to start of Auto_Main
         gameVars.setNewGame()
         gameVars.setCSR(True)
         print("Variables initialized.")
