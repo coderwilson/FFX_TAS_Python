@@ -169,7 +169,7 @@ def desert():
                             FFX_Battle.fleeAll()
                     else:
                         FFX_Battle.sandragora(2)
-                        checkpoint = 59
+                        checkpoint = 58
                 else:
                     FFX_Battle.bikanelBattleLogic(
                         [chargeState, needSpeed, needPower, itemsNeeded])
@@ -230,6 +230,8 @@ def findSummoners():
             elif checkpoint < 18 and FFX_memory.getMap() == 280:
                 checkpoint = 19
             elif checkpoint == 34 and gameVars.nemesis():
+                checkpoint = 60
+            elif checkpoint == 34 and gameVars.skipKilikaLuck():
                 checkpoint = 60
             elif checkpoint == 63:
                 FFX_memory.clickToEventTemple(6)

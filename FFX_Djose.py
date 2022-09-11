@@ -334,18 +334,25 @@ def leavingDjose():
     FFX_memory.awaitControl()
 
     checkpoint = 0
+    lastCP = 0
     while FFX_memory.getMap() != 75:
+        if lastCP != checkpoint:
+            print("Checkpoint reached: ", checkpoint)
+            lastCP = checkpoint
         if FFX_memory.userControl():
             if checkpoint == 1:
                 if not gameVars.csr():
                     FFXC.set_movement(1, 0)
                     FFX_memory.clickToEventTemple(6)
                 checkpoint += 1
-            elif checkpoint == 11:  # No longer do we pick up the Remedy
+            elif checkpoint == 11: # and not gameVars.skipKilikaLuck(): #Do we need this chest for kilika luck skip? I think not.
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 FFX_memory.clickToEventTemple(0)
-                checkpoint += 1
+                if checkpoint == 9:
+                    checkpoint = 35
+                else:
+                    checkpoint += 1
             elif checkpoint == 14:
                 FFX_memory.clickToEventTemple(2)
                 checkpoint += 1
@@ -355,6 +362,13 @@ def leavingDjose():
             elif checkpoint in [22, 29]:
                 FFX_memory.clickToEventTemple(4)
                 checkpoint += 1
+            elif checkpoint == 36:
+                while FFX_memory.userControl():
+                    FFX_targetPathing.setMovement([-18,35])
+                    FFX_Xbox.tapB()
+                FFXC.set_neutral()
+                FFX_memory.clickToControl()
+                checkpoint = 13
             elif FFX_targetPathing.setMovement(FFX_targetPathing.djoseExit(checkpoint)):
                 checkpoint += 1
         else:

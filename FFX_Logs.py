@@ -27,20 +27,24 @@ def nextStats(rngSeedNum):
     global fileStats
     global game
     global ext
-    timeNow = datetime.datetime.now()
-    fileStats = "Logs/" + game + "Stats_ " + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
-        timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
+    if fileStats == "none":
+        timeNow = datetime.datetime.now()
+        fileStats = "Logs/" + game + "Stats_ " + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
+            timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
-    global statsFile
-    statsFile = open(fileStats, "x")
-    statsFile.close()
+        global statsFile
+        statsFile = open(fileStats, "x")
+        statsFile.close()
 
-    statsFile = open(fileStats, "a")
-    statsFile.write("Stats file is ready for writing!\n")
-    statsFile.write("\n")
-    statsFile.close()
+        statsFile = open(fileStats, "a")
+        statsFile.write("Stats file is ready for writing!\n")
+        statsFile.write("\n")
+        statsFile.close()
     print("Stats file is ready for writing!\n")
 
+def resetStatsLog():
+    global fileStats
+    fileStats = "none"
 
 def writePlot(message):
     global plotFile

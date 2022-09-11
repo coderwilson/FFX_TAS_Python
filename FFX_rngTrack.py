@@ -292,8 +292,12 @@ def tStrikeTracking(tros=False, report=False):
     # Increment only if we need to kill yellow element on a certain battle.
     killYellow = [0, 0, 0]
     battleVariance = earlyBattleCount()
-    lagoonCount = int(battleVariance['Lagoon'])
-    kilikaCount = int(battleVariance['Kilika'])
+    try:
+        lagoonCount = int(battleVariance['Lagoon'])
+        kilikaCount = int(battleVariance['Kilika'])
+    except:
+        lagoonCount = 3
+        kilikaCount = 6
     partySize = 4
 
     # Lagoon
@@ -572,7 +576,7 @@ def tStrikeTracking(tros=False, report=False):
         area="kilika_woods", battleCount=3, extraAdvances=advance01)
     FFX_Logs.writeRNGTrack("Kilika battles:")
     import FFX_Kilika
-    bestBattle = FFX_Kilika.selectBestOfThree(kilikaBattles)
+    bestBattle = FFX_Kilika.selectBestOfTwo(kilikaBattles)
     ragoraKills = [0, 0, 0]
     if "ragora" in bestBattle:
         for i in range(len(bestBattle)):
@@ -1004,11 +1008,11 @@ def recordBlitzResults(duration, testMode=False):
         newVal = {FFX_memory.rngSeed(): {gameVars.oblitzRNGCheck(): {"duration": duration, "victory": gameVars.getBlitzWin()}}}
         if str(FFX_memory.rngSeed()) in records.keys():
             if gameVars.oblitzRNGCheck() in records[str(FFX_memory.rngSeed())].keys():
-                if gameVars.getBlitzWin() and not records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
+                if not gameVars.getBlitzWin() and records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
                     records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory'] = gameVars.getBlitzWin()
                     records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration'] = duration
                 elif gameVars.getBlitzWin() == records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
-                    if duration < records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration']:
+                    if duration > records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration']:
                         records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory'] = gameVars.getBlitzWin()
                         records[str(FFX_memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration'] = duration
             else:
