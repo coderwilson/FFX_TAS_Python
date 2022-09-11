@@ -38,3 +38,7 @@ Then add a variable for size, so it looks like this:
 Then find the line with ReadProcessMemory and add the size variable where the static 4 is located, so it looks like this:  
 `---  ReadProcessMemory(self.handle, lp_base_address, lp_buffer, size, lp_number_of_bytes_read)`  
 Do this for both readBytes and writeBytes. Save and you're good to go.
+
+---
+Update as of 09/11/2022:
+We have improved the project such that the modifications to the ReadWriteMemory file are no longer needed. We will be testing and re-document the install process soon.
