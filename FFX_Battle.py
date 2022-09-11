@@ -376,9 +376,9 @@ def revive(itemNum=6, reportForRNG=False):
     print("Using Phoenix Down")
     if reportForRNG:
         FFX_Logs.writeRNGTrack("Reviving character")
-        FFX_Logs.writeRNGTrack("Battle:" + str(FFX_memory.getEncounterID()))
+        FFX_Logs.writeRNGTrack("Battle: " + str(FFX_memory.getEncounterID()))
         FFX_Logs.writeRNGTrack(
-            "Story flag:" + str(FFX_memory.getStoryProgress()))
+            "Story flag: " + str(FFX_memory.getStoryProgress()))
     if FFX_memory.getThrowItemsSlot(itemNum) > 250:
         attack('none')
         return
