@@ -5,7 +5,6 @@ import FFX_memory
 from FFX_memory import s32
 import FFX_vars
 import FFX_rngTrack
-import math
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -377,9 +376,9 @@ def revive(itemNum=6, reportForRNG=False):
     print("Using Phoenix Down")
     if reportForRNG:
         FFX_Logs.writeRNGTrack("Reviving character")
-        FFX_Logs.writeRNGTrack("Battle: " + str(FFX_memory.getEncounterID()))
+        FFX_Logs.writeRNGTrack("Battle:" + str(FFX_memory.getEncounterID()))
         FFX_Logs.writeRNGTrack(
-            "Story flag: " + str(FFX_memory.getStoryProgress()))
+            "Story flag:" + str(FFX_memory.getStoryProgress()))
     if FFX_memory.getThrowItemsSlot(itemNum) > 250:
         attack('none')
         return
@@ -1349,7 +1348,7 @@ def afterBlitz3LateHaste(earlyHaste):
 
 def MiihenRoad(selfDestruct=False):
     print("Fight start: Mi'ihen Road")
-    print("Mi'ihen battle. Self-destruct: ", gameVars.selfDestructGet())
+    print("Mi'ihen battle. Self-destruct:", gameVars.selfDestructGet())
     battle = FFX_memory.getEncounterID()
 
     while not FFX_memory.battleComplete():  # AKA end of battle screen
@@ -2106,7 +2105,7 @@ def thunderPlains(section):
     while not FFX_memory.turnReady():
         pass
 
-    #Petrify check is not working. Requires review.
+    # Petrify check is not working. Requires review.
     if checkPetrify():
         print("------------Someone has been petrified which messes up the battle logic. Escaping.")
         fleeAll()
@@ -2283,7 +2282,7 @@ def mWoods(woodsVars):
                         else:
                             escapeOne()
                 else:
-                    print("Fleeing with ", turnchar)
+                    print("Fleeing with", turnchar)
                     fleeAll()
             elif not woodsVars[0]:
                 if turnchar == 6:
@@ -3126,8 +3125,7 @@ def wendigo():
                     tidusOD('left', character=21)
                 elif tidushealself:
                     if partyHP[FFX_memory.getBattleCharSlot(0)] < tidusmaxHP:
-                        print(
-                            "Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
+                        print("Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
                         if fullheal(target=0,
                                     direction="l") == 0:
                             if FFX_Screen.faintCheck():
@@ -3330,7 +3328,7 @@ def bikanelBattleLogic(status):
                         itemToUse = 39
                     else:
                         itemToUse = 999
-                        
+
                     if itemToUse == 999:
                         escapeOne()
                     else:
@@ -3558,7 +3556,7 @@ def Evrae():
                     if tidusPrep == 0:
                         tidusPrep = 1
                         tidusHaste('none')
-                    elif tidusPrep in [1,2]:
+                    elif tidusPrep in [1, 2]:
                         tidusPrep += 1
                         cheer()
                     elif tidusAttacks == 4:
@@ -3567,7 +3565,7 @@ def Evrae():
                     else:
                         tidusAttacks += 1
                         attack('none')
-                elif gameVars.getBlitzWin(): #Blitz win logic
+                elif gameVars.getBlitzWin():  # Blitz win logic
                     if tidusPrep == 0:
                         tidusPrep = 1
                         tidusHaste('none')
@@ -4111,7 +4109,7 @@ def biranYenke():
         print("Double return sphere drops.")
         endGameVersion = 4
     elif retSlot == 255:
-        print("Double friend sphere, effective game over. :( ")
+        print("Double friend sphere, effective game over. :(")
         endGameVersion = 3
     else:
         print("Split items between friend and return spheres.")
@@ -4280,9 +4278,9 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
     while FFX_memory.mainBattleMenu():
         FFX_Xbox.tapB()
     if rikkuFlee:
-        print("Mark 2, selecting 'Use' command in position ", 2)
+        print("Mark 2, selecting 'Use' command in position", 2)
     else:
-        print("Mark 2, selecting 'Use' command in position ", 1)
+        print("Mark 2, selecting 'Use' command in position", 1)
     if rikkuFlee:
         _navigate_to_position(2)
     else:
@@ -4492,7 +4490,7 @@ def seymourSpell():
 
 
 def _useHealingItem(num=None, direction='l', itemID=0):
-    print("Healing character, ", num)
+    print("Healing character,", num)
     direction = direction.lower()
     while not FFX_memory.turnReady():
         print("Battle menu isn't up.")
@@ -4544,7 +4542,7 @@ def _useHealingItem(num=None, direction='l', itemID=0):
 
 
 def usePotionCharacter(num, direction):
-    print("Healing character, ", num)
+    print("Healing character,", num)
     _useHealingItem(num=num, direction=direction, itemID=0)
 
 
@@ -4553,7 +4551,7 @@ def attackByNum(num, direction='u'):
         friendlyTarget = True
     else:
         friendlyTarget = False
-    print("Attacking specific character, ", num)
+    print("Attacking specific character,", num)
     direction = direction.lower()
     if not FFX_memory.turnReady():
         print("Battle menu isn't up.")
@@ -4645,11 +4643,11 @@ def oblitzRngWait():
         secondResult = [comingSeeds[2], 0, True, 2]
     else:
         print("## Scanning values for this RNG seed")
-        if gameVars.loopBlitz(): #This will cause us to prefer results hunting
+        if gameVars.loopBlitz():  # This will cause us to prefer results hunting
             print("### Looping on blitz, we will try a new value.")
             firstResult = [0, 10, True, 0]
             secondResult = [0, 10, True, 0]
-        else: #For full runs, take the best result.
+        else:  # For full runs, take the best result.
             print("### This is a full run. Selecting best known result.")
             firstResult = [0, 9999, False, 0]
             secondResult = [0, 9999, False, 0]
@@ -4668,10 +4666,10 @@ def oblitzRngWait():
                 pass
             elif firstResult[3] == 0:
                 firstResult = [comingSeeds[i], duration, victory, pos]
-                print("Initial value for first: ", firstResult)
+                print("Initial value for first:", firstResult)
             elif secondResult[3] == 0:
                 secondResult = [comingSeeds[i], duration, victory, pos]
-                print("Initial value for second: ", secondResult)
+                print("Initial value for second:", secondResult)
             elif firstResult[2] and not secondResult[2]:
                 if duration < secondResult[1]:
                     secondResult = [comingSeeds[i], duration, victory, pos]
@@ -4699,11 +4697,11 @@ def oblitzRngWait():
     while s32(nextRNG) != s32(best[0]) and j < 15:
         nextRNG = FFX_memory.rngFromIndex(index=2)
         if lastRNG != nextRNG:
-            print(j, " | ", s32(nextRNG), " | ", s32(FFX_memory.rngFromIndex(index=2)), " | ", s32(best[0]))
+            print(j, "|", s32(nextRNG), "|", s32(FFX_memory.rngFromIndex(index=2)), "|", s32(best[0]))
             j += 1
             lastRNG = nextRNG
     print("====================================")
-    print("Success. Attacking. ", j, " | ", nextRNG)
+    print("Success. Attacking.", j, "|", nextRNG)
     gameVars.setOblitzRNG(value=nextRNG)
     return nextRNG
 
@@ -4715,7 +4713,7 @@ def attackOblitzEnd():
             pass
     while FFX_memory.mainBattleMenu():
         if not FFX_memory.battleMenuCursor() in [0, 203, 210, 216]:
-            print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
+            print("Battle Menu Cursor:", FFX_memory.battleMenuCursor())
             FFX_Xbox.tapUp()
         elif FFX_Screen.BattleComplete():
             return
@@ -5301,7 +5299,7 @@ def escapeOne():
                 elif replaceArray[i] in FFX_memory.getActiveBattleFormation():
                     pass
                 elif FFX_rngTrack.nextActionEscape(replaceArray[i]):
-                    print("Character ", replaceArray[i], " can escape. Swapping.")
+                    print("Character", replaceArray[i], "can escape. Swapping.")
                     replacement = replaceArray[i]
                     buddySwap_char(replacement)
                     return escapeOne()
@@ -5348,8 +5346,7 @@ def buddySwap_char(character):
     position = FFX_memory.getBattleCharSlot(character)
 
     if position < 3:
-        print("Cannot swap with character ", FFX_memory.nameFromNumber(character),
-              ", that character is in the front party.")
+        print("Cannot swap with character", FFX_memory.nameFromNumber(character), "\nThat character is in the front party.")
         return
     else:
         while not FFX_memory.otherBattleMenu():
@@ -5718,7 +5715,7 @@ def BFA():
                     useGil = aeon_hp * 10
                 else:
                     useGil = (int(aeon_hp / 1000) + 1) * 10000
-                print("#### USING GIL #### ", useGil)
+                print("#### USING GIL ####", useGil)
                 calculateSpareChangeMovement(useGil)
                 while FFX_memory.spareChangeOpen():
                     FFX_Xbox.tapB()
@@ -5852,11 +5849,11 @@ def yuYevon():
 
 
 def checkPetrify():
-    #This function is always returning as if someone is petrified, needs review.
+    # This function is always returning as if someone is petrified, needs review.
     for iterVar in range(7):
         print(iterVar)
         if FFX_memory.petrifiedstate(iterVar):
-            print("Character ", iterVar, " is petrified.")
+            print("Character", iterVar, "is petrified.")
             return True
     print("Everyone looks good - no petrification")
     return False
@@ -6004,7 +6001,7 @@ def equipInBattle(equipType='weap', abilityNum=0, character=0, special='none'):
     while FFX_memory.interiorBattleMenu():
         FFX_Xbox.tapB()
 
-    print("Desired equipment is in slot ", equipNum)
+    print("Desired equipment is in slot", equipNum)
 
 
 def checkCharacterOk(charNum):
@@ -6116,7 +6113,7 @@ def calmLandsManip():
     midArray = [277, 279, 285, 287, 289, 290]
     rng10nextChanceHigh = FFX_memory.nextChanceRNG10(128)
     highArray = [278, 286, 288]
-    print("++Gems: ", checkGems())
+    print("++Gems:", checkGems())
     if checkGems() < 2:
         print("++Calm Lands battle, looking for gems.")
         calmLandsGems()
@@ -6294,10 +6291,10 @@ def advanceRNG12():
                     aeonSummon(4)
             elif FFX_Screen.turnAeon():
                 numEnemies = len(FFX_memory.getEnemyCurrentHP())
-                print("+++ ", FFX_memory.getEnemyCurrentHP())
-                print("+++ ", numEnemies)
+                print("+++", FFX_memory.getEnemyCurrentHP())
+                print("+++", numEnemies)
                 checkAhead = numEnemies * 3
-                print("+++ ", checkAhead)
+                print("+++", checkAhead)
                 aheadArray = FFX_memory.nextChanceRNG10Full()
                 for h in range(checkAhead):
                     if h == 3:
@@ -6346,16 +6343,16 @@ def ghostKill():
         print("Aeon kill results in NEA on char:", owner2)
         ghostKillAeon()
     elif silenceSlot > 200:
-        print("No silence grenade, going with aeon kill: ", owner2)
+        print("No silence grenade, going with aeon kill:", owner2)
         ghostKillAeon()
     elif owner1 in [0, 4, 6]:
         print("Any character kill results in NEA on char:", owner1)
         ghostKillAny()
     elif owner1 == 9:
-        print("Has to be Tidus kill: ", owner1)
+        print("Has to be Tidus kill:", owner1)
         ghostKillTidus()
     else:
-        print("No way to get an optimal drop. Resorting to aeon: ", owner2)
+        print("No way to get an optimal drop. Resorting to aeon:", owner2)
         ghostKillAeon()
 
     FFX_memory.clickToControl3()

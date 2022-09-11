@@ -124,7 +124,6 @@ while attempts < 20 and cycles < 50:
 
         FFX_Reset.resetToMainMenu()
     else:
-        print(" ")
         print("------------------------------")
         print("------------------------------")
         print("Final demo is complete. Thanks for playing.")
