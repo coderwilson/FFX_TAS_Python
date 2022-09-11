@@ -41,7 +41,6 @@ while attempts < 20:
     print("Duration:", endTime - startTime)
 
     if attempts < 20:
-        print(" ")
         print("------------------------------")
         print("------------------------------")
         print("Test number", attempts, "is complete.")
@@ -54,7 +53,6 @@ while attempts < 20:
 
         FFX_Reset.resetToMainMenu()
     else:
-        print(" ")
         print("------------------------------")
         print("------------------------------")
         print("Testing is complete.")

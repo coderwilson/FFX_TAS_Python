@@ -128,7 +128,7 @@ def start():
         print("Process Modules complete")
         print("Dynamically determined memory address:", hex(baseValue))
     except Exception as errCode:
-        print("Could not get memory address dynamically. ", errCode)
+        print("Could not get memory address dynamically.", errCode)
         baseValue = 0x00FF0000
     
 
@@ -2034,7 +2034,7 @@ def mrrGuyCoords():
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        #print("Actor ", x, ":", hex(actorNum))
+        #print("Actor", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
     print("+++MRR guy in position:", mrrGuy)
@@ -3040,7 +3040,7 @@ def customizeMenuArray():
     for x in range(60):
         offset = 0x1197730 + (x * 4)
         retArray.append(process.readBytes(baseValue + offset, 2))
-    print("Customize menu: ")
+    print("Customize menu:")
     print(retArray)
     return retArray
 
@@ -4110,9 +4110,9 @@ def rollNextRNG(lastRNG: int, index: int) -> int:
 
 def printManipInfo():
     print("--------------------------")
-    print("Upcoming RNGs:")
-    print("RNG12:", nextChanceRNG12(), "| RNG13: ", nextChanceRNG13() - 1)
-    print("RNG10:", nextChanceRNG10(), "| Pre Defender X: ", nextChanceRNG10Calm())
+    print("Upcoming RNG:")
+    print("RNG12:", nextChanceRNG12(), "| RNG13:", nextChanceRNG13() - 1)
+    print("RNG10:", nextChanceRNG10(), "| Pre Defender X:", nextChanceRNG10Calm())
     print("--------------------------")
 
 

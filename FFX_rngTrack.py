@@ -917,7 +917,7 @@ def nextActionHitMiss(character: int = 0, enemy: str = "anima"):
 
     # Data directly from the tracker
     target_luck = MONSTERS[enemy].stats['Luck']
-    print("Enemy luck: ", target_luck)
+    print("Enemy luck:", target_luck)
     target_evasion = MONSTERS[enemy].stats['Evasion']
     print("Enemy evasion:", target_evasion)
 

@@ -193,7 +193,7 @@ def eggHunt(autoEggHunt):
             FFX_memory.waitFrames(30 * 1)
             waitCount += 1
             if waitCount % 10 == 0:
-                print("Still waiting on user to do this section. ", waitCount / 10)
+                print("Still waiting on user to do this section.", waitCount / 10)
     print("Done with the egg hunt. Final prep for BFA.")
     if gameVars.nemesis():
         FFX_menu.equipWeapon(character=0, ability=0x8019, fullMenuClose=True)
