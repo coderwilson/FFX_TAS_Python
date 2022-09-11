@@ -91,12 +91,12 @@ if gameVars.nemesis():
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
-Gamestate = "Sin"
+#Gamestate = "Sin"
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
-StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+#StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
+Gamestate = "none"
+StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
