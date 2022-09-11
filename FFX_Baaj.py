@@ -139,6 +139,9 @@ def ABboat1():
         FFX_targetPathing.setMovement(target)
         if distance(0, rikkuNum) < 10:
             FFX_Xbox.tapB()
+        elif FFX_memory.menuOpen():
+            FFX_Xbox.menuA()
+            FFX_Xbox.menuB()
     print("In the water!")
     FFXC.set_value('BtnA', 1)
     FFXC.set_movement(-1, -1)
