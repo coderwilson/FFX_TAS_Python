@@ -263,7 +263,7 @@ def ABswimming2():
             elif FFX_memory.getMap() == 71:
                 rikkuNum = FFX_memory.actorIndex(actorNum=41)
                 FFX_targetPathing.setMovement(FFX_memory.getActorCoords(rikkuNum))
-                if distance(0,rikkuNum) < 30:
+                if distance(0, rikkuNum) < 30:
                     FFX_Xbox.tapB()
         else:
             FFXC.set_neutral()

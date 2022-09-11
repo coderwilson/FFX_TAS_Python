@@ -168,7 +168,7 @@ def ammesBattle():
             lastHit = FFX_memory.lastHitCheckChange()
             while lastHit == 9999:
                 lastHit = FFX_memory.lastHitCheckChange()
-            print("Confirm - last hit: ", lastHit)
+            print("Confirm - last hit:", lastHit)
             hitsArray.append(lastHit)
             print(hitsArray)
     print("#####################################")
@@ -179,7 +179,7 @@ def ammesBattle():
     print("### Corrected RNG seed:", correctSeed)
     if correctSeed != "Err_seed_not_found":
         gameVars.setConfirmedSeed(correctSeed)
-    print("Confirming RNG seed: ", FFX_memory.rngSeed())
+    print("Confirming RNG seed:", FFX_memory.rngSeed())
     print("#####################################")
     print("Done Killing Sinspawn")
     FFX_memory.waitFrames(6)  # Just for no overlap
