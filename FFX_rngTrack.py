@@ -274,6 +274,10 @@ def reportDroppedItem(enemy: str, drop=FFX_memory.equipment, prefType: int = 99,
 
 
 def tStrikeTracking(tros=False, report=False):
+    return [0, 0, 0], [0, 0, 0]
+
+
+def tStrikeTracking_notWorkingYet(tros=False, report=False):
     if tros:
         advance01 = 0
         advance10 = 3  # Starts off with just the Tros kill advance.
