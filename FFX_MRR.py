@@ -117,7 +117,7 @@ def mainPath():
                 checkpoint += 1
                 print("Lift checkpoint:", checkpoint)
             elif checkpoint == 48:  # X-potion for safety
-                if not FFX_memory.rngSeed() in [31, 160]:
+                if not FFX_memory.rngSeed() in [31]:
                     FFX_memory.clickToEventTemple(7)
                     print("Got X-potion")
                 checkpoint += 1

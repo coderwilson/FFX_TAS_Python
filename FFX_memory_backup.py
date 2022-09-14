@@ -5,30 +5,13 @@ import struct
 import FFX_Xbox
 import FFX_targetPathing
 import FFX_vars
-import os.path
-import ctypes
-import ctypes.wintypes
-from typing import Any, List, NewType
-from ReadWriteMemory import ReadWriteMemory
-from ReadWriteMemory import Process
 gameVars = FFX_vars.varsHandle()
-
-# Process Permissions
-PROCESS_QUERY_INFORMATION = 0x0400
-PROCESS_VM_OPERATION = 0x0008
-PROCESS_VM_READ = 0x0010
-PROCESS_VM_WRITE = 0x0020
-
-MAX_PATH = 260
-
 baseValue = 0
+from ReadWriteMemory import ReadWriteMemory
 
 
-class LocProcess(Process):
-    def __init__(self, *args, **kwargs):
-        super(LocProcess, self).__init__(*args, **kwargs)
-
-    def readBytes(self, lp_base_address: int, size: int = 4):
+class FFXMemory(ReadWriteMemory):
+    def readBytes(self, lp_base_address: int, size:int=4):
         """
         See the original ReadWriteMemory values for details on how this works. This version allows us to pass
         the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
@@ -48,8 +31,8 @@ class LocProcess(Process):
             error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
                      'Name': self.name, 'ErrorCode': self.error_code}
             ReadWriteMemoryError(error)
-
-    def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
+    
+    def writeBytes(self, lp_base_address: int, value: int, size:int=4) -> bool:
         """
         Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
         """
@@ -69,40 +52,6 @@ class LocProcess(Process):
                      'Name': self.name, 'ErrorCode': self.error_code}
             ReadWriteMemoryError(error)
 
-
-class FFXMemory(ReadWriteMemory):
-    def __init__(self, *args, **kwargs):
-        super(FFXMemory, self).__init__(*args, **kwargs)
-        self.process = LocProcess()
-
-    def get_process_by_name(self, process_name: [str, bytes]) -> "Process":
-        """
-        :description: Get the process by the process executabe\'s name and return a Process object.
-
-        :param process_name: The name of the executable file for the specified process for example, my_program.exe.
-
-        :return: A Process object containing the information from the requested Process.
-        """
-        if not process_name.endswith('.exe'):
-            self.process.name = process_name + '.exe'
-
-        process_ids = self.enumerate_processes()
-
-        for process_id in process_ids:
-            self.process.handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, False, process_id)
-            if self.process.handle:
-                image_file_name = (ctypes.c_char * MAX_PATH)()
-                if ctypes.windll.psapi.GetProcessImageFileNameA(self.process.handle, image_file_name, MAX_PATH) > 0:
-                    filename = os.path.basename(image_file_name.value)
-                    if filename.decode('utf-8') == process_name:
-                        self.process.pid = process_id
-                        self.process.name = process_name
-                        return self.process
-                self.process.close()
-
-        raise ReadWriteMemoryError(f'Process "{self.process.name}" not found!')
-
-
 def start():
     global process
     global xPtr
@@ -110,15 +59,16 @@ def start():
     global coordsCounter
     coordsCounter = 0
 
-    # rwm = ReadWriteMemory()
     rwm = FFXMemory()
-    print("#############")
-    print(type(rwm))
+    print("Memory module opened:")
+    print(rwm)
     process = rwm.get_process_by_name('FFX.exe')
-    print("#############")
-    print(type(process))
-    print("#############")
+
+    print("Process now captured for FFX (reading memory)")
+    print(process)
     process.open()
+    print(process.__dict__)
+    print(process.pid)
 
     global baseValue
     try:
@@ -132,6 +82,7 @@ def start():
         baseValue = 0x00FF0000
 
 
+
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
 
@@ -139,7 +90,7 @@ def float_from_integer(integer):
 def getCutsceneID():
     global baseValue
     key = baseValue + 0xD27C88
-    cutscene_alt = process.readBytes(key, 4)
+    cutscene_alt = process.read(key, 4)
     storyline_prog = getStoryProgress()
     dialogue = diagProgressFlag()
     return (cutscene_alt, storyline_prog, dialogue)
@@ -149,14 +100,14 @@ def waitFrames(frames: int):
     frames = max(round(frames), 1)
     global baseValue
     key = baseValue + 0x0088FDD8
-    current = process.readBytes(key, 4)
+    current = process.read(key, 4)
     final = current + frames
     previous = current - 1
     while current < final:
         if not (current == previous or current == previous + 1):
             final = final - previous
         previous = current
-        current = process.readBytes(key, 4)
+        current = process.read(key, 4)
     return
 
 
@@ -171,16 +122,13 @@ def rngSeed():
 def setRngSeed(value):
     global baseValue
     key = baseValue + 0x003988a5
-    print("+++++++++++++++++")
-    print(type(process))
-    print("+++++++++++++++++")
     return process.writeBytes(key, value, 1)
 
 
 def gameOver():
     global baseValue
     key = baseValue + 0x00D2C9F1
-    if process.readBytes(key, 1) == 1:
+    if process.read(key, 1) == 1:
         return True
     else:
         return False
@@ -189,9 +137,9 @@ def gameOver():
 def battleComplete():
     global baseValue
     key = baseValue + 0x00D2C9F1
-    if process.readBytes(key, 1) == 2:
+    if process.read(key, 1) == 2:
         return True
-    elif process.readBytes(key, 1) == 3:
+    elif process.read(key, 1) == 3:
         return True
     else:
         return False
@@ -199,7 +147,7 @@ def battleComplete():
 
 def battleArenaResults():
     global baseValue
-    if process.readBytes(baseValue + 0x00D2C9F1, 1) == 2:
+    if process.read(baseValue + 0x00D2C9F1, 1) == 2:
         return True
     return False
 
@@ -213,19 +161,19 @@ def gameOverReset():
 def battleActive():
     global baseValue
     key = baseValue + 0x00D2C9F1
-    return process.readBytes(key, 1) == 0
+    return process.read(key, 1) == 0
 
 
 def getCurrentTurn():
     global baseValue
     key = baseValue + 0x00D2AA00
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def getNextTurn():
     global baseValue
     key = baseValue + 0x00D2AA04
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def battleMenuCursor():
@@ -233,7 +181,7 @@ def battleMenuCursor():
     if not turnReady():
         return 255
     key2 = baseValue + 0x00F3C926
-    return process.readBytes(key2, 1)
+    return process.read(key2, 1)
 
 
 def battleScreen():
@@ -251,7 +199,7 @@ def battleScreen():
 def turnReady():
     global baseValue
     key = baseValue + 0x00F3F77B
-    if process.readBytes(key, 1) == 0:
+    if process.read(key, 1) == 0:
         return False
     else:
         while not mainBattleMenu():
@@ -265,9 +213,9 @@ def turnReady():
 def battleCursor2():
     global baseValue
     key = baseValue + 0x00F3CA01
-    if process.readBytes(key, 1) != 0:
+    if process.read(key, 1) != 0:
         key = baseValue + 0x00F3CA0E
-        return process.readBytes(key, 1)
+        return process.read(key, 1)
     else:
         return 255
 
@@ -275,31 +223,31 @@ def battleCursor2():
 def battleCursor3():
     global baseValue
     key = baseValue + 0x00F3CAFE
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def overdriveMenuActive():
     global baseValue
     key = baseValue + 0x00F3D6F4
-    return process.readBytes(key, 1) == 4
+    return process.read(key, 1) == 4
 
 
 def overdriveMenuActiveWakka():
     global baseValue
     key = baseValue + 0x00DA0BD0
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def auronOverdriveActive():
     global baseValue
     key = baseValue + 0x00F3D6B4
-    return process.readBytes(key, 1) == 4
+    return process.read(key, 1) == 4
 
 
 def mainBattleMenu():
     global baseValue
     key = baseValue + 0x00F3C911
-    if process.readBytes(key, 1) > 0:
+    if process.read(key, 1) > 0:
         return True
     else:
         return False
@@ -308,7 +256,7 @@ def mainBattleMenu():
 def otherBattleMenu():
     global baseValue
     key = baseValue + 0x00F3CA01
-    if process.readBytes(key, 1) > 0:
+    if process.read(key, 1) > 0:
         return True
     else:
         return False
@@ -317,26 +265,25 @@ def otherBattleMenu():
 def interiorBattleMenu():
     global baseValue
     key = baseValue + 0x00F3CAF1
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def superInteriorBattleMenu():
     global baseValue
     key = baseValue + 0x00F3CBE1
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def battleTargetId():
     global baseValue
     key = baseValue + 0x00F3D1B4
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     print("Battle Target ID:", retVal)
     return retVal
 
 
 def battleLineTarget():
     return readVal(0x00F3CA42)
-
 
 def enemyTargetted():
     return readVal(0x00F3D1C0)
@@ -345,7 +292,7 @@ def enemyTargetted():
 def battleTargetActive():
     global baseValue
     key = baseValue + 0x00F3D1B4
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     print("Battle Target ID:", retVal)
     return retVal != 255
 
@@ -369,7 +316,7 @@ def awaitControl():
         waitCounter += 1
         if waitCounter % 10000000 == 0:
             print("Awaiting control -", waitCounter / 100000)
-    waitFrames(1)
+    waitFrames(30 * 0.05)
     return True
 
 
@@ -627,19 +574,19 @@ def getOrder():
     # Out of combat HP only
 
     coord = baseValue + 0x00D307E8
-    pos1 = process.readBytes(coord, 1)
+    pos1 = process.read(coord, 1)
     coord = baseValue + 0x00D307E9
-    pos2 = process.readBytes(coord, 1)
+    pos2 = process.read(coord, 1)
     coord = baseValue + 0x00D307EA
-    pos3 = process.readBytes(coord, 1)
+    pos3 = process.read(coord, 1)
     coord = baseValue + 0x00D307EB
-    pos4 = process.readBytes(coord, 1)
+    pos4 = process.read(coord, 1)
     coord = baseValue + 0x00D307EC
-    pos5 = process.readBytes(coord, 1)
+    pos5 = process.read(coord, 1)
     coord = baseValue + 0x00D307ED
-    pos6 = process.readBytes(coord, 1)
+    pos6 = process.read(coord, 1)
     coord = baseValue + 0x00D307EE
-    pos7 = process.readBytes(coord, 1)
+    pos7 = process.read(coord, 1)
 
     formation = [255, pos1, pos2, pos3, pos4, pos5, pos6, pos7]
     print("Party formation:", formation)
@@ -651,19 +598,19 @@ def getOrderSix():
     # Out of combat HP only
 
     coord = baseValue + 0x00D307E8
-    pos1 = process.readBytes(coord, 1)
+    pos1 = process.read(coord, 1)
     coord = baseValue + 0x00D307E9
-    pos2 = process.readBytes(coord, 1)
+    pos2 = process.read(coord, 1)
     coord = baseValue + 0x00D307EA
-    pos3 = process.readBytes(coord, 1)
+    pos3 = process.read(coord, 1)
     coord = baseValue + 0x00D307EB
-    pos4 = process.readBytes(coord, 1)
+    pos4 = process.read(coord, 1)
     coord = baseValue + 0x00D307EC
-    pos5 = process.readBytes(coord, 1)
+    pos5 = process.read(coord, 1)
     coord = baseValue + 0x00D307ED
-    pos6 = process.readBytes(coord, 1)
+    pos6 = process.read(coord, 1)
     coord = baseValue + 0x00D307EE
-    pos7 = process.readBytes(coord, 1)
+    pos7 = process.read(coord, 1)
 
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
     print(formation)
@@ -677,23 +624,23 @@ def getOrderSeven():
     # Out of combat HP only
 
     coord = baseValue + 0x00D307E8
-    pos1 = process.readBytes(coord, 1)
+    pos1 = process.read(coord, 1)
     coord = baseValue + 0x00D307E9
-    pos2 = process.readBytes(coord, 1)
+    pos2 = process.read(coord, 1)
     coord = baseValue + 0x00D307EA
-    pos3 = process.readBytes(coord, 1)
+    pos3 = process.read(coord, 1)
     coord = baseValue + 0x00D307EB
-    pos4 = process.readBytes(coord, 1)
+    pos4 = process.read(coord, 1)
     coord = baseValue + 0x00D307EC
-    pos5 = process.readBytes(coord, 1)
+    pos5 = process.read(coord, 1)
     coord = baseValue + 0x00D307ED
-    pos6 = process.readBytes(coord, 1)
+    pos6 = process.read(coord, 1)
     coord = baseValue + 0x00D307EE
-    pos7 = process.readBytes(coord, 1)
+    pos7 = process.read(coord, 1)
     coord = baseValue + 0x00D307EF
-    pos8 = process.readBytes(coord, 1)
+    pos8 = process.read(coord, 1)
     coord = baseValue + 0x00D307F0
-    pos9 = process.readBytes(coord, 1)
+    pos9 = process.read(coord, 1)
 
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
     while 255 in formation:
@@ -792,11 +739,11 @@ def getActiveBattleFormation():
     global baseValue
 
     key = baseValue + 0x00F3F76C
-    char1 = process.readBytes(key, 1)
+    char1 = process.read(key, 1)
     key = baseValue + 0x00F3F76E
-    char2 = process.readBytes(key, 1)
+    char2 = process.read(key, 1)
     key = baseValue + 0x00F3F770
-    char3 = process.readBytes(key, 1)
+    char3 = process.read(key, 1)
 
     battleForm = [char1, char2, char3]
     return battleForm
@@ -806,25 +753,25 @@ def getBattleFormation():
     global baseValue
 
     key = baseValue + 0x00F3F76C
-    char1 = process.readBytes(key, 1)
+    char1 = process.read(key, 1)
     key = baseValue + 0x00F3F76E
-    char2 = process.readBytes(key, 1)
+    char2 = process.read(key, 1)
     key = baseValue + 0x00F3F770
-    char3 = process.readBytes(key, 1)
+    char3 = process.read(key, 1)
     key = baseValue + 0x00D2C8A3
-    char4 = process.readBytes(key, 1)
+    char4 = process.read(key, 1)
     key = baseValue + 0x00D2C8A4
-    char5 = process.readBytes(key, 1)
+    char5 = process.read(key, 1)
     key = baseValue + 0x00D2C8A5
-    char6 = process.readBytes(key, 1)
+    char6 = process.read(key, 1)
     key = baseValue + 0x00D2C8A6
-    char7 = process.readBytes(key, 1)
+    char7 = process.read(key, 1)
     key = baseValue + 0x00D2C8A7
-    char8 = process.readBytes(key, 1)
+    char8 = process.read(key, 1)
     key = baseValue + 0x00D2C8A8
-    char9 = process.readBytes(key, 1)
+    char9 = process.read(key, 1)
     key = baseValue + 0x00D2C8A9
-    char10 = process.readBytes(key, 1)
+    char10 = process.read(key, 1)
 
     battleForm = [char4, char5, char6, char7, char8, char9, char10]
     print(battleForm)
@@ -857,7 +804,7 @@ def getBattleCharSlot(charNum) -> int:
             return 5
         if battleForm[6] == charNum:
             return 6
-    except Exception:
+    except:
         return 255
 
 
@@ -890,7 +837,7 @@ def getSLVLWakka():
     # Out of combat HP only
 
     key = baseValue + 0x00D322E7
-    sLvl = process.readBytes(key, 1)
+    sLvl = process.read(key, 1)
     print("Wakka current Slvl", sLvl)
     return sLvl
 
@@ -903,7 +850,7 @@ def itemAddress(num):
 def getItemsOrder():
     items = []
     for x in range(100):
-        items.append(process.readBytes(itemAddress(x), 1))
+        items.append(process.read(itemAddress(x), 1))
     return items
 
 
@@ -998,19 +945,19 @@ def getGridItemsSlot(itemNum) -> int:
 def getGridCursorPos():
     global baseValue
     key = baseValue + 0x012ACB78
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def getGridMoveUsePos():
     global baseValue
     key = baseValue + 0x012AC838
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def getGridMoveActive():
     global baseValue
     key = baseValue + 0x012AC82B
-    if process.readBytes(key, 1):
+    if process.read(key, 1):
         return True
     else:
         return False
@@ -1019,7 +966,7 @@ def getGridMoveActive():
 def getGridUseActive():
     global baseValue
     key = baseValue + 0x012ACB6B
-    if process.readBytes(key, 1):
+    if process.read(key, 1):
         return True
     else:
         return False
@@ -1079,13 +1026,13 @@ def getItemsCount():
     global baseValue
     itemCounts = []
     for x in range(60):
-        itemCounts.append(process.readBytes(baseValue + 0x00D30B5C + x, 1))
+        itemCounts.append(process.read(baseValue + 0x00D30B5C + x, 1))
     return itemCounts
 
 
 def getItemCountSlot(itemSlot) -> int:
     global baseValue
-    return process.readBytes(baseValue + 0x00D30B5C + itemSlot, 1)
+    return process.read(baseValue + 0x00D30B5C + itemSlot, 1)
 
 
 def getMenuDisplayCharacters():
@@ -1120,7 +1067,7 @@ def setStory(newValue):
 def RikkuODCursor1():
     global baseValue
     key = baseValue + 0x00F3CB32
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def RikkuODCursor2():
@@ -1134,7 +1081,7 @@ def getOverdriveBattle(character):
     basePointer = baseValue + 0x00d334cc
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5bc
-    retVal = process.readBytes(basePointerAddress + offset, 1)
+    retVal = process.read(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values:\n", retVal)
     return retVal
 
@@ -1146,7 +1093,7 @@ def getCharWeakness(character):
     basePointer = baseValue + 0x00d334cc
     basePointerAddress = process.read(basePointer)
     offset = (0xf90 * character) + 0x5dd
-    retVal = process.readBytes(basePointerAddress + offset, 1)
+    retVal = process.read(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values:\n", retVal)
     return retVal
 
@@ -1157,7 +1104,7 @@ def tidusEscapedState():
     basePointer = baseValue + 0x00D334CC
     basePointerAddress = process.read(basePointer)
     offset = 0xDC8
-    retVal = not process.readBytes(basePointerAddress + offset, 1)
+    retVal = not process.read(basePointerAddress + offset, 1)
     print("Tidus Escaped State:", retVal)
     return retVal
 
@@ -1170,7 +1117,7 @@ def deadstate(character):
     offset = (0xf90 * character) + 0x606
 
     key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
 
     if retVal % 2 == 1:
         return True
@@ -1186,7 +1133,7 @@ def berserkstate(character):
     offset = (0xf90 * character) + 0x607
 
     key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
 
     if retVal % 4 >= 2:
         return True
@@ -1205,7 +1152,7 @@ def petrifiedstate(character):
     offset = (0xf90 * character) + 0x606
 
     key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
 
     if retVal % 8 >= 4:
         return True
@@ -1221,7 +1168,7 @@ def confusedState(character):
     offset = (0xf90 * character) + 0x607
 
     key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
 
     if retVal % 2 == 1:
         print("Character %d is confused" % character)
@@ -1239,7 +1186,7 @@ def autoLifeState(character: int = 0):
     offset = (0xf90 * character) + 0x617
 
     key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
 
     if retVal % 4 >= 2:
         print("Character autolife is active", character)
@@ -1277,13 +1224,13 @@ def getEnemyCurrentHP():
         offset2 = (0xf90 * enemyNum) + 0x5D0
         key2 = basePointerAddress + offset2
         if enemyNum == 20:
-            maxHP = [process.readBytes(key1, 4)]
-            currentHP = [process.readBytes(key2, 4)]
+            maxHP = [process.read(key1, 4)]
+            currentHP = [process.read(key2, 4)]
         else:
-            nextHP = process.readBytes(key1, 4)
+            nextHP = process.read(key1, 4)
             if nextHP != 0:
                 maxHP.append(nextHP)
-                currentHP.append(process.readBytes(key2, 4))
+                currentHP.append(process.read(key2, 4))
         enemyNum += 1
     print("Enemy HP current values:", currentHP)
     return currentHP
@@ -1302,12 +1249,12 @@ def getEnemyMaxHP():
         offset2 = (0xf90 * enemyNum) + 0x5D0
         key2 = basePointerAddress + offset2
         if enemyNum == 20:
-            maxHP = [process.readBytes(key1, 4)]
-            currentHP = [process.readBytes(key2, 4)]
+            maxHP = [process.read(key1, 4)]
+            currentHP = [process.read(key2, 4)]
         else:
             if maxHP != 0:
-                maxHP.append(process.readBytes(key1, 4))
-                currentHP.append(process.readBytes(key2, 4))
+                maxHP.append(process.read(key1, 4))
+                currentHP.append(process.read(key2, 4))
         enemyNum += 1
     print("Enemy HP max values:")
     print(maxHP)
@@ -1320,7 +1267,7 @@ def menuOpen():
     global baseValue
 
     key = baseValue + 0x00F407E4
-    menuOpen = process.readBytes(key, 1)
+    menuOpen = process.read(key, 1)
     if menuOpen == 0:
         return False
     else:
@@ -1336,7 +1283,7 @@ def saveMenuOpen():
     global baseValue
 
     key = baseValue + 0x008E7300
-    menuOpen = process.readBytes(key, 1)
+    menuOpen = process.read(key, 1)
     if menuOpen == 1:
         return True
     else:
@@ -1381,14 +1328,14 @@ def openMenu():
 
 def menuNumber():
     global baseValue
-    return process.readBytes(baseValue + 0x85B2CC, 1)
+    return process.read(baseValue + 0x85B2CC, 1)
 
 
 def sGridActive():
     global baseValue
 
     key = baseValue + 0x0085B30C
-    menuOpen = process.readBytes(key, 1)
+    menuOpen = process.read(key, 1)
     if menuOpen == 1:
         return True
     else:
@@ -1399,7 +1346,7 @@ def sGridMenu():
     global baseValue
 
     key = baseValue + 0x0012AD860
-    menuOpen = process.readBytes(key, 1)
+    menuOpen = process.read(key, 1)
     return menuOpen
 
 
@@ -1407,7 +1354,7 @@ def sGridChar():
     global baseValue
 
     key = baseValue + 0x0012BEE2C
-    character = process.readBytes(key, 1)
+    character = process.read(key, 1)
     return character
 
 
@@ -1415,9 +1362,9 @@ def sGridNodeSelected():
     global baseValue
 
     key = baseValue + 0x0012BEB7E
-    nodeNumber = process.readBytes(key, 1)
+    nodeNumber = process.read(key, 1)
     key = baseValue + 0x0012BEB7F
-    nodeRegion = process.readBytes(key, 1)
+    nodeRegion = process.read(key, 1)
     return [nodeNumber, nodeRegion]
 
 
@@ -1425,9 +1372,9 @@ def cursorLocation():
     global baseValue
 
     key = baseValue + 0x0021D09A4
-    menu1 = process.readBytes(key, 1)
+    menu1 = process.read(key, 1)
     key = baseValue + 0x0021D09A6
-    menu2 = process.readBytes(key, 1)
+    menu2 = process.read(key, 1)
 
     return [menu1, menu2]
 
@@ -1436,7 +1383,7 @@ def getMenuCursorPos():
     global baseValue
 
     key = baseValue + 0x01471508
-    pos = process.readBytes(key, 1)
+    pos = process.read(key, 1)
 
     return pos
 
@@ -1445,7 +1392,7 @@ def getMenu2CharNum():
     global baseValue
 
     key = baseValue + 0x0147150C
-    pos = process.readBytes(key, 1)
+    pos = process.read(key, 1)
 
     return pos
 
@@ -1454,7 +1401,7 @@ def getCharCursorPos():
     global baseValue
 
     key = baseValue + 0x01441BE8
-    pos = process.readBytes(key, 1)
+    pos = process.read(key, 1)
 
     return pos
 
@@ -1463,7 +1410,7 @@ def getStoryProgress():
     global baseValue
 
     key = baseValue + 0x00D2D67C
-    progress = process.readBytes(key, 2)
+    progress = process.read(key, 2)
     return progress
 
 
@@ -1471,7 +1418,7 @@ def getMap():
     global baseValue
 
     key = baseValue + 0x00D2CA90
-    progress = process.readBytes(key, 2)
+    progress = process.read(key, 2)
     return progress
 
 
@@ -1479,7 +1426,7 @@ def touchingSaveSphere():
     global baseValue
 
     key = baseValue + 0x0021D09A6
-    value = process.readBytes(key, 1)
+    value = process.read(key, 1)
     if value != 0:
         return True
     else:
@@ -1490,7 +1437,7 @@ def saveMenuCursor():
     global baseValue
 
     key = baseValue + 0x001467942
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def mapCursor():
@@ -1498,7 +1445,7 @@ def mapCursor():
     basePointer = baseValue + 0x00F2FF14
     basePointerAddress = process.read(basePointer)
     print(basePointerAddress)
-    ret = process.readBytes(basePointerAddress + 272, 1)
+    ret = process.read(basePointerAddress + 272, 1)
     print(ret)
     return ret
 
@@ -1521,14 +1468,14 @@ def saveMenuCursor2():
     global baseValue
 
     key = baseValue + 0x001468302
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def NewGameCursor():
     global baseValue
 
     key = baseValue + 0x001467942
-    value = process.readBytes(key, 1)
+    value = process.read(key, 1)
     return value
 
 
@@ -1544,7 +1491,7 @@ def getYunaSlvl():
     global baseValue
 
     key = baseValue + 0x00D3212B
-    sLvl = process.readBytes(key, 1)
+    sLvl = process.read(key, 1)
     return sLvl
 
 
@@ -1552,7 +1499,7 @@ def getTidusSlvl():
     global baseValue
 
     key = baseValue + 0x00D32097
-    sLvl = process.readBytes(key, 1)
+    sLvl = process.read(key, 1)
     return sLvl
 
 
@@ -1560,7 +1507,7 @@ def getKimahriSlvl():
     global baseValue
 
     key = baseValue + 0x00D32253
-    sLvl = process.readBytes(key, 1)
+    sLvl = process.read(key, 1)
     return sLvl
 
 
@@ -1588,7 +1535,7 @@ def menuControl():
     global baseValue
 
     key = baseValue + 0x0085A03C
-    control = process.readBytes(key, 1)
+    control = process.read(key, 1)
     if control == 1:
         return True
     else:
@@ -1599,7 +1546,7 @@ def diagSkipPossible_old():
     global baseValue
 
     key = baseValue + 0x0085A03C
-    control = process.readBytes(key, 1)
+    control = process.read(key, 1)
     if control == 1:
         waitFrames(1)
         return True
@@ -1611,12 +1558,12 @@ def diagSkipPossible():
     global baseValue
 
     key = baseValue + 0x00F2FED0
-    control = process.readBytes(key, 1)
+    control = process.read(key, 1)
     if control == 1:
         return True
     else:
         key = baseValue + 0x0085A03C
-        control = process.readBytes(key, 1)
+        control = process.read(key, 1)
         if control == 1:
             return True
         else:
@@ -1627,7 +1574,7 @@ def cutsceneSkipPossible():
     global baseValue
 
     key = baseValue + 0x00D2A008
-    control = process.readBytes(key, 1)
+    control = process.read(key, 1)
     if control == 1:
         return True
     else:
@@ -1638,12 +1585,12 @@ def specialTextOpen():
     global baseValue
 
     key = baseValue + 0x01466D30
-    control = process.readBytes(key, 1)
+    control = process.read(key, 1)
     if control == 1:
         return True
     else:
         key = baseValue + 0x01476988
-        control = process.readBytes(key, 1)
+        control = process.read(key, 1)
         if control == 1:
             return True
         else:
@@ -1862,7 +1809,7 @@ def partyFormatCursor1():
     global baseValue
 
     coord = baseValue + 0x0147151C
-    retVal = process.readBytes(coord, 1)
+    retVal = process.read(coord, 1)
     return retVal
 
 
@@ -1870,7 +1817,7 @@ def partyFormatCursor2():
     global baseValue
 
     coord = baseValue + 0x01471520
-    retVal = process.readBytes(coord, 1)
+    retVal = process.read(coord, 1)
     return retVal
 
 
@@ -1974,7 +1921,7 @@ def getActorID(actorNum):
     basePointer = baseValue + 0x01fc44e4
     basePointerAddress = process.read(basePointer)
     offsetX = (0x880 * actorNum)
-    return process.readBytes(basePointerAddress + offsetX, 2)
+    return process.read(basePointerAddress + offsetX, 2)
 
 
 def getActorCoords(actorNumber):
@@ -1996,7 +1943,7 @@ def getActorCoords(actorNumber):
         retVal[2] = float_from_integer(process.read(keyZ))
 
         return retVal
-    except Exception:
+    except:
         pass
 
 
@@ -2009,7 +1956,7 @@ def getActorAngle(actorNumber):
         offset = (0x880 * actorNumber) + 0x158
         retVal = float_from_integer(process.read(basePointerAddress + offset))
         return retVal
-    except Exception:
+    except:
         pass
 
 
@@ -2021,8 +1968,7 @@ def miihenGuyCoords():
             spearGuy = x
     return getActorCoords(spearGuy)
 
-
-def actorIndex(actorNum: int = 41):
+def actorIndex(actorNum:int=41):
     actorIndex = 255
     for x in range(getActorArraySize()):
         actorMem = getActorID(x)
@@ -2036,7 +1982,7 @@ def mrrGuyCoords():
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        #print("Actor", x, ":", hex(actorNum))
+        #print("Actor ", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
     print("+++MRR guy in position:", mrrGuy)
@@ -2076,17 +2022,17 @@ def affectionArray():
 
     tidus = 255
     key = baseValue + 0x00D2CAC0
-    yuna = process.readBytes(key, 1)
+    yuna = process.read(key, 1)
     key = baseValue + 0x00D2CAC4
-    auron = process.readBytes(key, 1)
+    auron = process.read(key, 1)
     key = baseValue + 0x00D2CAC8
-    kimahri = process.readBytes(key, 1)
+    kimahri = process.read(key, 1)
     key = baseValue + 0x00D2CACC
-    wakka = process.readBytes(key, 1)
+    wakka = process.read(key, 1)
     key = baseValue + 0x00D2CAD0
-    lulu = process.readBytes(key, 1)
+    lulu = process.read(key, 1)
     key = baseValue + 0x00D2CAD4
-    rikku = process.readBytes(key, 1)
+    rikku = process.read(key, 1)
 
     return [tidus, yuna, auron, kimahri, wakka, lulu, rikku]
 
@@ -2101,7 +2047,7 @@ def overdriveState():
     basePointerAddress = process.read(basePointer)
     for x in range(20):
         offset = (0x94 * x) + 0x39
-        retVal[x] = process.readBytes(basePointerAddress + offset, 1)
+        retVal[x] = process.read(basePointerAddress + offset, 1)
     print("Overdrive values:\n", retVal)
     return retVal
 
@@ -2115,7 +2061,7 @@ def overdriveState2():
     basePointerAddress = process.read(basePointer)
     for x in range(7):
         offset = (0x94 * x) + 0x39
-        retVal[x] = process.readBytes(basePointerAddress + offset, 1)
+        retVal[x] = process.read(basePointerAddress + offset, 1)
     print("Overdrive values:\n", retVal)
     return retVal
 
@@ -2126,7 +2072,7 @@ def charLuck(character: int = 0):
     basePointer = baseValue + 0x003AB9B0
     basePointerAddress = process.read(basePointer)
     offset = (0x94 * character) + 0x34
-    retVal = process.readBytes(basePointerAddress + offset, 1)
+    retVal = process.read(basePointerAddress + offset, 1)
     return retVal
 
 
@@ -2136,7 +2082,7 @@ def charAccuracy(character: int = 0):
     basePointer = baseValue + 0x003AB9B0
     basePointerAddress = process.read(basePointer)
     offset = (0x94 * character) + 0x36
-    retVal = process.readBytes(basePointerAddress + offset, 1)
+    retVal = process.read(basePointerAddress + offset, 1)
     return retVal
 
 
@@ -2156,28 +2102,28 @@ def lStrikeCount():
     global baseValue
 
     key = baseValue + 0x00D2CE8C
-    return process.readBytes(key, 2)
+    return process.read(key, 2)
 
 
 def lDodgeCount():
     global baseValue
 
     key = baseValue + 0x00D2CE8E
-    return process.readBytes(key, 2)
+    return process.read(key, 2)
 
 
 def savePopupCursor():
     global baseValue
 
     key = baseValue + 0x0146780A
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def diagProgressFlag():
     global baseValue
 
     key = baseValue + 0x00F25A80
-    return process.readBytes(key, 4)
+    return process.read(key, 4)
 
 
 def clickToDiagProgress(num):
@@ -2212,7 +2158,7 @@ def printRNG36():
     global baseValue
 
     coord = baseValue + 0x00D35F68
-    retVal = process.readBytes(coord, 1)
+    retVal = process.read(coord, 1)
     print("------------------------------")
     print("RNG36 value:", retVal)
     print("------------------------------")
@@ -2227,13 +2173,13 @@ def end():
 def getFrameCount():
     global baseValue
     key = baseValue + 0x0088FDD8
-    return process.readBytes(key, 4)
+    return process.read(key, 4)
 
 
 def nameAeonReady():
     global baseValue
     key = baseValue + 0x01440A30
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 # Naming
@@ -2289,7 +2235,7 @@ def getEggLife(eggNum):
     basePointer = baseValue + 0xF270B8
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + 0x1C4CC + (0x40 * eggNum) + 4
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2299,7 +2245,7 @@ def getEggPicked(eggNum):
     basePointer = baseValue + 0xF270B8
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + 0x1C4CC + (0x40 * eggNum) + 5
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2384,7 +2330,7 @@ def getIceLife(iceNum):
     basePointer = baseValue + 0xF270B8
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + 0x1C0CC + (0x40 * iceNum) + 4
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2477,7 +2423,7 @@ def getBlitzAggro(playerIndex: int = 99):
         offset = 0x47AF5
 
     if playerIndex in [6, 7, 8, 9, 10]:
-        if process.readBytes(ptrKey + offset, 1) == 255:
+        if process.read(ptrKey + offset, 1) == 255:
             return False
         else:
             return True
@@ -2499,14 +2445,14 @@ def blitzHP(playerIndex=99):
 def blitzOwnScore():
     global baseValue
     key = baseValue + 0x00D2E0CE
-    score = process.readBytes(key, 1)
+    score = process.read(key, 1)
     return score
 
 
 def blitzOppScore():
     global baseValue
     key = baseValue + 0x00D2E0CF
-    score = process.readBytes(key, 1)
+    score = process.read(key, 1)
     return score
 
 
@@ -2519,14 +2465,14 @@ def blitzballPatriotsStyle():
 def blitzClockMenu():
     global baseValue
     key = baseValue + 0x014765FA
-    status = process.readBytes(key, 1)
+    status = process.read(key, 1)
     return status
 
 
 def blitzClockPause():
     global baseValue
     key = baseValue + 0x014663B0
-    status = process.readBytes(key, 1)
+    status = process.read(key, 1)
     return status
 
 
@@ -2539,7 +2485,7 @@ def blitzMenuNum():
     # Unsure about other variations, would take more testing.
 
     key = baseValue + 0x014765DA
-    status = process.readBytes(key, 1)
+    status = process.read(key, 1)
     if status == 17 or status == 27:
         status = 24
     return status
@@ -2555,7 +2501,7 @@ def blitzCurrentPlayer():
     global baseValue
 
     key = baseValue + 0x00F25B6A
-    player = process.readBytes(key, 1)
+    player = process.read(key, 1)
     return player
 
 
@@ -2563,7 +2509,7 @@ def blitzTargetPlayer():
     global baseValue
 
     key = baseValue + 0x00D3761C
-    player = process.readBytes(key, 1)
+    player = process.read(key, 1)
     return player
 
 
@@ -2571,10 +2517,10 @@ def blitzCoords():
     global baseValue
 
     key = baseValue + 0x00D37698
-    xVal = process.readBytes(key, 1)
+    xVal = process.read(key, 1)
     xVal = xVal * -1
     key = baseValue + 0x00D37690
-    yVal = process.readBytes(key, 1)
+    yVal = process.read(key, 1)
     return [xVal, yVal]
 
 
@@ -2599,7 +2545,7 @@ def blitzCharSelectCursor():
     global baseValue
 
     key = baseValue + 0x0146780A
-    cursor = process.readBytes(key, 1)
+    cursor = process.read(key, 1)
     return cursor
 
 
@@ -2607,7 +2553,7 @@ def blitzProceedCursor():
     global baseValue
 
     key = baseValue + 0x01467CEA
-    cursor = process.readBytes(key, 1)
+    cursor = process.read(key, 1)
     return cursor
 
 
@@ -2615,7 +2561,7 @@ def blitzCursor():
     global baseValue
 
     key = baseValue + 0x014676D2
-    cursor = process.readBytes(key, 1)
+    cursor = process.read(key, 1)
     return cursor
 
 # ------------------------------
@@ -2623,7 +2569,7 @@ def blitzCursor():
 
 
 def readBytes(key, size):
-    return process.readBytes(key, size)
+    return process.read(key, size)
 
 
 # ------------------------------
@@ -2649,7 +2595,7 @@ def getEquipType(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x05
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2658,7 +2604,7 @@ def getEquipLegit(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x03
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     if retVal in [0, 8, 9]:
         return True
     else:
@@ -2670,7 +2616,7 @@ def isEquipBrotherhood(equipNum):
         global baseValue
         basePointer = baseValue + 0x00d30f2c
         key = basePointer + (0x16 * equipNum) + 0x03
-        retVal = process.readBytes(key, 1)
+        retVal = process.read(key, 1)
         if retVal == 9:
             return True
     return False
@@ -2681,7 +2627,7 @@ def getEquipOwner(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x04
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2690,7 +2636,7 @@ def getEquipSlotCount(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x0B
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2699,7 +2645,7 @@ def getEquipCurrentlyEquipped(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x06
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -2709,13 +2655,13 @@ def getEquipAbilities(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x0E
-    retVal[0] = process.readBytes(key, 2)
+    retVal[0] = process.read(key, 2)
     key = basePointer + (0x16 * equipNum) + 0x10
-    retVal[1] = process.readBytes(key, 2)
+    retVal[1] = process.read(key, 2)
     key = basePointer + (0x16 * equipNum) + 0x12
-    retVal[2] = process.readBytes(key, 2)
+    retVal[2] = process.read(key, 2)
     key = basePointer + (0x16 * equipNum) + 0x14
-    retVal[3] = process.readBytes(key, 2)
+    retVal[3] = process.read(key, 2)
     return retVal
 
 
@@ -2724,7 +2670,7 @@ def getEquipExists(equipNum):
 
     basePointer = baseValue + 0x00d30f2c
     key = basePointer + (0x16 * equipNum) + 0x02
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
 
     return retVal
 
@@ -3033,7 +2979,7 @@ def checkAbilityArmor(ability=0x8032, slotCount: int = 99):
 
 def weapon_armor_cursor():
     global baseValue
-    return process.readBytes(baseValue + 0x0146A5E4, 1)
+    return process.read(baseValue + 0x0146A5E4, 1)
 
 
 def customizeMenuArray():
@@ -3041,7 +2987,7 @@ def customizeMenuArray():
     global baseValue
     for x in range(60):
         offset = 0x1197730 + (x * 4)
-        retArray.append(process.readBytes(baseValue + offset, 2))
+        retArray.append(process.read(baseValue + offset, 2))
     print("Customize menu: ")
     print(retArray)
     return retArray
@@ -3137,7 +3083,7 @@ def armorArrayCharacter(charNum):
                 charWeaps.append(currentHandle)
     try:
         return charWeaps
-    except Exception:
+    except:
         return []
 
 
@@ -3159,14 +3105,14 @@ def equipWeapCursor():
     global baseValue
 
     key = baseValue + 0x01440A38
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def assignAbilityToEquipCursor():
     global baseValue
     key = baseValue + 0x01440AD0
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 # ------------------------------
@@ -3176,56 +3122,56 @@ def assignAbilityToEquipCursor():
 def itemShopMenu():
     global baseValue
     key = baseValue + 0x0085A860
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def equipShopMenu():
     global baseValue
     key = baseValue + 0x0085A83C
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def cureMenuOpen():
     global baseValue
     key = baseValue + 0x01440A35
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def itemMenuNumber():
     global baseValue
     key = baseValue + 0x0085A318
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def itemMenuColumn():
     global baseValue
     key = baseValue + 0x01440A48
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def informationActive():
     global baseValue
     key = baseValue + 0x0146AA28
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal == 7
 
 
 def itemMenuRow():
     global baseValue
     key = baseValue + 0x01440A38
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def equipSellRow():
     global baseValue
     key = baseValue + 0x01440C00
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -3236,42 +3182,42 @@ def nameConfirmOpen():
 def equipBuyRow():
     global baseValue
     key = baseValue + 0x01440B68
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def cursorEnabledInEquip():
     global baseValue
     key = baseValue + 0x008CC7EC
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal == 12
 
 
 def equipConfirmationRow():
     global baseValue
     key = baseValue + 0x01440C98
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def equipMenuOpenFromChar():
     global baseValue
     key = baseValue + 0x01440A2A
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal == 5
 
 
 def configCursor():
     global baseValue
     key = baseValue + 0x0146A404
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def readVal(address, bytes=1):
     global baseValue
     key = baseValue + address
-    retVal = process.readBytes(key, bytes)
+    retVal = process.read(key, bytes)
     return retVal
 
 
@@ -3302,7 +3248,7 @@ def spareChangeOpen():
 def configCursorColumn():
     global baseValue
     key = baseValue + 0x0085A3FC
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -3313,35 +3259,35 @@ def purchasingAmountItems():
 def configAeonCursorColumn():
     global baseValue
     key = baseValue + 0x0085A454
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def loadMenuCursor():
     global baseValue
     key = baseValue + 0x008E72E0
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def rikkuOverdriveItemSelectedNumber():
     global baseValue
     key = baseValue + 0x00D2C948
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def sphereGridPlacementOpen():
     global baseValue
     key = baseValue + 0x012ACB6B
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def movingPromptOpen():
     global baseValue
     key = baseValue + 0x012AD543
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 # ------------------------------
@@ -3350,12 +3296,12 @@ def movingPromptOpen():
 
 def btBiDirection():
     key = baseValue + 0x0092DEED
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def btTriDirectionMain():
     key = baseValue + 0x0092E1ED
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 # ------------------------------
 # Gagazet trials
@@ -3622,7 +3568,7 @@ def touchSaveSphere():
             waitFrames(1)
     try:
         FFXC.set_neutral()
-    except Exception:
+    except:
         FFXC.set_neutral()
     FFXC.set_neutral()
 
@@ -3649,7 +3595,7 @@ def csrBaajSaveClear():
         FFXC = FFX_Xbox.controllerHandle()
         try:
             FFXC.set_neutral()
-        except Exception:
+        except:
             FFXC.set_neutral()
         while not userControl():
             if saveMenuOpen():
@@ -3670,22 +3616,22 @@ def csrBaajSaveClear():
 
 def memTestVal0():
     key = baseValue + 0x00D35EE0
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def memTestVal1():
     key = baseValue + 0x00D35EE1
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def memTestVal2():
     key = baseValue + 0x00D35EE2
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 
 def memTestVal3():
     key = baseValue + 0x00D35EE3
-    return process.readBytes(key, 1)
+    return process.read(key, 1)
 
 # ------------------------------
 
@@ -3723,14 +3669,14 @@ def printMemoryLog_backup():
 def loadGamePage():
     global baseValue
     key = baseValue + 0x008E72DC
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
 def loadGameCursor():
     global baseValue
     key = baseValue + 0x008E72E0
-    retVal = process.readBytes(key, 1)
+    retVal = process.read(key, 1)
     return retVal
 
 
@@ -3754,11 +3700,11 @@ def lastHitInit():
     try:
         for x in range(8):
             lastHitVals[x] = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-            # print("Val:", lastHitVals[x])
-        # print(lastHitVals)
+            #print("Val:", lastHitVals[x])
+        #print(lastHitVals)
         gameVars.firstHitsSet(lastHitVals)
         return True
-    except Exception:
+    except:
         return False
 
 
@@ -4044,7 +3990,7 @@ def nextDropRNG13(aSlots: int, beforeNatus: bool = False) -> int:
                 filledSlots.remove(9)
                 filledSlots.append(
                     outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
-        except Exception:
+        except:
             pass
         ptr += 1
 
@@ -4123,7 +4069,7 @@ def arenaArray():
     retArray = []
     for i in range(104):
         key = baseValue + 0xD30C9C + i
-        retArray.append(process.readBytes(key, 1))
+        retArray.append(process.read(key, 1))
     return retArray
 
 
@@ -4191,7 +4137,7 @@ def arenaCursor():
     global baseValue
 
     key = baseValue + 0x00D2A084
-    status = process.readBytes(key, 2)
+    status = process.read(key, 2)
     return status
 
 
