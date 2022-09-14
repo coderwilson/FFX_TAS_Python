@@ -6,7 +6,7 @@ gameVars = FFX_vars.varsHandle()
 def clearMouse(counter):
     try:
         return
-    except:
+    except Exception:
         if counter > 10:
             return
         else:

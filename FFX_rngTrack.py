@@ -96,7 +96,7 @@ def dropAbilityList(enemy: str = 'ghost', equipType: int = 0):
     for i in range(len(array)):
         try:
             retVal.append(array[i].tas_id)
-        except:
+        except Exception:
             retVal.append(255)
 
     return retVal
@@ -221,7 +221,7 @@ def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1,
                     filledSlots.remove(99)
                     filledSlots.append(
                         outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
-            except:
+            except Exception:
                 pass
 
     while 99 in filledSlots:
@@ -276,6 +276,7 @@ def reportDroppedItem(enemy: str, drop=FFX_memory.equipment, prefType: int = 99,
 def tStrikeTracking(tros=False, report=False):
     return [0, 0, 0], [0, 0, 0]
 
+
 def tStrikeTracking_notWorkingYet(tros=False, report=False):
     if tros:
         advance01 = 0
@@ -298,7 +299,7 @@ def tStrikeTracking_notWorkingYet(tros=False, report=False):
     try:
         lagoonCount = int(battleVariance['Lagoon'])
         kilikaCount = int(battleVariance['Kilika'])
-    except:
+    except Exception:
         lagoonCount = 3
         kilikaCount = 6
     partySize = 4

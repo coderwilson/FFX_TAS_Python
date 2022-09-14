@@ -2,7 +2,7 @@ import datetime
 import FFX_memory
 try:
     from FFX_memory import baseValue
-except:
+except Exception:
     baseValue = 0x0
 game = "FFX_"
 ext = ".txt"
@@ -97,7 +97,7 @@ def openRNGTrack():
     global RNGFile
     try:
         RNGFile = open(fileRNG, "a")
-    except:
+    except Exception:
         RNGFile = open(fileRNG, "x")
     RNGFile.close()
 

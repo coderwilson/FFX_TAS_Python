@@ -154,8 +154,8 @@ def mainPath():
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)):
                 if checkpoint == 61:
                     if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2, 3, 4, 5, 6, 7, 9]:
-                        #Try to end on 1.
-                        print("+++++++++++ We can manip: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                        # Try to end on 1.
+                        print("+++++++++++ We can manip:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                         checkpoint = 59
                     else:
                         checkpoint += 1

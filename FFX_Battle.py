@@ -4343,7 +4343,7 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
                         FFX_Xbox.tapLeft()
 
             tapTargeting()
-        except:
+        except Exception:
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
@@ -4435,7 +4435,7 @@ def useItemTidus(slot: int, direction='none', target=255):
                         FFX_Xbox.tapLeft()
 
             tapTargeting()
-        except:
+        except Exception:
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
             FFX_Xbox.tapB()
@@ -4752,7 +4752,7 @@ def attack(direction="none"):
             pass
     while FFX_memory.mainBattleMenu():
         if not FFX_memory.battleMenuCursor() in [0, 203, 210, 216]:
-            print(FFX_memory.battleMenuCursor(), ", Battle Menu Cursor")
+            print("Battle Menu Cursor:", FFX_memory.battleMenuCursor())
             FFX_Xbox.tapUp()
         elif FFX_Screen.BattleComplete():
             return

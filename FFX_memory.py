@@ -5,11 +5,14 @@ import struct
 import FFX_Xbox
 import FFX_targetPathing
 import FFX_vars
-gameVars = FFX_vars.varsHandle()
-from typing import Any,  List, NewType
 import os.path
 import ctypes
 import ctypes.wintypes
+from typing import Any, List, NewType
+from ReadWriteMemory import ReadWriteMemory
+from ReadWriteMemory import Process
+gameVars = FFX_vars.varsHandle()
+
 # Process Permissions
 PROCESS_QUERY_INFORMATION = 0x0400
 PROCESS_VM_OPERATION = 0x0008
@@ -20,14 +23,12 @@ MAX_PATH = 260
 
 baseValue = 0
 
-from ReadWriteMemory import ReadWriteMemory
-from ReadWriteMemory import Process
 
 class LocProcess(Process):
     def __init__(self, *args, **kwargs):
         super(LocProcess, self).__init__(*args, **kwargs)
-    
-    def readBytes(self, lp_base_address: int, size:int=4):
+
+    def readBytes(self, lp_base_address: int, size: int = 4):
         """
         See the original ReadWriteMemory values for details on how this works. This version allows us to pass
         the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
@@ -47,8 +48,8 @@ class LocProcess(Process):
             error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
                      'Name': self.name, 'ErrorCode': self.error_code}
             ReadWriteMemoryError(error)
-    
-    def writeBytes(self, lp_base_address: int, value: int, size:int=4) -> bool:
+
+    def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
         """
         Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
         """
@@ -102,7 +103,6 @@ class FFXMemory(ReadWriteMemory):
         raise ReadWriteMemoryError(f'Process "{self.process.name}" not found!')
 
 
-
 def start():
     global process
     global xPtr
@@ -110,7 +110,7 @@ def start():
     global coordsCounter
     coordsCounter = 0
 
-    #rwm = ReadWriteMemory()
+    # rwm = ReadWriteMemory()
     rwm = FFXMemory()
     print("#############")
     print(type(rwm))
@@ -130,7 +130,6 @@ def start():
     except Exception as errCode:
         print("Could not get memory address dynamically. ", errCode)
         baseValue = 0x00FF0000
-    
 
 
 def float_from_integer(integer):
@@ -159,6 +158,7 @@ def waitFrames(frames: int):
         previous = current
         current = process.readBytes(key, 4)
     return
+
 
 def rngSeed():
     if int(gameVars.confirmedSeed()) == 999:
@@ -336,6 +336,7 @@ def battleTargetId():
 
 def battleLineTarget():
     return readVal(0x00F3CA42)
+
 
 def enemyTargetted():
     return readVal(0x00F3D1C0)
@@ -856,7 +857,7 @@ def getBattleCharSlot(charNum) -> int:
             return 5
         if battleForm[6] == charNum:
             return 6
-    except:
+    except Exception:
         return 255
 
 
@@ -1995,7 +1996,7 @@ def getActorCoords(actorNumber):
         retVal[2] = float_from_integer(process.read(keyZ))
 
         return retVal
-    except:
+    except Exception:
         pass
 
 
@@ -2008,7 +2009,7 @@ def getActorAngle(actorNumber):
         offset = (0x880 * actorNumber) + 0x158
         retVal = float_from_integer(process.read(basePointerAddress + offset))
         return retVal
-    except:
+    except Exception:
         pass
 
 
@@ -2020,7 +2021,8 @@ def miihenGuyCoords():
             spearGuy = x
     return getActorCoords(spearGuy)
 
-def actorIndex(actorNum:int=41):
+
+def actorIndex(actorNum: int = 41):
     actorIndex = 255
     for x in range(getActorArraySize()):
         actorMem = getActorID(x)
@@ -2034,7 +2036,7 @@ def mrrGuyCoords():
     mrrGuy = 255
     for x in range(getActorArraySize()):
         actorNum = getActorID(x)
-        #print("Actor ", x, ":", hex(actorNum))
+        #print("Actor", x, ":", hex(actorNum))
         if actorNum == 0x2083:
             mrrGuy = x
     print("+++MRR guy in position:", mrrGuy)
@@ -3135,7 +3137,7 @@ def armorArrayCharacter(charNum):
                 charWeaps.append(currentHandle)
     try:
         return charWeaps
-    except:
+    except Exception:
         return []
 
 
@@ -3620,7 +3622,7 @@ def touchSaveSphere():
             waitFrames(1)
     try:
         FFXC.set_neutral()
-    except:
+    except Exception:
         FFXC.set_neutral()
     FFXC.set_neutral()
 
@@ -3647,7 +3649,7 @@ def csrBaajSaveClear():
         FFXC = FFX_Xbox.controllerHandle()
         try:
             FFXC.set_neutral()
-        except:
+        except Exception:
             FFXC.set_neutral()
         while not userControl():
             if saveMenuOpen():
@@ -3752,11 +3754,11 @@ def lastHitInit():
     try:
         for x in range(8):
             lastHitVals[x] = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-            #print("Val:", lastHitVals[x])
-        #print(lastHitVals)
+            # print("Val:", lastHitVals[x])
+        # print(lastHitVals)
         gameVars.firstHitsSet(lastHitVals)
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -4042,7 +4044,7 @@ def nextDropRNG13(aSlots: int, beforeNatus: bool = False) -> int:
                 filledSlots.remove(9)
                 filledSlots.append(
                     outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
-        except:
+        except Exception:
             pass
         ptr += 1
 

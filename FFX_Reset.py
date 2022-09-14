@@ -7,7 +7,8 @@ gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
 
-def midRunReset(landRun:bool=False, startTime=datetime.datetime.now()):
+
+def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
     if landRun:
         endTime = FFX_Logs.timeStamp()
         totalTime = endTime - startTime
@@ -41,7 +42,7 @@ def midRunReset(landRun:bool=False, startTime=datetime.datetime.now()):
     else:
         FFX_memory.waitFrames(60)
         resetToMainMenu()
-    
+
     # Now to re-start
     gameVars.setStartVars()
     rngSeed = FFX_memory.rngSeed()
@@ -59,8 +60,9 @@ def midRunReset(landRun:bool=False, startTime=datetime.datetime.now()):
     FFX_Logs.writeStats(rngSeed)
     Gamestate = 'none'
     StepCounter = 1
-    
+
     return Gamestate, StepCounter
+
 
 def resetToMainMenu():
     FFXC.set_neutral()

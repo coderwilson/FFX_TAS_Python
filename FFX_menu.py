@@ -1741,7 +1741,7 @@ def openGrid(character):
     FFXC = FFX_Xbox.controllerHandle()
     try:
         FFXC.set_neutral()
-    except:
+    except Exception:
         FFXC.set_neutral()
     while not FFX_memory.sGridActive():
         if FFX_memory.userControl() and not FFX_memory.menuOpen():
@@ -1768,12 +1768,12 @@ def openGrid(character):
                 FFX_Xbox.menuB()
             try:
                 FFXC.set_neutral()
-            except:
+            except Exception:
                 FFXC = FFX_Xbox.controllerHandle()
                 FFXC.set_neutral()
     try:
         FFXC.set_neutral()
-    except:
+    except Exception:
         FFXC = FFX_Xbox.controllerHandle()
         FFXC.set_neutral()
 
