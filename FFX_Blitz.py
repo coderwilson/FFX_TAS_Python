@@ -424,7 +424,7 @@ def jassuTrain():
     if not useCircle:
         targetCoords = [int(nextX), int(nextY)]
         if reportState:
-            print(version[0], "-", targetCoords)
+            print(version[0], " - ", targetCoords)
         FFX_blitzPathing.setMovement(targetCoords)
     else:
         if reportState:
@@ -1059,9 +1059,8 @@ def blitzMain(forceBlitzWin):
 
     print("Blitz game has completed.")
     # Set the blitzWin flag for the rest of the run.
-    print("Final scores",
-          "\nBesaid Aurochs:", FFX_memory.blitzOwnScore(),
-          "\nAl Bhed Psyches:", FFX_memory.blitzOppScore())
+    print("Final scores: Aurochs:", FFX_memory.blitzOwnScore(),
+          ", Opponent score:", FFX_memory.blitzOppScore())
     FFXC.set_neutral()
     if FFX_memory.blitzOwnScore() > FFX_memory.blitzOppScore():
         gameVars.setBlitzWin(True)

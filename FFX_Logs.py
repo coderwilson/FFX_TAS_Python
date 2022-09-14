@@ -29,7 +29,7 @@ def nextStats(rngSeedNum):
     global ext
     if fileStats == "none":
         timeNow = datetime.datetime.now()
-        fileStats = "Logs/" + game + "Stats_" + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
+        fileStats = "Logs/" + game + "Stats_ " + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
             timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
         global statsFile
@@ -42,11 +42,9 @@ def nextStats(rngSeedNum):
         statsFile.close()
     print("Stats file is ready for writing!\n")
 
-
 def resetStatsLog():
     global fileStats
     fileStats = "none"
-
 
 def writePlot(message):
     global plotFile
@@ -64,7 +62,7 @@ def nextPlot():
     global ext
     if filePlot == "none":
         timeNow = datetime.datetime.now()
-        filePlot = "Logs/" + game + "Plot_" + str(timeNow.year) + str(timeNow.month) + str(
+        filePlot = "Logs/" + game + "Plot_ " + str(timeNow.year) + str(timeNow.month) + str(
             timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
         global plotFile
@@ -93,7 +91,7 @@ def openRNGTrack():
     global game
     global ext
     timeNow = datetime.datetime.now()
-    fileRNG = "Logs/" + game + "RNG_" + str(timeNow.year) + str(timeNow.month) + str(
+    fileRNG = "Logs/" + game + "RNG_ " + str(timeNow.year) + str(timeNow.month) + str(
         timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
 
     global RNGFile

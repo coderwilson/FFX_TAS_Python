@@ -3,21 +3,21 @@ class allVars:
         self.setStartVars()
 
     def setStartVars(self):
-        # ------------------------------
-        # The default values assume starting from the beginning of the game.
-        # If you are starting from a loaded save, you may need to change one or more
-        # of the values below.
-        # ------------------------------
+        #------------------------------
+        #The default values assume starting from the beginning of the game.
+        #If you are starting from a loaded save, you may need to change one or more
+        #of the values below.
+        #------------------------------
 
-        # ----Most important values to review
-        self.artificialPauses = False  # Set depending on hardware. True = less powerful hardware.
-        self.csrValue = True  # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.nemesisValue = False  # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.forceLoop = False  # After game is finished, start again on next seed. DOES NOT WORK WITH CSR
-        self.blitzLoop = False  # Loop on the same seed immediately after Blitzball.
-        self.setSeed = False  # If you are using Rossy's patch, set to True. Otherwise set to False
-        self.kilikaSkip = True  # True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
+        #----Most important values to review
+        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
+        self.csrValue = True #Set automatically on new game. For testing (loading a save file) set for your environment.
+        self.nemesisValue = False #Set based on if you're doing any% (False) or Nemesis% (True)
+        self.forceLoop = False #After game is finished, start again on next seed. DOES NOT WORK WITH CSR
+        self.blitzLoop = False #Loop on the same seed immediately after Blitzball.
+        self.setSeed = True #If you are using Rossy's patch, set to True. Otherwise set to False
+        self.kilikaSkip = True #True == Tidus OD on Evrae instead of Seymour. New strat.
+        self.perfectAeonKills = False #Before YuYevon, True is slower but more swag.
 
         # ----Blitzball
         self.blitzWinValue = False  # No default value required
@@ -64,10 +64,10 @@ class allVars:
         # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-
+    
     def useSetSeed(self):
         return self.setSeed
-
+    
     def printArenaStatus(self):
         print("##############################################")
         print("Area:", self.areaResults)
@@ -84,13 +84,16 @@ class allVars:
         if arrayNum == 2:
             self.originalResults[index] = 1
         self.printArenaStatus()
-
+        
     def yuYevonSwag(self):
         return self.perfectAeonKills
-
+    
     def skipKilikaLuck(self):
         return self.kilikaSkip
-
+    
+    def dontSkipKilikaLuck(self):
+        self.kilikaSkip = False
+    
     def loopBlitz(self):
         return self.blitzLoop
 

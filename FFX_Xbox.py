@@ -490,15 +490,15 @@ def gridRight():
 
 
 def clickToBattle():
-    print("Mashing B until first turn in battle")
+    print("Mashing A until first turn in battle")
     FFXC.set_neutral()
     while not (FFX_memory.battleActive() and FFX_memory.turnReady()):
         if FFX_memory.userControl():
             break
         elif not FFX_memory.battleActive():
-            menuB()
+            tapB()
         elif FFX_memory.diagSkipPossible():
-            menuB()
+            tapB()
 
 
 characterMapping = {

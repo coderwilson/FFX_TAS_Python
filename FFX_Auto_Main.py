@@ -24,6 +24,8 @@ import FFX_Xbox
 import FFX_memory
 import FFX_Battle
 import FFX_Screen
+import random
+import time
 import FFX_vars
 import FFX_Reset
 gameVars = FFX_vars.varsHandle()
@@ -39,76 +41,76 @@ if gameVars.nemesis():
     import FFX_nem_arenaPrep
     import FFX_nem_arenaBattles
 
-# Gamestate, "none" for new game, or set to a specific section to start from the first save.
-# See the if statement tree below to determine starting position for Gamestate.
-# These are the popular ones. New Game ('none') is the last one.
-# Gamestate = "Baaj"
-# StepCounter = 1
-# StepCounter = 4
-# StepCounter = 6
-# Gamestate = "Besaid"
-# StepCounter = 3
-# Gamestate = "Kilika"
-# StepCounter = 1
-# Gamestate = "Luca"
-# StepCounter = 1
-# StepCounter = 3
-# StepCounter = 5
-# Gamestate = "Miihen"
-# StepCounter = 1
-# Gamestate = "MRR"
-# StepCounter = 1
-# Gamestate = "Djose"
-# StepCounter = 1
-# Gamestate = "Moonflow"
-# StepCounter = 2
-# Gamestate = "Guadosalam"
-# StepCounter = 2
-# Gamestate = "Macalania"
-# StepCounter = 1
-# StepCounter = 2
-# StepCounter = 3
-# StepCounter = 4 #Seymour fight, CSR, Blitz Win
-# StepCounter = 6 #Before escape sequence
-# Gamestate = "Home"
-# StepCounter = 1
-# StepCounter = 2
-# Gamestate = "rescueYuna"
-# StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
-# StepCounter = 2
-# StepCounter = 5 #Can pick regular run vs nemesis below.
-# Gamestate = "Gagazet"
-# StepCounter = 1 #Blitz Win, no end game version selected
-# StepCounter = 2 #NE armor testing
-# StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
-# StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
-# StepCounter = 10 #Nemesis variant, blitz win logic (not working)
-# StepCounter = 11 #Remiem racing
-# Gamestate = "Zanarkand"
-# StepCounter = 1 #Campfire, version 1
-# StepCounter = 3 #Blitz win, end game version 1 or 2
-# StepCounter = 4 #Before Yunalesca
-# StepCounter = 5 #After Yunalesca
-# Gamestate = "Sin"
-# StepCounter = 2 #Shedinja Highbridge
-# StepCounter = 3 #Before Sea of Sorrows
-# StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
+#Gamestate, "none" for new game, or set to a specific section to start from the first save.
+#See the if statement tree below to determine starting position for Gamestate.
+#These are the popular ones. New Game ('none') is the last one.
+#Gamestate = "Baaj"
+#StepCounter = 1
+#StepCounter = 4
+#StepCounter = 6
+#Gamestate = "Besaid"
+#StepCounter = 3
+#Gamestate = "Kilika"
+#StepCounter = 1
+#Gamestate = "Luca"
+#StepCounter = 1
+#StepCounter = 3
+#StepCounter = 5
+#Gamestate = "Miihen"
+#StepCounter = 1
+#Gamestate = "MRR"
+#StepCounter = 1
+#Gamestate = "Djose"
+#StepCounter = 1
+#Gamestate = "Moonflow"
+#StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
+#Gamestate = "Macalania"
+#StepCounter = 1
+#StepCounter = 2
+#StepCounter = 3
+#StepCounter = 4 #Seymour fight, CSR, Blitz Win
+#StepCounter = 6 #Before escape sequence
+#Gamestate = "Home"
+#StepCounter = 1
+#StepCounter = 2
+#Gamestate = "rescueYuna"
+#StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
+#StepCounter = 2
+#StepCounter = 5 #Can pick regular run vs nemesis below.
+#Gamestate = "Gagazet"
+#StepCounter = 1 #Blitz Win, no end game version selected
+#StepCounter = 2 #NE armor testing
+#StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
+#StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
+#StepCounter = 10 #Nemesis variant, blitz win logic (not working)
+#StepCounter = 11 #Remiem racing
+#Gamestate = "Zanarkand"
+#StepCounter = 1 #Campfire, version 1
+#StepCounter = 3 #Blitz win, end game version 1 or 2
+#StepCounter = 4 #Before Yunalesca
+#StepCounter = 5 #After Yunalesca
+#Gamestate = "Sin"
+#StepCounter = 2 #Shedinja Highbridge
+#StepCounter = 3 #Before Sea of Sorrows
+#StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
 StepCounter = 1
 
-# Nemesis load testing
-# Gamestate = "Nem_Farm"
-# StepCounter = 2 #Start of Calm Lands (only one each)
-# StepCounter = 3
-# StepCounter = 6 #First Miihen farm
-# StepCounter = 13 #Just before Djose farm
-# StepCounter = 14 #Just before Thunder Plains farm
-# StepCounter = 16 #Just before Bikanel farm
-# StepCounter = 18 #Just before Fayth Cave farm
-# StepCounter = 19 #Gagazet farm
-# StepCounter = 20 #After Gagazet, before Calm Lands farm
-# StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
-# StepCounter = 24 #Final Prep before arena bosses
+#Nemesis load testing
+#Gamestate = "Nem_Farm"
+#StepCounter = 2 #Start of Calm Lands (only one each)
+#StepCounter = 3
+#StepCounter = 6 #First Miihen farm
+#StepCounter = 13 #Just before Djose farm
+#StepCounter = 14 #Just before Thunder Plains farm
+#StepCounter = 16 #Just before Bikanel farm
+#StepCounter = 18 #Just before Fayth Cave farm
+#StepCounter = 19 #Gagazet farm
+#StepCounter = 20 #After Gagazet, before Calm Lands farm
+#StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
+#StepCounter = 24 #Final Prep before arena bosses
 
 ####################################################################################################
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
@@ -116,10 +118,10 @@ StepCounter = 1
 forceBlitzWin = False
 seedHunt = False  # Update this to decide new seed or known seed
 rngSeedNum = 255  # New seed number, only used if doing seed hunt.
-rngSelectArray = [31, 160]
+rngSelectArray = [31,160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 favoriteSeeds = [31, 183]
-rngSeedNum = 31  # yeah, I'm moving it here.
+rngSeedNum = 31 #If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -133,14 +135,14 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
-    # gameVars.setCSR(True)
+    #gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
-    # rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
-    # Current WR is on seed 160 for both any% and CSR%
+    #rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
+    #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
-else:  # Don't use this.
+else: #Don't use this.
     StepCounter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"
@@ -149,7 +151,7 @@ else:  # Don't use this.
 print("Game type will be:", gameLength)
 maxLoops = 12
 
-# Other variables
+#Other variables
 rngSeedOrig = rngSeedNum
 speedCount = 0
 strengthCount = 0
@@ -157,7 +159,7 @@ gems = 0  # Set to 2 if loading in after Evrae Altana with two gems
 autoEggHunt = True
 specialZanLoad = False
 
-# Main functions
+#Main functions
 
 
 def reportGamestate():
@@ -179,7 +181,7 @@ print("Game start screen")
 FFX_Screen.clearMouse(0)
 
 if gameVars.useSetSeed():
-    FFX_memory.setRngSeed(rngSeedNum)  # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+    FFX_memory.setRngSeed(rngSeedNum) #Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 rngSeed = FFX_memory.rngSeed()
 print("---RNG seed:", rngSeed)
@@ -423,8 +425,8 @@ while Gamestate != "End":
         FFX_Logs.writeStats(str(startTime))
         print("Timer starts now.")
         FFX_DreamZan.listenStory()
-        # Gamestate, StepCounter = FFX_Reset.midRunReset()
-        # Start of the game, up through the start of Sinspawn Ammes fight
+        #Gamestate, StepCounter = FFX_Reset.midRunReset()
+        #Start of the game, up through the start of Sinspawn Ammes fight
         StepCounter = 2
         FFX_DreamZan.ammesBattle()
 
@@ -1033,7 +1035,7 @@ while Gamestate != "End":
         Gamestate = "Sin"
         StepCounter = 3
 
-    if Gamestate == "End" and gameVars.loopSeeds() and rngSeedNum - rngSeedOrig < maxLoops and False:  # Disabled for now
+    if Gamestate == "End" and gameVars.loopSeeds() and rngSeedNum - rngSeedOrig < maxLoops and False: #Disabled for now
         # End of seed logic.
         Gamestate, StepCounter = FFX_Reset.midRunReset(landRun=True, startTime=startTime)
 

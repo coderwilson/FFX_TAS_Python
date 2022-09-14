@@ -223,8 +223,8 @@ def baajRamp(checkpoint):
         x = -28
         y = 17
     if checkpoint == 7:
-        x = 300
-        y = 300
+        x = -200
+        y = 150
     return [x, y]
 
 
