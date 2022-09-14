@@ -28,6 +28,8 @@ def Entrance():
             elif FFX_targetPathing.setMovement(FFX_targetPathing.baajRamp(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
+        else:
+            FFXC.set_neutral()
 
     FFXC.set_neutral()
 
@@ -127,10 +129,11 @@ def distance(n1, n2):
 
 def ABboat1():
     print("Start of Al Bhed boat section.")
-    FFX_memory.clearSaveMenuCursor2()
-    FFXC.set_neutral()
-    if gameVars.csr():
-        FFX_memory.waitFrames(10)
+    #FFX_memory.awaitControl()
+    #if gameVars.csr():
+    #    FFX_memory.waitFrames(45)
+    #FFX_memory.clearSaveMenuCursor2()
+    #FFXC.set_neutral()
     print("Control restored.")
     print("On the boat!")
     while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
@@ -266,7 +269,7 @@ def ABswimming2():
             elif FFX_memory.getMap() == 71:
                 rikkuNum = FFX_memory.actorIndex(actorNum=41)
                 FFX_targetPathing.setMovement(FFX_memory.getActorCoords(rikkuNum))
-                if distance(0, rikkuNum) < 30:
+                if distance(0,rikkuNum) < 30:
                     FFX_Xbox.tapB()
         else:
             FFXC.set_neutral()

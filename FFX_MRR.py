@@ -117,7 +117,7 @@ def mainPath():
                 checkpoint += 1
                 print("Lift checkpoint:", checkpoint)
             elif checkpoint == 48:  # X-potion for safety
-                if not FFX_memory.rngSeed() in [31, 160]:
+                if not FFX_memory.rngSeed() in [31]:
                     FFX_memory.clickToEventTemple(7)
                     print("Got X-potion")
                 checkpoint += 1
@@ -155,7 +155,7 @@ def mainPath():
                 if checkpoint == 61:
                     if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2, 3, 4, 5, 6, 7, 9]:
                         #Try to end on 1.
-                        print("+++++++++++ We can manip:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                        print("+++++++++++ We can manip: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                         checkpoint = 59
                     else:
                         checkpoint += 1

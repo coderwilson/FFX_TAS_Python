@@ -11,6 +11,10 @@ gameVars = FFX_vars.varsHandle()
 
 
 def arrival():
+    #For certain seed/s, preferable to get luck sphere just to manipulate battles.
+    if FFX_memory.rngSeed() == 31 and gameVars.skipKilikaLuck():
+        gameVars.dontSkipKilikaLuck()
+    
     print("Arrived at Kilika docks.")
     FFX_memory.clickToControl()
 
