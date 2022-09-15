@@ -3620,11 +3620,8 @@ def touchSaveSphere():
             FFX_targetPathing.setMovement([ssDetails[0], ssDetails[1]])
             FFX_Xbox.tapB()
             waitFrames(1)
-    try:
-        FFXC.set_neutral()
-    except Exception:
-        FFXC.set_neutral()
     FFXC.set_neutral()
+    waitFrames(6)
 
     while not userControl():
         if saveMenuOpen():
@@ -3820,8 +3817,8 @@ def buildRNGarray(index: int, arraySize: int = 255):
 
 
 def nextCrit(character: int, charLuck: int, enemyLuck: int) -> int:
-    # Returns the next time the character will critically strike.
-    # If 255 is returned, there will not be a next crit in the foreseeable future.
+    #Returns the next time the character will critically strike, counting number of advances from present.
+    #If 255 is returned, there will not be a next crit in the foreseeable future.
     rngIndex = min(20 + character, 27)
     rngArray = rngArrayFromIndex(index=rngIndex, arrayLen=200)
     del rngArray[0]
@@ -3836,6 +3833,21 @@ def nextCrit(character: int, charLuck: int, enemyLuck: int) -> int:
                 return x
     return 255
 
+def futureAttackWillCrit(character: int, charLuck: int, enemyLuck: int, attackIndex:int=0) -> bool:
+    #Returns if a specific attack in the future will crit.
+    #Attack Index 0 represents the next attack.
+    #Assumes no escape attempts, primarily this is used for Aeons anyway.
+    rngIndex = min(20 + character, 27)
+    rngArray = rngArrayFromIndex(index=rngIndex, arrayLen=200)
+    del rngArray[0]
+    del rngArray[0]
+    if attackIndex > 90:
+        return False
+    crit_roll = s32(rngArray[attackIndex*2]) % 101
+    crit_chance = charLuck - enemyLuck
+    if crit_roll < crit_chance:
+        return True
+    return False
 
 def rng01():
     global baseValue
@@ -4208,3 +4220,8 @@ def rngArrayFromIndex(index: int = 20, arrayLen: int = 20):
     for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], index))
     return retVal
+
+def advanceRNGindex(index:int=43):
+    global baseValue
+    key = 0xD35ED8 + (index * 0x4)
+    process.write(baseValue + key, rngArrayFromIndex(index=index)[1])

@@ -804,6 +804,63 @@ def tStrikeTracking_notWorkingYet(tros=False, report=False):
         "Kill Yellow ele on Kilika battles:" + str(killYellow))
     return thunderCount, killYellow
 
+def decideSkipZanLuck() -> bool:
+    #This function tracks if we need to pick up the luck and fortune spheres in Zanarkand.
+    #This will track through from Yunalesca to BFA, the two fights with ~4% chance to miss.
+    #False == there will be a miss. True == no miss.
+    extraXP = 0 #where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
+    bahamutLuck = 17
+    keeperCrit = FFX_memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=20, attackIndex=extraXP)
+    arm1Crit = False
+    arm2Crit = False
+    faceCrit = False
+    
+    attackCount = extraXP
+    if keeperCrit:
+        print("### Expecting crit on SK")
+        attackCount += 1
+    else:
+        attackCount += 2
+    
+    #Now to test the Yunalesca fight. Crits do not matter here, only hit chance.
+    for i in range(3):
+        print("### YL attack num ", i, " | ", attackCount)
+        if futureAttackHitMiss(character=7, enemy="yunalesca", attackIndex=attackCount) == False:
+            print("### Miss on Yunalesca, attack number", i)
+            return False
+        attackCount += 1
+    if gameVars.nemesis(): #BFA miss does not factor in for Nemesis route.
+        return True
+    
+    arm1Crit = FFX_memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
+    if arm1Crit:
+        print("### Expecting crit on Arm 1")
+        attackCount += 1
+    else:
+        attackCount += 2
+    arm2Crit = FFX_memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
+    if arm2Crit:
+        print("### Expecting crit on Arm 2")
+        attackCount += 1
+    else:
+        attackCount += 2
+    attackCount += 1 #Core is always one attack
+    faceCrit = FFX_memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
+    if not faceCrit:
+        faceCrit = FFX_memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount+1)
+    if faceCrit:
+        print("### Expecting crit on Face")
+        attackCount += 2
+    else:
+        attackCount += 3
+    for i in range(3):
+        print("### BFA attack num ", i, " | ", attackCount)
+        if futureAttackHitMiss(character=7, enemy="bfa", attackIndex=attackCount) == False:
+            print("### Miss on BFA, attack number", i)
+            return False
+        attackCount += 1
+    print("### No misses registered. Should be good to skip Luck/Fortune chests.")
+    return True
 
 def zombieTrack(report=False):
     advance01 = 0
@@ -905,22 +962,30 @@ def nextActionEscape(character: int = 0):
 
 
 def nextActionHitMiss(character: int = 0, enemy: str = "anima"):
-    print("=========================")
-    print("Checking hit chance - character:", character)
+    return futureAttackHitMiss(character=character, enemy=enemy)
+
+def futureAttackHitMiss(character:int=0, enemy:str="anima", attackIndex:int=0):
+    #print("=========================")
+    #print("Checking hit chance - character:", character)
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
     index = 36 + character
-    hit_rng = FFX_memory.rngArrayFromIndex(index=index)[1]
-    luck = FFX_memory.charLuck(character)  # Need this out of memory
-    print("Luck:", luck)
-    accuracy = FFX_memory.charAccuracy(character)  # Need this out of memory
-    print("Accuracy:", accuracy)
-
-    # Data directly from the tracker
-    target_luck = MONSTERS[enemy].stats['Luck']
-    print("Enemy luck: ", target_luck)
-    target_evasion = MONSTERS[enemy].stats['Evasion']
-    print("Enemy evasion:", target_evasion)
+    hit_rng = FFX_memory.rngArrayFromIndex(index=index, arrayLen=attackIndex+3)[attackIndex+1]
+    #print("### HitRNG ", hit_rng)
+    luck = FFX_memory.charLuck(character)
+    #print("Luck:", luck)
+    accuracy = FFX_memory.charAccuracy(character)
+    #print("Accuracy:", accuracy)
+    
+    if enemy == "bfa":
+        target_luck = 15
+        target_evasion = 0
+    else:
+        #Data directly from the tracker
+        target_luck = MONSTERS[enemy].stats['Luck']
+        #print("Enemy luck: ", target_luck)
+        target_evasion = MONSTERS[enemy].stats['Evasion']
+        #print("Enemy evasion:", target_evasion)
 
     # Unused, but technically part of the formula
     aims = 0
@@ -937,8 +1002,9 @@ def nextActionHitMiss(character: int = 0, enemy: str = "anima"):
         hit_chance_index = 8
     hit_chance = hitChanceTable(hit_chance_index) + luck
     hit_chance += (aims - target_reflexes) * 10 - target_luck
-    print("Hit results: ", hit_chance > (FFX_memory.s32(hit_rng) % 101))
-    print("=========================")
+    #print("Hit Chance: ", hit_chance, " vs ", (FFX_memory.s32(hit_rng) % 101))
+    #print("Hit results: ", hit_chance > (FFX_memory.s32(hit_rng) % 101))
+    #print("=========================")
     return hit_chance > (FFX_memory.s32(hit_rng) % 101)
 
 

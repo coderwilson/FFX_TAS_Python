@@ -30,7 +30,7 @@ class allVars:
         self.earlyTidusGridVal = False  # Default False
         self.earlyHasteVal = -1  # Default -1
         self.wakkaLateMenuVal = False  # Default False
-        self.endGameVersionVal = 2  # Default 0
+        self.endGameVersionVal = 1  # Default 0
 
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
@@ -39,6 +39,7 @@ class allVars:
         # ----RNG Manip
         self.yellows = 0
         self.confirmedSeedNum = 999
+        self.skipZanLuck = False
 
         # ----Other
         self.newGame = False
@@ -268,8 +269,17 @@ class allVars:
     def addYTKFarm(self):
         self.YTKFarm += 1
 
+    def YTKFarmCount(self):
+        return self.YTKFarm
+
     def completedYTKFarm(self):
         return self.YTKFarm >= 2
+    
+    def setSkipZanLuck(self, value):
+        self.skipZanLuck = value
+    
+    def getSkipZanLuck(self):
+        return self.skipZanLuck
 
 
 def initVars():

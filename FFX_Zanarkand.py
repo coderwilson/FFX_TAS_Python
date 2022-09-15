@@ -6,6 +6,7 @@ import FFX_Logs
 import FFX_memory
 import FFX_targetPathing
 import FFX_vars
+import FFX_rngTrack
 gameVars = FFX_vars.varsHandle()
 
 FFXC = FFX_Xbox.controllerHandle()
@@ -56,6 +57,8 @@ def arrival():
         FFX_menu.equipArmor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
+    gameVars.setSkipZanLuck(FFX_rngTrack.decideSkipZanLuck())
+    #gameVars.setSkipZanLuck(True) #For testing
     print("Outdoor Zanarkand pathing section")
     while FFX_memory.getMap() != 225:
         if FFX_memory.userControl():
@@ -77,7 +80,9 @@ def arrival():
     checkpoint = 0
     while FFX_memory.getMap() != 314:
         if FFX_memory.userControl():
-            if checkpoint == 4:  # First chest
+            if checkpoint == 3 and gameVars.getSkipZanLuck():
+                checkpoint = 5
+            elif checkpoint == 4:  # First chest
                 fortuneSlot = FFX_memory.getItemSlot(74)
                 if fortuneSlot == 255:
                     fortuneCount = 0
@@ -154,6 +159,8 @@ def arrival():
                         FFX_targetPathing.setMovement([8, 90])
                         FFX_memory.waitFrames(1)
                         FFX_Xbox.tapB()
+            if checkpoint == 23 and gameVars.getSkipZanLuck():
+                checkpoint = 25
             elif checkpoint == 24:  # Third chest
                 luckSlot = FFX_memory.getItemSlot(94)
                 if luckSlot == 255:
@@ -353,8 +360,11 @@ def sanctuaryKeeper():
         FFX_Battle.defend()
         FFX_Xbox.clickToBattle()
     FFX_Battle.aeonSummon(4)  # This is the whole fight. Kinda sad.
+    while not FFX_memory.battleComplete():
+        if FFX_memory.turnReady():
+            print(FFX_memory.rngArrayFromIndex(index=43, arrayLen=4))
+            FFX_Battle.attack('none')
     FFX_memory.clickToControl()
-
 
 def yunalesca():
     ver = gameVars.endGameVersion()
