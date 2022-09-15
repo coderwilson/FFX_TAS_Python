@@ -725,7 +725,7 @@ def homeGrid():
     FFX_memory.closeMenu()
 
 
-def beforeGuards():
+def beforeGuards(itemToUse:int=3):
     while not FFX_memory.menuOpen():
         FFX_memory.openMenu()
 
@@ -733,7 +733,7 @@ def beforeGuards():
         FFX_memory.menuDirection(FFX_memory.getMenuCursorPos(), 1, 11)
     while FFX_memory.menuNumber() != 26:
         FFX_Xbox.tapB()
-    megaPotSlot = FFX_memory.getItemSlot(3)
+    megaPotSlot = FFX_memory.getItemSlot(itemToUse)
     column = megaPotSlot % 2
     row = (megaPotSlot - column) / 2
     print(megaPotSlot, column, row)
@@ -1629,10 +1629,11 @@ def skReturn():
     openGrid(character=1)
     FFX_menuGrid.useFirst()
     FFX_menuGrid.selSphere('friend', 'd2')
-    FFX_menuGrid.useAndUseAgain()  # Friend sphere to Lulu
-    FFX_menuGrid.selSphere('luck', 'none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('fortune', 'none')
+    if not gameVars.getSkipZanLuck():
+        FFX_menuGrid.useAndUseAgain()  # Friend sphere to Lulu
+        FFX_menuGrid.selSphere('luck', 'none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('fortune', 'none')
     if FFX_memory.getPower() >= 1:
         FFX_menuGrid.useAndUseAgain()
         FFX_menuGrid.selSphere('power', 'none')
@@ -1664,10 +1665,11 @@ def skMixed():
     FFX_menuGrid.selSphere('mana', 'none')
     FFX_menuGrid.useAndUseAgain()
     FFX_menuGrid.selSphere('lv1', 'none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('luck', 'none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('fortune', 'none')
+    if not gameVars.getSkipZanLuck():
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('luck', 'none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('fortune', 'none')
     FFX_menuGrid.useAndMove()
     gridRight()
     gridDown()
@@ -1706,17 +1708,17 @@ def skFriend():
         FFX_memory.waitFrames(5)
 
     # Now sphere grid
-    openGrid(character=1)
-    FFX_menuGrid.moveFirst()
-    gridDown()
-    gridDown()
-    FFX_menuGrid.moveAndUse()
-    FFX_menuGrid.selSphere('luck', 'none')
-    FFX_menuGrid.useAndUseAgain()
-    FFX_menuGrid.selSphere('fortune', 'none')
-    FFX_menuGrid.useAndQuit()
+    if not gameVars.getSkipZanLuck():
+        openGrid(character=1)
+        FFX_menuGrid.moveFirst()
+        gridDown()
+        gridDown()
+        FFX_menuGrid.moveAndUse()
+        FFX_menuGrid.selSphere('luck', 'none')
+        FFX_menuGrid.useAndUseAgain()
+        FFX_menuGrid.selSphere('fortune', 'none')
+        FFX_menuGrid.useAndQuit()
     FFX_memory.closeMenu()
-
 
 def skReturn2():
     openGrid(character=1)

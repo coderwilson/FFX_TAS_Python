@@ -176,6 +176,9 @@ def lakeRoad2():
 
 def lake():
     print("Now to the frozen lake")
+    if FFX_memory.getHP()[3] < 1000: #Otherwise we under-level Tidus off of Crawler
+        FFX_Battle.healUp(fullMenuClose=False)
+    
     FFX_memory.fullPartyFormat('crawler', fullMenuClose=False)
     FFX_menu.mLakeGrid()
     FFX_memory.awaitControl()

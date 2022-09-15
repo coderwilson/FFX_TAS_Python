@@ -86,8 +86,8 @@ if gameVars.nemesis():
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
-#Gamestate = "Zanarkand"
-#StepCounter = 1 #Campfire, version 1
+Gamestate = "Zanarkand"
+StepCounter = 1 #Campfire, version 1
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
@@ -122,9 +122,9 @@ rngSelectArray = [31,160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 favoriteSeeds = [31, 183]
 rngSeedNum = 31 #If you don't randomly select below, this will be the seed you run.
-# TAS PB is on seed 31
-# 160 is WR for both categories, just has a bad start
-# Need review on the others
+#TAS PB is on seed 31
+#160 is WR for both categories, just has a bad start
+#Need review on the others
 
 ####################################################################################################
 

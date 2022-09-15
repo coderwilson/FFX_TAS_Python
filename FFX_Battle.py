@@ -1589,32 +1589,32 @@ def MRRbattle(status):
                         valeforChargeComplete = False
                     else:
                         print("No petrify issues.")
-                    if FFX_Screen.turnTidus():
-                        buddySwapKimahri()
-                        nextCritKim = mrrTarget()
-                    elif FFX_Screen.turnWakka():
-                        wakkaTurns += 1
-                        if wakkaTurns == 1:
-                            attackByNum(21, 'l')
-                        else:
+                        if FFX_Screen.turnTidus():
+                            buddySwapKimahri()
+                            nextCritKim = mrrTarget()
+                        elif FFX_Screen.turnWakka():
+                            wakkaTurns += 1
+                            if wakkaTurns == 1:
+                                attackByNum(21, 'l')
+                            else:
+                                buddySwapYuna()
+                                aeonSummon(0)
+                        elif FFX_Screen.turnAuron():
+                            attackByNum(22, 'r')
+                        elif FFX_Screen.turnKimahri():
                             buddySwapYuna()
                             aeonSummon(0)
-                    elif FFX_Screen.turnAuron():
-                        attackByNum(22, 'r')
-                    elif FFX_Screen.turnKimahri():
-                        buddySwapYuna()
-                        aeonSummon(0)
-                    elif FFX_Screen.turnAeon():
-                        if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
-                            aeonBoost()
-                            aeonTurn = 1
-                        elif aeonTurn < 2:
-                            aeonBoost()
-                            FFX_Screen.awaitTurn()
-                            attack('none')
-                            aeonTurn = 2
-                        else:
-                            aeonSpell2(3, 'none')
+                        elif FFX_Screen.turnAeon():
+                            if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
+                                aeonBoost()
+                                aeonTurn = 1
+                            elif aeonTurn < 2:
+                                aeonBoost()
+                                FFX_Screen.awaitTurn()
+                                attack('none')
+                                aeonTurn = 2
+                            else:
+                                aeonSpell2(3, 'none')
         elif battle == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
             while FFX_memory.battleActive():  # end of battle screen
                 if FFX_memory.turnReady():
@@ -1649,26 +1649,26 @@ def MRRbattle(status):
                         valeforChargeComplete = False
                     else:
                         print("No petrify issues.")
-                    if FFX_Screen.turnTidus():
-                        buddySwapKimahri()
-                    elif FFX_Screen.turnKimahri():
-                        nextCritKim = mrrTarget()
-                    elif FFX_Screen.turnWakka():
-                        attack('none')
-                    elif FFX_Screen.turnAuron():
-                        buddySwapYuna()
-                        aeonSummon(0)
-                    elif FFX_Screen.turnAeon():
-                        if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
-                            aeonBoost()
-                            aeonTurn = 1
-                        elif aeonTurn < 2:
-                            aeonSpell2(2, 'right')
-                            FFX_Screen.awaitTurn()
-                            aeonBoost()
-                            aeonTurn = 2
-                        else:
-                            aeonSpell2(3, 'right')
+                        if FFX_Screen.turnTidus():
+                            buddySwapKimahri()
+                        elif FFX_Screen.turnKimahri():
+                            nextCritKim = mrrTarget()
+                        elif FFX_Screen.turnWakka():
+                            attack('none')
+                        elif FFX_Screen.turnAuron():
+                            buddySwapYuna()
+                            aeonSummon(0)
+                        elif FFX_Screen.turnAeon():
+                            if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
+                                aeonBoost()
+                                aeonTurn = 1
+                            elif aeonTurn < 2:
+                                aeonSpell2(2, 'right')
+                                FFX_Screen.awaitTurn()
+                                aeonBoost()
+                                aeonTurn = 2
+                            else:
+                                aeonSpell2(3, 'right')
         # battle 99 is never used.
         elif battle == 100:  # Raptor, Funguar, Red Element (camera front)
             while FFX_memory.battleActive():  # end of battle screen
@@ -1679,33 +1679,33 @@ def MRRbattle(status):
                         valeforChargeComplete = False
                     else:
                         print("No petrify issues.")
-                    if FFX_Screen.turnTidus():
-                        buddySwapKimahri()
-                        if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                            nextCritKim = mrrTarget()
-                        else:
-                            defend()
-                    elif FFX_Screen.turnWakka():
-                        attack('none')
-                    elif FFX_memory.getEnemyCurrentHP()[0] != 0:
-                        buddySwapTidus()
-                        fleeAll()
-                        valeforChargeComplete = False
-                    elif FFX_Screen.turnAuron():
-                        buddySwapYuna()
-                        aeonSummon(0)
-                    elif FFX_Screen.turnAeon():
-                        if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
-                            FFX_Screen.awaitTurn()
-                            aeonBoost()
-                            aeonTurn = 1
-                        elif aeonTurn < 2:
-                            aeonSpell(0)
-                            FFX_Screen.awaitTurn()
-                            aeonBoost()
-                            aeonTurn = 2
-                        else:
-                            aeonSpell(3)
+                        if FFX_Screen.turnTidus():
+                            buddySwapKimahri()
+                            if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                                nextCritKim = mrrTarget()
+                            else:
+                                defend()
+                        elif FFX_Screen.turnWakka():
+                            attack('none')
+                        elif FFX_memory.getEnemyCurrentHP()[0] != 0:
+                            buddySwapTidus()
+                            fleeAll()
+                            valeforChargeComplete = False
+                        elif FFX_Screen.turnAuron():
+                            buddySwapYuna()
+                            aeonSummon(0)
+                        elif FFX_Screen.turnAeon():
+                            if aeonTurn == 0 and FFX_memory.getNextTurn() < 19:
+                                FFX_Screen.awaitTurn()
+                                aeonBoost()
+                                aeonTurn = 1
+                            elif aeonTurn < 2:
+                                aeonSpell(0)
+                                FFX_Screen.awaitTurn()
+                                aeonBoost()
+                                aeonTurn = 2
+                            else:
+                                aeonSpell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
         elif battle == 101:
             while FFX_memory.battleActive():  # end of battle screen
@@ -1820,7 +1820,10 @@ def MRRbattle(status):
 
 def MRRmanip(kimMaxAdvance: int = 6):
     nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-    kimTurn = nextCritKim >= 2
+    if nextCritKim >= 3:
+        kimTurn = True
+    else:
+        kimTurn = False
     while not FFX_memory.turnReady():
         pass
     while FFX_memory.battleActive():
@@ -3419,14 +3422,14 @@ def sandragora(version):
                 FFX_memory.awaitEvent()
                 FFXC.set_neutral()
                 FFX_Screen.awaitTurn()
-        elif FFX_memory.rngSeed() == 31:
-            print("Manipulating known seed 31")
-            fleeAll()
-            FFX_memory.clickToControl()
-            FFXC.set_movement(0, 1)
-            FFX_memory.awaitEvent()
-            FFXC.set_neutral()
-            FFX_Screen.awaitTurn()
+        #elif FFX_memory.rngSeed() == 31:
+        #    print("Manipulating known seed 31")
+        #    fleeAll()
+        #    FFX_memory.clickToControl()
+        #    FFXC.set_movement(0, 1)
+        #    FFX_memory.awaitEvent()
+        #    FFXC.set_neutral()
+        #    FFX_Screen.awaitTurn()
         else:
             print("DO NOT Swap odd/even seeds on RNG01")
 
@@ -5674,6 +5677,10 @@ def BFA_nem():
 
 
 def BFA():
+    if FFX_memory.getGilvalue() < 150000:
+        swagMode = True
+    else:
+        swagMode = gameVars.yuYevonSwag()
     FFXC.set_movement(1, 0)
     FFX_memory.waitFrames(30 * 0.4)
     FFXC.set_movement(1, 1)
@@ -5727,7 +5734,7 @@ def BFA():
                     FFX_Xbox.tapB()
                 print(FFX_memory.getEnemyMaxHP())
                 aeon_hp = FFX_memory.getEnemyMaxHP()[0]
-                if gameVars.yuYevonSwag():
+                if swagMode:
                     useGil = aeon_hp * 10
                 elif aeon_hp % 1000 == 0:
                     useGil = aeon_hp * 10
