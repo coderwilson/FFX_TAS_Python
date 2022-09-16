@@ -1,6 +1,6 @@
-import memory
+import memory.main
 import reset
 
-memory.start()
-memory.clearEncounterID()
+memory.main.start()
+memory.main.clearEncounterID()
 reset.resetToMainMenu()

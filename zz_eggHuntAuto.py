@@ -1,7 +1,7 @@
 import time
 import xbox
-import battle
-import memory
+import battle.main
+import memory.main
 import logs
 from math import copysign
 import numpy as np
@@ -64,18 +64,18 @@ def engage():
     target = [10, -10]
     checkpoint = 0
     print("Ready for movement.")
-    while memory.getStoryProgress() < 3251:
+    while memory.main.getStoryProgress() < 3251:
         lookingCount += 1
         if lookingCount % 40 == 0:
             checkpoint += 1
-        if memory.battleActive():
+        if memory.main.battleActive():
             print("Battle engaged - using flee.")
             FFXC.set_neutral()
-            battle.fleeAll()
+            battle.main.fleeAll()
             battleCount += 1
         else:  # User control is different for this section.
-            eggArray = memory.buildEggs()
-            iceArray = memory.buildIcicles()  # Added for additional pathing needs
+            eggArray = memory.main.buildEggs()
+            iceArray = memory.main.buildIcicles()  # Added for additional pathing needs
             if activeEgg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
                     if activeEgg == 99 and eggArray[marker].goForEgg and eggArray[marker].eggLife < 150:
@@ -101,9 +101,9 @@ def engage():
 
             # And now the code to move to the target.
             oldTarget = target
-            player = memory.getCoords()
-            iceArray = memory.buildIcicles()
-            (forward, right) = memory.getMovementVectors()
+            player = memory.main.getCoords()
+            iceArray = memory.main.buildIcicles()
+            (forward, right) = memory.main.getMovementVectors()
 
             targetPos = np.array([target[0], target[1]])
             playerPos = np.array(player)
@@ -173,9 +173,9 @@ def engage():
     duration = endTime - startTime
     print("Duration:", str(duration))
     print("Battle count:", battleCount)
-    while memory.getMap() != 325:
-        if memory.battleActive():
-            battle.fleeAll()
+    while memory.main.getMap() != 325:
+        if memory.main.battleActive():
+            battle.main.fleeAll()
     try:
         logs.writeStats("Egg hunt duration (seconds):")
         logs.writeStats(str(round(duration, 2)))

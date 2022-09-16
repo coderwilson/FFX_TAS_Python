@@ -1,5 +1,5 @@
 import xbox
-import memory
+import memory.main
 import datetime
 import logs
 import vars
@@ -17,35 +17,35 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
         print("The game duration was:", str(totalTime))
         print("This duration is intended for comparison reference only, not as a true timer.")
         print("Please do not use this as your submitted time.")
-        memory.waitFrames(30)
+        memory.main.waitFrames(30)
         print("--------")
         print("In order to conform with speedrun standards,")
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
         print("we now wait until the end of the credits and stuff")
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
         print("and then will open up the list of saves.")
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
         print("This will show the autosave values, which conforms to the speedrun rules.")
         # Bring up auto-save
-        while memory.getMap() != 23:
-            if memory.getMap() in [348, 349]:
+        while memory.main.getMap() != 23:
+            if memory.main.getMap() in [348, 349]:
                 xbox.tapStart()
-            elif memory.cutsceneSkipPossible():
+            elif memory.main.cutsceneSkipPossible():
                 xbox.skipScene()
-        memory.waitFrames(180)
-        while not memory.saveMenuOpen():
+        memory.main.waitFrames(180)
+        while not memory.main.saveMenuOpen():
             xbox.tapB()
-        memory.waitFrames(180)
+        memory.main.waitFrames(180)
         xbox.menuA()
         xbox.menuA()
         xbox.menuA()
     else:
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
         resetToMainMenu()
 
     # Now to re-start
     gameVars.setStartVars()
-    rngSeed = memory.rngSeed()
+    rngSeed = memory.main.rngSeed()
     if landRun:
         rngSeed += 1
         if rngSeed == 256:
@@ -53,7 +53,7 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
     logs.resetStatsLog()
     logs.nextStats(rngSeed)  # Start next stats file
     if gameVars.useSetSeed():
-        memory.setRngSeed(rngSeed)
+        memory.main.setRngSeed(rngSeed)
     print("-------------This game will be using RNG seed:", rngSeed)
     logs.nextStats(rngSeed)
     logs.writeStats("RNG seed:")
@@ -66,32 +66,32 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
 
 def resetToMainMenu():
     FFXC.set_neutral()
-    if memory.getStoryProgress() <= 8:
-        memory.waitFrames(30 * 0.07)
-        while not memory.getMap() in [23, 348, 349]:
+    if memory.main.getStoryProgress() <= 8:
+        memory.main.waitFrames(30 * 0.07)
+        while not memory.main.getMap() in [23, 348, 349]:
             print("----------Attempting reset")
-            print("FFX map:", memory.getMap())
+            print("FFX map:", memory.main.getMap())
             print("----------")
-            memory.setMapReset()
-            memory.waitFrames(30 * 0.1)
-            memory.forceMapLoad()
-            memory.waitFrames(30 * 1)
-    elif memory.battleActive():
+            memory.main.setMapReset()
+            memory.main.waitFrames(30 * 0.1)
+            memory.main.forceMapLoad()
+            memory.main.waitFrames(30 * 1)
+    elif memory.main.battleActive():
         print("Battle is active. Forcing battle to end so we can soft reset.")
-        while not memory.turnReady():
+        while not memory.main.turnReady():
             xbox.menuA()
-        memory.resetBattleEnd()
-        while not memory.getMap() in [23, 348, 349]:
+        memory.main.resetBattleEnd()
+        while not memory.main.getMap() in [23, 348, 349]:
             xbox.menuB()
 
     else:
-        memory.waitFrames(30 * 0.07)
-        while not memory.getMap() in [23, 348, 349]:
+        memory.main.waitFrames(30 * 0.07)
+        while not memory.main.getMap() in [23, 348, 349]:
             print("----------Attempting reset")
-            print("FFX map:", memory.getMap())
+            print("FFX map:", memory.main.getMap())
             print("----------")
-            memory.setMapReset()
-            memory.waitFrames(30 * 0.1)
-            memory.forceMapLoad()
-            memory.waitFrames(30 * 1)
+            memory.main.setMapReset()
+            memory.main.waitFrames(30 * 0.1)
+            memory.main.forceMapLoad()
+            memory.main.waitFrames(30 * 1)
     print("Resetting")

@@ -1,4 +1,4 @@
-import memory
+import memory.main
 
 
 def allFormations(area: int):
@@ -16,7 +16,7 @@ def allFormations(area: int):
 
 def comingBattles(area: int = 10, battleCount: int = 10, extraAdvances: int = 0):
     formations = allFormations(area)
-    advances = memory.rng01Advances((battleCount * 2) + extraAdvances)
+    advances = memory.main.rng01Advances((battleCount * 2) + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:
             del advances[0]

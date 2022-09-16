@@ -1,8 +1,8 @@
 import xbox
 import screen
 import logs
-import memory
-from memory import s32
+import memory.main
+from memory.main import s32
 import vars
 import rngTrack
 gameVars = vars.varsHandle()
@@ -11,22 +11,22 @@ FFXC = xbox.controllerHandle()
 
 
 def tapTargeting():
-    print("In Tap Targeting", not memory.mainBattleMenu(),
-          memory.battleActive())
-    while (not memory.mainBattleMenu()) and memory.battleActive():
+    print("In Tap Targeting", not memory.memory.main.mainBattleMenu(),
+          memory.memory.main.battleActive())
+    while (not memory.main.mainBattleMenu()) and memory.main.battleActive():
         xbox.tapB()
-    print("Done", not memory.mainBattleMenu(), memory.battleActive())
+    print("Done", not memory.main.mainBattleMenu(), memory.main.battleActive())
 
 
 def valeforOD(sinFin=0, version=0):
-    memory.waitFrames(6)
-    while memory.mainBattleMenu():
+    memory.main.waitFrames(6)
+    while memory.main.mainBattleMenu():
         xbox.tapLeft()
     print("Overdrive:", version)
     if version == 1:
-        while memory.battleCursor2() != 1:
+        while memory.main.battleCursor2() != 1:
             xbox.tapDown()
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()  # Energy Blast
     if sinFin == 1:
         xbox.tapDown()
@@ -41,46 +41,46 @@ def defend():
 
 
 def tidusFlee():
-    if memory.battleActive():
+    if memory.main.battleActive():
         print("Tidus Flee (or similar command pattern)")
-        while memory.battleMenuCursor() != 20:
-            if memory.battleMenuCursor() == 255:
+        while memory.main.battleMenuCursor() != 20:
+            if memory.main.battleMenuCursor() == 255:
                 xbox.tapUp()
-            elif memory.battleMenuCursor() == 1:
+            elif memory.main.battleMenuCursor() == 1:
                 xbox.tapUp()
-            elif memory.battleMenuCursor() > 20:
+            elif memory.main.battleMenuCursor() > 20:
                 xbox.tapUp()
             else:
                 xbox.tapDown()
-            if memory.otherBattleMenu():
+            if memory.main.otherBattleMenu():
                 xbox.tapA()
         print("Out")
-        while not memory.otherBattleMenu():
+        while not memory.main.otherBattleMenu():
             xbox.tapB()
         _navigate_to_position(0)
-        while memory.otherBattleMenu():
+        while memory.main.otherBattleMenu():
             xbox.tapB()
         tapTargeting()
 
 
 def yunaCureOmnis():
-    while memory.battleMenuCursor() != 22:
+    while memory.main.battleMenuCursor() != 22:
         if not screen.turnYuna():
             print("Attempting Cure, but it's not Yunas turn")
             return
-        if memory.battleMenuCursor() == 1:
+        if memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     _navigate_to_position(0)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
-    while memory.battleTargetId() <= 20:
-        if memory.battleTargetId() < 20:
+    while memory.main.battleTargetId() <= 20:
+        if memory.main.battleTargetId() < 20:
             xbox.tapDown()
-        elif memory.battleTargetId() == 20:
+        elif memory.main.battleTargetId() == 20:
             xbox.tapLeft()
     xbox.tapB()
     xbox.tapB()
@@ -89,32 +89,32 @@ def yunaCureOmnis():
 
 def tidusHaste(direction, character=255):
     direction = direction.lower()
-    while memory.battleMenuCursor() != 22:
+    while memory.main.battleMenuCursor() != 22:
         if not screen.turnTidus():
             print("Attempting Haste, but it's not Tidus' turn")
             xbox.tapUp()
             xbox.tapUp()
             return
-        if memory.battleMenuCursor() == 1:
+        if memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     _navigate_to_position(0)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     if character != 255:
         direction = 'l'
-        while character != memory.battleTargetId():
+        while character != memory.main.battleTargetId():
             if direction == 'l':
                 xbox.tapLeft()
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     xbox.tapRight()
                     direction = 'd'
             else:
                 xbox.tapDown()
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     xbox.tapUp()
                     direction = 'l'
     elif direction == 'left':
@@ -134,32 +134,32 @@ def lateHaste(direction):
 
 def useSkill(position: int = 0, target: int = 20):
     print("Using skill in position:", position)
-    while memory.battleMenuCursor() != 19:
-        print(memory.battleMenuCursor())
-        if memory.battleMenuCursor() == 255:
+    while memory.main.battleMenuCursor() != 19:
+        print(memory.main.battleMenuCursor())
+        if memory.main.battleMenuCursor() == 255:
             pass
-        elif memory.battleMenuCursor() == 1:
+        elif memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 19:
+        elif memory.main.battleMenuCursor() > 19:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     _navigate_to_position(position)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     if target != 20:
         direction = 'l'
-        while memory.battleTargetId() != target:
+        while memory.main.battleTargetId() != target:
             if direction == 'l':
                 xbox.tapLeft()
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     xbox.tapRight()
                     direction = 'd'
             else:
                 xbox.tapDown()
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     xbox.tapUp()
                     direction = 'l'
     tapTargeting()
@@ -167,134 +167,134 @@ def useSkill(position: int = 0, target: int = 20):
 
 def useSpecial(position, target: int = 20, direction: int = 'u'):
     print("Using skill in position:", position)
-    while memory.battleMenuCursor() != 20:
-        print(memory.battleMenuCursor())
-        if memory.battleMenuCursor() == 255:
+    while memory.main.battleMenuCursor() != 20:
+        print(memory.main.battleMenuCursor())
+        if memory.main.battleMenuCursor() == 255:
             pass
-        elif memory.battleMenuCursor() == 1:
+        elif memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     _navigate_to_position(position)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
 
-    if memory.battleTargetId() != target:
-        while memory.battleTargetId() != target:
+    if memory.main.battleTargetId() != target:
+        while memory.main.battleTargetId() != target:
             if direction == 'r':
                 xbox.tapRight()
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     xbox.tapLeft()
                     direction = 'u'
             else:
                 xbox.tapUp()
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     xbox.tapDown()
                     direction = 'r'
     tapTargeting()
 
 
 def auronOD(style="dragon fang"):
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapLeft()
-    while not memory.interiorBattleMenu():
+    while not memory.main.interiorBattleMenu():
         xbox.tapB()
     print("Style:", style)
     # Doing the actual overdrive
     if style == "dragon fang":
-        _navigate_to_position(0, battleCursor=memory.battleCursor3)
-        while not memory.auronOverdriveActive():
+        _navigate_to_position(0, battleCursor=memory.main.battleCursor3)
+        while not memory.main.auronOverdriveActive():
             xbox.tapB()
         print("Starting")
         for i in range(2):  # Do it twice in case there's a miss on the first one.
             FFXC.set_value('Dpad', 2)  # down
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('Dpad', 0)
             FFXC.set_value('Dpad', 4)  # left
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('Dpad', 0)
             FFXC.set_value('Dpad', 1)  # up
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('Dpad', 0)
             FFXC.set_value('Dpad', 8)  # right
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('Dpad', 0)
             FFXC.set_value('BtnShoulderL', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnShoulderL', 0)
             FFXC.set_value('BtnShoulderR', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnShoulderR', 0)
             FFXC.set_value('BtnA', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnA', 0)
             FFXC.set_value('BtnB', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnB', 0)
     elif style == "shooting star":
-        _navigate_to_position(1, battleCursor=memory.battleCursor3)
-        while not memory.auronOverdriveActive():
+        _navigate_to_position(1, battleCursor=memory.main.battleCursor3)
+        while not memory.main.auronOverdriveActive():
             xbox.tapB()
         for i in range(2):  # Do it twice in case there's a miss on the first one.
             FFXC.set_value('BtnY', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnY', 0)
             FFXC.set_value('BtnA', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnA', 0)
             FFXC.set_value('BtnX', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnX', 0)
             FFXC.set_value('BtnB', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnB', 0)
             FFXC.set_value('Dpad', 4)  # left
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('Dpad', 0)
             FFXC.set_value('Dpad', 8)  # right
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('Dpad', 0)
             FFXC.set_value('BtnB', 1)
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
             FFXC.set_value('BtnB', 0)
 
 
 def tidusOD(direction=None, version: int = 0, character=99):
     print("Tidus overdrive activating")
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapLeft()
-    while not memory.interiorBattleMenu():
+    while not memory.main.interiorBattleMenu():
         xbox.tapB()
     if version == 1:
-        memory.waitFrames(6)
+        memory.main.waitFrames(6)
         xbox.menuRight()
-    while memory.interiorBattleMenu():
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
-    if character != 99 and memory.getEnemyCurrentHP()[character - 20] != 0:
-        while character != memory.battleTargetId() and memory.getEnemyCurrentHP()[character - 20] != 0:
+    if character != 99 and memory.main.getEnemyCurrentHP()[character - 20] != 0:
+        while character != memory.main.battleTargetId() and memory.main.getEnemyCurrentHP()[character - 20] != 0:
             xbox.tapLeft()
     elif direction:
         if direction == 'left':
             xbox.tapLeft()
 
-    while not memory.overdriveMenuActive():
+    while not memory.main.overdriveMenuActive():
         xbox.tapB()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     print("Hit Overdrive")
     xbox.tapB()  # First try pog
-    memory.waitFrames(8)
+    memory.main.waitFrames(8)
     xbox.tapB()  # Extra attempt in case of miss
-    memory.waitFrames(9)
+    memory.main.waitFrames(9)
     xbox.tapB()  # Extra attempt in case of miss
-    memory.waitFrames(10)
+    memory.main.waitFrames(10)
     xbox.tapB()  # Extra attempt in case of miss
-    memory.waitFrames(11)
+    memory.main.waitFrames(11)
     xbox.tapB()  # Extra attempt in case of miss
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.tapB()  # Extra attempt in case of miss
 
 
@@ -307,18 +307,18 @@ def tidusODSeymour():
 def yunaOD(aeonNum: int = 5):
     print("Awaiting Yunas turn")
     while not screen.turnYuna():
-        if memory.turnReady():
+        if memory.main.turnReady():
             defend()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapLeft()
-    while not memory.interiorBattleMenu():
+    while not memory.main.interiorBattleMenu():
         xbox.tapB()
-    while not memory.battleCursor3() == aeonNum:
-        if aeonNum > memory.battleCursor3():
+    while not memory.main.battleCursor3() == aeonNum:
+        if aeonNum > memory.main.battleCursor3():
             xbox.tapDown()
         else:
             xbox.tapUp()
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
     xbox.tapB()
     xbox.tapB()
     xbox.tapB()
@@ -329,12 +329,12 @@ def yojimboOD(gilValue: int = 263000):
     screen.awaitTurn()
     if not screen.turnAeon():
         return
-    while memory.battleMenuCursor() != 35:
+    while memory.main.battleMenuCursor() != 35:
         xbox.tapUp()
-    memory.waitFrames(6)
+    memory.main.waitFrames(6)
     xbox.menuB()
     print("Selecting amount")
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapLeft()
     xbox.tapLeft()
     xbox.tapLeft()
@@ -362,7 +362,7 @@ def yojimboOD(gilValue: int = 263000):
 
 def remedy(character: int, direction: str):
     print("Remedy")
-    if memory.getThrowItemsSlot(15) < 250:
+    if memory.main.getThrowItemsSlot(15) < 250:
         itemnum = 15
     else:
         itemnum = -1
@@ -378,21 +378,21 @@ def revive(itemNum=6, reportForRNG=False):
     print("Using Phoenix Down")
     if reportForRNG:
         logs.writeRNGTrack("Reviving character")
-        logs.writeRNGTrack("Battle: " + str(memory.getEncounterID()))
+        logs.writeRNGTrack("Battle: " + str(memory.main.getEncounterID()))
         logs.writeRNGTrack(
-            "Story flag: " + str(memory.getStoryProgress()))
-    if memory.getThrowItemsSlot(itemNum) > 250:
+            "Story flag: " + str(memory.main.getStoryProgress()))
+    if memory.main.getThrowItemsSlot(itemNum) > 250:
         attack('none')
         return
-    while not memory.mainBattleMenu():
+    while not memory.main.mainBattleMenu():
         pass
-    while memory.battleMenuCursor() != 1:
+    while memory.main.battleMenuCursor() != 1:
         xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
-    itemPos = memory.getThrowItemsSlot(itemNum)
+    itemPos = memory.main.getThrowItemsSlot(itemNum)
     _navigate_to_position(itemPos)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     tapTargeting()
 
@@ -400,31 +400,31 @@ def revive(itemNum=6, reportForRNG=False):
 def reviveTarget(itemNum=6, target=0):
     direction = 'l'
     print("Using Phoenix Down")
-    if memory.getThrowItemsSlot(itemNum) > 250:
+    if memory.main.getThrowItemsSlot(itemNum) > 250:
         fleeAll()
         return
-    while not memory.mainBattleMenu():
+    while not memory.main.mainBattleMenu():
         pass
-    while memory.battleMenuCursor() != 1:
+    while memory.main.battleMenuCursor() != 1:
         xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
-    itemPos = memory.getThrowItemsSlot(itemNum)
+    itemPos = memory.main.getThrowItemsSlot(itemNum)
     _navigate_to_position(itemPos)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
 
     # Select target - default to Tidus
-    if memory.battleTargetId() != 0:
-        while memory.battleTargetId() != 0:
+    if memory.main.battleTargetId() != 0:
+        while memory.main.battleTargetId() != 0:
             if direction == 'l':
                 xbox.tapLeft()
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     xbox.tapRight()
                     direction = 'u'
             else:
                 xbox.tapUp()
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     xbox.tapDown()
                     direction = 'l'
     tapTargeting()
@@ -440,15 +440,15 @@ def Ammes():
     tidusODflag = False
 
     while BattleComplete != 1:
-        if memory.turnReady():
-            if not tidusODflag and screen.turnTidus() and memory.getOverdriveBattle(0) == 100:
+        if memory.main.turnReady():
+            if not tidusODflag and screen.turnTidus() and memory.main.getOverdriveBattle(0) == 100:
                 tidusOD()
                 tidusODflag = True
             else:
                 print("Attacking Sinspawn Ammes")
                 attack('none')
                 countAttacks += 1
-        if memory.userControl():
+        if memory.main.userControl():
             BattleComplete = 1
             print("Ammes battle complete")
 
@@ -460,8 +460,8 @@ def Tanker():
     auronCount = 0
     xbox.clickToBattle()
 
-    while not memory.battleComplete():
-        if memory.turnReady():
+    while not memory.main.battleComplete():
+        if memory.main.turnReady():
             if screen.turnTidus():
                 tidusCount += 1
                 if tidusCount < 4:
@@ -476,7 +476,7 @@ def Tanker():
                 else:
                     attack('none')
                     countAttacks += 1
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
 
 
@@ -484,46 +484,46 @@ def Klikk():
     print("Fight start: Klikk")
     klikkAttacks = 0
     klikkRevives = 0
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.turnReady():
-            BattleHP = memory.getBattleHP()
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.turnReady():
+            BattleHP = memory.main.getBattleHP()
             if BattleHP[0] == 0:
                 revive()
                 klikkRevives += 1
             elif screen.turnTidus():
-                if BattleHP[0] == 0 and memory.getEnemyCurrentHP()[0] > 125:
+                if BattleHP[0] == 0 and memory.main.getEnemyCurrentHP()[0] > 125:
                     usePotionCharacter(0, 'l')
                 else:
                     attack('none')
                 klikkAttacks += 1
             elif screen.turnRikku():
-                grenadeCount = memory.getItemCountSlot(
-                    memory.getItemSlot(35))
-                if BattleHP[0] < 120 and not (memory.getNextTurn() == 0 and memory.getEnemyCurrentHP()[0] <= 181):
+                grenadeCount = memory.main.getItemCountSlot(
+                    memory.main.getItemSlot(35))
+                if BattleHP[0] < 120 and not (memory.main.getNextTurn() == 0 and memory.main.getEnemyCurrentHP()[0] <= 181):
                     usePotionCharacter(0, 'l')
                     klikkRevives += 1
                 elif grenadeCount < 3:
                     print("Attempting to steal from Klikk")
                     Steal()
-                elif memory.rngSeed() == 160 and grenadeCount < 4:
+                elif memory.main.rngSeed() == 160 and grenadeCount < 4:
                     print("Attempting to steal from Klikk")
                     Steal()
-                elif memory.rngSeed() == 31 and memory.getEnemyCurrentHP()[0] < 250:
+                elif memory.main.rngSeed() == 31 and memory.main.getEnemyCurrentHP()[0] < 250:
                     defend()
                 else:
                     attack('none')
                     klikkAttacks += 1
         else:
-            if memory.diagSkipPossible():
+            if memory.main.diagSkipPossible():
                 xbox.tapB()
     print("Klikk fight complete")
     if gameVars.csr():
-        while memory.getMap() != 71:
+        while memory.main.getMap() != 71:
             FFXC.set_value("BtnB", 1)
         FFXC.set_neutral()
     else:
         # Maybe not skippable dialog, but whatever.
-        memory.clickToControl()
+        memory.main.clickToControl()
 
 
 def getAdvances(tros=True, report=False):
@@ -561,20 +561,20 @@ def Tros():
     Grenades = 0
     Steals = 0
     advances = 0
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
 
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.diagSkipPossible():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.diagSkipPossible():
             xbox.tapB()
-        elif memory.turnReady():
+        elif memory.main.turnReady():
             battleClock += 1
             print("Battle clock:", battleClock)
             trosPos = 2
             print("Determining Tros position")
-            while trosPos == 2 and not memory.battleComplete():
+            while trosPos == 2 and not memory.main.battleComplete():
                 # Two for "not yet determined". Maybe can be HP-based instead?
-                camera = memory.getCamera()
+                camera = memory.main.getCamera()
                 # First, determine position of Tros
                 if camera[0] > 2:
                     trosPos = 1  # One for cannot attack.
@@ -587,8 +587,8 @@ def Tros():
                     print("Tros is short-range.")
 
             # Assuming battle is not complete:
-            if memory.battleActive():
-                partyHP = memory.getBattleHP()
+            if memory.main.battleActive():
+                partyHP = memory.main.getBattleHP()
                 # Someone requires reviving.
                 if partyHP[0] == 0 or partyHP[1] == 0:
                     print("Tros: Someone fainted.")
@@ -596,8 +596,8 @@ def Tros():
                     Revives += 1
                 elif screen.turnRikku():
                     print("Rikku turn")
-                    grenadeSlot = memory.getItemSlot(35)
-                    grenadeCount = memory.getItemCountSlot(grenadeSlot)
+                    grenadeSlot = memory.main.getItemSlot(35)
+                    grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
                     print("------------------------------")
                     print("Current grenade count:", grenadeCount)
                     print("Grenades used:", Grenades)
@@ -620,12 +620,12 @@ def Tros():
                             Steal()
                             Steals += 1
                         else:
-                            grenadeSlot = memory.getUseItemsSlot(35)
+                            grenadeSlot = memory.main.getUseItemsSlot(35)
                             useItem(grenadeSlot, 'none')
                             Grenades += 1
                 elif screen.turnTidus():
                     print("Tidus turn")
-                    if trosPos == 1 and memory.getBattleHP()[1] < 200 and memory.getEnemyCurrentHP()[0] > 800:
+                    if trosPos == 1 and memory.main.getBattleHP()[1] < 200 and memory.main.getEnemyCurrentHP()[0] > 800:
                         usePotionCharacter(6, 'l')
                     elif trosPos == 1:
                         defend()
@@ -634,38 +634,38 @@ def Tros():
                         Attacks += 1
 
     print("Tros battle complete.")
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def piranhas():
-    encounterID = memory.getEncounterID()
-    print("#########Seed:", memory.rngSeed())
+    encounterID = memory.main.getEncounterID()
+    print("#########Seed:", memory.main.rngSeed())
     # 11 = two piranhas
     # 12 = three piranhas with one being a triple formation (takes two hits)
     # 13 = four piranhas
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady():
-            if memory.rngSeed() == 105:
+    while memory.main.battleActive():
+        if memory.main.turnReady():
+            if memory.main.rngSeed() == 105:
                 attack('none')
-            elif encounterID == 11 or (encounterID == 12 and memory.battleType() == 1):
+            elif encounterID == 11 or (encounterID == 12 and memory.main.battleType() == 1):
                 attack('none')
             else:
                 escapeAll()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def besaid():
     print("Fight start: Besaid battle")
     FFXC.set_neutral()
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    battleFormat = memory.getEncounterID()
+    battleFormat = memory.main.getEncounterID()
     print("Besaid battle format number:", battleFormat)
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
-            enemyHP = memory.getEnemyCurrentHP()
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
+            enemyHP = memory.main.getEnemyCurrentHP()
             print("Enemy HP:", enemyHP)
             if screen.turnYuna():
                 buddySwapWakka()
@@ -676,7 +676,7 @@ def besaid():
             elif screen.turnTidus():
                 attackByNum(21, direction='r')
 
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def SinFin():
@@ -686,7 +686,7 @@ def SinFin():
     kimTurn = False
     complete = False
     while not complete:
-        if memory.turnReady():
+        if memory.main.turnReady():
             finTurns += 1
             print("Determining first turn.")
             if screen.turnTidus():
@@ -708,8 +708,8 @@ def SinFin():
     print("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
     turnCounter = 0
-    while not memory.battleComplete():
-        if memory.turnReady():
+    while not memory.main.battleComplete():
+        if memory.main.turnReady():
             turnCounter += 1
             if screen.turnKimahri():
                 screen.awaitTurn()
@@ -719,7 +719,7 @@ def SinFin():
             elif screen.turnTidus():
                 if turnCounter < 4:
                     defend()
-                    memory.waitFrames(30 * 0.2)
+                    memory.main.waitFrames(30 * 0.2)
                 else:
                     buddySwapYuna()
                     aeonSummon(0)
@@ -736,13 +736,13 @@ def Echuilles():
     print("Sinspawn Echuilles fight start")
     logs.writeRNGTrack("######################################")
     logs.writeRNGTrack("Echuilles start")
-    logs.writeRNGTrack(memory.rng10Array(arrayLen=1))
+    logs.writeRNGTrack(memory.main.rng10Array(arrayLen=1))
 
     tidusCounter = 0
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.faintCheck() > 0:
                 revive()
             elif screen.turnTidus():
@@ -750,31 +750,31 @@ def Echuilles():
                 if tidusCounter <= 2:
                     print("Cheer")
                     tidusFlee()  # performs cheer command
-                elif memory.getOverdriveBattle(0) == 100 and memory.getEnemyCurrentHP()[0] <= 558:
+                elif memory.main.getOverdriveBattle(0) == 100 and memory.main.getEnemyCurrentHP()[0] <= 558:
                     print("Overdrive")
                     tidusOD()
                 else:
                     print("Tidus attack")
                     attack('none')
             elif screen.turnWakka():
-                if tidusCounter == 1 and memory.rngSeed() != 160:
+                if tidusCounter == 1 and memory.main.rngSeed() != 160:
                     print("Dark Attack")
                     useSkill(0)  # Dark Attack
-                elif memory.getEnemyCurrentHP()[0] <= 558:
+                elif memory.main.getEnemyCurrentHP()[0] <= 558:
                     print("Ready for Tidus Overdrive. Wakka defends.")
                     defend()
                 else:
                     print("Wakka attack")
                     attack('none')
     print("Battle is complete. Now awaiting control.")
-    while not memory.userControl():
-        if memory.cutsceneSkipPossible():
+    while not memory.main.userControl():
+        if memory.main.cutsceneSkipPossible():
             xbox.skipScene()
-        elif memory.menuOpen() or memory.diagSkipPossible():
+        elif memory.main.menuOpen() or memory.main.diagSkipPossible():
             xbox.tapB()
     logs.writeRNGTrack("######################################")
     logs.writeRNGTrack("Echuilles end")
-    logs.writeRNGTrack(memory.rng10Array(arrayLen=1))
+    logs.writeRNGTrack(memory.main.rng10Array(arrayLen=1))
 
 
 def lancetTutorial():
@@ -782,10 +782,10 @@ def lancetTutorial():
     xbox.clickToBattle()
     lancet('none')
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.turnTidus():
                 attack('none')
             elif screen.turnKimahri():
@@ -795,7 +795,7 @@ def lancetTutorial():
                 fire('none')
             else:
                 defend()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
@@ -803,9 +803,9 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
     print("Formation:", nextBattle)
     skipCharge = False
     turnCounter = 0
-    encID = memory.getEncounterID()
+    encID = memory.main.getEncounterID()
     print("Charge values:")
-    print(memory.overdriveState())
+    print(memory.main.overdriveState())
     screen.awaitTurn()
 
     FFXC.set_neutral()
@@ -820,11 +820,11 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
     print("Kilika battle")
     aeonTurn = False
     yunaWent = False
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
+    while memory.main.battleActive():  # AKA end of battle screen
         if not valeforCharge and not skipCharge and bestCharge == nextBattle:  # Still to charge Valefor
-            if memory.turnReady():
+            if memory.main.turnReady():
                 print("------------------------------")
                 print("Battle Turn")
                 print("Battle Number:", encID)
@@ -836,12 +836,12 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                     break
                 elif screen.faintCheck():
                     revive()
-                elif memory.petrifiedstate(character=0):
+                elif memory.main.petrifiedstate(character=0):
                     escapeOne()
                 elif screen.turnKimahri() or screen.turnLulu():
-                    if memory.getBattleCharSlot(4) >= 3:
+                    if memory.main.getBattleCharSlot(4) >= 3:
                         buddySwapWakka()
-                    elif memory.getBattleCharSlot(0) >= 3:
+                    elif memory.main.getBattleCharSlot(0) >= 3:
                         buddySwapTidus()
                     else:
                         buddySwapYuna()
@@ -854,7 +854,7 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                         screen.awaitTurn()
                         if not aeonTurn:
                             aeonTurn = True
-                            if memory.getNextTurn() < 20:
+                            if memory.main.getNextTurn() < 20:
                                 aeonShield()
                         aeonBoost()
                         screen.awaitTurn()
@@ -873,7 +873,7 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                         screen.awaitTurn()
                         if not aeonTurn:
                             aeonTurn = True
-                            if memory.getNextTurn() < 20:
+                            if memory.main.getNextTurn() < 20:
                                 aeonShield()
                         aeonBoost()
                         screen.awaitTurn()
@@ -892,7 +892,7 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                         screen.awaitTurn()
                         if not aeonTurn:
                             aeonTurn = True
-                            if memory.getNextTurn() < 20:
+                            if memory.main.getNextTurn() < 20:
                                 aeonShield()
                         aeonBoost()
                         screen.awaitTurn()
@@ -910,7 +910,7 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                         screen.awaitTurn()
                         if not aeonTurn:
                             aeonTurn = True
-                            if memory.getNextTurn() < 20:
+                            if memory.main.getNextTurn() < 20:
                                 aeonShield()
                         aeonBoost()
                         screen.awaitTurn()
@@ -930,14 +930,14 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                         screen.awaitTurn()
                         if not aeonTurn:
                             aeonTurn = True
-                            if memory.getNextTurn() < 20:
+                            if memory.main.getNextTurn() < 20:
                                 aeonShield()
                         aeonSpellDirection(1, 'right')
                         screen.awaitTurn()
                         aeonSpellDirection(1, 'right')
                     elif screen.turnAeon():
-                        while not memory.battleComplete():
-                            if memory.turnReady():
+                        while not memory.main.battleComplete():
+                            if memory.main.turnReady():
                                 aeonSpell(0)
                     else:
                         defend()
@@ -945,7 +945,7 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                     skipCharge = True
                     print("Not going to charge Valefor. Battle num:", encID)
         else:
-            if memory.turnReady():
+            if memory.main.turnReady():
                 print("------------------------------")
                 print("Battle Turn")
                 print("Battle Number:", encID)
@@ -957,21 +957,21 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                     break
                 elif screen.faintCheck():
                     revive()
-                elif memory.petrifiedstate(character=0):
+                elif memory.main.petrifiedstate(character=0):
                     escapeOne()
-                elif memory.getSpeed() >= 16:
+                elif memory.main.getSpeed() >= 16:
                     fleeAll()
                 elif screen.turnKimahri():
-                    if memory.getBattleCharSlot(4) >= 3:
+                    if memory.main.getBattleCharSlot(4) >= 3:
                         buddySwapWakka()
-                    elif memory.getBattleCharSlot(0) >= 3:
+                    elif memory.main.getBattleCharSlot(0) >= 3:
                         buddySwapTidus()
                     else:
                         buddySwapYuna()
                 elif screen.turnLulu() and encID != 37:
-                    if memory.getBattleCharSlot(4) >= 3:
+                    if memory.main.getBattleCharSlot(4) >= 3:
                         buddySwapWakka()
-                    elif memory.getBattleCharSlot(0) >= 3:
+                    elif memory.main.getBattleCharSlot(0) >= 3:
                         buddySwapTidus()
                     else:
                         buddySwapYuna()
@@ -1016,11 +1016,11 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                 elif encID == 35 or encID == 36:
                     fleeAll()
                 elif encID == 37:
-                    if memory.getSpeed() >= 16:
+                    if memory.main.getSpeed() >= 16:
                         fleeAll()
                     elif yunaWent:
                         fleeAll()
-                    elif screen.turnWakka() and memory.getEnemyCurrentHP()[2] != 0:
+                    elif screen.turnWakka() and memory.main.getEnemyCurrentHP()[2] != 0:
                         attackByNum(22, 'l')
                         yunaWent = True
                     elif screen.turnYuna():
@@ -1029,13 +1029,13 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
                     else:
                         defend()
     FFXC.set_neutral()
-    memory.clickToControl()  # Rewards screen
-    hpCheck = memory.getHP()
+    memory.main.clickToControl()  # Rewards screen
+    hpCheck = memory.main.getHP()
     if hpCheck[0] < 250 or hpCheck[1] < 250 or hpCheck[4] < 250:
         healUp(3)
     else:
         print("No need to heal up. Moving onward.")
-    if not valeforCharge and memory.overdriveState()[8] == 20:
+    if not valeforCharge and memory.main.overdriveState()[8] == 20:
         valeforCharge = True
     print("Returning Valefor Charge value:", valeforCharge)
     return valeforCharge
@@ -1043,8 +1043,8 @@ def KilikaWoods(valeforCharge=True, bestCharge: int = 99, nextBattle=[]):
 
 def sonicWings():
     print("Valefor attempting to use Sonic Wings - 1")
-    while memory.battleMenuCursor() != 204:
-        if memory.battleMenuCursor() == 203:
+    while memory.main.battleMenuCursor() != 204:
+        if memory.main.battleMenuCursor() == 203:
             xbox.tapDown()
         else:
             xbox.tapUp()
@@ -1077,26 +1077,26 @@ def Geneaux():
     screen.awaitTurn()
     valeforOD()
 
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.diagSkipPossible():
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.diagSkipPossible():
             xbox.tapB()
-        elif memory.turnReady():
+        elif memory.main.turnReady():
             print("Valefor casting Fire")
             aeonSpell(0)
         else:
             FFXC.set_neutral()
     print("Battle Complete")
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def LucaWorkers():
     print("Fight start: Workers in Luca")
     xbox.clickToBattle()
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.turnKimahri() or screen.turnTidus():
                 if screen.faintCheck() >= 1:
                     revive()
@@ -1104,9 +1104,9 @@ def LucaWorkers():
                     defend()
             if screen.turnLulu():
                 thunder('none')
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()  # Clicking to get through the battle faster
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def LucaWorkers2(earlyHaste):
@@ -1114,10 +1114,10 @@ def LucaWorkers2(earlyHaste):
     hasted = False
     xbox.clickToBattle()
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.faintCheck() >= 1:
                 revive()
             elif earlyHaste >= 1:
@@ -1128,11 +1128,11 @@ def LucaWorkers2(earlyHaste):
                     thunder('none')
                 else:
                     defend()
-            elif memory.lucaWorkersBattleID() in [44, 35]:
+            elif memory.main.lucaWorkersBattleID() in [44, 35]:
                 if screen.turnTidus():
                     attack('none')
                 elif screen.turnKimahri():
-                    if memory.getEnemyCurrentHP().count(0) == 1 and memory.getOverdriveBattle(3) == 100 and memory.getEnemyCurrentHP()[0] > 80:
+                    if memory.main.getEnemyCurrentHP().count(0) == 1 and memory.main.getOverdriveBattle(3) == 100 and memory.main.getEnemyCurrentHP()[0] > 80:
                         kimahriOD(1)
                     else:
                         attack('none')
@@ -1143,9 +1143,9 @@ def LucaWorkers2(earlyHaste):
                     thunder('none')
                 else:
                     defend()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()  # Clicking to get through the battle faster
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def Oblitzerator(earlyHaste):
@@ -1157,8 +1157,8 @@ def Oblitzerator(earlyHaste):
         # First turn is always Tidus. Haste Lulu if we've got the levels.
         tidusHaste(direction='left', character=5)
 
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.turnReady():
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.turnReady():
             if crane < 3:
                 if screen.turnLulu():
                     crane += 1
@@ -1168,11 +1168,11 @@ def Oblitzerator(earlyHaste):
             elif crane == 3:
                 if screen.turnTidus():
                     crane += 1
-                    while memory.mainBattleMenu():
+                    while memory.main.mainBattleMenu():
                         xbox.tapLeft()
-                    while memory.battleCursor2() != 1:
+                    while memory.main.battleCursor2() != 1:
                         xbox.tapDown()
-                    while memory.otherBattleMenu():
+                    while memory.main.otherBattleMenu():
                         xbox.tapB()
                     tapTargeting()
                 elif screen.turnLulu():
@@ -1186,10 +1186,10 @@ def Oblitzerator(earlyHaste):
                     attackOblitzEnd()
                 else:
                     defend()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
     print("End of fight, Oblitzerator")
-    memory.clickToControl()
+    memory.main.clickToControl()
     # logs.writeStats("RNG02 after battle:")
     # logs.writeStats(memory.s32(memory.rng02()))
 
@@ -1204,14 +1204,14 @@ def afterBlitz1(earlyHaste):
         tidusHaste('none')
     wakkaTurns = 0
 
-    while not memory.battleComplete():
-        if memory.turnReady():
-            print("Enemy HP:", memory.getEnemyCurrentHP())
+    while not memory.main.battleComplete():
+        if memory.main.turnReady():
+            print("Enemy HP:", memory.main.getEnemyCurrentHP())
             if screen.turnTidus():
                 attack('none')
             else:
                 wakkaTurns += 1
-                hpValues = memory.getBattleHP()
+                hpValues = memory.main.getBattleHP()
                 if wakkaTurns < 3:
                     attackByNum(22, 'l')
                 elif hpValues[1] < 200:  # Tidus HP
@@ -1229,10 +1229,10 @@ def afterBlitz3(earlyHaste):
     screen.awaitTurn()
     tidusTurn = 0
     darkAttack = False
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        hpValues = memory.getBattleHP()
+    while memory.main.battleActive():
+        hpValues = memory.main.getBattleHP()
         if screen.turnAuron():
             attack('none')
         elif screen.turnTidus():
@@ -1257,20 +1257,20 @@ def afterBlitz3(earlyHaste):
             else:
                 defend()
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 4)
+    memory.main.waitFrames(30 * 4)
     FFXC.set_value('BtnB', 0)
     print("Battle complete (Garuda)")
     # Get to control
-    while not memory.userControl():
-        if memory.cutsceneSkipPossible():
-            while not memory.diagProgressFlag() == 1:
-                if memory.cutsceneSkipPossible():
+    while not memory.main.userControl():
+        if memory.main.cutsceneSkipPossible():
+            while not memory.main.diagProgressFlag() == 1:
+                if memory.main.cutsceneSkipPossible():
                     xbox.skipScene()
             if gameVars.csr():
-                memory.waitFrames(60)
+                memory.main.waitFrames(60)
             else:
                 xbox.awaitSave(index=1)
-        elif memory.diagSkipPossible() or memory.menuOpen():
+        elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
 
 
@@ -1307,43 +1307,43 @@ def afterBlitz3LateHaste(earlyHaste):
     else:
         useSkill(0)
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             if screen.faintCheck() > 0:
                 revive()
             else:
                 attack('none')
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 4)
+    memory.main.waitFrames(30 * 4)
     FFXC.set_value('BtnB', 0)
     print("Battle complete (Garuda)")
     # Get to control
-    while not memory.userControl():
-        if memory.cutsceneSkipPossible():
-            while not memory.diagProgressFlag() == 1:
-                if memory.cutsceneSkipPossible():
+    while not memory.main.userControl():
+        if memory.main.cutsceneSkipPossible():
+            while not memory.main.diagProgressFlag() == 1:
+                if memory.main.cutsceneSkipPossible():
                     xbox.skipScene()
             if gameVars.csr():
-                memory.waitFrames(60)
+                memory.main.waitFrames(60)
             else:
                 xbox.awaitSave(index=1)
-        elif memory.diagSkipPossible() or memory.menuOpen():
+        elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
 
 
 def MiihenRoad(selfDestruct=False):
     print("Fight start: Mi'ihen Road")
     print("Mi'ihen battle. Self-destruct: ", gameVars.selfDestructGet())
-    battle = memory.getEncounterID()
+    battle = memory.main.getEncounterID()
 
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.battleType() == 2 and not checkTidusOk():
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.battleType() == 2 and not checkTidusOk():
             print("Looks like we got ambushed. Skipping this battle.")
             fleeAll()
             break
-        if memory.turnReady():
+        if memory.main.turnReady():
             if screen.turnTidus():
                 if not gameVars.selfDestructGet():
                     if battle == 51 or battle == 64 or battle == 66 or battle == 87:
@@ -1362,19 +1362,19 @@ def MiihenRoad(selfDestruct=False):
                 fleeAll()
 
     FFXC.set_movement(0, 1)
-    while not memory.userControl():
+    while not memory.main.userControl():
         FFXC.set_value('BtnB', 1)
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
         FFXC.set_value('BtnB', 0)
-        memory.waitFrames(3)
-    hpCheck = memory.getHP()
+        memory.main.waitFrames(3)
+    hpCheck = memory.main.getHP()
     print("------------------ HP check:", hpCheck)
     if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
-        memory.fullPartyFormat('miihen', fullMenuClose=False)
+        memory.main.fullPartyFormat('miihen', fullMenuClose=False)
         healUp()
     else:
         print("No need to heal up. Moving onward.")
-        memory.fullPartyFormat('miihen')
+        memory.main.fullPartyFormat('miihen')
 
     print("selfDestruct flag:", gameVars.selfDestructGet())
 
@@ -1384,10 +1384,10 @@ def chocoEater():
     xbox.clickToBattle()
     tidusHaste('right')  # First turn, haste the chocobo eater
     turns = 0
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             turns += 1
             # Only if two people are down, very rare but for safety.
             if screen.faintCheck() > 1:
@@ -1396,7 +1396,7 @@ def chocoEater():
             else:
                 print("Attempting defend")
                 defend()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             print("Skipping dialog")
             xbox.tapB()
     # logs.writeStats("Chocobo eater turns:")
@@ -1407,13 +1407,13 @@ def chocoEater():
 def aeonShield():
     print("Aeon Shield function")
     screen.awaitTurn()
-    memory.waitFrames(6)
-    while not memory.otherBattleMenu():
+    memory.main.waitFrames(6)
+    while not memory.main.otherBattleMenu():
         xbox.tapRight()
     if gameVars.usePause():
-        memory.waitFrames(2)
-    while memory.otherBattleMenu():
-        if memory.battleCursor2() == 0:
+        memory.main.waitFrames(2)
+    while memory.main.otherBattleMenu():
+        if memory.main.battleCursor2() == 0:
             xbox.tapB()
         else:
             xbox.tapUp()
@@ -1423,15 +1423,15 @@ def aeonShield():
 def aeonBoost():
     print("Aeon Boost function")
     screen.awaitTurn()
-    memory.waitFrames(6)
-    while not memory.otherBattleMenu():
+    memory.main.waitFrames(6)
+    while not memory.main.otherBattleMenu():
         xbox.tapRight()
     if gameVars.usePause():
-        memory.waitFrames(2)
-    while memory.otherBattleMenu():
-        if memory.battleCursor2() == 1:
+        memory.main.waitFrames(2)
+    while memory.main.otherBattleMenu():
+        if memory.main.battleCursor2() == 1:
             xbox.tapB()
-        elif memory.battleCursor2() == 0:
+        elif memory.main.battleCursor2() == 0:
             xbox.tapDown()
         else:
             xbox.tapUp()
@@ -1441,13 +1441,13 @@ def aeonBoost():
 def aeonDismiss():
     print("Aeon Dismiss function")
     screen.awaitTurn()
-    memory.waitFrames(6)
-    while not memory.otherBattleMenu():
+    memory.main.waitFrames(6)
+    while not memory.main.otherBattleMenu():
         xbox.tapRight()
     if gameVars.usePause():
-        memory.waitFrames(2)
-    while memory.otherBattleMenu():
-        if memory.battleCursor2() == 2:
+        memory.main.waitFrames(2)
+    while memory.main.otherBattleMenu():
+        if memory.main.battleCursor2() == 2:
             xbox.tapB()
         else:
             xbox.tapDown()
@@ -1455,7 +1455,7 @@ def aeonDismiss():
 
 
 def mrrTarget():
-    encID = memory.getEncounterID()
+    encID = memory.main.getEncounterID()
     if encID == 96:
         attackByNum(22, 'r')
     elif encID == 97:
@@ -1472,7 +1472,7 @@ def mrrTarget():
         lancetTarget(target=20, direction='l')
     else:
         defend()
-    return memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    return memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
 
 def MRRbattle(status):
@@ -1481,7 +1481,7 @@ def MRRbattle(status):
     print("------------------------------")
     print("------------------------------")
     print("Fight start: MRR")
-    battle = memory.getEncounterID()
+    battle = memory.main.getEncounterID()
     print("Battle number:", battle)
     # nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
@@ -1500,7 +1500,7 @@ def MRRbattle(status):
     aeonTurn = 0
 
     # If we're ambushed and take too much damage, this will trigger first.
-    hpArray = memory.getBattleHP()
+    hpArray = memory.main.getBattleHP()
     hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
     # Final charging for Yuna is a lower overall party HP
     if hpTotal < 1800 and status[5] != 2:
@@ -1515,10 +1515,10 @@ def MRRbattle(status):
     elif battle == 102:  # Garuda, flee no matter what.
         fleeAll()
     elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
-        if status[3] < 3 and memory.rngSeed() != 160:  # Battle number (zero-index)
+        if status[3] < 3 and memory.main.rngSeed() != 160:  # Battle number (zero-index)
             if battle == 100 or battle == 101:  # The two battles with Funguar
-                while memory.battleActive():  # end of battle screen
-                    if memory.turnReady():
+                while memory.main.battleActive():  # end of battle screen
+                    if memory.main.turnReady():
                         if screen.turnTidus():
                             buddySwapKimahri()
                         elif screen.turnKimahri():
@@ -1538,8 +1538,8 @@ def MRRbattle(status):
             else:
                 fleeAll()
         else:  # Starting with fourth battle, overdrive on any battle that isn't Garuda.
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if screen.turnTidus():
                         buddySwapKimahri()
                     elif screen.turnKimahri():
@@ -1558,14 +1558,14 @@ def MRRbattle(status):
                         status[5] = 1
     elif status[5] == 1:  # Next need to recharge Valefor
         valeforChargeComplete = True
-        if memory.battleType() == 1:
+        if memory.main.battleType() == 1:
             for _ in range(3):
                 screen.awaitTurn()
                 defend()
         if battle == 96:  # Gandarewa, Red Element, Raptor (camera front)
             wakkaTurns = 0
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if checkPetrify():
                         print("Someone is pretrified. Escaping battle.")
                         fleeAll()
@@ -1588,7 +1588,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                         elif screen.turnAeon():
-                            if aeonTurn == 0 and memory.getNextTurn() < 19:
+                            if aeonTurn == 0 and memory.main.getNextTurn() < 19:
                                 aeonBoost()
                                 aeonTurn = 1
                             elif aeonTurn < 2:
@@ -1599,8 +1599,8 @@ def MRRbattle(status):
                             else:
                                 aeonSpell2(3, 'none')
         elif battle == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if screen.turnTidus():
                         buddySwapKimahri()
                         nextCritKim = mrrTarget()
@@ -1612,7 +1612,7 @@ def MRRbattle(status):
                         buddySwapYuna()
                         aeonSummon(0)
                     elif screen.turnAeon():
-                        if aeonTurn == 0 and memory.getNextTurn() < 19:
+                        if aeonTurn == 0 and memory.main.getNextTurn() < 19:
                             screen.awaitTurn()
                             aeonBoost()
                             aeonTurn = 1
@@ -1624,8 +1624,8 @@ def MRRbattle(status):
                         else:
                             aeonSpell(3)
         elif battle == 98:  # Raptor, Red Element, Gandarewa (camera side)
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if checkPetrify():
                         print("Someone is pretrified. Escaping battle.")
                         fleeAll()
@@ -1642,7 +1642,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                         elif screen.turnAeon():
-                            if aeonTurn == 0 and memory.getNextTurn() < 19:
+                            if aeonTurn == 0 and memory.main.getNextTurn() < 19:
                                 aeonBoost()
                                 aeonTurn = 1
                             elif aeonTurn < 2:
@@ -1654,8 +1654,8 @@ def MRRbattle(status):
                                 aeonSpell2(3, 'right')
         # battle 99 is never used.
         elif battle == 100:  # Raptor, Funguar, Red Element (camera front)
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if checkPetrify():
                         print("Someone is pretrified. Escaping battle.")
                         fleeAll()
@@ -1670,7 +1670,7 @@ def MRRbattle(status):
                             defend()
                         elif screen.turnWakka():
                             attack('none')
-                        elif memory.getEnemyCurrentHP()[0] != 0:
+                        elif memory.main.getEnemyCurrentHP()[0] != 0:
                             buddySwapTidus()
                             fleeAll()
                             valeforChargeComplete = False
@@ -1678,7 +1678,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                         elif screen.turnAeon():
-                            if aeonTurn == 0 and memory.getNextTurn() < 19:
+                            if aeonTurn == 0 and memory.main.getNextTurn() < 19:
                                 screen.awaitTurn()
                                 aeonBoost()
                                 aeonTurn = 1
@@ -1691,14 +1691,14 @@ def MRRbattle(status):
                                 aeonSpell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
         elif battle == 101:
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if screen.turnTidus():
                         buddySwapKimahri()
                         nextCritKim = mrrTarget()
                     elif screen.turnWakka():
                         attackByNum(22, 'l')
-                    elif memory.getEnemyCurrentHP()[2] != 0:
+                    elif memory.main.getEnemyCurrentHP()[2] != 0:
                         buddySwapTidus()
                         fleeAll()
                         valeforChargeComplete = False
@@ -1706,7 +1706,7 @@ def MRRbattle(status):
                         buddySwapYuna()
                         aeonSummon(0)
                     elif screen.turnAeon():
-                        if aeonTurn == 0 and memory.getNextTurn() < 19:
+                        if aeonTurn == 0 and memory.main.getNextTurn() < 19:
                             aeonBoost()
                             aeonTurn = 1
                         elif aeonTurn < 2:
@@ -1723,20 +1723,20 @@ def MRRbattle(status):
         # Both Yuna and Kimahri have levels, good to go.
         if status[0] == 1 and status[1] == 1:
             status[5] = 3
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     fleeAll()
         else:
             # Wakka attack Raptors and Gandarewas for Yuna AP.
             yunaTurnCount = 0
-            while memory.battleActive():  # end of battle screen
-                if memory.turnReady():
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
                     if screen.turnTidus():
                         tidusFlee()
                     elif screen.faintCheck() >= 1:
                         buddySwapTidus()
                     elif screen.turnKimahri():
-                        if memory.getKimahriSlvl() >= 6 and yunaTurnCount:
+                        if memory.main.getKimahriSlvl() >= 6 and yunaTurnCount:
                             # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
                             #     nextCritKim = mrrTarget()
                             # else:
@@ -1771,10 +1771,10 @@ def MRRbattle(status):
 
     # Check on sphere levels for our two heroes
     if status[0] == 0:
-        if memory.getSLVLYuna() > 573:
+        if memory.main.getSLVLYuna() > 573:
             status[0] = 1
     if status[1] == 0:
-        if memory.getSLVLKim() >= 495:
+        if memory.main.getSLVLKim() >= 495:
             status[1] = 1
     if status[5] == 2:  # Last phase is to level Yuna and Kimahri
         # Both Yuna and Kimahri have levels, good to go.
@@ -1782,15 +1782,15 @@ def MRRbattle(status):
             status[5] = 3
 
     if status[5] == 3:
-        memory.fullPartyFormat('mrr1', fullMenuClose=False)
+        memory.main.fullPartyFormat('mrr1', fullMenuClose=False)
     elif status[5] == 2:  # Still levelling Yuna or Kimahri
-        memory.fullPartyFormat('mrr2', fullMenuClose=False)
+        memory.main.fullPartyFormat('mrr2', fullMenuClose=False)
         print("Yuna in front party, trying to get some more experience.")
     else:
-        memory.fullPartyFormat('mrr1', fullMenuClose=False)
+        memory.main.fullPartyFormat('mrr1', fullMenuClose=False)
 
     # Now checking health values
-    hpCheck = memory.getHP()
+    hpCheck = memory.main.getHP()
     print("HP values:", hpCheck)
     if status[5] == 2:
         healUp(3, fullMenuClose=False)
@@ -1803,25 +1803,25 @@ def MRRbattle(status):
 
 def MRRmanip(kimMaxAdvance: int = 6):
     screen.awaitTurn()
-    nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
     print("======== Next Kimahri crit:", nextCritKim)
     attemptManip = False
     if nextCritKim >= 3:
         kimTurn = True
     else:
         kimTurn = False
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady():
-            nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-            print("||| Manip - Battle number:", memory.getEncounterID())
+    while memory.main.battleActive():
+        if memory.main.turnReady():
+            nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
+            print("||| Manip - Battle number:", memory.main.getEncounterID())
             print("||| Next Kimahri Crit vs Gui:", nextCritKim)
             if nextCritKim > kimMaxAdvance:
                 fleeAll()
             elif kimTurn:
                 attemptManip = True
-                if 3 not in memory.getActiveBattleFormation():
+                if 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
                 elif screen.turnKimahri():
                     nextCritKim = mrrTarget()
@@ -1832,12 +1832,12 @@ def MRRmanip(kimMaxAdvance: int = 6):
                 fleeAll()
     wrapUp()
     # Now checking health values
-    hpCheck = memory.getHP()
+    hpCheck = memory.main.getHP()
     print("HP values:", hpCheck)
     if hpCheck != [520, 475, 1030, 644, 818, 380]:
         healUp(fullMenuClose=False)
-    nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
-    print("||| Manip - Battle number:", memory.getEncounterID())
+    nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    print("||| Manip - Battle number:", memory.main.getEncounterID())
     print("||| Next Kimahri Crit vs Gui:", nextCritKim)
     return attemptManip
 
@@ -1846,7 +1846,7 @@ def battleGui():
     print("Fight start: Sinspawn Gui")
     xbox.clickToBattle()
     print("Engaging Gui")
-    print("##### Expecting crit: ", memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+    print("##### Expecting crit: ", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
     wakkaTurn = False
     yunaTurn = False
     auronTurn = False
@@ -1855,7 +1855,7 @@ def battleGui():
     kimahriCrit = False
 
     while not aeonTurn:
-        if memory.turnReady():
+        if memory.main.turnReady():
             if screen.turnYuna():
                 if not yunaTurn:
                     buddySwapAuron()
@@ -1868,16 +1868,16 @@ def battleGui():
                     wakkaTurn = True
                 else:
                     buddySwapKimahri()
-                    print("##### Expecting crit: ", memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                    print("##### Expecting crit: ", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
             elif screen.turnKimahri():
                 kimahriOD(2)
                 screen.awaitTurn()
                 logs.writeStats("guiCrit:")
-                if memory.lastHitKimahri() > 6000:
+                if memory.main.lastHitKimahri() > 6000:
                     kimahriCrit = True
-                    logs.writeStats(memory.lastHitKimahri() > 6000)
+                    logs.writeStats(memory.main.lastHitKimahri() > 6000)
                 else:
-                    logs.writeStats(memory.lastHitKimahri() > 6000)
+                    logs.writeStats(memory.main.lastHitKimahri() > 6000)
             elif screen.turnTidus():
                 if not tidusTurn:
                     defend()
@@ -1895,22 +1895,22 @@ def battleGui():
                 aeonTurn = True
 
     screen.awaitTurn()
-    nextHP = memory.getBattleHP()[0]
+    nextHP = memory.main.getBattleHP()[0]
     lastHP = nextHP
     turn1 = False
     nextTurn = 20
     lastTurn = 20
     went = False
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady() and memory.getBattleCharTurn() == 8:
-            nextHP = memory.getBattleHP()[0]
+    while memory.main.battleActive():
+        if memory.main.turnReady() and memory.main.getBattleCharTurn() == 8:
+            nextHP = memory.main.getBattleHP()[0]
             lastTurn = nextTurn
-            nextTurn = memory.getNextTurn()
+            nextTurn = memory.main.getNextTurn()
             if went and kimahriCrit:
                 aeonSpell(1)
-            elif memory.getOverdriveBattle(8) == 20:
+            elif memory.main.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
                 valeforOD()
                 went = True
@@ -1928,41 +1928,41 @@ def battleGui():
                 print("------Attack was just used. Now boost.")
                 aeonBoost()
             lastHP = nextHP
-        elif memory.turnReady() and memory.getBattleCharTurn() == 1:
+        elif memory.main.turnReady() and memory.main.getBattleCharTurn() == 1:
             print("Yuna turn, something went wrong.")
-        elif memory.turnReady() and memory.getBattleCharTurn() == 2:
+        elif memory.main.turnReady() and memory.main.getBattleCharTurn() == 2:
             print("Auron turn, something went wrong.")
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
         elif screen.turnSeymour():
             break
 
     # In between battles
-    memory.waitFrames(12)
-    while not memory.turnReady():
-        if memory.getStoryProgress() >= 865 and memory.cutsceneSkipPossible():
-            memory.waitFrames(10)
+    memory.main.waitFrames(12)
+    while not memory.main.turnReady():
+        if memory.main.getStoryProgress() >= 865 and memory.main.cutsceneSkipPossible():
+            memory.main.waitFrames(10)
             xbox.skipScene()
             print("Skipping scene")
-        elif memory.diagSkipPossible() or memory.menuOpen():
+        elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
 
     # Second Gui battle
-    while not memory.userControl():
+    while not memory.main.userControl():
         turn = 1
-        if kimahriCrit or memory.getOverdriveBattle(8) == 20 or memory.getOverdriveBattle(1) == 100:
+        if kimahriCrit or memory.main.getOverdriveBattle(8) == 20 or memory.main.getOverdriveBattle(1) == 100:
             seymourTurn = 0
-            while memory.battleActive():
+            while memory.main.battleActive():
                 if screen.turnSeymour and seymourTurn < 2:
                     seymourSpell(head=False)
                     seymourTurn += 1
                 elif screen.turnYuna and seymourTurn >= 2:
-                    if memory.getOverdriveBattle(1) == 100:
-                        while not memory.otherBattleMenu():
+                    if memory.main.getOverdriveBattle(1) == 100:
+                        while not memory.main.otherBattleMenu():
                             xbox.tapLeft()
-                        while not memory.interiorBattleMenu():
+                        while not memory.main.interiorBattleMenu():
                             xbox.tapB()
-                        while memory.interiorBattleMenu():
+                        while memory.main.interiorBattleMenu():
                             xbox.tapB()
                     else:
                         aeonSummon(0)
@@ -1971,8 +1971,8 @@ def battleGui():
                 else:
                     defend()
         else:
-            while memory.battleActive():
-                if memory.turnReady():
+            while memory.main.battleActive():
+                if memory.main.turnReady():
                     if screen.turnSeymour():
                         seymourSpell()
                     else:
@@ -1996,9 +1996,9 @@ def battleGui():
 
 def djose(stoneBreath):
     print("Fight start: Djose road")
-    while not memory.battleComplete():  # AKA end of battle screen
-        encounterID = memory.getEncounterID()
-        if memory.turnReady():
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        encounterID = memory.main.getEncounterID()
+        if memory.main.turnReady():
             if stoneBreath == 1:  # Stone Breath already learned
                 print("Djose: Stone breath already learned.")
                 fleeAll()
@@ -2018,39 +2018,39 @@ def djose(stoneBreath):
                     fleeAll()
 
     print("Mark 2")
-    memory.clickToControl()
+    memory.main.clickToControl()
     print("Mark 3")
-    partyHP = memory.getHP()
+    partyHP = memory.main.getHP()
     print(partyHP)
     if partyHP[0] < 300 or partyHP[4] < 300:
         print("Djose: recovering HP")
         healUp(3)
     else:
         print("Djose: No need to heal.")
-    memory.fullPartyFormat('djose')
+    memory.main.fullPartyFormat('djose')
     return stoneBreath
 
 
 def wakkaOD():
     print("Wakka overdrive activating")
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapLeft()
-    while not memory.interiorBattleMenu():
+    while not memory.main.interiorBattleMenu():
         xbox.tapB()
-    while memory.interiorBattleMenu():
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
 
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     xbox.tapB()
 
-    while memory.overdriveMenuActiveWakka() == 0:
+    while memory.main.overdriveMenuActiveWakka() == 0:
         pass
-    memory.waitFrames(76)
+    memory.main.waitFrames(76)
     print("Hit Overdrive")
     xbox.tapB()  # First reel
-    memory.waitFrames(13)
+    memory.main.waitFrames(13)
     xbox.tapB()  # Second reel
-    memory.waitFrames(5)
+    memory.main.waitFrames(5)
     xbox.tapB()  # Third reel
 
 
@@ -2068,7 +2068,7 @@ def extractor():
     tidusHaste('l', character=4)
 
     cheerCount = 0
-    while not memory.battleComplete():  # AKA end of battle screen
+    while not memory.main.battleComplete():  # AKA end of battle screen
         # First determine if cheers are needed.
         if gameVars.getLStrike() % 2 == 0 and cheerCount < 4:
             tidusCheer = True
@@ -2077,49 +2077,49 @@ def extractor():
         else:
             tidusCheer = False
         # Then do the battle logic.
-        if memory.specialTextOpen():
+        if memory.main.specialTextOpen():
             xbox.tapB()
-        elif memory.turnReady():
-            if screen.faintCheck() > 0 and memory.getEnemyCurrentHP()[0] > 1100:
+        elif memory.main.turnReady():
+            if screen.faintCheck() > 0 and memory.main.getEnemyCurrentHP()[0] > 1100:
                 revive()
             elif screen.turnTidus():
-                print(memory.getActorCoords(3))
+                print(memory.main.getActorCoords(3))
                 if tidusCheer:
                     cheerCount += 1
                     cheer()
-                elif memory.getEnemyCurrentHP()[0] < 1400 and not screen.faintCheck() \
-                        and memory.getOverdriveBattle(4) == 100:
+                elif memory.main.getEnemyCurrentHP()[0] < 1400 and not screen.faintCheck() \
+                        and memory.main.getOverdriveBattle(4) == 100:
                     defend()
                 else:
                     attack('none')
             else:
-                if memory.rngSeed() == 31 and memory.getBattleHP()[1] < 250:
+                if memory.main.rngSeed() == 31 and memory.main.getBattleHP()[1] < 250:
 
                     # This logic is specific for seed 31. Wakka is known to die on this seed if we don't heal.
-                    if memory.getItemSlot(1) < 200:
+                    if memory.main.getItemSlot(1) < 200:
                         print("Using hi-potion")
                         revive(itemNum=1)
-                    elif memory.getItemSlot(2) < 200:
+                    elif memory.main.getItemSlot(2) < 200:
                         print("Using x-potion")
                         revive(itemNum=2)
-                    elif memory.getItemSlot(8) < 200:
+                    elif memory.main.getItemSlot(8) < 200:
                         print("Using elixir")
                         revive(itemNum=8)
-                    elif memory.getItemSlot(3) < 200:
+                    elif memory.main.getItemSlot(3) < 200:
                         print("Using mega-potion")
                         revive(itemNum=3)
-                    elif memory.getItemSlot(0) < 200:
+                    elif memory.main.getItemSlot(0) < 200:
                         print("Using potion")
                         revive(itemNum=0)
                     else:
                         attack('none')
-                elif memory.getEnemyCurrentHP()[0] < 1900 and memory.getOverdriveBattle(4) == 100:
+                elif memory.main.getEnemyCurrentHP()[0] < 1900 and memory.main.getOverdriveBattle(4) == 100:
                     wakkaOD()
                 else:
                     attack('none')
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def mixTutorial():
@@ -2127,25 +2127,25 @@ def mixTutorial():
     Steal()
     xbox.clickToBattle()
     rikkuFullOD('tutorial')
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def thunderPlains(section):
-    encID = memory.getEncounterID()
-    nadeSlot = memory.getItemSlot(35)
+    encID = memory.main.getEncounterID()
+    nadeSlot = memory.main.getItemSlot(35)
     print("++Grenade Slot %d" % nadeSlot)
-    nadeCount = memory.getItemCountSlot(nadeSlot)
+    nadeCount = memory.main.getItemCountSlot(nadeSlot)
     print("++Grenade count: %d" % nadeCount)
-    print("++Speed sphere count: %d" % memory.getSpeed())
-    useGrenades = nadeCount > 3 and memory.getSpeed() < 14
+    print("++Speed sphere count: %d" % memory.main.getSpeed())
+    useGrenades = nadeCount > 3 and memory.main.getSpeed() < 14
     print("++Use Grenades decision:", useGrenades)
-    useNadeSlot = memory.getUseItemsSlot(35)
-    lunarSlot = gameVars.getBlitzWin() or memory.getItemSlot(56) != 255
-    lightSlot = memory.getItemSlot(57) != 255
-    petrifySlot = memory.getItemSlot(49) != 255
+    useNadeSlot = memory.main.getUseItemsSlot(35)
+    lunarSlot = gameVars.getBlitzWin() or memory.main.getItemSlot(56) != 255
+    lightSlot = memory.main.getItemSlot(57) != 255
+    petrifySlot = memory.main.getItemSlot(49) != 255
 
     tidusturns = 0
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
 
     # Petrify check is not working. Requires review.
@@ -2158,9 +2158,9 @@ def thunderPlains(section):
             fleeAll()
         else:  # Blitz loss strat
             print("Battle with Larvae. Battle number:", encID)
-            while not memory.battleComplete():
-                if memory.turnReady():
-                    if not lunarSlot and memory.turnReady():
+            while not memory.main.battleComplete():
+                if memory.main.turnReady():
+                    if not lunarSlot and memory.main.turnReady():
                         if screen.turnTidus():
                             if tidusturns == 0:
                                 buddySwapRikku()
@@ -2169,42 +2169,42 @@ def thunderPlains(section):
                             tidusturns += 1
                         elif screen.turnRikku():
                             Steal()
-                            lunarSlot = gameVars.getBlitzWin() or memory.getItemSlot(56) != 255
+                            lunarSlot = gameVars.getBlitzWin() or memory.main.getItemSlot(56) != 255
                         else:
                             buddySwapTidus()
                     else:
                         fleeAll()
     elif encID == 160:
         print("Battle with Iron Giant. Battle number:", encID)
-        while not memory.battleComplete():
+        while not memory.main.battleComplete():
             screen.awaitTurn()
             if lightSlot:
                 fleeAll()
             else:
                 buddySwapRikku()
-            while not memory.battleComplete():
+            while not memory.main.battleComplete():
                 if screen.turnRikku():
                     if not lightSlot:
                         Steal()
-                        lightSlot = memory.getItemSlot(57) != 255
-                    elif memory.getOverdriveBattle(6) < 100:
+                        lightSlot = memory.main.getItemSlot(57) != 255
+                    elif memory.main.getOverdriveBattle(6) < 100:
                         attack('none')
                     else:
                         fleeAll()
                 else:
-                    if memory.getOverdriveBattle(6) < 100 and not checkRikkuOk():
+                    if memory.main.getOverdriveBattle(6) < 100 and not checkRikkuOk():
                         escapeOne()
                     else:
                         fleeAll()
     elif encID == 161:
         print("Battle with Iron Giant and Buer monsters. Battle number:", encID)
-        while not memory.battleComplete():
+        while not memory.main.battleComplete():
             screen.awaitTurn()
             if useGrenades or not lightSlot:
                 buddySwapRikku()
                 grenadeThrown = False
-                while not memory.battleComplete():
-                    if memory.turnReady():
+                while not memory.main.battleComplete():
+                    if memory.main.turnReady():
                         if screen.turnRikku():
                             if useGrenades and not grenadeThrown:
                                 print("Grenade Slot %d" % useNadeSlot)
@@ -2212,15 +2212,15 @@ def thunderPlains(section):
                                 grenadeThrown = True
                             elif not lightSlot:
                                 Steal()
-                                lightSlot = memory.getItemSlot(57) != 255
-                            elif memory.getOverdriveBattle(6) < 100:
+                                lightSlot = memory.main.getItemSlot(57) != 255
+                            elif memory.main.getOverdriveBattle(6) < 100:
                                 attack('none')
                             else:
                                 fleeAll()
                         else:
                             if not checkRikkuOk():
                                 fleeAll()
-                            elif memory.getOverdriveBattle(6) < 100:
+                            elif memory.main.getOverdriveBattle(6) < 100:
                                 escapeOne()
                             elif lightSlot and (not useGrenades or grenadeThrown):
                                 fleeAll()
@@ -2230,7 +2230,7 @@ def thunderPlains(section):
                 fleeAll()
     elif encID in [154, 156, 164] and useGrenades:
         print("Battle with random mobs including Buer. Battle number:", encID)
-        while not memory.battleComplete():
+        while not memory.main.battleComplete():
             screen.awaitTurn()
             if useGrenades:
                 buddySwapRikku()
@@ -2238,8 +2238,8 @@ def thunderPlains(section):
             fleeAll()
     elif not gameVars.getBlitzWin() and not petrifySlot and encID in [153, 154, 163]:
         print("Grabbing petrify grenade. Blitz Loss only strat.")
-        while not memory.battleComplete():
-            if memory.turnReady():
+        while not memory.main.battleComplete():
+            if memory.main.turnReady():
                 if encID in [153, 163]:
                     if screen.turnTidus():
                         buddySwapRikku()
@@ -2262,18 +2262,18 @@ def thunderPlains(section):
         fleeAll()
 
     print("Battle is ended - Thunder Plains")
-    memory.clickToControl()
-    memory.waitFrames(2)  # Allow lightning to attemt a strike
-    if memory.dodgeLightning(gameVars.getLStrike()):
+    memory.main.clickToControl()
+    memory.main.waitFrames(2)  # Allow lightning to attemt a strike
+    if memory.main.dodgeLightning(gameVars.getLStrike()):
         print("Dodge")
-        gameVars.setLStrike(memory.lStrikeCount())
+        gameVars.setLStrike(memory.main.lStrikeCount())
     print("Checking party format and resolving if needed.")
-    memory.fullPartyFormat('postbunyip', fullMenuClose=False)
+    memory.main.fullPartyFormat('postbunyip', fullMenuClose=False)
     print("Party format is good. Now checking health values.")
-    hpValues = memory.getHP()
+    hpValues = memory.main.getHP()
     if hpValues[0] < 400 or hpValues[2] < 400 or hpValues[4] < 400 or hpValues[6] < 180:
         healUp()
-    memory.closeMenu()
+    memory.main.closeMenu()
     print("Ready to continue onward.")
 
 
@@ -2281,17 +2281,17 @@ def mWoods(woodsVars):
     print("Logic depends on completion of specific goals. In Order:")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
     print(woodsVars)
-    encounterID = memory.getEncounterID()
+    encounterID = memory.main.getEncounterID()
     print("------------- Battle Start - Battle Number:", encounterID)
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.turnReady():
-            turnchar = memory.getBattleCharTurn()
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.turnReady():
+            turnchar = memory.main.getBattleCharTurn()
             if not woodsVars[1] or not woodsVars[2]:
                 if encounterID in [171, 172, 175]:
-                    if 6 not in memory.getActiveBattleFormation():
-                        if encounterID == 175 and memory.getUseItemsSlot(24) == 255:
+                    if 6 not in memory.main.getActiveBattleFormation():
+                        if encounterID == 175 and memory.main.getUseItemsSlot(24) == 255:
                             buddySwapRikku()
-                        elif encounterID in [171, 172] and memory.getUseItemsSlot(32) == 255:
+                        elif encounterID in [171, 172] and memory.main.getUseItemsSlot(32) == 255:
                             buddySwapRikku()
                         else:
                             fleeAll()
@@ -2299,26 +2299,26 @@ def mWoods(woodsVars):
                         print("Tidus or Rikku incapacitated, fleeing")
                         fleeAll()
                     elif turnchar == 6:
-                        if encounterID == 175 and memory.getUseItemsSlot(24) == 255:
+                        if encounterID == 175 and memory.main.getUseItemsSlot(24) == 255:
                             print("Marker 2")
                             Steal()
-                        elif encounterID == 172 and memory.getUseItemsSlot(32) == 255:
+                        elif encounterID == 172 and memory.main.getUseItemsSlot(32) == 255:
                             print("Marker 3")
                             StealDown()
-                        elif encounterID == 171 and memory.getUseItemsSlot(32) == 255:
+                        elif encounterID == 171 and memory.main.getUseItemsSlot(32) == 255:
                             print("Marker 4")
                             StealRight()
-                        elif memory.getOverdriveBattle(6) != 100:
+                        elif memory.main.getOverdriveBattle(6) != 100:
                             print("Charging")
                             attackByNum(6, 'u')
                         else:
                             print("Escaping")
                             fleeAll()
                     else:
-                        if woodsVars[0] or memory.getOverdriveBattle(6) == 100:
-                            if encounterID in [171, 172] and memory.getUseItemsSlot(32) == 255:
+                        if woodsVars[0] or memory.main.getOverdriveBattle(6) == 100:
+                            if encounterID in [171, 172] and memory.main.getUseItemsSlot(32) == 255:
                                 defend()
-                            elif encounterID == 175 and memory.getUseItemsSlot(24) == 255:
+                            elif encounterID == 175 and memory.main.getUseItemsSlot(24) == 255:
                                 defend()
                             else:
                                 fleeAll()
@@ -2330,9 +2330,9 @@ def mWoods(woodsVars):
             elif not woodsVars[0]:
                 if turnchar == 6:
                     attack('none')
-                elif 6 not in memory.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                elif memory.getOverdriveBattle(6) == 100:
+                elif memory.main.getOverdriveBattle(6) == 100:
                     fleeAll()
                 else:
                     escapeOne()
@@ -2340,21 +2340,21 @@ def mWoods(woodsVars):
                 fleeAll()
 
     print("Battle complete, now to deal with the aftermath.")
-    memory.clickToControl3()
+    memory.main.clickToControl3()
     print("M.woods, back in control")
-    if memory.overdriveState()[6] == 100:
+    if memory.main.overdriveState()[6] == 100:
         woodsVars[0] = True
-    if memory.getUseItemsSlot(32) != 255:
+    if memory.main.getUseItemsSlot(32) != 255:
         woodsVars[1] = True
-    if memory.getUseItemsSlot(24) != 255:
+    if memory.main.getUseItemsSlot(24) != 255:
         woodsVars[2] = True
     print("Checking battle formation.")
     print("Party format is now good. Let's check health.")
     # Heal logic
-    partyHP = memory.getHP()
+    partyHP = memory.main.getHP()
     if partyHP[0] < 450 or partyHP[6] < 180 or partyHP[2] + partyHP[4] < 500:
         healUp()
-    memory.closeMenu()
+    memory.main.closeMenu()
     print("And last, we'll update variables.")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
     print(woodsVars)
@@ -2363,17 +2363,17 @@ def mWoods(woodsVars):
 
 
 def spheriSpellItemReady():
-    if memory.getCharWeakness(20) == 1:
-        if memory.getItemSlot(27) > 200:
+    if memory.main.getCharWeakness(20) == 1:
+        if memory.main.getItemSlot(27) > 200:
             return False
-    elif memory.getCharWeakness(20) == 2:
-        if memory.getItemSlot(24) > 200:
+    elif memory.main.getCharWeakness(20) == 2:
+        if memory.main.getItemSlot(24) > 200:
             return False
-    elif memory.getCharWeakness(20) == 4:
-        if memory.getItemSlot(30) > 200:
+    elif memory.main.getCharWeakness(20) == 4:
+        if memory.main.getItemSlot(30) > 200:
             return False
-    elif memory.getCharWeakness(20) == 8:
-        if memory.getItemSlot(32) > 200:
+    elif memory.main.getCharWeakness(20) == 8:
+        if memory.main.getItemSlot(32) > 200:
             return False
     return True
 
@@ -2389,14 +2389,14 @@ def spherimorph():
     rikkuturns = 0
     yunaTurn = False
     kimTurn = False
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if gameVars.usePause():
-                memory.waitFrames(2)
-            turnchar = memory.getBattleCharTurn()
-            partyHP = memory.getBattleHP()
+                memory.main.waitFrames(2)
+            turnchar = memory.main.getBattleCharTurn()
+            partyHP = memory.main.getBattleHP()
             if turnchar == 0:
                 if tidusturns == 0:
                     equipInBattle(equipType='armor', abilityNum=0x8028)
@@ -2406,7 +2406,7 @@ def spherimorph():
                     buddySwapRikku()
                 tidusturns += 1
             elif turnchar == 1:
-                rikkuslotnum = memory.getBattleCharSlot(6)
+                rikkuslotnum = memory.main.getBattleCharSlot(6)
                 if rikkuslotnum < 3 and partyHP[rikkuslotnum] == 0:
                     revive()
                     yunaTurn = True
@@ -2414,28 +2414,28 @@ def spherimorph():
                     defend()
                     yunaTurn = True
                 elif not spheriSpellItemReady():
-                    if 5 not in memory.getActiveBattleFormation():
+                    if 5 not in memory.main.getActiveBattleFormation():
                         buddySwapLulu()
-                    elif 6 not in memory.getActiveBattleFormation():
+                    elif 6 not in memory.main.getActiveBattleFormation():
                         buddySwapRikku()
                     else:
                         defend()
-                elif 6 not in memory.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
                 else:
                     defend()
                     yunaTurn = True
             elif turnchar == 3:
-                rikkuslotnum = memory.getBattleCharSlot(6)
+                rikkuslotnum = memory.main.getBattleCharSlot(6)
                 if rikkuslotnum < 3 and partyHP[rikkuslotnum] == 0:
                     revive()
                     kimTurn = True
                 elif not kimTurn:
                     defend()
                     kimTurn = True
-                elif 6 not in memory.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                elif 5 not in memory.getActiveBattleFormation():
+                elif 5 not in memory.main.getActiveBattleFormation():
                     buddySwapLulu()
                 else:
                     defend()
@@ -2450,35 +2450,35 @@ def spherimorph():
                     else:
                         fire()
                     screen.awaitTurn()
-                    if memory.getCharWeakness(20) == 1:
+                    if memory.main.getCharWeakness(20) == 1:
                         spellNum = 4  # Ice
-                    elif memory.getCharWeakness(20) == 2:
+                    elif memory.main.getCharWeakness(20) == 2:
                         spellNum = 1  # Fire
-                    elif memory.getCharWeakness(20) == 4:
+                    elif memory.main.getCharWeakness(20) == 4:
                         spellNum = 3  # Water
-                    elif memory.getCharWeakness(20) == 8:
+                    elif memory.main.getCharWeakness(20) == 8:
                         spellNum = 2  # Thunder
-                elif 6 not in memory.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
                 else:
                     defend()
             elif turnchar == 6:
                 if rikkuturns == 0:
                     print("Throwing Grenade to check element")
-                    grenadeslotnum = memory.getUseItemsSlot(35)
+                    grenadeslotnum = memory.main.getUseItemsSlot(35)
                     useItem(grenadeslotnum, "none")
-                    if memory.getCharWeakness(20) == 1:
+                    if memory.main.getCharWeakness(20) == 1:
                         spellNum = 4  # Ice
-                    elif memory.getCharWeakness(20) == 2:
+                    elif memory.main.getCharWeakness(20) == 2:
                         spellNum = 1  # Fire
-                    elif memory.getCharWeakness(20) == 4:
+                    elif memory.main.getCharWeakness(20) == 4:
                         spellNum = 3  # Water
-                    elif memory.getCharWeakness(20) == 8:
+                    elif memory.main.getCharWeakness(20) == 8:
                         spellNum = 2  # Thunder
 
                     # spellNum = screen.spherimorphSpell()
                 elif not spheriSpellItemReady():
-                    if 5 not in memory.getActiveBattleFormation():
+                    if 5 not in memory.main.getActiveBattleFormation():
                         buddySwapLulu()
                     else:
                         defend()
@@ -2518,12 +2518,12 @@ def negator():  # AKA crawler
     luluturns = 0
     yunaturns = 0
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
+    while memory.main.battleActive():  # AKA end of battle screen
         FFXC.set_neutral()
-        if memory.turnReady():
-            turnchar = memory.getBattleCharTurn()
+        if memory.main.turnReady():
+            turnchar = memory.main.getBattleCharTurn()
             if turnchar == 0:
                 if tidusturns == 0:
                     print("Swapping Tidus for Rikku")
@@ -2534,7 +2534,7 @@ def negator():  # AKA crawler
             elif turnchar == 6:
                 if luluturns < 2:
                     print("Using Lightning Marble")
-                    lightningmarbleslot = memory.getUseItemsSlot(30)
+                    lightningmarbleslot = memory.main.getUseItemsSlot(30)
                     if rikkuturns < 1:
                         useItem(lightningmarbleslot, target=21)
                     else:
@@ -2545,7 +2545,7 @@ def negator():  # AKA crawler
                 rikkuturns += 1
             elif turnchar == 3:
                 if kimahriturns == 0:
-                    lightningmarbleslot = memory.getUseItemsSlot(30)
+                    lightningmarbleslot = memory.main.getUseItemsSlot(30)
                     useItem(lightningmarbleslot, target=21)
                 else:
                     buddySwapYuna()
@@ -2561,20 +2561,20 @@ def negator():  # AKA crawler
                 yunaturns += 1
             else:
                 defend()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
 
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def getAnimaItemSlot():
-    useableSlot = memory.getUseItemsSlot(32)
+    useableSlot = memory.main.getUseItemsSlot(32)
     if useableSlot > 200:
-        useableSlot = memory.getUseItemsSlot(30)
+        useableSlot = memory.main.getUseItemsSlot(30)
     if useableSlot > 200:
-        useableSlot = memory.getUseItemsSlot(24)
+        useableSlot = memory.main.getUseItemsSlot(24)
     if useableSlot > 200:
-        useableSlot = memory.getUseItemsSlot(27)
+        useableSlot = memory.main.getUseItemsSlot(27)
     if useableSlot > 200:
         useableSlot = 255
     return useableSlot
@@ -2595,34 +2595,34 @@ def seymourGuado_blitzWin():
     animahits = 0
     animamiss = 0
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
     screen.awaitTurn()
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
-            turnchar = memory.getBattleCharTurn()
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
+            turnchar = memory.main.getBattleCharTurn()
             for i in range(0, 3):
-                if memory.getBattleHP()[i] == 0:
-                    if memory.getBattleCharSlot(2) == i:
+                if memory.main.getBattleHP()[i] == 0:
+                    if memory.main.getBattleCharSlot(2) == i:
                         print("Auron is dead")
-                    elif memory.getBattleCharSlot(3) == i:
+                    elif memory.main.getBattleCharSlot(3) == i:
                         print("Kimahri is dead")
                         kimahridead = True
-                    elif memory.getBattleCharSlot(4) == i:
+                    elif memory.main.getBattleCharSlot(4) == i:
                         print("Wakka is dead")
             if turnchar == 0:
-                nextHit = rngTrack.nextActionHitMiss(character=memory.getCurrentTurn(), enemy="anima")
+                nextHit = rngTrack.nextActionHitMiss(character=memory.main.getCurrentTurn(), enemy="anima")
                 if tidusturns == 0:
                     print("Tidus Haste self")
                     tidusHaste('none')
                     tidushaste = True
                 elif tidusturns == 1:
                     print("Talk to Seymour")
-                    while not memory.otherBattleMenu():
+                    while not memory.main.otherBattleMenu():
                         xbox.tapLeft()
-                    while memory.battleCursor2() != 1:
+                    while memory.main.battleCursor2() != 1:
                         xbox.tapDown()
-                    while memory.otherBattleMenu():
+                    while memory.main.otherBattleMenu():
                         xbox.tapB()
                     xbox.tapLeft()
                     tapTargeting()
@@ -2642,9 +2642,9 @@ def seymourGuado_blitzWin():
                     tidusHaste('none')
                     tidushaste = True
                 elif animahits < 4:
-                    oldHP = memory.getEnemyCurrentHP()[3]
+                    oldHP = memory.main.getEnemyCurrentHP()[3]
                     attack(direction="none")
-                    newHP = memory.getEnemyCurrentHP()[3]
+                    newHP = memory.main.getEnemyCurrentHP()[3]
                     if newHP < oldHP:
                         print("Hit Anima")
                         animahits += 1
@@ -2664,8 +2664,8 @@ def seymourGuado_blitzWin():
                 print("Yuna turn, complete")
             elif turnchar == 3:
                 if kimahriconfused:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2677,8 +2677,8 @@ def seymourGuado_blitzWin():
                 elif animamiss > 0 and (not missbackup or screen.faintCheck() == 0):
                     xbox.weapSwap(0)
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2690,11 +2690,11 @@ def seymourGuado_blitzWin():
             elif turnchar == 2:
                 if auronturns == 0:
                     print("Confused states:")
-                    print("Yuna confusion:", memory.confusedState(1))
-                    print("Tidus confusion:", memory.confusedState(0))
-                    print("Kimahri confusion:", memory.confusedState(3))
-                    print("Auron confusion:", memory.confusedState(2))
-                    if memory.confusedState(3):
+                    print("Yuna confusion:", memory.main.confusedState(1))
+                    print("Tidus confusion:", memory.main.confusedState(0))
+                    print("Kimahri confusion:", memory.main.confusedState(3))
+                    print("Auron confusion:", memory.main.confusedState(2))
+                    if memory.main.confusedState(3):
                         remedy(character=3,
                                direction="l")
                         kimahriconfused = True
@@ -2708,8 +2708,8 @@ def seymourGuado_blitzWin():
                     else:
                         xbox.weapSwap(1)
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2727,8 +2727,8 @@ def seymourGuado_blitzWin():
                     else:
                         xbox.weapSwap(0)
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2746,15 +2746,15 @@ def seymourGuado_blitzWin():
                     if kimahridead and rikkuturns == 0:
                         Steal()
                     else:
-                        if memory.getBattleCharSlot(0) >= 3:
+                        if memory.main.getBattleCharSlot(0) >= 3:
                             buddySwapTidus()
-                        elif memory.getBattleCharSlot(1) >= 3:
+                        elif memory.main.getBattleCharSlot(1) >= 3:
                             buddySwapYuna()
-                        elif memory.getBattleCharSlot(5) >= 3:
+                        elif memory.main.getBattleCharSlot(5) >= 3:
                             buddySwapLulu()
                 elif animahits < 4:
                     Steal()
-                elif memory.getBattleHP()[memory.getBattleCharSlot(0)] == 0:
+                elif memory.main.getBattleHP()[memory.main.getBattleCharSlot(0)] == 0:
                     reviveTarget(target=0)
                 else:
                     defend()
@@ -2765,8 +2765,8 @@ def seymourGuado_blitzWin():
                     revive()
                     missbackup = True
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2776,12 +2776,12 @@ def seymourGuado_blitzWin():
                 print("Lulu turn, complete")
             else:
                 print("No turn. Holding for next action.")
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
             print("Diag skip")
     print("Battle summary screen")
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 2.8)
+    memory.main.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
 
 
@@ -2801,20 +2801,20 @@ def seymourGuado_blitzLoss():
     animamiss = 0
     thrownItems = 0
 
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.turnReady():
-            turnchar = memory.getBattleCharTurn()
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.turnReady():
+            turnchar = memory.main.getBattleCharTurn()
             for i in range(0, 3):
-                if memory.getBattleHP()[i] == 0:
-                    if memory.getBattleCharSlot(2) == i:
+                if memory.main.getBattleHP()[i] == 0:
+                    if memory.main.getBattleCharSlot(2) == i:
                         print("Auron is dead")
-                    elif memory.getBattleCharSlot(3) == i:
+                    elif memory.main.getBattleCharSlot(3) == i:
                         print("Kimahri is dead")
                         kimahridead = True
-                    elif memory.getBattleCharSlot(4) == i:
+                    elif memory.main.getBattleCharSlot(4) == i:
                         print("Wakka is dead")
             if turnchar == 0:
-                if memory.getEnemyCurrentHP()[1] < 2999:
+                if memory.main.getEnemyCurrentHP()[1] < 2999:
                     attack(direction="none")
                     print("Should be last attack of the fight.")
                 elif tidusturns == 0:
@@ -2825,11 +2825,11 @@ def seymourGuado_blitzLoss():
                     cheer()
                 elif tidusturns == 2:
                     print("Talk to Seymour")
-                    while not memory.otherBattleMenu():
+                    while not memory.main.otherBattleMenu():
                         xbox.tapLeft()
-                    while memory.battleCursor2() != 1:
+                    while memory.main.battleCursor2() != 1:
                         xbox.tapDown()
-                    while memory.otherBattleMenu():
+                    while memory.main.otherBattleMenu():
                         xbox.tapB()
                     xbox.tapLeft()
                     tapTargeting()
@@ -2849,9 +2849,9 @@ def seymourGuado_blitzLoss():
                     tidusHaste('none')
                     tidushaste = True
                 elif animahits < 4:
-                    oldHP = memory.getEnemyCurrentHP()[3]
+                    oldHP = memory.main.getEnemyCurrentHP()[3]
                     attack(direction="none")
-                    newHP = memory.getEnemyCurrentHP()[3]
+                    newHP = memory.main.getEnemyCurrentHP()[3]
                     if newHP < oldHP:
                         print("Hit Anima")
                         animahits += 1
@@ -2870,11 +2870,11 @@ def seymourGuado_blitzLoss():
                     buddySwapLulu()
                     screen.awaitTurn()
                     print("Confused states:")
-                    print("Yuna confusion:", memory.confusedState(1))
-                    print("Tidus confusion:", memory.confusedState(0))
-                    print("Kimahri confusion:", memory.confusedState(3))
-                    print("Auron confusion:", memory.confusedState(2))
-                    if memory.confusedState(3):
+                    print("Yuna confusion:", memory.main.confusedState(1))
+                    print("Tidus confusion:", memory.main.confusedState(0))
+                    print("Kimahri confusion:", memory.main.confusedState(3))
+                    print("Auron confusion:", memory.main.confusedState(2))
+                    if memory.main.confusedState(3):
                         remedy(character=3,
                                direction="l")
                         kimahriconfused = True
@@ -2885,22 +2885,22 @@ def seymourGuado_blitzLoss():
             elif turnchar == 5:
                 if animahits == 0:
                     print("Confused states:")
-                    print("Yuna confusion:", memory.confusedState(1))
-                    print("Tidus confusion:", memory.confusedState(0))
-                    print("Kimahri confusion:", memory.confusedState(3))
-                    print("Lulu confusion:", memory.confusedState(5))
+                    print("Yuna confusion:", memory.main.confusedState(1))
+                    print("Tidus confusion:", memory.main.confusedState(0))
+                    print("Kimahri confusion:", memory.main.confusedState(3))
+                    print("Lulu confusion:", memory.main.confusedState(5))
                     buddySwapRikku()
-                    if memory.confusedState(0):
+                    if memory.main.confusedState(0):
                         remedy(character=0, direction="l")
-                    elif memory.confusedState(3):
+                    elif memory.main.confusedState(3):
                         remedy(character=3, direction="l")
                 else:
                     buddySwapTidus()
                     attack(direction="none")
             elif turnchar == 3:
                 if kimahriconfused:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2909,16 +2909,16 @@ def seymourGuado_blitzLoss():
                         defend()
                 elif kimahriturns == 0:
                     print("Confused states:")
-                    print("Yuna confusion:", memory.confusedState(1))
-                    print("Tidus confusion:", memory.confusedState(0))
-                    print("Kimahri confusion:", memory.confusedState(3))
-                    print("Auron confusion:", memory.confusedState(2))
-                    print("Lulu confusion:", memory.confusedState(5))
-                    if memory.confusedState(0):
+                    print("Yuna confusion:", memory.main.confusedState(1))
+                    print("Tidus confusion:", memory.main.confusedState(0))
+                    print("Kimahri confusion:", memory.main.confusedState(3))
+                    print("Auron confusion:", memory.main.confusedState(2))
+                    print("Lulu confusion:", memory.main.confusedState(5))
+                    if memory.main.confusedState(0):
                         remedy(character=0, direction="l")
-                    elif memory.confusedState(1):
+                    elif memory.main.confusedState(1):
                         remedy(character=1, direction="l")
-                    elif memory.confusedState(5):
+                    elif memory.main.confusedState(5):
                         remedy(character=5, direction="l")
                     else:
                         defend()
@@ -2932,8 +2932,8 @@ def seymourGuado_blitzLoss():
                 elif animamiss > 0 and (not missbackup or screen.faintCheck() == 0):
                     Steal()
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2951,8 +2951,8 @@ def seymourGuado_blitzLoss():
                     else:
                         xbox.weapSwap(0)
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
-                    rikkuposition = memory.getBattleCharSlot(6)
+                    tidusposition = memory.main.getBattleCharSlot(0)
+                    rikkuposition = memory.main.getBattleCharSlot(6)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif rikkuposition >= 3:
@@ -2974,14 +2974,14 @@ def seymourGuado_blitzLoss():
                         Steal()
                     thrownItems += 1
                 else:
-                    tidusposition = memory.getBattleCharSlot(0)
+                    tidusposition = memory.main.getBattleCharSlot(0)
                     if tidusposition >= 3:
                         buddySwapTidus()
                     elif animamiss > 0 and (not missbackup or screen.faintCheck() == 0):
                         Steal()
                     elif animahits < 4:
                         Steal()
-                    elif memory.getBattleHP()[memory.getBattleCharSlot(0)] == 0:
+                    elif memory.main.getBattleHP()[memory.main.getBattleCharSlot(0)] == 0:
                         reviveTarget(target=0)
                     else:
                         defend()
@@ -2989,12 +2989,12 @@ def seymourGuado_blitzLoss():
                 print("Rikku turn, complete")
             else:
                 print("No turn. Holding for next action.")
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
             print("Diag skip")
     print("Battle summary screen")
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 2.8)
+    memory.main.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
 
 
@@ -3007,13 +3007,13 @@ def seymourGuado():
 
 def escapeWithXP():
     rikkuItem = False
-    if memory.getItemSlot(39) > 200:
+    if memory.main.getItemSlot(39) > 200:
         fleeAll()
     else:
-        while not memory.turnReady():
+        while not memory.main.turnReady():
             pass
-        while memory.battleActive():
-            if memory.turnReady():
+        while memory.main.battleActive():
+            if memory.main.turnReady():
                 if screen.turnTidus():
                     if not rikkuItem:
                         equipInBattle(equipType='armor', abilityNum=0x8028)
@@ -3023,7 +3023,7 @@ def escapeWithXP():
                         attack('none')
                 elif screen.turnRikku():
                     if not rikkuItem:
-                        useItem(memory.getUseItemsSlot(39))
+                        useItem(memory.main.getUseItemsSlot(39))
                         rikkuItem = True
                     else:
                         defend()
@@ -3031,18 +3031,18 @@ def escapeWithXP():
                     attack('none')
                 else:
                     buddySwapTidus()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def fullheal(target: int, direction: str):
     print("Full Heal function")
-    if memory.getThrowItemsSlot(2) < 255:
+    if memory.main.getThrowItemsSlot(2) < 255:
         itemnum = 2
         itemname = "X-Potion"
-    elif memory.getThrowItemsSlot(8) < 255:
+    elif memory.main.getThrowItemsSlot(8) < 255:
         itemnum = 8
         itemname = "Elixir"
-    elif memory.getThrowItemsSlot(3) < 255:
+    elif memory.main.getThrowItemsSlot(3) < 255:
         itemnum = 3
         itemname = "Mega-Potion"
         target = 255
@@ -3062,30 +3062,30 @@ def fullheal(target: int, direction: str):
 # Process written by CrimsonInferno
 def wendigoresheal(turnchar: int, usepowerbreak: int, tidusmaxHP: int):
     print("Wendigo Res/Heal function")
-    partyHP = memory.getBattleHP()
+    partyHP = memory.main.getBattleHP()
     if screen.faintCheck() == 2:
         print("2 Characters are dead")
-        if memory.getThrowItemsSlot(7) < 255:
+        if memory.main.getThrowItemsSlot(7) < 255:
             reviveAll()
-        elif memory.getThrowItemsSlot(6) < 255:
+        elif memory.main.getThrowItemsSlot(6) < 255:
             revive()  # This should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
-    elif partyHP[memory.getBattleCharSlot(0)] == 0:
+    elif partyHP[memory.main.getBattleCharSlot(0)] == 0:
         print("Reviving tidus")
         revive()
     elif usepowerbreak:
         print("Swapping to Auron to Power Break")
         buddySwapAuron()
     # If tidus is less than max HP heal him
-    elif partyHP[memory.getBattleCharSlot(0)] < tidusmaxHP:
+    elif partyHP[memory.main.getBattleCharSlot(0)] < tidusmaxHP:
         print("Tidus need healing")
         if fullheal(target=0,
                     direction="l") == 0:
             if screen.faintCheck():
                 print("No healing available so reviving instead")
-                if memory.getThrowItemsSlot(6) < 255:
+                if memory.main.getThrowItemsSlot(6) < 255:
                     revive()
-                elif memory.getThrowItemsSlot(7) < 255:
+                elif memory.main.getThrowItemsSlot(7) < 255:
                     reviveAll()
             else:
                 defend()
@@ -3112,14 +3112,14 @@ def wendigo():
 
     screen.awaitTurn()
 
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
-            partyHP = memory.getBattleHP()
-            turnchar = memory.getBattleCharTurn()
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
+            partyHP = memory.main.getBattleHP()
+            turnchar = memory.main.getBattleCharTurn()
 
-            if partyHP[memory.getBattleCharSlot(0)] == 0:
+            if partyHP[memory.main.getBattleCharSlot(0)] == 0:
                 print("Tidus is dead")
                 tidushaste = False
                 powerbreak = True
@@ -3157,17 +3157,17 @@ def wendigo():
                     print("Attack top Guado")
                     attackByNum(22, 'd')
                     phase += 1
-                elif memory.getEnemyCurrentHP()[1] != 0 and screen.faintCheck() == 2:
+                elif memory.main.getEnemyCurrentHP()[1] != 0 and screen.faintCheck() == 2:
                     print("2 Characters are dead")
                     tidushealself = True
-                    if memory.getThrowItemsSlot(7) < 255:
+                    if memory.main.getThrowItemsSlot(7) < 255:
                         reviveAll()
-                    elif memory.getThrowItemsSlot(6) < 255:
+                    elif memory.main.getThrowItemsSlot(6) < 255:
                         revive()
-                elif memory.getEnemyCurrentHP()[1] < 6000 and memory.getOverdriveBattle(0) == 100 and not gameVars.skipKilikaLuck():
+                elif memory.main.getEnemyCurrentHP()[1] < 6000 and memory.main.getOverdriveBattle(0) == 100 and not gameVars.skipKilikaLuck():
                     tidusOD('left', character=21)
                 elif tidushealself:
-                    if partyHP[memory.getBattleCharSlot(0)] < tidusmaxHP:
+                    if partyHP[memory.main.getBattleCharSlot(0)] < tidusmaxHP:
                         print(
                             "Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself")
                         if fullheal(target=0,
@@ -3185,11 +3185,11 @@ def wendigo():
                 else:
                     print("No need to heal. Ver 2")
                     attackByNum(21, 'l')
-                memory.waitFrames(30 * 0.2)
+                memory.main.waitFrames(30 * 0.2)
             elif turnchar == 6:
                 if phase == 2:
                     phase += 1
-                    lightcurtainslot = memory.getUseItemsSlot(57)
+                    lightcurtainslot = memory.main.getUseItemsSlot(57)
                     if lightcurtainslot < 255:
                         print("Using Light Curtain on Tidus")
                         useItem(lightcurtainslot, target=0)
@@ -3200,10 +3200,10 @@ def wendigo():
                         powerbreak = True
                         usepowerbreak = True
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
-                    if not guadosteal and memory.getEnemyCurrentHP().count(0) != 2:
+                    if not guadosteal and memory.main.getEnemyCurrentHP().count(0) != 2:
                         Steal()
                         guadosteal = True
-                    elif memory.getEnemyCurrentHP().count(0) == 2 and not luluSwap:
+                    elif memory.main.getEnemyCurrentHP().count(0) == 2 and not luluSwap:
                         luluSwap = True
                         buddySwapLulu()
                     else:
@@ -3218,7 +3218,7 @@ def wendigo():
                     if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
             else:
-                if memory.getEnemyCurrentHP()[1] != 0:
+                if memory.main.getEnemyCurrentHP()[1] != 0:
                     if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
                 else:
@@ -3228,21 +3228,21 @@ def wendigo():
 def zu():
     screen.awaitTurn()
     attack('none')
-    while not memory.battleComplete():
-        if memory.turnReady():
-            if memory.partySize() <= 2:
+    while not memory.main.battleComplete():
+        if memory.main.turnReady():
+            if memory.main.partySize() <= 2:
                 defend()
             else:
                 fleeAll()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()  # Skip Dialog
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def bikanelBattleLogic(status):
     # status should be an array length 2
     # [rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
-    encounterID = memory.getEncounterID()
+    encounterID = memory.main.getEncounterID()
     itemStolen = False
     itemThrown = False
     throwPower = False
@@ -3325,11 +3325,11 @@ def bikanelBattleLogic(status):
             battleGoal = 3  # Nothing to do but get to Home.
 
     # Then we take action.
-    while not memory.battleComplete():
+    while not memory.main.battleComplete():
         if battleGoal == 0:  # Steal an item
             print("Looking to steal an item.")
-            if memory.turnReady():
-                if memory.getBattleCharTurn() == 0:
+            if memory.main.turnReady():
+                if memory.main.getBattleCharTurn() == 0:
                     buddySwapKimahri()
                 elif not itemStolen and (screen.turnKimahri() or screen.turnReady()):
                     if stealDirection == 'left':
@@ -3349,7 +3349,7 @@ def bikanelBattleLogic(status):
                     else:
                         battleGoal = 3
                 elif not status[0]:
-                    if memory.getBattleCharTurn() == 6:
+                    if memory.main.getBattleCharTurn() == 6:
                         attack('none')
                     else:
                         escapeOne()
@@ -3359,9 +3359,9 @@ def bikanelBattleLogic(status):
                     fleeAll()
         elif battleGoal == 1:  # Throw an item
             print("Throw item with Kimahri, everyone else escape.")
-            if memory.turnReady():
+            if memory.main.turnReady():
                 items = updateStealItemsDesert()
-                if memory.getBattleCharTurn() == 0:
+                if memory.main.getBattleCharTurn() == 0:
                     buddySwapKimahri()
                 elif not itemThrown and (screen.turnKimahri() or screen.turnRikku()):
                     if items[2] >= 1:
@@ -3376,10 +3376,10 @@ def bikanelBattleLogic(status):
                     if itemToUse == 999:
                         escapeOne()
                     else:
-                        useItem(memory.getUseItemsSlot(itemToUse), 'none')
+                        useItem(memory.main.getUseItemsSlot(itemToUse), 'none')
                     itemThrown = True
                 elif not status[0]:
-                    if memory.getBattleCharTurn() == 6:
+                    if memory.main.getBattleCharTurn() == 6:
                         attack('none')
                     else:
                         escapeOne()
@@ -3387,17 +3387,17 @@ def bikanelBattleLogic(status):
                     fleeAll()
         elif battleGoal == 2:  # Charge Rikku
             print("Attack/Steal with Rikku, everyone else escape.")
-            if memory.turnReady():
-                if memory.getBattleCharTurn() == 6:
+            if memory.main.turnReady():
+                if memory.main.getBattleCharTurn() == 6:
                     attack('none')
-                elif screen.turnAuron() and memory.getOverdriveBattle(2) != 100:
+                elif screen.turnAuron() and memory.main.getOverdriveBattle(2) != 100:
                     attackByNum(2)
-                elif 6 in memory.getActiveBattleFormation():
+                elif 6 in memory.main.getActiveBattleFormation():
                     escapeOne()
                 else:
                     fleeAll()
         else:  # Charge Auron if needed, otherwise flee
-            if memory.getOverdriveBattle(2) != 100:
+            if memory.main.getOverdriveBattle(2) != 100:
                 if screen.turnAuron():
                     attackByNum(2)
                 else:
@@ -3410,34 +3410,34 @@ def bikanelBattleLogic(status):
 def updateStealItemsDesert():
     itemArray = [0, 0, 0, 0]
     # Bomb cores
-    index = memory.getItemSlot(27)
+    index = memory.main.getItemSlot(27)
     if index == 255:
         itemArray[0] = 0
     else:
-        itemArray[0] = memory.getItemCountSlot(index)
+        itemArray[0] = memory.main.getItemCountSlot(index)
 
     # Sleeping Powders
-    index = memory.getItemSlot(37)
+    index = memory.main.getItemSlot(37)
     if index == 255:
         itemArray[1] = 0
     else:
-        itemArray[1] = memory.getItemCountSlot(index)
+        itemArray[1] = memory.main.getItemCountSlot(index)
 
     # Smoke Bombs
-    index = memory.getItemSlot(40)
+    index = memory.main.getItemSlot(40)
     if index == 255:
         itemArray[2] = 0
     else:
-        itemArray[2] = memory.getItemCountSlot(index)
+        itemArray[2] = memory.main.getItemCountSlot(index)
 
     # Silence Grenades
-    index = memory.getItemSlot(39)
+    index = memory.main.getItemSlot(39)
     if index == 255:
         itemArray[3] = 0
-    elif memory.getItemCountSlot(index) == 1:
+    elif memory.main.getItemCountSlot(index) == 1:
         itemArray[3] = 0  # Save one for NEA manip
     else:
-        itemArray[3] = memory.getItemCountSlot(index)
+        itemArray[3] = memory.main.getItemCountSlot(index)
 
     return itemArray
 
@@ -3446,16 +3446,16 @@ def sandragora(version):
     screen.awaitTurn()
     if version != 1:  # Kimahri's turn
         fleeAll()
-        memory.clickToControl()
+        memory.main.clickToControl()
     else:  # Auron's turn
         # Manip for NE armor
-        if memory.battleType() == 2:
-            while memory.battleType() == 2:
+        if memory.main.battleType() == 2:
+            while memory.main.battleType() == 2:
                 print("Ambushed, swapping out.")
                 fleeAll()
-                memory.clickToControl()
+                memory.main.clickToControl()
                 FFXC.set_movement(0, 1)
-                memory.awaitEvent()
+                memory.main.awaitEvent()
                 FFXC.set_neutral()
                 screen.awaitTurn()
         # elif FX_memory.rngSeed() == 31:
@@ -3477,7 +3477,7 @@ def sandragora(version):
             screen.awaitTurn()
         print("Setting up Auron overdrive")
         auronOD(style="shooting star")
-        memory.clickToControl()
+        memory.main.clickToControl()
 
 
 def home1():
@@ -3485,56 +3485,56 @@ def home1():
     xbox.clickToBattle()
     print("Tidus vs Bombs")
     tidusHaste('none')
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.faintCheck() > 0:
                 revive()
             elif screen.turnTidus():
                 attack('none')
-            elif screen.turnAuron() and memory.getEnemyCurrentHP()[0] != 0:
+            elif screen.turnAuron() and memory.main.getEnemyCurrentHP()[0] != 0:
                 attack('none')
             else:
                 defend()
     print("Home 1 shows as fight complete.")
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def home2():
     xbox.clickToBattle()
 
     print("Kimahri vs dual horns")
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
 
             if screen.turnKimahri():
                 kimahriOD(3)
-            elif memory.getBattleCharSlot(3) >= 3:
+            elif memory.main.getBattleCharSlot(3) >= 3:
                 buddySwapKimahri()  # Tidus for Kimahri
                 lancetHome('none')
             else:
                 defend()
     print("Home 2 shows as fight complete.")
     FFXC.set_neutral()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def home3():
     xbox.clickToBattle()
-    if memory.getUseItemsSlot(49) > 200:
+    if memory.main.getUseItemsSlot(49) > 200:
         tidusHaste('none')
     else:
         while not screen.turnRikku():
             defend()
             xbox.clickToBattle()
-            useItem(memory.getUseItemsSlot(49), 'none')
+            useItem(memory.main.getUseItemsSlot(49), 'none')
 
     rikkuItemThrown = 0
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.turnReady():
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.turnReady():
             print("- Turn:")
             if screen.turnTidus():
                 print("  Tidus")
-                if memory.getUseItemsSlot(49) != 255:
+                if memory.main.getUseItemsSlot(49) != 255:
                     defend()
                 else:
                     attack('none')
@@ -3554,13 +3554,13 @@ def home3():
 
 
 def home3item():
-    throwSlot = memory.getUseItemsSlot(49)  # Petrify Grenade
+    throwSlot = memory.main.getUseItemsSlot(49)  # Petrify Grenade
     if throwSlot != 255:
         return throwSlot
-    throwSlot = memory.getUseItemsSlot(40)  # Smoke Bomb
+    throwSlot = memory.main.getUseItemsSlot(40)  # Smoke Bomb
     if throwSlot != 255:
         return throwSlot
-    throwSlot = memory.getUseItemsSlot(39)  # Silence - for the Guado-face.
+    throwSlot = memory.main.getUseItemsSlot(39)  # Silence - for the Guado-face.
     if throwSlot != 255:
         return throwSlot
     return 255
@@ -3570,17 +3570,17 @@ def home4():
     xbox.clickToBattle()
 
     print("Kimahri vs Chimera")
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.turnKimahri():
                 kimahriOD(4)
-            elif memory.getBattleCharSlot(3) >= 3:
+            elif memory.main.getBattleCharSlot(3) >= 3:
                 buddySwapKimahri()  # Tidus for Kimahri
                 lancetHome('none')
             else:
                 defend()
     print("Home 4 shows as fight complete.")
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 # Process written by CrimsonInferno
@@ -3590,7 +3590,7 @@ def Evrae():
     rikkuTurns = 0
     kimahriTurns = 0
     lunarCurtain = False
-    if memory.rngSeed() == 31:
+    if memory.main.rngSeed() == 31:
         stealCount = 2
     else:
         stealCount = 0
@@ -3598,9 +3598,9 @@ def Evrae():
     # This gets us past the tutorial and all the dialog.
     xbox.clickToBattle()
 
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
-            turnchar = memory.getBattleCharTurn()
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
+            turnchar = memory.main.getBattleCharTurn()
             print("Tidus prep turns:", tidusPrep)
             if turnchar == 0:
                 print("Registering Tidus' turn")
@@ -3658,27 +3658,27 @@ def Evrae():
                     rikkuFullOD('Evrae')
                 elif not gameVars.getBlitzWin() and not lunarCurtain:
                     print("Use Lunar Curtain")
-                    lunarSlot = memory.getUseItemsSlot(56)
+                    lunarSlot = memory.main.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif memory.getBattleHP()[memory.getBattleCharSlot(0)] < 1520 and (tidusAttacks < 3 or not gameVars.getBlitzWin()):
+                elif memory.main.getBattleHP()[memory.main.getBattleCharSlot(0)] < 1520 and (tidusAttacks < 3 or not gameVars.getBlitzWin()):
                     print("Rikku should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target=0,
                                 direction="d") == 0:
                         print("Restorative item not found.")
-                        useItem(memory.getUseItemsSlot(20))
+                        useItem(memory.main.getUseItemsSlot(20))
                     else:
                         print("Heal should be successful.")
                 elif gameVars.skipKilikaLuck():
-                    if memory.getUseItemsSlot(32) != 255:
-                        throwSlot = memory.getUseItemsSlot(32)
-                    elif memory.getUseItemsSlot(24) != 255:
-                        throwSlot = memory.getUseItemsSlot(24)
-                    elif memory.getUseItemsSlot(27) != 255:
-                        throwSlot = memory.getUseItemsSlot(27)
+                    if memory.main.getUseItemsSlot(32) != 255:
+                        throwSlot = memory.main.getUseItemsSlot(32)
+                    elif memory.main.getUseItemsSlot(24) != 255:
+                        throwSlot = memory.main.getUseItemsSlot(24)
+                    elif memory.main.getUseItemsSlot(27) != 255:
+                        throwSlot = memory.main.getUseItemsSlot(27)
                     else:
-                        throwSlot = memory.getUseItemsSlot(30)
+                        throwSlot = memory.main.getUseItemsSlot(30)
                     if throwSlot == 255:
                         Steal()
                     else:
@@ -3690,27 +3690,27 @@ def Evrae():
                 print("Registering Kimahri's turn")
                 if not gameVars.getBlitzWin() and not lunarCurtain:
                     print("Use Lunar Curtain")
-                    lunarSlot = memory.getUseItemsSlot(56)
+                    lunarSlot = memory.main.getUseItemsSlot(56)
                     useItem(lunarSlot, direction='l', target=0)
                     lunarCurtain = True
-                elif memory.getBattleHP()[memory.getBattleCharSlot(0)] < 1520 and (tidusAttacks < 3 or not gameVars.getBlitzWin()):
+                elif memory.main.getBattleHP()[memory.main.getBattleCharSlot(0)] < 1520 and (tidusAttacks < 3 or not gameVars.getBlitzWin()):
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if fullheal(target=0,
                                 direction="u") == 0:
                         print("Restorative item not found.")
-                        useItem(memory.getUseItemsSlot(20))
+                        useItem(memory.main.getUseItemsSlot(20))
                     else:
                         print("Heal should be successful.")
                 elif gameVars.skipKilikaLuck():
-                    if memory.getUseItemsSlot(32) != 255:
-                        throwSlot = memory.getUseItemsSlot(32)
-                    elif memory.getUseItemsSlot(24) != 255:
-                        throwSlot = memory.getUseItemsSlot(24)
-                    elif memory.getUseItemsSlot(27) != 255:
-                        throwSlot = memory.getUseItemsSlot(27)
+                    if memory.main.getUseItemsSlot(32) != 255:
+                        throwSlot = memory.main.getUseItemsSlot(32)
+                    elif memory.main.getUseItemsSlot(24) != 255:
+                        throwSlot = memory.main.getUseItemsSlot(24)
+                    elif memory.main.getUseItemsSlot(27) != 255:
+                        throwSlot = memory.main.getUseItemsSlot(27)
                     else:
-                        throwSlot = memory.getUseItemsSlot(30)
+                        throwSlot = memory.main.getUseItemsSlot(30)
                     if throwSlot == 255:
                         Steal()
                     else:
@@ -3718,39 +3718,39 @@ def Evrae():
                 else:
                     Steal()
                     stealCount += 1
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
 
     if not gameVars.csr():
-        while not memory.cutsceneSkipPossible():
-            if memory.menuOpen():
+        while not memory.main.cutsceneSkipPossible():
+            if memory.main.menuOpen():
                 xbox.tapB()
         xbox.skipSceneSpec()
 
 
 def guards(groupNum, sleepingPowders):
     xbox.clickToBattle()
-    throw_distiller = memory.getItemSlot(
-        16) != 255 or memory.getItemSlot(18) != 255
+    throw_distiller = memory.main.getItemSlot(
+        16) != 255 or memory.main.getItemSlot(18) != 255
     num_throws = 0
     hasted = False
     tidusWent = False
     if sleepingPowders:  # We have sleeping powders
-        while not memory.battleComplete():  # AKA end of battle screen
+        while not memory.main.battleComplete():  # AKA end of battle screen
             if groupNum in [1, 3]:
                 if screen.turnTidus():
                     attack('none')
                 elif throw_distiller:
-                    if memory.getItemSlot(18) != 255:
+                    if memory.main.getItemSlot(18) != 255:
                         _useHealingItem(itemID=18)
                     else:
                         _useHealingItem(itemID=16)
                     throw_distiller = False
-                elif 6 in memory.getActiveBattleFormation() and memory.getBattleHP()[memory.getBattleCharSlot(6)] <= 120 \
-                        and memory.getBattleHP()[memory.getBattleCharSlot(6)] != 0:
-                    if memory.getItemSlot(0) != 255:
+                elif 6 in memory.main.getActiveBattleFormation() and memory.main.getBattleHP()[memory.main.getBattleCharSlot(6)] <= 120 \
+                        and memory.main.getBattleHP()[memory.main.getBattleCharSlot(6)] != 0:
+                    if memory.main.getItemSlot(0) != 255:
                         usePotionCharacter(6, 'r')
-                    elif memory.getItemSlot(1) != 255:
+                    elif memory.main.getItemSlot(1) != 255:
                         _useHealingItem(num=6, direction='r', itemID=1)
                     else:
                         defend()
@@ -3760,22 +3760,22 @@ def guards(groupNum, sleepingPowders):
                 if screen.turnTidus():
                     attack('none')
                 elif (screen.turnRikku() or screen.turnKimahri()) and num_throws < 2:
-                    silenceSlot = memory.getItemSlot(39)
-                    if num_throws == 0 and memory.getUseItemsSlot(37) < 200:
-                        useItem(memory.getUseItemsSlot(37))
+                    silenceSlot = memory.main.getItemSlot(39)
+                    if num_throws == 0 and memory.main.getUseItemsSlot(37) < 200:
+                        useItem(memory.main.getUseItemsSlot(37))
                     else:
-                        if memory.getUseItemsSlot(40) != 255:
-                            useItem(memory.getUseItemsSlot(40))
-                        elif silenceSlot != 255 and memory.getItemCountSlot(silenceSlot) > 1:
+                        if memory.main.getUseItemsSlot(40) != 255:
+                            useItem(memory.main.getUseItemsSlot(40))
+                        elif silenceSlot != 255 and memory.main.getItemCountSlot(silenceSlot) > 1:
                             # Save one for later if possible
-                            useItem(memory.getUseItemsSlot(39))
-                        elif memory.getUseItemsSlot(37) != 255:
-                            useItem(memory.getUseItemsSlot(37))
-                        elif memory.getUseItemsSlot(27) != 255:
-                            useItem(memory.getUseItemsSlot(27))
+                            useItem(memory.main.getUseItemsSlot(39))
+                        elif memory.main.getUseItemsSlot(37) != 255:
+                            useItem(memory.main.getUseItemsSlot(37))
+                        elif memory.main.getUseItemsSlot(27) != 255:
+                            useItem(memory.main.getUseItemsSlot(27))
                         elif silenceSlot != 255:
                             # Throw last Silence grenade as a last resort.
-                            useItem(memory.getUseItemsSlot(39))
+                            useItem(memory.main.getUseItemsSlot(39))
                         else:
                             defend()
                     num_throws += 1
@@ -3791,40 +3791,40 @@ def guards(groupNum, sleepingPowders):
                     else:
                         attackByNum(22, 'r')
                 elif screen.turnRikku() or screen.turnKimahri():
-                    silenceSlot = memory.getItemSlot(39)
+                    silenceSlot = memory.main.getItemSlot(39)
                     if num_throws < 2:
-                        if memory.getUseItemsSlot(40) != 255:
-                            useItem(memory.getUseItemsSlot(40))
-                        elif silenceSlot != 255 and memory.getItemCountSlot(silenceSlot) > 1:
+                        if memory.main.getUseItemsSlot(40) != 255:
+                            useItem(memory.main.getUseItemsSlot(40))
+                        elif silenceSlot != 255 and memory.main.getItemCountSlot(silenceSlot) > 1:
                             # Save one for later if possible
-                            useItem(memory.getUseItemsSlot(39))
-                        elif memory.getUseItemsSlot(37) != 255:
-                            useItem(memory.getUseItemsSlot(37))
-                        elif memory.getUseItemsSlot(27) != 255:
-                            useItem(memory.getUseItemsSlot(27))
-                        elif memory.getUseItemsSlot(39) != 255:
-                            useItem(memory.getUseItemsSlot(39))
+                            useItem(memory.main.getUseItemsSlot(39))
+                        elif memory.main.getUseItemsSlot(37) != 255:
+                            useItem(memory.main.getUseItemsSlot(37))
+                        elif memory.main.getUseItemsSlot(27) != 255:
+                            useItem(memory.main.getUseItemsSlot(27))
+                        elif memory.main.getUseItemsSlot(39) != 255:
+                            useItem(memory.main.getUseItemsSlot(39))
                         else:
                             defend()
                         num_throws += 1
                     else:
                         defend()
     else:  # We do not have sleeping powders
-        while not memory.battleComplete():
+        while not memory.main.battleComplete():
             if groupNum in [1, 3]:
                 if screen.turnTidus():
                     attack('none')
                 elif throw_distiller:
-                    if memory.getItemSlot(18) != 255:
+                    if memory.main.getItemSlot(18) != 255:
                         _useHealingItem(itemID=18)
                     else:
                         _useHealingItem(itemID=16)
                     throw_distiller = False
-                elif 6 in memory.getActiveBattleFormation() and memory.getBattleHP()[memory.getBattleCharSlot(6)] <= 120 \
-                        and memory.getBattleHP()[memory.getBattleCharSlot(6)] != 0:
-                    if memory.getItemSlot(0) != 255:
+                elif 6 in memory.main.getActiveBattleFormation() and memory.main.getBattleHP()[memory.main.getBattleCharSlot(6)] <= 120 \
+                        and memory.main.getBattleHP()[memory.main.getBattleCharSlot(6)] != 0:
+                    if memory.main.getItemSlot(0) != 255:
                         usePotionCharacter(6, 'r')
-                    elif memory.getItemSlot(1) != 255:
+                    elif memory.main.getItemSlot(1) != 255:
                         _useHealingItem(num=6, direction='r', itemID=1)
                     else:
                         defend()
@@ -3838,18 +3838,18 @@ def guards(groupNum, sleepingPowders):
                     else:
                         attack('none')
                 elif screen.turnKimahri() or screen.turnRikku():
-                    silenceSlot = memory.getItemSlot(39)
-                    if memory.getUseItemsSlot(40) != 255:
-                        useItem(memory.getUseItemsSlot(40))
-                    elif silenceSlot != 255 and memory.getItemCountSlot(silenceSlot) >= 2:
+                    silenceSlot = memory.main.getItemSlot(39)
+                    if memory.main.getUseItemsSlot(40) != 255:
+                        useItem(memory.main.getUseItemsSlot(40))
+                    elif silenceSlot != 255 and memory.main.getItemCountSlot(silenceSlot) >= 2:
                         # Save one for later if possible
-                        useItem(memory.getUseItemsSlot(39))
-                    elif memory.getUseItemsSlot(37) != 255:
-                        useItem(memory.getUseItemsSlot(37))
-                    elif memory.getUseItemsSlot(27) != 255:
-                        useItem(memory.getUseItemsSlot(27))
-                    elif memory.getUseItemsSlot(39) != 255:
-                        useItem(memory.getUseItemsSlot(39))
+                        useItem(memory.main.getUseItemsSlot(39))
+                    elif memory.main.getUseItemsSlot(37) != 255:
+                        useItem(memory.main.getUseItemsSlot(37))
+                    elif memory.main.getUseItemsSlot(27) != 255:
+                        useItem(memory.main.getUseItemsSlot(27))
+                    elif memory.main.getUseItemsSlot(39) != 255:
+                        useItem(memory.main.getUseItemsSlot(39))
                     else:
                         defend()
                 else:
@@ -3862,19 +3862,19 @@ def guards(groupNum, sleepingPowders):
                     else:
                         attackByNum(22, 'l')
                 elif screen.turnRikku() or screen.turnKimahri():
-                    silenceSlot = memory.getItemSlot(39)
+                    silenceSlot = memory.main.getItemSlot(39)
                     if num_throws < 2:
-                        if memory.getUseItemsSlot(40) != 255:
-                            useItem(memory.getUseItemsSlot(40))
-                        elif silenceSlot != 255 and memory.getItemCountSlot(silenceSlot) > 1:
+                        if memory.main.getUseItemsSlot(40) != 255:
+                            useItem(memory.main.getUseItemsSlot(40))
+                        elif silenceSlot != 255 and memory.main.getItemCountSlot(silenceSlot) > 1:
                             # Save one for later if possible
-                            useItem(memory.getUseItemsSlot(39))
-                        elif memory.getUseItemsSlot(37) != 255:
-                            useItem(memory.getUseItemsSlot(37))
-                        elif memory.getUseItemsSlot(27) != 255:
-                            useItem(memory.getUseItemsSlot(27))
-                        elif memory.getUseItemsSlot(39) != 255 and num_throws < 2:
-                            useItem(memory.getUseItemsSlot(39))
+                            useItem(memory.main.getUseItemsSlot(39))
+                        elif memory.main.getUseItemsSlot(37) != 255:
+                            useItem(memory.main.getUseItemsSlot(37))
+                        elif memory.main.getUseItemsSlot(27) != 255:
+                            useItem(memory.main.getUseItemsSlot(27))
+                        elif memory.main.getUseItemsSlot(39) != 255 and num_throws < 2:
+                            useItem(memory.main.getUseItemsSlot(39))
                         else:
                             defend()
                     else:
@@ -3888,37 +3888,37 @@ def guards(groupNum, sleepingPowders):
 
 def isaaru():
     xbox.clickToBattle()
-    if memory.getEncounterID() < 258:
+    if memory.main.getEncounterID() < 258:
         gameVars.addRescueCount()
 
-    while memory.battleActive():  # AKA end of battle screen
-        if memory.turnReady():
+    while memory.main.battleActive():  # AKA end of battle screen
+        if memory.main.turnReady():
             if screen.turnYuna():
-                if memory.getEncounterID() in [257, 260]:
+                if memory.main.getEncounterID() in [257, 260]:
                     aeonSummon(2)  # Summon Ixion for Bahamut
                 else:
                     aeonSummon(4)  # Summon Bahamut for other aeons
             else:
                 attack('none')  # Aeon turn
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 2.8)
+    memory.main.waitFrames(30 * 2.8)
     FFXC.set_value('BtnB', 0)
 
 
 def altanaheal():
     direction = 'd'
-    if memory.getThrowItemsSlot(2) < 255:
+    if memory.main.getThrowItemsSlot(2) < 255:
         itemnum = 2
         itemname = "X-Potion"
-    elif memory.getThrowItemsSlot(8) < 255:
+    elif memory.main.getThrowItemsSlot(8) < 255:
         itemnum = 8
         itemname = "Elixir"
-    elif memory.getThrowItemsSlot(6) < 255:
+    elif memory.main.getThrowItemsSlot(6) < 255:
         itemnum = 6
         itemname = "Phoenix Down"
-    elif memory.getThrowItemsSlot(7) < 255:
+    elif memory.main.getThrowItemsSlot(7) < 255:
         itemnum = 7
         itemname = "Phoenix Down"
     else:
@@ -3926,43 +3926,43 @@ def altanaheal():
         itemname = "noitemfound"
     if itemnum >= 0:
         print("Using %s" % itemname)
-        while not memory.turnReady():
+        while not memory.main.turnReady():
             pass
-        while memory.mainBattleMenu():
-            if memory.battleMenuCursor() != 1:
+        while memory.main.mainBattleMenu():
+            if memory.main.battleMenuCursor() != 1:
                 xbox.tapDown()
             else:
                 xbox.tapB()
-        while memory.mainBattleMenu():
+        while memory.main.mainBattleMenu():
             xbox.tapB()
-        itemPos = memory.getThrowItemsSlot(itemnum)
+        itemPos = memory.main.getThrowItemsSlot(itemnum)
         print("Position:", itemPos)
         _navigate_to_position(itemPos)
-        while memory.otherBattleMenu():
+        while memory.main.otherBattleMenu():
             xbox.tapB()
         print("Direction:", direction)
-        while not memory.targetingEnemy():
+        while not memory.main.targetingEnemy():
             if direction == 'l':
                 xbox.tapLeft()
-                if not memory.targetingEnemy():
+                if not memory.main.targetingEnemy():
                     print("Wrong battle line targeted.")
                     xbox.tapRight()
                     direction = 'u'
             elif direction == 'r':
                 xbox.tapRight()
-                if not memory.targetingEnemy():
+                if not memory.main.targetingEnemy():
                     print("Wrong battle line targeted.")
                     xbox.tapLeft()
                     direction = 'd'
             elif direction == 'u':
                 xbox.tapUp()
-                if not memory.targetingEnemy():
+                if not memory.main.targetingEnemy():
                     print("Wrong battle line targeted.")
                     xbox.tapDown()
                     direction = 'l'
             elif direction == 'd':
                 xbox.tapDown()
-                if not memory.targetingEnemy():
+                if not memory.main.targetingEnemy():
                     print("Wrong battle line targeted.")
                     xbox.tapUp()
                     direction = 'r'
@@ -3976,17 +3976,17 @@ def altanaheal():
 
 def evraeAltana():
     xbox.clickToBattle()
-    if memory.getEncounterID() == 266:
+    if memory.main.getEncounterID() == 266:
         print("Evrae Altana fight start")
         thrownItem = False
-        while not memory.battleComplete():  # AKA end of battle screen
-            if memory.turnReady():
-                if memory.rngSeed() == 31 and screen.turnRikku():
+        while not memory.main.battleComplete():  # AKA end of battle screen
+            if memory.main.turnReady():
+                if memory.main.rngSeed() == 31 and screen.turnRikku():
                     Steal()
-                elif memory.getItemSlot(18) != 255 and not thrownItem:
+                elif memory.main.getItemSlot(18) != 255 and not thrownItem:
                     _useHealingItem(itemID=18)
                     thrownItem = True
-                elif memory.getItemSlot(18) != 255 and not thrownItem:
+                elif memory.main.getItemSlot(18) != 255 and not thrownItem:
                     _useHealingItem(itemID=16)
                     thrownItem = True
                 else:
@@ -3996,13 +3996,13 @@ def evraeAltana():
         print("Not Evrae this time.")
         fleeAll()
 
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def attackHighbridge():
-    if memory.getEncounterID() == 270:
+    if memory.main.getEncounterID() == 270:
         attackByNum(22, 'r')
-    elif memory.getEncounterID() == 271:
+    elif memory.main.getEncounterID() == 271:
         attackByNum(21, 'l')
     else:
         attack('none')
@@ -4010,13 +4010,13 @@ def attackHighbridge():
 
 def seymourNatus():
     aeonSummoned = False
-    while not memory.userControl():
-        if memory.getEncounterID() == 272:  # Seymour Natus
+    while not memory.main.userControl():
+        if memory.main.getEncounterID() == 272:  # Seymour Natus
             print("Seymour Natus engaged")
-            while not memory.battleComplete():
-                if memory.turnReady():
+            while not memory.main.battleComplete():
+                if memory.main.turnReady():
                     if screen.turnTidus():
-                        if memory.getLuluSlvl() < 35 or gameVars.nemesis():
+                        if memory.main.getLuluSlvl() < 35 or gameVars.nemesis():
                             buddySwapLulu()
                             screen.awaitTurn()
                             xbox.weapSwap(0)
@@ -4040,71 +4040,71 @@ def seymourNatus():
                     else:
                         defend()
             return 1
-        elif memory.getEncounterID() == 270:  # YAT-63 x2
-            while memory.battleActive():
+        elif memory.main.getEncounterID() == 270:  # YAT-63 x2
+            while memory.main.battleActive():
                 if gameVars.completedRescueFights():
                     fleeAll()
-                elif memory.turnReady():
+                elif memory.main.turnReady():
                     if screen.turnTidus() or screen.turnYuna():
-                        if memory.getEnemyCurrentHP().count(0) == 1:
+                        if memory.main.getEnemyCurrentHP().count(0) == 1:
                             fleeAll()
                             gameVars.addRescueCount()
                         else:
                             attackByNum(22, 'r')
                     else:
                         defend()
-        elif memory.getEncounterID() == 269:  # YAT-63 with two guard guys
-            while memory.battleActive():
+        elif memory.main.getEncounterID() == 269:  # YAT-63 with two guard guys
+            while memory.main.battleActive():
                 if gameVars.completedRescueFights():
                     fleeAll()
-                elif memory.turnReady():
+                elif memory.main.turnReady():
                     if screen.turnTidus() or screen.turnYuna():
-                        if memory.getEnemyCurrentHP().count(0) == 1:
+                        if memory.main.getEnemyCurrentHP().count(0) == 1:
                             fleeAll()
                             gameVars.addRescueCount()
                         else:
                             attack('none')
                     else:
                         defend()
-        elif memory.getEncounterID() == 271:  # one YAT-63, two YAT-99
-            while memory.battleActive():
+        elif memory.main.getEncounterID() == 271:  # one YAT-63, two YAT-99
+            while memory.main.battleActive():
                 if gameVars.completedRescueFights():
                     fleeAll()
-                elif memory.turnReady():
+                elif memory.main.turnReady():
                     if screen.turnTidus() or screen.turnYuna():
-                        if memory.getEnemyCurrentHP().count(0) == 1:
+                        if memory.main.getEnemyCurrentHP().count(0) == 1:
                             fleeAll()
                             gameVars.addRescueCount()
                         else:
                             attackByNum(21, 'l')
                     else:
                         defend()
-        if memory.menuOpen() or memory.diagSkipPossible():
+        if memory.main.menuOpen() or memory.main.diagSkipPossible():
             xbox.tapB()
     return 0
 
 
 def calmLandsGems():
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
     stealComplete = False
-    if not memory.getEncounterID() in [273, 275, 281, 283]:
+    if not memory.main.getEncounterID() in [273, 275, 281, 283]:
         fleeAll()
     else:
-        while memory.battleActive():
-            if memory.turnReady():
-                if 3 not in memory.getActiveBattleFormation():
+        while memory.main.battleActive():
+            if memory.main.turnReady():
+                if 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
                 elif stealComplete:
                     fleeAll()
                 elif screen.turnKimahri():
                     # Red element in center slot, with machina and dog
-                    if memory.getEncounterID() == [273, 281]:
+                    if memory.main.getEncounterID() == [273, 281]:
                         print("Grabbing a gem here.")
                         buddySwapKimahri()
                         StealLeft()
                     # Red element in top slot, with bee and tank
-                    elif memory.getEncounterID() in [275, 283]:
+                    elif memory.main.getEncounterID() in [275, 283]:
                         print("Grabbing a gem here.")
                         buddySwapKimahri()
                         StealDown()
@@ -4113,15 +4113,15 @@ def calmLandsGems():
                     stealComplete = True
                 else:
                     defend()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def gagazetPath():
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    if memory.getEncounterID() == 337:
-        while memory.battleActive():
-            if memory.turnReady():
+    if memory.main.getEncounterID() == 337:
+        while memory.main.battleActive():
+            if memory.main.turnReady():
                 if screen.turnRikku():
                     StealRight()
                 else:
@@ -4140,22 +4140,22 @@ def biranYenke():
         StealRight()
 
     screen.awaitTurn()
-    gemSlot = memory.getUseItemsSlot(34)
+    gemSlot = memory.main.getUseItemsSlot(34)
     if gemSlot == 255:
-        gemSlot = memory.getUseItemsSlot(28)
+        gemSlot = memory.main.getUseItemsSlot(28)
     useItem(gemSlot, 'none')
 
     xbox.clickToBattle()
-    gemSlot = memory.getUseItemsSlot(34)
+    gemSlot = memory.main.getUseItemsSlot(34)
     if gemSlot == 255:
-        gemSlot = memory.getUseItemsSlot(28)
+        gemSlot = memory.main.getUseItemsSlot(28)
     useItem(gemSlot, 'none')
 
-    while not memory.userControl():
+    while not memory.main.userControl():
         xbox.tapB()
 
-    retSlot = memory.getItemSlot(96)  # Return sphere
-    friendSlot = memory.getItemSlot(97)  # Friend sphere
+    retSlot = memory.main.getItemSlot(96)  # Return sphere
+    friendSlot = memory.main.getItemSlot(97)  # Friend sphere
 
     if friendSlot == 255:  # Four return sphere method.
         print("Double return sphere drops.")
@@ -4173,12 +4173,12 @@ def biranYenke():
 def seymourFlux():
     stage = 1
     print("Start: Seymour Flux battle")
-    yunaXP = memory.getSLVLYuna()
+    yunaXP = memory.main.getSLVLYuna()
     xbox.clickToBattle()
     if gameVars.endGameVersion() == 3:
         bahamutSummoned = False
-        while not memory.battleComplete():  # AKA end of battle screen
-            if memory.turnReady():
+        while not memory.main.battleComplete():  # AKA end of battle screen
+            if memory.main.turnReady():
                 if screen.turnTidus():
                     buddySwapYuna()
                 elif screen.turnYuna():
@@ -4197,9 +4197,9 @@ def seymourFlux():
                 else:
                     defend()
     else:
-        while not memory.battleComplete():  # AKA end of battle screen
-            if memory.turnReady():
-                lastHP = memory.getEnemyCurrentHP()[0]
+        while not memory.main.battleComplete():  # AKA end of battle screen
+            if memory.main.turnReady():
+                lastHP = memory.main.getEnemyCurrentHP()[0]
                 print("Last HP")
                 if screen.turnYuna():
                     print("Yunas turn. Stage:", stage)
@@ -4228,10 +4228,10 @@ def seymourFlux():
                 else:
                     print("Non-critical turn. Defending.")
                     defend()
-            elif memory.diagSkipPossible():
+            elif memory.main.diagSkipPossible():
                 xbox.tapB()
-    memory.clickToControl()
-    if memory.getSLVLYuna() - yunaXP == 15000:
+    memory.main.clickToControl()
+    if memory.main.getSLVLYuna() - yunaXP == 15000:
         gameVars.fluxOverkillSuccess()
     print("------------------------------")
     print("Flux Overkill:", gameVars.fluxOverkill())
@@ -4244,8 +4244,8 @@ def sKeeper():
     xbox.clickToBattle()
     print("Start of Sanctuary Keeper fight")
     if gameVars.endGameVersion() == 3 and gameVars.getBlitzWin():
-        while not memory.battleComplete():
-            if memory.turnReady():
+        while not memory.main.battleComplete():
+            if memory.main.turnReady():
                 if screen.turnYuna():
                     aeonSummon(4)
                 elif screen.turnAeon():
@@ -4254,8 +4254,8 @@ def sKeeper():
                     defend()
     else:
         armorBreak = False
-        while not memory.battleComplete():
-            if memory.turnReady():
+        while not memory.main.battleComplete():
+            if memory.main.turnReady():
                 if screen.turnTidus():
                     useSkill(0)
                     armorBreak = True
@@ -4268,19 +4268,19 @@ def sKeeper():
                     attack('none')
                 else:
                     defend()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def caveChargeRikku():
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             if screen.turnRikku():
                 attack('none')
             else:
                 escapeOne()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def gagazetCave(direction):
@@ -4289,7 +4289,7 @@ def gagazetCave(direction):
     fleeAll()
 
 
-def _navigate_to_position(position, battleCursor=memory.battleCursor2):
+def _navigate_to_position(position, battleCursor=memory.main.battleCursor2):
     while battleCursor() == 255:
         pass
     if battleCursor() != position:
@@ -4311,23 +4311,23 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
     print("Using items via the Use command")
     print("Item slot:", slot)
     print("Direction:", direction)
-    while not memory.mainBattleMenu():
+    while not memory.main.mainBattleMenu():
         pass
     print("Mark 1, turn is active.")
-    while memory.battleMenuCursor() != 20:
+    while memory.main.battleMenuCursor() != 20:
         if not screen.turnRikku() and not screen.turnKimahri():
             return
-        if memory.battleMenuCursor() in [0, 19]:
+        if memory.main.battleMenuCursor() in [0, 19]:
             xbox.tapDown()
-        elif memory.battleMenuCursor() == 1:
+        elif memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
     if gameVars.usePause():
-        memory.waitFrames(3)
-    while memory.mainBattleMenu():
+        memory.main.waitFrames(3)
+    while memory.main.mainBattleMenu():
         xbox.tapB()
     if rikkuFlee:
         print("Mark 2, selecting 'Use' command in position", 2)
@@ -4338,22 +4338,22 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
     else:
         _navigate_to_position(1)
     if gameVars.usePause():
-        memory.waitFrames(3)
-    while memory.otherBattleMenu():
+        memory.main.waitFrames(3)
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     print("Mark 3, navigating to item slot")
-    _navigate_to_position(slot, memory.battleCursor3)
+    _navigate_to_position(slot, memory.main.battleCursor3)
     if gameVars.usePause():
-        memory.waitFrames(3)
-    while memory.interiorBattleMenu():
+        memory.main.waitFrames(3)
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
     if target != 255:
         try:
             print("Targetting based on character number")
-            if target >= 20 and memory.getEnemyCurrentHP()[target - 20] != 0:
+            if target >= 20 and memory.main.getEnemyCurrentHP()[target - 20] != 0:
                 direction = 'l'
-                while memory.battleTargetId() != target:
-                    if memory.battleTargetId() < 20:
+                while memory.main.battleTargetId() != target:
+                    if memory.main.battleTargetId() < 20:
                         xbox.tapRight()
                         direction = 'u'
                     elif direction == 'u':
@@ -4362,8 +4362,8 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
                         xbox.tapLeft()
             elif target < 20 and target != 0:
                 direction = 'l'
-                while memory.battleTargetId() != target:
-                    if memory.battleTargetId() >= 20:
+                while memory.main.battleTargetId() != target:
+                    if memory.main.battleTargetId() >= 20:
                         xbox.tapRight()
                         direction = 'u'
                     elif direction == 'u':
@@ -4372,8 +4372,8 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
                         xbox.tapLeft()
             elif target == 0:
                 direction = 'l'
-                while memory.battleTargetId() != 0:
-                    if memory.battleTargetId() >= 20:
+                while memory.main.battleTargetId() != 0:
+                    if memory.main.battleTargetId() >= 20:
                         xbox.tapRight()
                         direction = 'u'
                     elif direction == 'u':
@@ -4409,43 +4409,43 @@ def useItemTidus(slot: int, direction='none', target=255):
     print("Using items via the Use command")
     print("Item slot:", slot)
     print("Direction:", direction)
-    while not memory.mainBattleMenu():
+    while not memory.main.mainBattleMenu():
         pass
     print("Mark 1")
-    while memory.battleMenuCursor() != 20:
+    while memory.main.battleMenuCursor() != 20:
         if not screen.turnTidus():
             return
-        if memory.battleMenuCursor() == 1:
+        if memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
     if gameVars.usePause():
-        memory.waitFrames(3)
-    while memory.mainBattleMenu():
+        memory.main.waitFrames(3)
+    while memory.main.mainBattleMenu():
         xbox.tapB()
     if gameVars.usePause():
-        memory.waitFrames(3)
+        memory.main.waitFrames(3)
     print("Mark 2")
     _navigate_to_position(2)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     if gameVars.usePause():
-        memory.waitFrames(3)
+        memory.main.waitFrames(3)
     print("Mark 3")
-    _navigate_to_position(slot, memory.battleCursor3)
+    _navigate_to_position(slot, memory.main.battleCursor3)
     if gameVars.usePause():
-        memory.waitFrames(3)
-    while memory.interiorBattleMenu():
+        memory.main.waitFrames(3)
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
     if target != 255:
         try:
             print("Targetting based on character number")
-            if target >= 20 and memory.getEnemyCurrentHP()[target - 20] != 0:
+            if target >= 20 and memory.main.getEnemyCurrentHP()[target - 20] != 0:
                 direction = 'l'
-                while memory.battleTargetId() != target:
-                    if memory.battleTargetId() < 20:
+                while memory.main.battleTargetId() != target:
+                    if memory.main.battleTargetId() < 20:
                         xbox.tapRight()
                         direction = 'u'
                     elif direction == 'u':
@@ -4454,8 +4454,8 @@ def useItemTidus(slot: int, direction='none', target=255):
                         xbox.tapLeft()
             elif target < 20 and target != 0:
                 direction = 'l'
-                while memory.battleTargetId() != target:
-                    if memory.battleTargetId() >= 20:
+                while memory.main.battleTargetId() != target:
+                    if memory.main.battleTargetId() >= 20:
                         xbox.tapRight()
                         direction = 'u'
                     elif direction == 'u':
@@ -4464,8 +4464,8 @@ def useItemTidus(slot: int, direction='none', target=255):
                         xbox.tapLeft()
             elif target == 0:
                 direction = 'l'
-                while memory.battleTargetId() != 0:
-                    if memory.battleTargetId() >= 20:
+                while memory.main.battleTargetId() != 0:
+                    if memory.main.battleTargetId() >= 20:
                         xbox.tapRight()
                         direction = 'u'
                     elif direction == 'u':
@@ -4499,17 +4499,17 @@ def useItemTidus(slot: int, direction='none', target=255):
 
 def cheer():
     print("Cheer command")
-    while memory.battleMenuCursor() != 20:
+    while memory.main.battleMenuCursor() != 20:
         if not screen.turnTidus():
             return
-        if memory.battleMenuCursor() == 0:
+        if memory.main.battleMenuCursor() == 0:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     _navigate_to_position(1)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     tapTargeting()
 
@@ -4517,25 +4517,25 @@ def cheer():
 def seymourSpell():
     print("Seymour casting tier 2 spell")
     num = 21  # Should be the enemy number for the head
-    if not memory.turnReady():
+    if not memory.main.turnReady():
         print("Battle menu isn't up.")
         screen.awaitTurn()
 
-    while memory.battleMenuCursor() != 21:
-        print(memory.battleMenuCursor())
-        if memory.battleMenuCursor() == 0:
+    while memory.main.battleMenuCursor() != 21:
+        print(memory.main.battleMenuCursor())
+        if memory.main.battleMenuCursor() == 0:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()  # Black magic
-    print(memory.battleCursor2())
+    print(memory.main.battleCursor2())
     _navigate_to_position(5)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
 
-    if memory.getEnemyCurrentHP()[num - 20] != 0:  # Target head if alive.
-        while memory.battleTargetId() != num:
+    if memory.main.getEnemyCurrentHP()[num - 20] != 0:  # Target head if alive.
+        while memory.main.battleTargetId() != num:
             xbox.tapLeft()
 
     tapTargeting()
@@ -4544,47 +4544,47 @@ def seymourSpell():
 def _useHealingItem(num=None, direction='l', itemID=0):
     print("Healing character, ", num)
     direction = direction.lower()
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         print("Battle menu isn't up.")
         pass
-    while not memory.mainBattleMenu():
+    while not memory.main.mainBattleMenu():
         pass
-    while memory.battleMenuCursor() != 1:
+    while memory.main.battleMenuCursor() != 1:
         xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         pass
-    print(memory.battleCursor2())
-    print(memory.getThrowItemsSlot(itemID))
-    _navigate_to_position(memory.getThrowItemsSlot(itemID))
-    while memory.otherBattleMenu():
+    print(memory.main.battleCursor2())
+    print(memory.main.getThrowItemsSlot(itemID))
+    _navigate_to_position(memory.main.getThrowItemsSlot(itemID))
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     if num is not None:
-        while memory.battleTargetId() != num:
+        while memory.main.battleTargetId() != num:
             if direction == 'l':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     print("Wrong battle line targeted.")
                     xbox.tapRight()
                     direction = 'u'
                 else:
                     xbox.tapLeft()
             elif direction == 'r':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     print("Wrong character targeted.")
                     xbox.tapLeft()
                     direction = 'd'
                 else:
                     xbox.tapRight()
             elif direction == 'u':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     print("Wrong character targeted.")
                     xbox.tapDown()
                     direction = 'l'
                 else:
                     xbox.tapUp()
             elif direction == 'd':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     print("Wrong character targeted.")
                     xbox.tapUp()
                     direction = 'r'
@@ -4605,54 +4605,54 @@ def attackByNum(num, direction='u'):
         friendlyTarget = False
     print("Attacking specific character, ", num)
     direction = direction.lower()
-    if not memory.turnReady():
+    if not memory.main.turnReady():
         print("Battle menu isn't up.")
-        while not memory.turnReady():
+        while not memory.main.turnReady():
             # Waiting for battle menu to come up.
             pass
         # Make sure we actually have control
-    if memory.battleMenuCursor() != 0 and memory.battleMenuCursor() != 216:
-        while not memory.battleMenuCursor() in [0, 216]:
+    if memory.main.battleMenuCursor() != 0 and memory.main.battleMenuCursor() != 216:
+        while not memory.main.battleMenuCursor() in [0, 216]:
             xbox.tapUp()
             if screen.BattleComplete():
                 return  # Safety
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
 
-    if not friendlyTarget and memory.getEnemyCurrentHP()[num - 20] != 0:
-        while memory.battleTargetId() != num:
+    if not friendlyTarget and memory.main.getEnemyCurrentHP()[num - 20] != 0:
+        while memory.main.battleTargetId() != num:
             if direction == 'l':
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     direction = 'u'
                 xbox.tapLeft()
             elif direction == 'r':
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     direction = 'd'
                 xbox.tapRight()
             elif direction == 'u':
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     direction = 'l'
                 xbox.tapUp()
             elif direction == 'd':
-                if memory.battleTargetId() < 20:
+                if memory.main.battleTargetId() < 20:
                     direction = 'r'
                 xbox.tapDown()
     elif friendlyTarget:
-        while memory.battleTargetId() != num:
+        while memory.main.battleTargetId() != num:
             if direction == 'l':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     direction = 'u'
                 xbox.tapLeft()
             elif direction == 'r':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     direction = 'd'
                 xbox.tapRight()
             elif direction == 'u':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     direction = 'l'
                 xbox.tapUp()
             elif direction == 'd':
-                if memory.battleTargetId() >= 20:
+                if memory.main.battleTargetId() >= 20:
                     direction = 'r'
                 xbox.tapDown()
     tapTargeting()
@@ -4660,20 +4660,20 @@ def attackByNum(num, direction='u'):
 
 def attackSelfTanker():
     print("Attacking specific character, Auron (self)")
-    if not memory.turnReady():
+    if not memory.main.turnReady():
         print("Battle menu isn't up.")
-        while not memory.turnReady():
+        while not memory.main.turnReady():
             # Waiting for battle menu to come up.
             pass
-    if memory.battleMenuCursor() != 0 and memory.battleMenuCursor() != 216:
-        while not memory.battleMenuCursor() in [0, 216]:
+    if memory.main.battleMenuCursor() != 0 and memory.main.battleMenuCursor() != 216:
+        while not memory.main.battleMenuCursor() in [0, 216]:
             xbox.tapUp()
             if screen.BattleComplete():
                 return  # Safety
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
-    while memory.battleTargetId() != 2:
-        if memory.battleTargetId() > 20:
+    while memory.main.battleTargetId() != 2:
+        if memory.main.battleTargetId() > 20:
             xbox.tapDown()
         else:
             xbox.tapLeft()
@@ -4683,9 +4683,9 @@ def attackSelfTanker():
 def oblitzRngWait():
     rngValues = rngTrack.oblitzHistory()
     print(rngValues)
-    lastRNG = memory.rngFromIndex(index=2)
-    comingSeeds = memory.rngArrayFromIndex(index=2, arrayLen=15)
-    seedNum = str(memory.rngSeed())
+    lastRNG = memory.main.rngFromIndex(index=2)
+    comingSeeds = memory.main.rngArrayFromIndex(index=2, arrayLen=15)
+    seedNum = str(memory.main.rngSeed())
     print(comingSeeds)
     pos = 0
 
@@ -4751,9 +4751,9 @@ def oblitzRngWait():
     print("====================================")
     # Now wait for one of the two results to come up
     while s32(nextRNG) != s32(best[0]) and j < 15:
-        nextRNG = memory.rngFromIndex(index=2)
+        nextRNG = memory.main.rngFromIndex(index=2)
         if lastRNG != nextRNG:
-            print(j, " | ", s32(nextRNG), " | ", s32(memory.rngFromIndex(index=2)), " | ", s32(best[0]))
+            print(j, " | ", s32(nextRNG), " | ", s32(memory.main.rngFromIndex(index=2)), " | ", s32(best[0]))
             j += 1
             lastRNG = nextRNG
     print("====================================")
@@ -4764,18 +4764,18 @@ def oblitzRngWait():
 
 def attackOblitzEnd():
     print("Attack")
-    if not memory.turnReady():
-        while not memory.turnReady():
+    if not memory.main.turnReady():
+        while not memory.main.turnReady():
             pass
-    while memory.mainBattleMenu():
-        if not memory.battleMenuCursor() in [0, 203, 210, 216]:
-            print(memory.battleMenuCursor(), ", Battle Menu Cursor")
+    while memory.main.mainBattleMenu():
+        if not memory.main.battleMenuCursor() in [0, 203, 210, 216]:
+            print(memory.main.battleMenuCursor(), ", Battle Menu Cursor")
             xbox.tapUp()
         elif screen.BattleComplete():
             return
         else:
             xbox.menuB()
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     rngWaitResults = oblitzRngWait()
     xbox.tapB()
     xbox.tapB()
@@ -4786,12 +4786,12 @@ def attackOblitzEnd():
 def attack(direction="none"):
     print("Attack")
     direction = direction.lower()
-    if not memory.turnReady():
-        while not memory.turnReady():
+    if not memory.main.turnReady():
+        while not memory.main.turnReady():
             pass
-    while memory.mainBattleMenu():
-        if not memory.battleMenuCursor() in [0, 203, 210, 216]:
-            print("Battle Menu Cursor:", memory.battleMenuCursor())
+    while memory.main.mainBattleMenu():
+        if not memory.main.battleMenuCursor() in [0, 203, 210, 216]:
+            print("Battle Menu Cursor:", memory.main.battleMenuCursor())
             xbox.tapUp()
         elif screen.BattleComplete():
             return
@@ -4816,25 +4816,25 @@ def attack(direction="none"):
 
 
 def _steal(direction=None):
-    if not memory.mainBattleMenu():
-        while not memory.mainBattleMenu():
+    if not memory.main.mainBattleMenu():
+        while not memory.main.mainBattleMenu():
             pass
-    while memory.battleMenuCursor() != 20:
+    while memory.main.battleMenuCursor() != 20:
         if not screen.turnRikku() and not screen.turnKimahri():
             return
-        if memory.battleMenuCursor() == 1:
+        if memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     _navigate_to_position(0)
-    print(memory.otherBattleMenu())
-    while memory.otherBattleMenu():
+    print(memory.main.otherBattleMenu())
+    while memory.main.otherBattleMenu():
         xbox.tapB()  # Use the Steal
-    print(memory.otherBattleMenu())
+    print(memory.main.otherBattleMenu())
     if direction == 'down':
         xbox.tapDown()
     elif direction == 'up':
@@ -4849,11 +4849,11 @@ def _steal(direction=None):
 
 def Steal():
     print("Steal")
-    if not memory.getEncounterID() in [273, 274, 276, 279, 281, 282, 284, 289]:
+    if not memory.main.getEncounterID() in [273, 274, 276, 279, 281, 282, 284, 289]:
         _steal()
-    elif memory.getEncounterID() in [273, 281]:
+    elif memory.main.getEncounterID() in [273, 281]:
         _steal('left')
-    elif memory.getEncounterID() in [276, 279, 289]:
+    elif memory.main.getEncounterID() in [276, 279, 289]:
         _steal('up')
     else:
         _steal()
@@ -4883,20 +4883,20 @@ def stealAndAttack():
     print("Steal/Attack function")
     FFXC.set_neutral()
     screen.awaitTurn()
-    while not memory.battleComplete():
-        if memory.turnReady():
+    while not memory.main.battleComplete():
+        if memory.main.turnReady():
             if screen.turnRikku():
-                grenadeSlot = memory.getItemSlot(35)
-                grenadeCount = memory.getItemCountSlot(grenadeSlot)
+                grenadeSlot = memory.main.getItemSlot(35)
+                grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
                 if grenadeCount < 6:
                     Steal()
                 else:
                     attack('none')
             if screen.turnTidus():
                 attack('none')
-        elif memory.otherBattleMenu():
+        elif memory.main.otherBattleMenu():
             xbox.tapB()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def stealAndAttackPreTros():
@@ -4904,13 +4904,13 @@ def stealAndAttackPreTros():
     turnCounter = 0
     advances = getAdvances(tros=False)
     FFXC.set_neutral()
-    while not memory.battleComplete():
-        if memory.turnReady():
+    while not memory.main.battleComplete():
+        if memory.main.turnReady():
             if screen.turnRikkuRed():
                 turnCounter += 1
                 if turnCounter == 1:
-                    grenadeSlot = memory.getItemSlot(35)
-                    grenadeCount = memory.getItemCountSlot(grenadeSlot)
+                    grenadeSlot = memory.main.getItemSlot(35)
+                    grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
                     if grenadeCount < 6:
                         Steal()
                     elif advances in [1, 2]:
@@ -4919,8 +4919,8 @@ def stealAndAttackPreTros():
                     else:
                         attack('none')
                 elif turnCounter == 2:
-                    grenadeSlot = memory.getItemSlot(35)
-                    grenadeCount = memory.getItemCountSlot(grenadeSlot)
+                    grenadeSlot = memory.main.getItemSlot(35)
+                    grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
                     if grenadeCount < 6:
                         StealDown()
                     elif advances in [1, 2]:
@@ -4932,25 +4932,25 @@ def stealAndAttackPreTros():
                     attack('none')
             if screen.turnTidus():
                 attack('none')
-        elif memory.otherBattleMenu():
+        elif memory.main.otherBattleMenu():
             xbox.tapB()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def castSpell(direction, spellID):
     if not screen.turnLulu():
         print("Lulu is not the current person. Deferring turn.")
         return
-    while memory.battleMenuCursor() != 21:
-        print(memory.battleMenuCursor())
-        if memory.battleMenuCursor() == 0:
+    while memory.main.battleMenuCursor() != 21:
+        print(memory.main.battleMenuCursor())
+        if memory.main.battleMenuCursor() == 0:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()  # Black magic
     _navigate_to_position(spellID)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()  # Cast the Spell
     direction = direction.lower()
     if direction == "right":
@@ -5008,43 +5008,43 @@ def thunderTarget(target, direction):
         print("Lulu is not the current person. Deferring turn.")
         return
     direction = direction.lower()
-    while memory.mainBattleMenu():
-        if memory.battleMenuCursor() != 21:
-            print(memory.battleMenuCursor())
-            if memory.battleMenuCursor() == 0:
+    while memory.main.mainBattleMenu():
+        if memory.main.battleMenuCursor() != 21:
+            print(memory.main.battleMenuCursor())
+            if memory.main.battleMenuCursor() == 0:
                 xbox.tapDown()
             else:
                 xbox.tapUp()
         else:
             xbox.tapB()
-    print(memory.battleCursor2())
+    print(memory.main.battleCursor2())
     _navigate_to_position(1)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()  # Thunder
-    while memory.battleTargetId() != target:
+    while memory.main.battleTargetId() != target:
         if direction == 'l':
-            if memory.battleTargetId() < 20:
+            if memory.main.battleTargetId() < 20:
                 print("Wrong battle line targeted.")
                 xbox.tapRight()
                 direction = 'u'
             else:
                 xbox.tapLeft()
         elif direction == 'r':
-            if memory.battleTargetId() < 20:
+            if memory.main.battleTargetId() < 20:
                 print("Wrong character targeted.")
                 xbox.tapLeft()
                 direction = 'd'
             else:
                 xbox.tapRight()
         elif direction == 'u':
-            if memory.battleTargetId() < 20:
+            if memory.main.battleTargetId() < 20:
                 print("Wrong character targeted.")
                 xbox.tapDown()
                 direction = 'l'
             else:
                 xbox.tapUp()
         elif direction == 'd':
-            if memory.battleTargetId() < 20:
+            if memory.main.battleTargetId() < 20:
                 print("Wrong character targeted.")
                 xbox.tapUp()
                 direction = 'r'
@@ -5055,29 +5055,29 @@ def thunderTarget(target, direction):
 
 def aeonSummon(position):
     print("Summoning Aeon" + str(position))
-    while not memory.mainBattleMenu():
+    while not memory.main.mainBattleMenu():
         pass
-    while memory.battleMenuCursor() != 23:
+    while memory.main.battleMenuCursor() != 23:
         if not screen.turnYuna():
             return
-        if memory.battleMenuCursor() == 255:
+        if memory.main.battleMenuCursor() == 255:
             pass
-        elif memory.battleMenuCursor() >= 1 and memory.battleMenuCursor() < 23:
+        elif memory.main.battleMenuCursor() >= 1 and memory.main.battleMenuCursor() < 23:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
-    while position != memory.battleCursor2():
-        print(memory.battleCursor2())
-        if memory.battleCursor2() < position:
+    while position != memory.main.battleCursor2():
+        print(memory.main.battleCursor2())
+        if memory.main.battleCursor2() < position:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     aeonWaitTimer = 0
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         if aeonWaitTimer % 10000 == 0:
             print("Waiting for Aeon's turn.", int(aeonWaitTimer % 10000))
         pass
@@ -5094,16 +5094,16 @@ def aeonSpell2(position, direction):
 
 def aeonSpellDirection(position, direction):
     print("Aeon casting a spell. Special direction:", direction)
-    while memory.battleMenuCursor() != 21:
+    while memory.main.battleMenuCursor() != 21:
         xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()  # Black magic
     print("In Black Magic")
     _navigate_to_position(position)
-    print(memory.otherBattleMenu())
-    while memory.otherBattleMenu():
+    print(memory.main.otherBattleMenu())
+    while memory.main.otherBattleMenu():
         xbox.tapB()  # Cast the Spell
-    print(memory.otherBattleMenu())
+    print(memory.main.otherBattleMenu())
     if direction == 'left':
         xbox.tapLeft()
     elif direction == 'right':
@@ -5118,73 +5118,73 @@ def aeonSpellDirection(position, direction):
 
 def healUp(chars=3, *, fullMenuClose=True):
     print("Menuing, healing characters:", chars)
-    if memory.getHP() == memory.getMaxHP():
+    if memory.main.getHP() == memory.main.getMaxHP():
         print("No need to heal. Exiting menu.")
-        print(memory.menuNumber())
+        print(memory.main.menuNumber())
         if fullMenuClose:
-            memory.closeMenu()
+            memory.main.closeMenu()
         else:
-            if memory.menuOpen():
-                memory.backToMainMenu()
+            if memory.main.menuOpen():
+                memory.main.backToMainMenu()
         return
-    if not memory.menuOpen():
-        memory.openMenu()
+    if not memory.main.menuOpen():
+        memory.main.openMenu()
     FFXC = xbox.controllerHandle()
     FFXC.set_neutral()
-    while memory.getMenuCursorPos() != 2:
-        print("Selecting Ability command -", memory.getMenuCursorPos())
-        memory.menuDirection(memory.getMenuCursorPos(), 2, 11)
-    while memory.menuNumber() == 5:
-        print("Select Ability -", memory.menuNumber())
+    while memory.main.getMenuCursorPos() != 2:
+        print("Selecting Ability command -", memory.main.getMenuCursorPos())
+        memory.main.menuDirection(memory.main.getMenuCursorPos(), 2, 11)
+    while memory.main.menuNumber() == 5:
+        print("Select Ability -", memory.main.menuNumber())
         xbox.tapB()
     print("Mark 1")
-    target_pos = memory.getCharacterIndexInMainMenu(1)
+    target_pos = memory.main.getCharacterIndexInMainMenu(1)
     print(target_pos)
-    while memory.getCharCursorPos() != target_pos:
-        memory.menuDirection(memory.getCharCursorPos(
-        ), target_pos, len(memory.getOrderSeven()))
+    while memory.main.getCharCursorPos() != target_pos:
+        memory.main.menuDirection(memory.main.getCharCursorPos(
+        ), target_pos, len(memory.main.getOrderSeven()))
     print("Mark 2")
-    while memory.menuNumber() != 26:
-        if memory.getMenu2CharNum() == 1:
+    while memory.main.menuNumber() != 26:
+        if memory.main.getMenu2CharNum() == 1:
             xbox.tapB()
         else:
             xbox.tapDown()
-    while not memory.cureMenuOpen():
+    while not memory.main.cureMenuOpen():
         xbox.tapB()
     character_positions = {
-        0: memory.getCharFormationSlot(0),  # Tidus
-        1: memory.getCharFormationSlot(1),  # Yuna
-        2: memory.getCharFormationSlot(2),  # Auron
-        3: memory.getCharFormationSlot(3),  # Kimahri
-        4: memory.getCharFormationSlot(4),  # Wakka
-        5: memory.getCharFormationSlot(5),  # Lulu
-        6: memory.getCharFormationSlot(6)  # Rikku
+        0: memory.main.getCharFormationSlot(0),  # Tidus
+        1: memory.main.getCharFormationSlot(1),  # Yuna
+        2: memory.main.getCharFormationSlot(2),  # Auron
+        3: memory.main.getCharFormationSlot(3),  # Kimahri
+        4: memory.main.getCharFormationSlot(4),  # Wakka
+        5: memory.main.getCharFormationSlot(5),  # Lulu
+        6: memory.main.getCharFormationSlot(6)  # Rikku
     }
     print(character_positions)
     positions_to_characters = {val: key for key,
                                val in character_positions.items() if val != 255}
     print(positions_to_characters)
-    maximal_hp = memory.getMaxHP()
+    maximal_hp = memory.main.getMaxHP()
     print("Max HP:", maximal_hp)
-    current_hp = memory.getHP()
+    current_hp = memory.main.getHP()
     for cur_position in range(len(positions_to_characters)):
         while current_hp[positions_to_characters[cur_position]] < maximal_hp[positions_to_characters[cur_position]]:
             print(current_hp)
-            while memory.assignAbilityToEquipCursor() != cur_position:
-                if memory.assignAbilityToEquipCursor() < cur_position:
+            while memory.main.assignAbilityToEquipCursor() != cur_position:
+                if memory.main.assignAbilityToEquipCursor() < cur_position:
                     xbox.tapDown()
                 else:
                     xbox.tapUp()
             xbox.tapB()
-            current_hp = memory.getHP()
-        if current_hp == maximal_hp or memory.getYunaMP() < 4:
+            current_hp = memory.main.getHP()
+        if current_hp == maximal_hp or memory.main.getYunaMP() < 4:
             break
     print("Healing complete. Exiting menu.")
-    print(memory.menuNumber())
+    print(memory.main.menuNumber())
     if fullMenuClose:
-        memory.closeMenu()
+        memory.main.closeMenu()
     else:
-        memory.backToMainMenu()
+        memory.main.backToMainMenu()
 
 
 def lancetSwap(direction):
@@ -5201,19 +5201,19 @@ def lancetSwap(direction):
 
 def lancet(direction):
     print("Casting Lancet with variation:", direction)
-    while memory.battleMenuCursor() != 20:
-        if memory.battleMenuCursor() == 255:
+    while memory.main.battleMenuCursor() != 20:
+        if memory.main.battleMenuCursor() == 255:
             pass
-        elif memory.battleMenuCursor() == 1:
+        elif memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
     _navigate_to_position(0)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     if direction == 'left':
         xbox.tapLeft()
@@ -5228,22 +5228,22 @@ def lancet(direction):
 
 def lancetTarget(target, direction):  # something
     print("Casting Lancet with variation:", direction)
-    while memory.battleMenuCursor() != 20:
-        if memory.battleMenuCursor() == 255:
+    while memory.main.battleMenuCursor() != 20:
+        if memory.main.battleMenuCursor() == 255:
             pass
-        elif memory.battleMenuCursor() == 1:
+        elif memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     retry = 0
-    if memory.getEnemyCurrentHP()[target - 20] != 0:  # Only lancet living targets.
-        while memory.battleTargetId() != target:
+    if memory.main.getEnemyCurrentHP()[target - 20] != 0:  # Only lancet living targets.
+        while memory.main.battleTargetId() != target:
             if direction == 'l':
                 if retry > 5:
                     retry = 0
@@ -5284,19 +5284,19 @@ def lancetTarget(target, direction):  # something
 
 def lancetHome(direction):
     print("Lancet (home) function")
-    while memory.battleMenuCursor() != 20:
-        if memory.battleMenuCursor() == 255:
+    while memory.main.battleMenuCursor() != 20:
+        if memory.main.battleMenuCursor() == 255:
             pass
-        elif memory.battleMenuCursor() == 1:
+        elif memory.main.battleMenuCursor() == 1:
             xbox.tapUp()
-        elif memory.battleMenuCursor() > 20:
+        elif memory.main.battleMenuCursor() > 20:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapB()
     _navigate_to_position(2)
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     if direction == 'left':
         xbox.tapLeft()
@@ -5311,48 +5311,48 @@ def lancetHome(direction):
 
 def fleeAll():
     print("Attempting escape (all party members and end screen)")
-    if memory.battleActive():
-        while memory.battleActive():
-            if memory.userControl():
+    if memory.main.battleActive():
+        while memory.main.battleActive():
+            if memory.main.userControl():
                 return
-            if memory.turnReady():
-                tidus_position = memory.getBattleCharSlot(0)
+            if memory.main.turnReady():
+                tidus_position = memory.main.getBattleCharSlot(0)
                 print("Tidus Position:", tidus_position)
                 if screen.turnTidus():
                     tidusFlee()
                 elif tidus_position >= 3 and tidus_position != 255:
                     buddySwapTidus()
-                elif not checkTidusOk() or tidus_position == 255 or memory.tidusEscapedState():
+                elif not checkTidusOk() or tidus_position == 255 or memory.main.tidusEscapedState():
                     escapeOne()
                 else:
                     defend()
-    memory.clickToControl3()
+    memory.main.clickToControl3()
     print("Flee complete")
 
 
 def escapeAll():
     print("escapeAll function")
     while not screen.BattleComplete():
-        if memory.turnReady():
+        if memory.main.turnReady():
             escapeOne()
 
 
 def escapeOne():
-    print("##### The next character will escape:", rngTrack.nextActionEscape(character=memory.getCurrentTurn()))
-    if not rngTrack.nextActionEscape(character=memory.getCurrentTurn()) and not memory.getEncounterID() == 26:
-        if memory.getStoryProgress() < 154:
+    print("##### The next character will escape:", rngTrack.nextActionEscape(character=memory.main.getCurrentTurn()))
+    if not rngTrack.nextActionEscape(character=memory.main.getCurrentTurn()) and not memory.main.getEncounterID() == 26:
+        if memory.main.getStoryProgress() < 154:
             print("Character cannot escape (Lagoon). Attacking instead.")
             attack('none')
         else:
             print("Character will not escape. Looking for a replacement.")
             replacement = 255
-            replaceArray = memory.getBattleFormation()
+            replaceArray = memory.main.getBattleFormation()
             for i in range(len(replaceArray)):
                 if replacement != 255:
                     pass
                 elif replaceArray[i] == 255:
                     pass
-                elif replaceArray[i] in memory.getActiveBattleFormation():
+                elif replaceArray[i] in memory.main.getActiveBattleFormation():
                     pass
                 elif rngTrack.nextActionEscape(replaceArray[i]):
                     print("Character ", replaceArray[i], " can escape. Swapping.")
@@ -5363,50 +5363,50 @@ def escapeOne():
                     pass
             if replacement == 255:
                 print("No character could be found.")
-                if memory.getCurrentTurn() == 0:
+                if memory.main.getCurrentTurn() == 0:
                     tidusFlee()
                     return False
-                elif memory.getCurrentTurn() == 1:
+                elif memory.main.getCurrentTurn() == 1:
                     defend()
                 else:
-                    attackByNum(num=memory.getCurrentTurn(), direction='u')
+                    attackByNum(num=memory.main.getCurrentTurn(), direction='u')
                     return False
     else:
         print("Attempting escape, one person")
-        while memory.mainBattleMenu():
-            if memory.battleComplete():
+        while memory.main.mainBattleMenu():
+            if memory.main.battleComplete():
                 break
             else:
                 xbox.tapRight()
         print("In other battle menu")
-        while memory.battleCursor2() != 2:
-            if memory.battleComplete():
+        while memory.main.battleCursor2() != 2:
+            if memory.main.battleComplete():
                 break
             else:
                 xbox.tapDown()
         print("Targeted Escape")
-        while memory.otherBattleMenu():
-            if memory.battleComplete():
+        while memory.main.otherBattleMenu():
+            if memory.main.battleComplete():
                 break
             else:
                 xbox.tapB()
-        if memory.battleActive():
+        if memory.main.battleActive():
             print("Selected Escaping")
             tapTargeting()
         return True
 
 
 def buddySwap_char(character):
-    memory.waitFrames(6)
+    memory.main.waitFrames(6)
     print("Swapping characters (in battle) - by char num")
-    position = memory.getBattleCharSlot(character)
+    position = memory.main.getBattleCharSlot(character)
 
     if position < 3:
-        print("Cannot swap with character ", memory.nameFromNumber(character),
+        print("Cannot swap with character ", memory.main.nameFromNumber(character),
               ", that character is in the front party.")
         return
     else:
-        while not memory.otherBattleMenu():
+        while not memory.main.otherBattleMenu():
             xbox.lBumper()
         position -= 3
         reserveposition = position % 4
@@ -5416,13 +5416,13 @@ def buddySwap_char(character):
         else:
             direction = 'down'
 
-        while reserveposition != memory.battleCursor2():
+        while reserveposition != memory.main.battleCursor2():
             if direction == 'down':
                 xbox.tapDown()
             else:
                 xbox.tapUp()
 
-        while memory.otherBattleMenu():
+        while memory.main.otherBattleMenu():
             xbox.tapB()
         xbox.clickToBattle()
         screen.awaitTurn()
@@ -5466,22 +5466,22 @@ def buddySwapRikku():
 
 def kimahriOD(pos):
     print("Kimahri using Overdrive, pos -", pos)
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapLeft()
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
-    _navigate_to_position(pos, battleCursor=memory.battleCursor3)
-    while memory.interiorBattleMenu():
+    _navigate_to_position(pos, battleCursor=memory.main.battleCursor3)
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
     tapTargeting()
 
 
 def wrapUp():
     print("^^Wrapping up battle.")
-    while not memory.userControl():
-        if memory.menuOpen() or memory.diagSkipPossible():
+    while not memory.main.userControl():
+        if memory.main.menuOpen() or memory.main.diagSkipPossible():
             xbox.tapB()
-        elif memory.turnReady():
+        elif memory.main.turnReady():
             print("^^Still someone's turn. Could not wrap up battle.")
             return False
         else:
@@ -5491,17 +5491,17 @@ def wrapUp():
 
 
 def impulse(direction=None, targetFarLine=False):
-    while memory.battleMenuCursor() != 217:
-        if memory.battleMenuCursor() == 216:
+    while memory.main.battleMenuCursor() != 217:
+        if memory.main.battleMenuCursor() == 216:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapB()
     if direction == 'left':
         xbox.tapLeft()
     if targetFarLine:
-        while not memory.battleLineTarget():
+        while not memory.main.battleLineTarget():
             xbox.tapLeft()
     tapTargeting()
     xbox.tapB()
@@ -5514,8 +5514,8 @@ def SinArms():
     # Area for improvement later. Multiple skippable FMVs
     xbox.clickToBattle()
     aeonSummon(4)
-    while memory.battleActive():  # Arm1
-        if memory.turnReady():
+    while memory.main.battleActive():  # Arm1
+        if memory.main.turnReady():
             impulse()
             xbox.tapB()
             xbox.tapB()
@@ -5523,16 +5523,16 @@ def SinArms():
             xbox.tapB()
 
     xbox.SkipDialog(0.3)
-    while not memory.battleActive():
-        if memory.cutsceneSkipPossible():
+    while not memory.main.battleActive():
+        if memory.main.cutsceneSkipPossible():
             xbox.skipScene()
-        elif memory.menuOpen() or memory.diagSkipPossible():
+        elif memory.main.menuOpen() or memory.main.diagSkipPossible():
             xbox.tapB()
 
     aeonSummon(4)
 
-    while memory.battleActive():  # Arm2
-        if memory.turnReady():
+    while memory.main.battleActive():  # Arm2
+        if memory.main.turnReady():
             impulse()
             xbox.tapB()
             xbox.tapB()
@@ -5540,28 +5540,28 @@ def SinArms():
             xbox.tapB()
 
     xbox.SkipDialog(0.3)
-    while not memory.battleActive():
-        if memory.cutsceneSkipPossible():
+    while not memory.main.battleActive():
+        if memory.main.cutsceneSkipPossible():
             xbox.skipScene()
-        elif memory.menuOpen() or memory.diagSkipPossible():
+        elif memory.main.menuOpen() or memory.main.diagSkipPossible():
             xbox.tapB()
 
     xbox.clickToBattle()  # Start of Sin Core
     aeonSummon(4)
     screen.awaitTurn()
     if gameVars.nemesis():
-        while not memory.battleComplete():
-            if memory.turnReady():
+        while not memory.main.battleComplete():
+            if memory.main.turnReady():
                 attack('none')
     else:
         impulse(targetFarLine=True)
         xbox.tapB()
         xbox.tapB()
 
-    while not memory.userControl():
-        if memory.diagSkipPossible() or memory.menuOpen():
+    while not memory.main.userControl():
+        if memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
-        elif memory.cutsceneSkipPossible():
+        elif memory.main.cutsceneSkipPossible():
             xbox.skipScene()
     print("Done with Sin's Arms section")
 
@@ -5572,8 +5572,8 @@ def SinFace():
     FFXC.set_neutral()
 
     aeonFirstTurn = True
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             if screen.turnYuna():
                 aeonSummon(4)
             elif screen.turnAeon():
@@ -5589,36 +5589,36 @@ def SinFace():
 
 
 def yojimbo():
-    while not memory.turnReady():
+    while not memory.main.turnReady():
         pass
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             if screen.turnYuna():
                 aeonSummon(4)
             elif screen.turnAeon():
                 attack('none')
             else:
                 defend()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
 
 
 def omnisItems():
     item1 = 99
-    if memory.getItemSlot(32) < 200:
+    if memory.main.getItemSlot(32) < 200:
         item1 = 32
-    elif memory.getItemSlot(30) < 200:
+    elif memory.main.getItemSlot(30) < 200:
         item1 = 30
-    elif memory.getItemSlot(27) < 200:
+    elif memory.main.getItemSlot(27) < 200:
         item1 = 27
     else:
         item1 = 24
 
-    if memory.getItemSlot(1) < 200:
+    if memory.main.getItemSlot(1) < 200:
         item2 = 1
-    elif memory.getItemSlot(3) < 200:
+    elif memory.main.getItemSlot(3) < 200:
         item2 = 3
-    elif memory.getItemSlot(2) < 200:
+    elif memory.main.getItemSlot(2) < 200:
         item2 = 2
     else:
         item2 = 7
@@ -5632,8 +5632,8 @@ def omnis():
     rikkuIn = False
     backupCure = False
 
-    while memory.getEnemyMaxHP()[0] == memory.getEnemyCurrentHP()[0]:
-        if memory.turnReady():
+    while memory.main.getEnemyMaxHP()[0] == memory.main.getEnemyCurrentHP()[0]:
+        if memory.main.turnReady():
             if screen.turnTidus():
                 useSkill(0)
             elif screen.turnAuron():
@@ -5650,9 +5650,9 @@ def omnis():
                 defend()
 
     print("Ready for aeon.")
-    while not memory.battleComplete():  # AKA end of battle screen
-        if memory.turnReady():
-            print("Character turn:", memory.getBattleCharTurn())
+    while not memory.main.battleComplete():  # AKA end of battle screen
+        if memory.main.turnReady():
+            print("Character turn:", memory.main.getBattleCharTurn())
             if screen.turnYuna():
                 aeonSummon(4)
             elif screen.turnAeon():
@@ -5661,25 +5661,25 @@ def omnis():
                 attack('none')
             else:
                 defend()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             print("Skipping dialog maybe?")
             xbox.tapB()
     print("Should be done now.")
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def BFA_nem():
     FFXC.set_movement(1, 0)
-    memory.waitFrames(30 * 0.4)
+    memory.main.waitFrames(30 * 0.4)
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_neutral()
     tidusFirstTurn = False
 
     xbox.clickToBattle()
 
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             if screen.turnTidus():
                 if tidusFirstTurn:
                     equipInBattle(equipType='weap',
@@ -5690,11 +5690,11 @@ def BFA_nem():
             else:
                 defend()
 
-    while memory.getStoryProgress() < 3400:  # End of game
-        if memory.battleActive():
-            if memory.turnReady():
+    while memory.main.getStoryProgress() < 3400:  # End of game
+        if memory.main.battleActive():
+            if memory.main.turnReady():
                 if screen.turnTidus():
-                    if memory.getEncounterID() == 401 and memory.overdriveState2()[0] == 100:
+                    if memory.main.getEncounterID() == 401 and memory.main.overdriveState2()[0] == 100:
                         tidusOD()
                     else:
                         attack('none')
@@ -5704,72 +5704,72 @@ def BFA_nem():
                     buddySwapLulu()
                 else:
                     defend()
-        elif memory.cutsceneSkipPossible():
-            memory.waitFrames(2)
-            if memory.cutsceneSkipPossible():
+        elif memory.main.cutsceneSkipPossible():
+            memory.main.waitFrames(2)
+            if memory.main.cutsceneSkipPossible():
                 xbox.skipScene()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             xbox.tapB()
 
 
 def BFA():
-    if memory.getGilvalue() < 150000:
+    if memory.main.getGilvalue() < 150000:
         swagMode = True
     else:
         swagMode = gameVars.yuYevonSwag()
     FFXC.set_movement(1, 0)
-    memory.waitFrames(30 * 0.4)
+    memory.main.waitFrames(30 * 0.4)
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_neutral()
 
     xbox.clickToBattle()
     buddySwapRikku()
-    if memory.overdriveState()[6] == 100:
+    if memory.main.overdriveState()[6] == 100:
         rikkuFullOD('bfa')
     else:
         useSkill(0)
 
     screen.awaitTurn()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapLeft()
-    while memory.battleCursor2() != 1:
+    while memory.main.battleCursor2() != 1:
         xbox.tapDown()
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         xbox.tapB()
     tapTargeting()
     buddySwapYuna()
     aeonSummon(4)
 
     # Bahamut finishes the battle.
-    while memory.battleActive():
+    while memory.main.battleActive():
         xbox.tapB()
 
     # Skip the cutscene
     print("BFA down. Ready for Aeons")
 
     if not gameVars.csr():
-        while not memory.cutsceneSkipPossible():
+        while not memory.main.cutsceneSkipPossible():
             xbox.tapB()
         xbox.skipScene()
 
-    while memory.getStoryProgress() < 3380:
-        if memory.turnReady():
-            encounterID = memory.getEncounterID()
+    while memory.main.getStoryProgress() < 3380:
+        if memory.main.turnReady():
+            encounterID = memory.main.getEncounterID()
             print("Battle engaged. Battle number:", encounterID)
             if screen.turnYuna():
-                if memory.battleMenuCursor() != 20:
-                    while memory.battleMenuCursor() != 20:
-                        if memory.battleMenuCursor() in [22, 1]:
+                if memory.main.battleMenuCursor() != 20:
+                    while memory.main.battleMenuCursor() != 20:
+                        if memory.main.battleMenuCursor() in [22, 1]:
                             xbox.tapUp()
                         else:
                             xbox.tapDown()
-                while memory.mainBattleMenu():
+                while memory.main.mainBattleMenu():
                     xbox.tapB()
-                while memory.otherBattleMenu():
+                while memory.main.otherBattleMenu():
                     xbox.tapB()
-                print(memory.getEnemyMaxHP())
-                aeon_hp = memory.getEnemyMaxHP()[0]
+                print(memory.main.getEnemyMaxHP())
+                aeon_hp = memory.main.getEnemyMaxHP()[0]
                 if swagMode:
                     useGil = aeon_hp * 10
                 elif aeon_hp % 1000 == 0:
@@ -5778,28 +5778,28 @@ def BFA():
                     useGil = (int(aeon_hp / 1000) + 1) * 10000
                 print("#### USING GIL #### ", useGil)
                 calculateSpareChangeMovement(useGil)
-                while memory.spareChangeOpen():
+                while memory.main.spareChangeOpen():
                     xbox.tapB()
-                while not memory.mainBattleMenu():
+                while not memory.main.mainBattleMenu():
                     xbox.tapB()
             else:
                 defend()
-        elif not memory.battleActive():
+        elif not memory.main.battleActive():
             xbox.tapB()
 
 
 def yuYevonItem():
-    if memory.getItemSlot(6) < 200:
+    if memory.main.getItemSlot(6) < 200:
         return 6
-    elif memory.getItemSlot(7) < 200:
+    elif memory.main.getItemSlot(7) < 200:
         return 7
-    elif memory.getItemSlot(8) < 200:
+    elif memory.main.getItemSlot(8) < 200:
         return 8
-    elif memory.getItemSlot(2) < 200:
+    elif memory.main.getItemSlot(2) < 200:
         return 2
-    elif memory.getItemSlot(1) < 200:
+    elif memory.main.getItemSlot(1) < 200:
         return 1
-    elif memory.getItemSlot(0) < 200:
+    elif memory.main.getItemSlot(0) < 200:
         return 0
     else:
         return 99
@@ -5812,8 +5812,8 @@ def yuYevon():
     zombieAttack = False
     zaChar = gameVars.zombieWeapon()
     weapSwap = False
-    while memory.getStoryProgress() < 3400:
-        if memory.turnReady():
+    while memory.main.getStoryProgress() < 3400:
+        if memory.main.turnReady():
             print("-----------------------")
             print("-----------------------")
             print("zaChar:", zaChar)
@@ -5876,15 +5876,15 @@ def yuYevon():
                 if itemNum == 99:
                     attack('none')
                 else:
-                    while memory.battleMenuCursor() != 1:
+                    while memory.main.battleMenuCursor() != 1:
                         xbox.tapDown()
-                    while memory.mainBattleMenu():
+                    while memory.main.mainBattleMenu():
                         xbox.tapB()
-                    itemPos = memory.getThrowItemsSlot(itemNum)
+                    itemPos = memory.main.getThrowItemsSlot(itemNum)
                     _navigate_to_position(itemPos)
-                    while memory.otherBattleMenu():
+                    while memory.main.otherBattleMenu():
                         xbox.tapB()
-                    while not memory.enemyTargetted():
+                    while not memory.main.enemyTargetted():
                         xbox.tapUp()
                     tapTargeting()
                 print("Phoenix Down on Yu Yevon. Good game.")
@@ -5896,16 +5896,16 @@ def yuYevon():
                 # Non-Tidus char to defend so Tidus can use Zombie Strike ability
                 defend()
             else:
-                if memory.getBattleCharTurn() == zaChar:
+                if memory.main.getBattleCharTurn() == zaChar:
                     attack('none')
                     zombieAttack = True
-                elif memory.getBattleCharSlot(zaChar) >= 3:
+                elif memory.main.getBattleCharSlot(zaChar) >= 3:
                     buddySwap_char(zaChar)
                 elif screen.turnTidus():
                     tidusHaste('l', character=zaChar)
                 else:
                     defend()
-        elif not memory.battleActive():
+        elif not memory.main.battleActive():
             xbox.tapB()
 
 
@@ -5913,7 +5913,7 @@ def checkPetrify():
     # This function is always returning as if someone is petrified, needs review.
     for iterVar in range(7):
         print(iterVar)
-        if memory.petrifiedstate(iterVar):
+        if memory.main.petrifiedstate(iterVar):
             print("Character ", iterVar, " is petrified.")
             return True
     print("Everyone looks good - no petrification")
@@ -5921,79 +5921,79 @@ def checkPetrify():
 
 
 def checkPetrifyTidus():
-    return memory.petrifiedstate(0)
+    return memory.main.petrifiedstate(0)
 
 
 def rikkuODItems(slot):
-    _navigate_to_position(slot, battleCursor=memory.RikkuODCursor1)
+    _navigate_to_position(slot, battleCursor=memory.main.RikkuODCursor1)
 
 
 def rikkuFullOD(battle):
     # First, determine which items we are using
     if battle == 'tutorial':
-        item1 = memory.getItemSlot(73)
+        item1 = memory.main.getItemSlot(73)
         print("Ability sphere in slot:", item1)
         item2 = item1
     elif battle == 'Evrae':
         if gameVars.skipKilikaLuck():
-            item1 = memory.getItemSlot(81)
+            item1 = memory.main.getItemSlot(81)
             print("Lv1 sphere in slot:", item1)
-            item2 = memory.getItemSlot(84)
+            item2 = memory.main.getItemSlot(84)
             print("Lv4 sphere in slot:", item2)
         else:
-            item1 = memory.getItemSlot(94)
+            item1 = memory.main.getItemSlot(94)
             print("Luck sphere in slot:", item1)
-            item2 = memory.getItemSlot(100)
+            item2 = memory.main.getItemSlot(100)
             print("Map in slot:", item2)
     elif battle == 'Flux':
-        item1 = memory.getItemSlot(35)
+        item1 = memory.main.getItemSlot(35)
         print("Grenade in slot:", item1)
-        item2 = memory.getItemSlot(85)
+        item2 = memory.main.getItemSlot(85)
         print("HP Sphere in slot:", item2)
     elif battle == 'trio':
         item1 = 108
         item2 = 108
         print("Wings are in slot:", item1)
     elif battle == 'crawler':
-        item1 = memory.getItemSlot(30)
+        item1 = memory.main.getItemSlot(30)
         print("Lightning Marble in slot:", item1)
-        item2 = memory.getItemSlot(85)
+        item2 = memory.main.getItemSlot(85)
         print("Mdef Sphere in slot:", item2)
     elif battle == 'spherimorph1':
-        item1 = memory.getItemSlot(24)
+        item1 = memory.main.getItemSlot(24)
         print("Arctic Wind in slot:", item1)
-        item2 = memory.getItemSlot(90)
+        item2 = memory.main.getItemSlot(90)
         print("Mag Def Sphere in slot:", item2)
     elif battle == 'spherimorph2':
-        item1 = memory.getItemSlot(32)
+        item1 = memory.main.getItemSlot(32)
         print("Fish Scale in slot:", item1)
-        item2 = memory.getItemSlot(90)
+        item2 = memory.main.getItemSlot(90)
         print("Mag Sphere in slot:", item2)
     elif battle == 'spherimorph3':
-        item1 = memory.getItemSlot(30)
+        item1 = memory.main.getItemSlot(30)
         print("Lightning Marble in slot:", item1)
-        item2 = memory.getItemSlot(90)
+        item2 = memory.main.getItemSlot(90)
         print("Mag Sphere in slot:", item2)
     elif battle == 'spherimorph4':
-        item1 = memory.getItemSlot(27)
+        item1 = memory.main.getItemSlot(27)
         print("Bomb Core in slot:", item1)
-        item2 = memory.getItemSlot(90)
+        item2 = memory.main.getItemSlot(90)
         print("Mag Sphere in slot:", item2)
     elif battle == 'bfa':
-        item1 = memory.getItemSlot(35)
+        item1 = memory.main.getItemSlot(35)
         print("Grenade in slot:", item1)
-        item2 = memory.getItemSlot(85)
+        item2 = memory.main.getItemSlot(85)
         print("HP Sphere in slot:", item2)
     elif battle == 'shinryu':
-        item1 = memory.getItemSlot(109)
+        item1 = memory.main.getItemSlot(109)
         print("Gambler's Spirit in slot:", item1)
-        item2 = memory.getItemSlot(58)
+        item2 = memory.main.getItemSlot(58)
         print("Star Curtain in slot:", item2)
     elif battle == 'omnis':
         bothItems = omnisItems()
         print("Omnis items, many possible combinations.")
-        item1 = memory.getItemSlot(bothItems[0])
-        item2 = memory.getItemSlot(bothItems[1])
+        item1 = memory.main.getItemSlot(bothItems[0])
+        item2 = memory.main.getItemSlot(bothItems[1])
 
     if item1 > item2:
         item3 = item1
@@ -6002,31 +6002,31 @@ def rikkuFullOD(battle):
 
     # Now to enter commands
 
-    while not memory.otherBattleMenu():
+    while not memory.main.otherBattleMenu():
         xbox.tapLeft()
 
-    while not memory.interiorBattleMenu():
+    while not memory.main.interiorBattleMenu():
         xbox.tapB()
     rikkuODItems(item1)
-    while not memory.rikkuOverdriveItemSelectedNumber():
+    while not memory.main.rikkuOverdriveItemSelectedNumber():
         xbox.tapB()
     rikkuODItems(item2)
-    while memory.interiorBattleMenu():
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
     tapTargeting()
 
 
 def equipInBattle(equipType='weap', abilityNum=0, character=0, special='none'):
     equipType = equipType.lower()
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         xbox.tapRight()
     if equipType == 'weap':
-        equipHandles = memory.weaponArrayCharacter(character)
+        equipHandles = memory.main.weaponArrayCharacter(character)
     else:
-        while memory.battleCursor2() != 1:
+        while memory.main.battleCursor2() != 1:
             xbox.tapDown()
-        equipHandles = memory.armorArrayCharacter(character)
-    while memory.otherBattleMenu():
+        equipHandles = memory.main.armorArrayCharacter(character)
+    while memory.main.otherBattleMenu():
         xbox.tapB()
 
     print("@@@@@")
@@ -6052,23 +6052,23 @@ def equipInBattle(equipType='weap', abilityNum=0, character=0, special='none'):
         elif currentHandle.hasAbility(abilityNum):  # First Strike for example
             equipNum = i
         i += 1
-    while memory.battleCursor3() != equipNum:
-        print("'''Battle cursor 3:", memory.battleCursor3())
+    while memory.main.battleCursor3() != equipNum:
+        print("'''Battle cursor 3:", memory.main.battleCursor3())
         print("'''equipNum:", equipNum)
-        if memory.battleCursor3() < equipNum:
+        if memory.main.battleCursor3() < equipNum:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.interiorBattleMenu():
+    while memory.main.interiorBattleMenu():
         xbox.tapB()
 
     print("Desired equipment is in slot ", equipNum)
 
 
 def checkCharacterOk(charNum):
-    if charNum not in memory.getActiveBattleFormation():
+    if charNum not in memory.main.getActiveBattleFormation():
         return True
-    return not any(func(charNum) for func in [memory.petrifiedstate, memory.confusedState, memory.deadstate, memory.berserkstate])
+    return not any(func(charNum) for func in [memory.main.petrifiedstate, memory.main.confusedState, memory.main.deadstate, memory.main.berserkstate])
 
 
 def checkTidusOk():
@@ -6088,8 +6088,8 @@ def get_digit(number, n):
 
 
 def calculateSpareChangeMovement(gilAmount):
-    if gilAmount > memory.getGilvalue():
-        gilAmount = memory.getGilvalue()
+    if gilAmount > memory.main.getGilvalue():
+        gilAmount = memory.main.getGilvalue()
     gilAmount = min(gilAmount, 100000)
     position = {}
     gilCopy = gilAmount
@@ -6102,42 +6102,42 @@ def calculateSpareChangeMovement(gilAmount):
     for cur in range(6, -1, -1):
         if not position[cur]:
             continue
-        while memory.spareChangeCursor() != cur:
-            memory.sideToSideDirection(
-                memory.spareChangeCursor(), cur, 6)
+        while memory.main.spareChangeCursor() != cur:
+            memory.main.sideToSideDirection(
+                memory.main.spareChangeCursor(), cur, 6)
         target = position[cur]
-        while get_digit(memory.spareChangeAmount(), cur) != target:
+        while get_digit(memory.main.spareChangeAmount(), cur) != target:
             if target > 5:
                 xbox.tapDown()
             else:
                 xbox.tapUp()
-        if memory.spareChangeAmount() == gilCopy:
+        if memory.main.spareChangeAmount() == gilCopy:
             return
     return
 
 
 def chargeRikkuOD():
-    print("#####Battle Number:", memory.getEncounterID())
-    if memory.getOverdriveBattle(6) != 100 and memory.getEncounterID() in [360, 361, 376, 378, 381, 384, 386]:
-        if (not memory.tidusEscapedState() and not checkTidusOk()) or not checkRikkuOk():
+    print("#####Battle Number:", memory.main.getEncounterID())
+    if memory.main.getOverdriveBattle(6) != 100 and memory.main.getEncounterID() in [360, 361, 376, 378, 381, 384, 386]:
+        if (not memory.main.tidusEscapedState() and not checkTidusOk()) or not checkRikkuOk():
             print("Tidus or Rikku incapacitated, fleeing")
-            print("--", not memory.tidusEscapedState())
+            print("--", not memory.main.tidusEscapedState())
             print("--", not checkTidusOk())
             print("--", not checkRikkuOk())
             fleeAll()
         else:
-            while not memory.battleComplete():
-                if memory.turnReady():
-                    turnchar = memory.getBattleCharTurn()
+            while not memory.main.battleComplete():
+                if memory.main.turnReady():
+                    turnchar = memory.main.getBattleCharTurn()
                     if turnchar == 6:
                         attackByNum(6, direction='u')
-                    elif memory.getOverdriveBattle(6) == 100:
+                    elif memory.main.getOverdriveBattle(6) == 100:
                         fleeAll()
-                    elif 6 not in memory.getActiveBattleFormation():
+                    elif 6 not in memory.main.getActiveBattleFormation():
                         buddySwapRikku()
                     else:
                         escapeOne()
-        memory.clickToControl3()
+        memory.main.clickToControl3()
     else:
         fleeAll()
 
@@ -6145,69 +6145,69 @@ def chargeRikkuOD():
 def faintCheckWithEscapes():
     faints = 0
     for x in range(3):
-        if memory.getActiveBattleFormation()[x] == 255:
+        if memory.main.getActiveBattleFormation()[x] == 255:
             pass
-        elif memory.deadstate(memory.getActiveBattleFormation()[x]):
+        elif memory.main.deadstate(memory.main.getActiveBattleFormation()[x]):
             faints += 1
     return faints
 
 
 def checkGems():
-    gemSlot = memory.getItemSlot(34)
+    gemSlot = memory.main.getItemSlot(34)
     if gemSlot < 200:
-        gems = memory.getItemCountSlot(gemSlot)
+        gems = memory.main.getItemCountSlot(gemSlot)
     else:
         gems = 0
 
-    gemSlot = memory.getItemSlot(28)
+    gemSlot = memory.main.getItemSlot(28)
     if gemSlot < 200:
-        gems += memory.getItemCountSlot(gemSlot)
+        gems += memory.main.getItemCountSlot(gemSlot)
     print("Total gems:", gems)
     return gems
 
 
 def calmLandsManip():
-    print("++Battle number:", memory.getEncounterID())
-    rng10nextChanceLow = memory.nextChanceRNG10(12)
+    print("++Battle number:", memory.main.getEncounterID())
+    rng10nextChanceLow = memory.main.nextChanceRNG10(12)
     lowArray = [273, 275, 276, 281, 283, 284]
-    rng10nextChanceMid = memory.nextChanceRNG10(60)
+    rng10nextChanceMid = memory.main.nextChanceRNG10(60)
     midArray = [277, 279, 285, 287, 289, 290]
-    rng10nextChanceHigh = memory.nextChanceRNG10(128)
+    rng10nextChanceHigh = memory.main.nextChanceRNG10(128)
     highArray = [278, 286, 288]
     print("++Gems: ", checkGems())
     if checkGems() < 2:
         print("++Calm Lands battle, looking for gems.")
         calmLandsGems()
-    elif memory.rngSeed == 31 and memory.nextChanceRNG10() == 0 and memory.nextChanceRNG12() == 1:
+    elif memory.main.rngSeed == 31 and memory.main.nextChanceRNG10() == 0 and memory.main.nextChanceRNG12() == 1:
         print("Specific logic for RNG seed 31, just drop item off of defender X")
         fleeAll()
-    elif memory.nextChanceRNG12() != 0:
+    elif memory.main.nextChanceRNG12() != 0:
         print("Not ready for NE armor drop. Apply logic to try to drop something else.")
         # NE armor too far ahead. Need to drop armors.
-        if rng10nextChanceLow == 0 and memory.getEncounterID() in lowArray:
+        if rng10nextChanceLow == 0 and memory.main.getEncounterID() in lowArray:
             advanceRNG12()
-        elif rng10nextChanceMid == 0 and memory.getEncounterID() in midArray:
+        elif rng10nextChanceMid == 0 and memory.main.getEncounterID() in midArray:
             advanceRNG12()
-        elif rng10nextChanceHigh == 0 and memory.getEncounterID() in highArray:
+        elif rng10nextChanceHigh == 0 and memory.main.getEncounterID() in highArray:
             advanceRNG12()
         else:  # Cycle mid chance as needed.
             print("Can't drop off of this battle.")
             advanceRNG10(rng10nextChanceMid)
     else:
-        setupNext = memory.nextChanceRNG10Calm()
-        if memory.getCoords()[0] > 1300:
+        setupNext = memory.main.nextChanceRNG10Calm()
+        if memory.main.getCoords()[0] > 1300:
             print("--Near Gagazet, just get off RNG10 equipment drop.")
-            if memory.nextChanceRNG10() == 0:
-                advanceRNG10(memory.nextChanceRNG10())
+            if memory.main.nextChanceRNG10() == 0:
+                advanceRNG10(memory.main.nextChanceRNG10())
                 # Don't want to have Defender X drop an item
         elif setupNext != 0:
             if setupNext < 25:
                 print("++Still a ways. Try to set up for Defender X plus Wraith.")
                 advanceRNG10(setupNext)
                 # Try for perfect setup if it's not too far off.
-            elif memory.nextChanceRNG10() == 0:
+            elif memory.main.nextChanceRNG10() == 0:
                 print("++No perfect chance coming up. Going for regular chance.")
-                advanceRNG10(memory.nextChanceRNG10())
+                advanceRNG10(memory.main.nextChanceRNG10())
             else:
                 print("--Next perfect value is too far away. Moving on.")
                 fleeAll()
@@ -6217,9 +6217,9 @@ def calmLandsManip():
 
 
 def calmSteal():
-    if memory.getEncounterID() == 313:
+    if memory.main.getEncounterID() == 313:
         _steal('down')
-    elif memory.getEncounterID() == 314:
+    elif memory.main.getEncounterID() == 314:
         _steal('right')
     else:
         _steal()
@@ -6232,16 +6232,16 @@ def advanceRNG10(numAdvances: int):
     print("##    ", numAdvances, "      ##")
     print("##    ", screen.faintCheck(), "      ##")
     print("#################")
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             print("+++Registering advances:", numAdvances)
-            if memory.battleType() == 2:
+            if memory.main.battleType() == 2:
                 print("+++Registering ambush")
                 fleeAll()
-            elif memory.getEncounterID() == 321:
+            elif memory.main.getEncounterID() == 321:
                 print("+++Registering evil jar guy, fleeing.")
                 fleeAll()
-            elif memory.getEncounterID() == 287:
+            elif memory.main.getEncounterID() == 287:
                 print("+++Registering Anaconadeur - I am French!!! - fleeing")
                 fleeAll()
             elif numAdvances >= 6:
@@ -6262,7 +6262,7 @@ def advanceRNG10(numAdvances: int):
                             escapeSuccessCount += 1
                     else:
                         defend()
-                elif 3 in memory.getBattleFormation() and 3 not in memory.getActiveBattleFormation() and numAdvances % 3 != 0:
+                elif 3 in memory.main.getBattleFormation() and 3 not in memory.main.getActiveBattleFormation() and numAdvances % 3 != 0:
                     buddySwapKimahri()
                 elif escapeSuccessCount == 0:
                     if escapeOne():
@@ -6286,7 +6286,7 @@ def advanceRNG10(numAdvances: int):
                         numAdvances -= 1
                     else:
                         defend()
-                elif 3 in memory.getBattleFormation() and 3 not in memory.getActiveBattleFormation() and numAdvances % 3 != 0:
+                elif 3 in memory.main.getBattleFormation() and 3 not in memory.main.getActiveBattleFormation() and numAdvances % 3 != 0:
                     buddySwapKimahri()
                 elif escapeSuccessCount in [0, 1]:
                     if escapeOne():
@@ -6299,33 +6299,33 @@ def advanceRNG10(numAdvances: int):
                     print("+++Registering turn, steal character")
                     calmSteal()
                     numAdvances -= 1
-                elif 3 not in memory.getActiveBattleFormation():
+                elif 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
                 elif screen.turnTidus():
                     fleeAll()
-                elif 0 not in memory.getActiveBattleFormation():
+                elif 0 not in memory.main.getActiveBattleFormation():
                     buddySwapTidus()
                 else:
                     defend()  # should not occur.
             else:  # any other scenarios, ready to advance.
                 print("+++Registering no advances needed, forcing flee.")
                 fleeAll()
-    memory.clickToControl3()
+    memory.main.clickToControl3()
 
 
 def rng12Attack(tryImpulse=False):
     if screen.turnAeon():
-        if memory.getEncounterID() in [283, 309, 313]:
+        if memory.main.getEncounterID() in [283, 309, 313]:
             attackByNum(21, 'u')  # Second target
-        elif memory.getEncounterID() in [284]:
+        elif memory.main.getEncounterID() in [284]:
             attackByNum(22, 'u')  # Third target
-        elif memory.getEncounterID() in [275, 289]:
+        elif memory.main.getEncounterID() in [275, 289]:
             attackByNum(21, 'r')  # Second target, aim right (aeon only)
-        elif memory.getEncounterID() in [303]:
+        elif memory.main.getEncounterID() in [303]:
             attackByNum(21, 'l')  # Second target
-        elif memory.getEncounterID() in [304]:
+        elif memory.main.getEncounterID() in [304]:
             attackByNum(23, 'u')  # fourth target
-        elif memory.getEncounterID() in [314]:
+        elif memory.main.getEncounterID() in [314]:
             attackByNum(21, 'r')
         else:
             attack('none')
@@ -6338,25 +6338,25 @@ def advanceRNG12():
     aeonTurn = False
     useImpulse = False
     doubleDrop = False
-    while memory.battleActive():
-        if memory.getEncounterID() == 321:
+    while memory.main.battleActive():
+        if memory.main.getEncounterID() == 321:
             print("+++Registering evil jar guy")
             print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
             fleeAll()
-        elif memory.turnReady():
-            advances = memory.nextChanceRNG12()
+        elif memory.main.turnReady():
+            advances = memory.main.nextChanceRNG12()
             if screen.turnYuna():
                 if aeonTurn:
                     fleeAll()
                 else:
                     aeonSummon(4)
             elif screen.turnAeon():
-                numEnemies = len(memory.getEnemyCurrentHP())
-                print("+++ ", memory.getEnemyCurrentHP())
+                numEnemies = len(memory.main.getEnemyCurrentHP())
+                print("+++ ", memory.main.getEnemyCurrentHP())
                 print("+++ ", numEnemies)
                 checkAhead = numEnemies * 3
                 print("+++ ", checkAhead)
-                aheadArray = memory.nextChanceRNG10Full()
+                aheadArray = memory.main.nextChanceRNG10Full()
                 for h in range(checkAhead):
                     if h == 3:
                         pass
@@ -6366,7 +6366,7 @@ def advanceRNG12():
                     if aheadArray[i + checkAhead] and not attackCount:
                         useImpulse = True
                 if not attackCount:
-                    if memory.getEncounterID() in [314]:
+                    if memory.main.getEncounterID() in [314]:
                         impulse()
                         attackCount = True
                     elif advances >= 2:
@@ -6387,11 +6387,11 @@ def advanceRNG12():
             else:
                 if aeonTurn:
                     fleeAll()
-                elif 1 not in memory.getActiveBattleFormation():
+                elif 1 not in memory.main.getActiveBattleFormation():
                     buddySwapYuna()
                 else:
                     defend()
-    memory.clickToControl3()
+    memory.main.clickToControl3()
 
 
 def ghostKill():
@@ -6399,7 +6399,7 @@ def ghostKill():
     nextDrop, _ = rngTrack.itemToBeDropped()
     owner1 = nextDrop.equipOwner
     owner2 = nextDrop.equipOwnerAlt
-    silenceSlot = memory.getItemSlot(39)
+    silenceSlot = memory.main.getItemSlot(39)
     if owner2 in [0, 4, 6]:
         print("Aeon kill results in NEA on char:", owner2)
         ghostKillAeon()
@@ -6416,130 +6416,130 @@ def ghostKill():
         print("No way to get an optimal drop. Resorting to aeon: ", owner2)
         ghostKillAeon()
 
-    memory.clickToControl3()
+    memory.main.clickToControl3()
 
 
 def ghostKillTidus():
-    silenceSlot = memory.getItemSlot(39)
+    silenceSlot = memory.main.getItemSlot(39)
     selfHaste = False
     itemThrown = silenceSlot >= 200
     print("++Silence slot:", silenceSlot)
-    while memory.battleActive():
+    while memory.main.battleActive():
         # Try to get NEA on Tidus
-        if memory.turnReady():
-            advances = memory.nextChanceRNG10()
+        if memory.main.turnReady():
+            advances = memory.main.nextChanceRNG10()
             if advances >= 1:
-                if not itemThrown and 6 not in memory.getActiveBattleFormation():
+                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif screen.turnTidus():
-                    if memory.getEnemyCurrentHP()[0] > 3800 and 6 not in memory.getActiveBattleFormation():
+                    if memory.main.getEnemyCurrentHP()[0] > 3800 and 6 not in memory.main.getActiveBattleFormation():
                         buddySwapYuna()
-                    elif memory.getEnemyCurrentHP()[0] <= 2800 and memory.getOverdriveBattle(0) == 100:
+                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
                         defend()
                     else:
                         attack('none')
                 elif screen.turnRikku() or screen.turnKimahri():
                     if not itemThrown:
-                        useItem(memory.getUseItemsSlot(39))
+                        useItem(memory.main.getUseItemsSlot(39))
                         itemThrown = True
                     elif advances >= 1:
                         Steal()
                     else:
                         buddySwapYuna()
-                elif 6 not in memory.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                elif 3 not in memory.getActiveBattleFormation():
+                elif 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
                 else:
                     defend()
             else:
-                if not itemThrown and 6 not in memory.getActiveBattleFormation():
+                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif screen.turnRikku() and not itemThrown:
-                    useItem(memory.getUseItemsSlot(39))
+                    useItem(memory.main.getUseItemsSlot(39))
                     itemThrown = True
-                elif 0 not in memory.getActiveBattleFormation():
+                elif 0 not in memory.main.getActiveBattleFormation():
                     print("+++Get Tidus back in")
                     buddySwapTidus()
                 elif screen.turnTidus():
                     if not selfHaste:
                         tidusHaste('none')
                         selfHaste = True
-                    elif memory.getEnemyCurrentHP()[0] <= 2800 and memory.getOverdriveBattle(0) == 100:
+                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
                         tidusOD()
                     else:
                         attack('none')
                 elif screen.faintCheck():
                     revive()
-                elif 1 not in memory.getActiveBattleFormation():
+                elif 1 not in memory.main.getActiveBattleFormation():
                     print("+++Get Yuna in for extra smacks")
                     buddySwapYuna()
-                elif screen.turnYuna() and memory.getEnemyCurrentHP()[0] > 3000:
+                elif screen.turnYuna() and memory.main.getEnemyCurrentHP()[0] > 3000:
                     attack('none')
                 else:
                     defend()
 
 
 def ghostKillAny():
-    silenceSlot = memory.getItemSlot(39)
+    silenceSlot = memory.main.getItemSlot(39)
     selfHaste = False
     yunaHaste = False
     itemThrown = silenceSlot >= 200
     print("++Silence slot:", silenceSlot)
-    while memory.battleActive():
-        if memory.turnReady():
-            advances = memory.nextChanceRNG10()
+    while memory.main.battleActive():
+        if memory.main.turnReady():
+            advances = memory.main.nextChanceRNG10()
             if advances >= 1:
-                if not itemThrown and 6 not in memory.getActiveBattleFormation():
+                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif screen.turnTidus():
-                    if memory.getEnemyCurrentHP()[0] > 3800 and 6 not in memory.getActiveBattleFormation():
+                    if memory.main.getEnemyCurrentHP()[0] > 3800 and 6 not in memory.main.getActiveBattleFormation():
                         buddySwapYuna()
-                    elif memory.getEnemyCurrentHP()[0] <= 2800 and memory.getOverdriveBattle(0) == 100:
+                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
                         defend()
                     else:
                         attack('none')
                 elif screen.turnRikku() or screen.turnKimahri():
                     if not itemThrown:
-                        useItem(memory.getUseItemsSlot(39))
+                        useItem(memory.main.getUseItemsSlot(39))
                         itemThrown = True
                     elif advances >= 1:
                         Steal()
                     else:
                         buddySwapYuna()
-                elif 6 not in memory.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                elif 3 not in memory.getActiveBattleFormation():
+                elif 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
                 else:
                     defend()
             else:
-                if not itemThrown and 6 not in memory.getActiveBattleFormation():
+                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
                     print("+++Silence grenade, Rikku to throw item.")
                     buddySwapRikku()
                 elif screen.turnRikku() and not itemThrown:
-                    useItem(memory.getUseItemsSlot(39))
+                    useItem(memory.main.getUseItemsSlot(39))
                     itemThrown = True
-                elif 0 not in memory.getActiveBattleFormation():
+                elif 0 not in memory.main.getActiveBattleFormation():
                     print("+++Get Tidus back in")
                     buddySwapTidus()
                 elif screen.turnTidus():
                     if not selfHaste:
                         tidusHaste('none')
                         selfHaste = True
-                    elif 1 in memory.getActiveBattleFormation() and not yunaHaste:
+                    elif 1 in memory.main.getActiveBattleFormation() and not yunaHaste:
                         tidusHaste(direction='l', character=1)
                         yunaHaste = True
-                    elif memory.getEnemyCurrentHP()[0] <= 2800 and memory.getOverdriveBattle(0) == 100:
+                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
                         tidusOD()
                     else:
                         attack('none')
                 elif screen.faintCheck():
                     revive()
-                elif 1 not in memory.getActiveBattleFormation():
+                elif 1 not in memory.main.getActiveBattleFormation():
                     print("+++Get Yuna in for extra smacks")
                     buddySwapYuna()
                 elif screen.turnYuna():
@@ -6549,11 +6549,11 @@ def ghostKillAny():
 
 
 def ghostKillAeon():
-    while memory.battleActive():
-        if memory.turnReady():
+    while memory.main.battleActive():
+        if memory.main.turnReady():
             if screen.turnAeon():
                 attack('none')
-            elif 1 not in memory.getActiveBattleFormation():
+            elif 1 not in memory.main.getActiveBattleFormation():
                 buddySwapYuna()
             elif screen.turnYuna():
                 aeonSummon(4)

@@ -1,12 +1,12 @@
-import memory
-memory.start()
+import memory.main
+memory.main.start()
 
 print("-----------")
-print(memory.rng23())
-print(memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+print(memory.main.rng23())
+print(memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
 print("-----------")
-while memory.nextCrit(character=3, charLuck=18, enemyLuck=15) > 12:
-    memory.advanceRNG23()
-    print(memory.rng23())
-    print(memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
+while memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15) > 12:
+    memory.main.advanceRNG23()
+    print(memory.main.rng23())
+    print(memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
     print("-----------")

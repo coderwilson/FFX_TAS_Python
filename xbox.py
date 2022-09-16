@@ -1,6 +1,6 @@
 import vgamepad as vg
 import time
-import memory
+import memory.main
 import math
 import vars
 import json
@@ -116,35 +116,35 @@ processed_cutscenes = set()
 
 
 def skipScene(fast_mode: bool = False):
-    cutsceneID = memory.getCutsceneID()
+    cutsceneID = memory.main.getCutsceneID()
     print(cutsceneID)
     if not fast_mode or cutsceneID not in processed_cutscenes:
         print("Skip cutscene")
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
         FFXC.set_value('BtnStart', 1)  # Generate button to skip
-        memory.waitFrames(1)
+        memory.main.waitFrames(1)
         FFXC.set_value('BtnStart', 0)
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
         tapX()
         processed_cutscenes.add(cutsceneID)
     if not fast_mode:
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
 
 
 def skipSceneSpec():
     print("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value('BtnStart', 1)  # Generate button to skip
-    memory.waitFrames(30 * 0.07)
+    memory.main.waitFrames(30 * 0.07)
     FFXC.set_value('BtnStart', 0)
-    memory.waitFrames(30 * 0.105)
+    memory.main.waitFrames(30 * 0.105)
     FFXC.set_value('BtnX', 1)  # Perform the skip
-    memory.waitFrames(30 * 0.035)
+    memory.main.waitFrames(30 * 0.035)
     FFXC.set_value('BtnX', 0)
     # Before despawn, regenerate the button for use in a future scene.
     FFXC.set_value('BtnStart', 1)
-    memory.waitFrames(30 * 0.035)
+    memory.main.waitFrames(30 * 0.035)
     FFXC.set_value('BtnStart', 0)
-    memory.waitFrames(30 * 0.2)
+    memory.main.waitFrames(30 * 0.2)
 
 
 def skipStoredScene(skipTimer):
@@ -155,9 +155,9 @@ def skipStoredScene(skipTimer):
     print("Click Until:", clickTimer)
     while currentTime < clickTimer:
         FFXC.set_value('BtnX', 1)  # Perform the skip
-        memory.waitFrames(30 * 0.035)
+        memory.main.waitFrames(30 * 0.035)
         FFXC.set_value('BtnX', 0)
-        memory.waitFrames(30 * 0.035)
+        memory.main.waitFrames(30 * 0.035)
         currentTime = time.time()
     print("Mashing skip button - Complete")
 
@@ -165,31 +165,31 @@ def skipStoredScene(skipTimer):
 def Attack():
     print("Basic attack")
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 0.08)
+    memory.main.waitFrames(30 * 0.08)
     FFXC.set_value('BtnB', 0)
-    memory.waitFrames(30 * 0.08)
+    memory.main.waitFrames(30 * 0.08)
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(30 * 0.08)
+    memory.main.waitFrames(30 * 0.08)
     FFXC.set_value('BtnB', 0)
-    memory.waitFrames(30 * 0.5)
+    memory.main.waitFrames(30 * 0.5)
 
 
 def touchSaveSphere():
     FFXC.set_neutral()
     print("Touching the save sphere")
-    while memory.userControl():
+    while memory.main.userControl():
         tapB()
-        memory.waitFrames(3)
-    memory.waitFrames(15)
-    while not memory.userControl():
-        if memory.menuControl():
-            if not memory.saveMenuCursor():
+        memory.main.waitFrames(3)
+    memory.main.waitFrames(15)
+    while not memory.main.userControl():
+        if memory.main.menuControl():
+            if not memory.main.saveMenuCursor():
                 menuA()
-                memory.waitFrames(1)
+                memory.main.waitFrames(1)
             else:
                 tapB()
     FFXC.set_neutral()
-    memory.waitFrames(30 * 0.035)
+    memory.main.waitFrames(30 * 0.035)
 
 
 def SkipDialog(Keystrokes):
@@ -207,233 +207,233 @@ def SkipDialogSpecial(Keystrokes):
     for _ in range(num_repetitions):
         FFXC.set_value('BtnB', 1)
         FFXC.set_value('BtnA', 1)
-        memory.waitFrames(1)
+        memory.main.waitFrames(1)
         FFXC.set_value('BtnB', 0)
         FFXC.set_value('BtnA', 0)
-        memory.waitFrames(1)
+        memory.main.waitFrames(1)
     print("Mashing A and B - Complete")
 
 
 def menuUp():
     FFXC.set_value('Dpad', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(3)
+    memory.main.waitFrames(3)
 
 
 def menuDown():
     FFXC.set_value('Dpad', 2)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(3)
+    memory.main.waitFrames(3)
 
 
 def menuLeft():
     FFXC.set_value('Dpad', 4)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(3)
+    memory.main.waitFrames(3)
 
 
 def menuRight():
     FFXC.set_value('Dpad', 8)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(3)
+    memory.main.waitFrames(3)
 
 
 def tapUp():
     FFXC.set_value('Dpad', 1)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def tapDown():
     FFXC.set_value('Dpad', 2)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def tapLeft():
     FFXC.set_value('Dpad', 4)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def tapRight():
     FFXC.set_value('Dpad', 8)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def shoulderLeft():
     FFXC.set_value('BtnShoulderL', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnShoulderL', 0)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def shoulderRight():
     FFXC.set_value('BtnShoulderR', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnShoulderR', 0)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def menuA():
     FFXC.set_value('BtnA', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnA', 0)
-    memory.waitFrames(4)
+    memory.main.waitFrames(4)
 
 
 def menuB():
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnB', 0)
-    memory.waitFrames(4)
+    memory.main.waitFrames(4)
 
 
 def tapA():
     FFXC.set_value('BtnA', 1)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('BtnA', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def tapB():
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('BtnB', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(3)
+        memory.main.waitFrames(3)
 
 
 def menuX():
     FFXC.set_value('BtnX', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnX', 0)
-    memory.waitFrames(4)
+    memory.main.waitFrames(4)
 
 
 def menuY():
     FFXC.set_value('BtnY', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnY', 0)
-    memory.waitFrames(4)
+    memory.main.waitFrames(4)
 
 
 def tapX():
     FFXC.set_value('BtnX', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnX', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def tapY():
     FFXC.set_value('BtnY', 1)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('BtnY', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def menuBack():
     FFXC.set_value('BtnBack', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('BtnBack', 0)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
 
 
 def lBumper():
     FFXC.set_value('BtnShoulderL', 1)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('BtnShoulderL', 0)
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def TriggerL():
     FFXC.set_value('TriggerL', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('TriggerL', 0)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def TriggerR():
     FFXC.set_value('TriggerR', 1)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     FFXC.set_value('TriggerR', 0)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
     if gameVars.usePause():
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
 
 def tapStart():
     FFXC.set_value('BtnStart', 1)  # Generate button to skip
-    memory.waitFrames(1)
+    memory.main.waitFrames(1)
     FFXC.set_value('BtnStart', 0)
-    memory.waitFrames(2)
+    memory.main.waitFrames(2)
 
 
 def weapSwap(position):
     print("Weapon swap, weapon in position:", position)
-    while memory.mainBattleMenu():
+    while memory.main.mainBattleMenu():
         tapRight()
-    while memory.otherBattleMenu():
+    while memory.main.otherBattleMenu():
         tapB()
-    while memory.battleCursor3() != position:
+    while memory.main.battleCursor3() != position:
         tapDown()
-    while memory.interiorBattleMenu():
+    while memory.main.interiorBattleMenu():
         tapB()
 
 
 def armorSwap(position):
     print("Armor swap, armor in position:", position)
     menuRight()
-    memory.waitFrames(30 * 0.5)
+    memory.main.waitFrames(30 * 0.5)
     menuDown()
-    memory.waitFrames(30 * 0.5)
+    memory.main.waitFrames(30 * 0.5)
     menuB()
-    memory.waitFrames(30 * 0.7)
+    memory.main.waitFrames(30 * 0.7)
     armor = 0
     while armor < position:
         menuDown()
         armor += 1
     menuB()
     menuB()
-    memory.waitFrames(30 * 0.3)
+    memory.main.waitFrames(30 * 0.3)
 
 
 def clearSavePopup(clickToDiagNum=0):
     FFXC = controllerHandle()
     FFXC.set_neutral()
-    memory.clickToDiagProgress(clickToDiagNum)
+    memory.main.clickToDiagProgress(clickToDiagNum)
     complete = 0
     counter = 0
     while complete == 0:
@@ -441,16 +441,16 @@ def clearSavePopup(clickToDiagNum=0):
         if counter % 100 == 0:
             print("Waiting for Save dialog:", counter / 100)
 
-        if memory.diagProgressFlag() != clickToDiagNum and memory.diagSkipPossible():
+        if memory.main.diagProgressFlag() != clickToDiagNum and memory.main.diagSkipPossible():
             tapB()
 
-        elif memory.diagSkipPossible():
-            if memory.savePopupCursor() == 0:
+        elif memory.main.diagSkipPossible():
+            if memory.main.savePopupCursor() == 0:
                 menuUp()
             else:
                 menuB()
                 complete = 1
-    memory.waitFrames(5)
+    memory.main.waitFrames(5)
 
 
 def awaitSave(index=0):
@@ -463,41 +463,41 @@ def remove():
 
 def gridUp():
     FFXC.set_value('Dpad', 1)
-    memory.waitFrames(30 * 0.04)
+    memory.main.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(30 * 0.12)
+    memory.main.waitFrames(30 * 0.12)
 
 
 def gridDown():
     FFXC.set_value('Dpad', 2)
-    memory.waitFrames(30 * 0.04)
+    memory.main.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(30 * 0.12)
+    memory.main.waitFrames(30 * 0.12)
 
 
 def gridLeft():
     FFXC.set_value('Dpad', 4)
-    memory.waitFrames(30 * 0.04)
+    memory.main.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(30 * 0.12)
+    memory.main.waitFrames(30 * 0.12)
 
 
 def gridRight():
     FFXC.set_value('Dpad', 8)
-    memory.waitFrames(30 * 0.04)
+    memory.main.waitFrames(30 * 0.04)
     FFXC.set_value('Dpad', 0)
-    memory.waitFrames(30 * 0.12)
+    memory.main.waitFrames(30 * 0.12)
 
 
 def clickToBattle():
     print("Mashing A until first turn in battle")
     FFXC.set_neutral()
-    while not (memory.battleActive() and memory.turnReady()):
-        if memory.userControl():
+    while not (memory.main.battleActive() and memory.main.turnReady()):
+        if memory.main.userControl():
             break
-        elif not memory.battleActive():
+        elif not memory.main.battleActive():
             tapB()
-        elif memory.diagSkipPossible():
+        elif memory.main.diagSkipPossible():
             tapB()
 
 
@@ -588,40 +588,40 @@ characterMapping = {
 
 def navigateToCharacter(curCharacter):
     positionTarget = characterMapping[curCharacter]
-    while positionTarget != memory.getNamingIndex():
-        if positionTarget - memory.getNamingIndex() >= 15:
+    while positionTarget != memory.main.getNamingIndex():
+        if positionTarget - memory.main.getNamingIndex() >= 15:
             tapDown()
-        elif memory.getNamingIndex() - positionTarget >= 15:
+        elif memory.main.getNamingIndex() - positionTarget >= 15:
             tapUp()
-        elif memory.getNamingIndex() < positionTarget:
+        elif memory.main.getNamingIndex() < positionTarget:
             tapRight()
-        elif memory.getNamingIndex() > positionTarget:
+        elif memory.main.getNamingIndex() > positionTarget:
             tapLeft()
 
 
 def nameAeon(character=""):
     print("Waiting for aeon naming screen")
 
-    while not memory.nameAeonReady():
-        if memory.diagSkipPossible() or memory.menuOpen():
+    while not memory.main.nameAeonReady():
+        if memory.main.diagSkipPossible() or memory.main.menuOpen():
             tapB()
     if character:
         with open("character_names.json") as fp:
             customName = json.load(fp)[character]
         if customName:
             customName = customName[:8]
-            while memory.getNamingMenu():
+            while memory.main.getNamingMenu():
                 tapRight()
-            while memory.nameHasCharacters():
+            while memory.main.nameHasCharacters():
                 tapA()
             for curCharacter in customName:
                 navigateToCharacter(curCharacter)
                 tapB()
 
     print("Naming screen is up.")
-    while memory.equipSellRow() != 1:
+    while memory.main.equipSellRow() != 1:
         tapStart()
-    while memory.equipSellRow() != 0:
+    while memory.main.equipSellRow() != 0:
         tapUp()
-    while memory.nameConfirmOpen():
+    while memory.main.nameConfirmOpen():
         tapB()

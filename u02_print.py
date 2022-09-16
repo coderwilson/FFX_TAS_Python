@@ -1,10 +1,10 @@
-import memory
-memory.start()
+import memory.main
+memory.main.start()
 
 counter = 0
 print("-----------")
 print("-----------")
-powerArray = memory.rng02Array()
+powerArray = memory.main.rng02Array()
 for i in range(20):
     print(hex(powerArray[i] & 0x7fffffff))
 print("-----------")

@@ -1,5 +1,5 @@
 import xbox
-import memory
+import memory.main
 
 from math import copysign
 FFXC = xbox.controllerHandle()
@@ -7,8 +7,8 @@ FFXC = xbox.controllerHandle()
 
 def setMovement(target) -> bool:
 
-    player = memory.getCoords()
-    (forward, right) = memory.getMovementVectors()
+    player = memory.main.getCoords()
+    (forward, right) = memory.main.getMovementVectors()
 
     # Calculate forward and right directions relative to camera space
     pX = player[0]

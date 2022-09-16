@@ -1,9 +1,9 @@
 import time
 import xbox
-import area.dreamZan as dreamZan
-import battle
+import area.dreamZan
+import battle.main
 import screen
-import memory
+import memory.main
 import reset
 
 FFXC = xbox.FFXC
@@ -18,12 +18,12 @@ while attempts < 10:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-        dreamZan.NewGame('rescueYuna')
+        area.dreamZan.NewGame('rescueYuna')
         print("Game start screen")
         screen.clearMouse(0)
 
         # Initiate memory reading, after we know the game is open.
-        memory.start()
+        memory.main.start()
 
         import loadGame
         loadGame.loadOffset(37)
@@ -44,21 +44,21 @@ while attempts < 10:
         # Initiate memory reading, after we know the game is open.
         print("Start egg hunt only program")
         print("--------------------------No-control method")
-        memory.start()
+        memory.main.start()
         import logs
         logs.nextPlot()
         waitCount = 0
-        while memory.getMap() == 324:
-            if memory.battleActive():
+        while memory.main.getMap() == 324:
+            if memory.main.battleActive():
                 print("GTFO battle.")
-                battle.fleeAll()
-            elif memory.menuOpen():
+                battle.main.fleeAll()
+            elif memory.main.menuOpen():
                 xbox.menuB()
             else:
                 waitCount += 1
                 if waitCount % 10 == 0:
                     print(waitCount)
-                    cam = memory.getCamera()
+                    cam = memory.main.getCamera()
                     logs.writePlot(str(cam[0]) + "," + str(cam[4]))
                 else:
                     time.sleep(0.035)
@@ -68,6 +68,6 @@ while attempts < 10:
     print("Allowing time for review.")
     time.sleep(35)
     print("Resetting.")
-    memory.end()
+    memory.main.end()
 
     reset.resetToMainMenu()

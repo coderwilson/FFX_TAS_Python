@@ -1,8 +1,8 @@
 import xbox
 import screen
-import battle
+import battle.main
 import menu
-import memory
+import memory.main
 import targetPathing
 import vars
 import logs
@@ -12,9 +12,9 @@ FFXC = xbox.controllerHandle()
 
 
 def arrival(rikkuCharged):
-    memory.clickToControl()
-    memory.fullPartyFormat("mwoodsneedcharge")
-    memory.closeMenu()
+    memory.main.clickToControl()
+    memory.main.fullPartyFormat("mwoodsneedcharge")
+    memory.main.closeMenu()
 
     # Rikkus charge, Fish Scales, and Arctic Winds
     woodsVars = [False, False, False]
@@ -23,16 +23,16 @@ def arrival(rikkuCharged):
     lastGil = 0  # for first chest
     checkpoint = 0
     totalBattles = 0
-    while memory.getMap() != 221:  # All the way to O'aka
-        if memory.userControl():
+    while memory.main.getMap() != 221:  # All the way to O'aka
+        if memory.main.userControl():
             # Events
             if checkpoint == 14:  # First chest
-                if lastGil != memory.getGilvalue():
-                    if lastGil == memory.getGilvalue() - 2000:
+                if lastGil != memory.main.getGilvalue():
+                    if lastGil == memory.main.getGilvalue() - 2000:
                         checkpoint += 1
                         print("Chest obtained. Updating checkpoint:", checkpoint)
                     else:
-                        lastGil = memory.getGilvalue()
+                        lastGil = memory.main.getGilvalue()
                 else:
                     FFXC.set_movement(1, 1)
                     xbox.tapB()
@@ -45,9 +45,9 @@ def arrival(rikkuCharged):
                     checkpoint += 1
 
             # Map changes
-            elif checkpoint < 18 and memory.getMap() == 241:
+            elif checkpoint < 18 and memory.main.getMap() == 241:
                 checkpoint = 18
-            elif checkpoint < 40 and memory.getMap() == 242:
+            elif checkpoint < 40 and memory.main.getMap() == 242:
                 checkpoint = 40
 
             # General pathing
@@ -58,48 +58,48 @@ def arrival(rikkuCharged):
             FFXC.set_neutral()
             if screen.BattleScreen():
                 print("variable check 1:", woodsVars)
-                woodsVars = battle.mWoods(woodsVars)
+                woodsVars = battle.main.mWoods(woodsVars)
                 print("variable check 2:", woodsVars)
-                if memory.overdriveState()[6] == 100:
-                    memory.fullPartyFormat("mwoodsgotcharge")
+                if memory.main.overdriveState()[6] == 100:
+                    memory.main.fullPartyFormat("mwoodsgotcharge")
                 else:
-                    memory.fullPartyFormat("mwoodsneedcharge")
+                    memory.main.fullPartyFormat("mwoodsneedcharge")
                 totalBattles += 1
-            elif not memory.battleActive() and memory.diagSkipPossible():
+            elif not memory.main.battleActive() and memory.main.diagSkipPossible():
                 xbox.tapB()
 
     # logs.writeStats("Mac Woods battles:")
     # logs.writeStats(totalBattles)
     # Save sphere
     FFXC.set_movement(-1, 1)
-    memory.waitFrames(2)
-    memory.awaitControl()
-    memory.waitFrames(1)
-    memory.touchSaveSphere()
+    memory.main.waitFrames(2)
+    memory.main.awaitControl()
+    memory.main.waitFrames(1)
+    memory.main.touchSaveSphere()
     FFXC.set_neutral()
 
 
 def lakeRoad():
-    memory.awaitControl()
+    memory.main.awaitControl()
     while not targetPathing.setMovement([174, -96]):
         pass
     while not targetPathing.setMovement([138, -83]):
         pass
     while not targetPathing.setMovement([101, -82]):
         pass
-    while memory.userControl():
+    while memory.main.userControl():
         FFXC.set_movement(0, 1)
         xbox.tapB()
     FFXC.set_neutral()
     menu.mWoods()  # Selling and buying, item sorting, etc
-    memory.fullPartyFormat('spheri')
+    memory.main.fullPartyFormat('spheri')
     while not targetPathing.setMovement([101, -72]):
         pass
 
-    while not memory.battleActive():
-        if memory.userControl():
-            mapVal = memory.getMap()
-            tidusPos = memory.getCoords()
+    while not memory.main.battleActive():
+        if memory.main.userControl():
+            mapVal = memory.main.getMap()
+            tidusPos = memory.main.getCoords()
             if mapVal == 221:
                 if tidusPos[0] > 35:
                     targetPathing.setMovement([33, -35])
@@ -116,14 +116,14 @@ def lakeRoad():
                     targetPathing.setMovement([-1, 100])
         else:
             FFXC.set_neutral()
-            if memory.diagSkipPossible():
+            if memory.main.diagSkipPossible():
                 xbox.tapB()
 
     FFXC.set_neutral()  # Engage Spherimorph
 
-    battle.spherimorph()
+    battle.main.spherimorph()
     print("Battle is over.")
-    memory.clickToControl()  # Jecht's memories
+    memory.main.clickToControl()  # Jecht's memories
 
 
 def lakeRoad2():
@@ -149,68 +149,68 @@ def lakeRoad2():
 
     else:
         FFXC.set_movement(0, -1)
-        memory.waitFrames(3)
-        memory.awaitEvent()
+        memory.main.waitFrames(3)
+        memory.main.awaitEvent()
         FFXC.set_neutral()
 
-        memory.clickToControl()  # Auron's musings.
-        print("Affection (before):", memory.affectionArray())
-        memory.waitFrames(30 * 0.2)
-        auronAffection = memory.affectionArray()[2]
+        memory.main.clickToControl()  # Auron's musings.
+        print("Affection (before):", memory.main.affectionArray())
+        memory.main.waitFrames(30 * 0.2)
+        auronAffection = memory.main.affectionArray()[2]
         # Make sure we get Auron affection
-        while memory.affectionArray()[2] == auronAffection:
-            auronCoords = memory.getActorCoords(3)
+        while memory.main.affectionArray()[2] == auronAffection:
+            auronCoords = memory.main.getActorCoords(3)
             targetPathing.setMovement(auronCoords)
             xbox.tapB()
-        print("Affection (after):", memory.affectionArray())
-    while memory.userControl():
+        print("Affection (after):", memory.main.affectionArray())
+    while memory.main.userControl():
         FFXC.set_movement(-1, -1)
     FFXC.set_neutral()
 
-    memory.clickToControl()  # Last map in the woods
+    memory.main.clickToControl()  # Last map in the woods
     FFXC.set_movement(-1, 1)
-    memory.waitFrames(2)
-    memory.awaitEvent()
+    memory.main.waitFrames(2)
+    memory.main.awaitEvent()
     FFXC.set_neutral()
 
 
 def lake():
     print("Now to the frozen lake")
-    if memory.getHP()[3] < 1000:  # Otherwise we under-level Tidus off of Crawler
-        battle.healUp(fullMenuClose=False)
+    if memory.main.getHP()[3] < 1000:  # Otherwise we under-level Tidus off of Crawler
+        battle.main.healUp(fullMenuClose=False)
 
-    memory.fullPartyFormat('crawler', fullMenuClose=False)
+    memory.main.fullPartyFormat('crawler', fullMenuClose=False)
     menu.mLakeGrid()
-    memory.awaitControl()
+    memory.main.awaitControl()
 
     print("------------------------------Affection array:")
-    print(memory.affectionArray())
+    print(memory.main.affectionArray())
     print("------------------------------")
 
     checkpoint = 0
-    while memory.getEncounterID() != 194:
-        if memory.userControl():
+    while memory.main.getEncounterID() != 194:
+        if memory.main.userControl():
             if targetPathing.setMovement(targetPathing.mLake(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.battleActive() and memory.getEncounterID() != 194:
-                battle.fleeAll()
-            elif memory.diagSkipPossible() or memory.menuOpen():
+            if memory.main.battleActive() and memory.main.getEncounterID() != 194:
+                battle.main.fleeAll()
+            elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.menuB()
     xbox.clickToBattle()
-    battle.negator()
+    battle.main.negator()
 
 
 def afterCrawler():
     print("------------------------------Affection array:")
-    print(memory.affectionArray())
+    print(memory.main.affectionArray())
     print("------------------------------")
-    memory.clickToControl()
-    while memory.getMap() != 153:
-        pos = memory.getCoords()
-        if memory.userControl():
+    memory.main.clickToControl()
+    while memory.main.getMap() != 153:
+        pos = memory.main.getCoords()
+        if memory.main.userControl():
             if pos[1] > ((2.94 * pos[0]) + 505.21):
                 FFXC.set_movement(1, 1)
             elif pos[1] < ((2.59 * pos[0]) + 469.19):
@@ -220,7 +220,7 @@ def afterCrawler():
         else:
             FFXC.set_neutral()
 
-    memory.clickToControl()
+    memory.main.clickToControl()
 
     checkpoint = 0
     lastCP = 0
@@ -228,7 +228,7 @@ def afterCrawler():
         if lastCP != checkpoint:
             print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
-        pos = memory.getCoords()
+        pos = memory.main.getCoords()
         if checkpoint == 0:
             if pos[0] > 130:
                 checkpoint = 10
@@ -264,7 +264,7 @@ def afterCrawler():
                 else:
                     FFXC.set_movement(-1, 0)
         elif checkpoint == 40:
-            if memory.getMap() == 106:
+            if memory.main.getMap() == 106:
                 FFXC.set_neutral()
                 checkpoint = 100
             else:

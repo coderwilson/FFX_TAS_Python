@@ -1,11 +1,11 @@
 import time
 import xbox
 import screen
-import battle
+import battle.main as main
 import menu
 import nemesis.menu as menu
 import nemesis.arenaSelect as arenaSelect
-import memory
+import memory.main as main
 import nemesis.targetPath as targetPath
 import vars
 import reset
@@ -23,42 +23,42 @@ def saveGame(firstSave=False):
     print("Arena - Touch Save Sphere, and actually save")
     FFXC = xbox.controllerHandle()
     FFXC.set_neutral()
-    ssDetails = memory.getSaveSphereDetails()
+    ssDetails = main.getSaveSphereDetails()
     
-    if memory.userControl():
-        while memory.userControl():
+    if main.userControl():
+        while main.userControl():
             targetPath.setMovement([ssDetails[0], ssDetails[1]])
             xbox.tapB()
-            memory.waitFrames(1)
+            main.waitFrames(1)
     try:
         FFXC.set_neutral()
     except:
         FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
-    memory.waitFrames(30)
+    main.waitFrames(30)
     xbox.tapB()
-    memory.waitFrames(10)
+    main.waitFrames(10)
     
     print("Controller is now neutral. Attemption to open save menu.")
-    while not memory.saveMenuOpen():
+    while not main.saveMenuOpen():
         pass
     print("Save menu is open.")
-    memory.waitFrames(9)
+    main.waitFrames(9)
     if not firstSave:
         xbox.menuDown()
         xbox.menuB()
         xbox.menuLeft()
     xbox.menuB() #Select the save file
     xbox.menuB() #Confirm the save
-    memory.waitFrames(90)
+    main.waitFrames(90)
     xbox.menuA() #Back out
     xbox.menuA() #Back out
     xbox.menuA() #Back out
     xbox.menuA() #Back out
     
     print("Menu now closed. Back to the battles.")
-    memory.clearSaveMenuCursor()
-    memory.clearSaveMenuCursor2()
+    main.clearSaveMenuCursor()
+    main.clearSaveMenuCursor2()
     while not targetPath.setMovement([-6,-27]):
         pass
     while not targetPath.setMovement([2,-25]):
@@ -69,7 +69,7 @@ def touchSave(realSave=False):
         pass
     while not targetPath.setMovement([-2,-2]):
         pass
-    memory.touchSaveSphere()
+    main.touchSaveSphere()
     while not targetPath.setMovement([-6,-27]):
         pass
     while not targetPath.setMovement([2,-25]):
@@ -77,28 +77,28 @@ def touchSave(realSave=False):
     arenaNPC()
 
 def airShipDestination(destNum=0): #Default to Sin.
-    while memory.getMap() != 382:
-        if memory.userControl():
+    while main.getMap() != 382:
+        if main.userControl():
             targetPath.setMovement([-251,340])
         else:
             FFXC.set_neutral()
         xbox.menuB()
-    while memory.diagProgressFlag() != 4:
+    while main.diagProgressFlag() != 4:
         xbox.menuB()
     print("Destination select on screen now.")
-    while memory.mapCursor() != destNum:
+    while main.mapCursor() != destNum:
         if destNum < 8:
             xbox.tapDown()
         else:
             xbox.tapUp()
     xbox.tapB()
-    memory.waitFrames(2)
+    main.waitFrames(2)
     xbox.tapB()
-    memory.clickToControl3()
+    main.clickToControl3()
 
 def getSaveSphereDetails():
-    mapVal = memory.getMap()
-    storyVal = memory.getStoryProgress()
+    mapVal = main.getMap()
+    storyVal = main.getStoryProgress()
     print("Map:", mapVal, "Story:", storyVal)
     x = 0
     y = 0
@@ -177,11 +177,11 @@ def returnToAirship():
     
     ssDetails = getSaveSphereDetails()
     
-    if memory.userControl():
-        while memory.userControl():
+    if main.userControl():
+        while main.userControl():
             targetPath.setMovement([ssDetails[0], ssDetails[1]])
             xbox.tapB()
-            memory.waitFrames(1)
+            main.waitFrames(1)
     try:
         FFXC.set_neutral()
     except:
@@ -189,94 +189,94 @@ def returnToAirship():
         FFXC.set_neutral()
     FFXC.set_neutral()
     
-    while not memory.getMap() in [194, 374]:
-        if memory.getMap() == 307 and memory.getCoords()[1] < -5:
+    while not main.getMap() in [194, 374]:
+        if main.getMap() == 307 and main.getCoords()[1] < -5:
             while not targetPath.setMovement([-4,-21]):
                 pass
             while not targetPath.setMovement([-2,-2]):
                 pass
         else:
             FFXC.set_neutral()
-            if memory.saveMenuOpen():
+            if main.saveMenuOpen():
                 xbox.tapA()
-            elif memory.diagProgressFlag() == ssDetails[2]:
+            elif main.diagProgressFlag() == ssDetails[2]:
                 # print("Cursor test: ", memory.saveMenuCursor())
-                if memory.saveMenuCursor() != 1:
+                if main.saveMenuCursor() != 1:
                     xbox.menuDown()
                 else:
                     xbox.menuB()
-            elif memory.userControl():
+            elif main.userControl():
                 targetPath.setMovement([ssDetails[0], ssDetails[1]])
                 xbox.menuB()
-            elif memory.diagSkipPossible():
+            elif main.diagSkipPossible():
                 xbox.menuB()
-            memory.waitFrames(4)
+            main.waitFrames(4)
     print("Return to Airship Complete.")
-    memory.clearSaveMenuCursor()
-    memory.clearSaveMenuCursor2()
+    main.clearSaveMenuCursor()
+    main.clearSaveMenuCursor2()
 
 def aeonStart():
     screen.awaitTurn()
-    battle.buddySwapYuna()
-    battle.aeonSummon(4)
+    main.buddySwapYuna()
+    main.aeonSummon(4)
     while not screen.turnTidus():
-        if memory.turnReady():
+        if main.turnReady():
             if screen.turnAeon():
-                battle.attack('none')
+                main.attack('none')
             else:
-                battle.defend()
+                main.defend()
 
 def yojimboBattle():
     #Incomplete
     screen.awaitTurn()
-    if not 1 in memory.getActiveBattleFormation():
-        battle.buddySwapYuna()
+    if not 1 in main.getActiveBattleFormation():
+        main.buddySwapYuna()
     print("+Yuna Overdrive to summon Yojimbo")
-    battle.yunaOD()
+    main.yunaOD()
     print("+Pay the man")
-    battle.yojimboOD()
-    memory.waitFrames(90)
-    while memory.battleActive():
-        if memory.turnReady():
+    main.yojimboOD()
+    main.waitFrames(90)
+    while main.battleActive():
+        if main.turnReady():
             if screen.turnTidus():
-                battle.tidusFlee()
+                main.tidusFlee()
             elif screen.turnAeon():
                 xbox.SkipDialog(2)
             else:
-                battle.defend()
+                main.defend()
     
     #After battle stuff
-    while not memory.menuOpen():
+    while not main.menuOpen():
         xbox.tapB()
     print("Battle is complete.")
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(180)
+    main.waitFrames(180)
     FFXC.set_neutral()
-    memory.waitFrames(2)
+    main.waitFrames(2)
     
-    return memory.battleArenaResults()
+    return main.battleArenaResults()
 
 def autoLife():
-    while not (memory.turnReady() and screen.turnTidus()):
-        if memory.turnReady():
+    while not (main.turnReady() and screen.turnTidus()):
+        if main.turnReady():
             if screen.turnAeon():
-                battle.attack('none')
+                main.attack('none')
             elif not screen.turnTidus():
-                battle.defend()
-    while memory.battleMenuCursor() != 22:
+                main.defend()
+    while main.battleMenuCursor() != 22:
         if screen.turnTidus() == False:
             print("Attempting Haste, but it's not Tidus's turn")
             xbox.tapUp()
             xbox.tapUp()
             return
-        if memory.battleMenuCursor() == 1:
+        if main.battleMenuCursor() == 1:
             xbox.tapUp()
         else:
             xbox.tapDown()
-    while not memory.otherBattleMenu():
+    while not main.otherBattleMenu():
         xbox.tapB()
-    battle._navigate_to_position(1)
-    while memory.otherBattleMenu():
+    main._navigate_to_position(1)
+    while main.otherBattleMenu():
         xbox.tapB()
     xbox.tapB()
     xbox.tapB()
@@ -285,65 +285,65 @@ def autoLife():
     xbox.tapB()
 
 def basicQuickAttacks(megaPhoenix = False, odVersion:int=0, yunaAutos=False):
-    print("### Battle Start:", memory.getEncounterID())
+    print("### Battle Start:", main.getEncounterID())
     FFXC.set_neutral()
-    while memory.battleActive():
-        if memory.turnReady():
+    while main.battleActive():
+        if main.turnReady():
             if screen.turnTidus():
                 if megaPhoenix and screen.faintCheck() >= 2:
-                    battle.revive(itemNum = 7)
-                elif memory.getOverdriveBattle(0) == 100:
-                    battle.tidusOD(version=odVersion)
+                    main.revive(itemNum = 7)
+                elif main.getOverdriveBattle(0) == 100:
+                    main.tidusOD(version=odVersion)
                 else:
-                    battle.useSkill(1) #Quick hit
+                    main.useSkill(1) #Quick hit
             elif screen.turnAeon():
-                battle.attack('none')
+                main.attack('none')
             else:
-                battle.defend()
+                main.defend()
     
     #After battle stuff
-    while not memory.menuOpen():
+    while not main.menuOpen():
         xbox.tapB()
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(150)
+    main.waitFrames(150)
     FFXC.set_neutral()
-    memory.waitFrames(2)
-    return memory.battleArenaResults()
+    main.waitFrames(2)
+    return main.battleArenaResults()
 
 def basicAttack(megaPhoenix = False, odVersion:int=0,useOD=False, yunaAutos=False):
-    print("### Battle Start:", memory.getEncounterID())
+    print("### Battle Start:", main.getEncounterID())
     FFXC.set_neutral()
-    while memory.battleActive():
-        if memory.turnReady():
+    while main.battleActive():
+        if main.turnReady():
             if screen.turnTidus():
                 if megaPhoenix and screen.faintCheck() >= 2:
-                    battle.revive(itemNum = 7)
-                elif useOD and memory.getOverdriveBattle(0) == 100:
-                    battle.tidusOD(version=odVersion)
+                    main.revive(itemNum = 7)
+                elif useOD and main.getOverdriveBattle(0) == 100:
+                    main.tidusOD(version=odVersion)
                 else:
-                    battle.attack('none')
+                    main.attack('none')
             elif screen.turnYuna() and yunaAutos:
                 attack('none')
             elif screen.turnAeon():
                 attack('none')
             else:
-                battle.defend()
+                main.defend()
     
     #After battle stuff
-    while not memory.menuOpen():
+    while not main.menuOpen():
         xbox.tapB()
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(150)
+    main.waitFrames(150)
     FFXC.set_neutral()
-    memory.waitFrames(2)
-    return memory.battleArenaResults()
+    main.waitFrames(2)
+    return main.battleArenaResults()
 
 def arenaNPC():
-    if memory.getMap() != 307:
+    if main.getMap() != 307:
         return
-    while not (memory.diagProgressFlag() == 74 and memory.diagSkipPossible()):
-        if memory.userControl():
-            if memory.getCoords()[1] > -15:
+    while not (main.diagProgressFlag() == 74 and main.diagSkipPossible()):
+        if main.userControl():
+            if main.getCoords()[1] > -15:
                 print("Wrong position, moving away from sphere")
                 while not targetPath.setMovement([-6,-27]):
                     pass
@@ -355,29 +355,29 @@ def arenaNPC():
                 xbox.tapB()
         else:
             FFXC.set_neutral()
-            if memory.diagProgressFlag() == 59:
+            if main.diagProgressFlag() == 59:
                 xbox.menuA()
                 xbox.menuA()
                 xbox.menuA()
                 xbox.tapB()
-            elif memory.diagSkipPossible() and not memory.diagProgressFlag() == 74:
+            elif main.diagSkipPossible() and not main.diagProgressFlag() == 74:
                 xbox.tapB()
     print("Mark 1")
-    memory.waitFrames(30) #This buffer can be improved later.
+    main.waitFrames(30) #This buffer can be improved later.
     print("Mark 2")
 
 def restockDowns():
     print("Restocking phoenix downs")
-    if memory.getItemCountSlot(memory.getItemSlot(6)) >= 80:
+    if main.getItemCountSlot(main.getItemSlot(6)) >= 80:
         print("Restock not needed. Disregard.")
         return
     arenaNPC()
     arenaSelect.arenaMenuSelect(3)
-    memory.waitFrames(60)
+    main.waitFrames(60)
     xbox.tapB()
-    memory.waitFrames(6)
-    while memory.equipBuyRow() != 2:
-        if memory.equipBuyRow() < 2:
+    main.waitFrames(6)
+    while main.equipBuyRow() != 2:
+        if main.equipBuyRow() < 2:
             xbox.tapDown()
         else:
             xbox.tapUp()
@@ -392,17 +392,17 @@ def restockDowns():
     xbox.tapUp()
     xbox.tapUp()
     xbox.tapB()
-    memory.waitFrames(6)
+    main.waitFrames(6)
     xbox.menuA()
-    memory.waitFrames(6)
+    main.waitFrames(6)
     xbox.menuA()
 
 def battles1():
-    if not memory.equippedArmorHasAbility(charNum=1, abilityNum=0x800A):
+    if not main.equippedArmorHasAbility(charNum=1, abilityNum=0x800A):
         menu.equipArmor(character=1,ability=0x800A, fullMenuClose=False)
-    if not memory.equippedArmorHasAbility(charNum=4, abilityNum=0x800A):
+    if not main.equippedArmorHasAbility(charNum=4, abilityNum=0x800A):
         menu.equipArmor(character=4,ability=0x800A)
-    memory.closeMenu()
+    main.closeMenu()
     arenaNPC()
     arenaSelect.arenaMenuSelect(1)
     arenaSelect.startFight(areaIndex=13,monsterIndex=0)
@@ -425,7 +425,7 @@ def battles1():
         print("Battle not completed successfully.")
         restockDowns()
         arenaSelect.arenaMenuSelect(4)
-        memory.fullPartyFormat('kilikawoods1')
+        main.fullPartyFormat('kilikawoods1')
         touchSave()
         arenaNPC()
         arenaSelect.arenaMenuSelect(1)
@@ -436,7 +436,7 @@ def battles1():
     gameVars.arenaSuccess(arrayNum=0,index=1)
     restockDowns()
     arenaSelect.arenaMenuSelect(4)
-    memory.fullPartyFormat('kilikawoods1')
+    main.fullPartyFormat('kilikawoods1')
     menu.tidusSlayer(odPos=0)
     
     checkYojimboPossible()
@@ -633,12 +633,12 @@ def battles2():
     checkYojimboPossible()
 
 def jugFarmDone():
-    print("||| Slot: ", memory.getItemSlot(87))
-    if memory.getItemSlot(87) > 250:
+    print("||| Slot: ", main.getItemSlot(87))
+    if main.getItemSlot(87) > 250:
         return False
     else:
-        print("Count: ", memory.getItemCountSlot(memory.getItemSlot(87)))
-        if memory.getItemCountSlot(memory.getItemSlot(87)) < 6:
+        print("Count: ", main.getItemCountSlot(main.getItemSlot(87)))
+        if main.getItemCountSlot(main.getItemSlot(87)) < 6:
             return False
     return True
 
@@ -783,7 +783,7 @@ def battles4():
 
 def itemDump():
     arenaSelect.arenaMenuSelect(2)
-    memory.waitFrames(90)
+    main.waitFrames(90)
     xbox.menuRight()
     xbox.menuB()
     menu.sellAll(NEA=True)
@@ -794,33 +794,33 @@ def itemDump():
 
 def quickResetLogic():
     reset.resetToMainMenu()
-    memory.waitFrames(90)
-    while memory.getMap() != 23:
+    main.waitFrames(90)
+    while main.getMap() != 23:
         FFXC.set_value('BtnStart', 1)
-        memory.waitFrames(2)
+        main.waitFrames(2)
         FFXC.set_value('BtnStart', 0)
-        memory.waitFrames(2)
-    memory.waitFrames(60)
+        main.waitFrames(2)
+    main.waitFrames(60)
     xbox.menuB()
-    memory.waitFrames(60)
+    main.waitFrames(60)
     xbox.menuDown()
     xbox.menuB()
     xbox.menuB()
     FFXC.set_neutral()
     gameVars.printArenaStatus()
-    memory.waitFrames(30)
+    main.waitFrames(30)
 
 def checkYojimboPossible():
-    if memory.overdriveState2()[1] < 100:
+    if main.overdriveState2()[1] < 100:
         return False
-    if memory.overdriveState2()[1] == 100 and memory.getGilvalue() < 300000:
+    if main.overdriveState2()[1] == 100 and main.getGilvalue() < 300000:
         itemDump()
     
-    if memory.overdriveState2()[1] == 100 and memory.getGilvalue() >= 300000:
+    if main.overdriveState2()[1] == 100 and main.getGilvalue() >= 300000:
         #Save game in preparation for the Yojimbo attempt
-        memory.waitFrames(20)
+        main.waitFrames(20)
         arenaSelect.arenaMenuSelect(4)
-        memory.fullPartyFormat('kilikawoods1')
+        main.fullPartyFormat('kilikawoods1')
         if gameVars.yojimboGetIndex() == 1:
             saveGame(firstSave=True)
         else:
@@ -837,34 +837,34 @@ def shinryuBattle():
     rikkuFirstTurn=False
     rikkuDriveComplete=False
     screen.awaitTurn()
-    while memory.battleActive():
-        if memory.turnReady():
+    while main.battleActive():
+        if main.turnReady():
             if screen.turnRikku():
                 if rikkuFirstTurn == False:
-                    battle.defend()
+                    main.defend()
                 elif rikkuDriveComplete:
-                    battle._useHealingItem(itemID=9)
+                    main._useHealingItem(itemID=9)
                 else:
-                    battle.rikkuFullOD('shinryu')
+                    main.rikkuFullOD('shinryu')
                     rikkuDriveComplete=True
             elif screen.turnTidus():
-                if memory.getOverdriveBattle(0) == 100:
-                    battle.tidusOD(version=1)
-                elif rikkuDriveComplete and not memory.autoLifeState():
+                if main.getOverdriveBattle(0) == 100:
+                    main.tidusOD(version=1)
+                elif rikkuDriveComplete and not main.autoLifeState():
                     autoLife()
                 else:
-                    battle.attack('none')
+                    main.attack('none')
             else:
-                battle.defend()
+                main.defend()
     
     #After battle stuff
-    while not memory.menuOpen():
+    while not main.menuOpen():
         xbox.tapB()
     FFXC.set_value('BtnB', 1)
-    memory.waitFrames(150)
+    main.waitFrames(150)
     FFXC.set_neutral()
-    memory.waitFrames(2)
-    return memory.battleArenaResults()
+    main.waitFrames(2)
+    return main.battleArenaResults()
 
 def battles5(completionVersion:int):
     print("Yojimbo battle number: ", completionVersion)
@@ -948,8 +948,8 @@ def battles5(completionVersion:int):
     elif completionVersion == 99: #Nemesis
         arenaSelect.startFight(areaIndex=15,monsterIndex=7)
         if yojimboBattle():
-            memory.clickToDiagProgress(2)
-            memory.clickToControl3()
+            main.clickToDiagProgress(2)
+            main.clickToControl3()
             return True
         else:
             return False
@@ -970,12 +970,12 @@ def rechargeYuna():
     arenaSelect.arenaMenuSelect(1)
     arenaSelect.startFight(areaIndex=13,monsterIndex=9)
     screen.awaitTurn()
-    while memory.battleActive():
-        if memory.turnReady():
+    while main.battleActive():
+        if main.turnReady():
             if screen.turnYuna():
-                battle.attack('none')
+                main.attack('none')
             else:
-                battle.escapeOne()
+                main.escapeOne()
 
 def nemesisBattle():
     if gameVars.yojimboGetIndex() < 12:
@@ -983,22 +983,22 @@ def nemesisBattle():
         touchSave()
         while gameVars.yojimboGetIndex() < 12:
             #If Yuna is charged, do next battle. Otherwise charge.
-            if memory.overdriveState2()[1] == 100:
+            if main.overdriveState2()[1] == 100:
                 battles5(gameVars.yojimboGetIndex())
             else:
                 rechargeYuna()
             arenaSelect.arenaMenuSelect(4)
             touchSave()
                 
-    if memory.overdriveState2()[1] != 100:
+    if main.overdriveState2()[1] != 100:
         rechargeYuna()
-    if memory.getGilvalue() < 300000:
+    if main.getGilvalue() < 300000:
         arenaSelect.arenaMenuSelect(4)
         menu.autoSortEquipment()
         # menu.autoSortItems()
         arenaNPC()
         arenaSelect.arenaMenuSelect(2)
-        memory.waitFrames(90)
+        main.waitFrames(90)
         xbox.menuRight()
         xbox.menuB()
         menu.sellAll()
@@ -1010,7 +1010,7 @@ def nemesisBattle():
         xbox.menuA()
         xbox.menuA()
     arenaSelect.arenaMenuSelect(4)
-    memory.fullPartyFormat('kilikawoods1')
+    main.fullPartyFormat('kilikawoods1')
     saveGame(firstSave=False)
     while not battles5(completionVersion=99):
         quickResetLogic()
@@ -1026,8 +1026,8 @@ def returnToSin():
     
     menu.equipWeapon(character=0, ability=0x8001, fullMenuClose=True)
     airShipDestination(destNum=0)
-    memory.awaitControl()
+    main.awaitControl()
     FFXC.set_movement(0,-1)
-    memory.waitFrames(2)
-    memory.awaitEvent()
+    main.waitFrames(2)
+    main.awaitEvent()
     FFXC.set_neutral()

@@ -1,16 +1,16 @@
 import blitz
-import area.luca as luca
+import area.luca
 import time
-import memory
+import memory.main
 import xbox
-import area.dreamZan as dreamZan
+import area.dreamZan
 import screen
 import reset
 import loadGame
 FFXC = xbox.controllerHandle()
 
 
-memory.start()
+memory.main.start()
 
 attempts = 0
 success = 0
@@ -37,10 +37,10 @@ rngMod19Array = [0] * 200
 rngMod20Array = [0] * 200
 
 while attempts < 20:
-    dreamZan.NewGame("BlitzballTesting")
+    area.dreamZan.NewGame("BlitzballTesting")
     loadGame.loadSaveNum(37)
-    memory.resetBattleEnd()
-    rngRootArray[attempts] = memory.rng02()
+    memory.main.resetBattleEnd()
+    rngRootArray[attempts] = memory.main.rng02()
     offset = 1
     blitzoffWin = False
 
@@ -48,10 +48,10 @@ while attempts < 20:
 
     # ---------This is the actual movement/code/logic/etc---------------
 
-    rolledArray = memory.rng02Array()
+    rolledArray = memory.main.rng02Array()
 
-    luca.blitzStart()
-    while not memory.blitzClock() in [1, 2]:
+    area.luca.blitzStart()
+    while not memory.main.blitzClock() in [1, 2]:
         FFXC.set_neutral()
     while not (blitz.selectFormation() or blitz.selectMovement()):
         xbox.tapY()
@@ -177,7 +177,7 @@ while attempts < 20:
     if attempts < 20:
         print("Resetting.")
 
-        memory.resetBlitzMenuNum()
+        memory.main.resetBlitzMenuNum()
         reset.resetToMainMenu()
     else:
         print("Final Results:")
@@ -192,7 +192,7 @@ while attempts < 20:
 
 time.sleep(5)
 
-memory.end()
+memory.main.end()
 
 time.sleep(5)
 print("--------------------------")

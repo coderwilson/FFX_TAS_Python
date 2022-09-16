@@ -1,10 +1,10 @@
 import time
 import xbox
 import screen
-import battle
+import battle.main as main
 import menu
 import nemesis.menu as menu
-import memory
+import memory.main as main
 import nemesis.targetPath as targetPath
 import vars
 gameVars = vars.varsHandle()
@@ -17,24 +17,24 @@ def areaArray():
 
 def areaIndexCheck(indexNum:int = 15):
     #Not working properly
-    print(memory.arenaCursor())
-    if arenaArray[indexNum] == memory.arenaCursor():
+    print(main.arenaCursor())
+    if arenaArray[indexNum] == main.arenaCursor():
         return True
     return False
 
 def arenaCursor():
     #Not working properly
     for x in range(16):
-        print(memory.arenaCursor())
-        if memory.arenaCursor() == areaArray()[x]:
+        print(main.arenaCursor())
+        if main.arenaCursor() == areaArray()[x]:
             return x
     return 255
 
 def arenaMenuSelect(choice:int=2):
     print("Selecting menu option: ", choice)
     if gameVars.usePause():
-        memory.waitFrames(2)
-    while not memory.blitzCursor() == choice:
+        main.waitFrames(2)
+    while not main.blitzCursor() == choice:
         if choice == 4:
             xbox.menuA()
         elif choice == 3:
@@ -42,12 +42,12 @@ def arenaMenuSelect(choice:int=2):
         else:
             xbox.menuDown()
     xbox.tapB()
-    memory.waitFrames(15)
+    main.waitFrames(15)
 
 def startFight(areaIndex:int,monsterIndex:int=0):
     print("Starting fight: ", areaIndex, " | ", monsterIndex)
     arenaCursor = 0
-    memory.waitFrames(90)
+    main.waitFrames(90)
     while arenaCursor != areaIndex:
         #print(arenaCursor())
         if arenaCursor % 2 == 0 and areaIndex % 2 == 1:
@@ -63,7 +63,7 @@ def startFight(areaIndex:int,monsterIndex:int=0):
             xbox.tapUp()
             arenaCursor -= 2
     xbox.menuB()
-    memory.waitFrames(6)
+    main.waitFrames(6)
     if monsterIndex >= 7:
         xbox.tapRight()
         monsterIndex -= 7
@@ -71,7 +71,7 @@ def startFight(areaIndex:int,monsterIndex:int=0):
         xbox.tapDown()
         monsterIndex -= 1
     xbox.tapB()
-    memory.waitFrames(6)
+    main.waitFrames(6)
     xbox.tapB()
-    while not memory.battleActive():
+    while not main.battleActive():
         pass

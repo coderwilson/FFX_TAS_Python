@@ -1,8 +1,8 @@
-import memory
-memory.start()
+import memory.main
+memory.main.start()
 
 print("-----------")
 print("-----------")
-memory.advanceRNG10()
+memory.main.advanceRNG10()
 print("-----------")
 print("-----------")

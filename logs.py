@@ -1,7 +1,7 @@
 import datetime
-import memory
+import memory.main
 try:
-    from memory import baseValue
+    from memory.main import baseValue
 except Exception:
     baseValue = 0x0
 game = "FFX_"
@@ -140,30 +140,30 @@ class memChangeMonitor:
 
     def setLastValue(self):
         if self.isPointer:
-            ptrRef = memory.readBytes(key, 4)
+            ptrRef = memory.main.readBytes(key, 4)
 
             if self.varType == 'byte':
-                self.lastValue = memory.readBytes(
+                self.lastValue = memory.main.readBytes(
                     ptrRef + self.ptrOffset, 1)
             elif self.varType == '2byte':
-                self.lastValue = memory.readBytes(
+                self.lastValue = memory.main.readBytes(
                     ptrRef + self.ptrOffset, 2)
             elif self.varType == '4byte':
-                self.lastValue = memory.readBytes(
+                self.lastValue = memory.main.readBytes(
                     ptrRef + self.ptrOffset, 4)
             elif self.varType == 'float':
-                self.lastValue = memory.float_from_integer(
-                    memory.readBytes(ptrRef + self.ptrOffset, 4))
+                self.lastValue = memory.main.float_from_integer(
+                    memory.main.readBytes(ptrRef + self.ptrOffset, 4))
         else:
             if self.varType == 'byte':
-                self.lastValue = memory.readBytes(key, 1)
+                self.lastValue = memory.main.readBytes(key, 1)
             elif self.varType == '2byte':
-                self.lastValue = memory.readBytes(key, 2)
+                self.lastValue = memory.main.readBytes(key, 2)
             elif self.varType == '4byte':
-                self.lastValue = memory.readBytes(key, 4)
+                self.lastValue = memory.main.readBytes(key, 4)
             elif self.varType == 'float':
-                self.lastValue = memory.float_from_integer(
-                    memory.readBytes(key, 4))
+                self.lastValue = memory.main.float_from_integer(
+                    memory.main.readBytes(key, 4))
 
     def reportIfChange(self):
         if self.checkChange():
@@ -180,9 +180,9 @@ class memChangeMonitor:
             writeMemChange("Updated value: " + self.getNewValue())
             writeMemChange("Time of change: " + timeStamp())
             writeMemChange("?? Game state ??")
-            writeMemChange("Story progress: " + str(memory.getStoryProgress()))
-            writeMemChange("Current map: " + str(memory.getMap()))
-            writeMemChange("Battle Active: " + str(memory.battleActive()))
+            writeMemChange("Story progress: " + str(memory.main.getStoryProgress()))
+            writeMemChange("Current map: " + str(memory.main.getMap()))
+            writeMemChange("Battle Active: " + str(memory.main.battleActive()))
 
             writeMemChange("----------------------------")
             if self.reportOnChild:
@@ -200,9 +200,9 @@ class memChangeMonitor:
         writeMemChange("Updated value: " + self.getNewValue())
         writeMemChange("Time of change: " + timeStamp())
         writeMemChange("?? Game state ??")
-        writeMemChange("Story progress: " + str(memory.getStoryProgress()))
-        writeMemChange("Current map: " + str(memory.getMap()))
-        writeMemChange("Battle Active: " + str(memory.battleActive()))
+        writeMemChange("Story progress: " + str(memory.main.getStoryProgress()))
+        writeMemChange("Current map: " + str(memory.main.getMap()))
+        writeMemChange("Battle Active: " + str(memory.main.battleActive()))
         writeMemChange("----------------------------")
         self.setLastValue()
 
@@ -217,41 +217,41 @@ class memChangeMonitor:
         writeMemChange("Updated value: " + self.getNewValue())
         writeMemChange("Time of change: " + timeStamp())
         writeMemChange("?? Game state ??")
-        writeMemChange("Story progress: " + str(memory.getStoryProgress()))
-        writeMemChange("Current map: " + str(memory.getMap()))
-        writeMemChange("Battle Active: " + str(memory.battleActive()))
+        writeMemChange("Story progress: " + str(memory.main.getStoryProgress()))
+        writeMemChange("Current map: " + str(memory.main.getMap()))
+        writeMemChange("Battle Active: " + str(memory.main.battleActive()))
         writeMemChange("----------------------------")
         self.setLastValue()
 
     def checkChange(self):
         if self.isPointer:
-            ptrRef = memory.readBytes(key, 4)
+            ptrRef = memory.main.readBytes(key, 4)
 
             if self.varType == 'byte':
-                if self.lastValue != memory.readBytes(ptrRef + self.ptrOffset, 1):
+                if self.lastValue != memory.main.readBytes(ptrRef + self.ptrOffset, 1):
                     return True
             elif self.varType == '2byte':
-                if self.lastValue != memory.readBytes(ptrRef + self.ptrOffset, 2):
+                if self.lastValue != memory.main.readBytes(ptrRef + self.ptrOffset, 2):
                     return True
             elif self.varType == '4byte':
-                if self.lastValue != memory.readBytes(ptrRef + self.ptrOffset, 4):
+                if self.lastValue != memory.main.readBytes(ptrRef + self.ptrOffset, 4):
                     return True
             elif self.varType == 'float':
-                if self.lastValue != memory.float_from_integer(memory.readBytes(ptrRef + self.ptrOffset, 4)):
+                if self.lastValue != memory.main.float_from_integer(memory.main.readBytes(ptrRef + self.ptrOffset, 4)):
                     return True
             return False
         else:
             if self.varType == 'byte':
-                if self.lastValue != memory.readBytes(key, 1):
+                if self.lastValue != memory.main.readBytes(key, 1):
                     return True
             elif self.varType == '2byte':
-                if self.lastValue != memory.readBytes(key, 2):
+                if self.lastValue != memory.main.readBytes(key, 2):
                     return True
             elif self.varType == '4byte':
-                if self.lastValue != memory.readBytes(key, 4):
+                if self.lastValue != memory.main.readBytes(key, 4):
                     return True
             elif self.varType == 'float':
-                if self.lastValue != memory.float_from_integer(memory.readBytes(key, 4)):
+                if self.lastValue != memory.main.float_from_integer(memory.main.readBytes(key, 4)):
                     return True
             return False
 

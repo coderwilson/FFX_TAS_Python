@@ -1,6 +1,6 @@
 import xbox
 import menuGrid
-import memory
+import memory.main
 import vars
 gameVars = vars.varsHandle()
 
@@ -25,40 +25,40 @@ def gridRight():
 
 def awaitMove():
     print("Sphere Grid: Waiting for Move command to be highlighted")
-    while not memory.sGridActive():
+    while not memory.main.sGridActive():
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
-        memory.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
     complete = False
     while not complete:
-        menuVal = memory.sGridMenu()
+        menuVal = memory.main.sGridMenu()
         if menuVal == 11 or menuVal == 255:
             xbox.menuB()
         elif menuVal == 7:
-            cursorLoc = memory.cursorLocation()
+            cursorLoc = memory.main.cursorLocation()
             if cursorLoc[0] == 51 or cursorLoc[1] == 243:
                 xbox.menuUp()
             xbox.menuB()
             complete = True
-            memory.waitFrames(30 * 0.25)
+            memory.main.waitFrames(30 * 0.25)
     print("Move command highlighted. Good to go.")
 
 
 def awaitUse():
     print("Sphere Grid: Waiting for Use command to be highlighted")
-    while not memory.sGridActive():
+    while not memory.main.sGridActive():
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
-        memory.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
     complete = False
     while not complete:
-        menuVal = memory.sGridMenu()
+        menuVal = memory.main.sGridMenu()
         print("Menu value:", menuVal)
         if menuVal == 7:
-            cursorLoc = memory.cursorLocation()
+            cursorLoc = memory.main.cursorLocation()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:
                 xbox.menuDown()
             xbox.menuB()
             complete = True
-            memory.waitFrames(30 * 0.25)
+            memory.main.waitFrames(30 * 0.25)
         else:
             xbox.menuB()
     print("Use command highlighted. Good to go.")
@@ -66,8 +66,8 @@ def awaitUse():
 
 def awaitQuitSG():
     print("Sphere Grid: attempting to quit")
-    while memory.sGridActive():
-        menuVal = memory.sGridMenu()
+    while memory.main.sGridActive():
+        menuVal = memory.main.sGridMenu()
         if menuVal == 255:
             xbox.menuA()
         elif menuVal == 11:
@@ -78,18 +78,18 @@ def awaitQuitSG():
 
 
 def autoSortItems(manual='n'):
-    memory.openMenu()
+    memory.main.openMenu()
     xbox.menuDown()
     xbox.menuB()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuA()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuRight()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuB()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuRight()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuB()
     xbox.menuB()
     xbox.menuB()
@@ -97,23 +97,23 @@ def autoSortItems(manual='n'):
         xbox.menuLeft()
         xbox.menuB()
     elif manual == 'n':
-        memory.closeMenu()
+        memory.main.closeMenu()
     else:
-        memory.closeMenu()
+        memory.main.closeMenu()
 
 
 def autoSortEquipment(manual='n'):
-    memory.openMenu()
+    memory.main.openMenu()
     xbox.menuDown()
     xbox.menuB()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuA()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuRight()
     xbox.menuRight()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuB()
-    memory.waitFrames(12)
+    memory.main.waitFrames(12)
     xbox.menuRight()
     xbox.menuB()
     xbox.menuB()
@@ -122,43 +122,43 @@ def autoSortEquipment(manual='n'):
         xbox.menuLeft()
         xbox.menuB()
     elif manual == 'n':
-        memory.closeMenu()
+        memory.main.closeMenu()
     else:
-        memory.closeMenu()
+        memory.main.closeMenu()
 
 
 def shortAeons():
-    memory.printMemoryLog()
-    memory.openMenu()
+    memory.main.printMemoryLog()
+    memory.main.openMenu()
     cursorTarget = 4
     print("Aiming at", cursorTarget)
-    while memory.getMenuCursorPos() != cursorTarget:
-        print(memory.getMenuCursorPos())
+    while memory.main.getMenuCursorPos() != cursorTarget:
+        print(memory.main.getMenuCursorPos())
         xbox.tapUp()
-    while memory.menuNumber() == 5:
+    while memory.main.menuNumber() == 5:
         xbox.tapB()
-    while memory.configCursor() != 5:
+    while memory.main.configCursor() != 5:
         xbox.tapUp()
-    while memory.configAeonCursorColumn() != 1:
+    while memory.main.configAeonCursorColumn() != 1:
         xbox.tapRight()
-    while memory.configCursor() != 3:
+    while memory.main.configCursor() != 3:
         xbox.tapUp()
-    while memory.configCursorColumn() != 1:
+    while memory.main.configCursorColumn() != 1:
         xbox.tapRight()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def Liki():
     print("Menu - SS Liki")
     openGrid(character=0)
-    memory.waitFrames(10)
+    memory.main.waitFrames(10)
 
     # Move to the Def node just to the left
     print("Sphere grid on Tidus, learn Cheer and Str +1")
     menuGrid.moveFirst()
     gridUp()
     gridUp()
-    if memory.getTidusSlvl() >= 3:
+    if memory.main.getTidusSlvl() >= 3:
         gridLeft()
         menuGrid.moveAndUse()
         menuGrid.selSphere('power', 'left')
@@ -175,7 +175,7 @@ def woodsMenuing():
     xbox.menuB()
     xbox.menuB()  # Sphere grid on Tidus
     menuGrid.moveFirst()
-    startNode = memory.sGridNodeSelected()[0]
+    startNode = memory.main.sGridNodeSelected()[0]
     if startNode == 242:
         agiNeed = 2
     else:
@@ -185,7 +185,7 @@ def woodsMenuing():
     if agiNeed == 3:
         menuGrid.gridLeft()
     fullMenu = False
-    if memory.getTidusSlvl() >= agiNeed:
+    if memory.main.getTidusSlvl() >= agiNeed:
         fullMenu = True
         menuGrid.gridLeft()
 
@@ -198,7 +198,7 @@ def woodsMenuing():
     menuGrid.useAndQuit()
     # Reorder the party
 
-    memory.fullPartyFormat('kilikawoods1', fullMenuClose=False)
+    memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
     equipScout(fullMenuClose=True)
 
 
@@ -210,7 +210,7 @@ def Geneaux():
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def LucaWorkers():
@@ -225,8 +225,8 @@ def LucaWorkers():
     gridRight()
 
     menuGrid.moveAndUse()
-    print("+++ sGridNodes:", memory.sGridNodeSelected())
-    if memory.sGridNodeSelected()[0] == 2:
+    print("+++ sGridNodes:", memory.main.sGridNodeSelected())
+    if memory.main.sGridNodeSelected()[0] == 2:
         print("No early haste")
         earlyHaste = 0
     else:
@@ -240,7 +240,7 @@ def LucaWorkers():
         menuGrid.selSphere('ability', 'none')  # Haste
 
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
     return earlyHaste
 
 
@@ -264,7 +264,7 @@ def mrrGrid1():
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     print("Determining state of Wakka late menu")
-    if memory.getSLVLWakka() < 3:
+    if memory.main.getSLVLWakka() < 3:
         wakkaLateMenu = True
         print("Deferring Wakkas remaining grid for later.")
     else:
@@ -280,13 +280,13 @@ def mrrGrid1():
 
     menuGrid.useAndQuit()
 
-    memory.closeMenu()
+    memory.main.closeMenu()
 
     gameVars.wakkaLateMenuSet(wakkaLateMenu)
 
 
 def mrrGrid2():
-    if memory.getSLVLWakka() >= 3:
+    if memory.main.getSLVLWakka() >= 3:
         print("Catching up Wakkas sphere grid.")
         openGrid(character=4)
 
@@ -359,7 +359,7 @@ def battleSiteGrid():
         equipWeapon(character=4, ability=0x8026, fullMenuClose=False)
     else:
         equipWeapon(character=4, fullMenuClose=False)
-    memory.fullPartyFormat('battleSite')
+    memory.main.fullPartyFormat('battleSite')
 
 
 def _navigate_to_position(position, battleCursor):
@@ -381,20 +381,20 @@ def _navigate_to_position(position, battleCursor):
 
 
 def battleSiteOaka1():
-    memory.clickToDiagProgress(96)
-    while memory.shopMenuDialogueRow() != 1:
+    memory.main.clickToDiagProgress(96)
+    while memory.main.shopMenuDialogueRow() != 1:
         xbox.tapDown()
-    while memory.itemShopMenu() != 7:
+    while memory.main.itemShopMenu() != 7:
         xbox.tapB()
-    while memory.assignAbilityToEquipCursor() != 1:
+    while memory.main.assignAbilityToEquipCursor() != 1:
         xbox.tapRight()
-    while memory.itemShopMenu() != 21:
+    while memory.main.itemShopMenu() != 21:
         xbox.tapB()
         if gameVars.usePause():
-            memory.waitFrames(2)
+            memory.main.waitFrames(2)
 
-    itemOrder = memory.getItemsOrder()
-    if memory.rngSeed() != 160:
+    itemOrder = memory.main.getItemsOrder()
+    if memory.main.rngSeed() != 160:
         items_to_sell = [(i, v)
                          for i, v in enumerate(itemOrder) if v in [0, 1, 2, 8]]
     else:
@@ -403,98 +403,98 @@ def battleSiteOaka1():
     print(items_to_sell)
     for slot, cur_item in items_to_sell:
         print(slot, cur_item)
-        _navigate_to_position(slot, memory.equipSellRow)
-        cur_amount = memory.getItemCountSlot(slot)
-        if memory.rngSeed() == 160:
+        _navigate_to_position(slot, memory.main.equipSellRow)
+        cur_amount = memory.main.getItemCountSlot(slot)
+        if memory.main.rngSeed() == 160:
             amount_to_sell = max(cur_amount - {0: 0, 1: 0, 2: 0}[cur_item], 0)
         else:
             amount_to_sell = max(
                 cur_amount - {0: 0, 1: 0, 2: 0, 8: 0}[cur_item], 0)
         print("Selling from", cur_amount, "to", amount_to_sell)
-        while memory.itemShopMenu() != 27:
+        while memory.main.itemShopMenu() != 27:
             xbox.tapB()
-        while memory.equipBuyRow() != amount_to_sell:
+        while memory.main.equipBuyRow() != amount_to_sell:
             if cur_amount == amount_to_sell:
                 xbox.tapUp()
-            elif memory.equipBuyRow() < amount_to_sell:
+            elif memory.main.equipBuyRow() < amount_to_sell:
                 xbox.tapRight()
             else:
                 xbox.tapLeft()
-        while memory.itemShopMenu() != 21:
+        while memory.main.itemShopMenu() != 21:
             xbox.tapB()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def battleSiteOaka2():
-    memory.clickToDiagProgress(74)
-    memory.clickToDiagProgress(96)
-    if memory.getGilvalue() < 10890:
-        all_equipment = memory.allEquipment()
+    memory.main.clickToDiagProgress(74)
+    memory.main.clickToDiagProgress(96)
+    if memory.main.getGilvalue() < 10890:
+        all_equipment = memory.main.allEquipment()
         other_slots = [i for i, handle in enumerate(all_equipment) if (
             i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())]
         for cur in other_slots:
             sellWeapon(cur)
-            if memory.getGilvalue() >= 10890:
+            if memory.main.getGilvalue() >= 10890:
                 break
     buyWeapon(2, equip=True)
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def buyWeapon(location, equip=False):
-    while not memory.menuOpen():
+    while not memory.main.menuOpen():
         xbox.tapB()
-    if memory.equipShopMenu() != 12:
-        while memory.equipShopMenu() != 9:
+    if memory.main.equipShopMenu() != 12:
+        while memory.main.equipShopMenu() != 9:
             xbox.tapA()
-        while memory.itemMenuRow() != 0:
+        while memory.main.itemMenuRow() != 0:
             xbox.tapLeft()
-        while memory.equipShopMenu() != 12:
+        while memory.main.equipShopMenu() != 12:
             xbox.tapB()
-    while memory.equipBuyRow() != location:
-        if memory.equipBuyRow() < location:
+    while memory.main.equipBuyRow() != location:
+        if memory.main.equipBuyRow() < location:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.equipShopMenu() != 18:
+    while memory.main.equipShopMenu() != 18:
         xbox.tapB()
-    while memory.equipConfirmationRow() != 1:
+    while memory.main.equipConfirmationRow() != 1:
         pass
-    while memory.equipConfirmationRow() != 0:
+    while memory.main.equipConfirmationRow() != 0:
         xbox.tapUp()
-    while memory.equipShopMenu() != 22:
+    while memory.main.equipShopMenu() != 22:
         xbox.tapB()
     if equip:
-        while memory.equipSellRow() != 1:
+        while memory.main.equipSellRow() != 1:
             pass
-        while memory.equipSellRow() != 0:
+        while memory.main.equipSellRow() != 0:
             xbox.tapUp()
-    while memory.equipShopMenu() != 12:
+    while memory.main.equipShopMenu() != 12:
         xbox.tapB()
 
 
 def sellWeapon(location):
-    while not memory.menuOpen():
+    while not memory.main.menuOpen():
         xbox.tapB()
-    if memory.equipShopMenu() != 25:
-        while memory.equipShopMenu() != 9:
+    if memory.main.equipShopMenu() != 25:
+        while memory.main.equipShopMenu() != 9:
             xbox.tapA()
-        while memory.itemMenuRow() != 1:
+        while memory.main.itemMenuRow() != 1:
             xbox.tapRight()
-        while memory.equipShopMenu() != 25:
+        while memory.main.equipShopMenu() != 25:
             xbox.tapB()
-    while memory.equipSellRow() != location:
-        if memory.equipSellRow() < location:
+    while memory.main.equipSellRow() != location:
+        if memory.main.equipSellRow() < location:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.equipShopMenu() != 31:
+    while memory.main.equipShopMenu() != 31:
         xbox.tapB()
-    while memory.equipConfirmationRow() != 1:
+    while memory.main.equipConfirmationRow() != 1:
         pass
-    while memory.equipConfirmationRow() != 0:
+    while memory.main.equipConfirmationRow() != 0:
         xbox.tapUp()
     print("Selling")
-    while memory.equipShopMenu() != 25:
+    while memory.main.equipShopMenu() != 25:
         xbox.tapB()
 
 
@@ -514,7 +514,7 @@ def djoseTemple():
     menuGrid.selSphere('speed', 'none')
     # Now sphere grid on Wakka
 
-    if memory.getSLVLWakka() >= 5:
+    if memory.main.getSLVLWakka() >= 5:
         menuGrid.useShiftRight('wakka')  # Agi +2
         menuGrid.moveFirst()
 
@@ -524,15 +524,15 @@ def djoseTemple():
         menuGrid.moveAndUse()
         menuGrid.selSphere('power', 'up')
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def mWoods():
-    while not memory.menuOpen():
+    while not memory.main.menuOpen():
         xbox.tapB()  # Talking through O'aka's conversation.
-    memory.closeMenu()
+    memory.main.closeMenu()
     buyWeapon(0, equip=True)
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def mLakeGrid():
@@ -600,7 +600,7 @@ def mLakeGrid():
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('ability', 'none')  # Use
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def macTemple():
@@ -679,7 +679,7 @@ def macTemple():
 
     if gameVars.getBlitzWin():
         equipWeapon(character=0, special='brotherhood')
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def afterSeymour():
@@ -709,7 +709,7 @@ def afterSeymour():
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('mana', 'none')
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def homeGrid():
@@ -721,70 +721,70 @@ def homeGrid():
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
 
-    memory.fullPartyFormat('desert1')
-    memory.closeMenu()
+    memory.main.fullPartyFormat('desert1')
+    memory.main.closeMenu()
 
 
 def beforeGuards(itemToUse: int = 3):
-    while not memory.menuOpen():
-        memory.openMenu()
+    while not memory.main.menuOpen():
+        memory.main.openMenu()
 
-    while memory.getMenuCursorPos() != 1:
-        memory.menuDirection(memory.getMenuCursorPos(), 1, 11)
-    while memory.menuNumber() != 26:
+    while memory.main.getMenuCursorPos() != 1:
+        memory.main.menuDirection(memory.main.getMenuCursorPos(), 1, 11)
+    while memory.main.menuNumber() != 26:
         xbox.tapB()
-    megaPotSlot = memory.getItemSlot(itemToUse)
+    megaPotSlot = memory.main.getItemSlot(itemToUse)
     column = megaPotSlot % 2
     row = (megaPotSlot - column) / 2
     print(megaPotSlot, column, row)
 
-    while memory.itemMenuColumn() != column:
-        if memory.itemMenuColumn() > column:
+    while memory.main.itemMenuColumn() != column:
+        if memory.main.itemMenuColumn() > column:
             xbox.tapLeft()
         else:
             xbox.tapRight()
-    while memory.itemMenuRow() != row:
-        if memory.itemMenuRow() < row:
+    while memory.main.itemMenuRow() != row:
+        if memory.main.itemMenuRow() < row:
             xbox.tapDown()
         else:
             xbox.tapUp()
 
-    while memory.itemMenuNumber() != 13:
+    while memory.main.itemMenuNumber() != 13:
         xbox.tapB()
-    current_hp = memory.getHP()
-    maximal_hp = memory.getMaxHP()
+    current_hp = memory.main.getHP()
+    maximal_hp = memory.main.getMaxHP()
     while current_hp != maximal_hp:
         xbox.tapB()
-        current_hp = memory.getHP()
+        current_hp = memory.main.getHP()
 
 
 def sortItems(fullMenuClose=True):
-    while not memory.menuOpen():
-        memory.openMenu()
-    while memory.getMenuCursorPos() != 1:
-        memory.menuDirection(memory.getMenuCursorPos(), 1, 11)
-    while memory.menuNumber() != 26:
+    while not memory.main.menuOpen():
+        memory.main.openMenu()
+    while memory.main.getMenuCursorPos() != 1:
+        memory.main.menuDirection(memory.main.getMenuCursorPos(), 1, 11)
+    while memory.main.menuNumber() != 26:
         xbox.tapB()
-    while memory.itemMenuNumber() != 53:
+    while memory.main.itemMenuNumber() != 53:
         xbox.tapA()
-    while memory.assignAbilityToEquipCursor() != 1:
+    while memory.main.assignAbilityToEquipCursor() != 1:
         xbox.tapRight()
-    while memory.itemMenuNumber() != 25:
+    while memory.main.itemMenuNumber() != 25:
         xbox.tapB()
-    while memory.equipBuyRow() != 1:
+    while memory.main.equipBuyRow() != 1:
         xbox.tapRight()
     xbox.tapB()
     if fullMenuClose:
-        memory.closeMenu()
+        memory.main.closeMenu()
     else:
-        memory.backToMainMenu()
+        memory.main.backToMainMenu()
 
 
 def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
     print("Equipping Weapon with ability ", ability)
-    memory.awaitControl()
+    memory.main.awaitControl()
 
-    weaponHandles = memory.weaponArrayCharacter(character)
+    weaponHandles = memory.main.weaponArrayCharacter(character)
     print("@@@@@")
     print(len(weaponHandles))
     print("@@@@@")
@@ -812,40 +812,40 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
     print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
         if fullMenuClose:
-            memory.closeMenu()
+            memory.main.closeMenu()
         else:
-            memory.backToMainMenu()
+            memory.main.backToMainMenu()
         return False  # Item is no in inventory.
 
-    if memory.menuNumber() != 26:
-        if not memory.menuOpen():
-            memory.openMenu()
-        while memory.getMenuCursorPos() != 4:
-            memory.menuDirection(memory.getMenuCursorPos(), 4, 11)
-        while memory.menuNumber() == 5:
+    if memory.main.menuNumber() != 26:
+        if not memory.main.menuOpen():
+            memory.main.openMenu()
+        while memory.main.getMenuCursorPos() != 4:
+            memory.main.menuDirection(memory.main.getMenuCursorPos(), 4, 11)
+        while memory.main.menuNumber() == 5:
             xbox.tapB()
 
-        target_pos = memory.getCharacterIndexInMainMenu(character)
-        while memory.getCharCursorPos() != target_pos:
-            memory.menuDirection(memory.getCharCursorPos(
-            ), target_pos, len(memory.getOrderSeven()))
-        while memory.menuNumber() != 26:
+        target_pos = memory.main.getCharacterIndexInMainMenu(character)
+        while memory.main.getCharCursorPos() != target_pos:
+            memory.main.menuDirection(memory.main.getCharCursorPos(
+            ), target_pos, len(memory.main.getOrderSeven()))
+        while memory.main.menuNumber() != 26:
             xbox.tapB()
-    while not memory.equipMenuOpenFromChar():
+    while not memory.main.equipMenuOpenFromChar():
         xbox.tapB()
 
-    while memory.equipWeapCursor() != weaponNum:
-        if memory.equipWeapCursor() < weaponNum:
+    while memory.main.equipWeapCursor() != weaponNum:
+        if memory.main.equipWeapCursor() < weaponNum:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.equipMenuOpenFromChar():
+    while memory.main.equipMenuOpenFromChar():
         xbox.tapB()
 
     if fullMenuClose:
-        memory.closeMenu()
+        memory.main.closeMenu()
     else:
-        memory.backToMainMenu()
+        memory.main.backToMainMenu()
 
     return True
 
@@ -860,9 +860,9 @@ def equipScout(fullMenuClose=True):
 
 def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
     print("Equipping Armor with ability ", ability)
-    memory.awaitControl()
+    memory.main.awaitControl()
 
-    armorHandles = memory.armorArrayCharacter(character)
+    armorHandles = memory.main.armorArrayCharacter(character)
     print("@@@@@")
     print(len(armorHandles))
     print("@@@@@")
@@ -896,43 +896,43 @@ def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
         armorNum = 0
 
     print("Armor is in slot ", armorNum)
-    if memory.menuNumber() != 26:
-        if not memory.menuOpen():
-            memory.openMenu()
-        while memory.getMenuCursorPos() != 4:
-            memory.menuDirection(memory.getMenuCursorPos(), 4, 11)
-        while memory.menuNumber() == 5:
+    if memory.main.menuNumber() != 26:
+        if not memory.main.menuOpen():
+            memory.main.openMenu()
+        while memory.main.getMenuCursorPos() != 4:
+            memory.main.menuDirection(memory.main.getMenuCursorPos(), 4, 11)
+        while memory.main.menuNumber() == 5:
             xbox.tapB()
 
-        target_pos = memory.getCharacterIndexInMainMenu(character)
-        while memory.getCharCursorPos() != target_pos:
-            memory.menuDirection(memory.getCharCursorPos(
-            ), target_pos, len(memory.getOrderSeven()))
-        memory.waitFrames(1)
+        target_pos = memory.main.getCharacterIndexInMainMenu(character)
+        while memory.main.getCharCursorPos() != target_pos:
+            memory.main.menuDirection(memory.main.getCharCursorPos(
+            ), target_pos, len(memory.main.getOrderSeven()))
+        memory.main.waitFrames(1)
         xbox.tapB()
-        memory.waitFrames(18)
+        memory.main.waitFrames(18)
         xbox.tapDown()
-        while memory.menuNumber() != 26:
+        while memory.main.menuNumber() != 26:
             xbox.tapB()
-    while not memory.equipMenuOpenFromChar():
+    while not memory.main.equipMenuOpenFromChar():
         xbox.tapB()
 
-    while memory.equipWeapCursor() != armorNum:
-        if memory.equipWeapCursor() < armorNum:
+    while memory.main.equipWeapCursor() != armorNum:
+        if memory.main.equipWeapCursor() < armorNum:
             xbox.tapDown()
         else:
             xbox.tapUp()
-    while memory.equipMenuOpenFromChar():
-        if memory.assignAbilityToEquipCursor() == 1:
+    while memory.main.equipMenuOpenFromChar():
+        if memory.main.assignAbilityToEquipCursor() == 1:
             xbox.tapUp()
         else:
             xbox.tapB()
-        memory.waitFrames(2)
+        memory.main.waitFrames(2)
 
     if fullMenuClose:
-        memory.closeMenu()
+        memory.main.closeMenu()
     else:
-        memory.backToMainMenu()
+        memory.main.backToMainMenu()
 
     return True
 
@@ -956,8 +956,8 @@ def viaPurifico():
     menuGrid.useAndMove()
     gridUp()
     gridUp()
-    memory.waitFrames(30 * 0.3)
-    gridLocation = memory.sGridNodeSelected()
+    memory.main.waitFrames(30 * 0.3)
+    gridLocation = memory.main.sGridNodeSelected()
     # We have extra levels, changes the path slightly.
     if gridLocation[0] != 242:
         gridUp()
@@ -1009,7 +1009,7 @@ def viaPurifico():
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def seymourNatusBlitzWin():
@@ -1160,20 +1160,20 @@ def prepCalmLands():
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def afterRonso():
     if gameVars.endGameVersion() != 3:
-        memory.openMenu()
+        memory.main.openMenu()
         yunaFirstStrike()
         auronFirstStrike()
-        if not memory.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
+        if not memory.main.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
             equipWeapon(character=1, ability=0x8001, fullMenuClose=False)
-        if not memory.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
+        if not memory.main.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
             equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
         if gameVars.usePause():
-            memory.waitFrames(5)
+            memory.main.waitFrames(5)
 
     openGrid(character=5)
     menuGrid.moveFirst()
@@ -1341,11 +1341,11 @@ def afterRonso():
         menuGrid.selSphere('power', 'none')
 
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
-    equipArray = memory.allEquipment()
+    equipArray = memory.main.allEquipment()
     print(owner, equipment_type, ability_array, slotcount)
     if not ability_array:
         ability_array = [255, 255, 255, 255]
@@ -1362,54 +1362,54 @@ def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
 
 
 def abilityToCustomizeRef(ability_index):
-    if memory.customizeMenuArray()[memory.assignAbilityToEquipCursor()] == ability_index:
+    if memory.main.customizeMenuArray()[memory.main.assignAbilityToEquipCursor()] == ability_index:
         return True
     return False
 
 
 def addAbility(*, owner, equipment_type, ability_array=[], ability_index=255, slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
     if navigateToEquipMenu:
-        if not memory.menuOpen():
-            memory.openMenu()
-        while memory.getMenuCursorPos() != 8:
-            memory.menuDirection(memory.getMenuCursorPos(), 8, 11)
-        while memory.menuNumber() == 5:
+        if not memory.main.menuOpen():
+            memory.main.openMenu()
+        while memory.main.getMenuCursorPos() != 8:
+            memory.main.menuDirection(memory.main.getMenuCursorPos(), 8, 11)
+        while memory.main.menuNumber() == 5:
             xbox.tapB()
     item_to_modify = findEquipmentIndex(
         owner=owner, equipment_type=equipment_type, ability_array=ability_array, slotcount=slotcount)
-    while memory.itemMenuRow() != item_to_modify:
-        if memory.itemMenuRow() < item_to_modify:
-            if item_to_modify - memory.itemMenuRow() > 9:
+    while memory.main.itemMenuRow() != item_to_modify:
+        if memory.main.itemMenuRow() < item_to_modify:
+            if item_to_modify - memory.main.itemMenuRow() > 9:
                 xbox.TriggerR()
             else:
                 xbox.tapDown()
         else:
-            if memory.itemMenuRow() - item_to_modify > 5 and memory.itemMenuRow() > 8:
+            if memory.main.itemMenuRow() - item_to_modify > 5 and memory.main.itemMenuRow() > 8:
                 xbox.TriggerL()
             else:
                 xbox.tapUp()
-    while not memory.cureMenuOpen():
+    while not memory.main.cureMenuOpen():
         xbox.tapB()
     while not abilityToCustomizeRef(ability_index):  # Find the right ability
         xbox.tapDown()
         if gameVars.usePause():
-            memory.waitFrames(3)
-    while memory.informationActive():
+            memory.main.waitFrames(3)
+    while memory.main.informationActive():
         xbox.tapB()
-    while memory.equipBuyRow() != 1:
+    while memory.main.equipBuyRow() != 1:
         pass
-    while memory.equipBuyRow() != 0:
+    while memory.main.equipBuyRow() != 0:
         xbox.tapUp()
-    while not memory.informationActive():
+    while not memory.main.informationActive():
         xbox.tapB()
     if exitOutOfCurrentWeapon:
-        while memory.cureMenuOpen():
+        while memory.main.cureMenuOpen():
             xbox.tapA()
     if closeMenu:
         if fullMenuClose:
-            memory.closeMenu()
+            memory.main.closeMenu()
         else:
-            memory.backToMainMenu()
+            memory.main.backToMainMenu()
 
 
 def addFirstStrike(*, owner, equipment_type, ability_array=[], slotcount, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True):
@@ -1436,15 +1436,15 @@ def yunaFirstStrike():
 
 
 def tidusSlayer(odPos: int = 2):
-    if not memory.menuOpen():
-        memory.openMenu()
-    while memory.getMenuCursorPos() != 3:
+    if not memory.main.menuOpen():
+        memory.main.openMenu()
+    while memory.main.getMenuCursorPos() != 3:
         xbox.tapDown()
-    while memory.menuNumber() == 5:
+    while memory.main.menuNumber() == 5:
         xbox.tapB()
-    memory.waitFrames(10)
+    memory.main.waitFrames(10)
     xbox.tapB()
-    memory.waitFrames(10)
+    memory.main.waitFrames(10)
     xbox.menuA()
     xbox.tapRight()
     xbox.menuB()
@@ -1453,38 +1453,38 @@ def tidusSlayer(odPos: int = 2):
     else:
         xbox.menuUp()
     xbox.menuB()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def sellAll(NEA=False):
     # Assume already on the sell items screen, index zero
-    fullArray = memory.allEquipment()
+    fullArray = memory.main.allEquipment()
     sellItem = True
     xbox.menuUp()
-    memory.waitFrames(9)
-    while memory.equipSellRow() + 1 < len(fullArray):
+    memory.main.waitFrames(9)
+    while memory.main.equipSellRow() + 1 < len(fullArray):
         xbox.menuDown()
-        memory.waitFrames(9)
-        if fullArray[memory.equipSellRow()].isEquipped() != 255:
+        memory.main.waitFrames(9)
+        if fullArray[memory.main.equipSellRow()].isEquipped() != 255:
             # Currently equipped
             sellItem = False
-        if fullArray[memory.equipSellRow()].isEquipped() == 0:
+        if fullArray[memory.main.equipSellRow()].isEquipped() == 0:
             # Currently equipped
             sellItem = False
-        if fullArray[memory.equipSellRow()].hasAbility(0x8056):
+        if fullArray[memory.main.equipSellRow()].hasAbility(0x8056):
             # Auto-haste
             sellItem = False
-        if fullArray[memory.equipSellRow()].hasAbility(0x8001):
+        if fullArray[memory.main.equipSellRow()].hasAbility(0x8001):
             # First Strike
             sellItem = False
-        if fullArray[memory.equipSellRow()].abilities() == [0x8072, 255, 255, 255]:
+        if fullArray[memory.main.equipSellRow()].abilities() == [0x8072, 255, 255, 255]:
             # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
-            if fullArray[memory.equipSellRow()].owner() in [1, 2, 4, 6]:
+            if fullArray[memory.main.equipSellRow()].owner() in [1, 2, 4, 6]:
                 sellItem = False
-        if not NEA and fullArray[memory.equipSellRow()].hasAbility(0x801D):
+        if not NEA and fullArray[memory.main.equipSellRow()].hasAbility(0x801D):
             # No-Encounters
             sellItem = False
-        if fullArray[memory.equipSellRow()].abilities() == [0x8063, 0x8064, 0x802A, 0x8000]:
+        if fullArray[memory.main.equipSellRow()].abilities() == [0x8063, 0x8064, 0x802A, 0x8000]:
             # Brotherhood
             sellItem = False
 
@@ -1492,7 +1492,7 @@ def sellAll(NEA=False):
             xbox.menuB()
             xbox.tapUp()
             xbox.menuB()
-            memory.waitFrames(1)
+            memory.main.waitFrames(1)
         else:
             sellItem = True
 
@@ -1517,7 +1517,7 @@ def afterFlux():
 
 def gagazetCave():
     # Occurs after swimming
-    memory.openMenu()
+    memory.main.openMenu()
     xbox.menuUp()
     xbox.menuUp()
     xbox.menuUp()
@@ -1533,7 +1533,7 @@ def gagazetCave():
     xbox.menuDown()
     xbox.menuDown()
     xbox.menuB()  # Auron to slot 3
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def zombieStrikeBackup():
@@ -1564,10 +1564,10 @@ def BFA():
         menuGrid.useAndUseAgain()
     else:
         menuGrid.selSphere('attribute', 'l5')
-        memory.waitFrames(30 * 0.07)
+        memory.main.waitFrames(30 * 0.07)
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('ret', 'torikku')
-        memory.waitFrames(30 * 0.07)
+        memory.main.waitFrames(30 * 0.07)
         menuGrid.useAndMove()
         gridDown()
         gridDown()
@@ -1602,7 +1602,7 @@ def BFA():
         menuGrid.moveAndUse()
         menuGrid.selSphere('speed', 'none')
 
-    if memory.overdriveState()[6] != 100:
+    if memory.main.overdriveState()[6] != 100:
         menuGrid.useShiftLeft('Rikku')
         menuGrid.useFirst()
         menuGrid.selSphere('skill', 'up')
@@ -1622,7 +1622,7 @@ def BFA():
         menuGrid.moveAndUse()
         menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def skReturn():
@@ -1634,10 +1634,10 @@ def skReturn():
         menuGrid.selSphere('luck', 'none')
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('fortune', 'none')
-    if memory.getPower() >= 1:
+    if memory.main.getPower() >= 1:
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('power', 'none')
-    if memory.getPower() >= 1:
+    if memory.main.getPower() >= 1:
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
@@ -1646,7 +1646,7 @@ def skReturn():
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    if memory.getPower() >= 1:
+    if memory.main.getPower() >= 1:
         menuGrid.selSphere('power', 'none')
         menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
@@ -1675,7 +1675,7 @@ def skMixed():
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    if memory.getPower() >= 1:
+    if memory.main.getPower() >= 1:
         menuGrid.selSphere('power', 'none')
         menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
@@ -1683,11 +1683,11 @@ def skMixed():
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    if memory.getPower() >= 1:
+    if memory.main.getPower() >= 1:
         menuGrid.selSphere('power', 'none')
         menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
-    if memory.getPower() >= 1:
+    if memory.main.getPower() >= 1:
         menuGrid.useAndMove()
         gridDown()
         menuGrid.moveAndUse()
@@ -1697,15 +1697,15 @@ def skMixed():
 
 def skFriend():
     # First to do the First Strike stuff we couldn't do earlier.
-    memory.openMenu()
+    memory.main.openMenu()
     yunaFirstStrike()
     auronFirstStrike()
-    if not memory.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
+    if not memory.main.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
         equipWeapon(character=1, ability=0x8001, fullMenuClose=False)
-    if not memory.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
+    if not memory.main.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
         equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
     if gameVars.usePause():
-        memory.waitFrames(5)
+        memory.main.waitFrames(5)
 
     # Now sphere grid
     if not gameVars.getSkipZanLuck():
@@ -1718,7 +1718,7 @@ def skFriend():
         menuGrid.useAndUseAgain()
         menuGrid.selSphere('fortune', 'none')
         menuGrid.useAndQuit()
-    memory.closeMenu()
+    memory.main.closeMenu()
 
 
 def skReturn2():
@@ -1746,28 +1746,28 @@ def openGrid(character):
         FFXC.set_neutral()
     except Exception:
         FFXC.set_neutral()
-    while not memory.sGridActive():
-        if memory.userControl() and not memory.menuOpen():
+    while not memory.main.sGridActive():
+        if memory.main.userControl() and not memory.main.menuOpen():
             xbox.tapY()
-        elif memory.menuNumber() == 5:  # Cursor on main menu
-            while memory.getMenuCursorPos() != 0:
-                memory.menuDirection(memory.getMenuCursorPos(), 0, 11)
-            while memory.menuNumber() == 5:
+        elif memory.main.menuNumber() == 5:  # Cursor on main menu
+            while memory.main.getMenuCursorPos() != 0:
+                memory.main.menuDirection(memory.main.getMenuCursorPos(), 0, 11)
+            while memory.main.menuNumber() == 5:
                 xbox.tapB()
-        elif memory.menuNumber() == 7:  # Cursor selecting party member
+        elif memory.main.menuNumber() == 7:  # Cursor selecting party member
             print("Selecting party member")
-            target_pos = memory.getCharacterIndexInMainMenu(character)
-            while memory.getCharCursorPos() != target_pos:
+            target_pos = memory.main.getCharacterIndexInMainMenu(character)
+            while memory.main.getCharCursorPos() != target_pos:
                 # After B&Y, party size is evaluated weird.
-                if memory.getStoryProgress() == 2528:
-                    memory.menuDirection(
-                        memory.getCharCursorPos(), target_pos, 7)
-                elif memory.partySize() < 3:
+                if memory.main.getStoryProgress() == 2528:
+                    memory.main.menuDirection(
+                        memory.main.getCharCursorPos(), target_pos, 7)
+                elif memory.main.partySize() < 3:
                     xbox.menuDown()
                 else:
-                    memory.menuDirection(
-                        memory.getCharCursorPos(), target_pos, 7)
-            while memory.menuNumber() == 7:
+                    memory.main.menuDirection(
+                        memory.main.getCharCursorPos(), target_pos, 7)
+            while memory.main.menuNumber() == 7:
                 xbox.menuB()
             try:
                 FFXC.set_neutral()
@@ -1785,48 +1785,48 @@ def openGrid(character):
 
 
 def arenaPurchase1():
-    memory.waitFrames(60)
+    memory.main.waitFrames(60)
     xbox.tapB()
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapB()  # Tidus catcher
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapUp()
     xbox.tapB()  # Confirm
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapB()  # Do not equip
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapDown()
     xbox.tapB()  # Yuna catcher
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapUp()
     xbox.tapB()  # Confirm
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapUp()
     xbox.tapB()  # Do equip
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapA()
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapA()
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapUp()
     xbox.tapA()
-    memory.waitFrames(15)
+    memory.main.waitFrames(15)
     xbox.tapB()
-    memory.waitFrames(60)
+    memory.main.waitFrames(60)
 
 
 def removeAllNEA():
     for i in range(7):
-        if memory.equippedArmorHasAbility(charNum=i):  # Defaults to NEA
+        if memory.main.equippedArmorHasAbility(charNum=i):  # Defaults to NEA
             if i == 0:
-                if memory.checkAbilityArmor(ability=0x8056)[i]:
+                if memory.main.checkAbilityArmor(ability=0x8056)[i]:
                     equipArmor(character=i, ability=0x8056)  # Auto-Haste
                 else:
                     equipArmor(character=i, ability=99)  # Remove equipment
             elif i in [4, 6]:
-                if memory.checkAbilityArmor(ability=0x801D)[i]:
+                if memory.main.checkAbilityArmor(ability=0x801D)[i]:
                     equipArmor(character=i, ability=0x801D)  # Auto-Phoenix
-                elif memory.checkAbilityArmor(ability=0x8072, slotCount=4)[i]:
+                elif memory.main.checkAbilityArmor(ability=0x8072, slotCount=4)[i]:
                     equipArmor(character=i, ability=0x8072, slotCount=4)
                 else:
                     equipArmor(character=i, ability=99)  # Remove equipment

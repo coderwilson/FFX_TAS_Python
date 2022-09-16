@@ -1,8 +1,8 @@
 import time
 import xbox
-import area.dreamZan as dreamZan
+import area.dreamZan
 import screen
-import memory
+import memory.main
 import reset
 import loadGame
 import logs
@@ -12,14 +12,14 @@ FFXC = xbox.controllerHandle()
 selfAuto = True
 print("Looping section: Bevelle Trials")
 
-memory.start()
+memory.main.start()
 
 attempts = 0
 success = 0
 while attempts < 20:
     attempts += 1
 
-    dreamZan.NewGame('Luca')
+    area.dreamZan.NewGame('Luca')
     loadGame.loadOffset(1)
 
     print("Game start screen")
@@ -63,7 +63,7 @@ while attempts < 20:
 
 time.sleep(5)
 
-memory.end()
+memory.main.end()
 
 time.sleep(5)
 print("--------------------------")

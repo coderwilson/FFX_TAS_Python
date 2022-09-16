@@ -1,4 +1,4 @@
-import memory
+import memory.main
 import csv
 # from tracker.data.formations import allFormations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
@@ -22,7 +22,7 @@ def areaFormations(area: str):
 
 def comingBattles(area: str = "kilika_woods", battleCount: int = 10, extraAdvances: int = 0):
     formations = areaFormations(area=area)
-    advances = memory.rng01Advances((battleCount * 2) + extraAdvances)
+    advances = memory.main.rng01Advances((battleCount * 2) + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:
             del advances[0]
@@ -36,7 +36,7 @@ def comingBattles(area: str = "kilika_woods", battleCount: int = 10, extraAdvanc
 
 
 def comingBattleType(extraAdvances: int = 0, initiative=False):
-    advances = memory.rng01Advances(2 + extraAdvances)
+    advances = memory.main.rng01Advances(2 + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:
             del advances[0]
@@ -55,7 +55,7 @@ def comingBattleType(extraAdvances: int = 0, initiative=False):
 
 def singlesBattles(area: str = "kilika_woods", battleCount: int = 10, extraAdvances: int = 0):
     formations = areaFormations(area=area)
-    advances = memory.rng01Advances((battleCount) + extraAdvances)
+    advances = memory.main.rng01Advances((battleCount) + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:
             del advances[0]
@@ -106,7 +106,7 @@ def earlyBattleCount():
     with open('csv\\Seed_Battle_Variance.csv', 'r', newline='') as csvFile:
         reader = csv.DictReader(csvFile)
         for row in reader:
-            if int(row['Seed']) == memory.rngSeed():
+            if int(row['Seed']) == memory.main.rngSeed():
                 return row
 
 
@@ -115,7 +115,7 @@ def trackDrops(enemy: str = 'ghost', battles: int = 20, extraAdvances: int = 0):
     oneAdvanceArray = []
     twoAdvanceArray = []
     advances = (battles + 1) * 3
-    randArray = memory.rng10Array(arrayLen=advances + extraAdvances)
+    randArray = memory.main.rng10Array(arrayLen=advances + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:
             del randArray[0]
@@ -154,7 +154,7 @@ def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: i
         partyChars = [0]
 
     advance12 = 4 + preAdvance12
-    testArray12 = memory.rng12Array(advance12)
+    testArray12 = memory.main.rng12Array(advance12)
     del testArray12[0]
     if preAdvance12 >= 1:
         while preAdvance12 >= 1:
@@ -190,7 +190,7 @@ def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: i
     abilityList = newAbilities[0]
     preAdvance13 += newAbilities[1]
 
-    finalItem = memory.equipment(equipNum=0)
+    finalItem = memory.main.equipment(equipNum=0)
     finalItem.createCustom(eType=equipType, eOwner1=user1,
                            eOwner2=user2, eSlots=slots, eAbilities=abilityList)
 
@@ -204,7 +204,7 @@ def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1,
     filledSlots = [99] * slots
 
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
-    testArray = memory.rng13Array(arrayLen=50 + advances)
+    testArray = memory.main.rng13Array(arrayLen=50 + advances)
 
     if outcomes[0]:
         filledSlots.remove(99)
@@ -235,7 +235,7 @@ def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1,
     return [filledSlots, ptr]
 
 
-def reportDroppedItem(enemy: str, drop=memory.equipment, prefType: int = 99, prefAbility: int = 255, needAdv: int = 0, report=False):
+def reportDroppedItem(enemy: str, drop=memory.main.equipment, prefType: int = 99, prefAbility: int = 255, needAdv: int = 0, report=False):
     abiStr = str(prefAbility)
     prefType
     report = True
@@ -286,7 +286,7 @@ def tStrikeTracking_notWorkingYet(tros=False, report=False):
         advance10 = 9  # Starts off with two advances for pirhanas and one for Tros
     if report:
         logs.openRNGTrack()
-        logs.writeRNGTrack(memory.rng10Array(arrayLen=80))
+        logs.writeRNGTrack(memory.main.rng10Array(arrayLen=80))
         logs.writeRNGTrack("#########################")
     advance12 = [0, 0, 0]  # Tros drops one item
     advance13 = [0, 0, 0]  # Tros item has no abilities
@@ -804,64 +804,66 @@ def tStrikeTracking_notWorkingYet(tros=False, report=False):
         "Kill Yellow ele on Kilika battles:" + str(killYellow))
     return thunderCount, killYellow
 
+
 def decideSkipZanLuck() -> bool:
-    #This function tracks if we need to pick up the luck and fortune spheres in Zanarkand.
-    #This will track through from Yunalesca to BFA, the two fights with ~4% chance to miss.
-    #False == there will be a miss. True == no miss.
-    extraXP = 0 #where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
+    # This function tracks if we need to pick up the luck and fortune spheres in Zanarkand.
+    # This will track through from Yunalesca to BFA, the two fights with ~4% chance to miss.
+    # False == there will be a miss. True == no miss.
+    extraXP = 0  # where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
     bahamutLuck = 17
-    keeperCrit = memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=20, attackIndex=extraXP)
+    keeperCrit = memory.main.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=20, attackIndex=extraXP)
     arm1Crit = False
     arm2Crit = False
     faceCrit = False
-    
+
     attackCount = extraXP
     if keeperCrit:
         print("### Expecting crit on SK")
         attackCount += 1
     else:
         attackCount += 2
-    
-    #Now to test the Yunalesca fight. Crits do not matter here, only hit chance.
+
+    # Now to test the Yunalesca fight. Crits do not matter here, only hit chance.
     for i in range(3):
-        print("### YL attack num ", i, " | ", attackCount)
-        if futureAttackHitMiss(character=7, enemy="yunalesca", attackIndex=attackCount) == False:
+        print("### YL attack num", i, "|", attackCount)
+        if not futureAttackHitMiss(character=7, enemy="yunalesca", attackIndex=attackCount):
             print("### Miss on Yunalesca, attack number", i)
             return False
         attackCount += 1
-    if gameVars.nemesis(): #BFA miss does not factor in for Nemesis route.
+    if gameVars.nemesis():  # BFA miss does not factor in for Nemesis route.
         return True
-    
-    arm1Crit = memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
+
+    arm1Crit = memory.main.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
     if arm1Crit:
         print("### Expecting crit on Arm 1")
         attackCount += 1
     else:
         attackCount += 2
-    arm2Crit = memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
+    arm2Crit = memory.main.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
     if arm2Crit:
         print("### Expecting crit on Arm 2")
         attackCount += 1
     else:
         attackCount += 2
-    attackCount += 1 #Core is always one attack
-    faceCrit = memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
+    attackCount += 1  # Core is always one attack
+    faceCrit = memory.main.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount)
     if not faceCrit:
-        faceCrit = memory.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount+1)
+        faceCrit = memory.main.futureAttackWillCrit(character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount + 1)
     if faceCrit:
         print("### Expecting crit on Face")
         attackCount += 2
     else:
         attackCount += 3
-    attackCount += 1 #One attack on Seymour
+    attackCount += 1  # One attack on Seymour
     for i in range(3):
         print("### BFA attack num ", i, " | ", attackCount)
-        if futureAttackHitMiss(character=7, enemy="bfa", attackIndex=attackCount) == False:
+        if not futureAttackHitMiss(character=7, enemy="bfa", attackIndex=attackCount):
             print("### Miss on BFA, attack number", i)
             return False
         attackCount += 1
     print("### No misses registered. Should be good to skip Luck/Fortune chests.")
     return True
+
 
 def zombieTrack(report=False):
     advance01 = 0
@@ -957,36 +959,37 @@ def zombieTrack(report=False):
 
 def nextActionEscape(character: int = 0):
     index = 20 + character
-    escapeRoll = memory.s32(
-        memory.rngArrayFromIndex(index=index, arrayLen=1)[1]) & 255
+    escapeRoll = memory.main.s32(
+        memory.main.rngArrayFromIndex(index=index, arrayLen=1)[1]) & 255
     return escapeRoll < 191
 
 
 def nextActionHitMiss(character: int = 0, enemy: str = "anima"):
     return futureAttackHitMiss(character=character, enemy=enemy)
 
-def futureAttackHitMiss(character:int=0, enemy:str="anima", attackIndex:int=0):
-    #print("=========================")
-    #print("Checking hit chance - character:", character)
+
+def futureAttackHitMiss(character: int = 0, enemy: str = "anima", attackIndex: int = 0):
+    # print("=========================")
+    # print("Checking hit chance - character:", character)
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
     index = 36 + character
-    hit_rng = memory.rngArrayFromIndex(index=index, arrayLen=attackIndex+3)[attackIndex+1]
-    #print("### HitRNG ", hit_rng)
-    luck = memory.charLuck(character)
-    #print("Luck:", luck)
-    accuracy = memory.charAccuracy(character)
-    #print("Accuracy:", accuracy)
-    
+    hit_rng = memory.main.rngArrayFromIndex(index=index, arrayLen=attackIndex + 3)[attackIndex + 1]
+    # print("### HitRNG ", hit_rng)
+    luck = memory.main.charLuck(character)
+    # print("Luck:", luck)
+    accuracy = memory.main.charAccuracy(character)
+    # print("Accuracy:", accuracy)
+
     if enemy == "bfa":
         target_luck = 15
         target_evasion = 0
     else:
-        #Data directly from the tracker
+        # Data directly from the tracker
         target_luck = MONSTERS[enemy].stats['Luck']
-        #print("Enemy luck: ", target_luck)
+        # print("Enemy luck: ", target_luck)
         target_evasion = MONSTERS[enemy].stats['Evasion']
-        #print("Enemy evasion:", target_evasion)
+        # print("Enemy evasion:", target_evasion)
 
     # Unused, but technically part of the formula
     aims = 0
@@ -1003,10 +1006,10 @@ def futureAttackHitMiss(character:int=0, enemy:str="anima", attackIndex:int=0):
         hit_chance_index = 8
     hit_chance = hitChanceTable(hit_chance_index) + luck
     hit_chance += (aims - target_reflexes) * 10 - target_luck
-    #print("Hit Chance: ", hit_chance, " vs ", (memory.s32(hit_rng) % 101))
-    #print("Hit results: ", hit_chance > (memory.s32(hit_rng) % 101))
-    #print("=========================")
-    return hit_chance > (memory.s32(hit_rng) % 101)
+    # print("Hit Chance: ", hit_chance, " vs ", (memory.s32(hit_rng) % 101))
+    # print("Hit results: ", hit_chance > (memory.s32(hit_rng) % 101))
+    # print("=========================")
+    return hit_chance > (memory.main.s32(hit_rng) % 101)
 
 
 def hitChanceTable(index: int):
@@ -1045,7 +1048,7 @@ def recordBlitzResults_Tyton(duration, testMode=False):
         sub_key = '9999'
         victory = False
     else:
-        seed = str(memory.rngSeed())
+        seed = str(memory.main.rngSeed())
         sub_key = str(gameVars.oblitzRNGCheck())
         victory = gameVars.getBlitzWin()
     if seed in records.keys():
@@ -1076,18 +1079,18 @@ def recordBlitzResults(duration, testMode=False):
         else:
             records.update(newVal)
     else:
-        newVal = {memory.rngSeed(): {gameVars.oblitzRNGCheck(): {"duration": duration, "victory": gameVars.getBlitzWin()}}}
-        if str(memory.rngSeed()) in records.keys():
-            if gameVars.oblitzRNGCheck() in records[str(memory.rngSeed())].keys():
-                if not gameVars.getBlitzWin() and records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
-                    records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory'] = gameVars.getBlitzWin()
-                    records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration'] = duration
-                elif gameVars.getBlitzWin() == records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
-                    if duration > records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration']:
-                        records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['victory'] = gameVars.getBlitzWin()
-                        records[str(memory.rngSeed())][gameVars.oblitzRNGCheck()]['duration'] = duration
+        newVal = {memory.main.rngSeed(): {gameVars.oblitzRNGCheck(): {"duration": duration, "victory": gameVars.getBlitzWin()}}}
+        if str(memory.main.rngSeed()) in records.keys():
+            if gameVars.oblitzRNGCheck() in records[str(memory.main.rngSeed())].keys():
+                if not gameVars.getBlitzWin() and records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
+                    records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['victory'] = gameVars.getBlitzWin()
+                    records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['duration'] = duration
+                elif gameVars.getBlitzWin() == records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['victory']:
+                    if duration > records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['duration']:
+                        records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['victory'] = gameVars.getBlitzWin()
+                        records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()]['duration'] = duration
             else:
-                records[str(memory.rngSeed())].update(newVal[memory.rngSeed()])
+                records[str(memory.main.rngSeed())].update(newVal[memory.main.rngSeed()])
         else:
             records.update(newVal)
     print(newVal)

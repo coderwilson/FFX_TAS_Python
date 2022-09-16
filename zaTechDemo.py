@@ -1,16 +1,16 @@
 import time
-import memory
+import memory.main
 import xbox
 import logs
 import loadGame
 import screen
 import reset
 
-import area.dreamZan as dreamZan
-import area.miihen as miihen
-import area.MRR as MRR
-import area.guadosalam as guadosalam
-import area.mTemple as mTemple
+import area.dreamZan
+import area.miihen
+import area.MRR
+import area.guadosalam
+import area.mTemple
 import vars
 gameVars = vars.varsHandle()
 
@@ -22,7 +22,7 @@ print(FFXC)
 
 print("Starting tech-demo program.")
 
-memory.start()
+memory.main.start()
 startTime = logs.timeStamp()
 print("Timer starts now.")
 SkipCount = 0
@@ -39,7 +39,7 @@ while attempts < 20 and cycles < 50:
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    dreamZan.NewGame('techdemo')
+    area.dreamZan.NewGame('techdemo')
 
     print("Game start screen")
     screen.clearMouse(0)
@@ -50,9 +50,9 @@ while attempts < 20 and cycles < 50:
         loadGame.loadSaveNum(26)  # W/O laughing scene
         loadGame.LoadMiihenStart()
         FFXC.set_neutral()
-        memory.setEncounterRate(0)
-        memory.awaitControl()
-        returnVal = miihen.arrival()
+        memory.main.setEncounterRate(0)
+        memory.main.awaitControl()
+        returnVal = area.miihen.arrival()
         print(returnVal)
         SkipAttempts += 1
         if returnVal[3]:
@@ -67,9 +67,9 @@ while attempts < 20 and cycles < 50:
         print("Demo - MRR skip")
         loadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
-        memory.setGilvalue(4000)
+        memory.main.setGilvalue(4000)
         loadGame.LoadMRR()
-        wakkaLateMenu = MRR.arrival()
+        wakkaLateMenu = area.MRR.arrival()
         SkipCount += 1
         SkipAttempts += 1
         print("------------------------------")
@@ -83,7 +83,7 @@ while attempts < 20 and cycles < 50:
         loadGame.loadSaveNum(3)
         loadGame.loadGuadoSkip()
         SkipAttempts += 1
-        guadoSkipStatus = guadosalam.guadoSkip()
+        guadoSkipStatus = area.guadosalam.guadoSkip()
         if guadoSkipStatus:
             SkipCount += 1
         print("------------------------------")
@@ -98,7 +98,7 @@ while attempts < 20 and cycles < 50:
         loadGame.loadSaveNum(97)
         loadGame.loadMacTemple()
         SkipAttempts += 1
-        jyscalSkipStatus = mTemple.arrival(doGrid=False)
+        jyscalSkipStatus = area.mTemple.arrival(doGrid=False)
         if jyscalSkipStatus:
             SkipCount += 1
         print("------------------------------")
@@ -114,8 +114,8 @@ while attempts < 20 and cycles < 50:
     FFXC.set_neutral()
     if attempts < 100:
         print("Demo complete. Now clicking to control so we can reset.", attempts)
-        if memory.getStoryProgress() < 3380:
-            memory.clickToControl()
+        if memory.main.getStoryProgress() < 3380:
+            memory.main.clickToControl()
             time.sleep(2)
         else:
             time.sleep(10)
@@ -174,7 +174,7 @@ print("------------------------------")
 # print("-May the rest of QfG:HH2 be a major success!")
 
 time.sleep(5)
-memory.end()
+memory.main.end()
 print("--------------------------")
 print("Program - end")
 print("--------------------------")

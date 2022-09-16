@@ -1,7 +1,7 @@
 import xbox
 import menu
-import memory
-import battle
+import memory.main
+import battle.main
 import logs
 import targetPathing
 import vars
@@ -11,23 +11,23 @@ FFXC = xbox.controllerHandle()
 
 
 def toHiddenCave():
-    memory.fullPartyFormat('rikku')
-    memory.printManipInfo()
+    memory.main.fullPartyFormat('rikku')
+    memory.main.printManipInfo()
     firstSave = False
     checkpoint = 0
     prepBattles = 0
-    while memory.getMap() != 56:
-        if memory.userControl():
-            if checkpoint < 5 and memory.getMap() == 266:
+    while memory.main.getMap() != 56:
+        if memory.main.userControl():
+            if checkpoint < 5 and memory.main.getMap() == 266:
                 checkpoint = 5
             if checkpoint == 6 and not firstSave:
-                if memory.getTidusMP() < 8:
-                    memory.touchSaveSphere()
+                if memory.main.getTidusMP() < 8:
+                    memory.main.touchSaveSphere()
                 firstSave = True
-            if checkpoint == 8 and (memory.nextChanceRNG12() >= 1 or memory.nextChanceRNG10() >= 1) \
-                    and memory.rngSeed() != 31:
+            if checkpoint == 8 and (memory.main.nextChanceRNG12() >= 1 or memory.main.nextChanceRNG10() >= 1) \
+                    and memory.main.rngSeed() != 31:
                 checkpoint -= 2
-            if checkpoint == 8 and memory.nextChanceRNG12() >= 1 and memory.rngSeed() == 31:
+            if checkpoint == 8 and memory.main.nextChanceRNG12() >= 1 and memory.main.rngSeed() == 31:
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
@@ -36,21 +36,21 @@ def toHiddenCave():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.battleActive():
-                if memory.nextChanceRNG12() >= 1:
-                    if memory.nextChanceRNG10() != 0:
-                        battle.advanceRNG10(memory.nextChanceRNG10())
+            if memory.main.battleActive():
+                if memory.main.nextChanceRNG12() >= 1:
+                    if memory.main.nextChanceRNG10() != 0:
+                        memory.main.advanceRNG10(memory.main.nextChanceRNG10())
                     else:
-                        battle.advanceRNG12()
-                elif memory.nextChanceRNG10() >= 1:
-                    battle.advanceRNG10(memory.nextChanceRNG10())
+                        memory.main.advanceRNG12()
+                elif memory.main.nextChanceRNG10() >= 1:
+                    memory.main.advanceRNG10(memory.main.nextChanceRNG10())
                 else:
-                    battle.fleeAll()
+                    battle.main.fleeAll()
                 prepBattles += 1
-                memory.fullPartyFormat('rikku')
-                memory.touchSaveSphere()
-                memory.printManipInfo()
-            elif memory.diagSkipPossible() or memory.menuOpen():
+                memory.main.fullPartyFormat('rikku')
+                memory.main.touchSaveSphere()
+                memory.main.printManipInfo()
+            elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
     logs.writeStats("NEA extra manip battles:")
     logs.writeStats(prepBattles)
@@ -58,28 +58,28 @@ def toHiddenCave():
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
-    memory.fullPartyFormat('rikku')
+    memory.main.fullPartyFormat('rikku')
 
     # Prep work:
     goGreen = False
-    nextGreen = memory.nextChanceRNG01(version='green')[0][0]
-    nextWhite = memory.nextChanceRNG01()[0][0]
-    if nextGreen < nextWhite and memory.nextChanceRNG10() == 0:
+    nextGreen = memory.main.nextChanceRNG01(version='green')[0][0]
+    nextWhite = memory.main.nextChanceRNG01()[0][0]
+    if nextGreen < nextWhite and memory.main.nextChanceRNG10() == 0:
         if nextGreen >= 2:
             goGreen = True
 
-    memory.printManipInfo()
+    memory.main.printManipInfo()
     print("#####################")
     print("#####################")
     print("#####################")
     if goGreen:
-        memory.nextChanceRNG01(version='green')
+        memory.main.nextChanceRNG01(version='green')
     else:
-        memory.nextChanceRNG01()
+        memory.main.nextChanceRNG01()
     checkpoint = 0
     preGhostBattles = 0
     while gameVars.neArmor() == 255:
-        if memory.userControl():
+        if memory.main.userControl():
             if goGreen:
                 if checkpoint == 15:
                     checkpoint -= 2
@@ -94,40 +94,40 @@ def dropHunt():
                     print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.battleActive():
-                if memory.nextChanceRNG12() == 0:
-                    if memory.getEncounterID() in [319, 323]:
-                        battle.ghostKill()
+            if memory.main.battleActive():
+                if memory.main.nextChanceRNG12() == 0:
+                    if memory.main.getEncounterID() in [319, 323]:
+                        battle.main.ghostKill()
                     else:
-                        if memory.nextChanceRNG10() != 0:
-                            battle.advanceRNG10(
-                                memory.nextChanceRNG10())
+                        if memory.main.nextChanceRNG10() != 0:
+                            memory.main.advanceRNG10(
+                                memory.main.nextChanceRNG10())
                         else:
-                            battle.fleeAll()
-                        memory.clickToControl3()
-                    memory.checkNEArmor()
+                            battle.main.fleeAll()
+                        memory.main.clickToControl3()
+                    memory.main.checkNEArmor()
                 else:
-                    if memory.nextChanceRNG10() != 0:
-                        battle.advanceRNG10(memory.nextChanceRNG10())
+                    if memory.main.nextChanceRNG10() != 0:
+                        memory.main.advanceRNG10(memory.main.nextChanceRNG10())
                     else:
-                        battle.advanceRNG12()
-                    memory.clickToControl3()
-                battle.healUp(fullMenuClose=True)
+                        memory.main.advanceRNG12()
+                    memory.main.clickToControl3()
+                battle.main.healUp(fullMenuClose=True)
                 if gameVars.neArmor() == 255:
-                    memory.fullPartyFormat('rikku')
-                    nextGreen = memory.nextChanceRNG01(version='green')[
+                    memory.main.fullPartyFormat('rikku')
+                    nextGreen = memory.main.nextChanceRNG01(version='green')[
                         0][0]
-                    nextWhite = memory.nextChanceRNG01()[0][0]
-                    if not goGreen and nextGreen < nextWhite and memory.nextChanceRNG10() == 0:
+                    nextWhite = memory.main.nextChanceRNG01()[0][0]
+                    if not goGreen and nextGreen < nextWhite and memory.main.nextChanceRNG10() == 0:
                         if nextGreen >= 2:
                             goGreen = True
-                    memory.printManipInfo()
+                    memory.main.printManipInfo()
                     if goGreen:
-                        memory.nextChanceRNG01(version='green')
+                        memory.main.nextChanceRNG01(version='green')
                     else:
-                        memory.nextChanceRNG01()
+                        memory.main.nextChanceRNG01()
                     preGhostBattles += 1
-            elif memory.diagSkipPossible() or memory.menuOpen():
+            elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
     print("The NE armor hunt is complete. Char:", gameVars.neArmor())
     logs.writeStats("Pre-Ghost flees:")
@@ -138,19 +138,19 @@ def dropHunt():
 
 def returnToGagazet():
     unequip = False
-    if memory.getCoords()[0] > 300:
+    if memory.main.getCoords()[0] > 300:
         goGreen = True
         menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
-        if memory.overdriveState2()[6] != 100:
+        if memory.main.overdriveState2()[6] != 100:
             unequip = True
     else:
         goGreen = False
-        if memory.overdriveState2()[6] == 100:
+        if memory.main.overdriveState2()[6] == 100:
             menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
 
     checkpoint = 0
-    while memory.getMap() != 259:
-        if memory.userControl():
+    while memory.main.getMap() != 259:
+        if memory.main.userControl():
             if goGreen:
                 if checkpoint == 10:
                     goGreen = False
@@ -158,22 +158,22 @@ def returnToGagazet():
                 elif targetPathing.setMovement(targetPathing.neReturnGreen(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 1 and memory.getMap() == 266:
+            elif checkpoint < 1 and memory.main.getMap() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
                 menu.equipArmor(character=gameVars.neArmor(), ability=99)
                 unequip = False
             elif checkpoint == 2:
-                memory.touchSaveSphere()
+                memory.main.touchSaveSphere()
                 checkpoint += 1
-            elif checkpoint < 7 and memory.getMap() == 279:
+            elif checkpoint < 7 and memory.main.getMap() == 279:
                 checkpoint = 7
             elif targetPathing.setMovement(targetPathing.neReturn(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.battleActive():
-                battle.fleeAll()
-            elif memory.diagSkipPossible() or memory.menuOpen():
+            if memory.main.battleActive():
+                battle.main.fleeAll()
+            elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()

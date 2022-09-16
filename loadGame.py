@@ -1,7 +1,7 @@
 # Libraries and Core Files
 import xbox
 import screen
-import memory
+import memory.main
 import zzairShipPath
 import targetPathing
 import os
@@ -32,12 +32,12 @@ def loadSaveNum(number):
         if saveFiles[x] == testString:
             print("Save file is in position:", x)
             savePos = x
-    memory.waitFrames(20)
+    memory.memory.main.waitFrames(20)
     if savePos != 255:
-        while memory.loadGamePos() != savePos:
-            if memory.loadGamePos() + 4 < savePos:
+        while memory.memory.main.loadGamePos() != savePos:
+            if memory.memory.main.loadGamePos() + 4 < savePos:
                 xbox.TriggerR()
-            elif memory.loadGamePos() < savePos:
+            elif memory.memory.main.loadGamePos() < savePos:
                 xbox.tapDown()
             else:
                 xbox.tapUp()
@@ -45,10 +45,10 @@ def loadSaveNum(number):
         for _ in range(7):
             xbox.tapB()
         FFXC.set_neutral()
-        memory.awaitControl()
-        memory.waitFrames(5)
+        memory.memory.main.awaitControl()
+        memory.memory.main.waitFrames(5)
         # So that we don't evaluate battle as complete after loading.
-        memory.resetBattleEnd()
+        memory.memory.main.resetBattleEnd()
     else:
         print("That save file does not exist. Quitting program.")
         exit()
@@ -57,72 +57,72 @@ def loadSaveNum(number):
 def LoadFirst():
     print("Loading to first save file")
     xbox.menuB()
-    memory.waitFrames(30 * 2.5)
+    memory.memory.main.waitFrames(30 * 2.5)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.waitFrames(30 * 0.1)
+    memory.memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.awaitControl()
+    memory.memory.main.awaitControl()
 
 
 def loadOffset(offset):
     print("Loading to save file in position", offset)
     totalOffset = offset
-    memory.waitFrames(30 * 2.5)
+    memory.memory.main.waitFrames(30 * 2.5)
     for _ in range(totalOffset):
         xbox.tapDown()
     for _ in range(7):
         xbox.tapB()
     FFXC.set_neutral()
-    memory.waitFrames(120)
+    memory.memory.main.waitFrames(120)
     # So that we don't evaluate battle as complete after loading.
-    memory.resetBattleEnd()
+    memory.memory.main.resetBattleEnd()
 
 
 def loadOffsetBattle(offset):
     print("Loading to save file in position", offset)
     xbox.menuB()
-    memory.waitFrames(30 * 2.5)
+    memory.memory.main.waitFrames(30 * 2.5)
     while offset > 0:
         xbox.tapDown()
         offset -= 1
-    memory.waitFrames(30 * 0.1)
+    memory.memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.waitFrames(30 * 0.1)
+    memory.memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.waitFrames(30 * 3)
+    memory.memory.main.waitFrames(30 * 3)
 
 
 def loadMemCursor():
     import vars
     gameVars = vars.varsHandle()
-    memory.awaitControl()
-    memory.openMenu()
-    if memory.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
+    memory.memory.main.awaitControl()
+    memory.memory.main.openMenu()
+    if memory.memory.main.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
         cursorTarget = 5
     else:
         cursorTarget = 8
     print("Aiming at", cursorTarget)
-    while memory.getMenuCursorPos() != cursorTarget:
-        print(memory.getMenuCursorPos())
+    while memory.memory.main.getMenuCursorPos() != cursorTarget:
+        print(memory.memory.main.getMenuCursorPos())
         xbox.tapUp()
-        print(memory.getMenuCursorPos())
+        print(memory.memory.main.getMenuCursorPos())
         if gameVars.usePause():
-            memory.waitFrames(2)
-    while memory.menuNumber() == 5:
+            memory.memory.main.waitFrames(2)
+    while memory.memory.main.menuNumber() == 5:
         xbox.tapB()
         if gameVars.usePause():
-            memory.waitFrames(90)
-    while memory.configCursor() != 3:
+            memory.memory.main.waitFrames(90)
+    while memory.main.configCursor() != 3:
         xbox.tapDown()
         if gameVars.usePause():
-            memory.waitFrames(1)
-    while memory.configCursorColumn() != 1:
+            memory.main.waitFrames(1)
+    while memory.main.configCursorColumn() != 1:
         xbox.tapRight()
         if gameVars.usePause():
-            memory.waitFrames(1)
-    memory.closeMenu()
+            memory.main.waitFrames(1)
+    memory.main.closeMenu()
 
 
 def loadPostBlitz():
@@ -133,41 +133,41 @@ def loadPostBlitz():
         if screen.Minimap4():
             FFXC.set_value('AxisLx', -1)
             FFXC.set_value('AxisLy', -1)
-            memory.waitFrames(30 * 0.5)
+            memory.main.waitFrames(30 * 0.5)
             FFXC.set_value('AxisLx', 0)
-            memory.waitFrames(30 * 1)
+            memory.main.waitFrames(30 * 1)
             FFXC.set_value('AxisLy', 0)
         else:
             xbox.menuB()
 
     # Reverse T screen
     FFXC.set_value('AxisLx', 1)
-    memory.waitFrames(30 * 4.5)
+    memory.main.waitFrames(30 * 4.5)
     FFXC.set_value('AxisLy', -1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_value('AxisLy', 0)
-    memory.waitFrames(30 * 5)
+    memory.main.waitFrames(30 * 5)
     FFXC.set_value('AxisLx', 0)
 
     # Carnival vendor screen
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_value('AxisLy', 1)
-    memory.waitFrames(30 * 1.5)
+    memory.main.waitFrames(30 * 1.5)
     FFXC.set_value('AxisLx', 1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_value('AxisLx', 0)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_value('AxisLx', 1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)
 
     print("Rejoining the party.")
-    memory.clickToControl()  # Scene, rejoining the party
+    memory.main.clickToControl()  # Scene, rejoining the party
     print("Walking up to Yuna.")
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 0)  # Enters laughing scene, ends Luca section.
     print("End of loading section.")
@@ -179,69 +179,69 @@ def LoadNeutral():
 
 def LoadBaaj():
     FFXC.set_movement(1, 0)
-    memory.waitFrames(30 * 0.4)
+    memory.main.waitFrames(30 * 0.4)
     FFXC.set_neutral()
-    memory.waitFrames(30 * 0.04)
+    memory.main.waitFrames(30 * 0.04)
 
 
 def BesaidTrials():
     loadOffset(29)
     # Exit Tent
     FFXC.set_value('AxisLy', -1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_value('AxisLx', 1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_value('AxisLy', 0)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_value('AxisLx', 0)
-    memory.waitFrames(30 * 4)
+    memory.main.waitFrames(30 * 4)
 
     # To the temple
     FFXC.set_value('AxisLx', 1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_value('AxisLx', 0)
     FFXC.set_value('AxisLy', 1)
-    memory.waitFrames(30 * 12)
+    memory.main.waitFrames(30 * 12)
     FFXC.set_value('AxisLy', 0)
 
 
 def Boat1():
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     # To the junction screen, then back.
     FFXC.set_value('AxisLy', -1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_value('AxisLy', 0)
-    memory.waitFrames(30 * 6)
+    memory.main.waitFrames(30 * 6)
     FFXC.set_value('AxisLy', -1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_value('AxisLy', 0)
 
 
 def Kilika():
     xbox.menuB()
-    memory.waitFrames(30 * 2.5)
+    memory.main.waitFrames(30 * 2.5)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuDown()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.waitFrames(30 * 4)
-    memory.awaitControl()
+    memory.main.waitFrames(30 * 4)
+    memory.main.awaitControl()
 
 
 def KilikaTrials():
     FFXC.set_movement(0, -1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_neutral()
 
 
@@ -249,10 +249,10 @@ def LoadMiihenStart_Laugh():
     import targetPathing
     while not targetPathing.setMovement([-440, 0]):
         pass
-    memory.clickToEventTemple(4)
+    memory.main.clickToEventTemple(4)
 
     # Reverse T screen
-    memory.awaitControl()
+    memory.main.awaitControl()
     while not targetPathing.setMovement([-39, 18]):
         pass
     while not targetPathing.setMovement([3, 31]):
@@ -261,10 +261,10 @@ def LoadMiihenStart_Laugh():
         pass
     while not targetPathing.setMovement([163, 0]):
         pass
-    memory.clickToEventTemple(2)
+    memory.main.clickToEventTemple(2)
 
     # Carnival vendor screen
-    memory.awaitControl()
+    memory.main.awaitControl()
     while not targetPathing.setMovement([30, -86]):
         pass
     while not targetPathing.setMovement([60, -24]):
@@ -273,12 +273,12 @@ def LoadMiihenStart_Laugh():
         pass
     while not targetPathing.setMovement([129, 101]):
         pass
-    memory.clickToEventTemple(1)
-    memory.waitFrames(30 * 1)
-    memory.clickToControl()
+    memory.main.clickToEventTemple(1)
+    memory.main.waitFrames(30 * 1)
+    memory.main.clickToControl()
     FFXC.set_movement(-1, -1)
-    memory.waitFrames(30 * 0.2)
-    memory.awaitEvent()
+    memory.main.waitFrames(30 * 0.2)
+    memory.main.awaitEvent()
     FFXC.set_neutral()
 
 
@@ -286,10 +286,10 @@ def LoadMiihenStart():
     import targetPathing
     while not targetPathing.setMovement([-440, 0]):
         pass
-    memory.clickToEventTemple(4)
+    memory.main.clickToEventTemple(4)
 
     # Reverse T screen
-    memory.awaitControl()
+    memory.main.awaitControl()
     while not targetPathing.setMovement([-39, 18]):
         pass
     while not targetPathing.setMovement([3, 31]):
@@ -298,10 +298,10 @@ def LoadMiihenStart():
         pass
     while not targetPathing.setMovement([163, 0]):
         pass
-    memory.clickToEventTemple(2)
+    memory.main.clickToEventTemple(2)
 
     # Carnival vendor screen
-    memory.awaitControl()
+    memory.main.awaitControl()
     while not targetPathing.setMovement([30, -86]):
         pass
     while not targetPathing.setMovement([60, -24]):
@@ -310,10 +310,10 @@ def LoadMiihenStart():
         pass
     while not targetPathing.setMovement([129, 101]):
         pass
-    memory.clickToEventTemple(1)
+    memory.main.clickToEventTemple(1)
 
     # -----Use this if you've already done the laughing scene.
-    memory.clickToControl()
+    memory.main.clickToControl()
     while not targetPathing.setMovement([2, 57]):
         pass
     while not targetPathing.setMovement([108, 59]):
@@ -328,51 +328,51 @@ def LoadMiihenStart():
         pass
     while not targetPathing.setMovement([-126, 117]):
         pass
-    memory.clickToEventTemple(1)
+    memory.main.clickToEventTemple(1)
 
     print("Load complete. Now for Mi'ihen area.")
 
 
 def LoadMRR():
     FFXC.set_movement(-1, 1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 2)
-    memory.awaitEvent()
+    memory.main.waitFrames(30 * 2)
+    memory.main.awaitEvent()
     FFXC.set_neutral()
-    memory.clickToControl()
+    memory.main.clickToControl()
 
 
 def LoadMRR2():
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 0.3)
+    memory.main.waitFrames(30 * 0.3)
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     xbox.SkipDialog(2)
     FFXC.set_neutral()
     xbox.menuB()
-    memory.waitFrames(30 * 2)
-    memory.awaitControl()
+    memory.main.waitFrames(30 * 2)
+    memory.main.awaitControl()
     for i in range(20):
         print(f"Sleeping for {20-i} more seconds...")
-        memory.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
 
 
 def AfterGui():
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_movement(-1, 0)
-    memory.waitFrames(30 * 2.5)
+    memory.main.waitFrames(30 * 2.5)
     FFXC.set_neutral()
 
     target = [[463, -163], [498, 77], [615, -39], [935, 12], [1200, 200]]
 
     checkpoint = 0
-    while memory.getMap() != 93:
-        if memory.userControl():
+    while memory.main.getMap() != 93:
+        if memory.main.userControl():
             if targetPathing.setMovement(target[checkpoint]):
                 checkpoint += 1
         else:
@@ -382,159 +382,159 @@ def AfterGui():
 
 def djoseTemple():
     loadOffset(19)
-    memory.waitFrames(30 * 6)
+    memory.main.waitFrames(30 * 6)
     FFXC.set_value('AxisLy', -1)
     FFXC.set_value('AxisLx', -1)
-    memory.waitFrames(30 * 1.7)
+    memory.main.waitFrames(30 * 1.7)
     FFXC.set_value('AxisLy', 0)
     FFXC.set_value('AxisLx', 0)
-    memory.waitFrames(30 * 0.5)
+    memory.main.waitFrames(30 * 0.5)
 
 
 def moonflow2():
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_movement(-1, -1)
-    memory.waitFrames(30 * 0.7)
+    memory.main.waitFrames(30 * 0.7)
     FFXC.set_neutral()
-    memory.waitFrames(30 * 0.5)
+    memory.main.waitFrames(30 * 0.5)
 
 
 def loadGuadoSkip():
-    memory.clickToControl3()
+    memory.main.clickToControl3()
     FFXC.set_movement(1, -1)
-    memory.awaitEvent()
+    memory.main.awaitEvent()
     FFXC.set_neutral()
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_movement(-1, 0)
-    memory.waitFrames(30 * 0.6)
+    memory.main.waitFrames(30 * 0.6)
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 1.5)
+    memory.main.waitFrames(30 * 1.5)
     FFXC.set_movement(-1, 1)
-    memory.waitFrames(30 * 0.9)
+    memory.main.waitFrames(30 * 0.9)
     FFXC.set_movement(-1, -1)
-    memory.waitFrames(30 * 2.2)
+    memory.main.waitFrames(30 * 2.2)
     FFXC.set_movement(1, -1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_movement(1, 1)
-    memory.awaitEvent()
+    memory.main.awaitEvent()
     FFXC.set_neutral()
-    memory.waitFrames(30 * 0.2)
-    memory.awaitControl()
+    memory.main.waitFrames(30 * 0.2)
+    memory.main.awaitControl()
     FFXC.set_movement(0, -1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_neutral()
     import area.guadosalam as guadosalam
     guadosalam.afterSpeech(checkpoint=26)
 
 
 def loadMacLake():
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_movement(0, 1)
-    memory.awaitEvent()
+    memory.main.awaitEvent()
     FFXC.set_neutral()
-    memory.awaitControl()
+    memory.main.awaitControl()
 
 
 def loadMacTemple():
     FFXC.set_movement(-1, 0)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_neutral()
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_neutral()
 
 
 def loadMacTemple2():
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_movement(-1, -1)
-    memory.waitFrames(30 * 1.5)
+    memory.main.waitFrames(30 * 1.5)
     FFXC.set_movement(-1, 1)
-    memory.waitFrames(30 * 1.5)
+    memory.main.waitFrames(30 * 1.5)
     FFXC.set_neutral()
 
 
 def loadWendigo():
-    import battle
-    battle.wendigo()
+    import battle.main
+    battle.main.wendigo()
     print("Wendigo fight over - end of loading game to Wendigo fight")
 
 
 def loadRescue():
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_movement(1, -1)
-    memory.waitFrames(30 * 0.7)
+    memory.main.waitFrames(30 * 0.7)
     FFXC.set_movement(0, -1)
-    while memory.userControl():
+    while memory.main.userControl():
         pass
     FFXC.set_neutral()
-    memory.waitFrames(30 * 1)
-    memory.awaitControl()
-    memory.fullPartyFormat('evrae')
+    memory.main.waitFrames(30 * 1)
+    memory.main.awaitControl()
+    memory.main.fullPartyFormat('evrae')
 
     zzairShipPath.airShipPath(1)  # The run from cockpit to the deck
 
 
 def loadBahamut():
     loadOffset(1)
-    memory.awaitControl()
+    memory.main.awaitControl()
     FFXC.set_value('AxisLy', 1)
     FFXC.set_value('AxisLx', 1)
-    memory.waitFrames(30 * 0.2)
+    memory.main.waitFrames(30 * 0.2)
     FFXC.set_value('AxisLx', 0)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_value('AxisLy', 0)
 
 
 def loadCalm():
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 1)
+    memory.main.waitFrames(30 * 1)
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_neutral()
-    memory.awaitControl()
+    memory.main.awaitControl()
 
 
 def loadGagaGates():
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
     FFXC.set_movement(0, 1)
-    memory.awaitEvent()
+    memory.main.awaitEvent()
     FFXC.set_neutral()
 
 
 def zanEntrance():
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 2.5)
+    memory.main.waitFrames(30 * 2.5)
     FFXC.set_neutral()
 
 
 def zanTrials():
     FFXC.set_movement(1, 1)
-    memory.waitFrames(30 * 0.5)
+    memory.main.waitFrames(30 * 0.5)
     FFXC.set_movement(0, 1)
-    memory.waitFrames(30 * 2)
+    memory.main.waitFrames(30 * 2)
     FFXC.set_neutral()
 
 
 def loadGagazetDream():
     print("Positioning to next map")
-    while memory.getMap() != 309:
+    while memory.main.getMap() != 309:
         FFXC.set_movement(1, 1)
     FFXC.set_neutral()
     print("Positioning complete")
-    memory.awaitControl()
+    memory.main.awaitControl()
 
 
 def loadEggHunt():
-    memory.awaitControl()
+    memory.main.awaitControl()
     while not targetPathing.setMovement([-10, -507]):
         pass
     while not targetPathing.setMovement([-5, -360]):
         pass
 
-    while memory.getMap() != 324:
+    while memory.main.getMap() != 324:
         FFXC.set_movement(0, 1)
     FFXC.set_neutral()

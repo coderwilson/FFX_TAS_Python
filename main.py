@@ -21,8 +21,8 @@ import area.besaid
 import area.baaj
 import area.dreamZan
 import xbox
-import memory
-import battle
+import memory.main
+import battle.main
 import screen
 import vars
 import reset
@@ -167,7 +167,7 @@ def reportGamestate():
 
 # Initiate memory reading, after we know the game is open.
 # import memory
-memory.start()
+memory.main.start()
 
 # Main
 print("FFX automation starting")
@@ -178,9 +178,9 @@ print("Game start screen")
 screen.clearMouse(0)
 
 if gameVars.useSetSeed():
-    memory.setRngSeed(rngSeedNum)  # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+    memory.main.setRngSeed(rngSeedNum)  # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-rngSeed = memory.rngSeed()
+rngSeed = memory.main.rngSeed()
 print("---RNG seed:", rngSeed)
 logs.nextStats(rngSeed)
 logs.writeStats("RNG seed:")
@@ -209,8 +209,8 @@ if Gamestate != "none":
         loadGame.loadSaveNum(39)
         print("Load complete")
         loadGame.loadMemCursor()
-        while memory.userControl():
-            if memory.getCoords()[0] > 0.5:
+        while memory.main.userControl():
+            if memory.main.getCoords()[0] > 0.5:
                 FFXC.set_movement(1, 1)
             else:
                 FFXC.set_movement(0, 1)
@@ -232,7 +232,7 @@ if Gamestate != "none":
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
         loadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
-        memory.setGilvalue(4000)
+        memory.main.setGilvalue(4000)
         loadGame.LoadMRR()
     if Gamestate == "Djose" and StepCounter == 1:  # Aftermath, after talking to Seymour and then Auron
         loadGame.loadSaveNum(27)
@@ -287,9 +287,9 @@ if Gamestate != "none":
     if Gamestate == "Gagazet" and StepCounter == 11:  # Calm Lands, but Nemesis version
         loadGame.loadSaveNum(64)
         FFXC.set_movement(1, 0)
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
         FFXC.set_movement(0, 1)
-        memory.waitFrames(60)
+        memory.main.waitFrames(60)
         FFXC.set_neutral()
         import menu
         menu.prepCalmLands()
@@ -313,14 +313,14 @@ if Gamestate != "none":
         # loadGame.loadSaveNum(49)
         # Nemesis logic, double friend sphere drops from B&Y
         loadGame.loadSaveNum(70)
-        while not memory.oakaGilCursor() in [8, 20]:
-            if memory.userControl():
+        while not memory.main.oakaGilCursor() in [8, 20]:
+            if memory.main.userControl():
                 import targetPathing
                 targetPathing.setMovement([-251, 340])
             else:
                 FFXC.set_neutral()
             xbox.menuB()
-        memory.checkNEArmor()
+        memory.main.checkNEArmor()
     if Gamestate == "Sin" and StepCounter == 3:  # Start of "Sea of Sorrows" section
         loadGame.loadSaveNum(50)
     if Gamestate == "Sin" and StepCounter == 4:  # Before point of no return
@@ -388,8 +388,8 @@ if Gamestate != "none":
         loadGame.loadSaveNum(85)
         gameVars.setNemCheckpointAP(30)
     if Gamestate == "Nem_Farm":
-        memory.checkNEArmor()
-    memory.checkNEArmor()
+        memory.main.checkNEArmor()
+    memory.main.checkNEArmor()
 
 rikkuCharged = 0
 blitzLoops = 0
@@ -414,7 +414,7 @@ while Gamestate != "End":
         gameVars.setCSR(True)
         print("Variables initialized.")
         Gamestate = "DreamZan"
-        memory.waitFrames(30 * 0.5)
+        memory.main.waitFrames(30 * 0.5)
         print("New Game 2 function initiated.")
         area.dreamZan.NewGame2()
         startTime = logs.timeStamp()
@@ -429,7 +429,7 @@ while Gamestate != "End":
 
     if Gamestate == "DreamZan" and StepCounter == 2:
         reportGamestate()
-        battle.Ammes()
+        battle.main.Ammes()
         StepCounter = 3
         reportGamestate()
 
@@ -602,7 +602,7 @@ while Gamestate != "End":
         reportGamestate()
         area.MRR.arrival()
         area.MRR.mainPath()
-        if memory.gameOver():
+        if battle.main.gameOver():
             Gamestate = "gameOverError"
         StepCounter = 2
 
@@ -726,7 +726,7 @@ while Gamestate != "End":
     if Gamestate == "rescueYuna" and StepCounter == 1:
         reportGamestate()
         area.rescueYuna.preEvrae()
-        battle.Evrae()
+        battle.main.Evrae()
         area.rescueYuna.guards()
         StepCounter = 2
 
@@ -853,10 +853,10 @@ while Gamestate != "End":
     if Gamestate == "Sin" and StepCounter == 4:
         area.sin.eggHunt(autoEggHunt)
         if gameVars.nemesis():
-            battle.BFA_nem()
+            battle.main.BFA_nem()
         else:
-            battle.BFA()
-            battle.yuYevon()
+            battle.main.BFA()
+            battle.main.yuYevon()
         Gamestate = "End"
 
     # Nemesis logic only:
@@ -870,7 +870,7 @@ while Gamestate != "End":
 
     if Gamestate == "Gagazet" and StepCounter == 12:
         print("MAAAAARK")
-        memory.awaitControl()
+        memory.main.awaitControl()
         nemesis.changes.arenaPurchase()
         area.gagazet.defenderX()
         StepCounter = 2
@@ -1056,32 +1056,32 @@ print("Time! The game is now over.")
 
 endTime = logs.timeStamp()
 
-if memory.getStoryProgress() > 3210:
+if memory.main.getStoryProgress() > 3210:
     totalTime = endTime - startTime
     logs.writeStats("Total time:")
     logs.writeStats(str(totalTime))
     print("The game duration was:", str(totalTime))
     print("This duration is intended for comparison reference only, not as a true timer.")
     print("Please do not use this as your submitted time.")
-    memory.waitFrames(30)
+    memory.main.waitFrames(30)
     print("--------")
     print("In order to conform with speedrun standards,")
-    memory.waitFrames(60)
+    memory.main.waitFrames(60)
     print("we now wait until the end of the credits and stuff")
-    memory.waitFrames(60)
+    memory.main.waitFrames(60)
     print("and then will open up the list of saves.")
-    memory.waitFrames(60)
+    memory.main.waitFrames(60)
     print("This will show the autosave values, which conforms to the speedrun rules.")
 
-    while memory.getMap() != 23:
-        if memory.getMap() in [348, 349]:
+    while memory.main.getMap() != 23:
+        if memory.main.getMap() in [348, 349]:
             xbox.tapStart()
-        elif memory.cutsceneSkipPossible():
+        elif memory.main.cutsceneSkipPossible():
             xbox.skipScene()
-    memory.waitFrames(180)
-    while not memory.saveMenuOpen():
+    memory.main.waitFrames(180)
+    while not memory.main.saveMenuOpen():
         xbox.tapB()
 
-memory.end()
+memory.main.end()
 
 print("Automation complete. Shutting down now. Have a great day!")

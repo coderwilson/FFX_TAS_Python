@@ -1,23 +1,23 @@
-import memory
+import memory.main
 import time
-memory.start()
+memory.main.start()
 
 readVals = False
 
 print("------------------")
 if readVals:
-    memory.printManipInfo()
+    memory.main.printManipInfo()
 else:
     print("Here goes nothing!")
     print("------------------")
-    while not memory.nextDropRNG13(1):
-        memory.advanceRNG13()
+    while not memory.main.nextDropRNG13(1):
+        memory.main.advanceRNG13()
     print("Mark 1")
-    while memory.nextChanceRNG12():
-        memory.advanceRNG12()
+    while memory.main.nextChanceRNG12():
+        memory.main.advanceRNG12()
     print("Mark 2")
-    while memory.nextChanceRNG10():
-        memory.advanceRNG10()
+    while memory.main.nextChanceRNG10():
+        memory.main.advanceRNG10()
     print("------------------")
     print("Should now drop NE armor.")
 print("------------------")
