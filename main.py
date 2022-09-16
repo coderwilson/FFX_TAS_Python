@@ -1,12 +1,5 @@
 # Libraries and Core Files
-import battle
-import blitz
 import logs
-import memory
-import reset
-import screen
-import vars
-import xbox
 import area.sin
 import area.zanarkand
 import area.gagazet
@@ -20,12 +13,19 @@ import area.moonflow
 import area.djose
 import area.MRR
 import area.miihen
+import blitz
 import area.luca
 import area.kilika
 import area.boats
 import area.besaid
 import area.baaj
 import area.dreamZan
+import xbox
+import memory
+import battle
+import screen
+import vars
+import reset
 gameVars = vars.varsHandle()
 gameVars.setStartVars()
 
