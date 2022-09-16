@@ -4330,9 +4330,9 @@ def useItem(slot: int, direction='none', target=255, rikkuFlee=False):
     while memory.mainBattleMenu():
         xbox.tapB()
     if rikkuFlee:
-        print("Mark 2, selecting 'Use' command in position ", 2)
+        print("Mark 2, selecting 'Use' command in position", 2)
     else:
-        print("Mark 2, selecting 'Use' command in position ", 1)
+        print("Mark 2, selecting 'Use' command in position", 1)
     if rikkuFlee:
         _navigate_to_position(2)
     else:
