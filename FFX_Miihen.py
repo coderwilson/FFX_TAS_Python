@@ -316,8 +316,8 @@ def lowRoad(selfDestruct, battleCount, SDencounterID):
             elif FFX_memory.diagSkipPossible():
                 if checkpoint < 6 or checkpoint > 12:
                     FFX_Xbox.tapB()
-    FFX_Logs.writeStats('Miihen encounters:')
-    FFX_Logs.writeStats(battleCount)
+    #FFX_Logs.writeStats('Miihen encounters:')
+    #FFX_Logs.writeStats(battleCount)
 
 
 def wrapUp():

@@ -63,8 +63,8 @@ def path():
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.menuB()
 
-    FFX_Logs.writeStats("Djose battles:")
-    FFX_Logs.writeStats(countBattles)
+    #FFX_Logs.writeStats("Djose battles:")
+    #FFX_Logs.writeStats(countBattles)
 
 
 def temple():

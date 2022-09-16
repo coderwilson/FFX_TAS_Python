@@ -58,8 +58,8 @@ if gameVars.nemesis():
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
-#Gamestate = "MRR"
-#StepCounter = 1
+Gamestate = "MRR"
+StepCounter = 1
 #Gamestate = "Djose"
 #StepCounter = 1
 #Gamestate = "Moonflow"
@@ -86,8 +86,8 @@ if gameVars.nemesis():
 #StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
 #StepCounter = 10 #Nemesis variant, blitz win logic (not working)
 #StepCounter = 11 #Remiem racing
-Gamestate = "Zanarkand"
-StepCounter = 1 #Campfire, version 1
+#Gamestate = "Zanarkand"
+#StepCounter = 1 #Campfire, version 1
 #StepCounter = 3 #Blitz win, end game version 1 or 2
 #StepCounter = 4 #Before Yunalesca
 #StepCounter = 5 #After Yunalesca
@@ -95,8 +95,8 @@ StepCounter = 1 #Campfire, version 1
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 #Nemesis load testing
 #Gamestate = "Nem_Farm"
@@ -613,6 +613,11 @@ while Gamestate != "End":
         reportGamestate()
         FFX_MRR.battleSite()
         FFX_MRR.guiAndAftermath()
+        endTime = FFX_Logs.timeStamp()
+        totalTime = endTime - startTime
+        print("End of Battle Site timer is:", str(totalTime))
+        FFX_Logs.writeStats("Djose-Start time:")
+        FFX_Logs.writeStats(totalTime)
         Gamestate = "Djose"
         StepCounter = 1
 
@@ -754,6 +759,7 @@ while Gamestate != "End":
             StepCounter = 1
 
     if Gamestate == "Gagazet" and StepCounter == 1:
+        manipTime1 = FFX_Logs.timeStamp()
         reportGamestate()
         FFX_Gagazet.calmLands()
         FFX_Gagazet.defenderX()
@@ -769,6 +775,11 @@ while Gamestate != "End":
             FFX_neArmor.dropHunt()
             print("Mark 3")
             FFX_neArmor.returnToGagazet()
+        manipTime2 = FFX_Logs.timeStamp()
+        manipTime = manipTime2 - manipTime1
+        print("NEA Manip duration:", str(manipTime))
+        FFX_Logs.writeStats("NEA Manip duration:")
+        FFX_Logs.writeStats(manipTime)
         StepCounter = 3
 
     if Gamestate == "Gagazet" and StepCounter == 3:

@@ -70,8 +70,8 @@ def _set_index_to_value(index, value, power):
 
 def ssWinno():
     FFX_memory.clickToControl()
-    FFX_Logs.writeStats("Winno Speed Count:")
-    FFX_Logs.writeStats(FFX_memory.getSpeed())
+    #FFX_Logs.writeStats("Winno Speed Count:")
+    #FFX_Logs.writeStats(FFX_memory.getSpeed())
 
     while FFX_memory.userControl():
         FFX_targetPathing.setMovement([28, -36])  # Through first door

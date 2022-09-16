@@ -130,7 +130,7 @@ def dropHunt():
             elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
                 FFX_Xbox.tapB()
     print("The NE armor hunt is complete. Char:", gameVars.neArmor())
-    FFX_Logs.writeStats("Pre-Ghost battles:")
+    FFX_Logs.writeStats("Pre-Ghost flees:")
     FFX_Logs.writeStats(preGhostBattles)
     FFX_Logs.writeStats("NEA char:")
     FFX_Logs.writeStats(gameVars.neArmor())

@@ -161,6 +161,7 @@ def forest1():
                     nextBattle = FFX_rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
                     print("##########################", nextBattle)
                     kilikaBattles += 1
+                FFX_memory.fullPartyFormat('kilika')
             elif FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
@@ -171,10 +172,10 @@ def forest1():
                 checkpoint = 94
             elif checkpoint < 96 and FFX_memory.getMap() == 96:  # Temple interior
                 checkpoint = 96
-    FFX_Logs.writeStats("Kilika battles (North):")
-    FFX_Logs.writeStats(str(kilikaBattles))
-    FFX_Logs.writeStats("Kilika optimal battles (North):")
-    FFX_Logs.writeStats(str(optimalBattles))
+    #FFX_Logs.writeStats("Kilika battles (North):")
+    #FFX_Logs.writeStats(str(kilikaBattles))
+    #FFX_Logs.writeStats("Kilika optimal battles (North):")
+    #FFX_Logs.writeStats(str(optimalBattles))
 
 
 def trials():
@@ -304,7 +305,7 @@ def forest3():
                 checkpoint = 53
             elif checkpoint < 64 and FFX_memory.getMap() == 16:  # Map with boat
                 checkpoint = 64
-    FFX_Logs.writeStats("Kilika battles (South):")
-    FFX_Logs.writeStats(str(kilikaBattles))
-    FFX_Logs.writeStats("Kilika optimal battles (South):")
-    FFX_Logs.writeStats(str(optimalBattles))
+    #FFX_Logs.writeStats("Kilika battles (South):")
+    #FFX_Logs.writeStats(str(kilikaBattles))
+    #FFX_Logs.writeStats("Kilika optimal battles (South):")
+    #FFX_Logs.writeStats(str(optimalBattles))

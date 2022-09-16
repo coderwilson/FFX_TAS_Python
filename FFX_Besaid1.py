@@ -84,8 +84,8 @@ def Beach():
                 checkpoint = 37
     FFX_Logs.writeStats("piranha battles:")
     FFX_Logs.writeStats(str(besaidBattles))
-    FFX_Logs.writeStats("Optimal piranha battles:")
-    FFX_Logs.writeStats(str(goodBattles))
+    #FFX_Logs.writeStats("Optimal piranha battles:")
+    #FFX_Logs.writeStats(str(goodBattles))
 
 
 def trials():
@@ -278,8 +278,8 @@ def leaving():
                             FFX_Battle.attack('none')
                     elif FFX_memory.diagSkipPossible():
                         FFX_Xbox.tapB()
-                FFX_Logs.writeStats("Kimahri heal count:")
-                FFX_Logs.writeStats(healCount)
+                #FFX_Logs.writeStats("Kimahri heal count:")
+                #FFX_Logs.writeStats(healCount)
                 FFX_memory.clickToControl()
             # Valefor summon tutorial
             elif checkpoint in [31, 32, 33, 34, 35, 36, 37, 38] and FFX_Screen.BattleScreen():

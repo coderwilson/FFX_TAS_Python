@@ -853,6 +853,7 @@ def decideSkipZanLuck() -> bool:
         attackCount += 2
     else:
         attackCount += 3
+    attackCount += 1 #One attack on Seymour
     for i in range(3):
         print("### BFA attack num ", i, " | ", attackCount)
         if futureAttackHitMiss(character=7, enemy="bfa", attackIndex=attackCount) == False:

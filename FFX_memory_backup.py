@@ -3720,7 +3720,7 @@ def lastHitCheckChange() -> int:
             changeFound = True
             changeValue = memVal
             print("**Registered hit:", changeValue)
-            FFX_Logs.writeStats(changeValue)
+            #FFX_Logs.writeStats(changeValue)
             lastHitInit()
             print("Mark 1")
             return int(changeValue)

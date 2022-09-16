@@ -3741,6 +3741,14 @@ def lucaWorkersBattleID():
 # ------------------------------
 # RNG tracking based on the first six hits
 
+def lastHitKimahri():
+    global baseValue
+    print("Initializing values")
+    key = baseValue + 0xd334cc
+    ptrVal = process.read(key)
+    kimLastHit = process.read(ptrVal + (3 * 0xF90) + 0x7AC)
+    print("Kimahri hit for ", kimLastHit, " damage")
+    return kimLastHit
 
 def lastHitInit():
     global baseValue
@@ -3771,7 +3779,7 @@ def lastHitCheckChange() -> int:
             changeFound = True
             changeValue = memVal
             print("**Registered hit:", changeValue)
-            FFX_Logs.writeStats(changeValue)
+            #FFX_Logs.writeStats(changeValue)
             lastHitInit()
             print("Mark 1")
             return int(changeValue)
