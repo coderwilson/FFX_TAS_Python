@@ -118,7 +118,7 @@ rngSeedNum = 255  # New seed number, only used if doing seed hunt.
 rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 favoriteSeeds = [31, 183]
-rngSeedNum = 31  # If you don't randomly select below, this will be the seed you run.
+rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -602,7 +602,7 @@ while Gamestate != "End":
         reportGamestate()
         area.MRR.arrival()
         area.MRR.mainPath()
-        if battle.main.gameOver():
+        if memory.main.gameOver():
             Gamestate = "gameOverError"
         StepCounter = 2
 

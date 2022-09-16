@@ -11,8 +11,8 @@ FFXC = xbox.controllerHandle()
 
 
 def tapTargeting():
-    print("In Tap Targeting", not memory.memory.main.mainBattleMenu(),
-          memory.memory.main.battleActive())
+    print("In Tap Targeting", not memory.main.mainBattleMenu(),
+          memory.main.battleActive())
     while (not memory.main.mainBattleMenu()) and memory.main.battleActive():
         xbox.tapB()
     print("Done", not memory.main.mainBattleMenu(), memory.main.battleActive())

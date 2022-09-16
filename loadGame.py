@@ -32,12 +32,12 @@ def loadSaveNum(number):
         if saveFiles[x] == testString:
             print("Save file is in position:", x)
             savePos = x
-    memory.memory.main.waitFrames(20)
+    memory.main.waitFrames(20)
     if savePos != 255:
-        while memory.memory.main.loadGamePos() != savePos:
-            if memory.memory.main.loadGamePos() + 4 < savePos:
+        while memory.main.loadGamePos() != savePos:
+            if memory.main.loadGamePos() + 4 < savePos:
                 xbox.TriggerR()
-            elif memory.memory.main.loadGamePos() < savePos:
+            elif memory.main.loadGamePos() < savePos:
                 xbox.tapDown()
             else:
                 xbox.tapUp()
@@ -45,10 +45,10 @@ def loadSaveNum(number):
         for _ in range(7):
             xbox.tapB()
         FFXC.set_neutral()
-        memory.memory.main.awaitControl()
-        memory.memory.main.waitFrames(5)
+        memory.main.awaitControl()
+        memory.main.waitFrames(5)
         # So that we don't evaluate battle as complete after loading.
-        memory.memory.main.resetBattleEnd()
+        memory.main.resetBattleEnd()
     else:
         print("That save file does not exist. Quitting program.")
         exit()
@@ -57,63 +57,63 @@ def loadSaveNum(number):
 def LoadFirst():
     print("Loading to first save file")
     xbox.menuB()
-    memory.memory.main.waitFrames(30 * 2.5)
+    memory.main.waitFrames(30 * 2.5)
     xbox.menuDown()
-    memory.memory.main.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.memory.main.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.memory.main.awaitControl()
+    memory.main.awaitControl()
 
 
 def loadOffset(offset):
     print("Loading to save file in position", offset)
     totalOffset = offset
-    memory.memory.main.waitFrames(30 * 2.5)
+    memory.main.waitFrames(30 * 2.5)
     for _ in range(totalOffset):
         xbox.tapDown()
     for _ in range(7):
         xbox.tapB()
     FFXC.set_neutral()
-    memory.memory.main.waitFrames(120)
+    memory.main.waitFrames(120)
     # So that we don't evaluate battle as complete after loading.
-    memory.memory.main.resetBattleEnd()
+    memory.main.resetBattleEnd()
 
 
 def loadOffsetBattle(offset):
     print("Loading to save file in position", offset)
     xbox.menuB()
-    memory.memory.main.waitFrames(30 * 2.5)
+    memory.main.waitFrames(30 * 2.5)
     while offset > 0:
         xbox.tapDown()
         offset -= 1
-    memory.memory.main.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.memory.main.waitFrames(30 * 0.1)
+    memory.main.waitFrames(30 * 0.1)
     xbox.menuB()
-    memory.memory.main.waitFrames(30 * 3)
+    memory.main.waitFrames(30 * 3)
 
 
 def loadMemCursor():
     import vars
     gameVars = vars.varsHandle()
-    memory.memory.main.awaitControl()
-    memory.memory.main.openMenu()
-    if memory.memory.main.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
+    memory.main.awaitControl()
+    memory.main.openMenu()
+    if memory.main.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
         cursorTarget = 5
     else:
         cursorTarget = 8
     print("Aiming at", cursorTarget)
-    while memory.memory.main.getMenuCursorPos() != cursorTarget:
-        print(memory.memory.main.getMenuCursorPos())
+    while memory.main.getMenuCursorPos() != cursorTarget:
+        print(memory.main.getMenuCursorPos())
         xbox.tapUp()
-        print(memory.memory.main.getMenuCursorPos())
+        print(memory.main.getMenuCursorPos())
         if gameVars.usePause():
-            memory.memory.main.waitFrames(2)
-    while memory.memory.main.menuNumber() == 5:
+            memory.main.waitFrames(2)
+    while memory.main.menuNumber() == 5:
         xbox.tapB()
         if gameVars.usePause():
-            memory.memory.main.waitFrames(90)
+            memory.main.waitFrames(90)
     while memory.main.configCursor() != 3:
         xbox.tapDown()
         if gameVars.usePause():

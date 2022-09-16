@@ -176,7 +176,7 @@ def mainPath():
                     print("Status update:", status)
                     status[3] += 1
                 else:
-                    if memory.main.MRRmanip(kimMaxAdvance=9):
+                    if battle.main.MRRmanip(kimMaxAdvance=9):
                         critManip = True
 
                 if memory.main.getYunaSlvl() >= 8 and status[4] == 0:
