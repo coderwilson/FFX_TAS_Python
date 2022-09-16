@@ -158,7 +158,7 @@ def ammesBattle():
     FFX_Xbox.clickToBattle()
     FFX_memory.lastHitInit()
     FFX_Battle.defend()
-    FFX_Logs.writeStats("First Six Hits:")
+    #FFX_Logs.writeStats("First Six Hits:")
     hitsArray = []
 
     print("Killing Sinspawn")

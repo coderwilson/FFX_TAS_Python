@@ -452,8 +452,6 @@ def Ammes():
         if FFX_memory.userControl():
             BattleComplete = 1
             print("Ammes battle complete")
-            FFX_Logs.writeStats("Sinspawn Ammes Attacks:")
-            FFX_Logs.writeStats(str(countAttacks))
 
 
 def Tanker():
@@ -481,8 +479,6 @@ def Tanker():
                     countAttacks += 1
         elif FFX_memory.diagSkipPossible():
             FFX_Xbox.tapB()
-    FFX_Logs.writeStats("Tanker Attacks:")
-    FFX_Logs.writeStats(str(countAttacks))
 
 
 def Klikk():
@@ -522,13 +518,9 @@ def Klikk():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("Klikk fight complete")
-    FFX_Logs.writeStats("Klikk Attacks:")
-    FFX_Logs.writeStats(str(klikkAttacks))
-    FFX_Logs.writeStats("Klikk items used:")
-    FFX_Logs.writeStats(str(klikkRevives))
     if gameVars.csr():
-        FFXC.set_value("BtnB", 1)
-        FFX_memory.awaitControl()
+        while FFX_memory.getMap() != 71:
+            FFXC.set_value("BtnB", 1)
         FFXC.set_neutral()
     else:
         # Maybe not skippable dialog, but whatever.
@@ -644,15 +636,6 @@ def Tros():
 
     print("Tros battle complete.")
     FFX_memory.clickToControl()
-    FFX_Logs.writeStats("Tros Attacks:")
-    FFX_Logs.writeStats(str(Attacks))
-    FFX_Logs.writeStats("Tros Revives:")
-    FFX_Logs.writeStats(str(Revives))
-    FFX_Logs.writeStats("Tros Grenades:")
-    FFX_Logs.writeStats(str(Grenades))
-    FFX_Logs.writeStats("Tros Steals:")
-    FFX_Logs.writeStats(str(Steals))
-
 
 def piranhas():
     encounterID = FFX_memory.getEncounterID()
@@ -1207,8 +1190,8 @@ def Oblitzerator(earlyHaste):
             FFX_Xbox.tapB()
     print("End of fight, Oblitzerator")
     FFX_memory.clickToControl()
-    FFX_Logs.writeStats("RNG02 after battle:")
-    FFX_Logs.writeStats(FFX_memory.s32(FFX_memory.rng02()))
+    #FFX_Logs.writeStats("RNG02 after battle:")
+    #FFX_Logs.writeStats(FFX_memory.s32(FFX_memory.rng02()))
 
 
 def afterBlitz1(earlyHaste):
@@ -1416,8 +1399,8 @@ def chocoEater():
         elif FFX_memory.diagSkipPossible():
             print("Skipping dialog")
             FFX_Xbox.tapB()
-    FFX_Logs.writeStats("Chocobo eater turns:")
-    FFX_Logs.writeStats(str(turns))
+    #FFX_Logs.writeStats("Chocobo eater turns:")
+    #FFX_Logs.writeStats(str(turns))
     print("Chocobo Eater battle complete.")
 
 
@@ -1500,7 +1483,7 @@ def MRRbattle(status):
     print("Fight start: MRR")
     battle = FFX_memory.getEncounterID()
     print("Battle number:", battle)
-    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    #nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
     if battle == 102:
         print("Garuda battle, we want nothing to do with this.")
@@ -1539,10 +1522,10 @@ def MRRbattle(status):
                         if FFX_Screen.turnTidus():
                             buddySwapKimahri()
                         elif FFX_Screen.turnKimahri():
-                            if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                                nextCritKim = mrrTarget()
-                            else:
-                                defend()
+                            #if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                            #    nextCritKim = mrrTarget()
+                            #else:
+                            defend()
                         elif FFX_Screen.turnWakka():
                             defend()
                         else:
@@ -1560,10 +1543,10 @@ def MRRbattle(status):
                     if FFX_Screen.turnTidus():
                         buddySwapKimahri()
                     elif FFX_Screen.turnKimahri():
-                        if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                            nextCritKim = mrrTarget()
-                        else:
-                            defend()
+                        #if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                        #    nextCritKim = mrrTarget()
+                        #else:
+                        defend()
                     elif FFX_Screen.turnWakka():
                         defend()
                     else:
@@ -1681,10 +1664,10 @@ def MRRbattle(status):
                         print("No petrify issues.")
                         if FFX_Screen.turnTidus():
                             buddySwapKimahri()
-                            if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                                nextCritKim = mrrTarget()
-                            else:
-                                defend()
+                            #if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                            #    nextCritKim = mrrTarget()
+                            #else:
+                            defend()
                         elif FFX_Screen.turnWakka():
                             attack('none')
                         elif FFX_memory.getEnemyCurrentHP()[0] != 0:
@@ -1754,10 +1737,10 @@ def MRRbattle(status):
                         buddySwapTidus()
                     elif FFX_Screen.turnKimahri():
                         if FFX_memory.getKimahriSlvl() >= 6 and yunaTurnCount:
-                            if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                                nextCritKim = mrrTarget()
-                            else:
-                                fleeAll()
+                            #if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                            #    nextCritKim = mrrTarget()
+                            #else:
+                            fleeAll()
                         else:
                             defend()
                     elif FFX_Screen.turnYuna():
@@ -1819,7 +1802,10 @@ def MRRbattle(status):
 
 
 def MRRmanip(kimMaxAdvance: int = 6):
+    FFX_Screen.awaitTurn()
     nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    print("======== Next Kimahri crit:", nextCritKim)
+    attemptManip = False
     if nextCritKim >= 3:
         kimTurn = True
     else:
@@ -1834,6 +1820,7 @@ def MRRmanip(kimMaxAdvance: int = 6):
             if nextCritKim > kimMaxAdvance:
                 fleeAll()
             elif kimTurn:
+                attemptManip = True
                 if 3 not in FFX_memory.getActiveBattleFormation():
                     buddySwapKimahri()
                 elif FFX_Screen.turnKimahri():
@@ -1849,17 +1836,22 @@ def MRRmanip(kimMaxAdvance: int = 6):
     print("HP values:", hpCheck)
     if hpCheck != [520, 475, 1030, 644, 818, 380]:
         healUp(fullMenuClose=False)
-
+    nextCritKim = FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    print("||| Manip - Battle number:", FFX_memory.getEncounterID())
+    print("||| Next Kimahri Crit vs Gui:", nextCritKim)
+    return attemptManip
 
 def battleGui():
     print("Fight start: Sinspawn Gui")
     FFX_Xbox.clickToBattle()
     print("Engaging Gui")
+    print("##### Expecting crit: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
     wakkaTurn = False
     yunaTurn = False
     auronTurn = False
     tidusTurn = False
     aeonTurn = False
+    kimahriCrit = False
 
     while not aeonTurn:
         if FFX_memory.turnReady():
@@ -1875,8 +1867,16 @@ def battleGui():
                     wakkaTurn = True
                 else:
                     buddySwapKimahri()
+                    print("##### Expecting crit: ", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
             elif FFX_Screen.turnKimahri():
                 kimahriOD(2)
+                FFX_Screen.awaitTurn()
+                FFX_Logs.writeStats("guiCrit:")
+                if FFX_memory.lastHitKimahri() > 6000
+                    kimahriCrit = True
+                    FFX_Logs.writeStats(FFX_memory.lastHitKimahri() > 6000)
+                else:
+                    FFX_Logs.writeStats(FFX_memory.lastHitKimahri() > 6000)
             elif FFX_Screen.turnTidus():
                 if not tidusTurn:
                     defend()
@@ -1899,6 +1899,7 @@ def battleGui():
     turn1 = False
     nextTurn = 20
     lastTurn = 20
+    went = False
     while not FFX_memory.turnReady():
         pass
     while FFX_memory.battleActive():
@@ -1906,9 +1907,12 @@ def battleGui():
             nextHP = FFX_memory.getBattleHP()[0]
             lastTurn = nextTurn
             nextTurn = FFX_memory.getNextTurn()
-            if FFX_memory.getOverdriveBattle(8) == 20:
+            if went and kimahriCrit:
+                aeonSpell(1)
+            elif FFX_memory.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
                 valeforOD()
+                went = True
             elif not turn1:
                 turn1 = True
                 print("------Recharge unsuccessful. Attempting recovery.")
@@ -1944,6 +1948,36 @@ def battleGui():
 
     # Second Gui battle
     while not FFX_memory.userControl():
+        turn = 1
+        if kimahriCrit or FFX_memory.getOverdriveBattle(8) == 20 or FFX_memory.getOverdriveBattle(1) == 100:
+            seymourTurn = 0
+            while FFX_memory.battleActive():
+                if FFX_Screen.turnSeymour and seymourTurn < 2:
+                    seymourSpell(head=False)
+                    seymourTurn += 1
+                elif FFX_Screen.turnYuna and seymourTurn >= 2:
+                    if FFX_memory.getOverdriveBattle(1) == 100:
+                        while not FFX_memory.otherBattleMenu():
+                            FFX_Xbox.tapLeft()
+                        while not FFX_memory.interiorBattleMenu():
+                            FFX_Xbox.tapB()
+                        while FFX_memory.interiorBattleMenu():
+                            FFX_Xbox.tapB()
+                    else:
+                        aeonSummon(0)
+                elif FFX_Screen.turnAeon():
+                    valeforOD()
+                else:
+                    defend()
+        else:
+            while FFX_memory.battleActive():
+                if FFX_memory.turnReady():
+                    if FFX_Screen.turnSeymour():
+                        seymourSpell()
+                    else:
+                        defend()
+    
+    ''' Standard/simple logic without considering Kimahri crit or overdrives
         if FFX_memory.turnReady():
             if FFX_Screen.turnSeymour():
                 seymourSpell()
@@ -1956,6 +1990,7 @@ def battleGui():
             FFX_memory.waitFrames(30 * 2)
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
+    '''
 
 
 def djose(stoneBreath):
@@ -2448,21 +2483,21 @@ def spherimorph():
                         defend()
                 else:
                     print("Starting Rikkus overdrive")
-                    FFX_Logs.writeStats("Spherimorph spell used:")
+                    #FFX_Logs.writeStats("Spherimorph spell used:")
                     if spellNum == 1:
-                        FFX_Logs.writeStats("Fire")
+                        #FFX_Logs.writeStats("Fire")
                         print("Creating Ice")
                         rikkuFullOD('spherimorph1')
                     elif spellNum == 2:
-                        FFX_Logs.writeStats("Water")
+                        #FFX_Logs.writeStats("Water")
                         print("Creating Water")
                         rikkuFullOD('spherimorph2')
                     elif spellNum == 3:
-                        FFX_Logs.writeStats("Thunder")
+                        #FFX_Logs.writeStats("Thunder")
                         print("Creating Thunder")
                         rikkuFullOD('spherimorph3')
                     elif spellNum == 4:
-                        FFX_Logs.writeStats("Ice")
+                        #FFX_Logs.writeStats("Ice")
                         print("Creating Fire")
                         rikkuFullOD('spherimorph4')
 
@@ -4743,8 +4778,8 @@ def attackOblitzEnd():
     rngWaitResults = oblitzRngWait()
     FFX_Xbox.tapB()
     FFX_Xbox.tapB()
-    FFX_Logs.writeStats("RNG02 on attack:")
-    FFX_Logs.writeStats(FFX_memory.s32(rngWaitResults))
+    #FFX_Logs.writeStats("RNG02 on attack:")
+    #FFX_Logs.writeStats(FFX_memory.s32(rngWaitResults))
 
 
 def attack(direction="none"):

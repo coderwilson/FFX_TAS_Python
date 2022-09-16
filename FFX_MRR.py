@@ -82,6 +82,7 @@ def arrival():
 
 def mainPath():
     FFX_memory.awaitControl()
+    critManip = False
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
     print("Resetting checkpoint.")
@@ -142,6 +143,7 @@ def mainPath():
             elif checkpoint == 66:
                 FFX_Xbox.SkipDialog(1)
                 print("Up the final lift")
+                print("======== Next Kimahri crit:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                 checkpoint += 1
             elif checkpoint == 68:
                 FFXC.set_movement(0, -1)
@@ -154,6 +156,7 @@ def mainPath():
             elif FFX_targetPathing.setMovement(FFX_targetPathing.mrrMain(checkpoint)):
                 if checkpoint == 61:
                     if FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2, 3, 4, 5, 6, 7, 9]:
+                        critManip = True
                         # Try to end on 1.
                         print("+++++++++++ We can manip:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                         checkpoint = 59
@@ -173,7 +176,8 @@ def mainPath():
                     print("Status update:", status)
                     status[3] += 1
                 else:
-                    FFX_Battle.MRRmanip(kimMaxAdvance=9)
+                    if FFX_Battle.MRRmanip(kimMaxAdvance=9):
+                        critManip = True
 
                 if FFX_memory.getYunaSlvl() >= 8 and status[4] == 0:
                     print("Yuna has enough levels now. Going to do her grid.")
@@ -197,9 +201,12 @@ def mainPath():
 
         if FFX_memory.gameOver():
             return
-    FFX_Logs.writeStats("MRR Battles:")
-    FFX_Logs.writeStats(battleCount)
+    #FFX_Logs.writeStats("MRR Battles:")
+    #FFX_Logs.writeStats(battleCount)
+    FFX_Logs.writeStats("MRR crit manip:")
+    FFX_Logs.writeStats(critManip)
     print("End of MRR section. Status:")
+    print("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
     print(status)
 
 
@@ -220,9 +227,11 @@ def battleSite():
                 FFXC.set_neutral()
                 FFX_menu.battleSiteOaka1()
                 FFX_menu.battleSiteOaka2()
+                print("======== Next Kimahri crit:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                 checkpoint += 1
             elif checkpoint == 8:
                 FFX_memory.touchSaveSphere()
+                print("======== Next Kimahri crit:", FFX_memory.nextCrit(character=3, charLuck=18, enemyLuck=15))
                 checkpoint += 1
             elif checkpoint == 12:
                 FFXC.set_movement(1, 0)

@@ -68,8 +68,8 @@ def arrival(rikkuCharged):
             elif not FFX_memory.battleActive() and FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
 
-    FFX_Logs.writeStats("Mac Woods battles:")
-    FFX_Logs.writeStats(totalBattles)
+    #FFX_Logs.writeStats("Mac Woods battles:")
+    #FFX_Logs.writeStats(totalBattles)
     # Save sphere
     FFXC.set_movement(-1, 1)
     FFX_memory.waitFrames(2)

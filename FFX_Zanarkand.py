@@ -58,6 +58,8 @@ def arrival():
         reEquipNE = True
 
     gameVars.setSkipZanLuck(FFX_rngTrack.decideSkipZanLuck())
+    FFX_Logs.writeStats("Zanarkand Luck Skip:")
+    FFX_Logs.writeStats(gameVars.getSkipZanLuck())
     #gameVars.setSkipZanLuck(True) #For testing
     print("Outdoor Zanarkand pathing section")
     while FFX_memory.getMap() != 225:
