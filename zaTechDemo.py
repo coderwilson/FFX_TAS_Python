@@ -1,29 +1,29 @@
 import time
-import FFX_memory
-import FFX_Xbox
-import FFX_Logs
-import FFX_LoadGame
-import FFX_Screen
-import FFX_Reset
+import memory
+import xbox
+import logs
+import loadGame
+import screen
+import reset
 
-import FFX_DreamZan
-import FFX_Miihen
-import FFX_MRR
-import FFX_Guadosalam
-import FFX_mTemple
-import FFX_vars
-gameVars = FFX_vars.varsHandle()
+import area.dreamZan as dreamZan
+import area.miihen as miihen
+import area.MRR as MRR
+import area.guadosalam as guadosalam
+import area.mTemple as mTemple
+import vars
+gameVars = vars.varsHandle()
 
 # Plug in controller
-FFXC = FFX_Xbox.controllerHandle()
+FFXC = xbox.controllerHandle()
 
 print("Test 2")
 print(FFXC)
 
 print("Starting tech-demo program.")
 
-FFX_memory.start()
-startTime = FFX_Logs.timeStamp()
+memory.start()
+startTime = logs.timeStamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
@@ -39,20 +39,20 @@ while attempts < 20 and cycles < 50:
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    FFX_DreamZan.NewGame('techdemo')
+    dreamZan.NewGame('techdemo')
 
     print("Game start screen")
-    FFX_Screen.clearMouse(0)
+    screen.clearMouse(0)
 
     # Now to run the appropriate section depending on attempt number.
     if attempts == 1:
         print("Demo - Mi'ihen skip")
-        FFX_LoadGame.loadSaveNum(26)  # W/O laughing scene
-        FFX_LoadGame.LoadMiihenStart()
+        loadGame.loadSaveNum(26)  # W/O laughing scene
+        loadGame.LoadMiihenStart()
         FFXC.set_neutral()
-        FFX_memory.setEncounterRate(0)
-        FFX_memory.awaitControl()
-        returnVal = FFX_Miihen.arrival()
+        memory.setEncounterRate(0)
+        memory.awaitControl()
+        returnVal = miihen.arrival()
         print(returnVal)
         SkipAttempts += 1
         if returnVal[3]:
@@ -65,11 +65,11 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
-        FFX_LoadGame.loadSaveNum(38)
+        loadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
-        FFX_memory.setGilvalue(4000)
-        FFX_LoadGame.LoadMRR()
-        wakkaLateMenu = FFX_MRR.arrival()
+        memory.setGilvalue(4000)
+        loadGame.LoadMRR()
+        wakkaLateMenu = MRR.arrival()
         SkipCount += 1
         SkipAttempts += 1
         print("------------------------------")
@@ -80,10 +80,10 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
-        FFX_LoadGame.loadSaveNum(3)
-        FFX_LoadGame.loadGuadoSkip()
+        loadGame.loadSaveNum(3)
+        loadGame.loadGuadoSkip()
         SkipAttempts += 1
-        guadoSkipStatus = FFX_Guadosalam.guadoSkip()
+        guadoSkipStatus = guadosalam.guadoSkip()
         if guadoSkipStatus:
             SkipCount += 1
         print("------------------------------")
@@ -95,10 +95,10 @@ while attempts < 20 and cycles < 50:
     elif attempts == 4:
         print("Demo - Jyscal skip")
         # No remedy in inventory, likely game over.
-        FFX_LoadGame.loadSaveNum(97)
-        FFX_LoadGame.loadMacTemple()
+        loadGame.loadSaveNum(97)
+        loadGame.loadMacTemple()
         SkipAttempts += 1
-        jyscalSkipStatus = FFX_mTemple.arrival(doGrid=False)
+        jyscalSkipStatus = mTemple.arrival(doGrid=False)
         if jyscalSkipStatus:
             SkipCount += 1
         print("------------------------------")
@@ -114,22 +114,22 @@ while attempts < 20 and cycles < 50:
     FFXC.set_neutral()
     if attempts < 100:
         print("Demo complete. Now clicking to control so we can reset.", attempts)
-        if FFX_memory.getStoryProgress() < 3380:
-            FFX_memory.clickToControl()
+        if memory.getStoryProgress() < 3380:
+            memory.clickToControl()
             time.sleep(2)
         else:
             time.sleep(10)
 
         print("Resetting.")
 
-        FFX_Reset.resetToMainMenu()
+        reset.resetToMainMenu()
     else:
         print("------------------------------")
         print("------------------------------")
         print("Final demo is complete. Thanks for playing.")
 
 
-endTime = FFX_Logs.timeStamp()
+endTime = logs.timeStamp()
 print("------------------------------")
 print("------------------------------")
 totalTime = endTime - startTime
@@ -174,7 +174,7 @@ print("------------------------------")
 # print("-May the rest of QfG:HH2 be a major success!")
 
 time.sleep(5)
-FFX_memory.end()
+memory.end()
 print("--------------------------")
 print("Program - end")
 print("--------------------------")

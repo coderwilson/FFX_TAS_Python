@@ -1,12 +1,12 @@
 import time
-import FFX_Xbox
-import FFX_DreamZan
-import FFX_Battle
-import FFX_Screen
-import FFX_memory
-import FFX_Reset
+import xbox
+import area.dreamZan as dreamZan
+import battle
+import screen
+import memory
+import reset
 
-FFXC = FFX_Xbox.FFXC
+FFXC = xbox.FFXC
 
 selfAuto = True
 
@@ -18,15 +18,15 @@ while attempts < 10:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-        FFX_DreamZan.NewGame('rescueYuna')
+        dreamZan.NewGame('rescueYuna')
         print("Game start screen")
-        FFX_Screen.clearMouse(0)
+        screen.clearMouse(0)
 
         # Initiate memory reading, after we know the game is open.
-        FFX_memory.start()
+        memory.start()
 
-        import FFX_LoadGame
-        FFX_LoadGame.loadOffset(37)
+        import loadGame
+        loadGame.loadOffset(37)
 
         FFXC.set_value('AxisLy', 1)
         FFXC.set_value('AxisLx', 1)
@@ -44,22 +44,22 @@ while attempts < 10:
         # Initiate memory reading, after we know the game is open.
         print("Start egg hunt only program")
         print("--------------------------No-control method")
-        FFX_memory.start()
-        import FFX_Logs
-        FFX_Logs.nextPlot()
+        memory.start()
+        import logs
+        logs.nextPlot()
         waitCount = 0
-        while FFX_memory.getMap() == 324:
-            if FFX_memory.battleActive():
+        while memory.getMap() == 324:
+            if memory.battleActive():
                 print("GTFO battle.")
-                FFX_Battle.fleeAll()
-            elif FFX_memory.menuOpen():
-                FFX_Xbox.menuB()
+                battle.fleeAll()
+            elif memory.menuOpen():
+                xbox.menuB()
             else:
                 waitCount += 1
                 if waitCount % 10 == 0:
                     print(waitCount)
-                    cam = FFX_memory.getCamera()
-                    FFX_Logs.writePlot(str(cam[0]) + "," + str(cam[4]))
+                    cam = memory.getCamera()
+                    logs.writePlot(str(cam[0]) + "," + str(cam[4]))
                 else:
                     time.sleep(0.035)
                 if waitCount > 10000:
@@ -68,6 +68,6 @@ while attempts < 10:
     print("Allowing time for review.")
     time.sleep(35)
     print("Resetting.")
-    FFX_memory.end()
+    memory.end()
 
-    FFX_Reset.resetToMainMenu()
+    reset.resetToMainMenu()

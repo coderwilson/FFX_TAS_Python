@@ -1,19 +1,19 @@
-import FFX_memory
-import FFX_Zanarkand
-import FFX_vars
-FFX_memory.start()
-gameVars = FFX_vars.varsHandle()
+import memory
+import area.zanarkand as zanarkand
+import vars
+memory.start()
+gameVars = vars.varsHandle()
 
-FFX_memory.advanceRNG01()
+memory.advanceRNG01()
 forceBreak = 0
-FFX_Zanarkand.decideNEA()
+zanarkand.decideNEA()
 
 while gameVars.getNEAzone() in [0, 1, 2, 99]:
-    FFX_memory.advanceRNG01()
-    FFX_Zanarkand.decideNEA()
+    memory.advanceRNG01()
+    zanarkand.decideNEA()
     print("Updating:", gameVars.getNEAzone())
     forceBreak != 1
     if forceBreak >= 1000:
         print("Could not find a value for NEA zone 3. Breaking program.")
-FFX_Zanarkand.decideNEA()
+zanarkand.decideNEA()
 print("Complete")

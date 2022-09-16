@@ -1,20 +1,20 @@
-import FFX_Xbox
-import FFX_memory
-import FFX_targetPathing
+import xbox
+import memory
+import targetPathing
 
-FFXC = FFX_Xbox.FFXC
+FFXC = xbox.FFXC
 
-FFX_memory.start()
-lStrikeCount = FFX_memory.lStrikeCount()
+memory.start()
+lStrikeCount = memory.lStrikeCount()
 print("Starting count of lightning strikes:", lStrikeCount)
 lStrikeStart = lStrikeCount
 
 complete = False
 while lStrikeCount - lStrikeStart < 250:
-    if FFX_memory.dodgeLightning(lStrikeCount):
-        lStrikeCount = FFX_memory.lStrikeCount()
+    if memory.dodgeLightning(lStrikeCount):
+        lStrikeCount = memory.lStrikeCount()
         print("Dodge,", lStrikeCount - lStrikeStart)
-    elif FFX_memory.userControl():
-        FFX_targetPathing.setMovement([62, 780])
+    elif memory.userControl():
+        targetPathing.setMovement([62, 780])
 
 print("Program has terminated, or similar effect.")
