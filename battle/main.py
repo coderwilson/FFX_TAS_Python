@@ -1989,7 +1989,6 @@ def battleGui():
         elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
 
-
 def djose(stoneBreath):
     print("Fight start: Djose road")
     while not memory.main.battleComplete():  # AKA end of battle screen
