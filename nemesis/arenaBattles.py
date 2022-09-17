@@ -99,7 +99,7 @@ def airShipDestination(destNum=0): #Default to Sin.
 def getSaveSphereDetails():
     mapVal = main.getMap()
     storyVal = main.getStoryProgress()
-    print("Map:", mapVal, "Story:", storyVal)
+    print("Map:", mapVal, "| Story:", storyVal)
     x = 0
     y = 0
     diag = 0

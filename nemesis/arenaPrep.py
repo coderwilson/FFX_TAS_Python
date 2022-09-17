@@ -127,7 +127,7 @@ def getSaveSphereDetails():
 def getSaveSphereDetails_old():
     mapVal = main.getMap()
     storyVal = main.getStoryProgress()
-    print("Map:", mapVal, "Story:", storyVal)
+    print("Map:", mapVal, "| Story:", storyVal)
     x = 0
     y = 0
     diag = 0

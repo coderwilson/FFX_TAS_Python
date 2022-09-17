@@ -1983,10 +1983,10 @@ def battleGui():
     while not memory.main.userControl():
         if memory.main.cutsceneSkipPossible():
             print("Intentional delay to get the cutscene skip to work.")
-            memory.waitFrames(2)
+            memory.main.waitFrames(2)
             xbox.skipSceneSpec()
-            memory.waitFrames(60)
-        elif memory.diagSkipPossible() or memory.menuOpen():
+            memory.main.waitFrames(60)
+        elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
 
 
