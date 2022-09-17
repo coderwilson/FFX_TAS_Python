@@ -32,7 +32,7 @@ def arrival():
     memory.main.waitFrames(30 * 2)
     FFXC.set_neutral()  # Enter the room where we meet Seymour
 
-    print("TestVar - ", gameVars.csr)
+    print("TestVar -", gameVars.csr)
     if not gameVars.csr():
         memory.main.clickToControl3()
         while not targetPathing.setMovement([4, -114]):

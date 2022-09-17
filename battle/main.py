@@ -1337,7 +1337,7 @@ def afterBlitz3LateHaste(earlyHaste):
 
 def MiihenRoad(selfDestruct=False):
     print("Fight start: Mi'ihen Road")
-    print("Mi'ihen battle. Self-destruct: ", gameVars.selfDestructGet())
+    print("Mi'ihen battle. Self-destruct:", gameVars.selfDestructGet())
     battle = memory.main.getEncounterID()
 
     while not memory.main.battleComplete():  # AKA end of battle screen
@@ -4599,7 +4599,7 @@ def attackByNum(num, direction='u'):
         friendlyTarget = True
     else:
         friendlyTarget = False
-    print("Attacking specific character, ", num)
+    print("Attacking specific character", num)
     direction = direction.lower()
     if not memory.main.turnReady():
         print("Battle menu isn't up.")
@@ -5050,7 +5050,7 @@ def thunderTarget(target, direction):
 
 
 def aeonSummon(position):
-    print("Summoning Aeon" + str(position))
+    print("Summoning Aeon " + str(position))
     while not memory.main.mainBattleMenu():
         pass
     while memory.main.battleMenuCursor() != 23:
