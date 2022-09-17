@@ -1,43 +1,43 @@
 import time
-import FFX_Xbox
-import FFX_DreamZan
-import FFX_Screen
-import FFX_memory
-import FFX_Reset
-import FFX_LoadGame
-import FFX_Logs
+import xbox
+import area.dreamZan
+import screen
+import memory.main
+import reset
+import loadGame
+import logs
 
-FFXC = FFX_Xbox.controllerHandle()
+FFXC = xbox.controllerHandle()
 
 selfAuto = True
 print("Looping section: Bevelle Trials")
 
-FFX_memory.start()
+memory.main.start()
 
 attempts = 0
 success = 0
 while attempts < 20:
     attempts += 1
 
-    FFX_DreamZan.NewGame('Luca')
-    FFX_LoadGame.loadOffset(1)
+    area.dreamZan.NewGame('Luca')
+    loadGame.loadOffset(1)
 
     print("Game start screen")
-    FFX_Screen.clearMouse(0)
+    screen.clearMouse(0)
 
-    startTime = FFX_Logs.timeStamp()
+    startTime = logs.timeStamp()
     print("Timer starts now.")
     # ---------This is the actual movement/code/logic/etc---------------
-    import FFX_Luca
-    import FFX_Blitz
+    import area.luca as luca
+    import blitz
 
-    FFX_Luca.blitzStart()
-    blitzWin = FFX_Blitz.blitzMain(False)
+    luca.blitzStart()
+    blitzWin = blitz.blitzMain(False)
     if blitzWin:
         success += 1
 
     # ---------End of the actual movement/code/logic/etc---------------
-    endTime = FFX_Logs.timeStamp()
+    endTime = logs.timeStamp()
     print("Duration:", endTime - startTime)
 
     if attempts < 20:
@@ -51,7 +51,7 @@ while attempts < 20:
 
         print("Resetting.")
 
-        FFX_Reset.resetToMainMenu()
+        reset.resetToMainMenu()
     else:
         print("------------------------------")
         print("------------------------------")
@@ -63,7 +63,7 @@ while attempts < 20:
 
 time.sleep(5)
 
-FFX_memory.end()
+memory.main.end()
 
 time.sleep(5)
 print("--------------------------")

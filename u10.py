@@ -1,8 +1,8 @@
-import FFX_memory
-FFX_memory.start()
+import memory.main
+memory.main.start()
 
 print("-----------")
 print("-----------")
-FFX_memory.advanceRNG10()
+memory.main.advanceRNG10()
 print("-----------")
 print("-----------")

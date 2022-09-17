@@ -1,8 +1,8 @@
 import time
-import FFX_Xbox
-import FFX_Battle
-import FFX_memory
-import FFX_Logs
+import xbox
+import battle.main
+import memory.main
+import logs
 from math import copysign
 import numpy as np
 
@@ -53,7 +53,7 @@ def pathAround(player, circle, target, radius=11):
 
 
 def engage():
-    FFXC = FFX_Xbox.controllerHandle()
+    FFXC = xbox.controllerHandle()
     print("Start egg hunt")
     startTime = time.time()
     checkpoint = 0
@@ -64,18 +64,18 @@ def engage():
     target = [10, -10]
     checkpoint = 0
     print("Ready for movement.")
-    while FFX_memory.getStoryProgress() < 3251:
+    while memory.main.getStoryProgress() < 3251:
         lookingCount += 1
         if lookingCount % 40 == 0:
             checkpoint += 1
-        if FFX_memory.battleActive():
+        if memory.main.battleActive():
             print("Battle engaged - using flee.")
             FFXC.set_neutral()
-            FFX_Battle.fleeAll()
+            battle.main.fleeAll()
             battleCount += 1
         else:  # User control is different for this section.
-            eggArray = FFX_memory.buildEggs()
-            iceArray = FFX_memory.buildIcicles()  # Added for additional pathing needs
+            eggArray = memory.main.buildEggs()
+            iceArray = memory.main.buildIcicles()  # Added for additional pathing needs
             if activeEgg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
                     if activeEgg == 99 and eggArray[marker].goForEgg and eggArray[marker].eggLife < 150:
@@ -101,9 +101,9 @@ def engage():
 
             # And now the code to move to the target.
             oldTarget = target
-            player = FFX_memory.getCoords()
-            iceArray = FFX_memory.buildIcicles()
-            (forward, right) = FFX_memory.getMovementVectors()
+            player = memory.main.getCoords()
+            iceArray = memory.main.buildIcicles()
+            (forward, right) = memory.main.getMovementVectors()
 
             targetPos = np.array([target[0], target[1]])
             playerPos = np.array(player)
@@ -160,26 +160,26 @@ def engage():
                 time.sleep(0.15)
                 FFXC.set_neutral()
                 print("Stutter-step to egg. |", checkpoint)
-                FFX_Xbox.tapB()
+                xbox.tapB()
             elif activeEgg == 99:
                 print("Looking for a new egg. |", checkpoint)
-                FFX_Xbox.tapB()
+                xbox.tapB()
             else:
                 print("Targeting egg: |", checkpoint)
-            FFX_Xbox.tapB()
+            xbox.tapB()
     endTime = time.time()
     print("End egg hunt")
     FFXC.set_neutral()
     duration = endTime - startTime
     print("Duration:", str(duration))
     print("Battle count:", battleCount)
-    while FFX_memory.getMap() != 325:
-        if FFX_memory.battleActive():
-            FFX_Battle.fleeAll()
+    while memory.main.getMap() != 325:
+        if memory.main.battleActive():
+            battle.main.fleeAll()
     try:
-        FFX_Logs.writeStats("Egg hunt duration (seconds):")
-        FFX_Logs.writeStats(str(round(duration, 2)))
-        FFX_Logs.writeStats("Egg hunt battles:")
-        FFX_Logs.writeStats(str(battleCount))
+        logs.writeStats("Egg hunt duration (seconds):")
+        logs.writeStats(str(round(duration, 2)))
+        logs.writeStats("Egg hunt battles:")
+        logs.writeStats(str(battleCount))
     except Exception:
         print("No log file.")

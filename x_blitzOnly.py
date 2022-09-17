@@ -1,16 +1,16 @@
-import FFX_Blitz
-import FFX_Luca
+import blitz
+import area.luca
 import time
-import FFX_memory
-import FFX_Xbox
-import FFX_DreamZan
-import FFX_Screen
-import FFX_Reset
-import FFX_LoadGame
-FFXC = FFX_Xbox.controllerHandle()
+import memory.main
+import xbox
+import area.dreamZan
+import screen
+import reset
+import loadGame
+FFXC = xbox.controllerHandle()
 
 
-FFX_memory.start()
+memory.main.start()
 
 attempts = 0
 success = 0
@@ -37,27 +37,27 @@ rngMod19Array = [0] * 200
 rngMod20Array = [0] * 200
 
 while attempts < 20:
-    FFX_DreamZan.NewGame("BlitzballTesting")
-    FFX_LoadGame.loadSaveNum(37)
-    FFX_memory.resetBattleEnd()
-    rngRootArray[attempts] = FFX_memory.rng02()
+    area.dreamZan.NewGame("BlitzballTesting")
+    loadGame.loadSaveNum(37)
+    memory.main.resetBattleEnd()
+    rngRootArray[attempts] = memory.main.rng02()
     offset = 1
     blitzoffWin = False
 
-    FFX_Screen.clearMouse(0)
+    screen.clearMouse(0)
 
     # ---------This is the actual movement/code/logic/etc---------------
 
-    rolledArray = FFX_memory.rng02Array()
+    rolledArray = memory.main.rng02Array()
 
-    FFX_Luca.blitzStart()
-    while not FFX_memory.blitzClock() in [1, 2]:
+    area.luca.blitzStart()
+    while not memory.main.blitzClock() in [1, 2]:
         FFXC.set_neutral()
-    while not (FFX_Blitz.selectFormation() or FFX_Blitz.selectMovement()):
-        FFX_Xbox.tapY()
+    while not (blitz.selectFormation() or blitz.selectMovement()):
+        xbox.tapY()
 
     FFXC.set_neutral()
-    if FFX_Blitz.selectMovement():
+    if blitz.selectMovement():
         blitzoffWin = True
     else:
         blitzoffWin = False
@@ -177,8 +177,8 @@ while attempts < 20:
     if attempts < 20:
         print("Resetting.")
 
-        FFX_memory.resetBlitzMenuNum()
-        FFX_Reset.resetToMainMenu()
+        memory.main.resetBlitzMenuNum()
+        reset.resetToMainMenu()
     else:
         print("Final Results:")
         print("------------------------------")
@@ -192,7 +192,7 @@ while attempts < 20:
 
 time.sleep(5)
 
-FFX_memory.end()
+memory.main.end()
 
 time.sleep(5)
 print("--------------------------")
