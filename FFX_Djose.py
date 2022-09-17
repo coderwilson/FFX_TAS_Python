@@ -33,6 +33,22 @@ def path():
             elif checkpoint == 47 and stoneBreath == 0:
                 checkpoint = 45
 
+            #This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
+            #elif checkpoint == 33:# and stoneBreath == 0: #Turn/talk
+            #    FFXC.set_movement(-1, 1)
+            #    FFX_memory.waitFrames(4)
+            #    while FFX_memory.userControl() and FFX_memory.getActorCoords(11)[1] < 790:
+            #        FFX_Xbox.tapB()
+            #    FFXC.set_neutral()
+            #    checkpoint += 1
+            #elif checkpoint == 34:# and stoneBreath == 0:
+            #    while FFX_memory.getActorCoords(0)[1] < 790 and \
+            #        FFX_memory.getActorCoords(11)[1] < 790:
+            #        
+            #        FFX_memory.waitFrames(1)
+            #    FFX_memory.clickToControl3()
+            #    checkpoint += 1
+            
             else:
                 # Map changes
                 if FFX_memory.getMap() == 76 and checkpoint < 49:

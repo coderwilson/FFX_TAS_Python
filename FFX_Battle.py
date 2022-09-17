@@ -500,13 +500,14 @@ def Klikk():
             elif FFX_Screen.turnRikku():
                 grenadeCount = FFX_memory.getItemCountSlot(
                     FFX_memory.getItemSlot(35))
-                if BattleHP[0] < 120 and not (FFX_memory.getNextTurn() == 0 and FFX_memory.getEnemyCurrentHP()[0] <= 181):
+                if BattleHP[0] < 120 and not (FFX_memory.getNextTurn() == 0 and FFX_memory.getEnemyCurrentHP()[0] <= 181) \
+                    and not FFX_memory.rngSeed() == 160:
                     usePotionCharacter(0, 'l')
                     klikkRevives += 1
-                elif grenadeCount < 3:
+                elif grenadeCount < 4:
                     print("Attempting to steal from Klikk")
                     Steal()
-                elif FFX_memory.rngSeed() == 160 and grenadeCount < 4:
+                elif FFX_memory.rngSeed() == 160 and grenadeCount < 5:
                     print("Attempting to steal from Klikk")
                     Steal()
                 elif FFX_memory.rngSeed() == 31 and FFX_memory.getEnemyCurrentHP()[0] < 250:
@@ -518,13 +519,15 @@ def Klikk():
             if FFX_memory.diagSkipPossible():
                 FFX_Xbox.tapB()
     print("Klikk fight complete")
-    if gameVars.csr():
-        while FFX_memory.getMap() != 71:
+    print(FFX_memory.getMap())
+    while not (FFX_memory.getMap() == 71 and FFX_memory.userControl()):
+        print(FFX_memory.getMap())
+        if gameVars.csr():
             FFXC.set_value("BtnB", 1)
-        FFXC.set_neutral()
-    else:
-        # Maybe not skippable dialog, but whatever.
-        FFX_memory.clickToControl()
+        else:
+            # Maybe not skippable dialog, but whatever.
+            FFX_Xbox.tapB()
+    FFXC.set_neutral()
 
 
 def getAdvances(tros=True, report=False):
@@ -1872,7 +1875,7 @@ def battleGui():
                 kimahriOD(2)
                 FFX_Screen.awaitTurn()
                 FFX_Logs.writeStats("guiCrit:")
-                if FFX_memory.lastHitKimahri() > 6000
+                if FFX_memory.lastHitKimahri() > 6000:
                     kimahriCrit = True
                     FFX_Logs.writeStats(FFX_memory.lastHitKimahri() > 6000)
                 else:
@@ -1947,7 +1950,7 @@ def battleGui():
             FFX_Xbox.tapB()
 
     # Second Gui battle
-    while not FFX_memory.userControl():
+    while FFX_memory.battleActive():
         turn = 1
         if kimahriCrit or FFX_memory.getOverdriveBattle(8) == 20 or FFX_memory.getOverdriveBattle(1) == 100:
             seymourTurn = 0
@@ -1977,21 +1980,14 @@ def battleGui():
                     else:
                         defend()
     
-    ''' Standard/simple logic without considering Kimahri crit or overdrives
-        if FFX_memory.turnReady():
-            if FFX_Screen.turnSeymour():
-                seymourSpell()
-            else:
-                defend()
-        elif FFX_memory.cutsceneSkipPossible():
+    while not FFX_memory.userControl():
+        if FFX_memory.cutsceneSkipPossible():
             print("Intentional delay to get the cutscene skip to work.")
-            FFX_memory.waitFrames(30 * 0.07)
+            FFX_memory.waitFrames(2)
             FFX_Xbox.skipSceneSpec()
-            FFX_memory.waitFrames(30 * 2)
+            FFX_memory.waitFrames(60)
         elif FFX_memory.diagSkipPossible() or FFX_memory.menuOpen():
             FFX_Xbox.tapB()
-    '''
-
 
 def djose(stoneBreath):
     print("Fight start: Djose road")
@@ -4887,7 +4883,7 @@ def stealAndAttack():
             if FFX_Screen.turnRikku():
                 grenadeSlot = FFX_memory.getItemSlot(35)
                 grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
-                if grenadeCount < 6:
+                if grenadeCount < 5:
                     Steal()
                 else:
                     attack('none')
@@ -4905,12 +4901,12 @@ def stealAndAttackPreTros():
     FFXC.set_neutral()
     while not FFX_memory.battleComplete():
         if FFX_memory.turnReady():
-            if FFX_Screen.turnRikkuRed():
+            if FFX_Screen.turnRikku():
                 turnCounter += 1
                 if turnCounter == 1:
                     grenadeSlot = FFX_memory.getItemSlot(35)
                     grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
-                    if grenadeCount < 6:
+                    if grenadeCount < 5:
                         Steal()
                     elif advances in [1, 2]:
                         Steal()
@@ -4921,7 +4917,7 @@ def stealAndAttackPreTros():
                     grenadeSlot = FFX_memory.getItemSlot(35)
                     grenadeCount = FFX_memory.getItemCountSlot(grenadeSlot)
                     if grenadeCount < 6:
-                        StealDown()
+                        Steal()
                     elif advances in [1, 2]:
                         Steal()
                         advances = getAdvances(tros=False)
