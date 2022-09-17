@@ -499,13 +499,14 @@ def Klikk():
             elif screen.turnRikku():
                 grenadeCount = memory.main.getItemCountSlot(
                     memory.main.getItemSlot(35))
-                if BattleHP[0] < 120 and not (memory.main.getNextTurn() == 0 and memory.main.getEnemyCurrentHP()[0] <= 181):
+                if BattleHP[0] < 120 and not (memory.main.getNextTurn() == 0 and memory.main.getEnemyCurrentHP()[0] <= 181) \
+                        and not memory.main.rngSeed() == 160:
                     usePotionCharacter(0, 'l')
                     klikkRevives += 1
-                elif grenadeCount < 3:
+                elif grenadeCount < 4:
                     print("Attempting to steal from Klikk")
                     Steal()
-                elif memory.main.rngSeed() == 160 and grenadeCount < 4:
+                elif memory.main.rngSeed() == 160 and grenadeCount < 5:
                     print("Attempting to steal from Klikk")
                     Steal()
                 elif memory.main.rngSeed() == 31 and memory.main.getEnemyCurrentHP()[0] < 250:
@@ -517,13 +518,14 @@ def Klikk():
             if memory.main.diagSkipPossible():
                 xbox.tapB()
     print("Klikk fight complete")
-    if gameVars.csr():
-        while memory.main.getMap() != 71:
+    print(memory.main.getMap())
+    while not (memory.main.getMap() == 71 and memory.main.userControl()):
+        print(memory.main.getMap())
+        if gameVars.csr():
             FFXC.set_value("BtnB", 1)
-        FFXC.set_neutral()
-    else:
-        # Maybe not skippable dialog, but whatever.
-        memory.main.clickToControl()
+        else:
+            xbox.tapB()  # Maybe not skippable dialog, but whatever.
+    FFXC.set_neutral()
 
 
 def getAdvances(tros=True, report=False):
@@ -1948,7 +1950,7 @@ def battleGui():
             xbox.tapB()
 
     # Second Gui battle
-    while not memory.main.userControl():
+    while memory.main.battleActive():
         turn = 1
         if kimahriCrit or memory.main.getOverdriveBattle(8) == 20 or memory.main.getOverdriveBattle(1) == 100:
             seymourTurn = 0
@@ -1978,20 +1980,14 @@ def battleGui():
                     else:
                         defend()
 
-    ''' Standard/simple logic without considering Kimahri crit or overdrives
-        if memory.turnReady():
-            if screen.turnSeymour():
-                seymourSpell()
-            else:
-                defend()
-        elif memory.cutsceneSkipPossible():
+    while not memory.main.userControl():
+        if memory.main.cutsceneSkipPossible():
             print("Intentional delay to get the cutscene skip to work.")
-            memory.waitFrames(30 * 0.07)
+            memory.waitFrames(2)
             xbox.skipSceneSpec()
-            memory.waitFrames(30 * 2)
+            memory.waitFrames(60)
         elif memory.diagSkipPossible() or memory.menuOpen():
             xbox.tapB()
-    '''
 
 
 def djose(stoneBreath):
@@ -4888,7 +4884,7 @@ def stealAndAttack():
             if screen.turnRikku():
                 grenadeSlot = memory.main.getItemSlot(35)
                 grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
-                if grenadeCount < 6:
+                if grenadeCount < 5:
                     Steal()
                 else:
                     attack('none')
@@ -4906,12 +4902,12 @@ def stealAndAttackPreTros():
     FFXC.set_neutral()
     while not memory.main.battleComplete():
         if memory.main.turnReady():
-            if screen.turnRikkuRed():
+            if screen.turnRikku():
                 turnCounter += 1
                 if turnCounter == 1:
                     grenadeSlot = memory.main.getItemSlot(35)
                     grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
-                    if grenadeCount < 6:
+                    if grenadeCount < 5:
                         Steal()
                     elif advances in [1, 2]:
                         Steal()
@@ -4922,7 +4918,7 @@ def stealAndAttackPreTros():
                     grenadeSlot = memory.main.getItemSlot(35)
                     grenadeCount = memory.main.getItemCountSlot(grenadeSlot)
                     if grenadeCount < 6:
-                        StealDown()
+                        Steal()
                     elif advances in [1, 2]:
                         Steal()
                         advances = getAdvances(tros=False)

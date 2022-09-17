@@ -114,9 +114,9 @@ StepCounter = 1
 
 forceBlitzWin = False
 seedHunt = False  # Update this to decide new seed or known seed
-rngSeedNum = 255  # New seed number, only used if doing seed hunt.
 rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
+rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
 favoriteSeeds = [31, 183]
 rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31

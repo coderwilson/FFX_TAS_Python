@@ -32,7 +32,21 @@ def path():
                 checkpoint = 47
             elif checkpoint == 47 and stoneBreath == 0:
                 checkpoint = 45
-
+            # The Djose skip pathing file was removed in commit f18ca78 (PR91)
+            # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
+            # elif checkpoint == 33:  # and stoneBreath == 0: #Turn/talk
+            #     FFXC.set_movement(-1, 1)
+            #     memory.main.waitFrames(4)
+            #     while memory.main.userControl() and memory.main.getActorCoords(11)[1] < 790:
+            #         xbox.tapB()
+            #     FFXC.set_neutral()
+            #     checkpoint += 1
+            # elif checkpoint == 34:  # and stoneBreath == 0:
+            #     while memory.main.getActorCoords(0)[1] < 790 and \
+            #             memory.main.getActorCoords(11)[1] < 790:
+            #         memory.main.waitFrames(1)
+            #     memory.main.clickToControl3()
+            #     checkpoint += 1
             else:
                 # Map changes
                 if memory.main.getMap() == 76 and checkpoint < 49:

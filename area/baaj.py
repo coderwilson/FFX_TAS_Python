@@ -129,11 +129,8 @@ def distance(n1, n2):
 
 def ABboat1():
     print("Start of Al Bhed boat section.")
-    # memory.awaitControl()
-    # if gameVars.csr():
-    #     memory.waitFrames(45)
-    # memory.clearSaveMenuCursor2()
-    # FFXC.set_neutral()
+    memory.main.awaitControl()
+    memory.main.waitFrames(1)
     print("Control restored.")
     print("On the boat!")
     while memory.main.getActorCoords(actorNumber=0)[0] > -50:
