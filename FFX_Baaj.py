@@ -129,11 +129,8 @@ def distance(n1, n2):
 
 def ABboat1():
     print("Start of Al Bhed boat section.")
-    #FFX_memory.awaitControl()
-    #if gameVars.csr():
-    #    FFX_memory.waitFrames(45)
-    #FFX_memory.clearSaveMenuCursor2()
-    #FFXC.set_neutral()
+    FFX_memory.awaitControl()
+    FFX_memory.waitFrames(1)
     print("Control restored.")
     print("On the boat!")
     while FFX_memory.getActorCoords(actorNumber=0)[0] > -50:
