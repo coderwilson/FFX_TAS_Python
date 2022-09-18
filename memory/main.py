@@ -8,7 +8,6 @@ import vars
 import os.path
 import ctypes
 import ctypes.wintypes
-from typing import Any, List, NewType
 from ReadWriteMemory import ReadWriteMemory
 from ReadWriteMemory import Process
 gameVars = vars.varsHandle()
