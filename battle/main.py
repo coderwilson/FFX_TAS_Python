@@ -4692,6 +4692,7 @@ def oblitzRngWait():
         print("## Scanning values for this RNG seed")
         if gameVars.loopBlitz():  # This will cause us to prefer results hunting
             print("### Looping on blitz, we will try a new value.")
+            # Seed value, time to completion, Win/Loss, and position
             firstResult = [0, 10, True, 0]
             secondResult = [0, 10, True, 0]
         else:  # For full runs, take the best result.
@@ -4706,9 +4707,9 @@ def oblitzRngWait():
                 victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
                 print(victory)
             else:
-                duration = 0
+                duration = 9999
                 victory = False
-            # Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
+            #Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
             if i == 0:
                 pass
             elif firstResult[3] == 0:
@@ -4718,19 +4719,19 @@ def oblitzRngWait():
                 secondResult = [comingSeeds[i], duration, victory, pos]
                 print("Initial value for second: ", secondResult)
             elif firstResult[2] and not secondResult[2]:
-                if duration < secondResult[1]:
+                if duration < secondResult[1] or victory == True:
                     secondResult = [comingSeeds[i], duration, victory, pos]
                     print("Better Result for Second: ", secondResult)
             elif secondResult[2] and not firstResult[2]:
-                if duration < firstResult[1]:
+                if duration < firstResult[1] or victory == True:
                     firstResult = [comingSeeds[i], duration, victory, pos]
                     print("Better Result for First: ", secondResult)
             elif secondResult[1] < firstResult[1]:
-                if duration < secondResult[1]:
+                if duration < secondResult[1] or victory == True:
                     secondResult = [comingSeeds[i], duration, victory, pos]
                     print("Better Result for Second: ", secondResult)
             else:
-                if duration < firstResult[1]:
+                if duration < firstResult[1] or victory == True:
                     firstResult = [comingSeeds[i], duration, victory, pos]
                     print("Better Result for First: ", secondResult)
             pos += 1
