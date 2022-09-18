@@ -1521,7 +1521,10 @@ def MRRbattle(status):
             if battle == 100 or battle == 101:  # The two battles with Funguar
                 while memory.main.battleActive():  # end of battle screen
                     if memory.main.turnReady():
-                        if screen.turnTidus():
+                        if checkPetrify():
+                            print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                            fleeAll()
+                        elif screen.turnTidus():
                             buddySwapKimahri()
                         elif screen.turnKimahri():
                             # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
@@ -1542,7 +1545,10 @@ def MRRbattle(status):
         else:  # Starting with fourth battle, overdrive on any battle that isn't Garuda.
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
-                    if screen.turnTidus():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
                         buddySwapKimahri()
                     elif screen.turnKimahri():
                         # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
@@ -1603,7 +1609,10 @@ def MRRbattle(status):
         elif battle == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
-                    if screen.turnTidus():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
                         buddySwapKimahri()
                         nextCritKim = mrrTarget()
                     elif screen.turnWakka():
@@ -1695,7 +1704,10 @@ def MRRbattle(status):
         elif battle == 101:
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
-                    if screen.turnTidus():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
                         buddySwapKimahri()
                         nextCritKim = mrrTarget()
                     elif screen.turnWakka():
@@ -1733,7 +1745,10 @@ def MRRbattle(status):
             yunaTurnCount = 0
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
-                    if screen.turnTidus():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
                         tidusFlee()
                     elif screen.faintCheck() >= 1:
                         buddySwapTidus()
