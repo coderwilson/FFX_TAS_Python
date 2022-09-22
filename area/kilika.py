@@ -12,8 +12,8 @@ gameVars = vars.varsHandle()
 
 def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
-    if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
-        gameVars.dontSkipKilikaLuck()
+    #if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
+    #    gameVars.dontSkipKilikaLuck()
 
     print("Arrived at Kilika docks.")
     memory.main.clickToControl()
@@ -212,10 +212,8 @@ def trials():
             elif checkpoint == 27:  # Glyph sphere
                 while not memory.main.diagSkipPossible():
                     targetPathing.setMovement([-21, -30])
-                    memory.main.waitFrames(3)
-                    FFXC.set_neutral()
-                    memory.main.waitFrames(6)
-                    xbox.tapB()
+                    if memory.main.userControl():
+                        xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
                 checkpoint += 1
@@ -297,6 +295,10 @@ def forest3():
                 kilikaBattles += 1
                 if memory.main.getEncounterID() in [32, 34, 37]:
                     optimalBattles += 1
+                if kilikaBattles == 1 and memory.main.rngSeed() == 31:
+                    memory.main.fullPartyFormat('kilikawoodsbackup')
+                else:
+                    memory.main.fullPartyFormat('kilika')
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
 

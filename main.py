@@ -39,60 +39,61 @@ if gameVars.nemesis():
     import nemesis.arenaPrep
     import nemesis.arenaBattles
 
-# Gamestate, "none" for new game, or set to a specific section to start from the first save.
-# See the if statement tree below to determine starting position for Gamestate.
-# These are the popular ones. New Game ('none') is the last one.
-# Gamestate = "Baaj"
-# StepCounter = 1
-# StepCounter = 4
-# StepCounter = 6
-# Gamestate = "Besaid"
-# StepCounter = 3
-# Gamestate = "Kilika"
-# StepCounter = 1
-# Gamestate = "Luca"
-# StepCounter = 1
-# StepCounter = 3
-# StepCounter = 5
-# Gamestate = "Miihen"
-# StepCounter = 1
-# Gamestate = "MRR"
-# StepCounter = 1
-# Gamestate = "Djose"
-# StepCounter = 1
-# Gamestate = "Moonflow"
-# StepCounter = 2
-# Gamestate = "Guadosalam"
-# StepCounter = 2
-# Gamestate = "Macalania"
-# StepCounter = 1
-# StepCounter = 2
-# StepCounter = 3
-# StepCounter = 4 #Seymour fight, CSR, Blitz Win
-# StepCounter = 6 #Before escape sequence
-# Gamestate = "Home"
-# StepCounter = 1
-# StepCounter = 2
-# Gamestate = "rescueYuna"
-# StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
-# StepCounter = 2
-# StepCounter = 5 #Can pick regular run vs nemesis below.
-# Gamestate = "Gagazet"
-# StepCounter = 1 #Blitz Win, no end game version selected
-# StepCounter = 2 #NE armor testing
-# StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
-# StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
-# StepCounter = 10 #Nemesis variant, blitz win logic (not working)
-# StepCounter = 11 #Remiem racing
-# Gamestate = "Zanarkand"
-# StepCounter = 1 #Campfire, version 1
-# StepCounter = 3 #Blitz win, end game version 1 or 2
-# StepCounter = 4 #Before Yunalesca
-# StepCounter = 5 #After Yunalesca
-# Gamestate = "Sin"
-# StepCounter = 2 #Shedinja Highbridge
-# StepCounter = 3 #Before Sea of Sorrows
-# StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
+#Gamestate, "none" for new game, or set to a specific section to start from the first save.
+#See the if statement tree below to determine starting position for Gamestate.
+#These are the popular ones. New Game ('none') is the last one.
+#Gamestate = "Baaj"
+#StepCounter = 1
+#StepCounter = 4
+#StepCounter = 6
+#Gamestate = "Besaid"
+#StepCounter = 3
+#Gamestate = "Kilika"
+#StepCounter = 1
+Gamestate = "Luca"
+StepCounter = 1
+#StepCounter = 3
+#StepCounter = 5
+#Gamestate = "Miihen"
+#StepCounter = 1
+#StepCounter = 2
+#Gamestate = "MRR"
+#StepCounter = 1
+#Gamestate = "Djose"
+#StepCounter = 1
+#Gamestate = "Moonflow"
+#StepCounter = 2
+#Gamestate = "Guadosalam"
+#StepCounter = 2
+#Gamestate = "Macalania"
+#StepCounter = 1
+#StepCounter = 2
+#StepCounter = 3
+#StepCounter = 4 #Seymour fight, CSR, Blitz Win
+#StepCounter = 6 #Before escape sequence
+#Gamestate = "Home"
+#StepCounter = 1
+#StepCounter = 2
+#Gamestate = "rescueYuna"
+#StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
+#StepCounter = 2
+#StepCounter = 5 #Can pick regular run vs nemesis below.
+#Gamestate = "Gagazet"
+#StepCounter = 1 #Blitz Win, no end game version selected
+#StepCounter = 2 #NE armor testing
+#StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
+#StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
+#StepCounter = 10 #Nemesis variant, blitz win logic (not working)
+#StepCounter = 11 #Remiem racing
+#Gamestate = "Zanarkand"
+#StepCounter = 1 #Campfire, version 1
+#StepCounter = 3 #Blitz win, end game version 1 or 2
+#StepCounter = 4 #Before Yunalesca
+#StepCounter = 5 #After Yunalesca
+#Gamestate = "Sin"
+#StepCounter = 2 #Shedinja Highbridge
+#StepCounter = 3 #Before Sea of Sorrows
+#StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
 StepCounter = 1
 
@@ -118,8 +119,8 @@ seedHunt = False  # Update this to decide new seed or known seed
 rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
-favoriteSeeds = [31, 183]
-rngSeedNum = 31  # If you don't randomly select below, this will be the seed you run.
+favoriteSeedsSoFar = [31, 160]
+rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -133,10 +134,11 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
-    # gameVars.setCSR(True)
+    #gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
-    rngSeedNum = random.choice(range(256))  # Select a favorite seed randomly, overrules the set seed above.
-    # Current WR is on seed 160 for both any% and CSR%
+    #rngSeedNum = random.choice(range(256))  # Select a favorite seed randomly, overrules the set seed above.
+    #rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
+    #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -225,11 +227,14 @@ if Gamestate != "none":
         FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1:  # Approaching Luca via boat
         loadGame.loadSaveNum(112)
-    if Gamestate == "Luca" and StepCounter == 5:  # Approaching Luca via boat
+    if Gamestate == "Luca" and StepCounter == 5:
         loadGame.loadSaveNum(5)
     if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
-        loadGame.loadSaveNum(16)  # With laughing scene
+        loadGame.loadSaveNum(16) #With laughing scene
         loadGame.LoadMiihenStart_Laugh()
+    if Gamestate == "Miihen" and StepCounter == 2: #Agency, for Chocobo Eater testing only
+        loadGame.loadSaveNum(28)
+        returnArray = [False,0,0,False]
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
         loadGame.loadSaveNum(38)
         # Fixes a low gil state for this save file.
@@ -564,6 +569,13 @@ while Gamestate != "End":
             screen.awaitTurn()
             Gamestate, StepCounter = reset.midRunReset()
             blitzLoops += 1
+        elif not gameVars.getBlitzWin():
+            FFXC.set_neutral()
+            print("------------------------------")
+            print("Resetting - BLITZ LOSS IS FAILED RUN!!!")
+            print("------------------------------")
+            screen.awaitTurn()
+            Gamestate, StepCounter = reset.midRunReset()
         else:
             print("------------------------------")
             print("Post-Blitz")
@@ -582,13 +594,13 @@ while Gamestate != "End":
         returnArray = area.miihen.arrival()
         selfDestruct = area.miihen.arrival2(
             returnArray[0], returnArray[1], returnArray[2])
-        area.miihen.midPoint()
-        print("End of Mi'ihen mid point section.")
-        area.miihen.lowRoad(returnArray[0], returnArray[1], returnArray[2])
         StepCounter = 2
 
     if Gamestate == "Miihen" and StepCounter == 2:
         reportGamestate()
+        area.miihen.midPoint()
+        print("End of Mi'ihen mid point section.")
+        area.miihen.lowRoad(returnArray[0], returnArray[1], returnArray[2])
 
         # Report duration at the end of Mi'ihen section for all runs.
         endTime = logs.timeStamp()
@@ -1044,8 +1056,8 @@ while Gamestate != "End":
         Gamestate = "Sin"
         StepCounter = 3
 
-    if Gamestate == "End" and gameVars.loopSeeds() and rngSeedNum - rngSeedOrig < maxLoops and False:  # Disabled for now
-        # End of seed logic.
+    if Gamestate == "End" and gameVars.loopSeeds() and rngSeedNum - rngSeedOrig < maxLoops:
+        #End of seed logic.
         Gamestate, StepCounter = reset.midRunReset(landRun=True, startTime=startTime)
 
     print("------------------------------")
