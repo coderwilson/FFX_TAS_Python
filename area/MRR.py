@@ -76,7 +76,7 @@ def arrival():
             elif memory.main.menuOpen() or memory.main.diagSkipPossible():
                 xbox.tapB()
     FFXC.set_neutral()
-    print("Done with prelim MRR area, now for the real deal.")
+    print("Done with perlim MRR area, now for the real deal.")
     return claskoSkip
 
 
