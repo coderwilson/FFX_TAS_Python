@@ -26,6 +26,7 @@ import battle.main
 import screen
 import vars
 import reset
+import random
 gameVars = vars.varsHandle()
 gameVars.setStartVars()
 
@@ -135,6 +136,7 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     #gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
+    #rngSeedNum = random.choice(range(256))  # Select a favorite seed randomly, overrules the set seed above.
     #rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
     #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False

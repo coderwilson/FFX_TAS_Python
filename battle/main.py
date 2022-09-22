@@ -4793,8 +4793,15 @@ def oblitzRngWait():
         secondResult = [comingSeeds[2], 9999, True, 2]
     else:
         print("## Scanning values for this RNG seed")
-        firstResult = [0, 9999, False, 0]
-        secondResult = [0, 9999, False, 0]
+        if gameVars.loopBlitz():  # This will cause us to prefer results hunting
+            print("### Looping on blitz, we will try a new value.")
+            # Seed value, time to completion, Win/Loss, and position
+            firstResult = [0, 10, True, 0]
+            secondResult = [0, 10, True, 0]
+        else:  # For full runs, take the best result.
+            print("### This is a full run. Selecting best known result.")
+            firstResult = [0, 9999, False, 0]
+            secondResult = [0, 9999, False, 0]
         for i in range(len(comingSeeds)):
             print("Checking seed ", comingSeeds[i])
             # Set up duration and victory values
