@@ -1323,8 +1323,8 @@ def KilikaTrials(checkpoint):
     if checkpoint == 25:
         print("Insert Kilika sphere")
     if checkpoint == 26:
-        x = -22
-        y = -23
+        x = -24
+        y = -25
     if checkpoint == 27:
         print("Pick up Glyph sphere")
     if checkpoint == 28:
@@ -1669,129 +1669,160 @@ def Luca1(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        x = 143
-        y = 329
+        x = 126
+        y = 381
     if checkpoint == 1:
-        x = 173
-        y = 290
+        x = 130
+        y = 362
     if checkpoint == 2:
-        x = 250
-        y = 200
+        x = 157
+        y = 302
     if checkpoint == 3:
-        x = 346
+        x = 189
+        y = 285
+    if checkpoint == 4:  # Map to map
+        x = 230
+        y = 250
+    if checkpoint == 5:  # Just before Seymour gets introduced
+        x = 328
         y = 63
-    if checkpoint == 4:  # Seymour intro scene
+    if checkpoint == 6:  # Seymour intro scene
         print("Seymour intro scene")
-    if checkpoint == 5:
+    if checkpoint == 7:
         x = 0
         y = -200
-    if checkpoint == 6:  # Luca stadium front
+    if checkpoint == 8:  # buffer
+        x = 0
+        y = -200
+    if checkpoint == 9:  # buffer
+        x = 0
+        y = -200
+    if checkpoint == 10:  # Luca stadium front
         x = -256
         y = -76
-    if checkpoint == 7:
-        x = -448
-        y = -19
-    if checkpoint == 8:
-        print("Upside down T section")
-    if checkpoint == 9:
-        x = 179
-        y = -13
-    if checkpoint == 10:
-        x = 300
-        y = -15
     if checkpoint == 11:
-        x = 51
-        y = -49
-    if checkpoint == 12:
-        x = 60
-        y = -4
-    if checkpoint == 13:
-        x = 59
-        y = 41
+        x = -600
+        y = -19
+    if checkpoint == 12: #Reverse T map
+        x = 187
+        y = 18
+    if checkpoint == 13: #Reverse T map - into next zone
+        x = 300
+        y = 10
     if checkpoint == 14:
-        x = 23
-        y = 91
+        x = 26
+        y = -130
     if checkpoint == 15:
-        x = 1
-        y = 124
+        x = 31
+        y = -90
     if checkpoint == 16:
-        x = 1
-        y = 188
-    if checkpoint == 17:  # Into the bar
-        print("Into the bar")
+        x = 53
+        y = -36
+    if checkpoint == 17:
+        x = 61
+        y = -8
     if checkpoint == 18:
+        x = 60
+        y = 29
+    if checkpoint == 19:
+        x = 21
+        y = 90
+    if checkpoint == 20:
+        x = 4
+        y = 131
+    if checkpoint == 21:
+        x = -1
+        y = 161
+    if checkpoint == 22:
+        x = -1
+        y = 161
+    if checkpoint == 23:  # Into the bar
+        print("Into the bar")
+    if checkpoint == 24:  # buffer
         x = 37
         y = -26
-    if checkpoint == 19:
+    if checkpoint == 25:  # buffer
+        x = 37
+        y = -26
+    if checkpoint == 26:  # buffer
+        x = 37
+        y = -26
+    if checkpoint == 27:  # buffer
+        x = 37
+        y = -26
+    if checkpoint == 28:
+        x = 37
+        y = -26
+    if checkpoint == 29:
         x = -4
         y = -30
-    if checkpoint == 20:
+    if checkpoint == 30:
         x = -60
         y = -19
-    if checkpoint == 21:
+    if checkpoint == 31:
         x = -149
         y = -12
-    if checkpoint == 22:
+    if checkpoint == 32:
         x = -257
         y = 10
-    if checkpoint == 23:
+    if checkpoint == 33:
         print("Back to the front of the Blitz dome")
-    if checkpoint == 24:
-        x = -384
-        y = 37
-    if checkpoint == 25:
-        x = -338
-        y = 84
-    if checkpoint == 26:
+    if checkpoint == 34:
+        x = -395
+        y = 38
+    if checkpoint == 35:
+        x = -320
+        y = 95
+    if checkpoint == 36:
         print("To the docks")
-    if checkpoint == 27:
+    if checkpoint == 37:
         x = -239
         y = 160
-    if checkpoint == 28:
+    if checkpoint == 38:
         x = -224
         y = 178
-    if checkpoint == 29:
+    if checkpoint == 39:
         x = -195
         y = 203
-    if checkpoint == 30:  # First battle
+    if checkpoint == 40:  # First battle
         print("First battle")
-    if checkpoint == 31:
+    if checkpoint == 41:
         x = 185
         y = 240
-    if checkpoint == 32:  # Second battle
+    if checkpoint == 42:  # Second battle
         print("Second battle")
-    if checkpoint == 33:
+    if checkpoint == 43:
         x = 281
         y = -75
-    if checkpoint == 34:  # Third battle
+    if checkpoint == 44:  # Third battle
         print("Third battle")
-    if checkpoint == 35:
+    if checkpoint == 45:
         x = 167
         y = -312
-    if checkpoint == 36:
+    if checkpoint == 46:
         print("Touch save sphere")
-    if checkpoint == 37:
+    if checkpoint == 47:
         x = 150
         y = -337
-    if checkpoint == 38:  # Start of Oblitzerator fight
+    if checkpoint == 48:  # Start of Oblitzerator fight
         print("Start of Oblitzerator fight")
-    if checkpoint == 39:
+    if checkpoint == 49:
         x = -8
         y = -311
-    if checkpoint == 40:
+    if checkpoint == 50:
         print("Screen change")
-    if checkpoint == 41:
+    if checkpoint == 51:
         x = -304
         y = -53
-    if checkpoint == 42:
+    if checkpoint == 52:
         print("Screen change")
-    if checkpoint == 43:
+    if checkpoint == 53:
         x = -293
         y = -87
-    if checkpoint == 44:
+    if checkpoint == 54:
         x = -275
         y = -50
-    if checkpoint == 45:  # Save sphere and end of section
+    if checkpoint == 55:  # Save sphere and end of section
         print("Save sphere and end of section")
     return [x, y]
 
@@ -2040,10 +2071,10 @@ def miihenAgency(checkpoint):
         x = -2
         y = -27
     if checkpoint == 4:
-        x = -7
+        x = -2
         y = -56
     if checkpoint == 5:
-        x = -15
+        x = -10
         y = -90
     return [x, y]
 
@@ -5271,21 +5302,39 @@ def calmLands(checkpoint):
     if checkpoint == 4:
         x = -777
         y = -1478
-    if checkpoint == 5:
-        x = 1045
-        y = -8
+    if checkpoint == 5: #Southeast of agency, northeast of the turn.
+        x = -186
+        y = -715
     if checkpoint == 6:
-        x = 1424
-        y = 668
+        x = 461
+        y = -35
     if checkpoint == 7:
-        x = 1474
-        y = 843
+        x = 708
+        y = 215
     if checkpoint == 8:
-        x = 1542
-        y = 1063
+        x = 766
+        y = 276
     if checkpoint == 9:
-        x = 1650
-        y = 1170
+        x = 821
+        y = 290
+    if checkpoint == 10:
+        x = 1366
+        y = 609
+    if checkpoint == 11:
+        x = 1422
+        y = 663
+    if checkpoint == 12:
+        x = 1440
+        y = 724
+    if checkpoint == 13:
+        x = 1466
+        y = 841
+    if checkpoint == 14:
+        x = 1549
+        y = 1059
+    if checkpoint == 15:
+        x = 1630
+        y = 1230
     return [x, y]
 
 

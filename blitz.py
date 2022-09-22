@@ -170,7 +170,8 @@ def cursor1():
 
 
 def tidusShotTiming() -> int:
-    baseTiming = int(170)
+    baseTiming = int(169)
+    
     for x in range(5):
         if distance(0, x + 6) < 180:
             baseTiming = int(baseTiming - 4)
@@ -187,7 +188,7 @@ def gameStage():
     currentStage = 0
     if memory.main.getStoryProgress() < 570:  # Second half, before Tidus/Wakka swap
         if memory.main.rngSeed() == 31:
-            stages = [0, 2, 115, 144, 157, tidusShotTiming()]
+            stages = [0, 2, 115, 143, 155, tidusShotTiming()]
             # previously 141 for defender manip, 157 for force pass to Tidus.
         else:
             stages = [0, 2, 2, 142, 155, tidusShotTiming()]
@@ -225,7 +226,7 @@ def gameStage():
                     currentStage = 4
 
             # Logic that reduces stage if score is too far apart.
-            if memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 1 \
+            if memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 2 \
                     and memory.main.getStoryProgress() >= 570:
                 currentStage = 0
 
@@ -343,6 +344,12 @@ def jassuCircle():
 
 
 def jassuTrain():
+    targetCoords = [0,-600]
+    if reportState:
+        print(version[0], " - ", targetCoords)
+    blitzPathing.setMovement(targetCoords)
+    
+def jassuTrain_stillInDev():
     jassuCoords = playerArray[3].getCoords()
     version = "None"
     useCircle = False
@@ -456,7 +463,7 @@ def passBall(target=0, breakThrough=5):
         else:
             xbox.tapB()
     else:
-        xbox.tapB()
+        xbox.menuB()
 
 
 def shootBall(breakThrough=5):

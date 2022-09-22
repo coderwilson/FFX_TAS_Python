@@ -1,0 +1,340 @@
+
+def MRRbattle(status):
+    gameVars = vars.varsHandle()
+    # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
+    print("------------------------------")
+    print("------------------------------")
+    print("Fight start: MRR")
+    battle = memory.main.getEncounterID()
+    print("Battle number:", battle)
+    # nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+
+    if battle == 102:
+        print("Garuda battle, we want nothing to do with this.")
+    elif status[5] == 0:
+        print("If funguar present or more than three flees already, Valefor overdrive.")
+    elif status[5] == 1:
+        print("Now we're going to try to charge Valefor's overdrive again.")
+    elif status[5] == 2:
+        print("Yuna still needs levels.")
+    else:
+        print("Nothing else, going to flee.")
+    screen.awaitTurn()
+
+    aeonTurn = 0
+
+    # If we're ambushed and take too much damage, this will trigger first.
+    hpArray = memory.main.getBattleHP()
+    hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
+    # Final charging for Yuna is a lower overall party HP
+    if hpTotal < 1800 and status[5] != 2:
+        print("------------We got ambushed. Not going to attempt to recover.")
+        fleeAll()
+    elif screen.faintCheck() >= 1:
+        print("------------Someone is dead from the start of battle. Just get out.")
+        fleeAll()
+    elif checkPetrify():
+        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+        fleeAll()
+    elif battle == 102:  # Garuda, flee no matter what.
+        fleeAll()
+    elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
+        if status[3] < 3 and memory.main.rngSeed() != 160:  # Battle number (zero-index)
+            if battle == 100 or battle == 101:  # The two battles with Funguar
+                while memory.main.battleActive():  # end of battle screen
+                    if memory.main.turnReady():
+                        if checkPetrify():
+                            print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                            fleeAll()
+                        elif screen.turnTidus():
+                            buddySwapKimahri()
+                        elif screen.turnKimahri():
+                            # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                            #    nextCritKim = mrrTarget()
+                            # else:
+                            defend()
+                        elif screen.turnWakka():
+                            defend()
+                        else:
+                            buddySwapYuna()
+                            aeonSummon(0)
+                            screen.awaitTurn()
+                            valeforOD(version=1)
+                            status[2] = 1
+                            status[5] = 1
+            else:
+                fleeAll()
+        else:  # Starting with fourth battle, overdrive on any battle that isn't Garuda.
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
+                        buddySwapKimahri()
+                    elif screen.turnKimahri():
+                        # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                        #     nextCritKim = mrrTarget()
+                        # else:
+                        defend()
+                    elif screen.turnWakka():
+                        defend()
+                    else:
+                        buddySwapYuna()
+                        aeonSummon(0)
+                        screen.awaitTurn()
+                        valeforOD(version=1)
+                        status[2] = 1
+                        status[5] = 1
+    elif status[5] == 1:  # Next need to recharge Valefor
+        valeforChargeComplete = True
+        if memory.main.battleType() == 1:
+            for _ in range(3):
+                screen.awaitTurn()
+                defend()
+        if battle == 96:  # Gandarewa, Red Element, Raptor (camera front)
+            wakkaTurns = 0
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("Someone is pretrified. Escaping battle.")
+                        fleeAll()
+                        valeforChargeComplete = False
+                    else:
+                        print("No petrify issues.")
+                        if screen.turnTidus():
+                            buddySwapKimahri()
+                            nextCritKim = mrrTarget()
+                        elif screen.turnWakka():
+                            wakkaTurns += 1
+                            if wakkaTurns == 1:
+                                attackByNum(21, 'l')
+                            else:
+                                buddySwapYuna()
+                                aeonSummon(0)
+                        elif screen.turnAuron():
+                            attackByNum(22, 'r')
+                        elif screen.turnKimahri():
+                            buddySwapYuna()
+                            aeonSummon(0)
+                        elif screen.turnAeon():
+                            if aeonTurn == 0 and memory.main.getNextTurn() < 19:
+                                aeonBoost()
+                                aeonTurn = 1
+                            elif aeonTurn < 2:
+                                aeonBoost()
+                                screen.awaitTurn()
+                                attack('none')
+                                aeonTurn = 2
+                            else:
+                                aeonSpell2(3, 'none')
+        elif battle == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
+                        buddySwapKimahri()
+                        nextCritKim = mrrTarget()
+                    elif screen.turnWakka():
+                        defend()
+                    elif screen.turnAuron():
+                        attack('none')
+                    elif screen.turnKimahri():
+                        buddySwapYuna()
+                        aeonSummon(0)
+                    elif screen.turnAeon():
+                        if aeonTurn == 0 and memory.main.getNextTurn() < 19:
+                            screen.awaitTurn()
+                            aeonBoost()
+                            aeonTurn = 1
+                        elif aeonTurn < 2:
+                            aeonSpell(2)
+                            screen.awaitTurn()
+                            aeonBoost()
+                            aeonTurn = 2
+                        else:
+                            aeonSpell(3)
+        elif battle == 98:  # Raptor, Red Element, Gandarewa (camera side)
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("Someone is pretrified. Escaping battle.")
+                        fleeAll()
+                        valeforChargeComplete = False
+                    else:
+                        print("No petrify issues.")
+                        if screen.turnTidus():
+                            buddySwapKimahri()
+                        elif screen.turnKimahri():
+                            nextCritKim = mrrTarget()
+                        elif screen.turnWakka():
+                            attack('none')
+                        elif screen.turnAuron():
+                            buddySwapYuna()
+                            aeonSummon(0)
+                        elif screen.turnAeon():
+                            if aeonTurn == 0 and memory.main.getNextTurn() < 19:
+                                aeonBoost()
+                                aeonTurn = 1
+                            elif aeonTurn < 2:
+                                aeonSpell2(2, 'right')
+                                screen.awaitTurn()
+                                aeonBoost()
+                                aeonTurn = 2
+                            else:
+                                aeonSpell2(3, 'right')
+        # battle 99 is never used.
+        elif battle == 100:  # Raptor, Funguar, Red Element (camera front)
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("Someone is pretrified. Escaping battle.")
+                        fleeAll()
+                        valeforChargeComplete = False
+                    else:
+                        print("No petrify issues.")
+                        if screen.turnTidus():
+                            buddySwapKimahri()
+                            # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                            #     nextCritKim = mrrTarget()
+                            # else:
+                            defend()
+                        elif screen.turnWakka():
+                            attack('none')
+                        elif memory.main.getEnemyCurrentHP()[0] != 0:
+                            buddySwapTidus()
+                            fleeAll()
+                            valeforChargeComplete = False
+                        elif screen.turnAuron():
+                            buddySwapYuna()
+                            aeonSummon(0)
+                        elif screen.turnAeon():
+                            if aeonTurn == 0 and memory.main.getNextTurn() < 19:
+                                screen.awaitTurn()
+                                aeonBoost()
+                                aeonTurn = 1
+                            elif aeonTurn < 2:
+                                aeonSpell(0)
+                                screen.awaitTurn()
+                                aeonBoost()
+                                aeonTurn = 2
+                            else:
+                                aeonSpell(3)
+        # Funguar, Red Element, Gandarewa (camera reverse angle)
+        elif battle == 101:
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
+                        buddySwapKimahri()
+                        nextCritKim = mrrTarget()
+                    elif screen.turnWakka():
+                        attackByNum(22, 'l')
+                    elif memory.main.getEnemyCurrentHP()[2] != 0:
+                        buddySwapTidus()
+                        fleeAll()
+                        valeforChargeComplete = False
+                    elif screen.turnAuron():
+                        buddySwapYuna()
+                        aeonSummon(0)
+                    elif screen.turnAeon():
+                        if aeonTurn == 0 and memory.main.getNextTurn() < 19:
+                            aeonBoost()
+                            aeonTurn = 1
+                        elif aeonTurn < 2:
+                            aeonSpell(0)
+                            screen.awaitTurn()
+                            aeonBoost()
+                            aeonTurn = 2
+                        else:
+                            aeonSpell(3)
+        if valeforChargeComplete:
+            status[5] = 2  # Phase 2, final phase to level up Kimahri and Yuna
+            status[2] = 2  # Valefor is charged flag.
+    elif status[5] == 2:  # Last phase is to level Yuna and Kimahri
+        # Both Yuna and Kimahri have levels, good to go.
+        if status[0] == 1 and status[1] == 1:
+            status[5] = 3
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    fleeAll()
+        else:
+            # Wakka attack Raptors and Gandarewas for Yuna AP.
+            yunaTurnCount = 0
+            while memory.main.battleActive():  # end of battle screen
+                if memory.main.turnReady():
+                    if checkPetrify():
+                        print("------------Someone has been petrified which messes up the battle logic. Escaping.")
+                        fleeAll()
+                    elif screen.turnTidus():
+                        tidusFlee()
+                    elif screen.faintCheck() >= 1:
+                        buddySwapTidus()
+                    elif screen.turnKimahri():
+                        if memory.main.getKimahriSlvl() >= 6 and yunaTurnCount:
+                            # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
+                            #     nextCritKim = mrrTarget()
+                            # else:
+                            fleeAll()
+                        else:
+                            defend()
+                    elif screen.turnYuna():
+                        yunaTurnCount += 1
+                        if yunaTurnCount == 1:
+                            defend()
+                        else:
+                            fleeAll()
+                    elif screen.turnWakka():
+                        if battle == 96 or battle == 97 or battle == 101:
+                            if battle == 101:
+                                attackByNum(22, 'l')
+                            else:
+                                attackByNum(21, 'l')
+                        elif battle == 98 or battle == 100:
+                            attack('none')
+                        else:
+                            fleeAll()
+                    else:  # Should not occur, but you never know.
+                        buddySwapTidus()
+    else:  # Everything is done.
+        fleeAll()
+    print("+++")
+    print(gameVars.wakkaLateMenu())
+    print("+++")
+    # OK the battle should be complete now. Let's do some wrap-up stuff.
+    wrapUp()
+
+    # Check on sphere levels for our two heroes
+    if status[0] == 0:
+        if memory.main.getSLVLYuna() > 573:
+            status[0] = 1
+    if status[1] == 0:
+        if memory.main.getSLVLKim() >= 495:
+            status[1] = 1
+    if status[5] == 2:  # Last phase is to level Yuna and Kimahri
+        # Both Yuna and Kimahri have levels, good to go.
+        if status[0] == 1 and status[1] == 1:
+            status[5] = 3
+
+    if status[5] == 3:
+        memory.main.fullPartyFormat('mrr1', fullMenuClose=False)
+    elif status[5] == 2:  # Still levelling Yuna or Kimahri
+        memory.main.fullPartyFormat('mrr2', fullMenuClose=False)
+        print("Yuna in front party, trying to get some more experience.")
+    else:
+        memory.main.fullPartyFormat('mrr1', fullMenuClose=False)
+
+    # Now checking health values
+    hpCheck = memory.main.getHP()
+    print("HP values:", hpCheck)
+    if status[5] == 2:
+        healUp(3, fullMenuClose=False)
+    elif hpCheck != [520, 475, 1030, 644, 818, 380]:
+        healUp(fullMenuClose=False)
+    # donezo. Back to the main path.
+    print("Clean-up is now complete.")
+    return status
