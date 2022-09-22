@@ -1,11 +1,11 @@
-# Libraries and Core Files
-import memory.main
-import xbox
+import logs
 import area.dreamZan
+import xbox
+import memory.main
+import vars
+import reset
 import loadGame
 import targetPathing
-import reset
-import logs
 gameVars = vars.varsHandle()
 gameVars.setStartVars()
 
