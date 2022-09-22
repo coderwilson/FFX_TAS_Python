@@ -16,7 +16,7 @@ def arrival():
     memory.main.clickToControl()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
 
-    memory.main.fullPartyFormat('djose')
+    memory.main.fullPartyFormat('kilikawoods1')
     miihenSkip = False
     battleCount = 0
     SDencounterID = 0
@@ -158,8 +158,6 @@ def arrival():
                     while not memory.main.menuOpen():
                         xbox.tapY()
                     FFXC.set_neutral()
-                    memory.main.fullPartyFormat('djose')
-                    memory.main.closeMenu()
                 elif checkpoint == 25 and not memory.main.battleActive():  # Shelinda dialog
                     FFXC.set_neutral()
                     xbox.tapB()
@@ -169,6 +167,8 @@ def arrival():
                     battleCount += 1
                     battle.main.MiihenRoad()
                     print("Battle complete")
+                memory.main.fullPartyFormat('kilikawoods1')
+                memory.main.closeMenu()
 
                 # Kimahri manip
                 nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
@@ -247,9 +247,9 @@ def midPoint():
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
-            elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
-                checkpoint = 4
-            elif checkpoint == 3:
+            #elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
+            #    checkpoint = 4
+            elif checkpoint in [2,3]:
                 checkpoint = 4
             elif checkpoint == 5:
                 FFXC.set_movement(0, -1)
@@ -272,7 +272,7 @@ def midPoint():
 # Starts just after the save sphere.
 def lowRoad(selfDestruct, battleCount, SDencounterID):
     checkpoint = 0
-    memory.main.fullPartyFormat('djose')
+    memory.main.fullPartyFormat('kilikawoods1')
     while memory.main.getMap() != 79:
         if memory.main.userControl():
             # Utility stuff

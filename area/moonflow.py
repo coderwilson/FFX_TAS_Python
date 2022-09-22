@@ -107,20 +107,25 @@ def northBank():
     memory.main.awaitEvent()
     memory.main.waitFrames(30 * 1)
     memory.main.awaitControl()
-    memory.main.waitFrames(30 * 1.5)
     if gameVars.csr():
-        FFXC.set_movement(-1, 1)
-        memory.main.waitFrames(4)
+        memory.main.waitFrames(10)
+        FFXC.set_movement(-1, -0.7)
+        memory.main.waitFrames(6)
+        FFXC.set_movement(-1, 0)
+        memory.main.awaitEvent()
     else:
+        memory.main.waitFrames(45)
         memory.main.clickToEvent()  # Talk to Auron
         FFXC.set_neutral()
-        memory.main.waitFrames(30 * 0.3)
+        memory.main.waitFrames(9)
         memory.main.clickToControl3()
     FFXC.set_movement(-1, 0)
-    memory.main.waitFrames(30 * 0.5)
+    memory.main.waitFrames(15)
     memory.main.awaitEvent()
     FFXC.set_neutral()
-    memory.main.waitFrames(30 * 0.5)
+    memory.main.waitFrames(15)
+    if gameVars.getLStrike() % 2 == 1:
+        memory.main.equipWeapon(character=0, special='brotherhood')
 
     checkpoint = 0
     print("Miihen North Bank pattern. Starts after talking to Auron.")
