@@ -171,7 +171,7 @@ def cursor1():
 
 def tidusShotTiming() -> int:
     baseTiming = int(169)
-    
+
     for x in range(5):
         if distance(0, x + 6) < 180:
             baseTiming = int(baseTiming - 4)
@@ -344,11 +344,12 @@ def jassuCircle():
 
 
 def jassuTrain():
-    targetCoords = [0,-600]
+    targetCoords = [0, -600]
     if reportState:
         print(version[0], " - ", targetCoords)
     blitzPathing.setMovement(targetCoords)
-    
+
+
 def jassuTrain_stillInDev():
     jassuCoords = playerArray[3].getCoords()
     version = "None"

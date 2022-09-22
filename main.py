@@ -230,15 +230,14 @@ if Gamestate != "none":
     if Gamestate == "Luca" and StepCounter == 5:
         loadGame.loadSaveNum(5)
     if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
-        loadGame.loadSaveNum(16) #With laughing scene
+        loadGame.loadSaveNum(16)  # With laughing scene
         loadGame.LoadMiihenStart_Laugh()
-    if Gamestate == "Miihen" and StepCounter == 2: #Agency, for Chocobo Eater testing only
+    if Gamestate == "Miihen" and StepCounter == 2:  # Agency, for Chocobo Eater testing only
         loadGame.loadSaveNum(28)
-        returnArray = [False,0,0,False]
+        returnArray = [False, 0, 0, False]
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
         loadGame.loadSaveNum(38)
-        # Fixes a low gil state for this save file.
-        memory.main.setGilvalue(4000)
+        memory.main.setGilvalue(4000)  # Fixes a low gil state for this save file.
         loadGame.LoadMRR()
     if Gamestate == "Djose" and StepCounter == 1:  # Aftermath, after talking to Seymour and then Auron
         loadGame.loadSaveNum(27)
