@@ -457,14 +457,13 @@ def passBall(target=0, breakThrough=5):
         else:
             xbox.menuB()
     elif selectPassTarget():
-        if targetedPlayer() != target:
-            xbox.menuDown()
-            memory.main.waitFrames(3)
-        else:
-            xbox.tapB()
+        while not activeClock():
+            if targetedPlayer() != target:
+                xbox.menuDown()
+            else:
+                xbox.tapB()
     else:
         xbox.menuB()
-
 
 def shootBall(breakThrough=5):
     if memory.main.getStoryProgress() < 570 and controllingPlayer() == 0:
