@@ -15,7 +15,7 @@ FFXC = xbox.controllerHandle()
 def arrival():
     memory.main.clickToControl()
     memory.main.closeMenu()
-    memory.main.fullPartyFormat('mrr1')
+    memory.main.fullPartyFormat('kilikawoods1')
     memory.main.closeMenu()
     claskoSkip = True
 
@@ -76,7 +76,7 @@ def arrival():
             elif memory.main.menuOpen() or memory.main.diagSkipPossible():
                 xbox.tapB()
     FFXC.set_neutral()
-    print("Done with prelim MRR area, now for the real deal.")
+    print("Done with perlim MRR area, now for the real deal.")
     return claskoSkip
 
 
@@ -98,6 +98,7 @@ def mainPath():
         if memory.main.userControl():
             if checkpoint == 1:
                 memory.main.touchSaveSphere()
+                memory.main.fullPartyFormat('mrr1')
                 checkpoint += 1
             elif checkpoint == 4:
                 print("Up the first lift")

@@ -48,7 +48,7 @@ def desert():
     itemsNeeded = 0
 
     # Now to figure out how many items we need.
-    stealItems = memory.main.updateStealItemsDesert()
+    stealItems = battle.main.updateStealItemsDesert()
     itemsNeeded = 8 - (stealItems[1] + stealItems[2] + stealItems[3])
 
     menu.equipSonicSteel()
@@ -193,7 +193,7 @@ def desert():
                         memory.main.fullPartyFormat('desert1')
 
                 # Next, figure out how many items we need.
-                stealItems = memory.main.updateStealItemsDesert()
+                stealItems = battle.main.updateStealItemsDesert()
                 print("-----------------------------")
                 print("Items status:", stealItems)
                 print("-----------------------------")

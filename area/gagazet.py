@@ -49,10 +49,10 @@ def calmLands():
         if memory.main.userControl():
             if targetPathing.setMovement(targetPathing.calmLands(checkpoint)):
                 checkpoint += 1
-                if checkpoint == 9:
+                if checkpoint == 15:
                     if checkGems() < 2:
                         checkpoint -= 1
-                        FFXC.set_movement(-1, 0)
+                        FFXC.set_movement(-1, -1)
                         memory.main.waitFrames(60)
                 print("Checkpoint reached:", checkpoint)
         else:

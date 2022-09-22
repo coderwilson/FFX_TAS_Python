@@ -194,22 +194,34 @@ def ammesBattle():
 def AfterAmmes():
     memory.main.clickToControl()
     checkpoint = 0
+    #memory.main.waitFrames(90)
+    #print("#### MARK ####")
+    #memory.main.ammesFix(actorIndex=0)
+    #memory.main.waitFrames(90)
 
     while memory.main.getMap() != 49:
         if memory.main.userControl():
-            # Map changes and events
-            if checkpoint == 6:  # Save sphere
-                memory.main.touchSaveSphere()
-                checkpoint += 1
-            elif checkpoint < 9 and memory.main.getStoryProgress() >= 20:  # Swim to Jecht
-                checkpoint = 9
-            elif checkpoint < 11 and memory.main.getStoryProgress() >= 30:  # Towards Baaj temple
-                checkpoint = 11
+            startPos = memory.main.getCoords()
+            if memory.main.getMap() == 389 and 860 <= startPos[0] <= 875 and -135 <= startPos[1] <= -150:
+                FFXC.set_neutral()
+                memory.main.waitFrames(2)
+                startPos = memory.main.getCoords()
+                if 860 <= startPos[0] <= 875 and -135 <= startPos[1] <= -150:
+                    memory.main.ammesFix(actorIndex=0)
+            else:
+                # Map changes and events
+                if checkpoint == 6:  # Save sphere
+                    memory.main.touchSaveSphere()
+                    checkpoint += 1
+                elif checkpoint < 9 and memory.main.getStoryProgress() >= 20:  # Swim to Jecht
+                    checkpoint = 9
+                elif checkpoint < 11 and memory.main.getStoryProgress() >= 30:  # Towards Baaj temple
+                    checkpoint = 11
 
-            # General pathing
-            elif targetPathing.setMovement(targetPathing.allStartsHere(checkpoint)):
-                checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                # General pathing
+                elif targetPathing.setMovement(targetPathing.allStartsHere(checkpoint)):
+                    checkpoint += 1
+                    print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.turnReady():

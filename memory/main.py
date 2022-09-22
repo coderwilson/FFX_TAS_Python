@@ -501,6 +501,14 @@ def getCoords():
 
     return [x, y]
 
+def ammesFix(actorIndex:int=0):
+    global process
+    global baseValue
+    basePtr = baseValue + 0x1fc44e4
+    baseAddr = process.read(basePtr)
+    #xCoord = 749, yCoord = -71
+    process.write(baseAddr + (0x880 * actorIndex) + 0x0c, 0x443B4000)
+    process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC28E0000)
 
 def extractorHeight():
     global process
@@ -1884,6 +1892,8 @@ def getPartyFormatFromText(frontLine):
         orderFinal = [0, 1, 2, 6, 4, 5, 3]
     elif frontLine == 'kilikawoods1':
         orderFinal = [0, 1, 4, 3, 5, 6, 2]
+    elif frontLine == 'kilikawoodsbackup':
+        orderFinal = [3, 1, 4, 0, 5]
     elif frontLine == 'gauntlet':
         orderFinal = [0, 1, 3, 2, 4, 5, 6]
     elif frontLine == 'miihen':
@@ -3741,17 +3751,6 @@ def lucaWorkersBattleID():
 # ------------------------------
 # RNG tracking based on the first six hits
 
-
-def lastHitKimahri():
-    global baseValue
-    print("Initializing values")
-    key = baseValue + 0xd334cc
-    ptrVal = process.read(key)
-    kimLastHit = process.read(ptrVal + (3 * 0xF90) + 0x7AC)
-    print("Kimahri hit for ", kimLastHit, " damage")
-    return kimLastHit
-
-
 def lastHitInit():
     global baseValue
     print("Initializing values")
@@ -4238,3 +4237,21 @@ def advanceRNGindex(index: int = 43):
     global baseValue
     key = 0xD35ED8 + (index * 0x4)
     process.write(baseValue + key, rngArrayFromIndex(index=index)[1])
+
+def nextSteal(stealCount:int):
+    useArray = rngArrayFromIndex(index=10, arrayLen=4)
+    print(useArray)
+    for i in range(len(useArray)):
+        if useArray[i] <= -1:
+            print(useArray[i] + (2 ** 32), " | ", hex(useArray[i] + (2 ** 32)))
+        else:
+            print(useArray[i], " | ", hex(useArray[i]))
+    if useArray[1] <= -1:
+        stealRNG = (useArray[1] + (2 ** 32)) % 255
+    else:
+        stealRNG = (useArray[1]) % 255
+    stealChance = 2 ** stealCount
+    print("=== ", stealRNG, " < ", 255 // stealChance)
+    waitFrames(90)
+    print("Test")
+    return stealRNG < 255 // stealChance

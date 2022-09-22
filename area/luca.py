@@ -18,10 +18,25 @@ def arrival():
 
     earlyHaste = 0
     checkpoint = 0
-    while checkpoint < 46:
+    while checkpoint < 56:
         if memory.main.userControl():
+            # Map changes
+            if checkpoint < 5 and memory.main.getMap() == 268:
+                checkpoint = 5
+                print("Map change:", checkpoint)
+            elif checkpoint < 10 and memory.main.getMap() == 123:  # Front of the Blitz dome
+                print("Map change:", checkpoint)
+                checkpoint = 10
+            elif checkpoint < 13 and memory.main.getMap() == 77:
+                print("Map change:", checkpoint)
+                checkpoint = 13
+            elif checkpoint < 15 and memory.main.getMap() == 104:
+                print("Map change:", checkpoint)
+                checkpoint = 15
+            
             # events
-            if checkpoint == 4:  # Seymour intro scene
+            if checkpoint in [5,6]:  # Seymour intro scene
+                memory.main.awaitControl()
                 print("Event: Seymour intro scene")
                 FFXC.set_movement(1, 0)
                 memory.main.awaitEvent()
@@ -39,33 +54,36 @@ def arrival():
                 if not gameVars.csr():
                     xbox.SkipDialogSpecial(45)  # Skip the Wakka Face scene
                 memory.main.clickToControl()
-                checkpoint += 1
-            elif checkpoint == 8:  # Upside down T section
+                checkpoint = 7
+                print("Seymour scene, updating checkpoint.")
+            elif checkpoint == 12:  # Upside down T section
                 print("Event: Upside down T section")
                 memory.main.clickToEventTemple(4)
                 checkpoint += 1
-            elif checkpoint == 17:  # Into the bar
+            elif checkpoint == 23:  # Into the bar
                 print("Event: Into the bar looking for Auron")
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint == 23:  # Back to the front of the Blitz dome
+            elif checkpoint == 33:  # Back to the front of the Blitz dome
                 print("Event: Back to Blitz dome entrance")
                 memory.main.clickToEventTemple(6)
                 checkpoint += 1
-            elif checkpoint == 26:  # To the docks
+            elif checkpoint == 36:  # To the docks
                 print("Event: Towards the docks")
+                FFXC.set_movement(0,1)
+                memory.main.waitFrames(9)
                 memory.main.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 30 or checkpoint == 32:  # First and second battles
+            elif checkpoint == 40 or checkpoint == 42:  # First and second battles
                 print("Event: First/Second battle")
                 FFXC.set_movement(1, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
                 battle.main.LucaWorkers()
                 checkpoint += 1
-            elif checkpoint == 34:  # Third battle
+            elif checkpoint == 44:  # Third battle
                 print("Tidus XP:", memory.main.getTidusXP())
                 if memory.main.getTidusXP() >= 312:
                     FFXC.set_neutral()
@@ -83,24 +101,24 @@ def arrival():
                     earlyHaste = menu.LucaWorkers()
 
                 checkpoint += 1
-            elif checkpoint == 36 or checkpoint == 45:
+            elif checkpoint == 46 or checkpoint == 55:
                 print("Event: Touch Save Sphere")
                 memory.main.touchSaveSphere()
                 checkpoint += 1
-            elif checkpoint == 38:  # Oblitzerator
+            elif checkpoint == 48:  # Oblitzerator
                 print("Event: Oblitzerator fight")
                 FFXC.set_movement(1, 0)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
                 battle.main.Oblitzerator(earlyHaste)
                 checkpoint += 1
-            elif checkpoint == 40:
+            elif checkpoint == 50:
                 memory.main.clickToEventTemple(4)
 
                 if earlyHaste == 0:
                     earlyHaste = menu.LucaWorkers() - 1
                 checkpoint += 1
-            elif checkpoint == 42:
+            elif checkpoint == 52:
                 memory.main.clickToEventTemple(5)
                 checkpoint += 1
 
@@ -114,17 +132,6 @@ def arrival():
                 xbox.tapB()
             elif memory.main.cutsceneSkipPossible():
                 xbox.skipScene()
-
-            # Map changes
-            elif checkpoint < 3 and memory.main.getMap() == 268:
-                checkpoint = 3
-                print("Map change:", checkpoint)
-            elif checkpoint < 6 and memory.main.getMap() == 123:  # Front of the Blitz dome
-                print("Map change:", checkpoint)
-                checkpoint = 6
-            elif checkpoint < 11 and memory.main.getMap() == 104:
-                print("Map change:", checkpoint)
-                checkpoint = 11
 
     logs.writeStats("Early Haste:")
     logs.writeStats(earlyHaste)

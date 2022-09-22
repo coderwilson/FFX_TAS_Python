@@ -81,6 +81,8 @@ def agencyShop():
 
     # 15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     speedNeeded = max(0, min(2, 14 - speedCount))
+    if memory.main.rngSeed() == 160 and not gameVars.getBlitzWin():
+        speedNeeded = 0
     grenade_slot = memory.main.getItemSlot(35)
     if grenade_slot == 255:
         cur_grenades = 0
