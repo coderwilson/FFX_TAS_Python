@@ -777,13 +777,13 @@ while Gamestate != "End":
     if Gamestate == "Gagazet" and StepCounter == 2:
         reportGamestate()
         if gameVars.tryForNE():
-            import neArmor
+            import area.neArmor
             print("Mark 1")
-            neArmor.toHiddenCave()
+            area.neArmor.toHiddenCave()
             print("Mark 2")
-            neArmor.dropHunt()
+            area.neArmor.dropHunt()
             print("Mark 3")
-            neArmor.returnToGagazet()
+            area.neArmor.returnToGagazet()
         manipTime2 = logs.timeStamp()
         manipTime = manipTime2 - manipTime1
         print("NEA Manip duration:", str(manipTime))
