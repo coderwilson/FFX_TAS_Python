@@ -466,6 +466,7 @@ def passBall(target=0, breakThrough=5):
     else:
         xbox.menuB()
 
+
 def shootBall(breakThrough=5):
     if memory.main.getStoryProgress() < 570 and controllingPlayer() == 0:
         if gameClock() > 167:

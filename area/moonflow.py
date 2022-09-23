@@ -4,6 +4,7 @@ import battle.main
 import memory.main
 import targetPathing
 import vars
+import menu
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -125,7 +126,7 @@ def northBank():
     FFXC.set_neutral()
     memory.main.waitFrames(15)
     if gameVars.getLStrike() % 2 == 1:
-        memory.main.equipWeapon(character=0, special='brotherhood')
+        menu.equipWeapon(character=0, special='brotherhood')
 
     checkpoint = 0
     print("Miihen North Bank pattern. Starts after talking to Auron.")
