@@ -2034,15 +2034,14 @@ def battleGui():
     while memory.main.battleActive():
         turn = 1
         if memory.main.getOverdriveBattle(8) == 20 or memory.main.getOverdriveBattle(1) == 100:
+            print("Special Fight")
             seymourTurn = 0
             while memory.main.battleActive():
-                if screen.turnSeymour and seymourTurn == 0:
-                    if memory.main.getOverdriveBattle(1) == 100:
-                        seymourSpell(targetFace=False)
-                    else:
-                        seymourSpell(targetFace=True)
+                if screen.turnSeymour() and seymourTurn < 2:
+                    seymourSpell(targetFace=False)
                     seymourTurn += 1
-                elif screen.turnYuna and seymourTurn >= 2:
+                elif screen.turnYuna() and seymourTurn >= 2:
+                    print("Laser Time")
                     if memory.main.getOverdriveBattle(1) == 100:
                         while not memory.main.otherBattleMenu():
                             xbox.tapLeft()
@@ -2053,8 +2052,10 @@ def battleGui():
                     else:
                         aeonSummon(0)
                 elif screen.turnAeon():
+                    print("Firing")
                     valeforOD()
                 else:
+                    print("Defend")
                     defend()
         else:
             while memory.main.battleActive():
