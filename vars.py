@@ -20,7 +20,7 @@ class allVars:
         self.perfectAeonKills = False #Before YuYevon, True is slower but more swag.
 
         # ----Blitzball
-        self.blitzWinValue = False  # No default value required
+        self.blitzWinValue = True  # No default value required
         self.blitzOvertime = False  # Set to False, no need to change ever.
         self.blitzFirstShotVal = False
         self.oblitzAttackVal = "255"  # Used for RNG manip tracking
@@ -28,13 +28,13 @@ class allVars:
         # ----Sphere grid
         self.fullKilikMenu = False  # Default to False
         self.earlyTidusGridVal = False  # Default False
-        self.earlyHasteVal = -1  # Default -1
+        self.earlyHasteVal = 1  # Default -1
         self.wakkaLateMenuVal = False  # Default False
         self.endGameVersionVal = 1  # Default 0
 
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
-        self.lStrikeCount = 0  # Default 0
+        self.lStrikeCount = 1  # Default 0
 
         # ----RNG Manip
         self.yellows = 0

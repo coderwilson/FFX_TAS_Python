@@ -10,6 +10,7 @@ import ctypes
 import ctypes.wintypes
 from ReadWriteMemory import ReadWriteMemory
 from ReadWriteMemory import Process
+import time
 gameVars = vars.varsHandle()
 
 # Process Permissions
@@ -108,6 +109,7 @@ def start():
     global yPtr
     global coordsCounter
     coordsCounter = 0
+    success = False
 
     # rwm = ReadWriteMemory()
     rwm = FFXMemory()
@@ -126,10 +128,12 @@ def start():
         baseValue = zz_rootMem.ListProcessModules(process.pid)
         print("Process Modules complete")
         print("Dynamically determined memory address:", hex(baseValue))
+        success = True
     except Exception as errCode:
         print("Could not get memory address dynamically. ", errCode)
         baseValue = 0x00FF0000
-
+        time.sleep(10)
+    return success
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
@@ -1890,7 +1894,7 @@ def getPartyFormatFromText(frontLine):
     elif frontLine == 'yuna':
         orderFinal = [0, 1, 2, 6, 4, 5, 3]
     elif frontLine == 'kilikawoods1':
-        orderFinal = [0, 1, 4, 3, 5, 6, 2]
+        orderFinal = [0, 1, 4, 3, 5, 2]
     elif frontLine == 'kilikawoodsbackup':
         orderFinal = [3, 1, 4, 0, 5]
     elif frontLine == 'gauntlet':
@@ -3630,14 +3634,19 @@ def touchSaveSphere():
             xbox.tapB()
             waitFrames(1)
     FFXC.set_neutral()
-    waitFrames(6)
+    print("Waiting for cursor to reset before we do things - Mark 1")
+    while saveMenuCursor() != 0:
+        pass
+    waitFrames(1)
+    print("Mark 2")
+    #waitFrames(300)
 
     while not userControl():
         if saveMenuOpen():
             xbox.tapA()
         elif diagProgressFlag() == ssDetails[2]:
             print("Cursor test:", saveMenuCursor())
-            if saveMenuCursor() == 0 and saveMenuCursor2() == 0:
+            if saveMenuCursor() == 0:# and saveMenuCursor2() == 0:
                 xbox.menuA()
             else:
                 xbox.menuB()
@@ -4130,15 +4139,6 @@ def rollNextRNG(lastRNG: int, index: int) -> int:
     new_value = s32(rng_value * rng_constant_1 ^ rng_constant_2)
     new_value = s32((new_value >> 0x10) + (new_value << 0x10))
     return new_value
-
-
-def printManipInfo():
-    print("--------------------------")
-    print("Upcoming RNGs:")
-    print("RNG12:", nextChanceRNG12(), "| RNG13: ", nextChanceRNG13() - 1)
-    print("RNG10:", nextChanceRNG10(), "| Pre Defender X: ", nextChanceRNG10Calm())
-    print("--------------------------")
-
 
 def arenaArray():
     global baseValue

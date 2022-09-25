@@ -1399,11 +1399,11 @@ def MiihenRoad(selfDestruct=False):
     hpCheck = memory.main.getHP()
     print("------------------ HP check:", hpCheck)
     if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
-        memory.main.fullPartyFormat('miihen', fullMenuClose=False)
+        memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
         healUp()
     else:
         print("No need to heal up. Moving onward.")
-        memory.main.fullPartyFormat('miihen')
+        memory.main.fullPartyFormat('kilikawoods1')
 
     print("selfDestruct flag:", gameVars.selfDestructGet())
 
@@ -6292,9 +6292,62 @@ def calmLandsManip():
     midArray = [277, 279, 285, 287, 289, 290]
     rng10nextChanceHigh = memory.main.nextChanceRNG10(128)
     highArray = [278, 286, 288]
-    print("++Gems: ", checkGems())
     if checkGems() < 2:
-        print("++Calm Lands battle, looking for gems.")
+        print("++++ Gems: ", checkGems())
+        print("++++ Calm Lands battle, need gems.")
+        calmLandsGems()
+    else:
+        print("++++ Gems good. NEA manip logic.")
+        advancePreX, advancePostX = rngTrack.neaTrack()  # returns integers
+        if advancePreX != 0 and advancePostX != 0:  # Non-zero for both
+            print("Not lined up for NEA")
+            if rng10nextChanceLow == 0 and memory.main.getEncounterID() in lowArray:
+                advanceRNG12()
+            elif rng10nextChanceMid == 0 and memory.main.getEncounterID() in midArray:
+                advanceRNG12()
+            elif rng10nextChanceHigh == 0 and memory.main.getEncounterID() in highArray:
+                advanceRNG12()
+            else:  # If we can't advance on this battle, try to get the next "mid" level advance.
+                print("Can't drop off of this battle.")
+                advanceRNG10(rng10nextChanceMid)
+        elif advancePostX == 0:  # Lined up for next drop NEA before defender X.
+            print("The next equipment to drop will be NEA")
+            if memory.main.getCoords()[0] > 1300:
+                print("--Near Gagazet, just get off RNG10 equipment drop.")
+                if memory.main.nextChanceRNG10() == 0:
+                    advanceRNG10(1) # Gets us off of a drop on defender X - probably. :D
+                    # Don't want to have Defender X drop an item
+                else:
+                    fleeAll()
+            elif memory.main.nextChanceRNG10Calm():
+                advanceRNG10(memory.main.nextChanceRNG10Calm())
+            else:
+                print("Lined up OK, ready for NEA. Just flee.")
+                fleeAll()
+        elif advancePreX == 0:
+            print("The second equipment drop from now will be NEA.")
+            if memory.main.nextChanceRNG10() != 0:
+                advanceRNG10(memory.main.nextChanceRNG10())
+                # Trying to get onto a good drop.
+            else:
+                print("Perfectly lined up pre-X. Just flee.")
+                fleeAll()
+        else:
+            print("Fallback logic, not sure.")
+            memory.main.waitFrames(180)
+            fleeAll()
+
+def calmLandsManip_old():
+    print("++Battle number:", memory.main.getEncounterID())
+    rng10nextChanceLow = memory.main.nextChanceRNG10(12)
+    lowArray = [273, 275, 276, 281, 283, 284]
+    rng10nextChanceMid = memory.main.nextChanceRNG10(60)
+    midArray = [277, 279, 285, 287, 289, 290]
+    rng10nextChanceHigh = memory.main.nextChanceRNG10(128)
+    highArray = [278, 286, 288]
+    if checkGems() < 2:
+        print("++++ Gems: ", checkGems())
+        print("++++ Calm Lands battle, looking for gems.")
         calmLandsGems()
     elif memory.main.rngSeed == 31 and memory.main.nextChanceRNG10() == 0 and memory.main.nextChanceRNG12() == 1:
         print("Specific logic for RNG seed 31, just drop item off of defender X")
@@ -6337,6 +6390,8 @@ def calmLandsManip():
 def calmSteal():
     if memory.main.getEncounterID() == 313:
         _steal('down')
+    elif memory.main.getEncounterID() == 289:
+        _steal('up')
     elif memory.main.getEncounterID() == 314:
         _steal('right')
     else:
@@ -6432,6 +6487,9 @@ def advanceRNG10(numAdvances: int):
 
 
 def rng12Attack(tryImpulse=False):
+    print("#################")
+    print("###RNG12 logic (attack only) ###")
+    print("#################")
     if screen.turnAeon():
         if memory.main.getEncounterID() in [283, 309, 313]:
             attackByNum(21, 'u')  # Second target
@@ -6452,6 +6510,9 @@ def rng12Attack(tryImpulse=False):
 
 
 def advanceRNG12():
+    print("#################")
+    print("###RNG12 logic (decision logic) ###")
+    print("#################")
     attackCount = False
     aeonTurn = False
     useImpulse = False
@@ -6462,7 +6523,13 @@ def advanceRNG12():
             print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
             fleeAll()
         elif memory.main.turnReady():
-            advances = memory.main.nextChanceRNG12()
+            preX, postX = rngTrack.neaTrack()
+            if postX == 1:
+                advances = 1
+            elif memory.main.getMap() == 223:
+                advances = preX
+            else:
+                advances = postX
             if screen.turnYuna():
                 if aeonTurn:
                     fleeAll()
@@ -6517,7 +6584,17 @@ def ghostKill():
     nextDrop, _ = rngTrack.itemToBeDropped()
     owner1 = nextDrop.equipOwner
     owner2 = nextDrop.equipOwnerAlt
-    silenceSlot = memory.main.getItemSlot(39)
+    silenceSlotCheck = memory.main.getItemSlot(39)
+    if silenceSlotCheck == 255:
+        silenceSlot = 255
+    else:
+        silenceSlot = memory.main.getUseItemsSlot(39)
+    tidusHasted = False
+    
+    if memory.main.nextChanceRNG10():
+        tidusHasted = ghostAdvanceRNG10Silence(silenceSlot=silenceSlot, owner1=owner1, owner2=owner2)
+        silenceSlot = 255 # will be used while prepping RNG10 anyway.
+    
     if owner2 in [0, 4, 6]:
         print("Aeon kill results in NEA on char:", owner2)
         ghostKillAeon()
@@ -6526,145 +6603,125 @@ def ghostKill():
         ghostKillAeon()
     elif owner1 in [0, 4, 6]:
         print("Any character kill results in NEA on char:", owner1)
-        ghostKillAny()
+        ghostKillAny(silenceSlot=silenceSlot, tidusHasted=tidusHasted)
     elif owner1 == 9:
         print("Has to be Tidus kill: ", owner1)
-        ghostKillTidus()
+        ghostKillTidus(silenceSlot=silenceSlot, tidusHasted=tidusHasted)
     else:
         print("No way to get an optimal drop. Resorting to aeon: ", owner2)
         ghostKillAeon()
 
     memory.main.clickToControl3()
 
+def ghostAdvanceRNG10Silence(silenceSlot:int, owner1:int, owner2:int):
+    print("RNG10 is not aligned. Special logic to align.")
+    # Premise is that we must have a silence grenade in inventory.
+    # We should force extra manip in gorge if no silence grenade,
+    # so should be guaranteed if this triggers.
+    prefDrop = [0,4,6]
+    silenceUsed = False
+    tidusHasted = False
+    while memory.main.nextChanceRNG10():
+        if memory.main.turnReady():
+            if silenceUsed == False:
+                if not 6 in memory.main.getActiveBattleFormation():
+                    buddySwapRikku()
+                    useItem(slot=silenceSlot) # Throw silence grenade
+                    silenceUsed = True
+                elif not 3 in memory.main.getActiveBattleFormation():
+                    buddySwapKimahri()
+                    useItem(slot=silenceSlot) # Throw silence grenade
+                    silenceUsed = True
+                elif screen.turnRikku() or screen.turnKimahri():
+                    useItem(slot=silenceSlot) # Throw silence grenade
+                    silenceUsed = True
+                else:
+                    defend()
+            #Next, put in preferred team
+            elif owner2 in prefDrop or not owner1 in prefDrop: # prefer aeon kill
+                if screen.turnRikku() or screen.turnKimahri():
+                    Steal()
+                elif not 6 in memory.main.getActiveBattleFormation():
+                    buddySwapRikku()
+                elif not 3 in memory.main.getActiveBattleFormation():
+                    buddySwapKimahri()
+                elif not 0 in memory.main.getActiveBattleFormation():
+                    buddySwapTidus()
+                else:
+                    defend()
+            else: #Will need a non-Aeon kill
+                if not 6 in memory.main.getActiveBattleFormation():
+                    buddySwapRikku()
+                elif not 0 in memory.main.getActiveBattleFormation():
+                    buddySwapTidus()
+                elif not 3 in memory.main.getActiveBattleFormation() and memory.main.nextChanceRNG10() > 3:
+                    buddySwapKimahri()
+                elif not 1 in memory.main.getActiveBattleFormation() and memory.main.nextChanceRNG10() <= 3:
+                    buddySwapYuna()
+                elif screen.turnRikku() or screen.turnKimahri():
+                    Steal()
+                elif screen.turnTidus() and not tidusHasted:
+                    tidusHasted = True
+                    tidusHaste('none')
+                elif memory.main.getEnemyCurrentHP()[0] > 3000:
+                    attack()
+                else:
+                    defend()
+    return tidusHasted
+    print("RNG10 is now aligned.")
 
-def ghostKillTidus():
-    silenceSlot = memory.main.getItemSlot(39)
-    selfHaste = False
-    itemThrown = silenceSlot >= 200
+def ghostKillTidus(silenceSlot:int, selfHaste:bool):
     print("++Silence slot:", silenceSlot)
     while memory.main.battleActive():
         # Try to get NEA on Tidus
         if memory.main.turnReady():
-            advances = memory.main.nextChanceRNG10()
-            if advances >= 1:
-                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
-                    print("+++Silence grenade, Rikku to throw item.")
-                    buddySwapRikku()
-                elif screen.turnTidus():
-                    if memory.main.getEnemyCurrentHP()[0] > 3800 and 6 not in memory.main.getActiveBattleFormation():
-                        buddySwapYuna()
-                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
-                        defend()
-                    else:
-                        attack('none')
-                elif screen.turnRikku() or screen.turnKimahri():
-                    if not itemThrown:
-                        useItem(memory.main.getUseItemsSlot(39))
-                        itemThrown = True
-                    elif advances >= 1:
-                        Steal()
-                    else:
-                        buddySwapYuna()
-                elif 6 not in memory.main.getActiveBattleFormation():
-                    buddySwapRikku()
-                elif 3 not in memory.main.getActiveBattleFormation():
-                    buddySwapKimahri()
+            if 0 not in memory.main.getActiveBattleFormation():
+                print("+++Get Tidus back in")
+                buddySwapTidus()
+            elif screen.turnTidus():
+                if not selfHaste:
+                    tidusHaste('none')
+                    selfHaste = True
+                elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
+                    tidusOD()
                 else:
-                    defend()
-            else:
-                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
-                    print("+++Silence grenade, Rikku to throw item.")
-                    buddySwapRikku()
-                elif screen.turnRikku() and not itemThrown:
-                    useItem(memory.main.getUseItemsSlot(39))
-                    itemThrown = True
-                elif 0 not in memory.main.getActiveBattleFormation():
-                    print("+++Get Tidus back in")
-                    buddySwapTidus()
-                elif screen.turnTidus():
-                    if not selfHaste:
-                        tidusHaste('none')
-                        selfHaste = True
-                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
-                        tidusOD()
-                    else:
-                        attack('none')
-                elif screen.faintCheck():
-                    revive()
-                elif 1 not in memory.main.getActiveBattleFormation():
-                    print("+++Get Yuna in for extra smacks")
-                    buddySwapYuna()
-                elif screen.turnYuna() and memory.main.getEnemyCurrentHP()[0] > 3000:
                     attack('none')
-                else:
-                    defend()
+            elif 1 not in memory.main.getActiveBattleFormation():
+                print("+++Get Yuna in for extra smacks")
+                buddySwapYuna()
+            elif screen.turnYuna() and memory.main.getEnemyCurrentHP()[0] > 3000:
+                attack('none')
+            else:
+                defend()
 
-
-def ghostKillAny():
-    silenceSlot = memory.main.getItemSlot(39)
-    selfHaste = False
+def ghostKillAny(silenceSlot:int, selfHaste:bool):
     yunaHaste = False
     itemThrown = silenceSlot >= 200
     print("++Silence slot:", silenceSlot)
     while memory.main.battleActive():
         if memory.main.turnReady():
-            advances = memory.main.nextChanceRNG10()
-            if advances >= 1:
-                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
-                    print("+++Silence grenade, Rikku to throw item.")
-                    buddySwapRikku()
-                elif screen.turnTidus():
-                    if memory.main.getEnemyCurrentHP()[0] > 3800 and 6 not in memory.main.getActiveBattleFormation():
-                        buddySwapYuna()
-                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
-                        defend()
-                    else:
-                        attack('none')
-                elif screen.turnRikku() or screen.turnKimahri():
-                    if not itemThrown:
-                        useItem(memory.main.getUseItemsSlot(39))
-                        itemThrown = True
-                    elif advances >= 1:
-                        Steal()
-                    else:
-                        buddySwapYuna()
-                elif 6 not in memory.main.getActiveBattleFormation():
-                    buddySwapRikku()
-                elif 3 not in memory.main.getActiveBattleFormation():
-                    buddySwapKimahri()
+            if 0 not in memory.main.getActiveBattleFormation():
+                print("+++Get Tidus back in")
+                buddySwapTidus()
+            elif screen.turnTidus():
+                if not selfHaste:
+                    tidusHaste('none')
+                    selfHaste = True
+                elif 1 in memory.main.getActiveBattleFormation() and not yunaHaste \
+                    and memory.main.getEnemyCurrentHP()[0] <= 6000:
+                    tidusHaste(direction='l', character=1)
+                    yunaHaste = True
+                elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
+                    tidusOD()
                 else:
-                    defend()
-            else:
-                if not itemThrown and 6 not in memory.main.getActiveBattleFormation():
-                    print("+++Silence grenade, Rikku to throw item.")
-                    buddySwapRikku()
-                elif screen.turnRikku() and not itemThrown:
-                    useItem(memory.main.getUseItemsSlot(39))
-                    itemThrown = True
-                elif 0 not in memory.main.getActiveBattleFormation():
-                    print("+++Get Tidus back in")
-                    buddySwapTidus()
-                elif screen.turnTidus():
-                    if not selfHaste:
-                        tidusHaste('none')
-                        selfHaste = True
-                    elif 1 in memory.main.getActiveBattleFormation() and not yunaHaste:
-                        tidusHaste(direction='l', character=1)
-                        yunaHaste = True
-                    elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
-                        tidusOD()
-                    else:
-                        attack('none')
-                elif screen.faintCheck():
-                    revive()
-                elif 1 not in memory.main.getActiveBattleFormation():
-                    print("+++Get Yuna in for extra smacks")
-                    buddySwapYuna()
-                elif screen.turnYuna():
                     attack('none')
-                else:
-                    defend()
-
+            elif 1 not in memory.main.getActiveBattleFormation():
+                print("+++Get Yuna in for extra smacks")
+                buddySwapYuna()
+            elif screen.turnYuna():
+                attack('none')
+            else:
+                defend()
 
 def ghostKillAeon():
     while memory.main.battleActive():

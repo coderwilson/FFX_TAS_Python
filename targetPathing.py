@@ -5381,11 +5381,11 @@ def neApproach(checkpoint):
         x = -228
         y = 228
     if checkpoint == 6:
-        x = -289
-        y = 185
-    if checkpoint == 7:
-        x = -305
+        x = -278
         y = 172
+    if checkpoint == 7:
+        x = -328
+        y = 150
     if checkpoint == 8:
         x = -385
         y = 168
