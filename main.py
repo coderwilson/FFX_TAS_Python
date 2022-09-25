@@ -50,8 +50,8 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-Gamestate = "Luca"
-StepCounter = 1
+#Gamestate = "Luca"
+#StepCounter = 1
 #StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
@@ -170,12 +170,15 @@ def reportGamestate():
 
 # Initiate memory reading, after we know the game is open.
 # import memory
-memory.main.start()
+while not memory.main.start():
+    pass
 
 # Main
-print("FFX automation starting")
-print("Please launch the game now.")
 reportGamestate()
+if memory.main.getMap in [23,348,349]:
+    pass
+else:
+    reset.resetToMainMenu()
 
 print("Game start screen")
 screen.clearMouse(0)
@@ -494,8 +497,16 @@ while Gamestate != "End":
     if Gamestate == "Besaid" and StepCounter == 3:
         area.besaid.leaving()
         Gamestate = "Boat1"
-        StepCounter = 1
-        reportGamestate()
+        if memory.main.getTidusSlvl() < 3:
+            print("=======================")
+            print("=======================")
+            print("== Under-levelled!!! ==")
+            print("=======================")
+            print("=======================")
+            Gamestate, StepCounter = reset.midRunReset()
+        else:
+            StepCounter = 1
+            reportGamestate()
 
     if Gamestate == "Boat1":
         reportGamestate()
@@ -778,13 +789,13 @@ while Gamestate != "End":
     if Gamestate == "Gagazet" and StepCounter == 2:
         reportGamestate()
         if gameVars.tryForNE():
-            import neArmor
+            import area.neArmor
             print("Mark 1")
-            neArmor.toHiddenCave()
+            area.neArmor.toHiddenCave()
             print("Mark 2")
-            neArmor.dropHunt()
+            area.neArmor.dropHunt()
             print("Mark 3")
-            neArmor.returnToGagazet()
+            area.neArmor.returnToGagazet()
         manipTime2 = logs.timeStamp()
         manipTime = manipTime2 - manipTime1
         print("NEA Manip duration:", str(manipTime))

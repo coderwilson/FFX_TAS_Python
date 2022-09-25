@@ -135,6 +135,7 @@ def trackDrops(enemy: str = 'ghost', battles: int = 20, extraAdvances: int = 0):
 
 
 def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: int = 0, partySize: int = 7):
+    testMode = False # Doesn't functionally change, but prints more stuff.
     slotMod = SlotMod(enemy=enemy)
     abilityMod = AbilityMod(enemy=enemy)
 
@@ -189,6 +190,8 @@ def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: i
         enemy=enemy, equipType=equipType, slots=abilityCount, advances=preAdvance13)
     abilityList = newAbilities[0]
     preAdvance13 += newAbilities[1]
+    if testMode:
+        print("New Abilities: ", abilityList)
 
     finalItem = memory.main.equipment(equipNum=0)
     finalItem.createCustom(eType=equipType, eOwner1=user1,
@@ -198,31 +201,54 @@ def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: i
 
 
 def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1, advances: int = 0):
+    testMode = False # Doesn't functionally change, but prints more stuff.
     outcomes = dropAbilityList(enemy=enemy, equipType=equipType)
+    found=0
+    #if testMode:
+    #    print("o: ", outcomes)
     if slots == 0:
         slots = 1
     filledSlots = [99] * slots
+    #if testMode:
+    #    print("fs: ", filledSlots)
 
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
     testArray = memory.main.rng13Array(arrayLen=50 + advances)
+    #if testMode:
+    #    print("ta: ", testArray)
 
-    if outcomes[0]:
-        filledSlots.remove(99)
-        filledSlots.append(outcomes[0])
+    #if outcomes[0]:
+    #    filledSlots.append(outcomes[0])
+    #    filledSlots.remove(99)
+    if testMode:
+        print("E: ", enemy, " - O: ", outcomes)
 
-    if 99 in filledSlots and ptr < 50 + advances:
-        while 99 in filledSlots and ptr < 50 + advances:
-            # Increment to match the first (and subsequent) advance(s)
+    while 99 in filledSlots and ptr < 50 + advances:
+        # Increment to match the first (and subsequent) advance(s)
+        try:
             ptr += 1
-            try:
-                if outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)] in filledSlots:
-                    pass
-                else:
-                    filledSlots.remove(99)
-                    filledSlots.append(
-                        outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
-            except Exception:
+            if testMode:
+                print("==================================")
+                print("ptr: ", ptr)
+                print("Try: ", testArray[ptr+advances])
+            arrayPos = ((testArray[ptr+advances] & 0x7fffffff) % 7) + 1
+            if testMode:
+                print("AP: ", arrayPos)
+                print("Res: ", outcomes[arrayPos])
+                print("==================================")
+            if outcomes[arrayPos] in filledSlots:
                 pass
+            else:
+                filledSlots.remove(99)
+                filledSlots.append(
+                    int(outcomes[arrayPos]))
+                found += 1
+                if testMode:
+                    print(filledSlots)
+        except Exception as e:
+            print("ERR: ", e)
+    if testMode:
+        print("FS: ", filledSlots)
 
     while 99 in filledSlots:
         filledSlots.remove(99)
@@ -231,8 +257,10 @@ def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1,
     if len(filledSlots) < 4:
         while len(filledSlots) < 4:
             filledSlots.append(255)
+    if testMode:
+        print("FSfin: ", filledSlots)
 
-    return [filledSlots, ptr]
+    return [filledSlots, found]
 
 
 def reportDroppedItem(enemy: str, drop=memory.main.equipment, prefType: int = 99, prefAbility: int = 255, needAdv: int = 0, report=False):
@@ -959,6 +987,50 @@ def zombieTrack(report=False):
 
     return zombieResults
 
+def neaTrack():
+    preAdvance12 = 0
+    preAdvance13 = 0
+    
+    totalAdvancePreX = 999
+    totalAdvancePostX = 999
+    enemy = 'defender_x'
+    
+    #If already aligned for NEA, we want X to drop nothing.
+    nextItem, preAdvance13 = itemToBeDropped(enemy='ghost')
+    if nextItem.equipmentType() == 1 and nextItem.hasAbility(0x801D):
+        #print("/// Already aligned")
+        totalAdvancePostX = 0
+    #else:
+        #print("/// Not yet aligned. Looking for more results.")
+    
+    
+    while totalAdvancePreX == 999 or totalAdvancePostX == 999 and preAdvance < 100:
+        preAdvance12 += 4
+        nextItem, preAdvance13 = itemToBeDropped(enemy='ghost', preAdvance12=preAdvance12, preAdvance13=preAdvance13)
+        #print("/// post-13: ", postAdvance13)
+        #preAdvance13 += postAdvance13
+        #print("/// upd-pre13: ", preAdvance13)
+        #print("/// Type: ", nextItem.equipmentType(), " /// Abilities: ", nextItem.abilities(), " /// ", int(preAdvance12 / 4))
+        #if 0x801D in nextItem.abilities():
+        #    print("AAAAAAAAAAAAAAAA")
+        #if 32797 in nextItem.abilities():
+        #    print("BBBBBBBBBBBBBBBB")
+        #    memory.main.waitFrames(300)
+        if nextItem.equipmentType() == 1 and 0x801D in nextItem.abilities():
+            if totalAdvancePostX == 999:
+                totalAdvancePostX = int(preAdvance12 / 4)
+            if totalAdvancePreX == 999:
+                totalAdvancePreX = int((preAdvance12 / 4) - 1)
+    #print("/// Pre-X: ", totalAdvancePreX, " /// Post-X", totalAdvancePostX)
+    return totalAdvancePreX, totalAdvancePostX
+
+def printManipInfo():
+    preX, postX = neaTrack()
+    print("--------------------------")
+    print("Upcoming RNGs:")
+    print("Next, before X:", preX, "| Next, after X: ", postX)
+    print("RNG10:", memory.main.nextChanceRNG10(), "| Pre Defender X: ", memory.main.nextChanceRNG10Calm())
+    print("--------------------------")
 
 def nextActionEscape(character: int = 0):
     index = 20 + character

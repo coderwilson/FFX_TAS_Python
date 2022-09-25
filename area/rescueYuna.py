@@ -6,6 +6,7 @@ import memory.main
 import targetPathing
 import zzairShipPath
 import vars
+import rngTrack
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -482,7 +483,7 @@ def evraeAltana():
                     FFXC.set_movement(0, 1)
         elif screen.BattleScreen():
             battle.main.evraeAltana()
-            memory.main.printManipInfo()
+            rngTrack.printManipInfo()
         elif screen.BattleComplete():
             xbox.menuB()
         else:
@@ -514,7 +515,7 @@ def seymourNatus():
                     battle.main.fleeAll()
                 else:
                     complete = battle.main.seymourNatus()
-                    memory.main.printManipInfo()
+                    rngTrack.printManipInfo()
 
     # Movement for make-out scene
     memory.main.clickToControl()

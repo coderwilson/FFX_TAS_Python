@@ -188,10 +188,10 @@ def gameStage():
     currentStage = 0
     if memory.main.getStoryProgress() < 570:  # Second half, before Tidus/Wakka swap
         if memory.main.rngSeed() == 31:
-            stages = [0, 2, 115, 143, 155, tidusShotTiming()]
+            stages = [0, 2, 115, 135, 153, tidusShotTiming()]
             # previously 141 for defender manip, 157 for force pass to Tidus.
         else:
-            stages = [0, 2, 2, 142, 155, tidusShotTiming()]
+            stages = [0, 2, 2, 135, 153, tidusShotTiming()]
     elif memory.main.getStoryProgress() < 700 and not gameVars.getBlitzOT():  # End of the storyline game
         stages = [0, 2, 2, 264, 278, 278]
     else:  # Overtime
@@ -464,6 +464,7 @@ def passBall(target=0, breakThrough=5):
                 xbox.tapB()
     else:
         xbox.menuB()
+
 
 def shootBall(breakThrough=5):
     if memory.main.getStoryProgress() < 570 and controllingPlayer() == 0:

@@ -6,6 +6,7 @@ import logs
 import memory.main
 import targetPathing
 import vars
+import rngTrack
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -31,7 +32,7 @@ def calmLands():
     memory.main.fullPartyFormat('rikku', fullMenuClose=False)
     battle.main.healUp(fullMenuClose=True)
 
-    memory.main.printManipInfo()
+    rngTrack.printManipInfo()
     print("RNG10:", memory.main.rng10())
     print("RNG12:", memory.main.rng12())
     print("RNG13:", memory.main.rng13())
@@ -62,7 +63,7 @@ def calmLands():
                 memory.main.clickToControl3()
                 memory.main.fullPartyFormat('rikku', fullMenuClose=False)
                 battle.main.healUp(fullMenuClose=True)
-                memory.main.printManipInfo()
+                rngTrack.printManipInfo()
             elif memory.main.menuOpen():
                 xbox.tapB()
             elif memory.main.diagSkipPossible():
@@ -90,7 +91,7 @@ def defenderX():
                 battle.main.attack('none')
     FFXC.set_movement(0, 1)
     memory.main.clickToControl()
-    memory.main.printManipInfo()
+    rngTrack.printManipInfo()
 
 
 def toTheRonso():
