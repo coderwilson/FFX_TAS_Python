@@ -4229,6 +4229,7 @@ def rngArrayFromIndex(index: int = 20, arrayLen: int = 20):
     retVal = [rngFromIndex(index)]  # First value is the current value
     for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], index))
+    retVal = [x & 0x7fffffff for x in retVal] # Anding it because that's the value that's actually used
     return retVal
 
 
@@ -4238,19 +4239,8 @@ def advanceRNGindex(index: int = 43):
     process.write(baseValue + key, rngArrayFromIndex(index=index)[1])
 
 def nextSteal(stealCount:int):
-    useArray = rngArrayFromIndex(index=10, arrayLen=4)
-    print(useArray)
-    for i in range(len(useArray)):
-        if useArray[i] <= -1:
-            print(useArray[i] + (2 ** 32), " | ", hex(useArray[i] + (2 ** 32)))
-        else:
-            print(useArray[i], " | ", hex(useArray[i]))
-    if useArray[1] <= -1:
-        stealRNG = (useArray[1] + (2 ** 32)) % 255
-    else:
-        stealRNG = (useArray[1]) % 255
+    useArray = rngArrayFromIndex(index=10, arrayLen=4) 
+    stealRNG = useArray[1] % 255
     stealChance = 2 ** stealCount
-    print("=== ", stealRNG, " < ", 255 // stealChance)
-    waitFrames(90)
-    print("Test")
-    return stealRNG < 255 // stealChance
+    print("=== ", useArray[1], " === ", stealRNG, " < ", 255 // stealChance, " = ", stealRNG < (255 // stealChance))
+    return stealRNG < (255 // stealChance)

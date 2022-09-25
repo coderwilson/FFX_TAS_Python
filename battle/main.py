@@ -517,24 +517,13 @@ def Klikk():
                         and not memory.main.rngSeed() == 160:
                     usePotionCharacter(0, 'l')
                     klikkRevives += 1
-                if grenadeCount < 3: #Simple logic for most seeds, replaced by above logic when working.
-                    print("Attempting to steal from Klikk")
-                    Steal()
-                elif memory.main.rngSeed() in [31] and grenadeCount < 4:
-                    print("Attempting to steal from Klikk")
-                    Steal()
-                elif memory.main.rngSeed() in [160] and grenadeCount < 5:
-                    print("Attempting to steal from Klikk")
-                    Steal()
-                elif memory.main.rngSeed() == 31 and memory.main.getEnemyCurrentHP()[0] < 250:
-                    attackByNum(num=6)
                 elif memory.main.getEnemyCurrentHP()[0] < 58:
                     attack('none')
                     klikkAttacks += 1
-                #elif grenadeCount < 6 and memory.main.nextSteal(stealCount=stealCount):
-                #    print("Attempting to steal from Klikk")
-                #    Steal()
-                #    stealCount += 1
+                elif grenadeCount < 6 and memory.main.nextSteal(stealCount=stealCount):
+                    print("Attempting to steal from Klikk")
+                    Steal()
+                    stealCount += 1
                 else:
                     attack('none')
                     klikkAttacks += 1
