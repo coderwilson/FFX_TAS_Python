@@ -172,7 +172,7 @@ def cursor1():
 def jassuPassTiming() -> int:
     shotDistance = distance(0,11)
     shotMod = int(shotDistance / 160)
-    if 540 < memory.main.getStoryProgress() < 570:
+    if 540 <= memory.main.getStoryProgress() < 570:
         baseTiming = int(162 - shotMod)
     else:
         baseTiming = int(280 - shotMod)
@@ -186,7 +186,7 @@ def jassuPassTiming() -> int:
 def tidusShotTiming() -> int:
     shotDistance = distance(0,11)
     shotMod = int(shotDistance / 160)
-    if 540 < memory.main.getStoryProgress() < 570:
+    if 540 <= memory.main.getStoryProgress() < 570:
         baseTiming = int(171 - shotMod)
     else:
         baseTiming = int(288 - shotMod)
@@ -899,8 +899,8 @@ def jassuAct():
     elif currentStage == 2:
         dribbleBall()
     elif currentStage == 3:
-        p10C = playerArray[10].getCoords()
-        tidusC = playerArray[0].getCoords()
+        relDist = int((tidusC[1] - p10C[1]) + (tidusC[0] - p10C[0]))
+        relDist2 = int((tidusC[1] - graavC[1]) + (tidusC[0] - graavC[0]))
         relDist = tidusC[1] - p10C[1]
         relDist2 = tidusC[1] - graavC[1]
         if relDist > 220:
