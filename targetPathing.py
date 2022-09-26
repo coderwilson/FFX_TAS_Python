@@ -1710,11 +1710,11 @@ def Luca1(checkpoint):
         x = 300
         y = 10
     if checkpoint == 14:
-        x = 26
-        y = -130
+        x = 28
+        y = -60
     if checkpoint == 15:
-        x = 31
-        y = -90
+        x = 39
+        y = -52
     if checkpoint == 16:
         x = 53
         y = -36

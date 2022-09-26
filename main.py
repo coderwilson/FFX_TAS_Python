@@ -50,9 +50,9 @@ if gameVars.nemesis():
 #StepCounter = 3
 #Gamestate = "Kilika"
 #StepCounter = 1
-#Gamestate = "Luca"
+Gamestate = "Luca"
 #StepCounter = 1
-#StepCounter = 3
+StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -94,8 +94,8 @@ if gameVars.nemesis():
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-StepCounter = 1
+#Gamestate = "none"
+#StepCounter = 1
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
@@ -131,6 +131,7 @@ if Gamestate == "Luca" and StepCounter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
 elif Gamestate != "none":  # Loading a save file, no RNG manip here
+    rngSeedNum = 255
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
@@ -580,7 +581,7 @@ while Gamestate != "End":
             screen.awaitTurn()
             Gamestate, StepCounter = reset.midRunReset()
             blitzLoops += 1
-        elif not gameVars.getBlitzWin():
+        elif gameVars.blitzLossReset() and not gameVars.getBlitzWin():
             FFXC.set_neutral()
             print("------------------------------")
             print("Resetting - BLITZ LOSS IS FAILED RUN!!!")
