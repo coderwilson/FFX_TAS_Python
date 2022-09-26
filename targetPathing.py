@@ -1703,10 +1703,10 @@ def Luca1(checkpoint):
     if checkpoint == 11:
         x = -600
         y = -19
-    if checkpoint == 12: #Reverse T map
+    if checkpoint == 12:  # Reverse T map
         x = 187
         y = 18
-    if checkpoint == 13: #Reverse T map - into next zone
+    if checkpoint == 13:  # Reverse T map - into next zone
         x = 300
         y = 10
     if checkpoint == 14:
@@ -5302,7 +5302,7 @@ def calmLands(checkpoint):
     if checkpoint == 4:
         x = -777
         y = -1478
-    if checkpoint == 5: #Southeast of agency, northeast of the turn.
+    if checkpoint == 5:  # Southeast of agency, northeast of the turn.
         x = -186
         y = -715
     if checkpoint == 6:

@@ -5,6 +5,7 @@ import memory.main
 import targetPathing
 import menu
 import vars
+import menu
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

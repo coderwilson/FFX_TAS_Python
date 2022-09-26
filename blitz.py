@@ -396,11 +396,12 @@ def jassuCircle():
 
 
 def jassuTrain():
-    targetCoords = [0,-600]
+    targetCoords = [0, -600]
     if reportState:
         print(version[0], " - ", targetCoords)
     blitzPathing.setMovement(targetCoords)
-    
+
+
 def jassuTrain_stillInDev():
     jassuCoords = playerArray[3].getCoords()
     version = "None"
