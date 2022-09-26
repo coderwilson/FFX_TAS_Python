@@ -3628,34 +3628,35 @@ def touchSaveSphere():
 
     ssDetails = getSaveSphereDetails()
     FFXC = xbox.controllerHandle()
-    if userControl():
-        while userControl():
-            targetPathing.setMovement([ssDetails[0], ssDetails[1]])
-            xbox.tapB()
-            waitFrames(1)
+    while userControl():
+        targetPathing.setMovement([ssDetails[0], ssDetails[1]])
+        xbox.tapB()
+        waitFrames(1)
     FFXC.set_neutral()
     print("Waiting for cursor to reset before we do things - Mark 1")
-    while saveMenuCursor() != 0:
+    while menuControl() == 0:
         pass
     waitFrames(1)
     print("Mark 2")
     #waitFrames(300)
     
-    while saveMenuCursor() == 0:
-        if saveMenuOpen():
-            xbox.tapA()
-        elif diagProgressFlag() != ssDetails[2]:
-            xbox.tapB()
-        else:
-            xbox.tapA()
+    if saveMenuCursor() == 0:
+        xbox.tapA()
+    #while saveMenuCursor() == 0:
+    #    if saveMenuOpen():
+    #        xbox.tapA()
+    #    elif diagProgressFlag() != ssDetails[2] and diagSkipPossible():
+    #        xbox.tapB()
+    #    else:
+    #        xbox.tapA()
     
     while not userControl():
         if saveMenuOpen():
             xbox.tapA()
         elif diagProgressFlag() == ssDetails[2]:
             print("Cursor test:", saveMenuCursor())
-            if saveMenuCursor() == 0:# and saveMenuCursor2() == 0:
-                xbox.menuA()
+            if saveMenuCursor() == 0: # and saveMenuCursor2() == 0:
+                xbox.tapA()
             else:
                 xbox.menuB()
         else:

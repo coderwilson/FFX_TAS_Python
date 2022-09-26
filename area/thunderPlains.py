@@ -223,10 +223,11 @@ def agency():
                     FFXC.set_neutral()
                     memory.main.awaitControl()
                 checkpoint += 1
-            elif checkpoint == 9 and gameVars.nemesis() and strCount < 3:
+            elif checkpoint == 9 and (gameVars.nemesis() or not gameVars.getBlitzWin()) and strCount < 3:
                 targetPathing.setMovement([-73, 45])
                 xbox.tapB()
             elif checkpoint == 11:
+                gameVars.setBlitzWin()
                 FFXC.set_movement(0, 1)
                 memory.main.clickToEvent()
 
