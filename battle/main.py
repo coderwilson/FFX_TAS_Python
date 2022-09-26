@@ -1411,12 +1411,19 @@ def MiihenRoad(selfDestruct=False):
 def chocoEater():
     print("Fight start: Chocobo Eater")
     rng44Last = memory.main.rngFromIndex(44)
-    xbox.clickToBattle()
     turns = 0
     chocoTarget = 255
     chocoNext = False
     chocoHaste = False
+    xbox.clickToBattle()
     charHpLast = memory.main.getBattleHP()
+    
+    #If chocobo doesn't take the second turn, that means it out-sped Tidus.
+    if memory.main.getNextTurn() != 20:
+        if memory.main.rngFromIndex(44) == rng44Last:
+            # Eater did not take an attack, but did take first turn. Should register as true.
+            chocoNext = True
+    
     while memory.main.battleActive():
         if memory.main.turnReady():
             if chocoNext == True:
@@ -3294,7 +3301,7 @@ def wendigo():
                         buddySwapAuron()  # Swap for Auron
                         powerbreak = True
                         usepowerbreak = True
-                elif memory.main.getEnemyCurrentHP()[0] < stopHealing:
+                elif memory.main.getEnemyCurrentHP()[1] < stopHealing:
                     defend()
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     if not guadosteal and memory.main.getEnemyCurrentHP().count(0) != 2:
@@ -3311,19 +3318,19 @@ def wendigo():
                     useSkill(position=0, target=21)
                     powerbreakused = True
                     usepowerbreak = False
-                elif memory.main.getEnemyCurrentHP()[0] < stopHealing:
+                elif memory.main.getEnemyCurrentHP()[1] < stopHealing:
                     defend()
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     defend()
             else:
-                if memory.main.getEnemyCurrentHP()[0] < stopHealing:
+                if memory.main.getEnemyCurrentHP()[1] < stopHealing:
+                    print("End of battle, no need to heal.")
                     defend()
                 elif memory.main.getEnemyCurrentHP()[1] != 0:
                     if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
                 else:
                     defend()
-
 
 def zu():
     screen.awaitTurn()
@@ -4786,6 +4793,8 @@ def oblitzRngWait():
     seedNum = str(memory.main.rngSeed())
     print(comingSeeds)
     pos = 0
+    countUnknowns = 0
+    countKnowns = 0
 
     if seedNum not in rngValues:
         print("## No values for this RNG seed")
@@ -4806,18 +4815,20 @@ def oblitzRngWait():
             print("Checking seed ", comingSeeds[i])
             # Set up duration and victory values
             if str(comingSeeds[i]) in rngValues[seedNum]:
-                duration = int(rngValues[seedNum][str(comingSeeds[i])]['duration']) + (pos / 2)
+                duration = int(rngValues[seedNum][str(comingSeeds[i])]['duration']) + pos
                 print(duration)
                 victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
                 print("Found result: ", [comingSeeds[i], duration, victory, pos])
                 print(victory)
+                countKnowns += 1
             elif gameVars.loopBlitz():
                 print("No result, registering a preferred result while looping on Blitzball.")
-                duration = 1 + (pos / 2)
+                duration = 1 + pos
                 victory = True
+                countUnknowns += 1
             else:
                 print("No result, registering an unknown result while attempting full run.")
-                duration = 9999 + (pos / 2)
+                duration = 999 + pos
                 victory = False
             #Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
             if i == 0:
@@ -4847,7 +4858,15 @@ def oblitzRngWait():
                 else:
                     print("Result for ", pos, " is not as good. - D")
             pos += 1
-    if firstResult[2] == 9999 and secondResult[2] != 9999:
+    if countKnowns == 0 and not gameVars.loopBlitz():
+        print("Could not find a known result.")
+        best = secondResult
+        best[0] = comingSeeds[1]
+    elif countUnknowns == 0 and gameVars.loopBlitz():
+        print("all values are known. Choosing a random value to test.")
+        best = secondResult
+        best[0] = comingSeeds[random(range(14))+1]
+    elif firstResult[2] == 9999 and secondResult[2] != 9999:
         best=secondResult
     elif secondResult[2] == 9999 and firstResult[2] != 9999:
         best=firstResult

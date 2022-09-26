@@ -76,8 +76,15 @@ def arrival():
                 memory.main.waitFrames(9)
                 memory.main.clickToEventTemple(7)
                 checkpoint += 1
-            elif checkpoint == 40 or checkpoint == 42:  # First and second battles
-                print("Event: First/Second battle")
+            elif checkpoint == 40:
+                print("Event: First battle")
+                FFXC.set_movement(0, 1)
+                memory.main.awaitEvent()
+                FFXC.set_neutral()
+                battle.main.LucaWorkers()
+                checkpoint += 1
+            elif checkpoint == 42:  # First and second battles
+                print("Event: Second battle")
                 FFXC.set_movement(1, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()

@@ -31,7 +31,7 @@ def path():
             if checkpoint in [45, 46] and stoneBreath == 1:
                 checkpoint = 47
             elif checkpoint == 47 and stoneBreath == 0:
-                checkpoint = 45
+                checkpoint = 44 #Need to re-confirm.
             # The Djose skip pathing file was removed in commit f18ca78 (PR91)
             # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
             # elif checkpoint == 33:  # and stoneBreath == 0: #Turn/talk

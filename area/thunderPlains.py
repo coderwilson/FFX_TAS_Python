@@ -29,6 +29,8 @@ def southPathing():
                     print("Dodge:", count50)
             elif checkpoint == 2 and gameVars.nemesis():
                 checkpoint = 20
+            elif checkpoint == 2 and not gameVars.getBlitzWin():
+                checkpoint = 20
             elif checkpoint == 21:
                 # memory.touchSaveSphere()
                 checkpoint += 1
@@ -66,10 +68,14 @@ def southPathing():
                 xbox.tapB()
 
     memory.main.awaitControl()
-    FFXC.set_movement(0, 1)
-    memory.main.waitFrames(30 * 0.5)
-    FFXC.set_movement(-1, 1)
+    while not targetPathing.setMovement([-73,14]):
+        if memory.main.diagSkipPossible():
+            xbox.menuB()
+    while not targetPathing.setMovement([-83,29]):
+        if memory.main.diagSkipPossible():
+            xbox.menuB()
     while not memory.main.getMap() == 263:
+        FFXC.set_movement(-1,1)
         if memory.main.diagSkipPossible():
             xbox.menuB()
     FFXC.set_neutral()
@@ -161,8 +167,8 @@ def agencyShop():
             menu.sellWeapon(loc)
             if memory.main.getGilvalue() >= 9550:
                 break
-    if not gameVars.getBlitzWin():
-        menu.buyWeapon(0, equip=False)
+    #if not gameVars.getBlitzWin(): # This may come back later.
+    #    menu.buyWeapon(0, equip=False)
     menu.buyWeapon(5, equip=False)
     memory.main.closeMenu()
 
@@ -204,7 +210,7 @@ def agency():
                     targetPathing.setMovement([3, -52])
                     xbox.tapB()
                 memory.main.clickToControl()
-                if gameVars.nemesis():
+                if gameVars.nemesis() or not gameVars.getBlitzWin():
                     # Back in and out to spawn the chest
                     FFXC.set_movement(-1, 1)
                     while memory.main.getMap() != 263:

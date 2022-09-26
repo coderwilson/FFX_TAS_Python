@@ -3640,7 +3640,13 @@ def touchSaveSphere():
     waitFrames(1)
     print("Mark 2")
     #waitFrames(300)
-
+    
+    while saveMenuCursor() == 0:
+        if diagProgressFlag() != ssDetails[2]:
+            xbox.tapB()
+        else:
+            xbox.tapA()
+    
     while not userControl():
         if saveMenuOpen():
             xbox.tapA()
