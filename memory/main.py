@@ -3642,7 +3642,9 @@ def touchSaveSphere():
     #waitFrames(300)
     
     while saveMenuCursor() == 0:
-        if diagProgressFlag() != ssDetails[2]:
+        if saveMenuOpen():
+            xbox.tapA()
+        elif diagProgressFlag() != ssDetails[2]:
             xbox.tapB()
         else:
             xbox.tapA()
