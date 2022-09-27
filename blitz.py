@@ -865,11 +865,21 @@ def jassuMove():
 
 def jassuAct():
     currentStage = gameStage()
+    playerCoords = playerArray[controllingPlayer()].getCoords()
+    targetCoords = [-585, -130]
+    p10C = playerArray[10].getCoords()
+    graavC = playerArray[8].getCoords()
+    tidusC = playerArray[0].getCoords()
+    findSafety = False
+    moveForward = False
+    graavDistance = distance(3, 8)
+    otherDistance = 0
+    targetCoords = [-600, -100]
+    currentStage = gameStage()
     if reportState:
         print("Jassu Action")
         print("Stage:", currentStage)
     graavDistance = distance(3, 8)
-    graavC = playerArray[8].getCoords()
     otherDistance = 0
     if distance(3, 6) < 350:
         otherDistance += 1
