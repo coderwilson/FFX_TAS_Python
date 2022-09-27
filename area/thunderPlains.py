@@ -227,7 +227,7 @@ def agency():
                 targetPathing.setMovement([-73, 45])
                 xbox.tapB()
             elif checkpoint == 11:
-                gameVars.setBlitzWin()
+                gameVars.setBlitzWin(value=True)
                 FFXC.set_movement(0, 1)
                 memory.main.clickToEvent()
 
