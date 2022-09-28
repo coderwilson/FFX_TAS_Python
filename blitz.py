@@ -18,6 +18,8 @@ playerArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 for i in range(12):
     playerArray[i] = memory.main.blitzActor(playerNum=i)
 
+global engageDefender
+engageDefender = False
 
 def goersScoreFirst():
     return memory.main.diagProgressFlag() in [47, 48, 49]
@@ -175,7 +177,7 @@ def jassuPassTiming() -> int:
     if 540 <= memory.main.getStoryProgress() < 570:
         baseTiming = int(162 - shotMod)
     else:
-        baseTiming = int(280 - shotMod)
+        baseTiming = int(270 - shotMod)
     
     for x in range(5):
         if distance(0, x + 6) < 180:
@@ -186,8 +188,8 @@ def jassuPassTiming() -> int:
 def tidusShotTiming() -> int:
     shotDistance = distance(0,11)
     shotMod = int(shotDistance / 160)
-    if 540 <= memory.main.getStoryProgress() < 570:
-        baseTiming = int(171 - shotMod)
+    if 540 < memory.main.getStoryProgress() < 570:
+        baseTiming = int(170 - shotMod)
     else:
         baseTiming = int(288 - shotMod)
     
@@ -205,21 +207,32 @@ def gameStage():
     # Stage 4: Pass to Tidus
     # Stage 5: Shoot for goal
     currentStage = 0
-    if gameVars.getBlitzOT():
-        stages = [0, 2, 2, 300, 300, 300]
-    elif 540 < memory.main.getStoryProgress() < 570:
-        # Requires special timing before Wakka comes in
-        stages = [0, 2, 120, jassuPassTiming() - 16, jassuPassTiming(), tidusShotTiming()]
+    global engageDefender
+    # Logic that immediately moves to scoring phases if in overtime.
+    if memory.main.getStoryProgress() > 570 and memory.main.getStoryProgress() < 700:
+        if gameClock() in [2,3,4,5,6,7]:
+            gameVars.setBlitzOT(True)
+    
+    if memory.main.getStoryProgress() < 570:
+        if memory.main.getStoryProgress() > 540:
+            # Requires special timing before Wakka comes in
+            stages = [0, 30, 90, jassuPassTiming() - 12, jassuPassTiming(), tidusShotTiming()]
+        elif memory.main.getStoryProgress() < 540 and not gameVars.blitzFirstShot():
+            currentStage = 20  # default 20
+        else:
+            currentStage = 30
     else:
-        stages = [0, 2, 180, jassuPassTiming() - 16, jassuPassTiming(), tidusShotTiming()]
-    if memory.main.getStoryProgress() < 540 and not gameVars.blitzFirstShot():
-        currentStage = 20  # default 20
+        if gameVars.getBlitzOT():
+            stages = [0, 2, 2, 2, 300, 300]
+        else:
+            #print("After Wakka")
+            stages = [0, 160, 200, jassuPassTiming() - 12, jassuPassTiming(), tidusShotTiming()]
     
     # Determine base stage. Modified by following logic.
     if abs(memory.main.blitzOwnScore() - memory.main.blitzOppScore()) >= 2 and memory.main.getStoryProgress() >= 570:
         currentStage = 30
-    elif abs(memory.main.blitzOwnScore() - memory.main.blitzOppScore()) >= 1 \
-        and 700 > memory.main.getStoryProgress() > 570:
+    elif memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 1 \
+        and 570 < memory.main.getStoryProgress() < 700:
         # Ahead by 1 goal after Wakka enters, just end the game.
         currentStage = 30
     elif memory.main.getStoryProgress() < 540:
@@ -244,17 +257,18 @@ def gameStage():
                     and memory.main.getStoryProgress() >= 570:
                 currentStage = 0
 
-            # Logic that immediately moves to scoring phases if in overtime.
-            if memory.main.getStoryProgress() >= 570 and memory.main.getStoryProgress() < 700:
-                if gameClock() < 20 and not gameVars.getBlitzOT():
-                    gameVars.setBlitzOT(True)
-            if gameVars.getBlitzOT() and currentStage < 3:
-                currentStage = 3
-
             # Logic if we're in defensive zone trying to move forward
             if currentStage == 3 and playerArray[controllingPlayer()].getCoords()[1] < -200:
                 currentStage = 2
-
+    if currentStage == 3 and not engageDefender:
+        print("Start engaging defender!")
+        engageDefender = True
+    elif currentStage == 2 and engageDefender:
+        currentStage = 3
+    elif currentStage in [0,1,20,30] and engageDefender:
+        print("Disengaging defender logic")
+        engageDefender = False
+    
     if currentStage < 3 and controllingPlayer() == 0:
         currentStage = 30
     return currentStage
@@ -329,6 +343,8 @@ def findSafePlace():
     # Determin target coords based on character and state.
     if cPlayerNum in [1, 4]:
         targetCoords = [520, -20]
+    elif getCharRadius(controllingPlayer()) < 450:
+        radiusMovement(radius=480, direction='back')
     elif cPlayerNum in [2, 3]:
         if playerArray[9].getCoords()[1] < 150:
             safeSpot = 3
@@ -344,15 +360,15 @@ def findSafePlace():
     else:  # Should never occur, should never get Tidus/Wakka into this logic.
         safeSpot = 3
 
-    if safeSpot == 1:
+    if safeSpot == 1: #Near the left wall
         targetCoords = [-521, -266]
-    elif safeSpot == 2:
+    elif safeSpot == 2: #About half way
         targetCoords = [-380, -550]
-    elif safeSpot == 3:
-        targetCoords = [-225, -543]
+    elif safeSpot == 3: #All the way back
+        targetCoords = [-2, -595]
 
     # I think this is still the best option.
-    targetCoords = [-2, -595]
+    #targetCoords = [-2, -595]
 
     if blitzPathing.setMovement(targetCoords):
         return True
@@ -715,7 +731,8 @@ def lettyMove():
         elif not playerGuarded(2):
             xbox.tapX()
     elif currentStage == 1:
-        if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
+        #if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
+        if distance(3, 8) < 360:
             xbox.tapX()
         else:
             if findSafePlace() and graavDistance < 320:
@@ -770,13 +787,11 @@ def lettyAct():
         elif not playerGuarded(0):
             tar = 0
         else:
-            tar = 4
+            tar = 3
         passBall(target=tar, breakThrough=breakThroughVal)
-    elif currentStage == 1:
-        if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
-            passBall(target=3)
-        else:
-            dribbleBall()
+    elif currentStage in [0,1]:
+        print("Letty pass to Jassu")
+        passBall(target=3)
     elif gameVars.blitzFirstShot():
         dribbleBall()
     elif playerArray[2].currentHP() < 10:
@@ -827,12 +842,20 @@ def jassuMove():
             xbox.tapX()
         else:
             findSafety = True
-    elif currentStage in [0, 1]:
+    elif currentStage == 0:
         # Defend in the goal for safety.
         findSafety = True
         if playerArray[2].currentHP() >= 40 and currentStage == 0:
             if distance(2, 8) > 360 and distance(2, 7) > 360 and distance(2, 6) > 360:
                 xbox.tapX()
+    elif currentStage == 1:
+        if playerArray[10].getCoords()[1] < 150:
+            findSafePlace()
+        elif distance(3,8) < 350:
+            findSafePlace()
+        else:
+            workingForward()
+        moveForward = True
     elif currentStage == 2:
         # Move forward to staging position, prep for shot.
         workingForward()
@@ -844,11 +867,11 @@ def jassuMove():
             xbox.tapX()
             moveForward = True
         elif distance(3,10) > 340:
-            moveRadius = min(int(getCharRadius()+60), 540)
+            moveRadius = min(int(getCharRadius()+150), 570)
             targetCoords = radiusMovement(radius=moveRadius, direction='forward')
             moveForward = True
         else:
-            moveRadius = min(int(getCharRadius()+60), 540)
+            moveRadius = min(int(getCharRadius()+150), 570)
             targetCoords = radiusMovement(radius=moveRadius, direction='back')
             moveForward = True
     else:  # Pass to Tidus
@@ -860,7 +883,10 @@ def jassuMove():
             if findSafePlace() and graavDistance < 320:
                 xbox.tapX()
         elif not moveForward:
-            blitzPathing.setMovement(targetCoords)
+            try:
+                blitzPathing.setMovement(targetCoords)
+            except:
+                pass
 
 
 def jassuAct():
@@ -871,9 +897,6 @@ def jassuAct():
     graavC = playerArray[8].getCoords()
     tidusC = playerArray[0].getCoords()
     findSafety = False
-    moveForward = False
-    graavDistance = distance(3, 8)
-    otherDistance = 0
     targetCoords = [-600, -100]
     currentStage = gameStage()
     if reportState:
@@ -925,14 +948,15 @@ def jassuAct():
         passBall(target=0)
 
 
-def otherMove():
-    if findSafePlace() and distance(3, 8) > 350:
+def otherMove(): #fix
+    if getCharRadius(controllingPlayer()) < 540:
+        FFXC.set_movement(0,1)
+    elif playerArray[controllingPlayer()].getCoords()[1] < -400:
         xbox.tapX()
-    elif controllingPlayer() == 1:
+    elif distance(controllingPlayer(), 8) < 300:
         xbox.tapX()
     else:
-        xbox.tapX()
-
+        radiusMovement(radius=570, direction='back')
 
 def otherAct():
     currentStage = gameStage()
@@ -949,6 +973,8 @@ def otherAct():
                 passBall(target=2, breakThrough=0)
             else:
                 passBall(target=3, breakThrough=0)
+    elif distance(controllingPlayer(), 8) < 300:
+        passBall(target=2)
     else:
         passBall(target=3)
 

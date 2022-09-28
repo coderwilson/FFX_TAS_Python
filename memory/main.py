@@ -3623,7 +3623,7 @@ def getSaveSphereDetails():
     return [x, y, diag]
 
 
-def touchSaveSphere():
+def touchSaveSphere(saveCursorNum:int=0):
     print("MEM - Touch Save Sphere")
 
     ssDetails = getSaveSphereDetails()
@@ -3640,8 +3640,36 @@ def touchSaveSphere():
     print("Mark 2")
     #waitFrames(300)
     
-    if saveMenuCursor() == 0:
+    while saveMenuCursor() != 0 or saveMenuCursor2() != 0:
+        print("Cursor test A:", saveMenuCursor(), " | ", saveMenuCursor2())
         xbox.tapA()
+    while saveMenuCursor() == 0 and saveMenuCursor2() == 0:
+        print("Cursor test: B", saveMenuCursor(), " | ", saveMenuCursor2())
+        xbox.tapA()
+    print("Cursor test: C", saveMenuCursor(), " | ", saveMenuCursor2())
+    while not userControl():
+        print("Cursor test: D", saveMenuCursor(), " | ", saveMenuCursor2())
+        xbox.tapB()
+    print("Cursor test: E", saveMenuCursor(), " | ", saveMenuCursor2())
+
+def touchSaveSphere_notWorking(saveCursorNum:int=0):
+    print("MEM - Touch Save Sphere")
+
+    ssDetails = getSaveSphereDetails()
+    FFXC = xbox.controllerHandle()
+    while userControl():
+        targetPathing.setMovement([ssDetails[0], ssDetails[1]])
+        xbox.tapB()
+        waitFrames(1)
+    FFXC.set_neutral()
+    print("Waiting for cursor to reset before we do things - Mark 1")
+    while menuControl() == 0:
+        pass
+    waitFrames(1)
+    print("Mark 2")
+    #waitFrames(300)
+    
+    xbox.tapA()
     #while saveMenuCursor() == 0:
     #    if saveMenuOpen():
     #        xbox.tapA()
@@ -3655,7 +3683,10 @@ def touchSaveSphere():
             xbox.tapA()
         elif diagProgressFlag() == ssDetails[2]:
             print("Cursor test:", saveMenuCursor())
-            if saveMenuCursor() == 0: # and saveMenuCursor2() == 0:
+            print("Cursor test2:", saveMenuCursor2())
+            if saveCursorNum == 0 and saveMenuCursor() == 0:
+                xbox.tapA()
+            elif saveCursorNum == 1 and saveMenuCursor2() == 0:
                 xbox.tapA()
             else:
                 xbox.menuB()
