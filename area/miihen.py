@@ -239,11 +239,11 @@ def arrival2(selfDestruct, battleCount, SDencounterID):
 
 def midPoint():
     checkpoint = 0
-    memory.main.fullPartyFormat('tidkimwak')
-    while not memory.main.battleActive():
+    while memory.main.getMap() != 115:
         if memory.main.userControl():
             pDownSlot = memory.main.getItemSlot(6)
-            if memory.main.getMap() != 171:
+            if memory.main.getMap() == 58:
+                memory.main.fullPartyFormat('tidkimwak')
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
@@ -263,11 +263,11 @@ def midPoint():
             FFXC.set_neutral()
             if memory.main.diagSkipPossible():
                 xbox.tapB()
-
-    print("Mi'ihen - ready for Chocobo Eater")
-    battle.main.chocoEater()
-    print("Mi'ihen - Chocobo Eater complete")
-
+            elif memory.main.battleActive():
+                FFXC.set_neutral()
+                print("Mi'ihen - ready for Chocobo Eater")
+                battle.main.chocoEater()
+                print("Mi'ihen - Chocobo Eater complete")
 
 # Starts just after the save sphere.
 def lowRoad(selfDestruct, battleCount, SDencounterID):

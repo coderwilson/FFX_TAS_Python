@@ -1404,7 +1404,7 @@ def chocoEater():
     chocoTarget = 255
     chocoNext = False
     chocoHaste = False
-    xbox.clickToBattle()
+    screen.awaitTurn()
     charHpLast = memory.main.getBattleHP()
     
     #If chocobo doesn't take the second turn, that means it out-sped Tidus.
@@ -2404,9 +2404,9 @@ def mWoods(woodsVars):
                     else:
                         if woodsVars[0] or memory.main.getOverdriveBattle(6) == 100:
                             if encounterID in [171, 172] and memory.main.getUseItemsSlot(32) == 255:
-                                defend()
+                                escapeOne()
                             elif encounterID == 175 and memory.main.getUseItemsSlot(24) == 255:
-                                defend()
+                                escapeOne()
                             else:
                                 fleeAll()
                         else:

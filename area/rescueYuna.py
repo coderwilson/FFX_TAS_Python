@@ -496,10 +496,11 @@ def evraeAltana():
 def seymourNatus():
     memory.main.clickToControl()
 
-    if gameVars.getBlitzWin():
-        menu.seymourNatusBlitzWin()
-    else:
-        menu.seymourNatusBlitzLoss()
+    if memory.main.getYunaSlvl() >= 14:
+        if gameVars.getBlitzWin():
+            menu.seymourNatusBlitzWin()
+        else:
+            menu.seymourNatusBlitzLoss()
 
     memory.main.fullPartyFormat('highbridge')
     memory.main.touchSaveSphere()
@@ -515,7 +516,14 @@ def seymourNatus():
                     battle.main.fleeAll()
                 else:
                     complete = battle.main.seymourNatus()
-                    rngTrack.printManipInfo()
+                    
+                if memory.main.getYunaSlvl() >= 14:
+                    if gameVars.getBlitzWin():
+                        menu.seymourNatusBlitzWin()
+                    else:
+                        menu.seymourNatusBlitzLoss()
+                rngTrack.printManipInfo()
+
 
     # Movement for make-out scene
     memory.main.clickToControl()

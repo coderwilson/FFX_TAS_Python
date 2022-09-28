@@ -287,7 +287,7 @@ if Gamestate != "none":
         loadGame.loadGagaGates()
     if Gamestate == "Gagazet" and StepCounter == 6:  # After the dream
         loadGame.loadSaveNum(98)
-        gameVars.endGameVersionSet(1)
+        gameVars.endGameVersionSet(4)
         loadGame.loadGagazetDream()
         gameVars.fluxOverkillSuccess()
     if Gamestate == "Gagazet" and StepCounter == 10:  # Calm Lands, but Nemesis version
