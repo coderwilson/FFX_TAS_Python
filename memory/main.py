@@ -3457,7 +3457,10 @@ def getSaveSphereDetails():
         # MRR
         x = 5
         y = -740
-        diag = 39
+        if getStoryProgress() < 1000:
+            diag = 39
+        else:
+            diag = 43  # Nemesis run
     if mapVal == 119:
         # Battle Site
         x = -55
@@ -3472,7 +3475,10 @@ def getSaveSphereDetails():
         # Mac woods before Spherimorph
         x = 195
         y = -123
-        diag = 19
+        if getStoryProgress() < 4000:
+            diag = 19
+        else:
+            diag = 23
     if mapVal == 106:
         # Mac Temple entrance
         x = -22
@@ -3514,7 +3520,10 @@ def getSaveSphereDetails():
     if mapVal == 266:
         x = -305
         y = 185
-        diag = 39
+        if getStoryProgress() < 3000:  # NEA trip
+            diag = 39
+        else:
+            diag = 43
     if mapVal == 285:
         # After Flux
         x = 140
@@ -3560,25 +3569,11 @@ def getSaveSphereDetails():
         x = 46
         y = -252
         diag = 34
-    if mapVal == 92:  # Nemesis run
-        # MRR start
-        x = -1
-        y = -740
-        diag = 43
-    if mapVal == 266:  # Nemesis run
-        # Calm Lands Gorge
-        x = -310
-        y = 190
-        diag = 43
     if mapVal == 82:  # Nemesis run
         # Djose temple
         x = 100
         y = -240
         diag = 89
-    if mapVal == 221:  # Nemesis run
-        x = 197
-        y = -120
-        diag = 23
     if mapVal == 137:  # Nemesis run
         # Bikanel Desert
         x = -15
@@ -3644,7 +3639,7 @@ def touchSaveSphere(saveCursorNum:int=0):
     inc = 0
     
     while not (saveMenuCursor() == 0 and saveMenuCursor2() == 0 and diagProgressFlag() == ssDetails[2]):
-        print("Cursor test: A", saveMenuCursor(), " | ", saveMenuCursor2(), " | ", diagSkipPossible(), " | ", inc)
+        print("Cursor test: A", getStoryProgress(), " | ", diagProgressFlag(), " | ", getMap(), " | ", inc)
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
