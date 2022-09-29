@@ -135,6 +135,7 @@ def start():
         time.sleep(10)
     return success
 
+
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
 
@@ -504,7 +505,8 @@ def getCoords():
 
     return [x, y]
 
-def ammesFix(actorIndex:int=0):
+
+def ammesFix(actorIndex: int = 0):
     global process
     global baseValue
     basePtr = baseValue + 0x1fc44e4
@@ -512,6 +514,7 @@ def ammesFix(actorIndex:int=0):
     #xCoord = 749, yCoord = -71
     process.write(baseAddr + (0x880 * actorIndex) + 0x0c, 0x443B4000)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC28E0000)
+
 
 def extractorHeight():
     global process
@@ -3618,7 +3621,7 @@ def getSaveSphereDetails():
     return [x, y, diag]
 
 
-def touchSaveSphere(saveCursorNum:int=0):
+def touchSaveSphere(saveCursorNum: int = 0):
     print("MEM - Touch Save Sphere")
     clearSaveMenuCursor()
     clearSaveMenuCursor2()
@@ -3637,7 +3640,7 @@ def touchSaveSphere(saveCursorNum:int=0):
     print("Mark 2")
     #waitFrames(300)
     inc = 0
-    
+
     while not (saveMenuCursor() == 0 and saveMenuCursor2() == 0 and diagProgressFlag() == ssDetails[2]):
         print("Cursor test: A", getStoryProgress(), " | ", diagProgressFlag(), " | ", getMap(), " | ", inc)
         inc += 1
@@ -3672,7 +3675,8 @@ def touchSaveSphere(saveCursorNum:int=0):
     print("Cursor test: E", saveMenuCursor(), " | ", saveMenuCursor2(), " | ", inc)
     inc += 1
 
-def touchSaveSphere_notWorking(saveCursorNum:int=0):
+
+def touchSaveSphere_notWorking(saveCursorNum: int = 0):
     print("MEM - Touch Save Sphere")
 
     ssDetails = getSaveSphereDetails()
@@ -3688,7 +3692,7 @@ def touchSaveSphere_notWorking(saveCursorNum:int=0):
     waitFrames(1)
     print("Mark 2")
     #waitFrames(300)
-    
+
     xbox.tapA()
     #while saveMenuCursor() == 0:
     #    if saveMenuOpen():
@@ -3697,7 +3701,7 @@ def touchSaveSphere_notWorking(saveCursorNum:int=0):
     #        xbox.tapB()
     #    else:
     #        xbox.tapA()
-    
+
     while not userControl():
         if saveMenuOpen():
             xbox.tapA()
@@ -3818,6 +3822,7 @@ def lucaWorkersBattleID():
 
 # ------------------------------
 # RNG tracking based on the first six hits
+
 
 def lastHitInit():
     global baseValue
@@ -4200,6 +4205,7 @@ def rollNextRNG(lastRNG: int, index: int) -> int:
     new_value = s32((new_value >> 0x10) + (new_value << 0x10))
     return new_value
 
+
 def arenaArray():
     global baseValue
     retArray = []
@@ -4289,7 +4295,7 @@ def rngArrayFromIndex(index: int = 20, arrayLen: int = 20):
     retVal = [rngFromIndex(index)]  # First value is the current value
     for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], index))
-    retVal = [x & 0x7fffffff for x in retVal] # Anding it because that's the value that's actually used
+    retVal = [x & 0x7fffffff for x in retVal]  # Anding it because that's the value that's actually used
     return retVal
 
 
@@ -4298,8 +4304,9 @@ def advanceRNGindex(index: int = 43):
     key = 0xD35ED8 + (index * 0x4)
     process.write(baseValue + key, rngArrayFromIndex(index=index)[1])
 
-def nextSteal(stealCount:int):
-    useArray = rngArrayFromIndex(index=10, arrayLen=4) 
+
+def nextSteal(stealCount: int):
+    useArray = rngArrayFromIndex(index=10, arrayLen=4)
     stealRNG = useArray[1] % 255
     stealChance = 2 ** stealCount
     print("=== ", useArray[1], " === ", stealRNG, " < ", 255 // stealChance, " = ", stealRNG < (255 // stealChance))

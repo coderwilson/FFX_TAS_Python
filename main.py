@@ -176,7 +176,7 @@ while not memory.main.start():
 
 # Main
 reportGamestate()
-if memory.main.getMap in [23,348,349]:
+if memory.main.getMap in [23, 348, 349]:
     pass
 else:
     reset.resetToMainMenu()
