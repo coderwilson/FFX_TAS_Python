@@ -5,6 +5,7 @@ import memory.main
 from memory.main import s32
 import vars
 import rngTrack
+import random
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
