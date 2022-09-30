@@ -3642,21 +3642,21 @@ def touchSaveSphere(saveCursorNum: int = 0):
     inc = 0
 
     while not (saveMenuCursor() == 0 and saveMenuCursor2() == 0 and diagProgressFlag() == ssDetails[2]):
-        print("Cursor test: A", getStoryProgress(), " | ", diagProgressFlag(), " | ", getMap(), " | ", inc)
+        print("Cursor test: A", getStoryProgress(), "|", diagProgressFlag(), "|", getMap(), "|", inc)
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
         elif diagSkipPossible() and diagProgressFlag() != ssDetails[2]:
             xbox.tapB()
     while not (saveMenuCursor() == 0 and saveMenuCursor2() == 0):
-        print("Cursor test: B", saveMenuCursor(), " | ", saveMenuCursor2(), " | ", diagSkipPossible(), " | ", inc)
+        print("Cursor test: B", saveMenuCursor(), "|", saveMenuCursor2(), "|", diagSkipPossible(), "|", inc)
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
         elif diagSkipPossible():
             xbox.tapA()
     while saveMenuCursor() == 0 and saveMenuCursor2() == 0:
-        print("Cursor test: C", saveMenuCursor(), " | ", saveMenuCursor2(), " | ", diagSkipPossible(), " | ", inc)
+        print("Cursor test: C", saveMenuCursor(), "|", saveMenuCursor2(), "|", diagSkipPossible(), "|", inc)
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
@@ -3666,13 +3666,13 @@ def touchSaveSphere(saveCursorNum: int = 0):
             else:
                 xbox.tapA()
     while not userControl():
-        print("Cursor test: D", saveMenuCursor(), " | ", saveMenuCursor2(), " | ", inc)
+        print("Cursor test: D", saveMenuCursor(), "|", saveMenuCursor2(), "|", inc)
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
         else:
             xbox.tapB()
-    print("Cursor test: E", saveMenuCursor(), " | ", saveMenuCursor2(), " | ", inc)
+    print("Cursor test: E", saveMenuCursor(), "|", saveMenuCursor2(), "|", inc)
     inc += 1
 
 

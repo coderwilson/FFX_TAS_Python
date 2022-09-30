@@ -200,7 +200,7 @@ def returnToAirship():
             if main.saveMenuOpen():
                 xbox.tapA()
             elif main.diagProgressFlag() == ssDetails[2]:
-                # print("Cursor test: ", memory.saveMenuCursor())
+                # print("Cursor test:", memory.saveMenuCursor())
                 if main.saveMenuCursor() != 1:
                     xbox.menuDown()
                 else:
