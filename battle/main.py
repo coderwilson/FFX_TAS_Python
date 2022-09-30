@@ -1453,7 +1453,7 @@ def chocoEater():
                 print("#####  Target for You're Next attack: ", chocoTarget)
 
             # Only if two people are down, very rare but for safety.
-            if screen.faintCheck() > 1:
+            if screen.faintCheck() >= 1:
                 print("Attempting revive")
                 revive()
             #elif 0 not in memory.main.getActiveBattleFormation():

@@ -185,10 +185,10 @@ def leaving():
                 memory.main.clickToEventTemple(7)
                 checkpoint += 1
             elif checkpoint == 5:  # Shopkeeper
-                FFXC.set_movement(-1, -1)
-                memory.main.waitFrames(30 * 0.2)
+                while memory.main.userControl():
+                    targetPathing.setMovement([1,15])
+                    xbox.tapB()
                 FFXC.set_neutral()
-                xbox.tapB()
                 while memory.main.shopMenuDialogueRow() != 1:
                     xbox.tapDown()
                 xbox.tapB()
