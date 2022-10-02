@@ -1049,12 +1049,8 @@ def futureAttackHitMiss(character: int = 0, enemy: str = "anima", attackIndex: i
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
     index = 36 + character
-    hit_rng = memory.main.rngArrayFromIndex(index=index, arrayLen=attackIndex + 3)[attackIndex + 1]
-    # print("### HitRNG ", hit_rng)
     luck = memory.main.charLuck(character)
-    # print("Luck:", luck)
     accuracy = memory.main.charAccuracy(character)
-    # print("Accuracy:", accuracy)
 
     if enemy == "bfa":
         target_luck = 15
@@ -1070,22 +1066,19 @@ def futureAttackHitMiss(character: int = 0, enemy: str = "anima", attackIndex: i
     aims = 0
     target_reflexes = 0
 
-    hit_chance = accuracy * 2
-    hit_chance = (hit_chance * 0x66666667) // 0xffffffff
-    hit_chance = hit_chance // 2
-    hit_chance_index = hit_chance // 0x80000000
-    hit_chance_index += hit_chance - target_evasion + 10
+    accuracyIndex = ((accuracy * 2 * 0x66666667) // 0xffffffff) // 2
+    hit_chance_index += accuracyIndex - target_evasion + 10
     if hit_chance_index < 0:
         hit_chance_index = 0
     elif hit_chance_index > 8:
         hit_chance_index = 8
-    hit_chance = hitChanceTable(hit_chance_index) + luck
-    hit_chance += (aims - target_reflexes) * 10 - target_luck
-    # print("Hit Chance: ", hit_chance, " vs ", (memory.s32(hit_rng) % 101))
-    # print("Hit results: ", hit_chance > (memory.s32(hit_rng) % 101))
-    # print("=========================")
-    return hit_chance > (memory.main.s32(hit_rng) % 101)
-
+    base_hit_chance = hitChanceTable(hit_chance_index)
+    
+    hit_rng = memory.main.rngArrayFromIndex(index=index, arrayLen=attackIndex + 3)[attackIndex + 1] % 101
+    
+    hit_chance = base_hit_chance + luck - target_luck
+    hit_chance += (aims - target_reflexes) * 10
+    return hit_chance > hit_rng
 
 def hitChanceTable(index: int):
     if index == 0:
