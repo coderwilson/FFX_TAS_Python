@@ -175,7 +175,7 @@ def jassuPassTiming() -> int:
     shotDistance = distance(0,11)
     shotMod = int(shotDistance / 160)
     if 540 <= memory.main.getStoryProgress() < 570:
-        baseTiming = int(162 - shotMod)
+        baseTiming = int(160 - shotMod)
     else:
         baseTiming = int(270 - shotMod)
     
@@ -189,7 +189,7 @@ def tidusShotTiming() -> int:
     shotDistance = distance(0,11)
     shotMod = int(shotDistance / 160)
     if 540 < memory.main.getStoryProgress() < 570:
-        baseTiming = int(170 - shotMod)
+        baseTiming = int(169 - shotMod)
     else:
         baseTiming = int(288 - shotMod)
     
@@ -338,42 +338,40 @@ def findSafePlace():
     # graav coords
     graavPos = playerArray[8].getCoords()
     forwardPos = playerArray[7].getCoords()
+    targetCoords = [-2, -595]
     safeSpot = 255
 
     # Determin target coords based on character and state.
     if cPlayerNum in [1, 4]:
         targetCoords = [520, -20]
-    elif getCharRadius(controllingPlayer()) < 450:
-        radiusMovement(radius=480, direction='back')
     elif cPlayerNum in [2, 3]:
-        if playerArray[9].getCoords()[1] < 150:
+        if playerArray[7].getCoords()[1] < -90:
             safeSpot = 3
-        elif graavPos[1] < -20 and cPlayer[1] > -500 and distance(cPlayerNum, 8) > 370 and distance(cPlayerNum, 10) > 370:
-            if cPlayer[0] > graavPos[0]:
-                safeSpot = 1
-            else:
-                safeSpot = 2
-        elif forwardPos[1] > 250:
-            safeSpot = 2
         else:
-            safeSpot = 3
+            safeSpot = 2
     else:  # Should never occur, should never get Tidus/Wakka into this logic.
         safeSpot = 3
 
     if safeSpot == 1: #Near the left wall
         targetCoords = [-521, -266]
     elif safeSpot == 2: #About half way
-        targetCoords = [-380, -550]
+        targetCoords = [-380, -447]
     elif safeSpot == 3: #All the way back
         targetCoords = [-2, -595]
 
     # I think this is still the best option.
     #targetCoords = [-2, -595]
 
-    if blitzPathing.setMovement(targetCoords):
-        return True
+    if abs(cPlayer[0] - targetCoords[0]) + abs(cPlayer[1] - targetCoords[1]) > 80:
+        if cPlayer[1] > targetCoords[1]:
+            radiusMovement(radius=570, direction='back')
+        else:
+            radiusMovement(radius=570, direction='forward')
     else:
-        return False
+        if blitzPathing.setMovement(targetCoords):
+            return True
+        else:
+            return False
 
 
 def jassuCircle():
@@ -412,11 +410,17 @@ def jassuCircle():
 
 
 def jassuTrain():
-    targetCoords = [0, -600]
-    if reportState:
-        print(version[0], " - ", targetCoords)
-    blitzPathing.setMovement(targetCoords)
-
+    print("All aboard the Jassu train! Choo choo!")
+    jassuCoords = playerArray[3].getCoords()
+    if abs(jassuCoords[0]) < 30:
+        if jassuCoords[1] > 400:
+            FFXC.set_movement(0,-1)
+        else:
+            FFXC.set_movement(0,-1)
+    elif jassuCoords[0] < 10:
+        radiusMovement(direction='back')
+    else:
+        radiusMovement(direction='forward')
 
 def jassuTrain_stillInDev():
     jassuCoords = playerArray[3].getCoords()
@@ -806,6 +810,7 @@ def lettyAct():
 
 
 def jassuMove():
+    targetCoords = [999,999]
     currentStage = gameStage()
     playerCoords = playerArray[controllingPlayer()].getCoords()
     targetCoords = [-585, -130]
@@ -832,8 +837,8 @@ def jassuMove():
             if playerArray[9].getCoords()[1] > 100:
                 xbox.tapX()
     elif currentStage == 30:
-        #jassuTrain()
-        findSafePlace()
+        jassuTrain()
+        #findSafePlace()
         moveForward = True
     elif currentStage <= 1 and playerArray[3].currentHP() < 10:
         if playerArray[2].currentHP() >= 40 and distance(2, 8) > 360:
@@ -878,7 +883,7 @@ def jassuMove():
         targetCoords = [p10C[0] - 180, p10C[1] - 150]
         xbox.tapX()
 
-    if currentStage < 15:
+    if currentStage < 15 and targetCoords != [999,999]:
         if findSafety:
             if findSafePlace() and graavDistance < 320:
                 xbox.tapX()
@@ -892,12 +897,10 @@ def jassuMove():
 def jassuAct():
     currentStage = gameStage()
     playerCoords = playerArray[controllingPlayer()].getCoords()
-    targetCoords = [-585, -130]
     p10C = playerArray[10].getCoords()
     graavC = playerArray[8].getCoords()
     tidusC = playerArray[0].getCoords()
     findSafety = False
-    targetCoords = [-600, -100]
     currentStage = gameStage()
     if reportState:
         print("Jassu Action")
