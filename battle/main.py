@@ -5,6 +5,7 @@ import memory.main
 from memory.main import s32
 import vars
 import rngTrack
+import random
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -498,7 +499,7 @@ def Klikk():
     klikkAttacks = 0
     klikkRevives = 0
     stealCount = 0
-    while not memory.main.battleComplete(): #AKA end of battle screen
+    while not memory.main.battleComplete():  # AKA end of battle screen
         if memory.main.turnReady():
             BattleHP = memory.main.getBattleHP()
             if BattleHP[0] == 0:
@@ -540,6 +541,7 @@ def Klikk():
             xbox.tapB()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
     memory.main.waitFrames(1)
+
 
 def getAdvances(tros=True, report=False):
     import rngTrack
@@ -772,7 +774,7 @@ def Echuilles():
                     print("Tidus attack")
                     attack('none')
             elif screen.turnWakka():
-                if tidusCounter == 1:# and memory.main.rngSeed() != 160:
+                if tidusCounter == 1: #and memory.main.rngSeed() != 160:
                     print("Dark Attack")
                     useSkill(0)  # Dark Attack
                 #elif memory.main.getEnemyCurrentHP()[0] <= 558:
@@ -1353,7 +1355,7 @@ def afterBlitz3LateHaste(earlyHaste):
 
 def MiihenRoad(selfDestruct=False):
     print("Fight start: Mi'ihen Road")
-    print("Mi'ihen battle. Self-destruct: ", gameVars.selfDestructGet())
+    print("Mi'ihen battle. Self-destruct:", gameVars.selfDestructGet())
     battle = memory.main.getEncounterID()
 
     while not memory.main.battleComplete():  # AKA end of battle screen
@@ -1406,20 +1408,20 @@ def chocoEater():
     chocoHaste = False
     screen.awaitTurn()
     charHpLast = memory.main.getBattleHP()
-    
+
     #If chocobo doesn't take the second turn, that means it out-sped Tidus.
     if memory.main.getNextTurn() != 20:
         if memory.main.rngFromIndex(44) == rng44Last:
             # Eater did not take an attack, but did take first turn. Should register as true.
             chocoNext = True
-    
+
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if chocoNext == True:
+            if chocoNext:
                 chocoNext = False
-                if memory.main.getBattleHP() != charHpLast: #We took damage
+                if memory.main.getBattleHP() != charHpLast:  # We took damage
                     pass
-                elif memory.main.rngFromIndex(44) != rng44Last: #Chocobo eater attacked, covers miss
+                elif memory.main.rngFromIndex(44) != rng44Last:  # Chocobo eater attacked, covers miss
                     pass
                 elif chocoTarget == 255 and 1 not in memory.main.getActiveBattleFormation():
                     chocoIndex = memory.main.actorIndex(actorNum=4200)
@@ -1449,16 +1451,16 @@ def chocoEater():
                 rng44Last = memory.main.rngFromIndex(44)
             if chocoTarget != 255:
                 print("#####  Target for You're Next attack: ", chocoTarget)
-            
+
             # Only if two people are down, very rare but for safety.
             if screen.faintCheck() >= 1:
                 print("Attempting revive")
                 revive()
             #elif 0 not in memory.main.getActiveBattleFormation():
-                #Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
+                # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
             #    buddySwapTidus()
             elif 1 in memory.main.getActiveBattleFormation() and not chocoHaste and memory.main.getBattleCharTurn() == 0:
-                tidusHaste(direction='l', character=20) #After Yuna in, haste choco eater.
+                tidusHaste(direction='l', character=20)  # After Yuna in, haste choco eater.
                 chocoHaste = True
             else:
                 print("Attempting defend")
@@ -2036,7 +2038,7 @@ def battleGui():
             print("Skipping scene")
         elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
-    
+
     # Second Gui battle
     while memory.main.battleActive():
         turn = 1
@@ -2080,6 +2082,7 @@ def battleGui():
             memory.main.waitFrames(60)
         elif memory.main.diagSkipPossible() or memory.main.menuOpen():
             xbox.tapB()
+
 
 def djose(stoneBreath):
     print("Fight start: Djose road")
@@ -3236,11 +3239,11 @@ def wendigo():
                     if usepowerbreak:
                         print("Swapping to Auron to Power Break")
                         buddySwapAuron()
-                    elif not 5 in memory.main.getActiveBattleFormation():
+                    elif 5 not in memory.main.getActiveBattleFormation():
                         print("Swapping to Lulu")
                         luluSwap = True
                         buddySwapLulu()
-                    elif not 6 in memory.main.getActiveBattleFormation():
+                    elif 6 not in memory.main.getActiveBattleFormation():
                         buddySwapRikku()
                     else:
                         defend()
@@ -3330,6 +3333,7 @@ def wendigo():
                         defend()
                 else:
                     defend()
+
 
 def zu():
     screen.awaitTurn()
@@ -4835,28 +4839,28 @@ def oblitzRngWait():
             if i == 0:
                 pass
             elif firstResult[2] and not secondResult[2]:
-                if duration < secondResult[1] and victory == True:
+                if duration < secondResult[1] and victory:
                     secondResult = [comingSeeds[i], duration, victory, pos]
                     #print("Better Result for Second: ", pos, " - A")
                 else:
                     #print("Result for ", pos, " is not as good. - A")
                     pass
             elif secondResult[2] and not firstResult[2]:
-                if duration < firstResult[1] and victory == True:
+                if duration < firstResult[1] and victory:
                     firstResult = [comingSeeds[i], duration, victory, pos]
                     #print("Better Result for First: ", pos, " - B")
                 else:
                     #print("Result for ", pos, " is not as good. - B")
                     pass
             elif secondResult[1] < firstResult[1]:
-                if duration < secondResult[1] and victory == True:
+                if duration < secondResult[1] and victory:
                     secondResult = [comingSeeds[i], duration, victory, pos]
                     #print("Better Result for Second: ", pos, " - C")
                 else:
                     #print("Result for ", pos, " is not as good. - C")
                     pass
             else:
-                if duration < firstResult[1] and victory == True:
+                if duration < firstResult[1] and victory:
                     firstResult = [comingSeeds[i], duration, victory, pos]
                     #print("Better Result for First: ", pos, " - D")
                 else:
@@ -4870,18 +4874,18 @@ def oblitzRngWait():
     elif countUnknowns == 0 and gameVars.loopBlitz():
         print("all values are known. Choosing a random value to test.")
         best = secondResult
-        best[0] = comingSeeds[random(range(len(comingSeeds)-1))+1]
-    #elif firstResult[2] == 9999 and secondResult[2] != 9999:
-    #    best=secondResult
-    #elif secondResult[2] == 9999 and firstResult[2] != 9999:
-    #    best=firstResult
+        best[0] = comingSeeds[random(range(14)) + 1]
+    elif firstResult[2] == 9999 and secondResult[2] != 9999:
+        best = secondResult
+    elif secondResult[2] == 9999 and firstResult[2] != 9999:
+        best = firstResult
     elif firstResult[1] > secondResult[1]:
         best = secondResult
     else:
         best = firstResult
     logs.writeStats("Chosen Blitzball result:")
     logs.writeStats(best)
-    
+
     nextRNG = lastRNG
     j = 0
     print("====================================")
@@ -5193,7 +5197,7 @@ def thunderTarget(target, direction):
 
 
 def aeonSummon(position):
-    print("Summoning Aeon" + str(position))
+    print("Summoning Aeon " + str(position))
     while not memory.main.mainBattleMenu():
         pass
     while memory.main.battleMenuCursor() != 23:
@@ -5497,6 +5501,7 @@ def escapeAction():
     if memory.main.battleActive():
         print("Selected Escaping")
         tapTargeting()
+
 
 def escapeOne():
     print("##### The next character will escape:", rngTrack.nextActionEscape(character=memory.main.getCurrentTurn()))
@@ -6339,7 +6344,7 @@ def calmLandsManip():
             if memory.main.getCoords()[0] > 1300:
                 print("--Near Gagazet, just get off RNG10 equipment drop.")
                 if memory.main.nextChanceRNG10() == 0:
-                    advanceRNG10(1) # Gets us off of a drop on defender X - probably. :D
+                    advanceRNG10(1)  # Gets us off of a drop on defender X - probably. :D
                     # Don't want to have Defender X drop an item
                 else:
                     fleeAll()
@@ -6360,6 +6365,7 @@ def calmLandsManip():
             print("Fallback logic, not sure.")
             memory.main.waitFrames(180)
             fleeAll()
+
 
 def calmLandsManip_old():
     print("++Battle number:", memory.main.getEncounterID())
@@ -6614,11 +6620,11 @@ def ghostKill():
     else:
         silenceSlot = memory.main.getUseItemsSlot(39)
     tidusHasted = False
-    
+
     if memory.main.nextChanceRNG10():
         tidusHasted = ghostAdvanceRNG10Silence(silenceSlot=silenceSlot, owner1=owner1, owner2=owner2)
-        silenceSlot = 255 # will be used while prepping RNG10 anyway.
-    
+        silenceSlot = 255  # will be used while prepping RNG10 anyway.
+
     if owner2 in [0, 4, 6]:
         print("Aeon kill results in NEA on char:", owner2)
         ghostKillAeon()
@@ -6637,32 +6643,33 @@ def ghostKill():
 
     memory.main.clickToControl3()
 
-def ghostAdvanceRNG10Silence(silenceSlot:int, owner1:int, owner2:int):
+
+def ghostAdvanceRNG10Silence(silenceSlot: int, owner1: int, owner2: int):
     print("RNG10 is not aligned. Special logic to align.")
     # Premise is that we must have a silence grenade in inventory.
     # We should force extra manip in gorge if no silence grenade,
     # so should be guaranteed if this triggers.
-    prefDrop = [0,4,6]
+    prefDrop = [0, 4, 6]
     silenceUsed = False
     tidusHasted = False
     while memory.main.nextChanceRNG10():
         if memory.main.turnReady():
-            if silenceUsed == False:
+            if not silenceUsed:
                 if not 6 in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                    useItem(slot=silenceSlot) # Throw silence grenade
+                    useItem(slot=silenceSlot)  # Throw silence grenade
                     silenceUsed = True
                 elif not 3 in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
-                    useItem(slot=silenceSlot) # Throw silence grenade
+                    useItem(slot=silenceSlot)  # Throw silence grenade
                     silenceUsed = True
                 elif screen.turnRikku() or screen.turnKimahri():
-                    useItem(slot=silenceSlot) # Throw silence grenade
+                    useItem(slot=silenceSlot)  # Throw silence grenade
                     silenceUsed = True
                 else:
                     defend()
             #Next, put in preferred team
-            elif owner2 in prefDrop or not owner1 in prefDrop: # prefer aeon kill
+            elif owner2 in prefDrop or not owner1 in prefDrop:  # prefer aeon kill
                 if screen.turnRikku() or screen.turnKimahri():
                     Steal()
                 elif not 6 in memory.main.getActiveBattleFormation():
@@ -6673,7 +6680,7 @@ def ghostAdvanceRNG10Silence(silenceSlot:int, owner1:int, owner2:int):
                     buddySwapTidus()
                 else:
                     defend()
-            else: #Will need a non-Aeon kill
+            else:  # Will need a non-Aeon kill
                 if not 6 in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
                 elif not 0 in memory.main.getActiveBattleFormation():
@@ -6694,7 +6701,8 @@ def ghostAdvanceRNG10Silence(silenceSlot:int, owner1:int, owner2:int):
     return tidusHasted
     print("RNG10 is now aligned.")
 
-def ghostKillTidus(silenceSlot:int, selfHaste:bool):
+
+def ghostKillTidus(silenceSlot: int, selfHaste: bool):
     print("++Silence slot:", silenceSlot)
     while memory.main.battleActive():
         # Try to get NEA on Tidus
@@ -6718,7 +6726,8 @@ def ghostKillTidus(silenceSlot:int, selfHaste:bool):
             else:
                 defend()
 
-def ghostKillAny(silenceSlot:int, selfHaste:bool):
+
+def ghostKillAny(silenceSlot: int, selfHaste: bool):
     yunaHaste = False
     itemThrown = silenceSlot >= 200
     print("++Silence slot:", silenceSlot)
@@ -6732,7 +6741,7 @@ def ghostKillAny(silenceSlot:int, selfHaste:bool):
                     tidusHaste('none')
                     selfHaste = True
                 elif 1 in memory.main.getActiveBattleFormation() and not yunaHaste \
-                    and memory.main.getEnemyCurrentHP()[0] <= 6000:
+                        and memory.main.getEnemyCurrentHP()[0] <= 6000:
                     tidusHaste(direction='l', character=1)
                     yunaHaste = True
                 elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
@@ -6746,6 +6755,7 @@ def ghostKillAny(silenceSlot:int, selfHaste:bool):
                 attack('none')
             else:
                 defend()
+
 
 def ghostKillAeon():
     while memory.main.battleActive():

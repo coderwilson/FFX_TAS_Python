@@ -10,32 +10,32 @@ class allVars:
         # ------------------------------
 
         # ----Most important values to review
-        self.artificialPauses = False #Set depending on hardware. True = less powerful hardware.
-        self.csrValue = True #Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.nemesisValue = False #Set based on if you're doing any% (False) or Nemesis% (True)
-        self.forceLoop = False #After game is finished, start again on next seed.
-        self.blitzLoop = False #Loop on the same seed immediately after Blitzball.
-        self.blitzLossForceReset = False #True = reset after blitz loss
-        self.setSeed = True #If you are using Rossy's patch, set to True. Otherwise set to False
-        self.kilikaSkip = True #True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.perfectAeonKills = False #Before YuYevon, True is slower but more swag.
+        self.artificialPauses = False     # Set depending on hardware. True = less powerful hardware.
+        self.csrValue = True              # Set automatically on new game. For testing (loading a save file) set for your environment.
+        self.nemesisValue = False         # Set based on if you're doing any% (False) or Nemesis% (True)
+        self.forceLoop = True             # After game is finished, start again on next seed.
+        self.blitzLoop = False            # Loop on the same seed immediately after Blitzball.
+        self.blitzLossForceReset = True   # True = reset after blitz loss
+        self.setSeed = True               # If you are using Rossy's patch, set to True. Otherwise set to False
+        self.kilikaSkip = True            # True == Tidus OD on Evrae instead of Seymour. New strat.
+        self.perfectAeonKills = False     # Before YuYevon, True is slower but more swag.
 
         # ----Blitzball
-        self.blitzWinValue = True  # No default value required
-        self.blitzOvertime = False  # Set to False, no need to change ever.
+        self.blitzWinValue = True         # No default value required
+        self.blitzOvertime = False        # Set to False, no need to change ever.
         self.blitzFirstShotVal = False
-        self.oblitzAttackVal = "255"  # Used for RNG manip tracking
+        self.oblitzAttackVal = "255"      # Used for RNG manip tracking
 
         # ----Sphere grid
-        self.fullKilikMenu = False  # Default to False
-        self.earlyTidusGridVal = False  # Default False
-        self.earlyHasteVal = 1  # Default -1
-        self.wakkaLateMenuVal = False  # Default False
-        self.endGameVersionVal = 1  # Default 0
+        self.fullKilikMenu = False        # Default to False
+        self.earlyTidusGridVal = False    # Default False
+        self.earlyHasteVal = 1            # Default -1
+        self.wakkaLateMenuVal = False     # Default False
+        self.endGameVersionVal = 1        # Default 0
 
         # ----Equipment
-        self.zombieWeaponVal = 255  # Default 255
-        self.lStrikeCount = 1  # Default 0
+        self.zombieWeaponVal = 255        # Default 255
+        self.lStrikeCount = 1             # Default 0
 
         # ----RNG Manip
         self.yellows = 0
@@ -66,10 +66,10 @@ class allVars:
         # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-    
+
     def blitzLossReset(self):
         return self.blitzLossForceReset
-    
+
     def useSetSeed(self):
         return self.setSeed
 
