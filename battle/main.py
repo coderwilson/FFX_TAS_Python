@@ -2749,7 +2749,16 @@ def seymourGuado_blitzWin():
                 if yunaturns == 0:
                     xbox.weapSwap(0)
                 else:
-                    buddySwapAuron()
+                    if 2 not in memory.main.getActiveBattleFormation():
+                        buddySwapAuron()
+                    elif 6 not in memory.main.getActiveBattleFormation():
+                        buddySwapRikku()
+                    elif 4 not in memory.main.getActiveBattleFormation():
+                        buddySwapWakka()
+                    elif 3 not in memory.main.getActiveBattleFormation():
+                        buddySwapKimahri()
+                    else:
+                        defend()
                 yunaturns += 1
                 print("Yuna turn, complete")
             elif turnchar == 3:
@@ -4783,7 +4792,7 @@ def oblitzRngWait():
     rngValues = rngTrack.oblitzHistory()
     print(rngValues)
     lastRNG = memory.main.rngFromIndex(index=2)
-    comingSeeds = memory.main.rngArrayFromIndex(index=2, arrayLen=15)
+    comingSeeds = memory.main.rngArrayFromIndex(index=2, arrayLen=8)
     seedNum = str(memory.main.rngSeed())
     print(comingSeeds)
     pos = 0
@@ -4791,68 +4800,74 @@ def oblitzRngWait():
     countKnowns = 0
 
     if seedNum not in rngValues:
-        print("## No values for this RNG seed")
-        firstResult = [comingSeeds[1], 9999, True, 1]
-        secondResult = [comingSeeds[2], 9999, True, 2]
+        print("## No values for this RNG seed - ", memory.main.rngSeed())
+        firstResult = [comingSeeds[1], 10, True, 1]
+        secondResult = [comingSeeds[2], 20, True, 2]
     else:
         print("## Scanning values for this RNG seed")
         if gameVars.loopBlitz():  # This will cause us to prefer results hunting
             print("### Looping on blitz, we will try a new value.")
             # Seed value, time to completion, Win/Loss, and position
-            firstResult = [0, 10, True, 0]
-            secondResult = [0, 10, True, 0]
+            firstResult = [0, 9999, True, 0]
+            secondResult = [0, 9999, True, 0]
         else:  # For full runs, take the best result.
             print("### This is a full run. Selecting best known result.")
             firstResult = [0, 9999, False, 0]
             secondResult = [0, 9999, False, 0]
         for i in range(len(comingSeeds)):
-            print("Checking seed ", comingSeeds[i])
+            #print("Checking seed ", comingSeeds[i])
             # Set up duration and victory values
             if str(comingSeeds[i]) in rngValues[seedNum]:
                 duration = int(rngValues[seedNum][str(comingSeeds[i])]['duration']) + pos
-                print(duration)
+                #print(duration)
                 victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
-                print("Found result: ", [comingSeeds[i], duration, victory, pos])
-                print(victory)
+                print("Known result. ", [comingSeeds[i], duration, victory, pos])
+                #print(victory)
                 countKnowns += 1
             elif gameVars.loopBlitz():
-                print("No result, registering a preferred result while looping on Blitzball.")
                 duration = 1 + pos
                 victory = True
                 countUnknowns += 1
+                print("No result (preferred), loop. ", [comingSeeds[i], duration, victory, pos])
             else:
-                print("No result, registering an unknown result while attempting full run.")
-                duration = 999 + pos
+                duration = 540 + pos
+                #540 is about the maximum duration we desire.
                 victory = False
+                countUnknowns += 1
+                print("No result (undesirable), full.", [comingSeeds[i], duration, victory, pos])
             #Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
             if i == 0:
                 pass
             elif firstResult[2] and not secondResult[2]:
                 if duration < secondResult[1] and victory:
                     secondResult = [comingSeeds[i], duration, victory, pos]
-                    print("Better Result for Second: ", pos, " - A")
+                    #print("Better Result for Second: ", pos, " - A")
                 else:
-                    print("Result for ", pos, " is not as good. - A")
+                    #print("Result for ", pos, " is not as good. - A")
+                    pass
             elif secondResult[2] and not firstResult[2]:
                 if duration < firstResult[1] and victory:
                     firstResult = [comingSeeds[i], duration, victory, pos]
-                    print("Better Result for First: ", pos, " - B")
+                    #print("Better Result for First: ", pos, " - B")
                 else:
-                    print("Result for ", pos, " is not as good. - B")
+                    #print("Result for ", pos, " is not as good. - B")
+                    pass
             elif secondResult[1] < firstResult[1]:
                 if duration < secondResult[1] and victory:
                     secondResult = [comingSeeds[i], duration, victory, pos]
-                    print("Better Result for Second: ", pos, " - C")
+                    #print("Better Result for Second: ", pos, " - C")
                 else:
-                    print("Result for ", pos, " is not as good. - C")
+                    #print("Result for ", pos, " is not as good. - C")
+                    pass
             else:
                 if duration < firstResult[1] and victory:
                     firstResult = [comingSeeds[i], duration, victory, pos]
-                    print("Better Result for First: ", pos, " - D")
+                    #print("Better Result for First: ", pos, " - D")
                 else:
-                    print("Result for ", pos, " is not as good. - D")
+                    #print("Result for ", pos, " is not as good. - D")
+                    pass
             pos += 1
-    if countKnowns == 0 and not gameVars.loopBlitz():
+    if countKnowns == 0:
         print("Could not find a known result.")
         best = secondResult
         best[0] = comingSeeds[1]
@@ -4874,12 +4889,12 @@ def oblitzRngWait():
     nextRNG = lastRNG
     j = 0
     print("====================================")
-    print("Desired results (RNG, duration, victory, waits):")
+    print("Chosen results (RNG, duration, victory, waits):")
     print(best)
     print("====================================")
     # Now wait for one of the two results to come up
-    while s32(nextRNG) != s32(best[0]) and j < 15:
-        nextRNG = memory.main.rngFromIndex(index=2)
+    while nextRNG != best[0] and j < 15:
+        nextRNG = memory.main.rngFromIndex(index=2) & 0x7fffffff
         if lastRNG != nextRNG:
             print(j, " | ", s32(nextRNG), " | ", s32(memory.main.rngFromIndex(index=2)), " | ", s32(best[0]))
             j += 1
@@ -6618,10 +6633,10 @@ def ghostKill():
         ghostKillAeon()
     elif owner1 in [0, 4, 6]:
         print("Any character kill results in NEA on char:", owner1)
-        ghostKillAny(silenceSlot=silenceSlot, tidusHasted=tidusHasted)
+        ghostKillAny(silenceSlot=silenceSlot, selfHaste=tidusHasted)
     elif owner1 == 9:
         print("Has to be Tidus kill: ", owner1)
-        ghostKillTidus(silenceSlot=silenceSlot, tidusHasted=tidusHasted)
+        ghostKillTidus(silenceSlot=silenceSlot, selfHaste=tidusHasted)
     else:
         print("No way to get an optimal drop. Resorting to aeon: ", owner2)
         ghostKillAeon()
