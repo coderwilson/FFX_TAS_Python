@@ -202,12 +202,12 @@ def AfterAmmes():
     while memory.main.getMap() != 49:
         if memory.main.userControl():
             startPos = memory.main.getCoords()
-            if memory.main.getMap() == 389 and 860 <= startPos[0] <= 875 and -135 <= startPos[1] <= -150:
+            if int(startPos[0]) in [866,867,868,869,870] \
+                and int(startPos[1]) in [-138,-139,-140, -141]:
+                print("Positioning error")
                 FFXC.set_neutral()
-                memory.main.waitFrames(2)
-                startPos = memory.main.getCoords()
-                if 860 <= startPos[0] <= 875 and -135 <= startPos[1] <= -150:
-                    memory.main.ammesFix(actorIndex=0)
+                memory.main.waitFrames(1)
+                memory.main.ammesFix(actorIndex=0)
             else:
                 # Map changes and events
                 if checkpoint == 6:  # Save sphere
