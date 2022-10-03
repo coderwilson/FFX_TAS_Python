@@ -3218,6 +3218,7 @@ def wendigo():
         if memory.main.turnReady():
             partyHP = memory.main.getBattleHP()
             turnchar = memory.main.getBattleCharTurn()
+            tidusSlot = memory.main.getBattleCharSlot(0)
 
             if partyHP[memory.main.getBattleCharSlot(0)] == 0:
                 print("Tidus is dead")
@@ -3232,23 +3233,18 @@ def wendigo():
                     print("Yuna still needs AP")
                     # If both other characters are dead Mega-Phoenix if available, otherwise PD
                     if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
-                        defend()
+                        xbox.weapSwap(0)
                     YunaAP = True
                 # If Yuna has had a turn swap for Lulu
                 else:
-                    if usepowerbreak:
-                        print("Swapping to Auron to Power Break")
-                        buddySwapAuron()
-                    elif 5 not in memory.main.getActiveBattleFormation():
+                    if 5 not in memory.main.getActiveBattleFormation():
                         print("Swapping to Lulu")
-                        luluSwap = True
                         buddySwapLulu()
                     elif 6 not in memory.main.getActiveBattleFormation():
                         buddySwapRikku()
                     else:
-                        defend()
+                        xbox.weapSwap(0)
             elif turnchar == 0:
-                print("Test 1")
                 if not tidushaste:
                     print("Tidus Haste self")
                     tidusHaste('none')
@@ -3310,7 +3306,6 @@ def wendigo():
                         Steal()
                         guadosteal = True
                     elif memory.main.getEnemyCurrentHP().count(0) == 2 and not luluSwap:
-                        luluSwap = True
                         buddySwapLulu()
                     else:
                         defend()
@@ -3320,15 +3315,26 @@ def wendigo():
                     useSkill(position=0, target=21)
                     powerbreakused = True
                     usepowerbreak = False
-                elif memory.main.getEnemyCurrentHP()[1] < stopHealing:
+                elif memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
                     defend()
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
-                    defend()
+                    buddySwapKimahri()
+            elif turnchar == 5:
+                if not luluSwap:
+                    if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                        xbox.weapSwap(0)
+                        luluSwap = True
+                elif not 2 in memory.main.getActiveBattleFormation():
+                    buddySwapAuron()
+                    usepowerbreak = True
             else:
-                if memory.main.getEnemyCurrentHP()[1] < stopHealing:
+                if usepowerbreak and not powerbreakused and not 2 in memory.main.getActiveBattleFormation():
+                    print("Swapping to Auron to Power Break")
+                    buddySwapAuron()
+                if memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
                     print("End of battle, no need to heal.")
                     defend()
-                elif memory.main.getEnemyCurrentHP()[1] != 0:
+                elif memory.main.getEnemyCurrentHP()[1] != 0 and memory.main.getBattleHP()[tidusSlot] != 0:
                     if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
                 else:
@@ -4207,9 +4213,8 @@ def calmLandsGems():
                     fleeAll()
                 elif screen.turnKimahri():
                     # Red element in center slot, with machina and dog
-                    if memory.main.getEncounterID() == [273, 281]:
+                    if memory.main.getEncounterID() in [273, 281]:
                         print("Grabbing a gem here.")
-                        buddySwapKimahri()
                         StealLeft()
                     # Red element in top slot, with bee and tank
                     elif memory.main.getEncounterID() in [275, 283]:
@@ -4992,9 +4997,7 @@ def _steal(direction=None):
 
 def Steal():
     print("Steal")
-    if not memory.main.getEncounterID() in [273, 274, 276, 279, 281, 282, 284, 289]:
-        _steal()
-    elif memory.main.getEncounterID() in [273, 281]:
+    if memory.main.getEncounterID() in [273, 281]:
         _steal('left')
     elif memory.main.getEncounterID() in [276, 279, 289]:
         _steal('up')

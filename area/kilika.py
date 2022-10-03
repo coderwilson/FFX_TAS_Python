@@ -181,7 +181,7 @@ def forest1():
 def trials():
     memory.main.clickToControl()
     checkpoint = 0
-    while memory.main.getMap() != 18:
+    while memory.main.getMap() != 45:
         if memory.main.userControl():
             # Spheres and glyphs
             if checkpoint == 2:  # First sphere
@@ -228,14 +228,14 @@ def trials():
                 memory.main.waitFrames(30 * 0.07)
                 memory.main.clickToEventTemple(0)
                 checkpoint += 1
-            elif checkpoint == 53 and gameVars.csr():
-                memory.main.awaitControl()
-                FFXC.set_movement(0, 1)
-                memory.main.waitFrames(2)
-                memory.main.awaitEvent()
-                FFXC.set_neutral()
-                xbox.nameAeon("Ifrit")  # Set Ifrit name
-                checkpoint = 55
+            #elif checkpoint == 53 and gameVars.csr():
+            #    memory.main.awaitControl()
+            #    FFXC.set_movement(0, 1)
+            #    memory.main.waitFrames(2)
+            #    memory.main.awaitEvent()
+            #    FFXC.set_neutral()
+            #    xbox.nameAeon("Ifrit")  # Set Ifrit name
+            #    checkpoint = 55
             elif checkpoint == 54 and not gameVars.csr():  # Talk to Wakka
                 memory.main.clickToEventTemple(7)
                 checkpoint += 1
@@ -262,6 +262,34 @@ def trials():
             elif checkpoint < 53 and memory.main.getMap() == 45:  # Inner sanctum
                 checkpoint = 53
 
+def trialsEnd():
+    # Talking to Wakka
+    while memory.main.getStoryProgress() < 346:
+        if memory.main.userControl():
+            if memory.main.getCoords()[0] < -28:
+                targetPathing.setMovement([-10,-23])
+            else:
+                targetPathing.setMovement([-20,1])
+                xbox.tapB()
+        else:
+            FFXC.set_neutral()
+            if memory.main.diagSkipPossible():
+                xbox.tapB()
+    
+    #Leave the chamber, then name Ifrit.
+    memory.main.clickToControl3()
+    while memory.main.userControl():
+        FFXC.set_movement(0,-1)
+    FFXC.set_neutral()
+    xbox.nameAeon("Ifrit")  # Set Ifrit name
+    
+    while memory.main.getMap() != 18:
+        if memory.main.userControl():
+            FFXC.set_movement(0,-1)
+        else:
+            FFXC.set_neutral()
+            if memory.main.diagSkipPossible():
+                xbox.tapB()
 
 def forest3():
     # First, re-order the party
