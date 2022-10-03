@@ -75,7 +75,7 @@ class FFXMemory(ReadWriteMemory):
         super(FFXMemory, self).__init__(*args, **kwargs)
         self.process = LocProcess()
 
-    def get_process_by_name(self, process_name: [str, bytes]) -> "Process":
+    def get_process_by_name(self, process_name: str | bytes) -> "Process":
         """
         :description: Get the process by the process executabe\'s name and return a Process object.
 
