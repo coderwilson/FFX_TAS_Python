@@ -249,7 +249,7 @@ def midPoint():
                 FFXC.set_neutral()
             #elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
             #    checkpoint = 4
-            elif checkpoint in [2,3]:
+            elif checkpoint in [2, 3]:
                 checkpoint = 4
             elif checkpoint == 5:
                 FFXC.set_movement(0, -1)
@@ -268,6 +268,7 @@ def midPoint():
                 print("Mi'ihen - ready for Chocobo Eater")
                 battle.main.chocoEater()
                 print("Mi'ihen - Chocobo Eater complete")
+
 
 # Starts just after the save sphere.
 def lowRoad(selfDestruct, battleCount, SDencounterID):

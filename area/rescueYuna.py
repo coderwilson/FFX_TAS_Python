@@ -516,14 +516,13 @@ def seymourNatus():
                     battle.main.fleeAll()
                 else:
                     complete = battle.main.seymourNatus()
-                    
+
                 if memory.main.getYunaSlvl() >= 14:
                     if gameVars.getBlitzWin():
                         menu.seymourNatusBlitzWin()
                     else:
                         menu.seymourNatusBlitzLoss()
                 rngTrack.printManipInfo()
-
 
     # Movement for make-out scene
     memory.main.clickToControl()

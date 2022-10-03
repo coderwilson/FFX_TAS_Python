@@ -33,9 +33,9 @@ def arrival():
             elif checkpoint < 15 and memory.main.getMap() == 104:
                 print("Map change:", checkpoint)
                 checkpoint = 15
-            
+
             # events
-            if checkpoint in [5,6]:  # Seymour intro scene
+            if checkpoint in [5, 6]:  # Seymour intro scene
                 memory.main.awaitControl()
                 print("Event: Seymour intro scene")
                 FFXC.set_movement(1, 0)
@@ -72,7 +72,7 @@ def arrival():
                 checkpoint += 1
             elif checkpoint == 36:  # To the docks
                 print("Event: Towards the docks")
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 memory.main.waitFrames(9)
                 memory.main.clickToEventTemple(7)
                 checkpoint += 1

@@ -186,7 +186,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 5:  # Shopkeeper
                 while memory.main.userControl():
-                    targetPathing.setMovement([1,15])
+                    targetPathing.setMovement([1, 15])
                     xbox.tapB()
                 FFXC.set_neutral()
                 while memory.main.shopMenuDialogueRow() != 1:

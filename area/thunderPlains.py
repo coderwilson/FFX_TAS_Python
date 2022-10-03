@@ -68,14 +68,14 @@ def southPathing():
                 xbox.tapB()
 
     memory.main.awaitControl()
-    while not targetPathing.setMovement([-73,14]):
+    while not targetPathing.setMovement([-73, 14]):
         if memory.main.diagSkipPossible():
             xbox.menuB()
-    while not targetPathing.setMovement([-83,29]):
+    while not targetPathing.setMovement([-83, 29]):
         if memory.main.diagSkipPossible():
             xbox.menuB()
     while not memory.main.getMap() == 263:
-        FFXC.set_movement(-1,1)
+        FFXC.set_movement(-1, 1)
         if memory.main.diagSkipPossible():
             xbox.menuB()
     FFXC.set_neutral()

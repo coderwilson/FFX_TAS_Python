@@ -135,7 +135,7 @@ def trackDrops(enemy: str = 'ghost', battles: int = 20, extraAdvances: int = 0):
 
 
 def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: int = 0, partySize: int = 7):
-    testMode = False # Doesn't functionally change, but prints more stuff.
+    testMode = False  # Doesn't functionally change, but prints more stuff.
     slotMod = SlotMod(enemy=enemy)
     abilityMod = AbilityMod(enemy=enemy)
 
@@ -201,9 +201,9 @@ def itemToBeDropped(enemy: str = 'ghost', preAdvance12: int = 0, preAdvance13: i
 
 
 def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1, advances: int = 0):
-    testMode = False # Doesn't functionally change, but prints more stuff.
+    testMode = False  # Doesn't functionally change, but prints more stuff.
     outcomes = dropAbilityList(enemy=enemy, equipType=equipType)
-    found=0
+    found = 0
     #if testMode:
     #    print("o: ", outcomes)
     if slots == 0:
@@ -230,8 +230,8 @@ def abilityToBeDropped(enemy: str = 'ghost', equipType: int = 0, slots: int = 1,
             if testMode:
                 print("==================================")
                 print("ptr: ", ptr)
-                print("Try: ", testArray[ptr+advances])
-            arrayPos = ((testArray[ptr+advances] & 0x7fffffff) % 7) + 1
+                print("Try: ", testArray[ptr + advances])
+            arrayPos = ((testArray[ptr + advances] & 0x7fffffff) % 7) + 1
             if testMode:
                 print("AP: ", arrayPos)
                 print("Res: ", outcomes[arrayPos])
@@ -987,14 +987,15 @@ def zombieTrack(report=False):
 
     return zombieResults
 
+
 def neaTrack():
     preAdvance12 = 0
     preAdvance13 = 0
-    
+
     totalAdvancePreX = 999
     totalAdvancePostX = 999
     enemy = 'defender_x'
-    
+
     #If already aligned for NEA, we want X to drop nothing.
     nextItem, preAdvance13 = itemToBeDropped(enemy='ghost')
     if nextItem.equipmentType() == 1 and nextItem.hasAbility(0x801D):
@@ -1002,8 +1003,6 @@ def neaTrack():
         totalAdvancePostX = 0
     #else:
         #print("/// Not yet aligned. Looking for more results.")
-    
-    
     while totalAdvancePreX == 999 or totalAdvancePostX == 999 and preAdvance12 < 100:
         preAdvance12 += 4
         nextItem, preAdvance13 = itemToBeDropped(enemy='ghost', preAdvance12=preAdvance12, preAdvance13=preAdvance13)
@@ -1024,6 +1023,7 @@ def neaTrack():
     #print("/// Pre-X: ", totalAdvancePreX, " /// Post-X", totalAdvancePostX)
     return totalAdvancePreX, totalAdvancePostX
 
+
 def printManipInfo():
     preX, postX = neaTrack()
     print("--------------------------")
@@ -1031,6 +1031,7 @@ def printManipInfo():
     print("Next, before X:", preX, "| Next, after X: ", postX)
     print("RNG10:", memory.main.nextChanceRNG10(), "| Pre Defender X: ", memory.main.nextChanceRNG10Calm())
     print("--------------------------")
+
 
 def nextActionEscape(character: int = 0):
     index = 20 + character
@@ -1073,12 +1074,13 @@ def futureAttackHitMiss(character: int = 0, enemy: str = "anima", attackIndex: i
     elif hit_chance_index > 8:
         hit_chance_index = 8
     base_hit_chance = hitChanceTable(hit_chance_index)
-    
+
     hit_rng = memory.main.rngArrayFromIndex(index=index, arrayLen=attackIndex + 3)[attackIndex + 1] % 101
-    
+
     hit_chance = base_hit_chance + luck - target_luck
     hit_chance += (aims - target_reflexes) * 10
     return hit_chance > hit_rng
+
 
 def hitChanceTable(index: int):
     if index == 0:

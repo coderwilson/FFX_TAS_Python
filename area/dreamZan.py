@@ -205,8 +205,8 @@ def AfterAmmes():
     while memory.main.getMap() != 49:
         if memory.main.userControl():
             startPos = memory.main.getCoords()
-            if int(startPos[0]) in [866,867,868,869,870] \
-                and int(startPos[1]) in [-138,-139,-140, -141]:
+            if int(startPos[0]) in [866, 867, 868, 869, 870] \
+                    and int(startPos[1]) in [-138, -139, -140, -141]:
                 print("Positioning error")
                 FFXC.set_neutral()
                 memory.main.waitFrames(1)
