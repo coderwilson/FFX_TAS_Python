@@ -71,6 +71,7 @@ def toHiddenCave():
     logs.writeStats("NEA extra manip battles:")
     logs.writeStats(prepBattles)
 
+
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
     memory.main.fullPartyFormat('rikku')
@@ -110,7 +111,7 @@ def dropHunt():
         else:
             FFXC.set_neutral()
             if memory.main.battleActive():
-                if memory.main.getEncounterID() in [319,323]:
+                if memory.main.getEncounterID() in [319, 323]:
                     battle.main.ghostKill()
                 else:
                     battle.main.fleeAll()

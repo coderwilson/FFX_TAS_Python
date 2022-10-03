@@ -359,9 +359,9 @@ def findSafePlace():
 
     if safeSpot == 1:  # Near the left wall
         targetCoords = [-521, -266]
-    elif safeSpot == 2: #About half way
+    elif safeSpot == 2:  # About half way
         targetCoords = [-380, -447]
-    elif safeSpot == 3: #All the way back
+    elif safeSpot == 3:  # All the way back
         targetCoords = [-2, -595]
 
     # I think this is still the best option.
@@ -419,13 +419,14 @@ def jassuTrain():
     jassuCoords = playerArray[3].getCoords()
     if abs(jassuCoords[0]) < 30:
         if jassuCoords[1] > 400:
-            FFXC.set_movement(0,-1)
+            FFXC.set_movement(0, -1)
         else:
-            FFXC.set_movement(0,-1)
+            FFXC.set_movement(0, -1)
     elif jassuCoords[0] < 10:
         radiusMovement(direction='back')
     else:
         radiusMovement(direction='forward')
+
 
 def jassuTrain_stillInDev():
     jassuCoords = playerArray[3].getCoords()
@@ -815,7 +816,7 @@ def lettyAct():
 
 
 def jassuMove():
-    targetCoords = [999,999]
+    targetCoords = [999, 999]
     currentStage = gameStage()
     playerCoords = playerArray[controllingPlayer()].getCoords()
     targetCoords = [-585, -130]
@@ -888,7 +889,7 @@ def jassuMove():
         targetCoords = [p10C[0] - 180, p10C[1] - 150]
         xbox.tapX()
 
-    if currentStage < 15 and targetCoords != [999,999]:
+    if currentStage < 15 and targetCoords != [999, 999]:
         if findSafety:
             if findSafePlace() and graavDistance < 320:
                 xbox.tapX()

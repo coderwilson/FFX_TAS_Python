@@ -804,7 +804,7 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True, special='none'):
                 weaponNum = index
                 break
         elif special == 'brotherhoodearly':
-            if currentWeapon.abilities() == [0x8063, 255,255,255] and currentWeapon.slotCount() == 4:
+            if currentWeapon.abilities() == [0x8063, 255, 255, 255] and currentWeapon.slotCount() == 4:
                 weaponNum = index
                 break
         elif not abilityarray and currentWeapon.abilities() == [255, 255, 255, 255]:
