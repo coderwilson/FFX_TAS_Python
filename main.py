@@ -48,11 +48,11 @@ if gameVars.nemesis():
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-#Gamestate = "Kilika"
+Gamestate = "Kilika"
+StepCounter = 1
+#Gamestate = "Luca"
 #StepCounter = 1
-Gamestate = "Luca"
-#StepCounter = 1
-StepCounter = 3
+#StepCounter = 3
 #StepCounter = 5
 #Gamestate = "Miihen"
 #StepCounter = 1
@@ -523,6 +523,7 @@ while Gamestate != "End":
     if Gamestate == "Kilika" and StepCounter == 3:
         reportGamestate()
         area.kilika.trials()
+        area.kilika.trialsEnd()
         StepCounter = 4
 
     if Gamestate == "Kilika" and StepCounter == 4:

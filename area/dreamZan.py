@@ -99,16 +99,19 @@ def listenStory():
             # Events
             if checkpoint == 5:
                 FFXC.set_movement(0, -1)
-                while memory.main.userControl():
+                while not memory.main.nameAeonReady():
                     xbox.tapB()
+                print("Ready to name Tidus")
                 FFXC.set_neutral()
+                memory.main.waitFrames(1)
 
                 # Name Tidus
                 xbox.nameAeon("Tidus")
+                print("Tidus name complete.")
 
                 checkpoint += 1
-            elif checkpoint == 7 and gameVars.csr():
-                checkpoint = 9
+            #elif checkpoint == 7 and gameVars.csr():
+            #    checkpoint = 9
             elif checkpoint == 8:
                 while memory.main.userControl():
                     FFXC.set_movement(1, 0)

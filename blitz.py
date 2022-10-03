@@ -299,28 +299,54 @@ def getCharRadius(playerIndex: int = 10):
     return result
 
 
-def radiusMovement(radius: int = 570, direction='forward'):
+def radiusMovement(radius: int = 580, direction='forward'):
     playerCoords = playerArray[controllingPlayer()].getCoords()
     targetCoords = [-400, -400]
     playerCoords[0] *= radius / getCharRadius(controllingPlayer())
     playerCoords[1] *= radius / getCharRadius(controllingPlayer())
 
-    if 10 > playerCoords[0] > -10:
-        # Too close to the center line
-        playerCoords[0] = -30
+    if direction == 'forward' and -30 < playerCoords[0] < 30:
+        FFXC.set_movement(-1,-1)
     else:
         if direction == 'forward':
-            targetCoords = [playerCoords[0] - 10, playerCoords[1] + 10]
+            targetCoords = [playerCoords[0], playerCoords[1] + 10]
         else:
-            targetCoords = [playerCoords[0] - 10, playerCoords[1] - 10]
+            targetCoords = [playerCoords[0], playerCoords[1] - 10]
         try:
             targetCoords[0] = math.sqrt((radius**2) - (targetCoords[1]**2))
             if playerCoords[0] < -1:
                 targetCoords[0] *= -1
         except:
-            print("Math error, out of bounds.")
-            targetCoords[0] = playerCoords[0]
-        #print("Radius movement: ", targetCoords)
+            playerCoords = playerArray[controllingPlayer()].getCoords()
+            targetCoords = [-400, -400]
+            playerCoords[0] *= radius / getCharRadius(controllingPlayer())
+            playerCoords[1] *= radius / getCharRadius(controllingPlayer())
+            if direction == 'forward':
+                targetCoords = [playerCoords[0], playerCoords[1]]
+            else:
+                targetCoords = [playerCoords[0], playerCoords[1]]
+            
+            if playerCoords[1] < -1:
+                if direction == 'forward':
+                    targetCoords[0] -= 10
+                else:
+                    targetCoords[0] += 10
+            else:
+                if direction == 'forward':
+                    targetCoords[0] += 10
+                else:
+                    targetCoords[0] -= 10
+            try:
+                targetCoords[1] = math.sqrt((radius**2) - (targetCoords[0]**2))
+                if playerCoords[1] < -1:
+                    targetCoords[1] *= -1
+            except:
+                if direction == 'forward':
+                    targetCoords[0] = playerCoords[0] - 10
+                    targetCoords[1] = playerCoords[1] + 10
+                else:
+                    targetCoords[0] = playerCoords[0] + 10
+                    targetCoords[1] = playerCoords[1] - 10
     blitzPathing.setMovement(targetCoords)
     return targetCoords
 
@@ -350,7 +376,7 @@ def findSafePlace():
     if cPlayerNum in [1, 4]:
         targetCoords = [520, -20]
     elif cPlayerNum in [2, 3]:
-        if playerArray[7].getCoords()[1] < -90:
+        if playerArray[7].getCoords()[1] < 10 or playerArray[6].getCoords()[1] < 10:
             safeSpot = 3
         else:
             safeSpot = 2
@@ -360,14 +386,14 @@ def findSafePlace():
     if safeSpot == 1:  # Near the left wall
         targetCoords = [-521, -266]
     elif safeSpot == 2: #About half way
-        targetCoords = [-380, -447]
+        targetCoords = [-340, -497]
     elif safeSpot == 3: #All the way back
         targetCoords = [-2, -595]
 
     # I think this is still the best option.
     #targetCoords = [-2, -595]
 
-    if abs(cPlayer[0] - targetCoords[0]) + abs(cPlayer[1] - targetCoords[1]) > 80:
+    if abs(cPlayer[0] - targetCoords[0]) + abs(cPlayer[1] - targetCoords[1]) > 120:
         if cPlayer[1] > targetCoords[1]:
             radiusMovement(radius=570, direction='back')
         else:
@@ -377,41 +403,6 @@ def findSafePlace():
             return True
         else:
             return False
-
-
-def jassuCircle():
-    radius = 540
-    jassuCoords = playerArray[3].getCoords()
-    if jassuCoords[0] > 150:  # Upper section
-        version = "A"
-        if distance(3, 6) < 500 and not playerArray[6].aggro():
-            tarPlayer = playerArray[8].getCoords()
-            if tarPlayer[1] - jassuCoords[1] > 300:
-                nextX = tarPlayer[0]
-                nextY = tarPlayer[1] - 280
-            else:
-                nextX = tarPlayer[0] - 200
-                nextY = tarPlayer[1] - 100
-        else:
-            nextY = jassuCoords[1] + 30
-            nextX = abs(math.sqrt((radius * radius) - (jassuCoords[1] * jassuCoords[1])))
-            if nextX < jassuCoords[0]:
-                nextX = jassuCoords[0] + 50
-    elif jassuCoords[0] < -150:  # Lower section
-        version = "C"
-        nextY = jassuCoords[1] - 20
-        nextX = math.sqrt((radius * radius) - (jassuCoords[1] * jassuCoords[1]))
-        nextX *= -1
-    elif jassuCoords[1] < -100:  # Near own goal
-        version = "D"
-        nextX = jassuCoords[0] + 100
-        nextY = jassuCoords[1]
-    else:  # Near opponent goal
-        version = "B"
-
-    targetCoords = [int(nextX), int(nextY)]
-    blitzPathing.setMovement(targetCoords)
-    return [version, nextX, nextY]
 
 
 def jassuTrain():
@@ -426,94 +417,6 @@ def jassuTrain():
         radiusMovement(direction='back')
     else:
         radiusMovement(direction='forward')
-
-def jassuTrain_stillInDev():
-    jassuCoords = playerArray[3].getCoords()
-    version = "None"
-    useCircle = False
-    radius = 540
-    bufferLeft = -90
-    bufferRight = -200
-    nextX = jassuCoords[0] - 20
-    if not playerArray[8].aggro() and not playerArray[6].aggro():
-        nextX = -2
-        nextY = -595
-    elif jassuCoords[1] < bufferRight:
-        # Defensive zone
-        if not playerArray[6].aggro():
-            nextX = playerArray[6].getCoords()[0]
-            nextY = playerArray[6].getCoords()[1] - 130
-            version = "6"
-        elif playerArray[9].getCoords()[1] > jassuCoords[1] + 150 and distance(3, 9) < 400:
-            tarPlayer = playerArray[9].getCoords()
-            nextY = tarPlayer[1] - 200
-            nextX = tarPlayer[0] - 100
-            version = "9"
-        elif math.sqrt((jassuCoords[0] * jassuCoords[0]) + (jassuCoords[1] * jassuCoords[1])) < 480:
-            # Too close to center. Get to own goal near full radius.
-            if jassuCoords[1] > -300:
-                nextX = -10
-                nextY = -310
-            else:
-                nextX = 100
-                nextY = -500
-            version = "E"
-        else:
-            version = jassuCircle()
-            useCircle = True
-    elif not playerArray[6].aggro():
-        tarPlayer = playerArray[6].getCoords()
-        nextY = tarPlayer[1] - 300
-        nextX = tarPlayer[0] + 100
-        version = "6"
-    elif playerArray[8].getCoords()[1] > jassuCoords[1] + 150 and distance(3, 8) < 400:
-        tarPlayer = playerArray[8].getCoords()
-        nextY = tarPlayer[1] - 300
-        nextX = tarPlayer[0] - 100
-        version = "8"
-    elif playerArray[8].getCoords()[0] < jassuCoords[0] - 150 and distance(3, 8) < 400:
-        tarPlayer = playerArray[8].getCoords()
-        nextY = tarPlayer[1] - 300
-        nextX = tarPlayer[0] - 100
-        version = "8"
-    elif playerArray[7].getCoords()[0] < jassuCoords[0] - 100 and distance(3, 7) < 600:
-        tarPlayer = playerArray[7].getCoords()
-        nextY = tarPlayer[1] - 300
-        nextX = tarPlayer[0] + 150
-        version = "7"
-    elif playerArray[10].getCoords()[1] > jassuCoords[1] + 150 and distance(3, 10) < 400:
-        tarPlayer = playerArray[10].getCoords()
-        nextY = tarPlayer[1] - 300
-        nextX = tarPlayer[0] - 100
-        version = "10"
-    elif jassuCoords[0] < -450 and jassuCoords[1] > bufferRight - 5:
-        nextY = bufferRight - 10
-        nextX = math.sqrt((radius * radius) - (nextY * nextY)) * -1
-        version = "L"
-    elif jassuCoords[1] >= bufferRight and jassuCoords[1] < bufferLeft:
-        # Buffer zone
-        nextX = jassuCoords[0] - 20
-        if jassuCoords[0] > 100:
-            nextY = jassuCoords[1] + 40
-        elif jassuCoords[0] < -300:
-            nextX = jassuCoords[0] - 40
-            nextY = jassuCoords[1] - 40
-        else:
-            nextY = jassuCoords[1]
-        version = "F"
-    else:
-        nextX = jassuCoords[0] - 500
-        nextY = jassuCoords[1]
-        version = "T"
-
-    if not useCircle:
-        targetCoords = [int(nextX), int(nextY)]
-        if reportState:
-            print(version[0], " - ", targetCoords)
-        blitzPathing.setMovement(targetCoords)
-    else:
-        if reportState:
-            print(version)
 
 
 def passBall(target=0, breakThrough=5):
@@ -842,8 +745,8 @@ def jassuMove():
             if playerArray[9].getCoords()[1] > 100:
                 xbox.tapX()
     elif currentStage == 30:
-        jassuTrain()
-        #findSafePlace()
+        #jassuTrain()
+        findSafePlace()
         moveForward = True
     elif currentStage <= 1 and playerArray[3].currentHP() < 10:
         if playerArray[2].currentHP() >= 40 and distance(2, 8) > 360:
@@ -942,7 +845,7 @@ def jassuAct():
     elif currentStage == 3:
         relDist = int((tidusC[1] - p10C[1]) + (tidusC[0] - p10C[0]))
         relDist2 = int((tidusC[1] - graavC[1]) + (tidusC[0] - graavC[0]))
-        if relDist > 220:
+        if relDist > 180:
             passBall(target=0)
         elif graavDistance < 150:
             # Graav too close

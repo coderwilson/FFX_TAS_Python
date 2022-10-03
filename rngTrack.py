@@ -1004,7 +1004,7 @@ def neaTrack():
         #print("/// Not yet aligned. Looking for more results.")
     
     
-    while totalAdvancePreX == 999 or totalAdvancePostX == 999 and preAdvance < 100:
+    while totalAdvancePreX == 999 or totalAdvancePostX == 999 and preAdvance12 < 100:
         preAdvance12 += 4
         nextItem, preAdvance13 = itemToBeDropped(enemy='ghost', preAdvance12=preAdvance12, preAdvance13=preAdvance13)
         #print("/// post-13: ", postAdvance13)
@@ -1067,7 +1067,7 @@ def futureAttackHitMiss(character: int = 0, enemy: str = "anima", attackIndex: i
     target_reflexes = 0
 
     accuracyIndex = ((accuracy * 2 * 0x66666667) // 0xffffffff) // 2
-    hit_chance_index += accuracyIndex - target_evasion + 10
+    hit_chance_index = accuracyIndex - target_evasion + 10
     if hit_chance_index < 0:
         hit_chance_index = 0
     elif hit_chance_index > 8:

@@ -33,8 +33,37 @@ def arrival():
     FFXC.set_neutral()  # Enter the room where we meet Seymour
 
     print("TestVar -", gameVars.csr)
-    if not gameVars.csr():
+    # Adjusted branch CSR logic, start
+    memory.main.clickToControl3()
+    if gameVars.csr():
+        while not targetPathing.setMovement([-13, -67]):
+            pass
+        print("Mark3")
+        while memory.main.userControl():  # Lulu conversation
+            targetPathing.setMovement([-11, -55])
+            xbox.tapB()
+        FFXC.set_neutral()
         memory.main.clickToControl3()
+
+        while not targetPathing.setMovement([-39, -77]):
+            pass
+        print("Mark2")
+        while memory.main.userControl():  # Start conversation with Wakka
+            targetPathing.setMovement([-49, -61])
+            xbox.tapB()
+        FFXC.set_neutral()
+        memory.main.clickToControl3()
+        
+        while not targetPathing.setMovement([4, -114]):
+            pass
+        print("Mark1")
+        while memory.main.userControl():  # Talk to Auron
+            targetPathing.setMovement([18, -119])
+            xbox.tapB()
+        FFXC.set_neutral()
+        memory.main.clickToControl3()
+    
+    else:
         while not targetPathing.setMovement([4, -114]):
             pass
         print("Mark1")
@@ -61,29 +90,34 @@ def arrival():
             xbox.tapB()
         FFXC.set_neutral()
         memory.main.clickToControl3()
+    
+    # Line up for Rikku/Yuna
+    while not targetPathing.setMovement([15, -52]):
+        pass
+    
+    while not targetPathing.setMovement([22, -25]):
+        pass
+    print("Mark5")
+    while memory.main.userControl():  # Start conversation with Rikku
+        targetPathing.setMovement([8, -26])
+        xbox.tapB()
+    FFXC.set_neutral()
+    memory.main.clickToControl3()
 
-        while not targetPathing.setMovement([15, -52]):
-            pass
-        while not targetPathing.setMovement([27, -37]):
-            pass
-        print("Mark4")
-        while memory.main.userControl():  # Yunas turn
-            targetPathing.setMovement([39, -33])
-            xbox.tapB()
-        FFXC.set_neutral()
-        memory.main.clickToControl3()
-
-        while not targetPathing.setMovement([22, -25]):
-            pass
-        print("Mark5")
-        while memory.main.userControl():  # Start conversation with Rikku
-            targetPathing.setMovement([8, -26])
-            xbox.tapB()
-        FFXC.set_neutral()
-
+    while not targetPathing.setMovement([27, -37]):
+        pass
+    print("Mark4")
+    while memory.main.userControl():  # Yunas turn
+        targetPathing.setMovement([39, -33])
+        xbox.tapB()
+    FFXC.set_neutral()
+    memory.main.clickToControl3()
+    
+    if not gameVars.csr():
         while not memory.main.cutsceneSkipPossible():
             xbox.tapB()
         xbox.skipStoredScene(3)
+    # Adjusted CSR branch logic, end
     print("Ready for next movement.")
 
 
