@@ -1248,14 +1248,17 @@ def afterBlitz3(earlyHaste):
     # Wakka dark attack, or Auron power break
     screen.awaitTurn()
     tidusTurn = 0
-    darkAttack = False
     while not memory.main.turnReady():
         pass
     while memory.main.battleActive():
+        while not memory.main.turnReady():
+            pass
         hpValues = memory.main.getBattleHP()
         if screen.turnAuron():
+            print("Auron Turn")
             attack('none')
         elif screen.turnTidus():
+            print("Tidus Turn: ", tidusTurn)
             if tidusTurn == 0:
                 tidusHaste('d', character=2)
                 tidusTurn += 1
@@ -1267,13 +1270,11 @@ def afterBlitz3(earlyHaste):
             else:
                 defend()
         elif screen.turnWakka():
+            print("Wakka Turn")
             if hpValues[0] < 202:
                 usePotionCharacter(2, 'u')
             elif hpValues[1] < 312 and tidusTurn < 2:
                 usePotionCharacter(0, 'u')
-            elif not darkAttack:
-                useSkill(0)
-                darkAttack = True
             else:
                 defend()
     FFXC.set_value('BtnB', 1)
@@ -1414,7 +1415,7 @@ def chocoEater():
         if memory.main.rngFromIndex(44) == rng44Last:
             # Eater did not take an attack, but did take first turn. Should register as true.
             chocoNext = True
-
+    swappedYuna = False
     while memory.main.battleActive():
         if memory.main.turnReady():
             if chocoNext:
@@ -1445,6 +1446,7 @@ def chocoEater():
                     buddySwapYuna()
                     attackByNum(1)
                     chocoTarget = 255
+                    swappedYuna = True
             if memory.main.getNextTurn() == 20:
                 chocoNext = True
                 charHpLast = memory.main.getBattleHP()
@@ -1453,12 +1455,14 @@ def chocoEater():
                 print("#####  Target for You're Next attack: ", chocoTarget)
 
             # Only if two people are down, very rare but for safety.
-            if screen.faintCheck() >= 1:
+            if screen.faintCheck() >= 2:
                 print("Attempting revive")
                 revive()
             #elif 0 not in memory.main.getActiveBattleFormation():
                 # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
             #    buddySwapTidus()
+            elif swappedYuna and 0 not in memory.main.getActiveBattleFormation() and memory.main.deadstate(1) and not chocoHaste:
+                buddySwapTidus()
             elif 1 in memory.main.getActiveBattleFormation() and not chocoHaste and memory.main.getBattleCharTurn() == 0:
                 tidusHaste(direction='l', character=20)  # After Yuna in, haste choco eater.
                 chocoHaste = True
