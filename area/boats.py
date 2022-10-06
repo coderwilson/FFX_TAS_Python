@@ -77,6 +77,7 @@ def ssWinno():
         targetPathing.setMovement([28, -36])  # Through first door
     memory.main.waitFrames(2)
     memory.main.clickToControl()
+    memory.main.waitFrames(2)
     FFXC.set_movement(1, -1)
     memory.main.waitFrames(2)
 

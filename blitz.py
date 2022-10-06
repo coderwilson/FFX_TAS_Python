@@ -643,17 +643,19 @@ def lettyMove():
             xbox.tapX()
     elif currentStage == 1:
         #if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
-        if distance(3, 8) < 360:
+        if distance(3, 8) < 450:
             xbox.tapX()
         else:
             if findSafePlace() and graavDistance < 320:
                 xbox.tapX()
     elif gameVars.blitzFirstShot():
-        findSafePlace()
+        if distance(3, 8) < 450:
+            xbox.tapX()
+        else:
+            findSafePlace()
     else:
-        if distance(3, 8) < 340 or distance(3, 7) < 340:
-            if findSafePlace() and graavDistance < 280:
-                xbox.tapX()
+        if distance(3, 8) < 450 or distance(3, 7) < 450:
+            xbox.tapX()
         elif playerArray[2].currentHP() < 10:
             print("Letty out of HP. Passing to Jassu.")
             xbox.tapX()
@@ -701,10 +703,13 @@ def lettyAct():
             tar = 3
         passBall(target=tar, breakThrough=breakThroughVal)
     elif currentStage in [0, 1]:
-        print("Letty pass to Jassu")
-        passBall(target=3)
+        if distance(3,8) > 450:
+            print("Letty pass to Jassu")
+            passBall(target=3)
+        else:
+            dribbleBall()
     elif gameVars.blitzFirstShot():
-        dribbleBall()
+        passBall(target=3)
     elif playerArray[2].currentHP() < 10:
         if playerGuarded(3):
             dribbleBall()

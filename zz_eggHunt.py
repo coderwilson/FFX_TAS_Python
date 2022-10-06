@@ -26,7 +26,7 @@ while attempts < 10:
         memory.main.start()
 
         import loadGame
-        loadGame.loadOffset(37)
+        loadGame.loadSaveNum(number=51)
 
         FFXC.set_value('AxisLy', 1)
         FFXC.set_value('AxisLx', 1)
