@@ -17,9 +17,9 @@ def arrival():
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
 
     if memory.main.overdriveState2()[1] >= 43:
-        memory.main.fullPartyFormat('kilikawoods1')
-    else:
         memory.main.fullPartyFormat('djose')
+    else:
+        memory.main.fullPartyFormat('kilikawoods1')
     miihenSkip = False
     battleCount = 0
     SDencounterID = 0
@@ -171,9 +171,9 @@ def arrival():
                     battle.main.MiihenRoad()
                     print("Battle complete")
                 if memory.main.overdriveState2()[1] >= 43:
-                    memory.main.fullPartyFormat('kilikawoods1')
-                else:
                     memory.main.fullPartyFormat('djose')
+                else:
+                    memory.main.fullPartyFormat('kilikawoods1')
                 memory.main.closeMenu()
 
                 # Kimahri manip
