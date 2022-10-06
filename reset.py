@@ -47,7 +47,7 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
     gameVars.setStartVars()
     rngSeed = memory.main.rngSeed()
     if landRun:
-        rngSeed += 1
+        rngSeed += 0
         if rngSeed == 256:
             rngSeed = 0
     logs.resetStatsLog()

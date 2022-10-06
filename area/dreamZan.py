@@ -209,8 +209,9 @@ def AfterAmmes():
                     and int(startPos[1]) in [-138, -139, -140, -141]:
                 print("Positioning error")
                 FFXC.set_neutral()
-                memory.main.waitFrames(1)
+                memory.main.waitFrames(20)
                 memory.main.ammesFix(actorIndex=0)
+                memory.main.waitFrames(20)
             else:
                 # Map changes and events
                 if checkpoint == 6:  # Save sphere

@@ -1920,6 +1920,7 @@ def MRRmanip(kimMaxAdvance: int = 6):
     print("HP values:", hpCheck)
     if hpCheck != [520, 475, 1030, 644, 818, 380]:
         healUp(fullMenuClose=False)
+    memory.main.fullPartyFormat('mrr1')
     nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
     print("||| Manip - Battle number:", memory.main.getEncounterID())
     print("||| Next Kimahri Crit vs Gui:", nextCritKim)
@@ -2040,39 +2041,39 @@ def battleGui():
             xbox.tapB()
 
     # Second Gui battle
-    while memory.main.battleActive():
-        turn = 1
-        if memory.main.getOverdriveBattle(8) == 20 or memory.main.getOverdriveBattle(1) == 100:
-            print("Special Fight")
-            seymourTurn = 0
-            while memory.main.battleActive():
-                if screen.turnSeymour() and seymourTurn < 2:
-                    seymourSpell(targetFace=False)
-                    seymourTurn += 1
-                elif screen.turnYuna() and seymourTurn >= 2:
-                    print("Laser Time")
-                    if memory.main.getOverdriveBattle(1) == 100:
-                        while not memory.main.otherBattleMenu():
-                            xbox.tapLeft()
-                        while not memory.main.interiorBattleMenu():
-                            xbox.tapB()
-                        while memory.main.interiorBattleMenu():
-                            xbox.tapB()
-                    else:
-                        aeonSummon(0)
-                elif screen.turnAeon():
-                    print("Firing")
-                    valeforOD()
+    seymourTurn = 0
+    turn = 1
+    if memory.main.getOverdriveBattle(8) == 20 or memory.main.getOverdriveBattle(1) == 100:
+        print("Gui2 - with extra Aeon overdrive")
+        while memory.main.battleActive():
+            if screen.turnSeymour() and seymourTurn < 2:
+                seymourSpell(targetFace=False)
+                seymourTurn += 1
+            elif screen.turnYuna() and seymourTurn >= 2:
+                print("Laser Time")
+                if memory.main.getOverdriveBattle(1) == 100:
+                    while not memory.main.otherBattleMenu():
+                        xbox.tapLeft()
+                    while not memory.main.interiorBattleMenu():
+                        xbox.tapB()
+                    while memory.main.interiorBattleMenu():
+                        xbox.tapB()
                 else:
-                    print("Defend")
+                    aeonSummon(0)
+            elif screen.turnAeon():
+                print("Firing")
+                valeforOD()
+            else:
+                print("Defend")
+                defend()
+    else:
+        print("Gui2 - standard")
+        while memory.main.battleActive():
+            if memory.main.turnReady():
+                if screen.turnSeymour():
+                    seymourSpell(targetFace=True)
+                else:
                     defend()
-        else:
-            while memory.main.battleActive():
-                if memory.main.turnReady():
-                    if screen.turnSeymour():
-                        seymourSpell(targetFace=True)
-                    else:
-                        defend()
 
     while not memory.main.userControl():
         if memory.main.cutsceneSkipPossible():
@@ -2183,27 +2184,7 @@ def extractor():
                 else:
                     attack('none')
             else:
-                if memory.main.rngSeed() == 31 and memory.main.getBattleHP()[1] < 250:
-
-                    # This logic is specific for seed 31. Wakka is known to die on this seed if we don't heal.
-                    if memory.main.getItemSlot(1) < 200:
-                        print("Using hi-potion")
-                        revive(itemNum=1)
-                    elif memory.main.getItemSlot(2) < 200:
-                        print("Using x-potion")
-                        revive(itemNum=2)
-                    elif memory.main.getItemSlot(8) < 200:
-                        print("Using elixir")
-                        revive(itemNum=8)
-                    elif memory.main.getItemSlot(3) < 200:
-                        print("Using mega-potion")
-                        revive(itemNum=3)
-                    elif memory.main.getItemSlot(0) < 200:
-                        print("Using potion")
-                        revive(itemNum=0)
-                    else:
-                        attack('none')
-                elif memory.main.getEnemyCurrentHP()[0] < 1900 and memory.main.getOverdriveBattle(4) == 100:
+                if memory.main.getEnemyCurrentHP()[0] < 1900 and memory.main.getOverdriveBattle(4) == 100:
                     wakkaOD()
                 else:
                     attack('none')
@@ -2772,7 +2753,15 @@ def seymourGuado_blitzWin():
                 elif kimahriturns == 0:
                     kimahriOD(3)
                 elif kimahriturns == 1:
-                    Steal()
+                    if not memory.main.nextStealRare(preAdvance=0):
+                        Steal()
+                    elif memory.main.nextSteal(stealCount=1, preAdvance=1):
+                        if not memory.main.nextStealRare(preAdvance=1):
+                            Steal()
+                        else:
+                            defend()
+                    else:
+                        defend()
                 elif animamiss > 0 and (not missbackup or screen.faintCheck() == 0):
                     xbox.weapSwap(0)
                 else:
@@ -2843,16 +2832,32 @@ def seymourGuado_blitzWin():
                     tidushaste = False
                 elif animamiss > 0 and (not missbackup or screen.faintCheck() == 0):
                     if kimahridead and rikkuturns == 0:
-                        Steal()
+                        if not memory.main.nextStealRare(preAdvance=0):
+                            Steal()
+                        elif memory.main.nextSteal(stealCount=1, preAdvance=1):
+                            if not memory.main.nextStealRare(preAdvance=1):
+                                Steal()
+                            else:
+                                defend()
+                        else:
+                            defend()
                     else:
                         if memory.main.getBattleCharSlot(0) >= 3:
                             buddySwapTidus()
-                        elif memory.main.getBattleCharSlot(1) >= 3:
-                            buddySwapYuna()
-                        elif memory.main.getBattleCharSlot(5) >= 3:
-                            buddySwapLulu()
+                        #elif memory.main.getBattleCharSlot(1) >= 3:
+                        #    buddySwapYuna()
+                        #elif memory.main.getBattleCharSlot(5) >= 3:
+                        #    buddySwapLulu()
+                        else:
+                            defend()
                 elif animahits < 4:
-                    Steal()
+                    if memory.main.nextSteal(stealCount=1, preAdvance=0):
+                        if not memory.main.nextStealRare(preAdvance=0):
+                            Steal()
+                        else:
+                            defend()
+                    else:
+                        defend()
                 elif memory.main.getBattleHP()[memory.main.getBattleCharSlot(0)] == 0:
                     reviveTarget(target=0)
                 else:
@@ -3299,8 +3304,8 @@ def wendigo():
                         buddySwapAuron()  # Swap for Auron
                         powerbreak = True
                         usepowerbreak = True
-                elif memory.main.getEnemyCurrentHP()[1] < stopHealing:
-                    defend()
+                #elif memory.main.getEnemyCurrentHP()[1] < stopHealing:
+                #    defend()
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     if not guadosteal and memory.main.getEnemyCurrentHP().count(0) != 2:
                         Steal()
@@ -3315,8 +3320,8 @@ def wendigo():
                     useSkill(position=0, target=21)
                     powerbreakused = True
                     usepowerbreak = False
-                elif memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
-                    defend()
+                #elif memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
+                #    defend()
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     buddySwapKimahri()
             elif turnchar == 5:
@@ -3331,9 +3336,9 @@ def wendigo():
                 if usepowerbreak and not powerbreakused and not 2 in memory.main.getActiveBattleFormation():
                     print("Swapping to Auron to Power Break")
                     buddySwapAuron()
-                if memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
-                    print("End of battle, no need to heal.")
-                    defend()
+                #if memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
+                #    print("End of battle, no need to heal.")
+                #    defend()
                 elif memory.main.getEnemyCurrentHP()[1] != 0 and memory.main.getBattleHP()[tidusSlot] != 0:
                     if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                         defend()
@@ -3355,7 +3360,7 @@ def zu():
     memory.main.clickToControl()
 
 
-def bikanelBattleLogic(status):
+def bikanelBattleLogic(status, sandyFightComplete:bool=False):
     # status should be an array length 2
     # [rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
     encounterID = memory.main.getEncounterID()
@@ -3513,7 +3518,7 @@ def bikanelBattleLogic(status):
                 else:
                     fleeAll()
         else:  # Charge Auron if needed, otherwise flee
-            if memory.main.getOverdriveBattle(2) != 100:
+            if memory.main.getOverdriveBattle(2) != 100 and not sandyFightComplete:
                 if screen.turnAuron():
                     attackByNum(2)
                 else:
@@ -4092,8 +4097,17 @@ def altanaheal():
 
 def evraeAltana():
     xbox.clickToBattle()
-    if memory.main.getEncounterID() == 266:
+    if memory.main.getEncounterID() != 266:
+        print("Not Evrae this time.")
+        fleeAll()
+    else:
         print("Evrae Altana fight start")
+        if memory.main.nextStealRare():
+            evraeAltanaSteal()
+        else:
+            print("=======================================")
+            print("Next steal will crit, do not steal.")
+            print("=======================================")
         thrownItem = False
         while memory.main.battleActive():  # AKA end of battle screen
             if memory.main.turnReady():
@@ -4106,12 +4120,28 @@ def evraeAltana():
                 else:
                     altanaheal()
 
-    else:  # Just a regular group
-        print("Not Evrae this time.")
-        fleeAll()
-
     memory.main.clickToControl()
 
+def evraeAltanaSteal():
+    print("=======================================")
+    print("Steal logic, we will get two gems")
+    print("=======================================")
+    hasteCount = False
+    stealCount = False
+    while memory.main.getItemSlot(34) == 255:
+        if memory.main.turnReady():
+            if screen.turnTidus() and not hasteCount:
+                tidusHaste(direction='l', character=6)
+                hasteCount = True
+            elif screen.turnRikku() and not stealCount:
+                _steal()
+                stealCount = True
+            else:
+                defend()
+    print("=======================================")
+    print("End of steal logic. Back to regular.")
+    print("=======================================")
+    #memory.main.waitFrames(180)
 
 def attackHighbridge():
     if memory.main.getEncounterID() == 270:

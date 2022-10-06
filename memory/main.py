@@ -4305,9 +4305,14 @@ def advanceRNGindex(index: int = 43):
     process.write(baseValue + key, rngArrayFromIndex(index=index)[1])
 
 
-def nextSteal(stealCount: int):
-    useArray = rngArrayFromIndex(index=10, arrayLen=4)
-    stealRNG = useArray[1] % 255
+def nextSteal(stealCount:int=0, preAdvance:int=0):
+    useArray = rngArrayFromIndex(index=10, arrayLen=1+preAdvance)
+    stealRNG = useArray[1+preAdvance] % 255
     stealChance = 2 ** stealCount
     print("=== ", useArray[1], " === ", stealRNG, " < ", 255 // stealChance, " = ", stealRNG < (255 // stealChance))
     return stealRNG < (255 // stealChance)
+
+def nextStealRare(preAdvance:int=0):
+    useArray = rngArrayFromIndex(index=11, arrayLen=1+preAdvance)
+    stealCritRNG = useArray[1+preAdvance] % 255
+    return stealCritRNG < 32

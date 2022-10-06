@@ -16,7 +16,10 @@ def arrival():
     memory.main.clickToControl()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
 
-    memory.main.fullPartyFormat('kilikawoods1')
+    if memory.main.overdriveState2()[1] >= 43:
+        memory.main.fullPartyFormat('kilikawoods1')
+    else:
+        memory.main.fullPartyFormat('djose')
     miihenSkip = False
     battleCount = 0
     SDencounterID = 0
@@ -167,7 +170,10 @@ def arrival():
                     battleCount += 1
                     battle.main.MiihenRoad()
                     print("Battle complete")
-                memory.main.fullPartyFormat('kilikawoods1')
+                if memory.main.overdriveState2()[1] >= 43:
+                    memory.main.fullPartyFormat('kilikawoods1')
+                else:
+                    memory.main.fullPartyFormat('djose')
                 memory.main.closeMenu()
 
                 # Kimahri manip
@@ -273,7 +279,7 @@ def midPoint():
 # Starts just after the save sphere.
 def lowRoad(selfDestruct, battleCount, SDencounterID):
     checkpoint = 0
-    memory.main.fullPartyFormat('kilikawoods1')
+    memory.main.fullPartyFormat('djose')
     while memory.main.getMap() != 79:
         if memory.main.userControl():
             # Utility stuff

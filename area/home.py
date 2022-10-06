@@ -172,7 +172,7 @@ def desert():
                         checkpoint = 58
                 else:
                     battle.main.bikanelBattleLogic(
-                        [chargeState, needSpeed, needPower, itemsNeeded])
+                        [chargeState, needSpeed, needPower, itemsNeeded], sandyFightComplete=sandy1)
 
                 # After-battle logic
                 memory.main.clickToControl()

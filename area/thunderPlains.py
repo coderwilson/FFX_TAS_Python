@@ -79,7 +79,7 @@ def southPathing():
         if memory.main.diagSkipPossible():
             xbox.menuB()
     FFXC.set_neutral()
-    menu.autoSortEquipment()
+    #menu.autoSortEquipment()
 
 
 def agencyShop():
