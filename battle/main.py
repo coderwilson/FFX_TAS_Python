@@ -1388,14 +1388,6 @@ def MiihenRoad(selfDestruct=False):
         memory.main.waitFrames(2)
         FFXC.set_value('BtnB', 0)
         memory.main.waitFrames(3)
-    hpCheck = memory.main.getHP()
-    print("------------------ HP check:", hpCheck)
-    if hpCheck[0] < 520 or hpCheck[2] < 900 or hpCheck[4] < 800:
-        memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
-        healUp()
-    else:
-        print("No need to heal up. Moving onward.")
-        memory.main.fullPartyFormat('kilikawoods1')
 
     print("selfDestruct flag:", gameVars.selfDestructGet())
 

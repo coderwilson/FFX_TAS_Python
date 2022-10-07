@@ -15,11 +15,6 @@ def arrival():
     FFXC.set_movement(0, 1)
     memory.main.clickToControl()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
-
-    if memory.main.overdriveState2()[1] >= 43:
-        memory.main.fullPartyFormat('djose')
-    else:
-        memory.main.fullPartyFormat('kilikawoods1')
     miihenSkip = False
     battleCount = 0
     SDencounterID = 0
@@ -171,9 +166,18 @@ def arrival():
                     battle.main.MiihenRoad()
                     print("Battle complete")
                 if memory.main.overdriveState2()[1] >= 43:
-                    memory.main.fullPartyFormat('djose')
+                    if gameVars.selfDestructGet(): 
+                        memory.main.fullPartyFormat('tidkimwak', fullMenuClose=False)
+                    else:
+                        memory.main.fullPartyFormat('djose', fullMenuClose=False)
                 else:
-                    memory.main.fullPartyFormat('kilikawoods1')
+                    memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
+                hpCheck = memory.main.getHP()
+                print("------------------ HP check:", hpCheck)
+                if hpCheck[0] < 520:
+                    battle.main.healUp()
+                else:
+                    print("No need to heal up. Moving onward.")
                 memory.main.closeMenu()
 
                 # Kimahri manip
@@ -227,6 +231,13 @@ def arrival2(selfDestruct, battleCount, SDencounterID):
                     print("Starting battle")
                     battle.main.MiihenRoad()
                     print("Battle complete")
+                if memory.main.overdriveState2()[1] >= 43:
+                    if gameVars.selfDestructGet(): 
+                        memory.main.fullPartyFormat('tidkimwak')
+                    else:
+                        memory.main.fullPartyFormat('djose')
+                else:
+                    memory.main.fullPartyFormat('kilikawoods1')
             elif memory.main.menuOpen():
                 xbox.tapB()
             elif memory.main.diagSkipPossible():  # Exclude during the Miihen skip.

@@ -49,7 +49,7 @@ def desert():
 
     # Now to figure out how many items we need.
     stealItems = battle.main.updateStealItemsDesert()
-    itemsNeeded = 8 - (stealItems[1] + stealItems[2] + stealItems[3])
+    itemsNeeded = 7 - sum(stealItems)
 
     menu.equipSonicSteel()
     memory.main.closeMenu()
@@ -197,7 +197,7 @@ def desert():
                 print("-----------------------------")
                 print("Items status:", stealItems)
                 print("-----------------------------")
-                itemsNeeded = 8 - sum(stealItems)
+                itemsNeeded = 7 - sum(stealItems)
 
                 # Finally, check for other factors and report to console.
                 chargeState = memory.main.overdriveState()[6] == 100
