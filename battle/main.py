@@ -2351,7 +2351,6 @@ def thunderPlains(section):
     memory.main.closeMenu()
     print("Ready to continue onward.")
 
-
 def mWoods(woodsVars):
     print("Logic depends on completion of specific goals. In Order:")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
@@ -2363,16 +2362,19 @@ def mWoods(woodsVars):
             turnchar = memory.main.getBattleCharTurn()
             if not woodsVars[1] or not woodsVars[2]:
                 if encounterID in [171, 172, 175]:
-                    if 6 not in memory.main.getActiveBattleFormation():
+                    if encounterID == 175 and memory.main.nextStealRare():
+                        print("No steal on Chimera, it will be rare which is no good.")
+                        fleeAll()
+                    elif checkPetrifyTidus() or 6 not in memory.main.getBattleFormation():
+                        print("Tidus or Rikku incapacitated, fleeing")
+                        fleeAll()
+                    elif 6 not in memory.main.getActiveBattleFormation():
                         if encounterID == 175 and memory.main.getUseItemsSlot(24) == 255:
                             buddySwapRikku()
                         elif encounterID in [171, 172] and memory.main.getUseItemsSlot(32) == 255:
                             buddySwapRikku()
                         else:
                             fleeAll()
-                    elif checkPetrifyTidus() or not checkRikkuOk():
-                        print("Tidus or Rikku incapacitated, fleeing")
-                        fleeAll()
                     elif turnchar == 6:
                         if encounterID == 175 and memory.main.getUseItemsSlot(24) == 255:
                             print("Marker 2")
@@ -2404,14 +2406,26 @@ def mWoods(woodsVars):
                     fleeAll()
             elif not woodsVars[0]:
                 if turnchar == 6:
-                    attack('none')
+                    if memory.main.nextStealRare(preAdvance=2):
+                        #Manip for crit 
+                        _steal()
+                    else:
+                        attackByNum(num=6)
                 elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
                 elif memory.main.getOverdriveBattle(6) == 100:
                     fleeAll()
                 else:
                     escapeOne()
+            elif memory.main.nextStealRare(preAdvance=2):
+                print("##Looking ahead, manip for non-crit steal")
+                if 6 not in memory.main.getActiveBattleFormation():
+                    buddySwapRikku()
+                    _steal()
+                else:
+                    fleeAll()
             else:
+                print("##Looking ahead, no need to manip")
                 fleeAll()
 
     print("Battle complete, now to deal with the aftermath.")
