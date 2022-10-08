@@ -31,8 +31,30 @@ def Beach():
         if checkpoint != lastCP:
             print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
-        if memory.main.userControl():
-            # Events
+
+        # map changes
+        if checkpoint < 2 and memory.main.getMap() == 20:
+            checkpoint = 2
+            print("Map change. Checkpoint: ", checkpoint)
+        elif checkpoint < 6 and memory.main.getMap() == 41:
+            checkpoint = 6
+            print("Map change. Checkpoint: ", checkpoint)
+        elif checkpoint < 22 and memory.main.getMap() == 69:
+            checkpoint = 22
+            print("Map change. Checkpoint: ", checkpoint)
+        elif checkpoint < 29 and memory.main.getMap() == 133:
+            if not gameVars.csr():
+                # You do remember the prayer?
+                memory.main.clickToDiagProgress(9)
+                memory.main.waitFrames(20)
+                xbox.menuDown()
+                xbox.menuB()
+            checkpoint = 29
+        elif checkpoint == 36 and memory.main.getMap() == 17:
+            checkpoint = 37
+        
+        # Events
+        elif memory.main.userControl():
             if checkpoint == 34:  # Into the temple for the first time
                 memory.main.clickToEventTemple(0)
                 checkpoint += 1
@@ -64,24 +86,6 @@ def Beach():
                     goodBattles += 1
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
-
-            # map changes
-            elif checkpoint < 2 and memory.main.getMap() == 20:
-                checkpoint = 2
-            elif checkpoint < 6 and memory.main.getMap() == 41:
-                checkpoint = 6
-            elif checkpoint < 22 and memory.main.getMap() == 69:
-                checkpoint = 22
-            elif checkpoint < 29 and memory.main.getMap() == 133:
-                if not gameVars.csr():
-                    # You do remember the prayer?
-                    memory.main.clickToDiagProgress(9)
-                    memory.main.waitFrames(20)
-                    xbox.menuDown()
-                    xbox.menuB()
-                checkpoint = 29
-            elif checkpoint == 36 and memory.main.getMap() == 17:
-                checkpoint = 37
     logs.writeStats("piranha battles:")
     logs.writeStats(str(besaidBattles))
     # logs.writeStats("Optimal piranha battles:")
