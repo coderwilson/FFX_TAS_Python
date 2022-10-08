@@ -3986,11 +3986,11 @@ def nextChanceRNG01(version='white'):
         if (testArray[(i + 1) * 2] & 0x7fffffff) % modulo == battleIndex:
             evenArray.append(i)
 
-    print("------------------------------")
-    print("Next event will appear on the odd array without manip. Area:", version)
-    print("oddArray:", oddArray)
-    print("evenArray:", evenArray)
-    print("------------------------------")
+    #print("------------------------------")
+    #print("Next event will appear on the odd array without manip. Area:", version)
+    #print("oddArray:", oddArray[0])
+    #print("evenArray:", evenArray[0])
+    #print("------------------------------")
     return ([oddArray, evenArray])
 
 
