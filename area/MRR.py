@@ -15,8 +15,6 @@ FFXC = xbox.controllerHandle()
 def arrival():
     memory.main.clickToControl()
     memory.main.closeMenu()
-    memory.main.fullPartyFormat('kilikawoods1')
-    memory.main.closeMenu()
     claskoSkip = True
 
     checkpoint = 0

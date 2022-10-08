@@ -9,6 +9,21 @@ gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
 
+def post_battle_logic(forceCharge = False):
+    if memory.main.overdriveState2()[1] < 43 or (forceCharge and memory.main.overdriveState2()[1] != 100):
+        memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
+    else:
+        if gameVars.selfDestructGet(): 
+            memory.main.fullPartyFormat('miihen', fullMenuClose=False)
+        else:
+            memory.main.fullPartyFormat('djose', fullMenuClose=False)
+    hpCheck = memory.main.getHP()
+    print("------------------ HP check:", hpCheck)
+    if hpCheck[0] < 520 or hpCheck[1] < 220:
+        battle.main.healUp()
+    else:
+        print("No need to heal up. Moving onward.")
+    memory.main.closeMenu()
 
 def arrival():
     print("Waiting for Yuna/Tidus to stop laughing.")
@@ -153,8 +168,7 @@ def arrival():
                     FFXC.set_movement(0, 1)
                     while not memory.main.userControl():
                         xbox.tapB()
-                    while not memory.main.menuOpen():
-                        xbox.tapY()
+                    post_battle_logic()
                     FFXC.set_neutral()
                 elif checkpoint == 25 and not memory.main.battleActive():  # Shelinda dialog
                     FFXC.set_neutral()
@@ -165,20 +179,7 @@ def arrival():
                     battleCount += 1
                     battle.main.MiihenRoad()
                     print("Battle complete")
-                if memory.main.overdriveState2()[1] >= 43:
-                    if gameVars.selfDestructGet(): 
-                        memory.main.fullPartyFormat('tidkimwak', fullMenuClose=False)
-                    else:
-                        memory.main.fullPartyFormat('djose', fullMenuClose=False)
-                else:
-                    memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
-                hpCheck = memory.main.getHP()
-                print("------------------ HP check:", hpCheck)
-                if hpCheck[0] < 520:
-                    battle.main.healUp()
-                else:
-                    print("No need to heal up. Moving onward.")
-                memory.main.closeMenu()
+                    post_battle_logic()
 
                 # Kimahri manip
                 nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
@@ -231,13 +232,7 @@ def arrival2(selfDestruct, battleCount, SDencounterID):
                     print("Starting battle")
                     battle.main.MiihenRoad()
                     print("Battle complete")
-                if memory.main.overdriveState2()[1] >= 43:
-                    if gameVars.selfDestructGet(): 
-                        memory.main.fullPartyFormat('tidkimwak')
-                    else:
-                        memory.main.fullPartyFormat('djose')
-                else:
-                    memory.main.fullPartyFormat('kilikawoods1')
+                    post_battle_logic()
             elif memory.main.menuOpen():
                 xbox.tapB()
             elif memory.main.diagSkipPossible():  # Exclude during the Miihen skip.
@@ -290,7 +285,7 @@ def midPoint():
 # Starts just after the save sphere.
 def lowRoad(selfDestruct, battleCount, SDencounterID):
     checkpoint = 0
-    memory.main.fullPartyFormat('djose')
+    post_battle_logic(forceCharge=True)
     while memory.main.getMap() != 79:
         if memory.main.userControl():
             # Utility stuff
@@ -329,6 +324,7 @@ def lowRoad(selfDestruct, battleCount, SDencounterID):
                 print("Starting battle")
                 battle.main.MiihenRoad()
                 print("Battle complete")
+                post_battle_logic(forceCharge=True)
             elif memory.main.menuOpen():
                 xbox.tapB()
             elif memory.main.diagSkipPossible():

@@ -767,7 +767,7 @@ def Echuilles():
                 if tidusCounter <= 2:
                     print("Cheer")
                     tidusFlee()  # performs cheer command
-                elif memory.main.getOverdriveBattle(0) == 100 and memory.main.getEnemyCurrentHP()[0] <= 730:
+                elif memory.main.getOverdriveBattle(0) == 100 and memory.main.getEnemyCurrentHP()[0] <= 750:
                     print("Overdrive")
                     tidusOD()
                 else:
@@ -1271,7 +1271,7 @@ def afterBlitz3(earlyHaste):
                 defend()
         elif screen.turnWakka():
             print("Wakka Turn")
-            if hpValues[0] < 202:
+            if hpValues[0] < 202 and (memory.main.getNextTurn() != 2 or memory.main.getEnemyCurrentHP() > 268):
                 usePotionCharacter(2, 'u')
             elif hpValues[1] < 312 and tidusTurn < 2:
                 usePotionCharacter(0, 'u')
@@ -3335,13 +3335,8 @@ def wendigo():
                 elif wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     buddySwapKimahri()
             elif turnchar == 5:
-                if not luluSwap:
-                    if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
-                        xbox.weapSwap(0)
-                        luluSwap = True
-                elif not 2 in memory.main.getActiveBattleFormation():
-                    buddySwapAuron()
-                    usepowerbreak = True
+                if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
+                    xbox.weapSwap(0)
             else:
                 if usepowerbreak and not powerbreakused and not 2 in memory.main.getActiveBattleFormation():
                     print("Swapping to Auron to Power Break")
@@ -4326,9 +4321,20 @@ def biranYenke():
 def seymourFlux():
     stage = 1
     print("Start: Seymour Flux battle")
+    bahamut_crit = memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+    print("Next Aeon Crit:", bahamut_crit)
     yunaXP = memory.main.getSLVLYuna()
     xbox.clickToBattle()
-    if gameVars.endGameVersion() == 3:
+    if bahamut_crit == 2:
+        while not memory.main.battleComplete():
+            if memory.main.turnReady():
+                if screen.turnAeon():
+                    attack('none')
+                elif screen.turnYuna():
+                    aeonSummon(4)
+                else:
+                    defend()
+    elif gameVars.endGameVersion() == 3:
         bahamutSummoned = False
         while not memory.main.battleComplete():  # AKA end of battle screen
             if memory.main.turnReady():
@@ -4396,9 +4402,28 @@ def seymourFlux():
 def sKeeper():
     xbox.clickToBattle()
     print("Start of Sanctuary Keeper fight")
-    if gameVars.endGameVersion() == 3 and gameVars.getBlitzWin():
+    bahamut_crit = memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+    print("Next Aeon Crit:", bahamut_crit)
+    yunaXP = memory.main.getSLVLYuna()
+    xbox.clickToBattle()
+    bahamut_crit = memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+    print("Next Aeon Crit:", bahamut_crit)
+    if bahamut_crit == 2 or bahamut_crit == 7:
         while not memory.main.battleComplete():
             if memory.main.turnReady():
+                bahamut_crit = memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+                print("Next Aeon Crit:", bahamut_crit)
+                if screen.turnAeon():
+                    attack('none')
+                elif screen.turnYuna():
+                    aeonSummon(4)
+                else:
+                    defend()
+    elif gameVars.endGameVersion() == 3 and gameVars.getBlitzWin():
+        while not memory.main.battleComplete():
+            if memory.main.turnReady():
+                bahamut_crit = memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+                print("Next Aeon Crit:", bahamut_crit)
                 if screen.turnYuna():
                     aeonSummon(4)
                 elif screen.turnAeon():
@@ -4409,6 +4434,8 @@ def sKeeper():
         armorBreak = False
         while not memory.main.battleComplete():
             if memory.main.turnReady():
+                bahamut_crit = memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+                print("Next Aeon Crit:", bahamut_crit)
                 if screen.turnTidus():
                     useSkill(0)
                     armorBreak = True
@@ -5559,6 +5586,8 @@ def escapeOne():
             for i in range(len(replaceArray)):
                 if replacement != 255:
                     pass
+                elif i == 3 and memory.main.rngSeed() == 31 and memory.main.getStoryProgress() < 865:
+                    pass
                 elif replaceArray[i] == 255:
                     pass
                 elif replaceArray[i] in memory.main.getActiveBattleFormation():
@@ -6258,7 +6287,7 @@ def equipInBattle(equipType='weap', abilityNum=0, character=0, special='none'):
 def checkCharacterOk(charNum):
     if charNum not in memory.main.getActiveBattleFormation():
         return True
-    return not any(func(charNum) for func in [memory.main.petrifiedstate, memory.main.confusedState, memory.main.deadstate, memory.main.berserkstate])
+    return not any(func(charNum) for func in [memory.main.petrifiedstate, memory.main.confusedState, memory.main.deadstate, memory.main.berserkstate, memory.main.sleepState])
 
 
 def checkTidusOk():
