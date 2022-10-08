@@ -49,8 +49,8 @@ if gameVars.nemesis():
 #StepCounter = 6
 #Gamestate = "Besaid"
 #StepCounter = 3
-Gamestate = "Kilika"
-StepCounter = 1
+#Gamestate = "Kilika"
+#StepCounter = 1
 #Gamestate = "Luca"
 #StepCounter = 1
 #StepCounter = 3
@@ -66,8 +66,8 @@ StepCounter = 1
 #StepCounter = 2
 #Gamestate = "Guadosalam"
 #StepCounter = 2
-Gamestate = "Macalania"
-StepCounter = 1
+#Gamestate = "Macalania"
+#StepCounter = 1
 #StepCounter = 2
 #StepCounter = 3
 #StepCounter = 4 #Seymour fight, CSR, Blitz Win
@@ -96,8 +96,8 @@ StepCounter = 1
 #StepCounter = 2 #Shedinja Highbridge
 #StepCounter = 3 #Before Sea of Sorrows
 #StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1
+Gamestate = "none"
+StepCounter = 1
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
