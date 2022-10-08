@@ -1,6 +1,8 @@
 __pycache__/
+memory.__pycache__/
+battle.__pycache__/
+area.__pycache__/
 *.py[cod]
 *.txt
 none
-oblitzRNG/*
 *.pyc
