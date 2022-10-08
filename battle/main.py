@@ -163,7 +163,7 @@ def useSkill(position: int = 0, target: int = 20):
     _navigate_to_position(position)
     while memory.main.otherBattleMenu():
         xbox.tapB()
-    if target != 20:
+    if target != 20 and memory.main.getEnemyCurrentHP()[target-20] != 0:
         direction = 'l'
         while memory.main.battleTargetId() != target:
             if direction == 'l':
@@ -4849,8 +4849,6 @@ def oblitzRngWait():
     seedNum = str(memory.main.rngSeed())
     print(comingSeeds)
     pos = 0
-    countUnknowns = 0
-    countKnowns = 0
 
     if seedNum not in rngValues:
         print("## No values for this RNG seed - ", memory.main.rngSeed())
@@ -4861,12 +4859,12 @@ def oblitzRngWait():
         if gameVars.loopBlitz():  # This will cause us to prefer results hunting
             print("### Looping on blitz, we will try a new value.")
             # Seed value, time to completion, Win/Loss, and position
-            firstResult = [0, 9999, True, 0]
-            secondResult = [0, 9999, True, 0]
+            firstResult = [comingSeeds[1], 9999, True, 0]
+            secondResult = [comingSeeds[2], 9999, True, 0]
         else:  # For full runs, take the best result.
             print("### This is a full run. Selecting best known result.")
-            firstResult = [0, 9999, False, 0]
-            secondResult = [0, 9999, False, 0]
+            firstResult = [comingSeeds[1], 9999, False, 0]
+            secondResult = [comingSeeds[2], 9999, False, 0]
         for i in range(len(comingSeeds)):
             #print("Checking seed ", comingSeeds[i])
             # Set up duration and victory values
@@ -4880,13 +4878,11 @@ def oblitzRngWait():
             elif gameVars.loopBlitz():
                 duration = 1 + pos
                 victory = True
-                countUnknowns += 1
                 print("No result (preferred), loop. ", [comingSeeds[i], duration, victory, pos])
             else:
                 duration = 540 + pos
                 #540 is about the maximum duration we desire.
                 victory = False
-                countUnknowns += 1
                 print("No result (undesirable), full.", [comingSeeds[i], duration, victory, pos])
             #Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
             if i == 0:
@@ -4920,22 +4916,10 @@ def oblitzRngWait():
                     #print("Result for ", pos, " is not as good. - D")
                     pass
             pos += 1
-    if countKnowns == 0:
-        print("Could not find a known result.")
-        best = secondResult
-        best[0] = comingSeeds[1]
-    elif countUnknowns == 0 and gameVars.loopBlitz():
-        print("all values are known. Choosing a random value to test.")
-        best = secondResult
-        best[0] = comingSeeds[random(range(14)) + 1]
-    elif firstResult[2] == 9999 and secondResult[2] != 9999:
-        best = secondResult
-    elif secondResult[2] == 9999 and firstResult[2] != 9999:
+    if firstResult[1] <= secondResult[1]:
         best = firstResult
-    elif firstResult[1] > secondResult[1]:
-        best = secondResult
     else:
-        best = firstResult
+        best = secondResult
     logs.writeStats("Chosen Blitzball result:")
     logs.writeStats(best)
 
@@ -5566,6 +5550,8 @@ def escapeOne():
             replaceArray = memory.main.getBattleFormation()
             for i in range(len(replaceArray)):
                 if replacement != 255:
+                    pass
+                elif i == 3 and memory.main.rngSeed() == 31 and memory.main.getStoryProgress() < 865:
                     pass
                 elif replaceArray[i] == 255:
                     pass
