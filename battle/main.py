@@ -4893,7 +4893,6 @@ def oblitzRngWait():
                 victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
                 print("Known result. ", [comingSeeds[i], duration, victory, pos])
                 #print(victory)
-                countKnowns += 1
             elif gameVars.loopBlitz():
                 duration = 1 + pos
                 victory = True
