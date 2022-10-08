@@ -185,25 +185,26 @@ def LoadBaaj():
 
 
 def BesaidTrials():
-    loadOffset(29)
     # Exit Tent
-    FFXC.set_value('AxisLy', -1)
-    memory.main.waitFrames(30 * 1)
-    FFXC.set_value('AxisLx', 1)
-    memory.main.waitFrames(30 * 1)
-    FFXC.set_value('AxisLy', 0)
-    memory.main.waitFrames(30 * 2)
-    FFXC.set_value('AxisLx', 0)
-    memory.main.waitFrames(30 * 4)
+    while memory.main.getMap() != 17:
+        tCoords = memory.main.getCoords()
+        targetPathing.setMovement([-1, tCoords[1] - 15])
 
     # To the temple
-    FFXC.set_value('AxisLx', 1)
-    memory.main.waitFrames(30 * 2)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 1)
-    memory.main.waitFrames(30 * 12)
-    FFXC.set_value('AxisLy', 0)
-
+    while not targetPathing.setMovement([35, 182]):
+        pass
+    while not targetPathing.setMovement([17, 22]):
+        pass
+    while not targetPathing.setMovement([14, -67]):
+        pass
+    while memory.main.getMap() != 42:
+        tCoords = memory.main.getCoords()
+        targetPathing.setMovement([-2, tCoords[1] - 15])
+    
+    #Start the trials
+    while memory.main.getMap() != 122:
+        tCoords = memory.main.getCoords()
+        targetPathing.setMovement([-2, tCoords[1] + 15])
 
 def Boat1():
     memory.main.waitFrames(30 * 3)
