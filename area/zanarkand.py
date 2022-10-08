@@ -362,6 +362,7 @@ def sanctuaryKeeper():
         battle.main.defend()
         xbox.clickToBattle()
     battle.main.aeonSummon(4)  # This is the whole fight. Kinda sad.
+    print("Next Aeon Crit:", memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15))
     while not memory.main.battleComplete():
         if memory.main.turnReady():
             print(memory.main.rngArrayFromIndex(index=43, arrayLen=4))

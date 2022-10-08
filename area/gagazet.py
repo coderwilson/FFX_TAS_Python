@@ -29,8 +29,8 @@ def checkGems():
 def calmLands():
     memory.main.awaitControl()
     # Start by getting away from the save sphere
-    memory.main.fullPartyFormat('rikku', fullMenuClose=False)
-    battle.main.healUp(fullMenuClose=True)
+    memory.main.fullPartyFormat('rikku', fullMenuClose=True)
+    #battle.main.healUp(fullMenuClose=True)
 
     rngTrack.printManipInfo()
     print("RNG10:", memory.main.rng10())
@@ -61,8 +61,8 @@ def calmLands():
             if screen.BattleScreen():
                 battle.main.calmLandsManip()
                 memory.main.clickToControl3()
-                memory.main.fullPartyFormat('rikku', fullMenuClose=False)
-                battle.main.healUp(fullMenuClose=True)
+                memory.main.fullPartyFormat('rikku', fullMenuClose=True)
+                #battle.main.healUp(fullMenuClose=True)
                 rngTrack.printManipInfo()
             elif memory.main.menuOpen():
                 xbox.tapB()

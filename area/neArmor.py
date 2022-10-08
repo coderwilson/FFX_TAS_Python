@@ -118,7 +118,7 @@ def dropHunt():
                 memory.main.clickToControl3()
                 memory.main.checkNEArmor()
                 if gameVars.neArmor() == 255:
-                    battle.main.healUp(fullMenuClose=False)
+                    #battle.main.healUp(fullMenuClose=False)
                     memory.main.fullPartyFormat('rikku')
                     nextGreen = memory.main.nextChanceRNG01(version='green')[
                         0][0]

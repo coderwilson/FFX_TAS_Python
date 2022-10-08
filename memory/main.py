@@ -1244,6 +1244,22 @@ def confusedState(character):
         print("Character %d is not confused" % character)
         return False
 
+def sleepState(character):
+    global process
+    global baseValue
+    basePointer = baseValue + 0xD334CC
+    basePointerAddress = process.read(basePointer)
+    offset = (0xf90 * character) + 0x608
+
+    key = basePointerAddress + offset
+    retVal = process.readBytes(key, 1)
+
+    if retVal == 3:
+        print("Character %d is asleep" % character)
+        return True
+    else:
+        print("Character %d is not asleep" % character)
+        return False
 
 def autoLifeState(character: int = 0):
     global process
