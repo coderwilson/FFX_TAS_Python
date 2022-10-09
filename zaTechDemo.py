@@ -11,6 +11,7 @@ import area.miihen
 import area.MRR
 import area.guadosalam
 import area.mTemple
+import Showcase.chocoEater
 import vars
 gameVars = vars.varsHandle()
 
@@ -94,7 +95,6 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
-        # No remedy in inventory, likely game over.
         loadGame.loadSaveNum(97)
         loadGame.loadMacTemple()
         SkipAttempts += 1
@@ -107,6 +107,12 @@ while attempts < 20 and cycles < 50:
         print("Success:", SkipCount)
         print("------------------------------")
         print("------------------------------")
+    elif attempts == 5:
+        print("###  Just for fun - Chocobo Eater Stomp")
+        print("###  Please engage the CSR now!")
+        loadGame.loadSaveNum(28)
+        Showcase.chocoEater.engage()
+        Showcase.chocoEater.battle()
     else:  # Breaks the loop when everything is complete.
         attempts = 100
 
