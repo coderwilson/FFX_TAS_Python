@@ -1271,7 +1271,7 @@ def afterBlitz3(earlyHaste):
                 defend()
         elif screen.turnWakka():
             print("Wakka Turn")
-            if hpValues[0] < 202 and (memory.main.getNextTurn() != 2 or memory.main.getEnemyCurrentHP() > 268):
+            if hpValues[0] < 202 and (memory.main.getNextTurn() != 2 or memory.main.getEnemyCurrentHP()[0] > 268):
                 usePotionCharacter(2, 'u')
             elif hpValues[1] < 312 and tidusTurn < 2:
                 usePotionCharacter(0, 'u')
