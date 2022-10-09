@@ -44,60 +44,60 @@ if gameVars.nemesis():
 #See the if statement tree below to determine starting position for Gamestate.
 #These are the popular ones. New Game ('none') is the last one.
 #Gamestate = "Baaj"
-#StepCounter = 1
-#StepCounter = 4
-#StepCounter = 6
+#StepCounter = 1 # x40 Baaj temple, before Geos boss
+#StepCounter = 4 # x100 Al Bhed boat before Tros
 #Gamestate = "Besaid"
-#StepCounter = 3
+#StepCounter = 1 # x111 Before first viewing Besaid beach
+#StepCounter = 2 # x6 Crusader's hut before trials NOT WORKING
+#StepCounter = 3 # x39 Crusader's hut after trials
+#Gamestate = "Boat1"
+#StepCounter = 1 # 31 NOT WORKING
 #Gamestate = "Kilika"
-#StepCounter = 1
+#StepCounter = 1 # x22
 #Gamestate = "Luca"
-#StepCounter = 1
-#StepCounter = 3
-#StepCounter = 5
+#StepCounter = 1 # x112 Boat lands, first movement
+#StepCounter = 3 # Blitzball only, do not use
+#StepCounter = 5 # x5 between Blitz and swimmers/Garuda REMAKE THIS SAVE
 #Gamestate = "Miihen"
-#StepCounter = 1
-#StepCounter = 2
+#StepCounter = 1 # x16 with laughing scene, 26 after laughing scene
+#StepCounter = 2 # x28 (Agency before Chocobo Eater)
 #Gamestate = "MRR"
-#StepCounter = 1
+#StepCounter = 1 # x38, includes a low-gil fix
 #Gamestate = "Djose"
-#StepCounter = 1
+#StepCounter = 1 # x27
 #Gamestate = "Moonflow"
-#StepCounter = 2
+#StepCounter = 2 # x2 After Extractor
 #Gamestate = "Guadosalam"
-#StepCounter = 2
+#StepCounter = 2 # x3 before Guadosalam Skip
 #Gamestate = "Macalania"
-#StepCounter = 1
-#StepCounter = 2
-#StepCounter = 3
-#StepCounter = 4 #Seymour fight, CSR, Blitz Win
-#StepCounter = 6 #Before escape sequence
+#StepCounter = 1 # x9
+#StepCounter = 2 # x7
+#StepCounter = 4 # x10 Seymour
+#StepCounter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
 #Gamestate = "Home"
-#StepCounter = 1
-#StepCounter = 2
+#StepCounter = 1 # x60
+#StepCounter = 2 # x11
 #Gamestate = "rescueYuna"
-#StepCounter = 1 #Blitz Win, short two power and speed spheres for testing.
-#StepCounter = 2
-#StepCounter = 4
-#StepCounter = 5 #Can pick regular run vs nemesis below.
+#StepCounter = 1 # x56 First save chance on airship, before any movement.
+#StepCounter = 2 # x15
+#StepCounter = 4 # x30 Altana
+#StepCounter = 5 # x42 regular, 67 nemesis
 #Gamestate = "Gagazet"
-#StepCounter = 1 #Blitz Win, no end game version selected
-#StepCounter = 2 #NE armor testing
-#StepCounter = 3 #After B&Y, supports all four versions, choose down below. Blitz Win/Loss also.
-#StepCounter = 6 #After Flux/Dream. Can select version 3 or 4 below.
-#StepCounter = 10 #Nemesis variant, blitz win logic (not working)
-#StepCounter = 11 #Remiem racing
+#StepCounter = 1 # x43
+#StepCounter = 3 # x138 After B&Y
+#StepCounter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
+#StepCounter = 10 # Nemesis variant, blitz win logic (not working)
+#StepCounter = 11 # Remiem racing
 #Gamestate = "Zanarkand"
-#StepCounter = 1 #Campfire, version 1
-#StepCounter = 3 #Blitz win, end game version 1 or 2
-#StepCounter = 4 #Before Yunalesca
-#StepCounter = 5 #After Yunalesca
+#StepCounter = 1 # x99 Campfire
+#StepCounter = 4 # x44 Before Yunalesca
+#StepCounter = 5 # x48 After Yunalesca
 #Gamestate = "Sin"
-#StepCounter = 2 #Shedinja Highbridge
-#StepCounter = 3 #Before Sea of Sorrows
-#StepCounter = 4 #Before point of no return, with zombiestrike weapons (not Kimahri)
+#StepCounter = 2 # x70 Shedinja Highbridge
+#StepCounter = 3 # x50 Start of Sea of Sorrows
+#StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
-StepCounter = 1
+StepCounter = 1 # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
@@ -211,13 +211,14 @@ if Gamestate != "none":
         loadGame.loadSaveNum(40)
     if Gamestate == "Baaj" and StepCounter == 4:
         loadGame.loadSaveNum(100)
-        # loadGame.LoadBaaj()
     if Gamestate == "Besaid" and StepCounter == 1:  # Save pop-up after falling off of Rikkus boat
         loadGame.loadSaveNum(111)
+    if Gamestate == "Besaid" and StepCounter == 2:  # Save pop-up after falling off of Rikkus boat
+        loadGame.loadSaveNum(6)
+        loadGame.BesaidTrials()
     if Gamestate == "Besaid" and StepCounter == 3:  # Crusader's lodge after "Enough, Wakka!"
         loadGame.loadSaveNum(39)
         print("Load complete")
-        loadGame.loadMemCursor()
         while memory.main.userControl():
             if memory.main.getCoords()[0] > 0.5:
                 FFXC.set_movement(1, 1)
@@ -230,7 +231,6 @@ if Gamestate != "none":
         loadGame.Boat1()
     if Gamestate == "Kilika" and StepCounter == 1:  # Just after entering the woods
         loadGame.loadSaveNum(22)
-        FFXC.set_neutral()
     if Gamestate == "Luca" and StepCounter == 1:  # Approaching Luca via boat
         loadGame.loadSaveNum(112)
     if Gamestate == "Luca" and StepCounter == 5:
@@ -238,7 +238,7 @@ if Gamestate != "none":
     if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
         loadGame.loadSaveNum(16)  # With laughing scene
         loadGame.LoadMiihenStart_Laugh()
-    if Gamestate == "Miihen" and StepCounter == 2:  # Agency, for Chocobo Eater testing only
+    if Gamestate == "Miihen" and StepCounter == 2:  # Agency
         loadGame.loadSaveNum(28)
         returnArray = [False, 0, 0, False]
     if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
@@ -263,7 +263,7 @@ if Gamestate != "none":
         loadGame.loadMacTemple()
     # Outside temple, before escaping.
     if Gamestate == "Macalania" and StepCounter == 6:
-        loadGame.loadSaveNum(71)
+        loadGame.loadSaveNum(4)
     if Gamestate == "Home" and StepCounter == 1:
         loadGame.loadSaveNum(60)
     if Gamestate == "Home" and StepCounter == 2:
@@ -275,8 +275,8 @@ if Gamestate != "none":
         loadGame.loadSaveNum(15)
     if Gamestate == "rescueYuna" and StepCounter == 4:  # Altana
         loadGame.loadSaveNum(30)
-        memory.main.setEncounterRate(setVal=0)
-        memory.main.setGameSpeed(setVal=1)
+        #memory.main.setEncounterRate(setVal=0)
+        #memory.main.setGameSpeed(setVal=1)
     if Gamestate == "rescueYuna" and StepCounter == 5:  # Highbridge before Seymour Natus
         loadGame.loadSaveNum(42)  # Regular
         # loadGame.loadSaveNum(67) #Nemesis
@@ -309,18 +309,20 @@ if Gamestate != "none":
         import menu
         menu.prepCalmLands()
     if Gamestate == "Zanarkand" and StepCounter == 1:  # Intro scene revisited
-        loadGame.loadSaveNum(99)  # Coderwilson save
+        loadGame.loadSaveNum(99)
         gameVars.endGameVersionSet(1)
         gameVars.fluxOverkillSuccess()
+        gameVars.endGameVersionSet(4)
     if Gamestate == "Zanarkand" and StepCounter == 2:  # Just before the trials.
         loadGame.loadOffset(35)
         loadGame.zanTrials()
+        gameVars.endGameVersionSet(4)
     if Gamestate == "Zanarkand" and StepCounter == 3:  # After trials, before boss
         loadGame.loadSaveNum(45)
         gameVars.endGameVersionSet(4)
-        # loadGame.zanTrials()
     if Gamestate == "Zanarkand" and StepCounter == 4:  # After Sanctuary Keeper
         loadGame.loadSaveNum(44)
+        gameVars.endGameVersionSet(4)
     if Gamestate == "Zanarkand" and StepCounter == 5:  # After Yunalesca
         loadGame.loadSaveNum(48)
         specialZanLoad = True

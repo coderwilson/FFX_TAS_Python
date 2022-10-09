@@ -71,27 +71,23 @@ def toHiddenCave():
     logs.writeStats("NEA extra manip battles:")
     logs.writeStats(prepBattles)
 
+def nextGreen():
+    nextGreen = memory.main.nextChanceRNG01(version='green')[0][0]
+    nextWhite = memory.main.nextChanceRNG01()[0][0]
+    print("## Next Ghost coming up:")
+    print("## Green: ", nextGreen)
+    print("## White: ", nextWhite)
+    if nextGreen < nextWhite and memory.main.nextChanceRNG10() == 0:
+        if nextGreen >= 2:
+            goGreen = True
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
     memory.main.fullPartyFormat('rikku')
 
-    # Prep work:
-    goGreen = False
-    nextGreen = memory.main.nextChanceRNG01(version='green')[0][0]
-    nextWhite = memory.main.nextChanceRNG01()[0][0]
-    if nextGreen < nextWhite and memory.main.nextChanceRNG10() == 0:
-        if nextGreen >= 2:
-            goGreen = True
+    goGreen = nextGreen()
 
     rngTrack.printManipInfo()
-    print("#####################")
-    print("#####################")
-    print("#####################")
-    if goGreen:
-        memory.main.nextChanceRNG01(version='green')
-    else:
-        memory.main.nextChanceRNG01()
     checkpoint = 0
     preGhostBattles = 0
     while gameVars.neArmor() == 255:
@@ -120,16 +116,9 @@ def dropHunt():
                 if gameVars.neArmor() == 255:
                     #battle.main.healUp(fullMenuClose=False)
                     memory.main.fullPartyFormat('rikku')
-                    nextGreen = memory.main.nextChanceRNG01(version='green')[
-                        0][0]
-                    nextWhite = memory.main.nextChanceRNG01()[0][0]
-                    if not goGreen and nextGreen < nextWhite and memory.main.nextChanceRNG10() == 0:
-                        if nextGreen >= 2:
-                            goGreen = True
-                    if goGreen:
-                        memory.main.nextChanceRNG01(version='green')
-                    else:
-                        memory.main.nextChanceRNG01()
+                    
+                    if nextGreen() and not goGreen:
+                        goGreen = True
                     preGhostBattles += 1
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()

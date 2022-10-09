@@ -3320,8 +3320,8 @@ def wendigo():
                     if not guadosteal and memory.main.getEnemyCurrentHP().count(0) != 2:
                         Steal()
                         guadosteal = True
-                    elif memory.main.getEnemyCurrentHP().count(0) == 2 and not luluSwap:
-                        buddySwapLulu()
+                    #elif memory.main.getEnemyCurrentHP().count(0) == 2 and not 5 in memory.main.getActiveBattleFormation():
+                    #    buddySwapLulu()
                     else:
                         defend()
             elif turnchar == 2:
