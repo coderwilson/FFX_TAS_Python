@@ -515,6 +515,12 @@ def ammesFix(actorIndex: int = 0):
     process.write(baseAddr + (0x880 * actorIndex) + 0x0c, 0x443B4000)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC28E0000)
 
+def chocoEaterFun(actorIndex: int = 0):
+    global process
+    global baseValue
+    basePtr = baseValue + 0x1fc44e4
+    baseAddr = process.read(basePtr)
+    process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xc4bb8000)
 
 def extractorHeight():
     global process
@@ -3502,7 +3508,7 @@ def getSaveSphereDetails():
         # Mac Temple entrance
         x = -22
         y = -127
-        diag = 68
+        diag = 66
     if mapVal == 153:
         # Mac Temple exit
         x = 820
