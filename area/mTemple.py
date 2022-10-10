@@ -10,7 +10,7 @@ gameVars = vars.varsHandle()
 FFXC = xbox.controllerHandle()
 
 
-def approach():
+def approach(doGrid=True):
     print("------------------------------Affection array:")
     print(memory.main.affectionArray())
     print("------------------------------")
@@ -33,13 +33,14 @@ def approach():
             if memory.main.diagSkipPossible():
                 xbox.tapB()
     FFXC.set_neutral()
-
-
-def arrival(doGrid=True):
-    print("Starting Macalania Temple section")
     memory.main.awaitControl()
     if doGrid:
         menu.macTemple()
+    memory.main.touchSaveSphere()
+
+
+def arrival():
+    print("Starting Macalania Temple section")
 
     # Movement:
     jyscalSkipStatus = False
@@ -49,9 +50,7 @@ def arrival(doGrid=True):
         if memory.main.userControl():
             # Main events
             if checkpoint == 1:
-                FFXC.set_neutral()
-                memory.main.waitFrames(30 * 0.2)
-                memory.main.touchSaveSphere()
+                #FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 2 and gameVars.csr():
                 checkpoint = 11
