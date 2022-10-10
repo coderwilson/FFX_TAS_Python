@@ -3508,7 +3508,7 @@ def getSaveSphereDetails():
         # Mac Temple entrance
         x = -22
         y = -127
-        diag = 66
+        diag = 68
     if mapVal == 153:
         # Mac Temple exit
         x = 820
