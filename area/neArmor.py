@@ -160,6 +160,7 @@ def dropHunt():
                 if gameVars.neArmor() == 255:
                     battle.main.healUp(fullMenuClose=False)
                     memory.main.fullPartyFormat('rikku')
+                    memory.main.closeMenu()
                     
                     if nextGreen() and not goGreen:
                         goGreen = True

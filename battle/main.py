@@ -1449,6 +1449,13 @@ def chocoEater():
             # Only if two people are down, very rare but for safety.
             if screen.faintCheck() >= 2:
                 print("Attempting revive")
+                if screen.turnKimahri():
+                    if not 0 in memory.main.getActiveBattleFormation():
+                        buddySwapTidus()
+                    elif not 4 in memory.main.getActiveBattleFormation():
+                        buddySwapWakka()
+                    else:
+                        buddySwapAuron()
                 revive()
             #elif 0 not in memory.main.getActiveBattleFormation():
                 # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
@@ -2512,7 +2519,11 @@ def spherimorph():
                     revive()
                     kimTurn = True
                 elif not kimTurn:
-                    defend()
+                    if memory.main.nextStealRare(preAdvance=12):
+                        #Spherimorph, Crawler, and two Guado
+                        _steal()
+                    else:
+                        defend()
                     kimTurn = True
                 elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
