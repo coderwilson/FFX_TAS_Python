@@ -177,9 +177,9 @@ def jassuPassTiming() -> int:
     shotDistance = distance(0, 11)
     shotMod = int(shotDistance / 160)
     if 540 <= memory.main.getStoryProgress() < 570:
-        baseTiming = int(160 - shotMod)
+        baseTiming = int(155 - shotMod)
     else:
-        baseTiming = int(270 - shotMod)
+        baseTiming = int(265 - shotMod)
 
     for x in range(5):
         if distance(0, x + 6) < 180:
@@ -641,26 +641,13 @@ def lettyMove():
             xbox.tapX()
         elif not playerGuarded(2):
             xbox.tapX()
-    elif currentStage == 1:
-        #if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
-        if distance(3, 8) < 450:
-            xbox.tapX()
-        else:
-            if findSafePlace() and graavDistance < 320:
-                xbox.tapX()
-    elif gameVars.blitzFirstShot():
-        if distance(3, 8) < 450:
-            xbox.tapX()
-        else:
-            findSafePlace()
     else:
-        if distance(3, 8) < 450 or distance(3, 7) < 450:
-            xbox.tapX()
-        elif playerArray[2].currentHP() < 10:
-            print("Letty out of HP. Passing to Jassu.")
+        #if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
+        if distance(3, 8) > 400:
             xbox.tapX()
         else:
-            findSafePlace()
+            if findSafePlace() and graavDistance < 280:
+                xbox.tapX()
 
 
 def lettyAct():
@@ -702,24 +689,13 @@ def lettyAct():
         else:
             tar = 3
         passBall(target=tar, breakThrough=breakThroughVal)
-    elif currentStage in [0, 1]:
-        if distance(3,8) > 450:
+    else:
+        if not gameVars.blitzFirstShot() and distance(0,8) > 400:
+            print("Letty pass to Tidus")
+            passBall(target=0)
+        else:
             print("Letty pass to Jassu")
             passBall(target=3)
-        else:
-            dribbleBall()
-    elif gameVars.blitzFirstShot():
-        passBall(target=3)
-    elif playerArray[2].currentHP() < 10:
-        if playerGuarded(3):
-            dribbleBall()
-        else:
-            passBall(target=3)
-    else:
-        dribbleBall()
-        if reportState:
-            print("Letty Action 5")
-
 
 def jassuMove():
     targetCoords = [999, 999]

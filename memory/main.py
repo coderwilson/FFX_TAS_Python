@@ -4109,13 +4109,16 @@ def nextChanceRNG12(beforeNatus: bool = False) -> int:
         if ptr > 250:
             return 256
         elif (testArray[ptr + 1] & 0x7fffffff) % 2 == 1:  # equipment
+            #print("RNG12 ptr: ", ptr)
             baseMod = (abilityMod + ((testArray[ptr + 3] & 0x7fffffff) & 7)) - 4
             abilities = (baseMod + ((baseMod >> 31) & 7)) >> 3
 
             if ptr == 1:
                 if nextDropRNG13(abilities, beforeNatus):
+                    print("Mark1")
                     nextChance = 0
                 else:
+                    print("Mark2")
                     nextChance = 1
                 if beforeNatus:
                     nextChance += 1
@@ -4166,6 +4169,8 @@ def nextDropRNG13(aSlots: int, beforeNatus: bool = False) -> int:
             pass
         ptr += 1
 
+    #print("RNG13: ", filledSlots)
+
     if 1 in filledSlots:
         return True
     else:
@@ -4179,11 +4184,12 @@ def nextChanceRNG13() -> int:
     nextChance = 0
     testArray = rng13Array()
     while nextChance == 0:
+        #print("RNG13 outcome: ", outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
         if outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)] == 1:
             nextChance = ptr
         else:
             ptr += 1
-
+    print("Value found. ", ptr)
     return int(nextChance)
 
 
