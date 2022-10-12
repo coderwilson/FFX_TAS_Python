@@ -48,7 +48,7 @@ if gameVars.nemesis():
 #StepCounter = 4 # x100 Al Bhed boat before Tros
 #Gamestate = "Besaid"
 #StepCounter = 1 # x111 Before first viewing Besaid beach
-#StepCounter = 2 # x6 Crusader's hut before trials NOT WORKING
+#StepCounter = 2 # x6 Crusader's hut before trials
 #StepCounter = 3 # x39 Crusader's hut after trials
 #Gamestate = "Boat1"
 #StepCounter = 1 # 31 NOT WORKING

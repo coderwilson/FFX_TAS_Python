@@ -143,7 +143,11 @@ def ABboat1():
     print("In the water!")
     FFXC.set_value('BtnA', 1)
     while not memory.main.userControl():
-        xbox.tapB()
+        FFXC.set_value('BtnB', 1)
+        memory.main.waitFrames(1)
+        FFXC.set_value('BtnB', 0)
+        memory.main.waitFrames(1)
+    FFXC.set_value('BtnA', 1)
     FFXC.set_movement(-1, -1)
     memory.main.waitFrames(20)
 
