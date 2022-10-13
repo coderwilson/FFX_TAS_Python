@@ -77,9 +77,9 @@ if gameVars.nemesis():
 #Gamestate = "Home"
 #StepCounter = 1 # x60
 #StepCounter = 2 # x11
-Gamestate = "rescueYuna"
+#Gamestate = "rescueYuna"
 #StepCounter = 1 # x56 First save chance on airship, before any movement.
-StepCounter = 2 # x15
+#StepCounter = 2 # x15
 #StepCounter = 4 # x30 Altana
 #StepCounter = 5 # x42 regular, 67 nemesis
 #Gamestate = "Gagazet"
@@ -96,8 +96,8 @@ StepCounter = 2 # x15
 #StepCounter = 2 # x70 Shedinja Highbridge
 #StepCounter = 3 # x50 Start of Sea of Sorrows
 #StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#StepCounter = 1 # NEW GAME!
+Gamestate = "none"
+StepCounter = 1 # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
