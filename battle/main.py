@@ -2519,11 +2519,14 @@ def spherimorph():
                     revive()
                     kimTurn = True
                 elif not kimTurn:
-                    if memory.main.nextStealRare(preAdvance=12):
-                        #Spherimorph, Crawler, and two Guado
-                        _steal()
-                    else:
-                        defend()
+                    logs.writeRNGTrack("RNG11 before Spherimorph")
+                    logs.writeRNGTrack(memory.main.rngArrayFromIndex(index=11, arrayLen=30))
+                    #if memory.main.nextStealRare(preAdvance=6):
+                        # One each for Spherimorph, Negator, Crawler, and guados.
+                        # Except we haven't learned Steal yet. That's no good.
+                    #    _steal()
+                    #else:
+                    defend()
                     kimTurn = True
                 elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
@@ -2599,62 +2602,124 @@ def spherimorph():
     if not gameVars.csr():
         xbox.SkipDialog(5)
 
-
-def negator():  # AKA crawler
-    print("Starting battle with Crawler")
-    xbox.clickToBattle()
-
+def negator_with_steal():
     tidusturns = 0
     rikkuturns = 0
     kimahriturns = 0
     luluturns = 0
     yunaturns = 0
-
-    while not memory.main.turnReady():
-        pass
     while memory.main.battleActive():  # AKA end of battle screen
-        FFXC.set_neutral()
         if memory.main.turnReady():
-            turnchar = memory.main.getBattleCharTurn()
-            if turnchar == 0:
-                if tidusturns == 0:
-                    print("Swapping Tidus for Rikku")
+            turnChar = memory.main.getBattleCharTurn()
+            if turnChar == 0:
+                if rikkuturns == 0:
                     buddySwapRikku()
+                #elif faintCheck(): #Optional revive on Kimahri
+                #    revive()
                 else:
                     defend()
                 tidusturns += 1
-            elif turnchar == 6:
-                if luluturns < 2:
-                    print("Using Lightning Marble")
-                    lightningmarbleslot = memory.main.getUseItemsSlot(30)
-                    if rikkuturns < 1:
-                        useItem(lightningmarbleslot, target=21)
-                    else:
-                        useItem(lightningmarbleslot, target=21)
+            elif turnChar == 3:
+                lightningmarbleslot = memory.main.getUseItemsSlot(30)
+                if kimahriturns == 0:
+                    useItem(lightningmarbleslot)
+                elif kimahriturns == 1:
+                    xbox.weapSwap(0)
+                elif kimahriturns == 2:
+                    _steal()
+                elif not 0 in memory.main.getActiveBattleFormation():
+                    buddySwapTidus()
+                else:
+                    defend()
+                kimahriturns += 1
+            elif turnChar == 5:
+                if luluturns == 0:
+                    revive()
+                else:
+                    buddySwapYuna()
+                luluturns += 1
+            elif turnChar == 1:
+                if yunaturns == 0:
+                    revive()
+                else:
+                    buddySwapTidus()
+                yunaturns += 1
+            elif turnChar == 6:
+                lightningmarbleslot = memory.main.getUseItemsSlot(30)
+                if rikkuturns == 0:
+                    useItem(lightningmarbleslot, target=21)
+                    while memory.main.getEnemyCurrentHP()[1] == 1000:
+                        pass
+                    if memory.main.getEnemyCurrentHP()[1] != 0:
+                        rikkuturns -= 1
+                elif rikkuturns in [1,2]:
+                    useItem(lightningmarbleslot)
+                elif tidusturns < 2:
+                    xbox.weapSwap(0)
                 else:
                     print("Starting Rikkus overdrive")
                     rikkuFullOD('crawler')
                 rikkuturns += 1
-            elif turnchar == 3:
-                if kimahriturns == 0:
-                    lightningmarbleslot = memory.main.getUseItemsSlot(30)
-                    useItem(lightningmarbleslot, target=21)
+
+def negator():  # AKA crawler
+    print("Starting battle with Crawler")
+    xbox.clickToBattle()
+    
+    if memory.main.nextStealRare(preAdvance=5):
+        # One each for two Negators, Crawler, and guados.
+        negator_with_steal()
+    else:
+        tidusturns = 0
+        rikkuturns = 0
+        kimahriturns = 0
+        luluturns = 0
+        yunaturns = 0
+
+        while not memory.main.turnReady():
+            pass
+        while memory.main.battleActive():  # AKA end of battle screen
+            FFXC.set_neutral()
+            if memory.main.turnReady():
+                turnchar = memory.main.getBattleCharTurn()
+                if turnchar == 0:
+                    if tidusturns == 0:
+                        print("Swapping Tidus for Rikku")
+                        buddySwapRikku()
+                    else:
+                        defend()
+                    tidusturns += 1
+                elif turnchar == 6:
+                    if luluturns < 2:
+                        print("Using Lightning Marble")
+                        lightningmarbleslot = memory.main.getUseItemsSlot(30)
+                        if rikkuturns < 1:
+                            useItem(lightningmarbleslot, target=21)
+                        else:
+                            useItem(lightningmarbleslot, target=21)
+                    else:
+                        print("Starting Rikkus overdrive")
+                        rikkuFullOD('crawler')
+                    rikkuturns += 1
+                elif turnchar == 3:
+                    if kimahriturns == 0:
+                        lightningmarbleslot = memory.main.getUseItemsSlot(30)
+                        useItem(lightningmarbleslot, target=21)
+                    else:
+                        buddySwapYuna()
+                    kimahriturns += 1
+                elif turnchar == 5:
+                    revive()
+                    luluturns += 1
+                elif turnchar == 1:
+                    if yunaturns == 0:
+                        defend()
+                    else:
+                        buddySwapTidus()
+                    yunaturns += 1
                 else:
-                    buddySwapYuna()
-                kimahriturns += 1
-            elif turnchar == 5:
-                revive()
-                luluturns += 1
-            elif turnchar == 1:
-                if yunaturns == 0:
                     defend()
-                else:
-                    buddySwapTidus()
-                yunaturns += 1
-            else:
-                defend()
-        elif memory.main.diagSkipPossible():
-            xbox.tapB()
+            elif memory.main.diagSkipPossible():
+                xbox.tapB()
 
     memory.main.clickToControl()
 
@@ -2774,6 +2839,8 @@ def seymourGuado_blitzWin():
                 elif kimahriturns == 0:
                     kimahriOD(3)
                 elif kimahriturns == 1:
+                    logs.writeRNGTrack("RNG11 on Seymour steal command")
+                    logs.writeRNGTrack(memory.main.rngArrayFromIndex(index=11, arrayLen=2))
                     if not memory.main.nextStealRare(preAdvance=0):
                         Steal()
                     elif memory.main.nextSteal(stealCount=1, preAdvance=1):
