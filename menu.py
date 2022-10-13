@@ -1000,7 +1000,10 @@ def viaPurifico():
 
     menuGrid.useAndMove()
     gridLeft()
-    gridLeft()
+    gridDown()
+    menuGrid.moveAndUse()
+    menuGrid.selSphere('mana', 'none')
+    menuGrid.useAndMove()
     gridLeft()
     gridDown()
     menuGrid.moveAndUse()
