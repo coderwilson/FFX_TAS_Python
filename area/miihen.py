@@ -10,11 +10,12 @@ gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
 
-def post_battle_logic(forceCharge = False):
+
+def post_battle_logic(forceCharge=False):
     if memory.main.overdriveState2()[1] < 43 or (forceCharge and memory.main.overdriveState2()[1] != 100):
         memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
     else:
-        if gameVars.selfDestructGet(): 
+        if gameVars.selfDestructGet():
             memory.main.fullPartyFormat('miihen', fullMenuClose=False)
         else:
             memory.main.fullPartyFormat('djose', fullMenuClose=False)
@@ -25,6 +26,7 @@ def post_battle_logic(forceCharge = False):
     else:
         print("No need to heal up. Moving onward.")
     memory.main.closeMenu()
+
 
 def arrival():
     print("Waiting for Yuna/Tidus to stop laughing.")

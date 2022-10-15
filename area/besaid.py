@@ -52,7 +52,7 @@ def Beach():
             checkpoint = 29
         elif checkpoint == 36 and memory.main.getMap() == 17:
             checkpoint = 37
-        
+
         # Events
         elif memory.main.userControl():
             if checkpoint == 34:  # Into the temple for the first time

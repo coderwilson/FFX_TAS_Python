@@ -11,10 +11,11 @@ gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
 
+
 def toHiddenCave():
     #Force manip NEA
     if gameVars.marathonSafety():
-        if rngTrack.neaTrack()[1] in [0,1]:
+        if rngTrack.neaTrack()[1] in [0, 1]:
             pass
         else:
             FFXC.set_neutral()
@@ -38,8 +39,7 @@ def toHiddenCave():
                 advanceCount += 1
                 memory.main.advanceRNG13()
                 nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy='ghost')
-            
-            
+
             if memory.main.nextChanceRNG10() > 10:
                 print("Advance 10 - ", advanceCount)
                 advanceCount += 1
@@ -55,7 +55,7 @@ def toHiddenCave():
             memory.main.waitFrames(9)
             print("===============")
             memory.main.waitFrames(9)
-    
+
     #Regular logic
     memory.main.fullPartyFormat('rikku')
     rngTrack.printManipInfo()
@@ -116,6 +116,7 @@ def toHiddenCave():
     logs.writeStats("NEA extra manip battles:")
     logs.writeStats(prepBattles)
 
+
 def nextGreen():
     nextGreen = memory.main.nextChanceRNG01(version='green')[0][0]
     nextWhite = memory.main.nextChanceRNG01()[0][0]
@@ -125,6 +126,7 @@ def nextGreen():
     if nextGreen < nextWhite and memory.main.nextChanceRNG10() == 0:
         if nextGreen >= 2:
             goGreen = True
+
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
@@ -162,7 +164,7 @@ def dropHunt():
                     battle.main.healUp(fullMenuClose=False)
                     memory.main.fullPartyFormat('rikku')
                     memory.main.closeMenu()
-                    
+
                     if nextGreen() and not goGreen:
                         goGreen = True
                     preGhostBattles += 1

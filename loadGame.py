@@ -201,11 +201,12 @@ def BesaidTrials():
     while memory.main.getMap() != 42:
         tCoords = memory.main.getCoords()
         targetPathing.setMovement([-2, tCoords[1] - 15])
-    
+
     #Start the trials
     while memory.main.getMap() != 122:
         tCoords = memory.main.getCoords()
         targetPathing.setMovement([-2, tCoords[1] + 15])
+
 
 def Boat1():
     memory.main.waitFrames(30 * 3)

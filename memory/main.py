@@ -517,12 +517,14 @@ def ammesFix(actorIndex: int = 0):
     process.write(baseAddr + (0x880 * actorIndex) + 0x0c, 0x443B4000)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC28E0000)
 
+
 def chocoEaterFun(actorIndex: int = 0):
     global process
     global baseValue
     basePtr = baseValue + 0x1fc44e4
     baseAddr = process.read(basePtr)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xc4bb8000)
+
 
 def extractorHeight():
     global process
@@ -1252,6 +1254,7 @@ def confusedState(character):
         print("Character %d is not confused" % character)
         return False
 
+
 def sleepState(character):
     global process
     global baseValue
@@ -1268,6 +1271,7 @@ def sleepState(character):
     else:
         print("Character %d is not asleep" % character)
         return False
+
 
 def autoLifeState(character: int = 0):
     global process
@@ -4335,14 +4339,15 @@ def advanceRNGindex(index: int = 43):
     process.write(baseValue + key, rngArrayFromIndex(index=index)[1])
 
 
-def nextSteal(stealCount:int=0, preAdvance:int=0):
-    useArray = rngArrayFromIndex(index=10, arrayLen=1+preAdvance)
-    stealRNG = useArray[1+preAdvance] % 255
+def nextSteal(stealCount: int = 0, preAdvance: int = 0):
+    useArray = rngArrayFromIndex(index=10, arrayLen=1 + preAdvance)
+    stealRNG = useArray[1 + preAdvance] % 255
     stealChance = 2 ** stealCount
     print("=== ", useArray[1], " === ", stealRNG, " < ", 255 // stealChance, " = ", stealRNG < (255 // stealChance))
     return stealRNG < (255 // stealChance)
 
-def nextStealRare(preAdvance:int=0):
-    useArray = rngArrayFromIndex(index=11, arrayLen=1+preAdvance)
-    stealCritRNG = useArray[1+preAdvance] % 255
+
+def nextStealRare(preAdvance: int = 0):
+    useArray = rngArrayFromIndex(index=11, arrayLen=1 + preAdvance)
+    stealCritRNG = useArray[1 + preAdvance] % 255
     return stealCritRNG < 32

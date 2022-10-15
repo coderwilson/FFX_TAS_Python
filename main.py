@@ -99,7 +99,7 @@ if gameVars.nemesis():
 #StepCounter = 3 # x50 Start of Sea of Sorrows
 #StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
-StepCounter = 1 # NEW GAME!
+StepCounter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
@@ -530,7 +530,7 @@ while Gamestate != "End":
             area.kilika.forest1()
             reportGamestate()
             StepCounter = 3
-        
+
         if Gamestate == "Kilika" and StepCounter == 3:
             reportGamestate()
             area.kilika.trials()

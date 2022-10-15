@@ -1,5 +1,3 @@
-import random
-
 import logs
 import memory.main
 import rngTrack
@@ -165,7 +163,7 @@ def useSkill(position: int = 0, target: int = 20):
     _navigate_to_position(position)
     while memory.main.otherBattleMenu():
         xbox.tapB()
-    if target != 20 and memory.main.getEnemyCurrentHP()[target-20] != 0:
+    if target != 20 and memory.main.getEnemyCurrentHP()[target - 20] != 0:
         direction = 'l'
         while memory.main.battleTargetId() != target:
             if direction == 'l':
@@ -776,7 +774,7 @@ def Echuilles():
                     print("Tidus attack")
                     attack('none')
             elif screen.turnWakka():
-                if tidusCounter == 1: #and memory.main.rngSeed() != 160:
+                if tidusCounter == 1:  # and memory.main.rngSeed() != 160:
                     print("Dark Attack")
                     useSkill(0)  # Dark Attack
                 #elif memory.main.getEnemyCurrentHP()[0] <= 558:
@@ -1452,9 +1450,9 @@ def chocoEater():
             if screen.faintCheck() >= 2:
                 print("Attempting revive")
                 if screen.turnKimahri():
-                    if not 0 in memory.main.getActiveBattleFormation():
+                    if 0 not in memory.main.getActiveBattleFormation():
                         buddySwapTidus()
-                    elif not 4 in memory.main.getActiveBattleFormation():
+                    elif 4 not in memory.main.getActiveBattleFormation():
                         buddySwapWakka()
                     else:
                         buddySwapAuron()
@@ -2352,6 +2350,7 @@ def thunderPlains(section):
     memory.main.closeMenu()
     print("Ready to continue onward.")
 
+
 def mWoods(woodsVars):
     print("Logic depends on completion of specific goals. In Order:")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
@@ -2408,7 +2407,7 @@ def mWoods(woodsVars):
             elif not woodsVars[0]:
                 if turnchar == 6:
                     if memory.main.nextStealRare(preAdvance=2):
-                        #Manip for crit 
+                        # Manip for crit
                         _steal()
                     else:
                         attackByNum(num=6)
@@ -2524,8 +2523,8 @@ def spherimorph():
                     logs.writeRNGTrack("RNG11 before Spherimorph")
                     logs.writeRNGTrack(memory.main.rngArrayFromIndex(index=11, arrayLen=30))
                     #if memory.main.nextStealRare(preAdvance=6):
-                        # One each for Spherimorph, Negator, Crawler, and guados.
-                        # Except we haven't learned Steal yet. That's no good.
+                    # One each for Spherimorph, Negator, Crawler, and guados.
+                    # Except we haven't learned Steal yet. That's no good.
                     #    _steal()
                     #else:
                     defend()
@@ -2604,6 +2603,7 @@ def spherimorph():
     if not gameVars.csr():
         xbox.SkipDialog(5)
 
+
 def negator_with_steal():
     tidusturns = 0
     rikkuturns = 0
@@ -2629,7 +2629,7 @@ def negator_with_steal():
                     xbox.weapSwap(0)
                 elif kimahriturns == 2:
                     _steal()
-                elif not 0 in memory.main.getActiveBattleFormation():
+                elif 0 not in memory.main.getActiveBattleFormation():
                     buddySwapTidus()
                 else:
                     defend()
@@ -2654,7 +2654,7 @@ def negator_with_steal():
                         pass
                     if memory.main.getEnemyCurrentHP()[1] != 0:
                         rikkuturns -= 1
-                elif rikkuturns in [1,2]:
+                elif rikkuturns in [1, 2]:
                     useItem(lightningmarbleslot)
                 elif tidusturns < 2:
                     xbox.weapSwap(0)
@@ -2663,10 +2663,11 @@ def negator_with_steal():
                     rikkuFullOD('crawler')
                 rikkuturns += 1
 
+
 def negator():  # AKA crawler
     print("Starting battle with Crawler")
     xbox.clickToBattle()
-    
+
     if memory.main.nextStealRare(preAdvance=5):
         # One each for two Negators, Crawler, and guados.
         negator_with_steal()
@@ -3418,7 +3419,7 @@ def wendigo():
                 if wendigoresheal(turnchar=turnchar, usepowerbreak=usepowerbreak, tidusmaxHP=tidusmaxHP) == 0:
                     xbox.weapSwap(0)
             else:
-                if usepowerbreak and not powerbreakused and not 2 in memory.main.getActiveBattleFormation():
+                if usepowerbreak and not powerbreakused and 2 not in memory.main.getActiveBattleFormation():
                     print("Swapping to Auron to Power Break")
                     buddySwapAuron()
                 #if memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
@@ -3445,7 +3446,7 @@ def zu():
     memory.main.clickToControl()
 
 
-def bikanelBattleLogic(status, sandyFightComplete:bool=False):
+def bikanelBattleLogic(status, sandyFightComplete: bool = False):
     # status should be an array length 2
     # [rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
     encounterID = memory.main.getEncounterID()
@@ -4207,6 +4208,7 @@ def evraeAltana():
 
     memory.main.clickToControl()
 
+
 def evraeAltanaSteal():
     print("=======================================")
     print("Steal logic, we will get two gems")
@@ -4227,6 +4229,7 @@ def evraeAltanaSteal():
     print("End of steal logic. Back to regular.")
     print("=======================================")
     #memory.main.waitFrames(180)
+
 
 def attackHighbridge():
     if memory.main.getEncounterID() == 270:
@@ -6790,11 +6793,11 @@ def ghostAdvanceRNG10Silence(silenceSlot: int, owner1: int, owner2: int):
     while memory.main.nextChanceRNG10():
         if memory.main.turnReady():
             if not silenceUsed:
-                if not 6 in memory.main.getActiveBattleFormation():
+                if 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
                     useItem(slot=silenceSlot)  # Throw silence grenade
                     silenceUsed = True
-                elif not 3 in memory.main.getActiveBattleFormation():
+                elif 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
                     useItem(slot=silenceSlot)  # Throw silence grenade
                     silenceUsed = True
@@ -6804,25 +6807,25 @@ def ghostAdvanceRNG10Silence(silenceSlot: int, owner1: int, owner2: int):
                 else:
                     defend()
             #Next, put in preferred team
-            elif owner2 in prefDrop or not owner1 in prefDrop:  # prefer aeon kill
+            elif owner2 in prefDrop or owner1 not in prefDrop:  # prefer aeon kill
                 if screen.turnRikku() or screen.turnKimahri():
                     Steal()
-                elif not 6 in memory.main.getActiveBattleFormation():
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                elif not 3 in memory.main.getActiveBattleFormation():
+                elif 3 not in memory.main.getActiveBattleFormation():
                     buddySwapKimahri()
-                elif not 0 in memory.main.getActiveBattleFormation():
+                elif 0 not in memory.main.getActiveBattleFormation():
                     buddySwapTidus()
                 else:
                     defend()
             else:  # Will need a non-Aeon kill
-                if not 6 in memory.main.getActiveBattleFormation():
+                if 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
-                elif not 0 in memory.main.getActiveBattleFormation():
+                elif 0 not in memory.main.getActiveBattleFormation():
                     buddySwapTidus()
-                elif not 3 in memory.main.getActiveBattleFormation() and memory.main.nextChanceRNG10() > 3:
+                elif 3 not in memory.main.getActiveBattleFormation() and memory.main.nextChanceRNG10() > 3:
                     buddySwapKimahri()
-                elif not 1 in memory.main.getActiveBattleFormation() and memory.main.nextChanceRNG10() <= 3:
+                elif 1 not in memory.main.getActiveBattleFormation() and memory.main.nextChanceRNG10() <= 3:
                     buddySwapYuna()
                 elif screen.turnRikku() or screen.turnKimahri():
                     Steal()

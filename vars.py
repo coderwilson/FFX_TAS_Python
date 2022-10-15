@@ -67,10 +67,10 @@ class allVars:
         # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-    
+
     def marathonSafety(self):
         return self.marathonSafeFlag
-    
+
     def blitzLossReset(self):
         return self.blitzLossForceReset
 
