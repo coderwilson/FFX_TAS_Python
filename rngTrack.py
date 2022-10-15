@@ -1110,7 +1110,7 @@ def saveOblitzHistory(rngVals):
     writing = dict(rngVals)
     filepath = "oblitzRNG\\results.json"
     with open(filepath, 'w') as fp:
-        json.dump(writing, fp)
+        json.dump(writing, fp, indent=4)
 
 
 def recordBlitzResults_Tyton(duration, testMode=False):
@@ -1171,7 +1171,7 @@ def recordBlitzResults(duration, testMode=False):
     print(records)
 
     with open(filepath, 'w') as fp:
-        json.dump(records, fp)
+        json.dump(records, fp, indent=4)
 
 
 def hitsToSeed(hitsArray: int):
