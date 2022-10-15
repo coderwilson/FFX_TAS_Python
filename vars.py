@@ -14,7 +14,7 @@ class allVars:
         self.csrValue = True              # Set automatically on new game. For testing (loading a save file) set for your environment.
         self.nemesisValue = False         # Set based on if you're doing any% (False) or Nemesis% (True)
         self.forceLoop = False            # After game is finished, start again on next seed.
-        self.blitzLoop = False            # Loop on the same seed immediately after Blitzball.
+        self.blitzLoop = True             # Loop on the same seed immediately after Blitzball.
         self.blitzLossForceReset = False  # True = reset after blitz loss
         self.setSeed = True               # If you are using Rossy's patch, set to True. Otherwise set to False
         self.kilikaSkip = True            # True == Tidus OD on Evrae instead of Seymour. New strat.

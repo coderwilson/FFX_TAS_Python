@@ -54,7 +54,7 @@ def selectAction():
 
 
 def selectPassTarget():
-    return memory.main.blitzMenuNum() in [226, 236]
+    return memory.main.blitzMenuNum() in [226, 228, 236]
 
 
 def selectShotType():
