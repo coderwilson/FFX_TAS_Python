@@ -1,9 +1,12 @@
-import vgamepad as vg
-import time
-import memory.main
-import math
-import vars
 import json
+import math
+import time
+
+import vgamepad as vg
+
+import memory.main
+import vars
+
 gameVars = vars.varsHandle()
 
 

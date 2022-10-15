@@ -1,8 +1,10 @@
 import time
+
 import memory.main
-import xbox
 import screen
 import targetPathing
+import xbox
+
 FFXC = xbox.controllerHandle()
 
 def engage():

@@ -1,5 +1,6 @@
 import memory.main
 import vars
+
 gameVars = vars.varsHandle()
 
 

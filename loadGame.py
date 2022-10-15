@@ -1,11 +1,12 @@
 # Libraries and Core Files
-import xbox
-import screen
-import memory.main
-import zzairShipPath
-import targetPathing
 import os
 from pathlib import Path
+
+import memory.main
+import screen
+import targetPathing
+import xbox
+import zzairShipPath
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.

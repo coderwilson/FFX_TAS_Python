@@ -1,12 +1,13 @@
-import xbox
-import screen
 import battle.main
-import menu
 import memory.main
-import targetPathing
-import zzairShipPath
-import vars
+import menu
 import rngTrack
+import screen
+import targetPathing
+import vars
+import xbox
+import zzairShipPath
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

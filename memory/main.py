@@ -1,16 +1,18 @@
-from math import cos, sin
-from collections import Counter
-import logs
-import struct
-import xbox
-import targetPathing
-import vars
-import os.path
 import ctypes
 import ctypes.wintypes
-from ReadWriteMemory import ReadWriteMemory
-from ReadWriteMemory import Process
+import os.path
+import struct
 import time
+from collections import Counter
+from math import cos, sin
+
+from ReadWriteMemory import Process, ReadWriteMemory
+
+import logs
+import targetPathing
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 # Process Permissions

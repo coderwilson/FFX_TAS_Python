@@ -1,8 +1,9 @@
-import xbox
-import menuGrid
 import memory.main as main
-import vars
 import menu
+import menuGrid
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

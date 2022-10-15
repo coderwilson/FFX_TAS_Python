@@ -1,12 +1,14 @@
 import time
-import xbox
-import screen
+
 import battle.main as main
+import memory.main as main
 import menu
 import nemesis.menu as menu
-import memory.main as main
 import nemesis.targetPath as targetPath
+import screen
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

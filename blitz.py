@@ -1,11 +1,13 @@
-import xbox
-import time
-import memory.main
-import blitzPathing
-import vars
 import math
-import rngTrack
+import time
+
+import blitzPathing
 import logs
+import memory.main
+import rngTrack
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 tidusXP = False
 

@@ -1,8 +1,10 @@
 import time
-import xbox
+
 import memory.main
 import targetPathing
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

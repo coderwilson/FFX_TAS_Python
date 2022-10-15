@@ -1,10 +1,11 @@
-import xbox
+import area.gagazet as gagazet
 import battle.main as main
-import menu
 import memory.main as main
+import menu
 import nemesis.targetPath as targetPath
 import vars
-import area.gagazet as gagazet
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

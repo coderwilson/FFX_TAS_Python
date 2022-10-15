@@ -1,33 +1,35 @@
 # Libraries and Core Files
-import logs
-import area.sin
-import area.zanarkand
-import area.gagazet
-import area.rescueYuna
-import area.home
-import area.mTemple
-import area.mWoods
-import area.thunderPlains
-import area.guadosalam
-import area.moonflow
-import area.djose
-import area.MRR
-import area.miihen
-import blitz
-import area.luca
-import area.kilika
-import area.boats
-import area.besaid
-import area.baaj
-import area.dreamZan
-import xbox
-import memory.main
-import battle.main
-import screen
-import vars
-import reset
 import random
 import sys
+
+import area.baaj
+import area.besaid
+import area.boats
+import area.djose
+import area.dreamZan
+import area.gagazet
+import area.guadosalam
+import area.home
+import area.kilika
+import area.luca
+import area.miihen
+import area.moonflow
+import area.MRR
+import area.mTemple
+import area.mWoods
+import area.rescueYuna
+import area.sin
+import area.thunderPlains
+import area.zanarkand
+import battle.main
+import blitz
+import logs
+import memory.main
+import reset
+import screen
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 gameVars.setStartVars()
 
@@ -36,9 +38,9 @@ FFXC = xbox.controllerHandle()
 
 # Speedrun sectional files
 if gameVars.nemesis():
-    import nemesis.changes
-    import nemesis.arenaPrep
     import nemesis.arenaBattles
+    import nemesis.arenaPrep
+    import nemesis.changes
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.

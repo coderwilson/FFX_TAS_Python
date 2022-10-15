@@ -1,6 +1,7 @@
-import xbox
 import memory.main
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

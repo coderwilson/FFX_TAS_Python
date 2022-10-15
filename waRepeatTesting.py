@@ -1,11 +1,12 @@
 import time
-import xbox
+
 import area.dreamZan
-import screen
-import memory.main
-import reset
 import loadGame
 import logs
+import memory.main
+import reset
+import screen
+import xbox
 
 FFXC = xbox.controllerHandle()
 

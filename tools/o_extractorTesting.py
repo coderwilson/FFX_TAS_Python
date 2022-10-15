@@ -1,8 +1,9 @@
+import area.dreamZan
 import area.moonflow
+import loadGame
 import memory.main as main
 import xbox
-import area.dreamZan
-import loadGame
+
 FFXC = xbox.controllerHandle()
 
 main.start()

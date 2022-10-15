@@ -1,11 +1,13 @@
-import xbox
-import screen
+import random
+
 import logs
 import memory.main
-from memory.main import s32
-import vars
 import rngTrack
-import random
+import screen
+import vars
+import xbox
+from memory.main import s32
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()

@@ -1,11 +1,11 @@
-import xbox
-import screen
 import battle.main
-import memory.main
 import logs
+import memory.main
+import menu
+import screen
 import targetPathing
 import vars
-import menu
+import xbox
 
 FFXC = xbox.controllerHandle()
 gameVars = vars.varsHandle()
