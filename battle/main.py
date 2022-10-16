@@ -127,10 +127,6 @@ def tidusHaste(direction, character=255):
     tapTargeting()
 
 
-def lateHaste(direction):
-    tidusHaste(direction)
-
-
 def useSkill(position: int = 0, target: int = 20):
     print("Using skill in position:", position)
     while memory.main.battleMenuCursor() != 19:
