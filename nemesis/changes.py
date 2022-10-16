@@ -49,7 +49,7 @@ def calmLands():
     # Start chocobo races
     # memory.setGameSpeed(2)
     calmLands_1()
-    
+
     FFXC.set_neutral()
     main.clickToDiagProgress(28)
     main.waitFrames(9)
@@ -58,7 +58,7 @@ def calmLands():
     wobblyComplete = False
     while not wobblyComplete:
         wobblyComplete = chocoTame1()
-    
+
     print("Wobbly Chocobo complete")
     # nextRace()
     # dodgerComplete = False
@@ -82,8 +82,9 @@ def calmLands():
 
     toRemiem()
 
+
 def calmLands_1():
-    #Enter the cutscene that starts Calm Lands
+    # Enter the cutscene that starts Calm Lands
     main.fullPartyFormat('yuna', fullMenuClose=True)
     while not (main.getCoords()[1] >= -1650 and main.userControl()):
         if main.userControl():
@@ -92,7 +93,7 @@ def calmLands_1():
             FFXC.set_neutral()
             if main.diagSkipPossible():
                 xbox.tapB()
-    
+
     # Now head to the chocobo lady.
     # memory.setEncounterRate(0) #Testing only
     checkpoint = 0
@@ -114,7 +115,7 @@ def calmLands_1():
                 main.fullPartyFormat('yuna')
             elif main.menuOpen() or main.diagSkipPossible():
                 xbox.tapB()
-    
+
     print("Now talk to NPC")
     # arenaNPC()
     # arenaPurchase()
@@ -129,14 +130,14 @@ def chocoTame1():
         # print("Angle: ", retVal)
         position = main.getActorCoords(0)
         # print("Position: ", position)
-        if position[0] < -110: #Need to move right
+        if position[0] < -110:  # Need to move right
             if angle > 1.4:
                 FFXC.set_value('Dpad', 8)
             elif angle < 1.2:
                 FFXC.set_value('Dpad', 4)
             else:
                 FFXC.set_value('Dpad', 0)
-        elif position[0] > -60: #Need to move left
+        elif position[0] > -60:  # Need to move left
             if angle > 1.8:
                 FFXC.set_value('Dpad', 8)
             elif angle < 1.6:
@@ -144,21 +145,21 @@ def chocoTame1():
             else:
                 FFXC.set_value('Dpad', 0)
         else:
-            if angle > 1.6: #Stay straight
+            if angle > 1.6:  # Stay straight
                 FFXC.set_value('Dpad', 8)
             elif angle < 1.4:
                 FFXC.set_value('Dpad', 4)
             else:
                 FFXC.set_value('Dpad', 0)
     FFXC.set_neutral()
-    
+
     while not main.diagProgressFlag() in [51, 69, 74]:
         # 51 is success
         xbox.tapB()
-    if main.diagProgressFlag() == 51: #Success
+    if main.diagProgressFlag() == 51:  # Success
         main.clickToDiagProgress(77)
         main.waitFrames(12)
-        xbox.tapDown() #Up for next race, down for quit
+        xbox.tapDown()  # Up for next race, down for quit
         xbox.tapB()
         # memory.waitFrames(20)
         xbox.tapUp()
@@ -170,64 +171,65 @@ def chocoTame1():
         xbox.tapB()
         return False
 
+
 def chocoTame2():
     main.clickToDiagProgress(43)
     checkpoint = 0
-    while not main.diagProgressFlag() in [44,74]:
+    while not main.diagProgressFlag() in [44, 74]:
         angle = main.getActorAngle(0)
         position = main.getActorCoords(0)
-        
-        if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
+
+        if position[1] > -1360 and checkpoint == 0:  # Start off aiming right to manip balls
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('Dpad', 8)  # Right
             main.waitFrames(5)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -1200 and checkpoint == 1: #Slight left
+        if position[1] > -1200 and checkpoint == 1:  # Slight left
             checkpoint += 1
-            FFXC.set_value('Dpad', 4) #Left
+            FFXC.set_value('Dpad', 4)  # Left
             main.waitFrames(11)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -1000 and checkpoint == 2: #Straighten out
+        if position[1] > -1000 and checkpoint == 2:  # Straighten out
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('Dpad', 8)  # Right
             main.waitFrames(7)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -800 and checkpoint == 3: #Juke right
+        if position[1] > -800 and checkpoint == 3:  # Juke right
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('Dpad', 8)  # Right
             main.waitFrames(5)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -650 and checkpoint == 4: #Back to the left
+        if position[1] > -650 and checkpoint == 4:  # Back to the left
             checkpoint += 1
-            FFXC.set_value('Dpad', 4) #Left
+            FFXC.set_value('Dpad', 4)  # Left
             main.waitFrames(11)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -550 and checkpoint == 5: #Straighten out
+        if position[1] > -550 and checkpoint == 5:  # Straighten out
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('Dpad', 8)  # Right
             main.waitFrames(6)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -450 and checkpoint == 6: #Juke right again
+        if position[1] > -450 and checkpoint == 6:  # Juke right again
             checkpoint += 1
             FFXC.set_value('Dpad', 8)
             main.waitFrames(6)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -250 and checkpoint == 7: #Straighten out
+        if position[1] > -250 and checkpoint == 7:  # Straighten out
             checkpoint += 1
             FFXC.set_value('Dpad', 4)
             main.waitFrames(14)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -90 and checkpoint == 8: #The final juke!
+        if position[1] > -90 and checkpoint == 8:  # The final juke!
             checkpoint += 1
             FFXC.set_value('Dpad', 8)
             main.waitFrames(13)
             FFXC.set_value('Dpad', 0)
     FFXC.set_neutral()
 
-    while not main.diagProgressFlag() in [54,69,77]:
+    while not main.diagProgressFlag() in [54, 69, 77]:
         #54 is success
         xbox.tapB()
-    if main.diagProgressFlag() == 54: #Success
+    if main.diagProgressFlag() == 54:  # Success
         main.clickToDiagProgress(77)
         main.waitFrames(12)
         xbox.tapUp()
@@ -242,19 +244,20 @@ def chocoTame2():
         xbox.tapB()
         return False
 
+
 def chocoTame3():
     main.clickToDiagProgress(43)
     checkpoint = 0
-    while not main.diagProgressFlag() in [44,74]:
+    while not main.diagProgressFlag() in [44, 74]:
         position = main.getActorCoords(0)
         if position[1] > -1370 and checkpoint == 0:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4) #Left
+            FFXC.set_value('Dpad', 4)  # Left
             main.waitFrames(3)
             FFXC.set_value('Dpad', 0)
         if position[1] > -1200 and checkpoint == 1:
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('Dpad', 8)  # Right
             main.waitFrames(10)
             FFXC.set_value('Dpad', 0)
         if position[1] > -1100 and checkpoint == 2:
@@ -297,7 +300,8 @@ def chocoTame3():
             FFXC.set_value('Dpad', 4)
             main.waitFrames(16)
             FFXC.set_value('Dpad', 0)
-        if position[1] > -120 and checkpoint == 10: #Still dialing in on this one.
+        # Still dialing in on this one.
+        if position[1] > -120 and checkpoint == 10:
             checkpoint += 1
             FFXC.set_value('Dpad', 8)
             main.waitFrames(16)
@@ -315,7 +319,7 @@ def chocoTame3():
     if main.diagProgressFlag() == 56:  # Success
         main.clickToDiagProgress(77)
         main.waitFrames(12)
-        xbox.tapDown() #Up for something else, down for done.
+        xbox.tapDown()  # Up for something else, down for done.
         xbox.tapB()
         main.waitFrames(30)
         # xbox.tapUp()
@@ -327,11 +331,12 @@ def chocoTame3():
         xbox.tapB()
         return False
 
+
 def chocoTame4():
     print("START - CATCHER CHOCOBO")
     main.clickToDiagProgress(43)
     checkpoint = 0
-    while not main.diagProgressFlag() in [44,67]:
+    while not main.diagProgressFlag() in [44, 67]:
         angle = main.getActorAngle(0)
         position = main.getActorCoords(0)
         print("User control")
@@ -371,10 +376,10 @@ def chocoTame4():
     print("Race complete.")
     FFXC.set_neutral()
 
-    while not main.diagProgressFlag() in [67,77]:
-        #67 is 0:00.0 run
+    while not main.diagProgressFlag() in [67, 77]:
+        # 67 is 0:00.0 run
         xbox.tapB()
-    if main.diagProgressFlag() == 67: #Success
+    if main.diagProgressFlag() == 67:  # Success
         print("Great run! Perfect score!")
         main.clickToDiagProgress(77)
         main.waitFrames(12)
@@ -387,21 +392,22 @@ def chocoTame4():
         xbox.tapB()
         return False
 
+
 def toRemiem():
     main.clickToControl()
     while main.userControl():
-        targetPath.setMovement([-1565,434])
+        targetPath.setMovement([-1565, 434])
         xbox.tapB()
         print("Near chocobo lady")
     FFXC.set_neutral()
     main.clickToControl3()
-    
+
     checkpoint = 0
     while checkpoint < 35:
         if main.userControl():
             if main.getMap() == 290 and checkpoint < 13:
                 checkpoint = 13
-            
+
             elif checkpoint == 10:
                 print("Feather")
                 main.clickToEventTemple(0)
@@ -409,7 +415,7 @@ def toRemiem():
             elif checkpoint == 27:
                 print("Orb thing")
                 while main.userControl():
-                    targetPath.setMovement([770,631])
+                    targetPath.setMovement([770, 631])
                     xbox.tapB()
                 main.clickToControl3()
                 checkpoint += 1
@@ -417,19 +423,21 @@ def toRemiem():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
 
+
 def remiemRaces():
     print("Ready to start races")
     chocoRace1()
     print("Celestial Weapon obtained.")
-    #chocoRace2()
-    #print("Obtained")
-    #chocoRace3()
+    # chocoRace2()
+    # print("Obtained")
+    # chocoRace3()
     #print("Something obtained")
     print("Now heading back to the monster arena.")
 
+
 def chocoRace1():
     while main.userControl():
-        targetPath.setMovement([790,60])
+        targetPath.setMovement([790, 60])
         xbox.tapB()
     FFXC.set_neutral()
     main.clickToControl()
@@ -445,16 +453,17 @@ def chocoRace1():
                 main.fleeAll()
             else:
                 xbox.tapB()
-    FFXC.set_movement(-1,1)
+    FFXC.set_movement(-1, 1)
     main.waitFrames(10)
     FFXC.set_neutral()
     main.clickToControl3()
+
 
 def chocoRace2():
     FFXC.set_neutral()
     main.clickToControl()
     while main.userControl():
-        targetPath.setMovement([790,60])
+        targetPath.setMovement([790, 60])
         xbox.tapB()
     FFXC.set_neutral()
     checkpoint = 0
@@ -478,16 +487,17 @@ def chocoRace2():
                 main.fleeAll()
             else:
                 xbox.tapB()
-    FFXC.set_movement(-1,1)
+    FFXC.set_movement(-1, 1)
     main.waitFrames(10)
     FFXC.set_neutral()
     main.clickToControl3()
+
 
 def chocoRace3():
     FFXC.set_neutral()
     main.clickToControl()
     while main.userControl():
-        targetPath.setMovement([790,60])
+        targetPath.setMovement([790, 60])
         xbox.tapB()
     FFXC.set_neutral()
     checkpoint = 0
@@ -522,10 +532,11 @@ def chocoRace3():
                 main.fleeAll()
             else:
                 xbox.tapB()
-    FFXC.set_movement(-1,1)
+    FFXC.set_movement(-1, 1)
     main.waitFrames(60)
     FFXC.set_neutral()
     main.clickToControl3()
+
 
 def templeToArena():
     main.clickToControl3()
@@ -534,19 +545,19 @@ def templeToArena():
         if main.userControl():
             if main.getMap() == 223 and checkpoint < 18:
                 checkpoint = 18
-            
+
             elif checkpoint == 20:
                 while main.userControl():
-                    targetPath.setMovement([1261,-1238])
+                    targetPath.setMovement([1261, -1238])
                     xbox.tapB()
                 FFXC.set_neutral()
                 main.clickToControl()
                 checkpoint += 1
-            
+
             elif checkpoint == 24:
                 print("Feather")
                 while main.userControl():
-                    targetPath.setMovement([1101,-940])
+                    targetPath.setMovement([1101, -940])
                     xbox.tapB()
                 FFXC.set_neutral()
                 main.awaitControl()
@@ -555,9 +566,10 @@ def templeToArena():
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
 
+
 def arenaPurchase():
     main.clickToControl()
-    
+
     print("Straight forward to the guy")
     FFXC.set_movement(0, 1)
     main.clickToEvent()
@@ -578,15 +590,15 @@ def arenaPurchase():
     # Purchase the following weapons:
     # -Tidus x4
     # -Yuna x1
-        
-    #---Done buying.
+
+    # ---Done buying.
     main.awaitControl()
     main.waitFrames(2)
     FFXC.set_movement(0, -1)
-    main.awaitEvent() #Exit the arena map
+    main.awaitEvent()  # Exit the arena map
     FFXC.set_neutral()
     main.awaitControl()
-    
+
     checkpoint = 0
     while main.getMap() != 279:
         if main.userControl():
@@ -605,18 +617,18 @@ def arenaPurchase():
                 main.fullPartyFormat('yuna')
             elif main.menuOpen() or main.diagSkipPossible():
                 xbox.tapB()
-    
+
 
 def arenaPurchaseWithChocobo():
-    while main.userControl(): #Back onto chocobo
-        targetPath.setMovement([1347,-69])
+    while main.userControl():  # Back onto chocobo
+        targetPath.setMovement([1347, -69])
         xbox.tapB()
-    
-    while not targetPath.setMovement([1488,778]):
+
+    while not targetPath.setMovement([1488, 778]):
         pass
-    while not targetPath.setMovement([1545,1088]):
+    while not targetPath.setMovement([1545, 1088]):
         pass
     while not main.getMap() == 279:
-        targetPath.setMovement([1700,1200])
-    
+        targetPath.setMovement([1700, 1200])
+
     main.fullPartyFormat('kimahri')
