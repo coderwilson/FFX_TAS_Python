@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import logs
 import memory.main
@@ -281,7 +282,7 @@ def midPoint():
             elif memory.main.battleActive():
                 FFXC.set_neutral()
                 print("Mi'ihen - ready for Chocobo Eater")
-                battle.main.chocoEater()
+                battle.boss.chocoboEater()
                 print("Mi'ihen - Chocobo Eater complete")
 
 

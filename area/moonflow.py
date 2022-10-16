@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import memory.main
 import menu
@@ -100,7 +101,7 @@ def southBank(checkpoint: int = 0):
             if memory.main.diagSkipPossible():
                 xbox.tapB()
 
-    battle.main.extractor()
+    battle.boss.extractor()
 
 
 def northBank():

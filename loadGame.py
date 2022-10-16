@@ -458,8 +458,9 @@ def loadMacTemple2():
 
 
 def loadWendigo():
+    import battle.boss
     import battle.main
-    battle.main.wendigo()
+    battle.boss.wendigo()
     print("Wendigo fight over - end of loading game to Wendigo fight")
 
 

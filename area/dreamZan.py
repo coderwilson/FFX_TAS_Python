@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import battle.overdrive
 import logs
@@ -231,7 +232,7 @@ def AfterAmmes():
         else:
             FFXC.set_neutral()
             if memory.main.turnReady():
-                battle.main.Tanker()
+                battle.boss.tanker()
             if memory.main.diagSkipPossible():
                 xbox.tapB()
             elif memory.main.cutsceneSkipPossible():

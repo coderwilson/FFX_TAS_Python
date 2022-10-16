@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import memory.main
 import menu
@@ -155,7 +156,7 @@ def insideSin():
                 FFXC.set_movement(0, 1)
                 memory.main.waitFrames(30 * 5)
                 FFXC.set_neutral()
-                battle.main.omnis()
+                battle.boss.omnis()
                 memory.main.clickToControl()
             elif checkpoint < 41 and memory.main.getMap() == 204:
                 checkpoint = 41

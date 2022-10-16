@@ -1,5 +1,6 @@
 import time
 
+import battle.boss
 import battle.main
 import logs
 import memory.main
@@ -259,7 +260,7 @@ def battleSite():
 
 
 def guiAndAftermath():
-    battle.main.battleGui()
+    battle.boss.gui()
 
     checkpoint = 0
     while memory.main.getMap() != 93:

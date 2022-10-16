@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import logs
 import memory.main
@@ -153,7 +154,7 @@ def forest1():
                     nextBattle = rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
                     print("################# Next Battle:", nextBattle)
                 elif checkpoint > 86:
-                    battle.main.Geneaux()
+                    battle.boss.geneaux()
                 else:
                     print("---------------This should be battle number:", kilikaBattles)
                     print("---------------Reminder (north-bound only):", nextThree)

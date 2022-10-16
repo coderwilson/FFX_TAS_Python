@@ -1,6 +1,7 @@
 import time
 
 import battle.main as main
+import battle.boss
 import memory.main as main
 import menu
 import nemesis.arenaSelect as arenaSelect
@@ -3010,7 +3011,7 @@ def insideSin(capNum: int = 10):
                 FFXC.set_movement(0, 1)
                 main.waitFrames(30 * 5)
                 FFXC.set_neutral()
-                main.omnis()
+                battle.boss.omnis()
                 main.clickToControl()
                 main.fullPartyFormat('initiative')
 

@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import logs
 import memory.main
@@ -118,7 +119,7 @@ def arrival():
                 FFXC.set_movement(1, 0)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
-                battle.main.Oblitzerator(earlyHaste)
+                battle.boss.oblitzerator(earlyHaste)
                 checkpoint += 1
             elif checkpoint == 50:
                 memory.main.clickToEventTemple(4)

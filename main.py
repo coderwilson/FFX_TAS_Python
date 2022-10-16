@@ -21,6 +21,7 @@ import area.rescueYuna
 import area.sin
 import area.thunderPlains
 import area.zanarkand
+import battle.boss
 import battle.main
 import blitz
 import logs
@@ -449,7 +450,7 @@ while Gamestate != "End":
 
         if Gamestate == "DreamZan" and StepCounter == 2:
             reportGamestate()
-            battle.main.Ammes()
+            battle.boss.ammes()
             StepCounter = 3
             reportGamestate()
 
@@ -762,7 +763,7 @@ while Gamestate != "End":
         if Gamestate == "rescueYuna" and StepCounter == 1:
             reportGamestate()
             area.rescueYuna.preEvrae()
-            battle.main.Evrae()
+            battle.boss.evrae()
             area.rescueYuna.guards()
             StepCounter = 2
 
@@ -891,8 +892,8 @@ while Gamestate != "End":
             if gameVars.nemesis():
                 battle.main.BFA_nem()
             else:
-                battle.main.BFA()
-                battle.main.yuYevon()
+                battle.boss.BFA()
+                battle.boss.yuYevon()
             Gamestate = "End"
 
         # Nemesis logic only:

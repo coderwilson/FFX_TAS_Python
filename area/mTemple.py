@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import memory.main
 import menu
@@ -298,7 +299,7 @@ def escape():
                 xbox.tapB()
 
     print("Done pathing. Now for the Wendigo fight.")
-    battle.main.wendigo()
+    battle.boss.wendigo()
     print("Wendigo fight over")
 
 

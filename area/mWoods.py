@@ -1,3 +1,4 @@
+import battle.boss
 import battle.main
 import logs
 import memory.main
@@ -122,7 +123,7 @@ def lakeRoad():
 
     FFXC.set_neutral()  # Engage Spherimorph
 
-    battle.main.spherimorph()
+    battle.boss.spherimorph()
     print("Battle is over.")
     memory.main.clickToControl()  # Jecht's memories
 
@@ -201,7 +202,7 @@ def lake():
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.menuB()
     xbox.clickToBattle()
-    battle.main.negator()
+    battle.boss.crawler()
 
 
 def afterCrawler():
