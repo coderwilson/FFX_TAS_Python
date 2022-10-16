@@ -1,27 +1,27 @@
 import area.dreamZan
 import area.moonflow
 import loadGame
-import memory.main as main
+import memory.main
 import xbox
 
 FFXC = xbox.controllerHandle()
 
-main.start()
+memory.main.start()
 Gamestate = "none"
 StepCounter = 1
 
 area.dreamZan.NewGame("Extractor testing")
 loadGame.loadSaveNum(96)
-main.awaitControl()
+memory.main.awaitControl()
 FFXC.set_movement(1, -1)
-main.awaitEvent()
+memory.main.awaitEvent()
 FFXC.set_neutral()
-main.awaitControl()
+memory.main.awaitControl()
 
 area.moonflow.southBank(checkpoint=2)
-main.clickToControl()
+memory.main.clickToControl()
 
-main.end()
+memory.main.end()
 
 print("--------------------------")
 print("Program - end")

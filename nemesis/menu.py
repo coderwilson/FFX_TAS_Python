@@ -1,4 +1,4 @@
-import memory.main as main
+import memory.main
 import menu
 import menuGrid
 import vars
@@ -27,40 +27,40 @@ def gridRight():
 
 def awaitMove():
     print("Sphere Grid: Waiting for Move command to be highlighted")
-    while main.sGridActive() == False:
+    while memory.main.sGridActive() == False:
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
-        main.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
     complete = False
     while complete == False:
-        menuVal = main.sGridMenu()
+        menuVal = memory.main.sGridMenu()
         if menuVal == 11 or menuVal == 255:
             xbox.menuB()
         elif menuVal == 7:
-            cursorLoc = main.cursorLocation()
+            cursorLoc = memory.main.cursorLocation()
             if cursorLoc[0] == 51 or cursorLoc[1] == 243:
                 xbox.menuUp()
             xbox.menuB()
             complete = True
-            main.waitFrames(30 * 0.25)
+            memory.main.waitFrames(30 * 0.25)
     print("Move command highlighted. Good to go.")
 
 
 def awaitUse():
     print("Sphere Grid: Waiting for Use command to be highlighted")
-    while main.sGridActive() == False:
+    while memory.main.sGridActive() == False:
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
-        main.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
     complete = False
     while complete == False:
-        menuVal = main.sGridMenu()
+        menuVal = memory.main.sGridMenu()
         print("Menu value: ", menuVal)
         if menuVal == 7:
-            cursorLoc = main.cursorLocation()
+            cursorLoc = memory.main.cursorLocation()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:
                 xbox.menuDown()
             xbox.menuB()
             complete = True
-            main.waitFrames(30 * 0.25)
+            memory.main.waitFrames(30 * 0.25)
         else:
             xbox.menuB()
     print("Use command highlighted. Good to go.")
@@ -68,8 +68,8 @@ def awaitUse():
 
 def awaitQuitSG():
     print("Sphere Grid: attempting to quit")
-    while main.sGridActive():
-        menuVal = main.sGridMenu()
+    while memory.main.sGridActive():
+        menuVal = memory.main.sGridMenu()
         if menuVal == 255:
             xbox.menuA()
         elif menuVal == 11:
@@ -85,31 +85,31 @@ def openGrid(character):
     except:
         FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
-    while not main.sGridActive():
+    while not memory.main.sGridActive():
         #print("Attempting to open Sphere Grid")
-        if main.userControl() and not main.menuOpen():
-         #   print("Menu is not open at all")
+        if memory.main.userControl() and not memory.main.menuOpen():
+            #   print("Menu is not open at all")
             xbox.tapY()
-        elif main.menuNumber() == 5:  # Cursor on main menu
-          #  print("Main menu cursor")
-            while main.getMenuCursorPos() != 0:
-                main.menuDirection(main.getMenuCursorPos(), 0, 11)
-           # print("Done with menu cursor")
-            while main.menuNumber() == 5:
+        elif memory.main.menuNumber() == 5:  # Cursor on main menu
+            #  print("Main menu cursor")
+            while memory.main.getMenuCursorPos() != 0:
+                memory.main.menuDirection(memory.main.getMenuCursorPos(), 0, 11)
+            # print("Done with menu cursor")
+            while memory.main.menuNumber() == 5:
                 xbox.tapB()
-        elif main.menuNumber() == 7:  # Cursor selecting party member
+        elif memory.main.menuNumber() == 7:  # Cursor selecting party member
             print("Selecting party member")
-            target_pos = main.getCharacterIndexInMainMenu(character)
-            while main.getCharCursorPos() != target_pos:
-                if main.getStoryProgress() == 2528:  # After B&Y, party size is evaluated weird.
-                    main.menuDirection(main.getCharCursorPos(), target_pos, 7)
-                elif main.partySize() < 3:
+            target_pos = memory.main.getCharacterIndexInMainMenu(character)
+            while memory.main.getCharCursorPos() != target_pos:
+                if memory.main.getStoryProgress() == 2528:  # After B&Y, party size is evaluated weird.
+                    memory.main.menuDirection(memory.main.getCharCursorPos(), target_pos, 7)
+                elif memory.main.partySize() < 3:
                     xbox.menuDown()
                 else:
                     # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.partySize())
                     # Not working. Use this instead.
-                    main.menuDirection(main.getCharCursorPos(), target_pos, 7)
-            while main.menuNumber() == 7:
+                    memory.main.menuDirection(memory.main.getCharCursorPos(), target_pos, 7)
+            while memory.main.menuNumber() == 7:
                 xbox.menuB()
             try:
                 FFXC.set_neutral()
@@ -129,7 +129,7 @@ def openGrid(character):
 def performNextGrid(limit: int = 255):
     # Conditions to hard disregard further evaluations.
     print("###   Next Version: ", gameVars.nemCheckpointAP())
-    print("### Current S.lvls: ", main.getTidusSlvl())
+    print("### Current S.lvls: ", memory.main.getTidusSlvl())
     print("### Needed  S.lvls: ", nextAPneeded(gameVars.nemCheckpointAP()))
     if limit != 255:
         print("###          Limit: ", limit)
@@ -141,7 +141,7 @@ def performNextGrid(limit: int = 255):
         return False
 
     # If the above checks are passed, check Tidus level and do sphere grid.
-    if main.getTidusSlvl() >= nextAPneeded(gameVars.nemCheckpointAP()):
+    if memory.main.getTidusSlvl() >= nextAPneeded(gameVars.nemCheckpointAP()):
         print("##### Attemping Nemesis Grid #", gameVars.nemCheckpointAP())
         if gameVars.nemCheckpointAP() == 1:
             nemGridding1()
@@ -267,7 +267,7 @@ def nextAPneeded(checkpoint):
 
 
 def nemGridding1():
-    if main.getPower() < 4 or main.getSpeed() < 4:
+    if memory.main.getPower() < 4 or memory.main.getSpeed() < 4:
         gameVars.setNemCheckpointAP(value=0)
         return
     # Requires X levels
@@ -303,7 +303,7 @@ def nemGridding1():
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding2():
@@ -316,7 +316,7 @@ def nemGridding2():
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding3():
@@ -347,7 +347,7 @@ def nemGridding3():
     # menuGrid.useAndUseAgain()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding4():
@@ -372,7 +372,7 @@ def nemGridding4():
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding5():
@@ -396,7 +396,7 @@ def nemGridding5():
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'down')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding6():
@@ -438,7 +438,7 @@ def nemGridding6():
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding7():
@@ -474,7 +474,7 @@ def nemGridding7():
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding8():
@@ -517,7 +517,7 @@ def nemGridding8():
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding9():  # Ends near Wakka
@@ -549,7 +549,7 @@ def nemGridding9():  # Ends near Wakka
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding10():  # Starts near Wakka
@@ -587,10 +587,10 @@ def nemGridding10():  # Starts near Wakka
     menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
     FFXC.set_movement(1, -1)
-    main.waitFrames(30)
+    memory.main.waitFrames(30)
     FFXC.set_movement(0, 0)
     FFXC.set_neutral()
-    main.waitFrames(6)
+    memory.main.waitFrames(6)
     menuGrid.moveAndUse()
     menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
@@ -598,7 +598,7 @@ def nemGridding10():  # Starts near Wakka
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding11():  # Back from Ultima to Wakka's grid
@@ -629,7 +629,7 @@ def nemGridding11():  # Back from Ultima to Wakka's grid
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding12():  # Through Kimahri's grid to Rikku's.
@@ -665,7 +665,7 @@ def nemGridding12():  # Through Kimahri's grid to Rikku's.
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding13():  # Start on the Steal command
@@ -679,7 +679,7 @@ def nemGridding13():  # Start on the Steal command
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding14():
@@ -716,7 +716,7 @@ def nemGridding14():
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding15():  # Weird off-shoot with the three +1 strength nodes
@@ -751,7 +751,7 @@ def nemGridding15():  # Weird off-shoot with the three +1 strength nodes
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding16():
@@ -770,7 +770,7 @@ def nemGridding16():
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding17():  # Ends near Lulu
@@ -821,7 +821,7 @@ def nemGridding17():  # Ends near Lulu
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding18():  # All the way back to Kimahri grid
@@ -855,7 +855,7 @@ def nemGridding18():  # All the way back to Kimahri grid
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding19():
@@ -897,7 +897,7 @@ def nemGridding19():
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding20():  # Starts next to Haste node
@@ -917,7 +917,7 @@ def nemGridding20():  # Starts next to Haste node
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding21():  # Auron's grid back to Tidus
@@ -949,7 +949,7 @@ def nemGridding21():  # Auron's grid back to Tidus
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding22():
@@ -990,7 +990,7 @@ def nemGridding22():
     menuGrid.moveAndUse()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding23():
@@ -1016,7 +1016,7 @@ def nemGridding23():
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding24():
@@ -1055,7 +1055,7 @@ def nemGridding24():
     menuGrid.moveAndUse()
     menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def nemGridding25():  # End Tidus grid, Quick Hit
@@ -1095,7 +1095,7 @@ def nemGridding25():  # End Tidus grid, Quick Hit
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('lv3', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 # Backtrack to Auto-life, or can go through Yuna's grid on refactor.
@@ -1137,7 +1137,7 @@ def nemGridding26():
     menuGrid.moveAndUse()
     menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def luluBribe():
@@ -1151,7 +1151,7 @@ def luluBribe():
     menuGrid.moveAndUse()
     menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def rikkuHaste():
@@ -1186,7 +1186,7 @@ def rikkuHaste():
     menuGrid.moveAndUse()
     menuGrid.selSphere('ability', 'aftersk')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def rikkuProvoke():
@@ -1199,7 +1199,7 @@ def rikkuProvoke():
     menuGrid.moveAndUse()
     menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
 
 def strBoost():
@@ -1238,4 +1238,4 @@ def strBoost():
     menuGrid.useAndUseAgain()
     menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
