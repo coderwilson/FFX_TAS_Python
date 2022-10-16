@@ -1,3 +1,4 @@
+import battle.overdrive
 import logs
 import memory.main
 import rngTrack
@@ -17,22 +18,6 @@ def tapTargeting():
     while (not memory.main.mainBattleMenu()) and memory.main.battleActive():
         xbox.tapB()
     print("Done", not memory.main.mainBattleMenu(), memory.main.battleActive())
-
-
-def valeforOD(sinFin=0, version=0):
-    memory.main.waitFrames(6)
-    while memory.main.mainBattleMenu():
-        xbox.tapLeft()
-    print("Overdrive:", version)
-    if version == 1:
-        while memory.main.battleCursor2() != 1:
-            xbox.tapDown()
-    while memory.main.otherBattleMenu():
-        xbox.tapB()  # Energy Blast
-    if sinFin == 1:
-        xbox.tapDown()
-        xbox.tapLeft()
-    tapTargeting()
 
 
 def defend():
@@ -212,168 +197,6 @@ def useSpecial(position, target: int = 20, direction: int = 'u'):
     tapTargeting()
 
 
-def auronOD(style="dragon fang"):
-    while not memory.main.otherBattleMenu():
-        xbox.tapLeft()
-    while not memory.main.interiorBattleMenu():
-        xbox.tapB()
-    print("Style:", style)
-    # Doing the actual overdrive
-    if style == "dragon fang":
-        _navigate_to_position(0, battleCursor=memory.main.battleCursor3)
-        while not memory.main.auronOverdriveActive():
-            xbox.tapB()
-        print("Starting")
-        for i in range(2):  # Do it twice in case there's a miss on the first one.
-            FFXC.set_value('Dpad', 2)  # down
-            memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 4)  # left
-            memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 1)  # up
-            memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 8)  # right
-            memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('BtnShoulderL', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnShoulderL', 0)
-            FFXC.set_value('BtnShoulderR', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnShoulderR', 0)
-            FFXC.set_value('BtnA', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnA', 0)
-            FFXC.set_value('BtnB', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
-    elif style == "shooting star":
-        _navigate_to_position(1, battleCursor=memory.main.battleCursor3)
-        while not memory.main.auronOverdriveActive():
-            xbox.tapB()
-        for i in range(2):  # Do it twice in case there's a miss on the first one.
-            FFXC.set_value('BtnY', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnY', 0)
-            FFXC.set_value('BtnA', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnA', 0)
-            FFXC.set_value('BtnX', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnX', 0)
-            FFXC.set_value('BtnB', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
-            FFXC.set_value('Dpad', 4)  # left
-            memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 8)  # right
-            memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('BtnB', 1)
-            memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
-
-
-def tidusOD(direction=None, version: int = 0, character=99):
-    print("Tidus overdrive activating")
-    while not memory.main.otherBattleMenu():
-        xbox.tapLeft()
-    while not memory.main.interiorBattleMenu():
-        xbox.tapB()
-    if version == 1:
-        memory.main.waitFrames(6)
-        xbox.menuRight()
-    while memory.main.interiorBattleMenu():
-        xbox.tapB()
-    if character != 99 and memory.main.getEnemyCurrentHP()[character - 20] != 0:
-        while character != memory.main.battleTargetId() and memory.main.getEnemyCurrentHP()[character - 20] != 0:
-            xbox.tapLeft()
-    elif direction:
-        if direction == 'left':
-            xbox.tapLeft()
-
-    while not memory.main.overdriveMenuActive():
-        xbox.tapB()
-    memory.main.waitFrames(12)
-    print("Hit Overdrive")
-    xbox.tapB()  # First try pog
-    memory.main.waitFrames(8)
-    xbox.tapB()  # Extra attempt in case of miss
-    memory.main.waitFrames(9)
-    xbox.tapB()  # Extra attempt in case of miss
-    memory.main.waitFrames(10)
-    xbox.tapB()  # Extra attempt in case of miss
-    memory.main.waitFrames(11)
-    xbox.tapB()  # Extra attempt in case of miss
-    memory.main.waitFrames(12)
-    xbox.tapB()  # Extra attempt in case of miss
-
-
-def tidusODSeymour():
-    print("Tidus overdrive activating")
-    screen.awaitTurn()
-    tidusOD('left')
-
-
-def yunaOD(aeonNum: int = 5):
-    print("Awaiting Yunas turn")
-    while not screen.turnYuna():
-        if memory.main.turnReady():
-            defend()
-    while not memory.main.otherBattleMenu():
-        xbox.tapLeft()
-    while not memory.main.interiorBattleMenu():
-        xbox.tapB()
-    while not memory.main.battleCursor3() == aeonNum:
-        if aeonNum > memory.main.battleCursor3():
-            xbox.tapDown()
-        else:
-            xbox.tapUp()
-        memory.main.waitFrames(2)
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-
-
-def yojimboOD(gilValue: int = 263000):
-    print("Yojimbo overdrive")
-    screen.awaitTurn()
-    if not screen.turnAeon():
-        return
-    while memory.main.battleMenuCursor() != 35:
-        xbox.tapUp()
-    memory.main.waitFrames(6)
-    xbox.menuB()
-    print("Selecting amount")
-    memory.main.waitFrames(15)
-    xbox.tapLeft()
-    xbox.tapLeft()
-    xbox.tapLeft()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapLeft()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapLeft()
-    xbox.tapUp()
-    xbox.tapUp()
-    print("Amount selected")
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    return
-
-
 def remedy(character: int, direction: str):
     print("Remedy")
     if memory.main.getThrowItemsSlot(15) < 250:
@@ -456,7 +279,7 @@ def Ammes():
     while BattleComplete != 1:
         if memory.main.turnReady():
             if not tidusODflag and screen.turnTidus() and memory.main.getOverdriveBattle(0) == 100:
-                tidusOD()
+                battle.overdrive.tidus()
                 tidusODflag = True
             else:
                 print("Attacking Sinspawn Ammes")
@@ -741,7 +564,7 @@ def SinFin():
                     buddySwapYuna()
                     aeonSummon(0)
             elif screen.turnAeon():
-                valeforOD(sinFin=1)
+                battle.overdrive.valefor(sinFin=1)
                 print("Valefor energy blast")
     print("Sin's Fin fight complete")
     xbox.clickToBattle()
@@ -769,7 +592,7 @@ def Echuilles():
                     tidusFlee()  # performs cheer command
                 elif memory.main.getOverdriveBattle(0) == 100 and memory.main.getEnemyCurrentHP()[0] <= 750:
                     print("Overdrive")
-                    tidusOD()
+                    battle.overdrive.tidus()
                 else:
                     print("Tidus attack")
                     attack('none')
@@ -1095,7 +918,7 @@ def Geneaux():
     screen.awaitTurn()
     aeonSummon(0)  # Summon Valefor
     screen.awaitTurn()
-    valeforOD()
+    battle.overdrive.valefor()
 
     while not memory.main.battleComplete():  # AKA end of battle screen
         if memory.main.diagSkipPossible():
@@ -1153,7 +976,7 @@ def LucaWorkers2(earlyHaste):
                     attack('none')
                 elif screen.turnKimahri():
                     if memory.main.getEnemyCurrentHP().count(0) == 1 and memory.main.getOverdriveBattle(3) == 100 and memory.main.getEnemyCurrentHP()[0] > 80:
-                        kimahriOD(1)
+                        battle.overdrive.kimahri(1)
                     else:
                         attack('none')
                 elif screen.turnLulu():
@@ -1607,7 +1430,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                             screen.awaitTurn()
-                            valeforOD(version=1)
+                            battle.overdrive.valefor(version=1)
                             status[2] = 1
                             status[5] = 1
             else:
@@ -1631,7 +1454,7 @@ def MRRbattle(status):
                         buddySwapYuna()
                         aeonSummon(0)
                         screen.awaitTurn()
-                        valeforOD(version=1)
+                        battle.overdrive.valefor(version=1)
                         status[2] = 1
                         status[5] = 1
     elif status[5] == 1:  # Next need to recharge Valefor
@@ -1959,7 +1782,7 @@ def battleGui():
                     print("##### Expecting crit: ", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
             elif screen.turnKimahri():
                 dmgBefore = memory.main.getEnemyCurrentHP()[0]
-                kimahriOD(2)
+                battle.overdrive.kimahri(2)
                 screen.awaitTurn()
                 dmgAfter = memory.main.getEnemyCurrentHP()[0]
                 damage = dmgBefore - dmgAfter
@@ -1987,7 +1810,7 @@ def battleGui():
                 else:
                     defend()
             elif screen.turnAeon():
-                valeforOD()
+                battle.overdrive.valefor()
                 aeonTurn = True
 
     screen.awaitTurn()
@@ -2008,7 +1831,7 @@ def battleGui():
                 aeonSpell(1)
             elif memory.main.getOverdriveBattle(8) == 20:
                 print("------Overdriving")
-                valeforOD()
+                battle.overdrive.valefor()
                 went = True
             elif not turn1:
                 turn1 = True
@@ -2065,7 +1888,7 @@ def battleGui():
                     aeonSummon(0)
             elif screen.turnAeon():
                 print("Firing")
-                valeforOD()
+                battle.overdrive.valefor()
             else:
                 print("Defend")
                 defend()
@@ -2125,29 +1948,6 @@ def djose(stoneBreath):
     return stoneBreath
 
 
-def wakkaOD():
-    print("Wakka overdrive activating")
-    while not memory.main.otherBattleMenu():
-        xbox.tapLeft()
-    while not memory.main.interiorBattleMenu():
-        xbox.tapB()
-    while memory.main.interiorBattleMenu():
-        xbox.tapB()
-
-    memory.main.waitFrames(1)
-    xbox.tapB()
-
-    while memory.main.overdriveMenuActiveWakka() == 0:
-        pass
-    memory.main.waitFrames(76)
-    print("Hit Overdrive")
-    xbox.tapB()  # First reel
-    memory.main.waitFrames(13)
-    xbox.tapB()  # Second reel
-    memory.main.waitFrames(5)
-    xbox.tapB()  # Third reel
-
-
 def extractor():
     print("Fight start: Extractor")
     FFXC.set_neutral()
@@ -2188,7 +1988,7 @@ def extractor():
                     attack('none')
             else:
                 if memory.main.getEnemyCurrentHP()[0] < 1900 and memory.main.getOverdriveBattle(4) == 100:
-                    wakkaOD()
+                    battle.overdrive.wakka()
                 else:
                     attack('none')
         elif memory.main.diagSkipPossible():
@@ -2840,7 +2640,7 @@ def seymourGuado_blitzWin():
                     elif rikkuposition >= 3:
                         buddySwapRikku()
                 elif kimahriturns == 0:
-                    kimahriOD(3)
+                    battle.overdrive.kimahri(3)
                 elif kimahriturns == 1:
                     logs.writeRNGTrack("RNG11 on Seymour steal command")
                     logs.writeRNGTrack(memory.main.rngArrayFromIndex(index=11, arrayLen=2))
@@ -3032,7 +2832,9 @@ def seymourGuado_blitzLoss():
                     print("Swap to Brotherhood")
                     equipInBattle(special='brotherhood')
                 elif tidusturns == 4:
-                    tidusODSeymour()
+                    print("Tidus overdrive activating")
+                    screen.awaitTurn()
+                    battle.overdrive.tidus('left')
                 elif tidusturns == 5:
                     buddySwapWakka()
                 elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
@@ -3361,7 +3163,7 @@ def wendigo():
                     elif memory.main.getThrowItemsSlot(6) < 255:
                         revive()
                 elif memory.main.getEnemyCurrentHP()[1] < 6000 and memory.main.getOverdriveBattle(0) == 100 and not gameVars.skipKilikaLuck():
-                    tidusOD('left', character=21)
+                    battle.overdrive.tidus('left', character=21)
                 elif tidushealself:
                     if partyHP[memory.main.getBattleCharSlot(0)] < tidusmaxHP:
                         print(
@@ -3683,7 +3485,7 @@ def sandragora(version):
             defend()
             screen.awaitTurn()
         print("Setting up Auron overdrive")
-        auronOD(style="shooting star")
+        battle.overdrive.auron(style="shooting star")
         memory.main.clickToControl()
 
 
@@ -3714,7 +3516,7 @@ def home2():
         if memory.main.turnReady():
 
             if screen.turnKimahri():
-                kimahriOD(3)
+                battle.overdrive.kimahri(3)
             elif memory.main.getBattleCharSlot(3) >= 3:
                 buddySwapKimahri()  # Tidus for Kimahri
                 lancetHome('none')
@@ -3780,7 +3582,7 @@ def home4():
     while memory.main.battleActive():  # AKA end of battle screen
         if memory.main.turnReady():
             if screen.turnKimahri():
-                kimahriOD(4)
+                battle.overdrive.kimahri(4)
             elif memory.main.getBattleCharSlot(3) >= 3:
                 buddySwapKimahri()  # Tidus for Kimahri
                 lancetHome('none')
@@ -3820,7 +3622,7 @@ def Evrae():
                         cheer()
                     elif tidusAttacks == 4 or memory.main.getEnemyCurrentHP()[0] <= 9999:
                         tidusAttacks += 1
-                        tidusOD()
+                        battle.overdrive.tidus()
                     else:
                         tidusAttacks += 1
                         attack('none')
@@ -3853,7 +3655,7 @@ def Evrae():
                         tidusPrep += 1
                     elif tidusAttacks == 4 and gameVars.skipKilikaLuck():
                         tidusAttacks += 1
-                        tidusOD()
+                        battle.overdrive.tidus()
                     else:
                         tidusAttacks += 1
                         attack('none')
@@ -5749,18 +5551,6 @@ def buddySwapRikku():
     buddySwap_char(6)
 
 
-def kimahriOD(pos):
-    print("Kimahri using Overdrive, pos -", pos)
-    while not memory.main.otherBattleMenu():
-        xbox.tapLeft()
-    while memory.main.otherBattleMenu():
-        xbox.tapB()
-    _navigate_to_position(pos, battleCursor=memory.main.battleCursor3)
-    while memory.main.interiorBattleMenu():
-        xbox.tapB()
-    tapTargeting()
-
-
 def wrapUp():
     print("^^Wrapping up battle.")
     while not memory.main.userControl():
@@ -5980,7 +5770,7 @@ def BFA_nem():
             if memory.main.turnReady():
                 if screen.turnTidus():
                     if memory.main.getEncounterID() == 401 and memory.main.overdriveState2()[0] == 100:
-                        tidusOD()
+                        battle.overdrive.tidus()
                     else:
                         attack('none')
                 elif screen.turnYuna():
@@ -6853,7 +6643,7 @@ def ghostKillTidus(silenceSlot: int, selfHaste: bool):
                     tidusHaste('none')
                     selfHaste = True
                 elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
-                    tidusOD()
+                    battle.overdrive.tidus()
                 else:
                     attack('none')
             elif 1 not in memory.main.getActiveBattleFormation():
@@ -6883,7 +6673,7 @@ def ghostKillAny(silenceSlot: int, selfHaste: bool):
                     tidusHaste(direction='l', character=1)
                     yunaHaste = True
                 elif memory.main.getEnemyCurrentHP()[0] <= 2800 and memory.main.getOverdriveBattle(0) == 100:
-                    tidusOD()
+                    battle.overdrive.tidus()
                 else:
                     attack('none')
             elif 1 not in memory.main.getActiveBattleFormation():

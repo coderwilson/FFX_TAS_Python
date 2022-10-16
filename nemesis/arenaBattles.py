@@ -1,6 +1,7 @@
 import time
 
 import battle.main as main
+import battle.overdrive
 import memory.main as main
 import menu
 import nemesis.arenaSelect as arenaSelect
@@ -217,6 +218,7 @@ def returnToAirship():
     main.clearSaveMenuCursor()
     main.clearSaveMenuCursor2()
 
+
 def aeonStart():
     screen.awaitTurn()
     main.buddySwapYuna()
@@ -228,15 +230,16 @@ def aeonStart():
             else:
                 main.defend()
 
+
 def yojimboBattle():
     #Incomplete
     screen.awaitTurn()
     if not 1 in main.getActiveBattleFormation():
         main.buddySwapYuna()
     print("+Yuna Overdrive to summon Yojimbo")
-    main.yunaOD()
+    battle.overdrive.yuna()
     print("+Pay the man")
-    main.yojimboOD()
+    battle.overdrive.yojimbo()
     main.waitFrames(90)
     while main.battleActive():
         if main.turnReady():
@@ -295,7 +298,7 @@ def basicQuickAttacks(megaPhoenix = False, odVersion:int=0, yunaAutos=False):
                 if megaPhoenix and screen.faintCheck() >= 2:
                     main.revive(itemNum = 7)
                 elif main.getOverdriveBattle(0) == 100:
-                    main.tidusOD(version=odVersion)
+                    battle.overdrive.tidus(version=odVersion)
                 else:
                     main.useSkill(1) #Quick hit
             elif screen.turnAeon():
@@ -321,7 +324,7 @@ def basicAttack(megaPhoenix = False, odVersion:int=0,useOD=False, yunaAutos=Fals
                 if megaPhoenix and screen.faintCheck() >= 2:
                     main.revive(itemNum = 7)
                 elif useOD and main.getOverdriveBattle(0) == 100:
-                    main.tidusOD(version=odVersion)
+                    battle.overdrive.tidus(version=odVersion)
                 else:
                     main.attack('none')
             elif screen.turnYuna() and yunaAutos:
@@ -851,7 +854,7 @@ def shinryuBattle():
                     rikkuDriveComplete=True
             elif screen.turnTidus():
                 if main.getOverdriveBattle(0) == 100:
-                    main.tidusOD(version=1)
+                    battle.overdrive.tidus(version=1)
                 elif rikkuDriveComplete and not main.autoLifeState():
                     autoLife()
                 else:

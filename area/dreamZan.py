@@ -1,4 +1,5 @@
 import battle.main
+import battle.overdrive
 import logs
 import memory.main
 import rngTrack
@@ -192,7 +193,7 @@ def ammesBattle():
     print("Waiting for Auron's Turn")
     print("At Overdrive")
     # Auron overdrive tutorial
-    battle.main.auronOD()
+    battle.overdrive.auron()
 
 
 def AfterAmmes():
