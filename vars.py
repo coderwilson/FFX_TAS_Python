@@ -39,24 +39,24 @@ class allVars:
         self.lStrikeCount = 1             # Default 0
 
         # ----RNG Manip
-        self.yellows = 0
-        self.confirmedSeedNum = 999
-        self.skipZanLuck = False
+        self.yellows = 0                  # ?
+        self.confirmedSeedNum = 999       # ?
+        self.skipZanLuck = False          # ?
 
         # ----Other
-        self.newGame = False
-        self.selfDestruct = False  # Default False
-        self.YTKFarm = 0  # Default to 0
-        self.rescueCount = 0  # Default to 0
-        self.fluxOverkillVar = False  # Default to False
-        self.tryNEVal = True  # Based on
+        self.newGame = False              # ?
+        self.selfDestruct = False         # Default False
+        self.YTKFarm = 0                  # Default to 0
+        self.rescueCount = 0              # Default to 0
+        self.fluxOverkillVar = False      # Default to False
+        self.tryNEVal = True              # Based on
         self.firstHits = [0] * 8
-        self.neArmorVal = 255  # Default 255
-        self.neBattles = 0  # Default to 0
-        self.neaZone = 0  # Decides which zone we charge Rikku in after reaching Zanarkand.
+        self.neArmorVal = 255             # Default 255
+        self.neBattles = 0                # Default to 0
+        self.neaZone = 0                  # Decides which zone we charge Rikku in after reaching Zanarkand.
 
         # ----Nemesis variables, unused in any%
-        self.nemAPVal = 1  # Default to 1
+        self.nemAPVal = 1                 # Default to 1
         self.areaResults = [0] * 13
         self.speciesResults = [0] * 14
         self.originalResults = [0] * 7
