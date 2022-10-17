@@ -819,7 +819,7 @@ def afterBlitz3LateHaste(earlyHaste):
 def MiihenRoad(selfDestruct=False):
     print("Fight start: Mi'ihen Road")
     print("Mi'ihen battle. Self-destruct:", gameVars.selfDestructGet())
-    battle = memory.main.getEncounterID()
+    encounterID = memory.main.getEncounterID()
 
     while not memory.main.battleComplete():  # AKA end of battle screen
         if memory.main.battleType() == 2 and not checkTidusOk():
@@ -829,11 +829,11 @@ def MiihenRoad(selfDestruct=False):
         if memory.main.turnReady():
             if screen.turnTidus():
                 if not gameVars.selfDestructGet():
-                    if battle == 51 or battle == 64 or battle == 66 or battle == 87:
+                    if encounterID == 51 or encounterID == 64 or encounterID == 66 or encounterID == 87:
                         lancetSwap('none')
                         gameVars.selfDestructLearned()
                         break
-                    elif battle == 65 or battle == 84:
+                    elif encounterID == 65 or encounterID == 84:
                         lancetSwap('right')
                         gameVars.selfDestructLearned()
                         break
@@ -931,11 +931,11 @@ def MRRbattle(status):
     print("------------------------------")
     print("------------------------------")
     print("Fight start: MRR")
-    battle = memory.main.getEncounterID()
-    print("Battle number:", battle)
+    encounterID = memory.main.getEncounterID()
+    print("Battle number:", encounterID)
     # nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
-    if battle == 102:
+    if encounterID == 102:
         print("Garuda battle, we want nothing to do with this.")
     elif status[5] == 0:
         print("If funguar present or more than three flees already, Valefor overdrive.")
@@ -962,11 +962,11 @@ def MRRbattle(status):
     elif checkPetrify():
         print("------------Someone has been petrified which messes up the battle logic. Escaping.")
         fleeAll()
-    elif battle == 102:  # Garuda, flee no matter what.
+    elif encounterID == 102:  # Garuda, flee no matter what.
         fleeAll()
     elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
         if status[3] < 3 and memory.main.rngSeed() != 160:  # Battle number (zero-index)
-            if battle == 100 or battle == 101:  # The two battles with Funguar
+            if encounterID == 100 or encounterID == 101:  # The two battles with Funguar
                 while memory.main.battleActive():  # end of battle screen
                     if memory.main.turnReady():
                         if checkPetrify():
@@ -985,7 +985,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                             screen.awaitTurn()
-                            battle.overdrive.valefor(version=1)
+                            encounterID.overdrive.valefor(version=1)
                             status[2] = 1
                             status[5] = 1
             else:
@@ -1009,7 +1009,7 @@ def MRRbattle(status):
                         buddySwapYuna()
                         aeonSummon(0)
                         screen.awaitTurn()
-                        battle.overdrive.valefor(version=1)
+                        encounterID.overdrive.valefor(version=1)
                         status[2] = 1
                         status[5] = 1
     elif status[5] == 1:  # Next need to recharge Valefor
@@ -1018,7 +1018,7 @@ def MRRbattle(status):
             for _ in range(3):
                 screen.awaitTurn()
                 defend()
-        if battle == 96:  # Gandarewa, Red Element, Raptor (camera front)
+        if encounterID == 96:  # Gandarewa, Red Element, Raptor (camera front)
             wakkaTurns = 0
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
@@ -1054,7 +1054,7 @@ def MRRbattle(status):
                                 aeonTurn = 2
                             else:
                                 aeonSpell2(3, 'none')
-        elif battle == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
+        elif encounterID == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
                     if checkPetrify():
@@ -1082,7 +1082,7 @@ def MRRbattle(status):
                             aeonTurn = 2
                         else:
                             aeonSpell(3)
-        elif battle == 98:  # Raptor, Red Element, Gandarewa (camera side)
+        elif encounterID == 98:  # Raptor, Red Element, Gandarewa (camera side)
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
                     if checkPetrify():
@@ -1112,7 +1112,7 @@ def MRRbattle(status):
                             else:
                                 aeonSpell2(3, 'right')
         # battle 99 is never used.
-        elif battle == 100:  # Raptor, Funguar, Red Element (camera front)
+        elif encounterID == 100:  # Raptor, Funguar, Red Element (camera front)
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
                     if checkPetrify():
@@ -1149,7 +1149,7 @@ def MRRbattle(status):
                             else:
                                 aeonSpell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
-        elif battle == 101:
+        elif encounterID == 101:
             while memory.main.battleActive():  # end of battle screen
                 if memory.main.turnReady():
                     if checkPetrify():
@@ -1215,12 +1215,12 @@ def MRRbattle(status):
                         else:
                             fleeAll()
                     elif screen.turnWakka():
-                        if battle == 96 or battle == 97 or battle == 101:
-                            if battle == 101:
+                        if encounterID == 96 or encounterID == 97 or encounterID == 101:
+                            if encounterID == 101:
                                 attackByNum(22, 'l')
                             else:
                                 attackByNum(21, 'l')
-                        elif battle == 98 or battle == 100:
+                        elif encounterID == 98 or encounterID == 100:
                             attack('none')
                         else:
                             fleeAll()
