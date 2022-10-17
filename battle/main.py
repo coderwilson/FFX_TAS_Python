@@ -985,7 +985,7 @@ def MRRbattle(status):
                             buddySwapYuna()
                             aeonSummon(0)
                             screen.awaitTurn()
-                            encounterID.overdrive.valefor(version=1)
+                            battle.overdrive.valefor(version=1)
                             status[2] = 1
                             status[5] = 1
             else:
@@ -1009,7 +1009,7 @@ def MRRbattle(status):
                         buddySwapYuna()
                         aeonSummon(0)
                         screen.awaitTurn()
-                        encounterID.overdrive.valefor(version=1)
+                        battle.overdrive.valefor(version=1)
                         status[2] = 1
                         status[5] = 1
     elif status[5] == 1:  # Next need to recharge Valefor
