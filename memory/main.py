@@ -14,6 +14,7 @@ import vars
 import xbox
 
 gameVars = vars.varsHandle()
+FFXC = xbox.controllerHandle()
 
 # Process Permissions
 PROCESS_QUERY_INFORMATION = 0x0400
@@ -425,7 +426,6 @@ def clickToControl3():
 
 
 def clickToControlSpecial():
-    FFXC = xbox.controllerHandle()
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
@@ -443,7 +443,6 @@ def clickToControlSpecial():
 
 
 def clickToEvent():
-    FFXC = xbox.controllerHandle()
     while userControl():
         FFXC.set_value('BtnB', 1)
         if gameVars.usePause():
@@ -459,7 +458,6 @@ def clickToEvent():
 
 
 def clickToEventTemple(direction):
-    FFXC = xbox.controllerHandle()
     if direction == 0:
         FFXC.set_movement(0, 1)
     if direction == 1:
@@ -1386,7 +1384,6 @@ def saveMenuOpen():
 
 
 def backToMainMenu():
-    gameVars = vars.varsHandle()
     while menuNumber() not in [1, 2, 3, 4, 5]:
         if menuOpen():
             xbox.tapA()
@@ -1397,7 +1394,6 @@ def backToMainMenu():
 
 
 def openMenu():
-    FFXC = xbox.controllerHandle()
     menuCounter = 0
     while not (userControl() and menuOpen() and menuNumber() == 5):
         if menuOpen() and not userControl():
@@ -1701,7 +1697,6 @@ def awaitMenuControl():
 
 
 def clickToStoryProgress(destination):
-    FFXC = xbox.controllerHandle()
     counter = 0
     currentState = getStoryProgress()
     print("Story goal:", destination, "| Awaiting progress state:", currentState)
@@ -1754,7 +1749,6 @@ def getCharacterIndexInMainMenu(character):
 
 
 def fullPartyFormat(frontLine, *, fullMenuClose=True):
-    gameVars = vars.varsHandle()
     order = getOrderSeven()
     partyMembers = len(order)
     frontLine = frontLine.lower()
@@ -1782,7 +1776,6 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
         while not menuOpen():
             if not openMenu():
                 return
-        FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
         while getMenuCursorPos() != 7:
             menuDirection(getMenuCursorPos(), 7, 11)
@@ -2883,7 +2876,6 @@ def checkThunderStrike() -> int:
 
 def checkZombieStrike():
     ability = 0x8032
-    gameVars = vars.varsHandle()
 
     charWeaps = weaponArrayCharacter(0)  # Tidus
     while len(charWeaps) > 0:
@@ -3093,7 +3085,6 @@ def customizeMenuArray():
 
 def checkNEArmor():
     ability = 0x801D
-    gameVars = vars.varsHandle()
 
     charWeaps = armorArrayCharacter(0)  # Tidus
     while len(charWeaps) > 0:
@@ -3655,7 +3646,6 @@ def touchSaveSphere(saveCursorNum: int = 0):
     clearSaveMenuCursor2()
 
     ssDetails = getSaveSphereDetails()
-    FFXC = xbox.controllerHandle()
     while userControl():
         targetPathing.setMovement([ssDetails[0], ssDetails[1]])
         xbox.tapB()
@@ -3708,7 +3698,6 @@ def touchSaveSphere_notWorking(saveCursorNum: int = 0):
     print("MEM - Touch Save Sphere")
 
     ssDetails = getSaveSphereDetails()
-    FFXC = xbox.controllerHandle()
     while userControl():
         targetPathing.setMovement([ssDetails[0], ssDetails[1]])
         xbox.tapB()
@@ -3753,7 +3742,6 @@ def csrBaajSaveClear():
         print("No need to clear. User is in control.")
     else:
         print("Save dialog has popped up for some reason. Attempting clear.")
-        FFXC = xbox.controllerHandle()
         try:
             FFXC.set_neutral()
         except Exception:

@@ -5,6 +5,7 @@ from pathlib import Path
 import memory.main
 import screen
 import targetPathing
+import vars
 import xbox
 import zzairShipPath
 
@@ -12,11 +13,10 @@ import zzairShipPath
 # This assumes that the save is the first non-auto-save in the list of saves.
 
 FFXC = xbox.controllerHandle()
+gameVars = vars.varsHandle()
 
 
 def getSavedFiles():
-    import vars
-    gameVars = vars.varsHandle()
     saveFilesFull = sorted(
         Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime)
     saveFiles = [os.path.basename(i) for i in saveFilesFull]
@@ -96,8 +96,6 @@ def loadOffsetBattle(offset):
 
 
 def loadMemCursor():
-    import vars
-    gameVars = vars.varsHandle()
     memory.main.awaitControl()
     memory.main.openMenu()
     if memory.main.getStoryProgress() <= 200:  # Up to Besaid save, after Trials

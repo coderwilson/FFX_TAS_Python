@@ -1749,7 +1749,6 @@ def skReturn2():
 
 
 def openGrid(character):
-    FFXC = xbox.controllerHandle()
     try:
         FFXC.set_neutral()
     except Exception:
@@ -1780,12 +1779,10 @@ def openGrid(character):
             try:
                 FFXC.set_neutral()
             except Exception:
-                FFXC = xbox.controllerHandle()
                 FFXC.set_neutral()
     try:
         FFXC.set_neutral()
     except Exception:
-        FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
 
 # ------------------------------

@@ -105,7 +105,6 @@ def klikk():
 
 
 def tros():
-    FFXC = xbox.controllerHandle()
     logs.openRNGTrack()
     print("Fight start: Tros")
     FFXC.set_neutral()

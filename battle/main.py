@@ -926,7 +926,6 @@ def mrrTarget():
 
 
 def MRRbattle(status):
-    gameVars = vars.varsHandle()
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
     print("------------------------------")
     print("------------------------------")
@@ -3777,7 +3776,6 @@ def healUp(chars=3, *, fullMenuClose=True):
         return
     if not memory.main.menuOpen():
         memory.main.openMenu()
-    FFXC = xbox.controllerHandle()
     FFXC.set_neutral()
     while memory.main.getMenuCursorPos() != 2:
         print("Selecting Ability command -", memory.main.getMenuCursorPos())

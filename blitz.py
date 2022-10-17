@@ -889,7 +889,6 @@ def blitzMovement():
 
 
 def decideAction():
-    FFXC = xbox.controllerHandle()
     FFXC.set_neutral()
     updatePlayerArray()
     if controllingPlayer() == 0:
@@ -924,7 +923,6 @@ def blitzMain(forceBlitzWin):
     print("-Match is now starting.")
     startTime = logs.timeStamp()
 
-    FFXC = xbox.controllerHandle()
     gameVars.blitzFirstShotReset()
     movementSetFlag = False
     lastState = 0
