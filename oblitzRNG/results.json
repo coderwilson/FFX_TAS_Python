@@ -1,1 +1,42 @@
-{"999": {"999": {"duration": 987, "victory": false}, "9999": {"duration": 987, "victory": false}}}
+{
+    "999": {
+        "999": {
+            "duration": 999,
+            "victory": false
+        }
+    },
+    "31": {
+        "1303288413": {
+            "duration": 494,
+            "victory": false
+        },
+        "819148150": {
+            "duration": 670,
+            "victory": false
+        },
+        "1604092182": {
+            "duration": 431,
+            "victory": true
+        },
+        "1619771589": {
+            "duration": 501,
+            "victory": false
+        }
+    },
+    "160": {
+        "792934679": {
+            "duration": 452,
+            "victory": true
+        }
+    },
+    "56": {
+        "141125788": {
+            "duration": 550,
+            "victory": true
+        },
+        "777968232": {
+            "duration": 427,
+            "victory": true
+        }
+    }
+}

@@ -125,7 +125,7 @@ rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
 favoriteSeedsSoFar = [31, 160]
-rngSeedNum = 31  # If you don't randomly select below, this will be the seed you run.
+rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -142,7 +142,7 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     #gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
-    #rngSeedNum = random.choice(range(256))  # Select a favorite seed randomly, overrules the set seed above.
+    rngSeedNum = random.choice(range(256))  # Select a seed randomly, overrules the set seed above.
     #rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
     #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
