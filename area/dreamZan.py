@@ -174,7 +174,7 @@ def ammesBattle():
             lastHit = memory.main.lastHitCheckChange()
             while lastHit == 9999:
                 lastHit = memory.main.lastHitCheckChange()
-            print("Confirm - last hit: ", lastHit)
+            print("Confirm - last hit:", lastHit)
             hitsArray.append(lastHit)
             print(hitsArray)
     print("#####################################")
@@ -185,7 +185,7 @@ def ammesBattle():
     print("### Corrected RNG seed:", correctSeed)
     if correctSeed != "Err_seed_not_found":
         gameVars.setConfirmedSeed(correctSeed)
-    print("Confirming RNG seed: ", memory.main.rngSeed())
+    print("Confirming RNG seed:", memory.main.rngSeed())
     print("#####################################")
     print("Done Killing Sinspawn")
     memory.main.waitFrames(6)  # Just for no overlap

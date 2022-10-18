@@ -3321,7 +3321,7 @@ def oblitzRngWait():
     pos = 0
 
     if seedNum not in rngValues:
-        print("## No values for this RNG seed - ", memory.main.rngSeed())
+        print("## No values for this RNG seed -", memory.main.rngSeed())
         firstResult = [comingSeeds[1], 10, True, 1]
         secondResult = [comingSeeds[2], 20, True, 2]
     else:
@@ -3342,12 +3342,12 @@ def oblitzRngWait():
                 duration = int(rngValues[seedNum][str(comingSeeds[i])]['duration']) + pos
                 #print(duration)
                 victory = bool(rngValues[seedNum][str(comingSeeds[i])]['victory'])
-                print("Known result. ", [comingSeeds[i], duration, victory, pos])
+                print("Known result.", [comingSeeds[i], duration, victory, pos])
                 #print(victory)
             elif gameVars.loopBlitz():
                 duration = 1 + pos
                 victory = True
-                print("No result (preferred), loop. ", [comingSeeds[i], duration, victory, pos])
+                print("No result (preferred), loop.", [comingSeeds[i], duration, victory, pos])
             else:
                 duration = 540 + pos
                 #540 is about the maximum duration we desire.
