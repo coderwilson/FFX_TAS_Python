@@ -26,11 +26,13 @@ class Equipment:
     def __str__(self) -> str:
         abilities = [str(a) for a in self.abilities]
         for _ in range(self.slots - len(abilities)):
-            abilities.append('-')
-        string = (f'{self.name} '
-                  f'({self.owner.name}) '
-                  f'[{", ".join(abilities)}]'
-                  f'[{self.gil_value // 4} gil]')
+            abilities.append("-")
+        string = (
+            f"{self.name} "
+            f"({self.owner.name}) "
+            f'[{", ".join(abilities)}]'
+            f"[{self.gil_value // 4} gil]"
+        )
         return string
 
     def get_gil_value(self) -> None:
@@ -39,19 +41,19 @@ class Equipment:
         empty_slots = self.slots - len(self.abilities)
         abilities_values = [a.gil_value for a in self.abilities]
         base_gil_value = sum(abilities_values)
-        gil_value = int((50 + base_gil_value)
-                        * slots_factor[self.slots]
-                        * empty_slots_factor[empty_slots])
+        gil_value = int(
+            (50 + base_gil_value)
+            * slots_factor[self.slots]
+            * empty_slots_factor[empty_slots]
+        )
         return gil_value
 
     def get_name(self) -> str:
         ability_indexes = [AUTOABILITIES.index(a) for a in self.abilities]
         if self.type_ == EquipmentType.WEAPON:
-            name = get_weapon_name(
-                self.owner.index, ability_indexes, self.slots)
+            name = get_weapon_name(self.owner.index, ability_indexes, self.slots)
         elif self.type_ == EquipmentType.ARMOR:
-            name = get_armor_name(
-                self.owner.index, ability_indexes, self.slots)
+            name = get_armor_name(self.owner.index, ability_indexes, self.slots)
         return name
 
 
@@ -64,10 +66,10 @@ class EquipmentDrop:
 
     def __str__(self) -> str:
         string = str(self.equipment)
-        if self.monster.equipment['drop_chance'] == 255:
-            string += ' (guaranteed)'
+        if self.monster.equipment["drop_chance"] == 255:
+            string += " (guaranteed)"
         if self.killer_is_owner:
-            string += ' (for killer)'
+            string += " (for killer)"
         return string
 
 
@@ -77,7 +79,7 @@ def _get_equipment_names(file_path: str) -> dict[str, tuple[str]]:
     armor_names = []
     absolute_file_path = get_resource_path(file_path)
     with open(absolute_file_path) as file_object:
-        file_reader = csv.reader(file_object, delimiter=',')
+        file_reader = csv.reader(file_object, delimiter=",")
         # skips first 3 lines
         for _ in range(3):
             next(file_reader)
@@ -91,8 +93,8 @@ def _get_equipment_names(file_path: str) -> dict[str, tuple[str]]:
             armor_names.append(next(file_reader))
 
     equipment_names = {
-        'weapon': tuple(weapon_names),
-        'armor': tuple(armor_names),
+        "weapon": tuple(weapon_names),
+        "armor": tuple(armor_names),
     }
     return equipment_names
 
@@ -102,16 +104,15 @@ def get_weapon_name(owner_index: int, abilities: list[int], slots: int) -> str:
     the abilities and the number of slots.
     """
     # get number of certain ability types in the equipment
-    elemental_strikes = len([a for a in (30, 34, 38, 42)
-                             if a in abilities])
-    status_strikes = len([a for a in (46, 50, 54, 58, 62, 66, 70, 74)
-                          if a in abilities])
-    status_touches = len([a for a in (47, 51, 55, 59, 63, 67, 71, 75)
-                          if a in abilities])
-    strength_bonuses = len([a for a in (98, 99, 100, 101)
-                            if a in abilities])
-    magic_bonuses = len([a for a in (102, 103, 104, 105)
-                         if a in abilities])
+    elemental_strikes = len([a for a in (30, 34, 38, 42) if a in abilities])
+    status_strikes = len(
+        [a for a in (46, 50, 54, 58, 62, 66, 70, 74) if a in abilities]
+    )
+    status_touches = len(
+        [a for a in (47, 51, 55, 59, 63, 67, 71, 75) if a in abilities]
+    )
+    strength_bonuses = len([a for a in (98, 99, 100, 101) if a in abilities])
+    magic_bonuses = len([a for a in (102, 103, 104, 105) if a in abilities])
 
     # check conditions for names in order of priority
     if 122 in abilities:  # Capture
@@ -257,7 +258,7 @@ def get_weapon_name(owner_index: int, abilities: list[int], slots: int) -> str:
     else:  # No slots
         index = 65
 
-    return EQUIPMENT_NAMES['weapon'][index][owner_index]
+    return EQUIPMENT_NAMES["weapon"][index][owner_index]
 
 
 def get_armor_name(owner_index: int, abilities: list[int], slots: int) -> str:
@@ -268,11 +269,10 @@ def get_armor_name(owner_index: int, abilities: list[int], slots: int) -> str:
     elemental_eaters = len([a for a in (33, 37, 41, 45) if a in abilities])
     elemental_proofs = len([a for a in (32, 36, 40, 44) if a in abilities])
     status_proofs = len(
-        [a for a in (48, 52, 56, 60, 64, 68, 72, 76, 78, 80, 82)
-         if a in abilities])
+        [a for a in (48, 52, 56, 60, 64, 68, 72, 76, 78, 80, 82) if a in abilities]
+    )
     defense_bonuses = len([a for a in (106, 107, 108, 109) if a in abilities])
-    magic_defense_bonuses = len(
-        [a for a in (110, 111, 112, 113) if a in abilities])
+    magic_defense_bonuses = len([a for a in (110, 111, 112, 113) if a in abilities])
     hp_bonuses = len([a for a in (114, 115, 116, 117) if a in abilities])
     mp_bonuses = len([a for a in (118, 119, 120, 121) if a in abilities])
     auto_statuses = len([a for a in (84, 85, 86, 87, 88) if a in abilities])
@@ -294,10 +294,7 @@ def get_armor_name(owner_index: int, abilities: list[int], slots: int) -> str:
     elif elemental_proofs == 4:  # Four elemental -proof abilities
         index = 5
     # Auto Shell, Auto Protect, Auto Reflect and Auto Regen
-    elif (84 in abilities
-            and 85 in abilities
-            and 88 in abilities
-            and 87 in abilities):
+    elif 84 in abilities and 85 in abilities and 88 in abilities and 87 in abilities:
         index = 6
     # Auto-Potion, Auto Med and Auto Phoenix
     elif 8 in abilities and 9 in abilities and 10 in abilities:
@@ -466,7 +463,7 @@ def get_armor_name(owner_index: int, abilities: list[int], slots: int) -> str:
     else:  # No slots
         index = 83
 
-    return EQUIPMENT_NAMES['armor'][index][owner_index]
+    return EQUIPMENT_NAMES["armor"][index][owner_index]
 
 
-EQUIPMENT_NAMES = _get_equipment_names('tracker\\data\\equipment_names.csv')
+EQUIPMENT_NAMES = _get_equipment_names("tracker\\data\\equipment_names.csv")

@@ -10,8 +10,7 @@ class Character:
     name: str
     index: int
     _default_stats: dict[Stat, int] = field(default_factory=dict)
-    elemental_affinities: dict[Element, ElementalAffinity] = field(
-        default_factory=dict)
+    elemental_affinities: dict[Element, ElementalAffinity] = field(default_factory=dict)
 
     def __str__(self) -> str:
         return self.name
@@ -37,7 +36,7 @@ class CharacterState(Character):
             case Stat():
                 max_value = 255
             case _:
-                raise ValueError(f'Invalid stat name: {stat}')
+                raise ValueError(f"Invalid stat name: {stat}")
         value = min(max(value, 0), max_value)
         self.stats[stat] = value
 
@@ -49,7 +48,7 @@ def _get_characters(file_path: str) -> dict[str, Character]:
     """"""
     absolute_file_path = get_resource_path(file_path)
     with open(absolute_file_path) as file_object:
-        file_reader = csv.reader(file_object, delimiter=',')
+        file_reader = csv.reader(file_object, delimiter=",")
         # skips first line
         next(file_reader)
         characters = {}
@@ -87,8 +86,8 @@ def _get_characters(file_path: str) -> dict[str, Character]:
                 index=index,
                 _default_stats=default_stats,
                 elemental_affinities=elemental_affinities,
-                )
+            )
     return characters
 
 
-CHARACTERS = _get_characters('tracker\\data\\characters.csv')
+CHARACTERS = _get_characters("tracker\\data\\characters.csv")

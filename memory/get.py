@@ -24,15 +24,21 @@ class LocProcess(Process):
             read_buffer = ctypes.c_uint()
             lp_buffer = ctypes.byref(read_buffer)
             lp_number_of_bytes_read = ctypes.c_ulong(0)
-            ctypes.windll.kernel32.ReadProcessMemory(self.handle, lp_base_address, lp_buffer,
-                                                     size, lp_number_of_bytes_read)
+            ctypes.windll.kernel32.ReadProcessMemory(
+                self.handle, lp_base_address, lp_buffer, size, lp_number_of_bytes_read
+            )
             return read_buffer.value
         except (BufferError, ValueError, TypeError) as error:
             if self.handle:
                 self.close()
             self.error_code = self.get_last_error()
-            error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
-                     'Name': self.name, 'ErrorCode': self.error_code}
+            error = {
+                "msg": str(error),
+                "Handle": self.handle,
+                "PID": self.pid,
+                "Name": self.name,
+                "ErrorCode": self.error_code,
+            }
             ReadWriteMemoryError(error)
 
     def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
@@ -43,15 +49,25 @@ class LocProcess(Process):
             write_buffer = ctypes.c_uint(value)
             lp_buffer = ctypes.byref(write_buffer)
             lp_number_of_bytes_written = ctypes.c_ulong(0)
-            ctypes.windll.kernel32.WriteProcessMemory(self.handle, lp_base_address, lp_buffer,
-                                                      size, lp_number_of_bytes_written)
+            ctypes.windll.kernel32.WriteProcessMemory(
+                self.handle,
+                lp_base_address,
+                lp_buffer,
+                size,
+                lp_number_of_bytes_written,
+            )
             return True
         except (BufferError, ValueError, TypeError) as error:
             if self.handle:
                 self.close()
             self.error_code = self.get_last_error()
-            error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
-                     'Name': self.name, 'ErrorCode': self.error_code}
+            error = {
+                "msg": str(error),
+                "Handle": self.handle,
+                "PID": self.pid,
+                "Name": self.name,
+                "ErrorCode": self.error_code,
+            }
             ReadWriteMemoryError(error)
 
 
@@ -68,18 +84,25 @@ class FFXMemory(ReadWriteMemory):
 
         :return: A Process object containing the information from the requested Process.
         """
-        if not process_name.endswith('.exe'):
-            self.process.name = process_name + '.exe'
+        if not process_name.endswith(".exe"):
+            self.process.name = process_name + ".exe"
 
         process_ids = self.enumerate_processes()
 
         for process_id in process_ids:
-            self.process.handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, False, process_id)
+            self.process.handle = ctypes.windll.kernel32.OpenProcess(
+                PROCESS_QUERY_INFORMATION, False, process_id
+            )
             if self.process.handle:
                 image_file_name = (ctypes.c_char * MAX_PATH)()
-                if ctypes.windll.psapi.GetProcessImageFileNameA(self.process.handle, image_file_name, MAX_PATH) > 0:
+                if (
+                    ctypes.windll.psapi.GetProcessImageFileNameA(
+                        self.process.handle, image_file_name, MAX_PATH
+                    )
+                    > 0
+                ):
                     filename = os.path.basename(image_file_name.value)
-                    if filename.decode('utf-8') == process_name:
+                    if filename.decode("utf-8") == process_name:
                         self.process.pid = process_id
                         self.process.name = process_name
                         return self.process
@@ -89,7 +112,7 @@ class FFXMemory(ReadWriteMemory):
 
 
 rwm = FFXMemory()
-process = rwm.get_process_by_name('FFX.exe')
+process = rwm.get_process_by_name("FFX.exe")
 
 
 def cutsceneID():

@@ -40,15 +40,21 @@ class LocProcess(Process):
             read_buffer = ctypes.c_uint()
             lp_buffer = ctypes.byref(read_buffer)
             lp_number_of_bytes_read = ctypes.c_ulong(0)
-            ctypes.windll.kernel32.ReadProcessMemory(self.handle, lp_base_address, lp_buffer,
-                                                     size, lp_number_of_bytes_read)
+            ctypes.windll.kernel32.ReadProcessMemory(
+                self.handle, lp_base_address, lp_buffer, size, lp_number_of_bytes_read
+            )
             return read_buffer.value
         except (BufferError, ValueError, TypeError) as error:
             if self.handle:
                 self.close()
             self.error_code = self.get_last_error()
-            error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
-                     'Name': self.name, 'ErrorCode': self.error_code}
+            error = {
+                "msg": str(error),
+                "Handle": self.handle,
+                "PID": self.pid,
+                "Name": self.name,
+                "ErrorCode": self.error_code,
+            }
             ReadWriteMemoryError(error)
 
     def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
@@ -59,15 +65,25 @@ class LocProcess(Process):
             write_buffer = ctypes.c_uint(value)
             lp_buffer = ctypes.byref(write_buffer)
             lp_number_of_bytes_written = ctypes.c_ulong(0)
-            ctypes.windll.kernel32.WriteProcessMemory(self.handle, lp_base_address, lp_buffer,
-                                                      size, lp_number_of_bytes_written)
+            ctypes.windll.kernel32.WriteProcessMemory(
+                self.handle,
+                lp_base_address,
+                lp_buffer,
+                size,
+                lp_number_of_bytes_written,
+            )
             return True
         except (BufferError, ValueError, TypeError) as error:
             if self.handle:
                 self.close()
             self.error_code = self.get_last_error()
-            error = {'msg': str(error), 'Handle': self.handle, 'PID': self.pid,
-                     'Name': self.name, 'ErrorCode': self.error_code}
+            error = {
+                "msg": str(error),
+                "Handle": self.handle,
+                "PID": self.pid,
+                "Name": self.name,
+                "ErrorCode": self.error_code,
+            }
             ReadWriteMemoryError(error)
 
 
@@ -84,18 +100,25 @@ class FFXMemory(ReadWriteMemory):
 
         :return: A Process object containing the information from the requested Process.
         """
-        if not process_name.endswith('.exe'):
-            self.process.name = process_name + '.exe'
+        if not process_name.endswith(".exe"):
+            self.process.name = process_name + ".exe"
 
         process_ids = self.enumerate_processes()
 
         for process_id in process_ids:
-            self.process.handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, False, process_id)
+            self.process.handle = ctypes.windll.kernel32.OpenProcess(
+                PROCESS_QUERY_INFORMATION, False, process_id
+            )
             if self.process.handle:
                 image_file_name = (ctypes.c_char * MAX_PATH)()
-                if ctypes.windll.psapi.GetProcessImageFileNameA(self.process.handle, image_file_name, MAX_PATH) > 0:
+                if (
+                    ctypes.windll.psapi.GetProcessImageFileNameA(
+                        self.process.handle, image_file_name, MAX_PATH
+                    )
+                    > 0
+                ):
                     filename = os.path.basename(image_file_name.value)
-                    if filename.decode('utf-8') == process_name:
+                    if filename.decode("utf-8") == process_name:
                         self.process.pid = process_id
                         self.process.name = process_name
                         return self.process
@@ -116,7 +139,7 @@ def start():
     rwm = FFXMemory()
     print("#############")
     print(type(rwm))
-    process = rwm.get_process_by_name('FFX.exe')
+    process = rwm.get_process_by_name("FFX.exe")
     print("#############")
     print(type(process))
     print("#############")
@@ -125,6 +148,7 @@ def start():
     global baseValue
     try:
         import zz_rootMem
+
         print("Process Modules:")
         baseValue = zz_rootMem.ListProcessModules(process.pid)
         print("Process Modules complete")
@@ -138,7 +162,7 @@ def start():
 
 
 def float_from_integer(integer):
-    return struct.unpack('!f', struct.pack('!I', integer))[0]
+    return struct.unpack("!f", struct.pack("!I", integer))[0]
 
 
 def waitFrames(frames: int):
@@ -159,14 +183,14 @@ def waitFrames(frames: int):
 def rngSeed():
     if int(gameVars.confirmedSeed()) == 999:
         global baseValue
-        key = baseValue + 0x003988a5
+        key = baseValue + 0x003988A5
         return process.readBytes(key, 1)
     return int(gameVars.confirmedSeed())
 
 
 def setRngSeed(value):
     global baseValue
-    key = baseValue + 0x003988a5
+    key = baseValue + 0x003988A5
     print("+++++++++++++++++")
     print(type(process))
     print("+++++++++++++++++")
@@ -349,7 +373,7 @@ def battleTargetActive():
 def userControl():
     global baseValue
     # Auto updating via reference to the baseValue above
-    controlStruct = baseValue + 0x00f00740
+    controlStruct = baseValue + 0x00F00740
     inControl = process.read(controlStruct)
 
     if inControl == 0:
@@ -418,11 +442,11 @@ def clickToControlSpecial():
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
-        FFXC.set_value('BtnB', 1)
-        FFXC.set_value('BtnY', 1)
+        FFXC.set_value("BtnB", 1)
+        FFXC.set_value("BtnY", 1)
         waitFrames(30 * 0.035)
-        FFXC.set_value('BtnB', 0)
-        FFXC.set_value('BtnY', 0)
+        FFXC.set_value("BtnB", 0)
+        FFXC.set_value("BtnY", 0)
         waitFrames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 10000 == 0:
@@ -433,12 +457,12 @@ def clickToControlSpecial():
 
 def clickToEvent():
     while userControl():
-        FFXC.set_value('BtnB', 1)
+        FFXC.set_value("BtnB", 1)
         if gameVars.usePause():
             waitFrames(2)
         else:
             waitFrames(1)
-        FFXC.set_value('BtnB', 0)
+        FFXC.set_value("BtnB", 0)
         if gameVars.usePause():
             waitFrames(3)
         else:
@@ -498,19 +522,19 @@ def getCoords():
 def ammesFix(actorIndex: int = 0):
     global process
     global baseValue
-    basePtr = baseValue + 0x1fc44e4
+    basePtr = baseValue + 0x1FC44E4
     baseAddr = process.read(basePtr)
-    #xCoord = 749, yCoord = -71
-    process.write(baseAddr + (0x880 * actorIndex) + 0x0c, 0x443B4000)
+    # xCoord = 749, yCoord = -71
+    process.write(baseAddr + (0x880 * actorIndex) + 0x0C, 0x443B4000)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC28E0000)
 
 
 def chocoEaterFun(actorIndex: int = 0):
     global process
     global baseValue
-    basePtr = baseValue + 0x1fc44e4
+    basePtr = baseValue + 0x1FC44E4
     baseAddr = process.read(basePtr)
-    process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xc4bb8000)
+    process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC4BB8000)
 
 
 def extractorHeight():
@@ -1040,7 +1064,7 @@ def getItemSlot(itemNum):
     items = getItemsOrder()
     for x in range(len(items)):
         if items[x] == itemNum:
-            return (x)
+            return x
     return 255
 
 
@@ -1142,9 +1166,9 @@ def getOverdriveBattle(character):
     global process
     global baseValue
 
-    basePointer = baseValue + 0x00d334cc
+    basePointer = baseValue + 0x00D334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x5bc
+    offset = (0xF90 * character) + 0x5BC
     retVal = process.readBytes(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values:\n", retVal)
     return retVal
@@ -1154,9 +1178,9 @@ def getCharWeakness(character):
     global process
     global baseValue
 
-    basePointer = baseValue + 0x00d334cc
+    basePointer = baseValue + 0x00D334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x5dd
+    offset = (0xF90 * character) + 0x5DD
     retVal = process.readBytes(basePointerAddress + offset, 1)
     print("In-Battle Overdrive values:\n", retVal)
     return retVal
@@ -1178,7 +1202,7 @@ def deadstate(character):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x606
+    offset = (0xF90 * character) + 0x606
 
     key = basePointerAddress + offset
     retVal = process.readBytes(key, 1)
@@ -1194,7 +1218,7 @@ def berserkstate(character):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x607
+    offset = (0xF90 * character) + 0x607
 
     key = basePointerAddress + offset
     retVal = process.readBytes(key, 1)
@@ -1213,7 +1237,7 @@ def petrifiedstate(character):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x606
+    offset = (0xF90 * character) + 0x606
 
     key = basePointerAddress + offset
     retVal = process.readBytes(key, 1)
@@ -1229,7 +1253,7 @@ def confusedState(character):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x607
+    offset = (0xF90 * character) + 0x607
 
     key = basePointerAddress + offset
     retVal = process.readBytes(key, 1)
@@ -1247,7 +1271,7 @@ def sleepState(character):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x608
+    offset = (0xF90 * character) + 0x608
 
     key = basePointerAddress + offset
     retVal = process.readBytes(key, 1)
@@ -1265,7 +1289,7 @@ def autoLifeState(character: int = 0):
     global baseValue
     basePointer = baseValue + 0xD334CC
     basePointerAddress = process.read(basePointer)
-    offset = (0xf90 * character) + 0x617
+    offset = (0xF90 * character) + 0x617
 
     key = basePointerAddress + offset
     retVal = process.readBytes(key, 1)
@@ -1301,9 +1325,9 @@ def getEnemyCurrentHP():
     basePointerAddress = process.read(basePointer)
 
     while enemyNum < 27:
-        offset1 = (0xf90 * enemyNum) + 0x594
+        offset1 = (0xF90 * enemyNum) + 0x594
         key1 = basePointerAddress + offset1
-        offset2 = (0xf90 * enemyNum) + 0x5D0
+        offset2 = (0xF90 * enemyNum) + 0x5D0
         key2 = basePointerAddress + offset2
         if enemyNum == 20:
             maxHP = [process.readBytes(key1, 4)]
@@ -1326,9 +1350,9 @@ def getEnemyMaxHP():
     basePointerAddress = process.read(basePointer)
 
     while enemyNum < 25:
-        offset1 = (0xf90 * enemyNum) + 0x594
+        offset1 = (0xF90 * enemyNum) + 0x594
         key1 = basePointerAddress + offset1
-        offset2 = (0xf90 * enemyNum) + 0x5D0
+        offset2 = (0xF90 * enemyNum) + 0x5D0
         key2 = basePointerAddress + offset2
         if enemyNum == 20:
             maxHP = [process.readBytes(key1, 4)]
@@ -1691,15 +1715,21 @@ def clickToStoryProgress(destination):
     print("Story goal:", destination, "| Awaiting progress state:", currentState)
     while currentState < destination:
         if menuControl():
-            FFXC.set_value('BtnB', 1)
-            FFXC.set_value('BtnA', 1)
+            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("BtnA", 1)
             waitFrames(1)
-            FFXC.set_value('BtnB', 0)
-            FFXC.set_value('BtnA', 0)
+            FFXC.set_value("BtnB", 0)
+            FFXC.set_value("BtnA", 0)
             waitFrames(1)
         if counter % 100000 == 0:
-            print("Story goal:", destination, "| Awaiting progress state:",
-                  currentState, "| counter:", counter / 100000)
+            print(
+                "Story goal:",
+                destination,
+                "| Awaiting progress state:",
+                currentState,
+                "| counter:",
+                counter / 100000,
+            )
         counter += 1
         currentState = getStoryProgress()
     print("Story progress has reached destination. Value:", destination)
@@ -1710,9 +1740,9 @@ def desertFormat(rikkuCharge):
     if order == [0, 3, 2, 4, 6, 5]:
         print("Formation is fine, moving on.")
     elif not rikkuCharge:
-        fullPartyFormat('desert1')
+        fullPartyFormat("desert1")
     else:
-        fullPartyFormat('desert2')
+        fullPartyFormat("desert2")
 
 
 def partySize():
@@ -1782,8 +1812,12 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                     startPos += 1
                     if startPos == partyMembers:
                         startPos = 0
-            print("Character", nameFromNumber(
-                orderFinal[startPos]), "should be in position", startPos)
+            print(
+                "Character",
+                nameFromNumber(orderFinal[startPos]),
+                "should be in position",
+                startPos,
+            )
 
             # Set target, end position
             print("Selecting destination position.")
@@ -1792,8 +1826,9 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
                 while orderFinal[startPos] != order[endPos] and order != orderFinal:
                     endPos += 1
 
-            print("Character", nameFromNumber(
-                order[endPos]), "found in position", endPos)
+            print(
+                "Character", nameFromNumber(order[endPos]), "found in position", endPos
+            )
 
             print("Looking for character.")
             if startPos < 3 and endPos < 3:
@@ -1900,73 +1935,73 @@ def partyFormatCursor2():
 
 def getPartyFormatFromText(frontLine):
     print("||| FRONT LINE VARIABLE:", frontLine)
-    if frontLine == 'kimahri':
+    if frontLine == "kimahri":
         orderFinal = [0, 3, 2, 6, 4, 5, 1]
-    elif frontLine == 'rikku':
+    elif frontLine == "rikku":
         orderFinal = [0, 6, 2, 3, 4, 5, 1]
-    elif frontLine == 'yuna':
+    elif frontLine == "yuna":
         orderFinal = [0, 1, 2, 6, 4, 5, 3]
-    elif frontLine == 'kilikawoods1':
+    elif frontLine == "kilikawoods1":
         orderFinal = [0, 1, 4, 3, 5, 2]
-    elif frontLine == 'kilikawoodsbackup':
+    elif frontLine == "kilikawoodsbackup":
         orderFinal = [3, 1, 4, 0, 5]
-    elif frontLine == 'gauntlet':
+    elif frontLine == "gauntlet":
         orderFinal = [0, 1, 3, 2, 4, 5, 6]
-    elif frontLine == 'miihen':
+    elif frontLine == "miihen":
         orderFinal = [0, 4, 2, 3, 5, 1]
-    elif frontLine == 'macalaniaescape':
+    elif frontLine == "macalaniaescape":
         orderFinal = [0, 1, 6, 2, 4, 3, 5]
-    elif frontLine == 'desert1':
+    elif frontLine == "desert1":
         orderFinal = [0, 6, 2, 3, 4, 5]
-    elif frontLine == 'desert2':
+    elif frontLine == "desert2":
         orderFinal = [0, 3, 2, 6, 4, 5]
-    elif frontLine == 'desert3':
+    elif frontLine == "desert3":
         orderFinal = [0, 5, 2, 6, 4, 3]
-    elif frontLine == 'desert9':
+    elif frontLine == "desert9":
         orderFinal = [0, 4, 2, 3, 5]
-    elif frontLine == 'guards':
+    elif frontLine == "guards":
         orderFinal = [0, 2, 3, 6, 4, 5]
-    elif frontLine == 'evrae':
+    elif frontLine == "evrae":
         orderFinal = [0, 6, 3, 2, 4, 5]
-    elif frontLine == 'djose':
+    elif frontLine == "djose":
         orderFinal = [0, 4, 2, 3, 1, 5]
-    elif frontLine == 'spheri':
+    elif frontLine == "spheri":
         orderFinal = [0, 3, 1, 4, 2, 6, 5]
-    elif frontLine == 'crawler':
+    elif frontLine == "crawler":
         orderFinal = [0, 3, 5, 4, 2, 6, 1]
-    elif frontLine == 'besaid1':
+    elif frontLine == "besaid1":
         orderFinal = [0, 1, 5, 3, 4]
-    elif frontLine == 'besaid2':
+    elif frontLine == "besaid2":
         orderFinal = [0, 4, 5, 3, 5]
-    elif frontLine == 'kilika':
+    elif frontLine == "kilika":
         orderFinal = [0, 1, 4, 3, 5]
-    elif frontLine == 'mrr1':
+    elif frontLine == "mrr1":
         orderFinal = [0, 4, 2, 3, 5, 1]
-    elif frontLine == 'mrr2':
+    elif frontLine == "mrr2":
         orderFinal = [1, 4, 3, 5, 2, 0]
-    elif frontLine == 'battlesite':
+    elif frontLine == "battlesite":
         orderFinal = [0, 1, 4, 5, 2, 3]
-    elif frontLine == 'postbunyip':
+    elif frontLine == "postbunyip":
         orderFinal = [0, 4, 2, 6, 1, 3, 5]
-    elif frontLine == 'mwoodsneedcharge':
+    elif frontLine == "mwoodsneedcharge":
         orderFinal = [0, 6, 2, 4, 1, 3, 5]
-    elif frontLine == 'mwoodsgotcharge':
+    elif frontLine == "mwoodsgotcharge":
         orderFinal = [0, 4, 2, 6, 1, 3, 5]
-    elif frontLine == 'mwoodsdone':
+    elif frontLine == "mwoodsdone":
         orderFinal = [0, 3, 2, 4, 1, 6, 5]
-    elif frontLine == 'besaid':
+    elif frontLine == "besaid":
         orderFinal = [5, 1, 0, 4]
-    elif frontLine == 'highbridge':
+    elif frontLine == "highbridge":
         orderFinal = [0, 1, 2, 6, 4, 5]
-    elif frontLine == 'guards_no_lulu':
+    elif frontLine == "guards_no_lulu":
         orderFinal = [0, 3, 6]
-    elif frontLine == 'guards_lulu':
+    elif frontLine == "guards_lulu":
         orderFinal = [0, 5, 6]
-    elif frontLine == 'tidkimwak':
+    elif frontLine == "tidkimwak":
         orderFinal = [0, 4, 3, 6, 1, 2, 5]
-    elif frontLine == 'nemlulu':
+    elif frontLine == "nemlulu":
         orderFinal = [0, 1, 5, 2, 3, 4, 6]
-    elif frontLine == 'initiative':
+    elif frontLine == "initiative":
         orderFinal = [0, 4, 6, 1, 2, 3, 5]
     else:
         orderFinal = [6, 5, 4, 3, 2, 1, 0]
@@ -1992,14 +2027,14 @@ def nameFromNumber(charNum):
 
 def getActorArraySize():
     global baseValue
-    return process.read(baseValue + 0x01fc44e0)
+    return process.read(baseValue + 0x01FC44E0)
 
 
 def getActorID(actorNum):
     global baseValue
-    basePointer = baseValue + 0x01fc44e4
+    basePointer = baseValue + 0x01FC44E4
     basePointerAddress = process.read(basePointer)
-    offsetX = (0x880 * actorNum)
+    offsetX = 0x880 * actorNum
     return process.readBytes(basePointerAddress + offsetX, 2)
 
 
@@ -2008,9 +2043,9 @@ def getActorCoords(actorNumber):
     global baseValue
     retVal = [0, 0, 0]
     try:
-        basePointer = baseValue + 0x01fc44e4
+        basePointer = baseValue + 0x01FC44E4
         basePointerAddress = process.read(basePointer)
-        offsetX = (0x880 * actorNumber) + 0x0c
+        offsetX = (0x880 * actorNumber) + 0x0C
         offsetY = (0x880 * actorNumber) + 0x14
         offsetZ = (0x880 * actorNumber) + 0x10
 
@@ -2030,7 +2065,7 @@ def getActorAngle(actorNumber):
     global process
     global baseValue
     try:
-        basePointer = baseValue + 0x01fc44e4
+        basePointer = baseValue + 0x01FC44E4
         basePointerAddress = process.read(basePointer)
         offset = (0x880 * actorNumber) + 0x158
         retVal = float_from_integer(process.read(basePointerAddress + offset))
@@ -2083,7 +2118,7 @@ def lucilleDjoseAngle():
     global baseValue
     retVal = [0, 0]
 
-    basePointer = baseValue + 0x01fc44e4
+    basePointer = baseValue + 0x01FC44E4
     basePointerAddress = process.read(basePointer)
     offsetX = 0x91D8
     offsetY = 0x91E8
@@ -2355,8 +2390,15 @@ class egg:
             self.goForEgg = True
 
     def reportVars(self):
-        varArray = [self.num, self.isActive, self.x, self.y,
-                    150 - self.eggLife, self.eggPicked, self.distance]
+        varArray = [
+            self.num,
+            self.isActive,
+            self.x,
+            self.y,
+            150 - self.eggLife,
+            self.eggPicked,
+            self.distance,
+        ]
         print("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
         print(varArray)
 
@@ -2374,7 +2416,7 @@ def iceX(actor):
     # Icicle 0 is actor 7 in the array, incremented for each additional icicle.
     offset = actor + 7
 
-    basePointer = baseValue + 0x1fc44e4
+    basePointer = baseValue + 0x1FC44E4
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * offset) + 0x0C
     retVal = float_from_integer(process.read(key))
@@ -2387,7 +2429,7 @@ def iceY(actor):
     # Icicle 0 is actor 7 in the array, incremented for each additional icicle.
     offset = actor + 7
 
-    basePointer = baseValue + 0x1fc44e4
+    basePointer = baseValue + 0x1FC44E4
     basePointerAddress = process.read(basePointer)
     key = basePointerAddress + (0x880 * offset) + 0x14
     retVal = float_from_integer(process.read(key))
@@ -2437,6 +2479,7 @@ def buildIcicles():
 # ------------------------------
 # Soft reset section
 
+
 def setMapReset():
     global baseValue
 
@@ -2466,6 +2509,7 @@ def setRNG2():
 
 # ------------------------------
 # Blitzball!
+
 
 class blitzActor:
     def __init__(self, playerNum: int):
@@ -2517,7 +2561,7 @@ def blitzHP(playerIndex=99):
         return 9999
     else:
         ptrKey = process.read(baseValue + 0x00F2FF14)
-        offset = 0x1c8 + (0x4 * playerIndex)
+        offset = 0x1C8 + (0x4 * playerIndex)
         hpValue = process.read(ptrKey + offset)
         return hpValue
 
@@ -2644,6 +2688,7 @@ def blitzCursor():
     cursor = process.readBytes(key, 1)
     return cursor
 
+
 # ------------------------------
 # Function for logging
 
@@ -2670,10 +2715,11 @@ def readBytes(key, size):
 # 0x12 - ushort - auto-ability 3
 # 0x14 - ushort - auto-ability 4
 
+
 def getEquipType(equipNum):
     global baseValue
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x05
     retVal = process.readBytes(key, 1)
     return retVal
@@ -2682,7 +2728,7 @@ def getEquipType(equipNum):
 def getEquipLegit(equipNum):
     global baseValue
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x03
     retVal = process.readBytes(key, 1)
     if retVal in [0, 8, 9]:
@@ -2694,7 +2740,7 @@ def getEquipLegit(equipNum):
 def isEquipBrotherhood(equipNum):
     if getEquipOwner(equipNum) == 0:
         global baseValue
-        basePointer = baseValue + 0x00d30f2c
+        basePointer = baseValue + 0x00D30F2C
         key = basePointer + (0x16 * equipNum) + 0x03
         retVal = process.readBytes(key, 1)
         if retVal == 9:
@@ -2705,7 +2751,7 @@ def isEquipBrotherhood(equipNum):
 def getEquipOwner(equipNum):
     global baseValue
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x04
     retVal = process.readBytes(key, 1)
     return retVal
@@ -2714,7 +2760,7 @@ def getEquipOwner(equipNum):
 def getEquipSlotCount(equipNum):
     global baseValue
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x0B
     retVal = process.readBytes(key, 1)
     return retVal
@@ -2723,7 +2769,7 @@ def getEquipSlotCount(equipNum):
 def getEquipCurrentlyEquipped(equipNum):
     global baseValue
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x06
     retVal = process.readBytes(key, 1)
     return retVal
@@ -2733,7 +2779,7 @@ def getEquipAbilities(equipNum):
     global baseValue
     retVal = [255, 255, 255, 255]
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x0E
     retVal[0] = process.readBytes(key, 2)
     key = basePointer + (0x16 * equipNum) + 0x10
@@ -2748,7 +2794,7 @@ def getEquipAbilities(equipNum):
 def getEquipExists(equipNum):
     global baseValue
 
-    basePointer = baseValue + 0x00d30f2c
+    basePointer = baseValue + 0x00D30F2C
     key = basePointer + (0x16 * equipNum) + 0x02
     retVal = process.readBytes(key, 1)
 
@@ -2767,7 +2813,9 @@ class equipment:
         self.exists = getEquipExists(equipNum)
         self.brotherhood = isEquipBrotherhood(equipNum)
 
-    def createCustom(self, eType: int, eOwner1: int, eOwner2: int, eSlots: int, eAbilities):
+    def createCustom(
+        self, eType: int, eOwner1: int, eOwner2: int, eSlots: int, eAbilities
+    ):
         self.equipType = eType
         self.equipOwner = eOwner1
         self.equipOwnerAlt = eOwner2
@@ -3142,7 +3190,7 @@ def hunterSpear():
     else:
         while len(kimWeapHandles) > 0:
             currentHandle = kimWeapHandles.pop(0)
-            if currentHandle.abilities() == [0x800b, 0x8000, 0x8064, 0x00ff]:
+            if currentHandle.abilities() == [0x800B, 0x8000, 0x8064, 0x00FF]:
                 return True
     return False
 
@@ -3192,6 +3240,7 @@ def assignAbilityToEquipCursor():
     key = baseValue + 0x01440AD0
     retVal = process.readBytes(key, 1)
     return retVal
+
 
 # ------------------------------
 # Shopping related stuff
@@ -3368,6 +3417,7 @@ def movingPromptOpen():
     retVal = process.readBytes(key, 1)
     return retVal
 
+
 # ------------------------------
 # Bevelle Trials indicators
 
@@ -3380,6 +3430,7 @@ def btBiDirection():
 def btTriDirectionMain():
     key = baseValue + 0x0092E1ED
     return process.readBytes(key, 1)
+
 
 # ------------------------------
 # Gagazet trials
@@ -3397,6 +3448,7 @@ def GTinnerRing():
     key = baseValue + 0x014DFDA0
     height = float_from_integer(process.read(key))
     return height
+
 
 # ------------------------------
 # Save spheres
@@ -3645,25 +3697,56 @@ def touchSaveSphere(saveCursorNum: int = 0):
         pass
     waitFrames(1)
     print("Mark 2")
-    #waitFrames(300)
+    # waitFrames(300)
     inc = 0
 
-    while not (saveMenuCursor() == 0 and saveMenuCursor2() == 0 and diagProgressFlag() == ssDetails[2]):
-        print("Cursor test: A", getStoryProgress(), "|", diagProgressFlag(), "|", getMap(), "|", inc)
+    while not (
+        saveMenuCursor() == 0
+        and saveMenuCursor2() == 0
+        and diagProgressFlag() == ssDetails[2]
+    ):
+        print(
+            "Cursor test: A",
+            getStoryProgress(),
+            "|",
+            diagProgressFlag(),
+            "|",
+            getMap(),
+            "|",
+            inc,
+        )
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
         elif diagSkipPossible() and diagProgressFlag() != ssDetails[2]:
             xbox.tapB()
     while not (saveMenuCursor() == 0 and saveMenuCursor2() == 0):
-        print("Cursor test: B", saveMenuCursor(), "|", saveMenuCursor2(), "|", diagSkipPossible(), "|", inc)
+        print(
+            "Cursor test: B",
+            saveMenuCursor(),
+            "|",
+            saveMenuCursor2(),
+            "|",
+            diagSkipPossible(),
+            "|",
+            inc,
+        )
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
         elif diagSkipPossible():
             xbox.tapA()
     while saveMenuCursor() == 0 and saveMenuCursor2() == 0:
-        print("Cursor test: C", saveMenuCursor(), "|", saveMenuCursor2(), "|", diagSkipPossible(), "|", inc)
+        print(
+            "Cursor test: C",
+            saveMenuCursor(),
+            "|",
+            saveMenuCursor2(),
+            "|",
+            diagSkipPossible(),
+            "|",
+            inc,
+        )
         inc += 1
         if saveMenuOpen():
             xbox.tapA()
@@ -3697,10 +3780,10 @@ def touchSaveSphere_notWorking(saveCursorNum: int = 0):
         pass
     waitFrames(1)
     print("Mark 2")
-    #waitFrames(300)
+    # waitFrames(300)
 
     xbox.tapA()
-    #while saveMenuCursor() == 0:
+    # while saveMenuCursor() == 0:
     #    if saveMenuOpen():
     #        xbox.tapA()
     #    elif diagProgressFlag() != ssDetails[2] and diagSkipPossible():
@@ -3748,6 +3831,7 @@ def csrBaajSaveClear():
     clearSaveMenuCursor()
     clearSaveMenuCursor2()
 
+
 # ------------------------------
 # Testing
 
@@ -3770,6 +3854,7 @@ def memTestVal2():
 def memTestVal3():
     key = baseValue + 0x00D35EE3
     return process.readBytes(key, 1)
+
 
 # ------------------------------
 
@@ -3800,6 +3885,7 @@ def printMemoryLog_backup():
     # ffx.exe + D2A00C
     logs.writeStats("Temp Value 4: " + str(coord1))
 
+
 # ------------------------------
 # Load game functions
 
@@ -3825,6 +3911,7 @@ def loadGamePos():
 def lucaWorkersBattleID():
     return readVal(0x01466DCC)
 
+
 # ------------------------------
 # RNG tracking based on the first six hits
 
@@ -3832,7 +3919,7 @@ def lucaWorkersBattleID():
 def lastHitInit():
     global baseValue
     print("Initializing values")
-    key = baseValue + 0xd334cc
+    key = baseValue + 0xD334CC
     ptrVal = process.read(key)
     lastHitVals = [0] * 8
     try:
@@ -3848,7 +3935,7 @@ def lastHitInit():
 
 def lastHitCheckChange() -> int:
     global baseValue
-    key = baseValue + 0xd334cc
+    key = baseValue + 0xD334CC
     ptrVal = process.read(key)
     changeFound = False
     changeValue = 9999
@@ -3869,28 +3956,145 @@ def lastHitCheckChange() -> int:
 # ------------------------------
 # NE armor manip
 RNG_CONSTANTS_1 = (
-    2100005341, 1700015771, 247163863, 891644838, 1352476256, 1563244181,
-    1528068162, 511705468, 1739927914, 398147329, 1278224951, 20980264,
-    1178761637, 802909981, 1130639188, 1599606659, 952700148, -898770777,
-    -1097979074, -2013480859, -338768120, -625456464, -2049746478, -550389733,
-    -5384772, -128808769, -1756029551, 1379661854, 904938180, -1209494558,
-    -1676357703, -1287910319, 1653802906, 393811311, -824919740, 1837641861,
-    946029195, 1248183957, -1684075875, -2108396259, -681826312, 1003979812,
-    1607786269, -585334321, 1285195346, 1997056081, -106688232, 1881479866,
-    476193932, 307456100, 1290745818, 162507240, -213809065, -1135977230,
-    -1272305475, 1484222417, -1559875058, 1407627502, 1206176750, -1537348094,
-    638891383, 581678511, 1164589165, -1436620514, 1412081670, -1538191350,
-    -284976976, 706005400,
+    2100005341,
+    1700015771,
+    247163863,
+    891644838,
+    1352476256,
+    1563244181,
+    1528068162,
+    511705468,
+    1739927914,
+    398147329,
+    1278224951,
+    20980264,
+    1178761637,
+    802909981,
+    1130639188,
+    1599606659,
+    952700148,
+    -898770777,
+    -1097979074,
+    -2013480859,
+    -338768120,
+    -625456464,
+    -2049746478,
+    -550389733,
+    -5384772,
+    -128808769,
+    -1756029551,
+    1379661854,
+    904938180,
+    -1209494558,
+    -1676357703,
+    -1287910319,
+    1653802906,
+    393811311,
+    -824919740,
+    1837641861,
+    946029195,
+    1248183957,
+    -1684075875,
+    -2108396259,
+    -681826312,
+    1003979812,
+    1607786269,
+    -585334321,
+    1285195346,
+    1997056081,
+    -106688232,
+    1881479866,
+    476193932,
+    307456100,
+    1290745818,
+    162507240,
+    -213809065,
+    -1135977230,
+    -1272305475,
+    1484222417,
+    -1559875058,
+    1407627502,
+    1206176750,
+    -1537348094,
+    638891383,
+    581678511,
+    1164589165,
+    -1436620514,
+    1412081670,
+    -1538191350,
+    -284976976,
+    706005400,
 )
 
 RNG_CONSTANTS_2 = (
-    10259, 24563, 11177, 56952, 46197, 49826, 27077, 1257, 44164, 56565, 31009,
-    46618, 64397, 46089, 58119, 13090, 19496, 47700, 21163, 16247, 574, 18658,
-    60495, 42058, 40532, 13649, 8049, 25369, 9373, 48949, 23157, 32735, 29605,
-    44013, 16623, 15090, 43767, 51346, 28485, 39192, 40085, 32893, 41400, 1267,
-    15436, 33645, 37189, 58137, 16264, 59665, 53663, 11528, 37584, 18427,
-    59827, 49457, 22922, 24212, 62787, 56241, 55318, 9625, 57622, 7580, 56469,
-    49208, 41671, 36458,
+    10259,
+    24563,
+    11177,
+    56952,
+    46197,
+    49826,
+    27077,
+    1257,
+    44164,
+    56565,
+    31009,
+    46618,
+    64397,
+    46089,
+    58119,
+    13090,
+    19496,
+    47700,
+    21163,
+    16247,
+    574,
+    18658,
+    60495,
+    42058,
+    40532,
+    13649,
+    8049,
+    25369,
+    9373,
+    48949,
+    23157,
+    32735,
+    29605,
+    44013,
+    16623,
+    15090,
+    43767,
+    51346,
+    28485,
+    39192,
+    40085,
+    32893,
+    41400,
+    1267,
+    15436,
+    33645,
+    37189,
+    58137,
+    16264,
+    59665,
+    53663,
+    11528,
+    37584,
+    18427,
+    59827,
+    49457,
+    22922,
+    24212,
+    62787,
+    56241,
+    55318,
+    9625,
+    57622,
+    7580,
+    56469,
+    49208,
+    41671,
+    36458,
 )
 
 
@@ -3921,7 +4125,9 @@ def nextCrit(character: int, charLuck: int, enemyLuck: int) -> int:
     return 255
 
 
-def futureAttackWillCrit(character: int, charLuck: int, enemyLuck: int, attackIndex: int = 0) -> bool:
+def futureAttackWillCrit(
+    character: int, charLuck: int, enemyLuck: int, attackIndex: int = 0
+) -> bool:
     # Returns if a specific attack in the future will crit.
     # Attack Index 0 represents the next attack.
     # Assumes no escape attempts, primarily this is used for Aeons anyway.
@@ -3954,33 +4160,33 @@ def rng01Advances(advanceCount: int = 50):
     testArray = rng01Array()
     rangeVal = advanceCount
     for i in range(rangeVal):
-        testArray.append(testArray[i] & 0x7fffffff)
+        testArray.append(testArray[i] & 0x7FFFFFFF)
     return testArray
 
 
-def nextChanceRNG01(version='white'):
+def nextChanceRNG01(version="white"):
     testArray = rng01Array()
     evenArray = []
     oddArray = []
     rangeVal = int((len(testArray) - 1) / 2) - 2
-    if version == 'white':
+    if version == "white":
         modulo = 13
         battleIndex = 8
     else:
         modulo = 10
         battleIndex = 0
     for i in range(rangeVal):
-        if (testArray[((i + 1) * 2) - 1] & 0x7fffffff) % modulo == battleIndex:
+        if (testArray[((i + 1) * 2) - 1] & 0x7FFFFFFF) % modulo == battleIndex:
             oddArray.append(i)
-        if (testArray[(i + 1) * 2] & 0x7fffffff) % modulo == battleIndex:
+        if (testArray[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battleIndex:
             evenArray.append(i)
 
-    #print("------------------------------")
-    #print("Next event will appear on the odd array without manip. Area:", version)
-    #print("oddArray:", oddArray[0])
-    #print("evenArray:", evenArray[0])
-    #print("------------------------------")
-    return ([oddArray, evenArray])
+    # print("------------------------------")
+    # print("Next event will appear on the odd array without manip. Area:", version)
+    # print("oddArray:", oddArray[0])
+    # print("evenArray:", evenArray[0])
+    # print("------------------------------")
+    return [oddArray, evenArray]
 
 
 def advanceRNG01():
@@ -4024,8 +4230,8 @@ def nextChanceRNG10(dropChanceVal: int = 60) -> int:
     for i in range(len(testArray)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
-            return (i - 3)
+        elif (testArray[i] & 0x7FFFFFFF) % 255 < dropChanceVal:
+            return i - 3
 
 
 def nextChanceRNG10Full(dropChanceVal: int = 60) -> int:
@@ -4034,7 +4240,7 @@ def nextChanceRNG10Full(dropChanceVal: int = 60) -> int:
     for i in range(len(testArray)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7fffffff) % 255 < dropChanceVal:
+        elif (testArray[i] & 0x7FFFFFFF) % 255 < dropChanceVal:
             resultsArray.append(True)
         else:
             resultsArray.append(False)
@@ -4046,8 +4252,10 @@ def nextChanceRNG10Calm() -> int:
     for i in range(len(testArray)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7fffffff) % 255 >= 60 and (testArray[i + 3] & 0x7fffffff) % 255 < 60:
-            return (i - 3)
+        elif (testArray[i] & 0x7FFFFFFF) % 255 >= 60 and (
+            testArray[i + 3] & 0x7FFFFFFF
+        ) % 255 < 60:
+            return i - 3
 
 
 def noChanceX3RNG10Highbridge() -> int:
@@ -4055,9 +4263,12 @@ def noChanceX3RNG10Highbridge() -> int:
     for i in range(len(testArray)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7fffffff) % 255 < 30 and (testArray[i + 3] & 0x7fffffff) % 255 < 30 \
-                and (testArray[i] & 0x7fffffff) % 255 < 30:
-            return (i - 3)
+        elif (
+            (testArray[i] & 0x7FFFFFFF) % 255 < 30
+            and (testArray[i + 3] & 0x7FFFFFFF) % 255 < 30
+            and (testArray[i] & 0x7FFFFFFF) % 255 < 30
+        ):
+            return i - 3
 
 
 def advanceRNG10():
@@ -4091,9 +4302,9 @@ def nextChanceRNG12(beforeNatus: bool = False) -> int:
         # Assume killer is aeon
         if ptr > 250:
             return 256
-        elif (testArray[ptr + 1] & 0x7fffffff) % 2 == 1:  # equipment
-            #print("RNG12 ptr: ", ptr)
-            baseMod = (abilityMod + ((testArray[ptr + 3] & 0x7fffffff) & 7)) - 4
+        elif (testArray[ptr + 1] & 0x7FFFFFFF) % 2 == 1:  # equipment
+            # print("RNG12 ptr: ", ptr)
+            baseMod = (abilityMod + ((testArray[ptr + 3] & 0x7FFFFFFF) & 7)) - 4
             abilities = (baseMod + ((baseMod >> 31) & 7)) >> 3
 
             if ptr == 1:
@@ -4142,17 +4353,16 @@ def nextDropRNG13(aSlots: int, beforeNatus: bool = False) -> int:
     testArray = rng13Array()
     while 9 in filledSlots and ptr < 20:
         try:
-            if outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)] in filledSlots:
+            if outcomes[(((testArray[ptr] & 0x7FFFFFFF) % 7) + 1)] in filledSlots:
                 pass
             else:
                 filledSlots.remove(9)
-                filledSlots.append(
-                    outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
+                filledSlots.append(outcomes[(((testArray[ptr] & 0x7FFFFFFF) % 7) + 1)])
         except Exception:
             pass
         ptr += 1
 
-    #print("RNG13: ", filledSlots)
+    # print("RNG13: ", filledSlots)
 
     if 1 in filledSlots:
         return True
@@ -4167,8 +4377,8 @@ def nextChanceRNG13() -> int:
     nextChance = 0
     testArray = rng13Array()
     while nextChance == 0:
-        #print("RNG13 outcome: ", outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
-        if outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)] == 1:
+        # print("RNG13 outcome: ", outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
+        if outcomes[(((testArray[ptr] & 0x7FFFFFFF) % 7) + 1)] == 1:
             nextChance = ptr
         else:
             ptr += 1
@@ -4201,7 +4411,7 @@ def advanceRNG23():
 
 
 def s32(integer: int) -> int:
-    return ((integer & 0xffffffff) ^ 0x80000000) - 0x80000000
+    return ((integer & 0xFFFFFFFF) ^ 0x80000000) - 0x80000000
 
 
 def rollNextRNG(lastRNG: int, index: int) -> int:
@@ -4226,8 +4436,11 @@ def arenaArray():
     return retArray
 
 
-def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, returnArray=False):
+def arenaFarmCheck(
+    zone: str = "besaid", endGoal: int = 10, report=False, returnArray=False
+):
     import nemesis.menu as menu
+
     complete = True
     zone = zone.lower()
     if zone == "besaid":
@@ -4273,12 +4486,17 @@ def arenaFarmCheck(zone: str = "besaid", endGoal: int = 10, report=False, return
     if report:
         print("############")
         print("Next Sphere Grid checkpoint:", gameVars.nemCheckpointAP())
-        print("Tidus S.levels:", getTidusSlvl(), "- need levels:",
-              menu.nextAPneeded(gameVars.nemCheckpointAP()))
+        print(
+            "Tidus S.levels:",
+            getTidusSlvl(),
+            "- need levels:",
+            menu.nextAPneeded(gameVars.nemCheckpointAP()),
+        )
         print("Number of captures in this zone:")
         print(resultArray)
-        print("End goal is", endGoal,
-              "minimum before leaving this zone for each index.")
+        print(
+            "End goal is", endGoal, "minimum before leaving this zone for each index."
+        )
         print("############")
     if returnArray:
         return resultArray
@@ -4296,6 +4514,7 @@ def arenaCursor():
 
 # Escape logic, and used for others
 
+
 def rngFromIndex(index: int = 20):
     memTarget = 0xD35ED8 + (index * 0x4)
     global baseValue
@@ -4306,7 +4525,9 @@ def rngArrayFromIndex(index: int = 20, arrayLen: int = 20):
     retVal = [rngFromIndex(index)]  # First value is the current value
     for x in range(arrayLen):  # Subsequent values are based on first value.
         retVal.append(rollNextRNG(retVal[x], index))
-    retVal = [x & 0x7fffffff for x in retVal]  # Anding it because that's the value that's actually used
+    retVal = [
+        x & 0x7FFFFFFF for x in retVal
+    ]  # Anding it because that's the value that's actually used
     return retVal
 
 
@@ -4319,8 +4540,17 @@ def advanceRNGindex(index: int = 43):
 def nextSteal(stealCount: int = 0, preAdvance: int = 0):
     useArray = rngArrayFromIndex(index=10, arrayLen=1 + preAdvance)
     stealRNG = useArray[1 + preAdvance] % 255
-    stealChance = 2 ** stealCount
-    print("=== ", useArray[1], " === ", stealRNG, " < ", 255 // stealChance, " = ", stealRNG < (255 // stealChance))
+    stealChance = 2**stealCount
+    print(
+        "=== ",
+        useArray[1],
+        " === ",
+        stealRNG,
+        " < ",
+        255 // stealChance,
+        " = ",
+        stealRNG < (255 // stealChance),
+    )
     return stealRNG < (255 // stealChance)
 
 

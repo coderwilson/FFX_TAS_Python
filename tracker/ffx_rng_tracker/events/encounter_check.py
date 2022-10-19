@@ -17,11 +17,11 @@ class EncounterCheck(Event):
         self.encounter, self.distance = self.check_encounter()
 
     def __str__(self) -> str:
-        string = f'{self.zone.name}'
+        string = f"{self.zone.name}"
         if self.encounter:
-            string += f'Encounter at {self.distance} units'
+            string += f"Encounter at {self.distance} units"
         else:
-            string += f'No encounters for {self.distance} units'
+            string += f"No encounters for {self.distance} units"
         return string
 
     def check_encounter(self) -> tuple[bool, int]:
@@ -42,10 +42,11 @@ class EncounterCheck(Event):
         return encounter, distance
 
 
-def walk(gamestate: GameState,
-         distance: int,
-         zone: Zone,
-         ) -> Iterator[EncounterCheck]:
+def walk(
+    gamestate: GameState,
+    distance: int,
+    zone: Zone,
+) -> Iterator[EncounterCheck]:
     while distance > 0:
         encounter_check = EncounterCheck(gamestate, distance, zone)
         yield encounter_check

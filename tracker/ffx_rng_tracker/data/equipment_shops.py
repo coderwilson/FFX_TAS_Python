@@ -11,7 +11,7 @@ def _get_shops_equipment(file_path: str) -> tuple[Equipment]:
     """"""
     absolute_file_path = get_resource_path(file_path)
     with open(absolute_file_path) as file_object:
-        equipments_file_reader = csv.reader(file_object, delimiter=',')
+        equipments_file_reader = csv.reader(file_object, delimiter=",")
         equipments = []
         for line in equipments_file_reader:
             if int(line[5], 16) == 0:
@@ -36,21 +36,21 @@ def _get_shops_equipment(file_path: str) -> tuple[Equipment]:
                 abilities=tuple(abilities),
                 base_weapon_damage=base_weapon_damage,
                 bonus_crit=bonus_crit,
-                )
+            )
             equipments.append(equipment)
     return tuple(equipments)
 
 
 def _get_equipment_shops(file_path: str) -> dict[str, tuple[Equipment]]:
-    equipments = list(_get_shops_equipment('tracker\\data\\ffx_shop_arms.csv'))
+    equipments = list(_get_shops_equipment("tracker\\data\\ffx_shop_arms.csv"))
     absolute_file_path = get_resource_path(file_path)
     shops = {}
     with open(absolute_file_path) as file_object:
-        shops_file_reader = csv.reader(file_object, delimiter=',')
+        shops_file_reader = csv.reader(file_object, delimiter=",")
         next(shops_file_reader)
         for line in shops_file_reader:
             shops[line[0]] = [equipments.pop(0) for _ in range(int(line[1]))]
     return shops
 
 
-EQUIPMENT_SHOPS = _get_equipment_shops('tracker\\data\equipment_shops.csv')
+EQUIPMENT_SHOPS = _get_equipment_shops("tracker\\data\equipment_shops.csv")

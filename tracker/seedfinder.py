@@ -13,24 +13,24 @@ def main() -> None:
     setup_logger()
     root = tk.Tk()
     root.report_callback_exception = log_tkinter_error
-    root.protocol('WM_DELETE_WINDOW', root.quit)
-    title = 'ffx_seedfinder v' + '.'.join(map(str, get_version()))
-    title += f' {Configs.game_version} {Configs.speedrun_category}'
+    root.protocol("WM_DELETE_WINDOW", root.quit)
+    title = "ffx_seedfinder v" + ".".join(map(str, get_version()))
+    title += f" {Configs.game_version} {Configs.speedrun_category}"
     root.title(title)
-    root.geometry('800x600')
+    root.geometry("800x600")
 
     if Configs.use_theme:
         theme_path = get_resource_path(AZURE_THEME_PATH)
-        root.tk.call('source', theme_path)
+        root.tk.call("source", theme_path)
         if Configs.use_dark_mode:
-            root.tk.call('set_theme', 'dark')
+            root.tk.call("set_theme", "dark")
         else:
-            root.tk.call('set_theme', 'light')
+            root.tk.call("set_theme", "light")
 
     ui = TkSeedFinder(root)
-    ui.pack(expand=True, fill='both')
+    ui.pack(expand=True, fill="both")
     root.mainloop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,10 +1,10 @@
 print("Trying thing")
-#try:
+# try:
 from ffx_rng_tracker.data.monsters import MONSTERS
 
-#print(MONSTERS)
+# print(MONSTERS)
 
-dingoTest = MONSTERS['dingo'].equipment['ability_arrays']['Tidus']['Armor'][2]
+dingoTest = MONSTERS["dingo"].equipment["ability_arrays"]["Tidus"]["Armor"][2]
 
 print(dingoTest)
 print("=================")
@@ -12,11 +12,11 @@ print("=================")
 print("=================")
 
 equipType = 0
-enemy = 'chocobo_eater'
+enemy = "chocobo_eater"
 if equipType == 0:
-    array = MONSTERS[enemy].equipment['ability_arrays']['Tidus']['Weapon']
+    array = MONSTERS[enemy].equipment["ability_arrays"]["Tidus"]["Weapon"]
 else:
-    array = MONSTERS[enemy].equipment['ability_arrays']['Tidus']['Armor']
+    array = MONSTERS[enemy].equipment["ability_arrays"]["Tidus"]["Armor"]
 retVal = []
 print(array)
 print("=================")
@@ -36,6 +36,6 @@ print("=================")
 print("=================")
 print(retVal)
 
-#except Exception as e:
+# except Exception as e:
 #    print("Failure:",e)
 print("Success")

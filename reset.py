@@ -17,7 +17,9 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
         logs.writeStats("Total time:")
         logs.writeStats(str(totalTime))
         print("The game duration was:", str(totalTime))
-        print("This duration is intended for comparison reference only, not as a true timer.")
+        print(
+            "This duration is intended for comparison reference only, not as a true timer."
+        )
         print("Please do not use this as your submitted time.")
         memory.main.waitFrames(30)
         print("--------")
@@ -27,7 +29,9 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
         memory.main.waitFrames(60)
         print("and then will open up the list of saves.")
         memory.main.waitFrames(60)
-        print("This will show the autosave values, which conforms to the speedrun rules.")
+        print(
+            "This will show the autosave values, which conforms to the speedrun rules."
+        )
         # Bring up auto-save
         while memory.main.getMap() != 23:
             if memory.main.getMap() in [348, 349]:
@@ -60,7 +64,7 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
     logs.nextStats(rngSeed)
     logs.writeStats("RNG seed:")
     logs.writeStats(rngSeed)
-    Gamestate = 'none'
+    Gamestate = "none"
     StepCounter = 1
 
     return Gamestate, StepCounter

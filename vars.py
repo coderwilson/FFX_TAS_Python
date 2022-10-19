@@ -10,53 +10,63 @@ class allVars:
         # ------------------------------
 
         # ----Most important values to review
-        self.artificialPauses = False     # Set depending on hardware. True = less powerful hardware.
-        self.csrValue = True              # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.nemesisValue = False         # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.forceLoop = False            # After game is finished, start again on next seed.
-        self.blitzLoop = False            # Loop on the same seed immediately after Blitzball.
-        self.blitzLossForceReset = True   # True = reset after blitz loss
-        self.setSeed = True               # If you are using Rossy's patch, set to True. Otherwise set to False
-        self.kilikaSkip = True            # True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.perfectAeonKills = False     # Before YuYevon, True is slower but more swag.
-        self.marathonSafeFlag = True      # NEA drop will advance in memory if we are behind. Only use for marathon safety, not for legit runs.
+        self.artificialPauses = (
+            False  # Set depending on hardware. True = less powerful hardware.
+        )
+        self.csrValue = True  # Set automatically on new game. For testing (loading a save file) set for your environment.
+        self.nemesisValue = (
+            False  # Set based on if you're doing any% (False) or Nemesis% (True)
+        )
+        self.forceLoop = False  # After game is finished, start again on next seed.
+        self.blitzLoop = False  # Loop on the same seed immediately after Blitzball.
+        self.blitzLossForceReset = True  # True = reset after blitz loss
+        self.setSeed = (
+            True  # If you are using Rossy's patch, set to True. Otherwise set to False
+        )
+        self.kilikaSkip = (
+            True  # True == Tidus OD on Evrae instead of Seymour. New strat.
+        )
+        self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
+        self.marathonSafeFlag = True  # NEA drop will advance in memory if we are behind. Only use for marathon safety, not for legit runs.
 
         # ----Blitzball
-        self.blitzWinValue = True         # No default value required
-        self.blitzOvertime = False        # Set to False, no need to change ever.
+        self.blitzWinValue = True  # No default value required
+        self.blitzOvertime = False  # Set to False, no need to change ever.
         self.blitzFirstShotVal = False
-        self.oblitzAttackVal = "255"      # Used for RNG manip tracking
+        self.oblitzAttackVal = "255"  # Used for RNG manip tracking
 
         # ----Sphere grid
-        self.fullKilikMenu = False        # Default to False
-        self.earlyTidusGridVal = False    # Default False
-        self.earlyHasteVal = 1            # Default -1
-        self.wakkaLateMenuVal = False     # Default False
-        self.endGameVersionVal = 1        # Default 0
+        self.fullKilikMenu = False  # Default to False
+        self.earlyTidusGridVal = False  # Default False
+        self.earlyHasteVal = 1  # Default -1
+        self.wakkaLateMenuVal = False  # Default False
+        self.endGameVersionVal = 1  # Default 0
 
         # ----Equipment
-        self.zombieWeaponVal = 255        # Default 255
-        self.lStrikeCount = 1             # Default 0
+        self.zombieWeaponVal = 255  # Default 255
+        self.lStrikeCount = 1  # Default 0
 
         # ----RNG Manip
-        self.yellows = 0                  # ?
-        self.confirmedSeedNum = 999       # ?
-        self.skipZanLuck = False          # ?
+        self.yellows = 0  # ?
+        self.confirmedSeedNum = 999  # ?
+        self.skipZanLuck = False  # ?
 
         # ----Other
-        self.newGame = False              # ?
-        self.selfDestruct = False         # Default False
-        self.YTKFarm = 0                  # Default to 0
-        self.rescueCount = 0              # Default to 0
-        self.fluxOverkillVar = False      # Default to False
-        self.tryNEVal = True              # Based on
+        self.newGame = False  # ?
+        self.selfDestruct = False  # Default False
+        self.YTKFarm = 0  # Default to 0
+        self.rescueCount = 0  # Default to 0
+        self.fluxOverkillVar = False  # Default to False
+        self.tryNEVal = True  # Based on
         self.firstHits = [0] * 8
-        self.neArmorVal = 255             # Default 255
-        self.neBattles = 0                # Default to 0
-        self.neaZone = 0                  # Decides which zone we charge Rikku in after reaching Zanarkand.
+        self.neArmorVal = 255  # Default 255
+        self.neBattles = 0  # Default to 0
+        self.neaZone = (
+            0  # Decides which zone we charge Rikku in after reaching Zanarkand.
+        )
 
         # ----Nemesis variables, unused in any%
-        self.nemAPVal = 1                 # Default to 1
+        self.nemAPVal = 1  # Default to 1
         self.areaResults = [0] * 13
         self.speciesResults = [0] * 14
         self.originalResults = [0] * 7

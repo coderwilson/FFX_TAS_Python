@@ -3,6 +3,7 @@ from typing import Protocol
 
 class OutputWidget(Protocol):
     """Protocol class for output widgets."""
+
     regex_patterns: dict[str, str]
 
     def print_output(self, output: str) -> None:

@@ -21,10 +21,19 @@ def printNEAzone(battles: int):
 
 def decideNEA(bonusAdvance: int = 0):
     import rngTrack
+
     maxBattles = 1
-    zanOutdoors = rngTrack.comingBattles(area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonusAdvance)
-    zanIndoors = rngTrack.comingBattles(area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonusAdvance)
-    seaSorrows = rngTrack.comingBattles(area="inside_sin_(front)", battleCount=maxBattles, extraAdvances=bonusAdvance + 6)
+    zanOutdoors = rngTrack.comingBattles(
+        area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonusAdvance
+    )
+    zanIndoors = rngTrack.comingBattles(
+        area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonusAdvance
+    )
+    seaSorrows = rngTrack.comingBattles(
+        area="inside_sin_(front)",
+        battleCount=maxBattles,
+        extraAdvances=bonusAdvance + 6,
+    )
 
     for i in range(maxBattles):
         if "behemoth" in zanOutdoors[i]:
@@ -55,7 +64,7 @@ def arrival():
     # Starts from the map just after the fireplace chat.
     reEquipNE = False
     if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 1:
-        memory.main.fullPartyFormat('rikku', fullMenuClose=False)
+        memory.main.fullPartyFormat("rikku", fullMenuClose=False)
         menu.equipArmor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
@@ -110,9 +119,8 @@ def arrival():
                 if reEquipNE and memory.main.overdriveState2()[6] == 100:
                     reEquipNE = False
                     memory.main.clickToControl()
-                    memory.main.fullPartyFormat('yuna', fullMenuClose=False)
-                    menu.equipArmor(
-                        character=gameVars.neArmor(), ability=0x801D)
+                    memory.main.fullPartyFormat("yuna", fullMenuClose=False)
+                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
                     memory.main.closeMenu()
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()
@@ -141,7 +149,7 @@ def arrival():
         luckCount = memory.main.getItemCountSlot(luckSlot)
 
     if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 2:
-        memory.main.fullPartyFormat('rikku', fullMenuClose=False)
+        memory.main.fullPartyFormat("rikku", fullMenuClose=False)
         menu.equipArmor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
@@ -182,7 +190,9 @@ def arrival():
             elif checkpoint == 29:  # Save sphere
                 memory.main.touchSaveSphere()
                 checkpoint += 1
-            elif memory.main.getMap() == 316 and checkpoint < 21:  # Final room before trials
+            elif (
+                memory.main.getMap() == 316 and checkpoint < 21
+            ):  # Final room before trials
                 print("Final room before trials")
                 checkpoint = 21
             elif targetPathing.setMovement(targetPathing.zanarkandDome(checkpoint)):
@@ -195,9 +205,8 @@ def arrival():
                 if reEquipNE and memory.main.overdriveState2()[6] == 100:
                     reEquipNE = False
                     memory.main.clickToControl()
-                    memory.main.fullPartyFormat('yuna', fullMenuClose=False)
-                    menu.equipArmor(
-                        character=gameVars.neArmor(), ability=0x801D)
+                    memory.main.fullPartyFormat("yuna", fullMenuClose=False)
+                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
                     memory.main.closeMenu()
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()
@@ -352,7 +361,7 @@ def sanctuaryKeeper():
         menu.skFriend()
     else:
         menu.skMixed()
-    memory.main.fullPartyFormat('yuna')
+    memory.main.fullPartyFormat("yuna")
     memory.main.closeMenu()
 
     while not targetPathing.setMovement([110, 20]):
@@ -364,11 +373,13 @@ def sanctuaryKeeper():
         battle.main.defend()
         xbox.clickToBattle()
     battle.main.aeonSummon(4)  # This is the whole fight. Kinda sad.
-    print("Next Aeon Crit:", memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15))
+    print(
+        "Next Aeon Crit:", memory.main.nextCrit(character=7, charLuck=17, enemyLuck=15)
+    )
     while not memory.main.battleComplete():
         if memory.main.turnReady():
             print(memory.main.rngArrayFromIndex(index=43, arrayLen=4))
-            battle.main.attack('none')
+            battle.main.attack("none")
     memory.main.clickToControl()
 
 
@@ -405,11 +416,11 @@ def yunalesca():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            FFXC.set_value('BtnB', 1)
-            FFXC.set_value('BtnA', 1)
+            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("BtnA", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
-            FFXC.set_value('BtnA', 0)
+            FFXC.set_value("BtnB", 0)
+            FFXC.set_value("BtnA", 0)
             memory.main.waitFrames(1)
     xbox.clickToBattle()
     battle.main.aeonSummon(4)  # Summon Bahamut and attack.
@@ -431,28 +442,40 @@ def post_Yunalesca(checkpoint=0):
     memory.main.waitFrames(2)
     while memory.main.getMap() != 194:
         if memory.main.userControl():
-            if checkpoint < 2 and memory.main.getMap() == 319:  # Back to room before Yunalesca
+            if (
+                checkpoint < 2 and memory.main.getMap() == 319
+            ):  # Back to room before Yunalesca
                 checkpoint = 2
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 4 and memory.main.getMap() == 318:  # Exit to room with the inert Aeon
+            elif (
+                checkpoint < 4 and memory.main.getMap() == 318
+            ):  # Exit to room with the inert Aeon
                 checkpoint = 4
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 7:
                 memory.main.touchSaveSphere()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 10 and memory.main.getMap() == 320:  # Back to larger of the puzzle rooms
+            elif (
+                checkpoint < 10 and memory.main.getMap() == 320
+            ):  # Back to larger of the puzzle rooms
                 checkpoint = 10
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 18 and memory.main.getMap() == 316:  # Hallway before puzzle rooms
+            elif (
+                checkpoint < 18 and memory.main.getMap() == 316
+            ):  # Hallway before puzzle rooms
                 checkpoint = 18
                 print("Checkpoint reached:", checkpoint)
-            elif checkpoint < 25 and memory.main.getMap() == 315:  # Hallway before puzzle rooms
+            elif (
+                checkpoint < 25 and memory.main.getMap() == 315
+            ):  # Hallway before puzzle rooms
                 checkpoint = 25
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 26:
                 FFXC.set_neutral()
-            elif targetPathing.setMovement(targetPathing.yunalescaToAirship(checkpoint)):
+            elif targetPathing.setMovement(
+                targetPathing.yunalescaToAirship(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

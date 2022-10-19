@@ -18,7 +18,8 @@ gameVars = vars.varsHandle()
 
 def getSavedFiles():
     saveFilesFull = sorted(
-        Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime)
+        Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime
+    )
     saveFiles = [os.path.basename(i) for i in saveFilesFull]
     saveFiles = saveFiles[::-1]
     return saveFiles
@@ -130,45 +131,45 @@ def loadPostBlitz():
 
     while not screen.Minimap1():
         if screen.Minimap4():
-            FFXC.set_value('AxisLx', -1)
-            FFXC.set_value('AxisLy', -1)
+            FFXC.set_value("AxisLx", -1)
+            FFXC.set_value("AxisLy", -1)
             memory.main.waitFrames(30 * 0.5)
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value("AxisLx", 0)
             memory.main.waitFrames(30 * 1)
-            FFXC.set_value('AxisLy', 0)
+            FFXC.set_value("AxisLy", 0)
         else:
             xbox.menuB()
 
     # Reverse T screen
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value("AxisLx", 1)
     memory.main.waitFrames(30 * 4.5)
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_value("AxisLy", -1)
     memory.main.waitFrames(30 * 1)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value("AxisLy", 0)
     memory.main.waitFrames(30 * 5)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLx", 0)
 
     # Carnival vendor screen
     memory.main.awaitControl()
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_value("AxisLy", 1)
     memory.main.waitFrames(30 * 1.5)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value("AxisLx", 1)
     memory.main.waitFrames(30 * 3)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.waitFrames(30 * 1)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value("AxisLx", 1)
     memory.main.waitFrames(30 * 3)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value("AxisLx", 0)
+    FFXC.set_value("AxisLy", 0)
 
     print("Rejoining the party.")
     memory.main.clickToControl()  # Scene, rejoining the party
     print("Walking up to Yuna.")
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_value("AxisLy", -1)
+    FFXC.set_value("AxisLx", -1)
     memory.main.waitFrames(30 * 3)
-    FFXC.set_value('AxisLx', 0)
-    FFXC.set_value('AxisLy', 0)  # Enters laughing scene, ends Luca section.
+    FFXC.set_value("AxisLx", 0)
+    FFXC.set_value("AxisLy", 0)  # Enters laughing scene, ends Luca section.
     print("End of loading section.")
 
 
@@ -200,7 +201,7 @@ def BesaidTrials():
         tCoords = memory.main.getCoords()
         targetPathing.setMovement([-2, tCoords[1] - 15])
 
-    #Start the trials
+    # Start the trials
     while memory.main.getMap() != 122:
         tCoords = memory.main.getCoords()
         targetPathing.setMovement([-2, tCoords[1] + 15])
@@ -209,13 +210,13 @@ def BesaidTrials():
 def Boat1():
     memory.main.waitFrames(30 * 3)
     # To the junction screen, then back.
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_value("AxisLy", -1)
     memory.main.waitFrames(30 * 1)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value("AxisLy", 0)
     memory.main.waitFrames(30 * 6)
-    FFXC.set_value('AxisLy', -1)
+    FFXC.set_value("AxisLy", -1)
     memory.main.waitFrames(30 * 1)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value("AxisLy", 0)
 
 
 def Kilika():
@@ -248,6 +249,7 @@ def KilikaTrials():
 
 def LoadMiihenStart_Laugh():
     import targetPathing
+
     while not targetPathing.setMovement([-440, 0]):
         pass
     memory.main.clickToEventTemple(4)
@@ -285,6 +287,7 @@ def LoadMiihenStart_Laugh():
 
 def LoadMiihenStart():
     import targetPathing
+
     while not targetPathing.setMovement([-440, 0]):
         pass
     memory.main.clickToEventTemple(4)
@@ -384,11 +387,11 @@ def AfterGui():
 def djoseTemple():
     loadOffset(19)
     memory.main.waitFrames(30 * 6)
-    FFXC.set_value('AxisLy', -1)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_value("AxisLy", -1)
+    FFXC.set_value("AxisLx", -1)
     memory.main.waitFrames(30 * 1.7)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.waitFrames(30 * 0.5)
 
 
@@ -425,6 +428,7 @@ def loadGuadoSkip():
     memory.main.waitFrames(30 * 1)
     FFXC.set_neutral()
     import area.guadosalam as guadosalam
+
     guadosalam.afterSpeech(checkpoint=26)
 
 
@@ -458,6 +462,7 @@ def loadMacTemple2():
 def loadWendigo():
     import battle.boss
     import battle.main
+
     battle.boss.wendigo()
     print("Wendigo fight over - end of loading game to Wendigo fight")
 
@@ -472,7 +477,7 @@ def loadRescue():
     FFXC.set_neutral()
     memory.main.waitFrames(30 * 1)
     memory.main.awaitControl()
-    memory.main.fullPartyFormat('evrae')
+    memory.main.fullPartyFormat("evrae")
 
     zzairShipPath.airShipPath(1)  # The run from cockpit to the deck
 
@@ -480,12 +485,12 @@ def loadRescue():
 def loadBahamut():
     loadOffset(1)
     memory.main.awaitControl()
-    FFXC.set_value('AxisLy', 1)
-    FFXC.set_value('AxisLx', 1)
+    FFXC.set_value("AxisLy", 1)
+    FFXC.set_value("AxisLx", 1)
     memory.main.waitFrames(30 * 0.2)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.waitFrames(30 * 2)
-    FFXC.set_value('AxisLy', 0)
+    FFXC.set_value("AxisLy", 0)
 
 
 def loadCalm():

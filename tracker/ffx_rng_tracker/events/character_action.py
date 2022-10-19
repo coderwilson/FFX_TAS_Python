@@ -25,19 +25,21 @@ class CharacterAction(Event):
         self.ctb = self._get_ctb()
 
     def __str__(self) -> str:
-        string = (f'{self.character.name} -> {self.action.name}'
-                  f' [{self.ctb}]'
-                  f' -> {self.target.name}:')
+        string = (
+            f"{self.character.name} -> {self.action.name}"
+            f" [{self.ctb}]"
+            f" -> {self.target.name}:"
+        )
         if self.hit:
             if self.action.does_damage:
-                string += f' [{self.damage_rng}/31]'
-                string += f' {self.damage}'
+                string += f" [{self.damage_rng}/31]"
+                string += f" {self.damage}"
                 if self.crit:
-                    string += ' (Crit)'
+                    string += " (Crit)"
             else:
-                string += ' (No damage)'
+                string += " (No damage)"
         else:
-            string += ' Miss'
+            string += " Miss"
         return string
 
     def _get_hit(self) -> bool:
@@ -53,7 +55,7 @@ class CharacterAction(Event):
         aims = 0
         target_reflexes = 0
         hit_chance = accuracy * 2
-        hit_chance = (hit_chance * 0x66666667) // 0xffffffff
+        hit_chance = (hit_chance * 0x66666667) // 0xFFFFFFFF
         hit_chance = hit_chance // 2
         hit_chance_index = hit_chance // 0x80000000
         hit_chance_index += hit_chance - target_evasion + 10
@@ -82,7 +84,7 @@ class CharacterAction(Event):
             return 0, 0, False
         index = min(20 + self.character.index, 27)
         damage_rng = self._advance_rng(index) & 31
-        variance = damage_rng + 0xf0
+        variance = damage_rng + 0xF0
         crit = self._get_crit()
         damage_type = self.action.damage_type
         if self.action.element:
@@ -110,8 +112,10 @@ class CharacterAction(Event):
         elif damage_type == DamageType.FIXED:
             damage = self.action.base_damage
             return damage, damage_rng, crit
-        elif (damage_type is DamageType.PERCENTAGE_TOTAL
-                or damage_type is DamageType.PERCENTAGE_CURRENT):
+        elif (
+            damage_type is DamageType.PERCENTAGE_TOTAL
+            or damage_type is DamageType.PERCENTAGE_CURRENT
+        ):
             damage = self.action.base_damage * 100 // 16
             return damage, damage_rng, crit
         elif damage_type == DamageType.HP:
@@ -140,8 +144,11 @@ class CharacterAction(Event):
             offensive_stat = self.character.stats[Stat.STRENGTH]
             bonus = self.character.stats[Stat.BONUS_STRENGTH]
             defensive_stat = max(self.target.stats[Stat.DEFENSE], 1)
-        elif damage_type in (DamageType.MAGIC, DamageType.SPECIAL_MAGIC,
-                             DamageType.HEALING):
+        elif damage_type in (
+            DamageType.MAGIC,
+            DamageType.SPECIAL_MAGIC,
+            DamageType.HEALING,
+        ):
             base_damage = self.action.base_damage
             defensive_buffs = target_focuses
             offensive_buffs = focuses
@@ -156,31 +163,31 @@ class CharacterAction(Event):
 
         if damage_type in (DamageType.STRENGTH, DamageType.SPECIAL_MAGIC):
             power = offensive_stat * offensive_stat * offensive_stat
-            power = (power // 0x20) + 0x1e
+            power = (power // 0x20) + 0x1E
         elif damage_type == DamageType.MAGIC:
             power = offensive_stat * offensive_stat
-            power = (power * 0x2AAAAAAB) // 0xffffffff
+            power = (power * 0x2AAAAAAB) // 0xFFFFFFFF
             power = power + (power // 0x80000000)
             power = (power + base_damage) * base_damage
             power = power // 4
 
         mitigation_1 = defensive_stat * defensive_stat
-        mitigation_1 = (mitigation_1 * 0x2E8BA2E9) // 0xffffffff
+        mitigation_1 = (mitigation_1 * 0x2E8BA2E9) // 0xFFFFFFFF
         mitigation_1 = mitigation_1 // 2
         mitigation_1 = mitigation_1 + (mitigation_1 // 0x80000000)
         mitigation_2 = defensive_stat * 0x33
         mitigation = mitigation_2 - mitigation_1
-        mitigation = (mitigation * 0x66666667) // 0xffffffff
+        mitigation = (mitigation * 0x66666667) // 0xFFFFFFFF
         mitigation = mitigation // 4
         mitigation = mitigation + (mitigation // 0x80000000)
-        mitigation = 0x2da - mitigation
+        mitigation = 0x2DA - mitigation
 
         damage_1 = power * mitigation
-        damage_2 = (damage_1 * -1282606671) // 0xffffffff
+        damage_2 = (damage_1 * -1282606671) // 0xFFFFFFFF
         damage_3 = damage_2 + damage_1
         damage_3 = damage_3 // 0x200
         damage_3 = damage_3 * (15 - defensive_buffs)
-        damage_4 = (damage_3 * -2004318071) // 0xffffffff
+        damage_4 = (damage_3 * -2004318071) // 0xFFFFFFFF
         damage = (damage_4 + damage_3) // 0x8
         damage = damage + (damage // 0x80000000)
         if damage_type in (DamageType.STRENGTH, DamageType.SPECIAL_MAGIC):
@@ -192,10 +199,12 @@ class CharacterAction(Event):
 
         damage = damage * element_mod
 
-        if (damage_type == DamageType.STRENGTH
-                and isinstance(self.target, Monster)
-                and self.target.armored
-                and not self.character.stats[Stat.PIERCING]):
+        if (
+            damage_type == DamageType.STRENGTH
+            and isinstance(self.target, Monster)
+            and self.target.armored
+            and not self.character.stats[Stat.PIERCING]
+        ):
             damage = damage // 3
 
         damage = damage + (damage * bonus // 100)

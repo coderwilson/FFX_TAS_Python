@@ -52,7 +52,7 @@ def arrival():
         if memory.main.userControl():
             # Main events
             if checkpoint == 1:
-                #FFXC.set_neutral()
+                # FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 2 and gameVars.csr():
                 checkpoint = 11
@@ -71,9 +71,9 @@ def arrival():
                 memory.main.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 while memory.main.getCoords()[1] < -101.5:
-                    FFXC.set_value('Dpad', 8)
+                    FFXC.set_value("Dpad", 8)
                     memory.main.waitFrames(2)
-                    FFXC.set_value('Dpad', 0)
+                    FFXC.set_value("Dpad", 0)
                     memory.main.waitFrames(5)
 
                 print("Turning back")
@@ -86,9 +86,9 @@ def arrival():
                 print("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
                 memory.main.waitFrames(3)
-                FFXC.set_value('BtnB', 1)
+                FFXC.set_value("BtnB", 1)
                 memory.main.waitFrames(4)
-                FFXC.set_value('BtnB', 0)
+                FFXC.set_value("BtnB", 0)
                 memory.main.waitFrames(45)
                 FFXC.set_neutral()
                 checkpoint += 1
@@ -247,11 +247,11 @@ def escape():
     print("First, some menuing")
     menuDone = False
     if gameVars.nemesis():
-        memory.main.fullPartyFormat('yuna', fullMenuClose=False)
+        memory.main.fullPartyFormat("yuna", fullMenuClose=False)
     else:
         menu.afterSeymour()
         menuDone = True
-        memory.main.fullPartyFormat('macalaniaescape', fullMenuClose=False)
+        memory.main.fullPartyFormat("macalaniaescape", fullMenuClose=False)
     menu.equipSonicSteel(fullMenuClose=True)
 
     print("Now to escape the Guado")
@@ -288,7 +288,7 @@ def escape():
                     battle.main.escapeWithXP()
                     menu.afterSeymour()
                     menuDone = True
-                    memory.main.fullPartyFormat('macalaniaescape')
+                    memory.main.fullPartyFormat("macalaniaescape")
                 elif memory.main.getEncounterID() == 195:
                     break
                 else:

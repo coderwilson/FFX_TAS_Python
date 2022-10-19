@@ -17,9 +17,9 @@ class TrackerUI(ABC):
     warning_popup: OutputWidget
     confirmation_popup: ConfirmationPopup
     parser: EventParser = field(init=False, repr=False)
-    previous_input_text: str = field(default='', init=False, repr=False)
-    previous_output_text: str = field(default='', init=False, repr=False)
-    notes_file: str = field(default='', init=False, repr=False)
+    previous_input_text: str = field(default="", init=False, repr=False)
+    previous_output_text: str = field(default="", init=False, repr=False)
+    notes_file: str = field(default="", init=False, repr=False)
 
     def __post_init__(self) -> None:
         self.parser = EventParser(self.seed)
@@ -46,7 +46,7 @@ class TrackerUI(ABC):
 
     def events_to_string(self, events: list[Event]) -> str:
         """Converts a list of events to a string."""
-        return '\n'.join([str(e) for e in events])
+        return "\n".join([str(e) for e in events])
 
     @abstractmethod
     def edit_output(self, output: str) -> str:
@@ -75,18 +75,22 @@ class TrackerUI(ABC):
 
     def save_input_data(self) -> None:
         try:
-            save_notes(
-                self.notes_file, self.seed, self.input_widget.get_input())
+            save_notes(self.notes_file, self.seed, self.input_widget.get_input())
         except FileExistsError as error:
             self.confirmation_popup.print_output(
-                f'Do you want to overwrite file {error.args[0]!r}?')
+                f"Do you want to overwrite file {error.args[0]!r}?"
+            )
             if self.confirmation_popup.confirmed:
                 save_notes(
-                    self.notes_file, self.seed, self.input_widget.get_input(),
-                    force=True)
+                    self.notes_file,
+                    self.seed,
+                    self.input_widget.get_input(),
+                    force=True,
+                )
                 self.warning_popup.print_output(
-                    f'File "{self.seed}_{self.notes_file}" '
-                    'saved successfully!')
+                    f'File "{self.seed}_{self.notes_file}" ' "saved successfully!"
+                )
         else:
             self.warning_popup.print_output(
-                f'File "{self.seed}_{self.notes_file}" saved successfully!')
+                f'File "{self.seed}_{self.notes_file}" saved successfully!'
+            )
