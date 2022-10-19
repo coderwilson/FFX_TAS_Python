@@ -60,14 +60,9 @@ def NewGame(Gamestate):
 
 def NewGame2():
     # New game selected. Next, select options.
-    timeBuffer = 17
+    timeBuffer = 15
     print("====================================")
-    print("Countdown timer!!!")
-    memory.main.waitFrames(timeBuffer)
-    print("5")
-    memory.main.waitFrames(timeBuffer)
-    print("4")
-    memory.main.waitFrames(timeBuffer)
+    print("Starting in")
     print("3")
     memory.main.waitFrames(timeBuffer)
     print("2")
@@ -76,7 +71,7 @@ def NewGame2():
     memory.main.waitFrames(timeBuffer)
     print("GO!!! Good fortune!")
     print("====================================")
-    print("Reminder seed number:", memory.main.rngSeed())
+    print("Set seed:", memory.main.rngSeed())
     xbox.menuB()
     xbox.menuB()
 
