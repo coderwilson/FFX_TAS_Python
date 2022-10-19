@@ -1,7 +1,7 @@
 import time
 
-import battle.main as main
 import battle.boss
+import battle.main as main
 import memory.main as main
 import menu
 import nemesis.arenaSelect as arenaSelect

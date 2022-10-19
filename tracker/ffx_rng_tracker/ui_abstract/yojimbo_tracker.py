@@ -1,11 +1,8 @@
 from ..data.actions import YOJIMBO_ACTIONS
-from ..events.parsing_functions import (
-    ParsingFunction,
-    parse_compatibility_update,
-    parse_death,
-    parse_roll,
-    parse_yojimbo_action,
-)
+from ..events.parsing_functions import (ParsingFunction,
+                                        parse_compatibility_update,
+                                        parse_death, parse_roll,
+                                        parse_yojimbo_action)
 from .base_tracker import TrackerUI
 
 

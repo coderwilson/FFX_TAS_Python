@@ -11,7 +11,8 @@ from ..ui_abstract.encounters_table import EncountersTable
 from ..ui_abstract.encounters_tracker import EncountersTracker
 from ..ui_tkinter.input_widget import TkSearchBarWidget
 from ..utils import stringify
-from .base_widgets import BetterSpinbox, ScrollableFrame, TkConfirmPopup, TkWarningPopup
+from .base_widgets import (BetterSpinbox, ScrollableFrame, TkConfirmPopup,
+                           TkWarningPopup)
 from .output_widget import TkOutputWidget
 
 

@@ -2,7 +2,8 @@ import tkinter as tk
 
 from ffx_rng_tracker.configs import Configs
 from ffx_rng_tracker.data.file_functions import get_resource_path, get_version
-from ffx_rng_tracker.logger import log_exceptions, log_tkinter_error, setup_logger
+from ffx_rng_tracker.logger import (log_exceptions, log_tkinter_error,
+                                    setup_logger)
 from ffx_rng_tracker.ui_tkinter.main import AZURE_THEME_PATH
 from ffx_rng_tracker.ui_tkinter.seedfinder import TkSeedFinder
 

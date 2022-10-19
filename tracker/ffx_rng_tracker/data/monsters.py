@@ -7,16 +7,8 @@ from ..utils import add_bytes, stringify
 from .actions import MONSTER_ACTIONS, Action
 from .autoabilities import AUTOABILITIES
 from .characters import CHARACTERS, Character
-from .constants import (
-    Element,
-    ElementalAffinity,
-    EquipmentSlots,
-    EquipmentType,
-    GameVersion,
-    Rarity,
-    Stat,
-    Status,
-)
+from .constants import (Element, ElementalAffinity, EquipmentSlots,
+                        EquipmentType, GameVersion, Rarity, Stat, Status)
 from .file_functions import get_resource_path
 from .items import ITEMS, ItemDrop
 from .text_characters import TEXT_CHARACTERS

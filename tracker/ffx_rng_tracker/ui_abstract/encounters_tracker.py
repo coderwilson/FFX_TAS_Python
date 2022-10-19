@@ -1,5 +1,6 @@
 from ..data.encounter_formations import ZONES
-from ..events.parsing_functions import ParsingFunction, parse_encounter, parse_roll
+from ..events.parsing_functions import (ParsingFunction, parse_encounter,
+                                        parse_roll)
 from .base_tracker import TrackerUI
 
 

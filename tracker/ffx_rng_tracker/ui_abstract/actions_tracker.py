@@ -1,15 +1,9 @@
 from ..data.characters import CHARACTERS
 from ..data.monsters import MONSTERS
-from ..events.parsing_functions import (
-    ParsingFunction,
-    parse_action,
-    parse_encounter,
-    parse_monster_action,
-    parse_party_change,
-    parse_roll,
-    parse_stat_update,
-    parse_summon,
-)
+from ..events.parsing_functions import (ParsingFunction, parse_action,
+                                        parse_encounter, parse_monster_action,
+                                        parse_party_change, parse_roll,
+                                        parse_stat_update, parse_summon)
 from .base_tracker import TrackerUI
 
 
