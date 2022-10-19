@@ -1,5 +1,6 @@
 import battle.main
 import logs
+import memory.get
 import memory.main
 import menu
 import rngTrack
@@ -461,7 +462,7 @@ def post_Yunalesca(checkpoint=0):
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()
             elif memory.main.cutsceneSkipPossible():
-                print(memory.main.getCutsceneID())
-                if memory.main.getCutsceneID() == (5673, 2850, 3):
+                print(memory.get.cutsceneID())
+                if memory.get.cutsceneID() == (5673, 2850, 3):
                     memory.main.waitFrames(10)
                     xbox.skipScene()

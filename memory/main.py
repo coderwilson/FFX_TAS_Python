@@ -39,7 +39,6 @@ class LocProcess(Process):
         try:
             read_buffer = ctypes.c_uint()
             lp_buffer = ctypes.byref(read_buffer)
-            n_size = ctypes.sizeof(read_buffer)
             lp_number_of_bytes_read = ctypes.c_ulong(0)
             ctypes.windll.kernel32.ReadProcessMemory(self.handle, lp_base_address, lp_buffer,
                                                      size, lp_number_of_bytes_read)
@@ -59,7 +58,6 @@ class LocProcess(Process):
         try:
             write_buffer = ctypes.c_uint(value)
             lp_buffer = ctypes.byref(write_buffer)
-            n_size = ctypes.sizeof(write_buffer)
             lp_number_of_bytes_written = ctypes.c_ulong(0)
             ctypes.windll.kernel32.WriteProcessMemory(self.handle, lp_base_address, lp_buffer,
                                                       size, lp_number_of_bytes_written)
@@ -141,15 +139,6 @@ def start():
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
-
-
-def getCutsceneID():
-    global baseValue
-    key = baseValue + 0xD27C88
-    cutscene_alt = process.readBytes(key, 4)
-    storyline_prog = getStoryProgress()
-    dialogue = diagProgressFlag()
-    return (cutscene_alt, storyline_prog, dialogue)
 
 
 def waitFrames(frames: int):
