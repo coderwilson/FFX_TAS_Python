@@ -13,13 +13,15 @@ FFXC = xbox.controllerHandle()
 
 
 def post_battle_logic(forceCharge=False):
-    if memory.main.overdriveState2()[1] < 43 or (forceCharge and memory.main.overdriveState2()[1] != 100):
-        memory.main.fullPartyFormat('kilikawoods1', fullMenuClose=False)
+    if memory.main.overdriveState2()[1] < 43 or (
+        forceCharge and memory.main.overdriveState2()[1] != 100
+    ):
+        memory.main.fullPartyFormat("kilikawoods1", fullMenuClose=False)
     else:
         if gameVars.selfDestructGet():
-            memory.main.fullPartyFormat('miihen', fullMenuClose=False)
+            memory.main.fullPartyFormat("miihen", fullMenuClose=False)
         else:
-            memory.main.fullPartyFormat('djose', fullMenuClose=False)
+            memory.main.fullPartyFormat("djose", fullMenuClose=False)
     hpCheck = memory.main.getHP()
     print("------------------ HP check:", hpCheck)
     if hpCheck[0] < 520 or hpCheck[1] < 220:
@@ -47,8 +49,9 @@ def arrival():
                     # Only run this branch if CSR is online.
                     tidusCoords = memory.main.getCoords()
                     hunterCoords = memory.main.miihenGuyCoords()
-                    hunterDistance = abs(tidusCoords[1] - hunterCoords[1]) \
-                        + abs(tidusCoords[0] - hunterCoords[0])
+                    hunterDistance = abs(tidusCoords[1] - hunterCoords[1]) + abs(
+                        tidusCoords[0] - hunterCoords[0]
+                    )
 
                     # Get spear
                     if memory.main.hunterSpear():
@@ -140,7 +143,10 @@ def arrival():
                             memory.main.waitFrames(30 * 1)
                             print("Mark 2")
                             try:
-                                if memory.main.lucilleMiihenCoords()[1] > 1400 and memory.main.userControl():
+                                if (
+                                    memory.main.lucilleMiihenCoords()[1] > 1400
+                                    and memory.main.userControl()
+                                ):
                                     miihenSkip = True
                                 else:
                                     memory.main.clickToControl3()
@@ -153,7 +159,8 @@ def arrival():
                         print("Checkpoint reached:", checkpoint)
             elif checkpoint == 11 and not memory.main.hunterSpear():
                 targetPathing.setMovement(
-                    [memory.main.miihenGuyCoords()[0], memory.main.miihenGuyCoords()[1]])
+                    [memory.main.miihenGuyCoords()[0], memory.main.miihenGuyCoords()[1]]
+                )
                 xbox.tapB()
 
             # Map changes
@@ -174,7 +181,9 @@ def arrival():
                         xbox.tapB()
                     post_battle_logic()
                     FFXC.set_neutral()
-                elif checkpoint == 25 and not memory.main.battleActive():  # Shelinda dialog
+                elif (
+                    checkpoint == 25 and not memory.main.battleActive()
+                ):  # Shelinda dialog
                     FFXC.set_neutral()
                     xbox.tapB()
                 else:
@@ -186,19 +195,21 @@ def arrival():
                     post_battle_logic()
 
                 # Kimahri manip
-                nextCritKim = memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15)
+                nextCritKim = memory.main.nextCrit(
+                    character=3, charLuck=18, enemyLuck=15
+                )
                 print("#### Next Kimahri crit:", nextCritKim)
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menuOpen():
-                    FFXC.set_value('BtnB', 1)
+                    FFXC.set_value("BtnB", 1)
                     memory.main.waitFrames(2)
-                    FFXC.set_value('BtnB', 0)
+                    FFXC.set_value("BtnB", 0)
                     memory.main.waitFrames(3)
                 elif memory.main.diagSkipPossible():
-                    FFXC.set_value('BtnB', 1)
+                    FFXC.set_value("BtnB", 1)
                     memory.main.waitFrames(2)
-                    FFXC.set_value('BtnB', 0)
+                    FFXC.set_value("BtnB", 0)
                     memory.main.waitFrames(3)
     print("Mi'ihen skip status:", miihenSkip)
     return [gameVars.selfDestructGet(), battleCount, SDencounterID, miihenSkip]
@@ -230,7 +241,9 @@ def arrival2(selfDestruct, battleCount, SDencounterID):
             FFXC.set_neutral()
             if screen.BattleScreen():
                 battleCount += 1
-                if checkpoint == 27 and not memory.main.battleActive():  # Shelinda dialog
+                if (
+                    checkpoint == 27 and not memory.main.battleActive()
+                ):  # Shelinda dialog
                     xbox.tapB()
                 else:
                     print("Starting battle")
@@ -259,11 +272,11 @@ def midPoint():
         if memory.main.userControl():
             pDownSlot = memory.main.getItemSlot(6)
             if memory.main.getMap() == 58:
-                memory.main.fullPartyFormat('tidkimwak')
+                memory.main.fullPartyFormat("tidkimwak")
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
-            #elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
+            # elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
             #    checkpoint = 4
             elif checkpoint in [2, 3]:
                 checkpoint = 4

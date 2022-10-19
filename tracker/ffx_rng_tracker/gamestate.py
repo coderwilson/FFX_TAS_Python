@@ -17,7 +17,7 @@ class GameState:
         self.reset()
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}(seed=({self.seed}))'
+        return f"{type(self).__name__}(seed=({self.seed}))"
 
     def _get_characters(self) -> dict[str, CharacterState]:
         characters = {}
@@ -32,7 +32,7 @@ class GameState:
 
     def reset(self) -> None:
         self._rng_tracker.reset()
-        self.party = [CHARACTERS['tidus'], CHARACTERS['auron']]
+        self.party = [CHARACTERS["tidus"], CHARACTERS["auron"]]
         self.compatibility = BASE_COMPATIBILITY[Configs.game_version]
         self.equipment_drops = 0
         self.encounters_count = 0

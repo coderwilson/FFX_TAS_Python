@@ -20,9 +20,9 @@ class ItemDrop:
     rare: bool
 
     def __str__(self) -> str:
-        string = f'{self.item} x{self.quantity}'
+        string = f"{self.item} x{self.quantity}"
         if self.rare:
-            string += ' (rare)'
+            string += " (rare)"
         return string
 
 
@@ -30,7 +30,7 @@ def _get_items(file_path: str) -> tuple[str]:
     """Retrieves the items names."""
     absolute_file_path = get_resource_path(file_path)
     with open(absolute_file_path) as file_object:
-        file_reader = csv.reader(file_object, delimiter=',')
+        file_reader = csv.reader(file_object, delimiter=",")
         # skips first line
         next(file_reader)
         items = []
@@ -39,4 +39,4 @@ def _get_items(file_path: str) -> tuple[str]:
     return tuple(items)
 
 
-ITEMS = _get_items('tracker\\data\\items.csv')
+ITEMS = _get_items("tracker\\data\\items.csv")

@@ -1,8 +1,14 @@
 from dataclasses import dataclass, field
 
 from ..data.constants import ICV_BASE, ICV_VARIANCE, EncounterCondition, Stat
-from ..data.encounter_formations import (BOSSES, FORMATIONS, SIMULATIONS,
-                                         ZONES, Formation, Zone)
+from ..data.encounter_formations import (
+    BOSSES,
+    FORMATIONS,
+    SIMULATIONS,
+    ZONES,
+    Formation,
+    Zone,
+)
 from .main import Event
 
 
@@ -29,22 +35,24 @@ class Encounter(Event):
 
         for character_name, icv in self.party_icvs.items():
             c = self.gamestate.characters[character_name]
-            sort_key = f'{icv:03}{256 - c.stats[Stat.AGILITY]:03}{c.index:02}'
-            string = f'{c.name[:2]:2}[{icv:2}]'
+            sort_key = f"{icv:03}{256 - c.stats[Stat.AGILITY]:03}{c.index:02}"
+            string = f"{c.name[:2]:2}[{icv:2}]"
             icvs.append((sort_key, string))
 
         for index, icv in enumerate(self.monsters_icvs):
             m = self.formation[index]
-            sort_key = f'{icv:03}{256 - m.stats[Stat.AGILITY]:03}{index + 8:02}'
-            string = f'M{index + 1}[{icv:2}]'
+            sort_key = f"{icv:03}{256 - m.stats[Stat.AGILITY]:03}{index + 8:02}"
+            string = f"M{index + 1}[{icv:2}]"
             icvs.append((sort_key, string))
 
         icvs.sort(key=lambda v: v[0])
         icvs = [v[1] for v in icvs]
 
         name = FORMATIONS[self.name].name
-        string = (f'Encounter {self.index:3} - {name}: {self.formation} '
-                  f'{self.condition} {" ".join(icvs)}')
+        string = (
+            f"Encounter {self.index:3} - {name}: {self.formation} "
+            f'{self.condition} {" ".join(icvs)}'
+        )
         return string
 
     def _get_index(self) -> int:
@@ -128,7 +136,6 @@ class Encounter(Event):
 
 @dataclass
 class SimulatedEncounter(Encounter):
-
     def _get_index(self) -> int:
         # simulated encounter don't increment the game's
         # encounter count used to calculate aeons' stats
@@ -155,9 +162,11 @@ class RandomEncounter(Encounter):
 
     def __str__(self) -> str:
         string = super().__str__()
-        string = (f'{string[:13]}'
-                  f'|{self.random_index:3}|{self.zone_index:3}'
-                  f'{string[13:]}')
+        string = (
+            f"{string[:13]}"
+            f"|{self.random_index:3}|{self.zone_index:3}"
+            f"{string[13:]}"
+        )
         return string
 
     def _get_formation(self) -> Formation:
@@ -191,7 +200,7 @@ class MultizoneRandomEncounter(Event):
         self.encounters = self._get_encounters()
 
     def __str__(self) -> str:
-        string = ''
+        string = ""
         zones = []
         formations = []
         for count, enc in enumerate(self.encounters, 1):
@@ -199,11 +208,12 @@ class MultizoneRandomEncounter(Event):
                 string += str(enc)[:24]
             zone = ZONES[enc.name].name
             zones.append(zone)
-            formation = f'[{enc.formation}]'
+            formation = f"[{enc.formation}]"
             formations.append(formation)
             if count == len(self.encounters):
-                string += (f'{"/".join(zones)}: {"/".join(formations)} '
-                           f'{enc.condition}')
+                string += (
+                    f'{"/".join(zones)}: {"/".join(formations)} ' f"{enc.condition}"
+                )
         return string
 
     def _get_encounters(self) -> list[RandomEncounter]:

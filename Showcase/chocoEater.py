@@ -12,11 +12,11 @@ def engage():
         if memory.main.userControl():
             pDownSlot = memory.main.getItemSlot(6)
             if memory.main.getMap() == 58:
-                memory.main.fullPartyFormat('tidkimwak')
+                memory.main.fullPartyFormat("tidkimwak")
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
-            #elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
+            # elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
             #    checkpoint = 4
             elif checkpoint in [2, 3]:
                 checkpoint = 4

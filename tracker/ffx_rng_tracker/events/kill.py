@@ -25,28 +25,27 @@ class Kill(Event):
         self.equipment_index = self._get_equipment_index()
 
     def __str__(self) -> str:
-        string = f'{self.monster.name} drops: '
+        string = f"{self.monster.name} drops: "
         drops = []
         if self.item_1:
             drops.append(str(self.item_1))
         if self.item_2:
             drops.append(str(self.item_2))
         if self.equipment:
-            drops.append(f'Equipment #{self.equipment_index} '
-                         f'{str(self.equipment)}')
+            drops.append(f"Equipment #{self.equipment_index} " f"{str(self.equipment)}")
         if len(drops):
-            string += ', '.join(drops)
+            string += ", ".join(drops)
         else:
-            string += 'No drops'
+            string += "No drops"
         return string
 
     def _get_item_1(self) -> ItemDrop | None:
         rng_drop = self._advance_rng(10) % 255
         if self.overkill:
-            drop_type = 'overkill'
+            drop_type = "overkill"
         else:
-            drop_type = 'normal'
-        if self.monster.item_1['drop_chance'] > rng_drop:
+            drop_type = "normal"
+        if self.monster.item_1["drop_chance"] > rng_drop:
             rng_rarity = self._advance_rng(11) & 255
             if rng_rarity < 32:
                 return self.monster.item_1[drop_type][Rarity.RARE]
@@ -56,10 +55,10 @@ class Kill(Event):
     def _get_item_2(self) -> ItemDrop | None:
         rng_drop = self._advance_rng(10) % 255
         if self.overkill:
-            drop_type = 'overkill'
+            drop_type = "overkill"
         else:
-            drop_type = 'normal'
-        if self.monster.item_2['drop_chance'] > rng_drop:
+            drop_type = "normal"
+        if self.monster.item_2["drop_chance"] > rng_drop:
             rng_rarity = self._advance_rng(11) & 255
             if rng_rarity < 32:
                 return self.monster.item_2[drop_type][Rarity.RARE]
@@ -71,7 +70,7 @@ class Kill(Event):
         at the current rng position and advances rng accordingly.
         """
         rng_equipment_drop = self._advance_rng(10) % 255
-        if self.monster.equipment['drop_chance'] <= rng_equipment_drop:
+        if self.monster.equipment["drop_chance"] <= rng_equipment_drop:
             return
 
         characters_enabled = self.gamestate.party
@@ -113,9 +112,7 @@ class Kill(Event):
 
         # get number of slots
         rng_number_of_slots = self._advance_rng(12) & 7
-        slots_mod = (self.monster.equipment['slots_modifier']
-                     + rng_number_of_slots
-                     - 4)
+        slots_mod = self.monster.equipment["slots_modifier"] + rng_number_of_slots - 4
         number_of_slots = (slots_mod + ((slots_mod >> 31) & 3)) >> 2
         if number_of_slots > EquipmentSlots.MAX:
             number_of_slots = EquipmentSlots.MAX.value
@@ -124,13 +121,14 @@ class Kill(Event):
 
         # get number of abilities
         rng_number_of_abilities = self._advance_rng(12) & 7
-        abilities_mod = (self.monster.equipment['max_ability_rolls_modifier']
-                         + rng_number_of_abilities
-                         - 4)
-        number_of_abilities = ((abilities_mod + ((abilities_mod >> 31) & 7))
-                               >> 3)
+        abilities_mod = (
+            self.monster.equipment["max_ability_rolls_modifier"]
+            + rng_number_of_abilities
+            - 4
+        )
+        number_of_abilities = (abilities_mod + ((abilities_mod >> 31) & 7)) >> 3
 
-        ability_arrays = self.monster.equipment['ability_arrays']
+        ability_arrays = self.monster.equipment["ability_arrays"]
         ability_array = ability_arrays[owner.name][type_]
 
         abilities = []
@@ -152,8 +150,8 @@ class Kill(Event):
                 abilities.append(ability)
 
         # other equipment information
-        base_weapon_damage = self.monster.equipment['base_weapon_damage']
-        bonus_crit = self.monster.equipment['bonus_critical_chance']
+        base_weapon_damage = self.monster.equipment["base_weapon_damage"]
+        bonus_crit = self.monster.equipment["bonus_critical_chance"]
 
         equipment = Equipment(
             owner=owner,
@@ -181,9 +179,8 @@ class Kill(Event):
 
 @dataclass
 class Bribe(Kill):
-
     def _get_item_1(self) -> ItemDrop | None:
-        return self.monster.bribe['item']
+        return self.monster.bribe["item"]
 
     def _get_item_2(self) -> None:
         return

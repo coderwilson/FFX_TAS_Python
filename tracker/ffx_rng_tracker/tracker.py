@@ -33,23 +33,22 @@ class FFXRNGTracker:
         self.rng_initial_values = self.get_rng_array()
 
         # get rng generators
-        self._rng_generators = tuple(
-            [self.get_rng_generator(i) for i in range(68)])
+        self._rng_generators = tuple([self.get_rng_generator(i) for i in range(68)])
         # create a list of lists used to store rng values
         self._rng_arrays = [list() for _ in range(68)]
         self._rng_current_positions = [0 for _ in range(68)]
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}(seed=({self.seed}))'
+        return f"{type(self).__name__}(seed=({self.seed}))"
 
     def get_rng_array(self) -> list[int]:
         """Calculates the starting values of the rng arrays."""
         rng_value = s32(self.seed)
         initial_values = []
         for _ in range(68):
-            rng_value = s32(s32(rng_value * 0x5d588b65) + 0x3c35)
+            rng_value = s32(s32(rng_value * 0x5D588B65) + 0x3C35)
             rng_value = s32((rng_value >> 0x10) + (rng_value << 0x10))
-            initial_values.append(rng_value & 0x7fffffff)
+            initial_values.append(rng_value & 0x7FFFFFFF)
         return initial_values
 
     def get_rng_generator(self, rng_index: int) -> Iterator[int]:
@@ -63,7 +62,7 @@ class FFXRNGTracker:
         while True:
             rng_value = s32(rng_value * rng_constant_1 ^ rng_constant_2)
             rng_value = s32((rng_value >> 0x10) + (rng_value << 0x10))
-            yield rng_value & 0x7fffffff
+            yield rng_value & 0x7FFFFFFF
 
     def advance_rng(self, index: int) -> int:
         """Advances the position of the given rng index and returns

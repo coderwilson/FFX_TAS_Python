@@ -7,7 +7,7 @@ def get_text_characters(file_path: str) -> dict[int, str]:
     """Retrieves the character encoding chart used in prize structs."""
     absolute_file_path = get_resource_path(file_path)
     with open(absolute_file_path) as file_object:
-        file_reader = csv.reader(file_object, delimiter=',')
+        file_reader = csv.reader(file_object, delimiter=",")
         # skips first line
         next(file_reader)
         text_characters = {}
@@ -16,4 +16,4 @@ def get_text_characters(file_path: str) -> dict[int, str]:
     return text_characters
 
 
-TEXT_CHARACTERS = get_text_characters('tracker\\data\\text_characters.csv')
+TEXT_CHARACTERS = get_text_characters("tracker\\data\\text_characters.csv")

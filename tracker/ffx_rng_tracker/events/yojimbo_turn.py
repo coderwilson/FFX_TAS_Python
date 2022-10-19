@@ -3,8 +3,12 @@ from dataclasses import dataclass, field
 
 from ..configs import Configs
 from ..data.actions import YOJIMBO_ACTIONS, YojimboAction
-from ..data.constants import (COMPATIBILITY_MODIFIER, GIL_MOTIVATION_MODIFIER,
-                              OVERDRIVE_MOTIVATION, ZANMATO_LEVELS)
+from ..data.constants import (
+    COMPATIBILITY_MODIFIER,
+    GIL_MOTIVATION_MODIFIER,
+    OVERDRIVE_MOTIVATION,
+    ZANMATO_LEVELS,
+)
 from ..data.monsters import Monster
 from .main import Event
 
@@ -33,12 +37,14 @@ class YojimboTurn(Event):
 
     def __str__(self) -> str:
         if self.is_attack_free:
-            cost = 'free'
+            cost = "free"
         else:
-            cost = f'{self.gil} gil'
-        string = (f'{self.action.name} -> {self.monster}: '
-                  f'{cost} [{self.motivation}/{self.action.needed_motivation}'
-                  f' motivation][{self.compatibility}/255 compatibility]')
+            cost = f"{self.gil} gil"
+        string = (
+            f"{self.action.name} -> {self.monster}: "
+            f"{cost} [{self.motivation}/{self.action.needed_motivation}"
+            f" motivation][{self.compatibility}/255 compatibility]"
+        )
         return string
 
     def _free_attack_check(self) -> bool:
@@ -48,33 +54,33 @@ class YojimboTurn(Event):
 
     def _get_free_attack(self) -> tuple[YojimboAction, int]:
         base_motivation = self.gamestate.compatibility // 4
-        rng = self._advance_rng(17) & 0x3f
+        rng = self._advance_rng(17) & 0x3F
         motivation = base_motivation + rng
-        attacks = [a for a in YOJIMBO_ACTIONS.values()
-                   if a.needed_motivation is not None]
+        attacks = [
+            a for a in YOJIMBO_ACTIONS.values() if a.needed_motivation is not None
+        ]
         attacks.sort(key=lambda a: a.needed_motivation)
         for a in attacks:
             if motivation >= a.needed_motivation:
                 attack = a
 
-        if (attack == YOJIMBO_ACTIONS['zanmato']
-                and self.monster.zanmato_level > 0):
-            attack = YOJIMBO_ACTIONS['wakizashi_mt']
+        if attack == YOJIMBO_ACTIONS["zanmato"] and self.monster.zanmato_level > 0:
+            attack = YOJIMBO_ACTIONS["wakizashi_mt"]
         return attack, motivation
 
     def _get_gil(self) -> tuple[int, int]:
         """"""
-        base_motivation = (self.gamestate.compatibility
-                           // COMPATIBILITY_MODIFIER[Configs.game_version])
+        base_motivation = (
+            self.gamestate.compatibility // COMPATIBILITY_MODIFIER[Configs.game_version]
+        )
         zanmato_resistance = ZANMATO_LEVELS[self.monster.zanmato_level]
-        rng_motivation = self._advance_rng(17) & 0x3f
+        rng_motivation = self._advance_rng(17) & 0x3F
         # the zanmato level of the monster is only used to check for zanmato
         # if the desired attack is not zanmato then a second calculation is
         # made using the lowest zanmato level
-        if (self.action != YOJIMBO_ACTIONS['zanmato']
-                and self.monster.zanmato_level > 0):
+        if self.action != YOJIMBO_ACTIONS["zanmato"] and self.monster.zanmato_level > 0:
             zanmato_resistance = ZANMATO_LEVELS[0]
-            rng_motivation = self._advance_rng(17) & 0x3f
+            rng_motivation = self._advance_rng(17) & 0x3F
         fixed_motivation = int(base_motivation * zanmato_resistance)
         fixed_motivation += rng_motivation
         if self.overdrive:

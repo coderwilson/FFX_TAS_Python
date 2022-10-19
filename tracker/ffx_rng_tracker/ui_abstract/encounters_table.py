@@ -26,33 +26,34 @@ class EncountersTable(EncountersTracker):
                         for zone in event.zones:
                             zone_name = ZONES[zone].name
                             padding = self.paddings[zone]
-                            zones.append(f'{zone_name:{padding}}')
-                        first_line = (' ' * 26) + ''.join(zones)
+                            zones.append(f"{zone_name:{padding}}")
+                        first_line = (" " * 26) + "".join(zones)
                         output.append(first_line)
-                        output.append('=' * len(first_line))
+                        output.append("=" * len(first_line))
                     for count, enc in enumerate(event.encounters):
                         # append a spacer before appending encounters
                         # but only if there is already data
                         if output and count == 0:
                             enc = event.encounters[0]
-                            line = (f'{enc.index:4}|{enc.random_index:4}|'
-                                    f'{enc.zone_index:3}: {enc.condition:10} ')
+                            line = (
+                                f"{enc.index:4}|{enc.random_index:4}|"
+                                f"{enc.zone_index:3}: {enc.condition:10} "
+                            )
                         padding = self.paddings[enc.name]
-                        line += f'{enc.formation:{padding}}'
+                        line += f"{enc.formation:{padding}}"
                     output.append(line)
 
         important_monsters = self.search_bar.get_input()
-        for symbol in (',', '-', '/', '\\', '.'):
-            important_monsters = important_monsters.replace(symbol, ' ')
+        for symbol in (",", "-", "/", "\\", "."):
+            important_monsters = important_monsters.replace(symbol, " ")
         important_monsters = important_monsters.split()
-        pattern = '(?i)' + '|'.join(
-            [re.escape(m.strip()) for m in important_monsters])
-        self.output_widget.regex_patterns['important monster'] = pattern
+        pattern = "(?i)" + "|".join([re.escape(m.strip()) for m in important_monsters])
+        self.output_widget.regex_patterns["important monster"] = pattern
 
-        return '\n'.join(output)
+        return "\n".join(output)
 
     def edit_output(self, output: str) -> str:
-        output = output.replace(' Normal', '       ')
+        output = output.replace(" Normal", "       ")
         return output
 
     def _get_paddings(self) -> dict[str, int]:
@@ -60,6 +61,6 @@ class EncountersTable(EncountersTracker):
         for zone, data in ZONES.items():
             padding = len(zone)
             for f in data.formations:
-                padding = max(padding, len(', '.join([str(m) for m in f])))
+                padding = max(padding, len(", ".join([str(m) for m in f])))
             paddings[zone] = padding + 1
         return paddings

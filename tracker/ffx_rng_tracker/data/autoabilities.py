@@ -20,8 +20,7 @@ def _get_autoabilities(file_path: str) -> tuple[Autoability]:
     """
     absolute_file_path = get_resource_path(file_path)
     with open(absolute_file_path) as file_object:
-        abilities_file_reader = csv.reader(
-            file_object, delimiter=',')
+        abilities_file_reader = csv.reader(file_object, delimiter=",")
         # skips first line
         next(abilities_file_reader)
         autoabilities = []
@@ -30,4 +29,4 @@ def _get_autoabilities(file_path: str) -> tuple[Autoability]:
     return tuple(autoabilities)
 
 
-AUTOABILITIES = _get_autoabilities('tracker\\data\\auto-abilities.csv')
+AUTOABILITIES = _get_autoabilities("tracker\\data\\auto-abilities.csv")

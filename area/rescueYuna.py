@@ -30,7 +30,7 @@ def preEvrae():
                 checkpoint += 1
             elif checkpoint == 13:
                 memory.main.touchSaveSphere()
-                memory.main.fullPartyFormat('evrae')
+                memory.main.fullPartyFormat("evrae")
                 checkpoint += 1
             elif checkpoint == 18:
                 memory.main.clickToEventTemple(4)
@@ -57,10 +57,13 @@ def guards():
     sleepingPowders = memory.main.getItemSlot(37) != 255
     if not sleepingPowders:
         if memory.main.getLuluSlvl() < 35:
-            memory.main.fullPartyFormat('guards_lulu', fullMenuClose=False)
+            memory.main.fullPartyFormat("guards_lulu", fullMenuClose=False)
         else:
-            memory.main.fullPartyFormat('guards_no_lulu', fullMenuClose=False)
-    if memory.main.getItemSlot(3) < 200 and memory.main.getHP() != memory.main.getMaxHP():
+            memory.main.fullPartyFormat("guards_no_lulu", fullMenuClose=False)
+    if (
+        memory.main.getItemSlot(3) < 200
+        and memory.main.getHP() != memory.main.getMaxHP()
+    ):
         menu.beforeGuards()
     memory.main.closeMenu()
     memory.main.waitFrames(2)
@@ -82,12 +85,12 @@ def guards():
                 battle.main.guards(guardNum, sleepingPowders)
                 if guardNum == 2:
                     memory.main.clickToControl()
-                    memory.main.fullPartyFormat('guards_lulu')
+                    memory.main.fullPartyFormat("guards_lulu")
                 elif guardNum == 5:
                     pass
                 else:
                     memory.main.clickToControl()
-                    memory.main.fullPartyFormat('guards_no_lulu')
+                    memory.main.fullPartyFormat("guards_no_lulu")
                 guardNum += 1
             elif memory.main.menuOpen():
                 xbox.tapB()
@@ -139,13 +142,16 @@ def trials():
                 while not memory.main.userControl():
                     if memory.main.getActorCoords(0)[1] < -100:
                         if memory.main.btBiDirection() == 1:
-                            FFXC.set_value('BtnB', 1)
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
-                    elif memory.main.getActorCoords(0)[1] > 30 and memory.main.getActorCoords(0)[1] < 90:
-                        FFXC.set_value('BtnB', 1)
+                            FFXC.set_value("BtnB", 0)
+                    elif (
+                        memory.main.getActorCoords(0)[1] > 30
+                        and memory.main.getActorCoords(0)[1] < 90
+                    ):
+                        FFXC.set_value("BtnB", 1)
                     else:
-                        FFXC.set_value('BtnB', 0)
+                        FFXC.set_value("BtnB", 0)
                 FFXC.set_neutral()
                 if memory.main.getActorCoords(0)[0] < -20:
                     print("Correct alcove. Moving on with swiftness.")
@@ -183,11 +189,11 @@ def trials():
                 FFXC.set_neutral()
                 print("Mark 1")
                 memory.main.waitFrames(30 * 1)
-                FFXC.set_value('BtnB', 1)
+                FFXC.set_value("BtnB", 1)
                 print("Mark 2")
                 memory.main.awaitControl()
                 print("Mark 3")
-                FFXC.set_value('BtnB', 0)
+                FFXC.set_value("BtnB", 0)
                 checkpoint += 1
             elif checkpoint == 10:  # Insert Bevelle sphere. Activate lower areas.
                 memory.main.clickToEventTemple(0)
@@ -201,22 +207,34 @@ def trials():
 
                 while not memory.main.userControl():
                     if memory.main.getActorCoords(0)[0] < 40:
-                        if memory.main.getActorCoords(0)[1] > 100 or memory.main.getActorCoords(0)[1] < 10:
-                            FFXC.set_value('BtnB', 1)
+                        if (
+                            memory.main.getActorCoords(0)[1] > 100
+                            or memory.main.getActorCoords(0)[1] < 10
+                        ):
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
+                            FFXC.set_value("BtnB", 0)
 
                     elif memory.main.getActorCoords(0)[1] < -10:
-                        if memory.main.btBiDirection() == 1 and memory.main.btTriDirectionMain() == 0:
+                        if (
+                            memory.main.btBiDirection() == 1
+                            and memory.main.btTriDirectionMain() == 0
+                        ):
                             memory.main.waitFrames(2)
-                            if memory.main.btBiDirection() == 1 and memory.main.btTriDirectionMain() == 0:
+                            if (
+                                memory.main.btBiDirection() == 1
+                                and memory.main.btTriDirectionMain() == 0
+                            ):
                                 xbox.menuB()
                                 memory.main.waitFrames(20)
                     else:
-                        if memory.main.getActorCoords(0)[1] > 293 and memory.main.getActorCoords(0)[1] < 432:
-                            FFXC.set_value('BtnB', 1)
+                        if (
+                            memory.main.getActorCoords(0)[1] > 293
+                            and memory.main.getActorCoords(0)[1] < 432
+                        ):
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
+                            FFXC.set_value("BtnB", 0)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 16:  # Take Glyph sphere from second alcove
@@ -229,21 +247,30 @@ def trials():
                 memory.main.waitFrames(30 * 2)
                 while not memory.main.userControl():
                     if memory.main.getActorCoords(0)[0] < 40:
-                        if memory.main.getActorCoords(0)[1] > 100 or memory.main.getActorCoords(0)[1] < 10:
-                            FFXC.set_value('BtnB', 1)
+                        if (
+                            memory.main.getActorCoords(0)[1] > 100
+                            or memory.main.getActorCoords(0)[1] < 10
+                        ):
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
+                            FFXC.set_value("BtnB", 0)
 
                     elif memory.main.getActorCoords(0)[1] > 425:
-                        FFXC.set_value('BtnB', 1)
-                    elif memory.main.getActorCoords(0)[1] < -30 and \
-                            memory.main.btBiDirection() == 0 and memory.main.btTriDirectionMain() == 0:
+                        FFXC.set_value("BtnB", 1)
+                    elif (
+                        memory.main.getActorCoords(0)[1] < -30
+                        and memory.main.btBiDirection() == 0
+                        and memory.main.btTriDirectionMain() == 0
+                    ):
                         memory.main.waitFrames(2)
-                        if memory.main.btBiDirection() == 0 and memory.main.btTriDirectionMain() == 0:
+                        if (
+                            memory.main.btBiDirection() == 0
+                            and memory.main.btTriDirectionMain() == 0
+                        ):
                             xbox.menuB()
                             memory.main.waitFrames(20)
                     else:
-                        FFXC.set_value('BtnB', 0)
+                        FFXC.set_value("BtnB", 0)
                 # Go ahead and insert Glyph sphere.
                 memory.main.clickToEventTemple(0)
                 checkpoint += 1
@@ -290,21 +317,33 @@ def trials():
                 memory.main.waitFrames(30 * 10)
                 while not memory.main.userControl():
                     if memory.main.getActorCoords(0)[0] < 40:
-                        if memory.main.getActorCoords(0)[1] > 100 or memory.main.getActorCoords(0)[1] < 10:
-                            FFXC.set_value('BtnB', 1)
+                        if (
+                            memory.main.getActorCoords(0)[1] > 100
+                            or memory.main.getActorCoords(0)[1] < 10
+                        ):
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
+                            FFXC.set_value("BtnB", 0)
 
                     elif memory.main.getActorCoords(0)[1] < -30:
-                        if memory.main.btBiDirection() == 1 and memory.main.btTriDirectionMain() == 0:
+                        if (
+                            memory.main.btBiDirection() == 1
+                            and memory.main.btTriDirectionMain() == 0
+                        ):
                             memory.main.waitFrames(2)
-                            if memory.main.btBiDirection() == 1 and memory.main.btTriDirectionMain() == 0:
+                            if (
+                                memory.main.btBiDirection() == 1
+                                and memory.main.btTriDirectionMain() == 0
+                            ):
                                 xbox.menuB()
                                 memory.main.waitFrames(20)
-                    elif memory.main.getActorCoords(0)[1] > 250 and memory.main.getActorCoords(0)[1] < 450:
-                        FFXC.set_value('BtnB', 1)
+                    elif (
+                        memory.main.getActorCoords(0)[1] > 250
+                        and memory.main.getActorCoords(0)[1] < 450
+                    ):
+                        FFXC.set_value("BtnB", 1)
                     else:
-                        FFXC.set_value('BtnB', 0)
+                        FFXC.set_value("BtnB", 0)
                 FFXC.set_neutral()
                 print("Arriving in the second alcove again.")
                 checkpoint += 1
@@ -328,22 +367,31 @@ def trials():
                 memory.main.waitFrames(30 * 19)
                 while not memory.main.userControl():
                     if memory.main.getActorCoords(0)[0] < 40:
-                        if memory.main.getActorCoords(0)[1] > 100 or memory.main.getActorCoords(0)[1] < 10:
-                            FFXC.set_value('BtnB', 1)
+                        if (
+                            memory.main.getActorCoords(0)[1] > 100
+                            or memory.main.getActorCoords(0)[1] < 10
+                        ):
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
+                            FFXC.set_value("BtnB", 0)
 
                     elif memory.main.getActorCoords(0)[1] < -30:
-                        if memory.main.btBiDirection() == 0 and memory.main.btTriDirectionMain() == 0:
+                        if (
+                            memory.main.btBiDirection() == 0
+                            and memory.main.btTriDirectionMain() == 0
+                        ):
                             memory.main.waitFrames(2)
-                            if memory.main.btBiDirection() == 0 and memory.main.btTriDirectionMain() == 0:
+                            if (
+                                memory.main.btBiDirection() == 0
+                                and memory.main.btTriDirectionMain() == 0
+                            ):
                                 xbox.menuB()
                                 memory.main.waitFrames(20)
                     else:
                         if memory.main.getActorCoords(0)[1] < 250:
-                            FFXC.set_value('BtnB', 1)
+                            FFXC.set_value("BtnB", 1)
                         else:
-                            FFXC.set_value('BtnB', 0)
+                            FFXC.set_value("BtnB", 0)
                 FFXC.set_neutral()
                 memory.main.awaitControl()
                 FFXC.set_movement(0, -1)
@@ -504,7 +552,7 @@ def seymourNatus():
         else:
             menu.seymourNatusBlitzLoss()
 
-    memory.main.fullPartyFormat('highbridge')
+    memory.main.fullPartyFormat("highbridge")
     memory.main.touchSaveSphere()
     complete = 0
     while complete == 0:

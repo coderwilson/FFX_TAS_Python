@@ -19,15 +19,15 @@ def NewGame(Gamestate):
 
     lastMessage = 0
     # New version
-    if Gamestate == 'none':  # New Game
+    if Gamestate == "none":  # New Game
         while memory.main.getMap() != 0:
             if memory.main.getMap() != 23:
                 if lastMessage != 1:
                     lastMessage = 1
                     print("Attempting to get to New Game screen")
-                FFXC.set_value('BtnStart', 1)
+                FFXC.set_value("BtnStart", 1)
                 memory.main.waitFrames(1)
-                FFXC.set_value('BtnStart', 0)
+                FFXC.set_value("BtnStart", 0)
                 memory.main.waitFrames(1)
             elif memory.main.saveMenuOpen():
                 if lastMessage != 2:
@@ -48,9 +48,9 @@ def NewGame(Gamestate):
     else:  # Load Game
         while not memory.main.saveMenuOpen():
             if memory.main.getMap() != 23:
-                FFXC.set_value('BtnStart', 1)
+                FFXC.set_value("BtnStart", 1)
                 memory.main.waitFrames(1)
-                FFXC.set_value('BtnStart', 0)
+                FFXC.set_value("BtnStart", 0)
                 memory.main.waitFrames(1)
             elif memory.main.saveMenuCursor() == 0:
                 xbox.menuDown()
@@ -83,11 +83,13 @@ def listenStory():
         if memory.main.getMap() == 132:
             if memory.main.diagProgressFlag() == 1:
                 gameVars.setCSR(False)
-                print("Skipping intro scene, we'll watch this properly in about 8 hours.")
+                print(
+                    "Skipping intro scene, we'll watch this properly in about 8 hours."
+                )
                 memory.main.awaitControl()
-            FFXC.set_value('BtnBack', 1)
+            FFXC.set_value("BtnBack", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnBack', 0)
+            FFXC.set_value("BtnBack", 0)
             memory.main.waitFrames(1)
 
     print("### CSR check:", gameVars.csr())
@@ -108,7 +110,7 @@ def listenStory():
                 print("Tidus name complete.")
 
                 checkpoint += 1
-            #elif checkpoint == 7 and gameVars.csr():
+            # elif checkpoint == 7 and gameVars.csr():
             #    checkpoint = 9
             elif checkpoint == 8:
                 while memory.main.userControl():
@@ -139,13 +141,16 @@ def listenStory():
             if memory.main.diagSkipPossible():
                 xbox.tapB()
             elif memory.main.cutsceneSkipPossible():
-                if memory.main.getStoryProgress() == 10 and memory.main.diagProgressFlag() == 2:
+                if (
+                    memory.main.getStoryProgress() == 10
+                    and memory.main.diagProgressFlag() == 2
+                ):
                     print("Special Skip")
                     memory.main.waitFrames(130)
                     # Generate button to skip later
-                    FFXC.set_value('BtnStart', 1)
+                    FFXC.set_value("BtnStart", 1)
                     memory.main.waitFrames(1)
-                    FFXC.set_value('BtnStart', 0)
+                    FFXC.set_value("BtnStart", 0)
                     xbox.SkipDialog(10)
                 else:
                     if gameVars.usePause():
@@ -165,7 +170,7 @@ def ammesBattle():
     print("Killing Sinspawn")
     while memory.main.battleActive():
         if memory.main.turnReady():
-            battle.main.attack('none')
+            battle.main.attack("none")
             lastHit = memory.main.lastHitCheckChange()
             while lastHit == 9999:
                 lastHit = memory.main.lastHitCheckChange()
@@ -195,16 +200,20 @@ def ammesBattle():
 def AfterAmmes():
     memory.main.clickToControl()
     checkpoint = 0
-    #memory.main.waitFrames(90)
-    #print("#### MARK ####")
-    #memory.main.ammesFix(actorIndex=0)
-    #memory.main.waitFrames(90)
+    # memory.main.waitFrames(90)
+    # print("#### MARK ####")
+    # memory.main.ammesFix(actorIndex=0)
+    # memory.main.waitFrames(90)
 
     while memory.main.getMap() != 49:
         if memory.main.userControl():
             startPos = memory.main.getCoords()
-            if int(startPos[0]) in [866, 867, 868, 869, 870] \
-                    and int(startPos[1]) in [-138, -139, -140, -141]:
+            if int(startPos[0]) in [866, 867, 868, 869, 870] and int(startPos[1]) in [
+                -138,
+                -139,
+                -140,
+                -141,
+            ]:
                 print("Positioning error")
                 FFXC.set_neutral()
                 memory.main.waitFrames(20)
@@ -215,9 +224,13 @@ def AfterAmmes():
                 if checkpoint == 6:  # Save sphere
                     memory.main.touchSaveSphere()
                     checkpoint += 1
-                elif checkpoint < 9 and memory.main.getStoryProgress() >= 20:  # Swim to Jecht
+                elif (
+                    checkpoint < 9 and memory.main.getStoryProgress() >= 20
+                ):  # Swim to Jecht
                     checkpoint = 9
-                elif checkpoint < 11 and memory.main.getStoryProgress() >= 30:  # Towards Baaj temple
+                elif (
+                    checkpoint < 11 and memory.main.getStoryProgress() >= 30
+                ):  # Towards Baaj temple
                     checkpoint = 11
 
                 # General pathing
@@ -237,14 +250,14 @@ def AfterAmmes():
 def SwimToJecht():
     print("Swimming to Jecht")
 
-    FFXC.set_value('BtnA', 1)
+    FFXC.set_value("BtnA", 1)
     FFXC.set_movement(-1, -1)
     memory.main.waitFrames(30 * 8)
     while memory.main.userControl():
         FFXC.set_movement(-1, 1)
 
     FFXC.set_neutral()
-    FFXC.set_value('BtnA', 0)
+    FFXC.set_value("BtnA", 0)
     print("We've now reached Jecht.")
     xbox.SkipDialog(5)
 

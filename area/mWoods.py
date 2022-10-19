@@ -94,7 +94,7 @@ def lakeRoad():
         xbox.tapB()
     FFXC.set_neutral()
     menu.mWoods()  # Selling and buying, item sorting, etc
-    memory.main.fullPartyFormat('spheri')
+    memory.main.fullPartyFormat("spheri")
     while not targetPathing.setMovement([101, -72]):
         pass
 
@@ -181,7 +181,7 @@ def lake():
     if memory.main.getHP()[3] < 1000:  # Otherwise we under-level Tidus off of Crawler
         battle.main.healUp(fullMenuClose=False)
 
-    memory.main.fullPartyFormat('crawler', fullMenuClose=False)
+    memory.main.fullPartyFormat("crawler", fullMenuClose=False)
     menu.mLakeGrid()
     memory.main.awaitControl()
 

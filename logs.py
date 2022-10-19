@@ -31,8 +31,23 @@ def nextStats(rngSeedNum):
     global ext
     if fileStats == "none":
         timeNow = datetime.datetime.now()
-        fileStats = "Logs/" + game + "Stats_ " + str(rngSeedNum) + "_" + str(timeNow.year) + str(timeNow.month) + str(
-            timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
+        fileStats = (
+            "Logs/"
+            + game
+            + "Stats_ "
+            + str(rngSeedNum)
+            + "_"
+            + str(timeNow.year)
+            + str(timeNow.month)
+            + str(timeNow.day)
+            + "_"
+            + str(timeNow.hour)
+            + "_"
+            + str(timeNow.minute)
+            + "_"
+            + str(timeNow.second)
+            + ext
+        )
 
         global statsFile
         statsFile = open(fileStats, "x")
@@ -66,8 +81,21 @@ def nextPlot():
     global ext
     if filePlot == "none":
         timeNow = datetime.datetime.now()
-        filePlot = "Logs/" + game + "Plot_ " + str(timeNow.year) + str(timeNow.month) + str(
-            timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
+        filePlot = (
+            "Logs/"
+            + game
+            + "Plot_ "
+            + str(timeNow.year)
+            + str(timeNow.month)
+            + str(timeNow.day)
+            + "_"
+            + str(timeNow.hour)
+            + "_"
+            + str(timeNow.minute)
+            + "_"
+            + str(timeNow.second)
+            + ext
+        )
 
         global plotFile
         plotFile = open(filePlot, "x")
@@ -95,8 +123,21 @@ def openRNGTrack():
     global game
     global ext
     timeNow = datetime.datetime.now()
-    fileRNG = "Logs/" + game + "RNG_ " + str(timeNow.year) + str(timeNow.month) + str(
-        timeNow.day) + "_" + str(timeNow.hour) + "_" + str(timeNow.minute) + "_" + str(timeNow.second) + ext
+    fileRNG = (
+        "Logs/"
+        + game
+        + "RNG_ "
+        + str(timeNow.year)
+        + str(timeNow.month)
+        + str(timeNow.day)
+        + "_"
+        + str(timeNow.hour)
+        + "_"
+        + str(timeNow.minute)
+        + "_"
+        + str(timeNow.second)
+        + ext
+    )
 
     global RNGFile
     try:
@@ -123,13 +164,20 @@ def writeRNGTrack(message):
 
 
 class memChangeMonitor:
-    def __init__(self, baseOffsetRef, isPointerRef=False, ptrOffsetRef=0x0, typeRef='4byte', childReport: int = 0):
+    def __init__(
+        self,
+        baseOffsetRef,
+        isPointerRef=False,
+        ptrOffsetRef=0x0,
+        typeRef="4byte",
+        childReport: int = 0,
+    ):
         self.isPointer = isPointerRef
         self.baseOffset = baseOffsetRef
         if self.isPointer:
             self.ptrOffset = ptrOffsetRef
         self.varType = typeRef
-        self.key = baseValue + 0x003988a5
+        self.key = baseValue + 0x003988A5
 
         self.setLastValue()
 
@@ -138,34 +186,34 @@ class memChangeMonitor:
         else:
             self.reportOnChild = True
             self.childHandle = memChangeMonitor(
-                self.baseOffset, True, self.ptrOffset, self.typeRef, 0)
+                self.baseOffset, True, self.ptrOffset, self.typeRef, 0
+            )
 
     def setLastValue(self):
         if self.isPointer:
             ptrRef = memory.main.readBytes(key, 4)
 
-            if self.varType == 'byte':
-                self.lastValue = memory.main.readBytes(
-                    ptrRef + self.ptrOffset, 1)
-            elif self.varType == '2byte':
-                self.lastValue = memory.main.readBytes(
-                    ptrRef + self.ptrOffset, 2)
-            elif self.varType == '4byte':
-                self.lastValue = memory.main.readBytes(
-                    ptrRef + self.ptrOffset, 4)
-            elif self.varType == 'float':
+            if self.varType == "byte":
+                self.lastValue = memory.main.readBytes(ptrRef + self.ptrOffset, 1)
+            elif self.varType == "2byte":
+                self.lastValue = memory.main.readBytes(ptrRef + self.ptrOffset, 2)
+            elif self.varType == "4byte":
+                self.lastValue = memory.main.readBytes(ptrRef + self.ptrOffset, 4)
+            elif self.varType == "float":
                 self.lastValue = memory.main.float_from_integer(
-                    memory.main.readBytes(ptrRef + self.ptrOffset, 4))
+                    memory.main.readBytes(ptrRef + self.ptrOffset, 4)
+                )
         else:
-            if self.varType == 'byte':
+            if self.varType == "byte":
                 self.lastValue = memory.main.readBytes(key, 1)
-            elif self.varType == '2byte':
+            elif self.varType == "2byte":
                 self.lastValue = memory.main.readBytes(key, 2)
-            elif self.varType == '4byte':
+            elif self.varType == "4byte":
                 self.lastValue = memory.main.readBytes(key, 4)
-            elif self.varType == 'float':
+            elif self.varType == "float":
                 self.lastValue = memory.main.float_from_integer(
-                    memory.main.readBytes(key, 4))
+                    memory.main.readBytes(key, 4)
+                )
 
     def reportIfChange(self):
         if self.checkChange():
@@ -178,7 +226,7 @@ class memChangeMonitor:
             if self.isPointer:
                 writeMemChange("Pointer offset: " + str(self.pointerOffset))
             writeMemChange("Type of variable: " + str(self.varType))
-            writeMemChange("Previous value: " + self. lastValue)
+            writeMemChange("Previous value: " + self.lastValue)
             writeMemChange("Updated value: " + self.getNewValue())
             writeMemChange("Time of change: " + timeStamp())
             writeMemChange("?? Game state ??")
@@ -198,7 +246,7 @@ class memChangeMonitor:
         if self.isPointer:
             writeMemChange("Pointer offset: " + str(self.pointerOffset))
         writeMemChange("Type of variable: " + str(self.varType))
-        writeMemChange("Previous value: " + self. lastValue)
+        writeMemChange("Previous value: " + self.lastValue)
         writeMemChange("Updated value: " + self.getNewValue())
         writeMemChange("Time of change: " + timeStamp())
         writeMemChange("?? Game state ??")
@@ -215,7 +263,7 @@ class memChangeMonitor:
         if self.isPointer:
             writeMemChange("Pointer offset: " + str(self.pointerOffset))
         writeMemChange("Type of variable: " + str(self.varType))
-        writeMemChange("Previous value: " + self. lastValue)
+        writeMemChange("Previous value: " + self.lastValue)
         writeMemChange("Updated value: " + self.getNewValue())
         writeMemChange("Time of change: " + timeStamp())
         writeMemChange("?? Game state ??")
@@ -229,31 +277,35 @@ class memChangeMonitor:
         if self.isPointer:
             ptrRef = memory.main.readBytes(key, 4)
 
-            if self.varType == 'byte':
+            if self.varType == "byte":
                 if self.lastValue != memory.main.readBytes(ptrRef + self.ptrOffset, 1):
                     return True
-            elif self.varType == '2byte':
+            elif self.varType == "2byte":
                 if self.lastValue != memory.main.readBytes(ptrRef + self.ptrOffset, 2):
                     return True
-            elif self.varType == '4byte':
+            elif self.varType == "4byte":
                 if self.lastValue != memory.main.readBytes(ptrRef + self.ptrOffset, 4):
                     return True
-            elif self.varType == 'float':
-                if self.lastValue != memory.main.float_from_integer(memory.main.readBytes(ptrRef + self.ptrOffset, 4)):
+            elif self.varType == "float":
+                if self.lastValue != memory.main.float_from_integer(
+                    memory.main.readBytes(ptrRef + self.ptrOffset, 4)
+                ):
                     return True
             return False
         else:
-            if self.varType == 'byte':
+            if self.varType == "byte":
                 if self.lastValue != memory.main.readBytes(key, 1):
                     return True
-            elif self.varType == '2byte':
+            elif self.varType == "2byte":
                 if self.lastValue != memory.main.readBytes(key, 2):
                     return True
-            elif self.varType == '4byte':
+            elif self.varType == "4byte":
                 if self.lastValue != memory.main.readBytes(key, 4):
                     return True
-            elif self.varType == 'float':
-                if self.lastValue != memory.main.float_from_integer(memory.main.readBytes(key, 4)):
+            elif self.varType == "float":
+                if self.lastValue != memory.main.float_from_integer(
+                    memory.main.readBytes(key, 4)
+                ):
                     return True
             return False
 
@@ -263,8 +315,8 @@ def memChangeList():
     # Fifth element is to report on another offset, only works for pointers.
     # Types can be '1byte', '2byte', '4byte', or 'float'
     fullList = [
-        [0x8E9004, True, 0x1c, '4byte', 0x8],
-        [0x8E9004, True, 0x1c, '4byte', 0xc]
+        [0x8E9004, True, 0x1C, "4byte", 0x8],
+        [0x8E9004, True, 0x1C, "4byte", 0xC],
     ]
 
     return fullList
@@ -279,12 +331,24 @@ def memChangeHandle():
         if firstEle:
             firstEle = False
             variables = memRefList.pop()
-            retArray[0] = memChangeMonitor(baseOffsetRef=variables[0], isPointerRef=variables[1],
-                                           ptrOffsetRef=variables[2], typeRef=variables[3], childReport=variables[4])
+            retArray[0] = memChangeMonitor(
+                baseOffsetRef=variables[0],
+                isPointerRef=variables[1],
+                ptrOffsetRef=variables[2],
+                typeRef=variables[3],
+                childReport=variables[4],
+            )
         else:
             variables = memRefList.pop()
-            retArray.append(memChangeMonitor(baseOffsetRef=variables[0], isPointerRef=variables[1],
-                                             ptrOffsetRef=variables[2], typeRef=variables[3], childReport=variables[4]))
+            retArray.append(
+                memChangeMonitor(
+                    baseOffsetRef=variables[0],
+                    isPointerRef=variables[1],
+                    ptrOffsetRef=variables[2],
+                    typeRef=variables[3],
+                    childReport=variables[4],
+                )
+            )
     return retArray
 
 

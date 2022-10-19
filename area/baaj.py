@@ -38,7 +38,7 @@ def Entrance():
     while memory.main.getStoryProgress() < 48:
         if screen.BattleScreen():
             if memory.main.getEncounterID() == 2:
-                battle.main.attack('none')
+                battle.main.attack("none")
             else:
                 battle.main.defend()
         elif memory.main.diagSkipPossible():
@@ -113,7 +113,7 @@ def Klikk_fight():
         xbox.tapB()
 
     xbox.clickToBattle()
-    battle.main.useItem(0, 'none')  # Tidus self-potion
+    battle.main.useItem(0, "none")  # Tidus self-potion
     screen.awaitTurn()
     battle.boss.klikk()
 
@@ -122,7 +122,7 @@ def distance(n1, n2):
     try:
         player1 = memory.main.getActorCoords(actorNumber=n1)
         player2 = memory.main.getActorCoords(actorNumber=n2)
-        return (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
+        return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
     except Exception as x:
         print("Exception:", x)
         return 999
@@ -142,18 +142,18 @@ def ABboat1():
             xbox.menuA()
             xbox.menuB()
     print("In the water!")
-    FFXC.set_value('BtnA', 1)
+    FFXC.set_value("BtnA", 1)
     while not memory.main.userControl():
-        FFXC.set_value('BtnB', 1)
+        FFXC.set_value("BtnB", 1)
         memory.main.waitFrames(1)
-        FFXC.set_value('BtnB', 0)
+        FFXC.set_value("BtnB", 0)
         memory.main.waitFrames(1)
-    FFXC.set_value('BtnA', 1)
+    FFXC.set_value("BtnA", 1)
     FFXC.set_movement(-1, -1)
     memory.main.waitFrames(20)
 
     while memory.main.getMap() != 288:
-        FFXC.set_value('BtnA', 1)
+        FFXC.set_value("BtnA", 1)
         FFXC.set_movement(0, -1)
         if memory.main.battleActive():
             FFXC.set_neutral()
@@ -170,7 +170,7 @@ def ABswimming1():
     while memory.main.getMap() != 288:
         if memory.main.userControl():
             targetPathing.setMovement([-300, -300])
-            FFXC.set_value('BtnA', 1)
+            FFXC.set_value("BtnA", 1)
         else:
             FFXC.set_neutral()
             if screen.BattleScreen():
@@ -188,9 +188,9 @@ def ABswimming1():
         if memory.main.userControl():
             if memory.main.getMap() == 71:
                 FFXC.set_movement(0, -1)
-                FFXC.set_value('BtnA', 1)
+                FFXC.set_value("BtnA", 1)
             else:
-                FFXC.set_value('BtnA', 0)
+                FFXC.set_value("BtnA", 0)
                 if pos[1] > -230:
                     targetPathing.setMovement([-343, -284])
                 elif pos[1] > -410:
@@ -212,7 +212,7 @@ def ABswimming2():
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.awaitControl()
     FFXC.set_movement(1, -1)
-    FFXC.set_value('BtnA', 1)
+    FFXC.set_value("BtnA", 1)
     memory.main.touchSaveSphere()
 
     memory.main.clearSaveMenuCursor2()

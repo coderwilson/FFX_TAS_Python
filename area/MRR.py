@@ -99,7 +99,7 @@ def mainPath():
         if memory.main.userControl():
             if checkpoint == 1:
                 memory.main.touchSaveSphere()
-                memory.main.fullPartyFormat('mrr1')
+                memory.main.fullPartyFormat("mrr1")
                 checkpoint += 1
             elif checkpoint == 4:
                 print("Up the first lift")
@@ -127,7 +127,9 @@ def mainPath():
             elif checkpoint >= 54 and checkpoint <= 56:  # 400 gil guy
                 if memory.main.rngSeed() in [160, 31]:
                     checkpoint = 57
-                elif memory.main.getGilvalue() != lastGilValue:  # check if we got the 400 from the guy
+                elif (
+                    memory.main.getGilvalue() != lastGilValue
+                ):  # check if we got the 400 from the guy
                     if memory.main.getGilvalue() == lastGilValue + 400:
                         print("We've procured the 400 gil from the guy.")
                         checkpoint = 57  # now to the actual lift
@@ -145,7 +147,10 @@ def mainPath():
             elif checkpoint == 66:
                 xbox.SkipDialog(1)
                 print("Up the final lift")
-                print("======== Next Kimahri crit:", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                print(
+                    "======== Next Kimahri crit:",
+                    memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15),
+                )
                 checkpoint += 1
             elif checkpoint == 68:
                 FFXC.set_movement(0, -1)
@@ -157,10 +162,23 @@ def mainPath():
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
             elif targetPathing.setMovement(targetPathing.mrrMain(checkpoint)):
                 if checkpoint == 61:
-                    if memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15) in [2, 3, 4, 5, 6, 7, 9]:
+                    if memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15) in [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        9,
+                    ]:
                         critManip = True
                         # Try to end on 1.
-                        print("+++++++++++ We can manip:", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                        print(
+                            "+++++++++++ We can manip:",
+                            memory.main.nextCrit(
+                                character=3, charLuck=18, enemyLuck=15
+                            ),
+                        )
                         checkpoint = 59
                     else:
                         checkpoint += 1
@@ -190,7 +208,10 @@ def mainPath():
                     menu.mrrGrid2()
                 memory.main.closeMenu()
                 print("MRR battle complete")
-                print("======== Next Kimahri crit:", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                print(
+                    "======== Next Kimahri crit:",
+                    memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15),
+                )
                 battleCount += 1
             elif memory.main.menuOpen():
                 xbox.tapB()
@@ -229,11 +250,17 @@ def battleSite():
                 FFXC.set_neutral()
                 menu.battleSiteOaka1()
                 menu.battleSiteOaka2()
-                print("======== Next Kimahri crit:", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                print(
+                    "======== Next Kimahri crit:",
+                    memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15),
+                )
                 checkpoint += 1
             elif checkpoint == 8:
                 memory.main.touchSaveSphere()
-                print("======== Next Kimahri crit:", memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15))
+                print(
+                    "======== Next Kimahri crit:",
+                    memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15),
+                )
                 checkpoint += 1
             elif checkpoint == 12:
                 FFXC.set_movement(1, 0)
@@ -279,7 +306,9 @@ def guiAndAftermath():
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.battleSiteAftermath(checkpoint)):
+            elif targetPathing.setMovement(
+                targetPathing.battleSiteAftermath(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

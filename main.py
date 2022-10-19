@@ -43,62 +43,62 @@ if gameVars.nemesis():
     import nemesis.arenaPrep
     import nemesis.changes
 
-#Gamestate, "none" for new game, or set to a specific section to start from the first save.
-#See the if statement tree below to determine starting position for Gamestate.
-#These are the popular ones. New Game ('none') is the last one.
-#Gamestate = "Baaj"
-#StepCounter = 1 # x40 Baaj temple, before Geos boss
-#StepCounter = 4 # x100 Al Bhed boat before Tros
-#Gamestate = "Besaid"
-#StepCounter = 1 # x111 Before first viewing Besaid beach
-#StepCounter = 2 # x6 Crusader's hut before trials
-#StepCounter = 3 # x39 Crusader's hut after trials
-#Gamestate = "Boat1"
-#StepCounter = 1 # 31 NOT WORKING
-#Gamestate = "Kilika"
-#StepCounter = 1 # x22
-#Gamestate = "Luca"
-#StepCounter = 1 # x112 Boat lands, first movement
-#StepCounter = 3 # Blitzball only, do not use
-#StepCounter = 5 # x5 between Blitz and swimmers/Garuda REMAKE THIS SAVE
-#Gamestate = "Miihen"
-#StepCounter = 1 # x16 with laughing scene, 26 after laughing scene
-#StepCounter = 2 # x28 (Agency before Chocobo Eater)
-#Gamestate = "MRR"
-#StepCounter = 1 # x38, includes a low-gil fix
-#Gamestate = "Djose"
-#StepCounter = 1 # x27
-#Gamestate = "Moonflow"
-#StepCounter = 2 # x2 After Extractor
-#Gamestate = "Guadosalam"
-#StepCounter = 2 # x3 before Guadosalam Skip
-#Gamestate = "Macalania"
-#StepCounter = 1 # x9
-#StepCounter = 2 # x7
-#StepCounter = 4 # x10 Seymour
-#StepCounter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
-#Gamestate = "Home"
-#StepCounter = 1 # x60
-#StepCounter = 2 # x11
-#Gamestate = "rescueYuna"
-#StepCounter = 1 # x56 First save chance on airship, before any movement.
-#StepCounter = 2 # x15
-#StepCounter = 4 # x30 Altana
-#StepCounter = 5 # x42 regular, 67 nemesis
-#Gamestate = "Gagazet"
-#StepCounter = 1 # x43
-#StepCounter = 3 # x138 After B&Y
-#StepCounter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
-#StepCounter = 10 # Nemesis variant, blitz win logic (not working)
-#StepCounter = 11 # Remiem racing
-#Gamestate = "Zanarkand"
-#StepCounter = 1 # x99 Campfire
-#StepCounter = 4 # x44 Before Yunalesca
-#StepCounter = 5 # x48 After Yunalesca
-#Gamestate = "Sin"
-#StepCounter = 2 # x70 Shedinja Highbridge
-#StepCounter = 3 # x50 Start of Sea of Sorrows
-#StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
+# Gamestate, "none" for new game, or set to a specific section to start from the first save.
+# See the if statement tree below to determine starting position for Gamestate.
+# These are the popular ones. New Game ('none') is the last one.
+# Gamestate = "Baaj"
+# StepCounter = 1 # x40 Baaj temple, before Geos boss
+# StepCounter = 4 # x100 Al Bhed boat before Tros
+# Gamestate = "Besaid"
+# StepCounter = 1 # x111 Before first viewing Besaid beach
+# StepCounter = 2 # x6 Crusader's hut before trials
+# StepCounter = 3 # x39 Crusader's hut after trials
+# Gamestate = "Boat1"
+# StepCounter = 1 # 31 NOT WORKING
+# Gamestate = "Kilika"
+# StepCounter = 1 # x22
+# Gamestate = "Luca"
+# StepCounter = 1 # x112 Boat lands, first movement
+# StepCounter = 3 # Blitzball only, do not use
+# StepCounter = 5 # x5 between Blitz and swimmers/Garuda REMAKE THIS SAVE
+# Gamestate = "Miihen"
+# StepCounter = 1 # x16 with laughing scene, 26 after laughing scene
+# StepCounter = 2 # x28 (Agency before Chocobo Eater)
+# Gamestate = "MRR"
+# StepCounter = 1 # x38, includes a low-gil fix
+# Gamestate = "Djose"
+# StepCounter = 1 # x27
+# Gamestate = "Moonflow"
+# StepCounter = 2 # x2 After Extractor
+# Gamestate = "Guadosalam"
+# StepCounter = 2 # x3 before Guadosalam Skip
+# Gamestate = "Macalania"
+# StepCounter = 1 # x9
+# StepCounter = 2 # x7
+# StepCounter = 4 # x10 Seymour
+# StepCounter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
+# Gamestate = "Home"
+# StepCounter = 1 # x60
+# StepCounter = 2 # x11
+# Gamestate = "rescueYuna"
+# StepCounter = 1 # x56 First save chance on airship, before any movement.
+# StepCounter = 2 # x15
+# StepCounter = 4 # x30 Altana
+# StepCounter = 5 # x42 regular, 67 nemesis
+# Gamestate = "Gagazet"
+# StepCounter = 1 # x43
+# StepCounter = 3 # x138 After B&Y
+# StepCounter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
+# StepCounter = 10 # Nemesis variant, blitz win logic (not working)
+# StepCounter = 11 # Remiem racing
+# Gamestate = "Zanarkand"
+# StepCounter = 1 # x99 Campfire
+# StepCounter = 4 # x44 Before Yunalesca
+# StepCounter = 5 # x48 After Yunalesca
+# Gamestate = "Sin"
+# StepCounter = 2 # x70 Shedinja Highbridge
+# StepCounter = 3 # x50 Start of Sea of Sorrows
+# StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
 StepCounter = 1  # NEW GAME!
 
@@ -140,11 +140,13 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     rngReviewOnly = False
     gameLength = "Loading mid point for testing."
     blitzTesting = False
-    #gameVars.setCSR(True)
+    # gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
-    rngSeedNum = random.choice(range(256))  # Select a seed randomly, overrules the set seed above.
-    #rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
-    #Current WR is on seed 160 for both any% and CSR%
+    rngSeedNum = random.choice(
+        range(256)
+    )  # Select a seed randomly, overrules the set seed above.
+    # rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
+    # Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
     blitzTesting = False
@@ -168,6 +170,7 @@ specialZanLoad = False
 
 # Main functions
 
+
 def reportGamestate():
     global Gamestate
     global StepCounter
@@ -189,8 +192,9 @@ else:
 print("Game start screen")
 screen.clearMouse(0)
 
+# Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 if gameVars.useSetSeed():
-    memory.main.setRngSeed(rngSeedNum)  # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+    memory.main.setRngSeed(rngSeedNum)
 
 rngSeed = memory.main.rngSeed()
 print("---RNG seed:", rngSeed)
@@ -214,12 +218,18 @@ if Gamestate != "none":
         loadGame.loadSaveNum(40)
     if Gamestate == "Baaj" and StepCounter == 4:
         loadGame.loadSaveNum(100)
-    if Gamestate == "Besaid" and StepCounter == 1:  # Save pop-up after falling off of Rikkus boat
+    if (
+        Gamestate == "Besaid" and StepCounter == 1
+    ):  # Save pop-up after falling off of Rikkus boat
         loadGame.loadSaveNum(111)
-    if Gamestate == "Besaid" and StepCounter == 2:  # Save pop-up after falling off of Rikkus boat
+    if (
+        Gamestate == "Besaid" and StepCounter == 2
+    ):  # Save pop-up after falling off of Rikkus boat
         loadGame.loadSaveNum(6)
         loadGame.BesaidTrials()
-    if Gamestate == "Besaid" and StepCounter == 3:  # Crusader's lodge after "Enough, Wakka!"
+    if (
+        Gamestate == "Besaid" and StepCounter == 3
+    ):  # Crusader's lodge after "Enough, Wakka!"
         loadGame.loadSaveNum(39)
         print("Load complete")
         while memory.main.userControl():
@@ -248,7 +258,9 @@ if Gamestate != "none":
         loadGame.loadSaveNum(38)
         memory.main.setGilvalue(4000)  # Fixes a low gil state for this save file.
         loadGame.LoadMRR()
-    if Gamestate == "Djose" and StepCounter == 1:  # Aftermath, after talking to Seymour and then Auron
+    if (
+        Gamestate == "Djose" and StepCounter == 1
+    ):  # Aftermath, after talking to Seymour and then Auron
         loadGame.loadSaveNum(27)
         loadGame.AfterGui()
     if Gamestate == "Moonflow" and StepCounter == 2:  # North bank, before Rikku
@@ -278,9 +290,11 @@ if Gamestate != "none":
         loadGame.loadSaveNum(15)
     if Gamestate == "rescueYuna" and StepCounter == 4:  # Altana
         loadGame.loadSaveNum(30)
-        #memory.main.setEncounterRate(setVal=0)
-        #memory.main.setGameSpeed(setVal=1)
-    if Gamestate == "rescueYuna" and StepCounter == 5:  # Highbridge before Seymour Natus
+        # memory.main.setEncounterRate(setVal=0)
+        # memory.main.setGameSpeed(setVal=1)
+    if (
+        Gamestate == "rescueYuna" and StepCounter == 5
+    ):  # Highbridge before Seymour Natus
         loadGame.loadSaveNum(42)  # Regular
         # loadGame.loadSaveNum(67) #Nemesis
     if Gamestate == "Gagazet" and StepCounter == 1:  # Just before Calm Lands
@@ -310,6 +324,7 @@ if Gamestate != "none":
         memory.main.waitFrames(60)
         FFXC.set_neutral()
         import menu
+
         menu.prepCalmLands()
     if Gamestate == "Zanarkand" and StepCounter == 1:  # Intro scene revisited
         loadGame.loadSaveNum(99)
@@ -329,13 +344,16 @@ if Gamestate != "none":
     if Gamestate == "Zanarkand" and StepCounter == 5:  # After Yunalesca
         loadGame.loadSaveNum(48)
         specialZanLoad = True
-    if Gamestate == "Sin" and StepCounter == 2:  # Save sphere on the Highbridge before talking to Shedinja
+    if (
+        Gamestate == "Sin" and StepCounter == 2
+    ):  # Save sphere on the Highbridge before talking to Shedinja
         # loadGame.loadSaveNum(49)
         # Nemesis logic, double friend sphere drops from B&Y
         loadGame.loadSaveNum(70)
         while not memory.main.oakaGilCursor() in [8, 20]:
             if memory.main.userControl():
                 import targetPathing
+
                 targetPathing.setMovement([-251, 340])
             else:
                 FFXC.set_neutral()
@@ -617,7 +635,8 @@ while Gamestate != "End":
             reportGamestate()
             returnArray = area.miihen.arrival()
             selfDestruct = area.miihen.arrival2(
-                returnArray[0], returnArray[1], returnArray[2])
+                returnArray[0], returnArray[1], returnArray[2]
+            )
             StepCounter = 2
 
         if Gamestate == "Miihen" and StepCounter == 2:
@@ -803,6 +822,7 @@ while Gamestate != "End":
             reportGamestate()
             if gameVars.tryForNE():
                 import area.neArmor
+
                 print("Mark 1")
                 area.neArmor.toHiddenCave()
                 print("Mark 2")
@@ -1080,9 +1100,15 @@ while Gamestate != "End":
             Gamestate = "Sin"
             StepCounter = 3
 
-        if Gamestate == "End" and gameVars.loopSeeds() and rngSeedNum - rngSeedOrig < maxLoops:
-            #End of seed logic.
-            Gamestate, StepCounter = reset.midRunReset(landRun=True, startTime=startTime)
+        if (
+            Gamestate == "End"
+            and gameVars.loopSeeds()
+            and rngSeedNum - rngSeedOrig < maxLoops
+        ):
+            # End of seed logic.
+            Gamestate, StepCounter = reset.midRunReset(
+                landRun=True, startTime=startTime
+            )
 
         print("------------------------------")
         print("Looping")
@@ -1102,7 +1128,9 @@ if memory.main.getStoryProgress() > 3210:
     logs.writeStats("Total time:")
     logs.writeStats(str(totalTime))
     print("The game duration was:", str(totalTime))
-    print("This duration is intended for comparison reference only, not as a true timer.")
+    print(
+        "This duration is intended for comparison reference only, not as a true timer."
+    )
     print("Please do not use this as your submitted time.")
     memory.main.waitFrames(30)
     print("--------")

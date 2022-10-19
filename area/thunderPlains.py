@@ -16,7 +16,7 @@ def southPathing():
 
     gameVars.setLStrike(memory.main.lStrikeCount())
 
-    memory.main.fullPartyFormat('postbunyip')
+    memory.main.fullPartyFormat("postbunyip")
     memory.main.closeMenu()
     count50 = 0
     checkpoint = 0
@@ -147,14 +147,27 @@ def agencyShop():
     while memory.main.shopMenuDialogueRow() != 1:
         xbox.tapDown()
     all_equipment = memory.main.allEquipment()
-    tidus_longsword = [i for i, handle in enumerate(all_equipment) if (
-        handle.abilities() == [255, 255, 255, 255] and handle.owner() == 0)][0]
+    tidus_longsword = [
+        i
+        for i, handle in enumerate(all_equipment)
+        if (handle.abilities() == [255, 255, 255, 255] and handle.owner() == 0)
+    ][0]
     print("Tidus Longsword in slot:", tidus_longsword)
-    auron_katana = [i for i, handle in enumerate(all_equipment) if (
-        handle.abilities() == [0x800B, 255, 255, 255] and handle.owner() == 2)][0]
+    auron_katana = [
+        i
+        for i, handle in enumerate(all_equipment)
+        if (handle.abilities() == [0x800B, 255, 255, 255] and handle.owner() == 2)
+    ][0]
     print("Auron Katana in slot:", auron_katana)
-    other_slots = [i for i, handle in enumerate(all_equipment) if (
-        i not in [tidus_longsword, auron_katana] and handle.equipStatus == 255 and not handle.isBrotherhood())]
+    other_slots = [
+        i
+        for i, handle in enumerate(all_equipment)
+        if (
+            i not in [tidus_longsword, auron_katana]
+            and handle.equipStatus == 255
+            and not handle.isBrotherhood()
+        )
+    ]
     print("Sellable Items in :", other_slots)
     menu.sellWeapon(tidus_longsword)
     menu.sellWeapon(auron_katana)
@@ -168,7 +181,7 @@ def agencyShop():
             menu.sellWeapon(loc)
             if memory.main.getGilvalue() >= 9550:
                 break
-    #if not gameVars.getBlitzWin(): # This may come back later.
+    # if not gameVars.getBlitzWin(): # This may come back later.
     #    menu.buyWeapon(0, equip=False)
     menu.buyWeapon(5, equip=False)
     memory.main.closeMenu()
@@ -224,7 +237,11 @@ def agency():
                     FFXC.set_neutral()
                     memory.main.awaitControl()
                 checkpoint += 1
-            elif checkpoint == 9 and (gameVars.nemesis() or not gameVars.getBlitzWin()) and strCount < 3:
+            elif (
+                checkpoint == 9
+                and (gameVars.nemesis() or not gameVars.getBlitzWin())
+                and strCount < 3
+            ):
                 targetPathing.setMovement([-73, 45])
                 xbox.tapB()
             elif checkpoint == 11:

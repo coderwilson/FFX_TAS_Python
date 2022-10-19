@@ -13,6 +13,7 @@ FFXC = xbox.controllerHandle()
 
 # The following functions replace the default ones from the regular Bahamut run.
 
+
 def arenaNPC():
     main.awaitControl()
     if main.getMap() != 307:
@@ -85,7 +86,7 @@ def calmLands():
 
 def calmLands_1():
     # Enter the cutscene that starts Calm Lands
-    main.fullPartyFormat('yuna', fullMenuClose=True)
+    main.fullPartyFormat("yuna", fullMenuClose=True)
     while not (main.getCoords()[1] >= -1650 and main.userControl()):
         if main.userControl():
             FFXC.set_movement(0, 1)
@@ -112,7 +113,7 @@ def calmLands_1():
                     main.calmLandsGems()
                 else:
                     main.calmLandsManip()
-                main.fullPartyFormat('yuna')
+                main.fullPartyFormat("yuna")
             elif main.menuOpen() or main.diagSkipPossible():
                 xbox.tapB()
 
@@ -132,25 +133,25 @@ def chocoTame1():
         # print("Position: ", position)
         if position[0] < -110:  # Need to move right
             if angle > 1.4:
-                FFXC.set_value('Dpad', 8)
+                FFXC.set_value("Dpad", 8)
             elif angle < 1.2:
-                FFXC.set_value('Dpad', 4)
+                FFXC.set_value("Dpad", 4)
             else:
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value("Dpad", 0)
         elif position[0] > -60:  # Need to move left
             if angle > 1.8:
-                FFXC.set_value('Dpad', 8)
+                FFXC.set_value("Dpad", 8)
             elif angle < 1.6:
-                FFXC.set_value('Dpad', 4)
+                FFXC.set_value("Dpad", 4)
             else:
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value("Dpad", 0)
         else:
             if angle > 1.6:  # Stay straight
-                FFXC.set_value('Dpad', 8)
+                FFXC.set_value("Dpad", 8)
             elif angle < 1.4:
-                FFXC.set_value('Dpad', 4)
+                FFXC.set_value("Dpad", 4)
             else:
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value("Dpad", 0)
     FFXC.set_neutral()
 
     while not main.diagProgressFlag() in [51, 69, 74]:
@@ -179,55 +180,57 @@ def chocoTame2():
         angle = main.getActorAngle(0)
         position = main.getActorCoords(0)
 
-        if position[1] > -1360 and checkpoint == 0:  # Start off aiming right to manip balls
+        if (
+            position[1] > -1360 and checkpoint == 0
+        ):  # Start off aiming right to manip balls
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 8)  # Right
             main.waitFrames(5)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -1200 and checkpoint == 1:  # Slight left
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)  # Left
+            FFXC.set_value("Dpad", 4)  # Left
             main.waitFrames(11)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -1000 and checkpoint == 2:  # Straighten out
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 8)  # Right
             main.waitFrames(7)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -800 and checkpoint == 3:  # Juke right
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 8)  # Right
             main.waitFrames(5)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -650 and checkpoint == 4:  # Back to the left
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)  # Left
+            FFXC.set_value("Dpad", 4)  # Left
             main.waitFrames(11)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -550 and checkpoint == 5:  # Straighten out
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 8)  # Right
             main.waitFrames(6)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -450 and checkpoint == 6:  # Juke right again
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)
+            FFXC.set_value("Dpad", 8)
             main.waitFrames(6)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -250 and checkpoint == 7:  # Straighten out
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(14)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -90 and checkpoint == 8:  # The final juke!
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)
+            FFXC.set_value("Dpad", 8)
             main.waitFrames(13)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
     FFXC.set_neutral()
 
     while not main.diagProgressFlag() in [54, 69, 77]:
-        #54 is success
+        # 54 is success
         xbox.tapB()
     if main.diagProgressFlag() == 54:  # Success
         main.clickToDiagProgress(77)
@@ -252,65 +255,65 @@ def chocoTame3():
         position = main.getActorCoords(0)
         if position[1] > -1370 and checkpoint == 0:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)  # Left
+            FFXC.set_value("Dpad", 4)  # Left
             main.waitFrames(3)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -1200 and checkpoint == 1:
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 8)  # Right
             main.waitFrames(10)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -1100 and checkpoint == 2:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(12)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -1040 and checkpoint == 3:
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)
+            FFXC.set_value("Dpad", 8)
             main.waitFrames(9)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -950 and checkpoint == 4:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(12)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -700 and checkpoint == 5:
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)
+            FFXC.set_value("Dpad", 8)
             main.waitFrames(12)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -600 and checkpoint == 6:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(12)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -500 and checkpoint == 7:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(6)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -400 and checkpoint == 8:
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)
+            FFXC.set_value("Dpad", 8)
             main.waitFrames(16)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -250 and checkpoint == 9:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(16)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         # Still dialing in on this one.
         if position[1] > -120 and checkpoint == 10:
             checkpoint += 1
-            FFXC.set_value('Dpad', 8)
+            FFXC.set_value("Dpad", 8)
             main.waitFrames(16)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
         if position[1] > -20 and checkpoint == 11:
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)
+            FFXC.set_value("Dpad", 4)
             main.waitFrames(10)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value("Dpad", 0)
     FFXC.set_neutral()
 
     while not main.diagProgressFlag() in [56, 69, 77]:
@@ -340,7 +343,7 @@ def chocoTame4():
         angle = main.getActorAngle(0)
         position = main.getActorCoords(0)
         print("User control")
-        '''
+        """
         if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
             checkpoint += 1
             FFXC.set_value('Dpad', 8) #Right
@@ -372,7 +375,7 @@ def chocoTame4():
                 FFXC.set_value('Dpad', 4)#Left
             else:
                 FFXC.set_value('Dpad', 0)
-    '''
+    """
     print("Race complete.")
     FFXC.set_neutral()
 
@@ -431,7 +434,7 @@ def remiemRaces():
     # chocoRace2()
     # print("Obtained")
     # chocoRace3()
-    #print("Something obtained")
+    # print("Something obtained")
     print("Now heading back to the monster arena.")
 
 
@@ -614,7 +617,7 @@ def arenaPurchase():
                     main.calmLandsGems()
                 else:
                     main.calmLandsManip()
-                main.fullPartyFormat('yuna')
+                main.fullPartyFormat("yuna")
             elif main.menuOpen() or main.diagSkipPossible():
                 xbox.tapB()
 
@@ -631,4 +634,4 @@ def arenaPurchaseWithChocobo():
     while not main.getMap() == 279:
         targetPath.setMovement([1700, 1200])
 
-    main.fullPartyFormat('kimahri')
+    main.fullPartyFormat("kimahri")

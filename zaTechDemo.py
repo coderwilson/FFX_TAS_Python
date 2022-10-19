@@ -41,7 +41,7 @@ while attempts < 20 and cycles < 50:
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    area.dreamZan.NewGame('techdemo')
+    area.dreamZan.NewGame("techdemo")
 
     print("Game start screen")
     screen.clearMouse(0)

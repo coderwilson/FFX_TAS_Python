@@ -7,9 +7,9 @@ from ..gamestate import GameState
 @dataclass
 class Event(ABC):
     """Abstract base class for all events."""
+
     gamestate: GameState
-    _rng_rolls: dict[int, int] = field(
-        default_factory=dict, init=False, repr=False)
+    _rng_rolls: dict[int, int] = field(default_factory=dict, init=False, repr=False)
 
     @abstractmethod
     def __str__(self) -> str:

@@ -27,8 +27,7 @@ def ssLiki():
                 checkpoint += 1
             elif checkpoint == 3:  # Talk to Wakka
                 memory.main.clickToEventTemple(3)
-                print("Ready for SS Liki menu - (var) ",
-                      gameVars.earlyTidusGrid())
+                print("Ready for SS Liki menu - (var) ", gameVars.earlyTidusGrid())
                 if not gameVars.earlyTidusGrid():
                     menu.Liki()
                     memory.main.closeMenu()
@@ -85,14 +84,15 @@ def ssWinno():
     memory.main.waitFrames(2)
 
     # Talk to O'akaXXIII
-    oakaCoords = [memory.main.getActorCoords(
-        1)[0], memory.main.getActorCoords(1)[1]]
+    oakaCoords = [memory.main.getActorCoords(1)[0], memory.main.getActorCoords(1)[1]]
     while memory.main.userControl():
         targetPathing.setMovement(oakaCoords)
         xbox.tapB()
         memory.main.waitFrames(3)
-        oakaCoords = [memory.main.getActorCoords(
-            1)[0], memory.main.getActorCoords(1)[1]]
+        oakaCoords = [
+            memory.main.getActorCoords(1)[0],
+            memory.main.getActorCoords(1)[1],
+        ]
     FFXC.set_neutral()
     while memory.main.oakaInterface() != 12:
         xbox.tapB()
@@ -140,32 +140,32 @@ def ssWinno2():
 
 
 def jechtShotSuccess():
-    FFXC.set_value('Dpad', 1)  # Up
+    FFXC.set_value("Dpad", 1)  # Up
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 1)  # Up
-    FFXC.set_value('Dpad', 8)  # Right
+    FFXC.set_value("Dpad", 1)  # Up
+    FFXC.set_value("Dpad", 8)  # Right
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 8)  # Right
+    FFXC.set_value("Dpad", 8)  # Right
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 8)  # Right
-    FFXC.set_value('Dpad', 2)  # Down
+    FFXC.set_value("Dpad", 8)  # Right
+    FFXC.set_value("Dpad", 2)  # Down
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 2)  # Down
+    FFXC.set_value("Dpad", 2)  # Down
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 2)  # Down
-    FFXC.set_value('Dpad', 4)  # Left
+    FFXC.set_value("Dpad", 2)  # Down
+    FFXC.set_value("Dpad", 4)  # Left
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 4)  # Left
+    FFXC.set_value("Dpad", 4)  # Left
     xbox.tapB()
     FFXC.set_neutral()
-    FFXC.set_value('Dpad', 4)  # Left
-    FFXC.set_value('Dpad', 1)  # Up
+    FFXC.set_value("Dpad", 4)  # Left
+    FFXC.set_value("Dpad", 1)  # Up
     xbox.tapB()
     FFXC.set_neutral()
     xbox.tapB()
@@ -177,15 +177,15 @@ def jechtShot():
     memory.main.clickToDiagProgress(96)
     while memory.main.diagProgressFlag() != 100:
         if memory.main.diagProgressFlag() == 97:
-            FFXC.set_value('Dpad', 1)  # Up
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 1)  # Up
+            FFXC.set_value("Dpad", 8)  # Right
             xbox.tapB()
         elif memory.main.diagProgressFlag() == 98:
-            FFXC.set_value('Dpad', 4)  # Left
+            FFXC.set_value("Dpad", 4)  # Left
             xbox.tapB()
         elif memory.main.diagProgressFlag() == 99:
-            FFXC.set_value('Dpad', 2)  # Down
-            FFXC.set_value('Dpad', 8)  # Right
+            FFXC.set_value("Dpad", 2)  # Down
+            FFXC.set_value("Dpad", 8)  # Right
             xbox.tapB()
         elif memory.main.diagSkipPossible():
             xbox.tapB()

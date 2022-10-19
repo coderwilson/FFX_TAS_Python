@@ -13,7 +13,7 @@ gameVars = vars.varsHandle()
 
 def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
-    #if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
+    # if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
     #    gameVars.dontSkipKilikaLuck()
 
     print("Arrived at Kilika docks.")
@@ -72,7 +72,8 @@ def selectBestOfTwo(comingBattles):
         ["yellow_element", "killer_bee"],
         ["ragora"],
         ["dinonix", "yellow_element"],
-        ["ragora", "ragora"]]
+        ["ragora", "ragora"],
+    ]
     for i in range(len(priority)):
         if priority[i] in comingBattles:
             print("--------------Best charge, battle num:", priority[i])
@@ -151,18 +152,24 @@ def forest1():
                     battle.main.lancetTutorial()
                     nextTwo = rngTrack.comingBattles(area="kilika_woods", battleCount=2)
                     bestOfTwo = selectBestOfTwo(nextTwo)
-                    nextBattle = rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
+                    nextBattle = rngTrack.comingBattles(
+                        area="kilika_woods", battleCount=1
+                    )[0]
                     print("################# Next Battle:", nextBattle)
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
                     print("---------------This should be battle number:", kilikaBattles)
                     print("---------------Reminder (north-bound only):", nextThree)
-                    valeforCharge = battle.main.KilikaWoods(valeforCharge, bestOfTwo, nextBattle)
-                    nextBattle = rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
+                    valeforCharge = battle.main.KilikaWoods(
+                        valeforCharge, bestOfTwo, nextBattle
+                    )
+                    nextBattle = rngTrack.comingBattles(
+                        area="kilika_woods", battleCount=1
+                    )[0]
                     print("##########################", nextBattle)
                     kilikaBattles += 1
-                memory.main.fullPartyFormat('kilika')
+                memory.main.fullPartyFormat("kilika")
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
 
@@ -229,7 +236,7 @@ def trials():
                 memory.main.waitFrames(30 * 0.07)
                 memory.main.clickToEventTemple(0)
                 checkpoint += 1
-            #elif checkpoint == 53 and gameVars.csr():
+            # elif checkpoint == 53 and gameVars.csr():
             #    memory.main.awaitControl()
             #    FFXC.set_movement(0, 1)
             #    memory.main.waitFrames(2)
@@ -278,7 +285,7 @@ def trialsEnd():
             if memory.main.diagSkipPossible():
                 xbox.tapB()
 
-    #Leave the chamber, then name Ifrit.
+    # Leave the chamber, then name Ifrit.
     memory.main.clickToControl3()
     while memory.main.userControl():
         FFXC.set_movement(0, -1)
@@ -296,7 +303,7 @@ def trialsEnd():
 
 def forest3():
     # First, re-order the party
-    memory.main.fullPartyFormat('kilika')
+    memory.main.fullPartyFormat("kilika")
     kilikaBattles = 0
     optimalBattles = 0
     checkpoint = 0
@@ -327,9 +334,9 @@ def forest3():
                 if memory.main.getEncounterID() in [32, 34, 37]:
                     optimalBattles += 1
                 if kilikaBattles == 1 and memory.main.rngSeed() == 31:
-                    memory.main.fullPartyFormat('kilikawoodsbackup')
+                    memory.main.fullPartyFormat("kilikawoodsbackup")
                 else:
-                    memory.main.fullPartyFormat('kilika')
+                    memory.main.fullPartyFormat("kilika")
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
 

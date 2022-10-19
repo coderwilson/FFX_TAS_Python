@@ -211,9 +211,9 @@ def guadoSkip():
                     xbox.tapB()
                 recovery = True
             else:
-                FFXC.set_value('Dpad', 4)
+                FFXC.set_value("Dpad", 4)
                 memory.main.waitFrames(3)
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value("Dpad", 0)
                 memory.main.waitFrames(5)
                 pos = memory.main.getCoords()
         print("Adjustment 3")
@@ -226,9 +226,9 @@ def guadoSkip():
                     xbox.tapB()
                 recovery = True
             else:
-                FFXC.set_value('Dpad', 1)
+                FFXC.set_value("Dpad", 1)
                 memory.main.waitFrames(3)
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value("Dpad", 0)
                 memory.main.waitFrames(5)
                 pos = memory.main.getCoords()
 
@@ -247,9 +247,9 @@ def guadoSkip():
                     print("MARK")
                     xbox.SkipDialog(0.5)
             elif pos[1] > -9:
-                FFXC.set_value('Dpad', 2)
+                FFXC.set_value("Dpad", 2)
                 memory.main.waitFrames(2)
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value("Dpad", 0)
                 memory.main.waitFrames(5)
                 pos = memory.main.getCoords()
 

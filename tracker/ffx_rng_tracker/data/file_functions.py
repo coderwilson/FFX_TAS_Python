@@ -17,8 +17,8 @@ def get_resource_path(relative_path: str) -> str:
 
 def get_version() -> tuple[int, int, int]:
     """Used to retrieve the version number from the version file."""
-    absolute_file_path = get_resource_path('data/VERSION')
+    absolute_file_path = get_resource_path("data/VERSION")
     with open(absolute_file_path) as file_object:
         contents = file_object.read()
-    version = [int(i) for i in contents.strip().split('.')]
+    version = [int(i) for i in contents.strip().split(".")]
     return tuple(version)

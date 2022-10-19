@@ -80,7 +80,11 @@ def engage():
             iceArray = memory.main.buildIcicles()  # Added for additional pathing needs
             if activeEgg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
-                    if activeEgg == 99 and eggArray[marker].goForEgg and eggArray[marker].eggLife < 150:
+                    if (
+                        activeEgg == 99
+                        and eggArray[marker].goForEgg
+                        and eggArray[marker].eggLife < 150
+                    ):
                         activeEgg = marker
                         target = [eggArray[marker].x, eggArray[marker].y]
                         # We will hunt for this egg for this many seconds.
@@ -114,18 +118,19 @@ def engage():
             intersectPoint = []
             for icicle in iceArray:
                 numIntersect, hits = lineSphereIntersect(
-                    playerPos, targetPos, np.array([icicle.x, icicle.y]))
+                    playerPos, targetPos, np.array([icicle.x, icicle.y])
+                )
                 if numIntersect > 0:
-                    intersectDistance = (
-                        player[0] - hits[0][0])**2 + (player[1] - hits[0][1])**2
+                    intersectDistance = (player[0] - hits[0][0]) ** 2 + (
+                        player[1] - hits[0][1]
+                    ) ** 2
                     if intersectDistance < closestIntersect:
                         closestIntersect = intersectDistance
                         intersectPoint = hits[0]
 
             if closestIntersect < 9999:
                 # Move around icicle instead
-                target = pathAround(playerPos, np.array(
-                    intersectPoint), targetPos)
+                target = pathAround(playerPos, np.array(intersectPoint), targetPos)
 
             # Calculate forward and right directions relative to camera space
             pX = player[0]
@@ -158,7 +163,11 @@ def engage():
             target = oldTarget
 
             # Now if we're close, we want to slow down a bit.
-            if activeEgg != 99 and eggArray[activeEgg].distance < 15 and eggArray[activeEgg].eggLife < 130:
+            if (
+                activeEgg != 99
+                and eggArray[activeEgg].distance < 15
+                and eggArray[activeEgg].eggLife < 130
+            ):
                 time.sleep(0.15)
                 FFXC.set_neutral()
                 print("Stutter-step to egg. |", checkpoint)

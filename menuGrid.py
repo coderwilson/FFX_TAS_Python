@@ -8,30 +8,30 @@ FFXC = xbox.controllerHandle()
 
 
 def gridUp():
-    FFXC.set_value('Dpad', 1)
+    FFXC.set_value("Dpad", 1)
     memory.main.waitFrames(2)
-    FFXC.set_value('Dpad', 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.waitFrames(3)
 
 
 def gridDown():
-    FFXC.set_value('Dpad', 2)
+    FFXC.set_value("Dpad", 2)
     memory.main.waitFrames(2)
-    FFXC.set_value('Dpad', 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.waitFrames(3)
 
 
 def gridLeft():
-    FFXC.set_value('Dpad', 4)
+    FFXC.set_value("Dpad", 4)
     memory.main.waitFrames(2)
-    FFXC.set_value('Dpad', 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.waitFrames(3)
 
 
 def gridRight():
-    FFXC.set_value('Dpad', 8)
+    FFXC.set_value("Dpad", 8)
     memory.main.waitFrames(2)
-    FFXC.set_value('Dpad', 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.waitFrames(3)
 
 
@@ -244,7 +244,7 @@ def useShiftLeft(toon):
     memory.main.waitFrames(1)
     xbox.menuB()
     toon = toon.lower()
-    if toon == 'yuna':
+    if toon == "yuna":
         while not gridYuna():
             if readyUseSphere():
                 xbox.menuB()
@@ -252,7 +252,7 @@ def useShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'lulu':
+    if toon == "lulu":
         while not gridLulu():
             if readyUseSphere():
                 xbox.menuB()
@@ -260,7 +260,7 @@ def useShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'auron':
+    if toon == "auron":
         while not gridAuron():
             if readyUseSphere():
                 xbox.menuB()
@@ -268,7 +268,7 @@ def useShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'wakka':
+    if toon == "wakka":
         while not gridWakka():
             if readyUseSphere():
                 xbox.menuB()
@@ -276,7 +276,7 @@ def useShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'tidus':
+    if toon == "tidus":
         while not gridTidus():
             if readyUseSphere():
                 xbox.menuB()
@@ -284,7 +284,7 @@ def useShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'kimahri':
+    if toon == "kimahri":
         while not gridKimahri():
             if readyUseSphere():
                 xbox.menuB()
@@ -292,7 +292,7 @@ def useShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'rikku':
+    if toon == "rikku":
         while not gridRikku():
             if readyUseSphere():
                 xbox.menuB()
@@ -307,7 +307,7 @@ def useShiftRight(toon):
     print("use and shift")
     xbox.menuB()
     toon = toon.lower()
-    if toon == 'yuna':
+    if toon == "yuna":
         while not gridYuna():
             if readyUseSphere():
                 xbox.menuB()
@@ -315,7 +315,7 @@ def useShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'lulu':
+    if toon == "lulu":
         while not gridLulu():
             if readyUseSphere():
                 xbox.menuB()
@@ -324,7 +324,7 @@ def useShiftRight(toon):
             elif firstPosition():
                 xbox.shoulderRight()
                 memory.main.waitFrames(30 * 0.3)
-    if toon == 'auron':
+    if toon == "auron":
         while not gridAuron():
             if readyUseSphere():
                 xbox.menuB()
@@ -332,7 +332,7 @@ def useShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'wakka':
+    if toon == "wakka":
         while not gridWakka():
             if readyUseSphere():
                 xbox.menuB()
@@ -340,7 +340,7 @@ def useShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'tidus':
+    if toon == "tidus":
         while not gridTidus():
             if readyUseSphere():
                 xbox.menuB()
@@ -348,7 +348,7 @@ def useShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'kimahri':
+    if toon == "kimahri":
         while not gridKimahri():
             if readyUseSphere():
                 xbox.menuB()
@@ -356,7 +356,7 @@ def useShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'rikku':
+    if toon == "rikku":
         while not gridRikku():
             if readyUseSphere():
                 xbox.menuB()
@@ -373,7 +373,7 @@ def moveShiftLeft(toon):
     xbox.menuB()
     memory.main.waitFrames(2)
     toon = toon.lower()
-    if toon == 'yuna':
+    if toon == "yuna":
         while not gridYuna():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -381,7 +381,7 @@ def moveShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'lulu':
+    if toon == "lulu":
         while not gridLulu():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -389,7 +389,7 @@ def moveShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'tidus':
+    if toon == "tidus":
         while not gridTidus():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -397,7 +397,7 @@ def moveShiftLeft(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderLeft()
-    if toon == 'rikku':
+    if toon == "rikku":
         while not gridRikku():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -414,7 +414,7 @@ def moveShiftRight(toon):
     xbox.menuB()
     memory.main.waitFrames(2)
     toon = toon.lower()
-    if toon == 'yuna':
+    if toon == "yuna":
         while not gridYuna():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -422,7 +422,7 @@ def moveShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    elif toon == 'lulu':
+    elif toon == "lulu":
         while not gridLulu():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -430,7 +430,7 @@ def moveShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'tidus':
+    if toon == "tidus":
         while not gridTidus():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -438,7 +438,7 @@ def moveShiftRight(toon):
                 xbox.menuBack()
             elif firstPosition():
                 xbox.shoulderRight()
-    if toon == 'rikku':
+    if toon == "rikku":
         while not gridRikku():
             if moveReady() or moveActive() or moveComplete():
                 xbox.menuB()
@@ -469,65 +469,65 @@ def useAndQuit():
 
 def sphereNum(sType) -> int:
     sType = sType.lower()
-    if sType == 'power':
+    if sType == "power":
         return 70
-    elif sType == 'mana':
+    elif sType == "mana":
         return 71
-    elif sType == 'speed':
+    elif sType == "speed":
         return 72
-    elif sType == 'ability':
+    elif sType == "ability":
         return 73
-    elif sType == 'fortune':
+    elif sType == "fortune":
         return 74
-    elif sType == 'attribute':
+    elif sType == "attribute":
         return 75
-    elif sType == 'special':
+    elif sType == "special":
         return 76
-    elif sType == 'skill':
+    elif sType == "skill":
         return 77
-    elif sType == 'wmag':
+    elif sType == "wmag":
         return 78
-    elif sType == 'bmag':
+    elif sType == "bmag":
         return 79
-    elif sType == 'master':
+    elif sType == "master":
         return 80
-    elif sType == 'lv1':
+    elif sType == "lv1":
         return 81
-    elif sType == 'lv2':
+    elif sType == "lv2":
         return 82
-    elif sType == 'lv3':
+    elif sType == "lv3":
         return 83
-    elif sType == 'lv4':
+    elif sType == "lv4":
         return 84
-    elif sType == 'hp':
+    elif sType == "hp":
         return 85
-    elif sType == 'mp':
+    elif sType == "mp":
         return 86
-    elif sType == 'strength':
+    elif sType == "strength":
         return 87
-    elif sType == 'defense':
+    elif sType == "defense":
         return 88
-    elif sType == 'magic':
+    elif sType == "magic":
         return 89
-    elif sType == 'mdef':
+    elif sType == "mdef":
         return 90
-    elif sType == 'agility':
+    elif sType == "agility":
         return 91
-    elif sType == 'evasion':
+    elif sType == "evasion":
         return 92
-    elif sType == 'accuracy':
+    elif sType == "accuracy":
         return 93
-    elif sType == 'luck':
+    elif sType == "luck":
         return 94
-    elif sType == 'clear':
+    elif sType == "clear":
         return 95
-    elif sType == 'ret':
+    elif sType == "ret":
         return 96
-    elif sType == 'friend':
+    elif sType == "friend":
         return 97
-    elif sType == 'tele':
+    elif sType == "tele":
         return 98
-    elif sType == 'warp':
+    elif sType == "warp":
         return 99
     return 255
 
@@ -550,8 +550,14 @@ def selSphere(sType, shift):
             if gameVars.usePause():
                 xbox.tapDown()
             else:
-                if menuPos - memory.main.getGridCursorPos() >= 3 and len(memory.main.getGridItemsOrder()) > 4:
-                    if menuPos - memory.main.getGridCursorPos() == 3 and menuPos == len(memory.main.getGridItemsOrder()) - 1:
+                if (
+                    menuPos - memory.main.getGridCursorPos() >= 3
+                    and len(memory.main.getGridItemsOrder()) > 4
+                ):
+                    if (
+                        menuPos - memory.main.getGridCursorPos() == 3
+                        and menuPos == len(memory.main.getGridItemsOrder()) - 1
+                    ):
                         xbox.tapDown()
                     else:
                         xbox.TriggerR()
@@ -562,7 +568,9 @@ def selSphere(sType, shift):
                 xbox.tapUp()
             else:
                 if memory.main.getGridCursorPos() - menuPos >= 3:
-                    if (menuPos == 0 and memory.main.getGridCursorPos() - menuPos == 3) or len(memory.main.getGridItemsOrder()) <= 4:
+                    if (
+                        menuPos == 0 and memory.main.getGridCursorPos() - menuPos == 3
+                    ) or len(memory.main.getGridItemsOrder()) <= 4:
                         xbox.tapUp()
                     else:
                         xbox.TriggerL()
@@ -570,61 +578,61 @@ def selSphere(sType, shift):
                     xbox.tapUp()
     while not memory.main.sphereGridPlacementOpen():
         xbox.menuB()
-    if shift == 'up':
+    if shift == "up":
         gridUp()
-    if shift == 'left':
+    if shift == "left":
         gridLeft()
-    if shift == 'l2':
-        gridLeft()
-        gridLeft()
-    if shift == 'l5':
+    if shift == "l2":
         gridLeft()
         gridLeft()
+    if shift == "l5":
         gridLeft()
         gridLeft()
         gridLeft()
-    if shift == 'right':
+        gridLeft()
+        gridLeft()
+    if shift == "right":
         gridRight()
-    if shift == 'r2':
+    if shift == "r2":
         gridRight()
         gridRight()
-    if shift == 'down':
+    if shift == "down":
         gridDown()
-    if shift == 'd2':
+    if shift == "d2":
         gridDown()
         gridDown()
-    if shift == 'up2':
+    if shift == "up2":
         gridUp()
         gridUp()
-    if shift == 'd5':
+    if shift == "d5":
         gridDown()
         gridDown()
         gridDown()
         gridDown()
         gridDown()
-    if shift == 'aftersk':
+    if shift == "aftersk":
         gridUp()
         gridRight()
         gridDown()
         memory.main.waitFrames(4)
         if memory.main.sGridNodeSelected() == [248, 195]:
             gridDown()
-    if shift == 'aftersk2':
+    if shift == "aftersk2":
         gridRight()
         gridRight()
         memory.main.waitFrames(30 * 0.1)
         gridLeft()
-    if shift == 'afterBYSpec':
+    if shift == "afterBYSpec":
         gridRight()
         gridRight()
         gridUp()
-    if shift == 'torikku':
+    if shift == "torikku":
         memory.main.waitFrames(30 * 0.2)
         gridDown()
         gridDown()
         gridLeft()
         gridLeft()
-    if shift == 'yunaspec':
+    if shift == "yunaspec":
         # Yuna Special
         gridDown()
         gridRight()

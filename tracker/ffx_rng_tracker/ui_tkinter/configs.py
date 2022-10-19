@@ -11,6 +11,6 @@ class ConfigsPage(tk.Frame):
     def __init__(self, parent, _, *args, **kwargs) -> None:
         super().__init__(parent, *args, **kwargs)
 
-        self.output_widget = TkOutputWidget(self, wrap='none')
-        self.output_widget.pack(expand=True, fill='both')
+        self.output_widget = TkOutputWidget(self, wrap="none")
+        self.output_widget.pack(expand=True, fill="both")
         self.output_widget.print_output(treeview(Configs.get_configs()))

@@ -863,7 +863,7 @@ def calmLands1_old(checkpoint):
 
 
 def calmLands1(checkpoint):
-    #print("CKP:", checkpoint)
+    # print("CKP:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -903,7 +903,7 @@ def calmLands1(checkpoint):
 
 
 def calmFarm(checkpoint):
-    #print("CKP:", checkpoint)
+    # print("CKP:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -940,7 +940,7 @@ def calmFarm(checkpoint):
 
 
 def calmLands2(checkpoint):
-    #print("CKP2:", checkpoint)
+    # print("CKP2:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1613,7 +1613,7 @@ def miihenFarm(checkpoint):
     if checkpoint == 163:  # Diagonal towards the save sphere
         x = 226
         y = 170
-    #print("Dest: [", x, ", ", y, "]")
+    # print("Dest: [", x, ", ", y, "]")
     return [x, y]
 
 
