@@ -1,10 +1,11 @@
 import time
-import xbox
+
 import area.dreamZan
 import battle.main
-import screen
 import memory.main
 import reset
+import screen
+import xbox
 
 FFXC = xbox.FFXC
 

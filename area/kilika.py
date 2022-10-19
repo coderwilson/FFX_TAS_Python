@@ -1,10 +1,11 @@
-import xbox
+import battle.boss
 import battle.main
-import menu
-import memory.main
 import logs
+import memory.main
+import menu
 import targetPathing
 import vars
+import xbox
 
 FFXC = xbox.controllerHandle()
 gameVars = vars.varsHandle()
@@ -153,7 +154,7 @@ def forest1():
                     nextBattle = rngTrack.comingBattles(area="kilika_woods", battleCount=1)[0]
                     print("################# Next Battle:", nextBattle)
                 elif checkpoint > 86:
-                    battle.main.Geneaux()
+                    battle.boss.geneaux()
                 else:
                     print("---------------This should be battle number:", kilikaBattles)
                     print("---------------Reminder (north-bound only):", nextThree)
@@ -262,34 +263,36 @@ def trials():
             elif checkpoint < 53 and memory.main.getMap() == 45:  # Inner sanctum
                 checkpoint = 53
 
+
 def trialsEnd():
     # Talking to Wakka
     while memory.main.getStoryProgress() < 346:
         if memory.main.userControl():
             if memory.main.getCoords()[0] < -28:
-                targetPathing.setMovement([-10,-23])
+                targetPathing.setMovement([-10, -23])
             else:
-                targetPathing.setMovement([-20,1])
+                targetPathing.setMovement([-20, 1])
                 xbox.tapB()
         else:
             FFXC.set_neutral()
             if memory.main.diagSkipPossible():
                 xbox.tapB()
-    
+
     #Leave the chamber, then name Ifrit.
     memory.main.clickToControl3()
     while memory.main.userControl():
-        FFXC.set_movement(0,-1)
+        FFXC.set_movement(0, -1)
     FFXC.set_neutral()
     xbox.nameAeon("Ifrit")  # Set Ifrit name
-    
+
     while memory.main.getMap() != 18:
         if memory.main.userControl():
-            FFXC.set_movement(0,-1)
+            FFXC.set_movement(0, -1)
         else:
             FFXC.set_neutral()
             if memory.main.diagSkipPossible():
                 xbox.tapB()
+
 
 def forest3():
     # First, re-order the party

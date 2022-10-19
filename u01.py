@@ -1,6 +1,7 @@
-import memory.main
 import area.zanarkand
+import memory.main
 import vars
+
 memory.main.start()
 gameVars = vars.varsHandle()
 

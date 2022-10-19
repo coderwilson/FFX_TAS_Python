@@ -1,18 +1,19 @@
 import time
-import memory.main
-import xbox
-import logs
-import loadGame
-import screen
-import reset
 
 import area.dreamZan
+import area.guadosalam
 import area.miihen
 import area.MRR
-import area.guadosalam
 import area.mTemple
+import loadGame
+import logs
+import memory.main
+import reset
+import screen
 import Showcase.chocoEater
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 # Plug in controller

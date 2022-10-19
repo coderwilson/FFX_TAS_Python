@@ -1,11 +1,13 @@
-import xbox
-import screen
+import battle.boss
 import battle.main
-import menu
+import logs
 import memory.main
+import menu
+import screen
 import targetPathing
 import vars
-import logs
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -121,7 +123,7 @@ def lakeRoad():
 
     FFXC.set_neutral()  # Engage Spherimorph
 
-    battle.main.spherimorph()
+    battle.boss.spherimorph()
     print("Battle is over.")
     memory.main.clickToControl()  # Jecht's memories
 
@@ -200,7 +202,7 @@ def lake():
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.menuB()
     xbox.clickToBattle()
-    battle.main.negator()
+    battle.boss.crawler()
 
 
 def afterCrawler():

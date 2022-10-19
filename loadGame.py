@@ -1,21 +1,22 @@
 # Libraries and Core Files
-import xbox
-import screen
-import memory.main
-import zzairShipPath
-import targetPathing
 import os
 from pathlib import Path
+
+import memory.main
+import screen
+import targetPathing
+import vars
+import xbox
+import zzairShipPath
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
 
 FFXC = xbox.controllerHandle()
+gameVars = vars.varsHandle()
 
 
 def getSavedFiles():
-    import vars
-    gameVars = vars.varsHandle()
     saveFilesFull = sorted(
         Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime)
     saveFiles = [os.path.basename(i) for i in saveFilesFull]
@@ -95,8 +96,6 @@ def loadOffsetBattle(offset):
 
 
 def loadMemCursor():
-    import vars
-    gameVars = vars.varsHandle()
     memory.main.awaitControl()
     memory.main.openMenu()
     if memory.main.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
@@ -200,11 +199,12 @@ def BesaidTrials():
     while memory.main.getMap() != 42:
         tCoords = memory.main.getCoords()
         targetPathing.setMovement([-2, tCoords[1] - 15])
-    
+
     #Start the trials
     while memory.main.getMap() != 122:
         tCoords = memory.main.getCoords()
         targetPathing.setMovement([-2, tCoords[1] + 15])
+
 
 def Boat1():
     memory.main.waitFrames(30 * 3)
@@ -456,8 +456,9 @@ def loadMacTemple2():
 
 
 def loadWendigo():
+    import battle.boss
     import battle.main
-    battle.main.wendigo()
+    battle.boss.wendigo()
     print("Wendigo fight over - end of loading game to Wendigo fight")
 
 

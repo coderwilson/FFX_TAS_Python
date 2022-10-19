@@ -1,10 +1,13 @@
-import xbox
+import battle.boss
 import battle.main
+import battle.overdrive
+import logs
 import memory.main
+import rngTrack
 import targetPathing
 import vars
-import logs
-import rngTrack
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -57,14 +60,9 @@ def NewGame(Gamestate):
 
 def NewGame2():
     # New game selected. Next, select options.
-    timeBuffer = 17
+    timeBuffer = 15
     print("====================================")
-    print("Countdown timer!!!")
-    memory.main.waitFrames(timeBuffer)
-    print("5")
-    memory.main.waitFrames(timeBuffer)
-    print("4")
-    memory.main.waitFrames(timeBuffer)
+    print("Starting in")
     print("3")
     memory.main.waitFrames(timeBuffer)
     print("2")
@@ -73,7 +71,7 @@ def NewGame2():
     memory.main.waitFrames(timeBuffer)
     print("GO!!! Good fortune!")
     print("====================================")
-    print("Reminder seed number:", memory.main.rngSeed())
+    print("Set seed:", memory.main.rngSeed())
     xbox.menuB()
     xbox.menuB()
 
@@ -171,7 +169,7 @@ def ammesBattle():
             lastHit = memory.main.lastHitCheckChange()
             while lastHit == 9999:
                 lastHit = memory.main.lastHitCheckChange()
-            print("Confirm - last hit: ", lastHit)
+            print("Confirm - last hit:", lastHit)
             hitsArray.append(lastHit)
             print(hitsArray)
     print("#####################################")
@@ -182,7 +180,7 @@ def ammesBattle():
     print("### Corrected RNG seed:", correctSeed)
     if correctSeed != "Err_seed_not_found":
         gameVars.setConfirmedSeed(correctSeed)
-    print("Confirming RNG seed: ", memory.main.rngSeed())
+    print("Confirming RNG seed:", memory.main.rngSeed())
     print("#####################################")
     print("Done Killing Sinspawn")
     memory.main.waitFrames(6)  # Just for no overlap
@@ -191,7 +189,7 @@ def ammesBattle():
     print("Waiting for Auron's Turn")
     print("At Overdrive")
     # Auron overdrive tutorial
-    battle.main.auronOD()
+    battle.overdrive.auron()
 
 
 def AfterAmmes():
@@ -229,7 +227,7 @@ def AfterAmmes():
         else:
             FFXC.set_neutral()
             if memory.main.turnReady():
-                battle.main.Tanker()
+                battle.boss.tanker()
             if memory.main.diagSkipPossible():
                 xbox.tapB()
             elif memory.main.cutsceneSkipPossible():

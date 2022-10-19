@@ -1,10 +1,12 @@
-import xbox
+import battle.boss
 import battle.main
-import menu
+import logs
 import memory.main
+import menu
 import targetPathing
 import vars
-import logs
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -45,9 +47,9 @@ def ssLiki():
                 xbox.skipScene()
             elif memory.main.battleActive():
                 print("Ready to start fight with Sin's Fin")
-                battle.main.SinFin()
+                battle.boss.sinFin()
                 print("Sin's Fin fight complete. Waiting for next fight")
-                battle.main.Echuilles()
+                battle.boss.echuilles()
                 print("Sinspawn Echuilles fight complete")
 
 

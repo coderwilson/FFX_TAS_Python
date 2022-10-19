@@ -1,11 +1,13 @@
-import xbox
-import time
-import memory.main
-import blitzPathing
-import vars
 import math
-import rngTrack
+import time
+
+import blitzPathing
 import logs
+import memory.main
+import rngTrack
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 tidusXP = False
 
@@ -306,7 +308,7 @@ def radiusMovement(radius: int = 580, direction='forward'):
     playerCoords[1] *= radius / getCharRadius(controllingPlayer())
 
     if direction == 'forward' and -30 < playerCoords[0] < 30:
-        FFXC.set_movement(-1,-1)
+        FFXC.set_movement(-1, -1)
     else:
         if direction == 'forward':
             targetCoords = [playerCoords[0], playerCoords[1] + 10]
@@ -325,7 +327,7 @@ def radiusMovement(radius: int = 580, direction='forward'):
                 targetCoords = [playerCoords[0], playerCoords[1]]
             else:
                 targetCoords = [playerCoords[0], playerCoords[1]]
-            
+
             if playerCoords[1] < -1:
                 if direction == 'forward':
                     targetCoords[0] -= 10
@@ -385,9 +387,9 @@ def findSafePlace():
 
     if safeSpot == 1:  # Near the left wall
         targetCoords = [-521, -266]
-    elif safeSpot == 2: #About half way
+    elif safeSpot == 2:  # About half way
         targetCoords = [-340, -497]
-    elif safeSpot == 3: #All the way back
+    elif safeSpot == 3:  # All the way back
         targetCoords = [-2, -595]
 
     # I think this is still the best option.
@@ -417,6 +419,7 @@ def jassuTrain():
         radiusMovement(direction='back')
     else:
         radiusMovement(direction='forward')
+
 
 def passBall(target=0, breakThrough=5):
     if controllingPlayer() == 4:
@@ -690,12 +693,13 @@ def lettyAct():
             tar = 3
         passBall(target=tar, breakThrough=breakThroughVal)
     else:
-        if not gameVars.blitzFirstShot() and distance(0,8) > 400:
+        if not gameVars.blitzFirstShot() and distance(0, 8) > 400:
             print("Letty pass to Tidus")
             passBall(target=0)
         else:
             print("Letty pass to Jassu")
             passBall(target=3)
+
 
 def jassuMove():
     targetCoords = [999, 999]
@@ -885,7 +889,6 @@ def blitzMovement():
 
 
 def decideAction():
-    FFXC = xbox.controllerHandle()
     FFXC.set_neutral()
     updatePlayerArray()
     if controllingPlayer() == 0:
@@ -920,7 +923,6 @@ def blitzMain(forceBlitzWin):
     print("-Match is now starting.")
     startTime = logs.timeStamp()
 
-    FFXC = xbox.controllerHandle()
     gameVars.blitzFirstShotReset()
     movementSetFlag = False
     lastState = 0

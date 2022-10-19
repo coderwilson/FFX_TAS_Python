@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
 from ..data.encounter_formations import ZONES
 from ..events.encounter import MultizoneRandomEncounter

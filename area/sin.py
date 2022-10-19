@@ -1,11 +1,13 @@
-import xbox
+import battle.boss
 import battle.main
-import menu
 import memory.main
-import zzairShipPath
+import menu
 import targetPathing
-import zz_eggHuntAuto
 import vars
+import xbox
+import zz_eggHuntAuto
+import zzairShipPath
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -154,7 +156,7 @@ def insideSin():
                 FFXC.set_movement(0, 1)
                 memory.main.waitFrames(30 * 5)
                 FFXC.set_neutral()
-                battle.main.omnis()
+                battle.boss.omnis()
                 memory.main.clickToControl()
             elif checkpoint < 41 and memory.main.getMap() == 204:
                 checkpoint = 41

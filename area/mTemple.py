@@ -1,10 +1,12 @@
-import xbox
-import screen
+import battle.boss
 import battle.main
-import menu
 import memory.main
+import menu
+import screen
 import targetPathing
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -297,7 +299,7 @@ def escape():
                 xbox.tapB()
 
     print("Done pathing. Now for the Wendigo fight.")
-    battle.main.wendigo()
+    battle.boss.wendigo()
     print("Wendigo fight over")
 
 

@@ -1,10 +1,12 @@
-import xbox
-import screen
+import battle.boss
 import battle.main
 import memory.main
-import targetPathing
 import menu
+import screen
+import targetPathing
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -99,7 +101,7 @@ def southBank(checkpoint: int = 0):
             if memory.main.diagSkipPossible():
                 xbox.tapB()
 
-    battle.main.extractor()
+    battle.boss.extractor()
 
 
 def northBank():

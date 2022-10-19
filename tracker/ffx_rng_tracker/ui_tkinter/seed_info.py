@@ -1,9 +1,9 @@
 import tkinter as tk
 
-from .output_widget import TkOutputWidget
 from ..data.constants import EquipmentType
 from ..ui_functions import get_encounter_predictions, get_equipment_types
 from ..utils import treeview
+from .output_widget import TkOutputWidget
 
 
 class TkSeedInfoOutputWidget(TkOutputWidget):

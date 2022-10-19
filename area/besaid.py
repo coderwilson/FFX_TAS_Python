@@ -1,11 +1,11 @@
-import xbox
-import screen
 import battle.main
-import memory.main
 import logs
+import memory.main
+import menu
+import screen
 import targetPathing
 import vars
-import menu
+import xbox
 
 FFXC = xbox.controllerHandle()
 gameVars = vars.varsHandle()
@@ -52,7 +52,7 @@ def Beach():
             checkpoint = 29
         elif checkpoint == 36 and memory.main.getMap() == 17:
             checkpoint = 37
-        
+
         # Events
         elif memory.main.userControl():
             if checkpoint == 34:  # Into the temple for the first time

@@ -1,67 +1,75 @@
-import xbox
-import menuGrid
-import memory.main as main
-import vars
+import memory.main
 import menu
+import menuGrid
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
 
+
 def gridUp():
     menuGrid.gridUp()
+
 
 def gridDown():
     menuGrid.gridDown()
 
+
 def gridLeft():
     menuGrid.gridLeft()
+
 
 def gridRight():
     menuGrid.gridRight()
 
+
 def awaitMove():
     print("Sphere Grid: Waiting for Move command to be highlighted")
-    while main.sGridActive() == False:
+    while memory.main.sGridActive() == False:
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
-        main.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
     complete = False
     while complete == False:
-        menuVal = main.sGridMenu()
+        menuVal = memory.main.sGridMenu()
         if menuVal == 11 or menuVal == 255:
             xbox.menuB()
         elif menuVal == 7:
-            cursorLoc = main.cursorLocation()
+            cursorLoc = memory.main.cursorLocation()
             if cursorLoc[0] == 51 or cursorLoc[1] == 243:
                 xbox.menuUp()
             xbox.menuB()
             complete = True
-            main.waitFrames(30 * 0.25)
+            memory.main.waitFrames(30 * 0.25)
     print("Move command highlighted. Good to go.")
+
 
 def awaitUse():
     print("Sphere Grid: Waiting for Use command to be highlighted")
-    while main.sGridActive() == False:
+    while memory.main.sGridActive() == False:
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
-        main.waitFrames(30 * 1)
+        memory.main.waitFrames(30 * 1)
     complete = False
     while complete == False:
-        menuVal = main.sGridMenu()
+        menuVal = memory.main.sGridMenu()
         print("Menu value: ", menuVal)
         if menuVal == 7:
-            cursorLoc = main.cursorLocation()
+            cursorLoc = memory.main.cursorLocation()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:
                 xbox.menuDown()
             xbox.menuB()
             complete = True
-            main.waitFrames(30 * 0.25)
+            memory.main.waitFrames(30 * 0.25)
         else:
             xbox.menuB()
     print("Use command highlighted. Good to go.")
 
+
 def awaitQuitSG():
     print("Sphere Grid: attempting to quit")
-    while main.sGridActive():
-        menuVal = main.sGridMenu()
+    while memory.main.sGridActive():
+        menuVal = memory.main.sGridMenu()
         if menuVal == 255:
             xbox.menuA()
         elif menuVal == 11:
@@ -77,31 +85,31 @@ def openGrid(character):
     except:
         FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
-    while not main.sGridActive():
+    while not memory.main.sGridActive():
         #print("Attempting to open Sphere Grid")
-        if main.userControl() and not main.menuOpen():
-         #   print("Menu is not open at all")
+        if memory.main.userControl() and not memory.main.menuOpen():
+            #   print("Menu is not open at all")
             xbox.tapY()
-        elif main.menuNumber() == 5: #Cursor on main menu
-          #  print("Main menu cursor")
-            while main.getMenuCursorPos() != 0:
-                main.menuDirection(main.getMenuCursorPos(), 0, 11)
-           # print("Done with menu cursor")
-            while main.menuNumber() == 5:
+        elif memory.main.menuNumber() == 5:  # Cursor on main menu
+            #  print("Main menu cursor")
+            while memory.main.getMenuCursorPos() != 0:
+                memory.main.menuDirection(memory.main.getMenuCursorPos(), 0, 11)
+            # print("Done with menu cursor")
+            while memory.main.menuNumber() == 5:
                 xbox.tapB()
-        elif main.menuNumber() == 7: #Cursor selecting party member
+        elif memory.main.menuNumber() == 7:  # Cursor selecting party member
             print("Selecting party member")
-            target_pos = main.getCharacterIndexInMainMenu(character)
-            while main.getCharCursorPos() != target_pos:
-                if main.getStoryProgress() == 2528: #After B&Y, party size is evaluated weird.
-                    main.menuDirection(main.getCharCursorPos(), target_pos, 7)
-                elif main.partySize() < 3:
+            target_pos = memory.main.getCharacterIndexInMainMenu(character)
+            while memory.main.getCharCursorPos() != target_pos:
+                if memory.main.getStoryProgress() == 2528:  # After B&Y, party size is evaluated weird.
+                    memory.main.menuDirection(memory.main.getCharCursorPos(), target_pos, 7)
+                elif memory.main.partySize() < 3:
                     xbox.menuDown()
                 else:
                     # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.partySize())
                     # Not working. Use this instead.
-                    main.menuDirection(main.getCharCursorPos(), target_pos, 7)
-            while main.menuNumber() == 7:
+                    memory.main.menuDirection(memory.main.getCharCursorPos(), target_pos, 7)
+            while memory.main.menuNumber() == 7:
                 xbox.menuB()
             try:
                 FFXC.set_neutral()
@@ -114,12 +122,14 @@ def openGrid(character):
         FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
 
-#------------------------------------------------------------
+# ------------------------------------------------------------
 # Nemesis Control functions
-def performNextGrid(limit:int=255):
-    #Conditions to hard disregard further evaluations.
+
+
+def performNextGrid(limit: int = 255):
+    # Conditions to hard disregard further evaluations.
     print("###   Next Version: ", gameVars.nemCheckpointAP())
-    print("### Current S.lvls: ", main.getTidusSlvl())
+    print("### Current S.lvls: ", memory.main.getTidusSlvl())
     print("### Needed  S.lvls: ", nextAPneeded(gameVars.nemCheckpointAP()))
     if limit != 255:
         print("###          Limit: ", limit)
@@ -129,9 +139,9 @@ def performNextGrid(limit:int=255):
     if gameVars.nemCheckpointAP() > limit:
         print("### Limit exceeded: ", limit)
         return False
-    
-    #If the above checks are passed, check Tidus level and do sphere grid.
-    if main.getTidusSlvl() >= nextAPneeded(gameVars.nemCheckpointAP()):
+
+    # If the above checks are passed, check Tidus level and do sphere grid.
+    if memory.main.getTidusSlvl() >= nextAPneeded(gameVars.nemCheckpointAP()):
         print("##### Attemping Nemesis Grid #", gameVars.nemCheckpointAP())
         if gameVars.nemCheckpointAP() == 1:
             nemGridding1()
@@ -189,11 +199,13 @@ def performNextGrid(limit:int=255):
             print("----------------------------")
             print("End of sphere grid, no further grid logic programmed.")
             print("----------------------------")
-            gameVars.setNemCheckpointAP(gameVars.nemCheckpointAP() - 1)  # Decrement
-        gameVars.setNemCheckpointAP(gameVars.nemCheckpointAP() + 1)  # Increment
+            gameVars.setNemCheckpointAP(
+                gameVars.nemCheckpointAP() - 1)  # Decrement
+        gameVars.setNemCheckpointAP(
+            gameVars.nemCheckpointAP() + 1)  # Increment
     # else:
         # print("###Not enough Slvl:", memory.getTidusSlvl() - nextAPneeded(gameVars.nemCheckpointAP()))
-        
+
 
 def nextAPneeded(checkpoint):
     if checkpoint == 1:
@@ -248,16 +260,17 @@ def nextAPneeded(checkpoint):
         return 22
     if checkpoint == 26:
         return 42
-    return 100 #If no further grids are possible, continue indefinitely.
+    return 100  # If no further grids are possible, continue indefinitely.
 
-#------------------------------------------------------------
+# ------------------------------------------------------------
 # Nemesis menus
 
+
 def nemGridding1():
-    if main.getPower() < 4 or main.getSpeed() < 4:
+    if memory.main.getPower() < 4 or memory.main.getSpeed() < 4:
         gameVars.setNemCheckpointAP(value=0)
         return
-    #Requires X levels
+    # Requires X levels
     menu.autoSortItems()
     openGrid(character=0)
     menuGrid.moveFirst()
@@ -267,7 +280,7 @@ def nemGridding1():
     menuGrid.moveAndUse()
     # menuGrid.selSphere('power','none') #HP sphere
     # menuGrid.useAndUseAgain()
-    menuGrid.selSphere('lv3','none')
+    menuGrid.selSphere('lv3', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridRight()
@@ -282,31 +295,33 @@ def nemGridding1():
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding2():
-    #Requires 2 levels
+    # Requires 2 levels
     openGrid(character=0)
     menuGrid.moveFirst()
     gridRight()
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding3():
-    #Starts between the two accuracy nodes, top right of the grid.
-    #Requires 13 levels to perform.
+    # Starts between the two accuracy nodes, top right of the grid.
+    # Requires 13 levels to perform.
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
@@ -317,7 +332,7 @@ def nemGridding3():
     menuGrid.moveAndUse()
     # menuGrid.selSphere('power','none')
     # menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
@@ -330,13 +345,14 @@ def nemGridding3():
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     # menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding4():
-    #Starts on created HP node, just north of Auron.
-    #Requires 11 levels to perform.
+    # Starts on created HP node, just north of Auron.
+    # Requires 11 levels to perform.
     openGrid(0)
     menuGrid.moveFirst()
     gridLeft()
@@ -344,23 +360,24 @@ def nemGridding4():
     menuGrid.moveAndUse()
     # menuGrid.selSphere('power','none')
     # menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','right')
+    menuGrid.selSphere('power', 'right')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding5():
-    #Starts west of Auron.
-    #Requires 11 levels to perform.
+    # Starts west of Auron.
+    # Requires 11 levels to perform.
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
@@ -369,7 +386,7 @@ def nemGridding5():
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','left')
+    menuGrid.selSphere('power', 'left')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndMove()
@@ -377,13 +394,14 @@ def nemGridding5():
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','down')
+    menuGrid.selSphere('power', 'down')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding6():
-    #Starts east of Auron, on an HP node in the right corner.
-    #Requires 9 levels to perform.
+    # Starts east of Auron, on an HP node in the right corner.
+    # Requires 9 levels to perform.
     openGrid(0)
     menuGrid.moveFirst()
     gridLeft()
@@ -392,56 +410,57 @@ def nemGridding6():
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('mana','none')
+    menuGrid.selSphere('mana', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','left')
+    menuGrid.selSphere('power', 'left')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','right')
+    menuGrid.selSphere('power', 'right')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
-    if gameVars.endGameVersion() in [1,2]:
+    if gameVars.endGameVersion() in [1, 2]:
         menuGrid.useAndUseAgain()
-        menuGrid.selSphere('lv1','none')
+        menuGrid.selSphere('lv1', 'none')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('hp','none')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding7():
-    #Starts in the center of the circle, near end of any% grid.
-    #Requires 9 levels to perform.
+    # Starts in the center of the circle, near end of any% grid.
+    # Requires 9 levels to perform.
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('mana','none')
+    menuGrid.selSphere('mana', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndMove()
@@ -449,13 +468,14 @@ def nemGridding7():
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding8():
     openGrid(0)
@@ -468,7 +488,7 @@ def nemGridding8():
     gridRight()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridLeft()
@@ -476,30 +496,31 @@ def nemGridding8():
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridUp()
     gridLeft()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('lv1','none')
+    menuGrid.selSphere('lv1', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridUp()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding9(): #Ends near Wakka
+
+def nemGridding9():  # Ends near Wakka
     openGrid(0)
     menuGrid.moveFirst()
     gridDown()
@@ -512,73 +533,75 @@ def nemGridding9(): #Ends near Wakka
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridRight()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding10(): #Starts near Wakka
+
+def nemGridding10():  # Starts near Wakka
     openGrid(0)
     menuGrid.moveFirst()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv2','none')
+    menuGrid.selSphere('lv2', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridRight()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv2','none')
+    menuGrid.selSphere('lv2', 'none')
     menuGrid.useAndMove()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv4','none')
+    menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv4','none')
+    menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
-    FFXC.set_movement(1,-1)
-    main.waitFrames(30)
-    FFXC.set_movement(0,0)
+    FFXC.set_movement(1, -1)
+    memory.main.waitFrames(30)
+    FFXC.set_movement(0, 0)
     FFXC.set_neutral()
-    main.waitFrames(6)
+    memory.main.waitFrames(6)
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv4','none')
+    menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding11(): #Back from Ultima to Wakka's grid
+
+def nemGridding11():  # Back from Ultima to Wakka's grid
     openGrid(0)
     menuGrid.moveFirst()
     gridLeft()
@@ -594,41 +617,42 @@ def nemGridding11(): #Back from Ultima to Wakka's grid
     gridUp()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv1','none')
+    menuGrid.selSphere('lv1', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding12(): #Through Kimahri's grid to Rikku's.
+
+def nemGridding12():  # Through Kimahri's grid to Rikku's.
     openGrid(0)
     menuGrid.moveFirst()
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
@@ -637,24 +661,26 @@ def nemGridding12(): #Through Kimahri's grid to Rikku's.
     gridUp()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('ability','none')
+    menuGrid.selSphere('ability', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('ability','none')
+    menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding13(): #Start on the Steal command
+
+def nemGridding13():  # Start on the Steal command
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','right')
+    menuGrid.selSphere('power', 'right')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding14():
     openGrid(0)
@@ -662,13 +688,13 @@ def nemGridding14():
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
@@ -676,55 +702,57 @@ def nemGridding14():
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('mana','none')
+    menuGrid.selSphere('mana', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('mana','none')
+    menuGrid.selSphere('mana', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding15(): #Weird off-shoot with the three +1 strength nodes
+
+def nemGridding15():  # Weird off-shoot with the three +1 strength nodes
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','right')
+    menuGrid.selSphere('power', 'right')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','right')
+    menuGrid.selSphere('power', 'right')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','left')
+    menuGrid.selSphere('power', 'left')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding16():
     openGrid(0)
@@ -733,68 +761,70 @@ def nemGridding16():
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding17(): #Ends near Lulu
+
+def nemGridding17():  # Ends near Lulu
     openGrid(0)
     menuGrid.moveFirst()
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('mana','none')
+    menuGrid.selSphere('mana', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridUp()
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding18(): #All the way back to Kimahri grid
+
+def nemGridding18():  # All the way back to Kimahri grid
     openGrid(0)
     menuGrid.moveFirst()
     gridLeft()
@@ -817,15 +847,16 @@ def nemGridding18(): #All the way back to Kimahri grid
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding19():
     openGrid(0)
@@ -838,19 +869,19 @@ def nemGridding19():
     gridRight()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','left')
+    menuGrid.selSphere('power', 'left')
     menuGrid.useAndMove()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv1','none')
+    menuGrid.selSphere('lv1', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridUp()
@@ -858,36 +889,38 @@ def nemGridding19():
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding20(): #Starts next to Haste node
+
+def nemGridding20():  # Starts next to Haste node
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
     gridRight()
     gridRight()
     gridDown()
-    menuGrid.moveAndUse() #Into Auron's grid
-    menuGrid.selSphere('power','none')
+    menuGrid.moveAndUse()  # Into Auron's grid
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding21(): #Auron's grid back to Tidus
+
+def nemGridding21():  # Auron's grid back to Tidus
     openGrid(0)
     menuGrid.moveFirst()
     gridLeft()
@@ -900,23 +933,24 @@ def nemGridding21(): #Auron's grid back to Tidus
     gridUp()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding22():
     openGrid(0)
@@ -927,7 +961,7 @@ def nemGridding22():
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridUp()
@@ -935,35 +969,36 @@ def nemGridding22():
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv3','none')
+    menuGrid.selSphere('lv3', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding23():
     openGrid(0)
     menuGrid.moveFirst()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridRight()
@@ -971,17 +1006,18 @@ def nemGridding23():
     gridDown()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def nemGridding24():
     openGrid(0)
@@ -990,18 +1026,18 @@ def nemGridding24():
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridLeft()
@@ -1010,57 +1046,60 @@ def nemGridding24():
     gridLeft()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridRight()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding25(): #End Tidus grid, Quick Hit
+
+def nemGridding25():  # End Tidus grid, Quick Hit
     openGrid(0)
     menuGrid.moveFirst()
     gridUp()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('speed','none')
+    menuGrid.selSphere('speed', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('lv3','none')
+    menuGrid.selSphere('lv3', 'none')
     menuGrid.useAndMove()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridLeft()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('ability','none')
+    menuGrid.selSphere('ability', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('lv3','none')
+    menuGrid.selSphere('lv3', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
 
-def nemGridding26(): #Backtrack to Auto-life, or can go through Yuna's grid on refactor.
+
+# Backtrack to Auto-life, or can go through Yuna's grid on refactor.
+def nemGridding26():
     openGrid(0)
     menuGrid.moveFirst()
     gridRight()
@@ -1073,7 +1112,7 @@ def nemGridding26(): #Backtrack to Auto-life, or can go through Yuna's grid on r
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv4','none')
+    menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridRight()
@@ -1083,22 +1122,23 @@ def nemGridding26(): #Backtrack to Auto-life, or can go through Yuna's grid on r
     gridRight()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('lv4','none')
+    menuGrid.selSphere('lv4', 'none')
     menuGrid.useAndMove()
     gridLeft()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('ability','none')
+    menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def luluBribe():
     openGrid(5)
@@ -1109,13 +1149,14 @@ def luluBribe():
     gridRight()
     gridRight()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('ability','none')
+    menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def rikkuHaste():
     openGrid(character=6)
-    
+
     menuGrid.moveFirst()
     if gameVars.endGameVersion() == 3:
         gridUp()
@@ -1143,9 +1184,10 @@ def rikkuHaste():
     gridLeft()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('ability','aftersk')
+    menuGrid.selSphere('ability', 'aftersk')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def rikkuProvoke():
     openGrid(6)
@@ -1155,9 +1197,10 @@ def rikkuProvoke():
     gridUp()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('ability','none')
+    menuGrid.selSphere('ability', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()
+
 
 def strBoost():
     openGrid(0)
@@ -1166,33 +1209,33 @@ def strBoost():
     gridRight()
     gridUp()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('strength','none')
+    menuGrid.selSphere('strength', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('strength','none')
+    menuGrid.selSphere('strength', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('strength','none')
+    menuGrid.selSphere('strength', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndMove()
     gridDown()
     gridLeft()
     gridDown()
     gridDown()
     menuGrid.moveAndUse()
-    menuGrid.selSphere('strength','none')
+    menuGrid.selSphere('strength', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('strength','none')
+    menuGrid.selSphere('strength', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('strength','none')
+    menuGrid.selSphere('strength', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndUseAgain()
-    menuGrid.selSphere('power','none')
+    menuGrid.selSphere('power', 'none')
     menuGrid.useAndQuit()
-    main.closeMenu()
+    memory.main.closeMenu()

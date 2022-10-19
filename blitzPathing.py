@@ -1,7 +1,7 @@
-import xbox
-import memory.main
-
 from math import copysign
+
+import memory.main
+import xbox
 
 FFXC = xbox.controllerHandle()
 

@@ -1,10 +1,11 @@
-import xbox
-import screen
+import battle.boss
 import battle.main
 import memory.main
-import targetPathing
 import menu
+import screen
+import targetPathing
 import vars
+import xbox
 
 FFXC = xbox.controllerHandle()
 gameVars = vars.varsHandle()
@@ -114,7 +115,7 @@ def Klikk_fight():
     xbox.clickToBattle()
     battle.main.useItem(0, 'none')  # Tidus self-potion
     screen.awaitTurn()
-    battle.main.Klikk()
+    battle.boss.klikk()
 
 
 def distance(n1, n2):
@@ -248,7 +249,7 @@ def ABswimming2():
 
     # Tros fight
     xbox.clickToBattle()
-    battle.main.Tros()
+    battle.boss.tros()
 
     FFXC.set_neutral()
     while memory.main.getStoryProgress() < 111:

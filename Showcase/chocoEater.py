@@ -1,9 +1,9 @@
-import time
 import memory.main
-import xbox
-import screen
 import targetPathing
+import xbox
+
 FFXC = xbox.controllerHandle()
+
 
 def engage():
     checkpoint = 0
@@ -32,6 +32,7 @@ def engage():
             FFXC.set_neutral()
             if memory.main.diagSkipPossible():
                 xbox.tapB()
+
 
 def battle():
     memory.main.waitFrames(10)

@@ -1,12 +1,15 @@
 import time
-import xbox
-import screen
+
+import battle.boss
 import battle.main
-import menu
 import logs
 import memory.main
+import menu
+import screen
 import targetPathing
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -257,7 +260,7 @@ def battleSite():
 
 
 def guiAndAftermath():
-    battle.main.battleGui()
+    battle.boss.gui()
 
     checkpoint = 0
     while memory.main.getMap() != 93:

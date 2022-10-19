@@ -81,19 +81,19 @@ def ListProcessModules(ProcessID):
 
     complete = False
     while not complete:
-        print("   MODULE NAME:     %s",         me32.szModule)
-        print("   executable     = %s",         me32.szExePath)
-        print("   process ID     = 0x%08X",     me32.th32ProcessID)
+        print("   MODULE NAME:     %s", me32.szModule)
+        print("   executable     = %s", me32.szExePath)
+        print("   process ID     = 0x%08X", me32.th32ProcessID)
         print("   ref count (g)  =     0x%04X", me32.GlblcntUsage)
         print("   ref count (p)  =     0x%04X", me32.ProccntUsage)
-        print("   base address   = 0x%08X",     me32.modBaseAddr)
+        print("   base address   = 0x%08X", me32.modBaseAddr)
         try:
             print("   Adjusted address   = 0x%08X", hex(
                 ctypes.addressof(me32.modBaseAddr.contents)))
             retVal = ctypes.addressof(me32.modBaseAddr.contents)
         except Exception as x:
             print("adjusted 3 error:", x)
-        print("   base size      = %d",         me32.modBaseSize)
+        print("   base size      = %d", me32.modBaseSize)
 
         if me32.szModule == b'FFX.exe':
             complete = True

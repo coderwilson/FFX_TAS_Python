@@ -1,5 +1,7 @@
-import memory.main
 import time
+
+import memory.main
+
 memory.main.start()
 
 readVals = False

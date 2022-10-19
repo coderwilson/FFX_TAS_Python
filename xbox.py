@@ -1,9 +1,13 @@
-import vgamepad as vg
-import time
-import memory.main
-import math
-import vars
 import json
+import math
+import time
+
+import vgamepad as vg
+
+import memory.get
+import memory.main
+import vars
+
 gameVars = vars.varsHandle()
 
 
@@ -116,7 +120,7 @@ processed_cutscenes = set()
 
 
 def skipScene(fast_mode: bool = False):
-    cutsceneID = memory.main.getCutsceneID()
+    cutsceneID = memory.get.cutsceneID()
     print(cutsceneID)
     if not fast_mode or cutsceneID not in processed_cutscenes:
         print("Skip cutscene")

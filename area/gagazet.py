@@ -1,12 +1,14 @@
-import xbox
-import screen
+import battle.boss
 import battle.main
-import menu
 import logs
 import memory.main
+import menu
+import rngTrack
+import screen
 import targetPathing
 import vars
-import rngTrack
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -116,7 +118,7 @@ def toTheRonso():
         else:
             FFXC.set_neutral()
             if memory.main.turnReady():
-                battle.main.biranYenke()
+                battle.boss.biranYenke()
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
 
@@ -196,7 +198,7 @@ def Flux():
             FFXC.set_neutral()
             if memory.main.battleActive():
                 print("Flux battle start")
-                battle.main.seymourFlux()
+                battle.boss.seymourFlux()
                 # FFXC.set_movement(0,1)
                 memory.main.clickToControl3()
                 if gameVars.endGameVersion() != 3:
@@ -469,7 +471,7 @@ def cave():
                     xbox.tapB()
 
     xbox.clickToBattle()
-    battle.main.sKeeper()
+    battle.boss.sKeeper()
 
 
 def wrapUp():

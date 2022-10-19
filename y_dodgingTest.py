@@ -1,6 +1,6 @@
-import xbox
 import memory.main
 import targetPathing
+import xbox
 
 FFXC = xbox.FFXC
 

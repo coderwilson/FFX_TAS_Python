@@ -1,12 +1,14 @@
-import xbox
-import screen
+import battle.boss
 import battle.main
-import menu
 import memory.main
-import targetPathing
-import zzairShipPath
-import vars
+import menu
 import rngTrack
+import screen
+import targetPathing
+import vars
+import xbox
+import zzairShipPath
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -415,7 +417,7 @@ def ViaPurifico():
             else:
                 FFXC.set_movement(0, 1)
         elif screen.BattleScreen():
-            battle.main.isaaru()
+            battle.boss.isaaru()
         else:
             FFXC.set_neutral()
             xbox.tapB()
@@ -482,7 +484,7 @@ def evraeAltana():
                 else:
                     FFXC.set_movement(0, 1)
         elif screen.BattleScreen():
-            battle.main.evraeAltana()
+            battle.boss.evraeAltana()
             rngTrack.printManipInfo()
         elif screen.BattleComplete():
             xbox.menuB()
@@ -515,7 +517,7 @@ def seymourNatus():
                 if memory.main.battleType() == 2:
                     battle.main.fleeAll()
                 else:
-                    complete = battle.main.seymourNatus()
+                    complete = battle.boss.seymourNatus()
 
                 if memory.main.getYunaSlvl() >= 14:
                     if gameVars.getBlitzWin():

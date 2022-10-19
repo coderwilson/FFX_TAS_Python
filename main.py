@@ -1,33 +1,36 @@
 # Libraries and Core Files
-import logs
-import area.sin
-import area.zanarkand
-import area.gagazet
-import area.rescueYuna
-import area.home
-import area.mTemple
-import area.mWoods
-import area.thunderPlains
-import area.guadosalam
-import area.moonflow
-import area.djose
-import area.MRR
-import area.miihen
-import blitz
-import area.luca
-import area.kilika
-import area.boats
-import area.besaid
-import area.baaj
-import area.dreamZan
-import xbox
-import memory.main
-import battle.main
-import screen
-import vars
-import reset
 import random
 import sys
+
+import area.baaj
+import area.besaid
+import area.boats
+import area.djose
+import area.dreamZan
+import area.gagazet
+import area.guadosalam
+import area.home
+import area.kilika
+import area.luca
+import area.miihen
+import area.moonflow
+import area.MRR
+import area.mTemple
+import area.mWoods
+import area.rescueYuna
+import area.sin
+import area.thunderPlains
+import area.zanarkand
+import battle.boss
+import battle.main
+import blitz
+import logs
+import memory.main
+import reset
+import screen
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
 gameVars.setStartVars()
 
@@ -36,9 +39,9 @@ FFXC = xbox.controllerHandle()
 
 # Speedrun sectional files
 if gameVars.nemesis():
-    import nemesis.changes
-    import nemesis.arenaPrep
     import nemesis.arenaBattles
+    import nemesis.arenaPrep
+    import nemesis.changes
 
 #Gamestate, "none" for new game, or set to a specific section to start from the first save.
 #See the if statement tree below to determine starting position for Gamestate.
@@ -97,7 +100,7 @@ if gameVars.nemesis():
 #StepCounter = 3 # x50 Start of Sea of Sorrows
 #StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
-StepCounter = 1 # NEW GAME!
+StepCounter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
@@ -122,7 +125,7 @@ rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
 favoriteSeedsSoFar = [31, 160]
-rngSeedNum = 31  # If you don't randomly select below, this will be the seed you run.
+rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -139,7 +142,7 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     #gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
-    #rngSeedNum = random.choice(range(256))  # Select a favorite seed randomly, overrules the set seed above.
+    rngSeedNum = random.choice(range(256))  # Select a seed randomly, overrules the set seed above.
     #rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
     #Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
@@ -447,7 +450,7 @@ while Gamestate != "End":
 
         if Gamestate == "DreamZan" and StepCounter == 2:
             reportGamestate()
-            battle.main.Ammes()
+            battle.boss.ammes()
             StepCounter = 3
             reportGamestate()
 
@@ -528,7 +531,7 @@ while Gamestate != "End":
             area.kilika.forest1()
             reportGamestate()
             StepCounter = 3
-        
+
         if Gamestate == "Kilika" and StepCounter == 3:
             reportGamestate()
             area.kilika.trials()
@@ -760,7 +763,7 @@ while Gamestate != "End":
         if Gamestate == "rescueYuna" and StepCounter == 1:
             reportGamestate()
             area.rescueYuna.preEvrae()
-            battle.main.Evrae()
+            battle.boss.evrae()
             area.rescueYuna.guards()
             StepCounter = 2
 
@@ -889,8 +892,8 @@ while Gamestate != "End":
             if gameVars.nemesis():
                 battle.main.BFA_nem()
             else:
-                battle.main.BFA()
-                battle.main.yuYevon()
+                battle.boss.BFA()
+                battle.boss.yuYevon()
             Gamestate = "End"
 
         # Nemesis logic only:

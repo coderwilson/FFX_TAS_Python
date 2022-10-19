@@ -1,8 +1,10 @@
 import time
-import xbox
+
 import memory.main
 import targetPathing
 import vars
+import xbox
+
 gameVars = vars.varsHandle()
 
 FFXC = xbox.controllerHandle()
@@ -53,7 +55,7 @@ def arrival():
             xbox.tapB()
         FFXC.set_neutral()
         memory.main.clickToControl3()
-        
+
         while not targetPathing.setMovement([4, -114]):
             pass
         print("Mark1")
@@ -62,7 +64,7 @@ def arrival():
             xbox.tapB()
         FFXC.set_neutral()
         memory.main.clickToControl3()
-    
+
     else:
         while not targetPathing.setMovement([4, -114]):
             pass
@@ -90,11 +92,11 @@ def arrival():
             xbox.tapB()
         FFXC.set_neutral()
         memory.main.clickToControl3()
-    
+
     # Line up for Rikku/Yuna
     while not targetPathing.setMovement([15, -52]):
         pass
-    
+
     while not targetPathing.setMovement([22, -25]):
         pass
     print("Mark5")
@@ -112,7 +114,7 @@ def arrival():
         xbox.tapB()
     FFXC.set_neutral()
     memory.main.clickToControl3()
-    
+
     if not gameVars.csr():
         while not memory.main.cutsceneSkipPossible():
             xbox.tapB()

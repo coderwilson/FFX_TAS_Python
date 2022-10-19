@@ -1,17 +1,20 @@
-from math import cos, sin
-from collections import Counter
-import logs
-import struct
-import xbox
-import targetPathing
-import vars
-import os.path
 import ctypes
 import ctypes.wintypes
-from ReadWriteMemory import ReadWriteMemory
-from ReadWriteMemory import Process
+import os.path
+import struct
 import time
+from collections import Counter
+from math import cos, sin
+
+from ReadWriteMemory import Process, ReadWriteMemory
+
+import logs
+import targetPathing
+import vars
+import xbox
+
 gameVars = vars.varsHandle()
+FFXC = xbox.controllerHandle()
 
 # Process Permissions
 PROCESS_QUERY_INFORMATION = 0x0400
@@ -36,7 +39,6 @@ class LocProcess(Process):
         try:
             read_buffer = ctypes.c_uint()
             lp_buffer = ctypes.byref(read_buffer)
-            n_size = ctypes.sizeof(read_buffer)
             lp_number_of_bytes_read = ctypes.c_ulong(0)
             ctypes.windll.kernel32.ReadProcessMemory(self.handle, lp_base_address, lp_buffer,
                                                      size, lp_number_of_bytes_read)
@@ -56,7 +58,6 @@ class LocProcess(Process):
         try:
             write_buffer = ctypes.c_uint(value)
             lp_buffer = ctypes.byref(write_buffer)
-            n_size = ctypes.sizeof(write_buffer)
             lp_number_of_bytes_written = ctypes.c_ulong(0)
             ctypes.windll.kernel32.WriteProcessMemory(self.handle, lp_base_address, lp_buffer,
                                                       size, lp_number_of_bytes_written)
@@ -138,15 +139,6 @@ def start():
 
 def float_from_integer(integer):
     return struct.unpack('!f', struct.pack('!I', integer))[0]
-
-
-def getCutsceneID():
-    global baseValue
-    key = baseValue + 0xD27C88
-    cutscene_alt = process.readBytes(key, 4)
-    storyline_prog = getStoryProgress()
-    dialogue = diagProgressFlag()
-    return (cutscene_alt, storyline_prog, dialogue)
 
 
 def waitFrames(frames: int):
@@ -423,7 +415,6 @@ def clickToControl3():
 
 
 def clickToControlSpecial():
-    FFXC = xbox.controllerHandle()
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not userControl():
@@ -441,7 +432,6 @@ def clickToControlSpecial():
 
 
 def clickToEvent():
-    FFXC = xbox.controllerHandle()
     while userControl():
         FFXC.set_value('BtnB', 1)
         if gameVars.usePause():
@@ -457,7 +447,6 @@ def clickToEvent():
 
 
 def clickToEventTemple(direction):
-    FFXC = xbox.controllerHandle()
     if direction == 0:
         FFXC.set_movement(0, 1)
     if direction == 1:
@@ -515,12 +504,14 @@ def ammesFix(actorIndex: int = 0):
     process.write(baseAddr + (0x880 * actorIndex) + 0x0c, 0x443B4000)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xC28E0000)
 
+
 def chocoEaterFun(actorIndex: int = 0):
     global process
     global baseValue
     basePtr = baseValue + 0x1fc44e4
     baseAddr = process.read(basePtr)
     process.write(baseAddr + (0x880 * actorIndex) + 0x14, 0xc4bb8000)
+
 
 def extractorHeight():
     global process
@@ -1250,6 +1241,7 @@ def confusedState(character):
         print("Character %d is not confused" % character)
         return False
 
+
 def sleepState(character):
     global process
     global baseValue
@@ -1266,6 +1258,7 @@ def sleepState(character):
     else:
         print("Character %d is not asleep" % character)
         return False
+
 
 def autoLifeState(character: int = 0):
     global process
@@ -1380,7 +1373,6 @@ def saveMenuOpen():
 
 
 def backToMainMenu():
-    gameVars = vars.varsHandle()
     while menuNumber() not in [1, 2, 3, 4, 5]:
         if menuOpen():
             xbox.tapA()
@@ -1391,7 +1383,6 @@ def backToMainMenu():
 
 
 def openMenu():
-    FFXC = xbox.controllerHandle()
     menuCounter = 0
     while not (userControl() and menuOpen() and menuNumber() == 5):
         if menuOpen() and not userControl():
@@ -1695,7 +1686,6 @@ def awaitMenuControl():
 
 
 def clickToStoryProgress(destination):
-    FFXC = xbox.controllerHandle()
     counter = 0
     currentState = getStoryProgress()
     print("Story goal:", destination, "| Awaiting progress state:", currentState)
@@ -1748,7 +1738,6 @@ def getCharacterIndexInMainMenu(character):
 
 
 def fullPartyFormat(frontLine, *, fullMenuClose=True):
-    gameVars = vars.varsHandle()
     order = getOrderSeven()
     partyMembers = len(order)
     frontLine = frontLine.lower()
@@ -1776,7 +1765,6 @@ def fullPartyFormat(frontLine, *, fullMenuClose=True):
         while not menuOpen():
             if not openMenu():
                 return
-        FFXC = xbox.controllerHandle()
         FFXC.set_neutral()
         while getMenuCursorPos() != 7:
             menuDirection(getMenuCursorPos(), 7, 11)
@@ -2877,7 +2865,6 @@ def checkThunderStrike() -> int:
 
 def checkZombieStrike():
     ability = 0x8032
-    gameVars = vars.varsHandle()
 
     charWeaps = weaponArrayCharacter(0)  # Tidus
     while len(charWeaps) > 0:
@@ -3087,7 +3074,6 @@ def customizeMenuArray():
 
 def checkNEArmor():
     ability = 0x801D
-    gameVars = vars.varsHandle()
 
     charWeaps = armorArrayCharacter(0)  # Tidus
     while len(charWeaps) > 0:
@@ -3649,7 +3635,6 @@ def touchSaveSphere(saveCursorNum: int = 0):
     clearSaveMenuCursor2()
 
     ssDetails = getSaveSphereDetails()
-    FFXC = xbox.controllerHandle()
     while userControl():
         targetPathing.setMovement([ssDetails[0], ssDetails[1]])
         xbox.tapB()
@@ -3702,7 +3687,6 @@ def touchSaveSphere_notWorking(saveCursorNum: int = 0):
     print("MEM - Touch Save Sphere")
 
     ssDetails = getSaveSphereDetails()
-    FFXC = xbox.controllerHandle()
     while userControl():
         targetPathing.setMovement([ssDetails[0], ssDetails[1]])
         xbox.tapB()
@@ -3747,7 +3731,6 @@ def csrBaajSaveClear():
         print("No need to clear. User is in control.")
     else:
         print("Save dialog has popped up for some reason. Attempting clear.")
-        FFXC = xbox.controllerHandle()
         try:
             FFXC.set_neutral()
         except Exception:
@@ -4333,14 +4316,15 @@ def advanceRNGindex(index: int = 43):
     process.write(baseValue + key, rngArrayFromIndex(index=index)[1])
 
 
-def nextSteal(stealCount:int=0, preAdvance:int=0):
-    useArray = rngArrayFromIndex(index=10, arrayLen=1+preAdvance)
-    stealRNG = useArray[1+preAdvance] % 255
+def nextSteal(stealCount: int = 0, preAdvance: int = 0):
+    useArray = rngArrayFromIndex(index=10, arrayLen=1 + preAdvance)
+    stealRNG = useArray[1 + preAdvance] % 255
     stealChance = 2 ** stealCount
     print("=== ", useArray[1], " === ", stealRNG, " < ", 255 // stealChance, " = ", stealRNG < (255 // stealChance))
     return stealRNG < (255 // stealChance)
 
-def nextStealRare(preAdvance:int=0):
-    useArray = rngArrayFromIndex(index=11, arrayLen=1+preAdvance)
-    stealCritRNG = useArray[1+preAdvance] % 255
+
+def nextStealRare(preAdvance: int = 0):
+    useArray = rngArrayFromIndex(index=11, arrayLen=1 + preAdvance)
+    stealCritRNG = useArray[1 + preAdvance] % 255
     return stealCritRNG < 32
