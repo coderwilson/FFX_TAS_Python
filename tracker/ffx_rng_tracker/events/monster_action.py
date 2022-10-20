@@ -27,24 +27,26 @@ class MonsterAction(Event):
 
     def __str__(self) -> str:
         actions = []
-        for target, hit, dmg, rng, crit in zip(self.targets, self.hits,
-                                               self.damages, self.damage_rngs,
-                                               self.crits):
-            string = f'{target.name} ->'
+        for target, hit, dmg, rng, crit in zip(
+            self.targets, self.hits, self.damages, self.damage_rngs, self.crits
+        ):
+            string = f"{target.name} ->"
             if hit:
                 if self.action.does_damage:
-                    string += f' [{rng}/31]'
+                    string += f" [{rng}/31]"
                     # string += f' {dmg}'
                     if crit:
-                        string += ' (Crit)'
+                        string += " (Crit)"
                 else:
-                    string += ' (No damage)'
+                    string += " (No damage)"
             else:
-                string += ' Miss'
+                string += " Miss"
             actions.append(string)
-        string = (f'{self.monster.name} M{self.slot + 1} -> '
-                  f'{self.action.name} [{self.ctb}]: '
-                  f'{", ".join(actions)}')
+        string = (
+            f"{self.monster.name} M{self.slot + 1} -> "
+            f"{self.action.name} [{self.ctb}]: "
+            f'{", ".join(actions)}'
+        )
         return string
 
     def _get_hits(self) -> list[bool]:
@@ -62,11 +64,13 @@ class MonsterAction(Event):
             target_luck = max(target.stats[Stat.LUCK], 1)
             # unused for now
             target_reflexes = 0
-            hit_chance = (self.action.accuracy
-                          - target_evasion
-                          + luck
-                          - target_luck
-                          + ((aims - target_reflexes) * 10))
+            hit_chance = (
+                self.action.accuracy
+                - target_evasion
+                + luck
+                - target_luck
+                + ((aims - target_reflexes) * 10)
+            )
             hits.append(hit_chance > hit_rng)
         return hits
 

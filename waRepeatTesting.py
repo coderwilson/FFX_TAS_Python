@@ -20,7 +20,7 @@ success = 0
 while attempts < 20:
     attempts += 1
 
-    area.dreamZan.NewGame('Luca')
+    area.dreamZan.NewGame("Luca")
     loadGame.loadOffset(1)
 
     print("Game start screen")

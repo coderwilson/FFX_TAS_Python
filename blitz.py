@@ -45,7 +45,9 @@ def selectFormation2():
 
 
 def selectBreakthrough():
-    if (memory.main.blitzMenuNum() >= 0 and memory.main.blitzMenuNum() <= 46) or memory.main.blitzMenuNum() == 246:
+    if (
+        memory.main.blitzMenuNum() >= 0 and memory.main.blitzMenuNum() <= 46
+    ) or memory.main.blitzMenuNum() == 246:
         return True
     else:
         return False
@@ -103,7 +105,9 @@ def prepHalf():
     # Map = 347, Dialog = 20
     print("Prepping for next period of play.")
     while memory.main.getMap() != 62:
-        if memory.main.diagProgressFlag() == 135:  # Select game mode (Tourney, League, Exhibiton, etc)
+        if (
+            memory.main.diagProgressFlag() == 135
+        ):  # Select game mode (Tourney, League, Exhibiton, etc)
             memory.main.waitFrames(90)
             if memory.main.savePopupCursor() != 1:
                 xbox.menuDown()
@@ -220,7 +224,14 @@ def gameStage():
     if memory.main.getStoryProgress() < 570:
         if memory.main.getStoryProgress() > 540:
             # Requires special timing before Wakka comes in
-            stages = [0, 30, 90, jassuPassTiming() - 12, jassuPassTiming(), tidusShotTiming()]
+            stages = [
+                0,
+                30,
+                90,
+                jassuPassTiming() - 12,
+                jassuPassTiming(),
+                tidusShotTiming(),
+            ]
         elif memory.main.getStoryProgress() < 540 and not gameVars.blitzFirstShot():
             currentStage = 20  # default 20
         else:
@@ -229,14 +240,26 @@ def gameStage():
         if gameVars.getBlitzOT():
             stages = [0, 2, 2, 2, 300, 300]
         else:
-            #print("After Wakka")
-            stages = [0, 160, 200, jassuPassTiming() - 12, jassuPassTiming(), tidusShotTiming()]
+            # print("After Wakka")
+            stages = [
+                0,
+                160,
+                200,
+                jassuPassTiming() - 12,
+                jassuPassTiming(),
+                tidusShotTiming(),
+            ]
 
     # Determine base stage. Modified by following logic.
-    if abs(memory.main.blitzOwnScore() - memory.main.blitzOppScore()) >= 2 and memory.main.getStoryProgress() >= 570:
+    if (
+        abs(memory.main.blitzOwnScore() - memory.main.blitzOppScore()) >= 2
+        and memory.main.getStoryProgress() >= 570
+    ):
         currentStage = 30
-    elif memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 1 \
-            and 570 < memory.main.getStoryProgress() < 700:
+    elif (
+        memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 1
+        and 570 < memory.main.getStoryProgress() < 700
+    ):
         # Ahead by 1 goal after Wakka enters, just end the game.
         currentStage = 30
     elif memory.main.getStoryProgress() < 540:
@@ -257,12 +280,17 @@ def gameStage():
                     currentStage = 4
 
             # Logic that reduces stage if score is too far apart.
-            if memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 2 \
-                    and memory.main.getStoryProgress() >= 570:
+            if (
+                memory.main.blitzOwnScore() - memory.main.blitzOppScore() >= 2
+                and memory.main.getStoryProgress() >= 570
+            ):
                 currentStage = 0
 
             # Logic if we're in defensive zone trying to move forward
-            if currentStage == 3 and playerArray[controllingPlayer()].getCoords()[1] < -200:
+            if (
+                currentStage == 3
+                and playerArray[controllingPlayer()].getCoords()[1] < -200
+            ):
                 currentStage = 2
     if currentStage == 3 and not engageDefender:
         print("Start engaging defender!")
@@ -282,8 +310,7 @@ def distanceSpecial():
     try:
         player1 = playerArray[6].getCoords()
         player2 = [222, -238]  # Formerly 230,-260
-        totalDistance = (
-            abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
+        totalDistance = abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
         return totalDistance
     except Exception as x:
         print("Exception:", x)
@@ -293,29 +320,31 @@ def distanceSpecial():
 def getCharRadius(playerIndex: int = 10):
     playerCoords = playerArray[playerIndex].getCoords()
     try:
-        result = math.sqrt((playerCoords[0] * playerCoords[0]) + (playerCoords[1] * playerCoords[1]))
+        result = math.sqrt(
+            (playerCoords[0] * playerCoords[0]) + (playerCoords[1] * playerCoords[1])
+        )
     except Exception as E:
         print("Math error, using default value.")
-        print(playerCoords[0]**2)
+        print(playerCoords[0] ** 2)
         result = 999
     return result
 
 
-def radiusMovement(radius: int = 580, direction='forward'):
+def radiusMovement(radius: int = 580, direction="forward"):
     playerCoords = playerArray[controllingPlayer()].getCoords()
     targetCoords = [-400, -400]
     playerCoords[0] *= radius / getCharRadius(controllingPlayer())
     playerCoords[1] *= radius / getCharRadius(controllingPlayer())
 
-    if direction == 'forward' and -30 < playerCoords[0] < 30:
+    if direction == "forward" and -30 < playerCoords[0] < 30:
         FFXC.set_movement(-1, -1)
     else:
-        if direction == 'forward':
+        if direction == "forward":
             targetCoords = [playerCoords[0], playerCoords[1] + 10]
         else:
             targetCoords = [playerCoords[0], playerCoords[1] - 10]
         try:
-            targetCoords[0] = math.sqrt((radius**2) - (targetCoords[1]**2))
+            targetCoords[0] = math.sqrt((radius**2) - (targetCoords[1] ** 2))
             if playerCoords[0] < -1:
                 targetCoords[0] *= -1
         except:
@@ -323,27 +352,27 @@ def radiusMovement(radius: int = 580, direction='forward'):
             targetCoords = [-400, -400]
             playerCoords[0] *= radius / getCharRadius(controllingPlayer())
             playerCoords[1] *= radius / getCharRadius(controllingPlayer())
-            if direction == 'forward':
+            if direction == "forward":
                 targetCoords = [playerCoords[0], playerCoords[1]]
             else:
                 targetCoords = [playerCoords[0], playerCoords[1]]
 
             if playerCoords[1] < -1:
-                if direction == 'forward':
+                if direction == "forward":
                     targetCoords[0] -= 10
                 else:
                     targetCoords[0] += 10
             else:
-                if direction == 'forward':
+                if direction == "forward":
                     targetCoords[0] += 10
                 else:
                     targetCoords[0] -= 10
             try:
-                targetCoords[1] = math.sqrt((radius**2) - (targetCoords[0]**2))
+                targetCoords[1] = math.sqrt((radius**2) - (targetCoords[0] ** 2))
                 if playerCoords[1] < -1:
                     targetCoords[1] *= -1
             except:
-                if direction == 'forward':
+                if direction == "forward":
                     targetCoords[0] = playerCoords[0] - 10
                     targetCoords[1] = playerCoords[1] + 10
                 else:
@@ -355,10 +384,10 @@ def radiusMovement(radius: int = 580, direction='forward'):
 
 def workingForward():
     cPlayer = playerArray[controllingPlayer()].getCoords()
-    #if distance(3,10) < 330:
+    # if distance(3,10) < 330:
     #    radiusMovement(direction='back')
     if cPlayer[1] > -180:
-        #print("In position")
+        # print("In position")
         blitzPathing.setMovement([-585, -130])
     else:
         radiusMovement()
@@ -393,13 +422,13 @@ def findSafePlace():
         targetCoords = [-2, -595]
 
     # I think this is still the best option.
-    #targetCoords = [-2, -595]
+    # targetCoords = [-2, -595]
 
     if abs(cPlayer[0] - targetCoords[0]) + abs(cPlayer[1] - targetCoords[1]) > 120:
         if cPlayer[1] > targetCoords[1]:
-            radiusMovement(radius=570, direction='back')
+            radiusMovement(radius=570, direction="back")
         else:
-            radiusMovement(radius=570, direction='forward')
+            radiusMovement(radius=570, direction="forward")
     else:
         if blitzPathing.setMovement(targetCoords):
             return True
@@ -416,9 +445,9 @@ def jassuTrain():
         else:
             FFXC.set_movement(0, -1)
     elif jassuCoords[0] < 10:
-        radiusMovement(direction='back')
+        radiusMovement(direction="back")
     else:
-        radiusMovement(direction='forward')
+        radiusMovement(direction="forward")
 
 
 def passBall(target=0, breakThrough=5):
@@ -544,7 +573,7 @@ def tidusMove():
     shootTarget = [-170, 540]
 
     if currentStage > 15:
-        radiusMovement(radius=400, direction='back')
+        radiusMovement(radius=400, direction="back")
         if distance(0, 3) < 330:
             xbox.tapX()
     elif memory.main.getStoryProgress() > 700:
@@ -566,7 +595,10 @@ def tidusMove():
             # Too many players closing in.
             FFXC.set_movement(-1, -1)
             xbox.tapX()
-        elif blitzPathing.setMovement(shootTarget) and memory.main.getStoryProgress() >= 570:
+        elif (
+            blitzPathing.setMovement(shootTarget)
+            and memory.main.getStoryProgress() >= 570
+        ):
             FFXC.set_movement(-1, -1)
             xbox.tapX()
     else:  # stages 3 and 4 only. All other stages we try to pass, or just shoot.
@@ -574,7 +606,7 @@ def tidusMove():
             FFXC.set_movement(-1, -1)
             xbox.tapX()
         else:
-            radiusMovement(radius=570, direction='forward')
+            radiusMovement(radius=570, direction="forward")
 
 
 def tidusAct():
@@ -645,7 +677,7 @@ def lettyMove():
         elif not playerGuarded(2):
             xbox.tapX()
     else:
-        #if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
+        # if not playerGuarded(3) and distance(3, 10) > 380 and graavDistance > 380:
         if distance(3, 8) > 400:
             xbox.tapX()
         else:
@@ -729,7 +761,7 @@ def jassuMove():
             if playerArray[9].getCoords()[1] > 100:
                 xbox.tapX()
     elif currentStage == 30:
-        #jassuTrain()
+        # jassuTrain()
         findSafePlace()
         moveForward = True
     elif currentStage <= 1 and playerArray[3].currentHP() < 10:
@@ -765,11 +797,11 @@ def jassuMove():
             moveForward = True
         elif distance(3, 10) > 340:
             moveRadius = min(int(getCharRadius() + 150), 570)
-            targetCoords = radiusMovement(radius=moveRadius, direction='forward')
+            targetCoords = radiusMovement(radius=moveRadius, direction="forward")
             moveForward = True
         else:
             moveRadius = min(int(getCharRadius() + 150), 570)
-            targetCoords = radiusMovement(radius=moveRadius, direction='back')
+            targetCoords = radiusMovement(radius=moveRadius, direction="back")
             moveForward = True
     else:  # Pass to Tidus
         targetCoords = [p10C[0] - 180, p10C[1] - 150]
@@ -851,7 +883,7 @@ def otherMove():  # fix
     elif distance(controllingPlayer(), 8) < 300:
         xbox.tapX()
     else:
-        radiusMovement(radius=570, direction='back')
+        radiusMovement(radius=570, direction="back")
 
 
 def otherAct():
@@ -905,7 +937,7 @@ def distance(n1, n2):
     try:
         player1 = playerArray[n1].getCoords()
         player2 = playerArray[n2].getCoords()
-        return (abs(player1[1] - player2[1]) + abs(player1[0] - player2[0]))
+        return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
     except Exception as x:
         print("Exception:", x)
         return 999
@@ -928,7 +960,9 @@ def blitzMain(forceBlitzWin):
     lastState = 0
     lastMenu = 0
     lastPhase = 99
-    while memory.main.getStoryProgress() < 582 or memory.main.getStoryProgress() > 700:  # End of Blitz
+    while (
+        memory.main.getStoryProgress() < 582 or memory.main.getStoryProgress() > 700
+    ):  # End of Blitz
         try:
             if lastPhase != gameStage() and gameClock() > 0 and gameClock() < 301:
                 lastPhase = gameStage()
@@ -948,7 +982,7 @@ def blitzMain(forceBlitzWin):
                         lastState = 1
                     if aurochsControl():
                         if lastMenu != 2:
-                            #print("Camera focusing Aurochs player")
+                            # print("Camera focusing Aurochs player")
                             lastMenu = 2
                         if not movementSetFlag:
                             xbox.tapY()
@@ -956,7 +990,7 @@ def blitzMain(forceBlitzWin):
                             blitzMovement()
                     else:
                         if lastMenu != 8:
-                            #print("Camera focusing opposing player")
+                            # print("Camera focusing opposing player")
                             lastMenu = 8
                 else:
                     FFXC.set_neutral()
@@ -1043,8 +1077,12 @@ def blitzMain(forceBlitzWin):
 
     print("Blitz game has completed.")
     # Set the blitzWin flag for the rest of the run.
-    print("Final scores: Aurochs:", memory.main.blitzOwnScore(),
-          ", Opponent score:", memory.main.blitzOppScore())
+    print(
+        "Final scores: Aurochs:",
+        memory.main.blitzOwnScore(),
+        ", Opponent score:",
+        memory.main.blitzOppScore(),
+    )
     FFXC.set_neutral()
     if memory.main.blitzOwnScore() > memory.main.blitzOppScore():
         gameVars.setBlitzWin(True)

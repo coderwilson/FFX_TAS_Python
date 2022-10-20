@@ -14,7 +14,7 @@ FFXC = xbox.controllerHandle()
 def path():
     memory.main.clickToControl()
     memory.main.closeMenu()
-    memory.main.fullPartyFormat('djose')
+    memory.main.fullPartyFormat("djose")
     memory.main.closeMenu()
 
     countBattles = 0
@@ -55,11 +55,19 @@ def path():
                 if checkpoint in [49, 54, 56]:
                     memory.main.clickToEventTemple(0)
                     checkpoint += 1
-                elif targetPathing.djosePath(checkpoint)[0] < memory.main.getActorCoords(0)[0] \
-                        and checkpoint < 46 and checkpoint > 18:
+                elif (
+                    targetPathing.djosePath(checkpoint)[0]
+                    < memory.main.getActorCoords(0)[0]
+                    and checkpoint < 46
+                    and checkpoint > 18
+                ):
                     checkpoint += 1
-                elif targetPathing.djosePath(checkpoint)[1] < memory.main.getActorCoords(0)[1] \
-                        and checkpoint < 46 and checkpoint > 18:
+                elif (
+                    targetPathing.djosePath(checkpoint)[1]
+                    < memory.main.getActorCoords(0)[1]
+                    and checkpoint < 46
+                    and checkpoint > 18
+                ):
                     checkpoint += 1
                 # General pathing
                 elif targetPathing.setMovement(targetPathing.djosePath(checkpoint)):
@@ -360,7 +368,9 @@ def leavingDjose():
                     FFXC.set_movement(1, 0)
                     memory.main.clickToEventTemple(6)
                 checkpoint += 1
-            elif checkpoint == 11:  # and not gameVars.skipKilikaLuck(): #Do we need this chest for kilika luck skip? I think not.
+            elif (
+                checkpoint == 11
+            ):  # and not gameVars.skipKilikaLuck(): #Do we need this chest for kilika luck skip? I think not.
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 memory.main.clickToEventTemple(0)

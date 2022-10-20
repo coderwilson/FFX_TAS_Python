@@ -139,11 +139,11 @@ def insideSin():
 
     if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 3:
         reEquipNE = True
-        memory.main.fullPartyFormat('rikku', fullMenuClose=False)
+        memory.main.fullPartyFormat("rikku", fullMenuClose=False)
         menu.equipArmor(character=gameVars.neArmor(), ability=99)
     else:
         reEquipNE = False
-        memory.main.fullPartyFormat('yuna', fullMenuClose=False)
+        memory.main.fullPartyFormat("yuna", fullMenuClose=False)
     memory.main.closeMenu()
 
     checkpoint = 0
@@ -152,7 +152,7 @@ def insideSin():
             # Events
             if memory.main.getMap() == 296:  # Seymour battle
                 print("We've reached the Seymour screen.")
-                memory.main.fullPartyFormat('yuna')
+                memory.main.fullPartyFormat("yuna")
                 FFXC.set_movement(0, 1)
                 memory.main.waitFrames(30 * 5)
                 FFXC.set_neutral()
@@ -174,9 +174,8 @@ def insideSin():
                 if reEquipNE and memory.main.overdriveState2()[6] == 100:
                     reEquipNE = False
                     memory.main.clickToControl()
-                    memory.main.fullPartyFormat('yuna', fullMenuClose=False)
-                    menu.equipArmor(
-                        character=gameVars.neArmor(), ability=0x801D)
+                    memory.main.fullPartyFormat("yuna", fullMenuClose=False)
+                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
             elif memory.main.menuOpen():
                 xbox.tapB()
 
@@ -206,5 +205,6 @@ def eggHunt(autoEggHunt):
     else:
         if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
             menu.equipWeapon(
-                character=gameVars.zombieWeapon(), ability=0x8032, fullMenuClose=False)
+                character=gameVars.zombieWeapon(), ability=0x8032, fullMenuClose=False
+            )
         menu.BFA()

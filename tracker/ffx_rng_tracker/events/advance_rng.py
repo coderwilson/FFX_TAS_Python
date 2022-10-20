@@ -13,4 +13,4 @@ class AdvanceRNG(Event):
             self._advance_rng(self.rng_index)
 
     def __str__(self) -> str:
-        return f'Advanced rng{self.rng_index} {self.number_of_times} times'
+        return f"Advanced rng{self.rng_index} {self.number_of_times} times"

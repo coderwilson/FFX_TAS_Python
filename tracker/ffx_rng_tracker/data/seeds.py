@@ -12,42 +12,43 @@ from .constants import GameVersion
 def get_seed(damage_values: Iterable[int]) -> int:
     damage_values_needed = DAMAGE_VALUES_NEEDED[Configs.game_version]
     if len(damage_values) < damage_values_needed:
-        raise SeedNotFoundError(
-            f'Need at least {damage_values_needed} damage values')
+        raise SeedNotFoundError(f"Need at least {damage_values_needed} damage values")
     damage_values = damage_values[:damage_values_needed]
 
     indexes = []
     for i, damage_value in enumerate(damage_values):
         if i in (0, 2, 4) or i >= 6:
-            character = 'auron'
+            character = "auron"
         else:
-            character = 'tidus'
+            character = "tidus"
         try:
             index = _DAMAGE_VALUES[character].index(damage_value)
         except ValueError:
             if damage_value % 2 != 0:
                 raise InvalidDamageValueError(
-                    f'Invalid damage value for {character}: {damage_value}')
+                    f"Invalid damage value for {character}: {damage_value}"
+                )
             try:
                 index = _DAMAGE_VALUES[character].index(damage_value // 2) + 32
             except ValueError:
                 raise InvalidDamageValueError(
-                    f'Invalid damage value for {character}: {damage_value}')
+                    f"Invalid damage value for {character}: {damage_value}"
+                )
         indexes.append(index)
 
-    damage_indexes_as_string = ''.join([f'{n:02}' for n in indexes])
+    damage_indexes_as_string = "".join([f"{n:02}" for n in indexes])
 
     if Configs.game_version is GameVersion.HD:
         absolute_file_path = _SEEDS_FILE_PATH
     else:
         absolute_file_path = _PS2_SEEDS_FILE_PATH
     with open(absolute_file_path) as file_object:
-        seeds = csv.reader(file_object, delimiter=',')
+        seeds = csv.reader(file_object, delimiter=",")
         for line in seeds:
             if line[0].startswith(damage_indexes_as_string):
                 break
         else:
-            raise SeedNotFoundError('Seed not found')
+            raise SeedNotFoundError("Seed not found")
         seed = int(line[1])
     return seed
 
@@ -64,16 +65,15 @@ def datetime_to_seed(datetime: int, frames: int) -> int:
 
 
 def make_seeds_file(file_path: str, frames: int) -> None:
-    print('Calculating damage rolls for every possible seed'
-          f' up to frame {frames}.')
+    print("Calculating damage rolls for every possible seed" f" up to frame {frames}.")
     if os.path.exists(file_path):
-        print(f'File {file_path} already exists!')
+        print(f"File {file_path} already exists!")
         return
     damage_rolls = []
     seeds = []
     rng_tracker = FFXRNGTracker(0)
     for frame in range(frames):
-        print(f'\r{frame}/{frames}', end='')
+        print(f"\r{frame}/{frames}", end="")
         for date_time in range(256):
             seed = datetime_to_seed(date_time, frame)
             rng_tracker.__init__(seed)
@@ -88,9 +88,8 @@ def make_seeds_file(file_path: str, frames: int) -> None:
                 if (auron_rolls[i + 1] % 101) < 22:
                     auron_damage_index += 32
                 indexes.append(auron_damage_index)
-                tidus_damage = _DAMAGE_VALUES['tidus'][tidus_rolls[i] & 31]
-                tidus_damage_index = _DAMAGE_VALUES['tidus'].index(
-                    tidus_damage)
+                tidus_damage = _DAMAGE_VALUES["tidus"][tidus_rolls[i] & 31]
+                tidus_damage_index = _DAMAGE_VALUES["tidus"].index(tidus_damage)
                 # if tidus crits the sinscale
                 if (tidus_rolls[i + 1] % 101) < 23:
                     tidus_damage_index += 32
@@ -103,25 +102,83 @@ def make_seeds_file(file_path: str, frames: int) -> None:
                 if (auron_rolls[i + 1] % 101) < 13:
                     auron_damage_index += 32
                 indexes.append(auron_damage_index)
-            damage_rolls.append(''.join([f'{n:02}' for n in indexes]))
+            damage_rolls.append("".join([f"{n:02}" for n in indexes]))
             seeds.append(str(seed))
-    print(f'\r{frames}/{frames}')
-    data = '\n'.join([f'{d},{s}' for d, s in zip(damage_rolls, seeds)])
-    with open(file_path, 'w') as file:
+    print(f"\r{frames}/{frames}")
+    data = "\n".join([f"{d},{s}" for d, s in zip(damage_rolls, seeds)])
+    with open(file_path, "w") as file:
         file.write(data)
-    print('Done!')
+    print("Done!")
 
 
 _DAMAGE_VALUES: dict[str, tuple[int]] = {
-    'auron': (
-        260, 261, 262, 263, 264, 266, 267, 268, 269, 270, 271,
-        272, 273, 274, 275, 276, 278, 279, 280, 281, 282, 283,
-        284, 285, 286, 287, 288, 289, 291, 292, 293, 294,
+    "auron": (
+        260,
+        261,
+        262,
+        263,
+        264,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        291,
+        292,
+        293,
+        294,
     ),
-    'tidus': (
-        125, 126, 126, 127, 127, 128, 128, 129, 129, 130, 130,
-        131, 131, 132, 132, 133, 134, 134, 135, 135, 136, 136,
-        137, 137, 138, 138, 139, 139, 140, 140, 141, 141,
+    "tidus": (
+        125,
+        126,
+        126,
+        127,
+        127,
+        128,
+        128,
+        129,
+        129,
+        130,
+        130,
+        131,
+        131,
+        132,
+        132,
+        133,
+        134,
+        134,
+        135,
+        135,
+        136,
+        136,
+        137,
+        137,
+        138,
+        138,
+        139,
+        139,
+        140,
+        140,
+        141,
+        141,
     ),
 }
 FRAMES_FROM_BOOT = {
@@ -133,21 +190,20 @@ DAMAGE_VALUES_NEEDED = {
     GameVersion.HD: 6,
 }
 
-_SEEDS_DIRECTORY_PATH = 'ffx_rng_tracker_seeds'
+_SEEDS_DIRECTORY_PATH = "ffx_rng_tracker_seeds"
 try:
     os.mkdir(_SEEDS_DIRECTORY_PATH)
 except FileExistsError:
     pass
 
-_SEEDS_FILE_PATH = _SEEDS_DIRECTORY_PATH + '/seeds.csv'
-_PS2_SEEDS_FILE_PATH = _SEEDS_DIRECTORY_PATH + '/ps2_seeds.csv'
+_SEEDS_FILE_PATH = _SEEDS_DIRECTORY_PATH + "/seeds.csv"
+_PS2_SEEDS_FILE_PATH = _SEEDS_DIRECTORY_PATH + "/ps2_seeds.csv"
 
 if not os.path.exists(_SEEDS_FILE_PATH):
-    print('Seeds file not found.')
+    print("Seeds file not found.")
     make_seeds_file(_SEEDS_FILE_PATH, FRAMES_FROM_BOOT[GameVersion.HD])
 
 if Configs.game_version is not GameVersion.HD:
     if not os.path.exists(_PS2_SEEDS_FILE_PATH):
-        print('Seeds file for ps2 not found.')
-        make_seeds_file(
-            _PS2_SEEDS_FILE_PATH, FRAMES_FROM_BOOT[GameVersion.PS2NA])
+        print("Seeds file for ps2 not found.")
+        make_seeds_file(_PS2_SEEDS_FILE_PATH, FRAMES_FROM_BOOT[GameVersion.PS2NA])

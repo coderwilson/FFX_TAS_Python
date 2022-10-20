@@ -19,56 +19,56 @@ def auron(style="dragon fang"):
             xbox.tapB()
         print("Starting")
         for i in range(2):  # Do it twice in case there's a miss on the first one.
-            FFXC.set_value('Dpad', 2)  # down
+            FFXC.set_value("Dpad", 2)  # down
             memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 4)  # left
+            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("Dpad", 4)  # left
             memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 1)  # up
+            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("Dpad", 1)  # up
             memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 8)  # right
+            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("Dpad", 8)  # right
             memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('BtnShoulderL', 1)
+            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("BtnShoulderL", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnShoulderL', 0)
-            FFXC.set_value('BtnShoulderR', 1)
+            FFXC.set_value("BtnShoulderL", 0)
+            FFXC.set_value("BtnShoulderR", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnShoulderR', 0)
-            FFXC.set_value('BtnA', 1)
+            FFXC.set_value("BtnShoulderR", 0)
+            FFXC.set_value("BtnA", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnA', 0)
-            FFXC.set_value('BtnB', 1)
+            FFXC.set_value("BtnA", 0)
+            FFXC.set_value("BtnB", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
+            FFXC.set_value("BtnB", 0)
     elif style == "shooting star":
         battle.main._navigate_to_position(1, battleCursor=memory.main.battleCursor3)
         while not memory.main.auronOverdriveActive():
             xbox.tapB()
         for i in range(2):  # Do it twice in case there's a miss on the first one.
-            FFXC.set_value('BtnY', 1)
+            FFXC.set_value("BtnY", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnY', 0)
-            FFXC.set_value('BtnA', 1)
+            FFXC.set_value("BtnY", 0)
+            FFXC.set_value("BtnA", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnA', 0)
-            FFXC.set_value('BtnX', 1)
+            FFXC.set_value("BtnA", 0)
+            FFXC.set_value("BtnX", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnX', 0)
-            FFXC.set_value('BtnB', 1)
+            FFXC.set_value("BtnX", 0)
+            FFXC.set_value("BtnB", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
-            FFXC.set_value('Dpad', 4)  # left
+            FFXC.set_value("BtnB", 0)
+            FFXC.set_value("Dpad", 4)  # left
             memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('Dpad', 8)  # right
+            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("Dpad", 8)  # right
             memory.main.waitFrames(1)
-            FFXC.set_value('Dpad', 0)
-            FFXC.set_value('BtnB', 1)
+            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("BtnB", 1)
             memory.main.waitFrames(1)
-            FFXC.set_value('BtnB', 0)
+            FFXC.set_value("BtnB", 0)
 
 
 def kimahri(pos):
@@ -95,10 +95,13 @@ def tidus(direction=None, version: int = 0, character=99):
     while memory.main.interiorBattleMenu():
         xbox.tapB()
     if character != 99 and memory.main.getEnemyCurrentHP()[character - 20] != 0:
-        while character != memory.main.battleTargetId() and memory.main.getEnemyCurrentHP()[character - 20] != 0:
+        while (
+            character != memory.main.battleTargetId()
+            and memory.main.getEnemyCurrentHP()[character - 20] != 0
+        ):
             xbox.tapLeft()
     elif direction:
-        if direction == 'left':
+        if direction == "left":
             xbox.tapLeft()
 
     while not memory.main.overdriveMenuActive():

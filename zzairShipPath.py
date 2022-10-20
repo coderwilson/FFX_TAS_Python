@@ -23,8 +23,12 @@ def airShipPath(version):
             if checkpoint == 2:
                 memory.main.clickToEventTemple(3)
                 checkpoint += 1
-            elif version == 1 and not distillerPurchase and checkpoint == 5 and \
-                    (memory.main.getSpeed() < 9 or memory.main.getPower() < 23):
+            elif (
+                version == 1
+                and not distillerPurchase
+                and checkpoint == 5
+                and (memory.main.getSpeed() < 9 or memory.main.getPower() < 23)
+            ):
 
                 # Tyton to update this with the actual purchase.
                 while memory.main.diagProgressFlag() != 44:
@@ -53,8 +57,12 @@ def airShipPath(version):
                             xbox.tapUp()
                     while not memory.main.itemShopMenu() == 16:
                         xbox.tapB()
-                    while memory.main.purchasingAmountItems() != min(math.ceil((23 - memory.main.getPower()) / 2), 3):
-                        if memory.main.purchasingAmountItems() < min(math.ceil((23 - memory.main.getPower()) / 2), 3):
+                    while memory.main.purchasingAmountItems() != min(
+                        math.ceil((23 - memory.main.getPower()) / 2), 3
+                    ):
+                        if memory.main.purchasingAmountItems() < min(
+                            math.ceil((23 - memory.main.getPower()) / 2), 3
+                        ):
                             xbox.tapRight()
                         else:
                             xbox.tapLeft()
@@ -68,8 +76,12 @@ def airShipPath(version):
                             xbox.tapUp()
                     while not memory.main.itemShopMenu() == 16:
                         xbox.tapB()
-                    while memory.main.purchasingAmountItems() != min(math.ceil((9 - memory.main.getSpeed()) / 2), 2):
-                        if memory.main.purchasingAmountItems() < min(math.ceil((9 - memory.main.getSpeed()) / 2), 2):
+                    while memory.main.purchasingAmountItems() != min(
+                        math.ceil((9 - memory.main.getSpeed()) / 2), 2
+                    ):
+                        if memory.main.purchasingAmountItems() < min(
+                            math.ceil((9 - memory.main.getSpeed()) / 2), 2
+                        ):
                             xbox.tapRight()
                         else:
                             xbox.tapLeft()
@@ -80,7 +92,9 @@ def airShipPath(version):
                 distillerPurchase = True
             elif checkpoint < 6 and memory.main.getMap() == 351:  # Screen with Isaaru
                 checkpoint = 6
-            elif checkpoint < 9 and memory.main.getMap() == 211:  # Gallery screen (includes lift screens)
+            elif (
+                checkpoint < 9 and memory.main.getMap() == 211
+            ):  # Gallery screen (includes lift screens)
                 checkpoint = 9
                 # Optional save sphere can be touched here.
                 # Should not be necessary, we should be touching save sphere in Home
@@ -201,52 +215,52 @@ def airShipReturn():
     pos = memory.main.getCoords()
     print("Ready to run back to the cockpit.")
     while pos[1] > -90:  # Leaving Yuna/Kimahri, heading back down.
-        FFXC.set_value('AxisLy', -1)
-        FFXC.set_value('AxisLx', 0)
+        FFXC.set_value("AxisLy", -1)
+        FFXC.set_value("AxisLx", 0)
         pos = memory.main.getCoords()
     print("Turn East")
     while pos[0] < -1:
-        FFXC.set_value('AxisLx', 1)
-        FFXC.set_value('AxisLy', 0)
+        FFXC.set_value("AxisLx", 1)
+        FFXC.set_value("AxisLy", 0)
         pos = memory.main.getCoords()
     print("Turn North")
     while memory.main.userControl():
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 1)
+        FFXC.set_value("AxisLx", 0)
+        FFXC.set_value("AxisLy", 1)
         pos = memory.main.getCoords()
 
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.awaitControl()
 
     while memory.main.userControl():
-        FFXC.set_value('AxisLx', 0)
-        FFXC.set_value('AxisLy', 1)
+        FFXC.set_value("AxisLx", 0)
+        FFXC.set_value("AxisLy", 1)
 
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.awaitControl()
 
     while memory.main.userControl():
         pos = memory.main.getCoords()
         memory.main.waitFrames(30 * 0.05)
-        FFXC.set_value('AxisLy', 1)
+        FFXC.set_value("AxisLy", 1)
         if pos[0] < -1:
-            FFXC.set_value('AxisLx', 1)
+            FFXC.set_value("AxisLx", 1)
         else:
-            FFXC.set_value('AxisLx', 0)
+            FFXC.set_value("AxisLx", 0)
 
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.awaitControl()
-    FFXC.set_value('AxisLy', 1)
+    FFXC.set_value("AxisLy", 1)
     memory.main.waitFrames(30 * 1.2)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', -1)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", -1)
     memory.main.waitFrames(30 * 0.5)
 
     while memory.main.userControl():
-        FFXC.set_value('AxisLy', 1)
-        FFXC.set_value('AxisLx', -1)
-    FFXC.set_value('AxisLy', 0)
-    FFXC.set_value('AxisLx', 0)
+        FFXC.set_value("AxisLy", 1)
+        FFXC.set_value("AxisLx", -1)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)

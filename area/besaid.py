@@ -82,7 +82,9 @@ def Beach():
                 battle.main.piranhas()
                 besaidBattles += 1
                 encounterID = memory.main.getEncounterID()
-                if encounterID == 11 or (encounterID == 12 and memory.main.battleType() == 1):
+                if encounterID == 11 or (
+                    encounterID == 12 and memory.main.battleType() == 1
+                ):
                     goodBattles += 1
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
@@ -229,15 +231,14 @@ def leaving():
                     FFXC.set_movement(1, 0)
                 FFXC.set_neutral()
                 xbox.clickToBattle()
-                battle.main.attack('none')
+                battle.main.attack("none")
                 xbox.clickToBattle()
-                battle.main.thunder('none')
+                battle.main.thunder("none")
                 memory.main.clickToControl()
                 checkpoint += 1
             elif checkpoint == 24:  # Hilltop
                 memory.main.clickToEventTemple(2)
-                print("Ready for SS Liki menu - (var)",
-                      gameVars.earlyTidusGrid())
+                print("Ready for SS Liki menu - (var)", gameVars.earlyTidusGrid())
                 if memory.main.getTidusSlvl() >= 3:
                     menu.Liki()
                     gameVars.earlyTidusGridSetTrue()
@@ -265,28 +266,36 @@ def leaving():
                 xbox.tapB()
             elif memory.main.cutsceneSkipPossible():
                 xbox.skipScene(fast_mode=True)
-            elif checkpoint > 25 and checkpoint < 30 and screen.BattleScreen():  # Kimahri fight
+            elif (
+                checkpoint > 25 and checkpoint < 30 and screen.BattleScreen()
+            ):  # Kimahri fight
                 FFXC.set_neutral()
                 healCount = 0
                 while memory.main.battleActive():
                     if screen.BattleScreen():
                         battleHP = memory.main.getBattleHP()
                         enemyHP = memory.main.getEnemyCurrentHP()
-                        if not gameVars.earlyTidusGrid() and battleHP[0] < 120 and enemyHP[0] > 119:
+                        if (
+                            not gameVars.earlyTidusGrid()
+                            and battleHP[0] < 120
+                            and enemyHP[0] > 119
+                        ):
                             if memory.main.rngSeed() == 31:
-                                battle.main.attack('none')
+                                battle.main.attack("none")
                             else:
-                                battle.main.usePotionCharacter(0, 'l')
+                                battle.main.usePotionCharacter(0, "l")
                                 healCount += 1
                         else:
-                            battle.main.attack('none')
+                            battle.main.attack("none")
                     elif memory.main.diagSkipPossible():
                         xbox.tapB()
                 # logs.writeStats("Kimahri heal count:")
                 # logs.writeStats(healCount)
                 memory.main.clickToControl()
             # Valefor summon tutorial
-            elif checkpoint in [31, 32, 33, 34, 35, 36, 37, 38] and screen.BattleScreen():
+            elif (
+                checkpoint in [31, 32, 33, 34, 35, 36, 37, 38] and screen.BattleScreen()
+            ):
                 xbox.clickToBattle()
                 while not screen.turnAeon():
                     if memory.main.turnReady():
@@ -303,18 +312,22 @@ def leaving():
                         battle.main.aeonSpell(1)
                 print("Now to open the menu")
                 memory.main.clickToControl()
-                memory.main.fullPartyFormat('Besaid')
+                memory.main.fullPartyFormat("Besaid")
                 checkpoint += 1
             elif checkpoint == 39 and screen.BattleScreen():  # Dark Attack tutorial
                 battle.main.escapeAll()
                 memory.main.clickToControl()
-                memory.main.fullPartyFormat('Besaid2')
+                memory.main.fullPartyFormat("Besaid2")
                 checkpoint += 1
-            elif checkpoint > 39 and screen.BattleScreen():  # One forced battle on the way out of Besaid
+            elif (
+                checkpoint > 39 and screen.BattleScreen()
+            ):  # One forced battle on the way out of Besaid
                 battle.main.besaid()
 
             # Map changes
-            elif checkpoint > 10 and checkpoint < 24 and memory.main.getMap() == 67:  # Hilltop
+            elif (
+                checkpoint > 10 and checkpoint < 24 and memory.main.getMap() == 67
+            ):  # Hilltop
                 checkpoint = 24
             elif checkpoint < 27 and memory.main.getMap() == 21:  # Kimahri map
                 checkpoint = 27

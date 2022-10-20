@@ -13,7 +13,7 @@ FFXC = xbox.controllerHandle()
 
 
 def toHiddenCave():
-    #Force manip NEA
+    # Force manip NEA
     if gameVars.marathonSafety():
         if rngTrack.neaTrack()[1] in [0, 1]:
             pass
@@ -25,20 +25,22 @@ def toHiddenCave():
             memory.main.waitFrames(9)
             print("== For marathon safety at RPGLB, we will now advance RNG.")
             memory.main.waitFrames(9)
-            print("== This is not part of the normal TAS, and is only for marathon safety.")
+            print(
+                "== This is not part of the normal TAS, and is only for marathon safety."
+            )
             memory.main.waitFrames(30)
             advanceCount = 0
-            nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy='ghost')
+            nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
             while nextItem.equipmentType() != 1:
                 print("Advance 12 - ", advanceCount)
                 advanceCount += 1
                 memory.main.advanceRNG12()
-                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy='ghost')
+                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
             while not nextItem.hasAbility(0x801D):
                 print("Advance 13 - ", advanceCount)
                 advanceCount += 1
                 memory.main.advanceRNG13()
-                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy='ghost')
+                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
 
             if memory.main.nextChanceRNG10() > 10:
                 print("Advance 10 - ", advanceCount)
@@ -56,8 +58,8 @@ def toHiddenCave():
             print("===============")
             memory.main.waitFrames(9)
 
-    #Regular logic
-    memory.main.fullPartyFormat('rikku')
+    # Regular logic
+    memory.main.fullPartyFormat("rikku")
     rngTrack.printManipInfo()
     lastReport = False
     firstSave = False
@@ -72,14 +74,22 @@ def toHiddenCave():
                     memory.main.touchSaveSphere()
                 firstSave = True
             _, nextDrop = rngTrack.neaTrack()
-            if checkpoint == 8 and (nextDrop >= 1 or memory.main.nextChanceRNG10() >= 9):
+            if checkpoint == 8 and (
+                nextDrop >= 1 or memory.main.nextChanceRNG10() >= 9
+            ):
                 if not lastReport:
                     print("Need more advances before entering cave.")
                     lastReport = True
                 checkpoint -= 2
-            elif checkpoint == 8 and memory.main.getItemSlot(39) == 255 and memory.main.nextChanceRNG10():
+            elif (
+                checkpoint == 8
+                and memory.main.getItemSlot(39) == 255
+                and memory.main.nextChanceRNG10()
+            ):
                 if not lastReport:
-                    print("Need more advances before entering cave (no silence grenade)")
+                    print(
+                        "Need more advances before entering cave (no silence grenade)"
+                    )
                     lastReport = True
                 checkpoint -= 2
             elif checkpoint == 9:
@@ -108,7 +118,7 @@ def toHiddenCave():
                     print("RNG12: ", memory.main.nextChanceRNG12())
                     battle.main.fleeAll()
                 prepBattles += 1
-                memory.main.fullPartyFormat('rikku')
+                memory.main.fullPartyFormat("rikku")
                 memory.main.touchSaveSphere()
                 rngTrack.printManipInfo()
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
@@ -118,7 +128,7 @@ def toHiddenCave():
 
 
 def nextGreen():
-    nextGreen = memory.main.nextChanceRNG01(version='green')[0][0]
+    nextGreen = memory.main.nextChanceRNG01(version="green")[0][0]
     nextWhite = memory.main.nextChanceRNG01()[0][0]
     print("## Next Ghost coming up:")
     print("## Green: ", nextGreen)
@@ -130,7 +140,7 @@ def nextGreen():
 
 def dropHunt():
     print("Now in the cave. Ready to try to get the NE armor.")
-    memory.main.fullPartyFormat('rikku')
+    memory.main.fullPartyFormat("rikku")
 
     goGreen = nextGreen()
 
@@ -142,11 +152,15 @@ def dropHunt():
             if goGreen:
                 if checkpoint == 15:
                     checkpoint -= 2
-                elif targetPathing.setMovement(targetPathing.neForceEncountersGreen(checkpoint)):
+                elif targetPathing.setMovement(
+                    targetPathing.neForceEncountersGreen(checkpoint)
+                ):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             else:
-                if targetPathing.setMovement(targetPathing.neForceEncountersWhite(checkpoint)):
+                if targetPathing.setMovement(
+                    targetPathing.neForceEncountersWhite(checkpoint)
+                ):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not goGreen:
                         checkpoint = 0
@@ -162,7 +176,7 @@ def dropHunt():
                 memory.main.checkNEArmor()
                 if gameVars.neArmor() == 255:
                     battle.main.healUp(fullMenuClose=False)
-                    memory.main.fullPartyFormat('rikku')
+                    memory.main.fullPartyFormat("rikku")
                     memory.main.closeMenu()
 
                     if nextGreen() and not goGreen:

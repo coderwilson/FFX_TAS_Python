@@ -7,9 +7,8 @@ from .monsters import MONSTERS, Monster
 
 
 class Formation(list[Monster]):
-
     def __str__(self) -> str:
-        return ', '.join([str(m) for m in self])
+        return ", ".join([str(m) for m in self])
 
     def __format__(self, __format_spec: str) -> str:
         return format(str(self), __format_spec)
@@ -61,43 +60,39 @@ def _get_formations(file_path: str) -> Formations:
     with open(absolute_file_path) as file_object:
         formations: dict[str, dict] = json.load(file_object)
     bosses = {}
-    for boss, data in formations['bosses'].items():
+    for boss, data in formations["bosses"].items():
         for condition in EncounterCondition:
-            if condition.lower() == data['forced_condition']:
+            if condition.lower() == data["forced_condition"]:
                 break
         else:
             condition = None
         bosses[boss] = Boss(
-            data['name'],
-            Formation(MONSTERS[m] for m in data['formation']),
-            condition
+            data["name"], Formation(MONSTERS[m] for m in data["formation"]), condition
         )
 
     simulations = {}
-    for encounter, data in formations['simulation'].items():
+    for encounter, data in formations["simulation"].items():
         for condition in EncounterCondition:
-            if condition.lower() == data['forced_condition']:
+            if condition.lower() == data["forced_condition"]:
                 break
         else:
             condition = None
         simulations[encounter] = Simulation(
-            data['name'],
-            Formation(MONSTERS[m] for m in data['monsters']),
-            condition
+            data["name"], Formation(MONSTERS[m] for m in data["monsters"]), condition
         )
 
     zones: dict[str, Zone] = {}
-    for encounter, data in formations['random'].items():
+    for encounter, data in formations["random"].items():
         for condition in EncounterCondition:
-            if condition.lower() == data['forced_condition']:
+            if condition.lower() == data["forced_condition"]:
                 break
         else:
             condition = None
         zones[encounter] = Zone(
-            data['name'],
-            [Formation(MONSTERS[m] for m in f) for f in data['formations']],
+            data["name"],
+            [Formation(MONSTERS[m] for m in f) for f in data["formations"]],
             condition,
-            data['danger_value']
+            data["danger_value"],
         )
         for formation in zones[encounter].formations:
             for monster in formation:
@@ -107,5 +102,5 @@ def _get_formations(file_path: str) -> Formations:
     return bosses, simulations, zones
 
 
-BOSSES, SIMULATIONS, ZONES = _get_formations('tracker\\data\\formations.json')
+BOSSES, SIMULATIONS, ZONES = _get_formations("tracker\\data\\formations.json")
 FORMATIONS = BOSSES | SIMULATIONS | ZONES

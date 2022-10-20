@@ -128,7 +128,7 @@ def northBank():
     FFXC.set_neutral()
     memory.main.waitFrames(15)
     if gameVars.getLStrike() % 2 == 1:
-        menu.equipWeapon(character=0, special='brotherhoodearly')
+        menu.equipWeapon(character=0, special="brotherhoodearly")
 
     checkpoint = 0
     print("Miihen North Bank pattern. Starts after talking to Auron.")

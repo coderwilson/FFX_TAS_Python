@@ -21,12 +21,28 @@ def checkSpheres():
 
     # Same for Power spheres
     if gameVars.nemesis():
-        if memory.main.getPower() >= 28 or (memory.main.getSpeed() < 9 and memory.main.getPower() >= (23 + math.ceil((9 - memory.main.getSpeed()) / 2))) or (memory.main.getSpeed() >= 9 and memory.main.getPower() >= 23):
+        if (
+            memory.main.getPower() >= 28
+            or (
+                memory.main.getSpeed() < 9
+                and memory.main.getPower()
+                >= (23 + math.ceil((9 - memory.main.getSpeed()) / 2))
+            )
+            or (memory.main.getSpeed() >= 9 and memory.main.getPower() >= 23)
+        ):
             needPower = False
         else:
             needPower = True
 
-    elif memory.main.getPower() >= 19 or (memory.main.getSpeed() < 9 and memory.main.getPower() >= (15 + math.ceil((9 - memory.main.getSpeed()) / 2))) or (memory.main.getSpeed() >= 9 and memory.main.getPower() >= 15):
+    elif (
+        memory.main.getPower() >= 19
+        or (
+            memory.main.getSpeed() < 9
+            and memory.main.getPower()
+            >= (15 + math.ceil((9 - memory.main.getSpeed()) / 2))
+        )
+        or (memory.main.getSpeed() >= 9 and memory.main.getPower() >= 15)
+    ):
         needPower = False
     else:
         needPower = True
@@ -111,7 +127,9 @@ def desert():
             elif checkpoint == 53:
                 print("Going for first Sandragora and chest")
                 teleSlot = memory.main.getItemSlot(98)
-                if teleSlot == 255 or teleCount == memory.main.getItemCountSlot(teleSlot):
+                if teleSlot == 255 or teleCount == memory.main.getItemCountSlot(
+                    teleSlot
+                ):
                     targetPathing.setMovement([-44, 446])
                     xbox.tapB()
                 else:
@@ -119,13 +137,15 @@ def desert():
                     print("Checkpoint reached:", checkpoint)
             elif checkpoint == 12 and not firstFormat:
                 firstFormat = True
-                memory.main.fullPartyFormat('desert9')
+                memory.main.fullPartyFormat("desert9")
 
             # Sandragora skip logic
             elif checkpoint == 57:
                 checkpoint += 1
             elif checkpoint == 60:
-                if memory.main.getCoords()[1] < 812:  # Dialing in. 810 works 95%, but was short once.
+                if (
+                    memory.main.getCoords()[1] < 812
+                ):  # Dialing in. 810 works 95%, but was short once.
                     FFXC.set_movement(0, 1)
                 else:
                     FFXC.set_neutral()
@@ -159,7 +179,9 @@ def desert():
                 xbox.menuB()
             if memory.main.battleActive():  # Lots of battle logic here.
                 xbox.clickToBattle()
-                if checkpoint < 7 and memory.main.getEncounterID() == 197:  # First battle in desert
+                if (
+                    checkpoint < 7 and memory.main.getEncounterID() == 197
+                ):  # First battle in desert
                     battle.main.zu()
                 elif memory.main.getEncounterID() == 234:  # Sandragora logic
                     print("Sandragora fight")
@@ -174,7 +196,9 @@ def desert():
                         checkpoint = 58
                 else:
                     battle.main.bikanelBattleLogic(
-                        [chargeState, needSpeed, needPower, itemsNeeded], sandyFightComplete=sandy1)
+                        [chargeState, needSpeed, needPower, itemsNeeded],
+                        sandyFightComplete=sandy1,
+                    )
 
                 # After-battle logic
                 memory.main.clickToControl()
@@ -182,17 +206,17 @@ def desert():
                 # First, check and update party format.
                 if checkpoint > 10:
                     if checkpoint < 23 and checkpoint > 10:
-                        memory.main.fullPartyFormat('desert9')
+                        memory.main.fullPartyFormat("desert9")
                     elif not chargeState:
-                        memory.main.fullPartyFormat('desert1')
+                        memory.main.fullPartyFormat("desert1")
                     elif needPower:
-                        memory.main.fullPartyFormat('desert1')
+                        memory.main.fullPartyFormat("desert1")
                     elif needSpeed:
-                        memory.main.fullPartyFormat('desert1')
+                        memory.main.fullPartyFormat("desert1")
                     elif itemsNeeded >= 1:
-                        memory.main.fullPartyFormat('desert1')
+                        memory.main.fullPartyFormat("desert1")
                     else:  # Catchall
-                        memory.main.fullPartyFormat('desert1')
+                        memory.main.fullPartyFormat("desert1")
 
                 # Next, figure out how many items we need.
                 stealItems = battle.main.updateStealItemsDesert()
@@ -300,14 +324,14 @@ def findSummoners():
                     if memory.main.getMap() == 280:
                         print("Home, battle 2")
                         battle.main.home2()
-                        memory.main.fullPartyFormat('desert1')
+                        memory.main.fullPartyFormat("desert1")
                     else:
                         print("Home, bonus battle for Blitz loss")
                         battle.main.home3()
                 elif memory.main.getEncounterID() == 420:
                     print("Home, final battle")
                     battle.main.home4()
-                    memory.main.fullPartyFormat('evrae')
+                    memory.main.fullPartyFormat("evrae")
                 else:
                     print("Flee from battle:", memory.main.getEncounterID())
                     battle.main.fleeAll()

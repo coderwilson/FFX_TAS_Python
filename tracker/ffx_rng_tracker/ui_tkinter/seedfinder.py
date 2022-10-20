@@ -8,7 +8,6 @@ from .input_widget import TkInputWidget
 
 
 class TkDamageValuesWidget(tk.StringVar):
-
     def get_input(self) -> str:
         return self.get()
 
@@ -26,22 +25,22 @@ class TkSeedFinder(tk.Frame):
         super().__init__(parent, *args, **kwargs)
 
         frame = tk.Frame(self)
-        frame.pack(fill='y', side='left')
-        tk.Label(frame, text='Actions').pack()
+        frame.pack(fill="y", side="left")
+        tk.Label(frame, text="Actions").pack()
 
         input_widget = TkInputWidget(frame)
-        input_widget.pack(fill='y', expand=True)
+        input_widget.pack(fill="y", expand=True)
 
-        tk.Label(frame, text='Damage values').pack()
+        tk.Label(frame, text="Damage values").pack()
 
         damage_values_widget = TkDamageValuesWidget(self)
-        tk.Entry(frame, textvariable=damage_values_widget).pack(fill='x')
+        tk.Entry(frame, textvariable=damage_values_widget).pack(fill="x")
 
-        button = tk.Button(frame, text='Search Seed')
+        button = tk.Button(frame, text="Search Seed")
         button.pack()
 
         output_widget = TkActionsOutputWidget(self)
-        output_widget.pack(expand=True, fill='both', side='right')
+        output_widget.pack(expand=True, fill="both", side="right")
 
         self.tracker = SeedFinder(
             seed=seed,

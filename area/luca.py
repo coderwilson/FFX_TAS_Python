@@ -26,7 +26,9 @@ def arrival():
             if checkpoint < 5 and memory.main.getMap() == 268:
                 checkpoint = 5
                 print("Map change:", checkpoint)
-            elif checkpoint < 10 and memory.main.getMap() == 123:  # Front of the Blitz dome
+            elif (
+                checkpoint < 10 and memory.main.getMap() == 123
+            ):  # Front of the Blitz dome
                 print("Map change:", checkpoint)
                 checkpoint = 10
             elif checkpoint < 13 and memory.main.getMap() == 77:
@@ -47,8 +49,7 @@ def arrival():
                     memory.main.clickToDiagProgress(18)  # Seymour scene
                     xbox.awaitSave(index=2)
 
-                    memory.main.clickToDiagProgress(
-                        82)  # Let's go over the basics
+                    memory.main.clickToDiagProgress(82)  # Let's go over the basics
                     xbox.SkipDialog(1)
                 while memory.main.blitzCursor() != 12:
                     xbox.tapA()
@@ -164,8 +165,7 @@ def arrival():
         if thunderStrike % 2 == 1:
             print("Equipping Tidus")
             fullClose = True
-            menu.equipWeapon(
-                character=0, ability=0x8026, fullMenuClose=fullClose)
+            menu.equipWeapon(character=0, ability=0x8026, fullMenuClose=fullClose)
     gameVars.setLStrike(thunderStrike)
 
 
@@ -176,11 +176,17 @@ def blitzStart():
         if memory.main.userControl():
             if memory.main.getMap() == 72 and checkpoint < 3:
                 checkpoint = 3
-            elif memory.main.getMap() == 72 and memory.main.getCoords()[0] < -18 \
-                    and checkpoint < 5:
+            elif (
+                memory.main.getMap() == 72
+                and memory.main.getCoords()[0] < -18
+                and checkpoint < 5
+            ):
                 checkpoint = 5
-            elif memory.main.getMap() == 72 and memory.main.getCoords()[0] > -15 \
-                    and checkpoint >= 5:
+            elif (
+                memory.main.getMap() == 72
+                and memory.main.getCoords()[0] > -15
+                and checkpoint >= 5
+            ):
                 checkpoint = 4
             elif checkpoint == 8:
                 targetPathing.setMovement([-111, -4])
@@ -246,7 +252,7 @@ def afterBlitz():
                     battle.main.afterBlitz1(gameVars.earlyHaste())
                 elif encounterID == 2:
                     xbox.clickToBattle()
-                    battle.main.attack('none')  # Hardest boss in the game.
+                    battle.main.attack("none")  # Hardest boss in the game.
                     print("Well that boss was difficult.")
                     memory.main.waitFrames(30 * 6)
                 elif encounterID == 3:

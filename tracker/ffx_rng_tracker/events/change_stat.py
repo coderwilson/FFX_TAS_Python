@@ -15,8 +15,7 @@ class ChangeStat(Event):
         self.stat_value = self._set_stat()
 
     def __str__(self) -> str:
-        return (f'{self.character.name}\'s {self.stat} '
-                f'changed to {self.stat_value}')
+        return f"{self.character.name}'s {self.stat} " f"changed to {self.stat_value}"
 
     def _set_stat(self) -> int:
         self.character.set_stat(self.stat, self.stat_value)

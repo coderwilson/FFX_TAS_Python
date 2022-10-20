@@ -16,14 +16,14 @@ We strive to only include code that is not seed-specific which causes the codeba
 
 This project has been showcased on:  
 
-- Q4G HH2 in Nov 2021  
+- Q4G HH2 - Nov 2021  
 <https://www.twitch.tv/videos/1205160940>
 
-- TASgiving Nov 2021  
+- TASgiving - Nov 2021  
 <https://www.youtube.com/watch?v=Gvz-XdiNuKI>
 
-- RPG Limit Break 2022 on October 17th 2022  
-_pending | <https://horaro.org/rpglb/2022>_
+- RPG Limit Break 2022 - October 17th 2022  
+<https://www.youtube.com/watch?v=C598HEcfdgE>
 
 ## Setup
 

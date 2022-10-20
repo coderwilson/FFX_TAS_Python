@@ -31,8 +31,8 @@ def checkGems():
 def calmLands():
     memory.main.awaitControl()
     # Start by getting away from the save sphere
-    memory.main.fullPartyFormat('rikku', fullMenuClose=True)
-    #battle.main.healUp(fullMenuClose=True)
+    memory.main.fullPartyFormat("rikku", fullMenuClose=True)
+    # battle.main.healUp(fullMenuClose=True)
 
     rngTrack.printManipInfo()
     print("RNG10:", memory.main.rng10())
@@ -63,8 +63,8 @@ def calmLands():
             if screen.BattleScreen():
                 battle.main.calmLandsManip()
                 memory.main.clickToControl3()
-                memory.main.fullPartyFormat('rikku', fullMenuClose=True)
-                #battle.main.healUp(fullMenuClose=True)
+                memory.main.fullPartyFormat("rikku", fullMenuClose=True)
+                # battle.main.healUp(fullMenuClose=True)
                 rngTrack.printManipInfo()
             elif memory.main.menuOpen():
                 xbox.tapB()
@@ -75,7 +75,7 @@ def calmLands():
 def defenderX():
     memory.main.awaitControl()
     menu.prepCalmLands()
-    memory.main.fullPartyFormat('postbunyip')
+    memory.main.fullPartyFormat("postbunyip")
     while not targetPathing.setMovement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
@@ -90,7 +90,7 @@ def defenderX():
             elif screen.turnYuna():
                 battle.main.aeonSummon(4)
             else:
-                battle.main.attack('none')
+                battle.main.attack("none")
     FFXC.set_movement(0, 1)
     memory.main.clickToControl()
     rngTrack.printManipInfo()
@@ -136,9 +136,9 @@ def gagazetGates():
         logs.writeStats("2")
     memory.main.awaitControl()
     if memory.main.overdriveState()[6] == 100:
-        memory.main.fullPartyFormat('kimahri', fullMenuClose=False)
+        memory.main.fullPartyFormat("kimahri", fullMenuClose=False)
     else:
-        memory.main.fullPartyFormat('rikku', fullMenuClose=False)
+        memory.main.fullPartyFormat("rikku", fullMenuClose=False)
     menu.afterRonso()
     memory.main.closeMenu()  # just in case
 
@@ -162,13 +162,15 @@ def gagazetGates():
                     battle.main.gagazetPath()
                     memory.main.clickToControl()
                     if memory.main.overdriveState()[6] == 100:
-                        memory.main.fullPartyFormat('kimahri')
+                        memory.main.fullPartyFormat("kimahri")
                     else:
-                        memory.main.fullPartyFormat('rikku')
+                        memory.main.fullPartyFormat("rikku")
                 memory.main.clickToControl()
-                if memory.main.overdriveState2()[6] == 100 and gameVars.neArmor() != 255:
-                    menu.equipArmor(
-                        character=gameVars.neArmor(), ability=0x801D)
+                if (
+                    memory.main.overdriveState2()[6] == 100
+                    and gameVars.neArmor() != 255
+                ):
+                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
     print("Should now be on the map with Seymour Flux.")
@@ -178,7 +180,7 @@ def Flux():
     print("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
     if gameVars.endGameVersion() != 3:
-        memory.main.fullPartyFormat('yuna')
+        memory.main.fullPartyFormat("yuna")
     checkpoint = 0
     while memory.main.getMap() != 309:
         if memory.main.userControl():
@@ -203,7 +205,7 @@ def Flux():
                 memory.main.clickToControl3()
                 if gameVars.endGameVersion() != 3:
                     menu.afterFlux()
-                memory.main.fullPartyFormat('kimahri')
+                memory.main.fullPartyFormat("kimahri")
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
             elif memory.main.menuOpen():
@@ -367,15 +369,33 @@ def cave():
 
                 FFXC.set_neutral()
                 while not memory.main.userControl():
-                    if memory.main.GTouterRing() < 2.3 and memory.main.GTouterRing() > 2.05:
-                        if memory.main.GTinnerRing() < 2.9 and memory.main.GTinnerRing() > 1.3:
+                    if (
+                        memory.main.GTouterRing() < 2.3
+                        and memory.main.GTouterRing() > 2.05
+                    ):
+                        if (
+                            memory.main.GTinnerRing() < 2.9
+                            and memory.main.GTinnerRing() > 1.3
+                        ):
                             xbox.tapB()
-                        elif memory.main.GTinnerRing() < 0.1 and memory.main.GTinnerRing() > -1.6:
+                        elif (
+                            memory.main.GTinnerRing() < 0.1
+                            and memory.main.GTinnerRing() > -1.6
+                        ):
                             xbox.tapB()
-                    elif memory.main.GTouterRing() < -0.7 and memory.main.GTouterRing() > -1.1:
-                        if memory.main.GTinnerRing() < 2.9 and memory.main.GTinnerRing() > 1.3:
+                    elif (
+                        memory.main.GTouterRing() < -0.7
+                        and memory.main.GTouterRing() > -1.1
+                    ):
+                        if (
+                            memory.main.GTinnerRing() < 2.9
+                            and memory.main.GTinnerRing() > 1.3
+                        ):
                             xbox.tapB()
-                        elif memory.main.GTinnerRing() < 0.1 and memory.main.GTinnerRing() > -1.6:
+                        elif (
+                            memory.main.GTinnerRing() < 0.1
+                            and memory.main.GTinnerRing() > -1.6
+                        ):
                             xbox.tapB()
 
                 print("First trial complete")
@@ -413,7 +433,7 @@ def cave():
             elif checkpoint == 59:  # Just before sanctuary keeper
                 FFXC.set_neutral()
                 print("Prepping for Sanctuary Keeper")
-                memory.main.fullPartyFormat('yuna')
+                memory.main.fullPartyFormat("yuna")
                 checkpoint += 1
 
                 # Determine drops from Yunalesca
@@ -431,7 +451,7 @@ def cave():
                 memory.main.waitFrames(90)
                 xbox.menuB()
                 memory.main.waitFrames(45)
-                FFXC.set_value('Dpad', 8)
+                FFXC.set_value("Dpad", 8)
                 memory.main.waitFrames(45)
                 FFXC.set_neutral()
                 memory.main.clickToControl()
@@ -440,19 +460,25 @@ def cave():
             elif checkpoint == 35 and memory.main.diagProgressFlag() == 3:
                 # CSR second trial
                 memory.main.waitFrames(10)
-                FFXC.set_value('Dpad', 8)
+                FFXC.set_value("Dpad", 8)
                 memory.main.waitFrames(45)
                 FFXC.set_neutral()
                 memory.main.clickToControl()
                 checkpoint += 1
             elif memory.main.battleActive():
                 if memory.main.getPower() < powerNeeded:
-                    if memory.main.getEncounterID() == 351:  # Two maelstroms and a splasher
-                        battle.main.gagazetCave('down')
-                    elif memory.main.getEncounterID() == 353:  # Two glowey guys, two splashers.
-                        battle.main.gagazetCave('right')
-                    elif memory.main.getEncounterID() == 354:  # Four groups of splashers
-                        battle.main.gagazetCave('none')
+                    if (
+                        memory.main.getEncounterID() == 351
+                    ):  # Two maelstroms and a splasher
+                        battle.main.gagazetCave("down")
+                    elif (
+                        memory.main.getEncounterID() == 353
+                    ):  # Two glowey guys, two splashers.
+                        battle.main.gagazetCave("right")
+                    elif (
+                        memory.main.getEncounterID() == 354
+                    ):  # Four groups of splashers
+                        battle.main.gagazetCave("none")
                     elif memory.main.overdriveState2()[6] != 100:
                         if memory.main.getEncounterID() in [351, 352, 353, 354]:
                             battle.main.caveChargeRikku()
@@ -467,7 +493,9 @@ def cave():
             elif checkpoint == 6 or checkpoint == 54:
                 if memory.main.battleActive():
                     battle.main.fleeAll()
-                elif memory.main.diagSkipPossible():  # So we don't override the second trial
+                elif (
+                    memory.main.diagSkipPossible()
+                ):  # So we don't override the second trial
                     xbox.tapB()
 
     xbox.clickToBattle()
@@ -539,7 +567,9 @@ def wrapUp():
         memory.main.waitFrames(30 * sleepTime)
         print("Ah well, still have some time. Might as well shout out a few people.")
         memory.main.waitFrames(30 * sleepTime)
-        print("First and most importantly, my wife for putting up with me for two years through this project.")
+        print(
+            "First and most importantly, my wife for putting up with me for two years through this project."
+        )
         memory.main.waitFrames(30 * sleepTime)
         print("My wife is the best!")
         memory.main.waitFrames(30 * sleepTime)
@@ -549,27 +579,41 @@ def wrapUp():
         memory.main.waitFrames(30 * sleepTime)
         print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
         memory.main.waitFrames(30 * sleepTime)
-        print("Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.")
+        print(
+            "Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section."
+        )
         memory.main.waitFrames(30 * sleepTime)
         print("You will see Inverted's work right before the final bosses.")
         memory.main.waitFrames(30 * sleepTime)
         print("Next, some people from the FFX speedrunning community.")
         memory.main.waitFrames(30 * sleepTime)
-        print("CrimsonInferno, current world record holder for this category. Dude knows everything about this run!")
+        print(
+            "CrimsonInferno, current world record holder for this category. Dude knows everything about this run!"
+        )
         memory.main.waitFrames(30 * sleepTime)
-        print("Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more.")
+        print(
+            "Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more."
+        )
         memory.main.waitFrames(30 * sleepTime)
-        print("Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory.")
+        print(
+            "Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory."
+        )
         memory.main.waitFrames(30 * sleepTime)
-        print("He also taught me a number of things about memory scans, pointers, etc. Dude is super smart.")
+        print(
+            "He also taught me a number of things about memory scans, pointers, etc. Dude is super smart."
+        )
         memory.main.waitFrames(30 * sleepTime)
         print("Peppy too. He has found a few key things in memory too.")
         memory.main.waitFrames(30 * sleepTime)
-        print("And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code.")
+        print(
+            "And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code."
+        )
         memory.main.waitFrames(30 * sleepTime)
         print("He has also done a lot of optimizations I just couldn't get back to.")
         memory.main.waitFrames(30 * sleepTime)
-        print("Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam.")
+        print(
+            "Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam."
+        )
         memory.main.waitFrames(30 * sleepTime)
         print("OK that wraps it up for this bit. I'll catch you when it's done.")
         memory.main.waitFrames(30 * sleepTime)

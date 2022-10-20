@@ -38,5 +38,17 @@
             "duration": 427,
             "victory": true
         }
+    },
+    "17": {
+        "1269392138": {
+            "duration": 528,
+            "victory": false
+        }
+    },
+    "226": {
+        "1458603471": {
+            "duration": 473,
+            "victory": false
+        }
     }
 }

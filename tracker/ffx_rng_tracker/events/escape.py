@@ -13,11 +13,11 @@ class Escape(Event):
         self.escape = self._get_escape()
 
     def __str__(self) -> str:
-        string = f'{self.character.name}: Escape ->'
+        string = f"{self.character.name}: Escape ->"
         if self.escape:
-            string += ' Succeeded'
+            string += " Succeeded"
         else:
-            string += ' Failed'
+            string += " Failed"
         return string
 
     def _get_escape(self) -> bool:

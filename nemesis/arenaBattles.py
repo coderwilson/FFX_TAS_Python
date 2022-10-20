@@ -231,7 +231,7 @@ def aeonStart():
     while not screen.turnTidus():
         if main.turnReady():
             if screen.turnAeon():
-                main.attack('none')
+                main.attack("none")
             else:
                 main.defend()
 
@@ -259,7 +259,7 @@ def yojimboBattle():
     while not main.menuOpen():
         xbox.tapB()
     print("Battle is complete.")
-    FFXC.set_value('BtnB', 1)
+    FFXC.set_value("BtnB", 1)
     main.waitFrames(180)
     FFXC.set_neutral()
     main.waitFrames(2)
@@ -271,7 +271,7 @@ def autoLife():
     while not (main.turnReady() and screen.turnTidus()):
         if main.turnReady():
             if screen.turnAeon():
-                main.attack('none')
+                main.attack("none")
             elif not screen.turnTidus():
                 main.defend()
     while main.battleMenuCursor() != 22:
@@ -309,14 +309,14 @@ def basicQuickAttacks(megaPhoenix=False, odVersion: int = 0, yunaAutos=False):
                 else:
                     main.useSkill(1)  # Quick hit
             elif screen.turnAeon():
-                main.attack('none')
+                main.attack("none")
             else:
                 main.defend()
 
     # After battle stuff
     while not main.menuOpen():
         xbox.tapB()
-    FFXC.set_value('BtnB', 1)
+    FFXC.set_value("BtnB", 1)
     main.waitFrames(150)
     FFXC.set_neutral()
     main.waitFrames(2)
@@ -334,18 +334,18 @@ def basicAttack(megaPhoenix=False, odVersion: int = 0, useOD=False, yunaAutos=Fa
                 elif useOD and main.getOverdriveBattle(0) == 100:
                     battle.overdrive.tidus(version=odVersion)
                 else:
-                    main.attack('none')
+                    main.attack("none")
             elif screen.turnYuna() and yunaAutos:
-                attack('none')
+                attack("none")
             elif screen.turnAeon():
-                attack('none')
+                attack("none")
             else:
                 main.defend()
 
     # After battle stuff
     while not main.menuOpen():
         xbox.tapB()
-    FFXC.set_value('BtnB', 1)
+    FFXC.set_value("BtnB", 1)
     main.waitFrames(150)
     FFXC.set_neutral()
     main.waitFrames(2)
@@ -441,7 +441,7 @@ def battles1():
         print("Battle not completed successfully.")
         restockDowns()
         arenaSelect.arenaMenuSelect(4)
-        main.fullPartyFormat('kilikawoods1')
+        main.fullPartyFormat("kilikawoods1")
         touchSave()
         arenaNPC()
         arenaSelect.arenaMenuSelect(1)
@@ -452,7 +452,7 @@ def battles1():
     gameVars.arenaSuccess(arrayNum=0, index=1)
     restockDowns()
     arenaSelect.arenaMenuSelect(4)
-    main.fullPartyFormat('kilikawoods1')
+    main.fullPartyFormat("kilikawoods1")
     menu.tidusSlayer(odPos=0)
 
     checkYojimboPossible()
@@ -819,9 +819,9 @@ def quickResetLogic():
     reset.resetToMainMenu()
     main.waitFrames(90)
     while main.getMap() != 23:
-        FFXC.set_value('BtnStart', 1)
+        FFXC.set_value("BtnStart", 1)
         main.waitFrames(2)
-        FFXC.set_value('BtnStart', 0)
+        FFXC.set_value("BtnStart", 0)
         main.waitFrames(2)
     main.waitFrames(60)
     xbox.menuB()
@@ -844,7 +844,7 @@ def checkYojimboPossible():
         # Save game in preparation for the Yojimbo attempt
         main.waitFrames(20)
         arenaSelect.arenaMenuSelect(4)
-        main.fullPartyFormat('kilikawoods1')
+        main.fullPartyFormat("kilikawoods1")
         if gameVars.yojimboGetIndex() == 1:
             saveGame(firstSave=True)
         else:
@@ -870,7 +870,7 @@ def shinryuBattle():
                 elif rikkuDriveComplete:
                     main._useHealingItem(itemID=9)
                 else:
-                    main.rikkuFullOD('shinryu')
+                    main.rikkuFullOD("shinryu")
                     rikkuDriveComplete = True
             elif screen.turnTidus():
                 if main.getOverdriveBattle(0) == 100:
@@ -878,14 +878,14 @@ def shinryuBattle():
                 elif rikkuDriveComplete and not main.autoLifeState():
                     autoLife()
                 else:
-                    main.attack('none')
+                    main.attack("none")
             else:
                 main.defend()
 
     # After battle stuff
     while not main.menuOpen():
         xbox.tapB()
-    FFXC.set_value('BtnB', 1)
+    FFXC.set_value("BtnB", 1)
     main.waitFrames(150)
     FFXC.set_neutral()
     main.waitFrames(2)
@@ -997,7 +997,7 @@ def rechargeYuna():
     while main.battleActive():
         if main.turnReady():
             if screen.turnYuna():
-                main.attack('none')
+                main.attack("none")
             else:
                 main.escapeOne()
 
@@ -1035,7 +1035,7 @@ def nemesisBattle():
         xbox.menuA()
         xbox.menuA()
     arenaSelect.arenaMenuSelect(4)
-    main.fullPartyFormat('kilikawoods1')
+    main.fullPartyFormat("kilikawoods1")
     saveGame(firstSave=False)
     while not battles5(completionVersion=99):
         quickResetLogic()
