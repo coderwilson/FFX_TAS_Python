@@ -5065,22 +5065,16 @@ def ghostAdvanceRNG10Silence(silenceSlot: int, owner1: int, owner2: int):
                 else:
                     defend()
             else:  # Will need a non-Aeon kill
-                if 6 not in memory.main.getActiveBattleFormation():
+                if screen.turnRikku() or screen.turnKimahri():
+                    Steal()
+                elif 6 not in memory.main.getActiveBattleFormation():
                     buddySwapRikku()
                 elif 0 not in memory.main.getActiveBattleFormation():
                     buddySwapTidus()
                 elif (
                     3 not in memory.main.getActiveBattleFormation()
-                    and memory.main.nextChanceRNG10() > 3
                 ):
                     buddySwapKimahri()
-                elif (
-                    1 not in memory.main.getActiveBattleFormation()
-                    and memory.main.nextChanceRNG10() <= 3
-                ):
-                    buddySwapYuna()
-                elif screen.turnRikku() or screen.turnKimahri():
-                    Steal()
                 elif screen.turnTidus() and not tidusHasted:
                     tidusHasted = True
                     tidusHaste("none")
