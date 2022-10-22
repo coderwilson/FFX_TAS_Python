@@ -7,7 +7,7 @@ import vars
 import xbox
 from memory.main import s32
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -285,7 +285,7 @@ def get_advances(tros=True, report=False):
         advances = 2
     else:
         advances = 0
-    gameVars.set_yellows(yellows[advances])
+    game_vars.set_yellows(yellows[advances])
     print("#############################################")
     print("### Advances updated:", tStrikeResults, "|", yellows, "|", advances, "###")
     print("#############################################")
@@ -779,7 +779,7 @@ def after_blitz_3(early_haste):
             while not memory.main.diag_progress_flag() == 1:
                 if memory.main.cutscene_skip_possible():
                     xbox.skip_scene()
-            if gameVars.csr():
+            if game_vars.csr():
                 memory.main.wait_frames(60)
             else:
                 xbox.await_save(index=1)
@@ -838,7 +838,7 @@ def after_blitz_3_late_haste(early_haste):
             while not memory.main.diag_progress_flag() == 1:
                 if memory.main.cutscene_skip_possible():
                     xbox.skip_scene()
-            if gameVars.csr():
+            if game_vars.csr():
                 memory.main.wait_frames(60)
             else:
                 xbox.await_save(index=1)
@@ -848,7 +848,7 @@ def after_blitz_3_late_haste(early_haste):
 
 def miihen_road(self_destruct=False):
     print("Fight start: Mi'ihen Road")
-    print("Mi'ihen battle. Self-destruct:", gameVars.self_destruct_get())
+    print("Mi'ihen battle. Self-destruct:", game_vars.self_destruct_get())
     encounterID = memory.main.get_encounter_id()
 
     while not memory.main.battle_complete():  # AKA end of battle screen
@@ -858,7 +858,7 @@ def miihen_road(self_destruct=False):
             break
         if memory.main.turn_ready():
             if screen.turn_tidus():
-                if not gameVars.self_destruct_get():
+                if not game_vars.self_destruct_get():
                     if (
                         encounterID == 51
                         or encounterID == 64
@@ -866,11 +866,11 @@ def miihen_road(self_destruct=False):
                         or encounterID == 87
                     ):
                         lancet_swap("none")
-                        gameVars.self_destruct_learned()
+                        game_vars.self_destruct_learned()
                         break
                     elif encounterID == 65 or encounterID == 84:
                         lancet_swap("right")
-                        gameVars.self_destruct_learned()
+                        game_vars.self_destruct_learned()
                         break
                     else:
                         flee_all()
@@ -886,7 +886,7 @@ def miihen_road(self_destruct=False):
         FFXC.set_value("BtnB", 0)
         memory.main.wait_frames(3)
 
-    print("selfDestruct flag:", gameVars.self_destruct_get())
+    print("selfDestruct flag:", game_vars.self_destruct_get())
 
 
 def aeon_shield():
@@ -895,7 +895,7 @@ def aeon_shield():
     memory.main.wait_frames(6)
     while not memory.main.other_battle_menu():
         xbox.tap_right()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
     while memory.main.other_battle_menu():
         if memory.main.battle_cursor_2() == 0:
@@ -911,7 +911,7 @@ def aeon_boost():
     memory.main.wait_frames(6)
     while not memory.main.other_battle_menu():
         xbox.tap_right()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
     while memory.main.other_battle_menu():
         if memory.main.battle_cursor_2() == 1:
@@ -929,7 +929,7 @@ def aeon_dismiss():
     memory.main.wait_frames(6)
     while not memory.main.other_battle_menu():
         xbox.tap_right()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
     while memory.main.other_battle_menu():
         if memory.main.battle_cursor_2() == 2:
@@ -1277,7 +1277,7 @@ def mrr_battle(status):
     else:  # Everything is done.
         flee_all()
     print("+++")
-    print(gameVars.wakka_late_menu())
+    print(game_vars.wakka_late_menu())
     print("+++")
     # OK the battle should be complete now. Let's do some wrap-up stuff.
     wrap_up()
@@ -1413,7 +1413,7 @@ def thunder_plains(section):
     useGrenades = nadeCount > 3 and memory.main.get_speed() < 14
     print("++Use Grenades decision:", useGrenades)
     useNadeSlot = memory.main.get_use_items_slot(35)
-    lunarSlot = gameVars.get_blitz_win() or memory.main.get_item_slot(56) != 255
+    lunarSlot = game_vars.get_blitz_win() or memory.main.get_item_slot(56) != 255
     lightSlot = memory.main.get_item_slot(57) != 255
     petrifySlot = memory.main.get_item_slot(49) != 255
 
@@ -1445,7 +1445,7 @@ def thunder_plains(section):
                         elif screen.turn_rikku():
                             steal()
                             lunarSlot = (
-                                gameVars.get_blitz_win()
+                                game_vars.get_blitz_win()
                                 or memory.main.get_item_slot(56) != 255
                             )
                         else:
@@ -1514,7 +1514,7 @@ def thunder_plains(section):
                 buddy_swap_rikku()
                 use_item(useNadeSlot, "none")
             flee_all()
-    elif not gameVars.get_blitz_win() and not petrifySlot and encID in [153, 154, 163]:
+    elif not game_vars.get_blitz_win() and not petrifySlot and encID in [153, 154, 163]:
         print("Grabbing petrify grenade. Blitz Loss only strat.")
         while not memory.main.battle_complete():
             if memory.main.turn_ready():
@@ -1542,9 +1542,9 @@ def thunder_plains(section):
     print("Battle is ended - Thunder Plains")
     memory.main.click_to_control()
     memory.main.wait_frames(2)  # Allow lightning to attemt a strike
-    if memory.main.dodge_lightning(gameVars.get_l_strike()):
+    if memory.main.dodge_lightning(game_vars.get_l_strike()):
         print("Dodge")
-        gameVars.set_l_strike(memory.main.l_strike_count())
+        game_vars.set_l_strike(memory.main.l_strike_count())
     print("Checking party format and resolving if needed.")
     memory.main.full_party_format("postbunyip", full_menu_close=False)
     print("Party format is good. Now checking health values.")
@@ -2234,7 +2234,7 @@ def seymour_guado_blitz_loss():
 
 
 def seymour_guado():
-    if gameVars.get_blitz_win():
+    if game_vars.get_blitz_win():
         seymour_guado_blitz_win()
     else:
         seymour_guado_blitz_loss()
@@ -3069,7 +3069,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
             xbox.tap_up()
         else:
             xbox.tap_down()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.main_battle_menu():
         xbox.tap_b()
@@ -3081,13 +3081,13 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
         _navigate_to_position(2)
     else:
         _navigate_to_position(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     print("Mark 3, navigating to item slot")
     _navigate_to_position(slot, memory.main.battle_cursor_3)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
@@ -3165,21 +3165,21 @@ def use_item_tidus(slot: int, direction="none", target=255):
             xbox.tap_up()
         else:
             xbox.tap_down()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.main_battle_menu():
         xbox.tap_b()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     print("Mark 2")
     _navigate_to_position(2)
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     print("Mark 3")
     _navigate_to_position(slot, memory.main.battle_cursor_3)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
@@ -3447,7 +3447,7 @@ def oblitz_rng_wait():
         secondResult = [comingSeeds[2], 20, True, 2]
     else:
         print("## Scanning values for this RNG seed")
-        if gameVars.loop_blitz():  # This will cause us to prefer results hunting
+        if game_vars.loop_blitz():  # This will cause us to prefer results hunting
             print("### Looping on blitz, we will try a new value.")
             # Seed value, time to completion, Win/Loss, and position
             firstResult = [comingSeeds[1], 9999, True, 0]
@@ -3467,7 +3467,7 @@ def oblitz_rng_wait():
                 victory = bool(rngValues[seedNum][str(comingSeeds[i])]["victory"])
                 print("Known result.", [comingSeeds[i], duration, victory, pos])
                 # print(victory)
-            elif gameVars.loop_blitz():
+            elif game_vars.loop_blitz():
                 duration = 1 + pos
                 victory = True
                 print(
@@ -3544,7 +3544,7 @@ def oblitz_rng_wait():
             lastRNG = nextRNG
     print("====================================")
     print("Success. Attacking. ", j, " | ", nextRNG)
-    gameVars.set_oblitz_rng(value=nextRNG)
+    game_vars.set_oblitz_rng(value=nextRNG)
     return nextRNG
 
 
@@ -4355,7 +4355,7 @@ def sin_arms():
     xbox.click_to_battle()  # Start of Sin Core
     aeon_summon(4)
     screen.await_turn()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 attack("none")
@@ -4520,7 +4520,7 @@ def rikku_full_od(battle):
         print("Ability sphere in slot:", item1)
         item2 = item1
     elif battle == "Evrae":
-        if gameVars.skip_kilika_luck():
+        if game_vars.skip_kilika_luck():
             item1 = memory.main.get_item_slot(81)
             print("Lv1 sphere in slot:", item1)
             item2 = memory.main.get_item_slot(84)

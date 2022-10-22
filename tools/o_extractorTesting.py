@@ -8,7 +8,7 @@ FFXC = xbox.controller_handle()
 
 memory.main.start()
 Gamestate = "none"
-StepCounter = 1
+step_counter = 1
 
 area.dreamZan.new_game("Extractor testing")
 loadGame.load_save_num(96)

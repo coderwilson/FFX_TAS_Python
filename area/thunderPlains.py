@@ -6,7 +6,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -14,7 +14,7 @@ FFXC = xbox.controller_handle()
 def south_pathing():
     memory.main.click_to_control()
 
-    gameVars.set_l_strike(memory.main.l_strike_count())
+    game_vars.set_l_strike(memory.main.l_strike_count())
 
     memory.main.full_party_format("postbunyip")
     memory.main.close_menu()
@@ -23,14 +23,14 @@ def south_pathing():
     while memory.main.get_map() != 256:
         if memory.main.user_control():
             # Lightning dodging
-            if memory.main.dodge_lightning(gameVars.get_l_strike()):
-                gameVars.set_l_strike(memory.main.l_strike_count())
+            if memory.main.dodge_lightning(game_vars.get_l_strike()):
+                game_vars.set_l_strike(memory.main.l_strike_count())
                 if checkpoint == 34:
                     count50 += 1
                     print("Dodge:", count50)
-            elif checkpoint == 2 and gameVars.nemesis():
+            elif checkpoint == 2 and game_vars.nemesis():
                 checkpoint = 20
-            elif checkpoint == 2 and not gameVars.get_blitz_win():
+            elif checkpoint == 2 and not game_vars.get_blitz_win():
                 checkpoint = 20
             elif checkpoint == 21:
                 # memory.touchSaveSphere()
@@ -88,7 +88,7 @@ def agency_shop():
 
     # 15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     speedNeeded = max(0, min(2, 14 - speedCount))
-    if memory.main.rng_seed() == 160 and not gameVars.get_blitz_win():
+    if memory.main.rng_seed() == 160 and not game_vars.get_blitz_win():
         speedNeeded = 0
     grenade_slot = memory.main.get_item_slot(35)
     if grenade_slot == 255:
@@ -171,12 +171,12 @@ def agency_shop():
     print("Sellable Items in :", other_slots)
     menu.sell_weapon(tidus_longsword)
     menu.sell_weapon(auron_katana)
-    if gameVars.get_blitz_win() and memory.main.get_gil_value() < 8725:
+    if game_vars.get_blitz_win() and memory.main.get_gil_value() < 8725:
         for loc in other_slots:
             menu.sell_weapon(loc)
             if memory.main.get_gil_value() >= 8725:
                 break
-    elif not gameVars.get_blitz_win() and memory.main.get_gil_value() < 9550:
+    elif not game_vars.get_blitz_win() and memory.main.get_gil_value() < 9550:
         for loc in other_slots:
             menu.sell_weapon(loc)
             if memory.main.get_gil_value() >= 9550:
@@ -210,7 +210,7 @@ def agency():
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 7:
-                if not gameVars.csr():
+                if not game_vars.csr():
                     kimahriAffection = memory.main.affection_array()[3]
                     print("Kimahri affection, ", kimahriAffection)
                     while memory.main.affection_array()[3] == kimahriAffection:
@@ -224,7 +224,7 @@ def agency():
                     targetPathing.set_movement([3, -52])
                     xbox.tap_b()
                 memory.main.click_to_control()
-                if gameVars.nemesis() or not gameVars.get_blitz_win():
+                if game_vars.nemesis() or not game_vars.get_blitz_win():
                     # Back in and out to spawn the chest
                     FFXC.set_movement(-1, 1)
                     while memory.main.get_map() != 263:
@@ -239,13 +239,13 @@ def agency():
                 checkpoint += 1
             elif (
                 checkpoint == 9
-                and (gameVars.nemesis() or not gameVars.get_blitz_win())
+                and (game_vars.nemesis() or not game_vars.get_blitz_win())
                 and strCount < 3
             ):
                 targetPathing.set_movement([-73, 45])
                 xbox.tap_b()
             elif checkpoint == 11:
-                gameVars.set_blitz_win(value=True)
+                game_vars.set_blitz_win(value=True)
                 FFXC.set_movement(0, 1)
                 memory.main.click_to_event()
 
@@ -271,9 +271,9 @@ def north_pathing():
             if memory.main.dodge_lightning(lStrikeCount):
                 print("Dodge")
                 lStrikeCount = memory.main.l_strike_count()
-            elif gameVars.csr() and checkpoint == 14:
+            elif game_vars.csr() and checkpoint == 14:
                 checkpoint = 16
-            elif checkpoint == 17 and not gameVars.get_blitz_win() and not lunarSlot:
+            elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunarSlot:
                 checkpoint -= 2
                 print("No lunar curtain. Checkpoint:", checkpoint)
 
@@ -295,7 +295,7 @@ def north_pathing():
     FFXC.set_neutral()
     memory.main.await_control()
     print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
-    if not gameVars.csr():
+    if not game_vars.csr():
         FFXC.set_movement(0, 1)
         xbox.skip_dialog(6)
         FFXC.set_neutral()

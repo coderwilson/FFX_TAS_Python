@@ -8,7 +8,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -130,7 +130,7 @@ def lake_road():
 
 def lake_road_2():
     FFXC.set_movement(0, -1)
-    if gameVars.csr():
+    if game_vars.csr():
         checkpoint = 0
         while checkpoint < 5:
             if checkpoint == 0:

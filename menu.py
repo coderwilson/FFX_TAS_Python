@@ -3,7 +3,7 @@ import menuGrid
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -195,7 +195,7 @@ def woods_menuing():
     if fullMenu:
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("speed", "none")
-        gameVars.complete_full_kilik_menu()
+        game_vars.complete_full_kilik_menu()
     menuGrid.use_and_quit()
     # Reorder the party
 
@@ -283,7 +283,7 @@ def mrr_grid_1():
 
     memory.main.close_menu()
 
-    gameVars.wakka_late_menu_set(wakkaLateMenu)
+    game_vars.wakka_late_menu_set(wakkaLateMenu)
 
 
 def mrr_grid_2():
@@ -300,8 +300,8 @@ def mrr_grid_2():
         menuGrid.move_and_use()
         menuGrid.sel_sphere("power", "none")
         menuGrid.use_and_quit()
-        gameVars.wakka_late_menu_set(False)
-        print("Wakka late menu updated:", gameVars.wakka_late_menu())
+        game_vars.wakka_late_menu_set(False)
+        print("Wakka late menu updated:", game_vars.wakka_late_menu())
     else:
         print("Not enough sphere levels yet.")
 
@@ -356,7 +356,7 @@ def battle_site_grid():
     menuGrid.use_and_quit()
 
     # Wakkas weapon
-    if gameVars.get_l_strike() >= 2:
+    if game_vars.get_l_strike() >= 2:
         equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     else:
         equip_weapon(character=4, full_menu_close=False)
@@ -391,7 +391,7 @@ def battle_site_oaka_1():
         xbox.tap_right()
     while memory.main.item_shop_menu() != 21:
         xbox.tap_b()
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(2)
 
     itemOrder = memory.main.get_items_order()
@@ -632,7 +632,7 @@ def mac_temple():
     menuGrid.use_and_move()
     grid_right()
     grid_right()
-    if gameVars.get_blitz_win():
+    if game_vars.get_blitz_win():
         menuGrid.move_and_use()
         menuGrid.sel_sphere("strength", "none")
         menuGrid.use_and_use_again()
@@ -640,7 +640,7 @@ def mac_temple():
         menuGrid.use_and_move()
     grid_left()
     grid_left()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         grid_up()
         grid_left()
         grid_up()
@@ -659,7 +659,7 @@ def mac_temple():
     menuGrid.use_and_use_again()
     menuGrid.sel_sphere("power", "none")
     menuGrid.use_and_move()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         grid_right()
         grid_down()
         menuGrid.move_and_use()
@@ -671,14 +671,14 @@ def mac_temple():
     grid_left()
     menuGrid.move_and_use()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("strength", "none")
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("power", "none")
     menuGrid.use_and_quit()
 
-    if gameVars.get_blitz_win():
+    if game_vars.get_blitz_win():
         equip_weapon(character=0, special="brotherhood")
     memory.main.close_menu()
 
@@ -694,7 +694,7 @@ def after_seymour():
     menuGrid.sel_sphere("power", "none")
     menuGrid.use_and_use_again()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("mp", "none")
         menuGrid.use_and_use_again()
@@ -704,7 +704,7 @@ def after_seymour():
     grid_up()
     menuGrid.move_and_use()
     menuGrid.sel_sphere("speed", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("mp", "none")
         menuGrid.use_and_use_again()
@@ -1047,7 +1047,7 @@ def seymour_natus_blitz_win():
     menuGrid.sel_sphere("power", "none")  # Def +3
 
     menuGrid.use_and_move()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         grid_up()
         grid_up()
         grid_left()
@@ -1068,7 +1068,7 @@ def seymour_natus_blitz_win():
     menuGrid.sel_sphere("power", "none")
 
     menuGrid.use_and_move()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         grid_right()
         grid_down()
         menuGrid.move_and_use()
@@ -1078,7 +1078,7 @@ def seymour_natus_blitz_win():
     grid_left()
     menuGrid.move_and_use()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("power", "none")
     menuGrid.use_and_move()
@@ -1088,7 +1088,7 @@ def seymour_natus_blitz_win():
     grid_left()
     menuGrid.move_and_use()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("mana", "none")
     menuGrid.use_and_quit()
@@ -1111,7 +1111,7 @@ def seymour_natus_blitz_loss():
     menuGrid.sel_sphere("speed", "none")
     menuGrid.use_and_use_again()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_move()
         grid_up()
         menuGrid.move_and_use()
@@ -1123,7 +1123,7 @@ def seymour_natus_blitz_loss():
     grid_right()
     menuGrid.move_and_use()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("mana", "none")
     menuGrid.use_and_move()
@@ -1133,12 +1133,12 @@ def seymour_natus_blitz_loss():
     grid_right()
     menuGrid.move_and_use()
     menuGrid.sel_sphere("power", "none")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("power", "none")
     menuGrid.use_and_move()
     grid_right()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         grid_right()
         grid_down()
         menuGrid.move_and_use()
@@ -1152,11 +1152,11 @@ def seymour_natus_blitz_loss():
 
 def prep_calm_lands():
     open_grid(character=1)
-    if gameVars.get_blitz_win():
+    if game_vars.get_blitz_win():
         menuGrid.move_first()
         grid_up()
         grid_up()
-        if gameVars.nemesis():
+        if game_vars.nemesis():
             menuGrid.move_and_use()
             menuGrid.sel_sphere("mana", "none")
             menuGrid.use_and_move()
@@ -1166,7 +1166,7 @@ def prep_calm_lands():
         menuGrid.sel_sphere("power", "none")
     else:
         menuGrid.move_first()
-        if gameVars.nemesis():
+        if game_vars.nemesis():
             grid_up()
             grid_up()
             grid_left()
@@ -1185,7 +1185,7 @@ def prep_calm_lands():
 
 
 def after_ronso():
-    if gameVars.end_game_version() != 3:
+    if game_vars.end_game_version() != 3:
         memory.main.open_menu()
         yuna_first_strike()
         auron_first_strike()
@@ -1193,7 +1193,7 @@ def after_ronso():
             equip_weapon(character=1, ability=0x8001, full_menu_close=False)
         if not memory.main.equipped_weapon_has_ability(char_num=2, ability_num=0x8001):
             equip_weapon(character=2, ability=0x8001, full_menu_close=False)
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(5)
 
     open_grid(character=5)
@@ -1219,7 +1219,7 @@ def after_ronso():
     grid_down()
     grid_down()
 
-    if gameVars.end_game_version() in [1, 2]:  # Two of each
+    if game_vars.end_game_version() in [1, 2]:  # Two of each
         menuGrid.move_shift_left("yuna")
         menuGrid.use_first()
         menuGrid.sel_sphere("friend", "d2")
@@ -1243,10 +1243,10 @@ def after_ronso():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("power", "none")
 
-    elif gameVars.end_game_version() == 4:  # Four return spheres
+    elif game_vars.end_game_version() == 4:  # Four return spheres
         menuGrid.move_shift_left("yuna")
         menuGrid.use_first()
-        if gameVars.get_blitz_win():
+        if game_vars.get_blitz_win():
             menuGrid.sel_sphere("ret", "yunaspec")
         else:
             menuGrid.sel_sphere("ret", "d5")
@@ -1265,8 +1265,8 @@ def after_ronso():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("power", "none")
 
-    elif gameVars.end_game_version() == 3:  # Four friend spheres
-        if gameVars.get_blitz_win():
+    elif game_vars.end_game_version() == 3:  # Four friend spheres
+        if game_vars.get_blitz_win():
             print("Four friend spheres, Blitz Win")
             menuGrid.move_shift_right("tidus")
             menuGrid.move_first()
@@ -1353,7 +1353,7 @@ def after_ronso():
         menuGrid.sel_sphere("friend", "l2")
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("speed", "none")
-        if gameVars.get_blitz_win():
+        if game_vars.get_blitz_win():
             menuGrid.use_and_use_again()
             menuGrid.sel_sphere("mana", "none")
         menuGrid.use_and_move()
@@ -1445,7 +1445,7 @@ def add_ability(
         xbox.tap_b()
     while not ability_to_customize_ref(ability_index):  # Find the right ability
         xbox.tap_down()
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(3)
     while memory.main.information_active():
         xbox.tap_b()
@@ -1505,7 +1505,7 @@ def auron_first_strike():
 
 def yuna_first_strike():
     print("Starting Yuna")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         add_first_strike(
             owner=1,
             equipment_type=0,
@@ -1659,7 +1659,7 @@ def bfa():
 
     menuGrid.use_first()
 
-    if gameVars.end_game_version() == 3:
+    if game_vars.end_game_version() == 3:
         menuGrid.sel_sphere("attribute", "none")
         menuGrid.use_and_use_again()
     else:
@@ -1686,7 +1686,7 @@ def bfa():
     menuGrid.move_and_use()
     menuGrid.sel_sphere("speed", "left")
 
-    if gameVars.end_game_version() == 3:
+    if game_vars.end_game_version() == 3:
         menuGrid.use_and_move()
         grid_right()  # Not sure exactly
         grid_right()
@@ -1707,7 +1707,7 @@ def bfa():
         menuGrid.use_first()
         menuGrid.sel_sphere("skill", "up")
 
-    if gameVars.zombie_weapon() == 255:
+    if game_vars.zombie_weapon() == 255:
         menuGrid.use_shift_left("tidus")
         menuGrid.move_first()
         grid_up()
@@ -1729,7 +1729,7 @@ def sk_return():
     open_grid(character=1)
     menuGrid.use_first()
     menuGrid.sel_sphere("friend", "d2")
-    if not gameVars.get_skip_zan_luck():
+    if not game_vars.get_skip_zan_luck():
         menuGrid.use_and_use_again()  # Friend sphere to Lulu
         menuGrid.sel_sphere("luck", "none")
         menuGrid.use_and_use_again()
@@ -1765,7 +1765,7 @@ def sk_mixed():
     menuGrid.sel_sphere("mana", "none")
     menuGrid.use_and_use_again()
     menuGrid.sel_sphere("lv1", "none")
-    if not gameVars.get_skip_zan_luck():
+    if not game_vars.get_skip_zan_luck():
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("luck", "none")
         menuGrid.use_and_use_again()
@@ -1804,11 +1804,11 @@ def sk_friend():
         equip_weapon(character=1, ability=0x8001, full_menu_close=False)
     if not memory.main.equipped_weapon_has_ability(char_num=2, ability_num=0x8001):
         equip_weapon(character=2, ability=0x8001, full_menu_close=False)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(5)
 
     # Now sphere grid
-    if not gameVars.get_skip_zan_luck():
+    if not game_vars.get_skip_zan_luck():
         open_grid(character=1)
         menuGrid.move_first()
         grid_down()

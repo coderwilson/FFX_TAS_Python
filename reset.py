@@ -5,7 +5,7 @@ import memory.main
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -50,7 +50,7 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
         reset_to_main_menu()
 
     # Now to re-start
-    gameVars.set_start_vars()
+    game_vars.set_start_vars()
     rngSeed = memory.main.rng_seed()
     if land_run:
         rngSeed += 0
@@ -58,16 +58,16 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
             rngSeed = 0
     logs.reset_stats_log()
     logs.next_stats(rngSeed)  # Start next stats file
-    if gameVars.use_set_seed():
+    if game_vars.use_set_seed():
         memory.main.set_rng_seed(rngSeed)
     print("-------------This game will be using RNG seed:", rngSeed)
     logs.next_stats(rngSeed)
     logs.write_stats("RNG seed:")
     logs.write_stats(rngSeed)
     Gamestate = "none"
-    StepCounter = 1
+    step_counter = 1
 
-    return Gamestate, StepCounter
+    return Gamestate, step_counter
 
 
 def reset_to_main_menu():

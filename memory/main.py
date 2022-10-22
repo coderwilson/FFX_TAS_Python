@@ -13,7 +13,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 # Process Permissions
@@ -181,11 +181,11 @@ def wait_frames(frames: int):
 
 
 def rng_seed():
-    if int(gameVars.confirmed_seed()) == 999:
+    if int(game_vars.confirmed_seed()) == 999:
         global baseValue
         key = baseValue + 0x003988A5
         return process.readBytes(key, 1)
-    return int(gameVars.confirmed_seed())
+    return int(game_vars.confirmed_seed())
 
 
 def set_rng_seed(value):
@@ -277,7 +277,7 @@ def turn_ready():
         while not main_battle_menu():
             pass
         wait_frames(1)
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             wait_frames(2)
         return True
 
@@ -458,12 +458,12 @@ def click_to_control_special():
 def click_to_event():
     while user_control():
         FFXC.set_value("BtnB", 1)
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             wait_frames(2)
         else:
             wait_frames(1)
         FFXC.set_value("BtnB", 0)
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             wait_frames(3)
         else:
             wait_frames(1)
@@ -1402,7 +1402,7 @@ def back_to_main_menu():
             xbox.tap_a()
         else:
             xbox.tap_y()
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             wait_frames(6)
 
 
@@ -1798,7 +1798,7 @@ def full_party_format(front_line, *, full_menu_close=True):
         FFXC.set_neutral()
         while get_menu_cursor_pos() != 7:
             menu_direction(get_menu_cursor_pos(), 7, 11)
-            if gameVars.use_pause():
+            if game_vars.use_pause():
                 wait_frames(1)
         while menu_number() != 14:
             xbox.tap_b()
@@ -1846,7 +1846,7 @@ def full_party_format(front_line, *, full_menu_close=True):
                 # print("Cursor not in right spot")
                 while party_format_cursor_1() != startPos:
                     menu_direction(party_format_cursor_1(), startPos, partyMembers)
-                    if gameVars.use_pause():
+                    if game_vars.use_pause():
                         wait_frames(1)
 
             while menu_number() != 20:
@@ -1856,7 +1856,7 @@ def full_party_format(front_line, *, full_menu_close=True):
             print("Moving to destination position.")
             while party_format_cursor_2() != endPos:
                 menu_direction(party_format_cursor_2(), endPos, partyMembers)
-                if gameVars.use_pause():
+                if game_vars.use_pause():
                     wait_frames(1)
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
@@ -2921,49 +2921,49 @@ def check_zombie_strike():
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(0)
+            game_vars.set_zombie(0)
             return True
 
     charWeaps = weapon_array_character(1)  # Yuna
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(1)
+            game_vars.set_zombie(1)
             return True
 
     charWeaps = weapon_array_character(2)  # Auron
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(2)
+            game_vars.set_zombie(2)
             return True
 
     charWeaps = weapon_array_character(3)  # Kimahri
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(3)
+            game_vars.set_zombie(3)
             return True
 
     charWeaps = weapon_array_character(4)  # Wakka
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(4)
+            game_vars.set_zombie(4)
             return True
 
     charWeaps = weapon_array_character(5)  # Lulu
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(5)
+            game_vars.set_zombie(5)
             return True
 
     charWeaps = weapon_array_character(6)  # Rikku
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_zombie(6)
+            game_vars.set_zombie(6)
             return True
 
     return False
@@ -3130,49 +3130,49 @@ def check_nea_armor():
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(0)
+            game_vars.set_ne_armor(0)
             return True
 
     charWeaps = armor_array_character(1)  # Yuna
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(1)
+            game_vars.set_ne_armor(1)
             return True
 
     charWeaps = armor_array_character(2)  # Auron
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(2)
+            game_vars.set_ne_armor(2)
             return True
 
     charWeaps = armor_array_character(3)  # Kimahri
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(3)
+            game_vars.set_ne_armor(3)
             return True
 
     charWeaps = armor_array_character(4)  # Wakka
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(4)
+            game_vars.set_ne_armor(4)
             return True
 
     charWeaps = armor_array_character(5)  # Lulu
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(5)
+            game_vars.set_ne_armor(5)
             return True
 
     charWeaps = armor_array_character(6)  # Rikku
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
         if currentHandle.has_ability(ability):
-            gameVars.set_ne_armor(6)
+            game_vars.set_ne_armor(6)
             return True
 
     return False
@@ -3930,7 +3930,7 @@ def last_hit_init():
             lastHitVals[x] = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
             # print("Val:", lastHitVals[x])
         # print(lastHitVals)
-        gameVars.first_hits_set(lastHitVals)
+        game_vars.first_hits_set(lastHitVals)
         return True
     except Exception:
         return False
@@ -3944,7 +3944,7 @@ def last_hit_check_change() -> int:
     changeValue = 9999
     for x in range(8):
         memVal = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-        if memVal != gameVars.first_hits_value(x) and not changeFound:
+        if memVal != game_vars.first_hits_value(x) and not changeFound:
             changeFound = True
             changeValue = memVal
             print("**Registered hit:", changeValue)
@@ -4488,12 +4488,12 @@ def arena_farm_check(
             complete = False
     if report:
         print("############")
-        print("Next Sphere Grid checkpoint:", gameVars.nem_checkpoint_ap())
+        print("Next Sphere Grid checkpoint:", game_vars.nem_checkpoint_ap())
         print(
             "Tidus S.levels:",
             get_tidus_slvl(),
             "- need levels:",
-            menu.next_ap_needed(gameVars.nem_checkpoint_ap()),
+            menu.next_ap_needed(game_vars.nem_checkpoint_ap()),
         )
         print("Number of captures in this zone:")
         print(resultArray)

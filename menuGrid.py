@@ -2,7 +2,7 @@ import memory.main
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -234,7 +234,7 @@ def use_and_use_again():
             xbox.menu_down()
         elif use_ready():
             xbox.menu_b()
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(6)
     return True
 
@@ -547,7 +547,7 @@ def sel_sphere(sType, shift):
         return
     while menuPos != memory.main.get_grid_cursor_pos():
         if menuPos > memory.main.get_grid_cursor_pos():
-            if gameVars.use_pause():
+            if game_vars.use_pause():
                 xbox.tap_down()
             else:
                 if (
@@ -564,7 +564,7 @@ def sel_sphere(sType, shift):
                 else:
                     xbox.tap_down()
         elif menuPos < memory.main.get_grid_cursor_pos():
-            if gameVars.use_pause():
+            if game_vars.use_pause():
                 xbox.tap_up()
             else:
                 if memory.main.get_grid_cursor_pos() - menuPos >= 3:

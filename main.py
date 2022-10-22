@@ -31,14 +31,14 @@ import screen
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
-gameVars.set_start_vars()
+game_vars = vars.vars_handle()
+game_vars.set_start_vars()
 
 # Plug in controller
 FFXC = xbox.controller_handle()
 
 # Speedrun sectional files
-if gameVars.nemesis():
+if game_vars.nemesis():
     import nemesis.arenaBattles
     import nemesis.arenaPrep
     import nemesis.changes
@@ -47,74 +47,74 @@ if gameVars.nemesis():
 # See the if statement tree below to determine starting position for Gamestate.
 # These are the popular ones. New Game ('none') is the last one.
 # Gamestate = "Baaj"
-# StepCounter = 1 # x40 Baaj temple, before Geos boss
-# StepCounter = 4 # x100 Al Bhed boat before Tros
+# step_counter = 1 # x40 Baaj temple, before Geos boss
+# step_counter = 4 # x100 Al Bhed boat before Tros
 # Gamestate = "Besaid"
-# StepCounter = 1 # x111 Before first viewing Besaid beach
-# StepCounter = 2 # x6 Crusader's hut before trials
-# StepCounter = 3 # x39 Crusader's hut after trials
+# step_counter = 1 # x111 Before first viewing Besaid beach
+# step_counter = 2 # x6 Crusader's hut before trials
+# step_counter = 3 # x39 Crusader's hut after trials
 # Gamestate = "Boat1"
-# StepCounter = 1 # 31 NOT WORKING
+# step_counter = 1 # 31 NOT WORKING
 # Gamestate = "Kilika"
-# StepCounter = 1 # x22
+# step_counter = 1 # x22
 # Gamestate = "Luca"
-# StepCounter = 1 # x112 Boat lands, first movement
-# StepCounter = 3 # Blitzball only, do not use
-# StepCounter = 5 # x5 between Blitz and swimmers/Garuda REMAKE THIS SAVE
+# step_counter = 1 # x112 Boat lands, first movement
+# step_counter = 3 # Blitzball only, do not use
+# step_counter = 5 # x5 between Blitz and swimmers/Garuda REMAKE THIS SAVE
 # Gamestate = "Miihen"
-# StepCounter = 1 # x16 with laughing scene, 26 after laughing scene
-# StepCounter = 2 # x28 (Agency before Chocobo Eater)
+# step_counter = 1 # x16 with laughing scene, 26 after laughing scene
+# step_counter = 2 # x28 (Agency before Chocobo Eater)
 # Gamestate = "MRR"
-# StepCounter = 1 # x38, includes a low-gil fix
+# step_counter = 1 # x38, includes a low-gil fix
 # Gamestate = "Djose"
-# StepCounter = 1 # x27
+# step_counter = 1 # x27
 # Gamestate = "Moonflow"
-# StepCounter = 2 # x2 After Extractor
+# step_counter = 2 # x2 After Extractor
 # Gamestate = "Guadosalam"
-# StepCounter = 2 # x3 before Guadosalam Skip
+# step_counter = 2 # x3 before Guadosalam Skip
 # Gamestate = "Macalania"
-# StepCounter = 1 # x9
-# StepCounter = 2 # x7
-# StepCounter = 4 # x10 Seymour
-# StepCounter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
+# step_counter = 1 # x9
+# step_counter = 2 # x7
+# step_counter = 4 # x10 Seymour
+# step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
 # Gamestate = "Home"
-# StepCounter = 1 # x60
-# StepCounter = 2 # x11
+# step_counter = 1 # x60
+# step_counter = 2 # x11
 # Gamestate = "rescueYuna"
-# StepCounter = 1 # x56 First save chance on airship, before any movement.
-# StepCounter = 2 # x15
-# StepCounter = 4 # x30 Altana
-# StepCounter = 5 # x42 regular, 67 nemesis
+# step_counter = 1 # x56 First save chance on airship, before any movement.
+# step_counter = 2 # x15
+# step_counter = 4 # x30 Altana
+# step_counter = 5 # x42 regular, 67 nemesis
 # Gamestate = "Gagazet"
-# StepCounter = 1 # x43
-# StepCounter = 3 # x138 After B&Y
-# StepCounter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
-# StepCounter = 10 # Nemesis variant, blitz win logic (not working)
-# StepCounter = 11 # Remiem racing
+# step_counter = 1 # x43
+# step_counter = 3 # x138 After B&Y
+# step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
+# step_counter = 10 # Nemesis variant, blitz win logic (not working)
+# step_counter = 11 # Remiem racing
 # Gamestate = "Zanarkand"
-# StepCounter = 1 # x99 Campfire
-# StepCounter = 4 # x44 Before Yunalesca
-# StepCounter = 5 # x48 After Yunalesca
+# step_counter = 1 # x99 Campfire
+# step_counter = 4 # x44 Before Yunalesca
+# step_counter = 5 # x48 After Yunalesca
 # Gamestate = "Sin"
-# StepCounter = 2 # x70 Shedinja Highbridge
-# StepCounter = 3 # x50 Start of Sea of Sorrows
-# StepCounter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
+# step_counter = 2 # x70 Shedinja Highbridge
+# step_counter = 3 # x50 Start of Sea of Sorrows
+# step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
 Gamestate = "none"
-StepCounter = 1  # NEW GAME!
+step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
-# StepCounter = 2 #Start of Calm Lands (only one each)
-# StepCounter = 3
-# StepCounter = 6 #First Miihen farm
-# StepCounter = 13 #Just before Djose farm
-# StepCounter = 14 #Just before Thunder Plains farm
-# StepCounter = 16 #Just before Bikanel farm
-# StepCounter = 18 #Just before Fayth Cave farm
-# StepCounter = 19 #Gagazet farm
-# StepCounter = 20 #After Gagazet, before Calm Lands farm
-# StepCounter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
-# StepCounter = 24 #Final Prep before arena bosses
+# step_counter = 2 #Start of Calm Lands (only one each)
+# step_counter = 3
+# step_counter = 6 #First Miihen farm
+# step_counter = 13 #Just before Djose farm
+# step_counter = 14 #Just before Thunder Plains farm
+# step_counter = 16 #Just before Bikanel farm
+# step_counter = 18 #Just before Fayth Cave farm
+# step_counter = 19 #Gagazet farm
+# step_counter = 20 #After Gagazet, before Calm Lands farm
+# step_counter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
+# step_counter = 24 #Final Prep before arena bosses
 
 ####################################################################################################
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
@@ -132,7 +132,7 @@ rngSeedNum = 160  # If you don't randomly select below, this will be the seed yo
 
 ####################################################################################################
 
-if Gamestate == "Luca" and StepCounter == 3:
+if Gamestate == "Luca" and step_counter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
 elif Gamestate != "none":  # Loading a save file, no RNG manip here
@@ -151,7 +151,7 @@ elif not seedHunt:  # Full run starting from New Game
     gameLength = "Full Run"
     blitzTesting = False
 else:  # Don't use this.
-    StepCounter = 1
+    step_counter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"
     blitzTesting = False
@@ -173,7 +173,7 @@ specialZanLoad = False
 
 def report_gamestate():
     global Gamestate
-    global StepCounter
+    global step_counter
     screen.clear_mouse(0)
 
 
@@ -193,7 +193,7 @@ print("Game start screen")
 screen.clear_mouse(0)
 
 # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-if gameVars.use_set_seed():
+if game_vars.use_set_seed():
     memory.main.set_rng_seed(rngSeedNum)
 
 rngSeed = memory.main.rng_seed()
@@ -204,7 +204,7 @@ logs.write_stats(rngSeed)
 
 # Next, check if we are loading to a save file
 if Gamestate != "none":
-    if not (Gamestate == "Luca" and StepCounter == 3):
+    if not (Gamestate == "Luca" and step_counter == 3):
         area.dreamZan.new_game(Gamestate)
         startTime = logs.time_stamp()
         logs.write_stats("Start time:")
@@ -214,21 +214,21 @@ if Gamestate != "none":
 
     # Need to update these to use loadGame.loadSaveNum(number) for all.
 
-    if Gamestate == "Baaj" and StepCounter == 1:
+    if Gamestate == "Baaj" and step_counter == 1:
         loadGame.load_save_num(40)
-    if Gamestate == "Baaj" and StepCounter == 4:
+    if Gamestate == "Baaj" and step_counter == 4:
         loadGame.load_save_num(100)
     if (
-        Gamestate == "Besaid" and StepCounter == 1
+        Gamestate == "Besaid" and step_counter == 1
     ):  # Save pop-up after falling off of Rikkus boat
         loadGame.load_save_num(111)
     if (
-        Gamestate == "Besaid" and StepCounter == 2
+        Gamestate == "Besaid" and step_counter == 2
     ):  # Save pop-up after falling off of Rikkus boat
         loadGame.load_save_num(6)
         loadGame.besaid_trials()
     if (
-        Gamestate == "Besaid" and StepCounter == 3
+        Gamestate == "Besaid" and step_counter == 3
     ):  # Crusader's lodge after "Enough, Wakka!"
         loadGame.load_save_num(39)
         print("Load complete")
@@ -242,81 +242,81 @@ if Gamestate != "none":
     if Gamestate == "Boat1":
         loadGame.load_save_num(31)
         loadGame.boat_1()
-    if Gamestate == "Kilika" and StepCounter == 1:  # Just after entering the woods
+    if Gamestate == "Kilika" and step_counter == 1:  # Just after entering the woods
         loadGame.load_save_num(22)
-    if Gamestate == "Luca" and StepCounter == 1:  # Approaching Luca via boat
+    if Gamestate == "Luca" and step_counter == 1:  # Approaching Luca via boat
         loadGame.load_save_num(112)
-    if Gamestate == "Luca" and StepCounter == 5:
+    if Gamestate == "Luca" and step_counter == 5:
         loadGame.load_save_num(5)
-    if Gamestate == "Miihen" and StepCounter == 1:  # After the talk with Auron
+    if Gamestate == "Miihen" and step_counter == 1:  # After the talk with Auron
         loadGame.load_save_num(16)  # With laughing scene
         loadGame.load_miihen_start_laugh()
-    if Gamestate == "Miihen" and StepCounter == 2:  # Agency
+    if Gamestate == "Miihen" and step_counter == 2:  # Agency
         loadGame.load_save_num(28)
         returnArray = [False, 0, 0, False]
-    if Gamestate == "MRR" and StepCounter == 1:  # Mi'ihen North after meeting Seymour
+    if Gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
         loadGame.load_save_num(38)
         memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
         loadGame.load_mrr()
     if (
-        Gamestate == "Djose" and StepCounter == 1
+        Gamestate == "Djose" and step_counter == 1
     ):  # Aftermath, after talking to Seymour and then Auron
         loadGame.load_save_num(27)
         loadGame.after_gui()
-    if Gamestate == "Moonflow" and StepCounter == 2:  # North bank, before Rikku
+    if Gamestate == "Moonflow" and step_counter == 2:  # North bank, before Rikku
         loadGame.load_save_num(2)
         loadGame.moonflow_2()
-    if Gamestate == "Guadosalam" and StepCounter == 2:  # After the Farplane
+    if Gamestate == "Guadosalam" and step_counter == 2:  # After the Farplane
         loadGame.load_save_num(3)
         loadGame.load_guado_skip()
-    if Gamestate == "Macalania" and StepCounter == 1:  # 1 = south, 2 = north
+    if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
         loadGame.load_save_num(9)
-    if Gamestate == "Macalania" and StepCounter == 2:  # 1 = south, 2 = north
+    if Gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
         loadGame.load_save_num(7)
-    if Gamestate == "Macalania" and StepCounter == 4:  # Right before Jyscal skip
+    if Gamestate == "Macalania" and step_counter == 4:  # Right before Jyscal skip
         loadGame.load_save_num(10)
         loadGame.load_mac_temple()
     # Outside temple, before escaping.
-    if Gamestate == "Macalania" and StepCounter == 6:
+    if Gamestate == "Macalania" and step_counter == 6:
         loadGame.load_save_num(4)
-    if Gamestate == "Home" and StepCounter == 1:
+    if Gamestate == "Home" and step_counter == 1:
         loadGame.load_save_num(60)
-    if Gamestate == "Home" and StepCounter == 2:
+    if Gamestate == "Home" and step_counter == 2:
         loadGame.load_save_num(11)
-    if Gamestate == "rescueYuna" and StepCounter == 1:  # Airship, first movement.
+    if Gamestate == "rescueYuna" and step_counter == 1:  # Airship, first movement.
         # Blitz Win, save less speed/power spheres
         loadGame.load_save_num(56)
-    if Gamestate == "rescueYuna" and StepCounter == 2:  # Bevelle trials
+    if Gamestate == "rescueYuna" and step_counter == 2:  # Bevelle trials
         loadGame.load_save_num(15)
-    if Gamestate == "rescueYuna" and StepCounter == 4:  # Altana
+    if Gamestate == "rescueYuna" and step_counter == 4:  # Altana
         loadGame.load_save_num(30)
         # memory.main.setEncounterRate(setVal=0)
         # memory.main.setGameSpeed(setVal=1)
     if (
-        Gamestate == "rescueYuna" and StepCounter == 5
+        Gamestate == "rescueYuna" and step_counter == 5
     ):  # Highbridge before Seymour Natus
         loadGame.load_save_num(42)  # Regular
         # loadGame.loadSaveNum(67) #Nemesis
-    if Gamestate == "Gagazet" and StepCounter == 1:  # Just before Calm Lands
+    if Gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
         loadGame.load_save_num(43)
         loadGame.load_calm()
-        gameVars.set_blitz_win(True)
-    if Gamestate == "Gagazet" and StepCounter == 2:  # NE armor save
+        game_vars.set_blitz_win(True)
+    if Gamestate == "Gagazet" and step_counter == 2:  # NE armor save
         loadGame.load_save_num(57)
-    if Gamestate == "Gagazet" and StepCounter == 3:  # Gagazet gates, after B&Y
+    if Gamestate == "Gagazet" and step_counter == 3:  # Gagazet gates, after B&Y
         loadGame.load_save_num(138)  # Blitz Win
         # loadGame.loadSaveNum(53) # Blitz Loss
-        gameVars.end_game_version_set(4)
+        game_vars.end_game_version_set(4)
         loadGame.load_gagazet_gates()
-    if Gamestate == "Gagazet" and StepCounter == 6:  # After the dream
+    if Gamestate == "Gagazet" and step_counter == 6:  # After the dream
         loadGame.load_save_num(98)
-        gameVars.end_game_version_set(4)
+        game_vars.end_game_version_set(4)
         loadGame.load_gagazet_dream()
-        gameVars.flux_overkill_success()
-    if Gamestate == "Gagazet" and StepCounter == 10:  # Calm Lands, but Nemesis version
+        game_vars.flux_overkill_success()
+    if Gamestate == "Gagazet" and step_counter == 10:  # Calm Lands, but Nemesis version
         loadGame.load_save_num(43)
         loadGame.load_calm()
-    if Gamestate == "Gagazet" and StepCounter == 11:  # Calm Lands, but Nemesis version
+    if Gamestate == "Gagazet" and step_counter == 11:  # Calm Lands, but Nemesis version
         loadGame.load_save_num(64)
         FFXC.set_movement(1, 0)
         memory.main.wait_frames(60)
@@ -326,26 +326,26 @@ if Gamestate != "none":
         import menu
 
         menu.prep_calm_lands()
-    if Gamestate == "Zanarkand" and StepCounter == 1:  # Intro scene revisited
+    if Gamestate == "Zanarkand" and step_counter == 1:  # Intro scene revisited
         loadGame.load_save_num(99)
-        gameVars.end_game_version_set(1)
-        gameVars.flux_overkill_success()
-        gameVars.end_game_version_set(4)
-    if Gamestate == "Zanarkand" and StepCounter == 2:  # Just before the trials.
+        game_vars.end_game_version_set(1)
+        game_vars.flux_overkill_success()
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 2:  # Just before the trials.
         loadGame.load_offset(35)
         loadGame.zan_trials()
-        gameVars.end_game_version_set(4)
-    if Gamestate == "Zanarkand" and StepCounter == 3:  # After trials, before boss
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 3:  # After trials, before boss
         loadGame.load_save_num(45)
-        gameVars.end_game_version_set(4)
-    if Gamestate == "Zanarkand" and StepCounter == 4:  # After Sanctuary Keeper
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 4:  # After Sanctuary Keeper
         loadGame.load_save_num(44)
-        gameVars.end_game_version_set(4)
-    if Gamestate == "Zanarkand" and StepCounter == 5:  # After Yunalesca
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 5:  # After Yunalesca
         loadGame.load_save_num(48)
         specialZanLoad = True
     if (
-        Gamestate == "Sin" and StepCounter == 2
+        Gamestate == "Sin" and step_counter == 2
     ):  # Save sphere on the Highbridge before talking to Shedinja
         # loadGame.loadSaveNum(49)
         # Nemesis logic, double friend sphere drops from B&Y
@@ -359,72 +359,72 @@ if Gamestate != "none":
                 FFXC.set_neutral()
             xbox.menu_b()
         memory.main.check_nea_armor()
-    if Gamestate == "Sin" and StepCounter == 3:  # Start of "Sea of Sorrows" section
+    if Gamestate == "Sin" and step_counter == 3:  # Start of "Sea of Sorrows" section
         loadGame.load_save_num(50)
-    if Gamestate == "Sin" and StepCounter == 4:  # Before point of no return
+    if Gamestate == "Sin" and step_counter == 4:  # Before point of no return
         # This save has zombiestrike weapons for all except Kimahri
         # Please use for egg hunt and zombie weapon testing.
         loadGame.load_save_num(51)
-        gameVars.set_zombie(5)
+        game_vars.set_zombie(5)
         loadGame.load_egg_hunt()
 
     # Nemesis run loads
-    if Gamestate == "Nem_Farm" and StepCounter == 1:
+    if Gamestate == "Nem_Farm" and step_counter == 1:
         loadGame.load_save_num(66)
-    if Gamestate == "Nem_Farm" and StepCounter == 2:
+    if Gamestate == "Nem_Farm" and step_counter == 2:
         loadGame.load_save_num(69)
-    if Gamestate == "Nem_Farm" and StepCounter == 3:
+    if Gamestate == "Nem_Farm" and step_counter == 3:
         loadGame.load_save_num(84)
-        gameVars.set_nem_checkpoint_ap(3)  # See nemesis.menu
+        game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
         # import nemesis.arenaPrep
         nemesis.arenaPrep.arena_return()
-    if Gamestate == "Nem_Farm" and StepCounter == 5:
+    if Gamestate == "Nem_Farm" and step_counter == 5:
         loadGame.load_save_num(71)
-    if Gamestate == "Nem_Farm" and StepCounter == 6:
+    if Gamestate == "Nem_Farm" and step_counter == 6:
         loadGame.load_save_num(72)
-        gameVars.set_nem_checkpoint_ap(2)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 8:
+        game_vars.set_nem_checkpoint_ap(2)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 8:
         loadGame.load_save_num(73)
-    if Gamestate == "Nem_Farm" and StepCounter == 9:
+    if Gamestate == "Nem_Farm" and step_counter == 9:
         loadGame.load_save_num(75)
-        gameVars.set_nem_checkpoint_ap(3)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 13:
+        game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 13:
         loadGame.load_save_num(116)
-        gameVars.set_nem_checkpoint_ap(7)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 14:
+        game_vars.set_nem_checkpoint_ap(7)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 14:
         loadGame.load_save_num(76)
-        gameVars.set_nem_checkpoint_ap(10)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 16:
+        game_vars.set_nem_checkpoint_ap(10)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 16:
         loadGame.load_save_num(113)
-        gameVars.set_nem_checkpoint_ap(12)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 17:
+        game_vars.set_nem_checkpoint_ap(12)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 17:
         loadGame.load_save_num(111)
-        gameVars.set_nem_checkpoint_ap(14)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 18:
+        game_vars.set_nem_checkpoint_ap(14)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 18:
         loadGame.load_save_num(114)
-        gameVars.set_nem_checkpoint_ap(15)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 19:  # Gagazet
+        game_vars.set_nem_checkpoint_ap(15)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 19:  # Gagazet
         loadGame.load_save_num(115)
-        gameVars.set_nem_checkpoint_ap(19)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 21:
+        game_vars.set_nem_checkpoint_ap(19)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 21:
         loadGame.load_save_num(79)
         nemesis.arenaPrep.arena_return()
-        gameVars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 22:
+        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 22:
         loadGame.load_save_num(82)
         # import nemesis.menu
         # nemesis.menu.rikkuHaste()
-        gameVars.set_nem_checkpoint_ap(24)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 23:
+        game_vars.set_nem_checkpoint_ap(24)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 23:
         loadGame.load_save_num(80)
-        gameVars.set_nem_checkpoint_ap(30)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 24:
+        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 24:
         loadGame.load_save_num(81)
-        gameVars.set_nem_checkpoint_ap(30)
-        gameVars.set_nem_checkpoint_ap(30)  # See nemesis.menu
-    if Gamestate == "Nem_Farm" and StepCounter == 20:
+        game_vars.set_nem_checkpoint_ap(30)
+        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 20:
         loadGame.load_save_num(85)
-        gameVars.set_nem_checkpoint_ap(30)
+        game_vars.set_nem_checkpoint_ap(30)
     if Gamestate == "Nem_Farm":
         memory.main.check_nea_armor()
     memory.main.check_nea_armor()
@@ -436,7 +436,7 @@ while Gamestate != "End":
 
     try:
         # Blitzball testing logic
-        if Gamestate == "Luca" and StepCounter == 3:
+        if Gamestate == "Luca" and step_counter == 3:
             area.dreamZan.new_game(Gamestate)
             loadGame.load_save_num(37)
 
@@ -444,13 +444,13 @@ while Gamestate != "End":
             Gamestate = "End"
 
         # Start of the game, start of Dream Zanarkand section
-        if Gamestate == "none" and StepCounter == 1:
+        if Gamestate == "none" and step_counter == 1:
             report_gamestate()
             print("New Game 1 function initiated.")
             area.dreamZan.new_game(Gamestate)
             print("New Game 1 function complete.")
-            gameVars.set_new_game()
-            gameVars.set_csr(True)
+            game_vars.set_new_game()
+            game_vars.set_csr(True)
             print("Variables initialized.")
             Gamestate = "DreamZan"
             memory.main.wait_frames(30 * 0.5)
@@ -461,70 +461,70 @@ while Gamestate != "End":
             logs.write_stats(str(startTime))
             print("Timer starts now.")
             area.dreamZan.listen_story()
-            # Gamestate, StepCounter = reset.midRunReset()
+            # Gamestate, step_counter = reset.midRunReset()
             # Start of the game, up through the start of Sinspawn Ammes fight
-            StepCounter = 2
+            step_counter = 2
             area.dreamZan.ammes_battle()
 
-        if Gamestate == "DreamZan" and StepCounter == 2:
+        if Gamestate == "DreamZan" and step_counter == 2:
             report_gamestate()
             battle.boss.ammes()
-            StepCounter = 3
+            step_counter = 3
             report_gamestate()
 
-        if Gamestate == "DreamZan" and StepCounter == 3:
+        if Gamestate == "DreamZan" and step_counter == 3:
             area.dreamZan.after_ammes()
             # Sin drops us near Baaj temple.
             Gamestate = "Baaj"
-            StepCounter = 1
+            step_counter = 1
 
-        if Gamestate == "Baaj" and StepCounter == 1:
+        if Gamestate == "Baaj" and step_counter == 1:
             report_gamestate()
             print("Starting Baaj temple section")
             area.baaj.entrance()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Baaj" and StepCounter == 2:
+        if Gamestate == "Baaj" and step_counter == 2:
             report_gamestate()
             area.baaj.baaj_puzzle()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Baaj" and StepCounter == 3:
+        if Gamestate == "Baaj" and step_counter == 3:
             area.baaj.klikk_fight()
-            StepCounter = 4
+            step_counter = 4
             report_gamestate()
 
-        if Gamestate == "Baaj" and StepCounter == 4:
+        if Gamestate == "Baaj" and step_counter == 4:
             # Klikk fight done. Now to wait for the Al Bhed ship.
             print("Al Bhed boat part 1")
             area.baaj.ab_boat_1()
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "Baaj" and StepCounter == 5:
+        if Gamestate == "Baaj" and step_counter == 5:
             report_gamestate()
             area.baaj.ab_swimming_1()
-            StepCounter = 6
+            step_counter = 6
             report_gamestate()
 
-        if Gamestate == "Baaj" and StepCounter == 6:
+        if Gamestate == "Baaj" and step_counter == 6:
             print("Underwater Airship section")
             area.baaj.ab_swimming_2()
             Gamestate = "Besaid"
-            StepCounter = 1
+            step_counter = 1
             report_gamestate()
 
-        if Gamestate == "Besaid" and StepCounter == 1:
+        if Gamestate == "Besaid" and step_counter == 1:
             report_gamestate()
             area.besaid.beach()
-            StepCounter = 2
+            step_counter = 2
             report_gamestate()
 
-        if Gamestate == "Besaid" and StepCounter == 2:
+        if Gamestate == "Besaid" and step_counter == 2:
             area.besaid.trials()
-            StepCounter = 3
+            step_counter = 3
             report_gamestate()
 
-        if Gamestate == "Besaid" and StepCounter == 3:
+        if Gamestate == "Besaid" and step_counter == 3:
             area.besaid.leaving()
             Gamestate = "Boat1"
             if memory.main.get_tidus_slvl() < 3:
@@ -533,9 +533,9 @@ while Gamestate != "End":
                 print("== Under-levelled!!! ==")
                 print("=======================")
                 print("=======================")
-                Gamestate, StepCounter = reset.mid_run_reset()
+                Gamestate, step_counter = reset.mid_run_reset()
             else:
-                StepCounter = 1
+                step_counter = 1
                 report_gamestate()
 
         if Gamestate == "Boat1":
@@ -544,26 +544,26 @@ while Gamestate != "End":
             area.kilika.arrival()
             Gamestate = "Kilika"
 
-        if Gamestate == "Kilika" and StepCounter == 1:
+        if Gamestate == "Kilika" and step_counter == 1:
             report_gamestate()
             area.kilika.forest_1()
             report_gamestate()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Kilika" and StepCounter == 3:
+        if Gamestate == "Kilika" and step_counter == 3:
             report_gamestate()
             area.kilika.trials()
             area.kilika.trials_end()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Kilika" and StepCounter == 4:
+        if Gamestate == "Kilika" and step_counter == 4:
             report_gamestate()
             area.kilika.forest_3()
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "Kilika" and StepCounter == 5:
+        if Gamestate == "Kilika" and step_counter == 5:
             report_gamestate()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Boat2"
 
         if Gamestate == "Boat2":
@@ -576,70 +576,70 @@ while Gamestate != "End":
             area.boats.ss_winno_2()
             Gamestate = "Luca"
 
-        if Gamestate == "Luca" and StepCounter == 1:
+        if Gamestate == "Luca" and step_counter == 1:
             report_gamestate()
             area.luca.arrival()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Luca" and StepCounter == 2:
+        if Gamestate == "Luca" and step_counter == 2:
             report_gamestate()
             endTime = logs.time_stamp()
             totalTime = endTime - startTime
             print("Pre-Blitz time:", str(totalTime))
             logs.write_stats("Pre Blitz time:")
             logs.write_stats(totalTime)
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Luca" and StepCounter == 3:
+        if Gamestate == "Luca" and step_counter == 3:
             report_gamestate()
             area.luca.blitz_start()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Luca" and StepCounter == 4:
+        if Gamestate == "Luca" and step_counter == 4:
             report_gamestate()
             print("------Blitz Start")
             blitz.blitz_main(forceBlitzWin)
             print("------Blitz End")
-            if not gameVars.csr():
+            if not game_vars.csr():
                 xbox.await_save()
 
-            if gameVars.loop_blitz() and blitzLoops < maxLoops:
+            if game_vars.loop_blitz() and blitzLoops < maxLoops:
                 FFXC.set_neutral()
                 print("------------------------------")
                 print("Resetting")
                 print("------------------------------")
                 screen.await_turn()
-                Gamestate, StepCounter = reset.mid_run_reset()
+                Gamestate, step_counter = reset.mid_run_reset()
                 blitzLoops += 1
-            elif gameVars.blitz_loss_reset() and not gameVars.get_blitz_win():
+            elif game_vars.blitz_loss_reset() and not game_vars.get_blitz_win():
                 FFXC.set_neutral()
                 print("------------------------------")
                 print("Resetting - BLITZ LOSS IS FAILED RUN!!!")
                 print("------------------------------")
                 screen.await_turn()
-                Gamestate, StepCounter = reset.mid_run_reset()
+                Gamestate, step_counter = reset.mid_run_reset()
             else:
                 print("------------------------------")
                 print("Post-Blitz")
                 print("------------------------------")
-                StepCounter = 5
+                step_counter = 5
 
-        if Gamestate == "Luca" and StepCounter == 5:
+        if Gamestate == "Luca" and step_counter == 5:
             report_gamestate()
             area.luca.after_blitz()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Miihen"
 
         # Just to make sure we set this variable somewhere.
-        if Gamestate == "Miihen" and StepCounter == 1:
+        if Gamestate == "Miihen" and step_counter == 1:
             report_gamestate()
             returnArray = area.miihen.arrival()
             selfDestruct = area.miihen.arrival_2(
                 returnArray[0], returnArray[1], returnArray[2]
             )
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Miihen" and StepCounter == 2:
+        if Gamestate == "Miihen" and step_counter == 2:
             report_gamestate()
             area.miihen.mid_point()
             print("End of Mi'ihen mid point section.")
@@ -652,17 +652,17 @@ while Gamestate != "End":
             logs.write_stats("Miihen End time:")
             logs.write_stats(totalTime)
             Gamestate = "MRR"
-            StepCounter = 1
+            step_counter = 1
 
-        if Gamestate == "MRR" and StepCounter == 1:
+        if Gamestate == "MRR" and step_counter == 1:
             report_gamestate()
             area.MRR.arrival()
             area.MRR.main_path()
             if memory.main.game_over():
                 Gamestate = "gameOverError"
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "MRR" and StepCounter == 2:
+        if Gamestate == "MRR" and step_counter == 2:
             report_gamestate()
             area.MRR.battle_site()
             area.MRR.gui_and_aftermath()
@@ -672,155 +672,155 @@ while Gamestate != "End":
             logs.write_stats("Djose-Start time:")
             logs.write_stats(totalTime)
             Gamestate = "Djose"
-            StepCounter = 1
+            step_counter = 1
 
-        if Gamestate == "Djose" and StepCounter == 1:
+        if Gamestate == "Djose" and step_counter == 1:
             report_gamestate()
             area.djose.path()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Djose" and StepCounter == 2:
+        if Gamestate == "Djose" and step_counter == 2:
             report_gamestate()
             area.djose.temple()
             area.djose.trials()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Djose" and StepCounter == 3:
+        if Gamestate == "Djose" and step_counter == 3:
             report_gamestate()
             area.djose.leaving_djose()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Moonflow"
 
-        if Gamestate == "Moonflow" and StepCounter == 1:
+        if Gamestate == "Moonflow" and step_counter == 1:
             report_gamestate()
             area.moonflow.arrival()
             area.moonflow.south_bank()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Moonflow" and StepCounter == 2:
+        if Gamestate == "Moonflow" and step_counter == 2:
             report_gamestate()
             area.moonflow.north_bank()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Guadosalam"
 
-        if Gamestate == "Guadosalam" and StepCounter == 1:
+        if Gamestate == "Guadosalam" and step_counter == 1:
             report_gamestate()
             area.guadosalam.arrival()
             area.guadosalam.after_speech()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Guadosalam" and StepCounter == 2:
+        if Gamestate == "Guadosalam" and step_counter == 2:
             report_gamestate()
             area.guadosalam.guado_skip()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "ThunderPlains"
 
-        if Gamestate == "ThunderPlains" and StepCounter == 1:
+        if Gamestate == "ThunderPlains" and step_counter == 1:
             report_gamestate()
             status = area.thunderPlains.south_pathing()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "ThunderPlains" and StepCounter == 2:
+        if Gamestate == "ThunderPlains" and step_counter == 2:
             area.thunderPlains.agency()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "ThunderPlains" and StepCounter == 3:
+        if Gamestate == "ThunderPlains" and step_counter == 3:
             area.thunderPlains.north_pathing()
             Gamestate = "Macalania"
-            StepCounter = 1
+            step_counter = 1
 
-        if Gamestate == "Macalania" and StepCounter == 1:
+        if Gamestate == "Macalania" and step_counter == 1:
             report_gamestate()
             area.mWoods.arrival(False)
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Macalania" and StepCounter == 2:
+        if Gamestate == "Macalania" and step_counter == 2:
             report_gamestate()
             area.mWoods.lake_road()
             area.mWoods.lake_road_2()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Macalania" and StepCounter == 3:
+        if Gamestate == "Macalania" and step_counter == 3:
             report_gamestate()
             area.mWoods.lake()
             area.mTemple.approach()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Macalania" and StepCounter == 4:
+        if Gamestate == "Macalania" and step_counter == 4:
             report_gamestate()
             area.mTemple.arrival()
             area.mTemple.start_seymour_fight()
             area.mTemple.seymour_fight()
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "Macalania" and StepCounter == 5:
+        if Gamestate == "Macalania" and step_counter == 5:
             report_gamestate()
             area.mTemple.trials()
-            StepCounter = 6
+            step_counter = 6
 
-        if Gamestate == "Macalania" and StepCounter == 6:
+        if Gamestate == "Macalania" and step_counter == 6:
             report_gamestate()
             area.mTemple.escape()
-            StepCounter = 7
+            step_counter = 7
 
-        if Gamestate == "Macalania" and StepCounter == 7:
+        if Gamestate == "Macalania" and step_counter == 7:
             area.mTemple.under_lake()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Home"
 
-        if Gamestate == "Home" and StepCounter == 1:
+        if Gamestate == "Home" and step_counter == 1:
             report_gamestate()
             area.home.desert()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Home" and StepCounter == 2:
+        if Gamestate == "Home" and step_counter == 2:
             report_gamestate()
             area.home.find_summoners()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "rescueYuna"
 
-        if Gamestate == "rescueYuna" and StepCounter == 1:
+        if Gamestate == "rescueYuna" and step_counter == 1:
             report_gamestate()
             area.rescueYuna.pre_evrae()
             battle.boss.evrae()
             area.rescueYuna.guards()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "rescueYuna" and StepCounter == 2:
+        if Gamestate == "rescueYuna" and step_counter == 2:
             report_gamestate()
             area.rescueYuna.trials()
             area.rescueYuna.trials_end()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "rescueYuna" and StepCounter == 3:
+        if Gamestate == "rescueYuna" and step_counter == 3:
             report_gamestate()
             area.rescueYuna.via_purifico()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "rescueYuna" and StepCounter == 4:
+        if Gamestate == "rescueYuna" and step_counter == 4:
             report_gamestate()
             area.rescueYuna.evrae_altana()
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "rescueYuna" and StepCounter == 5:
+        if Gamestate == "rescueYuna" and step_counter == 5:
             report_gamestate()
             area.rescueYuna.seymour_natus()
             Gamestate = "Gagazet"
-            if gameVars.nemesis():
-                StepCounter = 10
+            if game_vars.nemesis():
+                step_counter = 10
             else:
-                StepCounter = 1
+                step_counter = 1
 
-        if Gamestate == "Gagazet" and StepCounter == 1:
+        if Gamestate == "Gagazet" and step_counter == 1:
             manipTime1 = logs.time_stamp()
             report_gamestate()
             area.gagazet.calm_lands()
             area.gagazet.defender_x()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Gagazet" and StepCounter == 2:
+        if Gamestate == "Gagazet" and step_counter == 2:
             report_gamestate()
-            if gameVars.try_for_ne():
+            if game_vars.try_for_ne():
                 import area.neArmor
 
                 print("Mark 1")
@@ -834,82 +834,82 @@ while Gamestate != "End":
             print("NEA Manip duration:", str(manipTime))
             logs.write_stats("NEA Manip duration:")
             logs.write_stats(manipTime)
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Gagazet" and StepCounter == 3:
+        if Gamestate == "Gagazet" and step_counter == 3:
             report_gamestate()
             area.gagazet.to_the_ronso()
             area.gagazet.gagazet_gates()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Gagazet" and StepCounter == 4:
+        if Gamestate == "Gagazet" and step_counter == 4:
             report_gamestate()
             area.gagazet.flux()
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "Gagazet" and StepCounter == 5:
+        if Gamestate == "Gagazet" and step_counter == 5:
             report_gamestate()
             area.gagazet.dream()
-            StepCounter = 6
+            step_counter = 6
 
-        if Gamestate == "Gagazet" and StepCounter == 6:
+        if Gamestate == "Gagazet" and step_counter == 6:
             report_gamestate()
             area.gagazet.cave()
             area.gagazet.wrap_up()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Zanarkand"
 
-        if Gamestate == "Zanarkand" and StepCounter == 1:
+        if Gamestate == "Zanarkand" and step_counter == 1:
             report_gamestate()
             area.zanarkand.arrival()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Zanarkand" and StepCounter == 2:
+        if Gamestate == "Zanarkand" and step_counter == 2:
             report_gamestate()
             area.zanarkand.trials()
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Zanarkand" and StepCounter == 3:
+        if Gamestate == "Zanarkand" and step_counter == 3:
             report_gamestate()
             area.zanarkand.sanctuary_keeper()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Zanarkand" and StepCounter == 4:
+        if Gamestate == "Zanarkand" and step_counter == 4:
             report_gamestate()
             area.zanarkand.yunalesca()
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "Zanarkand" and StepCounter == 5:
+        if Gamestate == "Zanarkand" and step_counter == 5:
             area.zanarkand.post_yunalesca()
-            StepCounter = 1
+            step_counter = 1
             Gamestate = "Sin"
 
-        if Gamestate == "Sin" and StepCounter == 1:
+        if Gamestate == "Sin" and step_counter == 1:
             report_gamestate()
             area.sin.making_plans()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Sin" and StepCounter == 2:
+        if Gamestate == "Sin" and step_counter == 2:
             report_gamestate()
             print("Test 1")
             area.sin.shedinja()
             print("Test 2")
             area.sin.facing_sin()
             print("Test 3")
-            if gameVars.nemesis():
+            if game_vars.nemesis():
                 Gamestate = "Nem_Farm"
-                StepCounter = 1
+                step_counter = 1
             else:
-                StepCounter = 3
+                step_counter = 3
 
-        if Gamestate == "Sin" and StepCounter == 3:
+        if Gamestate == "Sin" and step_counter == 3:
             report_gamestate()
             area.sin.inside_sin()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Sin" and StepCounter == 4:
+        if Gamestate == "Sin" and step_counter == 4:
             area.sin.egg_hunt(autoEggHunt)
-            if gameVars.nemesis():
+            if game_vars.nemesis():
                 battle.main.bfa_nem()
             else:
                 battle.boss.bfa()
@@ -917,202 +917,202 @@ while Gamestate != "End":
             Gamestate = "End"
 
         # Nemesis logic only:
-        if Gamestate == "Gagazet" and StepCounter == 10:
+        if Gamestate == "Gagazet" and step_counter == 10:
             nemesis.changes.calm_lands_1()
-            StepCounter = 12
+            step_counter = 12
 
-        if Gamestate == "Gagazet" and StepCounter == 11:
+        if Gamestate == "Gagazet" and step_counter == 11:
             nemesis.changes.remiem_races()
-            StepCounter += 1
+            step_counter += 1
 
-        if Gamestate == "Gagazet" and StepCounter == 12:
+        if Gamestate == "Gagazet" and step_counter == 12:
             print("MAAAAARK")
             memory.main.await_control()
             nemesis.changes.arena_purchase()
             area.gagazet.defender_x()
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Nem_Farm" and StepCounter == 1:
+        if Gamestate == "Nem_Farm" and step_counter == 1:
             report_gamestate()
             nemesis.arenaPrep.transition()
             while not nemesis.arenaPrep.t_plains(cap_num=1):
                 pass
-            StepCounter = 2
+            step_counter = 2
 
-        if Gamestate == "Nem_Farm" and StepCounter == 2:
+        if Gamestate == "Nem_Farm" and step_counter == 2:
             report_gamestate()
             while not nemesis.arenaPrep.calm(cap_num=1, airship_return=False):
                 pass
-            StepCounter = 3
+            step_counter = 3
 
-        if Gamestate == "Nem_Farm" and StepCounter == 3:
+        if Gamestate == "Nem_Farm" and step_counter == 3:
             report_gamestate()
             nemesis.arenaPrep.kilika_shop()
-            StepCounter = 4
+            step_counter = 4
 
-        if Gamestate == "Nem_Farm" and StepCounter == 4:
+        if Gamestate == "Nem_Farm" and step_counter == 4:
             report_gamestate()
             nemesis.arenaPrep.besaid_farm(cap_num=1)
-            StepCounter = 5
+            step_counter = 5
 
-        if Gamestate == "Nem_Farm" and StepCounter == 5:
+        if Gamestate == "Nem_Farm" and step_counter == 5:
             report_gamestate()
             nemesis.arenaPrep.kilika_farm(cap_num=1)
-            StepCounter = 6
+            step_counter = 6
 
-        if Gamestate == "Nem_Farm" and StepCounter == 6:
+        if Gamestate == "Nem_Farm" and step_counter == 6:
             report_gamestate()
             nemesis.arenaPrep.miihen_farm(cap_num=1)
-            StepCounter = 7
+            step_counter = 7
 
-        if Gamestate == "Nem_Farm" and StepCounter == 7:
+        if Gamestate == "Nem_Farm" and step_counter == 7:
             # reportGamestate()
             # nemesis.arenaPrep.mrrFarm(capNum=1)
-            StepCounter = 8
+            step_counter = 8
 
-        if Gamestate == "Nem_Farm" and StepCounter == 8:
+        if Gamestate == "Nem_Farm" and step_counter == 8:
             report_gamestate()
             nemesis.arenaPrep.od_to_ap()
-            StepCounter = 9
+            step_counter = 9
 
-        if Gamestate == "Nem_Farm" and StepCounter == 9:
+        if Gamestate == "Nem_Farm" and step_counter == 9:
             report_gamestate()
             nemesis.arenaPrep.besaid_farm(cap_num=10)
-            StepCounter = 10
+            step_counter = 10
 
-        if Gamestate == "Nem_Farm" and StepCounter == 10:
+        if Gamestate == "Nem_Farm" and step_counter == 10:
             report_gamestate()
             nemesis.arenaPrep.kilika_farm(cap_num=10)
-            StepCounter = 11
+            step_counter = 11
 
-        if Gamestate == "Nem_Farm" and StepCounter == 11:
+        if Gamestate == "Nem_Farm" and step_counter == 11:
             report_gamestate()
             nemesis.arenaPrep.miihen_farm(cap_num=10)
-            StepCounter = 12
+            step_counter = 12
 
-        if Gamestate == "Nem_Farm" and StepCounter == 12:
+        if Gamestate == "Nem_Farm" and step_counter == 12:
             # reportGamestate()
             # nemesis.arenaPrep.mrrFarm(capNum=10)
-            StepCounter = 13
+            step_counter = 13
 
-        if Gamestate == "Nem_Farm" and StepCounter == 13:
+        if Gamestate == "Nem_Farm" and step_counter == 13:
             report_gamestate()
             nemesis.arenaPrep.djose_farm(cap_num=10)
-            StepCounter = 14
+            step_counter = 14
 
-        if Gamestate == "Nem_Farm" and StepCounter == 14:
+        if Gamestate == "Nem_Farm" and step_counter == 14:
             report_gamestate()
             nemesis.arenaPrep.t_plains(cap_num=10, auto_haste=True)
-            StepCounter = 15
+            step_counter = 15
 
-        if Gamestate == "Nem_Farm" and StepCounter == 15:
+        if Gamestate == "Nem_Farm" and step_counter == 15:
             report_gamestate()
             nemesis.arenaPrep.bikanel(cap_num=10)
-            StepCounter = 16
+            step_counter = 16
 
-        if Gamestate == "Nem_Farm" and StepCounter == 16:
+        if Gamestate == "Nem_Farm" and step_counter == 16:
             report_gamestate()
             nemesis.arenaPrep.arena_return()
             nemesis.arenaPrep.auto_phoenix()
-            StepCounter = 17
+            step_counter = 17
 
-        if Gamestate == "Nem_Farm" and StepCounter == 17:
+        if Gamestate == "Nem_Farm" and step_counter == 17:
             report_gamestate()
             nemesis.arenaPrep.mac_woods(cap_num=10)
-            StepCounter = 18
+            step_counter = 18
 
-        if Gamestate == "Nem_Farm" and StepCounter == 18:
+        if Gamestate == "Nem_Farm" and step_counter == 18:
             report_gamestate()
             nemesis.arenaPrep.stolen_fayth_cave()
-            StepCounter = 19
+            step_counter = 19
 
-        if Gamestate == "Nem_Farm" and StepCounter == 19:
+        if Gamestate == "Nem_Farm" and step_counter == 19:
             report_gamestate()
             nemesis.arenaPrep.gagazet()
             # nemesis.arenaPrep.gagazet1()
             # nemesis.arenaPrep.gagazet2()
             # nemesis.arenaPrep.gagazet3()
             # Gamestate = "End" #Testing only
-            StepCounter = 20
+            step_counter = 20
 
-        if Gamestate == "Nem_Farm" and StepCounter == 20:
+        if Gamestate == "Nem_Farm" and step_counter == 20:
             report_gamestate()
             nemesis.arenaPrep.calm(cap_num=10, airship_return=False, force_levels=27)
-            StepCounter = 21
+            step_counter = 21
 
-        if Gamestate == "Nem_Farm" and StepCounter == 21:
+        if Gamestate == "Nem_Farm" and step_counter == 21:
             report_gamestate()
             nemesis.arenaPrep.one_mp_weapon()
-            StepCounter = 22
+            step_counter = 22
 
-        if Gamestate == "Nem_Farm" and StepCounter == 22:
+        if Gamestate == "Nem_Farm" and step_counter == 22:
             report_gamestate()
             nemesis.arenaPrep.inside_sin(cap_num=10)
-            StepCounter = 23
+            step_counter = 23
 
-        if Gamestate == "Nem_Farm" and StepCounter == 23:
+        if Gamestate == "Nem_Farm" and step_counter == 23:
             report_gamestate()
             nemesis.arenaPrep.unlock_omega()
             nemesis.arenaPrep.omega_ruins()
-            StepCounter = 24
+            step_counter = 24
 
-        if Gamestate == "Nem_Farm" and StepCounter == 24:
+        if Gamestate == "Nem_Farm" and step_counter == 24:
             nemesis.arenaPrep.kilika_final_shop()
-            StepCounter = 25
+            step_counter = 25
 
-        if Gamestate == "Nem_Farm" and StepCounter == 25:
+        if Gamestate == "Nem_Farm" and step_counter == 25:
             nemesis.arenaPrep.arena_return()
             nemesis.arenaPrep.final_weapon()
             Gamestate = "Nem_Arena"
-            StepCounter = 1
+            step_counter = 1
 
-        if Gamestate == "Nem_Arena" and StepCounter == 1:
+        if Gamestate == "Nem_Arena" and step_counter == 1:
             nemesis.arenaBattles.battles_1()
-            gameVars.print_arena_status()
-            StepCounter = 2
+            game_vars.print_arena_status()
+            step_counter = 2
 
-        if Gamestate == "Nem_Arena" and StepCounter == 2:
+        if Gamestate == "Nem_Arena" and step_counter == 2:
             nemesis.arenaBattles.battles_2()
-            gameVars.print_arena_status()
-            StepCounter = 3
+            game_vars.print_arena_status()
+            step_counter = 3
 
-        if Gamestate == "Nem_Arena" and StepCounter == 3:
+        if Gamestate == "Nem_Arena" and step_counter == 3:
             nemesis.arenaBattles.juggernaut_farm()
-            gameVars.print_arena_status()
-            StepCounter = 4
+            game_vars.print_arena_status()
+            step_counter = 4
 
-        if Gamestate == "Nem_Arena" and StepCounter == 4:
+        if Gamestate == "Nem_Arena" and step_counter == 4:
             nemesis.arenaBattles.battles_3()
-            gameVars.print_arena_status()
-            StepCounter = 5
+            game_vars.print_arena_status()
+            step_counter = 5
 
-        if Gamestate == "Nem_Arena" and StepCounter == 5:
+        if Gamestate == "Nem_Arena" and step_counter == 5:
             nemesis.arenaBattles.battles_4()
-            gameVars.print_arena_status()
-            StepCounter = 6
+            game_vars.print_arena_status()
+            step_counter = 6
 
-        if Gamestate == "Nem_Arena" and StepCounter == 6:
+        if Gamestate == "Nem_Arena" and step_counter == 6:
             nemesis.arenaBattles.nemesis_battle()
-            StepCounter = 7
+            step_counter = 7
 
-        if Gamestate == "Nem_Arena" and StepCounter == 7:
+        if Gamestate == "Nem_Arena" and step_counter == 7:
             nemesis.arenaBattles.return_to_sin()
             Gamestate = "Sin"
-            StepCounter = 3
+            step_counter = 3
 
         if (
             Gamestate == "End"
-            and gameVars.loop_seeds()
+            and game_vars.loop_seeds()
             and rngSeedNum - rngSeedOrig < maxLoops
         ):
             # End of seed logic.
-            Gamestate, StepCounter = reset.mid_run_reset(
+            Gamestate, step_counter = reset.mid_run_reset(
                 land_run=True, start_time=startTime
             )
 
         print("------------------------------")
         print("Looping")
-        print(Gamestate, "|", StepCounter)
+        print(Gamestate, "|", step_counter)
         print("------------------------------")
 
     except KeyboardInterrupt:

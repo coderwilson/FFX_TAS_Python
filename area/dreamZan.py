@@ -8,7 +8,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -82,7 +82,7 @@ def listen_story():
     while not memory.main.user_control():
         if memory.main.get_map() == 132:
             if memory.main.diag_progress_flag() == 1:
-                gameVars.set_csr(False)
+                game_vars.set_csr(False)
                 print(
                     "Skipping intro scene, we'll watch this properly in about 8 hours."
                 )
@@ -92,7 +92,7 @@ def listen_story():
             FFXC.set_value("BtnBack", 0)
             memory.main.wait_frames(1)
 
-    print("### CSR check:", gameVars.csr())
+    print("### CSR check:", game_vars.csr())
     checkpoint = 0
     while memory.main.get_encounter_id() != 414:  # Sinspawn Ammes
         if memory.main.user_control():
@@ -153,7 +153,7 @@ def listen_story():
                     FFXC.set_value("BtnStart", 0)
                     xbox.skip_dialog(10)
                 else:
-                    if gameVars.use_pause():
+                    if game_vars.use_pause():
                         memory.main.wait_frames(1)
                     xbox.skip_scene(fast_mode=True)
                     xbox.skip_dialog(3)
@@ -184,7 +184,7 @@ def ammes_battle():
     logs.write_stats(correctSeed)
     print("### Corrected RNG seed:", correctSeed)
     if correctSeed != "Err_seed_not_found":
-        gameVars.set_confirmed_seed(correctSeed)
+        game_vars.set_confirmed_seed(correctSeed)
     print("Confirming RNG seed:", memory.main.rng_seed())
     print("#####################################")
     print("Done Killing Sinspawn")

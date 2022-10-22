@@ -9,7 +9,7 @@ import vars
 import xbox
 import zzairShipPath
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -51,7 +51,7 @@ def guards():
     print("Start, Guards")
     memory.main.click_to_control()
 
-    if not gameVars.get_blitz_win():
+    if not game_vars.get_blitz_win():
         menu.equip_sonic_steel(full_menu_close=False)
 
     sleepingPowders = memory.main.get_item_slot(37) != 255
@@ -436,7 +436,7 @@ def trials_end():
 
     # Name for Bahamut
     xbox.name_aeon("Bahamut")
-    if not gameVars.csr():
+    if not game_vars.csr():
         xbox.await_save(index=29)
 
 
@@ -450,7 +450,7 @@ def via_purifico():
     memory.main.wait_frames(30 * 5)
     FFXC.set_neutral()
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         memory.main.wait_frames(30 * 5.7)  # Wait for the right direction
     FFXC.set_movement(0, 1)
     memory.main.wait_frames(30 * 2)
@@ -549,7 +549,7 @@ def seymour_natus():
     memory.main.click_to_control()
 
     if memory.main.get_yuna_slvl() >= 14:
-        if gameVars.get_blitz_win():
+        if game_vars.get_blitz_win():
             menu.seymour_natus_blitz_win()
         else:
             menu.seymour_natus_blitz_loss()
@@ -570,7 +570,7 @@ def seymour_natus():
                     complete = battle.boss.seymour_natus()
 
                 if memory.main.get_yuna_slvl() >= 14:
-                    if gameVars.get_blitz_win():
+                    if game_vars.get_blitz_win():
                         menu.seymour_natus_blitz_win()
                     else:
                         menu.seymour_natus_blitz_loss()
@@ -595,7 +595,7 @@ def seymour_natus():
                 checkpoint += 1
             elif checkpoint == 6:
                 print("Checkpoint 6")
-                if not gameVars.csr():
+                if not game_vars.csr():
                     memory.main.click_to_event_temple(3)
                 checkpoint += 1
             elif checkpoint == 8:

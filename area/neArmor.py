@@ -7,7 +7,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -101,7 +101,7 @@ def drop_hunt():
     rngTrack.print_manip_info()
     checkpoint = 0
     preGhostBattles = 0
-    while gameVars.ne_armor() == 255:
+    while game_vars.ne_armor() == 255:
         if memory.main.user_control():
             if goGreen:
                 if checkpoint == 15:
@@ -128,7 +128,7 @@ def drop_hunt():
                     battle.main.flee_all()
                 memory.main.click_to_control_3()
                 memory.main.check_nea_armor()
-                if gameVars.ne_armor() == 255:
+                if game_vars.ne_armor() == 255:
                     battle.main.heal_up(full_menu_close=False)
                     memory.main.full_party_format("rikku")
                     memory.main.close_menu()
@@ -138,24 +138,24 @@ def drop_hunt():
                     preGhostBattles += 1
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
-    print("The NE armor hunt is complete. Char:", gameVars.ne_armor())
+    print("The NE armor hunt is complete. Char:", game_vars.ne_armor())
     logs.write_stats("Pre-Ghost flees:")
     logs.write_stats(preGhostBattles)
     logs.write_stats("NEA char:")
-    logs.write_stats(gameVars.ne_armor())
+    logs.write_stats(game_vars.ne_armor())
 
 
 def return_to_gagazet():
     unequip = False
     if memory.main.get_coords()[0] > 300:
         goGreen = True
-        menu.equip_armor(character=gameVars.ne_armor(), ability=0x801D)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
         if memory.main.overdrive_state_2()[6] != 100:
             unequip = True
     else:
         goGreen = False
         if memory.main.overdrive_state_2()[6] == 100:
-            menu.equip_armor(character=gameVars.ne_armor(), ability=0x801D)
+            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
 
     checkpoint = 0
     while memory.main.get_map() != 259:
@@ -172,7 +172,7 @@ def return_to_gagazet():
             elif checkpoint < 1 and memory.main.get_map() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
-                menu.equip_armor(character=gameVars.ne_armor(), ability=99)
+                menu.equip_armor(character=game_vars.ne_armor(), ability=99)
                 unequip = False
             elif checkpoint == 2:
                 memory.main.touch_save_sphere()

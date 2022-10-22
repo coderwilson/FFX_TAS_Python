@@ -9,7 +9,7 @@ import screen
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -47,7 +47,7 @@ def auto_life():
 
 # Default to Besaid. Maybe based on map number?
 def air_ship_destination(dest_num=0, force_omega=False):
-    if gameVars.csr():
+    if game_vars.csr():
         if dest_num >= 13:  # Adjust for Besaid and Kilika locations
             if force_omega:
                 dest_num += 4
@@ -83,7 +83,7 @@ def air_ship_destination(dest_num=0, force_omega=False):
 
 
 def unlock_omega():
-    if gameVars.csr():
+    if game_vars.csr():
         return
 
     while not memory.main.get_map() in [382, 999]:
@@ -624,7 +624,7 @@ def bribe_battle(spare_change_value: int = 12000):
                         xbox.tap_down()
                     else:
                         xbox.tap_up()
-                    if gameVars.use_pause():
+                    if game_vars.use_pause():
                         memory.main.wait_frames(6)
                 memory.main.wait_frames(8)
                 xbox.tap_b()
@@ -1028,8 +1028,8 @@ def auto_phoenix():  # Calm Lands items
     # nemesis.menu.equipArmor(character=0,ability=0x8056) #Auto-Haste
     nemesis.menu.equipArmor(character=4, ability=0x800A)  # Auto-Phoenix
     nemesis.menu.equipArmor(character=6, ability=0x800A)  # Auto-Phoenix
-    if not gameVars.ne_armor() in [0, 4, 6]:
-        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=99)  # Unequip
+    if not game_vars.ne_armor() in [0, 4, 6]:
+        nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=99)  # Unequip
     memory.main.close_menu()
 
 
@@ -1690,7 +1690,7 @@ def miihen_next(end_goal: int):
 
 def miihen_farm(cap_num: int = 1):
     air_ship_destination(dest_num=4)
-    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+    nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
     neArmor = True
     prefArea = miihen_next(end_goal=cap_num)
     print("Next area: ", prefArea)
@@ -1762,7 +1762,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint == 77 and prefArea == 2:
                 checkpoint = 34
             elif checkpoint in [48, 53] and prefArea >= 4 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint == 59 and prefArea in [4, 5] and neArmor:
                 nemesis.menu.removeAllNEA()
@@ -1770,7 +1770,7 @@ def miihen_farm(cap_num: int = 1):
                 print("Next area: ", prefArea)
                 neArmor = False
             elif checkpoint in [63, 64] and prefArea in [1, 2] and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [32, 42, 73] and prefArea in [1, 2, 3] and neArmor:
                 nemesis.menu.removeAllNEA()
@@ -1778,7 +1778,7 @@ def miihen_farm(cap_num: int = 1):
                 print("Next area: ", prefArea)
                 neArmor = False
             elif checkpoint == 151 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 
             # Garuda late farming logic
@@ -1794,7 +1794,7 @@ def miihen_farm(cap_num: int = 1):
                 and prefArea in [6, 8, 9]
                 and not neArmor
             ):
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint > 99 and checkpoint >= 144 and prefArea == 6 and neArmor:
                 nemesis.menu.removeAllNEA()
@@ -1850,19 +1850,19 @@ def miihen_farm(cap_num: int = 1):
 
 def miihen_farm_old(cap_num: int = 1):
     air_ship_destination(dest_num=4)
-    if gameVars.ne_armor() == 0:
+    if game_vars.ne_armor() == 0:
         nemesis.menu.equipArmor(
-            character=gameVars.ne_armor(), ability=0x8056
+            character=game_vars.ne_armor(), ability=0x8056
         )  # Auto-Haste
     else:
-        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=99)  # Unequip
+        nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=99)  # Unequip
 
     checkpoint = 0
     while memory.main.get_map() != 79:
         if memory.main.user_control():
             # print(checkpoint)
             # if memory.getMap() == 171:
-            #    if memory.getCoords()[0] > -2:
+            #    if memory.get_coords()[0] > -2:
             #        FFXC.set_movement(-1,-1)
             #    else:
             #        FFXC.set_movement(-0.5,-1)
@@ -1947,7 +1947,7 @@ def miihen_farm_old(cap_num: int = 1):
 
 def mrrFarm_old(capNum: int = 1):
     # Unlike other sections, MRR is expected to zone in from the Mi'ihen area and not the airship.
-    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+    nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
     while not nemesis.targetPath.set_movement([-45, -733]):  # Close to magus sisters
         pass
     while not nemesis.targetPath.set_movement([-61, -692]):  # Past magus sisters
@@ -2045,7 +2045,7 @@ def djose_next(end_goal: int):
 def djose_farm(cap_num: int = 10):
     rin_equip_dump()
     air_ship_destination(dest_num=5)
-    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+    nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
     neArmor = True
     prefArea = djose_next(end_goal=cap_num)
     print("Next area: ", prefArea)
@@ -2077,7 +2077,7 @@ def djose_farm(cap_num: int = 10):
 
             # Farming logic
             if prefArea in [3, 4] and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [21, 45] and prefArea == 1 and neArmor:
                 nemesis.menu.removeAllNEA()
@@ -2192,11 +2192,11 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
-            if memory.main.dodge_lightning(gameVars.get_l_strike()):
+            if memory.main.dodge_lightning(game_vars.get_l_strike()):
                 print("Strike!")
-                gameVars.set_l_strike(memory.main.l_strike_count())
+                game_vars.set_l_strike(memory.main.l_strike_count())
             if prefArea in [3, 4] and not neEquip:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neEquip = True
                 if checkpoint in [4, 5]:
                     checkpoint = 6
@@ -2280,16 +2280,16 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
-            if memory.main.dodge_lightning(gameVars.get_l_strike()):
+            if memory.main.dodge_lightning(game_vars.get_l_strike()):
                 print("Strike!")
-                gameVars.set_l_strike(memory.main.l_strike_count())
+                game_vars.set_l_strike(memory.main.l_strike_count())
             elif (
                 memory.main.arena_farm_check(
                     zone="tPlains", end_goal=cap_num, report=False
                 )
                 and checkpoint < 8
             ):
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 checkpoint = 8
             elif memory.main.get_yuna_mp() < 30 and checkpoint < 8:
                 checkpoint = 8
@@ -2556,7 +2556,7 @@ def bikanel_next(end_goal: int):
 
 def bikanel(cap_num: int = 10):
     air_ship_destination(dest_num=10)
-    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+    nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
     neArmor = True
     prefArea = bikanel_next(end_goal=cap_num)
     print("Next area: ", prefArea)
@@ -2567,7 +2567,7 @@ def bikanel(cap_num: int = 10):
         if memory.main.user_control():
             # NEA stuff
             if prefArea == 4 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [27, 28] and prefArea != 1:
                 checkpoint = 29
@@ -2576,14 +2576,14 @@ def bikanel(cap_num: int = 10):
                 bikanel_next(end_goal=cap_num)
                 neArmor = False
             elif checkpoint < 33 and prefArea == 3 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [34, 35] and prefArea == 3 and neArmor:
                 nemesis.menu.removeAllNEA()
                 bikanel_next(end_goal=cap_num)
                 neArmor = False
             elif checkpoint in [34, 35] and prefArea != 3 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 checkpoint = 36
                 neArmor = True
             elif checkpoint == 40 and prefArea != 4:
@@ -2701,7 +2701,7 @@ def calm_next(end_goal: int, force_levels: int):
     if memory.main.arena_farm_check(zone="calm", end_goal=end_goal):
         if memory.main.get_yuna_mp() < 30:
             return 9
-        if force_levels > gameVars.nem_checkpoint_ap():
+        if force_levels > game_vars.nem_checkpoint_ap():
             print("== Area complete, but need more levels ==")
             # Need extra AP to reach Quick Attack
             # Overdrive > AP gives us the most per kill.
@@ -2727,10 +2727,10 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
     while not memory.main.get_map() == 307:
         if memory.main.user_control():
             if not neArmor and prefArea == 9:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif prefArea == 9 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 
             if prefArea == 1 and checkpoint in [4, 5, 10]:
@@ -2760,7 +2760,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
             if memory.main.battle_active():
                 if (
                     memory.main.get_encounter_id() == 281
-                    and gameVars.nem_checkpoint_ap() < 8
+                    and game_vars.nem_checkpoint_ap() < 8
                 ):
                     if min(allCounts[13], allCounts[19]) >= cap_num:
                         battle.main.flee_all()
@@ -2768,7 +2768,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                         battle_farm_all()
                 elif (
                     memory.main.get_encounter_id() == 283
-                    and gameVars.nem_checkpoint_ap() < 8
+                    and game_vars.nem_checkpoint_ap() < 8
                 ):
                     if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
                         battle.main.flee_all()
@@ -2777,7 +2777,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 elif (
                     memory.main.get_encounter_id() == 284
                     and allCounts[33] >= cap_num
-                    and gameVars.nem_checkpoint_ap() < 8
+                    and game_vars.nem_checkpoint_ap() < 8
                 ):
                     battle.main.flee_all()
                 else:
@@ -2794,7 +2794,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 xbox.tap_b()
     if airship_return:
         return_to_airship()
-    if force_levels > gameVars.nem_checkpoint_ap():
+    if force_levels > game_vars.nem_checkpoint_ap():
         return False
     return memory.main.arena_farm_check(zone="calm", end_goal=cap_num, report=False)
 
@@ -2809,7 +2809,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
     while not memory.main.get_map() == 307:
         if memory.main.user_control():
             if not neArmor and memory.main.get_yuna_mp() < 30:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             if (
                 memory.main.arena_farm_check(
@@ -2842,7 +2842,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
             if memory.main.battle_active():
                 if (
                     memory.main.get_encounter_id() == 281
-                    and gameVars.nem_checkpoint_ap() < 8
+                    and game_vars.nem_checkpoint_ap() < 8
                 ):
                     if min(allCounts[13], allCounts[19]) >= cap_num:
                         battle.main.flee_all()
@@ -2850,7 +2850,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                         battle_farm_all()
                 elif (
                     memory.main.get_encounter_id() == 283
-                    and gameVars.nem_checkpoint_ap() < 8
+                    and game_vars.nem_checkpoint_ap() < 8
                 ):
                     if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
                         battle.main.flee_all()
@@ -2859,7 +2859,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 elif (
                     memory.main.get_encounter_id() == 284
                     and allCounts[33] >= cap_num
-                    and gameVars.nem_checkpoint_ap() < 8
+                    and game_vars.nem_checkpoint_ap() < 8
                 ):
                     battle.main.flee_all()
                 else:
@@ -2964,7 +2964,7 @@ def gagazet(cap_num: int = 10):
     air_ship_destination(dest_num=13)
     prefArea = gagazet_next(end_goal=cap_num)
     if prefArea == 4:
-        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+        nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
         neArmor = True
     else:
         nemesis.menu.removeAllNEA()
@@ -3068,10 +3068,10 @@ def gagazet(cap_num: int = 10):
                 nemesis.menu.removeAllNEA()
                 neArmor = False
             elif neArmor == False and checkpoint == 4:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif neArmor == False and checkpoint == 13 and prefArea != 2:
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 
             # End decisions
@@ -3323,9 +3323,9 @@ def fayth_next(endGoal: int):
 def stolen_fayth_cave(cap_num: int = 10):
     air_ship_destination(dest_num=13)
     if not memory.main.equipped_weapon_has_ability(
-        char_num=gameVars.ne_armor(), ability_num=0x801D
+        char_num=game_vars.ne_armor(), ability_num=0x801D
     ):
-        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+        nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
     neArmor = True
     prefArea = fayth_next(endGoal=cap_num)
     print("Next area: ", prefArea)
@@ -3336,7 +3336,7 @@ def stolen_fayth_cave(cap_num: int = 10):
             if prefArea == 4 and checkpoint in [25, 26, 27, 28, 29]:
                 checkpoint = 30
                 memory.main.full_party_format("initiative")
-                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif prefArea in [1, 2, 3] and checkpoint in [25, 27] and neArmor:
                 nemesis.menu.removeAllNEA()

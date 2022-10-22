@@ -7,8 +7,8 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
-gameVars.set_start_vars()
+game_vars = vars.vars_handle()
+game_vars.set_start_vars()
 
 memory.main.start()
 # Plug in controller

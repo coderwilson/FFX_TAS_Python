@@ -6,7 +6,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -93,7 +93,7 @@ def path():
 def temple():
     memory.main.click_to_control()
     menu.djose_temple()
-    if not gameVars.csr():
+    if not game_vars.csr():
         FFXC.set_movement(0, -1)
         memory.main.wait_frames(30 * 0.3)
         FFXC.set_movement(-1, -1)
@@ -310,7 +310,7 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 104:
                 print("End of Trials")
-                if gameVars.csr():
+                if game_vars.csr():
                     FFXC.set_movement(-1, 1)
                     memory.main.await_event()
                     FFXC.set_neutral()
@@ -323,7 +323,7 @@ def trials():
                 print("Checkpoint reached:", checkpoint)
 
     FFXC.set_neutral()
-    if not gameVars.csr():
+    if not game_vars.csr():
         memory.main.await_control()
         memory.main.wait_frames(30 * 0.3)
         print("Talk to Auron while we wait.")
@@ -364,7 +364,7 @@ def leaving_djose():
             lastCP = checkpoint
         if memory.main.user_control():
             if checkpoint == 1:
-                if not gameVars.csr():
+                if not game_vars.csr():
                     FFXC.set_movement(1, 0)
                     memory.main.click_to_event_temple(6)
                 checkpoint += 1

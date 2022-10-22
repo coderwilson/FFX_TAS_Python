@@ -7,7 +7,7 @@ import vars
 # from tracker.data.formations import allFormations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def area_formations(area: str):
@@ -1473,7 +1473,7 @@ def decide_skip_zan_luck() -> bool:
             print("### Miss on Yunalesca, attack number", i)
             return False
         attackCount += 1
-    if gameVars.nemesis():  # BFA miss does not factor in for Nemesis route.
+    if game_vars.nemesis():  # BFA miss does not factor in for Nemesis route.
         return True
 
     arm1Crit = memory.main.future_attack_will_crit(
@@ -1589,7 +1589,7 @@ def zombie_track(report=False):
 
     zanarkand.decide_nea(bonus_advance=1)
     # One death expected to recharge Rikku. No drops expected.
-    if gameVars.get_nea_zone() in [1, 2]:
+    if game_vars.get_nea_zone() in [1, 2]:
         advance10 += 3
         advance01 += 1
 
@@ -1840,8 +1840,8 @@ def record_blitz_results_tyton(duration, test_mode=False):
         victory = False
     else:
         seed = str(memory.main.rng_seed())
-        sub_key = str(gameVars.oblitz_rng_check())
-        victory = gameVars.get_blitz_win()
+        sub_key = str(game_vars.oblitz_rng_check())
+        victory = game_vars.get_blitz_win()
     if seed in records.keys():
         if sub_key in records[seed].keys():
             if records[seed][sub_key]["victory"] and not victory:
@@ -1875,46 +1875,46 @@ def record_blitz_results(duration, test_mode=False):
     else:
         newVal = {
             memory.main.rng_seed(): {
-                gameVars.oblitz_rng_check(): {
+                game_vars.oblitz_rng_check(): {
                     "duration": duration,
-                    "victory": gameVars.get_blitz_win(),
+                    "victory": game_vars.get_blitz_win(),
                 }
             }
         }
         if str(memory.main.rng_seed()) in records.keys():
             if (
-                gameVars.oblitz_rng_check()
+                game_vars.oblitz_rng_check()
                 in records[str(memory.main.rng_seed())].keys()
             ):
                 if (
-                    not gameVars.get_blitz_win()
+                    not game_vars.get_blitz_win()
                     and records[str(memory.main.rng_seed())][
-                        gameVars.oblitz_rng_check()
+                        game_vars.oblitz_rng_check()
                     ]["victory"]
                 ):
-                    records[str(memory.main.rng_seed())][gameVars.oblitz_rng_check()][
+                    records[str(memory.main.rng_seed())][game_vars.oblitz_rng_check()][
                         "victory"
-                    ] = gameVars.get_blitz_win()
-                    records[str(memory.main.rng_seed())][gameVars.oblitz_rng_check()][
+                    ] = game_vars.get_blitz_win()
+                    records[str(memory.main.rng_seed())][game_vars.oblitz_rng_check()][
                         "duration"
                     ] = duration
                 elif (
-                    gameVars.get_blitz_win()
+                    game_vars.get_blitz_win()
                     == records[str(memory.main.rng_seed())][
-                        gameVars.oblitz_rng_check()
+                        game_vars.oblitz_rng_check()
                     ]["victory"]
                 ):
                     if (
                         duration
                         > records[str(memory.main.rng_seed())][
-                            gameVars.oblitz_rng_check()
+                            game_vars.oblitz_rng_check()
                         ]["duration"]
                     ):
                         records[str(memory.main.rng_seed())][
-                            gameVars.oblitz_rng_check()
-                        ]["victory"] = gameVars.get_blitz_win()
+                            game_vars.oblitz_rng_check()
+                        ]["victory"] = game_vars.get_blitz_win()
                         records[str(memory.main.rng_seed())][
-                            gameVars.oblitz_rng_check()
+                            game_vars.oblitz_rng_check()
                         ]["duration"] = duration
             else:
                 records[str(memory.main.rng_seed())].update(

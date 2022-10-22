@@ -14,7 +14,7 @@ import Showcase.chocoEater
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 # Plug in controller
 FFXC = xbox.controller_handle()
@@ -29,7 +29,7 @@ startTime = logs.time_stamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
-gameVars.set_csr(False)
+game_vars.set_csr(False)
 
 attempts = 0  # Determines where in the showcase we start
 cycles = 0

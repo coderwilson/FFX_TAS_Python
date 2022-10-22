@@ -8,12 +8,12 @@ import vars
 import xbox
 
 FFXC = xbox.controller_handle()
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def beach():
     print("Starting Besaid section. Beach")
-    if gameVars.csr():
+    if game_vars.csr():
         FFXC.set_neutral()
         memory.main.await_control()
     else:
@@ -43,7 +43,7 @@ def beach():
             checkpoint = 22
             print("Map change. Checkpoint: ", checkpoint)
         elif checkpoint < 29 and memory.main.get_map() == 133:
-            if not gameVars.csr():
+            if not game_vars.csr():
                 # You do remember the prayer?
                 memory.main.click_to_diag_progress(9)
                 memory.main.wait_frames(20)
@@ -132,7 +132,7 @@ def trials():
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
-                if gameVars.use_pause():
+                if game_vars.use_pause():
                     memory.main.wait_frames(2)
                 while memory.main.get_map() == 122:
                     FFXC.set_movement(0, 1)
@@ -238,10 +238,10 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 24:  # Hilltop
                 memory.main.click_to_event_temple(2)
-                print("Ready for SS Liki menu - (var)", gameVars.early_tidus_grid())
+                print("Ready for SS Liki menu - (var)", game_vars.early_tidus_grid())
                 if memory.main.get_tidus_slvl() >= 3:
                     menu.liki()
-                    gameVars.early_tidus_grid_set_true()
+                    game_vars.early_tidus_grid_set_true()
                 logs.write_rng_track("###########################")
                 logs.write_rng_track("Pre-Kimahri array")
                 logs.write_rng_track(memory.main.rng_10_array(array_len=1))
@@ -276,7 +276,7 @@ def leaving():
                         battleHP = memory.main.get_battle_hp()
                         enemyHP = memory.main.get_enemy_current_hp()
                         if (
-                            not gameVars.early_tidus_grid()
+                            not game_vars.early_tidus_grid()
                             and battleHP[0] < 120
                             and enemyHP[0] > 119
                         ):

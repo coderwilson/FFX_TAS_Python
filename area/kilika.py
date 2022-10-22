@@ -8,7 +8,7 @@ import vars
 import xbox
 
 FFXC = xbox.controller_handle()
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def arrival():
@@ -89,7 +89,7 @@ def forest_1():
     import rngTrack
 
     valeforCharge = False
-    if gameVars.csr():
+    if game_vars.csr():
         checkpoint = 0
     else:
         checkpoint = 2
@@ -112,7 +112,7 @@ def forest_1():
                 checkpoint = 81
             if checkpoint == 83 and memory.main.get_map() == 65:
                 checkpoint = 84
-            if checkpoint == 37 and gameVars.skip_kilika_luck():
+            if checkpoint == 37 and game_vars.skip_kilika_luck():
                 checkpoint = 60
 
             # events
@@ -129,7 +129,7 @@ def forest_1():
                     checkpoint += 1
             elif checkpoint == 86:
                 memory.main.touch_save_sphere()
-                if not gameVars.did_full_kilik_menu():
+                if not game_vars.did_full_kilik_menu():
                     menu.geneaux()
                 checkpoint += 1
             elif checkpoint == 99:  # Lord O'holland
@@ -246,7 +246,7 @@ def trials():
             #    FFXC.set_neutral()
             #    xbox.nameAeon("Ifrit")  # Set Ifrit name
             #    checkpoint = 55
-            elif checkpoint == 54 and not gameVars.csr():  # Talk to Wakka
+            elif checkpoint == 54 and not game_vars.csr():  # Talk to Wakka
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 56:  # Leave inner sanctum

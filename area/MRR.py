@@ -10,7 +10,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -23,7 +23,7 @@ def arrival():
     checkpoint = 0
     while memory.main.get_map() != 92:
         if memory.main.user_control():
-            if gameVars.csr() and checkpoint == 1:
+            if game_vars.csr() and checkpoint == 1:
                 print("CSR, skipping forward")
                 checkpoint = 4
                 print("Checkpoint reached:", checkpoint)
@@ -237,7 +237,7 @@ def main_path():
 
 def battle_site():
     memory.main.await_control()
-    if gameVars.get_l_strike() >= 2:
+    if game_vars.get_l_strike() >= 2:
         menu.equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     menu.battle_site_grid()
 

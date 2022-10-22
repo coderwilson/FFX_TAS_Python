@@ -6,7 +6,7 @@ import vars
 import xbox
 
 FFXC = xbox.controller_handle()
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def ammes():
@@ -113,7 +113,7 @@ def klikk():
         and memory.main.get_coords()[1] < 15
     ):
         # print(memory.main.getMap())
-        if gameVars.csr():
+        if game_vars.csr():
             FFXC.set_value("BtnB", 1)
         else:
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
@@ -676,9 +676,9 @@ def extractor():
     cheerCount = 0
     while not memory.main.battle_complete():  # AKA end of battle screen
         # First determine if cheers are needed.
-        if gameVars.get_l_strike() % 2 == 0 and cheerCount < 4:
+        if game_vars.get_l_strike() % 2 == 0 and cheerCount < 4:
             tidusCheer = True
-        elif gameVars.get_l_strike() % 2 == 1 and cheerCount < 1:
+        elif game_vars.get_l_strike() % 2 == 1 and cheerCount < 1:
             tidusCheer = True
         else:
             tidusCheer = False
@@ -732,7 +732,7 @@ def spherimorph():
         pass
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            if gameVars.use_pause():
+            if game_vars.use_pause():
                 memory.main.wait_frames(2)
             turnchar = memory.main.get_battle_char_turn()
             partyHP = memory.main.get_battle_hp()
@@ -852,7 +852,7 @@ def spherimorph():
 
                 rikkuturns += 1
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         xbox.skip_dialog(5)
 
 
@@ -997,7 +997,7 @@ def wendigo():
                 elif (
                     memory.main.get_enemy_current_hp()[1] < 6000
                     and memory.main.get_overdrive_battle(0) == 100
-                    and not gameVars.skip_kilika_luck()
+                    and not game_vars.skip_kilika_luck()
                 ):
                     battle.overdrive.tidus("left", character=21)
                 elif tidushealself:
@@ -1129,7 +1129,7 @@ def evrae():
             print("Tidus prep turns:", tidusPrep)
             if turnchar == 0:
                 print("Registering Tidus' turn")
-                if gameVars.skip_kilika_luck():
+                if game_vars.skip_kilika_luck():
                     if tidusPrep == 0:
                         tidusPrep = 1
                         battle.main.tidus_haste("none")
@@ -1145,7 +1145,7 @@ def evrae():
                     else:
                         tidusAttacks += 1
                         battle.main.attack("none")
-                elif gameVars.get_blitz_win():  # Blitz win logic
+                elif game_vars.get_blitz_win():  # Blitz win logic
                     if tidusPrep == 0:
                         tidusPrep = 1
                         battle.main.tidus_haste("none")
@@ -1174,7 +1174,7 @@ def evrae():
                         print("Equip Baroque Sword.")
                         battle.main.equip_in_battle(special="baroque")
                         tidusPrep += 1
-                    elif tidusAttacks == 4 and gameVars.skip_kilika_luck():
+                    elif tidusAttacks == 4 and game_vars.skip_kilika_luck():
                         tidusAttacks += 1
                         battle.overdrive.tidus()
                     else:
@@ -1186,14 +1186,14 @@ def evrae():
                     rikkuTurns += 1
                     print("Rikku overdrive")
                     battle.main.rikku_full_od("Evrae")
-                elif not gameVars.get_blitz_win() and not lunarCurtain:
+                elif not game_vars.get_blitz_win() and not lunarCurtain:
                     print("Use Lunar Curtain")
                     lunarSlot = memory.main.get_use_items_slot(56)
                     battle.main.use_item(lunarSlot, direction="l", target=0)
                     lunarCurtain = True
                 elif memory.main.get_battle_hp()[
                     memory.main.get_battle_char_slot(0)
-                ] < 1520 and (tidusAttacks < 3 or not gameVars.get_blitz_win()):
+                ] < 1520 and (tidusAttacks < 3 or not game_vars.get_blitz_win()):
                     print("Rikku should attempt to heal a character.")
                     kimahriTurns += 1
                     if battle.main.fullheal(target=0, direction="d") == 0:
@@ -1201,7 +1201,7 @@ def evrae():
                         battle.main.use_item(memory.main.get_use_items_slot(20))
                     else:
                         print("Heal should be successful.")
-                elif gameVars.skip_kilika_luck():
+                elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
                         throwSlot = memory.main.get_use_items_slot(32)
                     elif memory.main.get_use_items_slot(24) != 255:
@@ -1219,14 +1219,14 @@ def evrae():
                     stealCount += 1
             elif turnchar == 3:
                 print("Registering Kimahri's turn")
-                if not gameVars.get_blitz_win() and not lunarCurtain:
+                if not game_vars.get_blitz_win() and not lunarCurtain:
                     print("Use Lunar Curtain")
                     lunarSlot = memory.main.get_use_items_slot(56)
                     battle.main.use_item(lunarSlot, direction="l", target=0)
                     lunarCurtain = True
                 elif memory.main.get_battle_hp()[
                     memory.main.get_battle_char_slot(0)
-                ] < 1520 and (tidusAttacks < 3 or not gameVars.get_blitz_win()):
+                ] < 1520 and (tidusAttacks < 3 or not game_vars.get_blitz_win()):
                     print("Kimahri should attempt to heal a character.")
                     kimahriTurns += 1
                     if battle.main.fullheal(target=0, direction="u") == 0:
@@ -1234,7 +1234,7 @@ def evrae():
                         battle.main.use_item(memory.main.get_use_items_slot(20))
                     else:
                         print("Heal should be successful.")
-                elif gameVars.skip_kilika_luck():
+                elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
                         throwSlot = memory.main.get_use_items_slot(32)
                     elif memory.main.get_use_items_slot(24) != 255:
@@ -1253,7 +1253,7 @@ def evrae():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         while not memory.main.cutscene_skip_possible():
             if memory.main.menu_open():
                 xbox.tap_b()
@@ -1263,7 +1263,7 @@ def evrae():
 def isaaru():
     xbox.click_to_battle()
     if memory.main.get_encounter_id() < 258:
-        gameVars.add_rescue_count()
+        game_vars.add_rescue_count()
 
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
@@ -1317,7 +1317,7 @@ def seymour_natus():
             while not memory.main.battle_complete():
                 if memory.main.turn_ready():
                     if screen.turn_tidus():
-                        if memory.main.get_lulu_slvl() < 35 or gameVars.nemesis():
+                        if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis():
                             battle.main.buddy_swap_lulu()
                             screen.await_turn()
                             xbox.weap_swap(0)
@@ -1343,39 +1343,39 @@ def seymour_natus():
             return 1
         elif memory.main.get_encounter_id() == 270:  # YAT-63 x2
             while memory.main.battle_active():
-                if gameVars.completed_rescue_fights():
+                if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
                     if screen.turn_tidus() or screen.turn_yuna():
                         if memory.main.get_enemy_current_hp().count(0) == 1:
                             battle.main.flee_all()
-                            gameVars.add_rescue_count()
+                            game_vars.add_rescue_count()
                         else:
                             battle.main.attack_by_num(22, "r")
                     else:
                         battle.main.defend()
         elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
             while memory.main.battle_active():
-                if gameVars.completed_rescue_fights():
+                if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
                     if screen.turn_tidus() or screen.turn_yuna():
                         if memory.main.get_enemy_current_hp().count(0) == 1:
                             battle.main.flee_all()
-                            gameVars.add_rescue_count()
+                            game_vars.add_rescue_count()
                         else:
                             battle.main.attack("none")
                     else:
                         battle.main.defend()
         elif memory.main.get_encounter_id() == 271:  # one YAT-63, two YAT-99
             while memory.main.battle_active():
-                if gameVars.completed_rescue_fights():
+                if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
                     if screen.turn_tidus() or screen.turn_yuna():
                         if memory.main.get_enemy_current_hp().count(0) == 1:
                             battle.main.flee_all()
-                            gameVars.add_rescue_count()
+                            game_vars.add_rescue_count()
                         else:
                             battle.main.attack_by_num(21, "l")
                     else:
@@ -1390,7 +1390,7 @@ def biran_yenke():
     battle.main.steal()
 
     # Nemesis logic
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         screen.await_turn()
         battle.main.steal_right()
 
@@ -1422,7 +1422,7 @@ def biran_yenke():
         print("Split items between friend and return spheres.")
         endGameVersion = 1
 
-    gameVars.end_game_version_set(endGameVersion)
+    game_vars.end_game_version_set(endGameVersion)
 
 
 def seymour_flux():
@@ -1441,7 +1441,7 @@ def seymour_flux():
                     battle.main.aeon_summon(4)
                 else:
                     battle.main.defend()
-    elif gameVars.end_game_version() == 3:
+    elif game_vars.end_game_version() == 3:
         bahamutSummoned = False
         while not memory.main.battle_complete():  # AKA end of battle screen
             if memory.main.turn_ready():
@@ -1454,7 +1454,7 @@ def seymour_flux():
                     else:
                         battle.main.attack("none")
                 elif screen.turn_aeon():
-                    if gameVars.get_blitz_win():
+                    if game_vars.get_blitz_win():
                         battle.main.attack("none")
                     else:
                         battle.main.impulse()
@@ -1498,9 +1498,9 @@ def seymour_flux():
                 xbox.tap_b()
     memory.main.click_to_control()
     if memory.main.get_slvl_yuna() - yunaXP == 15000:
-        gameVars.flux_overkill_success()
+        game_vars.flux_overkill_success()
     print("------------------------------")
-    print("Flux Overkill:", gameVars.flux_overkill())
+    print("Flux Overkill:", game_vars.flux_overkill())
     print("Seymour Flux battle complete.")
     print("------------------------------")
     # time.sleep(60) #Testing only
@@ -1527,7 +1527,7 @@ def s_keeper():
                     battle.main.aeon_summon(4)
                 else:
                     battle.main.defend()
-    elif gameVars.end_game_version() == 3 and gameVars.get_blitz_win():
+    elif game_vars.end_game_version() == 3 and game_vars.get_blitz_win():
         while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 bahamut_crit = memory.main.next_crit(
@@ -1612,7 +1612,7 @@ def bfa():
     if memory.main.get_gil_value() < 150000:
         swagMode = True
     else:
-        swagMode = gameVars.yu_yevon_swag()
+        swagMode = game_vars.yu_yevon_swag()
     FFXC.set_movement(1, 0)
     memory.main.wait_frames(30 * 0.4)
     FFXC.set_movement(1, 1)
@@ -1644,7 +1644,7 @@ def bfa():
     # Skip the cutscene
     print("BFA down. Ready for Aeons")
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         while not memory.main.cutscene_skip_possible():
             xbox.tap_b()
         xbox.skip_scene()
@@ -1689,7 +1689,7 @@ def yu_yevon():
     screen.await_turn()  # No need for skipping dialog
     print("Awww such a sad final boss!")
     zombieAttack = False
-    zaChar = gameVars.zombie_weapon()
+    zaChar = game_vars.zombie_weapon()
     weapSwap = False
     while memory.main.get_story_progress() < 3400:
         if memory.main.turn_ready():

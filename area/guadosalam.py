@@ -5,7 +5,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -34,10 +34,10 @@ def arrival():
     memory.main.wait_frames(30 * 2)
     FFXC.set_neutral()  # Enter the room where we meet Seymour
 
-    print("TestVar -", gameVars.csr)
+    print("TestVar -", game_vars.csr)
     # Adjusted branch CSR logic, start
     memory.main.click_to_control_3()
-    if gameVars.csr():
+    if game_vars.csr():
         while not targetPathing.set_movement([-13, -67]):
             pass
         print("Mark3")
@@ -115,7 +115,7 @@ def arrival():
     FFXC.set_neutral()
     memory.main.click_to_control_3()
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         while not memory.main.cutscene_skip_possible():
             xbox.tap_b()
         xbox.skip_stored_scene(3)
@@ -142,7 +142,7 @@ def after_speech(checkpoint=0):
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 17:
-                if not gameVars.csr():
+                if not game_vars.csr():
                     memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 14:
@@ -171,7 +171,7 @@ def guado_skip():
     while pos[0] > -85:
         pos = memory.main.get_coords()
 
-    if gameVars.csr():
+    if game_vars.csr():
         checkpoint = 2
     else:
         FFXC.set_movement(0, 1)
@@ -277,7 +277,7 @@ def guado_skip():
                 print(memory.main.get_camera())
                 if memory.main.get_camera()[1] < -9:
                     print("Guado skip success.")
-                    if gameVars.csr():
+                    if game_vars.csr():
                         guadoSkipStatus = False
                         checkpoint = 18
                     else:

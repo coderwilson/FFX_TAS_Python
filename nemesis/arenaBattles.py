@@ -9,7 +9,7 @@ import screen
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -431,7 +431,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=0)
-    gameVars.arena_success(array_num=0, index=0)
+    game_vars.arena_success(array_num=0, index=0)
     restock_downs()
 
     check_yojimbo_possible()
@@ -453,7 +453,7 @@ def battles_1():
         aeon_start()
         if screen.turn_tidus():
             auto_life()
-    gameVars.arena_success(array_num=0, index=1)
+    game_vars.arena_success(array_num=0, index=1)
     restock_downs()
     nemesis.arenaSelect.arena_menu_select(4)
     memory.main.full_party_format("kilikawoods1")
@@ -469,7 +469,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=2)
-    gameVars.arena_success(array_num=0, index=2)
+    game_vars.arena_success(array_num=0, index=2)
     restock_downs()
 
     check_yojimbo_possible()
@@ -482,7 +482,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=3)
-    gameVars.arena_success(array_num=0, index=3)
+    game_vars.arena_success(array_num=0, index=3)
     restock_downs()
 
     check_yojimbo_possible()
@@ -496,7 +496,7 @@ def battles_1():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=4)
         auto_life()
-    gameVars.arena_success(array_num=0, index=4)
+    game_vars.arena_success(array_num=0, index=4)
     restock_downs()
 
     check_yojimbo_possible()
@@ -509,7 +509,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=5)
-    gameVars.arena_success(array_num=0, index=5)
+    game_vars.arena_success(array_num=0, index=5)
     restock_downs()
 
     check_yojimbo_possible()
@@ -524,7 +524,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=6)
-    gameVars.arena_success(array_num=0, index=6)
+    game_vars.arena_success(array_num=0, index=6)
     restock_downs()
 
     check_yojimbo_possible()
@@ -537,7 +537,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=7)
-    gameVars.arena_success(array_num=0, index=7)
+    game_vars.arena_success(array_num=0, index=7)
     restock_downs()
 
     check_yojimbo_possible()
@@ -550,7 +550,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=8)
-    gameVars.arena_success(array_num=0, index=8)
+    game_vars.arena_success(array_num=0, index=8)
     restock_downs()
 
     check_yojimbo_possible()
@@ -565,7 +565,7 @@ def battles_1():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
-    gameVars.arena_success(array_num=0, index=9)
+    game_vars.arena_success(array_num=0, index=9)
     restock_downs()
 
     check_yojimbo_possible()
@@ -580,7 +580,7 @@ def battles_1():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=10)
         auto_life()
-    gameVars.arena_success(array_num=0, index=10)
+    game_vars.arena_success(array_num=0, index=10)
     restock_downs()
 
     check_yojimbo_possible()
@@ -601,7 +601,7 @@ def battles_2():
         arena_npc()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=1)
-    gameVars.arena_success(array_num=1, index=1)
+    game_vars.arena_success(array_num=1, index=1)
     restock_downs()
 
     check_yojimbo_possible()
@@ -616,7 +616,7 @@ def battles_2():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=3)
-    gameVars.arena_success(array_num=1, index=3)
+    game_vars.arena_success(array_num=1, index=3)
     restock_downs()
 
     check_yojimbo_possible()
@@ -631,7 +631,7 @@ def battles_2():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=5)
-    gameVars.arena_success(array_num=1, index=5)
+    game_vars.arena_success(array_num=1, index=5)
     restock_downs()
 
     check_yojimbo_possible()
@@ -646,7 +646,7 @@ def battles_2():
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=8)
-    gameVars.arena_success(array_num=1, index=8)
+    game_vars.arena_success(array_num=1, index=8)
     restock_downs()
     nemesis.arenaSelect.arena_menu_select(4)
     touch_save()
@@ -678,7 +678,7 @@ def juggernaut_farm():
         nemesis.arenaSelect.arena_menu_select(4)
         touch_save()
     print("Good to go on strength spheres")
-    gameVars.arena_success(array_num=1, index=12)
+    game_vars.arena_success(array_num=1, index=12)
     print("Starting menu to finish strength.")
     nemesis.arenaSelect.arena_menu_select(4)
     nemesis.menu.str_boost()
@@ -697,7 +697,7 @@ def battles_3():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=11)
         auto_life()
-    gameVars.arena_success(array_num=0, index=11)
+    game_vars.arena_success(array_num=0, index=11)
     restock_downs()
 
     check_yojimbo_possible()
@@ -717,7 +717,7 @@ def battles_3():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=2)
         auto_life()
-    gameVars.arena_success(array_num=1, index=2)
+    game_vars.arena_success(array_num=1, index=2)
     restock_downs()
 
     check_yojimbo_possible()
@@ -732,7 +732,7 @@ def battles_3():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=0)
         auto_life()
-    gameVars.arena_success(array_num=1, index=0)
+    game_vars.arena_success(array_num=1, index=0)
     restock_downs()
 
     check_yojimbo_possible()
@@ -747,7 +747,7 @@ def battles_3():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=9)
         auto_life()
-    gameVars.arena_success(array_num=1, index=9)
+    game_vars.arena_success(array_num=1, index=9)
     restock_downs()
 
     check_yojimbo_possible()
@@ -764,7 +764,7 @@ def battles_3():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=10)
         auto_life()
-    gameVars.arena_success(array_num=1, index=10)
+    game_vars.arena_success(array_num=1, index=10)
     restock_downs()
 
     check_yojimbo_possible()
@@ -783,7 +783,7 @@ def battles_4():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=0)
         auto_life()
-    gameVars.arena_success(array_num=2, index=0)
+    game_vars.arena_success(array_num=2, index=0)
     restock_downs()
 
     check_yojimbo_possible()
@@ -803,7 +803,7 @@ def battles_4():
         nemesis.arenaSelect.arena_menu_select(1)
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=6)
 
-    gameVars.arena_success(array_num=2, index=6)
+    game_vars.arena_success(array_num=2, index=6)
     restock_downs()
 
 
@@ -834,7 +834,7 @@ def quick_reset_logic():
     xbox.menu_b()
     xbox.menu_b()
     FFXC.set_neutral()
-    gameVars.print_arena_status()
+    game_vars.print_arena_status()
     memory.main.wait_frames(30)
 
 
@@ -855,13 +855,13 @@ def check_yojimbo_possible():
         memory.main.wait_frames(20)
         nemesis.arenaSelect.arena_menu_select(4)
         memory.main.full_party_format("kilikawoods1")
-        if gameVars.yojimbo_get_index() == 1:
+        if game_vars.yojimbo_get_index() == 1:
             save_game(first_save=True)
         else:
             save_game(first_save=False)
 
         # Now attempt to get Zanmato until successful, no re-saving.
-        while not battles_5(gameVars.yojimbo_get_index()):
+        while not battles_5(game_vars.yojimbo_get_index()):
             quick_reset_logic()
         return True
     else:
@@ -916,67 +916,67 @@ def battles_5(completion_version: int):
     if completion_version == 1:
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=1)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=2, index=1)
+            game_vars.arena_success(array_num=2, index=1)
             yojimboSuccess = True
 
     elif completion_version == 2:
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=2)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=2, index=2)
+            game_vars.arena_success(array_num=2, index=2)
             yojimboSuccess = True
 
     elif completion_version == 3:
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=3)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=2, index=3)
+            game_vars.arena_success(array_num=2, index=3)
             yojimboSuccess = True
 
     elif completion_version == 4:
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=4)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=2, index=4)
+            game_vars.arena_success(array_num=2, index=4)
             yojimboSuccess = True
 
     elif completion_version == 5:
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=5)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=2, index=5)
+            game_vars.arena_success(array_num=2, index=5)
             yojimboSuccess = True
 
     elif completion_version == 6:
         nemesis.arenaSelect.start_fight(area_index=13, monster_index=12)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=0, index=12)
+            game_vars.arena_success(array_num=0, index=12)
             yojimboSuccess = True
 
     elif completion_version == 7:
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=13)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=1, index=13)
+            game_vars.arena_success(array_num=1, index=13)
             yojimboSuccess = True
 
     elif completion_version == 8:
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=11)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=1, index=11)
+            game_vars.arena_success(array_num=1, index=11)
             yojimboSuccess = True
 
     elif completion_version == 9:
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=7)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=1, index=7)
+            game_vars.arena_success(array_num=1, index=7)
             yojimboSuccess = True
 
     elif completion_version == 10:
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=6)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=1, index=6)
+            game_vars.arena_success(array_num=1, index=6)
             yojimboSuccess = True
 
     elif completion_version == 11:
         nemesis.arenaSelect.start_fight(area_index=14, monster_index=4)
         if yojimbo_battle():
-            gameVars.arena_success(array_num=1, index=4)
+            game_vars.arena_success(array_num=1, index=4)
             yojimboSuccess = True
 
     elif completion_version == 99:  # Nemesis
@@ -990,7 +990,7 @@ def battles_5(completion_version: int):
 
     # Wrap up decisions
     if yojimboSuccess:
-        gameVars.yojimbo_increment_index()
+        game_vars.yojimbo_increment_index()
         if completion_version != 99:
             restock_downs()
         return True
@@ -1013,13 +1013,13 @@ def recharge_yuna():
 
 
 def nemesis_battle():
-    if gameVars.yojimbo_get_index() < 12:
+    if game_vars.yojimbo_get_index() < 12:
         nemesis.arenaSelect.arena_menu_select(4)
         touch_save()
-        while gameVars.yojimbo_get_index() < 12:
+        while game_vars.yojimbo_get_index() < 12:
             # If Yuna is charged, do next battle. Otherwise charge.
             if memory.main.overdrive_state_2()[1] == 100:
-                battles_5(gameVars.yojimbo_get_index())
+                battles_5(game_vars.yojimbo_get_index())
             else:
                 recharge_yuna()
             nemesis.arenaSelect.arena_menu_select(4)

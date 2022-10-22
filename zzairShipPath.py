@@ -6,7 +6,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -124,7 +124,7 @@ def air_ship_path(version):
             elif checkpoint == 40:
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
-            elif checkpoint in [43, 44] and not gameVars.csr():
+            elif checkpoint in [43, 44] and not game_vars.csr():
                 checkpoint = 45
             elif checkpoint == 44:  # Talk to Cid
                 while memory.main.user_control():

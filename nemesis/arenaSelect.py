@@ -2,7 +2,7 @@ import memory.main
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -48,7 +48,7 @@ def arena_cursor():
 
 def arena_menu_select(choice: int = 2):
     print("Selecting menu option: ", choice)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
     while not memory.main.blitz_cursor() == choice:
         if choice == 4:

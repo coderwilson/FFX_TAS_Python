@@ -9,13 +9,13 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def print_nea_zone(battles: int):
-    print("#### Charging Rikku zone:", gameVars.get_nea_zone())
+    print("#### Charging Rikku zone:", game_vars.get_nea_zone())
     print("#### This will take", battles, "number of battles (99 means unknown)")
 
 
@@ -37,23 +37,23 @@ def decide_nea(bonus_advance: int = 0):
 
     for i in range(maxBattles):
         if "behemoth" in zanOutdoors[i]:
-            gameVars.set_nea_zone(1)
+            game_vars.set_nea_zone(1)
             print_nea_zone(i + 1)
             return
         elif "defender_z" in zanIndoors[i]:
-            gameVars.set_nea_zone(2)
+            game_vars.set_nea_zone(2)
             print_nea_zone(i + 1)
             return
         elif "behemoth_king" in seaSorrows[i]:
-            gameVars.set_nea_zone(3)
+            game_vars.set_nea_zone(3)
             print_nea_zone(i + 1)
             return
         elif "adamantoise" in seaSorrows[i]:
-            gameVars.set_nea_zone(3)
+            game_vars.set_nea_zone(3)
             print_nea_zone(i + 1)
             return
     # If we won't get it in next five per zone, default to Inside Sin. The most possible battles there.
-    gameVars.set_nea_zone(99)
+    game_vars.set_nea_zone(99)
     print_nea_zone(99)
     return
 
@@ -63,14 +63,14 @@ def arrival():
     decide_nea()
     # Starts from the map just after the fireplace chat.
     reEquipNE = False
-    if memory.main.overdrive_state_2()[6] != 100 and gameVars.get_nea_zone() == 1:
+    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 1:
         memory.main.full_party_format("rikku", full_menu_close=False)
-        menu.equip_armor(character=gameVars.ne_armor(), ability=99)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         reEquipNE = True
 
-    gameVars.set_skip_zan_luck(rngTrack.decide_skip_zan_luck())
+    game_vars.set_skip_zan_luck(rngTrack.decide_skip_zan_luck())
     logs.write_stats("Zanarkand Luck Skip:")
-    logs.write_stats(gameVars.get_skip_zan_luck())
+    logs.write_stats(game_vars.get_skip_zan_luck())
     # gameVars.setSkipZanLuck(True) #For testing
     print("Outdoor Zanarkand pathing section")
     while memory.main.get_map() != 225:
@@ -93,7 +93,7 @@ def arrival():
     checkpoint = 0
     while memory.main.get_map() != 314:
         if memory.main.user_control():
-            if checkpoint == 3 and gameVars.get_skip_zan_luck():
+            if checkpoint == 3 and game_vars.get_skip_zan_luck():
                 checkpoint = 5
             elif checkpoint == 4:  # First chest
                 fortuneSlot = memory.main.get_item_slot(74)
@@ -122,7 +122,7 @@ def arrival():
                     reEquipNE = False
                     memory.main.click_to_control()
                     memory.main.full_party_format("yuna", full_menu_close=False)
-                    menu.equip_armor(character=gameVars.ne_armor(), ability=0x801D)
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     memory.main.close_menu()
             elif memory.main.diag_skip_possible() and not memory.main.battle_active():
                 xbox.tap_b()
@@ -150,9 +150,9 @@ def arrival():
     else:
         luckCount = memory.main.get_item_count_slot(luckSlot)
 
-    if memory.main.overdrive_state_2()[6] != 100 and gameVars.get_nea_zone() == 2:
+    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 2:
         memory.main.full_party_format("rikku", full_menu_close=False)
-        menu.equip_armor(character=gameVars.ne_armor(), ability=99)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         reEquipNE = True
 
     checkpoint = 0
@@ -173,7 +173,7 @@ def arrival():
                         targetPathing.set_movement([8, 90])
                         memory.main.wait_frames(1)
                         xbox.tap_b()
-            if checkpoint == 23 and gameVars.get_skip_zan_luck():
+            if checkpoint == 23 and game_vars.get_skip_zan_luck():
                 checkpoint = 25
             elif checkpoint == 24:  # Third chest
                 luckSlot = memory.main.get_item_slot(94)
@@ -208,7 +208,7 @@ def arrival():
                     reEquipNE = False
                     memory.main.click_to_control()
                     memory.main.full_party_format("yuna", full_menu_close=False)
-                    menu.equip_armor(character=gameVars.ne_armor(), ability=0x801D)
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     memory.main.close_menu()
             elif memory.main.diag_skip_possible() and not memory.main.battle_active():
                 xbox.tap_b()
@@ -353,7 +353,7 @@ def trials_4(checkpoint):
 
 
 def sanctuary_keeper():
-    ver = gameVars.end_game_version()
+    ver = game_vars.end_game_version()
     print("Now prepping for Sanctuary Keeper fight")
 
     if ver == 4:
@@ -387,7 +387,7 @@ def sanctuary_keeper():
 
 
 def yunalesca():
-    ver = gameVars.end_game_version()
+    ver = game_vars.end_game_version()
     while not targetPathing.set_movement([-2, -179]):
         if memory.main.diag_skip_possible():
             xbox.tap_b()
@@ -432,15 +432,15 @@ def yunalesca():
     # Now to check for zombie strike and then report to logs.
     print("Ready to check for Zombiestrike")
     logs.write_stats("Zombiestrike:")
-    logs.write_stats(gameVars.zombie_weapon())
+    logs.write_stats(game_vars.zombie_weapon())
     print("++Zombiestrike:")
-    print("++", gameVars.zombie_weapon())
+    print("++", game_vars.zombie_weapon())
 
 
 def post_yunalesca(checkpoint=0):
     print("Heading back outside.")
     FFXC.set_neutral()
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)
     memory.main.wait_frames(2)
     while memory.main.get_map() != 194:

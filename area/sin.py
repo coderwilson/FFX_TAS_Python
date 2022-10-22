@@ -8,7 +8,7 @@ import xbox
 import zz_eggHuntAuto
 import zzairShipPath
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -53,7 +53,7 @@ def shedinja():  # shelinda
     memory.main.await_event()
 
     FFXC.set_neutral()
-    if not gameVars.csr():
+    if not game_vars.csr():
         memory.main.click_to_diag_progress(100)
     memory.main.click_to_diag_progress(76)  # Have you found a way? Well?
     memory.main.wait_frames(20)
@@ -89,7 +89,7 @@ def facing_sin():
 
     FFXC.set_neutral()
 
-    if gameVars.csr():
+    if game_vars.csr():
         memory.main.click_to_control()
     else:
         # Gets us through the Airship destination menu.
@@ -137,10 +137,10 @@ def inside_sin():
             xbox.tap_b()
     FFXC.set_neutral()
 
-    if memory.main.overdrive_state_2()[6] != 100 and gameVars.get_nea_zone() == 3:
+    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
         reEquipNE = True
         memory.main.full_party_format("rikku", full_menu_close=False)
-        menu.equip_armor(character=gameVars.ne_armor(), ability=99)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
     else:
         reEquipNE = False
         memory.main.full_party_format("yuna", full_menu_close=False)
@@ -175,7 +175,7 @@ def inside_sin():
                     reEquipNE = False
                     memory.main.click_to_control()
                     memory.main.full_party_format("yuna", full_menu_close=False)
-                    menu.equip_armor(character=gameVars.ne_armor(), ability=0x801D)
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             elif memory.main.menu_open():
                 xbox.tap_b()
 
@@ -196,20 +196,20 @@ def egg_hunt(auto_egg_hunt):
             if waitCount % 10 == 0:
                 print("Still waiting on user to do this section. ", waitCount / 10)
     print("Done with the egg hunt. Final prep for BFA.")
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
         FFXC.set_movement(1, 1)
         memory.main.wait_frames(5)
         memory.main.await_event()
         FFXC.set_neutral()
     else:
-        if gameVars.zombie_weapon() != 255 and gameVars.zombie_weapon() not in [
+        if game_vars.zombie_weapon() != 255 and game_vars.zombie_weapon() not in [
             0,
             1,
             2,
         ]:
             menu.equip_weapon(
-                character=gameVars.zombie_weapon(),
+                character=game_vars.zombie_weapon(),
                 ability=0x8032,
                 full_menu_close=False,
             )

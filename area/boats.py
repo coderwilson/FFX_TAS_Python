@@ -7,7 +7,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -27,8 +27,8 @@ def ss_liki():
                 checkpoint += 1
             elif checkpoint == 3:  # Talk to Wakka
                 memory.main.click_to_event_temple(3)
-                print("Ready for SS Liki menu - (var) ", gameVars.early_tidus_grid())
-                if not gameVars.early_tidus_grid():
+                print("Ready for SS Liki menu - (var) ", game_vars.early_tidus_grid())
+                if not game_vars.early_tidus_grid():
                     menu.liki()
                     memory.main.close_menu()
                 checkpoint += 1
@@ -137,7 +137,7 @@ def ss_winno_2():
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
-    if not gameVars.csr():
+    if not game_vars.csr():
         memory.main.click_to_diag_progress(142)
         xbox.clear_save_popup(0)
 

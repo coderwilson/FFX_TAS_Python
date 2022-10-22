@@ -9,7 +9,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -125,7 +125,7 @@ def to_the_ronso():
 
 def gagazet_gates():
     # Should appear on the map just before the Ronso hymn
-    endVer = gameVars.end_game_version()
+    endVer = game_vars.end_game_version()
     print("Grid version: " + str(endVer))
     logs.write_stats("B&Y Return spheres:")
     if endVer == 4:
@@ -168,9 +168,9 @@ def gagazet_gates():
                 memory.main.click_to_control()
                 if (
                     memory.main.overdrive_state_2()[6] == 100
-                    and gameVars.ne_armor() != 255
+                    and game_vars.ne_armor() != 255
                 ):
-                    menu.equip_armor(character=gameVars.ne_armor(), ability=0x801D)
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
     print("Should now be on the map with Seymour Flux.")
@@ -179,7 +179,7 @@ def gagazet_gates():
 def flux():
     print("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
-    if gameVars.end_game_version() != 3:
+    if game_vars.end_game_version() != 3:
         memory.main.full_party_format("yuna")
     checkpoint = 0
     while memory.main.get_map() != 309:
@@ -203,14 +203,14 @@ def flux():
                 battle.boss.seymour_flux()
                 # FFXC.set_movement(0,1)
                 memory.main.click_to_control_3()
-                if gameVars.end_game_version() != 3:
+                if game_vars.end_game_version() != 3:
                     menu.after_flux()
                 memory.main.full_party_format("kimahri")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
             elif memory.main.menu_open():
                 xbox.tap_b()
-    if not gameVars.csr():
+    if not game_vars.csr():
         while not memory.main.cutscene_skip_possible():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -297,7 +297,7 @@ def dream_old():
     print("First talk with Bahamut child")
     memory.main.click_to_control()
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         FFXC.set_movement(0, -1)  # End of conversation
         memory.main.wait_frames(30 * 0.7)
         FFXC.set_movement(-1, 0)
@@ -543,7 +543,7 @@ def wrap_up():
     memory.main.await_control()
     memory.main.wait_frames(30 * 0.07)
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         FFXC.set_movement(0, 1)  # Start of the sadness cutscene.
         memory.main.await_event()
         FFXC.set_neutral()

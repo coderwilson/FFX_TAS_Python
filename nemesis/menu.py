@@ -4,7 +4,7 @@ import menuGrid
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -135,81 +135,81 @@ def open_grid(character):
 
 def perform_next_grid(limit: int = 255):
     # Conditions to hard disregard further evaluations.
-    print("###   Next Version: ", gameVars.nem_checkpoint_ap())
+    print("###   Next Version: ", game_vars.nem_checkpoint_ap())
     print("### Current S.lvls: ", memory.main.get_tidus_slvl())
-    print("### Needed  S.lvls: ", next_ap_needed(gameVars.nem_checkpoint_ap()))
+    print("### Needed  S.lvls: ", next_ap_needed(game_vars.nem_checkpoint_ap()))
     if limit != 255:
         print("###          Limit: ", limit)
-    if gameVars.nem_checkpoint_ap() == 0:
-        print("###Something wrong: ", gameVars.nem_checkpoint_ap())
+    if game_vars.nem_checkpoint_ap() == 0:
+        print("###Something wrong: ", game_vars.nem_checkpoint_ap())
         return False
-    if gameVars.nem_checkpoint_ap() > limit:
+    if game_vars.nem_checkpoint_ap() > limit:
         print("### Limit exceeded: ", limit)
         return False
 
     # If the above checks are passed, check Tidus level and do sphere grid.
-    if memory.main.get_tidus_slvl() >= next_ap_needed(gameVars.nem_checkpoint_ap()):
-        print("##### Attemping Nemesis Grid #", gameVars.nem_checkpoint_ap())
-        if gameVars.nem_checkpoint_ap() == 1:
+    if memory.main.get_tidus_slvl() >= next_ap_needed(game_vars.nem_checkpoint_ap()):
+        print("##### Attemping Nemesis Grid #", game_vars.nem_checkpoint_ap())
+        if game_vars.nem_checkpoint_ap() == 1:
             nem_gridding_1()
-        elif gameVars.nem_checkpoint_ap() == 2:
+        elif game_vars.nem_checkpoint_ap() == 2:
             nem_gridding_2()
-        elif gameVars.nem_checkpoint_ap() == 3:
+        elif game_vars.nem_checkpoint_ap() == 3:
             nem_gridding_3()
-        elif gameVars.nem_checkpoint_ap() == 4:
+        elif game_vars.nem_checkpoint_ap() == 4:
             nem_gridding_4()
-        elif gameVars.nem_checkpoint_ap() == 5:
+        elif game_vars.nem_checkpoint_ap() == 5:
             nem_gridding_5()
-        elif gameVars.nem_checkpoint_ap() == 6:
+        elif game_vars.nem_checkpoint_ap() == 6:
             nem_gridding_6()
-        elif gameVars.nem_checkpoint_ap() == 7:
+        elif game_vars.nem_checkpoint_ap() == 7:
             nem_gridding_7()
-        elif gameVars.nem_checkpoint_ap() == 8:
+        elif game_vars.nem_checkpoint_ap() == 8:
             nem_gridding_8()
-        elif gameVars.nem_checkpoint_ap() == 9:
+        elif game_vars.nem_checkpoint_ap() == 9:
             nem_gridding_9()
-        elif gameVars.nem_checkpoint_ap() == 10:
+        elif game_vars.nem_checkpoint_ap() == 10:
             nem_gridding_10()
-        elif gameVars.nem_checkpoint_ap() == 11:
+        elif game_vars.nem_checkpoint_ap() == 11:
             nem_gridding_11()
-        elif gameVars.nem_checkpoint_ap() == 12:
+        elif game_vars.nem_checkpoint_ap() == 12:
             nem_gridding_12()
-        elif gameVars.nem_checkpoint_ap() == 13:
+        elif game_vars.nem_checkpoint_ap() == 13:
             nem_gridding_13()
-        elif gameVars.nem_checkpoint_ap() == 14:
+        elif game_vars.nem_checkpoint_ap() == 14:
             nem_gridding_14()
-        elif gameVars.nem_checkpoint_ap() == 15:
+        elif game_vars.nem_checkpoint_ap() == 15:
             nem_gridding_15()
-        elif gameVars.nem_checkpoint_ap() == 16:
+        elif game_vars.nem_checkpoint_ap() == 16:
             nem_gridding_16()
-        elif gameVars.nem_checkpoint_ap() == 17:
+        elif game_vars.nem_checkpoint_ap() == 17:
             nem_gridding_17()
-        elif gameVars.nem_checkpoint_ap() == 18:
+        elif game_vars.nem_checkpoint_ap() == 18:
             nem_gridding_18()
-        elif gameVars.nem_checkpoint_ap() == 19:
+        elif game_vars.nem_checkpoint_ap() == 19:
             nem_gridding_19()
-        elif gameVars.nem_checkpoint_ap() == 20:
+        elif game_vars.nem_checkpoint_ap() == 20:
             nem_gridding_20()
-        elif gameVars.nem_checkpoint_ap() == 21:
+        elif game_vars.nem_checkpoint_ap() == 21:
             nem_gridding_21()
-        elif gameVars.nem_checkpoint_ap() == 22:
+        elif game_vars.nem_checkpoint_ap() == 22:
             nem_gridding_22()
-        elif gameVars.nem_checkpoint_ap() == 23:
+        elif game_vars.nem_checkpoint_ap() == 23:
             nem_gridding_23()
-        elif gameVars.nem_checkpoint_ap() == 24:
+        elif game_vars.nem_checkpoint_ap() == 24:
             nem_gridding_24()
-        elif gameVars.nem_checkpoint_ap() == 25:
+        elif game_vars.nem_checkpoint_ap() == 25:
             nem_gridding_25()
-        elif gameVars.nem_checkpoint_ap() == 26:
+        elif game_vars.nem_checkpoint_ap() == 26:
             nem_gridding_26()
         else:
             print("----------------------------")
             print("End of sphere grid, no further grid logic programmed.")
             print("----------------------------")
-            gameVars.set_nem_checkpoint_ap(
-                gameVars.nem_checkpoint_ap() - 1
+            game_vars.set_nem_checkpoint_ap(
+                game_vars.nem_checkpoint_ap() - 1
             )  # Decrement
-        gameVars.set_nem_checkpoint_ap(gameVars.nem_checkpoint_ap() + 1)  # Increment
+        game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)  # Increment
     # else:
     # print("###Not enough Slvl:", memory.getTidusSlvl() - nextAPneeded(gameVars.nemCheckpointAP()))
 
@@ -276,7 +276,7 @@ def next_ap_needed(checkpoint):
 
 def nem_gridding_1():
     if memory.main.get_power() < 4 or memory.main.get_speed() < 4:
-        gameVars.set_nem_checkpoint_ap(value=0)
+        game_vars.set_nem_checkpoint_ap(value=0)
         return
     # Requires X levels
     menu.auto_sort_items()
@@ -438,7 +438,7 @@ def nem_gridding_6():
     menuGrid.sel_sphere("power", "right")
     # menuGrid.useAndUseAgain()
     # menuGrid.selSphere('power','none')
-    if gameVars.end_game_version() in [1, 2]:
+    if game_vars.end_game_version() in [1, 2]:
         menuGrid.use_and_use_again()
         menuGrid.sel_sphere("lv1", "none")
     # menuGrid.useAndUseAgain()
@@ -1166,7 +1166,7 @@ def rikku_haste():
     open_grid(character=6)
 
     menuGrid.move_first()
-    if gameVars.end_game_version() == 3:
+    if game_vars.end_game_version() == 3:
         grid_up()
         grid_up()
         grid_right()

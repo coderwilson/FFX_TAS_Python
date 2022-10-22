@@ -7,7 +7,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -56,7 +56,7 @@ def arrival():
             if checkpoint == 1:
                 # FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint == 2 and gameVars.csr():
+            elif checkpoint == 2 and game_vars.csr():
                 checkpoint = 11
             elif checkpoint == 4:  # Talking to Trommell
                 memory.main.click_to_event_temple(6)
@@ -99,7 +99,7 @@ def arrival():
                 checkpoint = 11
             elif checkpoint == 11:
                 print("Check if skip is online")
-                if gameVars.csr():
+                if game_vars.csr():
                     jyscalSkipStatus = True
                     checkpoint += 1
                 elif memory.main.get_story_progress() < 1505:
@@ -110,7 +110,7 @@ def arrival():
                     checkpoint = 20
                     skipStatus = False
                 print("Jyscal Skip results:", skipStatus)
-            elif checkpoint == 14 and gameVars.csr():
+            elif checkpoint == 14 and game_vars.csr():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
@@ -177,7 +177,7 @@ def trials():
     while memory.main.get_map() != 153:
         if memory.main.user_control():
             # CSR start point
-            if checkpoint < 3 and gameVars.csr():
+            if checkpoint < 3 and game_vars.csr():
                 checkpoint = 3
 
             # Map changes
@@ -248,7 +248,7 @@ def escape():
     memory.main.click_to_control()
     print("First, some menuing")
     menuDone = False
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         memory.main.full_party_format("yuna", full_menu_close=False)
     else:
         menu.after_seymour()

@@ -7,7 +7,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -112,7 +112,7 @@ def north_bank():
     memory.main.await_event()
     memory.main.wait_frames(30 * 1)
     memory.main.await_control()
-    if gameVars.csr():
+    if game_vars.csr():
         memory.main.wait_frames(10)
         FFXC.set_movement(-1, -0.7)
         memory.main.wait_frames(6)
@@ -129,7 +129,7 @@ def north_bank():
     memory.main.await_event()
     FFXC.set_neutral()
     memory.main.wait_frames(15)
-    if gameVars.get_l_strike() % 2 == 1:
+    if game_vars.get_l_strike() % 2 == 1:
         menu.equip_weapon(character=0, special="brotherhoodearly")
 
     checkpoint = 0

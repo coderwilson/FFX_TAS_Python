@@ -7,13 +7,13 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def arrival():
-    if not gameVars.csr():
+    if not game_vars.csr():
         xbox.skip_stored_scene(2)
     print("Starting Luca section")
     memory.main.click_to_control()
@@ -45,7 +45,7 @@ def arrival():
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
                 FFXC.set_neutral()
-                if not gameVars.csr():
+                if not game_vars.csr():
                     memory.main.click_to_diag_progress(18)  # Seymour scene
                     xbox.await_save(index=2)
 
@@ -54,7 +54,7 @@ def arrival():
                 while memory.main.blitz_cursor() != 12:
                     xbox.tap_a()
                 xbox.menu_b()
-                if not gameVars.csr():
+                if not game_vars.csr():
                     xbox.skip_dialog_special(45)  # Skip the Wakka Face scene
                 memory.main.click_to_control()
                 checkpoint = 7
@@ -145,7 +145,7 @@ def arrival():
 
     logs.write_stats("Early Haste:")
     logs.write_stats(earlyHaste)
-    gameVars.early_haste_set(earlyHaste)
+    game_vars.early_haste_set(earlyHaste)
 
     print("##Checking for thunderstrike weapons for Tidus or Wakka")
     thunderStrike = memory.main.check_thunder_strike()
@@ -166,7 +166,7 @@ def arrival():
             print("Equipping Tidus")
             fullClose = True
             menu.equip_weapon(character=0, ability=0x8026, full_menu_close=fullClose)
-    gameVars.set_l_strike(thunderStrike)
+    game_vars.set_l_strike(thunderStrike)
 
 
 def blitz_start():
@@ -207,7 +207,7 @@ def after_blitz():
         if memory.main.user_control():
             # Events
             if checkpoint == 8:  # First chest
-                if gameVars.early_haste() == -1:
+                if game_vars.early_haste() == -1:
                     menu.late_haste()
                     memory.main.close_menu()
                 print("First chest")
@@ -226,7 +226,7 @@ def after_blitz():
                 memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 20:  # Target Auron
-                if not gameVars.csr():
+                if not game_vars.csr():
                     # First Auron affection, always zero
                     while memory.main.affection_array()[2] == 0:
                         auronCoords = memory.main.get_actor_coords(3)
@@ -249,17 +249,17 @@ def after_blitz():
                 encounterID += 1
                 print("After-Blitz Battle Number:", encounterID)
                 if encounterID == 1:
-                    battle.main.after_blitz_1(gameVars.early_haste())
+                    battle.main.after_blitz_1(game_vars.early_haste())
                 elif encounterID == 2:
                     xbox.click_to_battle()
                     battle.main.attack("none")  # Hardest boss in the game.
                     print("Well that boss was difficult.")
                     memory.main.wait_frames(30 * 6)
                 elif encounterID == 3:
-                    if gameVars.early_haste() == -1:
-                        battle.main.after_blitz_3_late_haste(gameVars.early_haste())
+                    if game_vars.early_haste() == -1:
+                        battle.main.after_blitz_3_late_haste(game_vars.early_haste())
                     else:
-                        battle.main.after_blitz_3(gameVars.early_haste())
+                        battle.main.after_blitz_3(game_vars.early_haste())
                     memory.main.click_to_control()
                     memory.main.wait_frames(4)
                     FFXC.set_neutral()
@@ -287,4 +287,4 @@ def after_blitz():
     FFXC.set_neutral()
 
     logs.write_stats("Blitz Win:")
-    logs.write_stats(gameVars.get_blitz_win())
+    logs.write_stats(game_vars.get_blitz_win())

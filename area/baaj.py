@@ -8,7 +8,7 @@ import vars
 import xbox
 
 FFXC = xbox.controller_handle()
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def entrance():
@@ -280,10 +280,10 @@ def ab_swimming_2():
             FFXC.set_neutral()
             if memory.main.diag_progress_flag() == 109:
                 memory.main.csr_baaj_save_clear()
-            elif memory.main.diag_skip_possible() and not gameVars.csr():
+            elif memory.main.diag_skip_possible() and not game_vars.csr():
                 xbox.tap_b()
 
     print("Should now be ready for Besaid")
 
-    if not gameVars.csr():
+    if not game_vars.csr():
         xbox.clear_save_popup(0)

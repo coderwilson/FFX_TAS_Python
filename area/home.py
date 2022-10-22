@@ -7,7 +7,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -20,7 +20,7 @@ def check_spheres():
         # Reprogram battle logic to throw some kind of grenades.
 
     # Same for Power spheres
-    if gameVars.nemesis():
+    if game_vars.nemesis():
         if (
             memory.main.get_power() >= 28
             or (
@@ -89,7 +89,7 @@ def desert():
                 checkpoint = 50
 
             # Nemesis stuff
-            elif checkpoint == 47 and gameVars.nemesis():
+            elif checkpoint == 47 and game_vars.nemesis():
                 checkpoint = 70
             elif checkpoint == 72:
                 FFXC.set_neutral()
@@ -255,9 +255,9 @@ def find_summoners():
                 checkpoint = 12
             elif checkpoint < 18 and memory.main.get_map() == 280:
                 checkpoint = 19
-            elif checkpoint == 34 and gameVars.nemesis():
+            elif checkpoint == 34 and game_vars.nemesis():
                 checkpoint = 60
-            elif checkpoint == 34 and gameVars.skip_kilika_luck():
+            elif checkpoint == 34 and game_vars.skip_kilika_luck():
                 checkpoint = 60
             elif checkpoint == 63:
                 memory.main.click_to_event_temple(6)
@@ -295,11 +295,11 @@ def find_summoners():
             elif checkpoint == 88:
                 checkpoint = 21
             elif checkpoint == 20:
-                if gameVars.get_blitz_win():
+                if game_vars.get_blitz_win():
                     checkpoint = 21
                 else:
                     checkpoint = 81
-            elif checkpoint == 31 and not gameVars.csr():
+            elif checkpoint == 31 and not game_vars.csr():
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
             elif checkpoint == 39:
@@ -339,7 +339,7 @@ def find_summoners():
                 xbox.tap_b()
     print("Let's go get that airship!")
     FFXC.set_neutral()
-    if not gameVars.csr():
+    if not game_vars.csr():
         memory.main.click_to_diag_progress(27)
         while not memory.main.cutscene_skip_possible():
             xbox.tap_b()

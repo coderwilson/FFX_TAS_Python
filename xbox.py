@@ -8,7 +8,7 @@ import memory.get
 import memory.main
 import vars
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 class VgTranslator:
@@ -251,7 +251,7 @@ def tap_up():
     memory.main.wait_frames(1)
     FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -260,7 +260,7 @@ def tap_down():
     memory.main.wait_frames(1)
     FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -269,7 +269,7 @@ def tap_left():
     memory.main.wait_frames(1)
     FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -278,7 +278,7 @@ def tap_right():
     memory.main.wait_frames(1)
     FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -287,7 +287,7 @@ def shoulder_left():
     memory.main.wait_frames(2)
     FFXC.set_value("BtnShoulderL", 0)
     memory.main.wait_frames(2)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -296,7 +296,7 @@ def shoulder_right():
     memory.main.wait_frames(2)
     FFXC.set_value("BtnShoulderR", 0)
     memory.main.wait_frames(2)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -319,7 +319,7 @@ def tap_a():
     memory.main.wait_frames(1)
     FFXC.set_value("BtnA", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -328,7 +328,7 @@ def tap_b():
     memory.main.wait_frames(1)
     FFXC.set_value("BtnB", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(3)
 
 
@@ -351,7 +351,7 @@ def tap_x():
     memory.main.wait_frames(2)
     FFXC.set_value("BtnX", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -360,7 +360,7 @@ def tap_y():
     memory.main.wait_frames(1)
     FFXC.set_value("BtnY", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -376,7 +376,7 @@ def l_bumper():
     memory.main.wait_frames(1)
     FFXC.set_value("BtnShoulderL", 0)
     memory.main.wait_frames(1)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -385,7 +385,7 @@ def trigger_l():
     memory.main.wait_frames(2)
     FFXC.set_value("TriggerL", 0)
     memory.main.wait_frames(2)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
@@ -394,7 +394,7 @@ def trigger_r():
     memory.main.wait_frames(2)
     FFXC.set_value("TriggerR", 0)
     memory.main.wait_frames(2)
-    if gameVars.use_pause():
+    if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 

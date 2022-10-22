@@ -13,12 +13,12 @@ import zzairShipPath
 # This assumes that the save is the first non-auto-save in the list of saves.
 
 FFXC = xbox.controller_handle()
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def get_saved_files():
     saveFilesFull = sorted(
-        Path(gameVars.game_save_path()).iterdir(), key=os.path.getmtime
+        Path(game_vars.game_save_path()).iterdir(), key=os.path.getmtime
     )
     saveFiles = [os.path.basename(i) for i in saveFilesFull]
     saveFiles = saveFiles[::-1]
@@ -108,19 +108,19 @@ def load_mem_cursor():
         print(memory.main.get_menu_cursor_pos())
         xbox.tap_up()
         print(memory.main.get_menu_cursor_pos())
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(2)
     while memory.main.menu_number() == 5:
         xbox.tap_b()
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(90)
     while memory.main.config_cursor() != 3:
         xbox.tap_down()
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(1)
     while memory.main.config_cursor_column() != 1:
         xbox.tap_right()
-        if gameVars.use_pause():
+        if game_vars.use_pause():
             memory.main.wait_frames(1)
     memory.main.close_menu()
 

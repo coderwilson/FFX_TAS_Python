@@ -1,7 +1,7 @@
 import memory.main
 import vars
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 
 def clear_mouse(counter):

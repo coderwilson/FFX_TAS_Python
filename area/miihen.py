@@ -7,7 +7,7 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.vars_handle()
+game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
@@ -18,7 +18,7 @@ def post_battle_logic(force_charge=False):
     ):
         memory.main.full_party_format("kilikawoods1", full_menu_close=False)
     else:
-        if gameVars.self_destruct_get():
+        if game_vars.self_destruct_get():
             memory.main.full_party_format("miihen", full_menu_close=False)
         else:
             memory.main.full_party_format("djose", full_menu_close=False)
@@ -45,7 +45,7 @@ def arrival():
         if memory.main.user_control():
             # Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
-                if gameVars.csr():
+                if game_vars.csr():
                     # Only run this branch if CSR is online.
                     tidusCoords = memory.main.get_coords()
                     hunterCoords = memory.main.miihen_guy_coords()
@@ -125,7 +125,7 @@ def arrival():
                             # Greater number for spear guy's position means we will start moving faster.
                             # Smaller number means moving later.
                             FFXC.set_movement(0, 1)
-                            if gameVars.use_pause():
+                            if game_vars.use_pause():
                                 memory.main.wait_frames(2)
                             else:
                                 memory.main.wait_frames(3)
@@ -215,7 +215,7 @@ def arrival():
                     FFXC.set_value("BtnB", 0)
                     memory.main.wait_frames(3)
     print("Mi'ihen skip status:", miihenSkip)
-    return [gameVars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]
+    return [game_vars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]
 
 
 def arrival_2(selfDestruct, battleCount, SDencounterID):
@@ -228,7 +228,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
             if checkpoint == 27:
                 if memory.main.get_coords()[1] > 2810:
                     checkpoint += 1
-                elif gameVars.csr():
+                elif game_vars.csr():
                     checkpoint += 1
                 else:
                     FFXC.set_neutral()
@@ -266,7 +266,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
                 checkpoint = 20
             elif checkpoint < 31 and memory.main.get_map() == 58:
                 checkpoint = 31
-    return [gameVars.self_destruct_get(), battleCount, SDencounterID]
+    return [game_vars.self_destruct_get(), battleCount, SDencounterID]
 
 
 def mid_point():
@@ -312,7 +312,7 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
             if checkpoint == 2:
                 memory.main.touch_save_sphere()
                 checkpoint += 1
-            elif checkpoint == 26 and not gameVars.self_destruct_get():
+            elif checkpoint == 26 and not game_vars.self_destruct_get():
                 checkpoint = 24
             elif checkpoint == 34:  # Talk to guard, then Seymour
                 FFXC.set_movement(0, 1)
