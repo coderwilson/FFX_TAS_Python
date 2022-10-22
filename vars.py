@@ -27,7 +27,6 @@ class allVars:
             True  # True == Tidus OD on Evrae instead of Seymour. New strat.
         )
         self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
-        self.marathonSafeFlag = True  # NEA drop will advance in memory if we are behind. Only use for marathon safety, not for legit runs.
 
         # ----Blitzball
         self.blitzWinValue = True  # No default value required
@@ -77,9 +76,6 @@ class allVars:
         # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-
-    def marathonSafety(self):
-        return self.marathonSafeFlag
 
     def blitzLossReset(self):
         return self.blitzLossForceReset

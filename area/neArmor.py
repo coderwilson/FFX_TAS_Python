@@ -13,52 +13,6 @@ FFXC = xbox.controllerHandle()
 
 
 def toHiddenCave():
-    # Force manip NEA
-    if gameVars.marathonSafety():
-        if rngTrack.neaTrack()[1] in [0, 1]:
-            pass
-        else:
-            FFXC.set_neutral()
-            print("===============")
-            memory.main.waitFrames(9)
-            print("===============")
-            memory.main.waitFrames(9)
-            print("== For marathon safety at RPGLB, we will now advance RNG.")
-            memory.main.waitFrames(9)
-            print(
-                "== This is not part of the normal TAS, and is only for marathon safety."
-            )
-            memory.main.waitFrames(30)
-            advanceCount = 0
-            nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
-            while nextItem.equipmentType() != 1:
-                print("Advance 12 - ", advanceCount)
-                advanceCount += 1
-                memory.main.advanceRNG12()
-                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
-            while not nextItem.hasAbility(0x801D):
-                print("Advance 13 - ", advanceCount)
-                advanceCount += 1
-                memory.main.advanceRNG13()
-                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
-
-            if memory.main.nextChanceRNG10() > 10:
-                print("Advance 10 - ", advanceCount)
-                advanceCount += 1
-                if memory.main.getItemSlot(39) == 255:
-                    while memory.main.nextChanceRNG10() != 0:
-                        memory.main.advanceRNG10()
-                else:
-                    while memory.main.nextChanceRNG10() > 4:
-                        memory.main.advanceRNG10()
-            print("== Complete.")
-            memory.main.waitFrames(9)
-            print("===============")
-            memory.main.waitFrames(9)
-            print("===============")
-            memory.main.waitFrames(9)
-
-    # Regular logic
     memory.main.fullPartyFormat("rikku")
     rngTrack.printManipInfo()
     lastReport = False
