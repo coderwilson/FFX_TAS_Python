@@ -30,7 +30,7 @@ def arrival():
                 if memory.main.getItemSlot(90) < 200:
                     checkpoint += 1
                 else:
-                    targetPathing.setMovement([-1796, -480])
+                    targetPathing.set_movement([-1796, -480])
                     xbox.tapB()
 
             # Map changes
@@ -50,12 +50,12 @@ def arrival():
                 print("Updating checkpoint based on story/map progress:", checkpoint)
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.moonflow(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.moonflow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.fleeAll()
             elif memory.main.menuOpen():
                 xbox.tapB()
@@ -93,7 +93,9 @@ def southBank(checkpoint: int = 0):
                 xbox.menuB()  # All aboardz!
                 xbox.SkipDialog(3)  # Just to clear some dialog
 
-            elif targetPathing.setMovement(targetPathing.moonflowBankSouth(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.moonflow_bank_south(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -128,7 +130,7 @@ def northBank():
     FFXC.set_neutral()
     memory.main.waitFrames(15)
     if gameVars.getLStrike() % 2 == 1:
-        menu.equipWeapon(character=0, special="brotherhoodearly")
+        menu.equip_weapon(character=0, special="brotherhoodearly")
 
     checkpoint = 0
     print("Miihen North Bank pattern. Starts after talking to Auron.")
@@ -153,12 +155,14 @@ def northBank():
                 checkpoint = 12
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.moonflowBankNorth(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.moonflow_bank_north(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.fleeAll()
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()

@@ -16,7 +16,7 @@ FFXC = xbox.controllerHandle()
 gameVars = vars.varsHandle()
 
 
-def getSavedFiles():
+def get_saved_files():
     saveFilesFull = sorted(
         Path(gameVars.gameSavePath()).iterdir(), key=os.path.getmtime
     )
@@ -25,8 +25,8 @@ def getSavedFiles():
     return saveFiles
 
 
-def loadSaveNum(number):
-    saveFiles = getSavedFiles()
+def load_save_num(number):
+    saveFiles = get_saved_files()
     testString = "ffx_" + str(number).zfill(3)
     print("Searching for string:", testString)
     savePos = 255
@@ -56,7 +56,7 @@ def loadSaveNum(number):
         exit()
 
 
-def LoadFirst():
+def load_first():
     print("Loading to first save file")
     xbox.menuB()
     memory.main.waitFrames(30 * 2.5)
@@ -68,7 +68,7 @@ def LoadFirst():
     memory.main.awaitControl()
 
 
-def loadOffset(offset):
+def load_offset(offset):
     print("Loading to save file in position", offset)
     totalOffset = offset
     memory.main.waitFrames(30 * 2.5)
@@ -82,7 +82,7 @@ def loadOffset(offset):
     memory.main.resetBattleEnd()
 
 
-def loadOffsetBattle(offset):
+def load_offset_battle(offset):
     print("Loading to save file in position", offset)
     xbox.menuB()
     memory.main.waitFrames(30 * 2.5)
@@ -96,7 +96,7 @@ def loadOffsetBattle(offset):
     memory.main.waitFrames(30 * 3)
 
 
-def loadMemCursor():
+def load_mem_cursor():
     memory.main.awaitControl()
     memory.main.openMenu()
     if memory.main.getStoryProgress() <= 200:  # Up to Besaid save, after Trials
@@ -125,9 +125,9 @@ def loadMemCursor():
     memory.main.closeMenu()
 
 
-def loadPostBlitz():
+def load_post_blitz():
     print("Loading to first save file")
-    loadOffset(1)
+    load_offset(1)
 
     while not screen.Minimap1():
         if screen.Minimap4():
@@ -173,41 +173,41 @@ def loadPostBlitz():
     print("End of loading section.")
 
 
-def LoadNeutral():
-    LoadFirst()
+def load_neutral():
+    load_first()
 
 
-def LoadBaaj():
+def load_baaj():
     FFXC.set_movement(1, 0)
     memory.main.waitFrames(30 * 0.4)
     FFXC.set_neutral()
     memory.main.waitFrames(30 * 0.04)
 
 
-def BesaidTrials():
+def besaid_trials():
     # Exit Tent
     while memory.main.getMap() != 17:
         tCoords = memory.main.getCoords()
-        targetPathing.setMovement([-1, tCoords[1] - 15])
+        targetPathing.set_movement([-1, tCoords[1] - 15])
 
     # To the temple
-    while not targetPathing.setMovement([35, 182]):
+    while not targetPathing.set_movement([35, 182]):
         pass
-    while not targetPathing.setMovement([17, 22]):
+    while not targetPathing.set_movement([17, 22]):
         pass
-    while not targetPathing.setMovement([14, -67]):
+    while not targetPathing.set_movement([14, -67]):
         pass
     while memory.main.getMap() != 42:
         tCoords = memory.main.getCoords()
-        targetPathing.setMovement([-2, tCoords[1] - 15])
+        targetPathing.set_movement([-2, tCoords[1] - 15])
 
     # Start the trials
     while memory.main.getMap() != 122:
         tCoords = memory.main.getCoords()
-        targetPathing.setMovement([-2, tCoords[1] + 15])
+        targetPathing.set_movement([-2, tCoords[1] + 15])
 
 
-def Boat1():
+def boat_1():
     memory.main.waitFrames(30 * 3)
     # To the junction screen, then back.
     FFXC.set_value("AxisLy", -1)
@@ -219,7 +219,7 @@ def Boat1():
     FFXC.set_value("AxisLy", 0)
 
 
-def Kilika():
+def kilika():
     xbox.menuB()
     memory.main.waitFrames(30 * 2.5)
     xbox.menuDown()
@@ -241,40 +241,40 @@ def Kilika():
     memory.main.awaitControl()
 
 
-def KilikaTrials():
+def kilika_trials():
     FFXC.set_movement(0, -1)
     memory.main.waitFrames(30 * 2)
     FFXC.set_neutral()
 
 
-def LoadMiihenStart_Laugh():
+def load_miihen_start_laugh():
     import targetPathing
 
-    while not targetPathing.setMovement([-440, 0]):
+    while not targetPathing.set_movement([-440, 0]):
         pass
     memory.main.clickToEventTemple(4)
 
     # Reverse T screen
     memory.main.awaitControl()
-    while not targetPathing.setMovement([-39, 18]):
+    while not targetPathing.set_movement([-39, 18]):
         pass
-    while not targetPathing.setMovement([3, 31]):
+    while not targetPathing.set_movement([3, 31]):
         pass
-    while not targetPathing.setMovement([64, 15]):
+    while not targetPathing.set_movement([64, 15]):
         pass
-    while not targetPathing.setMovement([163, 0]):
+    while not targetPathing.set_movement([163, 0]):
         pass
     memory.main.clickToEventTemple(2)
 
     # Carnival vendor screen
     memory.main.awaitControl()
-    while not targetPathing.setMovement([30, -86]):
+    while not targetPathing.set_movement([30, -86]):
         pass
-    while not targetPathing.setMovement([60, -24]):
+    while not targetPathing.set_movement([60, -24]):
         pass
-    while not targetPathing.setMovement([101, 72]):
+    while not targetPathing.set_movement([101, 72]):
         pass
-    while not targetPathing.setMovement([129, 101]):
+    while not targetPathing.set_movement([129, 101]):
         pass
     memory.main.clickToEventTemple(1)
     memory.main.waitFrames(30 * 1)
@@ -285,59 +285,59 @@ def LoadMiihenStart_Laugh():
     FFXC.set_neutral()
 
 
-def LoadMiihenStart():
+def load_miihen_start():
     import targetPathing
 
-    while not targetPathing.setMovement([-440, 0]):
+    while not targetPathing.set_movement([-440, 0]):
         pass
     memory.main.clickToEventTemple(4)
 
     # Reverse T screen
     memory.main.awaitControl()
-    while not targetPathing.setMovement([-39, 18]):
+    while not targetPathing.set_movement([-39, 18]):
         pass
-    while not targetPathing.setMovement([3, 31]):
+    while not targetPathing.set_movement([3, 31]):
         pass
-    while not targetPathing.setMovement([64, 15]):
+    while not targetPathing.set_movement([64, 15]):
         pass
-    while not targetPathing.setMovement([163, 0]):
+    while not targetPathing.set_movement([163, 0]):
         pass
     memory.main.clickToEventTemple(2)
 
     # Carnival vendor screen
     memory.main.awaitControl()
-    while not targetPathing.setMovement([30, -86]):
+    while not targetPathing.set_movement([30, -86]):
         pass
-    while not targetPathing.setMovement([60, -24]):
+    while not targetPathing.set_movement([60, -24]):
         pass
-    while not targetPathing.setMovement([101, 72]):
+    while not targetPathing.set_movement([101, 72]):
         pass
-    while not targetPathing.setMovement([129, 101]):
+    while not targetPathing.set_movement([129, 101]):
         pass
     memory.main.clickToEventTemple(1)
 
     # -----Use this if you've already done the laughing scene.
     memory.main.clickToControl()
-    while not targetPathing.setMovement([2, 57]):
+    while not targetPathing.set_movement([2, 57]):
         pass
-    while not targetPathing.setMovement([108, 59]):
+    while not targetPathing.set_movement([108, 59]):
         pass
-    while not targetPathing.setMovement([108, 26]):
+    while not targetPathing.set_movement([108, 26]):
         pass
-    while not targetPathing.setMovement([78, -3]):
+    while not targetPathing.set_movement([78, -3]):
         pass
-    while not targetPathing.setMovement([-68, -7]):
+    while not targetPathing.set_movement([-68, -7]):
         pass
-    while not targetPathing.setMovement([-99, 24]):
+    while not targetPathing.set_movement([-99, 24]):
         pass
-    while not targetPathing.setMovement([-126, 117]):
+    while not targetPathing.set_movement([-126, 117]):
         pass
     memory.main.clickToEventTemple(1)
 
     print("Load complete. Now for Mi'ihen area.")
 
 
-def LoadMRR():
+def load_mrr():
     FFXC.set_movement(-1, 1)
     memory.main.waitFrames(30 * 2)
     FFXC.set_movement(0, 1)
@@ -351,7 +351,7 @@ def LoadMRR():
     memory.main.clickToControl()
 
 
-def LoadMRR2():
+def load_mrr_2():
     FFXC.set_movement(0, 1)
     memory.main.waitFrames(30 * 0.3)
     FFXC.set_movement(1, 1)
@@ -366,7 +366,7 @@ def LoadMRR2():
         memory.main.waitFrames(30 * 1)
 
 
-def AfterGui():
+def after_gui():
     memory.main.awaitControl()
     FFXC.set_movement(-1, 0)
     memory.main.waitFrames(30 * 2.5)
@@ -377,15 +377,15 @@ def AfterGui():
     checkpoint = 0
     while memory.main.getMap() != 93:
         if memory.main.userControl():
-            if targetPathing.setMovement(target[checkpoint]):
+            if targetPathing.set_movement(target[checkpoint]):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
     FFXC.set_neutral()
 
 
-def djoseTemple():
-    loadOffset(19)
+def djose_temple():
+    load_offset(19)
     memory.main.waitFrames(30 * 6)
     FFXC.set_value("AxisLy", -1)
     FFXC.set_value("AxisLx", -1)
@@ -395,7 +395,7 @@ def djoseTemple():
     memory.main.waitFrames(30 * 0.5)
 
 
-def moonflow2():
+def moonflow_2():
     memory.main.waitFrames(30 * 2)
     FFXC.set_movement(-1, -1)
     memory.main.waitFrames(30 * 0.7)
@@ -403,7 +403,7 @@ def moonflow2():
     memory.main.waitFrames(30 * 0.5)
 
 
-def loadGuadoSkip():
+def load_guado_skip():
     memory.main.clickToControl3()
     FFXC.set_movement(1, -1)
     memory.main.awaitEvent()
@@ -432,7 +432,7 @@ def loadGuadoSkip():
     guadosalam.afterSpeech(checkpoint=26)
 
 
-def loadMacLake():
+def load_mac_lake():
     memory.main.awaitControl()
     FFXC.set_movement(0, 1)
     memory.main.awaitEvent()
@@ -440,7 +440,7 @@ def loadMacLake():
     memory.main.awaitControl()
 
 
-def loadMacTemple():
+def load_mac_temple():
     FFXC.set_movement(-1, 0)
     memory.main.waitFrames(30 * 3)
     FFXC.set_neutral()
@@ -450,7 +450,7 @@ def loadMacTemple():
     FFXC.set_neutral()
 
 
-def loadMacTemple2():
+def load_mac_temple_2():
     memory.main.awaitControl()
     FFXC.set_movement(-1, -1)
     memory.main.waitFrames(30 * 1.5)
@@ -459,7 +459,7 @@ def loadMacTemple2():
     FFXC.set_neutral()
 
 
-def loadWendigo():
+def load_wendigo():
     import battle.boss
     import battle.main
 
@@ -467,7 +467,7 @@ def loadWendigo():
     print("Wendigo fight over - end of loading game to Wendigo fight")
 
 
-def loadRescue():
+def load_rescue():
     memory.main.awaitControl()
     FFXC.set_movement(1, -1)
     memory.main.waitFrames(30 * 0.7)
@@ -482,8 +482,8 @@ def loadRescue():
     zzairShipPath.airShipPath(1)  # The run from cockpit to the deck
 
 
-def loadBahamut():
-    loadOffset(1)
+def load_bahamut():
+    load_offset(1)
     memory.main.awaitControl()
     FFXC.set_value("AxisLy", 1)
     FFXC.set_value("AxisLx", 1)
@@ -493,7 +493,7 @@ def loadBahamut():
     FFXC.set_value("AxisLy", 0)
 
 
-def loadCalm():
+def load_calm():
     FFXC.set_movement(1, 1)
     memory.main.waitFrames(30 * 1)
     FFXC.set_movement(0, 1)
@@ -502,7 +502,7 @@ def loadCalm():
     memory.main.awaitControl()
 
 
-def loadGagaGates():
+def load_gagazet_gates():
     FFXC.set_movement(1, 1)
     memory.main.waitFrames(30 * 3)
     FFXC.set_movement(0, 1)
@@ -510,7 +510,7 @@ def loadGagaGates():
     FFXC.set_neutral()
 
 
-def zanEntrance():
+def zan_entrance():
     FFXC.set_movement(0, 1)
     memory.main.waitFrames(30 * 2)
     FFXC.set_movement(1, 1)
@@ -518,7 +518,7 @@ def zanEntrance():
     FFXC.set_neutral()
 
 
-def zanTrials():
+def zan_trials():
     FFXC.set_movement(1, 1)
     memory.main.waitFrames(30 * 0.5)
     FFXC.set_movement(0, 1)
@@ -526,7 +526,7 @@ def zanTrials():
     FFXC.set_neutral()
 
 
-def loadGagazetDream():
+def load_gagazet_dream():
     print("Positioning to next map")
     while memory.main.getMap() != 309:
         FFXC.set_movement(1, 1)
@@ -535,11 +535,11 @@ def loadGagazetDream():
     memory.main.awaitControl()
 
 
-def loadEggHunt():
+def load_egg_hunt():
     memory.main.awaitControl()
-    while not targetPathing.setMovement([-10, -507]):
+    while not targetPathing.set_movement([-10, -507]):
         pass
-    while not targetPathing.setMovement([-5, -360]):
+    while not targetPathing.set_movement([-5, -360]):
         pass
 
     while memory.main.getMap() != 324:

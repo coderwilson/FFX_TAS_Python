@@ -10,12 +10,12 @@ gameVars = vars.varsHandle()
 FFXC = xbox.controllerHandle()
 
 
-def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
-    if landRun:
-        endTime = logs.timeStamp()
-        totalTime = endTime - startTime
-        logs.writeStats("Total time:")
-        logs.writeStats(str(totalTime))
+def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
+    if land_run:
+        endTime = logs.time_stamp()
+        totalTime = endTime - start_time
+        logs.write_stats("Total time:")
+        logs.write_stats(str(totalTime))
         print("The game duration was:", str(totalTime))
         print(
             "This duration is intended for comparison reference only, not as a true timer."
@@ -47,30 +47,30 @@ def midRunReset(landRun: bool = False, startTime=datetime.datetime.now()):
         xbox.menuA()
     else:
         memory.main.waitFrames(60)
-        resetToMainMenu()
+        reset_to_main_menu()
 
     # Now to re-start
-    gameVars.setStartVars()
+    gameVars.set_start_vars()
     rngSeed = memory.main.rngSeed()
-    if landRun:
+    if land_run:
         rngSeed += 0
         if rngSeed == 256:
             rngSeed = 0
-    logs.resetStatsLog()
-    logs.nextStats(rngSeed)  # Start next stats file
+    logs.reset_stats_log()
+    logs.next_stats(rngSeed)  # Start next stats file
     if gameVars.useSetSeed():
         memory.main.setRngSeed(rngSeed)
     print("-------------This game will be using RNG seed:", rngSeed)
-    logs.nextStats(rngSeed)
-    logs.writeStats("RNG seed:")
-    logs.writeStats(rngSeed)
+    logs.next_stats(rngSeed)
+    logs.write_stats("RNG seed:")
+    logs.write_stats(rngSeed)
     Gamestate = "none"
     StepCounter = 1
 
     return Gamestate, StepCounter
 
 
-def resetToMainMenu():
+def reset_to_main_menu():
     FFXC.set_neutral()
     if memory.main.getStoryProgress() <= 8:
         memory.main.waitFrames(30 * 0.07)

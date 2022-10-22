@@ -37,12 +37,12 @@ def southPathing():
                 checkpoint += 1
             elif checkpoint == 25:
                 while memory.main.userControl():
-                    targetPathing.setMovement([-175, -487])
+                    targetPathing.set_movement([-175, -487])
                     xbox.tapX()
                 checkpoint += 1
             elif checkpoint == 33:
                 while memory.main.userControl():
-                    targetPathing.setMovement([205, 160])
+                    targetPathing.set_movement([205, 160])
                     xbox.tapX()
                 checkpoint += 1
                 print("Now ready to dodge some lightning.")
@@ -56,23 +56,23 @@ def southPathing():
 
             # General pathing
             elif memory.main.userControl():
-                if targetPathing.setMovement(targetPathing.tPlainsSouth(checkpoint)):
+                if targetPathing.set_movement(targetPathing.t_plains_south(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.menuB()
-            elif screen.BattleScreen():
+            elif screen.battle_screen():
                 battle.main.thunderPlains(1)
             elif memory.main.menuOpen():
                 xbox.tapB()
 
     memory.main.awaitControl()
-    while not targetPathing.setMovement([-73, 14]):
+    while not targetPathing.set_movement([-73, 14]):
         if memory.main.diagSkipPossible():
             xbox.menuB()
-    while not targetPathing.setMovement([-83, 29]):
+    while not targetPathing.set_movement([-83, 29]):
         if memory.main.diagSkipPossible():
             xbox.menuB()
     while not memory.main.getMap() == 263:
@@ -80,7 +80,7 @@ def southPathing():
         if memory.main.diagSkipPossible():
             xbox.menuB()
     FFXC.set_neutral()
-    menu.autoSortEquipment()
+    menu.auto_sort_equipment()
 
 
 def agencyShop():
@@ -169,21 +169,21 @@ def agencyShop():
         )
     ]
     print("Sellable Items in :", other_slots)
-    menu.sellWeapon(tidus_longsword)
-    menu.sellWeapon(auron_katana)
+    menu.sell_weapon(tidus_longsword)
+    menu.sell_weapon(auron_katana)
     if gameVars.getBlitzWin() and memory.main.getGilvalue() < 8725:
         for loc in other_slots:
-            menu.sellWeapon(loc)
+            menu.sell_weapon(loc)
             if memory.main.getGilvalue() >= 8725:
                 break
     elif not gameVars.getBlitzWin() and memory.main.getGilvalue() < 9550:
         for loc in other_slots:
-            menu.sellWeapon(loc)
+            menu.sell_weapon(loc)
             if memory.main.getGilvalue() >= 9550:
                 break
     # if not gameVars.getBlitzWin(): # This may come back later.
     #    menu.buyWeapon(0, equip=False)
-    menu.buyWeapon(5, equip=False)
+    menu.buy_weapon(5, equip=False)
     memory.main.closeMenu()
 
 
@@ -197,7 +197,7 @@ def agency():
         if memory.main.userControl():
             if checkpoint == 1:
                 while not memory.main.diagSkipPossible():
-                    targetPathing.setMovement([2, -31])
+                    targetPathing.set_movement([2, -31])
                     xbox.tapB()
                     memory.main.waitFrames(3)
                 FFXC.set_neutral()
@@ -214,14 +214,14 @@ def agency():
                     kimahriAffection = memory.main.affectionArray()[3]
                     print("Kimahri affection, ", kimahriAffection)
                     while memory.main.affectionArray()[3] == kimahriAffection:
-                        targetPathing.setMovement([27, -44])
+                        targetPathing.set_movement([27, -44])
                         xbox.tapB()
                     print("Updated, full affection array:")
                     print(memory.main.affectionArray())
                 checkpoint += 1
             elif checkpoint == 8:
                 while not memory.main.getMap() == 256:
-                    targetPathing.setMovement([3, -52])
+                    targetPathing.set_movement([3, -52])
                     xbox.tapB()
                 memory.main.clickToControl()
                 if gameVars.nemesis() or not gameVars.getBlitzWin():
@@ -232,7 +232,7 @@ def agency():
                     FFXC.set_neutral()
                     memory.main.waitFrames(3)
                     while memory.main.getMap() != 256:
-                        targetPathing.setMovement([3, -150])
+                        targetPathing.set_movement([3, -150])
                         xbox.tapB()
                     FFXC.set_neutral()
                     memory.main.awaitControl()
@@ -242,14 +242,14 @@ def agency():
                 and (gameVars.nemesis() or not gameVars.getBlitzWin())
                 and strCount < 3
             ):
-                targetPathing.setMovement([-73, 45])
+                targetPathing.set_movement([-73, 45])
                 xbox.tapB()
             elif checkpoint == 11:
                 gameVars.setBlitzWin(value=True)
                 FFXC.set_movement(0, 1)
                 memory.main.clickToEvent()
 
-            elif targetPathing.setMovement(targetPathing.tPlainsAgency(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.t_plains_agency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -279,14 +279,14 @@ def northPathing():
 
             # General pathing
             elif memory.main.userControl():
-                if targetPathing.setMovement(targetPathing.tPlainsNorth(checkpoint)):
+                if targetPathing.set_movement(targetPathing.t_plains_north(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.menuB()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.thunderPlains(1)
                 lunarSlot = memory.main.getItemSlot(56) != 255
             elif memory.main.menuOpen():
@@ -310,5 +310,5 @@ def northPathing():
         FFXC.set_neutral()  # Approaching the party
 
     else:
-        while not targetPathing.setMovement([258, -7]):
+        while not targetPathing.set_movement([258, -7]):
             pass

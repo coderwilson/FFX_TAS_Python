@@ -1,8 +1,8 @@
-class allVars:
+class AllVars:
     def __init__(self):
-        self.setStartVars()
+        self.set_start_vars()
 
-    def setStartVars(self):
+    def set_start_vars(self):
         # ------------------------------
         # The default values assume starting from the beginning of the game.
         # If you are starting from a loaded save, you may need to change one or more
@@ -78,10 +78,10 @@ class allVars:
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
 
-    def marathonSafety(self):
+    def marathon_safety(self):
         return self.marathonSafeFlag
 
-    def blitzLossReset(self):
+    def blitz_loss_reset(self):
         return self.blitzLossForceReset
 
     def useSetSeed(self):
@@ -301,11 +301,11 @@ class allVars:
 
 
 def initVars():
-    mainVars = allVars()
+    mainVars = AllVars()
 
 
 def varsHandle():
     return mainVars
 
 
-mainVars = allVars()
+mainVars = AllVars()

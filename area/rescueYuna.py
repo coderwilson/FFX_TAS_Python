@@ -36,7 +36,7 @@ def preEvrae():
                 memory.main.clickToEventTemple(4)
                 checkpoint += 1
 
-            elif targetPathing.setMovement(targetPathing.rescueAirship(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.rescue_airship(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -52,7 +52,7 @@ def guards():
     memory.main.clickToControl()
 
     if not gameVars.getBlitzWin():
-        menu.equipSonicSteel(fullMenuClose=False)
+        menu.equip_sonic_steel(full_menu_close=False)
 
     sleepingPowders = memory.main.getItemSlot(37) != 255
     if not sleepingPowders:
@@ -64,7 +64,7 @@ def guards():
         memory.main.getItemSlot(3) < 200
         and memory.main.getHP() != memory.main.getMaxHP()
     ):
-        menu.beforeGuards()
+        menu.before_guards()
     memory.main.closeMenu()
     memory.main.waitFrames(2)
 
@@ -74,11 +74,11 @@ def guards():
             if memory.main.getMap() == 180:
                 memory.main.clickToEventTemple(6)  # Take the spiral lift down
             elif memory.main.getMap() == 181:
-                while not targetPathing.setMovement([-110, 0]):
+                while not targetPathing.set_movement([-110, 0]):
                     pass
                 memory.main.clickToEventTemple(0)  # Through the water door
             else:
-                targetPathing.setMovement([0, -200])
+                targetPathing.set_movement([0, -200])
         else:
             FFXC.set_neutral()
             if memory.main.battleActive():
@@ -110,7 +110,9 @@ def guards():
             if checkpoint < 2 and memory.main.getMap() == 182:
                 checkpoint = 2
             # General pathing
-            elif targetPathing.setMovement(targetPathing.bevellePreTrials(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.bevelle_pre_trials(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -289,7 +291,7 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 32:  # Insert Glyph sphere
                 while memory.main.userControl():
-                    targetPathing.setMovement([450, 525])
+                    targetPathing.set_movement([450, 525])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
@@ -403,7 +405,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.bevelleTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.bevelle_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -419,7 +421,7 @@ def trialsEnd():
     checkpoint = 53
     while memory.main.getMap() != 226:
         if memory.main.userControl():
-            if targetPathing.setMovement(targetPathing.bevelleTrials(checkpoint)):
+            if targetPathing.set_movement(targetPathing.bevelle_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         elif memory.main.diagSkipPossible():
@@ -455,7 +457,7 @@ def ViaPurifico():
     FFXC.set_neutral()
 
     memory.main.clickToControl()
-    menu.viaPurifico()
+    menu.via_purifico()
 
     while memory.main.getMap() != 209:  # Map number for Altana
         if memory.main.userControl():
@@ -464,7 +466,7 @@ def ViaPurifico():
                 memory.main.waitFrames(30 * 2)
             else:
                 FFXC.set_movement(0, 1)
-        elif screen.BattleScreen():
+        elif screen.battle_screen():
             battle.boss.isaaru()
         else:
             FFXC.set_neutral()
@@ -531,10 +533,10 @@ def evraeAltana():
                     FFXC.set_movement(-1, 1)
                 else:
                     FFXC.set_movement(0, 1)
-        elif screen.BattleScreen():
+        elif screen.battle_screen():
             battle.boss.evraeAltana()
-            rngTrack.printManipInfo()
-        elif screen.BattleComplete():
+            rngTrack.print_manip_info()
+        elif screen.battle_complete():
             xbox.menuB()
         else:
             FFXC.set_neutral()
@@ -548,19 +550,19 @@ def seymourNatus():
 
     if memory.main.getYunaSlvl() >= 14:
         if gameVars.getBlitzWin():
-            menu.seymourNatusBlitzWin()
+            menu.seymour_natus_blitz_win()
         else:
-            menu.seymourNatusBlitzLoss()
+            menu.seymour_natus_blitz_loss()
 
     memory.main.fullPartyFormat("highbridge")
     memory.main.touchSaveSphere()
     complete = 0
     while complete == 0:
         if memory.main.userControl():
-            targetPathing.setMovement([2, memory.main.getCoords()[1] - 50])
+            targetPathing.set_movement([2, memory.main.getCoords()[1] - 50])
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 print("Battle Start")
                 if memory.main.battleType() == 2:
                     battle.main.fleeAll()
@@ -569,10 +571,10 @@ def seymourNatus():
 
                 if memory.main.getYunaSlvl() >= 14:
                     if gameVars.getBlitzWin():
-                        menu.seymourNatusBlitzWin()
+                        menu.seymour_natus_blitz_win()
                     else:
-                        menu.seymourNatusBlitzLoss()
-                rngTrack.printManipInfo()
+                        menu.seymour_natus_blitz_loss()
+                rngTrack.print_manip_info()
 
     # Movement for make-out scene
     memory.main.clickToControl()
@@ -605,7 +607,7 @@ def seymourNatus():
                 memory.main.clickToEventTemple(0)
                 checkpoint += 1
 
-            elif targetPathing.setMovement(targetPathing.sutekiDaNe(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.suteki_da_ne(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

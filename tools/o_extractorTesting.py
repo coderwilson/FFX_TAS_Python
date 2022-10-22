@@ -11,7 +11,7 @@ Gamestate = "none"
 StepCounter = 1
 
 area.dreamZan.NewGame("Extractor testing")
-loadGame.loadSaveNum(96)
+loadGame.load_save_num(96)
 memory.main.awaitControl()
 FFXC.set_movement(1, -1)
 memory.main.awaitEvent()

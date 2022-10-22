@@ -15,6 +15,6 @@ while lStrikeCount - lStrikeStart < 250:
         lStrikeCount = memory.main.lStrikeCount()
         print("Dodge,", lStrikeCount - lStrikeStart)
     elif memory.main.userControl():
-        targetPathing.setMovement([62, 780])
+        targetPathing.set_movement([62, 780])
 
 print("Program has terminated, or similar effect.")

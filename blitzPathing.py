@@ -6,7 +6,7 @@ import xbox
 FFXC = xbox.controllerHandle()
 
 
-def setMovement(target) -> bool:
+def set_movement(target) -> bool:
     player = memory.main.getCoords()
     (forward, right) = ((1, 0), (0, -1))
 

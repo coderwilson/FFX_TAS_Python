@@ -27,7 +27,9 @@ def approach(doGrid=True):
                 checkpoint = 2
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.mTempleApproach(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.m_temple_approach(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -37,7 +39,7 @@ def approach(doGrid=True):
     FFXC.set_neutral()
     memory.main.awaitControl()
     if doGrid:
-        menu.macTemple()
+        menu.mac_temple()
     memory.main.touchSaveSphere()
 
 
@@ -135,7 +137,7 @@ def arrival():
                 checkpoint = 12
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.templeFoyer(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.temple_foyer(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -147,7 +149,7 @@ def arrival():
 
 def startSeymourFight():
     memory.main.clickToControl()
-    while not targetPathing.setMovement([9, -53]):
+    while not targetPathing.set_movement([9, -53]):
         pass  # Allows us to move to the Seymour fight.
     FFXC.set_movement(1, 0)
     memory.main.awaitEvent()
@@ -235,7 +237,7 @@ def trials():
                 memory.main.clickToEventTemple(4)
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.mTempleTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.m_temple_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -249,10 +251,10 @@ def escape():
     if gameVars.nemesis():
         memory.main.fullPartyFormat("yuna", fullMenuClose=False)
     else:
-        menu.afterSeymour()
+        menu.after_seymour()
         menuDone = True
         memory.main.fullPartyFormat("macalaniaescape", fullMenuClose=False)
-    menu.equipSonicSteel(fullMenuClose=True)
+    menu.equip_sonic_steel(full_menu_close=True)
 
     print("Now to escape the Guado")
     forceBattle = False
@@ -274,19 +276,19 @@ def escape():
                 print("Map change. Update checkpoint:", checkpoint)
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.mTempleEscape(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.m_temple_escape(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battleActive():
-                screen.awaitTurn()
+                screen.await_turn()
                 if checkpoint < 19:
                     battle.main.fleeAll()
                     forceBattle = False
                 elif not menuDone:
                     battle.main.escapeWithXP()
-                    menu.afterSeymour()
+                    menu.after_seymour()
                     menuDone = True
                     memory.main.fullPartyFormat("macalaniaescape")
                 elif memory.main.getEncounterID() == 195:
@@ -324,14 +326,14 @@ def underLake():
                 checkpoint += 1
             elif checkpoint == 15:
                 while memory.main.userControl():
-                    targetPathing.setMovement([-4, -8])
+                    targetPathing.set_movement([-4, -8])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.underMacTemple(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.under_mac_temple(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

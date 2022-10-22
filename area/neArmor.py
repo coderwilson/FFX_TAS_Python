@@ -14,8 +14,8 @@ FFXC = xbox.controllerHandle()
 
 def toHiddenCave():
     # Force manip NEA
-    if gameVars.marathonSafety():
-        if rngTrack.neaTrack()[1] in [0, 1]:
+    if gameVars.marathon_safety():
+        if rngTrack.nea_track()[1] in [0, 1]:
             pass
         else:
             FFXC.set_neutral()
@@ -30,17 +30,17 @@ def toHiddenCave():
             )
             memory.main.waitFrames(30)
             advanceCount = 0
-            nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
+            nextItem, preAdvance13 = rngTrack.item_to_be_dropped(enemy="ghost")
             while nextItem.equipmentType() != 1:
                 print("Advance 12 - ", advanceCount)
                 advanceCount += 1
                 memory.main.advanceRNG12()
-                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
+                nextItem, preAdvance13 = rngTrack.item_to_be_dropped(enemy="ghost")
             while not nextItem.hasAbility(0x801D):
                 print("Advance 13 - ", advanceCount)
                 advanceCount += 1
                 memory.main.advanceRNG13()
-                nextItem, preAdvance13 = rngTrack.itemToBeDropped(enemy="ghost")
+                nextItem, preAdvance13 = rngTrack.item_to_be_dropped(enemy="ghost")
 
             if memory.main.nextChanceRNG10() > 10:
                 print("Advance 10 - ", advanceCount)
@@ -60,7 +60,7 @@ def toHiddenCave():
 
     # Regular logic
     memory.main.fullPartyFormat("rikku")
-    rngTrack.printManipInfo()
+    rngTrack.print_manip_info()
     lastReport = False
     firstSave = False
     checkpoint = 0
@@ -73,7 +73,7 @@ def toHiddenCave():
                 if memory.main.getTidusMP() < 8:
                     memory.main.touchSaveSphere()
                 firstSave = True
-            _, nextDrop = rngTrack.neaTrack()
+            _, nextDrop = rngTrack.nea_track()
             if checkpoint == 8 and (
                 nextDrop >= 1 or memory.main.nextChanceRNG10() >= 9
             ):
@@ -94,16 +94,16 @@ def toHiddenCave():
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
-            elif targetPathing.setMovement(targetPathing.neApproach(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.ne_approach(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battleActive():
-                _, nextDrop = rngTrack.neaTrack()
+                _, nextDrop = rngTrack.nea_track()
                 lastReport = False
                 print("### Starting manip battle")
-                rngTrack.printManipInfo()
+                rngTrack.print_manip_info()
                 memory.main.waitFrames(2)
                 if nextDrop >= 1:
                     if memory.main.nextChanceRNG10() != 0:
@@ -120,11 +120,11 @@ def toHiddenCave():
                 prepBattles += 1
                 memory.main.fullPartyFormat("rikku")
                 memory.main.touchSaveSphere()
-                rngTrack.printManipInfo()
+                rngTrack.print_manip_info()
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
-    logs.writeStats("NEA extra manip battles:")
-    logs.writeStats(prepBattles)
+    logs.write_stats("NEA extra manip battles:")
+    logs.write_stats(prepBattles)
 
 
 def nextGreen():
@@ -144,7 +144,7 @@ def dropHunt():
 
     goGreen = nextGreen()
 
-    rngTrack.printManipInfo()
+    rngTrack.print_manip_info()
     checkpoint = 0
     preGhostBattles = 0
     while gameVars.neArmor() == 255:
@@ -152,14 +152,14 @@ def dropHunt():
             if goGreen:
                 if checkpoint == 15:
                     checkpoint -= 2
-                elif targetPathing.setMovement(
-                    targetPathing.neForceEncountersGreen(checkpoint)
+                elif targetPathing.set_movement(
+                    targetPathing.ne_force_encounters_green(checkpoint)
                 ):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             else:
-                if targetPathing.setMovement(
-                    targetPathing.neForceEncountersWhite(checkpoint)
+                if targetPathing.set_movement(
+                    targetPathing.ne_force_encounters_white(checkpoint)
                 ):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not goGreen:
@@ -185,23 +185,23 @@ def dropHunt():
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
     print("The NE armor hunt is complete. Char:", gameVars.neArmor())
-    logs.writeStats("Pre-Ghost flees:")
-    logs.writeStats(preGhostBattles)
-    logs.writeStats("NEA char:")
-    logs.writeStats(gameVars.neArmor())
+    logs.write_stats("Pre-Ghost flees:")
+    logs.write_stats(preGhostBattles)
+    logs.write_stats("NEA char:")
+    logs.write_stats(gameVars.neArmor())
 
 
 def returnToGagazet():
     unequip = False
     if memory.main.getCoords()[0] > 300:
         goGreen = True
-        menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+        menu.equip_armor(character=gameVars.neArmor(), ability=0x801D)
         if memory.main.overdriveState2()[6] != 100:
             unequip = True
     else:
         goGreen = False
         if memory.main.overdriveState2()[6] == 100:
-            menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+            menu.equip_armor(character=gameVars.neArmor(), ability=0x801D)
 
     checkpoint = 0
     while memory.main.getMap() != 259:
@@ -210,20 +210,22 @@ def returnToGagazet():
                 if checkpoint == 10:
                     goGreen = False
                     checkpoint = 0
-                elif targetPathing.setMovement(targetPathing.neReturnGreen(checkpoint)):
+                elif targetPathing.set_movement(
+                    targetPathing.ne_return_green(checkpoint)
+                ):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             elif checkpoint < 1 and memory.main.getMap() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
-                menu.equipArmor(character=gameVars.neArmor(), ability=99)
+                menu.equip_armor(character=gameVars.neArmor(), ability=99)
                 unequip = False
             elif checkpoint == 2:
                 memory.main.touchSaveSphere()
                 checkpoint += 1
             elif checkpoint < 7 and memory.main.getMap() == 279:
                 checkpoint = 7
-            elif targetPathing.setMovement(targetPathing.neReturn(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.ne_return(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

@@ -17,14 +17,14 @@ FFXC = xbox.controllerHandle()
 
 
 def autoLife():
-    while not (memory.main.turnReady() and screen.turnTidus()):
+    while not (memory.main.turnReady() and screen.turn_tidus()):
         if memory.main.turnReady():
-            if screen.turnAeon():
+            if screen.turn_aeon():
                 battle.main.attack("none")
-            elif not screen.turnTidus():
+            elif not screen.turn_tidus():
                 battle.main.defend()
     while memory.main.battleMenuCursor() != 22:
-        if screen.turnTidus() == False:
+        if screen.turn_tidus() == False:
             print("Attempting Auto-life, but it's not Tidus's turn")
             xbox.tapUp()
             xbox.tapUp()
@@ -273,12 +273,12 @@ def battleFarmAll(apCpLimit: int = 255, yunaAttack=True, faythCave=True):
     print("### Battle Start:", memory.main.getEncounterID())
     FFXC.set_neutral()
     if faythCave == True and memory.main.battleType() == 2:
-        screen.awaitTurn()
+        screen.await_turn()
         battle.main.fleeAll()
     else:
         while memory.main.battleActive():
             if memory.main.turnReady():
-                if screen.turnTidus():
+                if screen.turn_tidus():
                     if memory.main.getEncounterID() in [154, 156, 164]:
                         # Confusion is a dumb mechanic in this game.
                         battle.main.attackByNum(22, "l")
@@ -290,7 +290,7 @@ def battleFarmAll(apCpLimit: int = 255, yunaAttack=True, faythCave=True):
                         battle.main.attackByNum(23, "d")
                     else:
                         battle.main.attack("none")
-                elif screen.turnYuna():
+                elif screen.turn_yuna():
                     if yunaAttack:
                         if memory.main.getEncounterID() in [154, 156, 164]:
                             # Confusion is a dumb mechanic in this game.
@@ -305,7 +305,7 @@ def battleFarmAll(apCpLimit: int = 255, yunaAttack=True, faythCave=True):
                             battle.main.attack("none")
                     else:
                         battle.main.escapeOne()
-                elif screen.turnRikku() or screen.turnWakka():
+                elif screen.turn_rikku() or screen.turn_wakka():
                     if not battle.main.checkTidusOk():
                         battle.main.escapeOne()
                     elif memory.main.getEncounterID() == 219:
@@ -450,15 +450,15 @@ def advancedBattleLogic():
             aeonComplete = False
             while memory.main.battleActive():
                 if memory.main.turnReady():
-                    if screen.turnRikku():
+                    if screen.turn_rikku():
                         if not aeonComplete:
                             battle.main.buddySwapYuna()
                             battle.main.aeonSummon(4)
                         else:
                             battle.main.defend()
-                    elif screen.turnYuna():
+                    elif screen.turn_yuna():
                         battle.main.buddySwapRikku()
-                    elif screen.turnTidus():
+                    elif screen.turn_tidus():
                         battle.main.useSkill(1)  # Quick hit
                     else:
                         battle.main.defend()
@@ -473,7 +473,7 @@ def advancedBattleLogic():
                         battle.main.buddySwapYuna()
                         battle.main.aeonSummon(4)
                         battle.main.attack("none")
-                    elif screen.turnTidus():
+                    elif screen.turn_tidus():
                         if memory.main.getEncounterID() in [386] and not autoLifeUsed:
                             autoLife()
                             autoLifeUsed = True
@@ -521,7 +521,7 @@ def advancedBattleLogic():
                             battle.main.tidusFlee()
                         else:
                             battle.main.useSkill(1)  # Quick hit
-                    elif screen.turnRikku():
+                    elif screen.turn_rikku():
                         if encounterID in [377, 382]:
                             print(
                                 "Shining Gems for Gemini, better to save other items for other enemies."
@@ -614,7 +614,7 @@ def advancedBattleLogic():
 def bribeBattle(spareChangeValue: int = 12000):
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnLulu():
+            if screen.turn_lulu():
                 while memory.main.battleMenuCursor() != 20:
                     if memory.main.battleMenuCursor() == 0:
                         xbox.tapDown()
@@ -883,11 +883,11 @@ def farmFeathers():
     waitCounter = 0
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnRikku():
+            if screen.turn_rikku():
                 print("+++ Qactar steal command")
                 battle.main.Steal()
                 print("+++ Qactar steal command done")
-            elif screen.turnTidus():
+            elif screen.turn_tidus():
                 print("+++ Qactar flee command")
                 battle.main.tidusFlee()
                 print("+++ Qactar flee command done")
@@ -1572,11 +1572,11 @@ def kilikaFarm(capNum: int = 1):
 
 
 def miihenNext(endGoal: int):
-    next1 = rngTrack.comingBattles(area="mi'ihen_(newroad)", battleCount=2)[0]
-    next2 = rngTrack.comingBattles(area="old_road", battleCount=2)[0]
-    next3 = rngTrack.comingBattles(area="clasko_skip_screen", battleCount=2)[0]
-    next4 = rngTrack.comingBattles(area="mrr_-_valley", battleCount=2)[0]
-    next6 = rngTrack.comingBattles(area="mrr_-_precipice", battleCount=2)[0]
+    next1 = rngTrack.coming_battles(area="mi'ihen_(newroad)", battleCount=2)[0]
+    next2 = rngTrack.coming_battles(area="old_road", battleCount=2)[0]
+    next3 = rngTrack.coming_battles(area="clasko_skip_screen", battleCount=2)[0]
+    next4 = rngTrack.coming_battles(area="mrr_-_valley", battleCount=2)[0]
+    next6 = rngTrack.coming_battles(area="mrr_-_precipice", battleCount=2)[0]
     farmArray1 = memory.main.arenaFarmCheck(
         zone="miihen", endGoal=endGoal, returnArray=True
     )
@@ -1978,8 +1978,8 @@ def mrrFarm_old(capNum: int = 1):
 
 
 def djoseNext(endGoal: int):
-    next1 = rngTrack.comingBattles(area="djose_highroad_(back_half)", battleCount=2)[0]
-    next2 = rngTrack.comingBattles(area="moonflow_(south)", battleCount=2)[0]
+    next1 = rngTrack.coming_battles(area="djose_highroad_(back_half)", battleCount=2)[0]
+    next2 = rngTrack.coming_battles(area="moonflow_(south)", battleCount=2)[0]
     farmArray = memory.main.arenaFarmCheck(
         zone="djose", endGoal=endGoal, returnArray=True
     )
@@ -2096,10 +2096,10 @@ def djoseFarm(capNum: int = 10):
 
 
 def plainsNext(endGoal: int):
-    next1 = rngTrack.comingBattles(
+    next1 = rngTrack.coming_battles(
         area="thunder_plains_(north)_(1_stone)", battleCount=2
     )[0]
-    next2 = rngTrack.comingBattles(
+    next2 = rngTrack.coming_battles(
         area="thunder_plains_(south)_(2_stones)", battleCount=2
     )[0]
     farmArray = memory.main.arenaFarmCheck(
@@ -2310,8 +2310,8 @@ def tPlains_Old(capNum: int = 1, autoHaste: bool = False):
 
 
 def woodsNext(endGoal: int):
-    next1 = rngTrack.comingBattles(area="lake_macalania", battleCount=2)[0]
-    next2 = rngTrack.comingBattles(area="macalania_woods", battleCount=2)[0]
+    next1 = rngTrack.coming_battles(area="lake_macalania", battleCount=2)[0]
+    next2 = rngTrack.coming_battles(area="macalania_woods", battleCount=2)[0]
     farmArray1 = memory.main.arenaFarmCheck(
         zone="maclake", endGoal=endGoal, returnArray=True
     )
@@ -2469,9 +2469,9 @@ def macWoods_old(capNum: int = 10):
 
 
 def bikanelNext(endGoal: int):
-    next1 = rngTrack.comingBattles(area="sanubia_desert_(central)", battleCount=1)[0]
-    next2 = rngTrack.comingBattles(area="sanubia_desert_(ruins)", battleCount=1)[0]
-    next3 = rngTrack.comingBattles(area="sanubia_desert_(west)", battleCount=1)[0]
+    next1 = rngTrack.coming_battles(area="sanubia_desert_(central)", battleCount=1)[0]
+    next2 = rngTrack.coming_battles(area="sanubia_desert_(ruins)", battleCount=1)[0]
+    next3 = rngTrack.coming_battles(area="sanubia_desert_(west)", battleCount=1)[0]
     farmArray = memory.main.arenaFarmCheck(
         zone="bikanel", endGoal=endGoal, returnArray=True
     )
@@ -2613,11 +2613,11 @@ def bikanel(capNum: int = 10):
 
 
 def calmNext(endGoal: int, forceLevels: int):
-    next1 = rngTrack.comingBattles(area="calm_lands_(south)", battleCount=1)[0]
-    next2 = rngTrack.comingBattles(
+    next1 = rngTrack.coming_battles(area="calm_lands_(south)", battleCount=1)[0]
+    next2 = rngTrack.coming_battles(
         area="calm_lands_(central-north-east)", battleCount=1
     )[0]
-    next3 = rngTrack.comingBattles(area="calm_lands_(north-west)", battleCount=1)[0]
+    next3 = rngTrack.coming_battles(area="calm_lands_(north-west)", battleCount=1)[0]
     farmArray = memory.main.arenaFarmCheck(
         zone="calm", endGoal=endGoal, returnArray=True
     )
@@ -2848,10 +2848,10 @@ def calm_old(capNum: int = 1, autoHaste=False, airshipReturn=True):
 
 
 def gagazetNext(endGoal: int):
-    next1 = rngTrack.comingBattles(area="gagazet_(mountain)", battleCount=2)[0]
-    next2 = rngTrack.comingBattles(area="gagazet_(cave)", battleCount=2)[0]
-    next3 = rngTrack.comingBattles(area="zanarkand_(overpass)", battleCount=2)[0]
-    next4 = rngTrack.comingBattles(area="gagazet_(underwater)", battleCount=2)[0]
+    next1 = rngTrack.coming_battles(area="gagazet_(mountain)", battleCount=2)[0]
+    next2 = rngTrack.coming_battles(area="gagazet_(cave)", battleCount=2)[0]
+    next3 = rngTrack.coming_battles(area="zanarkand_(overpass)", battleCount=2)[0]
+    next4 = rngTrack.coming_battles(area="gagazet_(underwater)", battleCount=2)[0]
     farmArray = memory.main.arenaFarmCheck(
         zone="gagazet", endGoal=endGoal, returnArray=True
     )
@@ -3213,8 +3213,8 @@ def gagazet3(capNum: int = 10):  # No longer used
 
 
 def faythNext(endGoal: int):
-    next1 = rngTrack.comingBattles(area="cave_(white_zone)", battleCount=1)[0]
-    next2 = rngTrack.comingBattles(area="cave_(green_zone)", battleCount=1)[0]
+    next1 = rngTrack.coming_battles(area="cave_(white_zone)", battleCount=1)[0]
+    next2 = rngTrack.coming_battles(area="cave_(green_zone)", battleCount=1)[0]
     farmArray = memory.main.arenaFarmCheck(
         zone="stolenfayth", endGoal=endGoal, returnArray=True
     )
@@ -3427,7 +3427,7 @@ def insideSin(capNum: int = 10):
         else:
             FFXC.set_neutral()
             if memory.main.battleActive():
-                screen.awaitTurn()
+                screen.await_turn()
                 advancedBattleLogic()
                 if checkpoint < 40:
                     print("Ahrimans only:")

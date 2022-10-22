@@ -33,7 +33,7 @@ def airShipPath(version):
                 # Tyton to update this with the actual purchase.
                 while memory.main.diagProgressFlag() != 44:
                     if memory.main.userControl():
-                        targetPathing.setMovement([-6, 6])
+                        targetPathing.set_movement([-6, 6])
                         xbox.tapB()
                     else:
                         FFXC.set_neutral()
@@ -128,13 +128,13 @@ def airShipPath(version):
                 checkpoint = 45
             elif checkpoint == 44:  # Talk to Cid
                 while memory.main.userControl():
-                    targetPathing.setMovement([-250, 339])
+                    targetPathing.set_movement([-250, 339])
                     xbox.tapB()
                 FFXC.set_neutral()
                 complete = True
             elif checkpoint == 46:  # Talk to Cid
                 while memory.main.userControl():
-                    targetPathing.setMovement([-230, 366])
+                    targetPathing.set_movement([-230, 366])
                     xbox.tapB()
                 FFXC.set_neutral()
                 complete = True
@@ -163,10 +163,10 @@ def airShipPath(version):
                 memory.main.waitFrames(30 * 3)
                 FFXC.set_neutral()
                 memory.main.awaitControl()
-                targetPathing.setMovement([-2, -15])
+                targetPathing.set_movement([-2, -15])
                 memory.main.waitFrames(30 * 0.5)
                 while memory.main.userControl():
-                    targetPathing.setMovement([-2, -15])
+                    targetPathing.set_movement([-2, -15])
                     xbox.tapB()
                 FFXC.set_neutral()
                 while not memory.main.userControl():
@@ -194,7 +194,7 @@ def airShipPath(version):
                 complete = True
 
             # General Pathing
-            elif targetPathing.setMovement(targetPathing.airShip(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.air_ship(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

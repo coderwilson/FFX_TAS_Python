@@ -53,12 +53,12 @@ def arrival(rikkuCharged):
                 checkpoint = 40
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.mWoods(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.m_woods(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 print("variable check 1:", woodsVars)
                 woodsVars = battle.main.mWoods(woodsVars)
                 print("variable check 2:", woodsVars)
@@ -83,19 +83,19 @@ def arrival(rikkuCharged):
 
 def lakeRoad():
     memory.main.awaitControl()
-    while not targetPathing.setMovement([174, -96]):
+    while not targetPathing.set_movement([174, -96]):
         pass
-    while not targetPathing.setMovement([138, -83]):
+    while not targetPathing.set_movement([138, -83]):
         pass
-    while not targetPathing.setMovement([101, -82]):
+    while not targetPathing.set_movement([101, -82]):
         pass
     while memory.main.userControl():
         FFXC.set_movement(0, 1)
         xbox.tapB()
     FFXC.set_neutral()
-    menu.mWoods()  # Selling and buying, item sorting, etc
+    menu.m_woods()  # Selling and buying, item sorting, etc
     memory.main.fullPartyFormat("spheri")
-    while not targetPathing.setMovement([101, -72]):
+    while not targetPathing.set_movement([101, -72]):
         pass
 
     while not memory.main.battleActive():
@@ -104,18 +104,18 @@ def lakeRoad():
             tidusPos = memory.main.getCoords()
             if mapVal == 221:
                 if tidusPos[0] > 35:
-                    targetPathing.setMovement([33, -35])
+                    targetPathing.set_movement([33, -35])
                 else:
-                    targetPathing.setMovement([-4, 15])
+                    targetPathing.set_movement([-4, 15])
             elif mapVal == 248:
                 if tidusPos[0] < -131:
-                    targetPathing.setMovement([-129, -343])
+                    targetPathing.set_movement([-129, -343])
                 elif tidusPos[1] < -235:
-                    targetPathing.setMovement([-49, -233])
+                    targetPathing.set_movement([-49, -233])
                 elif tidusPos[1] < -95:
-                    targetPathing.setMovement([-1, -93])
+                    targetPathing.set_movement([-1, -93])
                 else:
-                    targetPathing.setMovement([-1, 100])
+                    targetPathing.set_movement([-1, 100])
         else:
             FFXC.set_neutral()
             if memory.main.diagSkipPossible():
@@ -134,19 +134,19 @@ def lakeRoad2():
         checkpoint = 0
         while checkpoint < 5:
             if checkpoint == 0:
-                if targetPathing.setMovement([-6, 25]):
+                if targetPathing.set_movement([-6, 25]):
                     checkpoint += 1
             elif checkpoint == 1:
-                if targetPathing.setMovement([-4, -50]):
+                if targetPathing.set_movement([-4, -50]):
                     checkpoint += 1
             elif checkpoint == 2:
-                if targetPathing.setMovement([-45, -212]):
+                if targetPathing.set_movement([-45, -212]):
                     checkpoint += 1
             elif checkpoint == 3:
-                if targetPathing.setMovement([-49, -245]):
+                if targetPathing.set_movement([-49, -245]):
                     checkpoint += 1
             else:
-                if targetPathing.setMovement([-145, -358]):
+                if targetPathing.set_movement([-145, -358]):
                     checkpoint += 1
 
     else:
@@ -162,7 +162,7 @@ def lakeRoad2():
         # Make sure we get Auron affection
         while memory.main.affectionArray()[2] == auronAffection:
             auronCoords = memory.main.getActorCoords(3)
-            targetPathing.setMovement(auronCoords)
+            targetPathing.set_movement(auronCoords)
             xbox.tapB()
         print("Affection (after):", memory.main.affectionArray())
     while memory.main.userControl():
@@ -182,7 +182,7 @@ def lake():
         battle.main.healUp(fullMenuClose=False)
 
     memory.main.fullPartyFormat("crawler", fullMenuClose=False)
-    menu.mLakeGrid()
+    menu.m_lake_grid()
     memory.main.awaitControl()
 
     print("------------------------------Affection array:")
@@ -192,7 +192,7 @@ def lake():
     checkpoint = 0
     while memory.main.getEncounterID() != 194:
         if memory.main.userControl():
-            if targetPathing.setMovement(targetPathing.mLake(checkpoint)):
+            if targetPathing.set_movement(targetPathing.m_lake(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

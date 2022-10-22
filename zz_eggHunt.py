@@ -21,14 +21,14 @@ while attempts < 10:
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
         area.dreamZan.NewGame("rescueYuna")
         print("Game start screen")
-        screen.clearMouse(0)
+        screen.clear_mouse(0)
 
         # Initiate memory reading, after we know the game is open.
         memory.main.start()
 
         import loadGame
 
-        loadGame.loadSaveNum(number=51)
+        loadGame.load_save_num(number=51)
 
         FFXC.set_value("AxisLy", 1)
         FFXC.set_value("AxisLx", 1)
@@ -50,7 +50,7 @@ while attempts < 10:
         memory.main.start()
         import logs
 
-        logs.nextPlot()
+        logs.next_plot()
         waitCount = 0
         while memory.main.getMap() == 324:
             if memory.main.battleActive():
@@ -63,7 +63,7 @@ while attempts < 10:
                 if waitCount % 10 == 0:
                     print(waitCount)
                     cam = memory.main.getCamera()
-                    logs.writePlot(str(cam[0]) + "," + str(cam[4]))
+                    logs.write_plot(str(cam[0]) + "," + str(cam[4]))
                 else:
                     time.sleep(0.035)
                 if waitCount > 10000:
@@ -74,4 +74,4 @@ while attempts < 10:
     print("Resetting.")
     memory.main.end()
 
-    reset.resetToMainMenu()
+    reset.reset_to_main_menu()

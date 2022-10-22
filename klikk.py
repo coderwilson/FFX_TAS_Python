@@ -8,19 +8,19 @@ import vars
 import xbox
 
 gameVars = vars.varsHandle()
-gameVars.setStartVars()
+gameVars.set_start_vars()
 
 memory.main.start()
 # Plug in controller
 FFXC = xbox.controllerHandle()
 
 area.dreamZan.NewGame("Klikk testing")
-loadGame.loadSaveNum(101)
+loadGame.load_save_num(101)
 memory.main.awaitControl()
 while memory.main.userControl():
-    targetPathing.setMovement([0, 0])
+    targetPathing.set_movement([0, 0])
     if memory.main.getCoords()[0] > -40:
         xbox.tapB()
 area.baaj.Klikk_fight()
 
-reset.midRunReset(landRun=False, startTime=logs.timeStamp())
+reset.mid_run_reset(land_run=False, start_time=logs.time_stamp())

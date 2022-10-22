@@ -15,7 +15,7 @@ fileMemChange = "none"
 fileRNG = "none"
 
 
-def writeStats(message):
+def write_stats(message):
     global statsFile
     global fileStats
 
@@ -25,7 +25,7 @@ def writeStats(message):
     statsFile.close()
 
 
-def nextStats(rngSeedNum):
+def next_stats(rng_seed_num):
     global fileStats
     global game
     global ext
@@ -35,7 +35,7 @@ def nextStats(rngSeedNum):
             "Logs/"
             + game
             + "Stats_ "
-            + str(rngSeedNum)
+            + str(rng_seed_num)
             + "_"
             + str(timeNow.year)
             + str(timeNow.month)
@@ -60,12 +60,12 @@ def nextStats(rngSeedNum):
     print("Stats file is ready for writing!\n")
 
 
-def resetStatsLog():
+def reset_stats_log():
     global fileStats
     fileStats = "none"
 
 
-def writePlot(message):
+def write_plot(message):
     global plotFile
     global filePlot
 
@@ -75,7 +75,7 @@ def writePlot(message):
     plotFile.close()
 
 
-def nextPlot():
+def next_plot():
     global filePlot
     global game
     global ext
@@ -108,7 +108,7 @@ def nextPlot():
         print("X/Y plotting file is ready for writing!\n")
 
 
-def writeMemChange(message):
+def write_mem_change(message):
     global memChangeFile
     global fileMemChange
 
@@ -118,7 +118,7 @@ def writeMemChange(message):
     memChangeFile.close()
 
 
-def openRNGTrack():
+def open_rng_track():
     global fileRNG
     global game
     global ext
@@ -153,7 +153,7 @@ def openRNGTrack():
     print("RNG log is ready for writing!\n")
 
 
-def writeRNGTrack(message):
+def write_rng_track(message):
     global RNGFile
     global fileRNG
 
@@ -163,7 +163,7 @@ def writeRNGTrack(message):
     RNGFile.close()
 
 
-class memChangeMonitor:
+class MemChangeMonitor:
     def __init__(
         self,
         baseOffsetRef,
@@ -179,17 +179,17 @@ class memChangeMonitor:
         self.varType = typeRef
         self.key = baseValue + 0x003988A5
 
-        self.setLastValue()
+        self.set_last_value()
 
         if childReport != 0:
             self.reportOnChild = False
         else:
             self.reportOnChild = True
-            self.childHandle = memChangeMonitor(
+            self.childHandle = MemChangeMonitor(
                 self.baseOffset, True, self.ptrOffset, self.typeRef, 0
             )
 
-    def setLastValue(self):
+    def set_last_value(self):
         if self.isPointer:
             ptrRef = memory.main.readBytes(key, 4)
 
@@ -215,65 +215,65 @@ class memChangeMonitor:
                     memory.main.readBytes(key, 4)
                 )
 
-    def reportIfChange(self):
-        if self.checkChange():
+    def report_if_change(self):
+        if self.check_change():
             if self.reportOnChild:
-                writeMemChange("Value changed (parent)")
+                write_mem_change("Value changed (parent)")
             else:
-                writeMemChange("Value changed")
-            writeMemChange("Base offset: " + str(self.baseOffset))
-            writeMemChange("Pointer value: " + str(self.isPointer))
+                write_mem_change("Value changed")
+            write_mem_change("Base offset: " + str(self.baseOffset))
+            write_mem_change("Pointer value: " + str(self.isPointer))
             if self.isPointer:
-                writeMemChange("Pointer offset: " + str(self.pointerOffset))
-            writeMemChange("Type of variable: " + str(self.varType))
-            writeMemChange("Previous value: " + self.lastValue)
-            writeMemChange("Updated value: " + self.getNewValue())
-            writeMemChange("Time of change: " + timeStamp())
-            writeMemChange("?? Game state ??")
-            writeMemChange("Story progress: " + str(memory.main.getStoryProgress()))
-            writeMemChange("Current map: " + str(memory.main.getMap()))
-            writeMemChange("Battle Active: " + str(memory.main.battleActive()))
+                write_mem_change("Pointer offset: " + str(self.pointerOffset))
+            write_mem_change("Type of variable: " + str(self.varType))
+            write_mem_change("Previous value: " + self.lastValue)
+            write_mem_change("Updated value: " + self.getNewValue())
+            write_mem_change("Time of change: " + time_stamp())
+            write_mem_change("?? Game state ??")
+            write_mem_change("Story progress: " + str(memory.main.getStoryProgress()))
+            write_mem_change("Current map: " + str(memory.main.getMap()))
+            write_mem_change("Battle Active: " + str(memory.main.battleActive()))
 
-            writeMemChange("----------------------------")
+            write_mem_change("----------------------------")
             if self.reportOnChild:
-                self.childHandle.forceReportChild()
-            self.setLastValue()
+                self.childHandle.force_report_child()
+            self.set_last_value()
 
-    def forceReportChild(self):
-        writeMemChange("Value changed (child)")
-        writeMemChange("Base offset: " + str(self.baseOffset))
-        writeMemChange("Pointer value: " + str(self.isPointer))
+    def force_report_child(self):
+        write_mem_change("Value changed (child)")
+        write_mem_change("Base offset: " + str(self.baseOffset))
+        write_mem_change("Pointer value: " + str(self.isPointer))
         if self.isPointer:
-            writeMemChange("Pointer offset: " + str(self.pointerOffset))
-        writeMemChange("Type of variable: " + str(self.varType))
-        writeMemChange("Previous value: " + self.lastValue)
-        writeMemChange("Updated value: " + self.getNewValue())
-        writeMemChange("Time of change: " + timeStamp())
-        writeMemChange("?? Game state ??")
-        writeMemChange("Story progress: " + str(memory.main.getStoryProgress()))
-        writeMemChange("Current map: " + str(memory.main.getMap()))
-        writeMemChange("Battle Active: " + str(memory.main.battleActive()))
-        writeMemChange("----------------------------")
-        self.setLastValue()
+            write_mem_change("Pointer offset: " + str(self.pointerOffset))
+        write_mem_change("Type of variable: " + str(self.varType))
+        write_mem_change("Previous value: " + self.lastValue)
+        write_mem_change("Updated value: " + self.getNewValue())
+        write_mem_change("Time of change: " + time_stamp())
+        write_mem_change("?? Game state ??")
+        write_mem_change("Story progress: " + str(memory.main.getStoryProgress()))
+        write_mem_change("Current map: " + str(memory.main.getMap()))
+        write_mem_change("Battle Active: " + str(memory.main.battleActive()))
+        write_mem_change("----------------------------")
+        self.set_last_value()
 
-    def forceReport(self):
-        writeMemChange("Value force-reported")
-        writeMemChange("Base offset: " + str(self.baseOffset))
-        writeMemChange("Pointer value: " + str(self.isPointer))
+    def force_report(self):
+        write_mem_change("Value force-reported")
+        write_mem_change("Base offset: " + str(self.baseOffset))
+        write_mem_change("Pointer value: " + str(self.isPointer))
         if self.isPointer:
-            writeMemChange("Pointer offset: " + str(self.pointerOffset))
-        writeMemChange("Type of variable: " + str(self.varType))
-        writeMemChange("Previous value: " + self.lastValue)
-        writeMemChange("Updated value: " + self.getNewValue())
-        writeMemChange("Time of change: " + timeStamp())
-        writeMemChange("?? Game state ??")
-        writeMemChange("Story progress: " + str(memory.main.getStoryProgress()))
-        writeMemChange("Current map: " + str(memory.main.getMap()))
-        writeMemChange("Battle Active: " + str(memory.main.battleActive()))
-        writeMemChange("----------------------------")
-        self.setLastValue()
+            write_mem_change("Pointer offset: " + str(self.pointerOffset))
+        write_mem_change("Type of variable: " + str(self.varType))
+        write_mem_change("Previous value: " + self.lastValue)
+        write_mem_change("Updated value: " + self.getNewValue())
+        write_mem_change("Time of change: " + time_stamp())
+        write_mem_change("?? Game state ??")
+        write_mem_change("Story progress: " + str(memory.main.getStoryProgress()))
+        write_mem_change("Current map: " + str(memory.main.getMap()))
+        write_mem_change("Battle Active: " + str(memory.main.battleActive()))
+        write_mem_change("----------------------------")
+        self.set_last_value()
 
-    def checkChange(self):
+    def check_change(self):
         if self.isPointer:
             ptrRef = memory.main.readBytes(key, 4)
 
@@ -310,7 +310,7 @@ class memChangeMonitor:
             return False
 
 
-def memChangeList():
+def mem_change_list():
     # Base offset, pointer (True/False), pointer offset, type to be returned
     # Fifth element is to report on another offset, only works for pointers.
     # Types can be '1byte', '2byte', '4byte', or 'float'
@@ -322,16 +322,16 @@ def memChangeList():
     return fullList
 
 
-def memChangeHandle():
+def mem_change_handle():
     retArray = [0]
     firstEle = True
-    memRefList = memChangeList()
+    memRefList = mem_change_list()
 
     while len(baseArray) != 0:
         if firstEle:
             firstEle = False
             variables = memRefList.pop()
-            retArray[0] = memChangeMonitor(
+            retArray[0] = MemChangeMonitor(
                 baseOffsetRef=variables[0],
                 isPointerRef=variables[1],
                 ptrOffsetRef=variables[2],
@@ -341,7 +341,7 @@ def memChangeHandle():
         else:
             variables = memRefList.pop()
             retArray.append(
-                memChangeMonitor(
+                MemChangeMonitor(
                     baseOffsetRef=variables[0],
                     isPointerRef=variables[1],
                     ptrOffsetRef=variables[2],
@@ -352,5 +352,5 @@ def memChangeHandle():
     return retArray
 
 
-def timeStamp():
+def time_stamp():
     return datetime.datetime.now()

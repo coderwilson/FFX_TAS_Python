@@ -25,7 +25,7 @@ def engage():
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif targetPathing.setMovement(targetPathing.miihenAgency(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.miihen_agency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

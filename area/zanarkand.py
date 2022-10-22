@@ -23,13 +23,13 @@ def decideNEA(bonusAdvance: int = 0):
     import rngTrack
 
     maxBattles = 1
-    zanOutdoors = rngTrack.comingBattles(
+    zanOutdoors = rngTrack.coming_battles(
         area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonusAdvance
     )
-    zanIndoors = rngTrack.comingBattles(
+    zanIndoors = rngTrack.coming_battles(
         area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonusAdvance
     )
-    seaSorrows = rngTrack.comingBattles(
+    seaSorrows = rngTrack.coming_battles(
         area="inside_sin_(front)",
         battleCount=maxBattles,
         extraAdvances=bonusAdvance + 6,
@@ -65,20 +65,20 @@ def arrival():
     reEquipNE = False
     if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 1:
         memory.main.fullPartyFormat("rikku", fullMenuClose=False)
-        menu.equipArmor(character=gameVars.neArmor(), ability=99)
+        menu.equip_armor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
-    gameVars.setSkipZanLuck(rngTrack.decideSkipZanLuck())
-    logs.writeStats("Zanarkand Luck Skip:")
-    logs.writeStats(gameVars.getSkipZanLuck())
+    gameVars.setSkipZanLuck(rngTrack.decide_skip_zan_luck())
+    logs.write_stats("Zanarkand Luck Skip:")
+    logs.write_stats(gameVars.getSkipZanLuck())
     # gameVars.setSkipZanLuck(True) #For testing
     print("Outdoor Zanarkand pathing section")
     while memory.main.getMap() != 225:
         if memory.main.userControl():
             if memory.main.getCoords()[1] > -52:
-                targetPathing.setMovement([103, -54])
+                targetPathing.set_movement([103, -54])
             elif memory.main.getCoords()[0] < 172:
-                targetPathing.setMovement([176, -118])
+                targetPathing.set_movement([176, -118])
             else:
                 FFXC.set_movement(-1, 1)
         else:
@@ -108,19 +108,21 @@ def arrival():
                     else:
                         FFXC.set_movement(-1, 1)
                         xbox.tapB()
-            elif targetPathing.setMovement(targetPathing.zanarkandOutdoors(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.zanarkand_outdoors(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
 
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.chargeRikkuOD()
                 if reEquipNE and memory.main.overdriveState2()[6] == 100:
                     reEquipNE = False
                     memory.main.clickToControl()
                     memory.main.fullPartyFormat("yuna", fullMenuClose=False)
-                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                    menu.equip_armor(character=gameVars.neArmor(), ability=0x801D)
                     memory.main.closeMenu()
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()
@@ -150,7 +152,7 @@ def arrival():
 
     if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 2:
         memory.main.fullPartyFormat("rikku", fullMenuClose=False)
-        menu.equipArmor(character=gameVars.neArmor(), ability=99)
+        menu.equip_armor(character=gameVars.neArmor(), ability=99)
         reEquipNE = True
 
     checkpoint = 0
@@ -160,7 +162,7 @@ def arrival():
                 friendSlot = memory.main.getItemSlot(97)
                 if friendSlot == 255:
                     friendCount = 0
-                    targetPathing.setMovement([8, 90])
+                    targetPathing.set_movement([8, 90])
                     memory.main.waitFrames(1)
                     xbox.tapB()
                 else:
@@ -168,7 +170,7 @@ def arrival():
                         checkpoint += 1
                         memory.main.clickToControl()
                     else:
-                        targetPathing.setMovement([8, 90])
+                        targetPathing.set_movement([8, 90])
                         memory.main.waitFrames(1)
                         xbox.tapB()
             if checkpoint == 23 and gameVars.getSkipZanLuck():
@@ -195,18 +197,18 @@ def arrival():
             ):  # Final room before trials
                 print("Final room before trials")
                 checkpoint = 21
-            elif targetPathing.setMovement(targetPathing.zanarkandDome(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.zanarkand_dome(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.chargeRikkuOD()
                 if reEquipNE and memory.main.overdriveState2()[6] == 100:
                     reEquipNE = False
                     memory.main.clickToControl()
                     memory.main.fullPartyFormat("yuna", fullMenuClose=False)
-                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                    menu.equip_armor(character=gameVars.neArmor(), ability=0x801D)
                     memory.main.closeMenu()
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()
@@ -239,7 +241,7 @@ def trials0(checkpoint):
                 memory.main.waitFrames(30 * 1.3)
                 FFXC.set_movement(0, 1)
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.zanarkandTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -270,7 +272,7 @@ def trials1(checkpoint):
                 memory.main.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.zanarkandTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -294,7 +296,7 @@ def trials2(checkpoint):
                 memory.main.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.zanarkandTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -318,7 +320,7 @@ def trials3(checkpoint):
                 memory.main.waitFrames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.zanarkandTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     return checkpoint
@@ -338,12 +340,12 @@ def trials4(checkpoint):
                 checkpoint += 1
             elif checkpoint == 87:
                 while memory.main.userControl():
-                    targetPathing.setMovement([141, 1])
+                    targetPathing.set_movement([141, 1])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.zanarkandTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
     FFXC.set_neutral()
@@ -356,20 +358,20 @@ def sanctuaryKeeper():
 
     if ver == 4:
         print("Pattern for four return spheres off of the B&Y fight")
-        menu.skReturn()
+        menu.sk_return()
     elif ver == 3:
-        menu.skFriend()
+        menu.sk_friend()
     else:
-        menu.skMixed()
+        menu.sk_mixed()
     memory.main.fullPartyFormat("yuna")
     memory.main.closeMenu()
 
-    while not targetPathing.setMovement([110, 20]):
+    while not targetPathing.set_movement([110, 20]):
         pass
     FFXC.set_movement(-1, 1)
     memory.main.awaitEvent()
     xbox.clickToBattle()
-    if screen.turnTidus():
+    if screen.turn_tidus():
         battle.main.defend()
         xbox.clickToBattle()
     battle.main.aeonSummon(4)  # This is the whole fight. Kinda sad.
@@ -385,13 +387,13 @@ def sanctuaryKeeper():
 
 def yunalesca():
     ver = gameVars.endGameVersion()
-    while not targetPathing.setMovement([-2, -179]):
+    while not targetPathing.set_movement([-2, -179]):
         if memory.main.diagSkipPossible():
             xbox.tapB()
 
     if ver == 4:
         print("Final pattern for four return spheres off of the B&Y fight")
-        menu.skReturn2()
+        menu.sk_return_2()
         memory.main.closeMenu()
     else:
         print("No further sphere gridding needed at this time.")
@@ -411,7 +413,7 @@ def yunalesca():
                 memory.main.awaitEvent()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-            elif targetPathing.setMovement(targetPathing.yunalesca(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.yunalesca(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -428,8 +430,8 @@ def yunalesca():
 
     # Now to check for zombie strike and then report to logs.
     print("Ready to check for Zombiestrike")
-    logs.writeStats("Zombiestrike:")
-    logs.writeStats(gameVars.zombieWeapon())
+    logs.write_stats("Zombiestrike:")
+    logs.write_stats(gameVars.zombieWeapon())
     print("++Zombiestrike:")
     print("++", gameVars.zombieWeapon())
 
@@ -438,7 +440,7 @@ def post_Yunalesca(checkpoint=0):
     print("Heading back outside.")
     FFXC.set_neutral()
     if gameVars.nemesis():
-        menu.equipWeapon(character=0, ability=0x807A, fullMenuClose=True)
+        menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)
     memory.main.waitFrames(2)
     while memory.main.getMap() != 194:
         if memory.main.userControl():
@@ -473,14 +475,14 @@ def post_Yunalesca(checkpoint=0):
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 26:
                 FFXC.set_neutral()
-            elif targetPathing.setMovement(
-                targetPathing.yunalescaToAirship(checkpoint)
+            elif targetPathing.set_movement(
+                targetPathing.yunalesca_to_airship(checkpoint)
             ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.fleeAll()
             elif memory.main.diagSkipPossible() and not memory.main.battleActive():
                 xbox.tapB()

@@ -188,9 +188,9 @@ def engage():
         if memory.main.battleActive():
             battle.main.fleeAll()
     try:
-        logs.writeStats("Egg hunt duration (seconds):")
-        logs.writeStats(str(round(duration, 2)))
-        logs.writeStats("Egg hunt battles:")
-        logs.writeStats(str(battleCount))
+        logs.write_stats("Egg hunt duration (seconds):")
+        logs.write_stats(str(round(duration, 2)))
+        logs.write_stats("Egg hunt battles:")
+        logs.write_stats(str(battleCount))
     except Exception:
         print("No log file.")

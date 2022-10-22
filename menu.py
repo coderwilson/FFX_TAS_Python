@@ -8,23 +8,23 @@ gameVars = vars.varsHandle()
 FFXC = xbox.controllerHandle()
 
 
-def gridUp():
-    menuGrid.gridUp()
+def grid_up():
+    menuGrid.grid_up()
 
 
-def gridDown():
-    menuGrid.gridDown()
+def grid_down():
+    menuGrid.grid_down()
 
 
-def gridLeft():
-    menuGrid.gridLeft()
+def grid_left():
+    menuGrid.grid_left()
 
 
-def gridRight():
-    menuGrid.gridRight()
+def grid_right():
+    menuGrid.grid_right()
 
 
-def awaitMove():
+def await_move():
     print("Sphere Grid: Waiting for Move command to be highlighted")
     while not memory.main.sGridActive():
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
@@ -44,7 +44,7 @@ def awaitMove():
     print("Move command highlighted. Good to go.")
 
 
-def awaitUse():
+def await_use():
     print("Sphere Grid: Waiting for Use command to be highlighted")
     while not memory.main.sGridActive():
         print("The Sphere Grid isn't even open! Awaiting manual recovery.")
@@ -65,7 +65,7 @@ def awaitUse():
     print("Use command highlighted. Good to go.")
 
 
-def awaitQuitSG():
+def await_quit_sg():
     print("Sphere Grid: attempting to quit")
     while memory.main.sGridActive():
         menuVal = memory.main.sGridMenu()
@@ -78,7 +78,7 @@ def awaitQuitSG():
     print("Back to the main menu")
 
 
-def autoSortItems(manual="n"):
+def auto_sort_items(manual="n"):
     memory.main.openMenu()
     xbox.menuDown()
     xbox.menuB()
@@ -103,7 +103,7 @@ def autoSortItems(manual="n"):
         memory.main.closeMenu()
 
 
-def autoSortEquipment(manual="n"):
+def auto_sort_equipment(manual="n"):
     memory.main.openMenu()
     xbox.menuDown()
     xbox.menuB()
@@ -128,7 +128,7 @@ def autoSortEquipment(manual="n"):
         memory.main.closeMenu()
 
 
-def shortAeons():
+def short_aeons():
     memory.main.printMemoryLog()
     memory.main.openMenu()
     cursorTarget = 4
@@ -149,83 +149,83 @@ def shortAeons():
     memory.main.closeMenu()
 
 
-def Liki():
+def liki():
     print("Menu - SS Liki")
-    openGrid(character=0)
+    open_grid(character=0)
     memory.main.waitFrames(10)
 
     # Move to the Def node just to the left
     print("Sphere grid on Tidus, learn Cheer and Str +1")
-    menuGrid.moveFirst()
-    gridUp()
-    gridUp()
+    menuGrid.move_first()
+    grid_up()
+    grid_up()
     if memory.main.getTidusSlvl() >= 3:
-        gridLeft()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "left")
-        menuGrid.useAndUseAgain()  # Str +1 node
-    menuGrid.selSphere("ability", "none")  # Cheer
+        grid_left()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "left")
+        menuGrid.use_and_use_again()  # Str +1 node
+    menuGrid.sel_sphere("ability", "none")  # Cheer
     xbox.menuB()
-    menuGrid.useAndQuit()
+    menuGrid.use_and_quit()
     xbox.menuA()
 
 
-def woodsMenuing():
+def woods_menuing():
     # Tidus learning Flee
-    openGrid(character=0)
+    open_grid(character=0)
     xbox.menuB()
     xbox.menuB()  # Sphere grid on Tidus
-    menuGrid.moveFirst()
+    menuGrid.move_first()
     startNode = memory.main.sGridNodeSelected()[0]
     if startNode == 242:
         agiNeed = 2
     else:
         agiNeed = 3
 
-    menuGrid.gridLeft()
+    menuGrid.grid_left()
     if agiNeed == 3:
-        menuGrid.gridLeft()
+        menuGrid.grid_left()
     fullMenu = False
     if memory.main.getTidusSlvl() >= agiNeed:
         fullMenu = True
-        menuGrid.gridLeft()
+        menuGrid.grid_left()
 
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("ability", "none")
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("ability", "none")
     if fullMenu:
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("speed", "none")
         gameVars.completeFullKilikMenu()
-    menuGrid.useAndQuit()
+    menuGrid.use_and_quit()
     # Reorder the party
 
     memory.main.fullPartyFormat("kilikawoods1", fullMenuClose=False)
-    equipScout(fullMenuClose=True)
+    equip_scout(full_menu_close=True)
 
 
-def Geneaux():
-    openGrid(character=0)
+def geneaux():
+    open_grid(character=0)
 
-    menuGrid.moveFirst()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndQuit()
+    menuGrid.move_first()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def LucaWorkers():
-    openGrid(character=0)
+def luca_workers():
+    open_grid(character=0)
 
-    menuGrid.moveFirst()
-    gridRight()
-    gridRight()
-    gridRight()
-    gridDown()
-    gridDown()
-    gridRight()
+    menuGrid.move_first()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_down()
+    grid_down()
+    grid_right()
 
-    menuGrid.moveAndUse()
+    menuGrid.move_and_use()
     print("+++ sGridNodes:", memory.main.sGridNodeSelected())
     if memory.main.sGridNodeSelected()[0] == 2:
         print("No early haste")
@@ -233,37 +233,37 @@ def LucaWorkers():
     else:
         print("Early haste, can haste for Oblitzerator")
         earlyHaste = 1
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("mana", "none")
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("mana", "none")
     if earlyHaste == 1:
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("ability", "none")  # Haste
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("ability", "none")  # Haste
 
-    menuGrid.useAndQuit()
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
     return earlyHaste
 
 
-def lateHaste():
-    openGrid(character=0)
-    menuGrid.moveFirst()
-    gridRight()
-    gridDown()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("ability", "none")  # Haste
-    menuGrid.useAndQuit()
+def late_haste():
+    open_grid(character=0)
+    menuGrid.move_first()
+    grid_right()
+    grid_down()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("ability", "none")  # Haste
+    menuGrid.use_and_quit()
 
 
-def mrrGrid1():
+def mrr_grid_1():
     print("Menuing: start of MRR ")
-    openGrid(character=4)
-    menuGrid.moveFirst()
-    gridRight()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
+    open_grid(character=4)
+    menuGrid.move_first()
+    grid_right()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
     print("Determining state of Wakka late menu")
     if memory.main.getSLVLWakka() < 3:
         wakkaLateMenu = True
@@ -271,117 +271,117 @@ def mrrGrid1():
     else:
         wakkaLateMenu = False
         print("Completing Wakkas remaining grid now.")
-        menuGrid.useAndMove()
-        gridDown()
-        gridDown()
-        gridRight()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
+        menuGrid.use_and_move()
+        grid_down()
+        grid_down()
+        grid_right()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
     print("Wakka late menu (before):", wakkaLateMenu)
 
-    menuGrid.useAndQuit()
+    menuGrid.use_and_quit()
 
     memory.main.closeMenu()
 
     gameVars.wakkaLateMenuSet(wakkaLateMenu)
 
 
-def mrrGrid2():
+def mrr_grid_2():
     if memory.main.getSLVLWakka() >= 3:
         print("Catching up Wakkas sphere grid.")
-        openGrid(character=4)
+        open_grid(character=4)
 
-        menuGrid.moveFirst()
-        gridRight()
-        gridDown()
-        gridDown()
-        gridDown()
-        gridRight()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndQuit()
+        menuGrid.move_first()
+        grid_right()
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_right()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_quit()
         gameVars.wakkaLateMenuSet(False)
         print("Wakka late menu updated:", gameVars.wakkaLateMenu())
     else:
         print("Not enough sphere levels yet.")
 
 
-def mrrGridYuna():
+def mrr_grid_yuna():
     print("Yuna levels good to level up.")
-    openGrid(character=1)
-    menuGrid.useFirst()  # Sphere grid on Yuna first
-    menuGrid.selSphere("magic", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
-    gridRight()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndQuit()
+    open_grid(character=1)
+    menuGrid.use_first()  # Sphere grid on Yuna first
+    menuGrid.sel_sphere("magic", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_quit()
 
 
-def battleSiteGrid():
+def battle_site_grid():
     print("Doing the menu stuff")
-    openGrid(character=1)
-    menuGrid.moveFirst()
-    gridLeft()
-    gridDown()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
+    open_grid(character=1)
+    menuGrid.move_first()
+    grid_left()
+    grid_down()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
 
-    menuGrid.useShiftLeft("Kimahri")  # Sphere grid on Kimahri
-    menuGrid.moveFirst()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridLeft()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+    menuGrid.use_shift_left("Kimahri")  # Sphere grid on Kimahri
+    menuGrid.move_first()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
 
     # Wakkas weapon
     if gameVars.getLStrike() >= 2:
-        equipWeapon(character=4, ability=0x8026, fullMenuClose=False)
+        equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     else:
-        equipWeapon(character=4, fullMenuClose=False)
+        equip_weapon(character=4, full_menu_close=False)
     memory.main.fullPartyFormat("battleSite")
 
 
-def _navigate_to_position(position, battleCursor):
-    while battleCursor() == 255:
+def _navigate_to_position(position, battle_cursor):
+    while battle_cursor() == 255:
         pass
-    if battleCursor() != position:
-        print("Wrong position targeted", battleCursor() % 2, position % 2)
-        while battleCursor() % 2 != position % 2:
-            if battleCursor() % 2 < position % 2:
+    if battle_cursor() != position:
+        print("Wrong position targeted", battle_cursor() % 2, position % 2)
+        while battle_cursor() % 2 != position % 2:
+            if battle_cursor() % 2 < position % 2:
                 xbox.tapRight()
             else:
                 xbox.tapLeft()
-        while battleCursor() != position:
-            print(battleCursor())
-            if battleCursor() > position:
+        while battle_cursor() != position:
+            print(battle_cursor())
+            if battle_cursor() > position:
                 xbox.tapUp()
             else:
                 xbox.tapDown()
 
 
-def battleSiteOaka1():
+def battle_site_oaka_1():
     memory.main.clickToDiagProgress(96)
     while memory.main.shopMenuDialogueRow() != 1:
         xbox.tapDown()
@@ -423,7 +423,7 @@ def battleSiteOaka1():
     memory.main.closeMenu()
 
 
-def battleSiteOaka2():
+def battle_site_oaka_2():
     memory.main.clickToDiagProgress(74)
     memory.main.clickToDiagProgress(96)
     if memory.main.getGilvalue() < 10890:
@@ -434,14 +434,14 @@ def battleSiteOaka2():
             if (i > 5 and handle.equipStatus == 255 and not handle.isBrotherhood())
         ]
         for cur in other_slots:
-            sellWeapon(cur)
+            sell_weapon(cur)
             if memory.main.getGilvalue() >= 10890:
                 break
-    buyWeapon(2, equip=True)
+    buy_weapon(2, equip=True)
     memory.main.closeMenu()
 
 
-def buyWeapon(location, equip=False):
+def buy_weapon(location, equip=False):
     while not memory.main.menuOpen():
         xbox.tapB()
     if memory.main.equipShopMenu() != 12:
@@ -473,7 +473,7 @@ def buyWeapon(location, equip=False):
         xbox.tapB()
 
 
-def sellWeapon(location):
+def sell_weapon(location):
     while not memory.main.menuOpen():
         xbox.tapB()
     if memory.main.equipShopMenu() != 25:
@@ -499,234 +499,234 @@ def sellWeapon(location):
         xbox.tapB()
 
 
-def djoseTemple():
-    openGrid(character=0)
+def djose_temple():
+    open_grid(character=0)
 
     # Sphere grid Tidus
-    menuGrid.moveFirst()
-    gridUp()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()  # Move to Str sphere near Lv.2 lock
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()  # Str +1
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()  # HP +200
-    menuGrid.selSphere("speed", "none")
+    menuGrid.move_first()
+    grid_up()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()  # Move to Str sphere near Lv.2 lock
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()  # Str +1
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()  # HP +200
+    menuGrid.sel_sphere("speed", "none")
     # Now sphere grid on Wakka
 
     if memory.main.getSLVLWakka() >= 5:
-        menuGrid.useShiftRight("wakka")  # Agi +2
-        menuGrid.moveFirst()
+        menuGrid.use_shift_right("wakka")  # Agi +2
+        menuGrid.move_first()
 
-        gridRight()
-        gridLeft()
-        gridLeft()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "up")
-    menuGrid.useAndQuit()
+        grid_right()
+        grid_left()
+        grid_left()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "up")
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def mWoods():
+def m_woods():
     while not memory.main.menuOpen():
         xbox.tapB()  # Talking through O'aka's conversation.
     memory.main.closeMenu()
-    buyWeapon(0, equip=True)
+    buy_weapon(0, equip=True)
     memory.main.closeMenu()
 
 
-def mLakeGrid():
-    openGrid(character=1)  # Start with Yuna
-    menuGrid.moveFirst()
-    gridUp()
-    gridUp()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
+def m_lake_grid():
+    open_grid(character=1)  # Start with Yuna
+    menuGrid.move_first()
+    grid_up()
+    grid_up()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
     xbox.menuDown()
     xbox.menuDown()
     xbox.menuDown()
-    menuGrid.selSphere("Lv2", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useShiftLeft("rikku")  # Shift to Rikku
-    menuGrid.moveFirst()
+    menuGrid.sel_sphere("Lv2", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_shift_left("rikku")  # Shift to Rikku
+    menuGrid.move_first()
 
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
 
-    menuGrid.useShiftRight("kimahri")  # And last is Yuna
-    menuGrid.moveFirst()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("Lv1", "none")
-    menuGrid.useAndMove()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("Lv1", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    gridUp()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("ability", "none")  # Steal
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("ability", "none")  # Use
-    menuGrid.useAndQuit()
+    menuGrid.use_shift_right("kimahri")  # And last is Yuna
+    menuGrid.move_first()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("Lv1", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("Lv1", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    grid_up()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("ability", "none")  # Steal
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("ability", "none")  # Use
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def macTemple():
-    openGrid(character=0)
+def mac_temple():
+    open_grid(character=0)
 
-    menuGrid.useFirst()
-    menuGrid.selSphere("Lv2", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
+    menuGrid.use_first()
+    menuGrid.sel_sphere("Lv2", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
     if gameVars.getBlitzWin():
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("strength", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndMove()
-    gridLeft()
-    gridLeft()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("strength", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_move()
+    grid_left()
+    grid_left()
     if gameVars.nemesis():
-        gridUp()
-        gridLeft()
-        gridUp()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("strength", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndMove()
-        gridDown()
-        gridRight()
-        gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
+        grid_up()
+        grid_left()
+        grid_up()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("strength", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_move()
+        grid_down()
+        grid_right()
+        grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
     if gameVars.nemesis():
-        gridRight()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("strength", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndMove()
-        gridLeft()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
+        grid_right()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("strength", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_move()
+        grid_left()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("strength", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("strength", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
 
     if gameVars.getBlitzWin():
-        equipWeapon(character=0, special="brotherhood")
+        equip_weapon(character=0, special="brotherhood")
     memory.main.closeMenu()
 
 
-def afterSeymour():
-    openGrid(character=0)
-    menuGrid.moveFirst()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+def after_seymour():
+    open_grid(character=0)
+    menuGrid.move_first()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mp", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mana", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mp", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mp", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mana", "none")
-    menuGrid.useAndQuit()
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mp", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def homeGrid():
-    openGrid(character=0)
-    menuGrid.moveFirst()
-    gridDown()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+def home_grid():
+    open_grid(character=0)
+    menuGrid.move_first()
+    grid_down()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
 
     memory.main.fullPartyFormat("desert1")
     memory.main.closeMenu()
 
 
-def beforeGuards(itemToUse: int = 3):
+def before_guards(item_to_use: int = 3):
     while not memory.main.menuOpen():
         memory.main.openMenu()
 
@@ -734,7 +734,7 @@ def beforeGuards(itemToUse: int = 3):
         memory.main.menuDirection(memory.main.getMenuCursorPos(), 1, 11)
     while memory.main.menuNumber() != 26:
         xbox.tapB()
-    megaPotSlot = memory.main.getItemSlot(itemToUse)
+    megaPotSlot = memory.main.getItemSlot(item_to_use)
     column = megaPotSlot % 2
     row = (megaPotSlot - column) / 2
     print(megaPotSlot, column, row)
@@ -759,7 +759,7 @@ def beforeGuards(itemToUse: int = 3):
         current_hp = memory.main.getHP()
 
 
-def sortItems(fullMenuClose=True):
+def sort_items(full_menu_close=True):
     while not memory.main.menuOpen():
         memory.main.openMenu()
     while memory.main.getMenuCursorPos() != 1:
@@ -775,13 +775,13 @@ def sortItems(fullMenuClose=True):
     while memory.main.equipBuyRow() != 1:
         xbox.tapRight()
     xbox.tapB()
-    if fullMenuClose:
+    if full_menu_close:
         memory.main.closeMenu()
     else:
         memory.main.backToMainMenu()
 
 
-def equipWeapon(*, character, ability=None, fullMenuClose=True, special="none"):
+def equip_weapon(*, character, ability=None, full_menu_close=True, special="none"):
     print("Equipping Weapon with ability ", ability)
     memory.main.awaitControl()
 
@@ -819,7 +819,7 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True, special="none"):
             break
     print("Weapon is in slot ", weaponNum)
     if weaponNum == 255:
-        if fullMenuClose:
+        if full_menu_close:
             memory.main.closeMenu()
         else:
             memory.main.backToMainMenu()
@@ -853,7 +853,7 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True, special="none"):
     while memory.main.equipMenuOpenFromChar():
         xbox.tapB()
 
-    if fullMenuClose:
+    if full_menu_close:
         memory.main.closeMenu()
     else:
         memory.main.backToMainMenu()
@@ -861,15 +861,15 @@ def equipWeapon(*, character, ability=None, fullMenuClose=True, special="none"):
     return True
 
 
-def equipSonicSteel(fullMenuClose=True):
-    return equipWeapon(character=0, ability=32769, fullMenuClose=fullMenuClose)
+def equip_sonic_steel(full_menu_close=True):
+    return equip_weapon(character=0, ability=32769, full_menu_close=full_menu_close)
 
 
-def equipScout(fullMenuClose=True):
-    return equipWeapon(character=4, ability=0x8022, fullMenuClose=fullMenuClose)
+def equip_scout(full_menu_close=True):
+    return equip_weapon(character=4, ability=0x8022, full_menu_close=full_menu_close)
 
 
-def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
+def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     print("Equipping Armor with ability ", ability)
     memory.main.awaitControl()
 
@@ -896,8 +896,8 @@ def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
             elif all(
                 currentArmor.hasAbility(cur_ability) for cur_ability in abilityarray
             ):
-                if slotCount != 99:
-                    if slotCount == currentArmor.slotCount():
+                if slot_count != 99:
+                    if slot_count == currentArmor.slotCount():
                         armorNum = index
                         break
                 else:
@@ -945,7 +945,7 @@ def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
             xbox.tapB()
         memory.main.waitFrames(2)
 
-    if fullMenuClose:
+    if full_menu_close:
         memory.main.closeMenu()
     else:
         memory.main.backToMainMenu()
@@ -953,417 +953,417 @@ def equipArmor(*, character, ability=255, slotCount=99, fullMenuClose=True):
     return True
 
 
-def viaPurifico():
-    openGrid(character=2)  # Auron
+def via_purifico():
+    open_grid(character=2)  # Auron
 
-    menuGrid.moveFirst()
-    gridRight()
-    gridRight()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("Lv2", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
-    gridRight()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("Lv2", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    gridUp()
+    menuGrid.move_first()
+    grid_right()
+    grid_right()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("Lv2", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("Lv2", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    grid_up()
     memory.main.waitFrames(30 * 0.3)
     gridLocation = memory.main.sGridNodeSelected()
     # We have extra levels, changes the path slightly.
     if gridLocation[0] != 242:
-        gridUp()
-        gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("mana", "none")
+        grid_up()
+        grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("mana", "none")
 
-    menuGrid.useShiftRight("yuna")
-    menuGrid.useFirst()
-    menuGrid.selSphere("tele", "up")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+    menuGrid.use_shift_right("yuna")
+    menuGrid.use_first()
+    menuGrid.sel_sphere("tele", "up")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
 
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
-    gridRight()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("mana", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("mana", "none")
 
-    menuGrid.useAndMove()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
 
-    menuGrid.useAndMove()
-    gridLeft()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndMove()
-    gridLeft()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
 
-    menuGrid.useAndMove()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+    menuGrid.use_and_move()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def seymourNatusBlitzWin():
-    openGrid(character=1)
+def seymour_natus_blitz_win():
+    open_grid(character=1)
 
-    menuGrid.useFirst()
-    menuGrid.selSphere("tele", "up2")
-    menuGrid.useAndUseAgain()
+    menuGrid.use_first()
+    menuGrid.sel_sphere("tele", "up2")
+    menuGrid.use_and_use_again()
 
-    menuGrid.selSphere("power", "none")  # Str
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")  # Str
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")  # Def +3
+    menuGrid.sel_sphere("power", "none")  # Str
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")  # Str
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")  # Def +3
 
-    menuGrid.useAndMove()
+    menuGrid.use_and_move()
     if gameVars.nemesis():
-        gridUp()
-        gridUp()
-        gridLeft()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndMove()
-        gridUp()
-        gridDown()
-        gridDown()
+        grid_up()
+        grid_up()
+        grid_left()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_move()
+        grid_up()
+        grid_down()
+        grid_down()
     else:
-        gridLeft()
-        gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+        grid_left()
+        grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
 
-    menuGrid.useAndMove()
+    menuGrid.use_and_move()
     if gameVars.nemesis():
-        gridRight()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndMove()
-        gridLeft()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
+        grid_right()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_move()
+        grid_left()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mana", "none")
-    menuGrid.useAndQuit()
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_quit()
 
 
-def seymourNatusBlitzLoss():
-    openGrid(character=1)
+def seymour_natus_blitz_loss():
+    open_grid(character=1)
 
-    menuGrid.useFirst()
-    menuGrid.selSphere("tele", "left")
-    menuGrid.useAndUseAgain()
+    menuGrid.use_first()
+    menuGrid.sel_sphere("tele", "left")
+    menuGrid.use_and_use_again()
 
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
 
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("friend", "left")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("friend", "left")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndMove()
-        gridUp()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("mana", "none")
+        menuGrid.use_and_move()
+        grid_up()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("mana", "none")
 
-    menuGrid.useAndMove()
+    menuGrid.use_and_move()
 
-    gridRight()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
+    grid_right()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mana", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
-    gridRight()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
     if gameVars.nemesis():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridRight()
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_right()
     if gameVars.nemesis():
-        gridRight()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndMove()
-        gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "left")
-    menuGrid.useAndQuit()
+        grid_right()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_move()
+        grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "left")
+    menuGrid.use_and_quit()
 
 
-def prepCalmLands():
-    openGrid(character=1)
+def prep_calm_lands():
+    open_grid(character=1)
     if gameVars.getBlitzWin():
-        menuGrid.moveFirst()
-        gridUp()
-        gridUp()
+        menuGrid.move_first()
+        grid_up()
+        grid_up()
         if gameVars.nemesis():
-            menuGrid.moveAndUse()
-            menuGrid.selSphere("mana", "none")
-            menuGrid.useAndMove()
-        gridDown()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
+            menuGrid.move_and_use()
+            menuGrid.sel_sphere("mana", "none")
+            menuGrid.use_and_move()
+        grid_down()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
     else:
-        menuGrid.moveFirst()
+        menuGrid.move_first()
         if gameVars.nemesis():
-            gridUp()
-            gridUp()
-            gridLeft()
-            menuGrid.moveAndUse()
-            menuGrid.selSphere("power", "none")
-            menuGrid.useAndMove()
-            gridUp()
-        gridRight()
-        gridRight()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+            grid_up()
+            grid_up()
+            grid_left()
+            menuGrid.move_and_use()
+            menuGrid.sel_sphere("power", "none")
+            menuGrid.use_and_move()
+            grid_up()
+        grid_right()
+        grid_right()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def afterRonso():
+def after_ronso():
     if gameVars.endGameVersion() != 3:
         memory.main.openMenu()
-        yunaFirstStrike()
-        auronFirstStrike()
+        yuna_first_strike()
+        auron_first_strike()
         if not memory.main.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
-            equipWeapon(character=1, ability=0x8001, fullMenuClose=False)
+            equip_weapon(character=1, ability=0x8001, full_menu_close=False)
         if not memory.main.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
-            equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
+            equip_weapon(character=2, ability=0x8001, full_menu_close=False)
         if gameVars.usePause():
             memory.main.waitFrames(5)
 
-    openGrid(character=5)
-    menuGrid.moveFirst()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("Lv2", "none")
-    menuGrid.useAndMove()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("Lv3", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridDown()
-    gridDown()
+    open_grid(character=5)
+    menuGrid.move_first()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("Lv2", "none")
+    menuGrid.use_and_move()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("Lv3", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_down()
+    grid_down()
 
     if gameVars.endGameVersion() in [1, 2]:  # Two of each
-        menuGrid.moveShiftLeft("yuna")
-        menuGrid.useFirst()
-        menuGrid.selSphere("friend", "d2")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useShiftRight("Lulu")
-        menuGrid.moveFirst()
-        gridUp()
-        gridUp()
-        gridUp()
-        gridUp()
-        menuGrid.moveShiftLeft("Yuna")
-        menuGrid.useFirst()
-        menuGrid.selSphere("friend", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
+        menuGrid.move_shift_left("yuna")
+        menuGrid.use_first()
+        menuGrid.sel_sphere("friend", "d2")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_shift_right("Lulu")
+        menuGrid.move_first()
+        grid_up()
+        grid_up()
+        grid_up()
+        grid_up()
+        menuGrid.move_shift_left("Yuna")
+        menuGrid.use_first()
+        menuGrid.sel_sphere("friend", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
 
     elif gameVars.endGameVersion() == 4:  # Four return spheres
-        menuGrid.moveShiftLeft("yuna")
-        menuGrid.useFirst()
+        menuGrid.move_shift_left("yuna")
+        menuGrid.use_first()
         if gameVars.getBlitzWin():
-            menuGrid.selSphere("ret", "yunaspec")
+            menuGrid.sel_sphere("ret", "yunaspec")
         else:
-            menuGrid.selSphere("ret", "d5")
-        menuGrid.useAndMove()
-        gridLeft()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("Lv1", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("mana", "none")
-        menuGrid.useAndMove()
-        gridRight()
-        gridDown()
-        gridRight()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
+            menuGrid.sel_sphere("ret", "d5")
+        menuGrid.use_and_move()
+        grid_left()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("Lv1", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("mana", "none")
+        menuGrid.use_and_move()
+        grid_right()
+        grid_down()
+        grid_right()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
 
     elif gameVars.endGameVersion() == 3:  # Four friend spheres
         if gameVars.getBlitzWin():
             print("Four friend spheres, Blitz Win")
-            menuGrid.moveShiftRight("tidus")
-            menuGrid.moveFirst()
-            gridRight()
-            gridRight()
-            gridRight()
-            gridDown()
-            gridRight()
-            gridRight()
-            gridRight()
-            menuGrid.moveShiftRight("yuna")
-            menuGrid.useFirst()
-            menuGrid.selSphere("friend", "afterBYSpec")
-            menuGrid.useAndUseAgain()
-            menuGrid.selSphere("power", "none")
-            menuGrid.useShiftLeft("tidus")
-            menuGrid.moveFirst()
-            gridDown()
-            gridLeft()
-            gridLeft()
-            menuGrid.moveAndUse()
-            menuGrid.selSphere("ability", "none")
-            menuGrid.moveShiftRight("yuna")
+            menuGrid.move_shift_right("tidus")
+            menuGrid.move_first()
+            grid_right()
+            grid_right()
+            grid_right()
+            grid_down()
+            grid_right()
+            grid_right()
+            grid_right()
+            menuGrid.move_shift_right("yuna")
+            menuGrid.use_first()
+            menuGrid.sel_sphere("friend", "afterBYSpec")
+            menuGrid.use_and_use_again()
+            menuGrid.sel_sphere("power", "none")
+            menuGrid.use_shift_left("tidus")
+            menuGrid.move_first()
+            grid_down()
+            grid_left()
+            grid_left()
+            menuGrid.move_and_use()
+            menuGrid.sel_sphere("ability", "none")
+            menuGrid.move_shift_right("yuna")
         else:
             print("Four friend spheres, Blitz Loss")
-            menuGrid.moveShiftRight("tidus")
-            menuGrid.moveFirst()
-            gridRight()
-            gridRight()
-            gridRight()
-            gridDown()
-            gridDown()
-            gridDown()
-            gridDown()
-            gridDown()
-            gridRight()
-            gridDown()
-            menuGrid.moveAndUse()
-            menuGrid.selSphere("ability", "none")
-            menuGrid.useAndMove()
-            gridRight()
-            gridRight()
-            gridDown()
-            menuGrid.moveShiftRight("yuna")
-            menuGrid.useFirst()
-            menuGrid.selSphere("friend", "afterBYSpec")
-            menuGrid.useAndUseAgain()
-            menuGrid.selSphere("power", "left")
+            menuGrid.move_shift_right("tidus")
+            menuGrid.move_first()
+            grid_right()
+            grid_right()
+            grid_right()
+            grid_down()
+            grid_down()
+            grid_down()
+            grid_down()
+            grid_down()
+            grid_right()
+            grid_down()
+            menuGrid.move_and_use()
+            menuGrid.sel_sphere("ability", "none")
+            menuGrid.use_and_move()
+            grid_right()
+            grid_right()
+            grid_down()
+            menuGrid.move_shift_right("yuna")
+            menuGrid.use_first()
+            menuGrid.sel_sphere("friend", "afterBYSpec")
+            menuGrid.use_and_use_again()
+            menuGrid.sel_sphere("power", "left")
 
         # Now to replicate the 2/2 split grid
-        menuGrid.useFirst()
-        menuGrid.selSphere("friend", "d2")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-        menuGrid.useShiftLeft("Lulu")
-        menuGrid.moveFirst()
-        gridUp()
-        gridUp()
-        gridUp()
-        gridUp()
-        menuGrid.moveShiftRight("Yuna")
-        menuGrid.useFirst()
-        menuGrid.selSphere("friend", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
+        menuGrid.use_first()
+        menuGrid.sel_sphere("friend", "d2")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_shift_left("Lulu")
+        menuGrid.move_first()
+        grid_up()
+        grid_up()
+        grid_up()
+        grid_up()
+        menuGrid.move_shift_right("Yuna")
+        menuGrid.use_first()
+        menuGrid.sel_sphere("friend", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
 
         # Last, to get some Rikku stuff early.
-        menuGrid.moveShiftRight("Rikku")
-        menuGrid.moveFirst()
-        gridDown()
-        gridDown()
-        gridDown()
-        gridLeft()
-        gridLeft()
-        gridLeft()
-        menuGrid.moveShiftRight("Yuna")
-        menuGrid.useFirst()
-        menuGrid.selSphere("friend", "l2")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("speed", "none")
+        menuGrid.move_shift_right("Rikku")
+        menuGrid.move_first()
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_left()
+        grid_left()
+        grid_left()
+        menuGrid.move_shift_right("Yuna")
+        menuGrid.use_first()
+        menuGrid.sel_sphere("friend", "l2")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("speed", "none")
         if gameVars.getBlitzWin():
-            menuGrid.useAndUseAgain()
-            menuGrid.selSphere("mana", "none")
-        menuGrid.useAndMove()
-        gridLeft()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
+            menuGrid.use_and_use_again()
+            menuGrid.sel_sphere("mana", "none")
+        menuGrid.use_and_move()
+        grid_left()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
 
-    menuGrid.useAndQuit()
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
+def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
     equipArray = memory.main.allEquipment()
     print(owner, equipment_type, ability_array, slotcount)
     if not ability_array:
@@ -1391,7 +1391,7 @@ def findEquipmentIndex(*, owner, equipment_type, ability_array=[], slotcount):
             return current_index
 
 
-def abilityToCustomizeRef(ability_index):
+def ability_to_customize_ref(ability_index):
     if (
         memory.main.customizeMenuArray()[memory.main.assignAbilityToEquipCursor()]
         == ability_index
@@ -1400,7 +1400,7 @@ def abilityToCustomizeRef(ability_index):
     return False
 
 
-def addAbility(
+def add_ability(
     *,
     owner,
     equipment_type,
@@ -1419,7 +1419,7 @@ def addAbility(
             memory.main.menuDirection(memory.main.getMenuCursorPos(), 8, 11)
         while memory.main.menuNumber() == 5:
             xbox.tapB()
-    item_to_modify = findEquipmentIndex(
+    item_to_modify = find_equipment_index(
         owner=owner,
         equipment_type=equipment_type,
         ability_array=ability_array,
@@ -1441,7 +1441,7 @@ def addAbility(
                 xbox.tapUp()
     while not memory.main.cureMenuOpen():
         xbox.tapB()
-    while not abilityToCustomizeRef(ability_index):  # Find the right ability
+    while not ability_to_customize_ref(ability_index):  # Find the right ability
         xbox.tapDown()
         if gameVars.usePause():
             memory.main.waitFrames(3)
@@ -1463,7 +1463,7 @@ def addAbility(
             memory.main.backToMainMenu()
 
 
-def addFirstStrike(
+def add_first_strike(
     *,
     owner,
     equipment_type,
@@ -1474,7 +1474,7 @@ def addFirstStrike(
     closeMenu=True,
     fullMenuClose=True
 ):
-    addAbility(
+    add_ability(
         owner=owner,
         equipment_type=equipment_type,
         ability_array=ability_array,
@@ -1487,9 +1487,9 @@ def addFirstStrike(
     )
 
 
-def auronFirstStrike():
+def auron_first_strike():
     print("Starting Auron")
-    addFirstStrike(
+    add_first_strike(
         owner=2,
         equipment_type=0,
         ability_array=[0x800B, 0x8063, 255, 255],
@@ -1501,10 +1501,10 @@ def auronFirstStrike():
     print("Done with Auron")
 
 
-def yunaFirstStrike():
+def yuna_first_strike():
     print("Starting Yuna")
     if gameVars.nemesis():
-        addFirstStrike(
+        add_first_strike(
             owner=1,
             equipment_type=0,
             ability_array=[0x807A, 255, 255, 255],
@@ -1513,7 +1513,7 @@ def yunaFirstStrike():
             navigateToEquipMenu=True,
         )
     else:
-        addFirstStrike(
+        add_first_strike(
             owner=1,
             equipment_type=0,
             slotcount=1,
@@ -1523,7 +1523,7 @@ def yunaFirstStrike():
     print("Done with Yuna")
 
 
-def tidusSlayer(odPos: int = 2):
+def tidus_slayer(od_pos: int = 2):
     if not memory.main.menuOpen():
         memory.main.openMenu()
     while memory.main.getMenuCursorPos() != 3:
@@ -1536,7 +1536,7 @@ def tidusSlayer(odPos: int = 2):
     xbox.menuA()
     xbox.tapRight()
     xbox.menuB()
-    if odPos == 2:
+    if od_pos == 2:
         xbox.menuDown()
     else:
         xbox.menuUp()
@@ -1544,7 +1544,7 @@ def tidusSlayer(odPos: int = 2):
     memory.main.closeMenu()
 
 
-def sellAll(NEA=False):
+def sell_all(nea=False):
     # Assume already on the sell items screen, index zero
     fullArray = memory.main.allEquipment()
     sellItem = True
@@ -1569,7 +1569,7 @@ def sellAll(NEA=False):
             # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
             if fullArray[memory.main.equipSellRow()].owner() in [1, 2, 4, 6]:
                 sellItem = False
-        if not NEA and fullArray[memory.main.equipSellRow()].hasAbility(0x801D):
+        if not nea and fullArray[memory.main.equipSellRow()].hasAbility(0x801D):
             # No-Encounters
             sellItem = False
         if fullArray[memory.main.equipSellRow()].abilities() == [
@@ -1590,25 +1590,25 @@ def sellAll(NEA=False):
             sellItem = True
 
 
-def afterFlux():
-    openGrid(character=0)
+def after_flux():
+    open_grid(character=0)
 
     # Sphere grid on Tidus
-    menuGrid.moveFirst()
-    gridRight()
-    gridRight()
-    gridRight()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("ability", "none")
-    menuGrid.useAndQuit()
+    menuGrid.move_first()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("ability", "none")
+    menuGrid.use_and_quit()
 
 
-def gagazetCave():
+def gagazet_cave():
     # Occurs after swimming
     memory.main.openMenu()
     xbox.menuUp()
@@ -1629,211 +1629,211 @@ def gagazetCave():
     memory.main.closeMenu()
 
 
-def zombieStrikeBackup():
-    openGrid(character=0)
+def zombie_strike_backup():
+    open_grid(character=0)
 
-    menuGrid.moveFirst()
-    gridUp()
-    gridUp()
-    gridUp()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("lv4", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("ability", "none")
-    menuGrid.useAndQuit()
+    menuGrid.move_first()
+    grid_up()
+    grid_up()
+    grid_up()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("lv4", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("ability", "none")
+    menuGrid.use_and_quit()
 
 
-def BFA():
-    openGrid(character=1)  # Yuna final grid
+def bfa():
+    open_grid(character=1)  # Yuna final grid
 
-    menuGrid.useFirst()
+    menuGrid.use_first()
 
     if gameVars.endGameVersion() == 3:
-        menuGrid.selSphere("attribute", "none")
-        menuGrid.useAndUseAgain()
+        menuGrid.sel_sphere("attribute", "none")
+        menuGrid.use_and_use_again()
     else:
-        menuGrid.selSphere("attribute", "l5")
+        menuGrid.sel_sphere("attribute", "l5")
         memory.main.waitFrames(30 * 0.07)
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("ret", "torikku")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("ret", "torikku")
         memory.main.waitFrames(30 * 0.07)
-        menuGrid.useAndMove()
-        gridDown()
-        gridDown()
-        gridLeft()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndMove()
-        gridDown()
-        gridDown()
-        gridDown()
-        menuGrid.moveAndUse()
-    menuGrid.selSphere("ability", "none")
-    menuGrid.useAndMove()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "left")
+        menuGrid.use_and_move()
+        grid_down()
+        grid_down()
+        grid_left()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_move()
+        grid_down()
+        grid_down()
+        grid_down()
+        menuGrid.move_and_use()
+    menuGrid.sel_sphere("ability", "none")
+    menuGrid.use_and_move()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "left")
 
     if gameVars.endGameVersion() == 3:
-        menuGrid.useAndMove()
-        gridRight()  # Not sure exactly
-        gridRight()
-        gridRight()
-        gridRight()
-        gridRight()
-        gridRight()
-        gridRight()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("speed", "none")
-        menuGrid.useAndMove()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("speed", "none")
+        menuGrid.use_and_move()
+        grid_right()  # Not sure exactly
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_right()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("speed", "none")
+        menuGrid.use_and_move()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("speed", "none")
 
     if memory.main.overdriveState()[6] != 100:
-        menuGrid.useShiftLeft("Rikku")
-        menuGrid.useFirst()
-        menuGrid.selSphere("skill", "up")
+        menuGrid.use_shift_left("Rikku")
+        menuGrid.use_first()
+        menuGrid.sel_sphere("skill", "up")
 
     if gameVars.zombieWeapon() == 255:
-        menuGrid.useShiftLeft("tidus")
-        menuGrid.moveFirst()
-        gridUp()
-        gridUp()
-        gridUp()
-        gridUp()
-        gridUp()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("lv4", "none")
-        menuGrid.useAndMove()
-        gridUp()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("ability", "none")
-    menuGrid.useAndQuit()
+        menuGrid.use_shift_left("tidus")
+        menuGrid.move_first()
+        grid_up()
+        grid_up()
+        grid_up()
+        grid_up()
+        grid_up()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("lv4", "none")
+        menuGrid.use_and_move()
+        grid_up()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("ability", "none")
+    menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def skReturn():
-    openGrid(character=1)
-    menuGrid.useFirst()
-    menuGrid.selSphere("friend", "d2")
+def sk_return():
+    open_grid(character=1)
+    menuGrid.use_first()
+    menuGrid.sel_sphere("friend", "d2")
     if not gameVars.getSkipZanLuck():
-        menuGrid.useAndUseAgain()  # Friend sphere to Lulu
-        menuGrid.selSphere("luck", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("fortune", "none")
+        menuGrid.use_and_use_again()  # Friend sphere to Lulu
+        menuGrid.sel_sphere("luck", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("fortune", "none")
     if memory.main.getPower() >= 1:
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
     if memory.main.getPower() >= 1:
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridUp()
-    gridUp()
-    gridUp()
-    gridUp()
-    menuGrid.moveAndUse()
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_up()
+    grid_up()
+    grid_up()
+    grid_up()
+    menuGrid.move_and_use()
     if memory.main.getPower() >= 1:
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndQuit()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_quit()
 
 
-def skMixed():
-    openGrid(character=1)
-    menuGrid.useFirst()
-    menuGrid.selSphere("ret", "r2")
-    menuGrid.useAndMove()  # Return to Wakkas grid
-    gridLeft()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("mana", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("lv1", "none")
+def sk_mixed():
+    open_grid(character=1)
+    menuGrid.use_first()
+    menuGrid.sel_sphere("ret", "r2")
+    menuGrid.use_and_move()  # Return to Wakkas grid
+    grid_left()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("mana", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("lv1", "none")
     if not gameVars.getSkipZanLuck():
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("luck", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("fortune", "none")
-    menuGrid.useAndMove()
-    gridRight()
-    gridDown()
-    gridRight()
-    menuGrid.moveAndUse()
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("luck", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("fortune", "none")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_down()
+    grid_right()
+    menuGrid.move_and_use()
     if memory.main.getPower() >= 1:
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndMove()
-    gridLeft()
-    gridLeft()
-    menuGrid.moveAndUse()
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_move()
+    grid_left()
+    grid_left()
+    menuGrid.move_and_use()
     if memory.main.getPower() >= 1:
-        menuGrid.selSphere("power", "none")
-        menuGrid.useAndUseAgain()
-    menuGrid.selSphere("speed", "none")
+        menuGrid.sel_sphere("power", "none")
+        menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("speed", "none")
     if memory.main.getPower() >= 1:
-        menuGrid.useAndMove()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+        menuGrid.use_and_move()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
 
 
-def skFriend():
+def sk_friend():
     # First to do the First Strike stuff we couldn't do earlier.
     memory.main.openMenu()
-    yunaFirstStrike()
-    auronFirstStrike()
+    yuna_first_strike()
+    auron_first_strike()
     if not memory.main.equippedWeaponHasAbility(charNum=1, abilityNum=0x8001):
-        equipWeapon(character=1, ability=0x8001, fullMenuClose=False)
+        equip_weapon(character=1, ability=0x8001, full_menu_close=False)
     if not memory.main.equippedWeaponHasAbility(charNum=2, abilityNum=0x8001):
-        equipWeapon(character=2, ability=0x8001, fullMenuClose=False)
+        equip_weapon(character=2, ability=0x8001, full_menu_close=False)
     if gameVars.usePause():
         memory.main.waitFrames(5)
 
     # Now sphere grid
     if not gameVars.getSkipZanLuck():
-        openGrid(character=1)
-        menuGrid.moveFirst()
-        gridDown()
-        gridDown()
-        menuGrid.moveAndUse()
-        menuGrid.selSphere("luck", "none")
-        menuGrid.useAndUseAgain()
-        menuGrid.selSphere("fortune", "none")
-        menuGrid.useAndQuit()
+        open_grid(character=1)
+        menuGrid.move_first()
+        grid_down()
+        grid_down()
+        menuGrid.move_and_use()
+        menuGrid.sel_sphere("luck", "none")
+        menuGrid.use_and_use_again()
+        menuGrid.sel_sphere("fortune", "none")
+        menuGrid.use_and_quit()
     memory.main.closeMenu()
 
 
-def skReturn2():
-    openGrid(character=1)
+def sk_return_2():
+    open_grid(character=1)
 
-    menuGrid.useFirst()
-    menuGrid.selSphere("ret", "aftersk")
-    menuGrid.useAndMove()
-    gridRight()
-    gridRight()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("speed", "none")
-    menuGrid.useAndUseAgain()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndMove()
-    gridDown()
-    menuGrid.moveAndUse()
-    menuGrid.selSphere("power", "none")
-    menuGrid.useAndQuit()
+    menuGrid.use_first()
+    menuGrid.sel_sphere("ret", "aftersk")
+    menuGrid.use_and_move()
+    grid_right()
+    grid_right()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("speed", "none")
+    menuGrid.use_and_use_again()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_move()
+    grid_down()
+    menuGrid.move_and_use()
+    menuGrid.sel_sphere("power", "none")
+    menuGrid.use_and_quit()
 
 
-def openGrid(character):
+def open_grid(character):
     try:
         FFXC.set_neutral()
     except Exception:
@@ -1877,7 +1877,7 @@ def openGrid(character):
 # Nemesis menus
 
 
-def arenaPurchase1():
+def arena_purchase_1():
     memory.main.waitFrames(60)
     xbox.tapB()
     memory.main.waitFrames(15)
@@ -1908,20 +1908,20 @@ def arenaPurchase1():
     memory.main.waitFrames(60)
 
 
-def removeAllNEA():
+def remove_all_nea():
     for i in range(7):
         if memory.main.equippedArmorHasAbility(charNum=i):  # Defaults to NEA
             if i == 0:
                 if memory.main.checkAbilityArmor(ability=0x8056)[i]:
-                    equipArmor(character=i, ability=0x8056)  # Auto-Haste
+                    equip_armor(character=i, ability=0x8056)  # Auto-Haste
                 else:
-                    equipArmor(character=i, ability=99)  # Remove equipment
+                    equip_armor(character=i, ability=99)  # Remove equipment
             elif i in [4, 6]:
                 if memory.main.checkAbilityArmor(ability=0x801D)[i]:
-                    equipArmor(character=i, ability=0x801D)  # Auto-Phoenix
+                    equip_armor(character=i, ability=0x801D)  # Auto-Phoenix
                 elif memory.main.checkAbilityArmor(ability=0x8072, slotCount=4)[i]:
-                    equipArmor(character=i, ability=0x8072, slotCount=4)
+                    equip_armor(character=i, ability=0x8072, slot_count=4)
                 else:
-                    equipArmor(character=i, ability=99)  # Remove equipment
+                    equip_armor(character=i, ability=99)  # Remove equipment
             else:
-                equipArmor(character=i, ability=99)  # Unequip
+                equip_armor(character=i, ability=99)  # Unequip

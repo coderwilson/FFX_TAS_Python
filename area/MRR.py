@@ -64,12 +64,12 @@ def arrival():
                 memory.main.clickToControl()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.mrrStart(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.mrr_start(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.fleeAll()
                 memory.main.clickToControl3()
                 if memory.main.getHP()[0] < 520:
@@ -107,10 +107,10 @@ def mainPath():
                 checkpoint += 1
             elif checkpoint == 45:
                 if status[0] == 0 or status[1] == 0 or status[2] != 2:
-                    if targetPathing.setMovement(targetPathing.mrrMain(99)):
+                    if targetPathing.set_movement(targetPathing.mrr_main(99)):
                         checkpoint -= 1
                 else:
-                    if targetPathing.setMovement(targetPathing.mrrMain(45)):
+                    if targetPathing.set_movement(targetPathing.mrr_main(45)):
                         checkpoint += 1
 
             elif checkpoint == 46:
@@ -136,12 +136,12 @@ def mainPath():
                     else:
                         lastGilValue = memory.main.getGilvalue()
                 else:
-                    targetPathing.setMovement(memory.main.mrrGuyCoords())
+                    targetPathing.set_movement(memory.main.mrrGuyCoords())
                     xbox.tapB()
             elif checkpoint == 58:
                 print("Up the third lift")
                 while memory.main.userControl():
-                    targetPathing.setMovement([29, 227])
+                    targetPathing.set_movement([29, 227])
                     xbox.tapB()
                 checkpoint += 1
             elif checkpoint == 66:
@@ -160,7 +160,7 @@ def mainPath():
                 checkpoint += 1
             elif checkpoint < 71 and memory.main.getMap() == 79:
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
-            elif targetPathing.setMovement(targetPathing.mrrMain(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.mrr_main(checkpoint)):
                 if checkpoint == 61:
                     if memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15) in [
                         2,
@@ -201,11 +201,11 @@ def mainPath():
 
                 if memory.main.getYunaSlvl() >= 8 and status[4] == 0:
                     print("Yuna has enough levels now. Going to do her grid.")
-                    menu.mrrGridYuna()
+                    menu.mrr_grid_yuna()
                     print("Yunas gridding is complete for now.")
                     status[4] = 1
                 if memory.main.getSLVLWakka() >= 7:
-                    menu.mrrGrid2()
+                    menu.mrr_grid_2()
                 memory.main.closeMenu()
                 print("MRR battle complete")
                 print(
@@ -226,8 +226,8 @@ def mainPath():
             return
     # logs.writeStats("MRR Battles:")
     # logs.writeStats(battleCount)
-    logs.writeStats("MRR crit manip:")
-    logs.writeStats(critManip)
+    logs.write_stats("MRR crit manip:")
+    logs.write_stats(critManip)
     print("End of MRR section. Status:")
     print("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
     print(status)
@@ -236,8 +236,8 @@ def mainPath():
 def battleSite():
     memory.main.awaitControl()
     if gameVars.getLStrike() >= 2:
-        menu.equipWeapon(character=4, ability=0x8026, fullMenuClose=False)
-    menu.battleSiteGrid()
+        menu.equip_weapon(character=4, ability=0x8026, full_menu_close=False)
+    menu.battle_site_grid()
 
     checkpoint = 0
     while checkpoint < 99:
@@ -245,11 +245,11 @@ def battleSite():
             if checkpoint == 5:
                 print("O'aka menu section")
                 while memory.main.userControl():
-                    targetPathing.setMovement([-45, 3425])
+                    targetPathing.set_movement([-45, 3425])
                     xbox.tapB()
                 FFXC.set_neutral()
-                menu.battleSiteOaka1()
-                menu.battleSiteOaka2()
+                menu.battle_site_oaka_1()
+                menu.battle_site_oaka_2()
                 print(
                     "======== Next Kimahri crit:",
                     memory.main.nextCrit(character=3, charLuck=18, enemyLuck=15),
@@ -277,7 +277,7 @@ def battleSite():
                 xbox.menuDown()
                 xbox.tapB()
                 checkpoint = 100
-            elif targetPathing.setMovement(targetPathing.battleSite(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.battle_site(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -306,8 +306,8 @@ def guiAndAftermath():
                 FFXC.set_movement(0, 1)
                 memory.main.awaitEvent()
                 checkpoint += 1
-            elif targetPathing.setMovement(
-                targetPathing.battleSiteAftermath(checkpoint)
+            elif targetPathing.set_movement(
+                targetPathing.battle_site_aftermath(checkpoint)
             ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)

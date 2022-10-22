@@ -69,7 +69,7 @@ def desert():
     stealItems = battle.main.updateStealItemsDesert()
     itemsNeeded = 7 - sum(stealItems)
 
-    menu.equipSonicSteel()
+    menu.equip_sonic_steel()
     memory.main.closeMenu()
 
     checkpoint = 0
@@ -130,7 +130,7 @@ def desert():
                 if teleSlot == 255 or teleCount == memory.main.getItemCountSlot(
                     teleSlot
                 ):
-                    targetPathing.setMovement([-44, 446])
+                    targetPathing.set_movement([-44, 446])
                     xbox.tapB()
                 else:
                     checkpoint += 1
@@ -170,7 +170,7 @@ def desert():
 
             # General pathing
             elif memory.main.userControl():
-                if targetPathing.setMovement(targetPathing.desert(checkpoint)):
+                if targetPathing.set_movement(targetPathing.desert(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
@@ -240,7 +240,7 @@ def desert():
 
 def findSummoners():
     print("Desert complete. Starting Home section")
-    menu.homeGrid()
+    menu.home_grid()
 
     checkpoint = 0
     while memory.main.getMap() != 261:
@@ -311,7 +311,7 @@ def findSummoners():
             elif checkpoint == 45:
                 memory.main.clickToEventTemple(1)
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.Home(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.home(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

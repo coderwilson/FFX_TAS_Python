@@ -1,7 +1,7 @@
 import memory.main
 
 
-def allFormations(area: int):
+def all_formations(area: int):
     if area == 10:  # Kilika
         return [31, 31, 32, 32, 33, 33, 34, 34, 35, 35, 35, 36, 37]
     if area == 69:  # Zanarkand, outdoors
@@ -14,8 +14,8 @@ def allFormations(area: int):
         return [380, 381, 382, 383, 384, 385, 386, 387]
 
 
-def comingBattles(area: int = 10, battleCount: int = 10, extraAdvances: int = 0):
-    formations = allFormations(area)
+def coming_battles(area: int = 10, battleCount: int = 10, extraAdvances: int = 0):
+    formations = all_formations(area)
     advances = memory.main.rng01Advances((battleCount * 2) + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:

@@ -18,14 +18,14 @@ def makingPlans():
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
-    while not targetPathing.setMovement([-267, 347]):
+    while not targetPathing.set_movement([-267, 347]):
         pass
 
     target = [[-242, 312], [-239, 258], [-243, 145], [-243, 10]]
     checkpoint = 0
     while memory.main.getMap() == 194:
         if memory.main.userControl():
-            if targetPathing.setMovement(target[checkpoint]):
+            if targetPathing.set_movement(target[checkpoint]):
                 checkpoint += 1
 
     zzairShipPath.airShipPath(2)  # Talk to Yuna/Kimahri
@@ -71,7 +71,7 @@ def exitCockpit():
         if memory.main.userControl():
             tidusCoords = memory.main.getCoords()
             if tidusCoords[1] > 318:
-                targetPathing.setMovement([-244, 315])
+                targetPathing.set_movement([-244, 315])
             else:
                 FFXC.set_movement(0, -1)
         else:
@@ -79,11 +79,11 @@ def exitCockpit():
 
 
 def facingSin():
-    while not targetPathing.setMovement([-245, 321]):
+    while not targetPathing.set_movement([-245, 321]):
         pass
 
     while memory.main.userControl():
-        targetPathing.setMovement([-256, 342])
+        targetPathing.set_movement([-256, 342])
         xbox.tapB()
         memory.main.waitFrames(1)
 
@@ -140,7 +140,7 @@ def insideSin():
     if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 3:
         reEquipNE = True
         memory.main.fullPartyFormat("rikku", fullMenuClose=False)
-        menu.equipArmor(character=gameVars.neArmor(), ability=99)
+        menu.equip_armor(character=gameVars.neArmor(), ability=99)
     else:
         reEquipNE = False
         memory.main.fullPartyFormat("yuna", fullMenuClose=False)
@@ -164,7 +164,7 @@ def insideSin():
                 checkpoint = 68
 
             # General Pathing
-            elif targetPathing.setMovement(targetPathing.insideSin(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.inside_sin(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -175,7 +175,7 @@ def insideSin():
                     reEquipNE = False
                     memory.main.clickToControl()
                     memory.main.fullPartyFormat("yuna", fullMenuClose=False)
-                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                    menu.equip_armor(character=gameVars.neArmor(), ability=0x801D)
             elif memory.main.menuOpen():
                 xbox.tapB()
 
@@ -197,14 +197,14 @@ def eggHunt(autoEggHunt):
                 print("Still waiting on user to do this section. ", waitCount / 10)
     print("Done with the egg hunt. Final prep for BFA.")
     if gameVars.nemesis():
-        menu.equipWeapon(character=0, ability=0x8019, fullMenuClose=True)
+        menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
         FFXC.set_movement(1, 1)
         memory.main.waitFrames(5)
         memory.main.awaitEvent()
         FFXC.set_neutral()
     else:
         if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
-            menu.equipWeapon(
-                character=gameVars.zombieWeapon(), ability=0x8032, fullMenuClose=False
+            menu.equip_weapon(
+                character=gameVars.zombieWeapon(), ability=0x8032, full_menu_close=False
             )
-        menu.BFA()
+        menu.bfa()

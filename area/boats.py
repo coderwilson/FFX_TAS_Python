@@ -29,12 +29,12 @@ def ssLiki():
                 memory.main.clickToEventTemple(3)
                 print("Ready for SS Liki menu - (var) ", gameVars.earlyTidusGrid())
                 if not gameVars.earlyTidusGrid():
-                    menu.Liki()
+                    menu.liki()
                     memory.main.closeMenu()
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.liki(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.liki(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -75,7 +75,7 @@ def ssWinno():
     # logs.writeStats(memory.getSpeed())
 
     while memory.main.userControl():
-        targetPathing.setMovement([28, -36])  # Through first door
+        targetPathing.set_movement([28, -36])  # Through first door
     memory.main.waitFrames(2)
     FFXC.set_neutral()
     memory.main.clickToControl()
@@ -86,7 +86,7 @@ def ssWinno():
     # Talk to O'akaXXIII
     oakaCoords = [memory.main.getActorCoords(1)[0], memory.main.getActorCoords(1)[1]]
     while memory.main.userControl():
-        targetPathing.setMovement(oakaCoords)
+        targetPathing.set_movement(oakaCoords)
         xbox.tapB()
         memory.main.waitFrames(3)
         oakaCoords = [
@@ -127,7 +127,7 @@ def ssWinno2():
             elif checkpoint == 11:
                 jechtShot()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.winno(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.winno(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

@@ -222,12 +222,12 @@ def returnToAirship():
 
 
 def aeonStart():
-    screen.awaitTurn()
+    screen.await_turn()
     battle.main.buddySwapYuna()
     battle.main.aeonSummon(4)
-    while not screen.turnTidus():
+    while not screen.turn_tidus():
         if memory.main.turnReady():
-            if screen.turnAeon():
+            if screen.turn_aeon():
                 battle.main.attack("none")
             else:
                 battle.main.defend()
@@ -235,7 +235,7 @@ def aeonStart():
 
 def yojimboBattle():
     # Incomplete
-    screen.awaitTurn()
+    screen.await_turn()
     if 1 not in memory.main.getActiveBattleFormation():
         battle.main.buddySwapYuna()
     print("+Yuna Overdrive to summon Yojimbo")
@@ -245,9 +245,9 @@ def yojimboBattle():
     memory.main.waitFrames(90)
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnTidus():
+            if screen.turn_tidus():
                 battle.main.tidusFlee()
-            elif screen.turnAeon():
+            elif screen.turn_aeon():
                 xbox.SkipDialog(2)
             else:
                 battle.main.defend()
@@ -265,14 +265,14 @@ def yojimboBattle():
 
 
 def autoLife():
-    while not (memory.main.turnReady() and screen.turnTidus()):
+    while not (memory.main.turnReady() and screen.turn_tidus()):
         if memory.main.turnReady():
-            if screen.turnAeon():
+            if screen.turn_aeon():
                 battle.main.attack("none")
-            elif not screen.turnTidus():
+            elif not screen.turn_tidus():
                 battle.main.defend()
     while memory.main.battleMenuCursor() != 22:
-        if not screen.turnTidus():
+        if not screen.turn_tidus():
             print("Attempting Haste, but it's not Tidus's turn")
             xbox.tapUp()
             xbox.tapUp()
@@ -298,14 +298,14 @@ def basicQuickAttacks(megaPhoenix=False, odVersion: int = 0, yunaAutos=False):
     FFXC.set_neutral()
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnTidus():
-                if megaPhoenix and screen.faintCheck() >= 2:
+            if screen.turn_tidus():
+                if megaPhoenix and screen.faint_check() >= 2:
                     battle.main.revive(itemNum=7)
                 elif memory.main.getOverdriveBattle(0) == 100:
                     battle.overdrive.tidus(version=odVersion)
                 else:
                     battle.main.useSkill(1)  # Quick hit
-            elif screen.turnAeon():
+            elif screen.turn_aeon():
                 battle.main.attack("none")
             else:
                 battle.main.defend()
@@ -325,16 +325,16 @@ def basicAttack(megaPhoenix=False, odVersion: int = 0, useOD=False, yunaAutos=Fa
     FFXC.set_neutral()
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnTidus():
-                if megaPhoenix and screen.faintCheck() >= 2:
+            if screen.turn_tidus():
+                if megaPhoenix and screen.faint_check() >= 2:
                     battle.main.revive(itemNum=7)
                 elif useOD and memory.main.getOverdriveBattle(0) == 100:
                     battle.overdrive.tidus(version=odVersion)
                 else:
                     battle.main.attack("none")
-            elif screen.turnYuna() and yunaAutos:
+            elif screen.turn_yuna() and yunaAutos:
                 battle.attack("none")
-            elif screen.turnAeon():
+            elif screen.turn_aeon():
                 battle.attack("none")
             else:
                 battle.main.defend()
@@ -447,7 +447,7 @@ def battles1():
         nemesis.arenaSelect.arenaMenuSelect(1)
         nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=1)
         aeonStart()
-        if screen.turnTidus():
+        if screen.turn_tidus():
             autoLife()
     gameVars.arenaSuccess(arrayNum=0, index=1)
     restockDowns()
@@ -816,7 +816,7 @@ def itemDump():
 
 
 def quickResetLogic():
-    reset.resetToMainMenu()
+    reset.reset_to_main_menu()
     memory.ain.waitFrames(90)
     while memory.main.getMap() != 23:
         FFXC.set_value("BtnStart", 1)
@@ -861,10 +861,10 @@ def checkYojimboPossible():
 def shinryuBattle():
     rikkuFirstTurn = False
     rikkuDriveComplete = False
-    screen.awaitTurn()
+    screen.await_turn()
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnRikku():
+            if screen.turn_rikku():
                 if not rikkuFirstTurn:
                     battle.main.defend()
                 elif rikkuDriveComplete:
@@ -872,7 +872,7 @@ def shinryuBattle():
                 else:
                     battle.main.rikkuFullOD("shinryu")
                     rikkuDriveComplete = True
-            elif screen.turnTidus():
+            elif screen.turn_tidus():
                 if memory.main.getOverdriveBattle(0) == 100:
                     battle.overdrive.tidus(version=1)
                 elif rikkuDriveComplete and not memory.main.autoLifeState():
@@ -993,10 +993,10 @@ def rechargeYuna():
     arenaNPC()
     nemesis.arenaSelect.arenaMenuSelect(1)
     nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=9)
-    screen.awaitTurn()
+    screen.await_turn()
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnYuna():
+            if screen.turn_yuna():
                 battle.main.attack("none")
             else:
                 battle.main.escapeOne()

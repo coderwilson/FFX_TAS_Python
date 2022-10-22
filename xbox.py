@@ -11,7 +11,7 @@ import vars
 gameVars = vars.varsHandle()
 
 
-class vgTranslator:
+class VgTranslator:
     def __init__(self):
         self.gamepad = vg.VX360Gamepad()
 
@@ -109,7 +109,7 @@ class vgTranslator:
         self.gamepad.update()
 
 
-FFXC = vgTranslator()
+FFXC = VgTranslator()
 
 
 def controllerHandle():

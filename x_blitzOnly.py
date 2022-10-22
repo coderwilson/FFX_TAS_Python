@@ -40,13 +40,13 @@ rngMod20Array = [0] * 200
 
 while attempts < 20:
     area.dreamZan.NewGame("BlitzballTesting")
-    loadGame.loadSaveNum(37)
+    loadGame.load_save_num(37)
     memory.main.resetBattleEnd()
     rngRootArray[attempts] = memory.main.rng02()
     offset = 1
     blitzoffWin = False
 
-    screen.clearMouse(0)
+    screen.clear_mouse(0)
 
     # ---------This is the actual movement/code/logic/etc---------------
 
@@ -55,11 +55,11 @@ while attempts < 20:
     area.luca.blitzStart()
     while not memory.main.blitzClock() in [1, 2]:
         FFXC.set_neutral()
-    while not (blitz.selectFormation() or blitz.selectMovement()):
+    while not (blitz.select_formation() or blitz.select_movement()):
         xbox.tapY()
 
     FFXC.set_neutral()
-    if blitz.selectMovement():
+    if blitz.select_movement():
         blitzoffWin = True
     else:
         blitzoffWin = False
@@ -180,7 +180,7 @@ while attempts < 20:
         print("Resetting.")
 
         memory.main.resetBlitzMenuNum()
-        reset.resetToMainMenu()
+        reset.reset_to_main_menu()
     else:
         print("Final Results:")
         print("------------------------------")

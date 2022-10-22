@@ -10,4 +10,4 @@ import reset
 
 memory.main.start()
 memory.main.clearEncounterID()
-reset.resetToMainMenu()
+reset.reset_to_main_menu()

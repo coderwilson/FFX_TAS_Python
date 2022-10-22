@@ -15,7 +15,7 @@ def Entrance():
     memory.main.awaitControl()
     print("Starting Baaj exterior area")
     FFXC.set_neutral()
-    menu.shortAeons()
+    menu.short_aeons()
 
     # Now back into the water
     checkpoint = 0
@@ -26,7 +26,7 @@ def Entrance():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.baajRamp(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.baaj_ramp(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -36,7 +36,7 @@ def Entrance():
 
     # Battles
     while memory.main.getStoryProgress() < 48:
-        if screen.BattleScreen():
+        if screen.battle_screen():
             if memory.main.getEncounterID() == 2:
                 battle.main.attack("none")
             else:
@@ -55,7 +55,7 @@ def Entrance():
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
             # General pathing
-            elif targetPathing.setMovement(targetPathing.baajHallway(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.baaj_hallway(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -93,11 +93,11 @@ def Baaj_puzzle():
                 memory.main.clickToEventTemple(2)
                 checkpoint += 1
             elif checkpoint == 33:  # To the fireplace
-                targetPathing.setMovement([1, 1])
+                targetPathing.set_movement([1, 1])
                 xbox.menuB()
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.baajPuzzle(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.baaj_puzzle(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -109,12 +109,12 @@ def Baaj_puzzle():
 def Klikk_fight():
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
-    while not screen.turnRikku():
+    while not screen.turn_rikku():
         xbox.tapB()
 
     xbox.clickToBattle()
     battle.main.useItem(0, "none")  # Tidus self-potion
-    screen.awaitTurn()
+    screen.await_turn()
     battle.boss.klikk()
 
 
@@ -135,7 +135,7 @@ def ABboat1():
     while memory.main.getActorCoords(actorNumber=0)[0] > -50:
         rikkuNum = memory.main.actorIndex(actorNum=41)
         target = memory.main.getActorCoords(actorNumber=rikkuNum)
-        targetPathing.setMovement(target)
+        targetPathing.set_movement(target)
         if distance(0, rikkuNum) < 10:
             xbox.tapB()
         elif memory.main.menuOpen():
@@ -169,11 +169,11 @@ def ABswimming1():
     print("Swimming down from the boat")
     while memory.main.getMap() != 288:
         if memory.main.userControl():
-            targetPathing.setMovement([-300, -300])
+            targetPathing.set_movement([-300, -300])
             FFXC.set_value("BtnA", 1)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 print("Battle Start (Al Bhed swimming section)")
                 battle.main.stealAndAttack()
                 print("Battle End (Al Bhed swimming section)")
@@ -192,14 +192,14 @@ def ABswimming1():
             else:
                 FFXC.set_value("BtnA", 0)
                 if pos[1] > -230:
-                    targetPathing.setMovement([-343, -284])
+                    targetPathing.set_movement([-343, -284])
                 elif pos[1] > -410:
-                    targetPathing.setMovement([-421, -463])
+                    targetPathing.set_movement([-421, -463])
                 else:
                     FFXC.set_movement(0, 1)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 print("Battle Start (Al Bhed swimming section)")
                 battle.main.stealAndAttack()
                 print("Battle End (Al Bhed swimming section)")
@@ -233,7 +233,7 @@ def ABswimming2():
         pos = memory.main.getCoords()
     FFXC.set_neutral()
 
-    screen.awaitTurn()
+    screen.await_turn()
     # Final group of Piranhas
     battle.main.stealAndAttackPreTros()
     memory.main.awaitControl()
@@ -263,14 +263,14 @@ def ABswimming2():
                 memory.main.waitFrames(4)
             elif memory.main.getMap() == 64:
                 if memory.main.getCoords()[0] < -4:
-                    targetPathing.setMovement([-2, 47])
+                    targetPathing.set_movement([-2, 47])
                 else:
-                    targetPathing.setMovement([73, 1])
+                    targetPathing.set_movement([73, 1])
             elif memory.main.getMap() == 380:
-                targetPathing.setMovement([700, 300])
+                targetPathing.set_movement([700, 300])
             elif memory.main.getMap() == 71:
                 rikkuNum = memory.main.actorIndex(actorNum=41)
-                targetPathing.setMovement(memory.main.getActorCoords(rikkuNum))
+                targetPathing.set_movement(memory.main.getActorCoords(rikkuNum))
                 if distance(0, rikkuNum) < 30:
                     xbox.tapB()
         else:

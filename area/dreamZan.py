@@ -133,7 +133,7 @@ def listenStory():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.tidusHome(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.tidus_home(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -179,9 +179,9 @@ def ammesBattle():
             print(hitsArray)
     print("#####################################")
     print("### Unconfirmed seed check:", memory.main.rngSeed())
-    correctSeed = rngTrack.hitsToSeed(hitsArray=hitsArray)
-    logs.writeStats("Corrected RNG seed:")
-    logs.writeStats(correctSeed)
+    correctSeed = rngTrack.hits_to_seed(hits_array=hitsArray)
+    logs.write_stats("Corrected RNG seed:")
+    logs.write_stats(correctSeed)
     print("### Corrected RNG seed:", correctSeed)
     if correctSeed != "Err_seed_not_found":
         gameVars.setConfirmedSeed(correctSeed)
@@ -234,7 +234,9 @@ def AfterAmmes():
                     checkpoint = 11
 
                 # General pathing
-                elif targetPathing.setMovement(targetPathing.allStartsHere(checkpoint)):
+                elif targetPathing.set_movement(
+                    targetPathing.all_starts_here(checkpoint)
+                ):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:

@@ -63,7 +63,7 @@ def Beach():
                 checkpoint += 1
             elif checkpoint == 44:  # Talk to Wakka
                 while memory.main.userControl():
-                    targetPathing.setMovement([15, 16])
+                    targetPathing.set_movement([15, 16])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl()
@@ -74,11 +74,11 @@ def Beach():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.besaid1(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.besaid_1(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.piranhas()
                 besaidBattles += 1
                 encounterID = memory.main.getEncounterID()
@@ -88,8 +88,8 @@ def Beach():
                     goodBattles += 1
             elif memory.main.diagSkipPossible() or memory.main.menuOpen():
                 xbox.tapB()
-    logs.writeStats("piranha battles:")
-    logs.writeStats(str(besaidBattles))
+    logs.write_stats("piranha battles:")
+    logs.write_stats(str(besaidBattles))
     # logs.writeStats("Optimal piranha battles:")
     # logs.writeStats(str(goodBattles))
 
@@ -114,21 +114,21 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 20:  # Touch the hidden door glyph
                 while memory.main.userControl():
-                    targetPathing.setMovement([-13, -33])
+                    targetPathing.set_movement([-13, -33])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 23:  # Second Besaid sphere
                 while memory.main.userControl():
-                    targetPathing.setMovement([-14, 31])
+                    targetPathing.set_movement([-14, 31])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
                 checkpoint += 1
             elif checkpoint == 26:  # Insert Besaid sphere, and push to completion
                 while memory.main.userControl():
-                    targetPathing.setMovement([-13, -60])
+                    targetPathing.set_movement([-13, -60])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
@@ -158,7 +158,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.besaidTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.besaid_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -192,7 +192,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 5:  # Shopkeeper
                 while memory.main.userControl():
-                    targetPathing.setMovement([1, 15])
+                    targetPathing.set_movement([1, 15])
                     xbox.tapB()
                 FFXC.set_neutral()
                 while memory.main.shopMenuDialogueRow() != 1:
@@ -216,9 +216,9 @@ def leaving():
                 memory.main.clickToEventTemple(4)
                 checkpoint += 1
             elif checkpoint == 18:  # First tutorial
-                logs.writeRNGTrack("###########################")
-                logs.writeRNGTrack("Pre-tutorial array")
-                logs.writeRNGTrack(memory.main.rng10Array(arrayLen=1))
+                logs.write_rng_track("###########################")
+                logs.write_rng_track("Pre-tutorial array")
+                logs.write_rng_track(memory.main.rng10Array(arrayLen=1))
                 print("Tutorial - Tidus and Wakka")
                 FFXC.set_movement(1, -1)
                 memory.main.clickToEvent()
@@ -240,16 +240,16 @@ def leaving():
                 memory.main.clickToEventTemple(2)
                 print("Ready for SS Liki menu - (var)", gameVars.earlyTidusGrid())
                 if memory.main.getTidusSlvl() >= 3:
-                    menu.Liki()
+                    menu.liki()
                     gameVars.earlyTidusGridSetTrue()
-                logs.writeRNGTrack("###########################")
-                logs.writeRNGTrack("Pre-Kimahri array")
-                logs.writeRNGTrack(memory.main.rng10Array(arrayLen=1))
+                logs.write_rng_track("###########################")
+                logs.write_rng_track("Pre-Kimahri array")
+                logs.write_rng_track(memory.main.rng10Array(arrayLen=1))
                 checkpoint += 1
             elif checkpoint in [59]:  # Beach, save sphere
-                logs.writeRNGTrack("###########################")
-                logs.writeRNGTrack("Pre-Sin array")
-                logs.writeRNGTrack(memory.main.rng10Array(arrayLen=1))
+                logs.write_rng_track("###########################")
+                logs.write_rng_track("Pre-Sin array")
+                logs.write_rng_track(memory.main.rng10Array(arrayLen=1))
                 checkpoint += 1
             elif checkpoint in [60]:  # Beach, save sphere
                 checkpoint += 1
@@ -257,7 +257,7 @@ def leaving():
                 checkpoint -= 2
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.besaid2(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.besaid_2(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -267,12 +267,12 @@ def leaving():
             elif memory.main.cutsceneSkipPossible():
                 xbox.skipScene(fast_mode=True)
             elif (
-                checkpoint > 25 and checkpoint < 30 and screen.BattleScreen()
+                checkpoint > 25 and checkpoint < 30 and screen.battle_screen()
             ):  # Kimahri fight
                 FFXC.set_neutral()
                 healCount = 0
                 while memory.main.battleActive():
-                    if screen.BattleScreen():
+                    if screen.battle_screen():
                         battleHP = memory.main.getBattleHP()
                         enemyHP = memory.main.getEnemyCurrentHP()
                         if (
@@ -294,14 +294,15 @@ def leaving():
                 memory.main.clickToControl()
             # Valefor summon tutorial
             elif (
-                checkpoint in [31, 32, 33, 34, 35, 36, 37, 38] and screen.BattleScreen()
+                checkpoint in [31, 32, 33, 34, 35, 36, 37, 38]
+                and screen.battle_screen()
             ):
                 xbox.clickToBattle()
-                while not screen.turnAeon():
+                while not screen.turn_aeon():
                     if memory.main.turnReady():
-                        if screen.turnYuna():
+                        if screen.turn_yuna():
                             battle.main.aeonSummon(0)
-                        elif screen.turnAeon():
+                        elif screen.turn_aeon():
                             pass
                         elif 1 not in memory.main.getActiveBattleFormation():
                             battle.main.buddySwapYuna()
@@ -314,13 +315,13 @@ def leaving():
                 memory.main.clickToControl()
                 memory.main.fullPartyFormat("Besaid")
                 checkpoint += 1
-            elif checkpoint == 39 and screen.BattleScreen():  # Dark Attack tutorial
+            elif checkpoint == 39 and screen.battle_screen():  # Dark Attack tutorial
                 battle.main.escapeAll()
                 memory.main.clickToControl()
                 memory.main.fullPartyFormat("Besaid2")
                 checkpoint += 1
             elif (
-                checkpoint > 39 and screen.BattleScreen()
+                checkpoint > 39 and screen.battle_screen()
             ):  # One forced battle on the way out of Besaid
                 battle.main.besaid()
 

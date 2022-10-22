@@ -97,7 +97,7 @@ def arrival():
                 print("Tidus XP:", memory.main.getTidusXP())
                 if memory.main.getTidusXP() >= 312:
                     FFXC.set_neutral()
-                    earlyHaste = menu.LucaWorkers()
+                    earlyHaste = menu.luca_workers()
                     if earlyHaste != 0:
                         earlyHaste = 2
                 print("Event: Third battle")
@@ -108,7 +108,7 @@ def arrival():
                 print("Tidus XP:", memory.main.getTidusXP())
                 memory.main.clickToControl()
                 if earlyHaste == 0 and memory.main.getTidusXP() >= 312:
-                    earlyHaste = menu.LucaWorkers()
+                    earlyHaste = menu.luca_workers()
 
                 checkpoint += 1
             elif checkpoint == 46 or checkpoint == 55:
@@ -126,14 +126,14 @@ def arrival():
                 memory.main.clickToEventTemple(4)
 
                 if earlyHaste == 0:
-                    earlyHaste = menu.LucaWorkers() - 1
+                    earlyHaste = menu.luca_workers() - 1
                 checkpoint += 1
             elif checkpoint == 52:
                 memory.main.clickToEventTemple(5)
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.Luca1(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.luca_1(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -143,8 +143,8 @@ def arrival():
             elif memory.main.cutsceneSkipPossible():
                 xbox.skipScene()
 
-    logs.writeStats("Early Haste:")
-    logs.writeStats(earlyHaste)
+    logs.write_stats("Early Haste:")
+    logs.write_stats(earlyHaste)
     gameVars.earlyHasteSet(earlyHaste)
 
     print("##Checking for thunderstrike weapons for Tidus or Wakka")
@@ -158,14 +158,14 @@ def arrival():
     else:
         print("##Both Tidus and Wakka somehow got a thunderstrike weapon.")
 
-    logs.writeStats("Thunderstrike results:")
-    logs.writeStats(thunderStrike)
+    logs.write_stats("Thunderstrike results:")
+    logs.write_stats(thunderStrike)
 
     if thunderStrike != 0:
         if thunderStrike % 2 == 1:
             print("Equipping Tidus")
             fullClose = True
-            menu.equipWeapon(character=0, ability=0x8026, fullMenuClose=fullClose)
+            menu.equip_weapon(character=0, ability=0x8026, full_menu_close=fullClose)
     gameVars.setLStrike(thunderStrike)
 
 
@@ -189,9 +189,9 @@ def blitzStart():
             ):
                 checkpoint = 4
             elif checkpoint == 8:
-                targetPathing.setMovement([-111, -4])
+                targetPathing.set_movement([-111, -4])
                 xbox.tapB()
-            elif targetPathing.setMovement(targetPathing.LucaPreBlitz(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.luca_pre_blitz(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -208,11 +208,11 @@ def afterBlitz():
             # Events
             if checkpoint == 8:  # First chest
                 if gameVars.earlyHaste() == -1:
-                    menu.lateHaste()
+                    menu.late_haste()
                     memory.main.closeMenu()
                 print("First chest")
                 while memory.main.userControl():
-                    targetPathing.setMovement([-635, -410])
+                    targetPathing.set_movement([-635, -410])
                     xbox.menuB()
                 FFXC.set_neutral()
                 memory.main.clickToControl()
@@ -220,7 +220,7 @@ def afterBlitz():
             elif checkpoint == 10:  # Second chest
                 print("Second chest")
                 while memory.main.userControl():
-                    targetPathing.setMovement([-620, -424])
+                    targetPathing.set_movement([-620, -424])
                     xbox.menuB()
                 FFXC.set_neutral()
                 memory.main.clickToControl()
@@ -230,7 +230,7 @@ def afterBlitz():
                     # First Auron affection, always zero
                     while memory.main.affectionArray()[2] == 0:
                         auronCoords = memory.main.getActorCoords(3)
-                        targetPathing.setMovement(auronCoords)
+                        targetPathing.set_movement(auronCoords)
                         xbox.tapB()
                 checkpoint += 1  # After affection changes
             elif checkpoint == 35:  # Bring the party together
@@ -239,7 +239,7 @@ def afterBlitz():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.Luca3(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.luca_3(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -286,5 +286,5 @@ def afterBlitz():
     memory.main.waitFrames(30 * 2)
     FFXC.set_neutral()
 
-    logs.writeStats("Blitz Win:")
-    logs.writeStats(gameVars.getBlitzWin())
+    logs.write_stats("Blitz Win:")
+    logs.write_stats(gameVars.getBlitzWin())

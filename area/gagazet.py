@@ -34,7 +34,7 @@ def calmLands():
     memory.main.fullPartyFormat("rikku", fullMenuClose=True)
     # battle.main.healUp(fullMenuClose=True)
 
-    rngTrack.printManipInfo()
+    rngTrack.print_manip_info()
     print("RNG10:", memory.main.rng10())
     print("RNG12:", memory.main.rng12())
     print("RNG13:", memory.main.rng13())
@@ -50,7 +50,7 @@ def calmLands():
     checkpoint = 0
     while memory.main.getMap() != 279:
         if memory.main.userControl():
-            if targetPathing.setMovement(targetPathing.calmLands(checkpoint)):
+            if targetPathing.set_movement(targetPathing.calm_lands(checkpoint)):
                 checkpoint += 1
                 if checkpoint == 15:
                     if checkGems() < 2:
@@ -60,12 +60,12 @@ def calmLands():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battle.main.calmLandsManip()
                 memory.main.clickToControl3()
                 memory.main.fullPartyFormat("rikku", fullMenuClose=True)
                 # battle.main.healUp(fullMenuClose=True)
-                rngTrack.printManipInfo()
+                rngTrack.print_manip_info()
             elif memory.main.menuOpen():
                 xbox.tapB()
             elif memory.main.diagSkipPossible():
@@ -74,9 +74,9 @@ def calmLands():
 
 def defenderX():
     memory.main.awaitControl()
-    menu.prepCalmLands()
+    menu.prep_calm_lands()
     memory.main.fullPartyFormat("postbunyip")
-    while not targetPathing.setMovement([67, -255]):
+    while not targetPathing.set_movement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
     memory.main.awaitEvent()
@@ -85,22 +85,22 @@ def defenderX():
     xbox.clickToBattle()
     while memory.main.battleActive():
         if memory.main.turnReady():
-            if screen.turnTidus():
+            if screen.turn_tidus():
                 battle.main.buddySwapYuna()
-            elif screen.turnYuna():
+            elif screen.turn_yuna():
                 battle.main.aeonSummon(4)
             else:
                 battle.main.attack("none")
     FFXC.set_movement(0, 1)
     memory.main.clickToControl()
-    rngTrack.printManipInfo()
+    rngTrack.print_manip_info()
 
 
 def toTheRonso():
     checkpoint = 2
     while memory.main.getMap() != 259:
         if memory.main.userControl():
-            if targetPathing.setMovement(targetPathing.defenderX(checkpoint)):
+            if targetPathing.set_movement(targetPathing.defender_x(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -112,7 +112,7 @@ def toTheRonso():
     checkpoint = 0
     while memory.main.getMap() != 244:
         if memory.main.userControl():
-            if targetPathing.setMovement(targetPathing.kelkRonso(checkpoint)):
+            if targetPathing.set_movement(targetPathing.kelk_ronso(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -127,26 +127,26 @@ def gagazetGates():
     # Should appear on the map just before the Ronso hymn
     endVer = gameVars.endGameVersion()
     print("Grid version: " + str(endVer))
-    logs.writeStats("B&Y Return spheres:")
+    logs.write_stats("B&Y Return spheres:")
     if endVer == 4:
-        logs.writeStats("4")
+        logs.write_stats("4")
     elif endVer == 3:
-        logs.writeStats("0")
+        logs.write_stats("0")
     else:
-        logs.writeStats("2")
+        logs.write_stats("2")
     memory.main.awaitControl()
     if memory.main.overdriveState()[6] == 100:
         memory.main.fullPartyFormat("kimahri", fullMenuClose=False)
     else:
         memory.main.fullPartyFormat("rikku", fullMenuClose=False)
-    menu.afterRonso()
+    menu.after_ronso()
     memory.main.closeMenu()  # just in case
 
     print("Gagazet path section")
     checkpoint = 0
     while memory.main.getMap() != 285:
         if memory.main.userControl():
-            if targetPathing.setMovement(targetPathing.gagazetSnow(checkpoint)):
+            if targetPathing.set_movement(targetPathing.gagazet_snow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -170,7 +170,7 @@ def gagazetGates():
                     memory.main.overdriveState2()[6] == 100
                     and gameVars.neArmor() != 255
                 ):
-                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                    menu.equip_armor(character=gameVars.neArmor(), ability=0x801D)
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
     print("Should now be on the map with Seymour Flux.")
@@ -193,7 +193,7 @@ def Flux():
                 while memory.main.userControl():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-            elif targetPathing.setMovement(targetPathing.Flux(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.flux(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -204,7 +204,7 @@ def Flux():
                 # FFXC.set_movement(0,1)
                 memory.main.clickToControl3()
                 if gameVars.endGameVersion() != 3:
-                    menu.afterFlux()
+                    menu.after_flux()
                 memory.main.fullPartyFormat("kimahri")
             elif memory.main.diagSkipPossible():
                 xbox.tapB()
@@ -241,7 +241,9 @@ def dream(checkpoint: int = 0):
                 memory.main.awaitEvent()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.gagazetDreamSeq(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.gagazet_dream_seq(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -331,7 +333,9 @@ def cave():
                 memory.main.waitFrames(3)
                 FFXC.set_movement(0, 1)
                 memory.main.waitFrames(6)
-            elif targetPathing.setMovement(targetPathing.gagazetPostDream(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.gagazet_post_dream(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -441,7 +445,7 @@ def cave():
                 # import rngTrack
                 # zombieResults = rngTrack.zombieTrack(report=True)
                 # logs.writeRNGTrack("Final results:"+str(zombieResults))
-            elif targetPathing.setMovement(targetPathing.gagazetCave(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.gagazet_cave(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -515,7 +519,7 @@ def wrapUp():
             elif checkpoint == 3:
                 # Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
                 while memory.main.getStoryProgress() < 2651:
-                    targetPathing.setMovement([786, -819])
+                    targetPathing.set_movement([786, -819])
                     xbox.tapB()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -526,7 +530,7 @@ def wrapUp():
                     checkpoint += 1
                 else:
                     FFXC.set_movement(1, 1)
-            elif targetPathing.setMovement(targetPathing.gagazetPeak(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.gagazet_peak(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

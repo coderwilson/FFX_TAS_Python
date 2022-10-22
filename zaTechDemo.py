@@ -25,7 +25,7 @@ print(FFXC)
 print("Starting tech-demo program.")
 
 memory.main.start()
-startTime = logs.timeStamp()
+startTime = logs.time_stamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
@@ -44,13 +44,13 @@ while attempts < 20 and cycles < 50:
     area.dreamZan.NewGame("techdemo")
 
     print("Game start screen")
-    screen.clearMouse(0)
+    screen.clear_mouse(0)
 
     # Now to run the appropriate section depending on attempt number.
     if attempts == 1:
         print("Demo - Mi'ihen skip")
-        loadGame.loadSaveNum(26)  # W/O laughing scene
-        loadGame.LoadMiihenStart()
+        loadGame.load_save_num(26)  # W/O laughing scene
+        loadGame.load_miihen_start()
         FFXC.set_neutral()
         memory.main.setEncounterRate(0)
         memory.main.awaitControl()
@@ -67,10 +67,10 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
-        loadGame.loadSaveNum(38)
+        loadGame.load_save_num(38)
         # Fixes a low gil state for this save file.
         memory.main.setGilvalue(4000)
-        loadGame.LoadMRR()
+        loadGame.load_mrr()
         wakkaLateMenu = area.MRR.arrival()
         SkipCount += 1
         SkipAttempts += 1
@@ -82,8 +82,8 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
-        loadGame.loadSaveNum(3)
-        loadGame.loadGuadoSkip()
+        loadGame.load_save_num(3)
+        loadGame.load_guado_skip()
         SkipAttempts += 1
         guadoSkipStatus = area.guadosalam.guadoSkip()
         if guadoSkipStatus:
@@ -96,8 +96,8 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
-        loadGame.loadSaveNum(97)
-        loadGame.loadMacTemple()
+        loadGame.load_save_num(97)
+        loadGame.load_mac_temple()
         SkipAttempts += 1
         jyscalSkipStatus = area.mTemple.arrival()
         if jyscalSkipStatus:
@@ -111,7 +111,7 @@ while attempts < 20 and cycles < 50:
     elif attempts == 5:
         print("###  Just for fun - Chocobo Eater Stomp")
         print("###  Please engage the CSR now!")
-        loadGame.loadSaveNum(28)
+        loadGame.load_save_num(28)
         Showcase.chocoEater.engage()
         Showcase.chocoEater.battle()
     else:  # Breaks the loop when everything is complete.
@@ -129,14 +129,14 @@ while attempts < 20 and cycles < 50:
 
         print("Resetting.")
 
-        reset.resetToMainMenu()
+        reset.reset_to_main_menu()
     else:
         print("------------------------------")
         print("------------------------------")
         print("Final demo is complete. Thanks for playing.")
 
 
-endTime = logs.timeStamp()
+endTime = logs.time_stamp()
 print("------------------------------")
 print("------------------------------")
 totalTime = endTime - startTime

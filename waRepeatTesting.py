@@ -21,24 +21,24 @@ while attempts < 20:
     attempts += 1
 
     area.dreamZan.NewGame("Luca")
-    loadGame.loadOffset(1)
+    loadGame.load_offset(1)
 
     print("Game start screen")
-    screen.clearMouse(0)
+    screen.clear_mouse(0)
 
-    startTime = logs.timeStamp()
+    startTime = logs.time_stamp()
     print("Timer starts now.")
     # ---------This is the actual movement/code/logic/etc---------------
     import area.luca as luca
     import blitz
 
     luca.blitzStart()
-    blitzWin = blitz.blitzMain(False)
+    blitzWin = blitz.blitz_main(False)
     if blitzWin:
         success += 1
 
     # ---------End of the actual movement/code/logic/etc---------------
-    endTime = logs.timeStamp()
+    endTime = logs.time_stamp()
     print("Duration:", endTime - startTime)
 
     if attempts < 20:
@@ -52,7 +52,7 @@ while attempts < 20:
 
         print("Resetting.")
 
-        reset.resetToMainMenu()
+        reset.reset_to_main_menu()
     else:
         print("------------------------------")
         print("------------------------------")

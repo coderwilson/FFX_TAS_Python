@@ -47,7 +47,7 @@ def arrival():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.Kilika1(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.kilika_1(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -118,30 +118,30 @@ def forest1():
             # events
             if checkpoint == 9:  # Chest with Wakkas weapon Scout
                 memory.main.clickToEventTemple(0)
-                menu.woodsMenuing()
+                menu.woods_menuing()
                 checkpoint += 1
             elif checkpoint == 47:  # Luck sphere chest
                 luckSlot = memory.main.getItemSlot(94)
                 if luckSlot == 255:
-                    targetPathing.setMovement([-250, 200])
+                    targetPathing.set_movement([-250, 200])
                     xbox.tapB()
                 else:
                     checkpoint += 1
             elif checkpoint == 86:
                 memory.main.touchSaveSphere()
                 if not gameVars.didFullKilikMenu():
-                    menu.Geneaux()
+                    menu.geneaux()
                 checkpoint += 1
             elif checkpoint == 99:  # Lord O'holland
                 while memory.main.userControl():
-                    targetPathing.setMovement([-30, 45])
+                    targetPathing.set_movement([-30, 45])
                     xbox.tapB()
                 FFXC.set_neutral()
                 memory.main.clickToControl3()
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.Kilika2(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.kilika_2(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -150,9 +150,11 @@ def forest1():
             if memory.main.battleActive():
                 if checkpoint < 9:
                     battle.main.lancetTutorial()
-                    nextTwo = rngTrack.comingBattles(area="kilika_woods", battleCount=2)
+                    nextTwo = rngTrack.coming_battles(
+                        area="kilika_woods", battleCount=2
+                    )
                     bestOfTwo = selectBestOfTwo(nextTwo)
-                    nextBattle = rngTrack.comingBattles(
+                    nextBattle = rngTrack.coming_battles(
                         area="kilika_woods", battleCount=1
                     )[0]
                     print("################# Next Battle:", nextBattle)
@@ -164,7 +166,7 @@ def forest1():
                     valeforCharge = battle.main.KilikaWoods(
                         valeforCharge, bestOfTwo, nextBattle
                     )
-                    nextBattle = rngTrack.comingBattles(
+                    nextBattle = rngTrack.coming_battles(
                         area="kilika_woods", battleCount=1
                     )[0]
                     print("##########################", nextBattle)
@@ -219,7 +221,7 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 27:  # Glyph sphere
                 while not memory.main.diagSkipPossible():
-                    targetPathing.setMovement([-21, -30])
+                    targetPathing.set_movement([-21, -30])
                     if memory.main.userControl():
                         xbox.tapB()
                 FFXC.set_neutral()
@@ -258,7 +260,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.KilikaTrials(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.kilika_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -276,9 +278,9 @@ def trialsEnd():
     while memory.main.getStoryProgress() < 346:
         if memory.main.userControl():
             if memory.main.getCoords()[0] < -28:
-                targetPathing.setMovement([-10, -23])
+                targetPathing.set_movement([-10, -23])
             else:
-                targetPathing.setMovement([-20, 1])
+                targetPathing.set_movement([-20, 1])
                 xbox.tapB()
         else:
             FFXC.set_neutral()
@@ -323,7 +325,7 @@ def forest3():
                 checkpoint = 64
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.Kilika3(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.kilika_3(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

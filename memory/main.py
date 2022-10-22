@@ -2364,7 +2364,7 @@ def getEggPicked(eggNum):
     return retVal
 
 
-class egg:
+class Egg:
     def __init__(self, eggnum):
         self.num = eggnum
         self.x = eggX(self.num)
@@ -2406,7 +2406,7 @@ class egg:
 def buildEggs():
     retArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for x in range(10):
-        retArray[x] = egg(x)
+        retArray[x] = Egg(x)
     return retArray
 
 
@@ -2456,7 +2456,7 @@ def getIceLife(iceNum):
     return retVal
 
 
-class icicle:
+class Icicle:
     def __init__(self, icenum):
         self.num = icenum
         self.x = iceX(self.num)
@@ -2472,7 +2472,7 @@ class icicle:
 def buildIcicles():
     retArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for x in range(16):
-        retArray[x] = icicle(x)
+        retArray[x] = Icicle(x)
     return retArray
 
 
@@ -2511,7 +2511,7 @@ def setRNG2():
 # Blitzball!
 
 
-class blitzActor:
+class BlitzActor:
     def __init__(self, playerNum: int):
         self.num = playerNum
         self.position = getActorCoords(self.num)
@@ -2801,7 +2801,7 @@ def getEquipExists(equipNum):
     return retVal
 
 
-class equipment:
+class Equipment:
     def __init__(self, equipNum):
         self.num = equipNum
         self.equipType = getEquipType(equipNum)
@@ -2855,13 +2855,13 @@ class equipment:
 def allEquipment():
     firstEquipment = True
     for i in range(200):
-        currentHandle = equipment(i)
+        currentHandle = Equipment(i)
         if getEquipLegit(i) and currentHandle.equipExists():
             if firstEquipment:
-                equipHandleArray = [equipment(i)]
+                equipHandleArray = [Equipment(i)]
                 firstEquipment = False
             else:
-                equipHandleArray.append(equipment(i))
+                equipHandleArray.append(Equipment(i))
     return equipHandleArray
 
 
@@ -3688,7 +3688,7 @@ def touchSaveSphere(saveCursorNum: int = 0):
 
     ssDetails = getSaveSphereDetails()
     while userControl():
-        targetPathing.setMovement([ssDetails[0], ssDetails[1]])
+        targetPathing.set_movement([ssDetails[0], ssDetails[1]])
         xbox.tapB()
         waitFrames(1)
     FFXC.set_neutral()
@@ -3771,7 +3771,7 @@ def touchSaveSphere_notWorking(saveCursorNum: int = 0):
 
     ssDetails = getSaveSphereDetails()
     while userControl():
-        targetPathing.setMovement([ssDetails[0], ssDetails[1]])
+        targetPathing.set_movement([ssDetails[0], ssDetails[1]])
         xbox.tapB()
         waitFrames(1)
     FFXC.set_neutral()
@@ -3870,20 +3870,20 @@ def printMemoryLog_backup():
     ptrVal = process.read(baseValue + 0x008DED2C)
     finalCoords = ptrVal + 0x6D0
     coord1 = process.read(finalCoords)
-    logs.writeStats("Temp Value 1: " + str(coord1))
+    logs.write_stats("Temp Value 1: " + str(coord1))
 
     # (Pointer) [[ffx.exe + 8DED2C] + 0x704]
     ptrVal = process.read(baseValue + 0x008DED2C)
     finalCoords = ptrVal + 0x704
-    logs.writeStats("Temp Value 2: " + str(coord1))
+    logs.write_stats("Temp Value 2: " + str(coord1))
 
     # (Pointer) [[ffx.exe + 8CB9D8] + 0x10D2E]
     ptrVal = process.read(baseValue + 0x008CB9D8)
     finalCoords = ptrVal + 0x10D2E
-    logs.writeStats("Temp Value 3: " + str(coord1))
+    logs.write_stats("Temp Value 3: " + str(coord1))
 
     # ffx.exe + D2A00C
-    logs.writeStats("Temp Value 4: " + str(coord1))
+    logs.write_stats("Temp Value 4: " + str(coord1))
 
 
 # ------------------------------

@@ -162,8 +162,8 @@ def wakka():
 
 def yojimbo(gilValue: int = 263000):
     print("Yojimbo overdrive")
-    screen.awaitTurn()
-    if not screen.turnAeon():
+    screen.await_turn()
+    if not screen.turn_aeon():
         return
     while memory.main.battleMenuCursor() != 35:
         xbox.tapUp()
@@ -198,7 +198,7 @@ def yojimbo(gilValue: int = 263000):
 
 def yuna(aeonNum: int = 5):
     print("Awaiting Yunas turn")
-    while not screen.turnYuna():
+    while not screen.turn_yuna():
         if memory.main.turnReady():
             battle.main.defend()
     while not memory.main.otherBattleMenu():
