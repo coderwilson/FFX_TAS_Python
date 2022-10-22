@@ -5,7 +5,7 @@ memory.main.start()
 counter = 0
 print("-----------")
 print("-----------")
-powerArray = memory.main.rng02Array()
+powerArray = memory.main.rng_02_array()
 for i in range(20):
     print(hex(powerArray[i] & 0x7FFFFFFF))
 print("-----------")

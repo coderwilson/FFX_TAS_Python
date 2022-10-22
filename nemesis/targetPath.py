@@ -3,12 +3,12 @@ from math import copysign
 import memory.main
 import xbox
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def setMovement(target) -> bool:
-    player = memory.main.getCoords()
-    (forward, right) = memory.main.getMovementVectors()
+def set_movement(target) -> bool:
+    player = memory.main.get_coords()
+    (forward, right) = memory.main.get_movement_vectors()
 
     # Calculate forward and right directions relative to camera space
     pX = player[0]
@@ -43,7 +43,7 @@ def setMovement(target) -> bool:
         return False
 
 
-def toRemiem(checkpoint):
+def to_remiem(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -157,7 +157,7 @@ def toRemiem(checkpoint):
     return [x, y]
 
 
-def race1(checkpoint):
+def race_1(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -274,7 +274,7 @@ def race1(checkpoint):
     return [x, y]
 
 
-def race2(checkpoint):
+def race_2(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -394,7 +394,7 @@ def race2(checkpoint):
     return [x, y]
 
 
-def race3(checkpoint):
+def race_3(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -532,7 +532,7 @@ def race3(checkpoint):
     return [x, y]
 
 
-def leaveRemiem(checkpoint):
+def leave_remiem(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -661,7 +661,7 @@ def leaveRemiem(checkpoint):
     return [x, y]
 
 
-def tpFarm(checkpoint):
+def tp_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -820,7 +820,7 @@ def tpFarm(checkpoint):
     return [x, y]
 
 
-def calmLands1_old(checkpoint):
+def calm_lands_1_old(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -862,7 +862,7 @@ def calmLands1_old(checkpoint):
     return [x, y]
 
 
-def calmLands1(checkpoint):
+def calm_lands_1(checkpoint):
     # print("CKP:", checkpoint)
     x = 999
     y = 999
@@ -902,7 +902,7 @@ def calmLands1(checkpoint):
     return [x, y]
 
 
-def calmFarm(checkpoint):
+def calm_farm(checkpoint):
     # print("CKP:", checkpoint)
     x = 999
     y = 999
@@ -939,7 +939,7 @@ def calmFarm(checkpoint):
     return [x, y]
 
 
-def calmLands2(checkpoint):
+def calm_lands_2(checkpoint):
     # print("CKP2:", checkpoint)
     x = 999
     y = 999
@@ -970,7 +970,7 @@ def calmLands2(checkpoint):
     return [x, y]
 
 
-def besaidFarm(checkpoint):
+def besaid_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1069,7 +1069,7 @@ def besaidFarm(checkpoint):
     return [x, y]
 
 
-def kilikaFarm(checkpoint):
+def kilika_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1168,7 +1168,7 @@ def kilikaFarm(checkpoint):
     return [x, y]
 
 
-def miihenFarm(checkpoint):
+def miihen_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1617,7 +1617,7 @@ def miihenFarm(checkpoint):
     return [x, y]
 
 
-def mrrFarm(checkpoint):
+def mrr_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1638,7 +1638,7 @@ def mrrFarm(checkpoint):
     return [x, y]
 
 
-def arenaReturn(checkpoint):
+def arena_return(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1869,7 +1869,7 @@ def yojimbo(checkpoint):
     return [x, y]
 
 
-def djoseFarm(checkpoint):
+def djose_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2028,7 +2028,7 @@ def djoseFarm(checkpoint):
     return [x, y]
 
 
-def macFarm(checkpoint):
+def mac_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2097,7 +2097,7 @@ def macFarm(checkpoint):
     return [x, y]
 
 
-def bikanelFarm(checkpoint):
+def bikanel_farm(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2416,7 +2416,7 @@ def gagazet(checkpoint):
     return [x, y]
 
 
-def gagazet1(checkpoint):  # No longer used
+def gagazet_1(checkpoint):  # No longer used
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2500,7 +2500,7 @@ def gagazet1(checkpoint):  # No longer used
     return [x, y]
 
 
-def gagazet2(checkpoint):  # No longer used
+def gagazet_2(checkpoint):  # No longer used
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2554,7 +2554,7 @@ def gagazet2(checkpoint):  # No longer used
     return [x, y]
 
 
-def gagazet3(checkpoint):  # No longer used
+def gagazet_3(checkpoint):  # No longer used
     x = 999
     y = 999
     if checkpoint == 0:

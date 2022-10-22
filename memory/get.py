@@ -115,10 +115,10 @@ rwm = FFXMemory()
 process = rwm.get_process_by_name("FFX.exe")
 
 
-def cutsceneID():
+def cutscene_id():
     global baseValue
     key = baseValue + 0xD27C88
     cutscene_alt = process.readBytes(key, 4)
-    storyline_prog = memory.main.getStoryProgress()
-    dialogue = memory.main.diagProgressFlag()
+    storyline_prog = memory.main.get_story_progress()
+    dialogue = memory.main.diag_progress_flag()
     return (cutscene_alt, storyline_prog, dialogue)

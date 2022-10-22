@@ -9,7 +9,7 @@ import reset
 import screen
 import xbox
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
 memory.main.start()
@@ -39,10 +39,10 @@ rngMod19Array = [0] * 200
 rngMod20Array = [0] * 200
 
 while attempts < 20:
-    area.dreamZan.NewGame("BlitzballTesting")
+    area.dreamZan.new_game("BlitzballTesting")
     loadGame.load_save_num(37)
-    memory.main.resetBattleEnd()
-    rngRootArray[attempts] = memory.main.rng02()
+    memory.main.reset_battle_end()
+    rngRootArray[attempts] = memory.main.rng_02()
     offset = 1
     blitzoffWin = False
 
@@ -50,13 +50,13 @@ while attempts < 20:
 
     # ---------This is the actual movement/code/logic/etc---------------
 
-    rolledArray = memory.main.rng02Array()
+    rolledArray = memory.main.rng_02_array()
 
-    area.luca.blitzStart()
-    while not memory.main.blitzClock() in [1, 2]:
+    area.luca.blitz_start()
+    while not memory.main.blitz_clock() in [1, 2]:
         FFXC.set_neutral()
     while not (blitz.select_formation() or blitz.select_movement()):
-        xbox.tapY()
+        xbox.tap_y()
 
     FFXC.set_neutral()
     if blitz.select_movement():
@@ -179,7 +179,7 @@ while attempts < 20:
     if attempts < 20:
         print("Resetting.")
 
-        memory.main.resetBlitzMenuNum()
+        memory.main.reset_blitz_menu_num()
         reset.reset_to_main_menu()
     else:
         print("Final Results:")

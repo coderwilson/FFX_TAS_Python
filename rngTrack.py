@@ -7,7 +7,7 @@ import vars
 # from tracker.data.formations import allFormations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
 
-gameVars = vars.varsHandle()
+gameVars = vars.vars_handle()
 
 
 def area_formations(area: str):
@@ -26,7 +26,7 @@ def coming_battles(
     area: str = "kilika_woods", battleCount: int = 10, extraAdvances: int = 0
 ):
     formations = area_formations(area=area)
-    advances = memory.main.rng01Advances((battleCount * 2) + extraAdvances)
+    advances = memory.main.rng_01_advances((battleCount * 2) + extraAdvances)
     if extraAdvances != 0:
         while extraAdvances != 0:
             del advances[0]
@@ -39,7 +39,7 @@ def coming_battles(
 
 
 def coming_battle_type(extra_advances: int = 0, initiative=False):
-    advances = memory.main.rng01Advances(2 + extra_advances)
+    advances = memory.main.rng_01_advances(2 + extra_advances)
     if extra_advances != 0:
         while extra_advances != 0:
             del advances[0]
@@ -60,7 +60,7 @@ def singles_battles(
     area: str = "kilika_woods", battle_count: int = 10, extra_advances: int = 0
 ):
     formations = area_formations(area=area)
-    advances = memory.main.rng01Advances(battle_count + extra_advances)
+    advances = memory.main.rng_01_advances(battle_count + extra_advances)
     if extra_advances != 0:
         while extra_advances != 0:
             del advances[0]
@@ -111,7 +111,7 @@ def early_battle_count():
     with open("csv\\Seed_Battle_Variance.csv", "r", newline="") as csvFile:
         reader = csv.DictReader(csvFile)
         for row in reader:
-            if int(row["Seed"]) == memory.main.rngSeed():
+            if int(row["Seed"]) == memory.main.rng_seed():
                 return row
 
 
@@ -120,7 +120,7 @@ def track_drops(enemy: str = "ghost", battles: int = 20, extra_advances: int = 0
     oneAdvanceArray = []
     twoAdvanceArray = []
     advances = (battles + 1) * 3
-    randArray = memory.main.rng10Array(arrayLen=advances + extra_advances)
+    randArray = memory.main.rng_10_array(array_len=advances + extra_advances)
     if extra_advances != 0:
         while extra_advances != 0:
             del randArray[0]
@@ -165,7 +165,7 @@ def item_to_be_dropped(
         partyChars = [0]
 
     advance12 = 4 + pre_advance_12
-    testArray12 = memory.main.rng12Array(advance12)
+    testArray12 = memory.main.rng_12_array(advance12)
     del testArray12[0]
     if pre_advance_12 >= 1:
         while pre_advance_12 >= 1:
@@ -204,8 +204,8 @@ def item_to_be_dropped(
     if testMode:
         print("New Abilities: ", abilityList)
 
-    finalItem = memory.main.Equipment(equipNum=0)
-    finalItem.createCustom(
+    finalItem = memory.main.Equipment(equip_num=0)
+    finalItem.create_custom(
         eType=equipType,
         eOwner1=user1,
         eOwner2=user2,
@@ -231,7 +231,7 @@ def ability_to_be_dropped(
     #    print("fs: ", filledSlots)
 
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
-    testArray = memory.main.rng13Array(arrayLen=50 + advances)
+    testArray = memory.main.rng_13_array(array_len=50 + advances)
     # if testMode:
     #    print("ta: ", testArray)
 
@@ -344,7 +344,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
         advance10 = 9  # Starts off with two advances for pirhanas and one for Tros
     if report:
         logs.open_rng_track()
-        logs.write_rng_track(memory.main.rng10Array(arrayLen=80))
+        logs.write_rng_track(memory.main.rng_10_array(array_len=80))
         logs.write_rng_track("#########################")
     advance12 = [0, 0, 0]  # Tros drops one item
     advance13 = [0, 0, 0]  # Tros item has no abilities
@@ -977,7 +977,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
     logs.write_rng_track("Kilika battles:")
     import area.kilika as kilika
 
-    bestBattle = kilika.selectBestOfTwo(kilikaBattles)
+    bestBattle = kilika.select_best_of_two(kilikaBattles)
     ragoraKills = [0, 0, 0]
     if "ragora" in bestBattle:
         for i in range(len(bestBattle)):
@@ -1450,8 +1450,8 @@ def decide_skip_zan_luck() -> bool:
     # False == there will be a miss. True == no miss.
     extraXP = 0  # where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
     bahamutLuck = 17
-    keeperCrit = memory.main.futureAttackWillCrit(
-        character=7, charLuck=bahamutLuck, enemyLuck=20, attackIndex=extraXP
+    keeperCrit = memory.main.future_attack_will_crit(
+        character=7, char_luck=bahamutLuck, enemy_luck=20, attack_index=extraXP
     )
     arm1Crit = False
     arm2Crit = False
@@ -1476,16 +1476,16 @@ def decide_skip_zan_luck() -> bool:
     if gameVars.nemesis():  # BFA miss does not factor in for Nemesis route.
         return True
 
-    arm1Crit = memory.main.futureAttackWillCrit(
-        character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount
+    arm1Crit = memory.main.future_attack_will_crit(
+        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attackCount
     )
     if arm1Crit:
         print("### Expecting crit on Arm 1")
         attackCount += 1
     else:
         attackCount += 2
-    arm2Crit = memory.main.futureAttackWillCrit(
-        character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount
+    arm2Crit = memory.main.future_attack_will_crit(
+        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attackCount
     )
     if arm2Crit:
         print("### Expecting crit on Arm 2")
@@ -1493,12 +1493,15 @@ def decide_skip_zan_luck() -> bool:
     else:
         attackCount += 2
     attackCount += 1  # Core is always one attack
-    faceCrit = memory.main.futureAttackWillCrit(
-        character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount
+    faceCrit = memory.main.future_attack_will_crit(
+        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attackCount
     )
     if not faceCrit:
-        faceCrit = memory.main.futureAttackWillCrit(
-            character=7, charLuck=bahamutLuck, enemyLuck=15, attackIndex=attackCount + 1
+        faceCrit = memory.main.future_attack_will_crit(
+            character=7,
+            char_luck=bahamutLuck,
+            enemy_luck=15,
+            attack_index=attackCount + 1,
         )
     if faceCrit:
         print("### Expecting crit on Face")
@@ -1584,9 +1587,9 @@ def zombie_track(report=False):
 
     import area.zanarkand as zanarkand
 
-    zanarkand.decideNEA(bonusAdvance=1)
+    zanarkand.decide_nea(bonus_advance=1)
     # One death expected to recharge Rikku. No drops expected.
-    if gameVars.getNEAzone() in [1, 2]:
+    if gameVars.get_nea_zone() in [1, 2]:
         advance10 += 3
         advance01 += 1
 
@@ -1702,7 +1705,7 @@ def nea_track():
 
     # If already aligned for NEA, we want X to drop nothing.
     nextItem, preAdvance13 = item_to_be_dropped(enemy="ghost")
-    if nextItem.equipmentType() == 1 and nextItem.hasAbility(0x801D):
+    if nextItem.equipment_type() == 1 and nextItem.has_ability(0x801D):
         # print("/// Already aligned")
         totalAdvancePostX = 0
     # else:
@@ -1721,7 +1724,7 @@ def nea_track():
         # if 32797 in nextItem.abilities():
         #    print("BBBBBBBBBBBBBBBB")
         #    memory.main.waitFrames(300)
-        if nextItem.equipmentType() == 1 and 0x801D in nextItem.abilities():
+        if nextItem.equipment_type() == 1 and 0x801D in nextItem.abilities():
             if totalAdvancePostX == 999:
                 totalAdvancePostX = int(preAdvance12 / 4)
             if totalAdvancePreX == 999:
@@ -1737,9 +1740,9 @@ def print_manip_info():
     print("Next, before X:", preX, "| Next, after X: ", postX)
     print(
         "RNG10:",
-        memory.main.nextChanceRNG10(),
+        memory.main.next_chance_rng_10(),
         "| Pre Defender X: ",
-        memory.main.nextChanceRNG10Calm(),
+        memory.main.next_chance_rng_10_calm(),
     )
     print("--------------------------")
 
@@ -1747,7 +1750,8 @@ def print_manip_info():
 def next_action_escape(character: int = 0):
     index = 20 + character
     escapeRoll = (
-        memory.main.s32(memory.main.rngArrayFromIndex(index=index, arrayLen=1)[1]) & 255
+        memory.main.s32(memory.main.rng_array_from_index(index=index, array_len=1)[1])
+        & 255
     )
     return escapeRoll < 191
 
@@ -1762,8 +1766,8 @@ def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: in
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
     index = 36 + character
-    luck = memory.main.charLuck(character)
-    accuracy = memory.main.charAccuracy(character)
+    luck = memory.main.char_luck(character)
+    accuracy = memory.main.char_accuracy(character)
 
     if enemy == "bfa":
         target_luck = 15
@@ -1788,7 +1792,7 @@ def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: in
     base_hit_chance = hit_chance_table(hit_chance_index)
 
     hit_rng = (
-        memory.main.rngArrayFromIndex(index=index, arrayLen=attack_index + 3)[
+        memory.main.rng_array_from_index(index=index, array_len=attack_index + 3)[
             attack_index + 1
         ]
         % 101
@@ -1835,9 +1839,9 @@ def record_blitz_results_tyton(duration, test_mode=False):
         sub_key = "9999"
         victory = False
     else:
-        seed = str(memory.main.rngSeed())
-        sub_key = str(gameVars.oblitzRNGCheck())
-        victory = gameVars.getBlitzWin()
+        seed = str(memory.main.rng_seed())
+        sub_key = str(gameVars.oblitz_rng_check())
+        victory = gameVars.get_blitz_win()
     if seed in records.keys():
         if sub_key in records[seed].keys():
             if records[seed][sub_key]["victory"] and not victory:
@@ -1870,48 +1874,51 @@ def record_blitz_results(duration, test_mode=False):
             records.update(newVal)
     else:
         newVal = {
-            memory.main.rngSeed(): {
-                gameVars.oblitzRNGCheck(): {
+            memory.main.rng_seed(): {
+                gameVars.oblitz_rng_check(): {
                     "duration": duration,
-                    "victory": gameVars.getBlitzWin(),
+                    "victory": gameVars.get_blitz_win(),
                 }
             }
         }
-        if str(memory.main.rngSeed()) in records.keys():
-            if gameVars.oblitzRNGCheck() in records[str(memory.main.rngSeed())].keys():
+        if str(memory.main.rng_seed()) in records.keys():
+            if (
+                gameVars.oblitz_rng_check()
+                in records[str(memory.main.rng_seed())].keys()
+            ):
                 if (
-                    not gameVars.getBlitzWin()
-                    and records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()][
-                        "victory"
-                    ]
+                    not gameVars.get_blitz_win()
+                    and records[str(memory.main.rng_seed())][
+                        gameVars.oblitz_rng_check()
+                    ]["victory"]
                 ):
-                    records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()][
+                    records[str(memory.main.rng_seed())][gameVars.oblitz_rng_check()][
                         "victory"
-                    ] = gameVars.getBlitzWin()
-                    records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()][
+                    ] = gameVars.get_blitz_win()
+                    records[str(memory.main.rng_seed())][gameVars.oblitz_rng_check()][
                         "duration"
                     ] = duration
                 elif (
-                    gameVars.getBlitzWin()
-                    == records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()][
-                        "victory"
-                    ]
+                    gameVars.get_blitz_win()
+                    == records[str(memory.main.rng_seed())][
+                        gameVars.oblitz_rng_check()
+                    ]["victory"]
                 ):
                     if (
                         duration
-                        > records[str(memory.main.rngSeed())][
-                            gameVars.oblitzRNGCheck()
+                        > records[str(memory.main.rng_seed())][
+                            gameVars.oblitz_rng_check()
                         ]["duration"]
                     ):
-                        records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()][
-                            "victory"
-                        ] = gameVars.getBlitzWin()
-                        records[str(memory.main.rngSeed())][gameVars.oblitzRNGCheck()][
-                            "duration"
-                        ] = duration
+                        records[str(memory.main.rng_seed())][
+                            gameVars.oblitz_rng_check()
+                        ]["victory"] = gameVars.get_blitz_win()
+                        records[str(memory.main.rng_seed())][
+                            gameVars.oblitz_rng_check()
+                        ]["duration"] = duration
             else:
-                records[str(memory.main.rngSeed())].update(
-                    newVal[memory.main.rngSeed()]
+                records[str(memory.main.rng_seed())].update(
+                    newVal[memory.main.rng_seed()]
                 )
         else:
             records.update(newVal)

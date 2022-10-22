@@ -4,6 +4,6 @@ memory.main.start()
 
 print("-----------")
 print("-----------")
-memory.main.advanceRNG13()
+memory.main.advance_rng_13()
 print("-----------")
 print("-----------")

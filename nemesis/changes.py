@@ -5,59 +5,61 @@ import nemesis.targetPath
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+gameVars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
 # The following functions replace the default ones from the regular Bahamut run.
 
 
-def arenaNPC():
-    memory.main.awaitControl()
-    if memory.main.getMap() != 307:
+def arena_npc():
+    memory.main.await_control()
+    if memory.main.get_map() != 307:
         return
-    while not (memory.main.diagProgressFlag() == 74 and memory.main.diagSkipPossible()):
-        if memory.main.userControl():
-            if memory.main.getCoords()[1] > -12:
+    while not (
+        memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
+    ):
+        if memory.main.user_control():
+            if memory.main.get_coords()[1] > -12:
                 FFXC.set_movement(0, -1)
-                memory.main.waitFrames(1)
+                memory.main.wait_frames(1)
             else:
-                nemesis.targetPath.setMovement([2, -15])
-                xbox.tapB()
+                nemesis.targetPath.set_movement([2, -15])
+                xbox.tap_b()
         else:
             FFXC.set_neutral()
-            if memory.main.diagProgressFlag() == 59:
-                xbox.menuA()
-                xbox.menuA()
-                xbox.menuA()
-                xbox.menuA()
-                xbox.tapB()
-            elif memory.main.diagSkipPossible():
-                xbox.tapB()
-    memory.main.waitFrames(3)
+            if memory.main.diag_progress_flag() == 59:
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
+    memory.main.wait_frames(3)
 
 
-def nextRace():
+def next_race():
     FFXC.set_neutral()
-    memory.main.clickToDiagProgress(28)
-    memory.main.waitFrames(9)
-    xbox.tapB()
+    memory.main.click_to_diag_progress(28)
+    memory.main.wait_frames(9)
+    xbox.tap_b()
 
 
-def calmLands():
+def calm_lands():
     # Start chocobo races
     # memory.setGameSpeed(2)
-    calmLands_1()
+    calm_lands_1()
 
     FFXC.set_neutral()
-    memory.main.clickToDiagProgress(28)
-    memory.main.waitFrames(9)
-    xbox.tapB()
+    memory.main.click_to_diag_progress(28)
+    memory.main.wait_frames(9)
+    xbox.tap_b()
     # memory.setGameSpeed(0)
     wobblyComplete = False
     while not wobblyComplete:
-        wobblyComplete = chocoTame1()
+        wobblyComplete = choco_tame_1()
 
     print("Wobbly Chocobo complete")
     # nextRace()
@@ -80,31 +82,31 @@ def calmLands():
 
     print("Catcher Chocobo complete")
 
-    toRemiem()
+    to_remiem()
 
 
-def calmLands_1():
+def calm_lands_1():
     # Enter the cutscene that starts Calm Lands
-    memory.main.fullPartyFormat("yuna", fullMenuClose=True)
-    while not (memory.main.getCoords()[1] >= -1650 and memory.main.userControl()):
-        if memory.main.userControl():
+    memory.main.full_party_format("yuna", full_menu_close=True)
+    while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
+        if memory.main.user_control():
             FFXC.set_movement(0, 1)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
 
     # Now head to the chocobo lady.
     # memory.setEncounterRate(0) #Testing only
     checkpoint = 0
-    while memory.main.getMap() != 307:
-        if memory.main.userControl():
+    while memory.main.get_map() != 307:
+        if memory.main.user_control():
             # if checkpoint == 10:
             #     if area.gagazet.checkGems() < 2:
             #         checkpoint -= 2
             if (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.calmLands1(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.calm_lands_1(checkpoint)
                 )
                 == True
             ):
@@ -112,14 +114,14 @@ def calmLands_1():
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if area.gagazet.checkGems() < 2:
-                    battle.main.calmLandsGems()
+            if memory.main.battle_active():
+                if area.gagazet.check_gems() < 2:
+                    battle.main.calm_lands_gems()
                 else:
-                    battle.main.calmLandsManip()
-                memory.main.fullPartyFormat("yuna")
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle.main.calm_lands_manip()
+                memory.main.full_party_format("yuna")
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
     print("Now talk to NPC")
     # arenaNPC()
@@ -128,12 +130,12 @@ def calmLands_1():
     # xbox.tapB() #I want to ride a chocobo.
 
 
-def chocoTame1():
-    memory.main.clickToDiagProgress(43)
-    while not memory.main.diagProgressFlag() in [44, 74]:
-        angle = memory.main.getActorAngle(0)
+def choco_tame_1():
+    memory.main.click_to_diag_progress(43)
+    while not memory.main.diag_progress_flag() in [44, 74]:
+        angle = memory.main.get_actor_angle(0)
         # print("Angle: ", retVal)
-        position = memory.main.getActorCoords(0)
+        position = memory.main.get_actor_coords(0)
         # print("Position: ", position)
         if position[0] < -110:  # Need to move right
             if angle > 1.4:
@@ -158,194 +160,194 @@ def chocoTame1():
                 FFXC.set_value("Dpad", 0)
     FFXC.set_neutral()
 
-    while not memory.main.diagProgressFlag() in [51, 69, 74]:
+    while not memory.main.diag_progress_flag() in [51, 69, 74]:
         # 51 is success
-        xbox.tapB()
-    if memory.main.diagProgressFlag() == 51:  # Success
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapDown()  # Up for next race, down for quit
-        xbox.tapB()
+        xbox.tap_b()
+    if memory.main.diag_progress_flag() == 51:  # Success
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_down()  # Up for next race, down for quit
+        xbox.tap_b()
         # memory.waitFrames(20)
-        xbox.tapUp()
-        xbox.tapB()
+        xbox.tap_up()
+        xbox.tap_b()
         return True
     else:
-        memory.main.clickToDiagProgress(76)
-        memory.main.waitFrames(12)
-        xbox.tapB()
+        memory.main.click_to_diag_progress(76)
+        memory.main.wait_frames(12)
+        xbox.tap_b()
         return False
 
 
-def chocoTame2():
-    memory.main.clickToDiagProgress(43)
+def choco_tame_2():
+    memory.main.click_to_diag_progress(43)
     checkpoint = 0
-    while not memory.main.diagProgressFlag() in [44, 74]:
-        angle = memory.main.getActorAngle(0)
-        position = memory.main.getActorCoords(0)
+    while not memory.main.diag_progress_flag() in [44, 74]:
+        angle = memory.main.get_actor_angle(0)
+        position = memory.main.get_actor_coords(0)
 
         if (
             position[1] > -1360 and checkpoint == 0
         ):  # Start off aiming right to manip balls
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
-            memory.main.waitFrames(5)
+            memory.main.wait_frames(5)
             FFXC.set_value("Dpad", 0)
         if position[1] > -1200 and checkpoint == 1:  # Slight left
             checkpoint += 1
             FFXC.set_value("Dpad", 4)  # Left
-            memory.main.waitFrames(11)
+            memory.main.wait_frames(11)
             FFXC.set_value("Dpad", 0)
         if position[1] > -1000 and checkpoint == 2:  # Straighten out
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
-            memory.main.waitFrames(7)
+            memory.main.wait_frames(7)
             FFXC.set_value("Dpad", 0)
         if position[1] > -800 and checkpoint == 3:  # Juke right
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
-            memory.main.waitFrames(5)
+            memory.main.wait_frames(5)
             FFXC.set_value("Dpad", 0)
         if position[1] > -650 and checkpoint == 4:  # Back to the left
             checkpoint += 1
             FFXC.set_value("Dpad", 4)  # Left
-            memory.main.waitFrames(11)
+            memory.main.wait_frames(11)
             FFXC.set_value("Dpad", 0)
         if position[1] > -550 and checkpoint == 5:  # Straighten out
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
-            memory.main.waitFrames(6)
+            memory.main.wait_frames(6)
             FFXC.set_value("Dpad", 0)
         if position[1] > -450 and checkpoint == 6:  # Juke right again
             checkpoint += 1
             FFXC.set_value("Dpad", 8)
-            memory.main.waitFrames(6)
+            memory.main.wait_frames(6)
             FFXC.set_value("Dpad", 0)
         if position[1] > -250 and checkpoint == 7:  # Straighten out
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(14)
+            memory.main.wait_frames(14)
             FFXC.set_value("Dpad", 0)
         if position[1] > -90 and checkpoint == 8:  # The final juke!
             checkpoint += 1
             FFXC.set_value("Dpad", 8)
-            memory.main.waitFrames(13)
+            memory.main.wait_frames(13)
             FFXC.set_value("Dpad", 0)
     FFXC.set_neutral()
 
-    while not memory.main.diagProgressFlag() in [54, 69, 77]:
+    while not memory.main.diag_progress_flag() in [54, 69, 77]:
         # 54 is success
-        xbox.tapB()
-    if memory.main.diagProgressFlag() == 54:  # Success
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapUp()
-        xbox.tapB()
-        memory.main.waitFrames(30)
-        xbox.tapUp()
-        xbox.tapB()
+        xbox.tap_b()
+    if memory.main.diag_progress_flag() == 54:  # Success
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_up()
+        xbox.tap_b()
+        memory.main.wait_frames(30)
+        xbox.tap_up()
+        xbox.tap_b()
         return True
     else:
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapB()
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_b()
         return False
 
 
-def chocoTame3():
-    memory.main.clickToDiagProgress(43)
+def choco_tame_3():
+    memory.main.click_to_diag_progress(43)
     checkpoint = 0
-    while not memory.main.diagProgressFlag() in [44, 74]:
-        position = memory.main.getActorCoords(0)
+    while not memory.main.diag_progress_flag() in [44, 74]:
+        position = memory.main.get_actor_coords(0)
         if position[1] > -1370 and checkpoint == 0:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)  # Left
-            memory.main.waitFrames(3)
+            memory.main.wait_frames(3)
             FFXC.set_value("Dpad", 0)
         if position[1] > -1200 and checkpoint == 1:
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
-            memory.main.waitFrames(10)
+            memory.main.wait_frames(10)
             FFXC.set_value("Dpad", 0)
         if position[1] > -1100 and checkpoint == 2:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(12)
+            memory.main.wait_frames(12)
             FFXC.set_value("Dpad", 0)
         if position[1] > -1040 and checkpoint == 3:
             checkpoint += 1
             FFXC.set_value("Dpad", 8)
-            memory.main.waitFrames(9)
+            memory.main.wait_frames(9)
             FFXC.set_value("Dpad", 0)
         if position[1] > -950 and checkpoint == 4:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(12)
+            memory.main.wait_frames(12)
             FFXC.set_value("Dpad", 0)
         if position[1] > -700 and checkpoint == 5:
             checkpoint += 1
             FFXC.set_value("Dpad", 8)
-            memory.main.waitFrames(12)
+            memory.main.wait_frames(12)
             FFXC.set_value("Dpad", 0)
         if position[1] > -600 and checkpoint == 6:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(12)
+            memory.main.wait_frames(12)
             FFXC.set_value("Dpad", 0)
         if position[1] > -500 and checkpoint == 7:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(6)
+            memory.main.wait_frames(6)
             FFXC.set_value("Dpad", 0)
         if position[1] > -400 and checkpoint == 8:
             checkpoint += 1
             FFXC.set_value("Dpad", 8)
-            memory.main.waitFrames(16)
+            memory.main.wait_frames(16)
             FFXC.set_value("Dpad", 0)
         if position[1] > -250 and checkpoint == 9:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(16)
+            memory.main.wait_frames(16)
             FFXC.set_value("Dpad", 0)
         # Still dialing in on this one.
         if position[1] > -120 and checkpoint == 10:
             checkpoint += 1
             FFXC.set_value("Dpad", 8)
-            memory.main.waitFrames(16)
+            memory.main.wait_frames(16)
             FFXC.set_value("Dpad", 0)
         if position[1] > -20 and checkpoint == 11:
             checkpoint += 1
             FFXC.set_value("Dpad", 4)
-            memory.main.waitFrames(10)
+            memory.main.wait_frames(10)
             FFXC.set_value("Dpad", 0)
     FFXC.set_neutral()
 
-    while not memory.main.diagProgressFlag() in [56, 69, 77]:
+    while not memory.main.diag_progress_flag() in [56, 69, 77]:
         # 56 is success
-        xbox.tapB()
-    if memory.main.diagProgressFlag() == 56:  # Success
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapDown()  # Up for something else, down for done.
-        xbox.tapB()
-        memory.main.waitFrames(30)
+        xbox.tap_b()
+    if memory.main.diag_progress_flag() == 56:  # Success
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_down()  # Up for something else, down for done.
+        xbox.tap_b()
+        memory.main.wait_frames(30)
         # xbox.tapUp()
         # xbox.tapB()
         return True
     else:
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapB()
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_b()
         return False
 
 
-def chocoTame4():
+def choco_tame_4():
     print("START - CATCHER CHOCOBO")
-    memory.main.clickToDiagProgress(43)
+    memory.main.click_to_diag_progress(43)
     checkpoint = 0
-    while not memory.main.diagProgressFlag() in [44, 67]:
-        angle = memory.main.getActorAngle(0)
-        position = memory.main.getActorCoords(0)
+    while not memory.main.diag_progress_flag() in [44, 67]:
+        angle = memory.main.get_actor_angle(0)
+        position = memory.main.get_actor_coords(0)
         print("User control")
         """
         if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
@@ -383,60 +385,62 @@ def chocoTame4():
     print("Race complete.")
     FFXC.set_neutral()
 
-    while not memory.main.diagProgressFlag() in [67, 77]:
+    while not memory.main.diag_progress_flag() in [67, 77]:
         # 67 is 0:00.0 run
-        xbox.tapB()
-    if memory.main.diagProgressFlag() == 67:  # Success
+        xbox.tap_b()
+    if memory.main.diag_progress_flag() == 67:  # Success
         print("Great run! Perfect score!")
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapDown()
-        xbox.tapB()
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_down()
+        xbox.tap_b()
         return True
     else:
-        memory.main.clickToDiagProgress(77)
-        memory.main.waitFrames(12)
-        xbox.tapB()
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_b()
         return False
 
 
-def toRemiem():
-    memory.main.clickToControl()
-    while memory.main.userControl():
-        nemesis.targetPath.setMovement([-1565, 434])
-        xbox.tapB()
+def to_remiem():
+    memory.main.click_to_control()
+    while memory.main.user_control():
+        nemesis.targetPath.set_movement([-1565, 434])
+        xbox.tap_b()
         print("Near chocobo lady")
     FFXC.set_neutral()
-    memory.main.clickToControl3()
+    memory.main.click_to_control_3()
 
     checkpoint = 0
     while checkpoint < 35:
-        if memory.main.userControl():
-            if memory.main.getMap() == 290 and checkpoint < 13:
+        if memory.main.user_control():
+            if memory.main.get_map() == 290 and checkpoint < 13:
                 checkpoint = 13
 
             elif checkpoint == 10:
                 print("Feather")
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 27:
                 print("Orb thing")
-                while memory.main.userControl():
-                    nemesis.targetPath.setMovement([770, 631])
-                    xbox.tapB()
-                memory.main.clickToControl3()
+                while memory.main.user_control():
+                    nemesis.targetPath.set_movement([770, 631])
+                    xbox.tap_b()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.toRemiem(checkpoint))
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.to_remiem(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
 
 
-def remiemRaces():
+def remiem_races():
     print("Ready to start races")
-    chocoRace1()
+    choco_race_1()
     print("Celestial Weapon obtained.")
     # chocoRace2()
     # print("Obtained")
@@ -445,94 +449,94 @@ def remiemRaces():
     print("Now heading back to the monster arena.")
 
 
-def chocoRace1():
-    while memory.main.userControl():
-        nemesis.targetPath.setMovement([790, 60])
-        xbox.tapB()
+def choco_race_1():
+    while memory.main.user_control():
+        nemesis.targetPath.set_movement([790, 60])
+        xbox.tap_b()
     FFXC.set_neutral()
-    memory.main.clickToControl()
+    memory.main.click_to_control()
     checkpoint = 0
     while checkpoint != 37:
-        if memory.main.userControl():
+        if memory.main.user_control():
             if (
-                nemesis.targetPath.setMovement(nemesis.targetPath.race1(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.race_1(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battle.main.fleeAll()
+            if memory.main.battle_active():
+                battle.main.flee_all()
             else:
-                xbox.tapB()
+                xbox.tap_b()
     FFXC.set_movement(-1, 1)
-    memory.main.waitFrames(10)
+    memory.main.wait_frames(10)
     FFXC.set_neutral()
-    memory.main.clickToControl3()
+    memory.main.click_to_control_3()
 
 
-def chocoRace2():
+def choco_race_2():
     FFXC.set_neutral()
-    memory.main.clickToControl()
-    while memory.main.userControl():
-        nemesis.targetPath.setMovement([790, 60])
-        xbox.tapB()
+    memory.main.click_to_control()
+    while memory.main.user_control():
+        nemesis.targetPath.set_movement([790, 60])
+        xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0
     while checkpoint != 38:
-        if memory.main.userControl():
+        if memory.main.user_control():
             if checkpoint == 11:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             if checkpoint == 17:
-                memory.main.clickToEventTemple(5)
+                memory.main.click_to_event_temple(5)
                 checkpoint += 1
             if checkpoint == 22:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             if (
-                nemesis.targetPath.setMovement(nemesis.targetPath.race2(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.race_2(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battle.main.fleeAll()
+            if memory.main.battle_active():
+                battle.main.flee_all()
             else:
-                xbox.tapB()
+                xbox.tap_b()
     FFXC.set_movement(-1, 1)
-    memory.main.waitFrames(10)
+    memory.main.wait_frames(10)
     FFXC.set_neutral()
-    memory.main.clickToControl3()
+    memory.main.click_to_control_3()
 
 
-def chocoRace3():
+def choco_race_3():
     FFXC.set_neutral()
-    memory.main.clickToControl()
-    while memory.main.userControl():
-        nemesis.targetPath.setMovement([790, 60])
-        xbox.tapB()
+    memory.main.click_to_control()
+    while memory.main.user_control():
+        nemesis.targetPath.set_movement([790, 60])
+        xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0
     while checkpoint != 44:
-        if memory.main.userControl():
+        if memory.main.user_control():
             if checkpoint == 11:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             if checkpoint == 17:
-                memory.main.clickToEventTemple(5)
+                memory.main.click_to_event_temple(5)
                 checkpoint += 1
             if checkpoint == 22:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             if checkpoint == 27:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             if checkpoint == 39:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             # if checkpoint == 42: #Since it's not tight enough movement yet
             #     FFXC.set_neutral()
@@ -540,50 +544,50 @@ def chocoRace3():
             #     memory.clickToControl3()
             #     break
             if (
-                nemesis.targetPath.setMovement(nemesis.targetPath.race3(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.race_3(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battle.main.fleeAll()
+            if memory.main.battle_active():
+                battle.main.flee_all()
             else:
-                xbox.tapB()
+                xbox.tap_b()
     FFXC.set_movement(-1, 1)
-    memory.main.waitFrames(60)
+    memory.main.wait_frames(60)
     FFXC.set_neutral()
-    memory.main.clickToControl3()
+    memory.main.click_to_control_3()
 
 
-def templeToArena():
-    memory.main.clickToControl3()
+def temple_to_arena():
+    memory.main.click_to_control_3()
     checkpoint = 0
-    while memory.main.getMap() != 307:
-        if memory.main.userControl():
-            if memory.main.getMap() == 223 and checkpoint < 18:
+    while memory.main.get_map() != 307:
+        if memory.main.user_control():
+            if memory.main.get_map() == 223 and checkpoint < 18:
                 checkpoint = 18
 
             elif checkpoint == 20:
-                while memory.main.userControl():
-                    nemesis.targetPath.setMovement([1261, -1238])
-                    xbox.tapB()
+                while memory.main.user_control():
+                    nemesis.targetPath.set_movement([1261, -1238])
+                    xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.clickToControl()
+                memory.main.click_to_control()
                 checkpoint += 1
 
             elif checkpoint == 24:
                 print("Feather")
-                while memory.main.userControl():
-                    nemesis.targetPath.setMovement([1101, -940])
-                    xbox.tapB()
+                while memory.main.user_control():
+                    nemesis.targetPath.set_movement([1101, -940])
+                    xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.awaitControl()
+                memory.main.await_control()
                 checkpoint += 1
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.leaveRemiem(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.leave_remiem(checkpoint)
                 )
                 == True
             ):
@@ -591,23 +595,23 @@ def templeToArena():
                 print("Checkpoint reached: ", checkpoint)
 
 
-def arenaPurchase():
-    memory.main.clickToControl()
+def arena_purchase():
+    memory.main.click_to_control()
 
     print("Straight forward to the guy")
     FFXC.set_movement(0, 1)
-    memory.main.clickToEvent()
+    memory.main.click_to_event()
     FFXC.set_neutral()
     print("Now for dialog")
-    memory.main.clickToDiagProgress(65)
+    memory.main.click_to_diag_progress(65)
     print("Select Sure")
-    memory.main.waitFrames(15)
-    xbox.tapDown()
-    xbox.tapB()
-    memory.main.clickToDiagProgress(73)
-    memory.main.waitFrames(15)
+    memory.main.wait_frames(15)
+    xbox.tap_down()
+    xbox.tap_b()
+    memory.main.click_to_diag_progress(73)
+    memory.main.wait_frames(15)
     # xbox.tapUp()
-    xbox.tapB()  # Let's see your weapons
+    xbox.tap_b()  # Let's see your weapons
     # memory.waitFrames(9000)
     nemesis.menu.arenaPurchase1()
     # Sell all undesirable equipment
@@ -616,21 +620,21 @@ def arenaPurchase():
     # -Yuna x1
 
     # ---Done buying.
-    memory.main.awaitControl()
-    memory.main.waitFrames(2)
+    memory.main.await_control()
+    memory.main.wait_frames(2)
     FFXC.set_movement(0, -1)
-    memory.main.awaitEvent()  # Exit the arena map
+    memory.main.await_event()  # Exit the arena map
     FFXC.set_neutral()
-    memory.main.awaitControl()
+    memory.main.await_control()
 
     checkpoint = 0
-    while memory.main.getMap() != 279:
-        if memory.main.userControl():
-            if checkpoint == 7 and area.gagazet.checkGems() < 2:
+    while memory.main.get_map() != 279:
+        if memory.main.user_control():
+            if checkpoint == 7 and area.gagazet.check_gems() < 2:
                 checkpoint -= 2
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.calmLands2(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.calm_lands_2(checkpoint)
                 )
                 == True
             ):
@@ -638,26 +642,26 @@ def arenaPurchase():
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if area.gagazet.checkGems() < 2:
-                    battle.main.calmLandsGems()
+            if memory.main.battle_active():
+                if area.gagazet.check_gems() < 2:
+                    battle.main.calm_lands_gems()
                 else:
-                    battle.main.calmLandsManip()
-                memory.main.fullPartyFormat("yuna")
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle.main.calm_lands_manip()
+                memory.main.full_party_format("yuna")
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def arenaPurchaseWithChocobo():
-    while memory.main.userControl():  # Back onto chocobo
-        nemesis.targetPath.setMovement([1347, -69])
-        xbox.tapB()
+def arena_purchase_with_chocobo():
+    while memory.main.user_control():  # Back onto chocobo
+        nemesis.targetPath.set_movement([1347, -69])
+        xbox.tap_b()
 
-    while not nemesis.targetPath.setMovement([1488, 778]):
+    while not nemesis.targetPath.set_movement([1488, 778]):
         pass
-    while not nemesis.targetPath.setMovement([1545, 1088]):
+    while not nemesis.targetPath.set_movement([1545, 1088]):
         pass
-    while not memory.main.getMap() == 279:
-        nemesis.targetPath.setMovement([1700, 1200])
+    while not memory.main.get_map() == 279:
+        nemesis.targetPath.set_movement([1700, 1200])
 
-    memory.main.fullPartyFormat("kimahri")
+    memory.main.full_party_format("kimahri")

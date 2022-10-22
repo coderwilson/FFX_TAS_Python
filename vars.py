@@ -80,227 +80,227 @@ class AllVars:
     def blitz_loss_reset(self):
         return self.blitzLossForceReset
 
-    def useSetSeed(self):
+    def use_set_seed(self):
         return self.setSeed
 
-    def printArenaStatus(self):
+    def print_arena_status(self):
         print("##############################################")
         print("Area:", self.areaResults)
         print("Species:", self.speciesResults)
         print("Original:", self.originalResults)
         print("##############################################")
 
-    def arenaSuccess(self, arrayNum, index):
-        print(arrayNum, "|", index)
-        if arrayNum == 0:
+    def arena_success(self, array_num, index):
+        print(array_num, "|", index)
+        if array_num == 0:
             self.areaResults[index] = 1
-        if arrayNum == 1:
+        if array_num == 1:
             self.speciesResults[index] = 1
-        if arrayNum == 2:
+        if array_num == 2:
             self.originalResults[index] = 1
-        self.printArenaStatus()
+        self.print_arena_status()
 
-    def yuYevonSwag(self):
+    def yu_yevon_swag(self):
         return self.perfectAeonKills
 
-    def skipKilikaLuck(self):
+    def skip_kilika_luck(self):
         return self.kilikaSkip
 
-    def dontSkipKilikaLuck(self):
+    def dont_skip_kilika_luck(self):
         self.kilikaSkip = False
 
-    def loopBlitz(self):
+    def loop_blitz(self):
         return self.blitzLoop
 
-    def loopSeeds(self):
+    def loop_seeds(self):
         return self.forceLoop
 
-    def confirmedSeed(self):
+    def confirmed_seed(self):
         return self.confirmedSeedNum
 
-    def setConfirmedSeed(self, value):
+    def set_confirmed_seed(self, value):
         self.confirmedSeedNum = value
 
-    def setNewGame(self):
+    def set_new_game(self):
         self.newGame = True
 
-    def newGameCheck(self):
+    def new_game_check(self):
         return self.newGame
 
-    def setOblitzRNG(self, value):
+    def set_oblitz_rng(self, value):
         self.oblitzAttackVal = str(value)
 
-    def oblitzRNGCheck(self):
+    def oblitz_rng_check(self):
         return self.oblitzAttackVal
 
-    def getYellows(self):
+    def get_yellows(self):
         return self.yellows
 
-    def setYellows(self, newVals):
-        self.yellows = newVals
+    def set_yellows(self, new_vals):
+        self.yellows = new_vals
 
-    def yojimboGetIndex(self):
+    def yojimbo_get_index(self):
         return self.yojimboIndex
 
-    def yojimboIncrementIndex(self):
+    def yojimbo_increment_index(self):
         self.yojimboIndex += 1
 
     def nemesis(self):
         return self.nemesisValue
 
-    def getNEAzone(self):
+    def get_nea_zone(self):
         return self.neaZone
 
-    def setNEAzone(self, value):
+    def set_nea_zone(self, value):
         self.neaZone = value
 
-    def nemCheckpointAP(self):
+    def nem_checkpoint_ap(self):
         return self.nemAPVal
 
-    def setNemCheckpointAP(self, value):
+    def set_nem_checkpoint_ap(self, value):
         self.nemAPVal = value
 
-    def neExtraBattles(self):
+    def ne_extra_battles(self):
         return self.neBattles
 
-    def neBattlesIncrement(self):
+    def ne_battles_increment(self):
         self.neBattles += 1
 
-    def neArmor(self):
+    def ne_armor(self):
         return self.neArmorVal
 
-    def setneArmor(self, value):
+    def set_ne_armor(self, value):
         self.neArmorVal = value
 
-    def tryForNE(self):
+    def try_for_ne(self):
         return self.tryNEVal
 
-    def firstHitsSet(self, values):
+    def first_hits_set(self, values):
         for x in range(8):
             self.firstHits[x] = values[x]
 
-    def firstHitsValue(self, index):
+    def first_hits_value(self, index):
         return self.firstHits[index]
 
-    def printFirstHits(self):
+    def print_first_hits(self):
         print(self.firstHits)
 
-    def gameSavePath(self):
+    def game_save_path(self):
         return self.savePath
 
-    def blitzFirstShot(self):
+    def blitz_first_shot(self):
         return self.blitzFirstShotVal
 
-    def blitzFirstShotTaken(self):
+    def blitz_first_shot_taken(self):
         self.blitzFirstShotVal = True
 
-    def blitzFirstShotReset(self):
+    def blitz_first_shot_reset(self):
         self.blitzFirstShotVal = False
 
-    def fluxOverkill(self):
+    def flux_overkill(self):
         return self.fluxOverkillVar
 
-    def fluxOverkillSuccess(self):
+    def flux_overkill_success(self):
         self.fluxOverkillVar = True
 
     def csr(self):
         return self.csrValue
 
-    def setCSR(self, value):
+    def set_csr(self, value):
         print("Setting CSR:", value)
         self.csrValue = value
 
-    def completeFullKilikMenu(self):
+    def complete_full_kilik_menu(self):
         self.fullKilikMenu = True
 
-    def didFullKilikMenu(self):
+    def did_full_kilik_menu(self):
         return self.fullKilikMenu
 
-    def usePause(self):
+    def use_pause(self):
         return self.artificialPauses
 
-    def setBlitzWin(self, value):
+    def set_blitz_win(self, value):
         self.blitzWinValue = value
 
-    def getBlitzWin(self):
+    def get_blitz_win(self):
         return self.blitzWinValue
 
-    def setBlitzOT(self, value):
+    def set_blitz_ot(self, value):
         self.blitzOvertime = value
 
-    def getBlitzOT(self):
+    def get_blitz_ot(self):
         return self.blitzOvertime
 
-    def setLStrike(self, value):
+    def set_l_strike(self, value):
         self.lStrikeCount = value
 
-    def getLStrike(self):
+    def get_l_strike(self):
         return self.lStrikeCount
 
-    def zombieWeapon(self):
+    def zombie_weapon(self):
         return self.zombieWeaponVal
 
-    def setZombie(self, value):
+    def set_zombie(self, value):
         self.zombieWeaponVal = value
 
-    def earlyTidusGridSetTrue(self):
+    def early_tidus_grid_set_true(self):
         self.earlyTidusGridVal = True
 
-    def earlyTidusGrid(self):
+    def early_tidus_grid(self):
         return self.earlyTidusGridVal
 
-    def earlyHasteSet(self, value):
+    def early_haste_set(self, value):
         self.earlyHasteVal = value
 
-    def earlyHaste(self):
+    def early_haste(self):
         return self.earlyHasteVal
 
-    def wakkaLateMenuSet(self, value):
+    def wakka_late_menu_set(self, value):
         self.wakkaLateMenuVal = value
 
-    def wakkaLateMenu(self):
+    def wakka_late_menu(self):
         return self.wakkaLateMenuVal
 
-    def endGameVersionSet(self, value):
+    def end_game_version_set(self, value):
         self.endGameVersionVal = value
 
-    def endGameVersion(self):
+    def end_game_version(self):
         return self.endGameVersionVal
 
-    def selfDestructLearned(self):
+    def self_destruct_learned(self):
         self.selfDestruct = True
 
-    def selfDestructGet(self):
+    def self_destruct_get(self):
         return self.selfDestruct
 
-    def addRescueCount(self):
+    def add_rescue_count(self):
         self.rescueCount += 1
 
-    def completedRescueFights(self):
+    def completed_rescue_fights(self):
         print(f"Completed {self.rescueCount} exp kills")
         return self.rescueCount >= 4
 
-    def addYTKFarm(self):
+    def add_ytk_farm(self):
         self.YTKFarm += 1
 
-    def YTKFarmCount(self):
+    def ytk_farm_count(self):
         return self.YTKFarm
 
-    def completedYTKFarm(self):
+    def completed_ytk_farm(self):
         return self.YTKFarm >= 2
 
-    def setSkipZanLuck(self, value):
+    def set_skip_zan_luck(self, value):
         self.skipZanLuck = value
 
-    def getSkipZanLuck(self):
+    def get_skip_zan_luck(self):
         return self.skipZanLuck
 
 
-def initVars():
+def init_vars():
     mainVars = AllVars()
 
 
-def varsHandle():
+def vars_handle():
     return mainVars
 
 

@@ -2,12 +2,12 @@ import memory.main
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+gameVars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def areaArray():
+def area_array():
     # Not working properly
     return [
         60112,
@@ -29,66 +29,66 @@ def areaArray():
     ]
 
 
-def areaIndexCheck(indexNum: int = 15):
+def area_index_check(index_num: int = 15):
     # Not working properly
-    print(memory.main.arenaCursor())
-    if memory.main.arenaArray[indexNum] == memory.main.arenaCursor():
+    print(memory.main.arena_cursor())
+    if memory.main.arena_array[index_num] == memory.main.arena_cursor():
         return True
     return False
 
 
-def arenaCursor():
+def arena_cursor():
     # Not working properly
     for x in range(16):
-        print(memory.main.arenaCursor())
-        if memory.main.arenaCursor() == areaArray()[x]:
+        print(memory.main.arena_cursor())
+        if memory.main.arena_cursor() == area_array()[x]:
             return x
     return 255
 
 
-def arenaMenuSelect(choice: int = 2):
+def arena_menu_select(choice: int = 2):
     print("Selecting menu option: ", choice)
-    if gameVars.usePause():
-        memory.main.waitFrames(2)
-    while not memory.main.blitzCursor() == choice:
+    if gameVars.use_pause():
+        memory.main.wait_frames(2)
+    while not memory.main.blitz_cursor() == choice:
         if choice == 4:
-            xbox.menuA()
+            xbox.menu_a()
         elif choice == 3:
-            xbox.menuUp()
+            xbox.menu_up()
         else:
-            xbox.menuDown()
-    xbox.tapB()
-    memory.main.waitFrames(15)
+            xbox.menu_down()
+    xbox.tap_b()
+    memory.main.wait_frames(15)
 
 
-def startFight(areaIndex: int, monsterIndex: int = 0):
-    print("Starting fight: ", areaIndex, " | ", monsterIndex)
+def start_fight(area_index: int, monster_index: int = 0):
+    print("Starting fight: ", area_index, " | ", monster_index)
     arenaCursor = 0
-    memory.main.waitFrames(90)
-    while arenaCursor != areaIndex:
+    memory.main.wait_frames(90)
+    while arenaCursor != area_index:
         # print(arenaCursor())
-        if arenaCursor % 2 == 0 and areaIndex % 2 == 1:
-            xbox.tapRight()
+        if arenaCursor % 2 == 0 and area_index % 2 == 1:
+            xbox.tap_right()
             arenaCursor += 1
-        elif arenaCursor % 2 == 1 and areaIndex % 2 == 0:
-            xbox.tapLeft()
+        elif arenaCursor % 2 == 1 and area_index % 2 == 0:
+            xbox.tap_left()
             arenaCursor -= 1
-        elif arenaCursor < areaIndex:
-            xbox.tapDown()
+        elif arenaCursor < area_index:
+            xbox.tap_down()
             arenaCursor += 2
         else:
-            xbox.tapUp()
+            xbox.tap_up()
             arenaCursor -= 2
-    xbox.menuB()
-    memory.main.waitFrames(6)
-    if monsterIndex >= 7:
-        xbox.tapRight()
-        monsterIndex -= 7
-    while monsterIndex > 0:
-        xbox.tapDown()
-        monsterIndex -= 1
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    xbox.tapB()
-    while not memory.main.battleActive():
+    xbox.menu_b()
+    memory.main.wait_frames(6)
+    if monster_index >= 7:
+        xbox.tap_right()
+        monster_index -= 7
+    while monster_index > 0:
+        xbox.tap_down()
+        monster_index -= 1
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    xbox.tap_b()
+    while not memory.main.battle_active():
         pass

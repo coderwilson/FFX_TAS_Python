@@ -9,100 +9,100 @@ import screen
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+gameVars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 # The following functions extend the regular Bahamut run. Arena battles sections.
 
 
-def saveGame(firstSave=False):
-    while not nemesis.targetPath.setMovement([-6, -27]):
+def save_game(first_save=False):
+    while not nemesis.targetPath.set_movement([-6, -27]):
         pass
-    while not nemesis.targetPath.setMovement([-2, -2]):
+    while not nemesis.targetPath.set_movement([-2, -2]):
         pass
     print("Arena - Touch Save Sphere, and actually save")
-    FFXC = xbox.controllerHandle()
+    FFXC = xbox.controller_handle()
     FFXC.set_neutral()
-    ssDetails = memory.main.getSaveSphereDetails()
+    ssDetails = memory.main.get_save_sphere_details()
 
-    if memory.main.userControl():
-        while memory.main.userControl():
-            nemesis.targetPath.setMovement([ssDetails[0], ssDetails[1]])
-            xbox.tapB()
-            memory.main.waitFrames(1)
+    if memory.main.user_control():
+        while memory.main.user_control():
+            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+            xbox.tap_b()
+            memory.main.wait_frames(1)
     try:
         FFXC.set_neutral()
     except:
-        FFXC = xbox.controllerHandle()
+        FFXC = xbox.controller_handle()
         FFXC.set_neutral()
-    memory.main.waitFrames(30)
-    xbox.tapB()
-    memory.main.waitFrames(10)
+    memory.main.wait_frames(30)
+    xbox.tap_b()
+    memory.main.wait_frames(10)
 
     print("Controller is now neutral. Attemption to open save nemesis.menu.")
-    while not memory.main.saveMenuOpen():
+    while not memory.main.save_menu_open():
         pass
     print("Save menu is open.")
-    memory.main.waitFrames(9)
-    if not firstSave:
-        xbox.menuDown()
-        xbox.menuB()
-        xbox.menuLeft()
-    xbox.menuB()  # Select the save file
-    xbox.menuB()  # Confirm the save
-    memory.main.waitFrames(90)
-    xbox.menuA()  # Back out
-    xbox.menuA()  # Back out
-    xbox.menuA()  # Back out
-    xbox.menuA()  # Back out
+    memory.main.wait_frames(9)
+    if not first_save:
+        xbox.menu_down()
+        xbox.menu_b()
+        xbox.menu_left()
+    xbox.menu_b()  # Select the save file
+    xbox.menu_b()  # Confirm the save
+    memory.main.wait_frames(90)
+    xbox.menu_a()  # Back out
+    xbox.menu_a()  # Back out
+    xbox.menu_a()  # Back out
+    xbox.menu_a()  # Back out
 
     print("Menu now closed. Back to the battles.")
-    memory.main.clearSaveMenuCursor()
-    memory.main.clearSaveMenuCursor2()
-    while not nemesis.targetPath.setMovement([-6, -27]):
+    memory.main.clear_save_menu_cursor()
+    memory.main.clear_save_menu_cursor_2()
+    while not nemesis.targetPath.set_movement([-6, -27]):
         pass
-    while not nemesis.targetPath.setMovement([2, -25]):
+    while not nemesis.targetPath.set_movement([2, -25]):
         pass
 
 
-def touchSave(realSave=False):
-    while not nemesis.targetPath.setMovement([-6, -27]):
+def touch_save(real_save=False):
+    while not nemesis.targetPath.set_movement([-6, -27]):
         pass
-    while not nemesis.targetPath.setMovement([-2, -2]):
+    while not nemesis.targetPath.set_movement([-2, -2]):
         pass
-    memory.main.touchSaveSphere()
-    while not nemesis.targetPath.setMovement([-6, -27]):
+    memory.main.touch_save_sphere()
+    while not nemesis.targetPath.set_movement([-6, -27]):
         pass
-    while not nemesis.targetPath.setMovement([2, -25]):
+    while not nemesis.targetPath.set_movement([2, -25]):
         pass
-    arenaNPC()
+    arena_npc()
 
 
-def airShipDestination(destNum=0):  # Default to Sin.
-    while memory.main.getMap() != 382:
-        if memory.main.userControl():
-            nemesis.targetPath.setMovement([-251, 340])
+def airship_destination(dest_num=0):  # Default to Sin.
+    while memory.main.get_map() != 382:
+        if memory.main.user_control():
+            nemesis.targetPath.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
-        xbox.menuB()
-    while memory.main.diagProgressFlag() != 4:
-        xbox.menuB()
+        xbox.menu_b()
+    while memory.main.diag_progress_flag() != 4:
+        xbox.menu_b()
     print("Destination select on screen now.")
-    while memory.main.mapCursor() != destNum:
-        if destNum < 8:
-            xbox.tapDown()
+    while memory.main.map_cursor() != dest_num:
+        if dest_num < 8:
+            xbox.tap_down()
         else:
-            xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(2)
-    xbox.tapB()
-    memory.main.clickToControl3()
+            xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(2)
+    xbox.tap_b()
+    memory.main.click_to_control_3()
 
 
-def getSaveSphereDetails():
-    mapVal = memory.main.getMap()
-    storyVal = memory.main.getStoryProgress()
+def get_save_sphere_details():
+    mapVal = memory.main.get_map()
+    storyVal = memory.main.get_story_progress()
     print("Map:", mapVal, "| Story:", storyVal)
     x = 0
     y = 0
@@ -177,162 +177,164 @@ def getSaveSphereDetails():
     return [x, y, diag]
 
 
-def returnToAirship():
+def return_to_airship():
     print("Attempting Return to Airship")
 
-    ssDetails = getSaveSphereDetails()
+    ssDetails = get_save_sphere_details()
 
-    if memory.main.userControl():
-        while memory.main.userControl():
-            nemesis.targetPath.setMovement([ssDetails[0], ssDetails[1]])
-            xbox.tapB()
-            memory.main.waitFrames(1)
+    if memory.main.user_control():
+        while memory.main.user_control():
+            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+            xbox.tap_b()
+            memory.main.wait_frames(1)
     try:
         FFXC.set_neutral()
     except:
-        FFXC = xbox.controllerHandle()
+        FFXC = xbox.controller_handle()
         FFXC.set_neutral()
     FFXC.set_neutral()
 
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.getMap() == 307 and memory.main.getCoords()[1] < -5:
-            while not nemesis.targetPath.setMovement([-4, -21]):
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.get_map() == 307 and memory.main.get_coords()[1] < -5:
+            while not nemesis.targetPath.set_movement([-4, -21]):
                 pass
-            while not nemesis.targetPath.setMovement([-2, -2]):
+            while not nemesis.targetPath.set_movement([-2, -2]):
                 pass
         else:
             FFXC.set_neutral()
-            if memory.main.saveMenuOpen():
-                xbox.tapA()
-            elif memory.main.diagProgressFlag() == ssDetails[2]:
+            if memory.main.save_menu_open():
+                xbox.tap_a()
+            elif memory.main.diag_progress_flag() == ssDetails[2]:
                 # print("Cursor test:", memory.saveMenuCursor())
-                if memory.main.saveMenuCursor() != 1:
-                    xbox.menuDown()
+                if memory.main.save_menu_cursor() != 1:
+                    xbox.menu_down()
                 else:
-                    xbox.menuB()
-            elif memory.main.userControl():
-                nemesis.targetPath.setMovement([ssDetails[0], ssDetails[1]])
-                xbox.menuB()
-            elif memory.main.diagSkipPossible():
-                xbox.menuB()
-            memory.main.waitFrames(4)
+                    xbox.menu_b()
+            elif memory.main.user_control():
+                nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+                xbox.menu_b()
+            elif memory.main.diag_skip_possible():
+                xbox.menu_b()
+            memory.main.wait_frames(4)
     print("Return to Airship Complete.")
-    memory.main.clearSaveMenuCursor()
-    memory.main.clearSaveMenuCursor2()
+    memory.main.clear_save_menu_cursor()
+    memory.main.clear_save_menu_cursor_2()
 
 
-def aeonStart():
+def aeon_start():
     screen.await_turn()
-    battle.main.buddySwapYuna()
-    battle.main.aeonSummon(4)
+    battle.main.buddy_swap_yuna()
+    battle.main.aeon_summon(4)
     while not screen.turn_tidus():
-        if memory.main.turnReady():
+        if memory.main.turn_ready():
             if screen.turn_aeon():
                 battle.main.attack("none")
             else:
                 battle.main.defend()
 
 
-def yojimboBattle():
+def yojimbo_battle():
     # Incomplete
     screen.await_turn()
-    if 1 not in memory.main.getActiveBattleFormation():
-        battle.main.buddySwapYuna()
+    if 1 not in memory.main.get_active_battle_formation():
+        battle.main.buddy_swap_yuna()
     print("+Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
     print("+Pay the man")
     battle.overdrive.yojimbo()
-    memory.main.waitFrames(90)
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+    memory.main.wait_frames(90)
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_tidus():
-                battle.main.tidusFlee()
+                battle.main.tidus_flee()
             elif screen.turn_aeon():
-                xbox.SkipDialog(2)
+                xbox.skip_dialog(2)
             else:
                 battle.main.defend()
 
     # After battle stuff
-    while not memory.main.menuOpen():
-        xbox.tapB()
+    while not memory.main.menu_open():
+        xbox.tap_b()
     print("Battle is complete.")
     FFXC.set_value("BtnB", 1)
-    memory.main.waitFrames(180)
+    memory.main.wait_frames(180)
     FFXC.set_neutral()
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
 
-    return memory.main.battleArenaResults()
+    return memory.main.battle_arena_results()
 
 
-def autoLife():
-    while not (memory.main.turnReady() and screen.turn_tidus()):
-        if memory.main.turnReady():
+def auto_life():
+    while not (memory.main.turn_ready() and screen.turn_tidus()):
+        if memory.main.turn_ready():
             if screen.turn_aeon():
                 battle.main.attack("none")
             elif not screen.turn_tidus():
                 battle.main.defend()
-    while memory.main.battleMenuCursor() != 22:
+    while memory.main.battle_menu_cursor() != 22:
         if not screen.turn_tidus():
             print("Attempting Haste, but it's not Tidus's turn")
-            xbox.tapUp()
-            xbox.tapUp()
+            xbox.tap_up()
+            xbox.tap_up()
             return
-        if memory.main.battleMenuCursor() == 1:
-            xbox.tapUp()
+        if memory.main.battle_menu_cursor() == 1:
+            xbox.tap_up()
         else:
-            xbox.tapDown()
-    while not memory.main.otherBattleMenu():
-        xbox.tapB()
+            xbox.tap_down()
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
     battle.main._navigate_to_position(1)
-    while memory.main.otherBattleMenu():
-        xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
+    while memory.main.other_battle_menu():
+        xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
 
 
-def basicQuickAttacks(megaPhoenix=False, odVersion: int = 0, yunaAutos=False):
-    print("### Battle Start:", memory.main.getEncounterID())
+def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False):
+    print("### Battle Start:", memory.main.get_encounter_id())
     FFXC.set_neutral()
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_tidus():
-                if megaPhoenix and screen.faint_check() >= 2:
-                    battle.main.revive(itemNum=7)
-                elif memory.main.getOverdriveBattle(0) == 100:
-                    battle.overdrive.tidus(version=odVersion)
+                if mega_phoenix and screen.faint_check() >= 2:
+                    battle.main.revive(item_num=7)
+                elif memory.main.get_overdrive_battle(0) == 100:
+                    battle.overdrive.tidus(version=od_version)
                 else:
-                    battle.main.useSkill(1)  # Quick hit
+                    battle.main.use_skill(1)  # Quick hit
             elif screen.turn_aeon():
                 battle.main.attack("none")
             else:
                 battle.main.defend()
 
     # After battle stuff
-    while not memory.main.menuOpen():
-        xbox.tapB()
+    while not memory.main.menu_open():
+        xbox.tap_b()
     FFXC.set_value("BtnB", 1)
-    memory.main.waitFrames(150)
+    memory.main.wait_frames(150)
     FFXC.set_neutral()
-    memory.main.waitFrames(2)
-    return memory.main.battleArenaResults()
+    memory.main.wait_frames(2)
+    return memory.main.battle_arena_results()
 
 
-def basicAttack(megaPhoenix=False, odVersion: int = 0, useOD=False, yunaAutos=False):
-    print("### Battle Start:", memory.main.getEncounterID())
+def basic_attack(
+    mega_phoenix=False, od_version: int = 0, use_od=False, yuna_autos=False
+):
+    print("### Battle Start:", memory.main.get_encounter_id())
     FFXC.set_neutral()
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_tidus():
-                if megaPhoenix and screen.faint_check() >= 2:
-                    battle.main.revive(itemNum=7)
-                elif useOD and memory.main.getOverdriveBattle(0) == 100:
-                    battle.overdrive.tidus(version=odVersion)
+                if mega_phoenix and screen.faint_check() >= 2:
+                    battle.main.revive(item_num=7)
+                elif use_od and memory.main.get_overdrive_battle(0) == 100:
+                    battle.overdrive.tidus(version=od_version)
                 else:
                     battle.main.attack("none")
-            elif screen.turn_yuna() and yunaAutos:
+            elif screen.turn_yuna() and yuna_autos:
                 battle.attack("none")
             elif screen.turn_aeon():
                 battle.attack("none")
@@ -340,720 +342,728 @@ def basicAttack(megaPhoenix=False, odVersion: int = 0, useOD=False, yunaAutos=Fa
                 battle.main.defend()
 
     # After battle stuff
-    while not memory.main.menuOpen():
-        xbox.tapB()
+    while not memory.main.menu_open():
+        xbox.tap_b()
     FFXC.set_value("BtnB", 1)
-    memory.main.waitFrames(150)
+    memory.main.wait_frames(150)
     FFXC.set_neutral()
-    memory.main.waitFrames(2)
-    return memory.main.battleArenaResults()
+    memory.main.wait_frames(2)
+    return memory.main.battle_arena_results()
 
 
-def arenaNPC():
-    if memory.main.getMap() != 307:
+def arena_npc():
+    if memory.main.get_map() != 307:
         return
-    while not (memory.main.diagProgressFlag() == 74 and memory.main.diagSkipPossible()):
-        if memory.main.userControl():
-            if memory.main.getCoords()[1] > -15:
+    while not (
+        memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
+    ):
+        if memory.main.user_control():
+            if memory.main.get_coords()[1] > -15:
                 print("Wrong position, moving away from sphere")
-                while not nemesis.targetPath.setMovement([-6, -27]):
+                while not nemesis.targetPath.set_movement([-6, -27]):
                     pass
-                while not nemesis.targetPath.setMovement([2, -25]):
+                while not nemesis.targetPath.set_movement([2, -25]):
                     pass
             else:
                 print("Engaging NPC")
-                nemesis.targetPath.setMovement([5, -12])
-                xbox.tapB()
+                nemesis.targetPath.set_movement([5, -12])
+                xbox.tap_b()
         else:
             FFXC.set_neutral()
-            if memory.main.diagProgressFlag() == 59:
-                xbox.menuA()
-                xbox.menuA()
-                xbox.menuA()
-                xbox.tapB()
+            if memory.main.diag_progress_flag() == 59:
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.tap_b()
             elif (
-                memory.main.diagSkipPossible()
-                and not memory.main.diagProgressFlag() == 74
+                memory.main.diag_skip_possible()
+                and not memory.main.diag_progress_flag() == 74
             ):
-                xbox.tapB()
+                xbox.tap_b()
     print("Mark 1")
-    memory.main.waitFrames(30)  # This buffer can be improved later.
+    memory.main.wait_frames(30)  # This buffer can be improved later.
     print("Mark 2")
 
 
-def restockDowns():
+def restock_downs():
     print("Restocking phoenix downs")
-    if memory.main.getItemCountSlot(memory.main.getItemSlot(6)) >= 80:
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) >= 80:
         print("Restock not needed. Disregard.")
         return
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(3)
-    memory.main.waitFrames(60)
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    while memory.main.equipBuyRow() != 2:
-        if memory.main.equipBuyRow() < 2:
-            xbox.tapDown()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(3)
+    memory.main.wait_frames(60)
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    while memory.main.equip_buy_row() != 2:
+        if memory.main.equip_buy_row() < 2:
+            xbox.tap_down()
         else:
-            xbox.tapUp()
-    xbox.tapB()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    xbox.menuA()
-    memory.main.waitFrames(6)
-    xbox.menuA()
+            xbox.tap_up()
+    xbox.tap_b()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    xbox.menu_a()
+    memory.main.wait_frames(6)
+    xbox.menu_a()
 
 
-def battles1():
-    if not memory.main.equippedArmorHasAbility(charNum=1, abilityNum=0x800A):
+def battles_1():
+    if not memory.main.equipped_armor_has_ability(charNum=1, abilityNum=0x800A):
         nemesis.menu.equipArmor(character=1, ability=0x800A, fullMenuClose=False)
-    if not memory.main.equippedArmorHasAbility(charNum=4, abilityNum=0x800A):
+    if not memory.main.equipped_armor_has_ability(charNum=4, abilityNum=0x800A):
         nemesis.menu.equipArmor(character=4, ability=0x800A)
-    memory.main.closeMenu()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=0)
-    while not basicQuickAttacks():
+    memory.main.close_menu()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=0)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=0)
-    gameVars.arenaSuccess(arrayNum=0, index=0)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=0)
+    gameVars.arena_success(array_num=0, index=0)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=1)
-    aeonStart()
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True):
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=1)
+    aeon_start()
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        memory.main.fullPartyFormat("kilikawoods1")
-        touchSave()
-        arenaNPC()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=1)
-        aeonStart()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(4)
+        memory.main.full_party_format("kilikawoods1")
+        touch_save()
+        arena_npc()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=1)
+        aeon_start()
         if screen.turn_tidus():
-            autoLife()
-    gameVars.arenaSuccess(arrayNum=0, index=1)
-    restockDowns()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    memory.main.fullPartyFormat("kilikawoods1")
+            auto_life()
+    gameVars.arena_success(array_num=0, index=1)
+    restock_downs()
+    nemesis.arenaSelect.arena_menu_select(4)
+    memory.main.full_party_format("kilikawoods1")
     nemesis.menu.tidusSlayer(odPos=0)
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=2)
-    while not basicQuickAttacks(yunaAutos=True):
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=2)
+    while not basic_quick_attacks(yuna_autos=True):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=2)
-    gameVars.arenaSuccess(arrayNum=0, index=2)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=2)
+    gameVars.arena_success(array_num=0, index=2)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=3)
-    while not basicQuickAttacks():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=3)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=3)
-    gameVars.arenaSuccess(arrayNum=0, index=3)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=3)
+    gameVars.arena_success(array_num=0, index=3)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=4)
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True):
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=4)
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True):
         print("Battle not completed successfully.")
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=4)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=0, index=4)
-    restockDowns()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=4)
+        auto_life()
+    gameVars.arena_success(array_num=0, index=4)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=5)
-    while not basicQuickAttacks():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=5)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=5)
-    gameVars.arenaSuccess(arrayNum=0, index=5)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=5)
+    gameVars.arena_success(array_num=0, index=5)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
+    nemesis.arenaSelect.arena_menu_select(4)
     nemesis.menu.tidusSlayer(odPos=2)
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=6)
-    while not basicQuickAttacks():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=6)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=6)
-    gameVars.arenaSuccess(arrayNum=0, index=6)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=6)
+    gameVars.arena_success(array_num=0, index=6)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=7)
-    while not basicQuickAttacks():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=7)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=7)
-    gameVars.arenaSuccess(arrayNum=0, index=7)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=7)
+    gameVars.arena_success(array_num=0, index=7)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=8)
-    while not basicQuickAttacks():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=8)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=8)
-    gameVars.arenaSuccess(arrayNum=0, index=8)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=8)
+    gameVars.arena_success(array_num=0, index=8)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
+    nemesis.arenaSelect.arena_menu_select(4)
     nemesis.menu.tidusSlayer(odPos=0)
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=9)
-    while not basicQuickAttacks(yunaAutos=True):
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
+    while not basic_quick_attacks(yuna_autos=True):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=9)
-    gameVars.arenaSuccess(arrayNum=0, index=9)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
+    gameVars.arena_success(array_num=0, index=9)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=10)
-    autoLife()
-    while not basicQuickAttacks():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=10)
+    auto_life()
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=10)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=0, index=10)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=10)
+        auto_life()
+    gameVars.arena_success(array_num=0, index=10)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
 
-def battles2():
+def battles_2():
     print("++Starting second section++")
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=1)
-    while not basicQuickAttacks():
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=1)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        touchSave()
-        arenaNPC()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=1)
-    gameVars.arenaSuccess(arrayNum=1, index=1)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(4)
+        touch_save()
+        arena_npc()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=1)
+    gameVars.arena_success(array_num=1, index=1)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=3)
-    while not basicQuickAttacks():
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=3)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=3)
-    gameVars.arenaSuccess(arrayNum=1, index=3)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=3)
+    gameVars.arena_success(array_num=1, index=3)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=5)
-    while not basicQuickAttacks():
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=5)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=5)
-    gameVars.arenaSuccess(arrayNum=1, index=5)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=5)
+    gameVars.arena_success(array_num=1, index=5)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=8)
-    while not basicQuickAttacks():
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=8)
+    while not basic_quick_attacks():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=8)
-    gameVars.arenaSuccess(arrayNum=1, index=8)
-    restockDowns()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=8)
+    gameVars.arena_success(array_num=1, index=8)
+    restock_downs()
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
 
-def jugFarmDone():
-    print("||| Slot: ", memory.main.getItemSlot(87))
-    if memory.main.getItemSlot(87) > 250:
+def jug_farm_done():
+    print("||| Slot: ", memory.main.get_item_slot(87))
+    if memory.main.get_item_slot(87) > 250:
         return False
     else:
-        print("Count: ", memory.main.getItemCountSlot(memory.main.getItemSlot(87)))
-        if memory.main.getItemCountSlot(memory.main.getItemSlot(87)) < 6:
+        print("Count: ", memory.main.get_item_count_slot(memory.main.get_item_slot(87)))
+        if memory.main.get_item_count_slot(memory.main.get_item_slot(87)) < 6:
             return False
     return True
 
 
-def juggernautFarm():
-    checkYojimboPossible()
-    while not jugFarmDone():
-        arenaNPC()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=12)
-        autoLife()
-        basicQuickAttacks(megaPhoenix=True, odVersion=1)
-        restockDowns()
-        checkYojimboPossible()
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        touchSave()
+def juggernaut_farm():
+    check_yojimbo_possible()
+    while not jug_farm_done():
+        arena_npc()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=12)
+        auto_life()
+        basic_quick_attacks(mega_phoenix=True, od_version=1)
+        restock_downs()
+        check_yojimbo_possible()
+        nemesis.arenaSelect.arena_menu_select(4)
+        touch_save()
     print("Good to go on strength spheres")
-    gameVars.arenaSuccess(arrayNum=1, index=12)
+    gameVars.arena_success(array_num=1, index=12)
     print("Starting menu to finish strength.")
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    nemesis.menu.strBoost()
+    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.menu.str_boost()
     print("Touch save sphere, and then good to go.")
-    touchSave()
+    touch_save()
 
 
-def battles3():
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=11)
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True):
+def battles_3():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=11)
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=11)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=0, index=11)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=11)
+        auto_life()
+    gameVars.arena_success(array_num=0, index=11)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=2)
-    aeonStart()
-    autoLife()
-    while not basicAttack(useOD=False):
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=2)
+    aeon_start()
+    auto_life()
+    while not basic_attack(use_od=False):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        touchSave()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=2)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=1, index=2)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(4)
+        touch_save()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=2)
+        auto_life()
+    gameVars.arena_success(array_num=1, index=2)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=0)
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True, odVersion=1):
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=0)
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True, od_version=1):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=0)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=1, index=0)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=0)
+        auto_life()
+    gameVars.arena_success(array_num=1, index=0)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=9)
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True, odVersion=1):
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=9)
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True, od_version=1):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=9)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=1, index=9)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=9)
+        auto_life()
+    gameVars.arena_success(array_num=1, index=9)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=10)
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True, odVersion=1):
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=14, monster_index=10)
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True, od_version=1):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=10)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=1, index=10)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=10)
+        auto_life()
+    gameVars.arena_success(array_num=1, index=10)
+    restock_downs()
 
-    checkYojimboPossible()
+    check_yojimbo_possible()
 
 
-def battles4():
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=0)
-    autoLife()
-    while not basicQuickAttacks(megaPhoenix=True, odVersion=1):
+def battles_4():
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=15, monster_index=0)
+    auto_life()
+    while not basic_quick_attacks(mega_phoenix=True, od_version=1):
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=0)
-        autoLife()
-    gameVars.arenaSuccess(arrayNum=2, index=0)
-    restockDowns()
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=0)
+        auto_life()
+    gameVars.arena_success(array_num=2, index=0)
+    restock_downs()
 
-    checkYojimboPossible()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    touchSave()
+    check_yojimbo_possible()
+    nemesis.arenaSelect.arena_menu_select(4)
+    touch_save()
 
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=6)
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=15, monster_index=6)
 
-    while not shinryuBattle():
+    while not shinryu_battle():
         print("Battle not completed successfully.")
-        restockDowns()
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        touchSave()
-        arenaNPC()
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=6)
+        restock_downs()
+        nemesis.arenaSelect.arena_menu_select(4)
+        touch_save()
+        arena_npc()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=6)
 
-    gameVars.arenaSuccess(arrayNum=2, index=6)
-    restockDowns()
+    gameVars.arena_success(array_num=2, index=6)
+    restock_downs()
 
 
-def itemDump():
-    nemesis.arenaSelect.arenaMenuSelect(2)
-    memory.main.waitFrames(90)
-    xbox.menuRight()
-    xbox.menuB()
+def item_dump():
+    nemesis.arenaSelect.arena_menu_select(2)
+    memory.main.wait_frames(90)
+    xbox.menu_right()
+    xbox.menu_b()
     nemesis.menu.sellAll(NEA=True)
-    xbox.menuA()
-    xbox.menuA()
-    xbox.menuA()
-    xbox.menuA()
+    xbox.menu_a()
+    xbox.menu_a()
+    xbox.menu_a()
+    xbox.menu_a()
 
 
-def quickResetLogic():
+def quick_reset_logic():
     reset.reset_to_main_menu()
     memory.ain.waitFrames(90)
-    while memory.main.getMap() != 23:
+    while memory.main.get_map() != 23:
         FFXC.set_value("BtnStart", 1)
-        memory.main.waitFrames(2)
+        memory.main.wait_frames(2)
         FFXC.set_value("BtnStart", 0)
-        memory.main.waitFrames(2)
-    memory.main.waitFrames(60)
-    xbox.menuB()
-    memory.main.waitFrames(60)
-    xbox.menuDown()
-    xbox.menuB()
-    xbox.menuB()
+        memory.main.wait_frames(2)
+    memory.main.wait_frames(60)
+    xbox.menu_b()
+    memory.main.wait_frames(60)
+    xbox.menu_down()
+    xbox.menu_b()
+    xbox.menu_b()
     FFXC.set_neutral()
-    gameVars.printArenaStatus()
-    memory.main.waitFrames(30)
+    gameVars.print_arena_status()
+    memory.main.wait_frames(30)
 
 
-def checkYojimboPossible():
-    if memory.main.overdriveState2()[1] < 100:
+def check_yojimbo_possible():
+    if memory.main.overdrive_state_2()[1] < 100:
         return False
-    if memory.main.overdriveState2()[1] == 100 and memory.main.getGilvalue() < 300000:
-        itemDump()
+    if (
+        memory.main.overdrive_state_2()[1] == 100
+        and memory.main.get_gil_value() < 300000
+    ):
+        item_dump()
 
-    if memory.main.overdriveState2()[1] == 100 and memory.main.getGilvalue() >= 300000:
+    if (
+        memory.main.overdrive_state_2()[1] == 100
+        and memory.main.get_gil_value() >= 300000
+    ):
         # Save game in preparation for the Yojimbo attempt
-        memory.main.waitFrames(20)
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        memory.main.fullPartyFormat("kilikawoods1")
-        if gameVars.yojimboGetIndex() == 1:
-            saveGame(firstSave=True)
+        memory.main.wait_frames(20)
+        nemesis.arenaSelect.arena_menu_select(4)
+        memory.main.full_party_format("kilikawoods1")
+        if gameVars.yojimbo_get_index() == 1:
+            save_game(first_save=True)
         else:
-            saveGame(firstSave=False)
+            save_game(first_save=False)
 
         # Now attempt to get Zanmato until successful, no re-saving.
-        while not battles5(gameVars.yojimboGetIndex()):
-            quickResetLogic()
+        while not battles_5(gameVars.yojimbo_get_index()):
+            quick_reset_logic()
         return True
     else:
         return False
 
 
-def shinryuBattle():
+def shinryu_battle():
     rikkuFirstTurn = False
     rikkuDriveComplete = False
     screen.await_turn()
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_rikku():
                 if not rikkuFirstTurn:
                     battle.main.defend()
                 elif rikkuDriveComplete:
-                    battle.main._useHealingItem(itemID=9)
+                    battle.main._use_healing_item(item_id=9)
                 else:
-                    battle.main.rikkuFullOD("shinryu")
+                    battle.main.rikku_full_od("shinryu")
                     rikkuDriveComplete = True
             elif screen.turn_tidus():
-                if memory.main.getOverdriveBattle(0) == 100:
+                if memory.main.get_overdrive_battle(0) == 100:
                     battle.overdrive.tidus(version=1)
-                elif rikkuDriveComplete and not memory.main.autoLifeState():
-                    autoLife()
+                elif rikkuDriveComplete and not memory.main.state_auto_life():
+                    auto_life()
                 else:
                     battle.main.attack("none")
             else:
                 battle.main.defend()
 
     # After battle stuff
-    while not memory.main.menuOpen():
-        xbox.tapB()
+    while not memory.main.menu_open():
+        xbox.tap_b()
     FFXC.set_value("BtnB", 1)
-    memory.main.waitFrames(150)
+    memory.main.wait_frames(150)
     FFXC.set_neutral()
-    memory.main.waitFrames(2)
-    return memory.main.battleArenaResults()
+    memory.main.wait_frames(2)
+    return memory.main.battle_arena_results()
 
 
-def battles5(completionVersion: int):
-    print("Yojimbo battle number: ", completionVersion)
-    if completionVersion >= 12 and completionVersion != 99:
+def battles_5(completion_version: int):
+    print("Yojimbo battle number: ", completion_version)
+    if completion_version >= 12 and completion_version != 99:
         return True  # These battles are complete at this point.
     yojimboSuccess = False
 
     # Now for the Yojimbo section
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
 
     # Battles here
-    if completionVersion == 1:
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=1)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=2, index=1)
+    if completion_version == 1:
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=1)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=2, index=1)
             yojimboSuccess = True
 
-    elif completionVersion == 2:
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=2)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=2, index=2)
+    elif completion_version == 2:
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=2)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=2, index=2)
             yojimboSuccess = True
 
-    elif completionVersion == 3:
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=3)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=2, index=3)
+    elif completion_version == 3:
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=3)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=2, index=3)
             yojimboSuccess = True
 
-    elif completionVersion == 4:
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=4)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=2, index=4)
+    elif completion_version == 4:
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=4)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=2, index=4)
             yojimboSuccess = True
 
-    elif completionVersion == 5:
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=5)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=2, index=5)
+    elif completion_version == 5:
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=5)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=2, index=5)
             yojimboSuccess = True
 
-    elif completionVersion == 6:
-        nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=12)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=0, index=12)
+    elif completion_version == 6:
+        nemesis.arenaSelect.start_fight(area_index=13, monster_index=12)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=0, index=12)
             yojimboSuccess = True
 
-    elif completionVersion == 7:
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=13)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=1, index=13)
+    elif completion_version == 7:
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=13)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=1, index=13)
             yojimboSuccess = True
 
-    elif completionVersion == 8:
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=11)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=1, index=11)
+    elif completion_version == 8:
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=11)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=1, index=11)
             yojimboSuccess = True
 
-    elif completionVersion == 9:
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=7)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=1, index=7)
+    elif completion_version == 9:
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=7)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=1, index=7)
             yojimboSuccess = True
 
-    elif completionVersion == 10:
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=6)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=1, index=6)
+    elif completion_version == 10:
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=6)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=1, index=6)
             yojimboSuccess = True
 
-    elif completionVersion == 11:
-        nemesis.arenaSelect.startFight(areaIndex=14, monsterIndex=4)
-        if yojimboBattle():
-            gameVars.arenaSuccess(arrayNum=1, index=4)
+    elif completion_version == 11:
+        nemesis.arenaSelect.start_fight(area_index=14, monster_index=4)
+        if yojimbo_battle():
+            gameVars.arena_success(array_num=1, index=4)
             yojimboSuccess = True
 
-    elif completionVersion == 99:  # Nemesis
-        nemesis.arenaSelect.startFight(areaIndex=15, monsterIndex=7)
-        if yojimboBattle():
-            memory.main.clickToDiagProgress(2)
-            memory.main.clickToControl3()
+    elif completion_version == 99:  # Nemesis
+        nemesis.arenaSelect.start_fight(area_index=15, monster_index=7)
+        if yojimbo_battle():
+            memory.main.click_to_diag_progress(2)
+            memory.main.click_to_control_3()
             return True
         else:
             return False
 
     # Wrap up decisions
     if yojimboSuccess:
-        gameVars.yojimboIncrementIndex()
-        if completionVersion != 99:
-            restockDowns()
+        gameVars.yojimbo_increment_index()
+        if completion_version != 99:
+            restock_downs()
         return True
     else:
-        nemesis.arenaSelect.arenaMenuSelect(4)
+        nemesis.arenaSelect.arena_menu_select(4)
         return False
 
 
-def rechargeYuna():
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=13, monsterIndex=9)
+def recharge_yuna():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
     screen.await_turn()
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_yuna():
                 battle.main.attack("none")
             else:
-                battle.main.escapeOne()
+                battle.main.escape_one()
 
 
-def nemesisBattle():
-    if gameVars.yojimboGetIndex() < 12:
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        touchSave()
-        while gameVars.yojimboGetIndex() < 12:
+def nemesis_battle():
+    if gameVars.yojimbo_get_index() < 12:
+        nemesis.arenaSelect.arena_menu_select(4)
+        touch_save()
+        while gameVars.yojimbo_get_index() < 12:
             # If Yuna is charged, do next battle. Otherwise charge.
-            if memory.main.overdriveState2()[1] == 100:
-                battles5(gameVars.yojimboGetIndex())
+            if memory.main.overdrive_state_2()[1] == 100:
+                battles_5(gameVars.yojimbo_get_index())
             else:
-                rechargeYuna()
-            nemesis.arenaSelect.arenaMenuSelect(4)
-            touchSave()
+                recharge_yuna()
+            nemesis.arenaSelect.arena_menu_select(4)
+            touch_save()
 
-    if memory.main.overdriveState2()[1] != 100:
-        rechargeYuna()
-    if memory.main.getGilvalue() < 300000:
-        nemesis.arenaSelect.arenaMenuSelect(4)
+    if memory.main.overdrive_state_2()[1] != 100:
+        recharge_yuna()
+    if memory.main.get_gil_value() < 300000:
+        nemesis.arenaSelect.arena_menu_select(4)
         nemesis.menu.autoSortEquipment()
         # nemesis.menu.autoSortItems()
-        arenaNPC()
-        nemesis.arenaSelect.arenaMenuSelect(2)
-        memory.main.waitFrames(90)
-        xbox.menuRight()
-        xbox.menuB()
+        arena_npc()
+        nemesis.arenaSelect.arena_menu_select(2)
+        memory.main.wait_frames(90)
+        xbox.menu_right()
+        xbox.menu_b()
         nemesis.menu.sellAll()
-        xbox.menuA()
-        xbox.menuA()
-        xbox.menuA()
-        xbox.menuA()
-        xbox.menuA()
-        xbox.menuA()
-        xbox.menuA()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    memory.main.fullPartyFormat("kilikawoods1")
-    saveGame(firstSave=False)
-    while not battles5(completionVersion=99):
-        quickResetLogic()
+        xbox.menu_a()
+        xbox.menu_a()
+        xbox.menu_a()
+        xbox.menu_a()
+        xbox.menu_a()
+        xbox.menu_a()
+        xbox.menu_a()
+    nemesis.arenaSelect.arena_menu_select(4)
+    memory.main.full_party_format("kilikawoods1")
+    save_game(first_save=False)
+    while not battles_5(completion_version=99):
+        quick_reset_logic()
     # nemesis.nemesis.arenaSelect.arenaMenuSelect(4)
 
 
-def returnToSin():
-    FFXC = xbox.controllerHandle()
-    while not nemesis.targetPath.setMovement([-6, -27]):
+def return_to_sin():
+    FFXC = xbox.controller_handle()
+    while not nemesis.targetPath.set_movement([-6, -27]):
         pass
-    while not nemesis.targetPath.setMovement([-2, -2]):
+    while not nemesis.targetPath.set_movement([-2, -2]):
         pass
-    returnToAirship()
+    return_to_airship()
 
     nemesis.menu.equipWeapon(character=0, ability=0x8001, fullMenuClose=True)
-    airShipDestination(destNum=0)
-    memory.main.awaitControl()
+    airship_destination(dest_num=0)
+    memory.main.await_control()
     FFXC.set_movement(0, -1)
-    memory.main.waitFrames(2)
-    memory.main.awaitEvent()
+    memory.main.wait_frames(2)
+    memory.main.await_event()
     FFXC.set_neutral()

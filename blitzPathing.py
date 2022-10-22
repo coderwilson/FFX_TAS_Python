@@ -3,11 +3,11 @@ from math import copysign
 import memory.main
 import xbox
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
 def set_movement(target) -> bool:
-    player = memory.main.getCoords()
+    player = memory.main.get_coords()
     (forward, right) = ((1, 0), (0, -1))
 
     # Calculate forward and right directions relative to camera space

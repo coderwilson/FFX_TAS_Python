@@ -7,23 +7,23 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+gameVars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def approach(doGrid=True):
+def approach(do_grid=True):
     print("------------------------------Affection array:")
-    print(memory.main.affectionArray())
+    print(memory.main.affection_array())
     print("------------------------------")
-    memory.main.clickToControl()
+    memory.main.click_to_control()
     print("Approaching Macalania Temple")
 
     checkpoint = 0
-    while memory.main.getMap() != 106:
-        if memory.main.userControl():
+    while memory.main.get_map() != 106:
+        if memory.main.user_control():
             # Map changes
-            if checkpoint < 2 and memory.main.getMap() == 153:
+            if checkpoint < 2 and memory.main.get_map() == 153:
                 checkpoint = 2
 
             # General pathing
@@ -34,13 +34,13 @@ def approach(doGrid=True):
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
     FFXC.set_neutral()
-    memory.main.awaitControl()
-    if doGrid:
+    memory.main.await_control()
+    if do_grid:
         menu.mac_temple()
-    memory.main.touchSaveSphere()
+    memory.main.touch_save_sphere()
 
 
 def arrival():
@@ -50,8 +50,8 @@ def arrival():
     jyscalSkipStatus = False
     checkpoint = 0
     skipStatus = True
-    while memory.main.getMap() != 80:
-        if memory.main.userControl():
+    while memory.main.get_map() != 80:
+        if memory.main.user_control():
             # Main events
             if checkpoint == 1:
                 # FFXC.set_neutral()
@@ -59,42 +59,42 @@ def arrival():
             elif checkpoint == 2 and gameVars.csr():
                 checkpoint = 11
             elif checkpoint == 4:  # Talking to Trommell
-                memory.main.clickToEventTemple(6)
-                if memory.main.getCoords()[0] < 23.5:
-                    memory.main.waitFrames(30 * 0.07)
+                memory.main.click_to_event_temple(6)
+                if memory.main.get_coords()[0] < 23.5:
+                    memory.main.wait_frames(30 * 0.07)
                     FFXC.set_movement(1, 0)
-                    memory.main.waitFrames(2)
+                    memory.main.wait_frames(2)
                     FFXC.set_neutral()
-                    memory.main.waitFrames(4)
+                    memory.main.wait_frames(4)
                 checkpoint += 1
             elif checkpoint == 5:  # Skip (new)
                 print("Lining up for skip.")
                 FFXC.set_movement(0, -1)
-                memory.main.waitFrames(30 * 0.2)
+                memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
-                while memory.main.getCoords()[1] < -101.5:
+                while memory.main.get_coords()[1] < -101.5:
                     FFXC.set_value("Dpad", 8)
-                    memory.main.waitFrames(2)
+                    memory.main.wait_frames(2)
                     FFXC.set_value("Dpad", 0)
-                    memory.main.waitFrames(5)
+                    memory.main.wait_frames(5)
 
                 print("Turning back")
-                memory.main.waitFrames(3)
+                memory.main.wait_frames(3)
                 FFXC.set_movement(-1, 0)
-                memory.main.waitFrames(2)
+                memory.main.wait_frames(2)
                 FFXC.set_neutral()
-                memory.main.waitFrames(15)
+                memory.main.wait_frames(15)
 
                 print("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
-                memory.main.waitFrames(3)
+                memory.main.wait_frames(3)
                 FFXC.set_value("BtnB", 1)
-                memory.main.waitFrames(4)
+                memory.main.wait_frames(4)
                 FFXC.set_value("BtnB", 0)
-                memory.main.waitFrames(45)
+                memory.main.wait_frames(45)
                 FFXC.set_neutral()
                 checkpoint += 1
-                memory.main.clickToControl3()
+                memory.main.click_to_control_3()
             elif checkpoint == 6:
                 checkpoint = 11
             elif checkpoint == 11:
@@ -102,7 +102,7 @@ def arrival():
                 if gameVars.csr():
                     jyscalSkipStatus = True
                     checkpoint += 1
-                elif memory.main.getStoryProgress() < 1505:
+                elif memory.main.get_story_progress() < 1505:
                     jyscalSkipStatus = True
                     checkpoint += 1
                 else:
@@ -112,26 +112,26 @@ def arrival():
                 print("Jyscal Skip results:", skipStatus)
             elif checkpoint == 14 and gameVars.csr():
                 FFXC.set_movement(0, 1)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 14:  # Pause so we don't mess up the skip
                 if skipStatus:
                     FFXC.set_neutral()
-                    xbox.SkipDialog(5)
+                    xbox.skip_dialog(5)
                     FFXC.set_movement(0, -1)
-                    memory.main.awaitEvent()
+                    memory.main.await_event()
                     FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint < 16 and memory.main.getMap() == 239:
+            elif checkpoint < 16 and memory.main.get_map() == 239:
                 checkpoint = 16
 
             # Recovery items
             elif checkpoint == 23:  # Door, Jyscal room
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 24:  # Back to the main room
-                memory.main.clickToEventTemple(5)
+                memory.main.click_to_event_temple(5)
                 checkpoint += 1
             elif checkpoint == 27:
                 checkpoint = 12
@@ -142,99 +142,99 @@ def arrival():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
     return jyscalSkipStatus
 
 
-def startSeymourFight():
-    memory.main.clickToControl()
+def start_seymour_fight():
+    memory.main.click_to_control()
     while not targetPathing.set_movement([9, -53]):
         pass  # Allows us to move to the Seymour fight.
     FFXC.set_movement(1, 0)
-    memory.main.awaitEvent()
+    memory.main.await_event()
     FFXC.set_neutral()
 
 
-def seymourFight():
-    battle.main.seymourGuado()
+def seymour_fight():
+    battle.main.seymour_guado()
 
     # Name for Shiva
-    xbox.nameAeon("Shiva")
+    xbox.name_aeon("Shiva")
 
-    memory.main.awaitControl()
+    memory.main.await_control()
     FFXC.set_movement(-1, -1)
-    memory.main.waitFrames(30 * 0.4)
+    memory.main.wait_frames(30 * 0.4)
     FFXC.set_movement(-1, 0)
-    memory.main.awaitEvent()
+    memory.main.await_event()
     FFXC.set_neutral()
 
 
 def trials():
-    memory.main.awaitControl()
+    memory.main.await_control()
 
     checkpoint = 0
-    while memory.main.getMap() != 153:
-        if memory.main.userControl():
+    while memory.main.get_map() != 153:
+        if memory.main.user_control():
             # CSR start point
             if checkpoint < 3 and gameVars.csr():
                 checkpoint = 3
 
             # Map changes
-            elif checkpoint < 2 and memory.main.getMap() == 239:
+            elif checkpoint < 2 and memory.main.get_map() == 239:
                 checkpoint = 2
 
             # Spheres and Pedestals
             elif checkpoint == 2:
-                memory.main.awaitControl()
+                memory.main.await_control()
                 print("Activate the trials")
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 9:  # Push pedestal - 1
                 FFXC.set_movement(1, 0)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.waitFrames(30 * 1)
+                memory.main.wait_frames(30 * 1)
                 checkpoint += 1
             elif checkpoint == 13:  # Grab first Mac Sphere
-                memory.main.clickToEventTemple(1)
+                memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 17:  # Place first Mac Sphere
-                memory.main.clickToEventTemple(2)
+                memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 20:  # Push pedestal - 2
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 23:  # Grab glyph sphere
-                memory.main.clickToEventTemple(2)
+                memory.main.click_to_event_temple(2)
                 checkpoint += 1
                 print("Checkpoint:", checkpoint)
             elif checkpoint == 29:  # Push pedestal - 3
                 FFXC.set_movement(1, 0)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.waitFrames(30 * 1)
+                memory.main.wait_frames(30 * 1)
                 checkpoint += 1
             elif checkpoint == 32:  # Place Glyph sphere
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 39:  # Grab second Mac sphere
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 46:  # Place second Mac sphere
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 51:  # Grab third Mac sphere
-                memory.main.clickToEventTemple(1)
+                memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 53:  # Place third Mac sphere
-                memory.main.clickToEventTemple(2)
+                memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 58:  # End of trials
-                memory.main.clickToEventTemple(0)
-                memory.main.awaitControl()
+                memory.main.click_to_event_temple(0)
+                memory.main.await_control()
                 # Just to start the next set of dialog.
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
 
             # General pathing
             elif targetPathing.set_movement(targetPathing.m_temple_trials(checkpoint)):
@@ -245,33 +245,33 @@ def trials():
 
 
 def escape():
-    memory.main.clickToControl()
+    memory.main.click_to_control()
     print("First, some menuing")
     menuDone = False
     if gameVars.nemesis():
-        memory.main.fullPartyFormat("yuna", fullMenuClose=False)
+        memory.main.full_party_format("yuna", full_menu_close=False)
     else:
         menu.after_seymour()
         menuDone = True
-        memory.main.fullPartyFormat("macalaniaescape", fullMenuClose=False)
+        memory.main.full_party_format("macalaniaescape", full_menu_close=False)
     menu.equip_sonic_steel(full_menu_close=True)
 
     print("Now to escape the Guado")
     forceBattle = False
 
     checkpoint = 0
-    while memory.main.getEncounterID() != 195:
-        if memory.main.userControl():
+    while memory.main.get_encounter_id() != 195:
+        if memory.main.user_control():
             # Events
             if checkpoint == 2:
-                memory.main.touchSaveSphere()
+                memory.main.touch_save_sphere()
                 checkpoint += 1
                 print("Touching save sphere. Update checkpoint:", checkpoint)
             elif checkpoint == 18 and forceBattle:
                 FFXC.set_neutral()
 
             # Map changes
-            elif checkpoint < 19 and memory.main.getMap() == 192:
+            elif checkpoint < 19 and memory.main.get_map() == 192:
                 checkpoint = 19
                 print("Map change. Update checkpoint:", checkpoint)
 
@@ -281,55 +281,55 @@ def escape():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
+            if memory.main.battle_active():
                 screen.await_turn()
                 if checkpoint < 19:
-                    battle.main.fleeAll()
+                    battle.main.flee_all()
                     forceBattle = False
                 elif not menuDone:
-                    battle.main.escapeWithXP()
+                    battle.main.escape_with_xp()
                     menu.after_seymour()
                     menuDone = True
-                    memory.main.fullPartyFormat("macalaniaescape")
-                elif memory.main.getEncounterID() == 195:
+                    memory.main.full_party_format("macalaniaescape")
+                elif memory.main.get_encounter_id() == 195:
                     break
                 else:
-                    battle.main.fleeAll()
-            elif memory.main.menuOpen():
-                xbox.tapB()
-            elif memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle.main.flee_all()
+            elif memory.main.menu_open():
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
 
     print("Done pathing. Now for the Wendigo fight.")
     battle.boss.wendigo()
     print("Wendigo fight over")
 
 
-def underLake():
-    memory.main.clickToControl()
+def under_lake():
+    memory.main.click_to_control()
     checkpoint = 0
-    while memory.main.getMap() != 129:
-        if memory.main.userControl():
+    while memory.main.get_map() != 129:
+        if memory.main.user_control():
             if checkpoint == 4:
                 FFXC.set_movement(0, 1)
-                memory.main.clickToEvent()
+                memory.main.click_to_event()
                 FFXC.set_neutral()
-                memory.main.clickToControl()
+                memory.main.click_to_control()
                 FFXC.set_movement(0, 1)
-                memory.main.waitFrames(2)
-                memory.main.clickToEvent()
+                memory.main.wait_frames(2)
+                memory.main.click_to_event()
                 FFXC.set_neutral()
-                memory.main.clickToControl()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 11:
-                memory.main.clickToEventTemple(2)
+                memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 15:
-                while memory.main.userControl():
+                while memory.main.user_control():
                     targetPathing.set_movement([-4, -8])
-                    xbox.tapB()
+                    xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.clickToControl3()
+                memory.main.click_to_control_3()
                 checkpoint += 1
 
             # General pathing
@@ -338,63 +338,63 @@ def underLake():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
     FFXC.set_neutral()
-    memory.main.clickToControl()
+    memory.main.click_to_control()
 
 
-def underLake_old():
-    memory.main.clickToControl()
+def under_lake_old():
+    memory.main.click_to_control()
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(30 * 1)
+    memory.main.wait_frames(30 * 1)
     FFXC.set_movement(-1, 1)
-    memory.main.waitFrames(30 * 0.8)
+    memory.main.wait_frames(30 * 0.8)
     FFXC.set_movement(1, 1)
-    memory.main.waitFrames(30 * 1)
+    memory.main.wait_frames(30 * 1)
     FFXC.set_movement(0, 1)
-    memory.main.clickToEvent()
+    memory.main.click_to_event()
     FFXC.set_neutral()
 
-    memory.main.clickToControl()
+    memory.main.click_to_control()
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(30 * 1.5)  # Approach Yuna
+    memory.main.wait_frames(30 * 1.5)  # Approach Yuna
     FFXC.set_neutral()
 
-    memory.main.clickToControl()
-    while memory.main.getCoords()[1] > 110:
+    memory.main.click_to_control()
+    while memory.main.get_coords()[1] > 110:
         FFXC.set_movement(-1, 1)
-    while memory.main.getCoords()[1] > 85:
+    while memory.main.get_coords()[1] > 85:
         FFXC.set_movement(1, 1)
-    while memory.main.getCoords()[0] > -30:
-        if memory.main.getCoords()[1] < 110:
+    while memory.main.get_coords()[0] > -30:
+        if memory.main.get_coords()[1] < 110:
             FFXC.set_movement(1, -1)
         else:
             FFXC.set_movement(1, 0)
     FFXC.set_movement(1, 0)
-    memory.main.clickToEvent()  # Chest with Lv.2 Key Sphere
+    memory.main.click_to_event()  # Chest with Lv.2 Key Sphere
     FFXC.set_neutral()
-    xbox.SkipDialog(0.2)
-    memory.main.clickToControl()
+    xbox.skip_dialog(0.2)
+    memory.main.click_to_control()
     FFXC.set_movement(-1, 0)
-    memory.main.waitFrames(30 * 0.25)
-    while memory.main.getCoords()[0] < -5:
+    memory.main.wait_frames(30 * 0.25)
+    while memory.main.get_coords()[0] < -5:
         FFXC.set_movement(-1, 1)
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(30 * 1)  # To Auron
-    xbox.SkipDialog(1.5)
+    memory.main.wait_frames(30 * 1)  # To Auron
+    xbox.skip_dialog(1.5)
     FFXC.set_movement(1, 0)
-    xbox.SkipDialog(0.4)
+    xbox.skip_dialog(0.4)
     FFXC.set_movement(-1, 0)
-    xbox.SkipDialog(0.4)
+    xbox.skip_dialog(0.4)
     FFXC.set_neutral()
-    memory.main.clickToControl()
+    memory.main.click_to_control()
 
-    while memory.main.getMap() != 129:
+    while memory.main.get_map() != 129:
         FFXC.set_movement(0, -1)
-        if memory.main.diagSkipPossible():
-            xbox.tapB()
-        elif memory.main.cutsceneSkipPossible():
-            xbox.skipScene()
+        if memory.main.diag_skip_possible():
+            xbox.tap_b()
+        elif memory.main.cutscene_skip_possible():
+            xbox.skip_scene()
     FFXC.set_neutral()
-    memory.main.clickToControl()
+    memory.main.click_to_control()

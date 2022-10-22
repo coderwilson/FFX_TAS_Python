@@ -19,7 +19,7 @@ while attempts < 10:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-        area.dreamZan.NewGame("rescueYuna")
+        area.dreamZan.new_game("rescueYuna")
         print("Game start screen")
         screen.clear_mouse(0)
 
@@ -52,17 +52,17 @@ while attempts < 10:
 
         logs.next_plot()
         waitCount = 0
-        while memory.main.getMap() == 324:
-            if memory.main.battleActive():
+        while memory.main.get_map() == 324:
+            if memory.main.battle_active():
                 print("GTFO battle.")
-                battle.main.fleeAll()
-            elif memory.main.menuOpen():
-                xbox.menuB()
+                battle.main.flee_all()
+            elif memory.main.menu_open():
+                xbox.menu_b()
             else:
                 waitCount += 1
                 if waitCount % 10 == 0:
                     print(waitCount)
-                    cam = memory.main.getCamera()
+                    cam = memory.main.get_camera()
                     logs.write_plot(str(cam[0]) + "," + str(cam[4]))
                 else:
                     time.sleep(0.035)

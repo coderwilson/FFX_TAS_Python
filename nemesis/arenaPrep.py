@@ -9,130 +9,130 @@ import screen
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+gameVars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 # The following functions extend the regular Bahamut run. Farming sections.
 
 
-def autoLife():
-    while not (memory.main.turnReady() and screen.turn_tidus()):
-        if memory.main.turnReady():
+def auto_life():
+    while not (memory.main.turn_ready() and screen.turn_tidus()):
+        if memory.main.turn_ready():
             if screen.turn_aeon():
                 battle.main.attack("none")
             elif not screen.turn_tidus():
                 battle.main.defend()
-    while memory.main.battleMenuCursor() != 22:
+    while memory.main.battle_menu_cursor() != 22:
         if screen.turn_tidus() == False:
             print("Attempting Auto-life, but it's not Tidus's turn")
-            xbox.tapUp()
-            xbox.tapUp()
+            xbox.tap_up()
+            xbox.tap_up()
             return
-        if memory.main.battleMenuCursor() == 1:
-            xbox.tapUp()
+        if memory.main.battle_menu_cursor() == 1:
+            xbox.tap_up()
         else:
-            xbox.tapDown()
-    while not memory.main.otherBattleMenu():
-        xbox.tapB()
+            xbox.tap_down()
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
     memory.main._navigate_to_position(1)
-    while memory.main.otherBattleMenu():
-        xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
-    xbox.tapB()
+    while memory.main.other_battle_menu():
+        xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
 
 
 # Default to Besaid. Maybe based on map number?
-def airShipDestination(destNum=0, forceOmega=False):
+def air_ship_destination(dest_num=0, force_omega=False):
     if gameVars.csr():
-        if destNum >= 13:  # Adjust for Besaid and Kilika locations
-            if forceOmega:
-                destNum += 4
+        if dest_num >= 13:  # Adjust for Besaid and Kilika locations
+            if force_omega:
+                dest_num += 4
             else:
-                destNum += 5
-        elif destNum >= 5:  # Adjust for Mushroom Rock flight path
-            destNum += 4
-        elif destNum >= 2:  # Adjust for Omega
-            destNum += 3
+                dest_num += 5
+        elif dest_num >= 5:  # Adjust for Mushroom Rock flight path
+            dest_num += 4
+        elif dest_num >= 2:  # Adjust for Omega
+            dest_num += 3
 
-    while not memory.main.getMap() in [382, 999]:
-        if memory.main.userControl():
-            nemesis.targetPath.setMovement([-251, 340])
+    while not memory.main.get_map() in [382, 999]:
+        if memory.main.user_control():
+            nemesis.targetPath.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
-        xbox.menuB()
-    while memory.main.diagProgressFlag() != 4:
-        xbox.tapB()
+        xbox.menu_b()
+    while memory.main.diag_progress_flag() != 4:
+        xbox.tap_b()
     print("Destination select on screen now.")
-    while memory.main.mapCursor() != destNum:
-        if destNum < 8:
-            xbox.tapDown()
+    while memory.main.map_cursor() != dest_num:
+        if dest_num < 8:
+            xbox.tap_down()
         else:
-            xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(2)
-    xbox.tapB()
-    while not memory.main.userControl():
-        if memory.main.cutsceneSkipPossible():
-            xbox.skipScene()
-        elif memory.main.diagSkipPossible():
-            xbox.tapB()
+            xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(2)
+    xbox.tap_b()
+    while not memory.main.user_control():
+        if memory.main.cutscene_skip_possible():
+            xbox.skip_scene()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
 
 
-def unlockOmega():
+def unlock_omega():
     if gameVars.csr():
         return
 
-    while not memory.main.getMap() in [382, 999]:
-        if memory.main.userControl():
-            nemesis.targetPath.setMovement([-251, 340])
+    while not memory.main.get_map() in [382, 999]:
+        if memory.main.user_control():
+            nemesis.targetPath.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
-        if memory.main.diagProgressFlag() == 4:
-            xbox.menuA()
+        if memory.main.diag_progress_flag() == 4:
+            xbox.menu_a()
         else:
-            xbox.menuB()
-    while memory.main.diagProgressFlag() != 3:
-        xbox.tapUp()
-    while memory.main.diagProgressFlag() != 0:
-        xbox.tapB()
+            xbox.menu_b()
+    while memory.main.diag_progress_flag() != 3:
+        xbox.tap_up()
+    while memory.main.diag_progress_flag() != 0:
+        xbox.tap_b()
 
-    while memory.main.diagProgressFlag() == 0:
-        print(memory.main.getCoords())
-        if memory.main.getCoords()[0] < 65:
+    while memory.main.diag_progress_flag() == 0:
+        print(memory.main.get_coords())
+        if memory.main.get_coords()[0] < 65:
             FFXC.set_value("Dpad", 8)
-        if memory.main.getCoords()[0] < 70:
-            nemesis.menu.gridRight()
-        elif memory.main.getCoords()[0] > 78:
+        if memory.main.get_coords()[0] < 70:
+            nemesis.menu.grid_right()
+        elif memory.main.get_coords()[0] > 78:
             FFXC.set_value("Dpad", 4)
-        elif memory.main.getCoords()[0] > 73:
-            nemesis.menu.gridLeft()
-        elif memory.main.getCoords()[1] > -28:
+        elif memory.main.get_coords()[0] > 73:
+            nemesis.menu.grid_left()
+        elif memory.main.get_coords()[1] > -28:
             FFXC.set_value("Dpad", 2)
-        elif memory.main.getCoords()[1] > -34:
-            nemesis.menu.gridDown()
-        elif memory.main.getCoords()[1] < -40:
+        elif memory.main.get_coords()[1] > -34:
+            nemesis.menu.grid_down()
+        elif memory.main.get_coords()[1] < -40:
             FFXC.set_value("Dpad", 1)
-        elif memory.main.getCoords()[1] < -37:
-            nemesis.menu.gridUp()
+        elif memory.main.get_coords()[1] < -37:
+            nemesis.menu.grid_up()
         else:
-            xbox.menuB()
-    memory.main.waitFrames(30)
-    xbox.menuB()
-    while not memory.main.getMap() in [194, 374]:
-        xbox.menuA()
+            xbox.menu_b()
+    memory.main.wait_frames(30)
+    xbox.menu_b()
+    while not memory.main.get_map() in [194, 374]:
+        xbox.menu_a()
 
 
-def getSaveSphereDetails():
-    return memory.main.getSaveSphereDetails()
+def get_save_sphere_details():
+    return memory.main.get_save_sphere_details()
 
 
-def getSaveSphereDetails_old():
-    mapVal = memory.main.getMap()
-    storyVal = memory.main.getStoryProgress()
+def get_save_sphere_details_old():
+    mapVal = memory.main.get_map()
+    storyVal = memory.main.get_story_progress()
     print("Map:", mapVal, "| Story:", storyVal)
     x = 0
     y = 0
@@ -217,112 +217,112 @@ def getSaveSphereDetails_old():
     return [x, y, diag]
 
 
-def returnToAirship():
+def return_to_airship():
     print("Attempting Return to Airship")
 
-    ssDetails = getSaveSphereDetails()
+    ssDetails = get_save_sphere_details()
 
-    if memory.main.getMap() == 307:  # Monster arena
-        while not nemesis.targetPath.setMovement([-4, -3]):
+    if memory.main.get_map() == 307:  # Monster arena
+        while not nemesis.targetPath.set_movement([-4, -3]):
             pass
 
-    if memory.main.getMap() == 263:  # Thunder plains
-        while not nemesis.targetPath.setMovement([-39, -18]):
+    if memory.main.get_map() == 263:  # Thunder plains
+        while not nemesis.targetPath.set_movement([-39, -18]):
             pass
 
-    if memory.main.userControl():
-        while memory.main.userControl():
-            nemesis.targetPath.setMovement([ssDetails[0], ssDetails[1]])
-            xbox.tapB()
-            memory.main.waitFrames(1)
+    if memory.main.user_control():
+        while memory.main.user_control():
+            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+            xbox.tap_b()
+            memory.main.wait_frames(1)
     try:
         FFXC.set_neutral()
     except:
-        FFXC = xbox.controllerHandle()
+        FFXC = xbox.controller_handle()
         FFXC.set_neutral()
     FFXC.set_neutral()
 
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.getMap() == 307 and memory.main.getCoords()[1] < -5:
-            while not nemesis.targetPath.setMovement([-4, -21]):
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.get_map() == 307 and memory.main.get_coords()[1] < -5:
+            while not nemesis.targetPath.set_movement([-4, -21]):
                 pass
-            while not nemesis.targetPath.setMovement([-2, -2]):
+            while not nemesis.targetPath.set_movement([-2, -2]):
                 pass
         else:
             FFXC.set_neutral()
-            if memory.main.saveMenuOpen():
-                xbox.tapA()
-            elif memory.main.diagProgressFlag() == ssDetails[2]:
+            if memory.main.save_menu_open():
+                xbox.tap_a()
+            elif memory.main.diag_progress_flag() == ssDetails[2]:
                 # print("Cursor test:", memory.saveMenuCursor())
-                if memory.main.saveMenuCursor() != 1:
-                    xbox.menuDown()
+                if memory.main.save_menu_cursor() != 1:
+                    xbox.menu_down()
                 else:
-                    xbox.menuB()
-            elif memory.main.userControl():
-                nemesis.targetPath.setMovement([ssDetails[0], ssDetails[1]])
-                xbox.menuB()
-            elif memory.main.diagSkipPossible():
-                xbox.menuB()
-            memory.main.waitFrames(4)
+                    xbox.menu_b()
+            elif memory.main.user_control():
+                nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+                xbox.menu_b()
+            elif memory.main.diag_skip_possible():
+                xbox.menu_b()
+            memory.main.wait_frames(4)
     print("Return to Airship Complete.")
-    memory.main.clearSaveMenuCursor()
-    memory.main.clearSaveMenuCursor2()
+    memory.main.clear_save_menu_cursor()
+    memory.main.clear_save_menu_cursor_2()
 
 
-def battleFarmAll(apCpLimit: int = 255, yunaAttack=True, faythCave=True):
-    print("### Battle Start:", memory.main.getEncounterID())
+def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
+    print("### Battle Start:", memory.main.get_encounter_id())
     FFXC.set_neutral()
-    if faythCave == True and memory.main.battleType() == 2:
+    if fayth_cave == True and memory.main.battle_type() == 2:
         screen.await_turn()
-        battle.main.fleeAll()
+        battle.main.flee_all()
     else:
-        while memory.main.battleActive():
-            if memory.main.turnReady():
+        while memory.main.battle_active():
+            if memory.main.turn_ready():
                 if screen.turn_tidus():
-                    if memory.main.getEncounterID() in [154, 156, 164]:
+                    if memory.main.get_encounter_id() in [154, 156, 164]:
                         # Confusion is a dumb mechanic in this game.
-                        battle.main.attackByNum(22, "l")
-                    elif memory.main.getEncounterID() == 281:
-                        battle.main.attackByNum(22, "r")
-                    elif memory.main.getEncounterID() == 283:
-                        battle.main.attackByNum(21, "u")
-                    elif memory.main.getEncounterID() == 284:
-                        battle.main.attackByNum(23, "d")
+                        battle.main.attack_by_num(22, "l")
+                    elif memory.main.get_encounter_id() == 281:
+                        battle.main.attack_by_num(22, "r")
+                    elif memory.main.get_encounter_id() == 283:
+                        battle.main.attack_by_num(21, "u")
+                    elif memory.main.get_encounter_id() == 284:
+                        battle.main.attack_by_num(23, "d")
                     else:
                         battle.main.attack("none")
                 elif screen.turn_yuna():
-                    if yunaAttack:
-                        if memory.main.getEncounterID() in [154, 156, 164]:
+                    if yuna_attack:
+                        if memory.main.get_encounter_id() in [154, 156, 164]:
                             # Confusion is a dumb mechanic in this game.
-                            battle.main.attackByNum(22, "l")
-                        elif memory.main.getEncounterID() == 281:
-                            battle.main.attackByNum(21, "l")
-                        elif memory.main.getEncounterID() == 283:
-                            battle.main.attackByNum(22, "d")
-                        elif memory.main.getEncounterID() == 284:
-                            battle.main.attackByNum(22, "d")
+                            battle.main.attack_by_num(22, "l")
+                        elif memory.main.get_encounter_id() == 281:
+                            battle.main.attack_by_num(21, "l")
+                        elif memory.main.get_encounter_id() == 283:
+                            battle.main.attack_by_num(22, "d")
+                        elif memory.main.get_encounter_id() == 284:
+                            battle.main.attack_by_num(22, "d")
                         else:
                             battle.main.attack("none")
                     else:
-                        battle.main.escapeOne()
+                        battle.main.escape_one()
                 elif screen.turn_rikku() or screen.turn_wakka():
                     if not battle.main.checkTidusOk():
-                        battle.main.escapeOne()
-                    elif memory.main.getEncounterID() == 219:
-                        battle.main.escapeOne()
+                        battle.main.escape_one()
+                    elif memory.main.get_encounter_id() == 219:
+                        battle.main.escape_one()
                     else:
                         battle.main.defend()
                 else:
-                    battle.main.escapeOne()
-    memory.main.clickToControl()
-    if float(memory.main.getHP()[0]) / float(memory.main.getMaxHP()[0]) < 0.4:
-        battle.main.healUp(3)
-    nemesis.menu.performNextGrid(limit=apCpLimit)
+                    battle.main.escape_one()
+    memory.main.click_to_control()
+    if float(memory.main.get_hp()[0]) / float(memory.main.get_max_hp()[0]) < 0.4:
+        battle.main.heal_up(3)
+    nemesis.menu.perform_next_grid(limit=ap_cp_limit)
 
 
-def advancedCompleteCheck():
-    encounterID = memory.main.getEncounterID()
-    arenaArray = memory.main.arenaArray()
+def advanced_complete_check():
+    encounterID = memory.main.get_encounter_id()
+    arenaArray = memory.main.arena_array()
     # Common monsters
     if False:
         pass
@@ -430,173 +430,177 @@ def advancedCompleteCheck():
     return False
 
 
-def advancedBattleLogic():
-    print("### Battle Start:", memory.main.getEncounterID())
-    print("### Ambush flag (2 is bad):", memory.main.battleType())
-    while not memory.main.turnReady():
+def advanced_battle_logic():
+    print("### Battle Start:", memory.main.get_encounter_id())
+    print("### Ambush flag (2 is bad):", memory.main.battle_type())
+    while not memory.main.turn_ready():
         pass
     autoLifeUsed = False
     FFXC.set_neutral()
 
-    if memory.main.battleType() == 2:
+    if memory.main.battle_type() == 2:
         print(">>>>Ambushed! Escaping!")
-        battle.main.tidusFlee()
-    elif advancedCompleteCheck():
+        battle.main.tidus_flee()
+    elif advanced_complete_check():
         print(">>>>Complete collecting this monster.")
-        battle.main.tidusFlee()
+        battle.main.tidus_flee()
     else:
-        if memory.main.getEncounterID() == 449:
+        if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
             aeonComplete = False
-            while memory.main.battleActive():
-                if memory.main.turnReady():
+            while memory.main.battle_active():
+                if memory.main.turn_ready():
                     if screen.turn_rikku():
                         if not aeonComplete:
-                            battle.main.buddySwapYuna()
-                            battle.main.aeonSummon(4)
+                            battle.main.buddy_swap_yuna()
+                            battle.main.aeon_summon(4)
                         else:
                             battle.main.defend()
                     elif screen.turn_yuna():
-                        battle.main.buddySwapRikku()
+                        battle.main.buddy_swap_rikku()
                     elif screen.turn_tidus():
-                        battle.main.useSkill(1)  # Quick hit
+                        battle.main.use_skill(1)  # Quick hit
                     else:
                         battle.main.defend()
         else:
-            print("---Regular battle:", memory.main.getEncounterID())
+            print("---Regular battle:", memory.main.get_encounter_id())
             sleepPowder = False
-            while memory.main.battleActive():
-                encounterID = memory.main.getEncounterID()
-                if memory.main.turnReady():
+            while memory.main.battle_active():
+                encounterID = memory.main.get_encounter_id()
+                if memory.main.turn_ready():
                     if encounterID in [442]:
                         # Damned malboros in Omega
-                        battle.main.buddySwapYuna()
-                        battle.main.aeonSummon(4)
+                        battle.main.buddy_swap_yuna()
+                        battle.main.aeon_summon(4)
                         battle.main.attack("none")
                     elif screen.turn_tidus():
-                        if memory.main.getEncounterID() in [386] and not autoLifeUsed:
-                            autoLife()
+                        if memory.main.get_encounter_id() in [386] and not autoLifeUsed:
+                            auto_life()
                             autoLifeUsed = True
                         elif (
                             encounterID == 383
-                            and memory.main.getEnemyCurrentHP()[0] > 9999
+                            and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItemTidus(
-                                    memory.main.getUseItemsSlot(41)
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item_tidus(
+                                    memory.main.get_use_items_slot(41)
                                 )
                             else:
-                                battle.main.useSkill(1)
+                                battle.main.use_skill(1)
                         elif (
                             encounterID == 426
-                            and memory.main.getEnemyCurrentHP()[0] > 9999
+                            and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItemTidus(
-                                    memory.main.getUseItemsSlot(41)
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item_tidus(
+                                    memory.main.get_use_items_slot(41)
                                 )
                             else:
-                                battle.main.useSkill(1)
+                                battle.main.use_skill(1)
                         elif (
                             encounterID == 430
-                            and memory.main.getEnemyCurrentHP()[0] > 9999
+                            and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItemTidus(
-                                    memory.main.getUseItemsSlot(41)
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item_tidus(
+                                    memory.main.get_use_items_slot(41)
                                 )
                             else:
-                                battle.main.useSkill(1)
+                                battle.main.use_skill(1)
                         elif (
                             encounterID == 437
-                            and memory.main.getEnemyCurrentHP()[0] > 9999
+                            and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItemTidus(
-                                    memory.main.getUseItemsSlot(41)
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item_tidus(
+                                    memory.main.get_use_items_slot(41)
                                 )
                             else:
-                                battle.main.useSkill(1)
+                                battle.main.use_skill(1)
                         elif encounterID == 431:
-                            battle.main.tidusFlee()
+                            battle.main.tidus_flee()
                         else:
-                            battle.main.useSkill(1)  # Quick hit
+                            battle.main.use_skill(1)  # Quick hit
                     elif screen.turn_rikku():
                         if encounterID in [377, 382]:
                             print(
                                 "Shining Gems for Gemini, better to save other items for other enemies."
                             )
                             # Double Gemini, two different locations
-                            if memory.main.getUseItemsSlot(42) < 100:
-                                battle.main.useItem(
-                                    memory.main.getUseItemsSlot(42), rikkuFlee=False
+                            if memory.main.get_use_items_slot(42) < 100:
+                                battle.main.use_item(
+                                    memory.main.get_use_items_slot(42), rikku_flee=False
                                 )
                             else:
                                 battle.main.defend()
                         elif encounterID == 386:
                             # Armor bomber guys
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItem(
-                                    memory.main.getUseItemsSlot(41), rikkuFlee=False
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item(
+                                    memory.main.get_use_items_slot(41), rikku_flee=False
                                 )
                             else:
                                 battle.main.defend()
                         elif encounterID in [430]:
                             # Demonolith
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItem(
-                                    memory.main.getUseItemsSlot(41), rikkuFlee=False
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item(
+                                    memory.main.get_use_items_slot(41), rikku_flee=False
                                 )
                             else:
                                 battle.main.defend()
                         elif encounterID == 422:
                             # Provoke on Spirit
-                            battle.main.useSpecial(position=3, target=21, direction="u")
-                            if memory.main.getUseItemsSlot(41) < 100:
-                                battle.main.useItem(
-                                    memory.main.getUseItemsSlot(41), rikkuFlee=False
+                            battle.main.use_special(
+                                position=3, target=21, direction="u"
+                            )
+                            if memory.main.get_use_items_slot(41) < 100:
+                                battle.main.use_item(
+                                    memory.main.get_use_items_slot(41), rikku_flee=False
                                 )
                             else:
                                 battle.main.defend()
                         elif encounterID == 424:
                             # Provoke on Spirit
-                            battle.main.useSpecial(position=3, target=21, direction="r")
+                            battle.main.use_special(
+                                position=3, target=21, direction="r"
+                            )
                         elif (
                             encounterID == 425
-                            and memory.main.getEnemyCurrentHP()[0] > 9999
+                            and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             # Varuna, use purifying salt to remove haste
                             # Safety potions are fun.
-                            battle.main.useItem(
-                                memory.main.getUseItemsSlot(63), rikkuFlee=False
+                            battle.main.use_item(
+                                memory.main.get_use_items_slot(63), rikku_flee=False
                             )
                         elif encounterID == 426:
                             # Master Tonberry
                             if not sleepPowder:
-                                battle.main.useItem(
-                                    memory.main.getUseItemsSlot(37), rikkuFlee=False
+                                battle.main.use_item(
+                                    memory.main.get_use_items_slot(37), rikku_flee=False
                                 )
                             else:
-                                if memory.main.getUseItemsSlot(41) < 100:
-                                    battle.main.useItemTidus(
-                                        memory.main.getUseItemsSlot(41)
+                                if memory.main.get_use_items_slot(41) < 100:
+                                    battle.main.use_item_tidus(
+                                        memory.main.get_use_items_slot(41)
                                     )
                                 else:
                                     battle.main.defend()
                         elif encounterID == 431:
-                            battle.main.tidusFlee()
+                            battle.main.tidus_flee()
                         elif (
                             encounterID == 437
-                            and memory.main.getEnemyCurrentHP()[0] > 9999
+                            and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if not sleepPowder:
-                                battle.main.useItem(
-                                    memory.main.getUseItemsSlot(37), rikkuFlee=False
+                                battle.main.use_item(
+                                    memory.main.get_use_items_slot(37), rikku_flee=False
                                 )
                             else:
-                                if memory.main.getUseItemsSlot(41) < 100:
-                                    battle.main.useItemTidus(
-                                        memory.main.getUseItemsSlot(41)
+                                if memory.main.get_use_items_slot(41) < 100:
+                                    battle.main.use_item_tidus(
+                                        memory.main.get_use_items_slot(41)
                                     )
                                 else:
                                     battle.main.defend()
@@ -604,99 +608,101 @@ def advancedBattleLogic():
                             battle.main.defend()
                     else:
                         battle.main.defend()
-    memory.main.clickToControl()
-    memory.main.fullPartyFormat("initiative")
-    nemesis.menu.performNextGrid()
-    if float(memory.main.getHP()[0]) / float(memory.main.getMaxHP()[0]) < 0.3:
-        battle.main.healUp(3)
+    memory.main.click_to_control()
+    memory.main.full_party_format("initiative")
+    nemesis.menu.perform_next_grid()
+    if float(memory.main.get_hp()[0]) / float(memory.main.get_max_hp()[0]) < 0.3:
+        battle.main.heal_up(3)
 
 
-def bribeBattle(spareChangeValue: int = 12000):
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+def bribe_battle(spare_change_value: int = 12000):
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_lulu():
-                while memory.main.battleMenuCursor() != 20:
-                    if memory.main.battleMenuCursor() == 0:
-                        xbox.tapDown()
+                while memory.main.battle_menu_cursor() != 20:
+                    if memory.main.battle_menu_cursor() == 0:
+                        xbox.tap_down()
                     else:
-                        xbox.tapUp()
-                    if gameVars.usePause():
-                        memory.main.waitFrames(6)
-                memory.main.waitFrames(8)
-                xbox.tapB()
-                memory.main.waitFrames(8)
-                xbox.tapB()
-                memory.main.waitFrames(8)
-                memory.main.calculateSpareChangeMovement(spareChangeValue)
-                while memory.main.spareChangeOpen():
-                    xbox.tapB()
-                xbox.tapB()
-                xbox.tapB()
+                        xbox.tap_up()
+                    if gameVars.use_pause():
+                        memory.main.wait_frames(6)
+                memory.main.wait_frames(8)
+                xbox.tap_b()
+                memory.main.wait_frames(8)
+                xbox.tap_b()
+                memory.main.wait_frames(8)
+                memory.main.calculateSpareChangeMovement(spare_change_value)
+                while memory.main.spare_change_open():
+                    xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
             else:
-                battle.main.buddySwapLulu()
+                battle.main.buddy_swap_lulu()
     print("Battle is complete.")
-    while not memory.main.menuOpen():
+    while not memory.main.menu_open():
         pass
     FFXC.set_value("BtnB", 1)
-    memory.main.waitFrames(150)
+    memory.main.wait_frames(150)
     FFXC.set_value("BtnB", 0)
     print("Now back in control.")
 
 
-def arenaNPC():
-    memory.main.awaitControl()
-    if memory.main.getMap() != 307:
+def arena_npc():
+    memory.main.await_control()
+    if memory.main.get_map() != 307:
         return
-    while not (memory.main.diagProgressFlag() == 74 and memory.main.diagSkipPossible()):
-        if memory.main.userControl():
-            if memory.main.getCoords()[1] > -12:
+    while not (
+        memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
+    ):
+        if memory.main.user_control():
+            if memory.main.get_coords()[1] > -12:
                 FFXC.set_movement(0, -1)
-                memory.main.waitFrames(1)
+                memory.main.wait_frames(1)
             else:
-                nemesis.targetPath.setMovement([2, -15])
-                xbox.tapB()
+                nemesis.targetPath.set_movement([2, -15])
+                xbox.tap_b()
         else:
             FFXC.set_neutral()
-            if memory.main.diagProgressFlag() == 59:
-                xbox.menuA()
-                xbox.menuA()
-                xbox.menuA()
-                xbox.tapB()
-            elif memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_progress_flag() == 59:
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("Mark 1")
-    memory.main.waitFrames(30)  # This buffer can be improved later.
+    memory.main.wait_frames(30)  # This buffer can be improved later.
     print("Mark 2")
 
 
-def arenaReturn(checkpoint: int = 0):
+def arena_return(checkpoint: int = 0):
     if checkpoint == 0:
-        airShipDestination(destNum=12)
+        air_ship_destination(dest_num=12)
     # nemesis.menu.equipArmor(character=gameVars.neArmor(),ability=0x801D)
 
-    while memory.main.getMap() != 307:
-        if memory.main.userControl():
+    while memory.main.get_map() != 307:
+        if memory.main.user_control():
             if checkpoint == 2:
-                while memory.main.userControl():
-                    nemesis.targetPath.setMovement([-641, -268])
-                    xbox.tapB()
+                while memory.main.user_control():
+                    nemesis.targetPath.set_movement([-641, -268])
+                    xbox.tap_b()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif nemesis.targetPath.setMovement(
-                nemesis.targetPath.arenaReturn(checkpoint)
+            elif nemesis.targetPath.set_movement(
+                nemesis.targetPath.arena_return(checkpoint)
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
 def transition():
-    memory.main.clickToControl()
-    returnToAirship()
-    memory.main.awaitControl()
+    memory.main.click_to_control()
+    return_to_airship()
+    memory.main.await_control()
     nemesis.menu.addAbility(
         owner=0,
         equipment_type=0,
@@ -708,15 +714,15 @@ def transition():
     )
 
 
-def kilikaShop():
-    arenaNPC()
-    xbox.tapA()
-    xbox.tapB()
-    memory.main.waitFrames(60)
-    arenaNPC()
-    xbox.tapA()
-    xbox.tapB()
-    arenaNPC()
+def kilika_shop():
+    arena_npc()
+    xbox.tap_a()
+    xbox.tap_b()
+    memory.main.wait_frames(60)
+    arena_npc()
+    xbox.tap_a()
+    xbox.tap_b()
+    arena_npc()
     # xbox.tapDown()
     # xbox.tapDown()
     # xbox.tapB()
@@ -728,55 +734,55 @@ def kilikaShop():
     # memory.waitFrames(30)
     # xbox.menuA()
     # memory.waitFrames(30)
-    xbox.menuA()
-    xbox.tapB()  # Exit
-    memory.main.waitFrames(60)
-    while not nemesis.targetPath.setMovement([-6, -23]):
+    xbox.menu_a()
+    xbox.tap_b()  # Exit
+    memory.main.wait_frames(60)
+    while not nemesis.targetPath.set_movement([-6, -23]):
         pass
-    while not nemesis.targetPath.setMovement([0, -3]):
+    while not nemesis.targetPath.set_movement([0, -3]):
         pass
-    returnToAirship()
-    memory.main.awaitControl()
+    return_to_airship()
+    memory.main.await_control()
     # nemesis.menu.equipWeapon(character=0,ability=0x807A, fullMenuClose=False)
-    airShipDestination(destNum=2)
-    while not nemesis.targetPath.setMovement([-25, -246]):
+    air_ship_destination(dest_num=2)
+    while not nemesis.targetPath.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.setMovement([-47, -209]):
+    while not nemesis.targetPath.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.setMovement([-91, -199]):
+    while not nemesis.targetPath.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.setMovement([-108, -169]):
+    while not nemesis.targetPath.set_movement([-108, -169]):
         pass
-    while memory.main.userControl():
+    while memory.main.user_control():
         FFXC.set_movement(-1, 0)
-        xbox.tapB()
+        xbox.tap_b()
     FFXC.set_neutral()  # Now talking to vendor
-    memory.main.waitFrames(60)
-    xbox.tapB()  # Intro dialog
-    memory.main.waitFrames(60)
-    xbox.tapB()  # Buy equipment
-    memory.main.waitFrames(60)
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Intro dialog
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Buy equipment
+    memory.main.wait_frames(60)
     # getEquipment(equip=False) #Weapon for Yuna
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    getEquipment(equip=True)  # Weapon for Rikku
-    xbox.tapDown()
-    getEquipment(equip=True)  # Armor for Tidus
-    xbox.tapDown()
-    getEquipment(equip=True)  # Armor for Yuna
-    xbox.tapDown()
-    getEquipment(equip=True)  # Armor for Wakka
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    getEquipment(equip=True)  # Armor for Wakka
-    xbox.tapDown()
-    getEquipment(equip=True)  # Armor for Rikku
-    memory.main.closeMenu()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    get_equipment(equip=True)  # Weapon for Rikku
+    xbox.tap_down()
+    get_equipment(equip=True)  # Armor for Tidus
+    xbox.tap_down()
+    get_equipment(equip=True)  # Armor for Yuna
+    xbox.tap_down()
+    get_equipment(equip=True)  # Armor for Wakka
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    get_equipment(equip=True)  # Armor for Wakka
+    xbox.tap_down()
+    get_equipment(equip=True)  # Armor for Rikku
+    memory.main.close_menu()
     nemesis.menu.addAbility(
         owner=6,
         equipment_type=0,
@@ -796,61 +802,61 @@ def kilikaShop():
         fullMenuClose=True,
     )
 
-    while not nemesis.targetPath.setMovement([-91, -199]):
+    while not nemesis.targetPath.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.setMovement([-47, -209]):
+    while not nemesis.targetPath.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.setMovement([-25, -246]):
+    while not nemesis.targetPath.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.setMovement([29, -252]):
+    while not nemesis.targetPath.set_movement([29, -252]):
         pass
-    returnToAirship()
+    return_to_airship()
 
 
-def odToAP():  # Calm Lands purchases
-    arenaReturn()
-    arenaNPC()
-    xbox.tapA()
-    xbox.tapB()
-    arenaNPC()
-    xbox.tapA()
-    xbox.tapB()
-    arenaNPC()
-    xbox.tapA()
-    xbox.tapB()
-    arenaNPC()
-    xbox.tapA()
-    xbox.tapB()
-    arenaNPC()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapB()
-    memory.main.waitFrames(60)
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    xbox.tapUp()
-    xbox.tapB()
+def od_to_ap():  # Calm Lands purchases
+    arena_return()
+    arena_npc()
+    xbox.tap_a()
+    xbox.tap_b()
+    arena_npc()
+    xbox.tap_a()
+    xbox.tap_b()
+    arena_npc()
+    xbox.tap_a()
+    xbox.tap_b()
+    arena_npc()
+    xbox.tap_a()
+    xbox.tap_b()
+    arena_npc()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_b()
+    memory.main.wait_frames(60)
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    xbox.tap_up()
+    xbox.tap_b()
     print("Now to sell items.")
-    memory.main.waitFrames(6)
-    xbox.menuA()
-    memory.main.waitFrames(6)
-    xbox.tapRight()
-    xbox.menuB()
+    memory.main.wait_frames(6)
+    xbox.menu_a()
+    memory.main.wait_frames(6)
+    xbox.tap_right()
+    xbox.menu_b()
     print("Should now be attempting to sell items.")
     nemesis.menu.sellAll()
-    xbox.menuA()
-    memory.main.waitFrames(60)
-    xbox.tapA()
-    memory.main.waitFrames(60)
-    xbox.tapA()
-    memory.main.waitFrames(60)
-    xbox.tapA()
-    xbox.tapB()
+    xbox.menu_a()
+    memory.main.wait_frames(60)
+    xbox.tap_a()
+    memory.main.wait_frames(60)
+    xbox.tap_a()
+    memory.main.wait_frames(60)
+    xbox.tap_a()
+    xbox.tap_b()
     nemesis.menu.autoSortEquipment(manual="n")
     nemesis.menu.addAbility(
         owner=0,
@@ -864,32 +870,32 @@ def odToAP():  # Calm Lands purchases
         fullMenuClose=False,
     )
     nemesis.menu.equipWeapon(character=0, ability=0x8011)
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
     nemesis.menu.tidusSlayer()
 
-    memory.main.awaitControl()
+    memory.main.await_control()
     FFXC.set_movement(-1, 0)
-    memory.main.waitFrames(30)
-    returnToAirship()
+    memory.main.wait_frames(30)
+    return_to_airship()
 
 
-def farmFeathers():
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=7, monsterIndex=5)
-    memory.main.waitFrames(1)
+def farm_feathers():
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=7, monster_index=5)
+    memory.main.wait_frames(1)
     waitCounter = 0
-    while memory.main.battleActive():
-        if memory.main.turnReady():
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
             if screen.turn_rikku():
                 print("+++ Qactar steal command")
-                battle.main.Steal()
+                battle.main.steal()
                 print("+++ Qactar steal command done")
             elif screen.turn_tidus():
                 print("+++ Qactar flee command")
-                battle.main.tidusFlee()
+                battle.main.tidus_flee()
                 print("+++ Qactar flee command done")
             else:
                 print("+++ Qactar defend command")
@@ -900,55 +906,55 @@ def farmFeathers():
             print("Waiting for next turn: ", waitCounter)
     print("Battle is complete.")
 
-    while not memory.main.menuOpen():
+    while not memory.main.menu_open():
         pass
     # memory.waitFrames(300)
 
     FFXC.set_value("BtnB", 1)
-    memory.main.waitFrames(150)
+    memory.main.wait_frames(150)
     FFXC.set_value("BtnB", 0)
     print("Now back in control.")
-    nemesis.arenaSelect.arenaMenuSelect(4)
+    nemesis.arenaSelect.arena_menu_select(4)
 
 
-def autoPhoenix():  # Calm Lands items
+def auto_phoenix():  # Calm Lands items
     nemesis.menu.autoSortEquipment()
-    nemesis.menu.luluBribe()
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=7, monsterIndex=0)
-    bribeBattle()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    memory.main.fullPartyFormat("initiative")
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=7, monsterIndex=0)
-    bribeBattle()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    memory.main.fullPartyFormat("initiative")
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(1)
-    nemesis.arenaSelect.startFight(areaIndex=7, monsterIndex=0)
-    bribeBattle()
-    nemesis.arenaSelect.arenaMenuSelect(4)
-    memory.main.fullPartyFormat("initiative")
-    arenaNPC()
-    while memory.main.getItemCountSlot(memory.main.getItemSlot(7)) != 99:
+    nemesis.menu.lulu_bribe()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+    bribe_battle()
+    nemesis.arenaSelect.arena_menu_select(4)
+    memory.main.full_party_format("initiative")
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+    bribe_battle()
+    nemesis.arenaSelect.arena_menu_select(4)
+    memory.main.full_party_format("initiative")
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(1)
+    nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+    bribe_battle()
+    nemesis.arenaSelect.arena_menu_select(4)
+    memory.main.full_party_format("initiative")
+    arena_npc()
+    while memory.main.get_item_count_slot(memory.main.get_item_slot(7)) != 99:
         print("Trying to obtain mega-phoenix downs")
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(2)  # Equipment menu
-    memory.main.waitFrames(90)
-    xbox.tapRight()
-    xbox.menuB()  # Sell
+        nemesis.arenaSelect.arena_menu_select(4)
+        arena_npc()
+    nemesis.arenaSelect.arena_menu_select(2)  # Equipment menu
+    memory.main.wait_frames(90)
+    xbox.tap_right()
+    xbox.menu_b()  # Sell
     nemesis.menu.sellAll()
-    memory.main.waitFrames(3)
-    xbox.tapA()
-    memory.main.waitFrames(90)
-    xbox.tapA()
-    memory.main.waitFrames(90)
-    xbox.tapA()
-    xbox.tapB()
+    memory.main.wait_frames(3)
+    xbox.tap_a()
+    memory.main.wait_frames(90)
+    xbox.tap_a()
+    memory.main.wait_frames(90)
+    xbox.tap_a()
+    xbox.tap_b()
     nemesis.menu.autoSortEquipment()  # This to make sure equipment is in the right place
     nemesis.menu.addAbility(
         owner=4,
@@ -962,8 +968,8 @@ def autoPhoenix():  # Calm Lands items
         fullMenuClose=False,
     )
 
-    memory.main.waitFrames(30)
-    initArray = memory.main.checkAbility(ability=0x8002)
+    memory.main.wait_frames(30)
+    initArray = memory.main.check_ability(ability=0x8002)
     print("Initiative weapons: ", initArray)
     if initArray[4]:
         nemesis.menu.addAbility(
@@ -978,7 +984,7 @@ def autoPhoenix():  # Calm Lands items
             fullMenuClose=False,
         )
         nemesis.menu.equipWeapon(character=4, ability=0x8002)  # Initiative
-        memory.main.closeMenu()
+        memory.main.close_menu()
     else:
         nemesis.menu.addAbility(
             owner=6,
@@ -991,12 +997,14 @@ def autoPhoenix():  # Calm Lands items
             closeMenu=True,
             fullMenuClose=True,
         )
-        memory.main.closeMenu()
-        featherSlot = memory.main.getItemSlot(itemNum=54)
-        if featherSlot == 255 or memory.main.getItemCountSlot(featherSlot) < 6:
-            while featherSlot == 255 or memory.main.getItemCountSlot(featherSlot) < 6:
-                farmFeathers()
-                featherSlot = memory.main.getItemSlot(itemNum=54)
+        memory.main.close_menu()
+        featherSlot = memory.main.get_item_slot(item_num=54)
+        if featherSlot == 255 or memory.main.get_item_count_slot(featherSlot) < 6:
+            while (
+                featherSlot == 255 or memory.main.get_item_count_slot(featherSlot) < 6
+            ):
+                farm_feathers()
+                featherSlot = memory.main.get_item_slot(item_num=54)
         nemesis.menu.addAbility(
             owner=6,
             equipment_type=0,
@@ -1010,113 +1018,118 @@ def autoPhoenix():  # Calm Lands items
         )
 
     FFXC.set_movement(-1, 0)
-    memory.main.waitFrames(15)
+    memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(15)
+    memory.main.wait_frames(15)
     FFXC.set_neutral()
-    memory.main.fullPartyFormat("initiative")
-    returnToAirship()
+    memory.main.full_party_format("initiative")
+    return_to_airship()
 
     # nemesis.menu.equipArmor(character=0,ability=0x8056) #Auto-Haste
     nemesis.menu.equipArmor(character=4, ability=0x800A)  # Auto-Phoenix
     nemesis.menu.equipArmor(character=6, ability=0x800A)  # Auto-Phoenix
-    if not gameVars.neArmor() in [0, 4, 6]:
-        nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=99)  # Unequip
-    memory.main.closeMenu()
+    if not gameVars.ne_armor() in [0, 4, 6]:
+        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=99)  # Unequip
+    memory.main.close_menu()
 
 
-def restockDowns():
+def restock_downs():
     print("Restocking phoenix downs")
-    arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(3)
-    memory.main.waitFrames(60)
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    while memory.main.equipBuyRow() != 2:
-        if memory.main.equipBuyRow() < 2:
-            xbox.tapDown()
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(3)
+    memory.main.wait_frames(60)
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    while memory.main.equip_buy_row() != 2:
+        if memory.main.equip_buy_row() < 2:
+            xbox.tap_down()
         else:
-            xbox.tapUp()
-    xbox.tapB()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(6)
-    xbox.menuA()
-    memory.main.waitFrames(6)
-    xbox.menuA()
+            xbox.tap_up()
+    xbox.tap_b()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(6)
+    xbox.menu_a()
+    memory.main.wait_frames(6)
+    xbox.menu_a()
 
 
-def oneMpReady():
-    print("Slot, Gambler:", memory.main.getItemSlot(41))
-    if memory.main.getItemSlot(41) > 200:
+def one_mp_ready():
+    print("Slot, Gambler:", memory.main.get_item_slot(41))
+    if memory.main.get_item_slot(41) > 200:
         return False
-    print("Count, Gambler:", memory.main.getItemCountSlot(memory.main.getItemSlot(41)))
-    if memory.main.getItemCountSlot(memory.main.getItemSlot(41)) < 99:
+    print(
+        "Count, Gambler:",
+        memory.main.get_item_count_slot(memory.main.get_item_slot(41)),
+    )
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(41)) < 99:
         return False
-    print("Slot, Salt:", memory.main.getItemSlot(63))
-    if memory.main.getItemSlot(63) > 200:
+    print("Slot, Salt:", memory.main.get_item_slot(63))
+    if memory.main.get_item_slot(63) > 200:
         return False
-    print("Count, Salt:", memory.main.getItemCountSlot(memory.main.getItemSlot(63)))
-    if memory.main.getItemCountSlot(memory.main.getItemSlot(63)) < 20:
+    print(
+        "Count, Salt:", memory.main.get_item_count_slot(memory.main.get_item_slot(63))
+    )
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(63)) < 20:
         return False
     return True
 
 
-def oneMpWeapon():  # Break Damage Limit, or One MP cost
+def one_mp_weapon():  # Break Damage Limit, or One MP cost
     nemesis.menu.autoSortEquipment()
-    memory.main.fullPartyFormat("initiative")
-    arenaNPC()
+    memory.main.full_party_format("initiative")
+    arena_npc()
     print(
         "###Sleeping powder count:",
-        memory.main.getItemCountSlot(memory.main.getItemSlot(37)),
+        memory.main.get_item_count_slot(memory.main.get_item_slot(37)),
     )
     while (
-        memory.main.getItemSlot(37) > 200
-        or memory.main.getItemCountSlot(memory.main.getItemSlot(37)) < 41
+        memory.main.get_item_slot(37) > 200
+        or memory.main.get_item_count_slot(memory.main.get_item_slot(37)) < 41
     ):
-        nemesis.arenaSelect.arenaMenuSelect(1)
-        nemesis.arenaSelect.startFight(areaIndex=7, monsterIndex=0)
-        bribeBattle()
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        memory.main.fullPartyFormat("initiative")
-        arenaNPC()
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+        bribe_battle()
+        nemesis.arenaSelect.arena_menu_select(4)
+        memory.main.full_party_format("initiative")
+        arena_npc()
         print(
             "###Sleeping powder count:",
-            memory.main.getItemCountSlot(memory.main.getItemSlot(37)),
+            memory.main.get_item_count_slot(memory.main.get_item_slot(37)),
         )
-    while not oneMpReady():
+    while not one_mp_ready():
         print("Trying to obtain Gambler's Soul and Purifying Salt items")
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(2)
-    memory.main.waitFrames(60)
-    xbox.menuB()  # Buy
-    memory.main.waitFrames(10)
-    xbox.menuB()  # New Tidus capture weapon
-    memory.main.waitFrames(10)
-    xbox.tapUp()
-    xbox.menuB()  # Confirm purchase
-    memory.main.waitFrames(10)
-    xbox.tapUp()
-    xbox.menuB()  # Confirm equipping weapon
+        nemesis.arenaSelect.arena_menu_select(4)
+        arena_npc()
+    nemesis.arenaSelect.arena_menu_select(2)
+    memory.main.wait_frames(60)
+    xbox.menu_b()  # Buy
+    memory.main.wait_frames(10)
+    xbox.menu_b()  # New Tidus capture weapon
+    memory.main.wait_frames(10)
+    xbox.tap_up()
+    xbox.menu_b()  # Confirm purchase
+    memory.main.wait_frames(10)
+    xbox.tap_up()
+    xbox.menu_b()  # Confirm equipping weapon
 
-    memory.main.waitFrames(3)
-    xbox.tapA()
-    memory.main.waitFrames(30)
-    xbox.tapA()
-    memory.main.waitFrames(30)
-    xbox.tapA()
-    xbox.tapB()
+    memory.main.wait_frames(3)
+    xbox.tap_a()
+    memory.main.wait_frames(30)
+    xbox.tap_a()
+    memory.main.wait_frames(30)
+    xbox.tap_a()
+    xbox.tap_b()
     nemesis.menu.autoSortEquipment()  # This to make sure equipment is in the right place
-    memory.main.closeMenu()
+    memory.main.close_menu()
     nemesis.menu.addAbility(
         owner=0,
         equipment_type=0,
@@ -1128,66 +1141,66 @@ def oneMpWeapon():  # Break Damage Limit, or One MP cost
         closeMenu=True,
         fullMenuClose=True,
     )
-    restockDowns()
-    nemesis.arenaSelect.arenaMenuSelect(4)
+    restock_downs()
+    nemesis.arenaSelect.arena_menu_select(4)
 
     FFXC.set_movement(-1, 0)
-    memory.main.waitFrames(15)
+    memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(15)
+    memory.main.wait_frames(15)
     FFXC.set_neutral()
-    returnToAirship()
-    nemesis.menu.rikkuHaste()
-    rinEquipDump()
+    return_to_airship()
+    nemesis.menu.rikku_haste()
+    rin_equip_dump()
 
 
-def kilikaFinalShop():
-    memory.main.awaitControl()
-    rinEquipDump()
+def kilika_final_shop():
+    memory.main.await_control()
+    rin_equip_dump()
     nemesis.menu.autoSortEquipment()
 
-    gilNeeded = 3500000 - memory.main.getGilvalue()
+    gilNeeded = 3500000 - memory.main.get_gil_value()
     weaponBuys = int(gilNeeded / 26150)
     weaponBuys += 1  # for safety
 
-    airShipDestination(destNum=2)
-    while not nemesis.targetPath.setMovement([-25, -246]):
+    air_ship_destination(dest_num=2)
+    while not nemesis.targetPath.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.setMovement([-47, -209]):
+    while not nemesis.targetPath.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.setMovement([-91, -199]):
+    while not nemesis.targetPath.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.setMovement([-108, -169]):
+    while not nemesis.targetPath.set_movement([-108, -169]):
         pass
-    while memory.main.userControl():
+    while memory.main.user_control():
         FFXC.set_movement(-1, 0)
-        xbox.tapB()
+        xbox.tap_b()
     FFXC.set_neutral()  # Now talking to vendor
-    memory.main.waitFrames(60)
-    xbox.tapB()  # Intro dialog
-    memory.main.waitFrames(60)
-    xbox.tapB()  # Buy equipment
-    memory.main.waitFrames(60)
-    getEquipment(equip=True)  # Weapon for Tidus
-    memory.main.waitFrames(60)
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
-    xbox.tapDown()
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Intro dialog
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Buy equipment
+    memory.main.wait_frames(60)
+    get_equipment(equip=True)  # Weapon for Tidus
+    memory.main.wait_frames(60)
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
     for x in range(weaponBuys):
         print("Buying armors, remaining - ", weaponBuys - x)
-        memory.main.waitFrames(6)
-        xbox.menuB()  # Purchase
-        memory.main.waitFrames(6)
-        xbox.menuUp()
-        xbox.menuB()  # Confirm
-        memory.main.waitFrames(6)
-        xbox.menuB()  # Do not equip
-    memory.main.waitFrames(6)
-    memory.main.closeMenu()
+        memory.main.wait_frames(6)
+        xbox.menu_b()  # Purchase
+        memory.main.wait_frames(6)
+        xbox.menu_up()
+        xbox.menu_b()  # Confirm
+        memory.main.wait_frames(6)
+        xbox.menu_b()  # Do not equip
+    memory.main.wait_frames(6)
+    memory.main.close_menu()
 
     for y in range(weaponBuys):
         if y == 0:  # First one
@@ -1227,37 +1240,37 @@ def kilikaFinalShop():
                 fullMenuClose=False,
             )
 
-    while memory.main.userControl():
+    while memory.main.user_control():
         FFXC.set_movement(-1, 0)
-        xbox.tapB()
+        xbox.tap_b()
     FFXC.set_neutral()  # Now talking to vendor
-    memory.main.waitFrames(60)
-    xbox.tapB()  # Intro dialog
-    memory.main.waitFrames(60)
-    xbox.tapRight()
-    xbox.tapB()  # Sell equipment
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Intro dialog
+    memory.main.wait_frames(60)
+    xbox.tap_right()
+    xbox.tap_b()  # Sell equipment
     nemesis.menu.sellAll()
-    memory.main.closeMenu()
+    memory.main.close_menu()
 
-    while not nemesis.targetPath.setMovement([-91, -199]):
+    while not nemesis.targetPath.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.setMovement([-47, -209]):
+    while not nemesis.targetPath.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.setMovement([-25, -246]):
+    while not nemesis.targetPath.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.setMovement([29, -252]):
+    while not nemesis.targetPath.set_movement([29, -252]):
         pass
     nemesis.menu.autoSortEquipment()
-    returnToAirship()
+    return_to_airship()
 
 
-def finalWeapon():
-    arenaNPC()
-    while memory.main.getItemCountSlot(memory.main.getItemSlot(53)) < 99:
+def final_weapon():
+    arena_npc()
+    while memory.main.get_item_count_slot(memory.main.get_item_slot(53)) < 99:
         print("Trying to obtain Dark Matter for BDL weapon")
-        nemesis.arenaSelect.arenaMenuSelect(4)
-        arenaNPC()
-    nemesis.arenaSelect.arenaMenuSelect(4)
+        nemesis.arenaSelect.arena_menu_select(4)
+        arena_npc()
+    nemesis.arenaSelect.arena_menu_select(4)
 
     nemesis.menu.addAbility(
         owner=0,
@@ -1307,85 +1320,85 @@ def finalWeapon():
         closeMenu=True,
         fullMenuClose=True,
     )
-    memory.main.fullPartyFormat("kilikawoods1")
+    memory.main.full_party_format("kilikawoods1")
 
 
-def rinEquipDump(buyWeapon=False):
-    while not nemesis.targetPath.setMovement([-242, 298]):
+def rin_equip_dump(buy_weapon=False):
+    while not nemesis.targetPath.set_movement([-242, 298]):
         pass
-    while not nemesis.targetPath.setMovement([-241, 211]):
+    while not nemesis.targetPath.set_movement([-241, 211]):
         pass
     FFXC.set_movement(0, -1)
-    while memory.main.userControl():
+    while memory.main.user_control():
         pass
-    while not nemesis.targetPath.setMovement([39, 53]):
+    while not nemesis.targetPath.set_movement([39, 53]):
         pass
-    while memory.main.userControl():
-        nemesis.targetPath.setMovement([28, 44])
-        xbox.tapB()
+    while memory.main.user_control():
+        nemesis.targetPath.set_movement([28, 44])
+        xbox.tap_b()
     FFXC.set_neutral()
-    memory.main.clickToDiagProgress(48)
-    memory.main.waitFrames(10)
-    xbox.tapB()
-    memory.main.waitFrames(30)
-    xbox.tapRight()
-    xbox.menuB()
+    memory.main.click_to_diag_progress(48)
+    memory.main.wait_frames(10)
+    xbox.tap_b()
+    memory.main.wait_frames(30)
+    xbox.tap_right()
+    xbox.menu_b()
 
     nemesis.menu.sellAll()
-    if buyWeapon:
-        memory.main.waitFrames(60)
-        xbox.menuRight()  # Removes any pop-ups
-        memory.main.waitFrames(60)
-        xbox.menuA()
-        memory.main.waitFrames(60)
-        xbox.menuLeft()
-        memory.main.waitFrames(60)
-        xbox.menuB()
-        memory.main.waitFrames(60)
-        xbox.menuB()
-        memory.main.waitFrames(60)
-        xbox.menuUp()
-        memory.main.waitFrames(60)
-        xbox.menuB()
-        memory.main.waitFrames(60)
-        xbox.menuUp()
-        memory.main.waitFrames(60)
-        xbox.menuB()
-        memory.main.waitFrames(60)
-    memory.main.closeMenu()
-    memory.main.clickToControl3()
-    while not nemesis.targetPath.setMovement([53, 110]):
+    if buy_weapon:
+        memory.main.wait_frames(60)
+        xbox.menu_right()  # Removes any pop-ups
+        memory.main.wait_frames(60)
+        xbox.menu_a()
+        memory.main.wait_frames(60)
+        xbox.menu_left()
+        memory.main.wait_frames(60)
+        xbox.menu_b()
+        memory.main.wait_frames(60)
+        xbox.menu_b()
+        memory.main.wait_frames(60)
+        xbox.menu_up()
+        memory.main.wait_frames(60)
+        xbox.menu_b()
+        memory.main.wait_frames(60)
+        xbox.menu_up()
+        memory.main.wait_frames(60)
+        xbox.menu_b()
+        memory.main.wait_frames(60)
+    memory.main.close_menu()
+    memory.main.click_to_control_3()
+    while not nemesis.targetPath.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)
-    while memory.main.userControl():
+    while memory.main.user_control():
         pass
-    while not nemesis.targetPath.setMovement([-241, 223]):
+    while not nemesis.targetPath.set_movement([-241, 223]):
         pass
-    while not nemesis.targetPath.setMovement([-246, 329]):
+    while not nemesis.targetPath.set_movement([-246, 329]):
         pass
 
 
-def yojimboDialog():
+def yojimbo_dialog():
     print("Clicking until dialog box")
-    while memory.main.diagProgressFlag():
-        xbox.tapB()
+    while memory.main.diag_progress_flag():
+        xbox.tap_b()
     print("Dialog box online.")
-    memory.main.waitFrames(60)
-    xbox.tapUp()
-    xbox.tapB()
-    memory.main.clickToDiagProgress(5)
-    memory.main.waitFrames(12)
-    xbox.tapLeft()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapLeft()
-    xbox.tapUp()
-    xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(12)  # Eff it, just pay the man!
+    memory.main.wait_frames(60)
+    xbox.tap_up()
+    xbox.tap_b()
+    memory.main.click_to_diag_progress(5)
+    memory.main.wait_frames(12)
+    xbox.tap_left()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_left()
+    xbox.tap_up()
+    xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(12)  # Eff it, just pay the man!
     # memory.clickToDiagProgress(5) #150,001
     # memory.waitFrames(12)
     # Xbox.tapDown()
@@ -1413,95 +1426,97 @@ def yojimboDialog():
     # xbox.tapUp()
     # xbox.tapB()
     print("Fayth accepts the contract.")
-    xbox.nameAeon("Yojimbo")
+    xbox.name_aeon("Yojimbo")
     print("Naming complete.")
 
 
 def yojimbo():
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if checkpoint == 5:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif checkpoint == 9:
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
-            elif checkpoint == 29 and memory.main.getCoords()[1] > 1800:
+            elif checkpoint == 29 and memory.main.get_coords()[1] > 1800:
                 checkpoint += 1
             elif checkpoint in [32, 35]:
                 FFXC.set_neutral()
-                memory.main.waitFrames(12)
+                memory.main.wait_frames(12)
                 if checkpoint == 32:
                     FFXC.set_movement(0, 1)
                 else:
                     FFXC.set_movement(0, -1)
-                memory.main.waitFrames(2)
+                memory.main.wait_frames(2)
                 FFXC.set_neutral()
-                memory.main.waitFrames(12)
-                xbox.tapB()
+                memory.main.wait_frames(12)
+                xbox.tap_b()
                 checkpoint += 1
             elif checkpoint == 33:  # Talking to Fayth
-                yojimboDialog()
+                yojimbo_dialog()
                 checkpoint += 1
             elif checkpoint == 39:
-                memory.main.clickToEventTemple(3)
+                memory.main.click_to_event_temple(3)
                 checkpoint += 1
             elif checkpoint == 41:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.yojimbo(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.yojimbo(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
+            if memory.main.battle_active():
                 battle.main.yojimbo()
-                memory.main.clickToControl()
+                memory.main.click_to_control()
             elif checkpoint == 33:  # Talking to Fayth
-                yojimboDialog()
+                yojimbo_dialog()
                 checkpoint += 1
-            elif memory.main.diagSkipPossible():
-                xbox.tapB()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def besaidFarm(capNum: int = 1):
-    airShipDestination(destNum=1)
+def besaid_farm(cap_num: int = 1):
+    air_ship_destination(dest_num=1)
     nemesis.menu.removeAllNEA()
 
-    memory.main.arenaFarmCheck(zone="besaid", endGoal=capNum, report=True)
+    memory.main.arena_farm_check(zone="besaid", end_goal=cap_num, report=True)
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(zone="besaid", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="besaid", end_goal=cap_num, report=False
+                )
                 and checkpoint < 15
             ):
                 checkpoint = 15
-            elif checkpoint == 15 and not memory.main.arenaFarmCheck(
-                zone="besaid", endGoal=capNum, report=False
+            elif checkpoint == 15 and not memory.main.arena_farm_check(
+                zone="besaid", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
             elif checkpoint == 1:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif checkpoint == 11:
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
-            elif checkpoint == 16 and memory.main.getMap() == 20:
+            elif checkpoint == 16 and memory.main.get_map() == 20:
                 checkpoint += 1
             elif checkpoint == 25:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif checkpoint == 26:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.besaidFarm(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.besaid_farm(checkpoint)
                 )
                 == True
             ):
@@ -1509,51 +1524,55 @@ def besaidFarm(capNum: int = 1):
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                memory.main.arenaFarmCheck(zone="besaid", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle_farm_all()
+                memory.main.arena_farm_check(
+                    zone="besaid", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def kilikaFarm(capNum: int = 1):
-    airShipDestination(destNum=2)
+def kilika_farm(cap_num: int = 1):
+    air_ship_destination(dest_num=2)
     nemesis.menu.removeAllNEA()
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(zone="kilika", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="kilika", end_goal=cap_num, report=False
+                )
                 and checkpoint < 14
             ):
                 checkpoint = 14
-            elif checkpoint == 14 and not memory.main.arenaFarmCheck(
-                zone="kilika", endGoal=capNum, report=False
+            elif checkpoint == 14 and not memory.main.arena_farm_check(
+                zone="kilika", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
             elif checkpoint == 4:
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 11:
-                memory.main.clickToEventTemple(0)
-                memory.main.arenaFarmCheck(zone="kilika", endGoal=10, report=True)
+                memory.main.click_to_event_temple(0)
+                memory.main.arena_farm_check(zone="kilika", end_goal=10, report=True)
                 checkpoint += 1
-            elif checkpoint == 14 and memory.main.getMap() == 47:
+            elif checkpoint == 14 and memory.main.get_map() == 47:
                 checkpoint += 1
             elif checkpoint == 21:
-                memory.main.clickToEventTemple(3)
+                memory.main.click_to_event_temple(3)
                 checkpoint += 1
             elif checkpoint == 25:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.kilikaFarm(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.kilika_farm(checkpoint)
                 )
                 == True
             ):
@@ -1561,32 +1580,34 @@ def kilikaFarm(capNum: int = 1):
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                memory.main.arenaFarmCheck(zone="kilika", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle_farm_all()
+                memory.main.arena_farm_check(
+                    zone="kilika", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def miihenNext(endGoal: int):
+def miihen_next(end_goal: int):
     next1 = rngTrack.coming_battles(area="mi'ihen_(newroad)", battleCount=2)[0]
     next2 = rngTrack.coming_battles(area="old_road", battleCount=2)[0]
     next3 = rngTrack.coming_battles(area="clasko_skip_screen", battleCount=2)[0]
     next4 = rngTrack.coming_battles(area="mrr_-_valley", battleCount=2)[0]
     next6 = rngTrack.coming_battles(area="mrr_-_precipice", battleCount=2)[0]
-    farmArray1 = memory.main.arenaFarmCheck(
-        zone="miihen", endGoal=endGoal, returnArray=True
+    farmArray1 = memory.main.arena_farm_check(
+        zone="miihen", end_goal=end_goal, return_array=True
     )
-    farmArray2 = memory.main.arenaFarmCheck(
-        zone="mrr", endGoal=endGoal, returnArray=True
+    farmArray2 = memory.main.arena_farm_check(
+        zone="mrr", end_goal=end_goal, return_array=True
     )
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 8
-    if memory.main.arenaFarmCheck(zone="miihen", endGoal=endGoal):
+    if memory.main.arena_farm_check(zone="miihen", end_goal=end_goal):
         print("=======================")
         print("Next battles:")
         print(next4)
@@ -1594,15 +1615,15 @@ def miihenNext(endGoal: int):
         print(farmArray2)
         print("=======================")
 
-        if memory.main.arenaFarmCheck(zone="mrr", endGoal=endGoal):
+        if memory.main.arena_farm_check(zone="mrr", end_goal=end_goal):
             return 9  # Ready to move on
         elif "garuda" in next6:
             return 6
         elif "garuda" in next4:
             return 5
-        elif farmArray2[3] < endGoal and "lamashtu" in next4:
+        elif farmArray2[3] < end_goal and "lamashtu" in next4:
             return 5
-        elif memory.main.getMap() == 128:
+        elif memory.main.get_map() == 128:
             return 6
         else:
             return 5
@@ -1617,113 +1638,113 @@ def miihenNext(endGoal: int):
     print(farmArray2)
     print("=======================")
 
-    if farmArray2[2] < endGoal and "garuda" in next4:
+    if farmArray2[2] < end_goal and "garuda" in next4:
         return 4
-    if farmArray1[0] < endGoal and "raldo" in next1:
+    if farmArray1[0] < end_goal and "raldo" in next1:
         return 1
-    if farmArray1[1] < endGoal and "mi'ihen_fang" in next1:
+    if farmArray1[1] < end_goal and "mi'ihen_fang" in next1:
         return 1
-    if farmArray1[7] < endGoal and "white_element" in next1:
+    if farmArray1[7] < end_goal and "white_element" in next1:
         return 1
-    if farmArray2[3] < endGoal and "lamashtu" in next4:
+    if farmArray2[3] < end_goal and "lamashtu" in next4:
         return 4
-    if farmArray1[2] < endGoal and "thunder_flan" in next2:
+    if farmArray1[2] < end_goal and "thunder_flan" in next2:
         return 2
-    if farmArray1[2] < endGoal and "thunder_flan" in next3:
+    if farmArray1[2] < end_goal and "thunder_flan" in next3:
         return 3
-    if farmArray1[3] < endGoal and "ipiria" in next2:
+    if farmArray1[3] < end_goal and "ipiria" in next2:
         return 2
-    if farmArray1[3] < endGoal and "ipiria" in next3:
+    if farmArray1[3] < end_goal and "ipiria" in next3:
         return 3
-    if farmArray1[4] < endGoal and "floating_eye" in next2:
+    if farmArray1[4] < end_goal and "floating_eye" in next2:
         return 2
-    if farmArray1[4] < endGoal and "floating_eye" in next3:
+    if farmArray1[4] < end_goal and "floating_eye" in next3:
         return 3
-    if farmArray1[5] < endGoal and "dual_horn" in next2:
+    if farmArray1[5] < end_goal and "dual_horn" in next2:
         return 2
-    if farmArray1[5] < endGoal and "dual_horn" in next3:
+    if farmArray1[5] < end_goal and "dual_horn" in next3:
         return 3
-    if farmArray1[6] < endGoal and "vouivre" in next2:
+    if farmArray1[6] < end_goal and "vouivre" in next2:
         return 2
-    if farmArray1[6] < endGoal and "vouivre" in next3:
+    if farmArray1[6] < end_goal and "vouivre" in next3:
         return 3
-    if farmArray1[8] < endGoal and "bomb" in next2:
+    if farmArray1[8] < end_goal and "bomb" in next2:
         return 2
-    if farmArray1[8] < endGoal and "bomb" in next3:
+    if farmArray1[8] < end_goal and "bomb" in next3:
         return 3
 
     print("Couldn't find a special case")
-    if memory.main.getMap() == 128:
+    if memory.main.get_map() == 128:
         return 6
-    if memory.main.getMap() == 92:
-        if memory.main.arenaFarmCheck(zone="miihen", endGoal=endGoal):
+    if memory.main.get_map() == 92:
+        if memory.main.arena_farm_check(zone="miihen", end_goal=end_goal):
             return 5
         else:
             return 4
-    if memory.main.getMap() == 79:
+    if memory.main.get_map() == 79:
         return 3
-    if memory.main.getMap() == 116:
+    if memory.main.get_map() == 116:
         return 2
     return 1
 
 
-def miihenFarm(capNum: int = 1):
-    airShipDestination(destNum=4)
-    nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+def miihen_farm(cap_num: int = 1):
+    air_ship_destination(dest_num=4)
+    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
     neArmor = True
-    prefArea = miihenNext(endGoal=capNum)
+    prefArea = miihen_next(end_goal=cap_num)
     print("Next area: ", prefArea)
-    memory.main.fullPartyFormat("initiative")
+    memory.main.full_party_format("initiative")
 
     checkpoint = 0
     lastCP = checkpoint
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             # Checkpoint notify
             if lastCP != checkpoint:
                 print("Checkpoint reached: ", checkpoint)
                 lastCP = checkpoint
             if checkpoint == 92:
                 FFXC.set_neutral()
-                while memory.main.userControl():
-                    xbox.tapB()
+                while memory.main.user_control():
+                    xbox.tap_b()
                 checkpoint = 144
             # Map changes
             if checkpoint == 2:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             if checkpoint == 8:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
-            elif checkpoint == 18 and memory.main.getMap() == 116:
+            elif checkpoint == 18 and memory.main.get_map() == 116:
                 checkpoint += 1
             # Map between Miihen and MRR
-            elif checkpoint in [31, 42, 72] and memory.main.getMap() == 59:
+            elif checkpoint in [31, 42, 72] and memory.main.get_map() == 59:
                 checkpoint += 1
-            elif checkpoint in [38, 39] and memory.main.getMap() == 116:  # Area 2 map
+            elif checkpoint in [38, 39] and memory.main.get_map() == 116:  # Area 2 map
                 checkpoint = 40
-            elif checkpoint in [50, 63] and memory.main.getMap() == 79:  # Clasko map
+            elif checkpoint in [50, 63] and memory.main.get_map() == 79:  # Clasko map
                 # FFXC.set_neutral()
                 # memory.waitFrames(6)
                 checkpoint += 1
-            elif checkpoint == 60 and memory.main.getMap() == 92:  # MRR lower map
+            elif checkpoint == 60 and memory.main.get_map() == 92:  # MRR lower map
                 checkpoint += 1
-            elif checkpoint == 79 and memory.main.getMap() == 116:  # Highroad
+            elif checkpoint == 79 and memory.main.get_map() == 116:  # Highroad
                 checkpoint = 29
 
             # Save Sphere / Exit logic
             if checkpoint in [47, 61, 62, 63, 164] and prefArea in [8, 9]:
                 if prefArea == 8:
-                    memory.main.touchSaveSphere()
-                    prefArea = miihenNext(endGoal=capNum)
+                    memory.main.touch_save_sphere()
+                    prefArea = miihen_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                 else:
-                    returnToAirship()
+                    return_to_airship()
 
             # Farming logic
             elif checkpoint == 28 and prefArea == 1 and neArmor:
                 nemesis.menu.removeAllNEA()
-                miihenNext(endGoal=capNum)
+                miihen_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
                 neArmor = False
             elif checkpoint in [31, 80] and prefArea == 1:  # Farm in area 1
@@ -1741,23 +1762,23 @@ def miihenFarm(capNum: int = 1):
             elif checkpoint == 77 and prefArea == 2:
                 checkpoint = 34
             elif checkpoint in [48, 53] and prefArea >= 4 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint == 59 and prefArea in [4, 5] and neArmor:
                 nemesis.menu.removeAllNEA()
-                miihenNext(endGoal=capNum)
+                miihen_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
                 neArmor = False
             elif checkpoint in [63, 64] and prefArea in [1, 2] and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [32, 42, 73] and prefArea in [1, 2, 3] and neArmor:
                 nemesis.menu.removeAllNEA()
-                miihenNext(endGoal=capNum)
+                miihen_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
                 neArmor = False
             elif checkpoint == 151 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
 
             # Garuda late farming logic
@@ -1765,7 +1786,7 @@ def miihenFarm(capNum: int = 1):
                 checkpoint = 100
             elif checkpoint in [104, 146, 158]:
                 FFXC.set_neutral()
-                memory.main.clickToEvent()
+                memory.main.click_to_event()
                 checkpoint += 1
             elif (
                 checkpoint > 99
@@ -1773,25 +1794,25 @@ def miihenFarm(capNum: int = 1):
                 and prefArea in [6, 8, 9]
                 and not neArmor
             ):
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint > 99 and checkpoint >= 144 and prefArea == 6 and neArmor:
                 nemesis.menu.removeAllNEA()
-                miihenNext(endGoal=capNum)
+                miihen_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
                 neArmor = False
             elif checkpoint == 145 and prefArea == 5:
                 checkpoint -= 2
                 if neArmor:
                     nemesis.menu.removeAllNEA()
-                    miihenNext(endGoal=capNum)
+                    miihen_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                     neArmor = False
             elif checkpoint == 150 and prefArea == 6:
                 checkpoint -= 2
                 if neArmor:
                     nemesis.menu.removeAllNEA()
-                    miihenNext(endGoal=capNum)
+                    miihen_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                     neArmor = False
 
@@ -1801,94 +1822,98 @@ def miihenFarm(capNum: int = 1):
             #    checkpoint = 144
 
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.miihenFarm(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.miihen_farm(checkpoint)
                 )
                 == True
             ):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
+            if memory.main.battle_active():
                 if (
-                    memory.main.getEncounterID() == 78
-                    and memory.main.arenaArray()[34] == 10
+                    memory.main.get_encounter_id() == 78
+                    and memory.main.arena_array()[34] == 10
                 ):
-                    battle.main.fleeAll()
+                    battle.main.flee_all()
                 else:
-                    if capNum == 10:
-                        battleFarmAll(yunaAttack=False)
+                    if cap_num == 10:
+                        battle_farm_all(yuna_attack=False)
                     else:
-                        battleFarmAll()
-                prefArea = miihenNext(endGoal=capNum)
+                        battle_farm_all()
+                prefArea = miihen_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
-                memory.main.fullPartyFormat("initiative")
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                memory.main.full_party_format("initiative")
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def miihenFarm_old(capNum: int = 1):
-    airShipDestination(destNum=4)
-    if gameVars.neArmor() == 0:
+def miihen_farm_old(cap_num: int = 1):
+    air_ship_destination(dest_num=4)
+    if gameVars.ne_armor() == 0:
         nemesis.menu.equipArmor(
-            character=gameVars.neArmor(), ability=0x8056
+            character=gameVars.ne_armor(), ability=0x8056
         )  # Auto-Haste
     else:
-        nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=99)  # Unequip
+        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=99)  # Unequip
 
     checkpoint = 0
-    while memory.main.getMap() != 79:
-        if memory.main.userControl():
+    while memory.main.get_map() != 79:
+        if memory.main.user_control():
             # print(checkpoint)
             # if memory.getMap() == 171:
             #    if memory.getCoords()[0] > -2:
             #        FFXC.set_movement(-1,-1)
             #    else:
             #        FFXC.set_movement(-0.5,-1)
-            if memory.main.arenaFarmCheck(
-                zone="miihen1", endGoal=capNum, report=False
+            if memory.main.arena_farm_check(
+                zone="miihen1", end_goal=cap_num, report=False
             ) and checkpoint in [28, 29]:
                 checkpoint = 30
-            elif checkpoint == 31 and not memory.main.arenaFarmCheck(
-                zone="miihen1", endGoal=capNum, report=False
+            elif checkpoint == 31 and not memory.main.arena_farm_check(
+                zone="miihen1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
             elif checkpoint == 2:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif checkpoint == 8:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
-                memory.main.arenaFarmCheck(zone="miihen1", endGoal=capNum, report=True)
-            elif checkpoint == 18 and memory.main.getMap() == 116:
+                memory.main.arena_farm_check(
+                    zone="miihen1", end_goal=cap_num, report=True
+                )
+            elif checkpoint == 18 and memory.main.get_map() == 116:
                 checkpoint += 1
-            elif checkpoint in [31, 42] and memory.main.getMap() == 59:
+            elif checkpoint in [31, 42] and memory.main.get_map() == 59:
                 checkpoint += 1
             elif checkpoint in [34, 47]:
-                memory.main.touchSaveSphere()
+                memory.main.touch_save_sphere()
                 checkpoint += 1
             elif checkpoint == 39:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif (
-                memory.main.arenaFarmCheck(zone="miihen2", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="miihen2", end_goal=cap_num, report=False
+                )
                 and checkpoint < 41
             ):
                 checkpoint = 41
-            elif checkpoint == 42 and not memory.main.arenaFarmCheck(
-                zone="miihen2", endGoal=capNum, report=False
+            elif checkpoint == 42 and not memory.main.arena_farm_check(
+                zone="miihen2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
             elif checkpoint == 50:
-                memory.main.clickToEventTemple(0)
+                memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.miihenFarm(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.miihen_farm(checkpoint)
                 )
                 == True
             ):
@@ -1896,92 +1921,88 @@ def miihenFarm_old(capNum: int = 1):
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
+            if memory.main.battle_active():
                 if (
-                    memory.main.getEncounterID() == 78
-                    and memory.main.arenaArray()[34] == 10
+                    memory.main.get_encounter_id() == 78
+                    and memory.main.arena_array()[34] == 10
                 ):
-                    battle.main.fleeAll()
+                    battle.main.flee_all()
                 else:
-                    if capNum == 10:
-                        battleFarmAll(yunaAttack=False)
+                    if cap_num == 10:
+                        battle_farm_all(yuna_attack=False)
                     else:
-                        battleFarmAll()
+                        battle_farm_all()
 
                 if checkpoint < 32:
-                    memory.main.arenaFarmCheck(
-                        zone="miihen1", endGoal=capNum, report=True
+                    memory.main.arena_farm_check(
+                        zone="miihen1", end_goal=cap_num, report=True
                     )
                 else:
-                    memory.main.arenaFarmCheck(
-                        zone="miihen2", endGoal=capNum, report=True
+                    memory.main.arena_farm_check(
+                        zone="miihen2", end_goal=cap_num, report=True
                     )
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
-
-
-def mrrFarm(capNum: int = 1):
-    print("No longer used, now a part of the Mi'ihen farm")
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
 def mrrFarm_old(capNum: int = 1):
     # Unlike other sections, MRR is expected to zone in from the Mi'ihen area and not the airship.
-    nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
-    while not nemesis.targetPath.setMovement([-45, -733]):  # Close to magus sisters
+    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
+    while not nemesis.targetPath.set_movement([-45, -733]):  # Close to magus sisters
         pass
-    while not nemesis.targetPath.setMovement([-61, -692]):  # Past magus sisters
+    while not nemesis.targetPath.set_movement([-61, -692]):  # Past magus sisters
         pass
-    while not nemesis.targetPath.setMovement([-19, -528]):  # Through Clasko trigger
+    while not nemesis.targetPath.set_movement([-19, -528]):  # Through Clasko trigger
         pass
-    while not nemesis.targetPath.setMovement([-145, -460]):  # Past O'aka's spot
+    while not nemesis.targetPath.set_movement([-145, -460]):  # Past O'aka's spot
         pass
-    while not nemesis.targetPath.setMovement([-219, -408]):  # Past O'aka's spot
+    while not nemesis.targetPath.set_movement([-219, -408]):  # Past O'aka's spot
         pass
-    while memory.main.getMap() != 92:
+    while memory.main.get_map() != 92:
         FFXC.set_movement(1, 1)
 
     # OK now ready to do farming.
     nemesis.menu.removeAllNEA()
-    memory.main.arenaFarmCheck(zone="mrr", endGoal=capNum, report=True)
+    memory.main.arena_farm_check(zone="mrr", end_goal=capNum, report=True)
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(zone="mrr", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(zone="mrr", end_goal=capNum, report=False)
                 and checkpoint < 2
             ):
                 checkpoint = 2
-            elif checkpoint == 3 and not memory.main.arenaFarmCheck(
-                zone="mrr", endGoal=capNum, report=False
+            elif checkpoint == 3 and not memory.main.arena_farm_check(
+                zone="mrr", end_goal=capNum, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
             elif checkpoint == 4:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.mrrFarm(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.mrr_farm(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
+            if memory.main.battle_active():
                 if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                memory.main.arenaFarmCheck(zone="mrr", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle_farm_all()
+                memory.main.arena_farm_check(zone="mrr", end_goal=capNum, report=True)
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def djoseNext(endGoal: int):
+def djose_next(end_goal: int):
     next1 = rngTrack.coming_battles(area="djose_highroad_(back_half)", battleCount=2)[0]
     next2 = rngTrack.coming_battles(area="moonflow_(south)", battleCount=2)[0]
-    farmArray = memory.main.arenaFarmCheck(
-        zone="djose", endGoal=endGoal, returnArray=True
+    farmArray = memory.main.arena_farm_check(
+        zone="djose", end_goal=end_goal, return_array=True
     )
 
     print("=======================")
@@ -1991,72 +2012,72 @@ def djoseNext(endGoal: int):
     print(farmArray)
     print("=======================")
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 3
-    if farmArray[3] < endGoal and "simurgh" in next1:
+    if farmArray[3] < end_goal and "simurgh" in next1:
         return 1
-    if farmArray[6] < endGoal and "ochu" in next2:
+    if farmArray[6] < end_goal and "ochu" in next2:
         return 2
-    if farmArray[4] < endGoal and "bite_bug" in next2:
+    if farmArray[4] < end_goal and "bite_bug" in next2:
         return 2
-    if farmArray[4] < endGoal and "bite_bug" in next1:
+    if farmArray[4] < end_goal and "bite_bug" in next1:
         return 1
-    if farmArray[5] < endGoal and "basilisk" in next1:
+    if farmArray[5] < end_goal and "basilisk" in next1:
         return 1
-    if farmArray[2] < endGoal and "snow_flan" in next1:
+    if farmArray[2] < end_goal and "snow_flan" in next1:
         return 1
-    if farmArray[2] < endGoal and "snow_flan" in next2:
+    if farmArray[2] < end_goal and "snow_flan" in next2:
         return 2
-    if farmArray[1] < endGoal and "garm" in next1:
+    if farmArray[1] < end_goal and "garm" in next1:
         return 1
-    if farmArray[1] < endGoal and "garm" in next2:
+    if farmArray[1] < end_goal and "garm" in next2:
         return 2
-    if farmArray[0] < endGoal and "bunyip_2" in next1:
+    if farmArray[0] < end_goal and "bunyip_2" in next1:
         return 1
-    if farmArray[0] < endGoal and "bunyip_2" in next2:
+    if farmArray[0] < end_goal and "bunyip_2" in next2:
         return 2
-    if memory.main.arenaFarmCheck(zone="djose", endGoal=endGoal):
+    if memory.main.arena_farm_check(zone="djose", end_goal=end_goal):
         return 4
     print("Couldn't find a special case")
     return 1
 
 
-def djoseFarm(capNum: int = 10):
-    rinEquipDump()
-    airShipDestination(destNum=5)
-    nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+def djose_farm(cap_num: int = 10):
+    rin_equip_dump()
+    air_ship_destination(dest_num=5)
+    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
     neArmor = True
-    prefArea = djoseNext(endGoal=capNum)
+    prefArea = djose_next(end_goal=cap_num)
     print("Next area: ", prefArea)
-    memory.main.fullPartyFormat("initiative")
+    memory.main.full_party_format("initiative")
 
     checkpoint = 0
     lastCP = 0
-    while not memory.main.getMap() in [194, 374]:
+    while not memory.main.get_map() in [194, 374]:
         if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
-        if memory.main.userControl():
+        if memory.main.user_control():
             # Map changes
-            if checkpoint in [7, 27, 45] and memory.main.getMap() == 93:
+            if checkpoint in [7, 27, 45] and memory.main.get_map() == 93:
                 checkpoint += 1
-            elif checkpoint == 24 and memory.main.getMap() == 75:
+            elif checkpoint == 24 and memory.main.get_map() == 75:
                 checkpoint += 1
-            elif checkpoint in [30, 39] and memory.main.getMap() == 76:
+            elif checkpoint in [30, 39] and memory.main.get_map() == 76:
                 checkpoint += 1
-            elif checkpoint == 35 and memory.main.getMap() == 82:
+            elif checkpoint == 35 and memory.main.get_map() == 82:
                 checkpoint += 1
             # Reset/End logic
             elif checkpoint == 37:
                 if prefArea == 3:
-                    memory.main.touchSaveSphere()
+                    memory.main.touch_save_sphere()
                     checkpoint += 1
                 else:
-                    returnToAirship()
+                    return_to_airship()
 
             # Farming logic
             if prefArea in [3, 4] and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [21, 45] and prefArea == 1 and neArmor:
                 nemesis.menu.removeAllNEA()
@@ -2079,31 +2100,33 @@ def djoseFarm(capNum: int = 10):
                 checkpoint = 21
 
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.djoseFarm(checkpoint))
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.djose_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battleFarmAll(yunaAttack=False)
-                if memory.main.getHP()[0] < 800:
-                    battle.main.healUp(3)
-                prefArea = djoseNext(endGoal=capNum)
+            if memory.main.battle_active():
+                battle_farm_all(yuna_attack=False)
+                if memory.main.get_hp()[0] < 800:
+                    battle.main.heal_up(3)
+                prefArea = djose_next(end_goal=cap_num)
                 print("Next area:", prefArea)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def plainsNext(endGoal: int):
+def plains_next(end_goal: int):
     next1 = rngTrack.coming_battles(
         area="thunder_plains_(north)_(1_stone)", battleCount=2
     )[0]
     next2 = rngTrack.coming_battles(
         area="thunder_plains_(south)_(2_stones)", battleCount=2
     )[0]
-    farmArray = memory.main.arenaFarmCheck(
-        zone="tplains", endGoal=endGoal, returnArray=True
+    farmArray = memory.main.arena_farm_check(
+        zone="tplains", end_goal=end_goal, return_array=True
     )
 
     print("=======================")
@@ -2113,67 +2136,67 @@ def plainsNext(endGoal: int):
     print(farmArray)
     print("=======================")
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 4
-    if farmArray[5] < endGoal and "iron_giant" in next1:
+    if farmArray[5] < end_goal and "iron_giant" in next1:
         return 1
-    if farmArray[5] < endGoal and "iron_giant" in next2:
+    if farmArray[5] < end_goal and "iron_giant" in next2:
         return 2
-    if farmArray[6] < endGoal and "qactuar" in next1:
+    if farmArray[6] < end_goal and "qactuar" in next1:
         return 1
-    if farmArray[6] < endGoal and "qactuar" in next2:
+    if farmArray[6] < end_goal and "qactuar" in next2:
         return 2
-    if farmArray[1] < endGoal and "melusine" in next1:
+    if farmArray[1] < end_goal and "melusine" in next1:
         return 1
-    if farmArray[1] < endGoal and "melusine" in next2:
+    if farmArray[1] < end_goal and "melusine" in next2:
         return 2
-    if farmArray[7] < endGoal and "larva" in next1:
+    if farmArray[7] < end_goal and "larva" in next1:
         return 1
-    if farmArray[7] < endGoal and "larva" in next2:
+    if farmArray[7] < end_goal and "larva" in next2:
         return 2
-    if farmArray[4] < endGoal and "gold_element" in next1:
+    if farmArray[4] < end_goal and "gold_element" in next1:
         return 1
-    if farmArray[4] < endGoal and "gold_element" in next2:
+    if farmArray[4] < end_goal and "gold_element" in next2:
         return 2
-    if farmArray[2] < endGoal and "buer" in next1:
+    if farmArray[2] < end_goal and "buer" in next1:
         return 1
-    if farmArray[2] < endGoal and "buer" in next2:
+    if farmArray[2] < end_goal and "buer" in next2:
         return 2
-    if farmArray[3] < endGoal and "kusariqqu" in next1:
+    if farmArray[3] < end_goal and "kusariqqu" in next1:
         return 1
-    if farmArray[3] < endGoal and "kusariqqu" in next2:
+    if farmArray[3] < end_goal and "kusariqqu" in next2:
         return 2
-    if farmArray[0] < endGoal and "aerouge" in next1:
+    if farmArray[0] < end_goal and "aerouge" in next1:
         return 1
-    if farmArray[0] < endGoal and "aerouge" in next2:
+    if farmArray[0] < end_goal and "aerouge" in next2:
         return 2
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 3
-    if memory.main.arenaFarmCheck(zone="tplains", endGoal=endGoal):
+    if memory.main.arena_farm_check(zone="tplains", end_goal=end_goal):
         return 4
     print("Couldn't find a special case")
-    if memory.main.getMap() == 162:
+    if memory.main.get_map() == 162:
         return 1
     else:
         return 2
 
 
-def tPlains(capNum: int = 1, autoHaste: bool = False):
-    rinEquipDump()
-    airShipDestination(destNum=8)
+def t_plains(cap_num: int = 1, auto_haste: bool = False):
+    rin_equip_dump()
+    air_ship_destination(dest_num=8)
     nemesis.menu.removeAllNEA()
-    prefArea = plainsNext(endGoal=capNum)
+    prefArea = plains_next(end_goal=cap_num)
     print("Next area: ", prefArea)
     neEquip = False
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
-            if memory.main.dodgeLightning(gameVars.getLStrike()):
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
+            if memory.main.dodge_lightning(gameVars.get_l_strike()):
                 print("Strike!")
-                gameVars.setLStrike(memory.main.lStrikeCount())
+                gameVars.set_l_strike(memory.main.l_strike_count())
             if prefArea in [3, 4] and not neEquip:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neEquip = True
                 if checkpoint in [4, 5]:
                     checkpoint = 6
@@ -2200,123 +2223,129 @@ def tPlains(capNum: int = 1, autoHaste: bool = False):
                 print("Direct to South: ", checkpoint)
 
             # Map changes:
-            if checkpoint in [1, 6, 11] and memory.main.getMap() == 256:
+            if checkpoint in [1, 6, 11] and memory.main.get_map() == 256:
                 checkpoint += 1
                 print("Map change: ", checkpoint)
-            if checkpoint in [3, 13] and memory.main.getMap() == 162:
+            if checkpoint in [3, 13] and memory.main.get_map() == 162:
                 checkpoint += 1
                 print("Map change: ", checkpoint)
-            if checkpoint == 8 and memory.main.getMap() == 140:
+            if checkpoint == 8 and memory.main.get_map() == 140:
                 checkpoint += 1
                 print("Map change: ", checkpoint)
-            if checkpoint == 21 and memory.main.getMap() == 263:
+            if checkpoint == 21 and memory.main.get_map() == 263:
                 checkpoint += 1
                 print("Map change: ", checkpoint)
             if checkpoint == 23:
                 if prefArea == 3:
-                    memory.main.touchSaveSphere()
+                    memory.main.touch_save_sphere()
                     nemesis.menu.removeAllNEA()
                     neEquip = False
-                    prefArea = plainsNext(endGoal=capNum)
+                    prefArea = plains_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                     checkpoint = 0
                 else:
-                    returnToAirship()
+                    return_to_airship()
 
             # General pathing
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.tpFarm(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.tp_farm(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                battle.main.healUp(3)
-                prefArea = plainsNext(endGoal=capNum)
+                    battle_farm_all()
+                battle.main.heal_up(3)
+                prefArea = plains_next(end_goal=cap_num)
                 print("Next area:", prefArea)
-                memory.main.arenaFarmCheck(zone="tPlains", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                memory.main.arena_farm_check(
+                    zone="tPlains", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("End of Thunder Plains section")
-    return memory.main.arenaFarmCheck(zone="tPlains", endGoal=capNum, report=False)
+    return memory.main.arena_farm_check(zone="tPlains", end_goal=cap_num, report=False)
 
 
-def tPlains_Old(capNum: int = 1, autoHaste: bool = False):
-    rinEquipDump()
-    airShipDestination(destNum=8)
+def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
+    rin_equip_dump()
+    air_ship_destination(dest_num=8)
     nemesis.menu.removeAllNEA()
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
-            if memory.main.dodgeLightning(gameVars.getLStrike()):
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
+            if memory.main.dodge_lightning(gameVars.get_l_strike()):
                 print("Strike!")
-                gameVars.setLStrike(memory.main.lStrikeCount())
+                gameVars.set_l_strike(memory.main.l_strike_count())
             elif (
-                memory.main.arenaFarmCheck(zone="tPlains", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="tPlains", end_goal=cap_num, report=False
+                )
                 and checkpoint < 8
             ):
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 checkpoint = 8
-            elif memory.main.getYunaMP() < 30 and checkpoint < 8:
+            elif memory.main.get_yuna_mp() < 30 and checkpoint < 8:
                 checkpoint = 8
             elif (
                 checkpoint == 9
-                and not memory.main.arenaFarmCheck(
-                    zone="tPlains", endGoal=capNum, report=False
+                and not memory.main.arena_farm_check(
+                    zone="tPlains", end_goal=cap_num, report=False
                 )
-                and memory.main.getYunaMP() >= 30
+                and memory.main.get_yuna_mp() >= 30
             ):
                 checkpoint -= 2
 
             # Map changes:
-            elif checkpoint == 1 and memory.main.getMap() == 256:
+            elif checkpoint == 1 and memory.main.get_map() == 256:
                 checkpoint += 1
-            elif checkpoint == 3 and memory.main.getMap() == 162:
+            elif checkpoint == 3 and memory.main.get_map() == 162:
                 checkpoint += 1
-            elif checkpoint == 11 and memory.main.getMap() == 256:
+            elif checkpoint == 11 and memory.main.get_map() == 256:
                 checkpoint += 1
             elif checkpoint == 14:
-                memory.main.clickToEventTemple(6)
+                memory.main.click_to_event_temple(6)
                 checkpoint += 1
             elif checkpoint == 16:
-                returnToAirship()
+                return_to_airship()
 
             # General pathing
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.tpFarm(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.tp_farm(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                memory.main.arenaFarmCheck(zone="tPlains", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle_farm_all()
+                memory.main.arena_farm_check(
+                    zone="tPlains", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("End of Thunder Plains section")
-    return memory.main.arenaFarmCheck(zone="tPlains", endGoal=capNum, report=False)
+    return memory.main.arena_farm_check(zone="tPlains", end_goal=cap_num, report=False)
 
 
-def woodsNext(endGoal: int):
+def woods_next(end_goal: int):
     next1 = rngTrack.coming_battles(area="lake_macalania", battleCount=2)[0]
     next2 = rngTrack.coming_battles(area="macalania_woods", battleCount=2)[0]
-    farmArray1 = memory.main.arenaFarmCheck(
-        zone="maclake", endGoal=endGoal, returnArray=True
+    farmArray1 = memory.main.arena_farm_check(
+        zone="maclake", end_goal=end_goal, return_array=True
     )
-    farmArray2 = memory.main.arenaFarmCheck(
-        zone="macwoods", endGoal=endGoal, returnArray=True
+    farmArray2 = memory.main.arena_farm_check(
+        zone="macwoods", end_goal=end_goal, return_array=True
     )
 
     print("=======================")
@@ -2327,35 +2356,35 @@ def woodsNext(endGoal: int):
     print(farmArray2)
     print("=======================")
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 4
-    if farmArray2[4] < endGoal and "chimera" in next2:
+    if farmArray2[4] < end_goal and "chimera" in next2:
         return 2
-    if farmArray2[5] < endGoal and "xiphos" in next2:
+    if farmArray2[5] < end_goal and "xiphos" in next2:
         return 2
-    if farmArray1[3] < endGoal and "evil_eye" in next1:
+    if farmArray1[3] < end_goal and "evil_eye" in next1:
         return 1
-    if farmArray1[0] < endGoal and "mafdet" in next1:
+    if farmArray1[0] < end_goal and "mafdet" in next1:
         return 1
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 3
-    if memory.main.arenaFarmCheck(
-        zone="maclake", endGoal=endGoal
-    ) and memory.main.arenaFarmCheck(zone="macwoods", endGoal=endGoal):
+    if memory.main.arena_farm_check(
+        zone="maclake", end_goal=end_goal
+    ) and memory.main.arena_farm_check(zone="macwoods", end_goal=end_goal):
         return 4
     print("Couldn't find a special case")
     return 2
 
 
-def macWoods(capNum: int = 10):
-    airShipDestination(destNum=9)
+def mac_woods(cap_num: int = 10):
+    air_ship_destination(dest_num=9)
     nemesis.menu.removeAllNEA()
-    prefArea = woodsNext(endGoal=capNum)
+    prefArea = woods_next(end_goal=cap_num)
     print("Next area: ", prefArea)
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if prefArea in [3, 4]:
                 if checkpoint in [4, 5]:
                     checkpoint = 6
@@ -2369,111 +2398,113 @@ def macWoods(capNum: int = 10):
                 checkpoint = 12
 
             # Map changes:
-            if checkpoint in [2, 19] and memory.main.getMap() == 164:
+            if checkpoint in [2, 19] and memory.main.get_map() == 164:
                 checkpoint += 1
-            elif checkpoint in [6, 14] and memory.main.getMap() == 221:
+            elif checkpoint in [6, 14] and memory.main.get_map() == 221:
                 checkpoint += 1
-            elif checkpoint == 11 and memory.main.getMap() == 242:
+            elif checkpoint == 11 and memory.main.get_map() == 242:
                 checkpoint += 1
             elif checkpoint in [10, 15] and prefArea in [3, 4]:
                 if prefArea == 3:
-                    memory.main.touchSaveSphere()
-                    prefArea = woodsNext(endGoal=capNum)
+                    memory.main.touch_save_sphere()
+                    prefArea = woods_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                     if prefArea == 1:
                         checkpoint = 15
                     else:
                         checkpoint = 10
                 else:
-                    returnToAirship()
+                    return_to_airship()
 
             # General pathing
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.macFarm(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.mac_farm(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battleFarmAll(yunaAttack=False)
-                prefArea = woodsNext(endGoal=capNum)
+            if memory.main.battle_active():
+                battle_farm_all(yuna_attack=False)
+                prefArea = woods_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def macWoods_old(capNum: int = 10):
-    airShipDestination(destNum=9)
+def mac_woods_old(cap_num: int = 10):
+    air_ship_destination(dest_num=9)
     nemesis.menu.removeAllNEA()
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(zone="macLake", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="macLake", end_goal=cap_num, report=False
+                )
                 and checkpoint < 6
             ):
                 checkpoint = 6
-            elif checkpoint == 6 and not memory.main.arenaFarmCheck(
-                zone="macLake", endGoal=capNum, report=False
+            elif checkpoint == 6 and not memory.main.arena_farm_check(
+                zone="macLake", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
             if (
-                memory.main.arenaFarmCheck(
-                    zone="macWoods", endGoal=capNum, report=False
+                memory.main.arena_farm_check(
+                    zone="macWoods", end_goal=cap_num, report=False
                 )
                 and checkpoint < 14
             ):
                 checkpoint = 14
-            elif checkpoint == 14 and not memory.main.arenaFarmCheck(
-                zone="macWoods", endGoal=capNum, report=False
+            elif checkpoint == 14 and not memory.main.arena_farm_check(
+                zone="macWoods", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
 
             # Map changes:
             elif checkpoint == 2:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
-            elif checkpoint == 6 and memory.main.getMap() == 221:
+            elif checkpoint == 6 and memory.main.get_map() == 221:
                 checkpoint += 1
-            elif checkpoint == 11 and memory.main.getMap() == 242:
+            elif checkpoint == 11 and memory.main.get_map() == 242:
                 checkpoint += 1
-            elif checkpoint == 14 and memory.main.getMap() == 221:
+            elif checkpoint == 14 and memory.main.get_map() == 221:
                 checkpoint += 1
             elif checkpoint == 15:
-                returnToAirship()
+                return_to_airship()
 
             # General pathing
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.macFarm(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.mac_farm(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                battle_farm_all(yuna_attack=False)
                 if checkpoint < 7:
-                    memory.main.arenaFarmCheck(
-                        zone="macLake", endGoal=capNum, report=True
+                    memory.main.arena_farm_check(
+                        zone="macLake", end_goal=cap_num, report=True
                     )
                 else:
-                    memory.main.arenaFarmCheck(
-                        zone="macWoods", endGoal=capNum, report=True
+                    memory.main.arena_farm_check(
+                        zone="macWoods", end_goal=cap_num, report=True
                     )
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def bikanelNext(endGoal: int):
+def bikanel_next(end_goal: int):
     next1 = rngTrack.coming_battles(area="sanubia_desert_(central)", battleCount=1)[0]
     next2 = rngTrack.coming_battles(area="sanubia_desert_(ruins)", battleCount=1)[0]
     next3 = rngTrack.coming_battles(area="sanubia_desert_(west)", battleCount=1)[0]
-    farmArray = memory.main.arenaFarmCheck(
-        zone="bikanel", endGoal=endGoal, returnArray=True
+    farmArray = memory.main.arena_farm_check(
+        zone="bikanel", end_goal=end_goal, return_array=True
     )
 
     print("=======================")
@@ -2483,81 +2514,81 @@ def bikanelNext(endGoal: int):
     print(next3)
     print("=======================")
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 4
-    if farmArray[5] < endGoal and "cactuar" in next1:
+    if farmArray[5] < end_goal and "cactuar" in next1:
         return 1
-    if farmArray[5] < endGoal and "cactuar" in next2:
+    if farmArray[5] < end_goal and "cactuar" in next2:
         return 2
-    if farmArray[5] < endGoal and "cactuar" in next3:
+    if farmArray[5] < end_goal and "cactuar" in next3:
         return 3
-    if farmArray[4] < endGoal and "mushussu" in next1:
+    if farmArray[4] < end_goal and "mushussu" in next1:
         return 1
-    if farmArray[4] < endGoal and "mushussu" in next3:
+    if farmArray[4] < end_goal and "mushussu" in next3:
         return 3
-    if farmArray[3] < endGoal and "sand_worm" in next1:
+    if farmArray[3] < end_goal and "sand_worm" in next1:
         return 1
-    if farmArray[3] < endGoal and "sand_worm" in next2:
+    if farmArray[3] < end_goal and "sand_worm" in next2:
         return 2
-    if farmArray[3] < endGoal and "sand_worm" in next3:
+    if farmArray[3] < end_goal and "sand_worm" in next3:
         return 3
-    if farmArray[2] < endGoal and "zu" in next1:
+    if farmArray[2] < end_goal and "zu" in next1:
         return 1
-    if farmArray[2] < endGoal and "zu" in next2:
+    if farmArray[2] < end_goal and "zu" in next2:
         return 2
-    if farmArray[2] < endGoal and "zu" in next3:
+    if farmArray[2] < end_goal and "zu" in next3:
         return 3
-    if farmArray[0] < endGoal and "sand_wolf" in next1:
+    if farmArray[0] < end_goal and "sand_wolf" in next1:
         return 1
-    if farmArray[0] < endGoal and "sand_wolf" in next2:
+    if farmArray[0] < end_goal and "sand_wolf" in next2:
         return 2
-    if farmArray[0] < endGoal and "sand_wolf" in next3:
+    if farmArray[0] < end_goal and "sand_wolf" in next3:
         return 3
-    if memory.main.arenaFarmCheck(zone="bikanel", endGoal=endGoal):
+    if memory.main.arena_farm_check(zone="bikanel", end_goal=end_goal):
         return 4
 
     print("Could not find a desirable encounter.")
-    if memory.main.getMap() == 138:
+    if memory.main.get_map() == 138:
         return 3
     else:
         return 1  # Prefer zone 1 for remaining battles.
 
 
-def bikanel(capNum: int = 10):
-    airShipDestination(destNum=10)
-    nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+def bikanel(cap_num: int = 10):
+    air_ship_destination(dest_num=10)
+    nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
     neArmor = True
-    prefArea = bikanelNext(endGoal=capNum)
+    prefArea = bikanel_next(end_goal=cap_num)
     print("Next area: ", prefArea)
-    memory.main.fullPartyFormat("initiative")
+    memory.main.full_party_format("initiative")
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             # NEA stuff
             if prefArea == 4 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [27, 28] and prefArea != 1:
                 checkpoint = 29
             elif checkpoint in [28, 29, 30] and prefArea in [1, 2] and neArmor:
                 nemesis.menu.removeAllNEA()
-                bikanelNext(endGoal=capNum)
+                bikanel_next(end_goal=cap_num)
                 neArmor = False
             elif checkpoint < 33 and prefArea == 3 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif checkpoint in [34, 35] and prefArea == 3 and neArmor:
                 nemesis.menu.removeAllNEA()
-                bikanelNext(endGoal=capNum)
+                bikanel_next(end_goal=cap_num)
                 neArmor = False
             elif checkpoint in [34, 35] and prefArea != 3 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 checkpoint = 36
                 neArmor = True
             elif checkpoint == 40 and prefArea != 4:
                 nemesis.menu.removeAllNEA()
-                bikanelNext(endGoal=capNum)
+                bikanel_next(end_goal=cap_num)
                 neArmor = False
                 if prefArea == 1:
                     checkpoint = 28
@@ -2576,19 +2607,19 @@ def bikanel(capNum: int = 10):
                 checkpoint = 40
 
             # Map changes:
-            if checkpoint == 5 and memory.main.getMap() == 136:
+            if checkpoint == 5 and memory.main.get_map() == 136:
                 checkpoint += 1
-            elif checkpoint in [22, 36] and memory.main.getMap() == 137:
+            elif checkpoint in [22, 36] and memory.main.get_map() == 137:
                 checkpoint += 1
-            elif checkpoint == 33 and memory.main.getMap() == 138:
+            elif checkpoint == 33 and memory.main.get_map() == 138:
                 checkpoint += 1
             elif checkpoint == 44:
-                returnToAirship()
+                return_to_airship()
 
             # General pathing
             elif (
-                nemesis.targetPath.setMovement(
-                    nemesis.targetPath.bikanelFarm(checkpoint)
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.bikanel_farm(checkpoint)
                 )
                 == True
             ):
@@ -2596,30 +2627,32 @@ def bikanel(capNum: int = 10):
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battleFarmAll(yunaAttack=False)
-                memory.main.arenaFarmCheck(zone="bikanel", endGoal=capNum, report=True)
-                hpCheck = memory.main.getHP()
+            if memory.main.battle_active():
+                battle_farm_all(yuna_attack=False)
+                memory.main.arena_farm_check(
+                    zone="bikanel", end_goal=cap_num, report=True
+                )
+                hpCheck = memory.main.get_hp()
                 if hpCheck[0] < 800:
-                    battle.main.healUp(3)
-                prefArea = bikanelNext(endGoal=capNum)
+                    battle.main.heal_up(3)
+                prefArea = bikanel_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
-    initArray = memory.main.checkAbility(ability=0x8002)
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
+    initArray = memory.main.check_ability(ability=0x8002)
     if initArray[4]:
         nemesis.menu.equipWeapon(character=4, ability=0x8002)  # Initiative
-        memory.main.fullPartyFormat("initiative")
+        memory.main.full_party_format("initiative")
 
 
-def calmNext(endGoal: int, forceLevels: int):
+def calm_next(end_goal: int, force_levels: int):
     next1 = rngTrack.coming_battles(area="calm_lands_(south)", battleCount=1)[0]
     next2 = rngTrack.coming_battles(
         area="calm_lands_(central-north-east)", battleCount=1
     )[0]
     next3 = rngTrack.coming_battles(area="calm_lands_(north-west)", battleCount=1)[0]
-    farmArray = memory.main.arenaFarmCheck(
-        zone="calm", endGoal=endGoal, returnArray=True
+    farmArray = memory.main.arena_farm_check(
+        zone="calm", end_goal=end_goal, return_array=True
     )
 
     print("=======================")
@@ -2629,46 +2662,46 @@ def calmNext(endGoal: int, forceLevels: int):
     print(next3)
     print("=======================")
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 4
-    if farmArray[4] < endGoal and "malboro" in next2:
+    if farmArray[4] < end_goal and "malboro" in next2:
         return 2
-    if farmArray[4] < endGoal and "malboro" in next3:
+    if farmArray[4] < end_goal and "malboro" in next3:
         return 3
-    if farmArray[0] < endGoal and "shred" in next1:
+    if farmArray[0] < end_goal and "shred" in next1:
         return 1
-    if farmArray[0] < endGoal and "shred" in next2:
+    if farmArray[0] < end_goal and "shred" in next2:
         return 2
-    if farmArray[0] < endGoal and "shred" in next3:
+    if farmArray[0] < end_goal and "shred" in next3:
         return 3
-    if farmArray[8] < endGoal and "anacondaur" in next1:
+    if farmArray[8] < end_goal and "anacondaur" in next1:
         return 1
-    if farmArray[8] < endGoal and "anacondaur" in next2:
+    if farmArray[8] < end_goal and "anacondaur" in next2:
         return 2
-    if farmArray[8] < endGoal and "anacondaur" in next3:
+    if farmArray[8] < end_goal and "anacondaur" in next3:
         return 3
-    if farmArray[5] < endGoal and "ogre" in next1:
+    if farmArray[5] < end_goal and "ogre" in next1:
         return 1
-    if farmArray[5] < endGoal and "ogre" in next2:
+    if farmArray[5] < end_goal and "ogre" in next2:
         return 2
-    if farmArray[5] < endGoal and "ogre" in next3:
+    if farmArray[5] < end_goal and "ogre" in next3:
         return 3
-    if farmArray[6] < endGoal and "chimera_brain" in next1:
+    if farmArray[6] < end_goal and "chimera_brain" in next1:
         return 1
-    if farmArray[6] < endGoal and "chimera_brain" in next2:
+    if farmArray[6] < end_goal and "chimera_brain" in next2:
         return 2
-    if farmArray[6] < endGoal and "chimera_brain" in next3:
+    if farmArray[6] < end_goal and "chimera_brain" in next3:
         return 3
-    if farmArray[7] < endGoal and "coeurl" in next1:
+    if farmArray[7] < end_goal and "coeurl" in next1:
         return 1
-    if farmArray[7] < endGoal and "coeurl" in next2:
+    if farmArray[7] < end_goal and "coeurl" in next2:
         return 2
-    if farmArray[7] < endGoal and "coeurl" in next3:
+    if farmArray[7] < end_goal and "coeurl" in next3:
         return 3
-    if memory.main.arenaFarmCheck(zone="calm", endGoal=endGoal):
-        if memory.main.getYunaMP() < 30:
+    if memory.main.arena_farm_check(zone="calm", end_goal=end_goal):
+        if memory.main.get_yuna_mp() < 30:
             return 9
-        if forceLevels > gameVars.nemCheckpointAP():
+        if force_levels > gameVars.nem_checkpoint_ap():
             print("== Area complete, but need more levels ==")
             # Need extra AP to reach Quick Attack
             # Overdrive > AP gives us the most per kill.
@@ -2681,23 +2714,23 @@ def calmNext(endGoal: int, forceLevels: int):
     return 2
 
 
-def calm(capNum: int = 1, autoHaste=False, airshipReturn=True, forceLevels=0):
-    airShipDestination(destNum=12)
+def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0):
+    air_ship_destination(dest_num=12)
     nemesis.menu.removeAllNEA()
     neArmor = False
-    prefArea = calmNext(endGoal=capNum, forceLevels=forceLevels)
+    prefArea = calm_next(end_goal=cap_num, force_levels=force_levels)
     print("Next area: ", prefArea)
 
     neArmor = False
 
     checkpoint = 0
-    while not memory.main.getMap() == 307:
-        if memory.main.userControl():
+    while not memory.main.get_map() == 307:
+        if memory.main.user_control():
             if not neArmor and prefArea == 9:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif prefArea == 9 and not neArmor:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
 
             if prefArea == 1 and checkpoint in [4, 5, 10]:
@@ -2711,149 +2744,155 @@ def calm(capNum: int = 1, autoHaste=False, airshipReturn=True, forceLevels=0):
             elif checkpoint in [6, 7] and prefArea != 3:
                 checkpoint = 8
             elif checkpoint == 10:  # Ride the bird back to arena
-                arenaReturn(checkpoint=1)
+                arena_return(checkpoint=1)
 
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.calmFarm(checkpoint))
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.calm_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            allCounts = memory.main.arenaArray()
-            if memory.main.battleActive():
+            allCounts = memory.main.arena_array()
+            if memory.main.battle_active():
                 if (
-                    memory.main.getEncounterID() == 281
-                    and gameVars.nemCheckpointAP() < 8
+                    memory.main.get_encounter_id() == 281
+                    and gameVars.nem_checkpoint_ap() < 8
                 ):
-                    if min(allCounts[13], allCounts[19]) >= capNum:
-                        battle.main.fleeAll()
+                    if min(allCounts[13], allCounts[19]) >= cap_num:
+                        battle.main.flee_all()
                     else:
-                        battleFarmAll()
+                        battle_farm_all()
                 elif (
-                    memory.main.getEncounterID() == 283
-                    and gameVars.nemCheckpointAP() < 8
+                    memory.main.get_encounter_id() == 283
+                    and gameVars.nem_checkpoint_ap() < 8
                 ):
-                    if min(allCounts[4], allCounts[19], allCounts[33]) >= capNum:
-                        battle.main.fleeAll()
+                    if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
+                        battle.main.flee_all()
                     else:
-                        battleFarmAll()
+                        battle_farm_all()
                 elif (
-                    memory.main.getEncounterID() == 284
-                    and allCounts[33] >= capNum
-                    and gameVars.nemCheckpointAP() < 8
+                    memory.main.get_encounter_id() == 284
+                    and allCounts[33] >= cap_num
+                    and gameVars.nem_checkpoint_ap() < 8
                 ):
-                    battle.main.fleeAll()
+                    battle.main.flee_all()
                 else:
-                    if capNum == 10:
-                        battleFarmAll(yunaAttack=False)
+                    if cap_num == 10:
+                        battle_farm_all(yuna_attack=False)
                     else:
-                        battleFarmAll()
-                battle.main.healUp(3)
-                prefArea = calmNext(endGoal=capNum, forceLevels=forceLevels)
+                        battle_farm_all()
+                battle.main.heal_up(3)
+                prefArea = calm_next(end_goal=cap_num, force_levels=force_levels)
                 print("Next area: ", prefArea)
-                memory.main.arenaFarmCheck(zone="calm", endGoal=capNum, report=True)
+                memory.main.arena_farm_check(zone="calm", end_goal=cap_num, report=True)
 
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
-    if airshipReturn:
-        returnToAirship()
-    if forceLevels > gameVars.nemCheckpointAP():
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
+    if airship_return:
+        return_to_airship()
+    if force_levels > gameVars.nem_checkpoint_ap():
         return False
-    return memory.main.arenaFarmCheck(zone="calm", endGoal=capNum, report=False)
+    return memory.main.arena_farm_check(zone="calm", end_goal=cap_num, report=False)
 
 
-def calm_old(capNum: int = 1, autoHaste=False, airshipReturn=True):
-    airShipDestination(destNum=12)
+def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
+    air_ship_destination(dest_num=12)
     nemesis.menu.removeAllNEA()
 
     neArmor = False
 
     checkpoint = 0
-    while not memory.main.getMap() == 307:
-        if memory.main.userControl():
-            if not neArmor and memory.main.getYunaMP() < 30:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+    while not memory.main.get_map() == 307:
+        if memory.main.user_control():
+            if not neArmor and memory.main.get_yuna_mp() < 30:
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             if (
-                memory.main.arenaFarmCheck(zone="calm", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="calm", end_goal=cap_num, report=False
+                )
                 and checkpoint < 5
             ):
                 checkpoint = 5
-            elif checkpoint == 5 and not memory.main.arenaFarmCheck(
-                zone="calm", endGoal=capNum, report=False
+            elif checkpoint == 5 and not memory.main.arena_farm_check(
+                zone="calm", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-            elif memory.main.arenaFarmCheck(
-                zone="calm2", endGoal=capNum, report=False
+            elif memory.main.arena_farm_check(
+                zone="calm2", end_goal=cap_num, report=False
             ) and checkpoint in [8, 9]:
                 checkpoint = 10
-            elif checkpoint == 10 and not memory.main.arenaFarmCheck(
-                zone="calm2", endGoal=capNum, report=False
+            elif checkpoint == 10 and not memory.main.arena_farm_check(
+                zone="calm2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.calm(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.calm(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            allCounts = memory.main.arenaArray()
-            if memory.main.battleActive():
+            allCounts = memory.main.arena_array()
+            if memory.main.battle_active():
                 if (
-                    memory.main.getEncounterID() == 281
-                    and gameVars.nemCheckpointAP() < 8
+                    memory.main.get_encounter_id() == 281
+                    and gameVars.nem_checkpoint_ap() < 8
                 ):
-                    if min(allCounts[13], allCounts[19]) >= capNum:
-                        battle.main.fleeAll()
+                    if min(allCounts[13], allCounts[19]) >= cap_num:
+                        battle.main.flee_all()
                     else:
-                        battleFarmAll()
+                        battle_farm_all()
                 elif (
-                    memory.main.getEncounterID() == 283
-                    and gameVars.nemCheckpointAP() < 8
+                    memory.main.get_encounter_id() == 283
+                    and gameVars.nem_checkpoint_ap() < 8
                 ):
-                    if min(allCounts[4], allCounts[19], allCounts[33]) >= capNum:
-                        battle.main.fleeAll()
+                    if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
+                        battle.main.flee_all()
                     else:
-                        battleFarmAll()
+                        battle_farm_all()
                 elif (
-                    memory.main.getEncounterID() == 284
-                    and allCounts[33] >= capNum
-                    and gameVars.nemCheckpointAP() < 8
+                    memory.main.get_encounter_id() == 284
+                    and allCounts[33] >= cap_num
+                    and gameVars.nem_checkpoint_ap() < 8
                 ):
-                    battle.main.fleeAll()
+                    battle.main.flee_all()
                 else:
-                    if capNum == 10:
-                        battleFarmAll(yunaAttack=False)
+                    if cap_num == 10:
+                        battle_farm_all(yuna_attack=False)
                     else:
-                        battleFarmAll()
-                battle.main.healUp(3)
+                        battle_farm_all()
+                battle.main.heal_up(3)
                 if checkpoint < 6:
-                    memory.main.arenaFarmCheck(zone="calm", endGoal=capNum, report=True)
+                    memory.main.arena_farm_check(
+                        zone="calm", end_goal=cap_num, report=True
+                    )
                 else:
-                    memory.main.arenaFarmCheck(
-                        zone="calm2", endGoal=capNum, report=True
+                    memory.main.arena_farm_check(
+                        zone="calm2", end_goal=cap_num, report=True
                     )
 
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
-    if not memory.main.arenaFarmCheck(zone="calm3", endGoal=capNum, report=False):
-        returnToAirship()
-    elif airshipReturn:
-        returnToAirship()
-    return memory.main.arenaFarmCheck(zone="calm3", endGoal=capNum, report=False)
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
+    if not memory.main.arena_farm_check(zone="calm3", end_goal=cap_num, report=False):
+        return_to_airship()
+    elif airship_return:
+        return_to_airship()
+    return memory.main.arena_farm_check(zone="calm3", end_goal=cap_num, report=False)
 
 
-def gagazetNext(endGoal: int):
+def gagazet_next(end_goal: int):
     next1 = rngTrack.coming_battles(area="gagazet_(mountain)", battleCount=2)[0]
     next2 = rngTrack.coming_battles(area="gagazet_(cave)", battleCount=2)[0]
     next3 = rngTrack.coming_battles(area="zanarkand_(overpass)", battleCount=2)[0]
     next4 = rngTrack.coming_battles(area="gagazet_(underwater)", battleCount=2)[0]
-    farmArray = memory.main.arenaFarmCheck(
-        zone="gagazet", endGoal=endGoal, returnArray=True
+    farmArray = memory.main.arena_farm_check(
+        zone="gagazet", end_goal=end_goal, return_array=True
     )
 
     print("=======================")
@@ -2865,67 +2904,67 @@ def gagazetNext(endGoal: int):
     print(farmArray)
     print("=======================")
 
-    if memory.main.getYunaMP() < 30:
+    if memory.main.get_yuna_mp() < 30:
         return 8
-    if farmArray[0] < endGoal and "bandersnatch" in next2:
+    if farmArray[0] < end_goal and "bandersnatch" in next2:
         return 2
-    if farmArray[0] < endGoal and "bandersnatch" in next1:
+    if farmArray[0] < end_goal and "bandersnatch" in next1:
         return 1
-    if farmArray[9] < endGoal and "behemoth" in next2:
+    if farmArray[9] < end_goal and "behemoth" in next2:
         return 2
-    if farmArray[9] < endGoal and "behemoth" in next3:
+    if farmArray[9] < end_goal and "behemoth" in next3:
         return 3
-    if farmArray[1] < endGoal and "dark_flan" in next2:
+    if farmArray[1] < end_goal and "dark_flan" in next2:
         return 2
-    if farmArray[1] < endGoal and "dark_flan" in next3:
+    if farmArray[1] < end_goal and "dark_flan" in next3:
         return 3
-    if farmArray[10] < endGoal and "mandragora" in next2:
+    if farmArray[10] < end_goal and "mandragora" in next2:
         return 2
-    if farmArray[10] < endGoal and "mandragora" in next3:
+    if farmArray[10] < end_goal and "mandragora" in next3:
         return 3
-    if farmArray[6] < endGoal and "grendel" in next2:
+    if farmArray[6] < end_goal and "grendel" in next2:
         return 2
-    if farmArray[6] < endGoal and "grendel" in next3:
+    if farmArray[6] < end_goal and "grendel" in next3:
         return 3
-    if farmArray[2] < endGoal and "ahriman" in next2:
+    if farmArray[2] < end_goal and "ahriman" in next2:
         return 2
-    if farmArray[2] < endGoal and "ahriman" in next3:
+    if farmArray[2] < end_goal and "ahriman" in next3:
         return 3
-    if farmArray[7] < endGoal and "bashura" in next2:
+    if farmArray[7] < end_goal and "bashura" in next2:
         return 2
-    if farmArray[7] < endGoal and "bashura" in next3:
+    if farmArray[7] < end_goal and "bashura" in next3:
         return 3
-    if farmArray[11] < endGoal and "grenade" in next1:
+    if farmArray[11] < end_goal and "grenade" in next1:
         return 1
-    if farmArray[3] < endGoal and "grat" in next1:
+    if farmArray[3] < end_goal and "grat" in next1:
         return 1
-    if farmArray[4] < endGoal and "achelous" in next4:
+    if farmArray[4] < end_goal and "achelous" in next4:
         return 4
-    if farmArray[5] < endGoal and "maelspike" in next4:
+    if farmArray[5] < end_goal and "maelspike" in next4:
         return 4
-    if farmArray[8] < endGoal and "maelspike" in next4:
+    if farmArray[8] < end_goal and "maelspike" in next4:
         return 4
-    if farmArray[4] < endGoal and "splasher_3" in next4:
+    if farmArray[4] < end_goal and "splasher_3" in next4:
         return 4
-    if memory.main.arenaFarmCheck(zone="gagazet", endGoal=endGoal):
+    if memory.main.arena_farm_check(zone="gagazet", end_goal=end_goal):
         return 9
     print("Couldn't find a special case")
-    if memory.main.getMap() == 225:
+    if memory.main.get_map() == 225:
         return 3
-    elif memory.main.getMap() == 244:
+    elif memory.main.get_map() == 244:
         return 1
-    elif memory.main.getMap() == 310:
+    elif memory.main.get_map() == 310:
         return 4
     else:
         return 2
 
 
-def gagazet(capNum: int = 10):
-    rinEquipDump()
-    airShipDestination(destNum=13)
-    prefArea = gagazetNext(endGoal=capNum)
+def gagazet(cap_num: int = 10):
+    rin_equip_dump()
+    air_ship_destination(dest_num=13)
+    prefArea = gagazet_next(end_goal=cap_num)
     if prefArea == 4:
-        nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
         neArmor = True
     else:
         nemesis.menu.removeAllNEA()
@@ -2934,25 +2973,25 @@ def gagazet(capNum: int = 10):
 
     lastCP = 0
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
+    while not memory.main.get_map() in [194, 374]:
         if lastCP != checkpoint:
             print("+++ Checkpoint reached: ", checkpoint)
             lastCP = checkpoint
-        if memory.main.userControl():
+        if memory.main.user_control():
             # Map changes
-            if checkpoint == 9 and memory.main.getMap() == 310:
+            if checkpoint == 9 and memory.main.get_map() == 310:
                 checkpoint += 1
-            elif checkpoint == 12 and memory.main.getMap() == 272:
+            elif checkpoint == 12 and memory.main.get_map() == 272:
                 checkpoint += 1
-            elif checkpoint in [23, 27] and memory.main.getMap() == 225:
+            elif checkpoint in [23, 27] and memory.main.get_map() == 225:
                 checkpoint = 24
-            elif checkpoint == 26 and memory.main.getMap() == 313:
+            elif checkpoint == 26 and memory.main.get_map() == 313:
                 checkpoint += 1
-            elif checkpoint == 34 and memory.main.getMap() == 244:
+            elif checkpoint == 34 and memory.main.get_map() == 244:
                 checkpoint += 1
-            elif checkpoint == 37 and memory.main.getMap() == 259:
+            elif checkpoint == 37 and memory.main.get_map() == 259:
                 checkpoint += 1
-            if checkpoint in [20, 21, 22, 29, 30] and memory.main.getMap() == 259:
+            if checkpoint in [20, 21, 22, 29, 30] and memory.main.get_map() == 259:
                 if prefArea in [8, 9]:
                     checkpoint = 41
                 else:
@@ -2961,35 +3000,35 @@ def gagazet(capNum: int = 10):
 
             # Portal Combat
             if checkpoint == 2:
-                while memory.main.userControl():
+                while memory.main.user_control():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-                memory.main.waitFrames(30)
+                memory.main.wait_frames(30)
                 if prefArea in [2, 4]:
-                    xbox.tapDown()
+                    xbox.tap_down()
                     checkpoint = 3
                 else:
-                    xbox.tapUp()
-                    xbox.tapUp()
+                    xbox.tap_up()
+                    xbox.tap_up()
                     checkpoint = 22
-                xbox.tapB()
-                memory.main.awaitControl()
+                xbox.tap_b()
+                memory.main.await_control()
                 print("Updated checkpoint: ", checkpoint)
             if checkpoint == 21:
-                while memory.main.userControl():
+                while memory.main.user_control():
                     FFXC.set_movement(0, -1)
                 FFXC.set_neutral()
-                memory.main.clickToControl()
-                memory.main.awaitControl()
+                memory.main.click_to_control()
+                memory.main.await_control()
                 if prefArea in [8, 9]:
                     checkpoint = 41
                 else:
                     checkpoint = 1
             elif checkpoint == 29:
                 FFXC.set_movement(0, -1)
-                memory.main.waitFrames(3)
-                xbox.tapB()
-                xbox.tapB()
+                memory.main.wait_frames(3)
+                xbox.tap_b()
+                xbox.tap_b()
                 FFXC.set_neutral()
                 if prefArea in [8, 9]:
                     checkpoint = 41
@@ -3029,194 +3068,206 @@ def gagazet(capNum: int = 10):
                 nemesis.menu.removeAllNEA()
                 neArmor = False
             elif neArmor == False and checkpoint == 4:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif neArmor == False and checkpoint == 13 and prefArea != 2:
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
 
             # End decisions
             if checkpoint == 43:
                 if prefArea == 8:
-                    memory.main.touchSaveSphere()
+                    memory.main.touch_save_sphere()
                     checkpoint = 0
                 else:
-                    returnToAirship()
+                    return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.gagazet(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.gagazet(checkpoint))
                 == True
             ):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                prefArea = gagazetNext(endGoal=capNum)
+                    battle_farm_all()
+                prefArea = gagazet_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("Done with Swimmers, now ready for Path")
 
 
-def gagazet1(capNum: int = 10):  # No longer used
-    rinEquipDump()
-    airShipDestination(destNum=13)
+def gagazet_1(cap_num: int = 10):  # No longer used
+    rin_equip_dump()
+    air_ship_destination(dest_num=13)
     nemesis.menu.removeAllNEA()
     checkpoint = 0
-    while not (memory.main.getMap() == 259 and checkpoint == 20):
-        if memory.main.userControl():
+    while not (memory.main.get_map() == 259 and checkpoint == 20):
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(
-                    zone="gagazet1", endGoal=capNum, report=False
+                memory.main.arena_farm_check(
+                    zone="gagazet1", end_goal=cap_num, report=False
                 )
                 and checkpoint < 12
             ):
                 checkpoint = 12
-            elif checkpoint == 12 and not memory.main.arenaFarmCheck(
-                zone="gagazet1", endGoal=capNum, report=False
+            elif checkpoint == 12 and not memory.main.arena_farm_check(
+                zone="gagazet1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
             elif checkpoint == 2:
-                while memory.main.userControl():
+                while memory.main.user_control():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-                memory.main.waitFrames(90)
-                xbox.tapDown()
-                xbox.tapB()
-                memory.main.awaitControl()
+                memory.main.wait_frames(90)
+                xbox.tap_down()
+                xbox.tap_b()
+                memory.main.await_control()
                 checkpoint += 1
-            elif checkpoint == 9 and memory.main.getMap() == 310:
+            elif checkpoint == 9 and memory.main.get_map() == 310:
                 checkpoint += 1
-            elif checkpoint == 12 and memory.main.getMap() == 272:
+            elif checkpoint == 12 and memory.main.get_map() == 272:
                 checkpoint += 1
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.gagazet1(checkpoint))
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.gagazet_1(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                memory.main.arenaFarmCheck(zone="gagazet1", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle_farm_all()
+                memory.main.arena_farm_check(
+                    zone="gagazet1", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("Done with Swimmers, now ready for Path")
 
 
-def gagazet2(capNum: int = 10):  # No longer used
-    if memory.main.getMap() in [194, 374]:
-        airShipDestination(destNum=13)
+def gagazet_2(cap_num: int = 10):  # No longer used
+    if memory.main.get_map() in [194, 374]:
+        air_ship_destination(dest_num=13)
 
     nemesis.menu.removeAllNEA()
     checkpoint = 0
     while not checkpoint == 11:
-        if memory.main.userControl():
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(
-                    zone="gagazet2", endGoal=capNum, report=False
+                memory.main.arena_farm_check(
+                    zone="gagazet2", end_goal=cap_num, report=False
                 )
                 and checkpoint < 7
             ):
                 checkpoint = 7
-            elif checkpoint == 7 and not memory.main.arenaFarmCheck(
-                zone="gagazet2", endGoal=capNum, report=False
+            elif checkpoint == 7 and not memory.main.arena_farm_check(
+                zone="gagazet2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
-            elif checkpoint == 4 and memory.main.getMap() == 244:
+            elif checkpoint == 4 and memory.main.get_map() == 244:
                 checkpoint += 1
-            elif checkpoint == 7 and memory.main.getMap() == 259:
+            elif checkpoint == 7 and memory.main.get_map() == 259:
                 checkpoint += 1
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.gagazet2(checkpoint))
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.gagazet_2(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                battleFarmAll()
-                memory.main.arenaFarmCheck(zone="gagazet2", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.battle_active():
+                battle_farm_all()
+                memory.main.arena_farm_check(
+                    zone="gagazet2", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("Done with Path now ready for Zanarkand")
 
 
-def gagazet3(capNum: int = 10):  # No longer used
-    if memory.main.getMap() in [194, 374]:
-        airShipDestination(destNum=13)
+def gagazet_3(cap_num: int = 10):  # No longer used
+    if memory.main.get_map() in [194, 374]:
+        air_ship_destination(dest_num=13)
 
     nemesis.menu.removeAllNEA()
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(
-                    zone="gagazet3", endGoal=capNum, report=False
+                memory.main.arena_farm_check(
+                    zone="gagazet3", end_goal=cap_num, report=False
                 )
                 and checkpoint < 8
             ):
                 checkpoint = 8
-            elif checkpoint == 8 and not memory.main.arenaFarmCheck(
-                zone="gagazet3", endGoal=capNum, report=False
+            elif checkpoint == 8 and not memory.main.arena_farm_check(
+                zone="gagazet3", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
 
             elif checkpoint == 2:
-                while memory.main.userControl():
+                while memory.main.user_control():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-                memory.main.waitFrames(90)
-                xbox.tapDown()
-                xbox.tapDown()
-                xbox.tapDown()
-                xbox.tapB()
-                memory.main.awaitControl()
+                memory.main.wait_frames(90)
+                xbox.tap_down()
+                xbox.tap_down()
+                xbox.tap_down()
+                xbox.tap_b()
+                memory.main.await_control()
                 checkpoint += 1
-            elif checkpoint == 5 and memory.main.getMap() == 225:
+            elif checkpoint == 5 and memory.main.get_map() == 225:
                 checkpoint += 1
-            elif checkpoint == 8 and memory.main.getMap() == 313:
+            elif checkpoint == 8 and memory.main.get_map() == 313:
                 checkpoint += 1
             elif checkpoint == 11:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.gagazet3(checkpoint))
+                nemesis.targetPath.set_movement(
+                    nemesis.targetPath.gagazet_3(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if capNum == 10:
-                    battleFarmAll(yunaAttack=False)
+            if memory.main.battle_active():
+                if cap_num == 10:
+                    battle_farm_all(yuna_attack=False)
                 else:
-                    battleFarmAll()
-                memory.main.arenaFarmCheck(zone="gagazet3", endGoal=capNum, report=True)
-            elif memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
+                    battle_farm_all()
+                memory.main.arena_farm_check(
+                    zone="gagazet3", end_goal=cap_num, report=True
+                )
+            elif memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("All of Gagazet complete")
-    rinEquipDump()
+    rin_equip_dump()
 
 
-def faythNext(endGoal: int):
+def fayth_next(endGoal: int):
     next1 = rngTrack.coming_battles(area="cave_(white_zone)", battleCount=1)[0]
     next2 = rngTrack.coming_battles(area="cave_(green_zone)", battleCount=1)[0]
-    farmArray = memory.main.arenaFarmCheck(
-        zone="stolenfayth", endGoal=endGoal, returnArray=True
+    farmArray = memory.main.arena_farm_check(
+        zone="stolenfayth", end_goal=endGoal, return_array=True
     )
 
     print("=======================")
@@ -3262,39 +3313,39 @@ def faythNext(endGoal: int):
         return 2
     if "magic_urn" in next2:  # Try to avoid urn
         return 1
-    if memory.main.arenaFarmCheck(zone="stolenfayth", endGoal=endGoal):
+    if memory.main.arena_farm_check(zone="stolenfayth", end_goal=endGoal):
         return 4
 
     print("Could not find a desirable encounter.")
     return 1
 
 
-def stolenFaythCave(capNum: int = 10):
-    airShipDestination(destNum=13)
-    if not memory.main.equippedWeaponHasAbility(
-        charNum=gameVars.neArmor(), abilityNum=0x801D
+def stolen_fayth_cave(cap_num: int = 10):
+    air_ship_destination(dest_num=13)
+    if not memory.main.equipped_weapon_has_ability(
+        char_num=gameVars.ne_armor(), ability_num=0x801D
     ):
-        nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+        nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
     neArmor = True
-    prefArea = faythNext(endGoal=capNum)
+    prefArea = fayth_next(endGoal=cap_num)
     print("Next area: ", prefArea)
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if prefArea == 4 and checkpoint in [25, 26, 27, 28, 29]:
                 checkpoint = 30
-                memory.main.fullPartyFormat("initiative")
-                nemesis.menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
+                memory.main.full_party_format("initiative")
+                nemesis.menu.equipArmor(character=gameVars.ne_armor(), ability=0x801D)
                 neArmor = True
             elif prefArea in [1, 2, 3] and checkpoint in [25, 27] and neArmor:
                 nemesis.menu.removeAllNEA()
                 neArmor = False
             elif checkpoint in [5, 14, 59]:
-                memory.main.clickToEventTemple(4)
+                memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif checkpoint == 19:
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif prefArea == 1 and checkpoint in [27, 28, 29]:
                 checkpoint = 25
@@ -3304,179 +3355,194 @@ def stolenFaythCave(capNum: int = 10):
                 checkpoint = 27
             elif checkpoint in [52, 53]:  # Glyph and Yojimbo
                 FFXC.set_neutral()
-                memory.main.waitFrames(5)
+                memory.main.wait_frames(5)
                 FFXC.set_movement(0, 1)
-                memory.main.waitFrames(2)
+                memory.main.wait_frames(2)
                 FFXC.set_neutral()
-                memory.main.waitFrames(5)
-                xbox.tapB()
-                memory.main.waitFrames(5)
-                yojimboDialog()
+                memory.main.wait_frames(5)
+                xbox.tap_b()
+                memory.main.wait_frames(5)
+                yojimbo_dialog()
                 checkpoint = 54
             elif checkpoint == 55:  # Back to entrance
                 FFXC.set_neutral()
-                memory.main.waitFrames(5)
+                memory.main.wait_frames(5)
                 FFXC.set_movement(0, -1)
-                memory.main.waitFrames(2)
+                memory.main.wait_frames(2)
                 FFXC.set_neutral()
-                memory.main.waitFrames(5)
-                xbox.tapB()
-                memory.main.waitFrames(5)
+                memory.main.wait_frames(5)
+                xbox.tap_b()
+                memory.main.wait_frames(5)
                 checkpoint += 1
             elif checkpoint == 62:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.yojimbo(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.yojimbo(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                if memory.main.getEncounterID() in [321, 329]:
+            if memory.main.battle_active():
+                if memory.main.get_encounter_id() in [321, 329]:
                     # Do not engage the jar boys.
-                    battle.main.fleeAll()
-                elif memory.main.getEncounterID() == 327 and memory.main.arenaFarmCheck(
-                    zone="justtonberry", endGoal=capNum, report=False
+                    battle.main.flee_all()
+                elif (
+                    memory.main.get_encounter_id() == 327
+                    and memory.main.arena_farm_check(
+                        zone="justtonberry", end_goal=cap_num, report=False
+                    )
                 ):
                     # No need to die extra times on tonberries.
-                    battle.main.fleeAll()
+                    battle.main.flee_all()
                 else:
-                    battleFarmAll(faythCave=True)
+                    battle_farm_all(fayth_cave=True)
 
-                memory.main.clickToControl()
-                hpCheck = memory.main.getHP()
+                memory.main.click_to_control()
+                hpCheck = memory.main.get_hp()
                 if hpCheck[0] < 795:
-                    battle.main.healUp(3)
-                prefArea = faythNext(endGoal=capNum)
+                    battle.main.heal_up(3)
+                prefArea = fayth_next(endGoal=cap_num)
                 print("Next area: ", prefArea)
-            elif memory.main.diagSkipPossible():
-                xbox.tapB()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
-def insideSin(capNum: int = 10):
-    airShipDestination(destNum=0)
+def inside_sin(cap_num: int = 10):
+    air_ship_destination(dest_num=0)
     nemesis.menu.removeAllNEA()
 
-    while memory.main.getMap() != 203:
+    while memory.main.get_map() != 203:
         FFXC.set_movement(0, -1)
     FFXC.set_neutral()
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             # Events
-            if memory.main.getMap() == 296:  # Seymour battle
+            if memory.main.get_map() == 296:  # Seymour battle
                 print("We've reached the Seymour screen.")
-                memory.main.fullPartyFormat("yuna")
+                memory.main.full_party_format("yuna")
                 FFXC.set_movement(0, 1)
-                memory.main.waitFrames(30 * 5)
+                memory.main.wait_frames(30 * 5)
                 FFXC.set_neutral()
                 battle.boss.omnis()
-                memory.main.clickToControl()
-                memory.main.fullPartyFormat("initiative")
+                memory.main.click_to_control()
+                memory.main.full_party_format("initiative")
 
             # End of first area logic
-            elif memory.main.arenaFarmCheck(
-                zone="sin1", endGoal=capNum, report=False
+            elif memory.main.arena_farm_check(
+                zone="sin1", end_goal=cap_num, report=False
             ) and checkpoint in [38, 39]:
                 checkpoint = 40
-            elif checkpoint == 40 and not memory.main.arenaFarmCheck(
-                zone="sin1", endGoal=capNum, report=False
+            elif checkpoint == 40 and not memory.main.arena_farm_check(
+                zone="sin1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint < 41 and memory.main.getMap() == 204:
+            elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
 
             # End of second area logic
             elif (
-                memory.main.arenaFarmCheck(zone="sin2", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="sin2", end_goal=cap_num, report=False
+                )
                 and checkpoint < 67
             ):
                 checkpoint = 67
-            elif checkpoint == 67 and not memory.main.arenaFarmCheck(
-                zone="sin2", endGoal=capNum, report=False
+            elif checkpoint == 67 and not memory.main.arena_farm_check(
+                zone="sin2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
-            elif checkpoint < 68 and memory.main.getMap() == 327:
+            elif checkpoint < 68 and memory.main.get_map() == 327:
                 checkpoint = 68
             elif checkpoint == 69:
-                returnToAirship()
-            elif checkpoint >= 65 and memory.main.getTidusMP() < 20:  # Tidus low on MP
-                nemesis.targetPath.setMovement([550, 485])
-                memory.main.awaitEvent()
+                return_to_airship()
+            elif (
+                checkpoint >= 65 and memory.main.get_tidus_mp() < 20
+            ):  # Tidus low on MP
+                nemesis.targetPath.set_movement([550, 485])
+                memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.waitFrames(3)
-                memory.main.awaitControl()
-                memory.main.touchSaveSphere()
-                nemesis.targetPath.setMovement([-200, -525])
-                memory.main.awaitEvent()
+                memory.main.wait_frames(3)
+                memory.main.await_control()
+                memory.main.touch_save_sphere()
+                nemesis.targetPath.set_movement([-200, -525])
+                memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 66
 
             # General Pathing
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.sin(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.sin(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
+            if memory.main.battle_active():
                 screen.await_turn()
-                advancedBattleLogic()
+                advanced_battle_logic()
                 if checkpoint < 40:
                     print("Ahrimans only:")
-                    memory.main.arenaFarmCheck(zone="sin1", endGoal=capNum, report=True)
+                    memory.main.arena_farm_check(
+                        zone="sin1", end_goal=cap_num, report=True
+                    )
                 else:
-                    memory.main.arenaFarmCheck(zone="sin2", endGoal=capNum, report=True)
-            elif memory.main.menuOpen():
-                xbox.tapB()
+                    memory.main.arena_farm_check(
+                        zone="sin2", end_goal=cap_num, report=True
+                    )
+            elif memory.main.menu_open():
+                xbox.tap_b()
 
 
-def omegaRuins(capNum: int = 10):
-    nemesis.menu.rikkuProvoke()
+def omega_ruins(cap_num: int = 10):
+    nemesis.menu.rikku_provoke()
     nemesis.menu.removeAllNEA()
 
     # rinEquipDump()
     # nemesis.menu.autoSortEquipment()
-    airShipDestination(destNum=13, forceOmega=True)
+    air_ship_destination(dest_num=13, force_omega=True)
 
     checkpoint = 0
-    while not memory.main.getMap() in [194, 374]:
-        if memory.main.userControl():
+    while not memory.main.get_map() in [194, 374]:
+        if memory.main.user_control():
             if (
-                memory.main.arenaFarmCheck(zone="omega", endGoal=capNum, report=False)
+                memory.main.arena_farm_check(
+                    zone="omega", end_goal=cap_num, report=False
+                )
                 and checkpoint < 2
             ):
                 checkpoint = 2
-            elif checkpoint == 2 and not memory.main.arenaFarmCheck(
-                zone="omega", endGoal=capNum, report=False
+            elif checkpoint == 2 and not memory.main.arena_farm_check(
+                zone="omega", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
-            elif memory.main.getTidusMP() < 20:
-                memory.main.touchSaveSphere()
+            elif memory.main.get_tidus_mp() < 20:
+                memory.main.touch_save_sphere()
             elif checkpoint == 3:
-                returnToAirship()
+                return_to_airship()
             elif (
-                nemesis.targetPath.setMovement(nemesis.targetPath.omega(checkpoint))
+                nemesis.targetPath.set_movement(nemesis.targetPath.omega(checkpoint))
                 == True
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive():
-                advancedBattleLogic()
-                memory.main.arenaFarmCheck(zone="omega", endGoal=capNum, report=True)
-                memory.main.clickToControl()
-            elif memory.main.diagSkipPossible() or memory.main.menuOpen():
-                xbox.tapB()
+            if memory.main.battle_active():
+                advanced_battle_logic()
+                memory.main.arena_farm_check(
+                    zone="omega", end_goal=cap_num, report=True
+                )
+                memory.main.click_to_control()
+            elif memory.main.diag_skip_possible() or memory.main.menu_open():
+                xbox.tap_b()
 
     # Keep this so we can add in the Omega kill later.
     # if gameVars.neArmor() == 0:
@@ -3487,20 +3553,20 @@ def omegaRuins(capNum: int = 10):
     #    nemesis.menu.equipArmor(character=gameVars.neArmor(),ability=99) #Unequip
 
 
-def getEquipment(equip=True):
-    memory.main.waitFrames(20)
-    xbox.tapB()
-    memory.main.waitFrames(5)
-    xbox.tapUp()
-    xbox.tapB()
-    memory.main.waitFrames(5)
+def get_equipment(equip=True):
+    memory.main.wait_frames(20)
+    xbox.tap_b()
+    memory.main.wait_frames(5)
+    xbox.tap_up()
+    xbox.tap_b()
+    memory.main.wait_frames(5)
     if equip == True:
-        xbox.tapUp()
-    xbox.tapB()  # Equip weapon for Rikku
-    memory.main.waitFrames(5)
+        xbox.tap_up()
+    xbox.tap_b()  # Equip weapon for Rikku
+    memory.main.wait_frames(5)
 
 
-def otherStuff():
-    arenaNPC()
-    xbox.tapB()
-    returnToAirship()
+def other_stuff():
+    arena_npc()
+    xbox.tap_b()
+    return_to_airship()

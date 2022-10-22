@@ -8,7 +8,7 @@ import reset
 import screen
 import xbox
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 selfAuto = True
 print("Looping section: Bevelle Trials")
@@ -20,7 +20,7 @@ success = 0
 while attempts < 20:
     attempts += 1
 
-    area.dreamZan.NewGame("Luca")
+    area.dreamZan.new_game("Luca")
     loadGame.load_offset(1)
 
     print("Game start screen")
@@ -32,7 +32,7 @@ while attempts < 20:
     import area.luca as luca
     import blitz
 
-    luca.blitzStart()
+    luca.blitz_start()
     blitzWin = blitz.blitz_main(False)
     if blitzWin:
         success += 1

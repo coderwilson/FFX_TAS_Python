@@ -12,14 +12,14 @@ if readVals:
 else:
     print("Here goes nothing!")
     print("------------------")
-    while not memory.main.nextDropRNG13(1):
-        memory.main.advanceRNG13()
+    while not memory.main.next_drop_rng_13(1):
+        memory.main.advance_rng_13()
     print("Mark 1")
-    while memory.main.nextChanceRNG12():
-        memory.main.advanceRNG12()
+    while memory.main.next_chance_rng_12():
+        memory.main.advance_rng_12()
     print("Mark 2")
-    while memory.main.nextChanceRNG10():
-        memory.main.advanceRNG10()
+    while memory.main.next_chance_rng_10():
+        memory.main.advance_rng_10()
     print("------------------")
     print("Should now drop NE armor.")
 print("------------------")
