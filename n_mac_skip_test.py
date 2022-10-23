@@ -1,7 +1,4 @@
 # Libraries and Core Files
-import random
-import sys
-
 import area.baaj
 import area.besaid
 import area.boats
@@ -21,72 +18,67 @@ import area.rescueYuna
 import area.sin
 import area.thunderPlains
 import area.zanarkand
-import battle.boss
-import battle.main
-import blitz
-import logs
+import loadGame
 import memory.main
 import reset
-import screen
+import targetPathing
 import vars
 import xbox
-import targetPathing
-import loadGame
 
-gameVars = vars.varsHandle()
-gameVars.setStartVars()
+game_vars = vars.vars_handle()
+game_vars.set_start_vars()
 
 # Plug in controller
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 Gamestate = "Macalania"
-StepCounter = 1 # x9
+step_counter = 1  # x9
 while not memory.main.start():
     pass
 
-if memory.main.getMap in [23, 348, 349]:
+if memory.main.get_map in [23, 348, 349]:
     pass
 else:
-    reset.resetToMainMenu()
+    reset.reset_to_main_menu()
 
 
 if Gamestate != "none":
-    if not (Gamestate == "Luca" and StepCounter == 3):
-        area.dreamZan.NewGame(Gamestate)
-    import loadGame
-    if Gamestate == "Macalania" and StepCounter == 1:  # 1 = south, 2 = north
-        loadGame.loadSaveNum(9)
-    if Gamestate == "Macalania" and StepCounter == 2:  # 1 = south, 2 = north
-        loadGame.loadSaveNum(7)
+    if not (Gamestate == "Luca" and step_counter == 3):
+        area.dreamZan.new_game(Gamestate)
+
+    if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
+        loadGame.load_save_num(9)
+    if Gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
+        loadGame.load_save_num(7)
 
 # Approach the position
-prep_step = [[303,34],[284,104],[222,160],[209,170]]
+prep_step = [[303, 34], [284, 104], [222, 160], [209, 170]]
 for i in range(len(prep_step)):
-    while not targetPathing.setMovement(prep_step[i]):
-        if memory.main.diagSkipPossible():
-            xbox.tapB()
+    while not targetPathing.set_movement(prep_step[i]):
+        if memory.main.diag_skip_possible():
+            xbox.tap_b()
 FFXC.set_neutral()
-memory.main.waitFrames(30)
+memory.main.wait_frames(30)
 # Into position
-while not targetPathing.setMovement([190,180]):
-    memory.main.waitFrames(2)
+while not targetPathing.set_movement([190, 180]):
+    memory.main.wait_frames(2)
     FFXC.set_neutral()
-    memory.main.waitFrames(6)
+    memory.main.wait_frames(6)
 
 print("Position Ready")
 FFXC.set_neutral()
-memory.main.waitFrames(30)
+memory.main.wait_frames(30)
 
 # Angle
-FFXC.set_movement(-1,-1)
-memory.main.waitFrames(1)
+FFXC.set_movement(-1, -1)
+memory.main.wait_frames(1)
 FFXC.set_neutral()
 print("Angle Ready")
-memory.main.waitFrames(40)
+memory.main.wait_frames(40)
 
 # Engage
-FFXC.set_movement(1,1)
-memory.main.waitFrames(2)
-xbox.tapB()
-memory.main.waitFrames(5)
+FFXC.set_movement(1, 1)
+memory.main.wait_frames(2)
+xbox.tap_b()
+memory.main.wait_frames(5)
 FFXC.set_neutral()
-memory.main.waitFrames(60)
+memory.main.wait_frames(60)

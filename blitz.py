@@ -235,7 +235,9 @@ def game_stage():
                 jassu_pass_timing(),
                 tidus_shot_timing(),
             ]
-        elif memory.main.get_story_progress() < 540 and not game_vars.blitz_first_shot():
+        elif (
+            memory.main.get_story_progress() < 540 and not game_vars.blitz_first_shot()
+        ):
             currentStage = 20  # default 20
         else:
             currentStage = 30

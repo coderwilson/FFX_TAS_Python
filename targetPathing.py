@@ -2692,7 +2692,7 @@ def djose_path(checkpoint):
     if checkpoint == 41:
         x = 447
         y = 651
-    if checkpoint in [42, 43,44,45,46]:
+    if checkpoint in [42, 43, 44, 45, 46]:
         x = 461.5
         y = 658
     if checkpoint == 47:  # Point of deferral 1
