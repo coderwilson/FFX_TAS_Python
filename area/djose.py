@@ -28,7 +28,7 @@ def path():
             print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
 
-        if memory.main.userControl():
+        if memory.main.user_control():
             if checkpoint in [47, 48] and stoneBreath == 1:
                 checkpoint = 49
             elif checkpoint == 49 and stoneBreath == 0:
@@ -43,13 +43,13 @@ def path():
                 memory.main.waitFrames(1)
                 xbox.tapB()
                 FFXC.set_neutral()
-                while memory.main.userControl() and memory.main.getActorCoords(11)[1] < 790:
+                while memory.main.user_control() and memory.main.get_actor_coords(11)[1] < 790:
                     xbox.tapB()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 43 and gameVars.tryDjoseSkip():  # and stoneBreath == 0:
-                while memory.main.getActorCoords(0)[1] < 790 and \
-                        memory.main.getActorCoords(11)[1] < 790:
+                while memory.main.get_actor_coords(0)[1] < 790 and \
+                        memory.main.get_actor_coords(11)[1] < 790:
                     memory.main.waitFrames(1)
                 memory.main.clickToControl3()
                 checkpoint += 1
@@ -62,14 +62,14 @@ def path():
                     checkpoint += 1
                 elif (
                     targetPathing.djosePath(checkpoint)[0]
-                    < memory.main.getActorCoords(0)[0]
+                    < memory.main.get_actor_coords(0)[0]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 elif (
                     targetPathing.djosePath(checkpoint)[1]
-                    < memory.main.getActorCoords(0)[1]
+                    < memory.main.get_actor_coords(0)[1]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
