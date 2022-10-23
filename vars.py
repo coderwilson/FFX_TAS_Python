@@ -69,11 +69,11 @@ class AllVars:
         # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        
+
     def tryDjoseSkip(self):
         return self.attemptDjose
-    
-    def blitzLossReset(self):
+
+    def blitz_loss_reset(self):
         return self.blitzLossForceReset
 
     def use_set_seed(self):
