@@ -7,160 +7,164 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
 def arrival():
     print("Starting Moonflow section")
 
     checkpoint = 0
-    while memory.main.getMap() != 235:
-        if memory.main.userControl():
+    while memory.main.get_map() != 235:
+        if memory.main.user_control():
             # Chests
             if checkpoint == 2:  # Gil outside Djose temple
                 print("Djose gil chest")
                 FFXC.set_movement(-1, 1)
-                xbox.SkipDialog(1)
+                xbox.skip_dialog(1)
                 FFXC.set_movement(1, -1)
-                memory.main.clickToControl()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 43:  # Moonflow chest
-                if memory.main.getItemSlot(90) < 200:
+                if memory.main.get_item_slot(90) < 200:
                     checkpoint += 1
                 else:
-                    targetPathing.setMovement([-1796, -480])
-                    xbox.tapB()
+                    targetPathing.set_movement([-1796, -480])
+                    xbox.tap_b()
 
             # Map changes
-            elif checkpoint < 6 and memory.main.getMap() == 76:
+            elif checkpoint < 6 and memory.main.get_map() == 76:
                 checkpoint = 6
-            elif checkpoint < 11 and memory.main.getMap() == 93:
+            elif checkpoint < 11 and memory.main.get_map() == 93:
                 checkpoint = 11
-            elif checkpoint < 14 and memory.main.getMap() == 75:
+            elif checkpoint < 14 and memory.main.get_map() == 75:
                 checkpoint = 14
-            elif checkpoint < 49 and memory.main.getMap() == 105:
+            elif checkpoint < 49 and memory.main.get_map() == 105:
                 checkpoint = 49
-            elif checkpoint < 54 and memory.main.getStoryProgress() == 1045:
+            elif checkpoint < 54 and memory.main.get_story_progress() == 1045:
                 checkpoint = 54
                 print("Updating checkpoint based on story/map progress:", checkpoint)
-            elif checkpoint == 54 and memory.main.getMap() == 188:
+            elif checkpoint == 54 and memory.main.get_map() == 188:
                 checkpoint = 55
                 print("Updating checkpoint based on story/map progress:", checkpoint)
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.moonflow(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.moonflow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
-                battle.main.fleeAll()
-            elif memory.main.menuOpen():
-                xbox.tapB()
-            elif memory.main.diagSkipPossible():
-                xbox.tapB()
+            if screen.battle_screen():
+                battle.main.flee_all()
+            elif memory.main.menu_open():
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
     print("End of approaching section, should now be talking to Lucille/Elma/etc.")
 
 
-def southBank(checkpoint: int = 0):
+def south_bank(checkpoint: int = 0):
     # Arrive at the south bank of the moonflow.
     print("South bank, Save sphere screen")
 
-    memory.main.clickToControl3()  # "Where there's a will, there's a way."
+    memory.main.click_to_control_3()  # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
-    memory.main.waitFrames(30 * 1)
+    memory.main.wait_frames(30 * 1)
     FFXC.set_neutral()
 
-    memory.main.clickToControl3()
-    partyHP = memory.main.getHP()
+    memory.main.click_to_control_3()
+    partyHP = memory.main.get_hp()
     if partyHP[4] < 800:
-        battle.main.healUp(2)
+        battle.main.heal_up(2)
     elif partyHP[0] < 700:
-        battle.main.healUp(1)
-    memory.main.closeMenu()
+        battle.main.heal_up(1)
+    memory.main.close_menu()
 
-    while not memory.main.battleActive():
-        if memory.main.userControl():
+    while not memory.main.battle_active():
+        if memory.main.user_control():
             if checkpoint == 4:
                 FFXC.set_neutral()
-                memory.main.clickToEvent()
-                memory.main.waitFrames(18)
-                xbox.menuB()  # Ride ze Shoopuff?
-                memory.main.waitFrames(10)
-                xbox.menuDown()
-                xbox.menuB()  # All aboardz!
-                xbox.SkipDialog(3)  # Just to clear some dialog
+                memory.main.click_to_event()
+                memory.main.wait_frames(18)
+                xbox.menu_b()  # Ride ze Shoopuff?
+                memory.main.wait_frames(10)
+                xbox.menu_down()
+                xbox.menu_b()  # All aboardz!
+                xbox.skip_dialog(3)  # Just to clear some dialog
 
-            elif targetPathing.setMovement(targetPathing.moonflowBankSouth(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.moonflow_bank_south(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
 
     battle.boss.extractor()
 
 
-def northBank():
-    memory.main.clickToControl3()
+def north_bank():
+    memory.main.click_to_control_3()
     FFXC.set_movement(-1, 0)
-    memory.main.awaitEvent()
-    memory.main.waitFrames(30 * 1)
-    memory.main.awaitControl()
-    if gameVars.csr():
-        memory.main.waitFrames(10)
+    memory.main.await_event()
+    memory.main.wait_frames(30 * 1)
+    memory.main.await_control()
+    if game_vars.csr():
+        memory.main.wait_frames(10)
         FFXC.set_movement(-1, -0.7)
-        memory.main.waitFrames(6)
+        memory.main.wait_frames(6)
         FFXC.set_movement(-1, 0)
-        memory.main.awaitEvent()
+        memory.main.await_event()
     else:
-        memory.main.waitFrames(45)
-        memory.main.clickToEvent()  # Talk to Auron
+        memory.main.wait_frames(45)
+        memory.main.click_to_event()  # Talk to Auron
         FFXC.set_neutral()
-        memory.main.waitFrames(9)
-        memory.main.clickToControl3()
+        memory.main.wait_frames(9)
+        memory.main.click_to_control_3()
     FFXC.set_movement(-1, 0)
-    memory.main.waitFrames(15)
-    memory.main.awaitEvent()
+    memory.main.wait_frames(15)
+    memory.main.await_event()
     FFXC.set_neutral()
-    memory.main.waitFrames(15)
-    if gameVars.getLStrike() % 2 == 1:
-        menu.equipWeapon(character=0, special="brotherhoodearly")
+    memory.main.wait_frames(15)
+    if game_vars.get_l_strike() % 2 == 1:
+        menu.equip_weapon(character=0, special="brotherhoodearly")
 
     checkpoint = 0
     print("Miihen North Bank pattern. Starts after talking to Auron.")
-    while memory.main.getMap() != 135:
-        if memory.main.userControl():
+    while memory.main.get_map() != 135:
+        if memory.main.user_control():
             if checkpoint == 7:  # Rikku steal/mix tutorial
                 FFXC.set_movement(1, 1)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
-                battle.main.mixTutorial()
-                memory.main.fullPartyFormat("postbunyip")
-                memory.main.closeMenu()
+                battle.main.mix_tutorial()
+                memory.main.full_party_format("postbunyip")
+                memory.main.close_menu()
                 checkpoint += 1
-            elif memory.main.getStoryProgress() >= 1085 and checkpoint < 4:
+            elif memory.main.get_story_progress() >= 1085 and checkpoint < 4:
                 checkpoint = 4
                 print("Rikku scene, updating checkpoint:", checkpoint)
 
             # Map changes
-            elif checkpoint < 2 and memory.main.getMap() == 109:
+            elif checkpoint < 2 and memory.main.get_map() == 109:
                 checkpoint = 2
-            elif checkpoint < 12 and memory.main.getMap() == 97:
+            elif checkpoint < 12 and memory.main.get_map() == 97:
                 checkpoint = 12
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.moonflowBankNorth(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.moonflow_bank_north(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
-                battle.main.fleeAll()
-            elif memory.main.diagSkipPossible() and not memory.main.battleActive():
-                xbox.tapB()
-            elif memory.main.menuOpen():
-                xbox.tapB()
+            if screen.battle_screen():
+                battle.main.flee_all()
+            elif memory.main.diag_skip_possible() and not memory.main.battle_active():
+                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_b()

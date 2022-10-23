@@ -7,20 +7,20 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
-gameVars.setStartVars()
+game_vars = vars.vars_handle()
+game_vars.set_start_vars()
 
 memory.main.start()
 # Plug in controller
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
-area.dreamZan.NewGame("Klikk testing")
-loadGame.loadSaveNum(101)
-memory.main.awaitControl()
-while memory.main.userControl():
-    targetPathing.setMovement([0, 0])
-    if memory.main.getCoords()[0] > -40:
-        xbox.tapB()
+area.dreamZan.new_game("Klikk testing")
+loadGame.load_save_num(101)
+memory.main.await_control()
+while memory.main.user_control():
+    targetPathing.set_movement([0, 0])
+    if memory.main.get_coords()[0] > -40:
+        xbox.tap_b()
 area.baaj.Klikk_fight()
 
-reset.midRunReset(landRun=False, startTime=logs.timeStamp())
+reset.mid_run_reset(land_run=False, start_time=logs.time_stamp())

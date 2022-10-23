@@ -8,203 +8,209 @@ import xbox
 import zz_eggHuntAuto
 import zzairShipPath
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def makingPlans():
-    memory.main.clickToControl3()
+def making_plans():
+    memory.main.click_to_control_3()
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
-    while not targetPathing.setMovement([-267, 347]):
+    while not targetPathing.set_movement([-267, 347]):
         pass
 
     target = [[-242, 312], [-239, 258], [-243, 145], [-243, 10]]
     checkpoint = 0
-    while memory.main.getMap() == 194:
-        if memory.main.userControl():
-            if targetPathing.setMovement(target[checkpoint]):
+    while memory.main.get_map() == 194:
+        if memory.main.user_control():
+            if targetPathing.set_movement(target[checkpoint]):
                 checkpoint += 1
 
-    zzairShipPath.airShipPath(2)  # Talk to Yuna/Kimahri
+    zzairShipPath.air_ship_path(2)  # Talk to Yuna/Kimahri
     FFXC.set_neutral()
 
 
-def Shedinja():
+def shedinja():  # shelinda
     print("The hymn is the key")
-    while memory.main.getMap() != 382:
+    while memory.main.get_map() != 382:
         print("Mark 1")
-        xbox.tapB()
-    while not memory.main.diagProgressFlag() in [4, 255]:
+        xbox.tap_b()
+    while not memory.main.diag_progress_flag() in [4, 255]:
         print("Mark 2")
-        xbox.tapB()
-    while memory.main.mapCursor() != 10:
+        xbox.tap_b()
+    while memory.main.map_cursor() != 10:
         print("The destination is the key")
-        memory.main.menuDirection(memory.main.mapCursor(), 10, 13)
-    memory.main.clickToControl()
+        memory.main.menu_direction(memory.main.map_cursor(), 10, 13)
+    memory.main.click_to_control()
 
-    memory.main.awaitControl()
+    memory.main.await_control()
     print("Moving to Shedinja")
     FFXC.set_movement(1, 1)
-    memory.main.waitFrames(45)
+    memory.main.wait_frames(45)
     FFXC.set_movement(0, 1)
-    memory.main.awaitEvent()
+    memory.main.await_event()
 
     FFXC.set_neutral()
-    if not gameVars.csr():
-        memory.main.clickToDiagProgress(100)
-    memory.main.clickToDiagProgress(76)  # Have you found a way? Well?
-    memory.main.waitFrames(20)
-    xbox.tapDown()
-    xbox.menuB()  # We fight Yu Yevon.
+    if not game_vars.csr():
+        memory.main.click_to_diag_progress(100)
+    memory.main.click_to_diag_progress(76)  # Have you found a way? Well?
+    memory.main.wait_frames(20)
+    xbox.tap_down()
+    xbox.menu_b()  # We fight Yu Yevon.
 
-    memory.main.clickToDiagProgress(74)
-    memory.main.clickToDiagProgress(28)
-    memory.main.clickToControl3()
+    memory.main.click_to_diag_progress(74)
+    memory.main.click_to_diag_progress(28)
+    memory.main.click_to_control_3()
 
 
-def exitCockpit():
+def exit_cockpit():
     print("Attempting to exit cockpit")
-    while memory.main.getMap() != 265:
-        if memory.main.userControl():
-            tidusCoords = memory.main.getCoords()
+    while memory.main.get_map() != 265:
+        if memory.main.user_control():
+            tidusCoords = memory.main.get_coords()
             if tidusCoords[1] > 318:
-                targetPathing.setMovement([-244, 315])
+                targetPathing.set_movement([-244, 315])
             else:
                 FFXC.set_movement(0, -1)
         else:
             FFXC.set_neutral()
 
 
-def facingSin():
-    while not targetPathing.setMovement([-245, 321]):
+def facing_sin():
+    while not targetPathing.set_movement([-245, 321]):
         pass
 
-    while memory.main.userControl():
-        targetPathing.setMovement([-256, 342])
-        xbox.tapB()
-        memory.main.waitFrames(1)
+    while memory.main.user_control():
+        targetPathing.set_movement([-256, 342])
+        xbox.tap_b()
+        memory.main.wait_frames(1)
 
     FFXC.set_neutral()
 
-    if gameVars.csr():
-        memory.main.clickToControl()
+    if game_vars.csr():
+        memory.main.click_to_control()
     else:
         # Gets us through the Airship destination menu.
-        xbox.SkipDialog(15)
-        while not memory.main.userControl():
-            if memory.main.menuOpen() or memory.main.diagSkipPossible():
-                xbox.tapB()
-            elif memory.main.cutsceneSkipPossible():
-                xbox.tapB()
+        xbox.skip_dialog(15)
+        while not memory.main.user_control():
+            if memory.main.menu_open() or memory.main.diag_skip_possible():
+                xbox.tap_b()
+            elif memory.main.cutscene_skip_possible():
+                xbox.tap_b()
 
-    if memory.main.getMap() in [255, 374]:
-        exitCockpit()
+    if memory.main.get_map() in [255, 374]:
+        exit_cockpit()
     FFXC.set_neutral()
 
-    zzairShipPath.airShipPath(3)
-    battle.main.SinArms()
-    memory.main.clickToControl()
+    zzairShipPath.air_ship_path(3)
+    battle.main.sin_arms()
+    memory.main.click_to_control()
     print("To the deck, talk to Yuna")
-    if memory.main.getMap() in [255, 374]:
-        exitCockpit()
+    if memory.main.get_map() in [255, 374]:
+        exit_cockpit()
     FFXC.set_neutral()
-    memory.main.clickToControl()
+    memory.main.click_to_control()
 
-    zzairShipPath.airShipPath(4)
+    zzairShipPath.air_ship_path(4)
     FFXC.set_neutral()
-    memory.main.clickToControl()
+    memory.main.click_to_control()
 
     print("To the deck, Sin's face battle.")
-    if memory.main.getMap() in [255, 374]:
-        exitCockpit()
+    if memory.main.get_map() in [255, 374]:
+        exit_cockpit()
     FFXC.set_neutral()
-    zzairShipPath.airShipPath(5)
-    battle.main.SinFace()
+    zzairShipPath.air_ship_path(5)
+    battle.main.sin_face()
     print("End of battle with Sin's face.")
 
 
-def insideSin():
-    while memory.main.getMap() != 203:  # Skip dialog and run to the sea of sorrows map
-        if memory.main.cutsceneSkipPossible():
+def inside_sin():
+    while memory.main.get_map() != 203:  # Skip dialog and run to the sea of sorrows map
+        if memory.main.cutscene_skip_possible():
             FFXC.set_neutral()
-            memory.main.waitFrames(3)
-            xbox.skipScene()
+            memory.main.wait_frames(3)
+            xbox.skip_scene()
         else:
             FFXC.set_movement(0, -1)
-            xbox.tapB()
+            xbox.tap_b()
     FFXC.set_neutral()
 
-    if memory.main.overdriveState2()[6] != 100 and gameVars.getNEAzone() == 3:
+    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
         reEquipNE = True
-        memory.main.fullPartyFormat("rikku", fullMenuClose=False)
-        menu.equipArmor(character=gameVars.neArmor(), ability=99)
+        memory.main.full_party_format("rikku", full_menu_close=False)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
     else:
         reEquipNE = False
-        memory.main.fullPartyFormat("yuna", fullMenuClose=False)
-    memory.main.closeMenu()
+        memory.main.full_party_format("yuna", full_menu_close=False)
+    memory.main.close_menu()
 
     checkpoint = 0
-    while memory.main.getMap() != 324:  # All the way to the egg hunt.
-        if memory.main.userControl():
+    while memory.main.get_map() != 324:  # All the way to the egg hunt.
+        if memory.main.user_control():
             # Events
-            if memory.main.getMap() == 296:  # Seymour battle
+            if memory.main.get_map() == 296:  # Seymour battle
                 print("We've reached the Seymour screen.")
-                memory.main.fullPartyFormat("yuna")
+                memory.main.full_party_format("yuna")
                 FFXC.set_movement(0, 1)
-                memory.main.waitFrames(30 * 5)
+                memory.main.wait_frames(30 * 5)
                 FFXC.set_neutral()
                 battle.boss.omnis()
-                memory.main.clickToControl()
-            elif checkpoint < 41 and memory.main.getMap() == 204:
+                memory.main.click_to_control()
+            elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
-            elif checkpoint < 68 and memory.main.getMap() == 327:
+            elif checkpoint < 68 and memory.main.get_map() == 327:
                 checkpoint = 68
 
             # General Pathing
-            elif targetPathing.setMovement(targetPathing.insideSin(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.inside_sin(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.battleActive() and memory.main.turnReady():
-                battle.main.chargeRikkuOD()
-                if reEquipNE and memory.main.overdriveState2()[6] == 100:
+            if memory.main.battle_active() and memory.main.turn_ready():
+                battle.main.charge_rikku_od()
+                if reEquipNE and memory.main.overdrive_state_2()[6] == 100:
                     reEquipNE = False
-                    memory.main.clickToControl()
-                    memory.main.fullPartyFormat("yuna", fullMenuClose=False)
-                    menu.equipArmor(character=gameVars.neArmor(), ability=0x801D)
-            elif memory.main.menuOpen():
-                xbox.tapB()
+                    memory.main.click_to_control()
+                    memory.main.full_party_format("yuna", full_menu_close=False)
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+            elif memory.main.menu_open():
+                xbox.tap_b()
 
 
-def eggHunt(autoEggHunt):
+def egg_hunt(auto_egg_hunt):
     # Done with pathing, now for egg hunt.
-    while not memory.main.userControl():
+    while not memory.main.user_control():
         FFXC.set_movement(-1, -1)
-    memory.main.waitFrames(30 * 0.5)
-    if autoEggHunt:
+    memory.main.wait_frames(30 * 0.5)
+    if auto_egg_hunt:
         zz_eggHuntAuto.engage()
     else:
         print("Start of egg hunt. User control expected.")
         waitCount = 0
-        while memory.main.getMap() != 325:
-            memory.main.waitFrames(30 * 1)
+        while memory.main.get_map() != 325:
+            memory.main.wait_frames(30 * 1)
             waitCount += 1
             if waitCount % 10 == 0:
                 print("Still waiting on user to do this section. ", waitCount / 10)
     print("Done with the egg hunt. Final prep for BFA.")
-    if gameVars.nemesis():
-        menu.equipWeapon(character=0, ability=0x8019, fullMenuClose=True)
+    if game_vars.nemesis():
+        menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
         FFXC.set_movement(1, 1)
-        memory.main.waitFrames(5)
-        memory.main.awaitEvent()
+        memory.main.wait_frames(5)
+        memory.main.await_event()
         FFXC.set_neutral()
     else:
-        if gameVars.zombieWeapon() != 255 and gameVars.zombieWeapon() not in [0, 1, 2]:
-            menu.equipWeapon(
-                character=gameVars.zombieWeapon(), ability=0x8032, fullMenuClose=False
+        if game_vars.zombie_weapon() != 255 and game_vars.zombie_weapon() not in [
+            0,
+            1,
+            2,
+        ]:
+            menu.equip_weapon(
+                character=game_vars.zombie_weapon(),
+                ability=0x8032,
+                full_menu_close=False,
             )
-        menu.BFA()
+        menu.bfa()

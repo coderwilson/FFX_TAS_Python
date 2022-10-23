@@ -2,91 +2,91 @@ import memory.main
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def gridUp():
+def grid_up():
     FFXC.set_value("Dpad", 1)
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
     FFXC.set_value("Dpad", 0)
-    memory.main.waitFrames(3)
+    memory.main.wait_frames(3)
 
 
-def gridDown():
+def grid_down():
     FFXC.set_value("Dpad", 2)
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
     FFXC.set_value("Dpad", 0)
-    memory.main.waitFrames(3)
+    memory.main.wait_frames(3)
 
 
-def gridLeft():
+def grid_left():
     FFXC.set_value("Dpad", 4)
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
     FFXC.set_value("Dpad", 0)
-    memory.main.waitFrames(3)
+    memory.main.wait_frames(3)
 
 
-def gridRight():
+def grid_right():
     FFXC.set_value("Dpad", 8)
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
     FFXC.set_value("Dpad", 0)
-    memory.main.waitFrames(3)
+    memory.main.wait_frames(3)
 
 
-def gridTidus():
-    if memory.main.sGridChar() == 0:
+def grid_tidus():
+    if memory.main.s_grid_char() == 0:
         return True
     else:
         return False
 
 
-def gridKimahri():
-    if memory.main.sGridChar() == 3:
+def grid_kimahri():
+    if memory.main.s_grid_char() == 3:
         return True
     else:
         return False
 
 
-def gridAuron():
-    if memory.main.sGridChar() == 2:
+def grid_auron():
+    if memory.main.s_grid_char() == 2:
         return True
     else:
         return False
 
 
-def gridLulu():
-    if memory.main.sGridChar() == 5:
+def grid_lulu():
+    if memory.main.s_grid_char() == 5:
         return True
     else:
         return False
 
 
-def gridWakka():
-    if memory.main.sGridChar() == 4:
+def grid_wakka():
+    if memory.main.s_grid_char() == 4:
         return True
     else:
         return False
 
 
-def gridYuna():
-    if memory.main.sGridChar() == 1:
+def grid_yuna():
+    if memory.main.s_grid_char() == 1:
         return True
     else:
         return False
 
 
-def gridRikku():
-    if memory.main.sGridChar() == 6:
+def grid_rikku():
+    if memory.main.s_grid_char() == 6:
         return True
     else:
         return False
 
 
-def firstPosition():
-    if memory.main.sGridMenu() == 255:
-        if memory.main.getGridMoveActive():
+def first_position():
+    if memory.main.s_grid_menu() == 255:
+        if memory.main.get_grid_move_active():
             return False
         else:
             return True
@@ -94,70 +94,70 @@ def firstPosition():
         return False
 
 
-def moveUseMenu():
-    if memory.main.sGridMenu() == 7:
+def move_use_menu():
+    if memory.main.s_grid_menu() == 7:
         return True
     else:
         return False
 
 
-def moveReady():
-    if moveUseMenu():
-        if memory.main.getGridMoveUsePos() == 0:
+def move_ready():
+    if move_use_menu():
+        if memory.main.get_grid_move_use_pos() == 0:
             return True
         else:
             return False
-    elif readyUseSphere() or moveActive():
-        xbox.menuA()
+    elif ready_use_sphere() or move_active():
+        xbox.menu_a()
     else:
         return False
 
 
-def moveActive():
-    if memory.main.getGridMoveActive() and memory.main.sGridMenu() == 255:
+def move_active():
+    if memory.main.get_grid_move_active() and memory.main.s_grid_menu() == 255:
         return True
     else:
         return False
 
 
-def moveComplete():
-    if memory.main.getGridMoveActive() and memory.main.sGridMenu() == 11:
+def move_complete():
+    if memory.main.get_grid_move_active() and memory.main.s_grid_menu() == 11:
         return True
     else:
         return False
 
 
-def useReady():
-    if moveUseMenu():
-        if memory.main.getGridMoveUsePos() == 1:
+def use_ready():
+    if move_use_menu():
+        if memory.main.get_grid_move_use_pos() == 1:
             return True
         else:
             return False
-    elif readyUseSphere() or moveActive():
-        xbox.menuA()
+    elif ready_use_sphere() or move_active():
+        xbox.menu_a()
     else:
         return False
 
 
-def readySelectSphere():
-    if memory.main.sGridMenu() == 8:
+def ready_select_sphere():
+    if memory.main.s_grid_menu() == 8:
         return True
     else:
         return False
 
 
-def readyUseSphere():
-    if memory.main.getGridUseActive():
+def ready_use_sphere():
+    if memory.main.get_grid_use_active():
         return True
     else:
         return False
 
 
-def quitGridReady():
-    if memory.main.sGridMenu() == 11:
-        if useReady():
+def quit_grid_ready():
+    if memory.main.s_grid_menu() == 11:
+        if use_ready():
             return False
-        elif moveComplete():
+        elif move_complete():
             return False
         else:
             return True
@@ -165,309 +165,309 @@ def quitGridReady():
         return False
 
 
-def useFirst():
+def use_first():
     print("use first")
-    while not readySelectSphere():
-        if firstPosition():
-            xbox.menuB()
-        elif moveReady():
-            xbox.menuDown()
-        elif useReady():
-            xbox.menuB()
+    while not ready_select_sphere():
+        if first_position():
+            xbox.menu_b()
+        elif move_ready():
+            xbox.menu_down()
+        elif use_ready():
+            xbox.menu_b()
     return True
 
 
-def moveFirst():
+def move_first():
     print("move first")
-    while not moveActive():
-        if firstPosition():
-            xbox.menuB()
-        elif moveReady():
-            xbox.menuB()
-            memory.main.waitFrames(3)
-        elif useReady():
-            xbox.menuUp()
+    while not move_active():
+        if first_position():
+            xbox.menu_b()
+        elif move_ready():
+            xbox.menu_b()
+            memory.main.wait_frames(3)
+        elif use_ready():
+            xbox.menu_up()
     return True
 
 
-def moveAndUse():
+def move_and_use():
     print("move and use")
-    memory.main.waitFrames(1)
-    xbox.menuB()
-    memory.main.waitFrames(1)
-    while not readySelectSphere():
-        if moveComplete() or firstPosition():
-            xbox.menuB()
-        elif moveReady():
-            xbox.menuDown()
-        elif useReady():
-            xbox.menuB()
+    memory.main.wait_frames(1)
+    xbox.menu_b()
+    memory.main.wait_frames(1)
+    while not ready_select_sphere():
+        if move_complete() or first_position():
+            xbox.menu_b()
+        elif move_ready():
+            xbox.menu_down()
+        elif use_ready():
+            xbox.menu_b()
     return True
 
 
-def useAndMove():
+def use_and_move():
     print("use and move")
-    memory.main.waitFrames(1)
-    xbox.menuB()
-    memory.main.waitFrames(1)
-    while not moveActive():
-        if readyUseSphere() or firstPosition():
-            xbox.menuB()
-        elif moveReady():
-            xbox.menuB()
-        elif useReady():
-            xbox.menuUp()
+    memory.main.wait_frames(1)
+    xbox.menu_b()
+    memory.main.wait_frames(1)
+    while not move_active():
+        if ready_use_sphere() or first_position():
+            xbox.menu_b()
+        elif move_ready():
+            xbox.menu_b()
+        elif use_ready():
+            xbox.menu_up()
         else:
-            xbox.menuB()
+            xbox.menu_b()
     return True
 
 
-def useAndUseAgain():
+def use_and_use_again():
     print("use and use again")
-    memory.main.waitFrames(1)
-    xbox.menuB()
-    memory.main.waitFrames(1)
-    while not readySelectSphere():
-        if readyUseSphere() or firstPosition():
-            xbox.menuB()
-        elif moveReady():
-            xbox.menuDown()
-        elif useReady():
-            xbox.menuB()
-    if gameVars.usePause():
-        memory.main.waitFrames(6)
+    memory.main.wait_frames(1)
+    xbox.menu_b()
+    memory.main.wait_frames(1)
+    while not ready_select_sphere():
+        if ready_use_sphere() or first_position():
+            xbox.menu_b()
+        elif move_ready():
+            xbox.menu_down()
+        elif use_ready():
+            xbox.menu_b()
+    if game_vars.use_pause():
+        memory.main.wait_frames(6)
     return True
 
 
-def useShiftLeft(toon):
+def use_shift_left(toon):
     print("use and shift")
-    memory.main.waitFrames(1)
-    xbox.menuB()
+    memory.main.wait_frames(1)
+    xbox.menu_b()
     toon = toon.lower()
     if toon == "yuna":
-        while not gridYuna():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_yuna():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "lulu":
-        while not gridLulu():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_lulu():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "auron":
-        while not gridAuron():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_auron():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "wakka":
-        while not gridWakka():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_wakka():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "tidus":
-        while not gridTidus():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_tidus():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "kimahri":
-        while not gridKimahri():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_kimahri():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "rikku":
-        while not gridRikku():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_rikku():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     print("Ready for grid: " + toon)
 
 
-def useShiftRight(toon):
+def use_shift_right(toon):
     print("use and shift")
-    xbox.menuB()
+    xbox.menu_b()
     toon = toon.lower()
     if toon == "yuna":
-        while not gridYuna():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_yuna():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "lulu":
-        while not gridLulu():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
-                memory.main.waitFrames(30 * 0.3)
+        while not grid_lulu():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
+                memory.main.wait_frames(30 * 0.3)
     if toon == "auron":
-        while not gridAuron():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_auron():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "wakka":
-        while not gridWakka():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_wakka():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "tidus":
-        while not gridTidus():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_tidus():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "kimahri":
-        while not gridKimahri():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_kimahri():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "rikku":
-        while not gridRikku():
-            if readyUseSphere():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_rikku():
+            if ready_use_sphere():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     print("Ready for grid: " + toon)
 
 
-def moveShiftLeft(toon):
+def move_shift_left(toon):
     print("Move and shift, left")
-    memory.main.waitFrames(2)
-    xbox.menuB()
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
+    xbox.menu_b()
+    memory.main.wait_frames(2)
     toon = toon.lower()
     if toon == "yuna":
-        while not gridYuna():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_yuna():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "lulu":
-        while not gridLulu():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_lulu():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "tidus":
-        while not gridTidus():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_tidus():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     if toon == "rikku":
-        while not gridRikku():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderLeft()
+        while not grid_rikku():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_left()
     print("Ready for grid: " + toon)
 
 
-def moveShiftRight(toon):
+def move_shift_right(toon):
     print("Move and shift, right")
-    memory.main.waitFrames(2)
-    xbox.menuB()
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
+    xbox.menu_b()
+    memory.main.wait_frames(2)
     toon = toon.lower()
     if toon == "yuna":
-        while not gridYuna():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_yuna():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     elif toon == "lulu":
-        while not gridLulu():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_lulu():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "tidus":
-        while not gridTidus():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_tidus():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     if toon == "rikku":
-        while not gridRikku():
-            if moveReady() or moveActive() or moveComplete():
-                xbox.menuB()
-            elif moveUseMenu():
-                xbox.menuBack()
-            elif firstPosition():
-                xbox.shoulderRight()
+        while not grid_rikku():
+            if move_ready() or move_active() or move_complete():
+                xbox.menu_b()
+            elif move_use_menu():
+                xbox.menu_back()
+            elif first_position():
+                xbox.shoulder_right()
     print("Ready for grid: " + toon)
 
 
-def useAndQuit():
-    memory.main.waitFrames(30 * 0.1)
-    xbox.menuB()
-    while memory.main.sGridActive():
-        if readyUseSphere():
+def use_and_quit():
+    memory.main.wait_frames(30 * 0.1)
+    xbox.menu_b()
+    while memory.main.s_grid_active():
+        if ready_use_sphere():
             print("Using the current item.")
-            xbox.menuB()
-        elif firstPosition():
+            xbox.menu_b()
+        elif first_position():
             print("Opening the Quit menu")
-            xbox.menuA()
-        elif quitGridReady():
+            xbox.menu_a()
+        elif quit_grid_ready():
             print("quitting sphere grid")
-            xbox.menuB()
-    while memory.main.menuNumber() != 5:
+            xbox.menu_b()
+    while memory.main.menu_number() != 5:
         pass
     return True
 
 
-def sphereNum(sType) -> int:
+def sphere_num(sType) -> int:
     sType = sType.lower()
     if sType == "power":
         return 70
@@ -532,112 +532,113 @@ def sphereNum(sType) -> int:
     return 255
 
 
-def selSphere(sType, shift):
+def sel_sphere(sType, shift):
     sNum = 255
     menuPos = 0
     print("------------------------------")
     print(sType)
-    sNum = sphereNum(sType)
+    sNum = sphere_num(sType)
     print(sNum)
-    menuPos = memory.main.getGridItemsSlot(sNum)
+    menuPos = memory.main.get_grid_items_slot(sNum)
     print(menuPos)
     print("------------------------------")
     if menuPos == 255:
         print("Sphere", sType, "is not in inventory.")
         return
-    while menuPos != memory.main.getGridCursorPos():
-        if menuPos > memory.main.getGridCursorPos():
-            if gameVars.usePause():
-                xbox.tapDown()
+    while menuPos != memory.main.get_grid_cursor_pos():
+        if menuPos > memory.main.get_grid_cursor_pos():
+            if game_vars.use_pause():
+                xbox.tap_down()
             else:
                 if (
-                    menuPos - memory.main.getGridCursorPos() >= 3
-                    and len(memory.main.getGridItemsOrder()) > 4
+                    menuPos - memory.main.get_grid_cursor_pos() >= 3
+                    and len(memory.main.get_grid_items_order()) > 4
                 ):
                     if (
-                        menuPos - memory.main.getGridCursorPos() == 3
-                        and menuPos == len(memory.main.getGridItemsOrder()) - 1
+                        menuPos - memory.main.get_grid_cursor_pos() == 3
+                        and menuPos == len(memory.main.get_grid_items_order()) - 1
                     ):
-                        xbox.tapDown()
+                        xbox.tap_down()
                     else:
-                        xbox.TriggerR()
+                        xbox.trigger_r()
                 else:
-                    xbox.tapDown()
-        elif menuPos < memory.main.getGridCursorPos():
-            if gameVars.usePause():
-                xbox.tapUp()
+                    xbox.tap_down()
+        elif menuPos < memory.main.get_grid_cursor_pos():
+            if game_vars.use_pause():
+                xbox.tap_up()
             else:
-                if memory.main.getGridCursorPos() - menuPos >= 3:
+                if memory.main.get_grid_cursor_pos() - menuPos >= 3:
                     if (
-                        menuPos == 0 and memory.main.getGridCursorPos() - menuPos == 3
-                    ) or len(memory.main.getGridItemsOrder()) <= 4:
-                        xbox.tapUp()
+                        menuPos == 0
+                        and memory.main.get_grid_cursor_pos() - menuPos == 3
+                    ) or len(memory.main.get_grid_items_order()) <= 4:
+                        xbox.tap_up()
                     else:
-                        xbox.TriggerL()
+                        xbox.trigger_l()
                 else:
-                    xbox.tapUp()
-    while not memory.main.sphereGridPlacementOpen():
-        xbox.menuB()
+                    xbox.tap_up()
+    while not memory.main.sphere_grid_placement_open():
+        xbox.menu_b()
     if shift == "up":
-        gridUp()
+        grid_up()
     if shift == "left":
-        gridLeft()
+        grid_left()
     if shift == "l2":
-        gridLeft()
-        gridLeft()
+        grid_left()
+        grid_left()
     if shift == "l5":
-        gridLeft()
-        gridLeft()
-        gridLeft()
-        gridLeft()
-        gridLeft()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
     if shift == "right":
-        gridRight()
+        grid_right()
     if shift == "r2":
-        gridRight()
-        gridRight()
+        grid_right()
+        grid_right()
     if shift == "down":
-        gridDown()
+        grid_down()
     if shift == "d2":
-        gridDown()
-        gridDown()
+        grid_down()
+        grid_down()
     if shift == "up2":
-        gridUp()
-        gridUp()
+        grid_up()
+        grid_up()
     if shift == "d5":
-        gridDown()
-        gridDown()
-        gridDown()
-        gridDown()
-        gridDown()
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_down()
     if shift == "aftersk":
-        gridUp()
-        gridRight()
-        gridDown()
-        memory.main.waitFrames(4)
-        if memory.main.sGridNodeSelected() == [248, 195]:
-            gridDown()
+        grid_up()
+        grid_right()
+        grid_down()
+        memory.main.wait_frames(4)
+        if memory.main.s_grid_node_selected() == [248, 195]:
+            grid_down()
     if shift == "aftersk2":
-        gridRight()
-        gridRight()
-        memory.main.waitFrames(30 * 0.1)
-        gridLeft()
+        grid_right()
+        grid_right()
+        memory.main.wait_frames(30 * 0.1)
+        grid_left()
     if shift == "afterBYSpec":
-        gridRight()
-        gridRight()
-        gridUp()
+        grid_right()
+        grid_right()
+        grid_up()
     if shift == "torikku":
-        memory.main.waitFrames(30 * 0.2)
-        gridDown()
-        gridDown()
-        gridLeft()
-        gridLeft()
+        memory.main.wait_frames(30 * 0.2)
+        grid_down()
+        grid_down()
+        grid_left()
+        grid_left()
     if shift == "yunaspec":
         # Yuna Special
-        gridDown()
-        gridRight()
-        gridRight()
-        gridDown()
-        gridDown()
-    while memory.main.sphereGridPlacementOpen():
-        xbox.menuB()
+        grid_down()
+        grid_right()
+        grid_right()
+        grid_down()
+        grid_down()
+    while memory.main.sphere_grid_placement_open():
+        xbox.menu_b()

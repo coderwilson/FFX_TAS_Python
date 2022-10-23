@@ -9,5 +9,5 @@ import memory.main
 import reset
 
 memory.main.start()
-memory.main.clearEncounterID()
-reset.resetToMainMenu()
+memory.main.clear_encounter_id()
+reset.reset_to_main_menu()

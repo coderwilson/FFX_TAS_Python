@@ -35,7 +35,7 @@ class MODULEENTRY32(Structure):
     ]
 
 
-def GetBaseAddr(ProcId, ProcName):
+def get_base_addr(ProcId, ProcName):
     me32 = MODULEENTRY32()
     me32.dwSize = sizeof(me32)
     hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ProcId)
@@ -68,7 +68,7 @@ def GetBaseAddr(ProcId, ProcName):
             CloseHandle(hSnapshot)
 
 
-def ListProcessModules(ProcessID):
+def list_process_modules(ProcessID):
     hModuleSnap = c_void_p(0)
     me32 = MODULEENTRY32()
     me32.dwSize = sizeof(MODULEENTRY32)

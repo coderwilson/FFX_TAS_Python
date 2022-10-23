@@ -1,10 +1,10 @@
 import memory.main
 import vars
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
 
-def clearMouse(counter):
+def clear_mouse(counter):
     try:
         return
     except Exception:
@@ -14,20 +14,20 @@ def clearMouse(counter):
             return
 
 
-def BattleScreen():
-    if memory.main.turnReady():
+def battle_screen():
+    if memory.main.turn_ready():
         return True
     else:
         return False
 
 
-def faintCheck():
+def faint_check():
     faints = 0
-    charHP = memory.main.getBattleHP()
-    frontParty = memory.main.getActiveBattleFormation()
+    charHP = memory.main.get_battle_hp()
+    frontParty = memory.main.get_active_battle_formation()
     print("##", frontParty, "##")
     print("##", charHP, "##")
-    if turnAeon():
+    if turn_aeon():
         return 0
     if frontParty[0] != 255 and charHP[0] == 0:
         faints += 1
@@ -39,94 +39,94 @@ def faintCheck():
     return faints
 
 
-def BattleComplete():
-    if not memory.main.battleActive():
+def battle_complete():
+    if not memory.main.battle_active():
         return True
     else:
         return False
 
 
-def awaitTurn():
+def await_turn():
     counter = 0
     print("Waiting for next turn in combat.")
     # Just to make sure there's no overlap from the previous character's turn
 
     # Now let's do this.
-    while not BattleScreen() or memory.main.userControl():
-        if not memory.main.battleActive():
+    while not battle_screen() or memory.main.user_control():
+        if not memory.main.battle_active():
             pass
         counter += 1
         if counter % 100000 == 0:
             print("Waiting for player turn:", counter / 10000)
-        if memory.main.gameOver():
+        if memory.main.game_over():
             return False
-    while not memory.main.mainBattleMenu():
+    while not memory.main.main_battle_menu():
         pass
     return True
 
 
-def turnRikkuRed():
-    return turnRikku()
+def turn_rikku_red():
+    return turn_rikku()
 
 
-def turnRikku():
-    if memory.main.getBattleCharTurn() == 6:
+def turn_rikku():
+    if memory.main.get_battle_char_turn() == 6:
         return True
     else:
         return False
 
 
-def turnTidus():
-    if memory.main.getBattleCharTurn() == 0:
+def turn_tidus():
+    if memory.main.get_battle_char_turn() == 0:
         return True
     else:
         return False
 
 
-def turnWakka():
-    if memory.main.getBattleCharTurn() == 4:
+def turn_wakka():
+    if memory.main.get_battle_char_turn() == 4:
         return True
     else:
         return False
 
 
-def turnLulu():
-    if memory.main.getBattleCharTurn() == 5:
+def turn_lulu():
+    if memory.main.get_battle_char_turn() == 5:
         return True
     else:
         return False
 
 
-def turnKimahri():
-    if memory.main.getBattleCharTurn() == 3:
+def turn_kimahri():
+    if memory.main.get_battle_char_turn() == 3:
         return True
     else:
         return False
 
 
-def turnAuron():
-    if memory.main.getBattleCharTurn() == 2:
+def turn_auron():
+    if memory.main.get_battle_char_turn() == 2:
         return True
     else:
         return False
 
 
-def turnYuna():
-    if memory.main.getBattleCharTurn() == 1:
+def turn_yuna():
+    if memory.main.get_battle_char_turn() == 1:
         return True
     else:
         return False
 
 
-def turnSeymour():
-    if memory.main.getBattleCharTurn() == 7:
+def turn_seymour():
+    if memory.main.get_battle_char_turn() == 7:
         return True
     else:
         return False
 
 
-def turnAeon():
-    turn = memory.main.getBattleCharTurn()
+def turn_aeon():
+    turn = memory.main.get_battle_char_turn()
     if turn > 7 and turn <= 19:
         print("Aeon's turn:")
         return True

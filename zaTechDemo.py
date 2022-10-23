@@ -14,10 +14,10 @@ import Showcase.chocoEater
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
 # Plug in controller
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 print("Test 2")
 print(FFXC)
@@ -25,11 +25,11 @@ print(FFXC)
 print("Starting tech-demo program.")
 
 memory.main.start()
-startTime = logs.timeStamp()
+startTime = logs.time_stamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
-gameVars.setCSR(False)
+game_vars.set_csr(False)
 
 attempts = 0  # Determines where in the showcase we start
 cycles = 0
@@ -41,19 +41,19 @@ while attempts < 20 and cycles < 50:
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    area.dreamZan.NewGame("techdemo")
+    area.dreamZan.new_game("techdemo")
 
     print("Game start screen")
-    screen.clearMouse(0)
+    screen.clear_mouse(0)
 
     # Now to run the appropriate section depending on attempt number.
     if attempts == 1:
         print("Demo - Mi'ihen skip")
-        loadGame.loadSaveNum(26)  # W/O laughing scene
-        loadGame.LoadMiihenStart()
+        loadGame.load_save_num(26)  # W/O laughing scene
+        loadGame.load_miihen_start()
         FFXC.set_neutral()
-        memory.main.setEncounterRate(0)
-        memory.main.awaitControl()
+        memory.main.set_encounter_rate(0)
+        memory.main.await_control()
         returnVal = area.miihen.arrival()
         print(returnVal)
         SkipAttempts += 1
@@ -67,10 +67,10 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
-        loadGame.loadSaveNum(38)
+        loadGame.load_save_num(38)
         # Fixes a low gil state for this save file.
-        memory.main.setGilvalue(4000)
-        loadGame.LoadMRR()
+        memory.main.set_gil_value(4000)
+        loadGame.load_mrr()
         wakkaLateMenu = area.MRR.arrival()
         SkipCount += 1
         SkipAttempts += 1
@@ -82,10 +82,10 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
-        loadGame.loadSaveNum(3)
-        loadGame.loadGuadoSkip()
+        loadGame.load_save_num(3)
+        loadGame.load_guado_skip()
         SkipAttempts += 1
-        guadoSkipStatus = area.guadosalam.guadoSkip()
+        guadoSkipStatus = area.guadosalam.guado_skip()
         if guadoSkipStatus:
             SkipCount += 1
         print("------------------------------")
@@ -96,8 +96,8 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
-        loadGame.loadSaveNum(97)
-        loadGame.loadMacTemple()
+        loadGame.load_save_num(97)
+        loadGame.load_mac_temple()
         SkipAttempts += 1
         jyscalSkipStatus = area.mTemple.arrival()
         if jyscalSkipStatus:
@@ -111,7 +111,7 @@ while attempts < 20 and cycles < 50:
     elif attempts == 5:
         print("###  Just for fun - Chocobo Eater Stomp")
         print("###  Please engage the CSR now!")
-        loadGame.loadSaveNum(28)
+        loadGame.load_save_num(28)
         Showcase.chocoEater.engage()
         Showcase.chocoEater.battle()
     else:  # Breaks the loop when everything is complete.
@@ -121,22 +121,22 @@ while attempts < 20 and cycles < 50:
     FFXC.set_neutral()
     if attempts < 100:
         print("Demo complete. Now clicking to control so we can reset.", attempts)
-        if memory.main.getStoryProgress() < 3380:
-            memory.main.clickToControl()
+        if memory.main.get_story_progress() < 3380:
+            memory.main.click_to_control()
             time.sleep(2)
         else:
             time.sleep(10)
 
         print("Resetting.")
 
-        reset.resetToMainMenu()
+        reset.reset_to_main_menu()
     else:
         print("------------------------------")
         print("------------------------------")
         print("Final demo is complete. Thanks for playing.")
 
 
-endTime = logs.timeStamp()
+endTime = logs.time_stamp()
 print("------------------------------")
 print("------------------------------")
 totalTime = endTime - startTime

@@ -7,46 +7,46 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def boatDance():
+def boat_dance():
     print("No dancing this time")
-    memory.main.waitFrames(30 * 50)
+    memory.main.wait_frames(30 * 50)
 
 
-def ssLiki():
+def ss_liki():
     checkpoint = 0
-    while memory.main.getMap() != 43:
-        if memory.main.userControl():
+    while memory.main.get_map() != 43:
+        if memory.main.user_control():
             # events
             if checkpoint == 1:  # Group surrounding Yuna
-                memory.main.clickToEventTemple(7)
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 3:  # Talk to Wakka
-                memory.main.clickToEventTemple(3)
-                print("Ready for SS Liki menu - (var) ", gameVars.earlyTidusGrid())
-                if not gameVars.earlyTidusGrid():
-                    menu.Liki()
-                    memory.main.closeMenu()
+                memory.main.click_to_event_temple(3)
+                print("Ready for SS Liki menu - (var) ", game_vars.early_tidus_grid())
+                if not game_vars.early_tidus_grid():
+                    menu.liki()
+                    memory.main.close_menu()
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.liki(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.liki(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible() or memory.main.menuOpen():
-                xbox.tapB()
-            elif memory.main.cutsceneSkipPossible():
-                xbox.skipScene()
-            elif memory.main.battleActive():
+            if memory.main.diag_skip_possible() or memory.main.menu_open():
+                xbox.tap_b()
+            elif memory.main.cutscene_skip_possible():
+                xbox.skip_scene()
+            elif memory.main.battle_active():
                 print("Ready to start fight with Sin's Fin")
-                battle.boss.sinFin()
+                battle.boss.sin_fin()
                 print("Sin's Fin fight complete. Waiting for next fight")
                 battle.boss.echuilles()
                 print("Sinspawn Echuilles fight complete")
@@ -57,142 +57,145 @@ def get_digit(number, n):
 
 
 def _set_index_to_value(index, value, power):
-    while memory.main.oakaGilCursor() != index:
-        if memory.main.oakaGilCursor() < index:
-            xbox.tapRight()
+    while memory.main.oaka_gil_cursor() != index:
+        if memory.main.oaka_gil_cursor() < index:
+            xbox.tap_right()
         else:
-            xbox.tapLeft()
-    while get_digit(memory.main.oakaGilAmount(), power) != value:
-        if get_digit(memory.main.oakaGilAmount(), power) < value:
-            xbox.tapUp()
+            xbox.tap_left()
+    while get_digit(memory.main.oaka_gil_amount(), power) != value:
+        if get_digit(memory.main.oaka_gil_amount(), power) < value:
+            xbox.tap_up()
         else:
-            xbox.tapDown()
+            xbox.tap_down()
 
 
-def ssWinno():
-    memory.main.clickToControl()
+def ss_winno():
+    memory.main.click_to_control()
     # logs.writeStats("Winno Speed Count:")
     # logs.writeStats(memory.getSpeed())
 
-    while memory.main.userControl():
-        targetPathing.setMovement([28, -36])  # Through first door
-    memory.main.waitFrames(2)
+    while memory.main.user_control():
+        targetPathing.set_movement([28, -36])  # Through first door
+    memory.main.wait_frames(2)
     FFXC.set_neutral()
-    memory.main.clickToControl()
-    memory.main.waitFrames(2)
+    memory.main.click_to_control()
+    memory.main.wait_frames(2)
     FFXC.set_movement(1, -1)
-    memory.main.waitFrames(2)
+    memory.main.wait_frames(2)
 
     # Talk to O'akaXXIII
-    oakaCoords = [memory.main.getActorCoords(1)[0], memory.main.getActorCoords(1)[1]]
-    while memory.main.userControl():
-        targetPathing.setMovement(oakaCoords)
-        xbox.tapB()
-        memory.main.waitFrames(3)
+    oakaCoords = [
+        memory.main.get_actor_coords(1)[0],
+        memory.main.get_actor_coords(1)[1],
+    ]
+    while memory.main.user_control():
+        targetPathing.set_movement(oakaCoords)
+        xbox.tap_b()
+        memory.main.wait_frames(3)
         oakaCoords = [
-            memory.main.getActorCoords(1)[0],
-            memory.main.getActorCoords(1)[1],
+            memory.main.get_actor_coords(1)[0],
+            memory.main.get_actor_coords(1)[1],
         ]
     FFXC.set_neutral()
-    while memory.main.oakaInterface() != 12:
-        xbox.tapB()
+    while memory.main.oaka_interface() != 12:
+        xbox.tap_b()
     print("Setting Hundreds")
     _set_index_to_value(5, 0, 2)
     print("Setting Thousands")
     _set_index_to_value(4, 1, 3)
     print("Setting Zeroes")
     _set_index_to_value(7, 1, 0)
-    while memory.main.oakaInterface() != 0:
-        xbox.tapB()
-    while memory.main.shopMenuDialogueRow() != 1:
-        xbox.tapDown()
-    xbox.tapB()
-    memory.main.clickToControl3()
+    while memory.main.oaka_interface() != 0:
+        xbox.tap_b()
+    while memory.main.shop_menu_dialogue_row() != 1:
+        xbox.tap_down()
+    xbox.tap_b()
+    memory.main.click_to_control_3()
 
 
-def ssWinno2():
+def ss_winno_2():
     # To the deck
-    memory.main.awaitControl()
+    memory.main.await_control()
     checkpoint = 0
 
-    while memory.main.getStoryProgress() < 395:
-        if memory.main.userControl():
-            if checkpoint < 2 and memory.main.getMap() == 94:
+    while memory.main.get_story_progress() < 395:
+        if memory.main.user_control():
+            if checkpoint < 2 and memory.main.get_map() == 94:
                 checkpoint = 2
             elif checkpoint == 6:
-                memory.main.clickToEventTemple(2)
+                memory.main.click_to_event_temple(2)
                 checkpoint += 1
-            elif checkpoint < 11 and memory.main.getStoryProgress() == 385:
+            elif checkpoint < 11 and memory.main.get_story_progress() == 385:
                 checkpoint = 11
             elif checkpoint == 11:
-                jechtShot()
+                jecht_shot()
                 checkpoint += 1
-            elif targetPathing.setMovement(targetPathing.winno(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.winno(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
-    if not gameVars.csr():
-        memory.main.clickToDiagProgress(142)
-        xbox.clearSavePopup(0)
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+    if not game_vars.csr():
+        memory.main.click_to_diag_progress(142)
+        xbox.clear_save_popup(0)
 
 
-def jechtShotSuccess():
+def jecht_shot_success():
     FFXC.set_value("Dpad", 1)  # Up
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 1)  # Up
     FFXC.set_value("Dpad", 8)  # Right
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 8)  # Right
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 8)  # Right
     FFXC.set_value("Dpad", 2)  # Down
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 2)  # Down
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 2)  # Down
     FFXC.set_value("Dpad", 4)  # Left
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 4)  # Left
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
     FFXC.set_value("Dpad", 4)  # Left
     FFXC.set_value("Dpad", 1)  # Up
-    xbox.tapB()
+    xbox.tap_b()
     FFXC.set_neutral()
-    xbox.tapB()
+    xbox.tap_b()
 
 
-def jechtShot():
+def jecht_shot():
     # Jecht shot tutorial
     print("Ready for Jecht Shot")
-    memory.main.clickToDiagProgress(96)
-    while memory.main.diagProgressFlag() != 100:
-        if memory.main.diagProgressFlag() == 97:
+    memory.main.click_to_diag_progress(96)
+    while memory.main.diag_progress_flag() != 100:
+        if memory.main.diag_progress_flag() == 97:
             FFXC.set_value("Dpad", 1)  # Up
             FFXC.set_value("Dpad", 8)  # Right
-            xbox.tapB()
-        elif memory.main.diagProgressFlag() == 98:
+            xbox.tap_b()
+        elif memory.main.diag_progress_flag() == 98:
             FFXC.set_value("Dpad", 4)  # Left
-            xbox.tapB()
-        elif memory.main.diagProgressFlag() == 99:
+            xbox.tap_b()
+        elif memory.main.diag_progress_flag() == 99:
             FFXC.set_value("Dpad", 2)  # Down
             FFXC.set_value("Dpad", 8)  # Right
-            xbox.tapB()
-        elif memory.main.diagSkipPossible():
-            xbox.tapB()
+            xbox.tap_b()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
         FFXC.set_neutral()
 
     # Failure logic
-    xbox.SkipDialog(2)
+    xbox.skip_dialog(2)
     print("End Jecht Shot")
     print("We are intentionally failing the Jecht shot. Save the frames!")
 

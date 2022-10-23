@@ -9,7 +9,7 @@ import memory.main
 import xbox
 
 
-def lineSphereIntersect(start, end, circle, radius=11):
+def line_sphere_intersect(start, end, circle, radius=11):
     numHits = 0
     hits = []
 
@@ -36,7 +36,7 @@ def lineSphereIntersect(start, end, circle, radius=11):
     return (numHits, hits)
 
 
-def pathAround(player, circle, target, radius=11):
+def path_around(player, circle, target, radius=11):
     line = player - circle
     line /= np.linalg.norm(line)  # normalize to length 1
     angle = np.arctan2(line[1], line[0])
@@ -55,7 +55,7 @@ def pathAround(player, circle, target, radius=11):
 
 
 def engage():
-    FFXC = xbox.controllerHandle()
+    FFXC = xbox.controller_handle()
     print("Start egg hunt")
     startTime = time.time()
     checkpoint = 0
@@ -66,18 +66,18 @@ def engage():
     target = [10, -10]
     checkpoint = 0
     print("Ready for movement.")
-    while memory.main.getStoryProgress() < 3251:
+    while memory.main.get_story_progress() < 3251:
         lookingCount += 1
         if lookingCount % 40 == 0:
             checkpoint += 1
-        if memory.main.battleActive():
+        if memory.main.battle_active():
             print("Battle engaged - using flee.")
             FFXC.set_neutral()
-            battle.main.fleeAll()
+            battle.main.flee_all()
             battleCount += 1
         else:  # User control is different for this section.
-            eggArray = memory.main.buildEggs()
-            iceArray = memory.main.buildIcicles()  # Added for additional pathing needs
+            eggArray = memory.main.build_eggs()
+            iceArray = memory.main.build_icicles()  # Added for additional pathing needs
             if activeEgg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
                     if (
@@ -107,9 +107,9 @@ def engage():
 
             # And now the code to move to the target.
             oldTarget = target
-            player = memory.main.getCoords()
-            iceArray = memory.main.buildIcicles()
-            (forward, right) = memory.main.getMovementVectors()
+            player = memory.main.get_coords()
+            iceArray = memory.main.build_icicles()
+            (forward, right) = memory.main.get_movement_vectors()
 
             targetPos = np.array([target[0], target[1]])
             playerPos = np.array(player)
@@ -117,7 +117,7 @@ def engage():
             closestIntersect = 9999
             intersectPoint = []
             for icicle in iceArray:
-                numIntersect, hits = lineSphereIntersect(
+                numIntersect, hits = line_sphere_intersect(
                     playerPos, targetPos, np.array([icicle.x, icicle.y])
                 )
                 if numIntersect > 0:
@@ -130,7 +130,7 @@ def engage():
 
             if closestIntersect < 9999:
                 # Move around icicle instead
-                target = pathAround(playerPos, np.array(intersectPoint), targetPos)
+                target = path_around(playerPos, np.array(intersectPoint), targetPos)
 
             # Calculate forward and right directions relative to camera space
             pX = player[0]
@@ -171,26 +171,26 @@ def engage():
                 time.sleep(0.15)
                 FFXC.set_neutral()
                 print("Stutter-step to egg. |", checkpoint)
-                xbox.tapB()
+                xbox.tap_b()
             elif activeEgg == 99:
                 print("Looking for a new egg. |", checkpoint)
-                xbox.tapB()
+                xbox.tap_b()
             else:
                 print("Targeting egg: |", checkpoint)
-            xbox.tapB()
+            xbox.tap_b()
     endTime = time.time()
     print("End egg hunt")
     FFXC.set_neutral()
     duration = endTime - startTime
     print("Duration:", str(duration))
     print("Battle count:", battleCount)
-    while memory.main.getMap() != 325:
-        if memory.main.battleActive():
-            battle.main.fleeAll()
+    while memory.main.get_map() != 325:
+        if memory.main.battle_active():
+            battle.main.flee_all()
     try:
-        logs.writeStats("Egg hunt duration (seconds):")
-        logs.writeStats(str(round(duration, 2)))
-        logs.writeStats("Egg hunt battles:")
-        logs.writeStats(str(battleCount))
+        logs.write_stats("Egg hunt duration (seconds):")
+        logs.write_stats(str(round(duration, 2)))
+        logs.write_stats("Egg hunt battles:")
+        logs.write_stats(str(battleCount))
     except Exception:
         print("No log file.")

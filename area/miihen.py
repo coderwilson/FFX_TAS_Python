@@ -7,274 +7,277 @@ import targetPathing
 import vars
 import xbox
 
-gameVars = vars.varsHandle()
+game_vars = vars.vars_handle()
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def post_battle_logic(forceCharge=False):
-    if memory.main.overdriveState2()[1] < 43 or (
-        forceCharge and memory.main.overdriveState2()[1] != 100
+def post_battle_logic(force_charge=False):
+    if memory.main.overdrive_state_2()[1] < 43 or (
+        force_charge and memory.main.overdrive_state_2()[1] != 100
     ):
-        memory.main.fullPartyFormat("kilikawoods1", fullMenuClose=False)
+        memory.main.full_party_format("kilikawoods1", full_menu_close=False)
     else:
-        if gameVars.selfDestructGet():
-            memory.main.fullPartyFormat("miihen", fullMenuClose=False)
+        if game_vars.self_destruct_get():
+            memory.main.full_party_format("miihen", full_menu_close=False)
         else:
-            memory.main.fullPartyFormat("djose", fullMenuClose=False)
-    hpCheck = memory.main.getHP()
+            memory.main.full_party_format("djose", full_menu_close=False)
+    hpCheck = memory.main.get_hp()
     print("------------------ HP check:", hpCheck)
     if hpCheck[0] < 520 or hpCheck[1] < 220:
-        battle.main.healUp()
+        battle.main.heal_up()
     else:
         print("No need to heal up. Moving onward.")
-    memory.main.closeMenu()
+    memory.main.close_menu()
 
 
 def arrival():
     print("Waiting for Yuna/Tidus to stop laughing.")
     FFXC.set_movement(0, 1)
-    memory.main.clickToControl()
+    memory.main.click_to_control()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
     miihenSkip = False
     battleCount = 0
     SDencounterID = 0
 
     checkpoint = 0
-    while memory.main.getMap() != 120:
-        if memory.main.userControl():
+    while memory.main.get_map() != 120:
+        if memory.main.user_control():
             # Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
-                if gameVars.csr():
+                if game_vars.csr():
                     # Only run this branch if CSR is online.
-                    tidusCoords = memory.main.getCoords()
-                    hunterCoords = memory.main.miihenGuyCoords()
+                    tidusCoords = memory.main.get_coords()
+                    hunterCoords = memory.main.miihen_guy_coords()
                     hunterDistance = abs(tidusCoords[1] - hunterCoords[1]) + abs(
                         tidusCoords[0] - hunterCoords[0]
                     )
 
                     # Get spear
-                    if memory.main.hunterSpear():
+                    if memory.main.hunter_spear():
                         checkpoint = 11
                     elif hunterDistance < 200 or checkpoint in [6, 7, 8, 9, 10]:
-                        targetPathing.setMovement(hunterCoords)
-                        xbox.tapB()
+                        targetPathing.set_movement(hunterCoords)
+                        xbox.tap_b()
 
-                    elif targetPathing.setMovement(targetPathing.miihen(checkpoint)):
+                    elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
                         checkpoint += 1
                         print("Checkpoint reached:", checkpoint)
 
                 else:
                     # Run this branch on a normal Any% run, no CSR
-                    tidusCoords = memory.main.getCoords()
-                    hunterCoords = memory.main.miihenGuyCoords()
+                    tidusCoords = memory.main.get_coords()
+                    hunterCoords = memory.main.miihen_guy_coords()
                     if hunterCoords[1] < tidusCoords[1]:
                         checkpoint = 11
                         print("**Late for Mi'ihen skip, forcing recovery.")
                     elif checkpoint == 6:
                         FFXC.set_neutral()
-                        memory.main.waitFrames(9)
+                        memory.main.wait_frames(9)
                         print("Updating checkpoint due to late skip.")
                         print("Checkpoint reached:", checkpoint)
                         checkpoint += 1
                     elif checkpoint == 7:
-                        if memory.main.getCoords()[1] > 1356.5:  # Into position
-                            if memory.main.getCoords()[0] < -44:
+                        if memory.main.get_coords()[1] > 1356.5:  # Into position
+                            if memory.main.get_coords()[0] < -44:
                                 FFXC.set_movement(1, 0)
-                                memory.main.waitFrames(30 * 0.06)
+                                memory.main.wait_frames(30 * 0.06)
                                 FFXC.set_neutral()
-                                memory.main.waitFrames(30 * 0.09)
+                                memory.main.wait_frames(30 * 0.09)
                             else:
                                 checkpoint += 1
                                 print("Close to the spot")
-                            print(memory.main.getCoords())
-                        elif memory.main.getCoords()[0] < -43.5:  # Into position
+                            print(memory.main.get_coords())
+                        elif memory.main.get_coords()[0] < -43.5:  # Into position
                             FFXC.set_movement(1, 1)
-                            memory.main.waitFrames(2)
+                            memory.main.wait_frames(2)
                             FFXC.set_neutral()
-                            memory.main.waitFrames(3)
+                            memory.main.wait_frames(3)
                         else:
                             FFXC.set_movement(0, 1)
-                            memory.main.waitFrames(2)
+                            memory.main.wait_frames(2)
                             FFXC.set_neutral()
-                            memory.main.waitFrames(3)
+                            memory.main.wait_frames(3)
                     elif checkpoint == 8:
-                        if memory.main.getCoords()[0] > -43.5:  # Into position
+                        if memory.main.get_coords()[0] > -43.5:  # Into position
                             checkpoint += 1
                             print("Adjusting for horizontal position - complete")
-                            print(memory.main.getCoords())
+                            print(memory.main.get_coords())
                         else:
                             FFXC.set_movement(1, 0)
-                            memory.main.waitFrames(2)
+                            memory.main.wait_frames(2)
                             FFXC.set_neutral()
-                            memory.main.waitFrames(3)
+                            memory.main.wait_frames(3)
                     elif checkpoint == 9:
-                        if memory.main.getCoords()[1] > 1358.5:  # Into position
+                        if memory.main.get_coords()[1] > 1358.5:  # Into position
                             checkpoint = 10
                             print("Stopped and ready for the skip.")
-                            print(memory.main.getCoords())
+                            print(memory.main.get_coords())
                         else:
                             FFXC.set_movement(0, 1)
-                            memory.main.waitFrames(2)
+                            memory.main.wait_frames(2)
                             FFXC.set_neutral()
-                            memory.main.waitFrames(4)
+                            memory.main.wait_frames(4)
                     elif checkpoint == 10:
                         # Spear guy's position when we start moving.
-                        if memory.main.miihenGuyCoords()[1] < 1380:
+                        if memory.main.miihen_guy_coords()[1] < 1380:
                             print("Skip engaging!!! Good luck!")
                             # Greater number for spear guy's position means we will start moving faster.
                             # Smaller number means moving later.
                             FFXC.set_movement(0, 1)
-                            if gameVars.usePause():
-                                memory.main.waitFrames(2)
+                            if game_vars.use_pause():
+                                memory.main.wait_frames(2)
                             else:
-                                memory.main.waitFrames(3)
+                                memory.main.wait_frames(3)
                             # Walk into the guy mashing B (or X, or whatever the key is)
-                            xbox.SkipDialog(0.3)
+                            xbox.skip_dialog(0.3)
                             FFXC.set_neutral()  # Stop trying to move. (recommended by Crimson)
                             print("Starting special skipping.")
-                            xbox.SkipDialogSpecial(3)  # Mash two buttons
+                            xbox.skip_dialog_special(3)  # Mash two buttons
                             print("End special skipping.")
                             print("Should now be able to see if it worked.")
                             # Don't move, avoiding a possible extra battle
-                            memory.main.waitFrames(30 * 3.5)
-                            memory.main.clickToControl3()
+                            memory.main.wait_frames(30 * 3.5)
+                            memory.main.click_to_control_3()
                             print("Mark 1")
-                            memory.main.waitFrames(30 * 1)
+                            memory.main.wait_frames(30 * 1)
                             print("Mark 2")
                             try:
                                 if (
-                                    memory.main.lucilleMiihenCoords()[1] > 1400
-                                    and memory.main.userControl()
+                                    memory.main.lucille_miihen_coords()[1] > 1400
+                                    and memory.main.user_control()
                                 ):
                                     miihenSkip = True
                                 else:
-                                    memory.main.clickToControl3()
+                                    memory.main.click_to_control_3()
                             except Exception:
                                 miihenSkip = False
                             print("Skip successful:", miihenSkip)
                             checkpoint += 1
-                    elif targetPathing.setMovement(targetPathing.miihen(checkpoint)):
+                    elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
                         checkpoint += 1
                         print("Checkpoint reached:", checkpoint)
-            elif checkpoint == 11 and not memory.main.hunterSpear():
-                targetPathing.setMovement(
-                    [memory.main.miihenGuyCoords()[0], memory.main.miihenGuyCoords()[1]]
+            elif checkpoint == 11 and not memory.main.hunter_spear():
+                targetPathing.set_movement(
+                    [
+                        memory.main.miihen_guy_coords()[0],
+                        memory.main.miihen_guy_coords()[1],
+                    ]
                 )
-                xbox.tapB()
+                xbox.tap_b()
 
             # Map changes
-            elif checkpoint < 15 and memory.main.getMap() == 120:
+            elif checkpoint < 15 and memory.main.get_map() == 120:
                 checkpoint = 15
             # General pathing
-            elif targetPathing.setMovement(targetPathing.miihen(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.turnReady():
+            if memory.main.turn_ready():
                 if checkpoint < 4:  # Tutorial battle with Auron
-                    while memory.main.battleActive():
-                        xbox.tapB()
+                    while memory.main.battle_active():
+                        xbox.tap_b()
                     FFXC.set_movement(0, 1)
-                    while not memory.main.userControl():
-                        xbox.tapB()
+                    while not memory.main.user_control():
+                        xbox.tap_b()
                     post_battle_logic()
                     FFXC.set_neutral()
                 elif (
-                    checkpoint == 25 and not memory.main.battleActive()
+                    checkpoint == 25 and not memory.main.battle_active()
                 ):  # Shelinda dialog
                     FFXC.set_neutral()
-                    xbox.tapB()
+                    xbox.tap_b()
                 else:
                     FFXC.set_neutral()
                     print("Starting battle")
                     battleCount += 1
-                    battle.main.MiihenRoad()
+                    battle.main.miihen_road()
                     print("Battle complete")
                     post_battle_logic()
 
                 # Kimahri manip
-                nextCritKim = memory.main.nextCrit(
-                    character=3, charLuck=18, enemyLuck=15
+                nextCritKim = memory.main.next_crit(
+                    character=3, char_luck=18, enemy_luck=15
                 )
                 print("#### Next Kimahri crit:", nextCritKim)
             else:
                 FFXC.set_movement(1, 1)
-                if memory.main.menuOpen():
+                if memory.main.menu_open():
                     FFXC.set_value("BtnB", 1)
-                    memory.main.waitFrames(2)
+                    memory.main.wait_frames(2)
                     FFXC.set_value("BtnB", 0)
-                    memory.main.waitFrames(3)
-                elif memory.main.diagSkipPossible():
+                    memory.main.wait_frames(3)
+                elif memory.main.diag_skip_possible():
                     FFXC.set_value("BtnB", 1)
-                    memory.main.waitFrames(2)
+                    memory.main.wait_frames(2)
                     FFXC.set_value("BtnB", 0)
-                    memory.main.waitFrames(3)
+                    memory.main.wait_frames(3)
     print("Mi'ihen skip status:", miihenSkip)
-    return [gameVars.selfDestructGet(), battleCount, SDencounterID, miihenSkip]
+    return [game_vars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]
 
 
-def arrival2(selfDestruct, battleCount, SDencounterID):
+def arrival_2(selfDestruct, battleCount, SDencounterID):
     print("Start of the second map")
     checkpoint = 15
-    while memory.main.getMap() != 171:
-        if memory.main.userControl():
+    while memory.main.get_map() != 171:
+        if memory.main.user_control():
 
             # Map changes
             if checkpoint == 27:
-                if memory.main.getCoords()[1] > 2810:
+                if memory.main.get_coords()[1] > 2810:
                     checkpoint += 1
-                elif gameVars.csr():
+                elif game_vars.csr():
                     checkpoint += 1
                 else:
                     FFXC.set_neutral()
-                    xbox.SkipDialog(1)
-                    memory.main.clickToControl3()
+                    xbox.skip_dialog(1)
+                    memory.main.click_to_control_3()
                     checkpoint += 1
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.miihen(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
+            if screen.battle_screen():
                 battleCount += 1
                 if (
-                    checkpoint == 27 and not memory.main.battleActive()
+                    checkpoint == 27 and not memory.main.battle_active()
                 ):  # Shelinda dialog
-                    xbox.tapB()
+                    xbox.tap_b()
                 else:
                     print("Starting battle")
-                    battle.main.MiihenRoad()
+                    battle.main.miihen_road()
                     print("Battle complete")
                     post_battle_logic()
-            elif memory.main.menuOpen():
-                xbox.tapB()
-            elif memory.main.diagSkipPossible():  # Exclude during the Miihen skip.
+            elif memory.main.menu_open():
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():  # Exclude during the Miihen skip.
                 if checkpoint < 6 or checkpoint > 12:
-                    xbox.tapB()
+                    xbox.tap_b()
 
             # Map changes
-            elif checkpoint < 13 and memory.main.getMap() == 120:
+            elif checkpoint < 13 and memory.main.get_map() == 120:
                 checkpoint = 13
-            elif checkpoint < 20 and memory.main.getMap() == 127:
+            elif checkpoint < 20 and memory.main.get_map() == 127:
                 checkpoint = 20
-            elif checkpoint < 31 and memory.main.getMap() == 58:
+            elif checkpoint < 31 and memory.main.get_map() == 58:
                 checkpoint = 31
-    return [gameVars.selfDestructGet(), battleCount, SDencounterID]
+    return [game_vars.self_destruct_get(), battleCount, SDencounterID]
 
 
-def midPoint():
+def mid_point():
     checkpoint = 0
-    while memory.main.getMap() != 115:
-        if memory.main.userControl():
-            pDownSlot = memory.main.getItemSlot(6)
-            if memory.main.getMap() == 58:
-                memory.main.fullPartyFormat("tidkimwak")
+    while memory.main.get_map() != 115:
+        if memory.main.user_control():
+            pDownSlot = memory.main.get_item_slot(6)
+            if memory.main.get_map() == 58:
+                memory.main.full_party_format("tidkimwak")
                 FFXC.set_movement(0, 1)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
             # elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
             #    checkpoint = 4
@@ -282,90 +285,90 @@ def midPoint():
                 checkpoint = 4
             elif checkpoint == 5:
                 FFXC.set_movement(0, -1)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif targetPathing.setMovement(targetPathing.miihenAgency(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.miihen_agency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if memory.main.diagSkipPossible():
-                xbox.tapB()
-            elif memory.main.battleActive():
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+            elif memory.main.battle_active():
                 FFXC.set_neutral()
                 print("Mi'ihen - ready for Chocobo Eater")
-                battle.boss.chocoboEater()
+                battle.boss.chocobo_eater()
                 print("Mi'ihen - Chocobo Eater complete")
 
 
 # Starts just after the save sphere.
-def lowRoad(selfDestruct, battleCount, SDencounterID):
+def low_road(self_destruct, battle_count, sd_encounter_id):
     checkpoint = 0
-    post_battle_logic(forceCharge=True)
-    while memory.main.getMap() != 79:
-        if memory.main.userControl():
+    post_battle_logic(force_charge=True)
+    while memory.main.get_map() != 79:
+        if memory.main.user_control():
             # Utility stuff
             if checkpoint == 2:
-                memory.main.touchSaveSphere()
+                memory.main.touch_save_sphere()
                 checkpoint += 1
-            elif checkpoint == 26 and not gameVars.selfDestructGet():
+            elif checkpoint == 26 and not game_vars.self_destruct_get():
                 checkpoint = 24
             elif checkpoint == 34:  # Talk to guard, then Seymour
                 FFXC.set_movement(0, 1)
-                memory.main.awaitEvent()
+                memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.waitFrames(30 * 0.2)
-                memory.main.clickToControl()
+                memory.main.wait_frames(30 * 0.2)
+                memory.main.click_to_control()
                 FFXC.set_movement(0, -1)
-                memory.main.waitFrames(30 * 4)
+                memory.main.wait_frames(30 * 4)
                 FFXC.set_neutral()
                 checkpoint += 1
 
             # Map changes
-            elif checkpoint < 17 and memory.main.getMap() == 116:
+            elif checkpoint < 17 and memory.main.get_map() == 116:
                 checkpoint = 17
-            elif checkpoint < 28 and memory.main.getMap() == 59:
+            elif checkpoint < 28 and memory.main.get_map() == 59:
                 checkpoint = 28
 
             # General pathing
-            elif targetPathing.setMovement(targetPathing.lowRoad(checkpoint)):
+            elif targetPathing.set_movement(targetPathing.low_road(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 25:  # Shelinda dialog
-                xbox.tapB()
+                xbox.tap_b()
         else:
             FFXC.set_neutral()
-            if screen.BattleScreen():
-                battleCount += 1
+            if screen.battle_screen():
+                battle_count += 1
                 print("Starting battle")
-                battle.main.MiihenRoad()
+                battle.main.miihen_road()
                 print("Battle complete")
-                post_battle_logic(forceCharge=True)
-            elif memory.main.menuOpen():
-                xbox.tapB()
-            elif memory.main.diagSkipPossible():
+                post_battle_logic(force_charge=True)
+            elif memory.main.menu_open():
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
                 if checkpoint < 6 or checkpoint > 12:
-                    xbox.tapB()
+                    xbox.tap_b()
     # logs.writeStats('Miihen encounters:')
-    # logs.writeStats(battleCount)
+    # logs.writeStats(battle_count)
 
 
-def wrapUp():
+def wrap_up():
     print("Now ready to meet Seymour")
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(30 * 5)
+    memory.main.wait_frames(30 * 5)
     FFXC.set_neutral()
 
-    memory.main.clickToControl()
+    memory.main.click_to_control()
     FFXC.set_movement(0, 1)
-    xbox.SkipDialog(4.5)
+    xbox.skip_dialog(4.5)
     FFXC.set_neutral()
-    xbox.SkipDialog(2.5)
+    xbox.skip_dialog(2.5)
     FFXC.set_movement(0, -1)
-    xbox.SkipDialog(12)
+    xbox.skip_dialog(12)
     FFXC.set_neutral()
-    memory.main.clickToControl()  # Seymour scene
+    memory.main.click_to_control()  # Seymour scene
     FFXC.set_movement(0, 1)
-    memory.main.waitFrames(30 * 12)
+    memory.main.wait_frames(30 * 12)
     FFXC.set_neutral()

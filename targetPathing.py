@@ -3,13 +3,13 @@ from math import copysign
 import memory.main
 import xbox
 
-FFXC = xbox.controllerHandle()
+FFXC = xbox.controller_handle()
 
 
-def setMovement(target) -> bool:
+def set_movement(target) -> bool:
 
-    player = memory.main.getCoords()
-    (forward, right) = memory.main.getMovementVectors()
+    player = memory.main.get_coords()
+    (forward, right) = memory.main.get_movement_vectors()
 
     # Calculate forward and right directions relative to camera space
     pX = player[0]
@@ -43,7 +43,7 @@ def setMovement(target) -> bool:
         return False
 
 
-def tidusHome(checkpoint):
+def tidus_home(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -134,7 +134,7 @@ def tidusHome(checkpoint):
     return [x, y]
 
 
-def allStartsHere(checkpoint):
+def all_starts_here(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -202,7 +202,7 @@ def allStartsHere(checkpoint):
     return [x, y]
 
 
-def baajRamp(checkpoint):
+def baaj_ramp(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -229,7 +229,7 @@ def baajRamp(checkpoint):
     return [x, y]
 
 
-def baajHallway(checkpoint):
+def baaj_hallway(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -262,7 +262,7 @@ def baajHallway(checkpoint):
     return [x, y]
 
 
-def baajPuzzle(checkpoint):
+def baaj_puzzle(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -360,7 +360,7 @@ def baajPuzzle(checkpoint):
     return [x, y]
 
 
-def besaid1(checkpoint):
+def besaid_1(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -518,7 +518,7 @@ def besaid1(checkpoint):
     return [x, y]
 
 
-def besaidTrials(checkpoint):
+def besaid_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -643,7 +643,7 @@ def besaidTrials(checkpoint):
     return [x, y]
 
 
-def besaid2(checkpoint):
+def besaid_2(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -869,7 +869,7 @@ def liki(checkpoint):
     return [x, y]
 
 
-def Kilika1(checkpoint):
+def kilika_1(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -944,7 +944,7 @@ def Kilika1(checkpoint):
     return [x, y]
 
 
-def Kilika2(checkpoint):
+def kilika_2(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1249,7 +1249,7 @@ def Kilika2(checkpoint):
     return [x, y]
 
 
-def KilikaTrials(checkpoint):
+def kilika_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1411,7 +1411,7 @@ def KilikaTrials(checkpoint):
     return [x, y]
 
 
-def Kilika3(checkpoint):
+def kilika_3(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1666,7 +1666,7 @@ def winno(checkpoint):
     return [x, y]
 
 
-def Luca1(checkpoint):
+def luca_1(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1828,7 +1828,7 @@ def Luca1(checkpoint):
     return [x, y]
 
 
-def LucaPreBlitz(checkpoint):
+def luca_pre_blitz(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1858,7 +1858,7 @@ def LucaPreBlitz(checkpoint):
     return [x, y]
 
 
-def Luca3(checkpoint):
+def luca_3(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2056,7 +2056,7 @@ def miihen(checkpoint):
     return [x, y]
 
 
-def miihenAgency(checkpoint):
+def miihen_agency(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2080,7 +2080,7 @@ def miihenAgency(checkpoint):
     return [x, y]
 
 
-def lowRoad(checkpoint):
+def low_road(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2195,7 +2195,7 @@ def lowRoad(checkpoint):
     return [x, y]
 
 
-def mrrStart(checkpoint):
+def mrr_start(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2233,7 +2233,7 @@ def mrrStart(checkpoint):
     return [x, y]
 
 
-def mrrMain(checkpoint):
+def mrr_main(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2467,7 +2467,7 @@ def mrrMain(checkpoint):
     return [x, y]
 
 
-def battleSite(checkpoint):
+def battle_site(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2514,7 +2514,7 @@ def battleSite(checkpoint):
     return [x, y]
 
 
-def battleSiteAftermath(checkpoint):
+def battle_site_aftermath(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2563,7 +2563,7 @@ def battleSiteAftermath(checkpoint):
     return [x, y]
 
 
-def djosePath(checkpoint):
+def djose_path(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -2734,7 +2734,7 @@ def djosePath(checkpoint):
     return [x, y]
 
 
-def djoseTrials(checkpoint):
+def djose_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3018,7 +3018,7 @@ def djoseTrials(checkpoint):
     return [x, y]
 
 
-def djoseDance(checkpoint):
+def djose_dance(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3048,7 +3048,7 @@ def djoseDance(checkpoint):
     return [x, y]
 
 
-def djoseExit(checkpoint):
+def djose_exit(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3349,7 +3349,7 @@ def moonflow(checkpoint):
     return [x, y]
 
 
-def moonflowBankSouth(checkpoint):
+def moonflow_bank_south(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3367,7 +3367,7 @@ def moonflowBankSouth(checkpoint):
     return [x, y]
 
 
-def moonflowBankNorth(checkpoint):
+def moonflow_bank_north(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3429,7 +3429,7 @@ def moonflowBankNorth(checkpoint):
     return [x, y]
 
 
-def guadoStoryline(checkpoint):
+def guado_storyline(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3558,7 +3558,7 @@ def guadoStoryline(checkpoint):
     return [x, y]
 
 
-def guadoSkip(checkpoint):
+def guado_skip(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3640,7 +3640,7 @@ def guadoSkip(checkpoint):
     return [x, y]
 
 
-def tPlainsSouth(checkpoint):
+def t_plains_south(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3745,7 +3745,7 @@ def tPlainsSouth(checkpoint):
     return [x, y]
 
 
-def tPlainsAgency(checkpoint):
+def t_plains_agency(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3787,7 +3787,7 @@ def tPlainsAgency(checkpoint):
     return [x, y]
 
 
-def tPlainsNorth(checkpoint):
+def t_plains_north(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -3859,7 +3859,7 @@ def tPlainsNorth(checkpoint):
     return [x, y]
 
 
-def mWoods(checkpoint):
+def m_woods(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4058,7 +4058,7 @@ def mWoods(checkpoint):
     return [x, y]
 
 
-def mLake(checkpoint):
+def m_lake(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4097,7 +4097,7 @@ def mLake(checkpoint):
     return [x, y]
 
 
-def mTempleApproach(checkpoint):
+def m_temple_approach(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4154,7 +4154,7 @@ def mTempleApproach(checkpoint):
     return [x, y]
 
 
-def templeFoyer(checkpoint):
+def temple_foyer(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4224,7 +4224,7 @@ def templeFoyer(checkpoint):
     return [x, y]
 
 
-def mTempleTrials(checkpoint):
+def m_temple_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4394,7 +4394,7 @@ def mTempleTrials(checkpoint):
     return [x, y]
 
 
-def mTempleEscape(checkpoint):
+def m_temple_escape(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4498,7 +4498,7 @@ def mTempleEscape(checkpoint):
     return [x, y]
 
 
-def underMacTemple(checkpoint):
+def under_mac_temple(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4778,7 +4778,7 @@ def desert(checkpoint):
     return [x, y]
 
 
-def Home(checkpoint):
+def home(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -4970,7 +4970,7 @@ def Home(checkpoint):
     return [x, y]
 
 
-def rescueAirship(checkpoint):
+def rescue_airship(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5039,7 +5039,7 @@ def rescueAirship(checkpoint):
     return [x, y]
 
 
-def bevellePreTrials(checkpoint):
+def bevelle_pre_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5069,7 +5069,7 @@ def bevellePreTrials(checkpoint):
     return [x, y]
 
 
-def bevelleTrials(checkpoint):
+def bevelle_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5238,13 +5238,13 @@ def bevelleTrials(checkpoint):
     return [x, y]
 
 
-def seymourNatus():  # First checkpoint ever written. :D
+def seymour_natus():  # First checkpoint ever written. :D
     x = 15
     y = 150
     return [x, y]
 
 
-def sutekiDaNe(checkpoint):
+def suteki_da_ne(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5285,7 +5285,7 @@ def sutekiDaNe(checkpoint):
     return [x, y]
 
 
-def calmLands(checkpoint):
+def calm_lands(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5339,7 +5339,7 @@ def calmLands(checkpoint):
     return [x, y]
 
 
-def defenderX(checkpoint):
+def defender_x(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5360,7 +5360,7 @@ def defenderX(checkpoint):
     return [x, y]
 
 
-def neApproach(checkpoint):
+def ne_approach(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5396,7 +5396,7 @@ def neApproach(checkpoint):
     return [x, y]
 
 
-def neForceEncountersWhite(checkpoint):
+def ne_force_encounters_white(checkpoint):
     x = 0
     y = 999
     if checkpoint % 2 == 0:
@@ -5406,7 +5406,7 @@ def neForceEncountersWhite(checkpoint):
     return [x, y]
 
 
-def neForceEncountersGreen(checkpoint):
+def ne_force_encounters_green(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5457,7 +5457,7 @@ def neForceEncountersGreen(checkpoint):
     return [x, y]
 
 
-def neReturnGreen(checkpoint):
+def ne_return_green(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5496,7 +5496,7 @@ def neReturnGreen(checkpoint):
     return [x, y]
 
 
-def neReturn(checkpoint):
+def ne_return(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5568,7 +5568,7 @@ def neReturn(checkpoint):
     return [x, y]
 
 
-def kelkRonso(checkpoint):
+def kelk_ronso(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5595,7 +5595,7 @@ def kelkRonso(checkpoint):
     return [x, y]
 
 
-def gagazetSnow(checkpoint):
+def gagazet_snow(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5694,7 +5694,7 @@ def gagazetSnow(checkpoint):
     return [x, y]
 
 
-def Flux(checkpoint):
+def flux(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5721,7 +5721,7 @@ def Flux(checkpoint):
     return [x, y]
 
 
-def gagazetDreamSeq(checkpoint):
+def gagazet_dream_seq(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5805,7 +5805,7 @@ def gagazetDreamSeq(checkpoint):
     return [x, y]
 
 
-def gagazetPostDream(checkpoint):
+def gagazet_post_dream(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -5841,7 +5841,7 @@ def gagazetPostDream(checkpoint):
     return [x, y]
 
 
-def gagazetCave(checkpoint):
+def gagazet_cave(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6019,7 +6019,7 @@ def gagazetCave(checkpoint):
     return [x, y]
 
 
-def gagazetPeak(checkpoint):
+def gagazet_peak(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6074,7 +6074,7 @@ def gagazetPeak(checkpoint):
     return [x, y]
 
 
-def zanarkandOutdoors(checkpoint):
+def zanarkand_outdoors(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6127,7 +6127,7 @@ def zanarkandOutdoors(checkpoint):
     return [x, y]
 
 
-def zanarkandDome(checkpoint):
+def zanarkand_dome(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6226,7 +6226,7 @@ def zanarkandDome(checkpoint):
     return [x, y]
 
 
-def zanarkandTrials(checkpoint):
+def zanarkand_trials(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6527,7 +6527,7 @@ def yunalesca(checkpoint):
     return [x, y]
 
 
-def yunalescaToAirship(checkpoint):
+def yunalesca_to_airship(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6612,7 +6612,7 @@ def yunalescaToAirship(checkpoint):
     return [x, y]
 
 
-def tPlainsDodging(checkpoint):
+def t_plains_dodging(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6639,7 +6639,7 @@ def tPlainsDodging(checkpoint):
     return [x, y]
 
 
-def insideSin(checkpoint):
+def inside_sin(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
@@ -6858,7 +6858,7 @@ def insideSin(checkpoint):
     return [x, y]
 
 
-def airShip(checkpoint):
+def air_ship(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
