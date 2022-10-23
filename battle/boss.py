@@ -295,7 +295,7 @@ def echuilles():
                 if tidusCounter == 1:  # and memory.main.rngSeed() != 160:
                     print("Dark Attack")
                     battle.main.use_skill(0)  # Dark Attack
-                # elif memory.main.getEnemyCurrentHP()[0] <= 558:
+                # elif memory.main.get_enemy_current_hp()[0] <= 558:
                 #    print("Ready for Tidus Overdrive. Wakka defends.")
                 #    defend()
                 else:
@@ -1033,7 +1033,7 @@ def wendigo():
                         battle.main.buddy_swap_auron()  # Swap for Auron
                         powerbreak = True
                         usepowerbreak = True
-                # elif memory.main.getEnemyCurrentHP()[1] < stopHealing:
+                # elif memory.main.get_enemy_current_hp()[1] < stopHealing:
                 #    defend()
                 elif (
                     battle.main.wendigo_res_heal(
@@ -1049,7 +1049,7 @@ def wendigo():
                     ):
                         battle.main.steal()
                         guadosteal = True
-                    # elif memory.main.getEnemyCurrentHP().count(0) == 2 and not 5 in memory.main.getActiveBattleFormation():
+                    # elif memory.main.get_enemy_current_hp().count(0) == 2 and not 5 in memory.main.getActiveBattleFormation():
                     #    buddySwapLulu()
                     else:
                         battle.main.defend()
@@ -1059,7 +1059,7 @@ def wendigo():
                     battle.main.use_skill(position=0, target=21)
                     powerbreakused = True
                     usepowerbreak = False
-                # elif memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
+                # elif memory.main.get_enemy_current_hp()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
                 #    defend()
                 elif (
                     battle.main.wendigo_res_heal(
@@ -1088,7 +1088,7 @@ def wendigo():
                 ):
                     print("Swapping to Auron to Power Break")
                     battle.main.buddy_swap_auron()
-                # if memory.main.getEnemyCurrentHP()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
+                # if memory.main.get_enemy_current_hp()[1] < stopHealing and memory.main.getBattleHP()[tidusSlot] != 0:
                 #    print("End of battle, no need to heal.")
                 #    defend()
                 elif (

@@ -28,48 +28,57 @@ def path():
             print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
 
-        if memory.main.userControl():
+        if memory.main.user_control():
             if checkpoint in [47, 48] and stoneBreath == 1:
                 checkpoint = 49
             elif checkpoint == 49 and stoneBreath == 0:
                 checkpoint = 47
             # The Djose skip pathing file was removed in commit f18ca78 (PR91)
             # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
-            elif checkpoint == 42 and gameVars.tryDjoseSkip():  # and stoneBreath == 0: #Turn/talk
+            elif (
+                checkpoint == 42 and game_vars.try_djose_skip()
+            ):  # and stoneBreath == 0: #Turn/talk
                 FFXC.set_movement(-1, 1)
-                memory.main.waitFrames(2)
-                xbox.tapB()
+                memory.main.wait_frames(2)
+                xbox.tap_b()
                 FFXC.set_movement(-1, 1)
-                memory.main.waitFrames(1)
-                xbox.tapB()
+                memory.main.wait_frames(1)
+                xbox.tap_b()
                 FFXC.set_neutral()
-                while memory.main.userControl() and memory.main.getActorCoords(11)[1] < 790:
-                    xbox.tapB()
+                while (
+                    memory.main.user_control()
+                    and memory.main.get_actor_coords(11)[1] < 790
+                ):
+                    xbox.tap_b()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint == 43 and gameVars.tryDjoseSkip():  # and stoneBreath == 0:
-                while memory.main.getActorCoords(0)[1] < 790 and \
-                        memory.main.getActorCoords(11)[1] < 790:
-                    memory.main.waitFrames(1)
-                memory.main.clickToControl3()
+            elif (
+                checkpoint == 43 and game_vars.try_djose_skip()
+            ):  # and stoneBreath == 0:
+                while (
+                    memory.main.get_actor_coords(0)[1] < 790
+                    and memory.main.get_actor_coords(11)[1] < 790
+                ):
+                    memory.main.wait_frames(1)
+                memory.main.click_to_control_3()
                 checkpoint += 1
             else:
                 # Map changes
-                if memory.main.getMap() == 76 and checkpoint < 51:
+                if memory.main.get_map() == 76 and checkpoint < 51:
                     checkpoint = 52
                 if checkpoint in [51, 56, 58]:
-                    memory.main.clickToEventTemple(0)
+                    memory.main.click_to_event_temple(0)
                     checkpoint += 1
                 elif (
-                    targetPathing.djosePath(checkpoint)[0]
-                    < memory.main.getActorCoords(0)[0]
+                    targetPathing.djose_path(checkpoint)[0]
+                    < memory.main.get_actor_coords(0)[0]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 elif (
-                    targetPathing.djosePath(checkpoint)[1]
-                    < memory.main.getActorCoords(0)[1]
+                    targetPathing.djose_path(checkpoint)[1]
+                    < memory.main.get_actor_coords(0)[1]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
