@@ -1331,15 +1331,15 @@ def get_enemy_current_hp():
         key2 = basePointerAddress + offset2
         if enemyNum == 20:
             maxHP = [process.readBytes(key1, 4)]
-            currentHP = [process.readBytes(key2, 4)]
+            current_hp = [process.readBytes(key2, 4)]
         else:
             nextHP = process.readBytes(key1, 4)
             if nextHP != 0:
                 maxHP.append(nextHP)
-                currentHP.append(process.readBytes(key2, 4))
+                current_hp.append(process.readBytes(key2, 4))
         enemyNum += 1
-    print("Enemy HP current values:", currentHP)
-    return currentHP
+    print("Enemy HP current values:", current_hp)
+    return current_hp
 
 
 def get_enemy_max_hp():
@@ -1356,16 +1356,16 @@ def get_enemy_max_hp():
         key2 = basePointerAddress + offset2
         if enemyNum == 20:
             maxHP = [process.readBytes(key1, 4)]
-            currentHP = [process.readBytes(key2, 4)]
+            current_hp = [process.readBytes(key2, 4)]
         else:
             if maxHP != 0:
                 maxHP.append(process.readBytes(key1, 4))
-                currentHP.append(process.readBytes(key2, 4))
+                current_hp.append(process.readBytes(key2, 4))
         enemyNum += 1
     print("Enemy HP max values:")
     print(maxHP)
     print("Enemy HP current values:")
-    print(currentHP)
+    print(current_hp)
     return maxHP
 
 

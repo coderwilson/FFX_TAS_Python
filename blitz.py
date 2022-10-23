@@ -714,7 +714,7 @@ def letty_act():
         pass_ball(target=3)
         if reportState:
             print("Letty Action 2")
-    elif playerArray[2].currentHP() < 10:
+    elif playerArray[2].current_hp() < 10:
         pass_ball(target=3)
     elif currentStage == 2:
         if distance(2, 8) < 250:
@@ -769,8 +769,8 @@ def jassu_move():
         # jassuTrain()
         find_safe_place()
         moveForward = True
-    elif currentStage <= 1 and playerArray[3].currentHP() < 10:
-        if playerArray[2].currentHP() >= 40 and distance(2, 8) > 360:
+    elif currentStage <= 1 and playerArray[3].current_hp() < 10:
+        if playerArray[2].current_hp() >= 40 and distance(2, 8) > 360:
             xbox.tap_x()
         elif graavDistance < 320:
             xbox.tap_x()
@@ -779,7 +779,7 @@ def jassu_move():
     elif currentStage == 0:
         # Defend in the goal for safety.
         findSafety = True
-        if playerArray[2].currentHP() >= 40 and currentStage == 0:
+        if playerArray[2].current_hp() >= 40 and currentStage == 0:
             if distance(2, 8) > 360 and distance(2, 7) > 360 and distance(2, 6) > 360:
                 xbox.tap_x()
     elif currentStage == 1:
@@ -853,13 +853,13 @@ def jassu_act():
     elif currentStage == 30:
         dribble_ball()
     elif currentStage == 0:
-        if playerArray[2].currentHP() >= 40 and distance(2, 8) > 360:
+        if playerArray[2].current_hp() >= 40 and distance(2, 8) > 360:
             pass_ball(target=2)
         else:
             dribble_ball()
     elif currentStage == 1:
         dribble_ball()
-    elif playerArray[3].currentHP() < 10:
+    elif playerArray[3].current_hp() < 10:
         pass_ball(target=0)
     elif currentStage == 2:
         dribble_ball()
