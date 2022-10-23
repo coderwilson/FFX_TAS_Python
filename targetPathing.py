@@ -2689,46 +2689,46 @@ def djosePath(checkpoint):
     if checkpoint == 40:
         x = 440
         y = 650
-    if checkpoint in [41, 42, 43]:
-        x = 449
-        y = 652
-    if checkpoint == 44:
-        x = 495
-        y = 700
-    if checkpoint == 45:  # Point of deferral 1
+    if checkpoint == 41:
+        x = 447
+        y = 651
+    if checkpoint in [42, 43,44,45,46]:
+        x = 461.5
+        y = 658
+    if checkpoint == 47:  # Point of deferral 1
         x = 550
         y = 730
-    if checkpoint == 46:  # Point of deferral 2
+    if checkpoint == 48:  # Point of deferral 2
         x = 489
         y = 730
-    if checkpoint == 47:  # Point of continuation
+    if checkpoint == 49:  # Point of continuation
         x = 604
         y = 836
-    if checkpoint == 48:
+    if checkpoint == 50:
         x = 734
         y = 859
-    if checkpoint == 49:  # Transition to next map
+    if checkpoint == 51:  # Transition to next map
         x = 0
         y = 0
-    if checkpoint == 50:
+    if checkpoint == 52:
         x = 27
         y = -231
-    if checkpoint == 51:
+    if checkpoint == 53:
         x = 59
         y = -14
-    if checkpoint == 52:
+    if checkpoint == 54:
         x = 51
         y = 0
-    if checkpoint == 53:
+    if checkpoint == 55:
         x = 9
         y = 151
-    if checkpoint == 54:  # Transition to temple map
+    if checkpoint == 56:  # Transition to temple map
         x = 0
         y = 0
-    if checkpoint == 55:
+    if checkpoint == 57:
         x = -4
         y = -87
-    if checkpoint == 56:  # Transition into temple
+    if checkpoint == 58:  # Transition into temple
         x = 0
         y = 0
     return [x, y]
