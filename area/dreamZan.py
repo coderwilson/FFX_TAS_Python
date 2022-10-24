@@ -7,6 +7,7 @@ import rngTrack
 import targetPathing
 import vars
 import xbox
+import tts
 
 game_vars = vars.vars_handle()
 
@@ -44,6 +45,12 @@ def new_game(Gamestate):
                     lastMessage = 4
                     print("New Game is selected. Starting game.")
                 xbox.menu_b()
+        memory.main.click_to_diag_progress(6)
+        if game_vars.useLegacySoundtrack():
+            tts.message("Setting legacy soundtrack")
+            memory.main.wait_frames(20)
+            xbox.tap_down()
+            memory.main.wait_frames(20)
         memory.main.click_to_diag_progress(7)
     else:  # Load Game
         while not memory.main.save_menu_open():
@@ -110,7 +117,7 @@ def listen_story():
                 print("Tidus name complete.")
 
                 checkpoint += 1
-            # elif checkpoint == 7 and gameVars.csr():
+            # elif checkpoint == 7 and game_vars.csr():
             #    checkpoint = 9
             elif checkpoint == 8:
                 while memory.main.user_control():
