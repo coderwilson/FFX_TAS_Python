@@ -5090,7 +5090,7 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                 else:
                     defend()
             else:  # Will need a non-Aeon kill
-                if screen.turnRikku() or screen.turnKimahri():
+                if screen.turn_rikku() or screen.turn_kimahri():
                     steal()
                 elif 6 not in memory.main.get_active_battle_formation():
                     buddy_swap_rikku()
