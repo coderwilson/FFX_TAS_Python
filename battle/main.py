@@ -326,14 +326,20 @@ def besaid():
             print("Enemy HP:", enemyHP)
             if screen.turn_yuna():
                 buddy_swap_wakka()
-            elif screen.turn_lulu():
-                thunder_target(22, "l")
-            elif screen.turn_wakka():
-                attack_by_num(20, direction="r")
-            elif screen.turn_tidus():
-                attack_by_num(21, direction="r")
+            elif memory.main.get_encounter_id() == 27:
+                if screen.turn_lulu():
+                    thunder_target(22, "l")
+                elif screen.turn_wakka():
+                    attack_by_num(20, direction="r")
+                elif screen.turn_tidus():
+                    attack_by_num(21, direction="r")
+            else:
+                if screen.turn_lulu():
+                    thunder_target(21, "l")
+                else:
+                    attack()
 
-    memory.main.click_to_control()
+    memory.main.click_to_control3()
 
 
 def lancet_tutorial():
