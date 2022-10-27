@@ -14,7 +14,7 @@ FFXC = xbox.controller_handle()
 
 
 def making_plans():
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
@@ -62,7 +62,7 @@ def shedinja():  # shelinda
 
     memory.main.click_to_diag_progress(74)
     memory.main.click_to_diag_progress(28)
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
 
 def exit_cockpit():

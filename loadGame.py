@@ -404,7 +404,7 @@ def moonflow_2():
 
 
 def load_guado_skip():
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     FFXC.set_movement(1, -1)
     memory.main.await_event()
     FFXC.set_neutral()

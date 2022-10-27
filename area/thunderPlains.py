@@ -189,7 +189,7 @@ def agency_shop():
 
 def agency():
     # Arrive at the travel agency
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     checkpoint = 0
 
     while memory.main.get_map() != 162:
@@ -207,7 +207,7 @@ def agency():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 7:
                 if not game_vars.csr():
@@ -301,7 +301,7 @@ def north_pathing():
         FFXC.set_neutral()
 
         # Conversation with Auron about Yuna being hard to guard.
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
         FFXC.set_movement(1, 1)
         memory.main.wait_frames(30 * 2)

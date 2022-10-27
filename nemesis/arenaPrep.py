@@ -1366,7 +1366,7 @@ def rin_equip_dump(buy_weapon=False):
         xbox.menu_b()
         memory.main.wait_frames(60)
     memory.main.close_menu()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     while not nemesis.targetPath.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)

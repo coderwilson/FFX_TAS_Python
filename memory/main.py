@@ -394,31 +394,6 @@ def await_control():
 
 
 def click_to_control():
-    return click_to_control_3()
-    waitCounter = 0
-    print("Awaiting control (clicking)")
-    while not user_control():
-        xbox.tap_b()
-        waitCounter += 1
-        if waitCounter % 1000 == 0:
-            print("Awaiting control -", waitCounter / 1000)
-    print("Control restored.")
-    return True
-
-
-def click_to_control_2():
-    return click_to_control_3()
-    waitCounter = 0
-    print("Awaiting control (clicking)")
-    while not user_control():
-        xbox.tap_b()
-        waitCounter += 1
-        if waitCounter % 1000 == 0:
-            print("Awaiting control -", waitCounter / 1000)
-    return True
-
-
-def click_to_control_3():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
@@ -494,7 +469,7 @@ def click_to_event_temple(direction):
     FFXC.set_neutral()
     wait_frames(30 * 0.2)
     while not user_control():
-        click_to_control_3()
+        click_to_control()
         wait_frames(30 * 0.035)
 
 

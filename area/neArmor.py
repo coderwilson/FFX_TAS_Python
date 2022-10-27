@@ -124,7 +124,7 @@ def drop_hunt():
                     battle.main.ghost_kill()
                 else:
                     battle.main.flee_all()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 memory.main.check_nea_armor()
                 if game_vars.ne_armor() == 255:
                     battle.main.heal_up(full_menu_close=False)

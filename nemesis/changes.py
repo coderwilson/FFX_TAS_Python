@@ -409,7 +409,7 @@ def to_remiem():
         xbox.tap_b()
         print("Near chocobo lady")
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
     checkpoint = 0
     while checkpoint < 35:
@@ -426,7 +426,7 @@ def to_remiem():
                 while memory.main.user_control():
                     nemesis.targetPath.set_movement([770, 631])
                     xbox.tap_b()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif (
                 nemesis.targetPath.set_movement(
@@ -473,7 +473,7 @@ def choco_race_1():
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(10)
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
 
 def choco_race_2():
@@ -510,7 +510,7 @@ def choco_race_2():
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(10)
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
 
 def choco_race_3():
@@ -558,11 +558,11 @@ def choco_race_3():
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(60)
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
 
 def temple_to_arena():
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     checkpoint = 0
     while memory.main.get_map() != 307:
         if memory.main.user_control():
