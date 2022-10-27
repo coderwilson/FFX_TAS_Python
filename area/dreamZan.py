@@ -5,9 +5,9 @@ import logs
 import memory.main
 import rngTrack
 import targetPathing
+import tts
 import vars
 import xbox
-import tts
 
 game_vars = vars.vars_handle()
 
@@ -47,11 +47,13 @@ def new_game(Gamestate):
                 xbox.menu_b()
         memory.main.click_to_diag_progress(6)
         if game_vars.useLegacySoundtrack():
-            tts.message("Setting legacy soundtrack")
+            tts.message("Setting original soundtrack")
             memory.main.wait_frames(20)
             xbox.tap_down()
             memory.main.wait_frames(20)
-        memory.main.click_to_diag_progress(7)
+            memory.main.click_to_diag_progress(8)
+        else:
+            memory.main.click_to_diag_progress(7)
     else:  # Load Game
         while not memory.main.save_menu_open():
             if memory.main.get_map() != 23:
@@ -90,9 +92,7 @@ def listen_story():
         if memory.main.get_map() == 132:
             if memory.main.diag_progress_flag() == 1:
                 game_vars.set_csr(False)
-                print(
-                    "Skipping intro scene, we'll watch this properly in about 8 hours."
-                )
+                print("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
             FFXC.set_value("BtnBack", 1)
             memory.main.wait_frames(1)
@@ -231,13 +231,11 @@ def after_ammes():
                 if checkpoint == 6:  # Save sphere
                     memory.main.touch_save_sphere()
                     checkpoint += 1
-                elif (
-                    checkpoint < 9 and memory.main.get_story_progress() >= 20
-                ):  # Swim to Jecht
+                # Swim to Jecht
+                elif checkpoint < 9 and memory.main.get_story_progress() >= 20:
                     checkpoint = 9
-                elif (
-                    checkpoint < 11 and memory.main.get_story_progress() >= 30
-                ):  # Towards Baaj temple
+                # Towards Baaj temple
+                elif checkpoint < 11 and memory.main.get_story_progress() >= 30:
                     checkpoint = 11
 
                 # General pathing

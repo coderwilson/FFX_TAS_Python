@@ -26,9 +26,8 @@ def arrival():
             if checkpoint < 5 and memory.main.get_map() == 268:
                 checkpoint = 5
                 print("Map change:", checkpoint)
-            elif (
-                checkpoint < 10 and memory.main.get_map() == 123
-            ):  # Front of the Blitz dome
+            elif checkpoint < 10 and memory.main.get_map() == 123:
+                # Front of the Blitz dome
                 print("Map change:", checkpoint)
                 checkpoint = 10
             elif checkpoint < 13 and memory.main.get_map() == 77:

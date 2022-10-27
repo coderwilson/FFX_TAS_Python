@@ -83,7 +83,7 @@ def ss_winno():
     FFXC.set_movement(1, -1)
     memory.main.wait_frames(2)
 
-    # Talk to O'akaXXIII
+    # Talk to O'aka XXIII
     oakaCoords = [
         memory.main.get_actor_coords(1)[0],
         memory.main.get_actor_coords(1)[1],

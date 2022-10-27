@@ -5,31 +5,41 @@ class AllVars:
     def set_start_vars(self):
         # ------------------------------
         # The default values assume starting from the beginning of the game.
-        # If you are starting from a loaded save, you may need to change one or more
-        # of the values below.
+        # If you are starting from a loaded save, you may need to
+        # change one or more of the values below.
         # ------------------------------
 
-        # ----Most important values to review
-        self.artificialPauses = (
-            False  # Set depending on hardware. True = less powerful hardware.
-        )
-        self.csrValue = True  # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.nemesisValue = (
-            False  # Set based on if you're doing any% (False) or Nemesis% (True)
-        )
-        self.forceLoop = False  # After game is finished, start again on next seed.
-        self.blitzLoop = False  # Loop on the same seed immediately after Blitzball.
-        self.blitzLossForceReset = True  # True = reset after blitz loss
-        self.setSeed = (
-            True  # If you are using Rossy's patch, set to True. Otherwise set to False
-        )
-        self.kilikaSkip = (
-            True  # True == Tidus OD on Evrae instead of Seymour. New strat.
-        )
-        self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
-        self.attemptDjose = True  # Try Djose skip? (not likely to succeed)
+        # === Important Values ===
+        # Set depending on hardware. True = less powerful hardware.
+        self.artificialPauses = False
+        # Set automatically on new game. For testing (loading a save file) set for your environment.
+        self.csrValue = True
+        # Set based on if you're doing any% (False) or Nemesis% (True)
+        self.nemesisValue = True
+        # After game is finished, start again on next seed.
+        self.forceLoop = False
+        # Loop on the same seed immediately after Blitzball.
+        self.blitzLoop = False
+        # True = reset after blitz loss
+        self.blitzLossForceReset = True
+        # If you are using Rossy's patch, set to True. Otherwise set to False
+        self.setSeed = True
+        # True == Tidus OD on Evrae instead of Seymour. New strat.
+        self.kilikaSkip = True
+        # Before YuYevon, True is slower but more swag.
+        self.perfectAeonKills = False
+        # Try Djose skip? (not likely to succeed)
+        self.attemptDjose = False
+        # use the original Soundtrack instead of arranged
         self.legacySoundtrack = True
         self.doNotSkipCutscenes = False
+
+        # ----Accessibility for blind
+        self.skip_cutscene_flag = True
+        self.skip_diag_flag = self.skip_cutscene_flag
+        self.play_TTS_flag = False
+        self.rails_trials = True
+        self.rails_egg_hunt = True
 
         # ----Blitzball
         self.blitzWinValue = True  # No default value required
@@ -63,9 +73,8 @@ class AllVars:
         self.firstHits = [0] * 8
         self.neArmorVal = 255  # Default 255
         self.neBattles = 0  # Default to 0
-        self.neaZone = (
-            0  # Decides which zone we charge Rikku in after reaching Zanarkand.
-        )
+        # Decides in which zone we charge Rikku OD after reaching Zanarkand.
+        self.neaZone = 0
 
         # ----Nemesis variables, unused in any%
         self.nemAPVal = 1  # Default to 1
@@ -75,14 +84,18 @@ class AllVars:
         self.yojimboIndex = 1
 
         # ----Path for save files, used for loading a specific save
-        # coderwilson automation PC
-        # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+
+    def accessibilityVars(self):
+        retArray = [self.skip_cutscene_flag, self.skip_diag_flag]
+        retArray.append(self.play_TTS_flag)
+        retArray.append(self.rails_trials)
+        retArray.append(self.rails_egg_hunt)
+        return retArray
 
     def useLegacySoundtrack(self):
         return self.legacySoundtrack
-    
+
     def try_djose_skip(self):
         return self.attemptDjose
 
@@ -93,11 +106,11 @@ class AllVars:
         return self.setSeed
 
     def print_arena_status(self):
-        print("##############################################")
+        print("###############################")
         print("Area:", self.areaResults)
         print("Species:", self.speciesResults)
         print("Original:", self.originalResults)
-        print("##############################################")
+        print("###############################")
 
     def arena_success(self, array_num, index):
         print(array_num, "|", index)

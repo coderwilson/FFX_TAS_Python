@@ -116,7 +116,7 @@ step_counter = 1  # NEW GAME!
 # step_counter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
 # step_counter = 24 #Final Prep before arena bosses
 
-####################################################################################################
+############################################################################################
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 forceBlitzWin = False
@@ -130,7 +130,7 @@ rngSeedNum = 160  # If you don't randomly select below, this will be the seed yo
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
 
-####################################################################################################
+############################################################################################
 
 if Gamestate == "Luca" and step_counter == 3:
     blitzTesting = True
@@ -142,10 +142,10 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     blitzTesting = False
     # gameVars.setCSR(True)
 elif not seedHunt:  # Full run starting from New Game
-    rngSeedNum = random.choice(
-        range(256)
-    )  # Select a seed randomly, overrules the set seed above.
-    # rngSeedNum = random.choice(rngSelectArray)  # Select a favorite seed randomly, overrules the set seed above.
+    # Select a seed randomly, overrules the set seed above.
+    rngSeedNum = random.choice(range(256))
+    # Select a favorite seed randomly, overrules the set seed above.
+    # rngSeedNum = random.choice(rngSelectArray)
     # Current WR is on seed 160 for both any% and CSR%
     rngReviewOnly = False
     gameLength = "Full Run"
@@ -169,8 +169,6 @@ specialZanLoad = False
 
 
 # Main functions
-
-
 def report_gamestate():
     global Gamestate
     global step_counter
@@ -178,7 +176,6 @@ def report_gamestate():
 
 
 # Initiate memory reading, after we know the game is open.
-# import memory
 while not memory.main.start():
     pass
 
@@ -218,18 +215,15 @@ if Gamestate != "none":
         loadGame.load_save_num(40)
     if Gamestate == "Baaj" and step_counter == 4:
         loadGame.load_save_num(100)
-    if (
-        Gamestate == "Besaid" and step_counter == 1
-    ):  # Save pop-up after falling off of Rikkus boat
+    # Save pop-up after falling off of Rikkus boat
+    if Gamestate == "Besaid" and step_counter == 1:
         loadGame.load_save_num(111)
-    if (
-        Gamestate == "Besaid" and step_counter == 2
-    ):  # Save pop-up after falling off of Rikkus boat
+    # Save pop-up after falling off of Rikkus boat
+    if Gamestate == "Besaid" and step_counter == 2:
         loadGame.load_save_num(6)
         loadGame.besaid_trials()
-    if (
-        Gamestate == "Besaid" and step_counter == 3
-    ):  # Crusader's lodge after "Enough, Wakka!"
+    # Crusader's lodge after "Enough, Wakka!"
+    if Gamestate == "Besaid" and step_counter == 3:
         loadGame.load_save_num(39)
         print("Load complete")
         while memory.main.user_control():
@@ -258,9 +252,8 @@ if Gamestate != "none":
         loadGame.load_save_num(38)
         memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
         loadGame.load_mrr()
-    if (
-        Gamestate == "Djose" and step_counter == 1
-    ):  # Aftermath, after talking to Seymour and then Auron
+    # Aftermath, after talking to Seymour and then Auron
+    if Gamestate == "Djose" and step_counter == 1:
         loadGame.load_save_num(27)
         loadGame.after_gui()
     if Gamestate == "Moonflow" and step_counter == 2:  # North bank, before Rikku
@@ -292,9 +285,8 @@ if Gamestate != "none":
         loadGame.load_save_num(30)
         # memory.main.setEncounterRate(setVal=0)
         # memory.main.setGameSpeed(setVal=1)
-    if (
-        Gamestate == "rescueYuna" and step_counter == 5
-    ):  # Highbridge before Seymour Natus
+    # Highbridge before Seymour Natus
+    if Gamestate == "rescueYuna" and step_counter == 5:
         loadGame.load_save_num(42)  # Regular
         # loadGame.loadSaveNum(67) #Nemesis
     if Gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
@@ -344,9 +336,8 @@ if Gamestate != "none":
     if Gamestate == "Zanarkand" and step_counter == 5:  # After Yunalesca
         loadGame.load_save_num(48)
         specialZanLoad = True
-    if (
-        Gamestate == "Sin" and step_counter == 2
-    ):  # Save sphere on the Highbridge before talking to Shedinja
+    # Save sphere on the Highbridge before talking to Shedinja
+    if Gamestate == "Sin" and step_counter == 2:
         # loadGame.loadSaveNum(49)
         # Nemesis logic, double friend sphere drops from B&Y
         loadGame.load_save_num(70)
@@ -528,11 +519,9 @@ while Gamestate != "End":
             area.besaid.leaving()
             Gamestate = "Boat1"
             if memory.main.get_tidus_slvl() < 3:
-                print("=======================")
-                print("=======================")
-                print("== Under-levelled!!! ==")
-                print("=======================")
-                print("=======================")
+                print("=========================")
+                print("=== Under-levelled!!! ===")
+                print("=========================")
                 Gamestate, step_counter = reset.mid_run_reset()
             else:
                 step_counter = 1
@@ -605,23 +594,23 @@ while Gamestate != "End":
 
             if game_vars.loop_blitz() and blitzLoops < maxLoops:
                 FFXC.set_neutral()
-                print("------------------------------")
-                print("Resetting")
-                print("------------------------------")
+                print("-------------")
+                print("- Resetting -")
+                print("-------------")
                 screen.await_turn()
                 Gamestate, step_counter = reset.mid_run_reset()
                 blitzLoops += 1
             elif game_vars.blitz_loss_reset() and not game_vars.get_blitz_win():
                 FFXC.set_neutral()
                 print("------------------------------")
-                print("Resetting - BLITZ LOSS IS FAILED RUN!!!")
+                print("- Resetting - Lost Blitzball -")
                 print("------------------------------")
                 screen.await_turn()
                 Gamestate, step_counter = reset.mid_run_reset()
             else:
-                print("------------------------------")
-                print("Post-Blitz")
-                print("------------------------------")
+                print("--------------")
+                print("- Post-Blitz -")
+                print("--------------")
                 step_counter = 5
 
         if Gamestate == "Luca" and step_counter == 5:
@@ -1128,19 +1117,15 @@ if memory.main.get_story_progress() > 3210:
     logs.write_stats("Total time:")
     logs.write_stats(str(totalTime))
     print("The game duration was:", str(totalTime))
-    print(
-        "This duration is intended for comparison reference only, not as a true timer."
-    )
-    print("Please do not use this as your submitted time.")
+    print("This duration is intended for internal comparisons only.")
+    print("It is not comparable to non-TAS runs.")
     memory.main.wait_frames(30)
     print("--------")
-    print("In order to conform with speedrun standards,")
+    print("In order to conform to the speedrun.com/ffx ruleset,")
     memory.main.wait_frames(60)
-    print("we now wait until the end of the credits and stuff")
+    print("we now wait until the end of the credits and open")
     memory.main.wait_frames(60)
-    print("and then will open up the list of saves.")
-    memory.main.wait_frames(60)
-    print("This will show the autosave values, which conforms to the speedrun rules.")
+    print("the Load Game menu to show the last autosave.")
 
     while memory.main.get_map() != 23:
         if memory.main.get_map() in [348, 349]:
@@ -1153,4 +1138,4 @@ if memory.main.get_story_progress() > 3210:
 
 memory.main.end()
 
-print("Automation complete. Shutting down now. Have a great day!")
+print("Automation complete. Shutting down. Have a great day!")

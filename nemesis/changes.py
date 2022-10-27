@@ -613,7 +613,7 @@ def arena_purchase():
     # xbox.tapUp()
     xbox.tap_b()  # Let's see your weapons
     # memory.waitFrames(9000)
-    nemesis.menu.arenaPurchase1()
+    nemesis.menu.arena_purchase_1()
     # Sell all undesirable equipment
     # Purchase the following weapons:
     # -Tidus x4

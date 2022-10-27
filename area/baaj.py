@@ -11,14 +11,14 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def entrance():
+def entrance(checkpoint: int = 0):
     memory.main.await_control()
     print("Starting Baaj exterior area")
     FFXC.set_neutral()
     menu.short_aeons()
 
     # Now back into the water
-    checkpoint = 0
+
     while not memory.main.battle_active():
         if memory.main.user_control():
             if checkpoint == 6:

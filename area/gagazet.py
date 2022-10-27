@@ -471,17 +471,14 @@ def cave():
                 checkpoint += 1
             elif memory.main.battle_active():
                 if memory.main.get_power() < powerNeeded:
-                    if (
-                        memory.main.get_encounter_id() == 351
-                    ):  # Two maelstroms and a splasher
+                    if memory.main.get_encounter_id() == 351:
+                        # Two maelstroms and a splasher
                         battle.main.gagazet_cave("down")
-                    elif (
-                        memory.main.get_encounter_id() == 353
-                    ):  # Two glowey guys, two splashers.
+                    elif memory.main.get_encounter_id() == 353:
+                        # Two glowey guys, two splashers.
                         battle.main.gagazet_cave("right")
-                    elif (
-                        memory.main.get_encounter_id() == 354
-                    ):  # Four groups of splashers
+                    elif memory.main.get_encounter_id() == 354:
+                        # Four groups of splashers
                         battle.main.gagazet_cave("none")
                     elif memory.main.overdrive_state_2()[6] != 100:
                         if memory.main.get_encounter_id() in [351, 352, 353, 354]:
@@ -497,9 +494,8 @@ def cave():
             elif checkpoint == 6 or checkpoint == 54:
                 if memory.main.battle_active():
                     battle.main.flee_all()
-                elif (
-                    memory.main.diag_skip_possible()
-                ):  # So we don't override the second trial
+                elif memory.main.diag_skip_possible():
+                    # So we don't override the second trial
                     xbox.tap_b()
 
     xbox.click_to_battle()
@@ -572,7 +568,7 @@ def wrap_up():
         print("Ah well, still have some time. Might as well shout out a few people.")
         memory.main.wait_frames(30 * sleepTime)
         print(
-            "First and most importantly, my wife for putting up with me for two years through this project."
+            "First and most importantly, my wife for putting up with me for two years through this project.",
         )
         memory.main.wait_frames(30 * sleepTime)
         print("My wife is the best!")
@@ -584,7 +580,7 @@ def wrap_up():
         print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
         memory.main.wait_frames(30 * sleepTime)
         print(
-            "Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section."
+            "Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.",
         )
         memory.main.wait_frames(30 * sleepTime)
         print("You will see Inverted's work right before the final bosses.")

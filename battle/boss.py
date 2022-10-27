@@ -411,9 +411,8 @@ def chocobo_eater():
                 chocoNext = False
                 if memory.main.get_battle_hp() != charHpLast:  # We took damage
                     pass
-                elif (
-                    memory.main.rng_from_index(44) != rng44Last
-                ):  # Chocobo eater attacked, covers miss
+                elif memory.main.rng_from_index(44) != rng44Last:
+                    # Chocobo eater attacked, covers miss
                     pass
                 elif (
                     chocoTarget == 255
@@ -474,9 +473,8 @@ def chocobo_eater():
                 and not chocoHaste
                 and memory.main.get_battle_char_turn() == 0
             ):
-                battle.main.tidus_haste(
-                    direction="l", character=20
-                )  # After Yuna in, haste choco eater.
+                battle.main.tidus_haste(direction="l", character=20)
+                # After Yuna in, haste choco eater.
                 chocoHaste = True
             else:
                 print("Attempting defend")
@@ -582,9 +580,8 @@ def gui():
             elif lastTurn == 8:  # Valefor takes two turns in a row
                 print("------Two turns in a row")
                 battle.main.aeon_shield()
-            elif (
-                nextHP > lastHP - 40 and not nextHP == lastHP
-            ):  # Gravity spell was used
+            elif nextHP > lastHP - 40 and not nextHP == lastHP:
+                # Gravity spell was used
                 print("------Gravity was used")
                 battle.main.aeon_shield()
             else:
@@ -1291,9 +1288,9 @@ def evrae_altana():
         if memory.main.next_steal_rare():
             battle.main.evrae_altana_steal()
         else:
-            print("=======================================")
+            print("===================================")
             print("Next steal will crit, do not steal.")
-            print("=======================================")
+            print("===================================")
         thrownItem = False
         while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():
@@ -1499,10 +1496,10 @@ def seymour_flux():
     memory.main.click_to_control()
     if memory.main.get_slvl_yuna() - yunaXP == 15000:
         game_vars.flux_overkill_success()
-    print("------------------------------")
+    print("-----------------------------")
     print("Flux Overkill:", game_vars.flux_overkill())
     print("Seymour Flux battle complete.")
-    print("------------------------------")
+    print("-----------------------------")
     # time.sleep(60) #Testing only
 
 
