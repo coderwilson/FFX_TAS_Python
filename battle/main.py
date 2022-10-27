@@ -338,7 +338,7 @@ def besaid():
                     thunder_target(21, "l")
                 else:
                     attack()
-    memory.main.click_to_control3()
+    memory.main.click_to_control()
 
 
 def lancet_tutorial():
@@ -5105,8 +5105,8 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     attack()
                 else:
                     defend()
-    return tidusHasted
     print("RNG10 is now aligned.")
+    return tidusHasted
 
 
 def ghost_kill_tidus(silence_slot: int, self_haste: bool):
