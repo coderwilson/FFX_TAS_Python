@@ -1,4 +1,6 @@
 import os
+
+
 class AllVars:
     def __init__(self):
         self.set_start_vars()
@@ -16,7 +18,7 @@ class AllVars:
         # Set automatically on new game. For testing (loading a save file) set for your environment.
         self.csrValue = True
         # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesisValue = True
+        self.nemesisValue = False
         # After game is finished, start again on next seed.
         self.forceLoop = False
         # Loop on the same seed immediately after Blitzball.
@@ -85,7 +87,10 @@ class AllVars:
         self.yojimboIndex = 1
 
         # ----Path for save files, used for loading a specific save
-        self.savePath = os.environ.get("userprofile") + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        self.savePath = (
+            os.environ.get("userprofile")
+            + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        )
 
     def accessibilityVars(self):
         retArray = [self.skip_cutscene_flag, self.skip_diag_flag]

@@ -1521,7 +1521,7 @@ def besaid_farm(cap_num: int = 1):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1737,7 +1737,7 @@ def miihen_farm(cap_num: int = 1):
                 if prefArea == 8:
                     memory.main.touch_save_sphere()
                     prefArea = miihen_next(end_goal=cap_num)
-                    print("Next area: ", prefArea)
+                    print("Next area:", prefArea)
                 else:
                     return_to_airship()
 
@@ -1842,7 +1842,7 @@ def miihen_farm(cap_num: int = 1):
                     else:
                         battle_farm_all()
                 prefArea = miihen_next(end_goal=cap_num)
-                print("Next area: ", prefArea)
+                print("Next area:", prefArea)
                 memory.main.full_party_format("initiative")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -1975,7 +1975,7 @@ def mrrFarm_old(capNum: int = 1):
                 zone="mrr", end_goal=capNum, report=False
             ):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
 
             elif checkpoint == 4:
                 return_to_airship()
@@ -1984,7 +1984,7 @@ def mrrFarm_old(capNum: int = 1):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2054,7 +2054,7 @@ def djose_farm(cap_num: int = 10):
     lastCP = 0
     while not memory.main.get_map() in [194, 374]:
         if lastCP != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
+            print("Checkpoint reached:", checkpoint)
             lastCP = checkpoint
         if memory.main.user_control():
             # Map changes
@@ -2251,7 +2251,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2320,7 +2320,7 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2379,7 +2379,7 @@ def mac_woods(cap_num: int = 10):
     air_ship_destination(dest_num=9)
     nemesis.menu.remove_all_nea()
     prefArea = woods_next(end_goal=cap_num)
-    print("Next area: ", prefArea)
+    print("Next area:", prefArea)
 
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
@@ -2407,7 +2407,7 @@ def mac_woods(cap_num: int = 10):
                 if prefArea == 3:
                     memory.main.touch_save_sphere()
                     prefArea = woods_next(end_goal=cap_num)
-                    print("Next area: ", prefArea)
+                    print("Next area:", prefArea)
                     if prefArea == 1:
                         checkpoint = 15
                     else:
@@ -2421,7 +2421,7 @@ def mac_woods(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2481,7 +2481,7 @@ def mac_woods_old(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2752,7 +2752,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             allCounts = memory.main.arena_array()
@@ -2834,7 +2834,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             allCounts = memory.main.arena_array()
@@ -2995,7 +2995,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 41
                 else:
                     checkpoint = 1
-                print("-- Reminder, next area: ", prefArea)
+                print("-- Reminder, next area:", prefArea)
 
             # Portal Combat
             if checkpoint == 2:
@@ -3012,7 +3012,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 22
                 xbox.tap_b()
                 memory.main.await_control()
-                print("Updated checkpoint: ", checkpoint)
+                print("Updated checkpoint:", checkpoint)
             if checkpoint == 21:
                 while memory.main.user_control():
                     FFXC.set_movement(0, -1)
@@ -3403,7 +3403,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 if hpCheck[0] < 795:
                     battle.main.heal_up(3)
                 prefArea = fayth_next(endGoal=cap_num)
-                print("Next area: ", prefArea)
+                print("Next area:", prefArea)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -3439,7 +3439,7 @@ def inside_sin(cap_num: int = 10):
                 zone="sin1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
 
@@ -3455,7 +3455,7 @@ def inside_sin(cap_num: int = 10):
                 zone="sin2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
             elif checkpoint < 68 and memory.main.get_map() == 327:
                 checkpoint = 68
             elif checkpoint == 69:
@@ -3480,7 +3480,7 @@ def inside_sin(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

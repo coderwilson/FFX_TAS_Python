@@ -186,9 +186,8 @@ def choco_tame_2():
         angle = memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
 
-        if (
-            position[1] > -1360 and checkpoint == 0
-        ):  # Start off aiming right to manip balls
+        if position[1] > -1360 and checkpoint == 0:
+            # Start off aiming right to manip balls
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
             memory.main.wait_frames(5)
@@ -463,7 +462,7 @@ def choco_race_1():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -500,7 +499,7 @@ def choco_race_2():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -541,7 +540,7 @@ def choco_race_3():
             # if checkpoint == 42: #Since it's not tight enough movement yet
             #     FFXC.set_neutral()
             #     memory.waitFrames(120)
-            #     memory.clickToControl3()
+            #     memory.click_to_control()
             #     break
             if (
                 nemesis.targetPath.set_movement(nemesis.targetPath.race_3(checkpoint))

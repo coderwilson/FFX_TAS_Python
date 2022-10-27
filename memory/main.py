@@ -1635,7 +1635,7 @@ def diag_skip_possible_old():
         return False
 
 
-def diag_skip_possible(ignore_audio = False):
+def diag_skip_possible(ignore_audio=False):
     if not ignore_audio and auditory_dialog_playing():
         return False
     global baseValue
@@ -1660,10 +1660,11 @@ def auditory_dialog_playing():
     key = baseValue + 0x00F2FED4
     return process.readBytes(key, 1) == 1
 
+
 def auditory_dialog_playing():
-    #This is usually a no-op unless doNotSkipCutscenes is set.
+    # This is usually a no-op unless doNotSkipCutscenes is set.
     if game_vars.doNotSkipCutscenes:
-        return false
+        return False
     global baseValue
 
     key = baseValue + 0x00F30038
@@ -1711,7 +1712,7 @@ def click_to_story_progress(destination):
             print(
                 "Story goal:",
                 destination,
-                "| Awaiting progress state:",
+                "| Awaiting progress:",
                 currentState,
                 "| counter:",
                 counter / 100000,
@@ -4484,9 +4485,7 @@ def arena_farm_check(
         )
         print("Number of captures in this zone:")
         print(resultArray)
-        print(
-            "End goal is", end_goal, "minimum before leaving this zone for each index."
-        )
+        print("Goal is", end_goal, "minimum before leaving this zone for each index.")
         print("############")
     if return_array:
         return resultArray
@@ -4515,9 +4514,8 @@ def rng_array_from_index(index: int = 20, array_len: int = 20):
     retVal = [rng_from_index(index)]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
         retVal.append(roll_next_rng(retVal[x], index))
-    retVal = [
-        x & 0x7FFFFFFF for x in retVal
-    ]  # Anding it because that's the value that's actually used
+    retVal = [x & 0x7FFFFFFF for x in retVal]
+    # ANDing it because that's the value that's actually used
     return retVal
 
 
