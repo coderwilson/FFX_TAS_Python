@@ -5,9 +5,9 @@ import logs
 import memory.main
 import rngTrack
 import targetPathing
+import tts
 import vars
 import xbox
-import tts
 
 game_vars = vars.vars_handle()
 
@@ -92,7 +92,9 @@ def listen_story():
         if memory.main.get_map() == 132:
             if memory.main.diag_progress_flag() == 1:
                 game_vars.set_csr(False)
-                print("Skipping intro scene, we'll watch this properly in about 8 hours.")
+                print(
+                    "Skipping intro scene, we'll watch this properly in about 8 hours."
+                )
                 memory.main.await_control()
             FFXC.set_value("BtnBack", 1)
             memory.main.wait_frames(1)

@@ -1248,8 +1248,10 @@ def str_boost():
     menuGrid.use_and_quit()
     memory.main.close_menu()
 
+
 # ------------------------------
 # Nemesis menus
+
 
 def arena_purchase_1():
     memory.main.wait_frames(60)
