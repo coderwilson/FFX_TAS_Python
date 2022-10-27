@@ -29,6 +29,7 @@ class AllVars:
         self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
         self.attemptDjose = True  # Try Djose skip? (not likely to succeed)
         self.legacySoundtrack = True
+        self.doNotSkipCutscenes = False
 
         # ----Blitzball
         self.blitzWinValue = True  # No default value required
