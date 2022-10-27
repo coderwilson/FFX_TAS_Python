@@ -10,25 +10,24 @@ class AllVars:
         # ------------------------------
 
         # ----Most important values to review
-        self.artificialPauses = (
-            False  # Set depending on hardware. True = less powerful hardware.
-        )
+        self.artificialPauses = False  # Set depending on hardware. True = less powerful hardware.
         self.csrValue = True  # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.nemesisValue = (
-            False  # Set based on if you're doing any% (False) or Nemesis% (True)
-        )
+        self.nemesisValue = True   # Set based on if you're doing any% (False) or Nemesis% (True)
         self.forceLoop = False  # After game is finished, start again on next seed.
         self.blitzLoop = False  # Loop on the same seed immediately after Blitzball.
         self.blitzLossForceReset = True  # True = reset after blitz loss
-        self.setSeed = (
-            True  # If you are using Rossy's patch, set to True. Otherwise set to False
-        )
-        self.kilikaSkip = (
-            True  # True == Tidus OD on Evrae instead of Seymour. New strat.
-        )
+        self.setSeed = True  # If you are using Rossy's patch, set to True. Otherwise set to False
+        self.kilikaSkip = True  # True == Tidus OD on Evrae instead of Seymour. New strat.
         self.perfectAeonKills = False  # Before YuYevon, True is slower but more swag.
-        self.attemptDjose = True  # Try Djose skip? (not likely to succeed)
+        self.attemptDjose = False  # Try Djose skip? (not likely to succeed)
         self.legacySoundtrack = True
+
+        # ----Accessibility for blind
+        self.skip_cutscene_flag = True
+        self.skip_diag_flag = self.skip_cutscene_flag
+        self.play_TTS_flag = False
+        self.rails_trials = True
+        self.rails_egg_hunt = True
 
         # ----Blitzball
         self.blitzWinValue = True  # No default value required
@@ -62,9 +61,7 @@ class AllVars:
         self.firstHits = [0] * 8
         self.neArmorVal = 255  # Default 255
         self.neBattles = 0  # Default to 0
-        self.neaZone = (
-            0  # Decides which zone we charge Rikku in after reaching Zanarkand.
-        )
+        self.neaZone = 0  # Decides which zone we charge Rikku in after reaching Zanarkand.
 
         # ----Nemesis variables, unused in any%
         self.nemAPVal = 1  # Default to 1
@@ -74,11 +71,15 @@ class AllVars:
         self.yojimboIndex = 1
 
         # ----Path for save files, used for loading a specific save
-        # coderwilson automation PC
-        # self.savePath = "C:/Users/Thomas Wilson/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        # coderwilson main PC
         self.savePath = "C:/Users/Thomas/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-
+    
+    def accessibilityVars(self):
+        retArray = [self.skip_cutscene_flag, self.skip_diag_flag]
+        retArray.append(self.play_TTS_flag)
+        retArray.append(self.rails_trials)
+        retArray.append(self.rails_egg_hunt)
+        return retArray
+    
     def useLegacySoundtrack(self):
         return self.legacySoundtrack
     

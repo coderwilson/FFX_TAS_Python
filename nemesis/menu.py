@@ -1247,3 +1247,55 @@ def str_boost():
     menuGrid.sel_sphere("power", "none")
     menuGrid.use_and_quit()
     memory.main.close_menu()
+
+# ------------------------------
+# Nemesis menus
+
+def arena_purchase_1():
+    memory.main.wait_frames(60)
+    xbox.tap_b()
+    memory.main.wait_frames(15)
+    xbox.tap_b()  # Tidus catcher
+    memory.main.wait_frames(15)
+    xbox.tap_up()
+    xbox.tap_b()  # Confirm
+    memory.main.wait_frames(15)
+    xbox.tap_b()  # Do not equip
+    memory.main.wait_frames(15)
+    xbox.tap_down()
+    xbox.tap_b()  # Yuna catcher
+    memory.main.wait_frames(15)
+    xbox.tap_up()
+    xbox.tap_b()  # Confirm
+    memory.main.wait_frames(15)
+    xbox.tap_up()
+    xbox.tap_b()  # Do equip
+    memory.main.wait_frames(15)
+    xbox.tap_a()
+    memory.main.wait_frames(15)
+    xbox.tap_a()
+    memory.main.wait_frames(15)
+    xbox.tap_up()
+    xbox.tap_a()
+    memory.main.wait_frames(15)
+    xbox.tap_b()
+    memory.main.wait_frames(60)
+
+
+def remove_all_nea():
+    for i in range(7):
+        if memory.main.equipped_armor_has_ability(charNum=i):  # Defaults to NEA
+            if i == 0:
+                if memory.main.check_ability_armor(ability=0x8056)[i]:
+                    equip_armor(character=i, ability=0x8056)  # Auto-Haste
+                else:
+                    equip_armor(character=i, ability=99)  # Remove equipment
+            elif i in [4, 6]:
+                if memory.main.check_ability_armor(ability=0x801D)[i]:
+                    equip_armor(character=i, ability=0x801D)  # Auto-Phoenix
+                elif memory.main.check_ability_armor(ability=0x8072, slot_count=4)[i]:
+                    equip_armor(character=i, ability=0x8072, slot_count=4)
+                else:
+                    equip_armor(character=i, ability=99)  # Remove equipment
+            else:
+                equip_armor(character=i, ability=99)  # Unequip

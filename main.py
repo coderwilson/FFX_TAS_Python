@@ -85,11 +85,11 @@ if game_vars.nemesis():
 # step_counter = 2 # x15
 # step_counter = 4 # x30 Altana
 # step_counter = 5 # x42 regular, 67 nemesis
-# Gamestate = "Gagazet"
+#Gamestate = "Gagazet"
 # step_counter = 1 # x43
 # step_counter = 3 # x138 After B&Y
 # step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
-# step_counter = 10 # Nemesis variant, blitz win logic (not working)
+#step_counter = 10 # Nemesis variant, blitz win logic (not working)
 # step_counter = 11 # Remiem racing
 # Gamestate = "Zanarkand"
 # step_counter = 1 # x99 Campfire
