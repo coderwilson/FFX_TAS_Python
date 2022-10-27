@@ -1661,29 +1661,22 @@ def diag_skip_possible_old():
 def diag_skip_possible():
     global baseValue
 
-    key = baseValue + 0x00F2FED0
-    control = process.readBytes(key, 1)
-    if control == 1:
+    if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
         return True
     else:
         key = baseValue + 0x0085A03C
-        control = process.readBytes(key, 1)
-        if control == 1:
-            return True
-        else:
-            return False
-
+        return process.readBytes(key, 1) == 1
 
 def cutscene_skip_possible():
     global baseValue
 
     key = baseValue + 0x00D2A008
-    control = process.readBytes(key, 1)
-    if control == 1:
-        return True
-    else:
-        return False
+    return process.readBytes(key, 1) == 1
 
+def auditory_dialog_playing():
+    global baseValue
+    key = baseValue + 0x00F2FED4
+    return process.readBytes(key, 1) == 1
 
 def special_text_open():
     global baseValue

@@ -266,9 +266,8 @@ def leaving():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 xbox.skip_scene(fast_mode=True)
-            elif (
-                checkpoint > 25 and checkpoint < 30 and screen.battle_screen()
-            ):  # Kimahri fight
+            # Kimahri fight
+            elif checkpoint > 25 and checkpoint < 30 and screen.battle_screen():
                 FFXC.set_neutral()
                 healCount = 0
                 while memory.main.battle_active():
