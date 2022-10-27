@@ -338,7 +338,7 @@ def besaid():
                     thunder_target(21, "l")
                 else:
                     attack()
-    memory.main.click_to_control3()
+    memory.main.click_to_control_3()
 
 
 def lancet_tutorial():
