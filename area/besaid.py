@@ -319,17 +319,16 @@ def leaving():
                 memory.main.click_to_control()
                 memory.main.full_party_format("Besaid2")
                 checkpoint += 1
-            elif (
-                checkpoint > 39 and screen.battle_screen()
-            ):  # One forced battle on the way out of Besaid
+            # One forced battle on the way out of Besaid
+            elif checkpoint > 39 and screen.battle_screen():
                 battle.main.besaid()
 
             # Map changes
-            elif (
-                checkpoint > 10 and checkpoint < 24 and memory.main.get_map() == 67
-            ):  # Hilltop
+            # Hilltop
+            elif checkpoint > 10 and checkpoint < 24 and memory.main.get_map() == 67:
                 checkpoint = 24
-            elif checkpoint < 27 and memory.main.get_map() == 21:  # Kimahri map
+            # Kimahri map
+            elif checkpoint < 27 and memory.main.get_map() == 21:
                 checkpoint = 27
             elif checkpoint < 32 and memory.main.get_map() == 22:
                 checkpoint = 32

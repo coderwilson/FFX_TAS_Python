@@ -77,7 +77,7 @@ def arrival():
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()
-    print("Done with perlim MRR area, now for the real deal.")
+    print("Done with prelim MRR area, now for the real deal.")
     return claskoSkip
 
 
@@ -127,9 +127,8 @@ def main_path():
             elif checkpoint >= 54 and checkpoint <= 56:  # 400 gil guy
                 if memory.main.rng_seed() in [160, 31]:
                     checkpoint = 57
-                elif (
-                    memory.main.get_gil_value() != lastGilValue
-                ):  # check if we got the 400 from the guy
+                elif memory.main.get_gil_value() != lastGilValue:
+                    # check if we got the 400 from the guy
                     if memory.main.get_gil_value() == lastGilValue + 400:
                         print("We've procured the 400 gil from the guy.")
                         checkpoint = 57  # now to the actual lift

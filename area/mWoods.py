@@ -206,9 +206,9 @@ def lake():
 
 
 def after_crawler():
-    print("------------------------------Affection array:")
+    print("--- Affection array ---")
     print(memory.main.affection_array())
-    print("------------------------------")
+    print("-----------------------")
     memory.main.click_to_control()
     while memory.main.get_map() != 153:
         pos = memory.main.get_coords()

@@ -143,9 +143,8 @@ def desert():
             elif checkpoint == 57:
                 checkpoint += 1
             elif checkpoint == 60:
-                if (
-                    memory.main.get_coords()[1] < 812
-                ):  # Dialing in. 810 works 95%, but was short once.
+                if memory.main.get_coords()[1] < 812:
+                    # Dialing in. 810 works 95%, but was short once.
                     FFXC.set_movement(0, 1)
                 else:
                     FFXC.set_neutral()
@@ -179,9 +178,8 @@ def desert():
                 xbox.menu_b()
             if memory.main.battle_active():  # Lots of battle logic here.
                 xbox.click_to_battle()
-                if (
-                    checkpoint < 7 and memory.main.get_encounter_id() == 197
-                ):  # First battle in desert
+                if checkpoint < 7 and memory.main.get_encounter_id() == 197:
+                    # First battle in desert
                     battle.main.zu()
                 elif memory.main.get_encounter_id() == 234:  # Sandragora logic
                     print("Sandragora fight")
