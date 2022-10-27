@@ -263,11 +263,11 @@ if Gamestate != "none":
         loadGame.load_save_num(3)
         loadGame.load_guado_skip()
     if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
-        loadGame.load_save_num(9)
+        loadGame.load_save_num(1)
     if Gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
-        loadGame.load_save_num(7)
+        loadGame.load_save_num(1)
     if Gamestate == "Macalania" and step_counter == 4:  # Right before Jyscal skip
-        loadGame.load_save_num(10)
+        loadGame.load_save_num(1)
         loadGame.load_mac_temple()
     # Outside temple, before escaping.
     if Gamestate == "Macalania" and step_counter == 6:
