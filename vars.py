@@ -32,6 +32,7 @@ class AllVars:
         self.attemptDjose = False
         # use the original Soundtrack instead of arranged
         self.legacySoundtrack = True
+        self.doNotSkipCutscenes = False
 
         # ----Accessibility for blind
         self.skip_cutscene_flag = True

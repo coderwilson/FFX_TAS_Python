@@ -394,6 +394,7 @@ def await_control():
 
 
 def click_to_control():
+    return click_to_control_3()
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not user_control():
@@ -406,6 +407,7 @@ def click_to_control():
 
 
 def click_to_control_2():
+    return click_to_control_3()
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not user_control():
@@ -1658,7 +1660,9 @@ def diag_skip_possible_old():
         return False
 
 
-def diag_skip_possible():
+def diag_skip_possible(ignore_audio = False):
+    if not ignore_audio and auditory_dialog_playing():
+        return False
     global baseValue
 
     if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
@@ -1669,6 +1673,7 @@ def diag_skip_possible():
 
 
 def cutscene_skip_possible():
+    return False
     global baseValue
 
     key = baseValue + 0x00D2A008
@@ -1679,6 +1684,16 @@ def auditory_dialog_playing():
     global baseValue
     key = baseValue + 0x00F2FED4
     return process.readBytes(key, 1) == 1
+
+def auditory_dialog_playing():
+    #This is usually a no-op unless doNotSkipCutscenes is set.
+    if game_vars.doNotSkipCutscenes:
+    return false
+    global baseValue
+
+    key = baseValue + 0x00F30038
+    control = process.readBytes(key, 1)
+    return control == 1
 
 
 def special_text_open():
@@ -2247,7 +2262,8 @@ def click_to_diag_progress(num):
         if user_control():
             return False
         else:
-            xbox.tap_b()
+            if not auditory_dialog_playing():
+                xbox.tap_b()
             if diag_progress_flag() != lastNum:
                 lastNum = diag_progress_flag()
                 print("Dialog change:", diag_progress_flag(), "- clicking to", num)

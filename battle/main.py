@@ -338,7 +338,6 @@ def besaid():
                     thunder_target(21, "l")
                 else:
                     attack()
-
     memory.main.click_to_control3()
 
 
