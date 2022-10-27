@@ -161,8 +161,8 @@ def forest_1():
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
-                    print("---------------This should be battle number:", kilikaBattles)
-                    print("---------------Reminder (north-bound only):", nextThree)
+                    print("------------This should be battle number:", kilikaBattles)
+                    print("------------Reminder (north-bound only):", nextThree)
                     valeforCharge = battle.main.kilika_woods(
                         valeforCharge, bestOfTwo, nextBattle
                     )

@@ -865,12 +865,7 @@ def miihen_road(self_destruct=False):
         if memory.main.turn_ready():
             if screen.turn_tidus():
                 if not game_vars.self_destruct_get():
-                    if (
-                        encounterID == 51
-                        or encounterID == 64
-                        or encounterID == 66
-                        or encounterID == 87
-                    ):
+                    if encounterID in [51, 64, 66, 87]:
                         lancet_swap("none")
                         game_vars.self_destruct_learned()
                         break
@@ -994,29 +989,24 @@ def mrr_battle(status):
     hpTotal = hpArray[0] + hpArray[1] + hpArray[2]
     # Final charging for Yuna is a lower overall party HP
     if hpTotal < 1800 and status[5] != 2:
-        print("------------We got ambushed. Not going to attempt to recover.")
+        print("----- We got ambushed. Not going to attempt to recover.")
         flee_all()
     elif screen.faint_check() >= 1:
-        print("------------Someone is dead from the start of battle. Just get out.")
+        print("--- Character is dead from the start of battle -> Escaping")
         flee_all()
     elif check_petrify():
-        print(
-            "------------Someone has been petrified which messes up the battle logic. Escaping."
-        )
+        print("--- Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif encounterID == 102:  # Garuda, flee no matter what.
         flee_all()
     elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
-        if (
-            status[3] < 3 and memory.main.rng_seed() != 160
-        ):  # Battle number (zero-index)
+        if status[3] < 3 and memory.main.rng_seed() != 160:
+            # Battle number (zero-index)
             if encounterID == 100 or encounterID == 101:  # The two battles with Funguar
                 while memory.main.battle_active():  # end of battle screen
                     if memory.main.turn_ready():
                         if check_petrify():
-                            print(
-                                "------------Someone has been petrified which messes up the battle logic. Escaping."
-                            )
+                            print("--- Character petrified. Unhandled case -> Escaping")
                             flee_all()
                         elif screen.turn_tidus():
                             buddy_swap_kimahri()
@@ -1040,9 +1030,7 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print(
-                            "------------Someone has been petrified which messes up the battle logic. Escaping."
-                        )
+                        print("--- Character petrified. Unhandled case -> Escaping")
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
@@ -1106,9 +1094,7 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print(
-                            "------------Someone has been petrified which messes up the battle logic. Escaping."
-                        )
+                        print("--- Character petrified. Unhandled case -> Escaping")
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
@@ -1203,9 +1189,7 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print(
-                            "------------Someone has been petrified which messes up the battle logic. Escaping."
-                        )
+                        print("--- Character petrified. Unhandled case -> Escaping")
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
@@ -1246,9 +1230,7 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print(
-                            "------------Someone has been petrified which messes up the battle logic. Escaping."
-                        )
+                        print("--- Character petrified. Unhandled case -> Escaping")
                         flee_all()
                     elif screen.turn_tidus():
                         tidus_flee()
@@ -1269,7 +1251,7 @@ def mrr_battle(status):
                         else:
                             flee_all()
                     elif screen.turn_wakka():
-                        if encounterID == 96 or encounterID == 97 or encounterID == 101:
+                        if encounterID in [96, 97, 101]:
                             if encounterID == 101:
                                 attack_by_num(22, "l")
                             else:
@@ -1429,9 +1411,7 @@ def thunder_plains(section):
 
     # Petrify check is not working. Requires review.
     if check_petrify():
-        print(
-            "------------Someone has been petrified which messes up the battle logic. Escaping."
-        )
+        print("--- Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif encID in [152, 155, 162]:  # Any battle with Larvae
         if lunarSlot:
@@ -2946,9 +2926,9 @@ def altana_heal():
 
 
 def evrae_altana_steal():
-    print("=======================================")
+    print("=================================")
     print("Steal logic, we will get two gems")
-    print("=======================================")
+    print("=================================")
     hasteCount = False
     stealCount = False
     while memory.main.get_item_slot(34) == 255:
@@ -2961,9 +2941,9 @@ def evrae_altana_steal():
                 stealCount = True
             else:
                 defend()
-    print("=======================================")
+    print("====================================")
     print("End of steal logic. Back to regular.")
-    print("=======================================")
+    print("====================================")
     # memory.main.waitFrames(180)
 
 
@@ -4025,7 +4005,7 @@ def lancet(direction):
     tap_targeting()
 
 
-def lancet_target(target, direction):  # something
+def lancet_target(target, direction):
     print("Casting Lancet with variation:", direction)
     while memory.main.battle_menu_cursor() != 20:
         if memory.main.battle_menu_cursor() == 255:
@@ -4041,9 +4021,8 @@ def lancet_target(target, direction):  # something
     while memory.main.other_battle_menu():
         xbox.tap_b()
     retry = 0
-    if (
-        memory.main.get_enemy_current_hp()[target - 20] != 0
-    ):  # Only lancet living targets.
+    if memory.main.get_enemy_current_hp()[target - 20] != 0:
+        # Only lancet living targets.
         while memory.main.battle_target_id() != target:
             if direction == "l":
                 if retry > 5:
@@ -4813,9 +4792,8 @@ def calm_lands_manip():
             if memory.main.get_coords()[0] > 1300:
                 print("--Near Gagazet, just get off RNG10 equipment drop.")
                 if memory.main.next_chance_rng_10() == 0:
-                    advance_rng_10(
-                        1
-                    )  # Gets us off of a drop on defender X - probably. :D
+                    advance_rng_10(1)
+                    # Gets us off of a drop on defender X - probably. :D
                     # Don't want to have Defender X drop an item
                 else:
                     flee_all()
@@ -4979,7 +4957,7 @@ def advance_rng_12():
     while memory.main.battle_active():
         if memory.main.get_encounter_id() == 321:
             print("+++Registering evil jar guy")
-            print("Aw hell naw, we want nothing to do with this guy! (evil jar guy)")
+            print("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
             preX, postX = rngTrack.nea_track()

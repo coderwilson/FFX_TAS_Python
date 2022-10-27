@@ -41,9 +41,7 @@ def to_hidden_cave():
                 and memory.main.next_chance_rng_10()
             ):
                 if not lastReport:
-                    print(
-                        "Need more advances before entering cave (no silence grenade)"
-                    )
+                    print("Need more advances before cave enter | no silence grenade")
                     lastReport = True
                 checkpoint -= 2
             elif checkpoint == 9:

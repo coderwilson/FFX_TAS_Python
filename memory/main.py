@@ -1667,16 +1667,19 @@ def diag_skip_possible():
         key = baseValue + 0x0085A03C
         return process.readBytes(key, 1) == 1
 
+
 def cutscene_skip_possible():
     global baseValue
 
     key = baseValue + 0x00D2A008
     return process.readBytes(key, 1) == 1
 
+
 def auditory_dialog_playing():
     global baseValue
     key = baseValue + 0x00F2FED4
     return process.readBytes(key, 1) == 1
+
 
 def special_text_open():
     global baseValue

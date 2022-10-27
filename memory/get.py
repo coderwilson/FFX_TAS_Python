@@ -79,9 +79,7 @@ class FFXMemory(ReadWriteMemory):
     def get_process_by_name(self, process_name: str | bytes) -> "Process":
         """
         :description: Get the process by the process executabe\'s name and return a Process object.
-
         :param process_name: The name of the executable file for the specified process for example, my_program.exe.
-
         :return: A Process object containing the information from the requested Process.
         """
         if not process_name.endswith(".exe"):

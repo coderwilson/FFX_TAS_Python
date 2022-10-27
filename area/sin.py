@@ -127,7 +127,8 @@ def facing_sin():
 
 
 def inside_sin():
-    while memory.main.get_map() != 203:  # Skip dialog and run to the sea of sorrows map
+    while memory.main.get_map() != 203:
+        # Skip dialog and run to the sea of sorrows map
         if memory.main.cutscene_skip_possible():
             FFXC.set_neutral()
             memory.main.wait_frames(3)

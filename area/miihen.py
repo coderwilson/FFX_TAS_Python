@@ -184,9 +184,8 @@ def arrival():
                         xbox.tap_b()
                     post_battle_logic()
                     FFXC.set_neutral()
-                elif (
-                    checkpoint == 25 and not memory.main.battle_active()
-                ):  # Shelinda dialog
+                elif checkpoint == 25 and not memory.main.battle_active():
+                    # Shelinda dialog
                     FFXC.set_neutral()
                     xbox.tap_b()
                 else:

@@ -16,7 +16,7 @@ FFXC = xbox.controller_handle()
 
 def print_nea_zone(battles: int):
     print("#### Charging Rikku zone:", game_vars.get_nea_zone())
-    print("#### This will take", battles, "number of battles (99 means unknown)")
+    print("#### This will take", battles, "number of battles (99 = unknown)")
 
 
 def decide_nea(bonus_advance: int = 0):
@@ -445,33 +445,28 @@ def post_yunalesca(checkpoint=0):
     memory.main.wait_frames(2)
     while memory.main.get_map() != 194:
         if memory.main.user_control():
-            if (
-                checkpoint < 2 and memory.main.get_map() == 319
-            ):  # Back to room before Yunalesca
+            if checkpoint < 2 and memory.main.get_map() == 319:
+                # Back to room before Yunalesca
                 checkpoint = 2
                 print("Checkpoint reached:", checkpoint)
-            elif (
-                checkpoint < 4 and memory.main.get_map() == 318
-            ):  # Exit to room with the inert Aeon
+            elif checkpoint < 4 and memory.main.get_map() == 318:
+                # Exit to room with the inert Aeon
                 checkpoint = 4
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 7:
                 memory.main.touch_save_sphere()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
-            elif (
-                checkpoint < 10 and memory.main.get_map() == 320
-            ):  # Back to larger of the puzzle rooms
+            elif checkpoint < 10 and memory.main.get_map() == 320:
+                # Back to larger of the puzzle rooms
                 checkpoint = 10
                 print("Checkpoint reached:", checkpoint)
-            elif (
-                checkpoint < 18 and memory.main.get_map() == 316
-            ):  # Hallway before puzzle rooms
+            elif checkpoint < 18 and memory.main.get_map() == 316:
+                # Hallway before puzzle rooms
                 checkpoint = 18
                 print("Checkpoint reached:", checkpoint)
-            elif (
-                checkpoint < 25 and memory.main.get_map() == 315
-            ):  # Hallway before puzzle rooms
+            elif checkpoint < 25 and memory.main.get_map() == 315:
+                # Hallway before puzzle rooms
                 checkpoint = 25
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 26:

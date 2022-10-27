@@ -33,11 +33,8 @@ def path():
                 checkpoint = 49
             elif checkpoint == 49 and stoneBreath == 0:
                 checkpoint = 47
-            # The Djose skip pathing file was removed in commit f18ca78 (PR91)
             # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
-            elif (
-                checkpoint == 42 and game_vars.try_djose_skip()
-            ):  # and stoneBreath == 0: #Turn/talk
+            elif checkpoint == 42 and game_vars.try_djose_skip():
                 FFXC.set_movement(-1, 1)
                 memory.main.wait_frames(2)
                 xbox.tap_b()
@@ -52,9 +49,7 @@ def path():
                     xbox.tap_b()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif (
-                checkpoint == 43 and game_vars.try_djose_skip()
-            ):  # and stoneBreath == 0:
+            elif checkpoint == 43 and game_vars.try_djose_skip():
                 while (
                     memory.main.get_actor_coords(0)[1] < 790
                     and memory.main.get_actor_coords(11)[1] < 790
@@ -382,9 +377,8 @@ def leaving_djose():
                     FFXC.set_movement(1, 0)
                     memory.main.click_to_event_temple(6)
                 checkpoint += 1
-            elif (
-                checkpoint == 11
-            ):  # and not gameVars.skipKilikaLuck(): #Do we need this chest for kilika luck skip? I think not.
+            # Do we need this chest for kilika luck skip? I think not.
+            elif checkpoint == 11:  # and not gameVars.skipKilikaLuck():
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 memory.main.click_to_event_temple(0)
