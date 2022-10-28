@@ -393,8 +393,7 @@ def await_control():
     return True
 
 
-def click_to_control():
-    return click_to_control_3()
+def click_to_control_dumb():
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not user_control():
@@ -405,20 +404,7 @@ def click_to_control():
     print("Control restored.")
     return True
 
-
-def click_to_control_2():
-    return click_to_control_3()
-    waitCounter = 0
-    print("Awaiting control (clicking)")
-    while not user_control():
-        xbox.tap_b()
-        waitCounter += 1
-        if waitCounter % 1000 == 0:
-            print("Awaiting control -", waitCounter / 1000)
-    return True
-
-
-def click_to_control_3():
+def click_to_control_smart():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
@@ -438,6 +424,13 @@ def click_to_control_3():
             print("Awaiting control -", waitCounter / 10000)
     print("User control restored.")
     return True
+
+def click_to_control():
+    return click_to_control_smart()
+def click_to_control_2():
+    return click_to_control_smart()
+def click_to_control_3():
+    return click_to_control_smart()
 
 
 def click_to_control_special():
@@ -3759,6 +3752,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
             save_menu_cursor_2(),
             "|",
             diag_skip_possible(),
+            "|",
+            get_story_progress(),
             "|",
             inc,
         )

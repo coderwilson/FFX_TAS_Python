@@ -50,12 +50,15 @@ def arrival():
     jyscalSkipStatus = False
     checkpoint = 0
     skipStatus = True
+    touchSave = False
     while memory.main.get_map() != 80:
         if memory.main.user_control():
             # Main events
             if checkpoint == 1:
-                # FFXC.set_neutral()
                 checkpoint += 1
+            elif checkpoint == 2 and not touchSave:
+                touchSave = True
+                memory.main.touch_save_sphere()
             elif checkpoint == 2 and game_vars.csr():
                 checkpoint = 11
             elif checkpoint == 4:  # Talking to Trommell
