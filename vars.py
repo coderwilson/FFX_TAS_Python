@@ -16,7 +16,7 @@ class AllVars:
         # Set automatically on new game. For testing (loading a save file) set for your environment.
         self.csrValue = True
         # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesisValue = True
+        self.nemesisValue = False
         # After game is finished, start again on next seed.
         self.forceLoop = False
         # Loop on the same seed immediately after Blitzball.

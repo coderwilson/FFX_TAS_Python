@@ -94,10 +94,11 @@ def listen_story():
                 game_vars.set_csr(False)
                 print("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
-            FFXC.set_value("BtnBack", 1)
-            memory.main.wait_frames(1)
-            FFXC.set_value("BtnBack", 0)
-            memory.main.wait_frames(1)
+            if not game_vars.accessibilityVars()[0]:
+                FFXC.set_value("BtnBack", 1)
+                memory.main.wait_frames(1)
+                FFXC.set_value("BtnBack", 0)
+                memory.main.wait_frames(1)
 
     print("### CSR check:", game_vars.csr())
     checkpoint = 0
