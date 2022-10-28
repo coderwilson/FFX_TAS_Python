@@ -2552,11 +2552,11 @@ def sandragora(version):
         # elif FX_memory.rngSeed() == 31:
         #    print("Manipulating known seed 31")
         #    fleeAll()
-        #    memory.clickToControl()
+        #    memory.click_to_control()
         #    FFXC.set_movement(0, 1)
-        #    memory.awaitEvent()
+        #    memory.await_event()
         #    FFXC.set_neutral()
-        #    screen.awaitTurn()
+        #    screen.await_turn()
         else:
             print("DO NOT Swap odd/even seeds on RNG01")
 

@@ -393,7 +393,7 @@ def await_control():
     return True
 
 
-def click_to_control_dumb():
+def click_to_control_gagazet_trial():  # should be integrated into click_to_control
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not user_control():
@@ -404,7 +404,8 @@ def click_to_control_dumb():
     print("Control restored.")
     return True
 
-def click_to_control_smart():
+
+def click_to_control():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
@@ -423,30 +424,6 @@ def click_to_control_smart():
         if waitCounter % 10000 == 0:
             print("Awaiting control -", waitCounter / 10000)
     print("User control restored.")
-    return True
-
-def click_to_control():
-    return click_to_control_smart()
-def click_to_control_2():
-    return click_to_control_smart()
-def click_to_control_3():
-    return click_to_control_smart()
-
-
-def click_to_control_special():
-    waitCounter = 0
-    print("Awaiting control (clicking)")
-    while not user_control():
-        FFXC.set_value("BtnB", 1)
-        FFXC.set_value("BtnY", 1)
-        wait_frames(30 * 0.035)
-        FFXC.set_value("BtnB", 0)
-        FFXC.set_value("BtnY", 0)
-        wait_frames(30 * 0.035)
-        waitCounter += 1
-        if waitCounter % 10000 == 0:
-            print("Awaiting control -", waitCounter / 10000)
-    wait_frames(30 * 0.05)
     return True
 
 

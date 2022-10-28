@@ -458,7 +458,7 @@ def cave():
                 FFXC.set_value("Dpad", 8)
                 memory.main.wait_frames(45)
                 FFXC.set_neutral()
-                memory.main.click_to_control_dumb()
+                memory.main.click_to_control_gagazet_trial()
                 checkpoint += 1
                 print("Second trial is complete")
             elif checkpoint == 35 and memory.main.diag_progress_flag() == 3:
