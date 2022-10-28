@@ -137,7 +137,7 @@ def forest_1():
                     targetPathing.set_movement([-30, 45])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
 
             # General pathing
@@ -225,7 +225,7 @@ def trials():
                     if memory.main.user_control():
                         xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 33:  # Insert Glyph sphere
                 memory.main.click_to_event_temple(1)
@@ -288,7 +288,7 @@ def trials_end():
                 xbox.tap_b()
 
     # Leave the chamber, then name Ifrit.
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     while memory.main.user_control():
         FFXC.set_movement(0, -1)
     FFXC.set_neutral()
@@ -317,7 +317,7 @@ def forest_3():
                 memory.main.await_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.3)
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint < 53 and memory.main.get_map() == 46:  # Exit woods
                 checkpoint = 53

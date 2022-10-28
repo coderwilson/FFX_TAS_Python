@@ -101,9 +101,8 @@ def open_grid(character):
             print("Selecting party member")
             target_pos = memory.main.get_character_index_in_main_menu(character)
             while memory.main.get_char_cursor_pos() != target_pos:
-                if (
-                    memory.main.get_story_progress() == 2528
-                ):  # After B&Y, party size is evaluated weird.
+                if memory.main.get_story_progress() == 2528:
+                    # After B&Y, party size is evaluated weird.
                     memory.main.menu_direction(
                         memory.main.get_char_cursor_pos(), target_pos, 7
                     )
@@ -1289,15 +1288,15 @@ def remove_all_nea():
         if memory.main.equipped_armor_has_ability(charNum=i):  # Defaults to NEA
             if i == 0:
                 if memory.main.check_ability_armor(ability=0x8056)[i]:
-                    equip_armor(character=i, ability=0x8056)  # Auto-Haste
+                    menu.equip_armor(character=i, ability=0x8056)  # Auto-Haste
                 else:
-                    equip_armor(character=i, ability=99)  # Remove equipment
+                    menu.equip_armor(character=i, ability=99)  # Remove equipment
             elif i in [4, 6]:
                 if memory.main.check_ability_armor(ability=0x801D)[i]:
-                    equip_armor(character=i, ability=0x801D)  # Auto-Phoenix
+                    menu.equip_armor(character=i, ability=0x801D)  # Auto-Phoenix
                 elif memory.main.check_ability_armor(ability=0x8072, slot_count=4)[i]:
-                    equip_armor(character=i, ability=0x8072, slot_count=4)
+                    menu.equip_armor(character=i, ability=0x8072, slot_count=4)
                 else:
-                    equip_armor(character=i, ability=99)  # Remove equipment
+                    menu.equip_armor(character=i, ability=99)  # Remove equipment
             else:
-                equip_armor(character=i, ability=99)  # Unequip
+                menu.equip_armor(character=i, ability=99)  # Unequip

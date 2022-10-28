@@ -1,4 +1,6 @@
 import os
+
+
 class AllVars:
     def __init__(self):
         self.set_start_vars()
@@ -85,7 +87,10 @@ class AllVars:
         self.yojimboIndex = 1
 
         # ----Path for save files, used for loading a specific save
-        self.savePath = os.environ.get("userprofile") + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        self.savePath = (
+            os.environ.get("userprofile")
+            + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        )
 
     def accessibilityVars(self):
         retArray = [self.skip_cutscene_flag, self.skip_diag_flag]

@@ -24,19 +24,19 @@ def arrival():
     memory.main.wait_frames(30 * 0.6)
     FFXC.set_neutral()
 
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     FFXC.set_movement(0, -1)
     memory.main.wait_frames(30 * 1)
     FFXC.set_neutral()
 
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     FFXC.set_movement(0, 1)
     memory.main.wait_frames(30 * 2)
     FFXC.set_neutral()  # Enter the room where we meet Seymour
 
     print("TestVar -", game_vars.csr)
     # Adjusted branch CSR logic, start
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     if game_vars.csr():
         while not targetPathing.set_movement([-13, -67]):
             pass
@@ -45,7 +45,7 @@ def arrival():
             targetPathing.set_movement([-11, -55])
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
         while not targetPathing.set_movement([-39, -77]):
             pass
@@ -54,7 +54,7 @@ def arrival():
             targetPathing.set_movement([-49, -61])
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
         while not targetPathing.set_movement([4, -114]):
             pass
@@ -63,7 +63,7 @@ def arrival():
             targetPathing.set_movement([18, -119])
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
     else:
         while not targetPathing.set_movement([4, -114]):
@@ -73,7 +73,7 @@ def arrival():
             targetPathing.set_movement([18, -119])
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
         while not targetPathing.set_movement([-39, -77]):
             pass
@@ -82,7 +82,7 @@ def arrival():
             targetPathing.set_movement([-49, -61])
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
         while not targetPathing.set_movement([-13, -67]):
             pass
@@ -91,7 +91,7 @@ def arrival():
             targetPathing.set_movement([-11, -55])
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
 
     # Line up for Rikku/Yuna
     while not targetPathing.set_movement([15, -52]):
@@ -104,7 +104,7 @@ def arrival():
         targetPathing.set_movement([8, -26])
         xbox.tap_b()
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
     while not targetPathing.set_movement([27, -37]):
         pass
@@ -113,7 +113,7 @@ def arrival():
         targetPathing.set_movement([39, -33])
         xbox.tap_b()
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
     if not game_vars.csr():
         while not memory.main.cutscene_skip_possible():
@@ -165,7 +165,7 @@ def after_speech(checkpoint=0):
 
 
 def guado_skip():
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     FFXC.set_movement(-1, -1)
     pos = memory.main.get_coords()
     while pos[0] > -85:

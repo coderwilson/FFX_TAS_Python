@@ -55,7 +55,7 @@ def path():
                     and memory.main.get_actor_coords(11)[1] < 790
                 ):
                     memory.main.wait_frames(1)
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             else:
                 # Map changes
@@ -108,7 +108,7 @@ def temple():
         FFXC.set_movement(-1, -1)
         memory.main.click_to_event()  # Talk to Auron
         memory.main.wait_frames(30 * 0.2)
-        memory.main.click_to_control_3()  # Done talking
+        memory.main.click_to_control()  # Done talking
 
     checkpoint = 0
     while not memory.main.get_map() == 214:
@@ -246,7 +246,7 @@ def trials():
                     memory.main.wait_frames(3)
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 63:
                 print("Final insert Left sphere")
@@ -262,7 +262,7 @@ def trials():
                     xbox.tap_b()
                     memory.main.wait_frames(3)
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 73:
                 print("Final insert Right sphere")
@@ -281,7 +281,7 @@ def trials():
                     memory.main.wait_frames(3)
                 FFXC.set_neutral()
                 print("Glyph touched.")
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 82:
                 print("Destruction sphere")
@@ -339,7 +339,7 @@ def trials():
         FFXC.set_movement(1, -1)
         memory.main.click_to_event()
         FFXC.set_movement(-1, -1)
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
         memory.main.wait_frames(30 * 0.07)
 
         # Dance

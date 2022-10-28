@@ -62,7 +62,7 @@ def calm_lands():
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle.main.calm_lands_manip()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 memory.main.full_party_format("rikku", full_menu_close=True)
                 # battle.main.healUp(fullMenuClose=True)
                 rngTrack.print_manip_info()
@@ -202,7 +202,7 @@ def flux():
                 print("Flux battle start")
                 battle.boss.seymour_flux()
                 # FFXC.set_movement(0,1)
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 if game_vars.end_game_version() != 3:
                     menu.after_flux()
                 memory.main.full_party_format("kimahri")

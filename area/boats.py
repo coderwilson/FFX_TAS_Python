@@ -110,7 +110,7 @@ def ss_winno():
     while memory.main.shop_menu_dialogue_row() != 1:
         xbox.tap_down()
     xbox.tap_b()
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
 
 
 def ss_winno_2():

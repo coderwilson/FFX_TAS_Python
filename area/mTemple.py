@@ -97,7 +97,7 @@ def arrival():
                 memory.main.wait_frames(45)
                 FFXC.set_neutral()
                 checkpoint += 1
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
             elif checkpoint == 6:
                 checkpoint = 11
             elif checkpoint == 11:
@@ -332,7 +332,7 @@ def under_lake():
                     targetPathing.set_movement([-4, -8])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
 
             # General pathing
