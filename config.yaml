@@ -1,4 +1,17 @@
+# Main gamestate and step to load
+# "none", "Baaj", "Besaid", "Boat1", "Kilika", "Luca", "Miihen", "MRR"
+# "Djose", "Moonflow", "Guadosalam", "Macalania", "Home", "rescueYuna"
+# "Gagazet", "Zanarkand", "Sin", "Nem_Farm"
+Gamestate     : "none"
+# valid step_counter values are dependent on Gamestate
+step_counter  : 1
 
+# RNG Seed (requires setting vars.setSeed: True)
+forceBlitzWin : False
+seedHunt      : False
+rngSeedNum    : 160
+
+# Run configuration variables in vars.py
 vars:
   # === Important Values ===
   # Set depending on hardware. True == less powerful hardware.
