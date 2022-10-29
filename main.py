@@ -99,8 +99,8 @@ step_counter = 2 # x3 before Guadosalam Skip
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#step_counter = 1  # NEW GAME!
+Gamestate = "none"
+step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
