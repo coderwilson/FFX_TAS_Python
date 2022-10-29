@@ -35,9 +35,9 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
 
 ## Installation
 
-* The Steam version of Final Fantasy X (in other words, the Final Fantasy X/X-2 HD Remaster).
-* Virtual gamepad port: <https://github.com/ViGEm/ViGEmBus/releases/tag/v1.21.442.0>
-* Python version 3.10 or later (through Windows store or from <https://www.python.org/downloads/>). Ensure that python is added to the `PATH` variable during installation. If you run into problems on version 3.11 or later, try installing 3.10.
+* Install the Steam version of Final Fantasy X (in other words, the Final Fantasy X/X-2 HD Remaster).
+* Install Virtual gamepad port: <https://github.com/ViGEm/ViGEmBus/releases/tag/v1.21.442.0>
+* Install Python version 3.10 or later (through Windows store or from <https://www.python.org/downloads/>). Ensure that python is added to the `PATH` variable during installation. If you run into problems on version 3.11 or later, try installing 3.10.
 * Download the repository to your computer: <https://github.com/coderwilson/FFX_TAS_Python>
 * Install the python requirements using pip (comes with your python installation):
   - Run `CMD` or `PowerShell` as administrator.
@@ -55,13 +55,13 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
 
 ## Before starting a run
 
-* The correct game settings are used:
-  - Open the game launcher and set language, change resolution and set to windowed/borderless mode.
+* Make sure the correct game settings are used:
+  - Open the game launcher and set language, change resolution and set to windowed or borderless mode.
   - Launch the base game (`FFX.exe`). Press `Escape` and go into `System Settings > Key Bindings > Controller` and set the `Talk/Examine/Confirm` option to `A`.
 * Make sure that there are no physical XBox/Playstation controllers connected. This is because the virtual gamepad needs to be controller 1 for the TAS to work.
-* The correct settings for the run are set in `vars.py`:
+* Make sure the correct settings for the run are set in `vars.py`:
   - Change `self.setSeed = True` to `self.setSeed = False`
-* The correct GameState for your run is set in `main.py`. For a new game, use `GameState = "none"`.
+* Make sure the correct GameState for your run is set in `main.py`. For a new game, use `GameState = "none"` and `step_counter = 1`. Comment out any other assignment at the top of `main.py`.
 * In order for other GameStates to work, put the contents of `TAS Saves` into `%userprofile%/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/`.
 
 ## Starting a run
@@ -69,6 +69,6 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
 * [Optional] Start LiveSplit
 * Start the patched `FFX.exe`
 * [Optional] Start the Cutscene remover
-* In `CMD` or `PowerShell` as administrator, run `py main.py` in the `FFX_TAS_Python` directory
+* In `CMD` or `PowerShell` as administrator, run `py main.py` in the `FFX_TAS_Python` directory.
 
 The TAS should now be running!
