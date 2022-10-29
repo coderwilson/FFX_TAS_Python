@@ -68,12 +68,12 @@ def south_bank(checkpoint: int = 0):
     # Arrive at the south bank of the moonflow.
     print("South bank, Save sphere screen")
 
-    memory.main.click_to_control()  # "Where there's a will, there's a way."
+    memory.main.click_to_control_3()  # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
     memory.main.wait_frames(30 * 1)
     FFXC.set_neutral()
 
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     partyHP = memory.main.get_hp()
     if partyHP[4] < 800:
         battle.main.heal_up(2)
@@ -107,7 +107,7 @@ def south_bank(checkpoint: int = 0):
 
 
 def north_bank():
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     FFXC.set_movement(-1, 0)
     memory.main.await_event()
     memory.main.wait_frames(30 * 1)
@@ -123,7 +123,7 @@ def north_bank():
         memory.main.click_to_event()  # Talk to Auron
         FFXC.set_neutral()
         memory.main.wait_frames(9)
-        memory.main.click_to_control()
+        memory.main.click_to_control_3()
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     memory.main.await_event()

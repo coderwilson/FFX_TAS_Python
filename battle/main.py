@@ -338,7 +338,7 @@ def besaid():
                     thunder_target(21, "l")
                 else:
                     attack()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def lancet_tutorial():
@@ -1642,7 +1642,7 @@ def m_woods(woods_vars):
                 flee_all()
 
     print("Battle complete, now to deal with the aftermath.")
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     print("M.woods, back in control")
     if memory.main.overdrive_state()[6] == 100:
         woods_vars[0] = True
@@ -4109,7 +4109,7 @@ def flee_all():
                     escape_one()
                 else:
                     defend()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     print("Flee complete")
 
 
@@ -4729,7 +4729,7 @@ def charge_rikku_od():
                         buddy_swap_rikku()
                     else:
                         escape_one()
-        memory.main.click_to_control()
+        memory.main.click_to_control_3()
     else:
         flee_all()
 
@@ -4919,7 +4919,7 @@ def advance_rng_10(num_advances: int):
             else:  # any other scenarios, ready to advance.
                 print("+++Registering no advances needed, forcing flee.")
                 flee_all()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def rng_12_attack(try_impulse=False):
@@ -5012,7 +5012,7 @@ def advance_rng_12():
                     buddy_swap_yuna()
                 else:
                     defend()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def ghost_kill():
@@ -5050,7 +5050,7 @@ def ghost_kill():
         print("No way to get an optimal drop. Resorting to aeon: ", owner2)
         ghost_kill_aeon()
 
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
@@ -5105,8 +5105,8 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     attack()
                 else:
                     defend()
-    print("RNG10 is now aligned.")
     return tidusHasted
+    print("RNG10 is now aligned.")
 
 
 def ghost_kill_tidus(silence_slot: int, self_haste: bool):

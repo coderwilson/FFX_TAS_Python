@@ -88,12 +88,13 @@ def air_ship_path(version):
                     while not memory.main.item_shop_menu() == 10:
                         xbox.tap_b()
                 memory.main.close_menu()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 distillerPurchase = True
             elif checkpoint < 6 and memory.main.get_map() == 351:  # Screen with Isaaru
                 checkpoint = 6
-            elif checkpoint < 9 and memory.main.get_map() == 211:
-                # Gallery screen (includes lift screens)
+            elif (
+                checkpoint < 9 and memory.main.get_map() == 211
+            ):  # Gallery screen (includes lift screens)
                 checkpoint = 9
                 # Optional save sphere can be touched here.
                 # Should not be necessary, we should be touching save sphere in Home

@@ -287,14 +287,14 @@ def trials():
                 memory.main.wait_frames(30 * 0.07)
                 memory.main.click_to_event()
                 memory.main.wait_frames(30 * 0.035)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 32:  # Insert Glyph sphere
                 while memory.main.user_control():
                     targetPathing.set_movement([450, 525])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 34:  # Take Destro sphere
                 memory.main.click_to_event_temple(7)
@@ -306,7 +306,7 @@ def trials():
                 memory.main.wait_frames(30 * 0.07)
                 FFXC.set_neutral()
                 xbox.skip_dialog(1)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 39:  # Take Bevelle sphere
                 memory.main.click_to_event_temple(5)
@@ -357,7 +357,7 @@ def trials():
                 memory.main.wait_frames(30 * 0.1)
                 FFXC.set_neutral()
                 xbox.skip_dialog(1)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 50:  # Insert Destro sphere
                 memory.main.click_to_event_temple(0)
