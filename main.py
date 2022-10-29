@@ -72,10 +72,10 @@ if game_vars.nemesis():
 # step_counter = 2 # x2 After Extractor
 # Gamestate = "Guadosalam"
 # step_counter = 2 # x3 before Guadosalam Skip
-Gamestate = "Macalania"
+#Gamestate = "Macalania"
 # step_counter = 1 # x9
 # step_counter = 2 # x7
-step_counter = 4 # x10 Seymour
+#step_counter = 4 # x10 Seymour
 # step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
 # Gamestate = "Home"
 # step_counter = 1 # x60
@@ -99,8 +99,8 @@ step_counter = 4 # x10 Seymour
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#step_counter = 1  # NEW GAME!
+Gamestate = "none"
+step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
