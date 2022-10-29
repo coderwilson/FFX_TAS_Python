@@ -117,21 +117,21 @@ def trials():
                     targetPathing.set_movement([-13, -33])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 23:  # Second Besaid sphere
                 while memory.main.user_control():
                     targetPathing.set_movement([-14, 31])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 26:  # Insert Besaid sphere, and push to completion
                 while memory.main.user_control():
                     targetPathing.set_movement([-13, -60])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 if game_vars.use_pause():
                     memory.main.wait_frames(2)
                 while memory.main.get_map() == 122:
@@ -198,7 +198,7 @@ def leaving():
                 while memory.main.shop_menu_dialogue_row() != 1:
                     xbox.tap_down()
                 xbox.tap_b()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 7:  # Exit tent
                 memory.main.click_to_event_temple(0)

@@ -138,7 +138,7 @@ def arrival():
                             print("Should now be able to see if it worked.")
                             # Don't move, avoiding a possible extra battle
                             memory.main.wait_frames(30 * 3.5)
-                            memory.main.click_to_control()
+                            memory.main.click_to_control_3()
                             print("Mark 1")
                             memory.main.wait_frames(30 * 1)
                             print("Mark 2")
@@ -149,7 +149,7 @@ def arrival():
                                 ):
                                     miihenSkip = True
                                 else:
-                                    memory.main.click_to_control()
+                                    memory.main.click_to_control_3()
                             except Exception:
                                 miihenSkip = False
                             print("Skip successful:", miihenSkip)
@@ -232,7 +232,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
                 else:
                     FFXC.set_neutral()
                     xbox.skip_dialog(1)
-                    memory.main.click_to_control()
+                    memory.main.click_to_control_3()
                     checkpoint += 1
 
             # General pathing
