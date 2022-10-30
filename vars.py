@@ -46,26 +46,21 @@ class AllVars:
         self.rails_egg_hunt = config_vars.get("rails_egg_hunt", True)
 
         # ----Blitzball
-        self.blitzWinValue = config_vars.get(
-            "blitzWinValue", True
-        )  # No default value required
-        self.blitzOvertime = config_vars.get(
-            "blitzOvertime", False
-        )  # Set to False, no need to change ever.
+        # No default value required
+        self.blitzWinValue = config_vars.get("blitzWinValue", True)
+        # Set to False, no need to change ever.
+        self.blitzOvertime = config_vars.get("blitzOvertime", False)
         self.blitzFirstShotVal = config_vars.get("blitzFirstShotVal", False)
-        self.oblitzAttackVal = config_vars.get(
-            "oblitzAttackVal", "255"
-        )  # Used for RNG manip tracking
+        # Used for RNG manip tracking
+        self.oblitzAttackVal = config_vars.get("oblitzAttackVal", "255")
 
         # ----Sphere grid
         self.fullKilikMenu = config_vars.get("fullKilikMenu", False)  # Default to False
-        self.earlyTidusGridVal = config_vars.get(
-            "earlyTidusGridVal", False
-        )  # Default False
+        self.earlyTidusGridVal = config_vars.get("earlyTidusGridVal", False)
+        # Default False
         self.earlyHasteVal = config_vars.get("earlyHasteVal", 1)  # Default -1
-        self.wakkaLateMenuVal = config_vars.get(
-            "wakkaLateMenuVal", False
-        )  # Default False
+        # Default False
+        self.wakkaLateMenuVal = config_vars.get("wakkaLateMenuVal", False)
         self.endGameVersionVal = config_vars.get("endGameVersionVal", 1)  # Default 0
 
         # ----Equipment
@@ -82,9 +77,8 @@ class AllVars:
         self.selfDestruct = config_vars.get("selfDestruct", False)  # Default False
         self.YTKFarm = config_vars.get("YTKFarm", 0)  # Default to 0
         self.rescueCount = config_vars.get("rescueCount", 0)  # Default to 0
-        self.fluxOverkillVar = config_vars.get(
-            "fluxOverkillVar", False
-        )  # Default to False
+        # Default to False
+        self.fluxOverkillVar = config_vars.get("fluxOverkillVar", False)
         self.tryNEVal = config_vars.get("tryNEVal", True)  # Based on
         self.neArmorVal = config_vars.get("neArmorVal", 255)  # Default 255
         self.neBattles = config_vars.get("neBattles", 0)  # Default to 0

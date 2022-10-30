@@ -4773,10 +4773,8 @@ def calm_lands_manip():
     else:
         print("++++ Gems good. NEA manip logic.")
         advancePreX, advancePostX = rng_track.nea_track()  # returns integers
-        if advancePreX not in [0, 2] and advancePostX not in [
-            0,
-            2,
-        ]:  # Non-zero for both
+        if advancePreX not in [0, 2] and advancePostX not in [0, 2]:
+            # Non-zero for both
             print("Not lined up for NEA")
             if rng10nextChanceLow == 0 and memory.main.get_encounter_id() in lowArray:
                 advance_rng_12()
@@ -4789,9 +4787,8 @@ def calm_lands_manip():
             else:  # If we can't advance on this battle, try to get the next "mid" level advance.
                 print("Can't drop off of this battle.")
                 advance_rng_10(rng10nextChanceMid)
-        elif (
-            advancePostX == 2
-        ):  # Lined up for non-drop defender X + drops on B&Y drops.
+        elif advancePostX == 2:
+            # Lined up for non-drop defender X + drops on B&Y drops.
             if memory.main.next_chance_rng_10() == 0:
                 advance_rng_10(1)
                 # Don't want to have Defender X drop an item
