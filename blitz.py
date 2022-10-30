@@ -1,7 +1,7 @@
 import math
 import time
 
-import blitzPathing
+import blitz_pathing
 import logs
 import memory.main
 import rngTrack
@@ -383,7 +383,7 @@ def radius_movement(radius: int = 580, direction="forward"):
                 else:
                     target_coords[0] = playerCoords[0] + 10
                     target_coords[1] = playerCoords[1] - 10
-    blitzPathing.set_movement(target_coords)
+    blitz_pathing.set_movement(target_coords)
     return target_coords
 
 
@@ -393,7 +393,7 @@ def working_forward():
     #    radiusMovement(direction='back')
     if cPlayer[1] > -180:
         # print("In position")
-        blitzPathing.set_movement([-585, -130])
+        blitz_pathing.set_movement([-585, -130])
     else:
         radius_movement()
 
@@ -435,7 +435,7 @@ def find_safe_place():
         else:
             radius_movement(radius=570, direction="forward")
     else:
-        if blitzPathing.set_movement(target_coords):
+        if blitz_pathing.set_movement(target_coords):
             return True
         else:
             return False
@@ -586,7 +586,7 @@ def tidus_move():
             xbox.tap_x()
         elif currentStage == 4:
             xbox.tap_x()
-        elif blitzPathing.set_movement(shootTarget):
+        elif blitz_pathing.set_movement(shootTarget):
             xbox.tap_x()
     elif currentStage in [0, 1, 2, 5]:
         FFXC.set_movement(-1, -1)
@@ -601,7 +601,7 @@ def tidus_move():
             FFXC.set_movement(-1, -1)
             xbox.tap_x()
         elif (
-            blitzPathing.set_movement(shootTarget)
+            blitz_pathing.set_movement(shootTarget)
             and memory.main.get_story_progress() >= 570
         ):
             FFXC.set_movement(-1, -1)
@@ -676,7 +676,7 @@ def letty_move():
         xbox.tap_x()
     elif currentStage == 2:
         target_coords = [-20, -585]
-        blitzPathing.set_movement(target_coords)
+        blitz_pathing.set_movement(target_coords)
         if not player_guarded(3):
             xbox.tap_x()
         elif not player_guarded(2):
@@ -818,7 +818,7 @@ def jassu_move():
                 xbox.tap_x()
         elif not moveForward:
             try:
-                blitzPathing.set_movement(target_coords)
+                blitz_pathing.set_movement(target_coords)
             except:
                 pass
 
