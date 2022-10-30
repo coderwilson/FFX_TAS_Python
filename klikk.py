@@ -1,5 +1,5 @@
 import area.dream_zan
-import loadGame
+import load_game
 import logs
 import memory.main
 import reset
@@ -15,7 +15,7 @@ memory.main.start()
 FFXC = xbox.controller_handle()
 
 area.dream_zan.new_game("Klikk testing")
-loadGame.load_save_num(101)
+load_game.load_save_num(101)
 memory.main.await_control()
 while memory.main.user_control():
     targetPathing.set_movement([0, 0])

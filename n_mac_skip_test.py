@@ -18,7 +18,7 @@ import area.rescue_yuna
 import area.sin
 import area.thunder_plains
 import area.zanarkand
-import loadGame
+import load_game
 import memory.main
 import reset
 import targetPathing
@@ -46,9 +46,9 @@ if Gamestate != "none":
         area.dream_zan.new_game(Gamestate)
 
     if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
-        loadGame.load_save_num(9)
+        load_game.load_save_num(9)
     if Gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
-        loadGame.load_save_num(7)
+        load_game.load_save_num(7)
 
 # Approach the position
 prep_step = [[303, 34], [284, 104], [222, 160], [209, 170]]

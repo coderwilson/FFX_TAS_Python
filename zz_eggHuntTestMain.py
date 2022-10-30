@@ -26,9 +26,9 @@ while attempts < 10:
         # Initiate memory reading, after we know the game is open.
         memory.main.start()
 
-        import loadGame
+        import load_game
 
-        loadGame.load_save_num(number=51)
+        load_game.load_save_num(number=51)
 
         FFXC.set_value("AxisLy", 1)
         FFXC.set_value("AxisLx", 1)
