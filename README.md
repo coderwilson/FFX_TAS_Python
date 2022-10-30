@@ -63,7 +63,7 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
   - Set `setSeed: False` if you are not running a fixed RNG exe file.
   - Set the correct GameState for your run. For a new game, use `GameState: "none"` and `step_counter: 1`. Other possible assignments can be found in comments near the top of `main.py`.
 
-In order for other starting GameStates to work, the saves in `TAS Saves` must be installed correctly. Please ask in the Discord how to do this, as it requires a few steps beyond just copying the files.
+In order for other starting GameStates to work, the saves in `tas_saves` must be installed correctly. Please ask in the Discord how to do this, as it requires a few steps beyond just copying the files.
 
 ## Starting a run
 
