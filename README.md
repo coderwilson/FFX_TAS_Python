@@ -60,7 +60,7 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
   - Launch the base game (`FFX.exe`). Press `Escape` and go into `System Settings > Key Bindings > Controller` and set the `Talk/Examine/Confirm` option to `A`.
 * Make sure that there are no physical XBox/Playstation controllers connected. This is because the virtual gamepad needs to be controller 1 for the TAS to work.
 
-It's possible to congigure parameters for the TAS. There are a lot of parameters that are possible to set, which are all read from a file called `config.yaml`. When you first download the repository, there won't be a `config.yaml` file; in this case the TAS will use default parameters for everything. If you want to configure something, make a copy the provided `config.example.yaml` file and name it `config.yaml`. Keep an eye on the example file, as more parameters may be added in the future.
+It's possible to congigure parameters for the TAS. There are a lot of parameters that are possible to set, which are all read from a file called `config.yaml`. When you first download the repository, there won't be a `config.yaml` file; in this case the TAS will use default parameters for everything. If you want to configure something, make a copy the provided `config.yaml.example` file and name it `config.yaml`. Keep an eye on the example file, as more parameters may be added in the future.
 
 ## Checkpoint saves
 
