@@ -3,11 +3,11 @@ import os
 from pathlib import Path
 
 import memory.main
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
-import zzairShipPath
+import zz_airship_path
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
@@ -188,23 +188,23 @@ def besaid_trials():
     # Exit Tent
     while memory.main.get_map() != 17:
         tCoords = memory.main.get_coords()
-        targetPathing.set_movement([-1, tCoords[1] - 15])
+        pathing.set_movement([-1, tCoords[1] - 15])
 
     # To the temple
-    while not targetPathing.set_movement([35, 182]):
+    while not pathing.set_movement([35, 182]):
         pass
-    while not targetPathing.set_movement([17, 22]):
+    while not pathing.set_movement([17, 22]):
         pass
-    while not targetPathing.set_movement([14, -67]):
+    while not pathing.set_movement([14, -67]):
         pass
     while memory.main.get_map() != 42:
         tCoords = memory.main.get_coords()
-        targetPathing.set_movement([-2, tCoords[1] - 15])
+        pathing.set_movement([-2, tCoords[1] - 15])
 
     # Start the trials
     while memory.main.get_map() != 122:
         tCoords = memory.main.get_coords()
-        targetPathing.set_movement([-2, tCoords[1] + 15])
+        pathing.set_movement([-2, tCoords[1] + 15])
 
 
 def boat_1():
@@ -248,33 +248,33 @@ def kilika_trials():
 
 
 def load_miihen_start_laugh():
-    import targetPathing
+    import pathing
 
-    while not targetPathing.set_movement([-440, 0]):
+    while not pathing.set_movement([-440, 0]):
         pass
     memory.main.click_to_event_temple(4)
 
     # Reverse T screen
     memory.main.await_control()
-    while not targetPathing.set_movement([-39, 18]):
+    while not pathing.set_movement([-39, 18]):
         pass
-    while not targetPathing.set_movement([3, 31]):
+    while not pathing.set_movement([3, 31]):
         pass
-    while not targetPathing.set_movement([64, 15]):
+    while not pathing.set_movement([64, 15]):
         pass
-    while not targetPathing.set_movement([163, 0]):
+    while not pathing.set_movement([163, 0]):
         pass
     memory.main.click_to_event_temple(2)
 
     # Carnival vendor screen
     memory.main.await_control()
-    while not targetPathing.set_movement([30, -86]):
+    while not pathing.set_movement([30, -86]):
         pass
-    while not targetPathing.set_movement([60, -24]):
+    while not pathing.set_movement([60, -24]):
         pass
-    while not targetPathing.set_movement([101, 72]):
+    while not pathing.set_movement([101, 72]):
         pass
-    while not targetPathing.set_movement([129, 101]):
+    while not pathing.set_movement([129, 101]):
         pass
     memory.main.click_to_event_temple(1)
     memory.main.wait_frames(30 * 1)
@@ -286,51 +286,51 @@ def load_miihen_start_laugh():
 
 
 def load_miihen_start():
-    import targetPathing
+    import pathing
 
-    while not targetPathing.set_movement([-440, 0]):
+    while not pathing.set_movement([-440, 0]):
         pass
     memory.main.click_to_event_temple(4)
 
     # Reverse T screen
     memory.main.await_control()
-    while not targetPathing.set_movement([-39, 18]):
+    while not pathing.set_movement([-39, 18]):
         pass
-    while not targetPathing.set_movement([3, 31]):
+    while not pathing.set_movement([3, 31]):
         pass
-    while not targetPathing.set_movement([64, 15]):
+    while not pathing.set_movement([64, 15]):
         pass
-    while not targetPathing.set_movement([163, 0]):
+    while not pathing.set_movement([163, 0]):
         pass
     memory.main.click_to_event_temple(2)
 
     # Carnival vendor screen
     memory.main.await_control()
-    while not targetPathing.set_movement([30, -86]):
+    while not pathing.set_movement([30, -86]):
         pass
-    while not targetPathing.set_movement([60, -24]):
+    while not pathing.set_movement([60, -24]):
         pass
-    while not targetPathing.set_movement([101, 72]):
+    while not pathing.set_movement([101, 72]):
         pass
-    while not targetPathing.set_movement([129, 101]):
+    while not pathing.set_movement([129, 101]):
         pass
     memory.main.click_to_event_temple(1)
 
     # -----Use this if you've already done the laughing scene.
     memory.main.click_to_control()
-    while not targetPathing.set_movement([2, 57]):
+    while not pathing.set_movement([2, 57]):
         pass
-    while not targetPathing.set_movement([108, 59]):
+    while not pathing.set_movement([108, 59]):
         pass
-    while not targetPathing.set_movement([108, 26]):
+    while not pathing.set_movement([108, 26]):
         pass
-    while not targetPathing.set_movement([78, -3]):
+    while not pathing.set_movement([78, -3]):
         pass
-    while not targetPathing.set_movement([-68, -7]):
+    while not pathing.set_movement([-68, -7]):
         pass
-    while not targetPathing.set_movement([-99, 24]):
+    while not pathing.set_movement([-99, 24]):
         pass
-    while not targetPathing.set_movement([-126, 117]):
+    while not pathing.set_movement([-126, 117]):
         pass
     memory.main.click_to_event_temple(1)
 
@@ -377,7 +377,7 @@ def after_gui():
     checkpoint = 0
     while memory.main.get_map() != 93:
         if memory.main.user_control():
-            if targetPathing.set_movement(target[checkpoint]):
+            if pathing.set_movement(target[checkpoint]):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -479,7 +479,7 @@ def load_rescue():
     memory.main.await_control()
     memory.main.full_party_format("evrae")
 
-    zzairShipPath.air_ship_path(1)  # The run from cockpit to the deck
+    zz_airship_path.air_ship_path(1)  # The run from cockpit to the deck
 
 
 def load_bahamut():
@@ -537,9 +537,9 @@ def load_gagazet_dream():
 
 def load_egg_hunt():
     memory.main.await_control()
-    while not targetPathing.set_movement([-10, -507]):
+    while not pathing.set_movement([-10, -507]):
         pass
-    while not targetPathing.set_movement([-5, -360]):
+    while not pathing.set_movement([-5, -360]):
         pass
 
     while memory.main.get_map() != 324:

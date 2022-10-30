@@ -1,6 +1,7 @@
+# currently unused file, should be removed if abandoned
 import time
 
-import area.dreamZan
+import area.dream_zan
 import battle.main
 import memory.main
 import reset
@@ -19,16 +20,16 @@ while attempts < 10:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-        area.dreamZan.new_game("rescueYuna")
+        area.dream_zan.new_game("rescueYuna")
         print("Game start screen")
         screen.clear_mouse(0)
 
         # Initiate memory reading, after we know the game is open.
         memory.main.start()
 
-        import loadGame
+        import load_game
 
-        loadGame.load_save_num(number=51)
+        load_game.load_save_num(number=51)
 
         FFXC.set_value("AxisLy", 1)
         FFXC.set_value("AxisLx", 1)
@@ -40,9 +41,9 @@ while attempts < 10:
         print("Start egg hunt only program")
         print("--------------------------No-control method")
 
-        import zz_eggHuntAuto
+        import zz_egg_hunt_auto
 
-        zz_eggHuntAuto.engage()
+        zz_egg_hunt_auto.engage()
     else:
         # Initiate memory reading, after we know the game is open.
         print("Start egg hunt only program")

@@ -2,11 +2,11 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
-import targetPathing
+import pathing
 import vars
 import xbox
-import zz_eggHuntAuto
-import zzairShipPath
+import zz_airship_path
+import zz_egg_hunt_auto
 
 game_vars = vars.vars_handle()
 
@@ -18,17 +18,17 @@ def making_plans():
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
-    while not targetPathing.set_movement([-267, 347]):
+    while not pathing.set_movement([-267, 347]):
         pass
 
     target = [[-242, 312], [-239, 258], [-243, 145], [-243, 10]]
     checkpoint = 0
     while memory.main.get_map() == 194:
         if memory.main.user_control():
-            if targetPathing.set_movement(target[checkpoint]):
+            if pathing.set_movement(target[checkpoint]):
                 checkpoint += 1
 
-    zzairShipPath.air_ship_path(2)  # Talk to Yuna/Kimahri
+    zz_airship_path.air_ship_path(2)  # Talk to Yuna/Kimahri
     FFXC.set_neutral()
 
 
@@ -71,7 +71,7 @@ def exit_cockpit():
         if memory.main.user_control():
             tidusCoords = memory.main.get_coords()
             if tidusCoords[1] > 318:
-                targetPathing.set_movement([-244, 315])
+                pathing.set_movement([-244, 315])
             else:
                 FFXC.set_movement(0, -1)
         else:
@@ -79,11 +79,11 @@ def exit_cockpit():
 
 
 def facing_sin():
-    while not targetPathing.set_movement([-245, 321]):
+    while not pathing.set_movement([-245, 321]):
         pass
 
     while memory.main.user_control():
-        targetPathing.set_movement([-256, 342])
+        pathing.set_movement([-256, 342])
         xbox.tap_b()
         memory.main.wait_frames(1)
 
@@ -104,7 +104,7 @@ def facing_sin():
         exit_cockpit()
     FFXC.set_neutral()
 
-    zzairShipPath.air_ship_path(3)
+    zz_airship_path.air_ship_path(3)
     battle.main.sin_arms()
     memory.main.click_to_control()
     print("To the deck, talk to Yuna")
@@ -113,7 +113,7 @@ def facing_sin():
     FFXC.set_neutral()
     memory.main.click_to_control()
 
-    zzairShipPath.air_ship_path(4)
+    zz_airship_path.air_ship_path(4)
     FFXC.set_neutral()
     memory.main.click_to_control()
 
@@ -121,7 +121,7 @@ def facing_sin():
     if memory.main.get_map() in [255, 374]:
         exit_cockpit()
     FFXC.set_neutral()
-    zzairShipPath.air_ship_path(5)
+    zz_airship_path.air_ship_path(5)
     battle.main.sin_face()
     print("End of battle with Sin's face.")
 
@@ -165,7 +165,7 @@ def inside_sin():
                 checkpoint = 68
 
             # General Pathing
-            elif targetPathing.set_movement(targetPathing.inside_sin(checkpoint)):
+            elif pathing.set_movement(pathing.inside_sin(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -187,7 +187,7 @@ def egg_hunt(auto_egg_hunt):
         FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 0.5)
     if auto_egg_hunt:
-        zz_eggHuntAuto.engage()
+        zz_egg_hunt_auto.engage()
     else:
         print("Start of egg hunt. User control expected.")
         waitCount = 0

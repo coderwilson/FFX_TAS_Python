@@ -3,8 +3,8 @@ import battle.main
 import battle.overdrive
 import logs
 import memory.main
-import rngTrack
-import targetPathing
+import pathing
+import rng_track
 import tts
 import vars
 import xbox
@@ -141,7 +141,7 @@ def listen_story():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.tidus_home(checkpoint)):
+            elif pathing.set_movement(pathing.tidus_home(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -187,7 +187,7 @@ def ammes_battle():
             print(hitsArray)
     print("#####################################")
     print("### Unconfirmed seed check:", memory.main.rng_seed())
-    correctSeed = rngTrack.hits_to_seed(hits_array=hitsArray)
+    correctSeed = rng_track.hits_to_seed(hits_array=hitsArray)
     logs.write_stats("Corrected RNG seed:")
     logs.write_stats(correctSeed)
     print("### Corrected RNG seed:", correctSeed)
@@ -240,9 +240,7 @@ def after_ammes():
                     checkpoint = 11
 
                 # General pathing
-                elif targetPathing.set_movement(
-                    targetPathing.all_starts_here(checkpoint)
-                ):
+                elif pathing.set_movement(pathing.all_starts_here(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:

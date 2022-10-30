@@ -32,7 +32,7 @@ def next_stats(rng_seed_num):
     if fileStats == "none":
         timeNow = datetime.datetime.now()
         fileStats = (
-            "Logs/"
+            "logs/"
             + game
             + "Stats_ "
             + str(rng_seed_num)
@@ -82,7 +82,7 @@ def next_plot():
     if filePlot == "none":
         timeNow = datetime.datetime.now()
         filePlot = (
-            "Logs/"
+            "logs/"
             + game
             + "Plot_ "
             + str(timeNow.year)
@@ -124,7 +124,7 @@ def open_rng_track():
     global ext
     timeNow = datetime.datetime.now()
     fileRNG = (
-        "Logs/"
+        "logs/"
         + game
         + "RNG_ "
         + str(timeNow.year)

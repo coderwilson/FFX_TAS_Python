@@ -1,16 +1,17 @@
+# currently unused file, should be removed if abandoned
 import time
 
-import area.dreamZan
+import area.dream_zan
 import area.guadosalam
+import area.mac_temple
 import area.miihen
-import area.MRR
-import area.mTemple
-import loadGame
+import area.mrr
+import load_game
 import logs
 import memory.main
 import reset
 import screen
-import Showcase.chocoEater
+import showcase.choco_eater
 import vars
 import xbox
 
@@ -41,7 +42,7 @@ while attempts < 20 and cycles < 50:
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    area.dreamZan.new_game("techdemo")
+    area.dream_zan.new_game("techdemo")
 
     print("Game start screen")
     screen.clear_mouse(0)
@@ -49,8 +50,8 @@ while attempts < 20 and cycles < 50:
     # Now to run the appropriate section depending on attempt number.
     if attempts == 1:
         print("Demo - Mi'ihen skip")
-        loadGame.load_save_num(26)  # W/O laughing scene
-        loadGame.load_miihen_start()
+        load_game.load_save_num(26)  # W/O laughing scene
+        load_game.load_miihen_start()
         FFXC.set_neutral()
         memory.main.set_encounter_rate(0)
         memory.main.await_control()
@@ -67,11 +68,11 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
-        loadGame.load_save_num(38)
+        load_game.load_save_num(38)
         # Fixes a low gil state for this save file.
         memory.main.set_gil_value(4000)
-        loadGame.load_mrr()
-        wakkaLateMenu = area.MRR.arrival()
+        load_game.load_mrr()
+        wakkaLateMenu = area.mrr.arrival()
         SkipCount += 1
         SkipAttempts += 1
         print("------------------------------")
@@ -82,8 +83,8 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
-        loadGame.load_save_num(3)
-        loadGame.load_guado_skip()
+        load_game.load_save_num(3)
+        load_game.load_guado_skip()
         SkipAttempts += 1
         guadoSkipStatus = area.guadosalam.guado_skip()
         if guadoSkipStatus:
@@ -96,10 +97,10 @@ while attempts < 20 and cycles < 50:
         print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
-        loadGame.load_save_num(97)
-        loadGame.load_mac_temple()
+        load_game.load_save_num(97)
+        load_game.load_mac_temple()
         SkipAttempts += 1
-        jyscalSkipStatus = area.mTemple.arrival()
+        jyscalSkipStatus = area.mac_temple.arrival()
         if jyscalSkipStatus:
             SkipCount += 1
         print("------------------------------")
@@ -111,9 +112,9 @@ while attempts < 20 and cycles < 50:
     elif attempts == 5:
         print("###  Just for fun - Chocobo Eater Stomp")
         print("###  Please engage the CSR now!")
-        loadGame.load_save_num(28)
-        Showcase.chocoEater.engage()
-        Showcase.chocoEater.battle()
+        load_game.load_save_num(28)
+        showcase.choco_eater.engage()
+        showcase.choco_eater.battle()
     else:  # Breaks the loop when everything is complete.
         attempts = 100
 

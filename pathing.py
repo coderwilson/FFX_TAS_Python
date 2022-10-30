@@ -5594,6 +5594,7 @@ def kelk_ronso(checkpoint):
         y = 550
     return [x, y]
 
+
 def gagazet_nea_loop_back(checkpoint):
     x = 999
     y = 999
@@ -5633,7 +5634,7 @@ def gagazet_nea_loop_back(checkpoint):
     if checkpoint == 11:
         x = -168
         y = -645
-    if checkpoint == 12: #Transition to previous map
+    if checkpoint == 12:  # Transition to previous map
         x = -190
         y = -800
     if checkpoint == 13:
@@ -5652,6 +5653,7 @@ def gagazet_nea_loop_back(checkpoint):
         x = 7
         y = 94
     return [x, y]
+
 
 def gagazet_snow(checkpoint):
     x = 999

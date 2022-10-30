@@ -108,7 +108,7 @@ def drop_ability_list(enemy: str = "ghost", equip_type: int = 0):
 
 
 def early_battle_count():
-    with open("csv\\Seed_Battle_Variance.csv", "r", newline="") as csvFile:
+    with open("csv\\seed_battle_variance.csv", "r", newline="") as csvFile:
         reader = csv.DictReader(csvFile)
         for row in reader:
             if int(row["Seed"]) == memory.main.rng_seed():

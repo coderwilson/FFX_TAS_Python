@@ -3,7 +3,7 @@ import math
 import battle.main
 import memory.main
 import menu
-import targetPathing
+import pathing
 import vars
 import xbox
 
@@ -130,7 +130,7 @@ def desert():
                 if teleSlot == 255 or teleCount == memory.main.get_item_count_slot(
                     teleSlot
                 ):
-                    targetPathing.set_movement([-44, 446])
+                    pathing.set_movement([-44, 446])
                     xbox.tap_b()
                 else:
                     checkpoint += 1
@@ -169,7 +169,7 @@ def desert():
 
             # General pathing
             elif memory.main.user_control():
-                if targetPathing.set_movement(targetPathing.desert(checkpoint)):
+                if pathing.set_movement(pathing.desert(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
@@ -309,7 +309,7 @@ def find_summoners():
             elif checkpoint == 45:
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
-            elif targetPathing.set_movement(targetPathing.home(checkpoint)):
+            elif pathing.set_movement(pathing.home(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

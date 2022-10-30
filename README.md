@@ -66,7 +66,7 @@ It's possible to congigure parameters for the TAS. There are a lot of parameters
 
 One of the possible configuration options is to start in the middle of a run using a FFX save. Set the `GameState` and `step_counter` values in `config.yaml`, please refer to the comments near the top of `main.py` for valid checkpoints.
 
-In order for checkpoint saves to work, the saves in `TAS Saves` must be installed correctly. Please ask in the Discord how to do this, as it currently requires a few steps beyond just copying the files.
+In order for checkpoint saves to work, the saves in `tas_saves` must be installed correctly. Please ask in the Discord how to do this, as it currently requires a few steps beyond just copying the files.
 
 ## Starting a run
 
