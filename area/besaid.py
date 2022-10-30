@@ -2,8 +2,8 @@ import battle.main
 import logs
 import memory.main
 import menu
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -63,7 +63,7 @@ def beach():
                 checkpoint += 1
             elif checkpoint == 44:  # Talk to Wakka
                 while memory.main.user_control():
-                    targetPathing.set_movement([15, 16])
+                    pathing.set_movement([15, 16])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
@@ -74,7 +74,7 @@ def beach():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.besaid_1(checkpoint)):
+            elif pathing.set_movement(pathing.besaid_1(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -114,21 +114,21 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 20:  # Touch the hidden door glyph
                 while memory.main.user_control():
-                    targetPathing.set_movement([-13, -33])
+                    pathing.set_movement([-13, -33])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 23:  # Second Besaid sphere
                 while memory.main.user_control():
-                    targetPathing.set_movement([-14, 31])
+                    pathing.set_movement([-14, 31])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 26:  # Insert Besaid sphere, and push to completion
                 while memory.main.user_control():
-                    targetPathing.set_movement([-13, -60])
+                    pathing.set_movement([-13, -60])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
@@ -158,7 +158,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.besaid_trials(checkpoint)):
+            elif pathing.set_movement(pathing.besaid_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -192,7 +192,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 5:  # Shopkeeper
                 while memory.main.user_control():
-                    targetPathing.set_movement([1, 15])
+                    pathing.set_movement([1, 15])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 while memory.main.shop_menu_dialogue_row() != 1:
@@ -257,7 +257,7 @@ def leaving():
                 checkpoint -= 2
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.besaid_2(checkpoint)):
+            elif pathing.set_movement(pathing.besaid_2(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

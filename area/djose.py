@@ -2,7 +2,7 @@ import battle.main
 import logs
 import memory.main
 import menu
-import targetPathing
+import pathing
 import vars
 import xbox
 
@@ -65,21 +65,21 @@ def path():
                     memory.main.click_to_event_temple(0)
                     checkpoint += 1
                 elif (
-                    targetPathing.djose_path(checkpoint)[0]
+                    pathing.djose_path(checkpoint)[0]
                     < memory.main.get_actor_coords(0)[0]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 elif (
-                    targetPathing.djose_path(checkpoint)[1]
+                    pathing.djose_path(checkpoint)[1]
                     < memory.main.get_actor_coords(0)[1]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 # General pathing
-                elif targetPathing.set_movement(targetPathing.djose_path(checkpoint)):
+                elif pathing.set_movement(pathing.djose_path(checkpoint)):
                     checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -117,7 +117,7 @@ def temple():
             memory.main.click_to_event_temple(0)
             checkpoint += 1
         elif memory.main.user_control():
-            if targetPathing.set_movement(target[checkpoint]):
+            if pathing.set_movement(target[checkpoint]):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -240,7 +240,7 @@ def trials():
             elif checkpoint == 58:
                 print("Left sphere")
                 while memory.main.user_control():
-                    targetPathing.set_movement([-5, 24])
+                    pathing.set_movement([-5, 24])
                     memory.main.wait_frames(3)
                     FFXC.set_neutral()
                     memory.main.wait_frames(3)
@@ -255,7 +255,7 @@ def trials():
             elif checkpoint == 68:
                 print("Right sphere")
                 while memory.main.user_control():
-                    targetPathing.set_movement([5, 24])
+                    pathing.set_movement([5, 24])
                     memory.main.wait_frames(3)
                     FFXC.set_neutral()
                     memory.main.wait_frames(3)
@@ -273,7 +273,7 @@ def trials():
             elif checkpoint == 80:
                 print("Destruction Glyph")
                 while memory.main.user_control():
-                    targetPathing.set_movement([-58, 38])
+                    pathing.set_movement([-58, 38])
                     memory.main.wait_frames(3)
                     FFXC.set_neutral()
                     memory.main.wait_frames(4)
@@ -288,7 +288,7 @@ def trials():
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 85:  # Lift
-                if targetPathing.set_movement([0, 30]):
+                if pathing.set_movement([0, 30]):
                     FFXC.set_neutral()
                     memory.main.wait_frames(30 * 0.2)
                     checkpoint += 1
@@ -327,7 +327,7 @@ def trials():
                 else:
                     memory.main.click_to_event_temple(7)
                 checkpoint += 1
-            elif targetPathing.set_movement(targetPathing.djose_trials(checkpoint)):
+            elif pathing.set_movement(pathing.djose_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -345,7 +345,7 @@ def trials():
         # Dance
         checkpoint = 0
         while memory.main.user_control():
-            if targetPathing.set_movement(targetPathing.djose_dance(checkpoint)):
+            if pathing.set_movement(pathing.djose_dance(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -397,12 +397,12 @@ def leaving_djose():
                 checkpoint += 1
             elif checkpoint == 36:
                 while memory.main.user_control():
-                    targetPathing.set_movement([-18, 35])
+                    pathing.set_movement([-18, 35])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
                 checkpoint = 13
-            elif targetPathing.set_movement(targetPathing.djose_exit(checkpoint)):
+            elif pathing.set_movement(pathing.djose_exit(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()

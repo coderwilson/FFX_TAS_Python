@@ -2,8 +2,8 @@ import battle.main
 import logs
 import memory.main
 import menu
-import rngTrack
-import targetPathing
+import pathing
+import rng_track
 import vars
 import xbox
 
@@ -11,16 +11,17 @@ game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
-def loop_back_from_ronso(checkpoint = 0):
+
+def loop_back_from_ronso(checkpoint=0):
     memory.main.full_party_format("rikku")
     battle.main.heal_up(full_menu_close=True)
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     print("Looping back to the Ronso")
     while checkpoint != 18:
         if memory.main.user_control():
             if checkpoint < 13 and memory.main.get_map() == 279:
                 checkpoint = 13
-            elif targetPathing.set_movement(targetPathing.gagazet_nea_loop_back(checkpoint)):
+            elif pathing.set_movement(pathing.gagazet_nea_loop_back(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -28,10 +29,11 @@ def loop_back_from_ronso(checkpoint = 0):
             if memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
 
+
 def to_hidden_cave():
     memory.main.full_party_format("rikku")
     battle.main.heal_up(full_menu_close=True)
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     lastReport = False
     firstSave = False
     checkpoint = 0
@@ -43,7 +45,7 @@ def to_hidden_cave():
             if checkpoint == 7 and not firstSave:
                 memory.main.touch_save_sphere()
                 firstSave = True
-            _, nextDrop = rngTrack.nea_track()
+            _, nextDrop = rng_track.nea_track()
             if checkpoint == 8 and (
                 nextDrop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
@@ -62,16 +64,16 @@ def to_hidden_cave():
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
-            elif targetPathing.set_movement(targetPathing.ne_approach(checkpoint)):
+            elif pathing.set_movement(pathing.ne_approach(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                _, nextDrop = rngTrack.nea_track()
+                _, nextDrop = rng_track.nea_track()
                 lastReport = False
                 print("### Starting manip battle")
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
                 memory.main.wait_frames(2)
                 if nextDrop >= 1:
                     if memory.main.next_chance_rng_10() != 0:
@@ -88,7 +90,7 @@ def to_hidden_cave():
                 prepBattles += 1
                 memory.main.full_party_format("rikku")
                 memory.main.touch_save_sphere()
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
     logs.write_stats("NEA extra manip battles:")
@@ -112,7 +114,7 @@ def drop_hunt():
 
     goGreen = next_green()
 
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     checkpoint = 0
     preGhostBattles = 0
     while game_vars.ne_armor() == 255:
@@ -120,15 +122,13 @@ def drop_hunt():
             if goGreen:
                 if checkpoint == 15:
                     checkpoint -= 2
-                elif targetPathing.set_movement(
-                    targetPathing.ne_force_encounters_green(checkpoint)
+                elif pathing.set_movement(
+                    pathing.ne_force_encounters_green(checkpoint)
                 ):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             else:
-                if targetPathing.set_movement(
-                    targetPathing.ne_force_encounters_white(checkpoint)
-                ):
+                if pathing.set_movement(pathing.ne_force_encounters_white(checkpoint)):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not goGreen:
                         checkpoint = 0
@@ -177,9 +177,7 @@ def return_to_gagazet():
                 if checkpoint == 10:
                     goGreen = False
                     checkpoint = 0
-                elif targetPathing.set_movement(
-                    targetPathing.ne_return_green(checkpoint)
-                ):
+                elif pathing.set_movement(pathing.ne_return_green(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             elif checkpoint < 1 and memory.main.get_map() == 266:
@@ -192,7 +190,7 @@ def return_to_gagazet():
                 checkpoint += 1
             elif checkpoint < 7 and memory.main.get_map() == 279:
                 checkpoint = 7
-            elif targetPathing.set_movement(targetPathing.ne_return(checkpoint)):
+            elif pathing.set_movement(pathing.ne_return(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

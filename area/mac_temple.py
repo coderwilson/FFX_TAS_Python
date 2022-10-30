@@ -2,8 +2,8 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -27,9 +27,7 @@ def approach(do_grid=True):
                 checkpoint = 2
 
             # General pathing
-            elif targetPathing.set_movement(
-                targetPathing.m_temple_approach(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.m_temple_approach(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -140,7 +138,7 @@ def arrival():
                 checkpoint = 12
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.temple_foyer(checkpoint)):
+            elif pathing.set_movement(pathing.temple_foyer(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -152,7 +150,7 @@ def arrival():
 
 def start_seymour_fight():
     memory.main.click_to_control()
-    while not targetPathing.set_movement([9, -53]):
+    while not pathing.set_movement([9, -53]):
         pass  # Allows us to move to the Seymour fight.
     FFXC.set_movement(1, 0)
     memory.main.await_event()
@@ -240,7 +238,7 @@ def trials():
                 memory.main.click_to_event_temple(4)
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.m_temple_trials(checkpoint)):
+            elif pathing.set_movement(pathing.m_temple_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -279,7 +277,7 @@ def escape():
                 print("Map change. Update checkpoint:", checkpoint)
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.m_temple_escape(checkpoint)):
+            elif pathing.set_movement(pathing.m_temple_escape(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -329,14 +327,14 @@ def under_lake():
                 checkpoint += 1
             elif checkpoint == 15:
                 while memory.main.user_control():
-                    targetPathing.set_movement([-4, -8])
+                    pathing.set_movement([-4, -8])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.under_mac_temple(checkpoint)):
+            elif pathing.set_movement(pathing.under_mac_temple(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

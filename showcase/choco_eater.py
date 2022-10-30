@@ -1,5 +1,5 @@
 import memory.main
-import targetPathing
+import pathing
 import xbox
 
 FFXC = xbox.controller_handle()
@@ -25,7 +25,7 @@ def engage():
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif targetPathing.set_movement(targetPathing.miihen_agency(checkpoint)):
+            elif pathing.set_movement(pathing.miihen_agency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

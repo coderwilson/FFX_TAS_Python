@@ -2,12 +2,12 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
-import rngTrack
+import pathing
+import rng_track
 import screen
-import targetPathing
 import vars
 import xbox
-import zzairShipPath
+import zz_airship_path
 
 game_vars = vars.vars_handle()
 
@@ -36,7 +36,7 @@ def pre_evrae():
                 memory.main.click_to_event_temple(4)
                 checkpoint += 1
 
-            elif targetPathing.set_movement(targetPathing.rescue_airship(checkpoint)):
+            elif pathing.set_movement(pathing.rescue_airship(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -44,7 +44,7 @@ def pre_evrae():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    zzairShipPath.air_ship_path(1)
+    zz_airship_path.air_ship_path(1)
 
 
 def guards():
@@ -74,11 +74,11 @@ def guards():
             if memory.main.get_map() == 180:
                 memory.main.click_to_event_temple(6)  # Take the spiral lift down
             elif memory.main.get_map() == 181:
-                while not targetPathing.set_movement([-110, 0]):
+                while not pathing.set_movement([-110, 0]):
                     pass
                 memory.main.click_to_event_temple(0)  # Through the water door
             else:
-                targetPathing.set_movement([0, -200])
+                pathing.set_movement([0, -200])
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -110,9 +110,7 @@ def guards():
             if checkpoint < 2 and memory.main.get_map() == 182:
                 checkpoint = 2
             # General pathing
-            elif targetPathing.set_movement(
-                targetPathing.bevelle_pre_trials(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.bevelle_pre_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -291,7 +289,7 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 32:  # Insert Glyph sphere
                 while memory.main.user_control():
-                    targetPathing.set_movement([450, 525])
+                    pathing.set_movement([450, 525])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
@@ -405,7 +403,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.bevelle_trials(checkpoint)):
+            elif pathing.set_movement(pathing.bevelle_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -421,7 +419,7 @@ def trials_end():
     checkpoint = 53
     while memory.main.get_map() != 226:
         if memory.main.user_control():
-            if targetPathing.set_movement(targetPathing.bevelle_trials(checkpoint)):
+            if pathing.set_movement(pathing.bevelle_trials(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         elif memory.main.diag_skip_possible():
@@ -535,7 +533,7 @@ def evrae_altana():
                     FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.evrae_altana()
-            rngTrack.print_manip_info()
+            rng_track.print_manip_info()
         elif screen.battle_complete():
             xbox.menu_b()
         else:
@@ -559,7 +557,7 @@ def seymour_natus():
     complete = 0
     while complete == 0:
         if memory.main.user_control():
-            targetPathing.set_movement([2, memory.main.get_coords()[1] - 50])
+            pathing.set_movement([2, memory.main.get_coords()[1] - 50])
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -574,7 +572,7 @@ def seymour_natus():
                         menu.seymour_natus_blitz_win()
                     else:
                         menu.seymour_natus_blitz_loss()
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
 
     # Movement for make-out scene
     memory.main.click_to_control()
@@ -607,7 +605,7 @@ def seymour_natus():
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
-            elif targetPathing.set_movement(targetPathing.suteki_da_ne(checkpoint)):
+            elif pathing.set_movement(pathing.suteki_da_ne(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

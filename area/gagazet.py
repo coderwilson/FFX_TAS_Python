@@ -3,9 +3,9 @@ import battle.main
 import logs
 import memory.main
 import menu
-import rngTrack
+import pathing
+import rng_track
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -27,13 +27,14 @@ def check_gems():
     print("Total gems:", gems)
     return gems
 
+
 def calm_lands():
     memory.main.await_control()
     # Start by getting away from the save sphere
     memory.main.full_party_format("rikku", full_menu_close=True)
     battle.main.heal_up(full_menu_close=True)
 
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     print("RNG10:", memory.main.rng_10())
     print("RNG12:", memory.main.rng_12())
     print("RNG13:", memory.main.rng_13())
@@ -49,7 +50,7 @@ def calm_lands():
     checkpoint = 0
     while memory.main.get_map() != 279:
         if memory.main.user_control():
-            if targetPathing.set_movement(targetPathing.calm_lands(checkpoint)):
+            if pathing.set_movement(pathing.calm_lands(checkpoint)):
                 checkpoint += 1
                 if checkpoint == 15:
                     if check_gems() < 2:
@@ -64,17 +65,18 @@ def calm_lands():
                 memory.main.click_to_control_3()
                 memory.main.full_party_format("rikku", full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
 
+
 def defender_x():
     memory.main.await_control()
     menu.prep_calm_lands()
     memory.main.full_party_format("postbunyip")
-    while not targetPathing.set_movement([67, -255]):
+    while not pathing.set_movement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
     memory.main.await_event()
@@ -91,13 +93,14 @@ def defender_x():
                 battle.main.attack("none")
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
+
 
 def to_the_ronso():
     checkpoint = 2
     while memory.main.get_map() != 259:
         if memory.main.user_control():
-            if targetPathing.set_movement(targetPathing.defender_x(checkpoint)):
+            if pathing.set_movement(pathing.defender_x(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -109,7 +112,7 @@ def to_the_ronso():
     checkpoint = 0
     while memory.main.get_map() != 244:
         if memory.main.user_control():
-            if targetPathing.set_movement(targetPathing.kelk_ronso(checkpoint)):
+            if pathing.set_movement(pathing.kelk_ronso(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -120,6 +123,7 @@ def to_the_ronso():
                     return
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+
 
 def gagazet_gates():
     # Should appear on the map just before the Ronso hymn
@@ -144,7 +148,7 @@ def gagazet_gates():
     checkpoint = 0
     while memory.main.get_map() != 285:
         if memory.main.user_control():
-            if targetPathing.set_movement(targetPathing.gagazet_snow(checkpoint)):
+            if pathing.set_movement(pathing.gagazet_snow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -173,6 +177,7 @@ def gagazet_gates():
                 xbox.tap_b()
     print("Should now be on the map with Seymour Flux.")
 
+
 def flux():
     print("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
@@ -190,7 +195,7 @@ def flux():
                 while memory.main.user_control():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-            elif targetPathing.set_movement(targetPathing.flux(checkpoint)):
+            elif pathing.set_movement(pathing.flux(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -212,6 +217,7 @@ def flux():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
         xbox.skip_scene()
+
 
 def dream(checkpoint: int = 0):
     memory.main.click_to_control()
@@ -237,9 +243,7 @@ def dream(checkpoint: int = 0):
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.set_movement(
-                targetPathing.gagazet_dream_seq(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.gagazet_dream_seq(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -252,6 +256,7 @@ def dream(checkpoint: int = 0):
     print("Dream sequence over")
     print("*********")
 
+
 def cave():
     checkpoint = 0
 
@@ -262,9 +267,7 @@ def cave():
                 memory.main.wait_frames(3)
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(6)
-            elif targetPathing.set_movement(
-                targetPathing.gagazet_post_dream(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.gagazet_post_dream(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -374,7 +377,7 @@ def cave():
                 # import rngTrack
                 # zombieResults = rngTrack.zombieTrack(report=True)
                 # logs.writeRNGTrack("Final results:"+str(zombieResults))
-            elif targetPathing.set_movement(targetPathing.gagazet_cave(checkpoint)):
+            elif pathing.set_movement(pathing.gagazet_cave(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -435,6 +438,7 @@ def cave():
     xbox.click_to_battle()
     battle.boss.s_keeper()
 
+
 def wrap_up():
     print("Cave section complete and Sanctuary Keeper is down.")
     print("Now onward to Zanarkand.")
@@ -448,7 +452,7 @@ def wrap_up():
             elif checkpoint == 3:
                 # Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
                 while memory.main.get_story_progress() < 2651:
-                    targetPathing.set_movement([786, -819])
+                    pathing.set_movement([786, -819])
                     xbox.tap_b()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -459,7 +463,7 @@ def wrap_up():
                     checkpoint += 1
                 else:
                     FFXC.set_movement(1, 1)
-            elif targetPathing.set_movement(targetPathing.gagazet_peak(checkpoint)):
+            elif pathing.set_movement(pathing.gagazet_peak(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
