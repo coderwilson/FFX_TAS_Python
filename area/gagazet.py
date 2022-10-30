@@ -27,12 +27,11 @@ def check_gems():
     print("Total gems:", gems)
     return gems
 
-
 def calm_lands():
     memory.main.await_control()
     # Start by getting away from the save sphere
     memory.main.full_party_format("rikku", full_menu_close=True)
-    # battle.main.healUp(fullMenuClose=True)
+    battle.main.heal_up(full_menu_close=True)
 
     rngTrack.print_manip_info()
     print("RNG10:", memory.main.rng_10())
@@ -64,13 +63,12 @@ def calm_lands():
                 battle.main.calm_lands_manip()
                 memory.main.click_to_control_3()
                 memory.main.full_party_format("rikku", full_menu_close=True)
-                # battle.main.healUp(fullMenuClose=True)
+                battle.main.heal_up(full_menu_close=True)
                 rngTrack.print_manip_info()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
-
 
 def defender_x():
     memory.main.await_control()
@@ -95,7 +93,6 @@ def defender_x():
     memory.main.click_to_control()
     rngTrack.print_manip_info()
 
-
 def to_the_ronso():
     checkpoint = 2
     while memory.main.get_map() != 259:
@@ -119,9 +116,10 @@ def to_the_ronso():
             FFXC.set_neutral()
             if memory.main.turn_ready():
                 battle.boss.biran_yenke()
+                if game_vars.ne_armor() == 255:
+                    return
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-
 
 def gagazet_gates():
     # Should appear on the map just before the Ronso hymn
@@ -175,7 +173,6 @@ def gagazet_gates():
                 xbox.tap_b()
     print("Should now be on the map with Seymour Flux.")
 
-
 def flux():
     print("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
@@ -216,7 +213,6 @@ def flux():
                 xbox.tap_b()
         xbox.skip_scene()
 
-
 def dream(checkpoint: int = 0):
     memory.main.click_to_control()
     print("*********")
@@ -255,73 +251,6 @@ def dream(checkpoint: int = 0):
     print("*********")
     print("Dream sequence over")
     print("*********")
-
-
-def dream_old():
-    memory.main.click_to_control()
-    print("*********")
-    print("Dream sequence")
-    print("*********")
-    memory.main.wait_frames(3)
-    pos = memory.main.get_coords()
-    while pos[1] > 180:
-        FFXC.set_movement(0.4, 1)
-        pos = memory.main.get_coords()
-
-    while pos[0] < -1:
-        FFXC.set_movement(0, 1)
-        pos = memory.main.get_coords()
-
-    while pos[1] > 20:
-        FFXC.set_movement(1, 1)
-        pos = memory.main.get_coords()
-    print("Onto the gangway")
-
-    while pos[0] < 235:
-        if pos[1] < -6:
-            FFXC.set_movement(-1, 0)
-        else:
-            FFXC.set_movement(-1, 1)
-        pos = memory.main.get_coords()
-
-    while memory.main.user_control():  # Into the boathouse.
-        FFXC.set_movement(-1, 0)
-    print("Now inside the boathouse.")
-
-    memory.main.await_control()
-    FFXC.set_movement(1, 0)
-    memory.main.wait_frames(30 * 0.7)
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 1)
-    FFXC.set_neutral()  # Start convo with Bahamut child
-    print("First talk with Bahamut child")
-    memory.main.click_to_control()
-
-    if not game_vars.csr():
-        FFXC.set_movement(0, -1)  # End of conversation
-        memory.main.wait_frames(30 * 0.7)
-        FFXC.set_movement(-1, 0)
-        memory.main.wait_frames(30 * 0.7)
-        FFXC.set_movement(0, -1)
-        memory.main.wait_frames(30 * 0.7)
-        FFXC.set_neutral()
-
-        memory.main.click_to_control()
-        pos = memory.main.get_coords()
-        while pos[1] > -20:
-            FFXC.set_movement(1, 0)
-            pos = memory.main.get_coords()
-
-        while pos[0] < 300:
-            FFXC.set_movement(0, 1)
-            pos = memory.main.get_coords()
-        FFXC.set_movement(-1, 0)
-        xbox.skip_dialog(2)
-        FFXC.set_neutral()  # Second/last convo with kid
-        print("Second talk with Bahamut child")
-
-        memory.main.click_to_control()
-
 
 def cave():
     checkpoint = 0
@@ -450,25 +379,30 @@ def cave():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            if checkpoint == 35 and memory.main.diag_progress_flag() == 2:
-                print("Second trial start")
-                memory.main.wait_frames(90)
-                xbox.menu_b()
-                memory.main.wait_frames(45)
-                FFXC.set_value("Dpad", 8)
-                memory.main.wait_frames(45)
-                FFXC.set_neutral()
-                memory.main.click_to_control_dumb()
-                checkpoint += 1
-                print("Second trial is complete")
-            elif checkpoint == 35 and memory.main.diag_progress_flag() == 3:
-                # CSR second trial
-                memory.main.wait_frames(10)
-                FFXC.set_value("Dpad", 8)
-                memory.main.wait_frames(45)
-                FFXC.set_neutral()
-                memory.main.click_to_control()
-                checkpoint += 1
+            if checkpoint == 35:
+                if memory.main.diag_progress_flag() == 2:
+                    print("Second trial start")
+                    memory.main.wait_frames(90)
+                    xbox.menu_b()
+                    memory.main.wait_frames(45)
+                    FFXC.set_value("Dpad", 8)
+                    memory.main.wait_frames(45)
+                    FFXC.set_neutral()
+                    memory.main.click_to_control_dumb()
+                    checkpoint += 1
+                    print("Second trial is complete")
+                elif memory.main.diag_progress_flag() == 3:
+                    # CSR second trial
+                    memory.main.wait_frames(10)
+                    FFXC.set_value("Dpad", 8)
+                    memory.main.wait_frames(45)
+                    FFXC.set_neutral()
+                    memory.main.click_to_control_dumb()
+                    checkpoint += 1
+                elif memory.main.battle_active():
+                    battle.main.flee_all()
+                elif memory.main.diag_skip_possible() or memory.main.menu_open():
+                    xbox.tap_b()
             elif memory.main.battle_active():
                 if memory.main.get_power() < powerNeeded:
                     if memory.main.get_encounter_id() == 351:
@@ -500,7 +434,6 @@ def cave():
 
     xbox.click_to_battle()
     battle.boss.s_keeper()
-
 
 def wrap_up():
     print("Cave section complete and Sanctuary Keeper is down.")

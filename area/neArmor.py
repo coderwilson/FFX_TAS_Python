@@ -11,9 +11,26 @@ game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
+def loop_back_from_ronso(checkpoint = 0):
+    memory.main.full_party_format("rikku")
+    battle.main.heal_up(full_menu_close=True)
+    rngTrack.print_manip_info()
+    print("Looping back to the Ronso")
+    while checkpoint != 18:
+        if memory.main.user_control():
+            if checkpoint < 13 and memory.main.get_map() == 279:
+                checkpoint = 13
+            elif targetPathing.set_movement(targetPathing.gagazet_nea_loop_back(checkpoint)):
+                checkpoint += 1
+                print("Checkpoint reached:", checkpoint)
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible() or memory.main.menu_open():
+                xbox.tap_b()
 
 def to_hidden_cave():
     memory.main.full_party_format("rikku")
+    battle.main.heal_up(full_menu_close=True)
     rngTrack.print_manip_info()
     lastReport = False
     firstSave = False
@@ -23,9 +40,8 @@ def to_hidden_cave():
         if memory.main.user_control():
             if checkpoint < 5 and memory.main.get_map() == 266:
                 checkpoint = 5
-            if checkpoint == 6 and not firstSave:
-                if memory.main.get_tidus_mp() < 8:
-                    memory.main.touch_save_sphere()
+            if checkpoint == 7 and not firstSave:
+                memory.main.touch_save_sphere()
                 firstSave = True
             _, nextDrop = rngTrack.nea_track()
             if checkpoint == 8 and (
@@ -125,15 +141,14 @@ def drop_hunt():
                 else:
                     battle.main.flee_all()
                 memory.main.click_to_control_3()
+                memory.main.full_party_format("rikku")
+                battle.main.heal_up(full_menu_close=False)
                 memory.main.check_nea_armor()
                 if game_vars.ne_armor() == 255:
-                    battle.main.heal_up(full_menu_close=False)
-                    memory.main.full_party_format("rikku")
-                    memory.main.close_menu()
-
                     if next_green() and not goGreen:
                         goGreen = True
                     preGhostBattles += 1
+                memory.main.close_menu()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
     print("The NE armor hunt is complete. Char:", game_vars.ne_armor())
