@@ -21,6 +21,7 @@ import area.rescueYuna
 import area.sin
 import area.thunderPlains
 import area.zanarkand
+import area.neArmor
 import battle.boss
 import battle.main
 import blitz
@@ -70,8 +71,8 @@ if game_vars.nemesis():
 # step_counter = 1 # x27
 # Gamestate = "Moonflow"
 # step_counter = 2 # x2 After Extractor
-Gamestate = "Guadosalam"
-step_counter = 2 # x3 before Guadosalam Skip
+#Gamestate = "Guadosalam"
+#step_counter = 2 # x3 before Guadosalam Skip
 #Gamestate = "Macalania"
 # step_counter = 1 # x9
 # step_counter = 2 # x7
@@ -80,13 +81,13 @@ step_counter = 2 # x3 before Guadosalam Skip
 # Gamestate = "Home"
 # step_counter = 1 # x60
 # step_counter = 2 # x11
-# Gamestate = "rescueYuna"
+#Gamestate = "rescueYuna"
 # step_counter = 1 # x56 First save chance on airship, before any movement.
 # step_counter = 2 # x15
-# step_counter = 4 # x30 Altana
+#step_counter = 4 # x30 Altana (any%) / x12 Altana (nemesis)
 # step_counter = 5 # x42 regular, 67 nemesis
 #Gamestate = "Gagazet"
-# step_counter = 1 # x43
+#step_counter = 1 # x43
 # step_counter = 3 # x138 After B&Y
 #step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
 # step_counter = 10 # Nemesis variant, blitz win logic (not working)
@@ -94,20 +95,18 @@ step_counter = 2 # x3 before Guadosalam Skip
 #Gamestate = "Zanarkand"
 # step_counter = 1 # x99 Campfire
 # step_counter = 4 # x44 Before Yunalesca
-#step_counter = 5 # x48 After Yunalesca
+#step_counter = 5 # x48 After Yunalesca any%, x13 for Nemesis
 # Gamestate = "Sin"
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-step_counter = 1  # NEW GAME!
+#Gamestate = "none"
+#step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
-# Gamestate = "Nem_Farm"
-# step_counter = 2 #Start of Calm Lands (only one each)
-# step_counter = 3
-# step_counter = 6 #First Miihen farm
-# step_counter = 13 #Just before Djose farm
+Gamestate = "Nem_Farm"
+#step_counter = 1 # x14 Inside Sin, right at start of the branching logic.
+step_counter = 13 # x17 Just before Djose farm
 # step_counter = 14 #Just before Thunder Plains farm
 # step_counter = 16 #Just before Bikanel farm
 # step_counter = 18 #Just before Fayth Cave farm
@@ -285,9 +284,9 @@ if Gamestate != "none":
     if Gamestate == "rescueYuna" and step_counter == 2:  # Bevelle trials
         loadGame.load_save_num(15)
     if Gamestate == "rescueYuna" and step_counter == 4:  # Altana
-        loadGame.load_save_num(30)
-        # memory.main.setEncounterRate(setVal=0)
-        # memory.main.setGameSpeed(setVal=1)
+        loadGame.load_save_num(12)
+        #memory.main.setEncounterRate(setVal=0)
+        #memory.main.setGameSpeed(setVal=1)
     # Highbridge before Seymour Natus
     if Gamestate == "rescueYuna" and step_counter == 5:
         loadGame.load_save_num(42)  # Regular
@@ -337,7 +336,7 @@ if Gamestate != "none":
         loadGame.load_save_num(44)
         game_vars.end_game_version_set(4)
     if Gamestate == "Zanarkand" and step_counter == 5:  # After Yunalesca
-        loadGame.load_save_num(48)
+        loadGame.load_save_num(13)
         specialZanLoad = True
     # Save sphere on the Highbridge before talking to Shedinja
     if Gamestate == "Sin" and step_counter == 2:
@@ -364,7 +363,7 @@ if Gamestate != "none":
 
     # Nemesis run loads
     if Gamestate == "Nem_Farm" and step_counter == 1:
-        loadGame.load_save_num(66)
+        loadGame.load_save_num(14)
     if Gamestate == "Nem_Farm" and step_counter == 2:
         loadGame.load_save_num(69)
     if Gamestate == "Nem_Farm" and step_counter == 3:
@@ -383,7 +382,7 @@ if Gamestate != "none":
         loadGame.load_save_num(75)
         game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
     if Gamestate == "Nem_Farm" and step_counter == 13:
-        loadGame.load_save_num(116)
+        loadGame.load_save_num(17)
         game_vars.set_nem_checkpoint_ap(7)  # See nemesis.menu
     if Gamestate == "Nem_Farm" and step_counter == 14:
         loadGame.load_save_num(76)
@@ -807,13 +806,17 @@ while Gamestate != "End":
             report_gamestate()
             area.gagazet.calm_lands()
             area.gagazet.defender_x()
-            step_counter = 2
+            import rngTrack
+            advancePreX, advancePostX = rngTrack.nea_track()
+            if advancePostX in [0,1]:
+                step_counter = 2
+            else:
+                step_counter = 3
 
         if Gamestate == "Gagazet" and step_counter == 2:
             report_gamestate()
             if game_vars.try_for_ne():
                 manipTime1 = logs.time_stamp()
-                import area.neArmor
 
                 print("Mark 1")
                 area.neArmor.to_hidden_cave()
@@ -834,8 +837,12 @@ while Gamestate != "End":
         if Gamestate == "Gagazet" and step_counter == 3:
             report_gamestate()
             area.gagazet.to_the_ronso()
-            area.gagazet.gagazet_gates()
-            step_counter = 4
+            if game_vars.ne_armor() == 255:
+                area.neArmor.loop_back_from_ronso()
+                step_counter = 2
+            else:
+                area.gagazet.gagazet_gates()
+                step_counter = 4
 
         if Gamestate == "Gagazet" and step_counter == 4:
             report_gamestate()

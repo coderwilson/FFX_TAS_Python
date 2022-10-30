@@ -5560,11 +5560,11 @@ def ne_return(checkpoint):
         x = 4
         y = 290
     if checkpoint == 21:  # Through the trigger to Gagazet gates
-        x = 30
-        y = 350
+        x = 17
+        y = 550
     if checkpoint == 22:  # Safety
         x = 100
-        y = 600
+        y = 800
     return [x, y]
 
 
@@ -5594,6 +5594,64 @@ def kelk_ronso(checkpoint):
         y = 550
     return [x, y]
 
+def gagazet_nea_loop_back(checkpoint):
+    x = 999
+    y = 999
+    if checkpoint == 0:
+        x = 33
+        y = 197
+    if checkpoint == 1:
+        x = 22
+        y = -64
+    if checkpoint == 2:
+        x = 18
+        y = -198
+    if checkpoint == 3:
+        x = 24
+        y = -300
+    if checkpoint == 4:
+        x = 11
+        y = -354
+    if checkpoint == 5:
+        x = 5
+        y = -396
+    if checkpoint == 6:
+        x = -7
+        y = -445
+    if checkpoint == 7:
+        x = -33
+        y = -473
+    if checkpoint == 8:
+        x = -78
+        y = -521
+    if checkpoint == 9:
+        x = -111
+        y = -536
+    if checkpoint == 10:
+        x = -140
+        y = -591
+    if checkpoint == 11:
+        x = -168
+        y = -645
+    if checkpoint == 12: #Transition to previous map
+        x = -190
+        y = -800
+    if checkpoint == 13:
+        x = 21
+        y = 366
+    if checkpoint == 14:
+        x = -8
+        y = 238
+    if checkpoint == 15:
+        x = -9
+        y = 190
+    if checkpoint == 16:
+        x = -10
+        y = 108
+    if checkpoint == 17:
+        x = 7
+        y = 94
+    return [x, y]
 
 def gagazet_snow(checkpoint):
     x = 999

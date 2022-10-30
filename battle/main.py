@@ -4773,7 +4773,7 @@ def calm_lands_manip():
     else:
         print("++++ Gems good. NEA manip logic.")
         advancePreX, advancePostX = rngTrack.nea_track()  # returns integers
-        if advancePreX != 0 and advancePostX != 0:  # Non-zero for both
+        if advancePreX not in [0,2] and advancePostX not in [0,2]:  # Non-zero for both
             print("Not lined up for NEA")
             if rng10nextChanceLow == 0 and memory.main.get_encounter_id() in lowArray:
                 advance_rng_12()
@@ -4786,6 +4786,12 @@ def calm_lands_manip():
             else:  # If we can't advance on this battle, try to get the next "mid" level advance.
                 print("Can't drop off of this battle.")
                 advance_rng_10(rng10nextChanceMid)
+        elif advancePostX == 2:  # Lined up for non-drop defender X + drops on B&Y drops.
+            if memory.main.next_chance_rng_10() == 0:
+                advance_rng_10(1)
+                # Don't want to have Defender X drop an item
+            else:
+                flee_all()
         elif advancePostX == 0:  # Lined up for next drop NEA before defender X.
             print("The next equipment to drop will be NEA")
             if memory.main.get_coords()[0] > 1300:
@@ -4800,6 +4806,12 @@ def calm_lands_manip():
                 advance_rng_10(memory.main.next_chance_rng_10_calm())
             else:
                 print("Lined up OK, ready for NEA. Just flee.")
+                flee_all()
+        elif advancePreX == 2:  # Lined up for drops on defender X + B&Y drops.
+            if memory.main.next_chance_rng_10() != 0:
+                advance_rng_10(memory.main.next_chance_rng_10())
+            else:
+                print("Perfectly lined up pre-X + B&Y. Just flee.")
                 flee_all()
         elif advancePreX == 0:
             print("The second equipment drop from now will be NEA.")

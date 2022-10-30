@@ -1596,7 +1596,6 @@ def sell_all(nea=False):
         else:
             sellItem = True
 
-
 def after_flux():
     open_grid(character=0)
 
@@ -1924,8 +1923,8 @@ def remove_all_nea():
                 else:
                     equip_armor(character=i, ability=99)  # Remove equipment
             elif i in [4, 6]:
-                if memory.main.check_ability_armor(ability=0x801D)[i]:
-                    equip_armor(character=i, ability=0x801D)  # Auto-Phoenix
+                if memory.main.check_ability_armor(ability=0x800A)[i]:
+                    equip_armor(character=i, ability=0x800A)  # Auto-Phoenix
                 elif memory.main.check_ability_armor(ability=0x8072, slot_count=4)[i]:
                     equip_armor(character=i, ability=0x8072, slot_count=4)
                 else:

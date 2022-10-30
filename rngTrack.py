@@ -1706,24 +1706,12 @@ def nea_track():
     # If already aligned for NEA, we want X to drop nothing.
     nextItem, preAdvance13 = item_to_be_dropped(enemy="ghost")
     if nextItem.equipment_type() == 1 and nextItem.has_ability(0x801D):
-        # print("/// Already aligned")
         totalAdvancePostX = 0
-    # else:
-    # print("/// Not yet aligned. Looking for more results.")
     while totalAdvancePreX == 999 or totalAdvancePostX == 999 and preAdvance12 < 100:
         preAdvance12 += 4
         nextItem, preAdvance13 = item_to_be_dropped(
             enemy="ghost", pre_advance_12=preAdvance12, pre_advance_13=preAdvance13
         )
-        # print("/// post-13: ", postAdvance13)
-        # preAdvance13 += postAdvance13
-        # print("/// upd-pre13: ", preAdvance13)
-        # print("/// Type: ", nextItem.equipmentType(), " /// Abilities: ", nextItem.abilities(), " /// ", int(preAdvance12 / 4))
-        # if 0x801D in nextItem.abilities():
-        #    print("AAAAAAAAAAAAAAAA")
-        # if 32797 in nextItem.abilities():
-        #    print("BBBBBBBBBBBBBBBB")
-        #    memory.main.waitFrames(300)
         if nextItem.equipment_type() == 1 and 0x801D in nextItem.abilities():
             if totalAdvancePostX == 999:
                 totalAdvancePostX = int(preAdvance12 / 4)

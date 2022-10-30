@@ -53,7 +53,7 @@ class AllVars:
         self.earlyTidusGridVal = False  # Default False
         self.earlyHasteVal = 1  # Default -1
         self.wakkaLateMenuVal = False  # Default False
-        self.endGameVersionVal = 1  # Default 0
+        self.endGameVersionVal = 4  # Default 0
 
         # ----Equipment
         self.zombieWeaponVal = 255  # Default 255
