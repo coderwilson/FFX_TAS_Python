@@ -9,10 +9,10 @@ import area.guadosalam
 import area.home
 import area.kilika
 import area.luca
+import area.mac_temple
 import area.miihen
 import area.moonflow
 import area.MRR
-import area.mTemple
 import area.mWoods
 import area.rescueYuna
 import area.sin

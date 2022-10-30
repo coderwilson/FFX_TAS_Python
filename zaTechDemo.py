@@ -2,9 +2,9 @@ import time
 
 import area.dream_zan
 import area.guadosalam
+import area.mac_temple
 import area.miihen
 import area.MRR
-import area.mTemple
 import loadGame
 import logs
 import memory.main
@@ -99,7 +99,7 @@ while attempts < 20 and cycles < 50:
         loadGame.load_save_num(97)
         loadGame.load_mac_temple()
         SkipAttempts += 1
-        jyscalSkipStatus = area.mTemple.arrival()
+        jyscalSkipStatus = area.mac_temple.arrival()
         if jyscalSkipStatus:
             SkipCount += 1
         print("------------------------------")

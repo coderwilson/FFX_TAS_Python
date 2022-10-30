@@ -12,10 +12,10 @@ import area.guadosalam
 import area.home
 import area.kilika
 import area.luca
+import area.mac_temple
 import area.miihen
 import area.moonflow
 import area.MRR
-import area.mTemple
 import area.mWoods
 import area.neArmor
 import area.rescueYuna
@@ -758,28 +758,28 @@ while Gamestate != "End":
         if Gamestate == "Macalania" and step_counter == 3:
             report_gamestate()
             area.mWoods.lake()
-            area.mTemple.approach()
+            area.mac_temple.approach()
             step_counter = 4
 
         if Gamestate == "Macalania" and step_counter == 4:
             report_gamestate()
-            area.mTemple.arrival()
-            area.mTemple.start_seymour_fight()
-            area.mTemple.seymour_fight()
+            area.mac_temple.arrival()
+            area.mac_temple.start_seymour_fight()
+            area.mac_temple.seymour_fight()
             step_counter = 5
 
         if Gamestate == "Macalania" and step_counter == 5:
             report_gamestate()
-            area.mTemple.trials()
+            area.mac_temple.trials()
             step_counter = 6
 
         if Gamestate == "Macalania" and step_counter == 6:
             report_gamestate()
-            area.mTemple.escape()
+            area.mac_temple.escape()
             step_counter = 7
 
         if Gamestate == "Macalania" and step_counter == 7:
-            area.mTemple.under_lake()
+            area.mac_temple.under_lake()
             step_counter = 1
             Gamestate = "Home"
 
