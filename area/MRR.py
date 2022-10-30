@@ -71,7 +71,7 @@ def arrival():
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle.main.flee_all()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 if memory.main.get_hp()[0] < 520:
                     battle.main.heal_up()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
@@ -217,7 +217,7 @@ def main_path():
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
 
             # Map changes
             elif checkpoint < 47 and memory.main.get_map() == 128:
@@ -314,4 +314,4 @@ def gui_and_aftermath():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            memory.main.click_to_control()
+            memory.main.click_to_control_3()

@@ -14,7 +14,7 @@ FFXC = xbox.controller_handle()
 
 
 def making_plans():
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
@@ -43,7 +43,7 @@ def shedinja():  # shelinda
     while memory.main.map_cursor() != 10:
         print("The destination is the key")
         memory.main.menu_direction(memory.main.map_cursor(), 10, 13)
-    memory.main.click_to_control()
+    memory.main.click_to_control_dumb()
 
     memory.main.await_control()
     print("Moving to Shedinja")
@@ -62,7 +62,7 @@ def shedinja():  # shelinda
 
     memory.main.click_to_diag_progress(74)
     memory.main.click_to_diag_progress(28)
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def exit_cockpit():
@@ -90,7 +90,7 @@ def facing_sin():
     FFXC.set_neutral()
 
     if game_vars.csr():
-        memory.main.click_to_control()
+        memory.main.click_to_control_dumb()
     else:
         # Gets us through the Airship destination menu.
         xbox.skip_dialog(15)

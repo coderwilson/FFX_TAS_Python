@@ -257,14 +257,14 @@ def trials_1(checkpoint):
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.5)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 26 or checkpoint == 28:
                 FFXC.set_movement(-1, -1)
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.5)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 30:
                 FFXC.set_movement(0, 1)
@@ -288,7 +288,7 @@ def trials_2(checkpoint):
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.5)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 48:
                 FFXC.set_movement(-1, 1)
@@ -312,7 +312,7 @@ def trials_3(checkpoint):
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.7)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 68:
                 FFXC.set_movement(-1, 1)
@@ -336,14 +336,14 @@ def trials_4(checkpoint):
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.5)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 87:
                 while memory.main.user_control():
                     targetPathing.set_movement([141, 1])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif targetPathing.set_movement(targetPathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
