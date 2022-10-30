@@ -141,18 +141,14 @@ rngSeedNum = 160  # If you don't randomly select below, this will be the seed yo
 
 # Open the config file and parse game configuration
 # This may overwrite configuration above
-try:
-    config_data = config.open_config()
-    # Gamestate
-    Gamestate = config_data["Gamestate"]
-    step_counter = config_data["step_counter"]
-    # RNG
-    forceBlitzWin = config_data["forceBlitzWin"]
-    seedHunt = config_data["seedHunt"]
-    rngSeedNum = config_data["rngSeedNum"]
-except Exception as E:
-    print("Failed to load configuration: ", E)
-
+config_data = config.open_config()
+# Gamestate
+Gamestate = config_data.get("Gamestate", "none")
+step_counter = config_data.get("step_counter", 1)
+# RNG
+forceBlitzWin = config_data.get("forceBlitzWin", False)
+seedHunt = config_data.get("seedHunt", False)
+rngSeedNum = config_data.get("rngSeedNum", 160)
 
 if Gamestate == "Luca" and step_counter == 3:
     blitzTesting = True
