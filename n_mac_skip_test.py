@@ -10,10 +10,10 @@ import area.home
 import area.kilika
 import area.luca
 import area.mac_temple
+import area.mac_woods
 import area.miihen
 import area.moonflow
 import area.MRR
-import area.mWoods
 import area.rescueYuna
 import area.sin
 import area.thunderPlains

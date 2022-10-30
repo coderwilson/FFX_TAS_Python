@@ -13,10 +13,10 @@ import area.home
 import area.kilika
 import area.luca
 import area.mac_temple
+import area.mac_woods
 import area.miihen
 import area.moonflow
 import area.MRR
-import area.mWoods
 import area.neArmor
 import area.rescueYuna
 import area.sin
@@ -746,18 +746,18 @@ while Gamestate != "End":
 
         if Gamestate == "Macalania" and step_counter == 1:
             report_gamestate()
-            area.mWoods.arrival(False)
+            area.mac_woods.arrival(False)
             step_counter = 2
 
         if Gamestate == "Macalania" and step_counter == 2:
             report_gamestate()
-            area.mWoods.lake_road()
-            area.mWoods.lake_road_2()
+            area.mac_woods.lake_road()
+            area.mac_woods.lake_road_2()
             step_counter = 3
 
         if Gamestate == "Macalania" and step_counter == 3:
             report_gamestate()
-            area.mWoods.lake()
+            area.mac_woods.lake()
             area.mac_temple.approach()
             step_counter = 4
 
