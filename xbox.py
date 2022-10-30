@@ -502,10 +502,7 @@ def click_to_battle():
     while not (memory.main.battle_active() and memory.main.turn_ready()):
         if memory.main.user_control():
             break
-        elif (
-            not memory.main.battle_active()
-            and not memory.main.auditory_dialog_playing()
-        ):
+        elif not memory.main.battle_active() and not memory.main.auditory_dialog_playing():
             tap_b()
         elif memory.main.diag_skip_possible():
             tap_b()

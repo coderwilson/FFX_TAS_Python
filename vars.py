@@ -92,10 +92,7 @@ class AllVars:
         self.originalResults = [0] * 7
 
         # ----Path for save files, used for loading a specific save
-        self.savePath = (
-            os.environ.get("userprofile")
-            + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        )
+        self.savePath = os.environ.get("userprofile") + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
 
     def accessibilityVars(self):
         return [
