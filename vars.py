@@ -1,5 +1,7 @@
 import os
+
 import config
+
 
 class AllVars:
     def __init__(self):
@@ -9,77 +11,89 @@ class AllVars:
         # Open the config file
         config_data = config.open_config()
         # All relevant vars are stored in a dictionary
-        config_vars = config_data.get('vars', {})
+        config_vars = config_data.get("vars", {})
 
         # === Important Values ===
         # Set depending on hardware. True = less powerful hardware.
-        self.artificialPauses   = config_vars.get('artificialPauses', False)
+        self.artificialPauses = config_vars.get("artificialPauses", False)
         # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.csrValue           = config_vars.get('csrValue', True)
+        self.csrValue = config_vars.get("csrValue", True)
         # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesisValue       = config_vars.get('nemesisValue', False)
+        self.nemesisValue = config_vars.get("nemesisValue", False)
         # After game is finished, start again on next seed.
-        self.forceLoop          = config_vars.get('forceLoop', False)
+        self.forceLoop = config_vars.get("forceLoop", False)
         # Loop on the same seed immediately after Blitzball.
-        self.blitzLoop          = config_vars.get('blitzLoop', False)
+        self.blitzLoop = config_vars.get("blitzLoop", False)
         # True = reset after blitz loss
-        self.blitzLossForceReset = config_vars.get('blitzLossForceReset', True)
+        self.blitzLossForceReset = config_vars.get("blitzLossForceReset", True)
         # If you are using Rossy's patch, set to True. Otherwise set to False
-        self.setSeed            = config_vars.get('setSeed', False)
+        self.setSeed = config_vars.get("setSeed", False)
         # True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.kilikaSkip         = config_vars.get('kilikaSkip', True)
+        self.kilikaSkip = config_vars.get("kilikaSkip", True)
         # Before YuYevon, True is slower but more swag.
-        self.perfectAeonKills   = config_vars.get('perfectAeonKills', False)
+        self.perfectAeonKills = config_vars.get("perfectAeonKills", False)
         # Try Djose skip? (not likely to succeed)
-        self.attemptDjose       = config_vars.get('attemptDjose', False)
+        self.attemptDjose = config_vars.get("attemptDjose", False)
         # use the original Soundtrack instead of arranged
-        self.legacySoundtrack   = config_vars.get('legacySoundtrack', True)
-        self.doNotSkipCutscenes = config_vars.get('doNotSkipCutscenes', False)
+        self.legacySoundtrack = config_vars.get("legacySoundtrack", True)
+        self.doNotSkipCutscenes = config_vars.get("doNotSkipCutscenes", False)
 
         # ----Accessibility for blind
-        self.skip_cutscene_flag = config_vars.get('skip_cutscene_flag', True)
-        self.skip_diag_flag     = config_vars.get('skip_diag_flag', True)
-        self.play_TTS_flag      = config_vars.get('play_TTS_flag', False)
-        self.rails_trials       = config_vars.get('rails_trials', True)
-        self.rails_egg_hunt     = config_vars.get('rails_egg_hunt', True)
+        self.skip_cutscene_flag = config_vars.get("skip_cutscene_flag", True)
+        self.skip_diag_flag = config_vars.get("skip_diag_flag", True)
+        self.play_TTS_flag = config_vars.get("play_TTS_flag", False)
+        self.rails_trials = config_vars.get("rails_trials", True)
+        self.rails_egg_hunt = config_vars.get("rails_egg_hunt", True)
 
         # ----Blitzball
-        self.blitzWinValue      = config_vars.get('blitzWinValue', True)        # No default value required
-        self.blitzOvertime      = config_vars.get('blitzOvertime', False)       # Set to False, no need to change ever.
-        self.blitzFirstShotVal  = config_vars.get('blitzFirstShotVal', False)
-        self.oblitzAttackVal    = config_vars.get('oblitzAttackVal', "255")     # Used for RNG manip tracking
+        self.blitzWinValue = config_vars.get(
+            "blitzWinValue", True
+        )  # No default value required
+        self.blitzOvertime = config_vars.get(
+            "blitzOvertime", False
+        )  # Set to False, no need to change ever.
+        self.blitzFirstShotVal = config_vars.get("blitzFirstShotVal", False)
+        self.oblitzAttackVal = config_vars.get(
+            "oblitzAttackVal", "255"
+        )  # Used for RNG manip tracking
 
         # ----Sphere grid
-        self.fullKilikMenu      = config_vars.get('fullKilikMenu', False)       # Default to False
-        self.earlyTidusGridVal  = config_vars.get('earlyTidusGridVal', False)   # Default False
-        self.earlyHasteVal      = config_vars.get('earlyHasteVal', 1)           # Default -1
-        self.wakkaLateMenuVal   = config_vars.get('wakkaLateMenuVal', False)    # Default False
-        self.endGameVersionVal  = config_vars.get('endGameVersionVal', 1)       # Default 0
+        self.fullKilikMenu = config_vars.get("fullKilikMenu", False)  # Default to False
+        self.earlyTidusGridVal = config_vars.get(
+            "earlyTidusGridVal", False
+        )  # Default False
+        self.earlyHasteVal = config_vars.get("earlyHasteVal", 1)  # Default -1
+        self.wakkaLateMenuVal = config_vars.get(
+            "wakkaLateMenuVal", False
+        )  # Default False
+        self.endGameVersionVal = config_vars.get("endGameVersionVal", 1)  # Default 0
 
         # ----Equipment
-        self.zombieWeaponVal    = config_vars.get('zombieWeaponVal', 255)       # Default 255
-        self.lStrikeCount       = config_vars.get('lStrikeCount', 1)            # Default 0
+        self.zombieWeaponVal = config_vars.get("zombieWeaponVal", 255)  # Default 255
+        self.lStrikeCount = config_vars.get("lStrikeCount", 1)  # Default 0
 
         # ----RNG Manip
-        self.yellows            = config_vars.get('yellows', 0)                 # ?
-        self.confirmedSeedNum   = config_vars.get('confirmedSeedNum', 999)      # ?
-        self.skipZanLuck        = config_vars.get('skipZanLuck', False)         # ?
+        self.yellows = config_vars.get("yellows", 0)  # ?
+        self.confirmedSeedNum = config_vars.get("confirmedSeedNum", 999)  # ?
+        self.skipZanLuck = config_vars.get("skipZanLuck", False)  # ?
 
         # ----Other
-        self.newGame            = config_vars.get('newGame', False)             # ?
-        self.selfDestruct       = config_vars.get('selfDestruct', False)        # Default False
-        self.YTKFarm            = config_vars.get('YTKFarm', 0)                 # Default to 0
-        self.rescueCount        = config_vars.get('rescueCount', 0)             # Default to 0
-        self.fluxOverkillVar    = config_vars.get('fluxOverkillVar', False)     # Default to False
-        self.tryNEVal           = config_vars.get('tryNEVal', True)             # Based on
-        self.neArmorVal         = config_vars.get('neArmorVal', 255)            # Default 255
-        self.neBattles          = config_vars.get('neBattles', 0)               # Default to 0
+        self.newGame = config_vars.get("newGame", False)  # ?
+        self.selfDestruct = config_vars.get("selfDestruct", False)  # Default False
+        self.YTKFarm = config_vars.get("YTKFarm", 0)  # Default to 0
+        self.rescueCount = config_vars.get("rescueCount", 0)  # Default to 0
+        self.fluxOverkillVar = config_vars.get(
+            "fluxOverkillVar", False
+        )  # Default to False
+        self.tryNEVal = config_vars.get("tryNEVal", True)  # Based on
+        self.neArmorVal = config_vars.get("neArmorVal", 255)  # Default 255
+        self.neBattles = config_vars.get("neBattles", 0)  # Default to 0
         # Decides in which zone we charge Rikku OD after reaching Zanarkand.
-        self.neaZone            = config_vars.get('neaZone', 0)
+        self.neaZone = config_vars.get("neaZone", 0)
 
         # ----Nemesis variables, unused in any%
-        self.nemAPVal           = config_vars.get('nemAPVal', 1)                # Default to 1
-        self.yojimboIndex       = config_vars.get('yojimboIndex', 1)
+        self.nemAPVal = config_vars.get("nemAPVal", 1)  # Default to 1
+        self.yojimboIndex = config_vars.get("yojimboIndex", 1)
 
         # ===================================================================
         # Can't set these particular fields with this syntax in the yaml file
@@ -92,7 +106,10 @@ class AllVars:
         self.originalResults = [0] * 7
 
         # ----Path for save files, used for loading a specific save
-        self.savePath = os.environ.get("userprofile") + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        self.savePath = (
+            os.environ.get("userprofile")
+            + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+        )
 
     def accessibilityVars(self):
         return [
@@ -100,7 +117,7 @@ class AllVars:
             self.skip_diag_flag,
             self.play_TTS_flag,
             self.rails_trials,
-            self.rails_egg_hunt
+            self.rails_egg_hunt,
         ]
 
     def useLegacySoundtrack(self):
