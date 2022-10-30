@@ -5,8 +5,8 @@ import menu
 import pathing
 import vars
 import xbox
+import zz_airship_path
 import zz_egg_hunt_auto
-import zzairShipPath
 
 game_vars = vars.vars_handle()
 
@@ -28,7 +28,7 @@ def making_plans():
             if pathing.set_movement(target[checkpoint]):
                 checkpoint += 1
 
-    zzairShipPath.air_ship_path(2)  # Talk to Yuna/Kimahri
+    zz_airship_path.air_ship_path(2)  # Talk to Yuna/Kimahri
     FFXC.set_neutral()
 
 
@@ -104,7 +104,7 @@ def facing_sin():
         exit_cockpit()
     FFXC.set_neutral()
 
-    zzairShipPath.air_ship_path(3)
+    zz_airship_path.air_ship_path(3)
     battle.main.sin_arms()
     memory.main.click_to_control()
     print("To the deck, talk to Yuna")
@@ -113,7 +113,7 @@ def facing_sin():
     FFXC.set_neutral()
     memory.main.click_to_control()
 
-    zzairShipPath.air_ship_path(4)
+    zz_airship_path.air_ship_path(4)
     FFXC.set_neutral()
     memory.main.click_to_control()
 
@@ -121,7 +121,7 @@ def facing_sin():
     if memory.main.get_map() in [255, 374]:
         exit_cockpit()
     FFXC.set_neutral()
-    zzairShipPath.air_ship_path(5)
+    zz_airship_path.air_ship_path(5)
     battle.main.sin_face()
     print("End of battle with Sin's face.")
 

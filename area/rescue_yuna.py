@@ -7,7 +7,7 @@ import rng_track
 import screen
 import vars
 import xbox
-import zzairShipPath
+import zz_airship_path
 
 game_vars = vars.vars_handle()
 
@@ -44,7 +44,7 @@ def pre_evrae():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    zzairShipPath.air_ship_path(1)
+    zz_airship_path.air_ship_path(1)
 
 
 def guards():

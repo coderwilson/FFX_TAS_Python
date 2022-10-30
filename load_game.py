@@ -7,7 +7,7 @@ import pathing
 import screen
 import vars
 import xbox
-import zzairShipPath
+import zz_airship_path
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
@@ -479,7 +479,7 @@ def load_rescue():
     memory.main.await_control()
     memory.main.full_party_format("evrae")
 
-    zzairShipPath.air_ship_path(1)  # The run from cockpit to the deck
+    zz_airship_path.air_ship_path(1)  # The run from cockpit to the deck
 
 
 def load_bahamut():
