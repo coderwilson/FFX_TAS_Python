@@ -59,9 +59,9 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
   - Open the game launcher and set language, change resolution and set to windowed or borderless mode.
   - Launch the base game (`FFX.exe`). Press `Escape` and go into `System Settings > Key Bindings > Controller` and set the `Talk/Examine/Confirm` option to `A`.
 * Make sure that there are no physical XBox/Playstation controllers connected. This is because the virtual gamepad needs to be controller 1 for the TAS to work.
-* Make sure the correct settings for the run are set in `vars.py`:
-  - Change `self.setSeed = True` to `self.setSeed = False`
-* Make sure the correct GameState for your run is set in `main.py`. For a new game, use `GameState = "none"` and `step_counter = 1`. Comment out any other assignment at the top of `main.py`.
+* Make sure the correct settings for the run are set in `config.yaml`:
+  - Set `setSeed: False` if you are not running a fixed RNG exe file.
+  - Set the correct GameState for your run. For a new game, use `GameState: "none"` and `step_counter: 1`. Other possible assignments can be found in comments near the top of `main.py`.
 
 In order for other starting GameStates to work, the saves in `TAS Saves` must be installed correctly. Please ask in the Discord how to do this, as it requires a few steps beyond just copying the files.
 
