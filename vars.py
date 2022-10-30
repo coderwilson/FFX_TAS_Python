@@ -1,98 +1,107 @@
 import os
+import config
+
 class AllVars:
     def __init__(self):
         self.set_start_vars()
 
     def set_start_vars(self):
-        # ------------------------------
-        # The default values assume starting from the beginning of the game.
-        # If you are starting from a loaded save, you may need to
-        # change one or more of the values below.
-        # ------------------------------
+        # Open the config file
+        try:
+            config_data = config.open_config()
+            # All relevant vars are stored in a dictionary
+            config_vars = config_data['vars']
 
-        # === Important Values ===
-        # Set depending on hardware. True = less powerful hardware.
-        self.artificialPauses = False
-        # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.csrValue = True
-        # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesisValue = True
-        # After game is finished, start again on next seed.
-        self.forceLoop = False
-        # Loop on the same seed immediately after Blitzball.
-        self.blitzLoop = False
-        # True = reset after blitz loss
-        self.blitzLossForceReset = True
-        # If you are using Rossy's patch, set to True. Otherwise set to False
-        self.setSeed = True
-        # True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.kilikaSkip = True
-        # Before YuYevon, True is slower but more swag.
-        self.perfectAeonKills = False
-        # Try Djose skip? (not likely to succeed)
-        self.attemptDjose = False
-        # use the original Soundtrack instead of arranged
-        self.legacySoundtrack = True
-        self.doNotSkipCutscenes = False
+            # === Important Values ===
+            # Set depending on hardware. True = less powerful hardware.
+            self.artificialPauses   = config_vars['artificialPauses']
+            # Set automatically on new game. For testing (loading a save file) set for your environment.
+            self.csrValue           = config_vars['csrValue']
+            # Set based on if you're doing any% (False) or Nemesis% (True)
+            self.nemesisValue       = config_vars['nemesisValue']
+            # After game is finished, start again on next seed.
+            self.forceLoop          = config_vars['forceLoop']
+            # Loop on the same seed immediately after Blitzball.
+            self.blitzLoop          = config_vars['blitzLoop']
+            # True = reset after blitz loss
+            self.blitzLossForceReset = config_vars['blitzLossForceReset']
+            # If you are using Rossy's patch, set to True. Otherwise set to False
+            self.setSeed            = config_vars['setSeed']
+            # True == Tidus OD on Evrae instead of Seymour. New strat.
+            self.kilikaSkip         = config_vars['kilikaSkip']
+            # Before YuYevon, True is slower but more swag.
+            self.perfectAeonKills   = config_vars['perfectAeonKills']
+            # Try Djose skip? (not likely to succeed)
+            self.attemptDjose       = config_vars['attemptDjose']
+            # use the original Soundtrack instead of arranged
+            self.legacySoundtrack   = config_vars['legacySoundtrack']
+            self.doNotSkipCutscenes = config_vars['doNotSkipCutscenes']
 
-        # ----Accessibility for blind
-        self.skip_cutscene_flag = True
-        self.skip_diag_flag = self.skip_cutscene_flag
-        self.play_TTS_flag = False
-        self.rails_trials = True
-        self.rails_egg_hunt = True
+            # ----Accessibility for blind
+            self.skip_cutscene_flag = config_vars['skip_cutscene_flag']
+            self.skip_diag_flag     = config_vars['skip_diag_flag']
+            self.play_TTS_flag      = config_vars['play_TTS_flag']
+            self.rails_trials       = config_vars['rails_trials']
+            self.rails_egg_hunt     = config_vars['rails_egg_hunt']
 
-        # ----Blitzball
-        self.blitzWinValue = True  # No default value required
-        self.blitzOvertime = False  # Set to False, no need to change ever.
-        self.blitzFirstShotVal = False
-        self.oblitzAttackVal = "255"  # Used for RNG manip tracking
+            # ----Blitzball
+            self.blitzWinValue      = config_vars['blitzWinValue']  # No default value required
+            self.blitzOvertime      = config_vars['blitzOvertime']  # Set to False, no need to change ever.
+            self.blitzFirstShotVal  = config_vars['blitzFirstShotVal']
+            self.oblitzAttackVal    = config_vars['oblitzAttackVal']  # Used for RNG manip tracking
 
-        # ----Sphere grid
-        self.fullKilikMenu = False  # Default to False
-        self.earlyTidusGridVal = False  # Default False
-        self.earlyHasteVal = 1  # Default -1
-        self.wakkaLateMenuVal = False  # Default False
-        self.endGameVersionVal = 4  # Default 0
+            # ----Sphere grid
+            self.fullKilikMenu      = config_vars['fullKilikMenu']  # Default to False
+            self.earlyTidusGridVal  = config_vars['earlyTidusGridVal']  # Default False
+            self.earlyHasteVal      = config_vars['earlyHasteVal']  # Default -1
+            self.wakkaLateMenuVal   = config_vars['wakkaLateMenuVal']  # Default False
+            self.endGameVersionVal  = config_vars['endGameVersionVal']  # Default 0
 
-        # ----Equipment
-        self.zombieWeaponVal = 255  # Default 255
-        self.lStrikeCount = 1  # Default 0
+            # ----Equipment
+            self.zombieWeaponVal    = config_vars['zombieWeaponVal']  # Default 255
+            self.lStrikeCount       = config_vars['lStrikeCount']  # Default 0
 
-        # ----RNG Manip
-        self.yellows = 0  # ?
-        self.confirmedSeedNum = 999  # ?
-        self.skipZanLuck = False  # ?
+            # ----RNG Manip
+            self.yellows            = config_vars['yellows']  # ?
+            self.confirmedSeedNum   = config_vars['confirmedSeedNum']  # ?
+            self.skipZanLuck        = config_vars['skipZanLuck']  # ?
 
-        # ----Other
-        self.newGame = False  # ?
-        self.selfDestruct = False  # Default False
-        self.YTKFarm = 0  # Default to 0
-        self.rescueCount = 0  # Default to 0
-        self.fluxOverkillVar = False  # Default to False
-        self.tryNEVal = True  # Based on
+            # ----Other
+            self.newGame            = config_vars['newGame']  # ?
+            self.selfDestruct       = config_vars['selfDestruct']  # Default False
+            self.YTKFarm            = config_vars['YTKFarm']  # Default to 0
+            self.rescueCount        = config_vars['rescueCount']  # Default to 0
+            self.fluxOverkillVar    = config_vars['fluxOverkillVar']  # Default to False
+            self.tryNEVal           = config_vars['tryNEVal']  # Based on
+            self.neArmorVal         = config_vars['neArmorVal']  # Default 255
+            self.neBattles          = config_vars['neBattles']  # Default to 0
+            # Decides in which zone we charge Rikku OD after reaching Zanarkand.
+            self.neaZone            = config_vars['neaZone']
+
+            # ----Nemesis variables, unused in any%
+            self.nemAPVal           = config_vars['nemAPVal']  # Default to 1
+            self.yojimboIndex       = config_vars['yojimboIndex']
+        except Exception as E:
+            print("Failed to open configuration: ", E)
+
+        # Can't set these particular fields with this syntax in the yaml file
         self.firstHits = [0] * 8
-        self.neArmorVal = 255  # Default 255
-        self.neBattles = 0  # Default to 0
-        # Decides in which zone we charge Rikku OD after reaching Zanarkand.
-        self.neaZone = 0
-
-        # ----Nemesis variables, unused in any%
-        self.nemAPVal = 1  # Default to 1
+        # Nemesis variables
         self.areaResults = [0] * 13
         self.speciesResults = [0] * 14
         self.originalResults = [0] * 7
-        self.yojimboIndex = 1
 
         # ----Path for save files, used for loading a specific save
         self.savePath = os.environ.get("userprofile") + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
 
     def accessibilityVars(self):
-        retArray = [self.skip_cutscene_flag, self.skip_diag_flag]
-        retArray.append(self.play_TTS_flag)
-        retArray.append(self.rails_trials)
-        retArray.append(self.rails_egg_hunt)
-        return retArray
+        return [
+            self.skip_cutscene_flag,
+            self.skip_diag_flag,
+            self.play_TTS_flag,
+            self.rails_trials,
+            self.rails_egg_hunt
+        ]
 
     def useLegacySoundtrack(self):
         return self.legacySoundtrack
@@ -117,9 +126,9 @@ class AllVars:
         print(array_num, "|", index)
         if array_num == 0:
             self.areaResults[index] = 1
-        if array_num == 1:
+        elif array_num == 1:
             self.speciesResults[index] = 1
-        if array_num == 2:
+        elif array_num == 2:
             self.originalResults[index] = 1
         self.print_arena_status()
 

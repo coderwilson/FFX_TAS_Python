@@ -2,6 +2,8 @@
 import random
 import sys
 
+import config
+
 import area.baaj
 import area.besaid
 import area.boats
@@ -44,6 +46,12 @@ if game_vars.nemesis():
     import nemesis.arenaPrep
     import nemesis.changes
 
+# Set default gamestate
+Gamestate = "none"
+step_counter = 1  # NEW GAME!
+
+# List below is kept as a reference, use config.yaml instead
+
 # Gamestate, "none" for new game, or set to a specific section to start from the first save.
 # See the if statement tree below to determine starting position for Gamestate.
 # These are the popular ones. New Game ('none') is the last one.
@@ -71,8 +79,8 @@ if game_vars.nemesis():
 # step_counter = 1 # x27
 # Gamestate = "Moonflow"
 # step_counter = 2 # x2 After Extractor
-#Gamestate = "Guadosalam"
-#step_counter = 2 # x3 before Guadosalam Skip
+# Gamestate = "Guadosalam"
+# step_counter = 2 # x3 before Guadosalam Skip
 #Gamestate = "Macalania"
 # step_counter = 1 # x9
 # step_counter = 2 # x7
@@ -100,13 +108,13 @@ if game_vars.nemesis():
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#step_counter = 1  # NEW GAME!
+Gamestate = "none"
+step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
-Gamestate = "Nem_Farm"
+#Gamestate = "Nem_Farm"
 #step_counter = 1 # x14 Inside Sin, right at start of the branching logic.
-step_counter = 13 # x17 Just before Djose farm
+#step_counter = 13 # x17 Just before Djose farm
 # step_counter = 14 #Just before Thunder Plains farm
 # step_counter = 16 #Just before Bikanel farm
 # step_counter = 18 #Just before Fayth Cave farm
@@ -114,6 +122,7 @@ step_counter = 13 # x17 Just before Djose farm
 # step_counter = 20 #After Gagazet, before Calm Lands farm
 # step_counter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
 # step_counter = 24 #Final Prep before arena bosses
+
 
 ############################################################################################
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
@@ -130,6 +139,21 @@ rngSeedNum = 160  # If you don't randomly select below, this will be the seed yo
 # Need review on the others
 
 ############################################################################################
+
+# Open the config file and parse game configuration
+# This may overwrite configuration above
+try:
+    config_data     = config.open_config()
+    # Gamestate
+    Gamestate       = config_data['Gamestate']
+    step_counter    = config_data['step_counter']
+    # RNG
+    forceBlitzWin   = config_data['forceBlitzWin']
+    seedHunt        = config_data['seedHunt']
+    rngSeedNum      = config_data['rngSeedNum']
+except Exception as E:
+    print("Failed to load configuration: ", E)
+
 
 if Gamestate == "Luca" and step_counter == 3:
     blitzTesting = True
