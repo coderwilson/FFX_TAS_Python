@@ -41,7 +41,7 @@ FFXC = xbox.controller_handle()
 
 # Speedrun sectional files
 if game_vars.nemesis():
-    import nemesis.arenaBattles
+    import nemesis.arena_battles
     import nemesis.arenaPrep
     import nemesis.changes
 
@@ -1094,36 +1094,36 @@ while Gamestate != "End":
             step_counter = 1
 
         if Gamestate == "Nem_Arena" and step_counter == 1:
-            nemesis.arenaBattles.battles_1()
+            nemesis.arena_battles.battles_1()
             game_vars.print_arena_status()
             step_counter = 2
 
         if Gamestate == "Nem_Arena" and step_counter == 2:
-            nemesis.arenaBattles.battles_2()
+            nemesis.arena_battles.battles_2()
             game_vars.print_arena_status()
             step_counter = 3
 
         if Gamestate == "Nem_Arena" and step_counter == 3:
-            nemesis.arenaBattles.juggernaut_farm()
+            nemesis.arena_battles.juggernaut_farm()
             game_vars.print_arena_status()
             step_counter = 4
 
         if Gamestate == "Nem_Arena" and step_counter == 4:
-            nemesis.arenaBattles.battles_3()
+            nemesis.arena_battles.battles_3()
             game_vars.print_arena_status()
             step_counter = 5
 
         if Gamestate == "Nem_Arena" and step_counter == 5:
-            nemesis.arenaBattles.battles_4()
+            nemesis.arena_battles.battles_4()
             game_vars.print_arena_status()
             step_counter = 6
 
         if Gamestate == "Nem_Arena" and step_counter == 6:
-            nemesis.arenaBattles.nemesis_battle()
+            nemesis.arena_battles.nemesis_battle()
             step_counter = 7
 
         if Gamestate == "Nem_Arena" and step_counter == 7:
-            nemesis.arenaBattles.return_to_sin()
+            nemesis.arena_battles.return_to_sin()
             Gamestate = "Sin"
             step_counter = 3
 
