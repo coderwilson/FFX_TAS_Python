@@ -105,8 +105,9 @@ def prep_half():
     # Map = 347, Dialog = 20
     print("Prepping for next period of play.")
     while memory.main.get_map() != 62:
-        if memory.main.diag_progress_flag() == 135:
-            # Select game mode (Tourney, League, Exhibiton, etc)
+        if (
+            memory.main.diag_progress_flag() == 135
+        ):  # Select game mode (Tourney, League, Exhibiton, etc)
             memory.main.wait_frames(90)
             if memory.main.save_popup_cursor() != 1:
                 xbox.menu_down()

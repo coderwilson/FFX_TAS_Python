@@ -239,7 +239,7 @@ def ability_to_be_dropped(
     #    filledSlots.append(outcomes[0])
     #    filledSlots.remove(99)
     if testMode:
-        print("E:", enemy, "- O:", outcomes)
+        print("E: ", enemy, " - O: ", outcomes)
 
     while 99 in filledSlots and ptr < 50 + advances:
         # Increment to match the first (and subsequent) advance(s)
@@ -247,12 +247,12 @@ def ability_to_be_dropped(
             ptr += 1
             if testMode:
                 print("==================================")
-                print("ptr:", ptr)
-                print("Try:", testArray[ptr + advances])
+                print("ptr: ", ptr)
+                print("Try: ", testArray[ptr + advances])
             arrayPos = ((testArray[ptr + advances] & 0x7FFFFFFF) % 7) + 1
             if testMode:
-                print("AP:", arrayPos)
-                print("Res:", outcomes[arrayPos])
+                print("AP: ", arrayPos)
+                print("Res: ", outcomes[arrayPos])
                 print("==================================")
             if outcomes[arrayPos] in filledSlots:
                 pass
@@ -263,9 +263,9 @@ def ability_to_be_dropped(
                 if testMode:
                     print(filledSlots)
         except Exception as e:
-            print("ERR:", e)
+            print("ERR: ", e)
     if testMode:
-        print("FS:", filledSlots)
+        print("FS: ", filledSlots)
 
     while 99 in filledSlots:
         filledSlots.remove(99)
@@ -275,7 +275,7 @@ def ability_to_be_dropped(
         while len(filledSlots) < 4:
             filledSlots.append(255)
     if testMode:
-        print("FSfin:", filledSlots)
+        print("FSfin: ", filledSlots)
 
     return [filledSlots, found]
 
@@ -1515,7 +1515,7 @@ def decide_skip_zan_luck() -> bool:
         return False
     attackCount += 1  # One attack on Seymour
     for i in range(3):
-        print("### BFA attack num", i, "|", attackCount)
+        print("### BFA attack num ", i, " | ", attackCount)
         if not future_attack_hit(character=7, enemy="bfa", attack_index=attackCount):
             print("### Miss on BFA, attack number", i)
             return False
@@ -1737,11 +1737,11 @@ def print_manip_info():
     preX, postX = nea_track()
     print("--------------------------")
     print("Upcoming RNGs:")
-    print("Next, before X:", preX, "| Next, after X:", postX)
+    print("Next, before X:", preX, "| Next, after X: ", postX)
     print(
         "RNG10:",
         memory.main.next_chance_rng_10(),
-        "| Pre Defender X:",
+        "| Pre Defender X: ",
         memory.main.next_chance_rng_10_calm(),
     )
     print("--------------------------")

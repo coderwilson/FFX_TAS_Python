@@ -70,12 +70,12 @@ if game_vars.nemesis():
 # step_counter = 1 # x27
 # Gamestate = "Moonflow"
 # step_counter = 2 # x2 After Extractor
-# Gamestate = "Guadosalam"
-# step_counter = 2 # x3 before Guadosalam Skip
-Gamestate = "Macalania"
+Gamestate = "Guadosalam"
+step_counter = 2 # x3 before Guadosalam Skip
+#Gamestate = "Macalania"
 # step_counter = 1 # x9
 # step_counter = 2 # x7
-step_counter = 4 # x10 Seymour
+#step_counter = 4 # x10 Seymour
 # step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
 # Gamestate = "Home"
 # step_counter = 1 # x60
@@ -85,22 +85,22 @@ step_counter = 4 # x10 Seymour
 # step_counter = 2 # x15
 # step_counter = 4 # x30 Altana
 # step_counter = 5 # x42 regular, 67 nemesis
-# Gamestate = "Gagazet"
+#Gamestate = "Gagazet"
 # step_counter = 1 # x43
 # step_counter = 3 # x138 After B&Y
-# step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
+#step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
 # step_counter = 10 # Nemesis variant, blitz win logic (not working)
 # step_counter = 11 # Remiem racing
-# Gamestate = "Zanarkand"
+#Gamestate = "Zanarkand"
 # step_counter = 1 # x99 Campfire
 # step_counter = 4 # x44 Before Yunalesca
-# step_counter = 5 # x48 After Yunalesca
+#step_counter = 5 # x48 After Yunalesca
 # Gamestate = "Sin"
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#step_counter = 1  # NEW GAME!
+Gamestate = "none"
+step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
@@ -804,7 +804,6 @@ while Gamestate != "End":
                 step_counter = 1
 
         if Gamestate == "Gagazet" and step_counter == 1:
-            manipTime1 = logs.time_stamp()
             report_gamestate()
             area.gagazet.calm_lands()
             area.gagazet.defender_x()
@@ -813,6 +812,7 @@ while Gamestate != "End":
         if Gamestate == "Gagazet" and step_counter == 2:
             report_gamestate()
             if game_vars.try_for_ne():
+                manipTime1 = logs.time_stamp()
                 import area.neArmor
 
                 print("Mark 1")
@@ -821,11 +821,14 @@ while Gamestate != "End":
                 area.neArmor.drop_hunt()
                 print("Mark 3")
                 area.neArmor.return_to_gagazet()
-            manipTime2 = logs.time_stamp()
-            manipTime = manipTime2 - manipTime1
-            print("NEA Manip duration:", str(manipTime))
-            logs.write_stats("NEA Manip duration:")
-            logs.write_stats(manipTime)
+                manipTime2 = logs.time_stamp()
+                try:
+                    manipTime = manipTime2 - manipTime1
+                    print("NEA Manip duration:", str(manipTime))
+                    logs.write_stats("NEA Manip duration:")
+                    logs.write_stats(manipTime)
+                except:
+                    pass
             step_counter = 3
 
         if Gamestate == "Gagazet" and step_counter == 3:
