@@ -14,7 +14,7 @@ import area.mac_woods
 import area.miihen
 import area.moonflow
 import area.MRR
-import area.rescueYuna
+import area.rescue_yuna
 import area.sin
 import area.thunderPlains
 import area.zanarkand

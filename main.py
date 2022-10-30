@@ -18,7 +18,7 @@ import area.miihen
 import area.moonflow
 import area.MRR
 import area.ne_armor
-import area.rescueYuna
+import area.rescue_yuna
 import area.sin
 import area.thunderPlains
 import area.zanarkand
@@ -796,30 +796,30 @@ while Gamestate != "End":
 
         if Gamestate == "rescueYuna" and step_counter == 1:
             report_gamestate()
-            area.rescueYuna.pre_evrae()
+            area.rescue_yuna.pre_evrae()
             battle.boss.evrae()
-            area.rescueYuna.guards()
+            area.rescue_yuna.guards()
             step_counter = 2
 
         if Gamestate == "rescueYuna" and step_counter == 2:
             report_gamestate()
-            area.rescueYuna.trials()
-            area.rescueYuna.trials_end()
+            area.rescue_yuna.trials()
+            area.rescue_yuna.trials_end()
             step_counter = 3
 
         if Gamestate == "rescueYuna" and step_counter == 3:
             report_gamestate()
-            area.rescueYuna.via_purifico()
+            area.rescue_yuna.via_purifico()
             step_counter = 4
 
         if Gamestate == "rescueYuna" and step_counter == 4:
             report_gamestate()
-            area.rescueYuna.evrae_altana()
+            area.rescue_yuna.evrae_altana()
             step_counter = 5
 
         if Gamestate == "rescueYuna" and step_counter == 5:
             report_gamestate()
-            area.rescueYuna.seymour_natus()
+            area.rescue_yuna.seymour_natus()
             Gamestate = "Gagazet"
             if game_vars.nemesis():
                 step_counter = 10
