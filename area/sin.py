@@ -2,7 +2,7 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
-import targetPathing
+import pathing
 import vars
 import xbox
 import zz_eggHuntAuto
@@ -18,14 +18,14 @@ def making_plans():
     print("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
-    while not targetPathing.set_movement([-267, 347]):
+    while not pathing.set_movement([-267, 347]):
         pass
 
     target = [[-242, 312], [-239, 258], [-243, 145], [-243, 10]]
     checkpoint = 0
     while memory.main.get_map() == 194:
         if memory.main.user_control():
-            if targetPathing.set_movement(target[checkpoint]):
+            if pathing.set_movement(target[checkpoint]):
                 checkpoint += 1
 
     zzairShipPath.air_ship_path(2)  # Talk to Yuna/Kimahri
@@ -71,7 +71,7 @@ def exit_cockpit():
         if memory.main.user_control():
             tidusCoords = memory.main.get_coords()
             if tidusCoords[1] > 318:
-                targetPathing.set_movement([-244, 315])
+                pathing.set_movement([-244, 315])
             else:
                 FFXC.set_movement(0, -1)
         else:
@@ -79,11 +79,11 @@ def exit_cockpit():
 
 
 def facing_sin():
-    while not targetPathing.set_movement([-245, 321]):
+    while not pathing.set_movement([-245, 321]):
         pass
 
     while memory.main.user_control():
-        targetPathing.set_movement([-256, 342])
+        pathing.set_movement([-256, 342])
         xbox.tap_b()
         memory.main.wait_frames(1)
 
@@ -165,7 +165,7 @@ def inside_sin():
                 checkpoint = 68
 
             # General Pathing
-            elif targetPathing.set_movement(targetPathing.inside_sin(checkpoint)):
+            elif pathing.set_movement(pathing.inside_sin(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

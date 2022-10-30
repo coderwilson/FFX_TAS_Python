@@ -1,8 +1,8 @@
 import battle.main
 import memory.main
 import menu
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -37,12 +37,12 @@ def south_pathing():
                 checkpoint += 1
             elif checkpoint == 25:
                 while memory.main.user_control():
-                    targetPathing.set_movement([-175, -487])
+                    pathing.set_movement([-175, -487])
                     xbox.tap_x()
                 checkpoint += 1
             elif checkpoint == 33:
                 while memory.main.user_control():
-                    targetPathing.set_movement([205, 160])
+                    pathing.set_movement([205, 160])
                     xbox.tap_x()
                 checkpoint += 1
                 print("Now ready to dodge some lightning.")
@@ -56,7 +56,7 @@ def south_pathing():
 
             # General pathing
             elif memory.main.user_control():
-                if targetPathing.set_movement(targetPathing.t_plains_south(checkpoint)):
+                if pathing.set_movement(pathing.t_plains_south(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
@@ -69,10 +69,10 @@ def south_pathing():
                 xbox.tap_b()
 
     memory.main.await_control()
-    while not targetPathing.set_movement([-73, 14]):
+    while not pathing.set_movement([-73, 14]):
         if memory.main.diag_skip_possible():
             xbox.menu_b()
-    while not targetPathing.set_movement([-83, 29]):
+    while not pathing.set_movement([-83, 29]):
         if memory.main.diag_skip_possible():
             xbox.menu_b()
     while not memory.main.get_map() == 263:
@@ -204,7 +204,7 @@ def agency():
         if memory.main.user_control():
             if checkpoint == 1:
                 while not memory.main.diag_skip_possible():
-                    targetPathing.set_movement([2, -31])
+                    pathing.set_movement([2, -31])
                     xbox.tap_b()
                     memory.main.wait_frames(3)
                 FFXC.set_neutral()
@@ -221,14 +221,14 @@ def agency():
                     kimahriAffection = memory.main.affection_array()[3]
                     print("Kimahri affection, ", kimahriAffection)
                     while memory.main.affection_array()[3] == kimahriAffection:
-                        targetPathing.set_movement([27, -44])
+                        pathing.set_movement([27, -44])
                         xbox.tap_b()
                     print("Updated, full affection array:")
                     print(memory.main.affection_array())
                 checkpoint += 1
             elif checkpoint == 8:
                 while not memory.main.get_map() == 256:
-                    targetPathing.set_movement([3, -52])
+                    pathing.set_movement([3, -52])
                     xbox.tap_b()
                 memory.main.click_to_control()
                 if game_vars.nemesis() or not game_vars.get_blitz_win():
@@ -239,7 +239,7 @@ def agency():
                     FFXC.set_neutral()
                     memory.main.wait_frames(3)
                     while memory.main.get_map() != 256:
-                        targetPathing.set_movement([3, -150])
+                        pathing.set_movement([3, -150])
                         xbox.tap_b()
                     FFXC.set_neutral()
                     memory.main.await_control()
@@ -249,14 +249,14 @@ def agency():
                 and (game_vars.nemesis() or not game_vars.get_blitz_win())
                 and strCount < 3
             ):
-                targetPathing.set_movement([-73, 45])
+                pathing.set_movement([-73, 45])
                 xbox.tap_b()
             elif checkpoint == 11:
                 game_vars.set_blitz_win(value=True)
                 FFXC.set_movement(0, 1)
                 memory.main.click_to_event()
 
-            elif targetPathing.set_movement(targetPathing.t_plains_agency(checkpoint)):
+            elif pathing.set_movement(pathing.t_plains_agency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -286,7 +286,7 @@ def north_pathing():
 
             # General pathing
             elif memory.main.user_control():
-                if targetPathing.set_movement(targetPathing.t_plains_north(checkpoint)):
+                if pathing.set_movement(pathing.t_plains_north(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
@@ -317,5 +317,5 @@ def north_pathing():
         FFXC.set_neutral()  # Approaching the party
 
     else:
-        while not targetPathing.set_movement([258, -7]):
+        while not pathing.set_movement([258, -7]):
             pass

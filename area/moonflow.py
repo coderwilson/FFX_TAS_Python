@@ -2,8 +2,8 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -30,7 +30,7 @@ def arrival():
                 if memory.main.get_item_slot(90) < 200:
                     checkpoint += 1
                 else:
-                    targetPathing.set_movement([-1796, -480])
+                    pathing.set_movement([-1796, -480])
                     xbox.tap_b()
 
             # Map changes
@@ -50,7 +50,7 @@ def arrival():
                 print("Updating checkpoint based on story/map progress:", checkpoint)
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.moonflow(checkpoint)):
+            elif pathing.set_movement(pathing.moonflow(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -93,9 +93,7 @@ def south_bank(checkpoint: int = 0):
                 xbox.menu_b()  # All aboardz!
                 xbox.skip_dialog(3)  # Just to clear some dialog
 
-            elif targetPathing.set_movement(
-                targetPathing.moonflow_bank_south(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.moonflow_bank_south(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -155,9 +153,7 @@ def north_bank():
                 checkpoint = 12
 
             # General pathing
-            elif targetPathing.set_movement(
-                targetPathing.moonflow_bank_north(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.moonflow_bank_north(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

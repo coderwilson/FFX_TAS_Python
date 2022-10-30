@@ -5,8 +5,8 @@ import battle.main
 import logs
 import memory.main
 import menu
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -64,7 +64,7 @@ def arrival():
                 memory.main.click_to_control()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif targetPathing.set_movement(targetPathing.mrr_start(checkpoint)):
+            elif pathing.set_movement(pathing.mrr_start(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -107,10 +107,10 @@ def main_path():
                 checkpoint += 1
             elif checkpoint == 45:
                 if status[0] == 0 or status[1] == 0 or status[2] != 2:
-                    if targetPathing.set_movement(targetPathing.mrr_main(99)):
+                    if pathing.set_movement(pathing.mrr_main(99)):
                         checkpoint -= 1
                 else:
-                    if targetPathing.set_movement(targetPathing.mrr_main(45)):
+                    if pathing.set_movement(pathing.mrr_main(45)):
                         checkpoint += 1
 
             elif checkpoint == 46:
@@ -135,12 +135,12 @@ def main_path():
                     else:
                         lastGilValue = memory.main.get_gil_value()
                 else:
-                    targetPathing.set_movement(memory.main.mrr_guy_coords())
+                    pathing.set_movement(memory.main.mrr_guy_coords())
                     xbox.tap_b()
             elif checkpoint == 58:
                 print("Up the third lift")
                 while memory.main.user_control():
-                    targetPathing.set_movement([29, 227])
+                    pathing.set_movement([29, 227])
                     xbox.tap_b()
                 checkpoint += 1
             elif checkpoint == 66:
@@ -159,7 +159,7 @@ def main_path():
                 checkpoint += 1
             elif checkpoint < 71 and memory.main.get_map() == 79:
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
-            elif targetPathing.set_movement(targetPathing.mrr_main(checkpoint)):
+            elif pathing.set_movement(pathing.mrr_main(checkpoint)):
                 if checkpoint == 61:
                     if memory.main.next_crit(
                         character=3, char_luck=18, enemy_luck=15
@@ -246,7 +246,7 @@ def battle_site():
             if checkpoint == 5:
                 print("O'aka menu section")
                 while memory.main.user_control():
-                    targetPathing.set_movement([-45, 3425])
+                    pathing.set_movement([-45, 3425])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 menu.battle_site_oaka_1()
@@ -278,7 +278,7 @@ def battle_site():
                 xbox.menu_down()
                 xbox.tap_b()
                 checkpoint = 100
-            elif targetPathing.set_movement(targetPathing.battle_site(checkpoint)):
+            elif pathing.set_movement(pathing.battle_site(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -307,9 +307,7 @@ def gui_and_aftermath():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
-            elif targetPathing.set_movement(
-                targetPathing.battle_site_aftermath(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.battle_site_aftermath(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

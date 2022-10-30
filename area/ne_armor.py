@@ -2,8 +2,8 @@ import battle.main
 import logs
 import memory.main
 import menu
+import pathing
 import rng_track
-import targetPathing
 import vars
 import xbox
 
@@ -21,9 +21,7 @@ def loop_back_from_ronso(checkpoint=0):
         if memory.main.user_control():
             if checkpoint < 13 and memory.main.get_map() == 279:
                 checkpoint = 13
-            elif targetPathing.set_movement(
-                targetPathing.gagazet_nea_loop_back(checkpoint)
-            ):
+            elif pathing.set_movement(pathing.gagazet_nea_loop_back(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -66,7 +64,7 @@ def to_hidden_cave():
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
-            elif targetPathing.set_movement(targetPathing.ne_approach(checkpoint)):
+            elif pathing.set_movement(pathing.ne_approach(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -124,15 +122,13 @@ def drop_hunt():
             if goGreen:
                 if checkpoint == 15:
                     checkpoint -= 2
-                elif targetPathing.set_movement(
-                    targetPathing.ne_force_encounters_green(checkpoint)
+                elif pathing.set_movement(
+                    pathing.ne_force_encounters_green(checkpoint)
                 ):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             else:
-                if targetPathing.set_movement(
-                    targetPathing.ne_force_encounters_white(checkpoint)
-                ):
+                if pathing.set_movement(pathing.ne_force_encounters_white(checkpoint)):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not goGreen:
                         checkpoint = 0
@@ -181,9 +177,7 @@ def return_to_gagazet():
                 if checkpoint == 10:
                     goGreen = False
                     checkpoint = 0
-                elif targetPathing.set_movement(
-                    targetPathing.ne_return_green(checkpoint)
-                ):
+                elif pathing.set_movement(pathing.ne_return_green(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
             elif checkpoint < 1 and memory.main.get_map() == 266:
@@ -196,7 +190,7 @@ def return_to_gagazet():
                 checkpoint += 1
             elif checkpoint < 7 and memory.main.get_map() == 279:
                 checkpoint = 7
-            elif targetPathing.set_movement(targetPathing.ne_return(checkpoint)):
+            elif pathing.set_movement(pathing.ne_return(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

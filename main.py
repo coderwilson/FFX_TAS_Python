@@ -369,9 +369,9 @@ if Gamestate != "none":
         load_game.load_save_num(70)
         while not memory.main.oaka_gil_cursor() in [8, 20]:
             if memory.main.user_control():
-                import targetPathing
+                import pathing
 
-                targetPathing.set_movement([-251, 340])
+                pathing.set_movement([-251, 340])
             else:
                 FFXC.set_neutral()
             xbox.menu_b()

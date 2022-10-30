@@ -1,5 +1,5 @@
 import memory.main
-import targetPathing
+import pathing
 import xbox
 
 FFXC = xbox.FFXC
@@ -15,6 +15,6 @@ while lStrikeCount - lStrikeStart < 250:
         lStrikeCount = memory.main.l_strike_count()
         print("Dodge,", lStrikeCount - lStrikeStart)
     elif memory.main.user_control():
-        targetPathing.set_movement([62, 780])
+        pathing.set_movement([62, 780])
 
 print("Program has terminated, or similar effect.")

@@ -3,8 +3,8 @@ import battle.main
 import battle.overdrive
 import logs
 import memory.main
+import pathing
 import rng_track
-import targetPathing
 import tts
 import vars
 import xbox
@@ -141,7 +141,7 @@ def listen_story():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.tidus_home(checkpoint)):
+            elif pathing.set_movement(pathing.tidus_home(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -240,9 +240,7 @@ def after_ammes():
                     checkpoint = 11
 
                 # General pathing
-                elif targetPathing.set_movement(
-                    targetPathing.all_starts_here(checkpoint)
-                ):
+                elif pathing.set_movement(pathing.all_starts_here(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:

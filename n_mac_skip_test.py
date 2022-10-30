@@ -20,8 +20,8 @@ import area.thunder_plains
 import area.zanarkand
 import load_game
 import memory.main
+import pathing
 import reset
-import targetPathing
 import vars
 import xbox
 
@@ -53,13 +53,13 @@ if Gamestate != "none":
 # Approach the position
 prep_step = [[303, 34], [284, 104], [222, 160], [209, 170]]
 for i in range(len(prep_step)):
-    while not targetPathing.set_movement(prep_step[i]):
+    while not pathing.set_movement(prep_step[i]):
         if memory.main.diag_skip_possible():
             xbox.tap_b()
 FFXC.set_neutral()
 memory.main.wait_frames(30)
 # Into position
-while not targetPathing.set_movement([190, 180]):
+while not pathing.set_movement([190, 180]):
     memory.main.wait_frames(2)
     FFXC.set_neutral()
     memory.main.wait_frames(6)

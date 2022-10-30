@@ -9,7 +9,7 @@ from math import cos, sin
 from ReadWriteMemory import Process, ReadWriteMemory
 
 import logs
-import targetPathing
+import pathing
 import vars
 import xbox
 
@@ -404,6 +404,7 @@ def click_to_control_dumb():
     print("Control restored.")
     return True
 
+
 def click_to_control_smart():
     waitCounter = 0
     print("Awaiting control (clicking only when appropriate - dialog)")
@@ -425,10 +426,15 @@ def click_to_control_smart():
     print("User control restored.")
     return True
 
+
 def click_to_control():
     return click_to_control_smart()
+
+
 def click_to_control_2():
     return click_to_control_smart()
+
+
 def click_to_control_3():
     return click_to_control_smart()
 
@@ -1653,7 +1659,7 @@ def diag_skip_possible_old():
         return False
 
 
-def diag_skip_possible(ignore_audio = False):
+def diag_skip_possible(ignore_audio=False):
     if not ignore_audio and auditory_dialog_playing():
         return False
     global baseValue
@@ -1678,8 +1684,9 @@ def auditory_dialog_playing():
     key = baseValue + 0x00F2FED4
     return process.readBytes(key, 1) == 1
 
+
 def auditory_dialog_playing():
-    #This is usually a no-op unless doNotSkipCutscenes is set.
+    # This is usually a no-op unless doNotSkipCutscenes is set.
     if game_vars.doNotSkipCutscenes:
         return false
     global baseValue
@@ -3698,7 +3705,7 @@ def touch_save_sphere(save_cursor_num: int = 0):
 
     ssDetails = get_save_sphere_details()
     while user_control():
-        targetPathing.set_movement([ssDetails[0], ssDetails[1]])
+        pathing.set_movement([ssDetails[0], ssDetails[1]])
         xbox.tap_b()
         wait_frames(1)
     FFXC.set_neutral()
@@ -3783,7 +3790,7 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
 
     ssDetails = get_save_sphere_details()
     while user_control():
-        targetPathing.set_movement([ssDetails[0], ssDetails[1]])
+        pathing.set_movement([ssDetails[0], ssDetails[1]])
         xbox.tap_b()
         wait_frames(1)
     FFXC.set_neutral()

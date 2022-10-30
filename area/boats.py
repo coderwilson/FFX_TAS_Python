@@ -3,7 +3,7 @@ import battle.main
 import logs
 import memory.main
 import menu
-import targetPathing
+import pathing
 import vars
 import xbox
 
@@ -34,7 +34,7 @@ def ss_liki():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.liki(checkpoint)):
+            elif pathing.set_movement(pathing.liki(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 
@@ -75,7 +75,7 @@ def ss_winno():
     # logs.writeStats(memory.getSpeed())
 
     while memory.main.user_control():
-        targetPathing.set_movement([28, -36])  # Through first door
+        pathing.set_movement([28, -36])  # Through first door
     memory.main.wait_frames(2)
     FFXC.set_neutral()
     memory.main.click_to_control()
@@ -89,7 +89,7 @@ def ss_winno():
         memory.main.get_actor_coords(1)[1],
     ]
     while memory.main.user_control():
-        targetPathing.set_movement(oakaCoords)
+        pathing.set_movement(oakaCoords)
         xbox.tap_b()
         memory.main.wait_frames(3)
         oakaCoords = [
@@ -130,7 +130,7 @@ def ss_winno_2():
             elif checkpoint == 11:
                 jecht_shot()
                 checkpoint += 1
-            elif targetPathing.set_movement(targetPathing.winno(checkpoint)):
+            elif pathing.set_movement(pathing.winno(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:

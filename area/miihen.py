@@ -2,8 +2,8 @@ import battle.boss
 import battle.main
 import logs
 import memory.main
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 
@@ -57,10 +57,10 @@ def arrival():
                     if memory.main.hunter_spear():
                         checkpoint = 11
                     elif hunterDistance < 200 or checkpoint in [6, 7, 8, 9, 10]:
-                        targetPathing.set_movement(hunterCoords)
+                        pathing.set_movement(hunterCoords)
                         xbox.tap_b()
 
-                    elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
+                    elif pathing.set_movement(pathing.miihen(checkpoint)):
                         checkpoint += 1
                         print("Checkpoint reached:", checkpoint)
 
@@ -154,11 +154,11 @@ def arrival():
                                 miihenSkip = False
                             print("Skip successful:", miihenSkip)
                             checkpoint += 1
-                    elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
+                    elif pathing.set_movement(pathing.miihen(checkpoint)):
                         checkpoint += 1
                         print("Checkpoint reached:", checkpoint)
             elif checkpoint == 11 and not memory.main.hunter_spear():
-                targetPathing.set_movement(
+                pathing.set_movement(
                     [
                         memory.main.miihen_guy_coords()[0],
                         memory.main.miihen_guy_coords()[1],
@@ -170,7 +170,7 @@ def arrival():
             elif checkpoint < 15 and memory.main.get_map() == 120:
                 checkpoint = 15
             # General pathing
-            elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
+            elif pathing.set_movement(pathing.miihen(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -236,7 +236,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
                     checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.miihen(checkpoint)):
+            elif pathing.set_movement(pathing.miihen(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -287,7 +287,7 @@ def mid_point():
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif targetPathing.set_movement(targetPathing.miihen_agency(checkpoint)):
+            elif pathing.set_movement(pathing.miihen_agency(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -331,7 +331,7 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
                 checkpoint = 28
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.low_road(checkpoint)):
+            elif pathing.set_movement(pathing.low_road(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 25:  # Shelinda dialog
