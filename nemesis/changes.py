@@ -4,6 +4,7 @@ import memory.main
 import nemesis.targetPath
 import vars
 import xbox
+import rngTrack
 
 game_vars = vars.vars_handle()
 
@@ -119,7 +120,9 @@ def calm_lands_1():
                     battle.main.calm_lands_gems()
                 else:
                     battle.main.calm_lands_manip()
-                memory.main.full_party_format("yuna")
+                memory.main.full_party_format("rikku", full_menu_close=True)
+                battle.main.heal_up(full_menu_close=True)
+                rngTrack.print_manip_info()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -186,8 +189,9 @@ def choco_tame_2():
         angle = memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
 
-        if position[1] > -1360 and checkpoint == 0:
-            # Start off aiming right to manip balls
+        if (
+            position[1] > -1360 and checkpoint == 0
+        ):  # Start off aiming right to manip balls
             checkpoint += 1
             FFXC.set_value("Dpad", 8)  # Right
             memory.main.wait_frames(5)
@@ -408,7 +412,7 @@ def to_remiem():
         xbox.tap_b()
         print("Near chocobo lady")
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
     checkpoint = 0
     while checkpoint < 35:
@@ -425,7 +429,7 @@ def to_remiem():
                 while memory.main.user_control():
                     nemesis.targetPath.set_movement([770, 631])
                     xbox.tap_b()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif (
                 nemesis.targetPath.set_movement(
@@ -462,7 +466,7 @@ def choco_race_1():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -472,7 +476,7 @@ def choco_race_1():
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(10)
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def choco_race_2():
@@ -499,7 +503,7 @@ def choco_race_2():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -509,7 +513,7 @@ def choco_race_2():
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(10)
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def choco_race_3():
@@ -540,7 +544,7 @@ def choco_race_3():
             # if checkpoint == 42: #Since it's not tight enough movement yet
             #     FFXC.set_neutral()
             #     memory.waitFrames(120)
-            #     memory.click_to_control()
+            #     memory.clickToControl3()
             #     break
             if (
                 nemesis.targetPath.set_movement(nemesis.targetPath.race_3(checkpoint))
@@ -557,11 +561,11 @@ def choco_race_3():
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(60)
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def temple_to_arena():
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     checkpoint = 0
     while memory.main.get_map() != 307:
         if memory.main.user_control():

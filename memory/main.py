@@ -3100,6 +3100,7 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
     charWeaps = armor_array_character(6)  # Rikku
     while len(charWeaps) > 0:
         currentHandle = charWeaps.pop(0)
+        print(currentHandle.abilities())
         if currentHandle.has_ability(ability):
             if slot_count != 99:
                 if currentHandle.slot_count() != slot_count:
@@ -3108,6 +3109,7 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
                     results[6] = True
             else:
                 results[6] = True
+        print(results[6])
 
     return results
 

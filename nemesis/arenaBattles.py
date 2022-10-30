@@ -97,7 +97,7 @@ def airship_destination(dest_num=0):  # Default to Sin.
     xbox.tap_b()
     memory.main.wait_frames(2)
     xbox.tap_b()
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
 
 
 def get_save_sphere_details():
@@ -983,7 +983,7 @@ def battles_5(completion_version: int):
         nemesis.arenaSelect.start_fight(area_index=15, monster_index=7)
         if yojimbo_battle():
             memory.main.click_to_diag_progress(2)
-            memory.main.click_to_control()
+            memory.main.click_to_control_3()
             return True
         else:
             return False
