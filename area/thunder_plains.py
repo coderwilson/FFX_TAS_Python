@@ -88,7 +88,11 @@ def agency_shop():
 
     # 15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
     speedNeeded = max(0, min(2, 14 - speedCount))
-    if memory.main.rng_seed() == 160 and not game_vars.get_blitz_win() and game_vars.new_game_check():
+    if (
+        memory.main.rng_seed() == 160
+        and not game_vars.get_blitz_win()
+        and game_vars.new_game_check()
+    ):
         speedNeeded = 0
     grenade_slot = memory.main.get_item_slot(35)
     if grenade_slot == 255:
@@ -96,7 +100,7 @@ def agency_shop():
     else:
         cur_grenades = memory.main.get_item_count_slot(grenade_slot)
     total_grenades_needed = 3 + speedNeeded - cur_grenades
-    #Don't panic if we have more grenades than expected.
+    # Don't panic if we have more grenades than expected.
     if total_grenades_needed < 0:
         total_grenades_needed = 0
     memory.main.click_to_diag_progress(92)

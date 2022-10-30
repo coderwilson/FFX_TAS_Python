@@ -16,7 +16,7 @@ import area.moonflow
 import area.MRR
 import area.rescue_yuna
 import area.sin
-import area.thunderPlains
+import area.thunder_plains
 import area.zanarkand
 import loadGame
 import memory.main

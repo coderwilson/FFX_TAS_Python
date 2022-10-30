@@ -20,7 +20,7 @@ import area.MRR
 import area.ne_armor
 import area.rescue_yuna
 import area.sin
-import area.thunderPlains
+import area.thunder_plains
 import area.zanarkand
 import battle.boss
 import battle.main
@@ -732,15 +732,15 @@ while Gamestate != "End":
 
         if Gamestate == "ThunderPlains" and step_counter == 1:
             report_gamestate()
-            status = area.thunderPlains.south_pathing()
+            status = area.thunder_plains.south_pathing()
             step_counter = 2
 
         if Gamestate == "ThunderPlains" and step_counter == 2:
-            area.thunderPlains.agency()
+            area.thunder_plains.agency()
             step_counter = 3
 
         if Gamestate == "ThunderPlains" and step_counter == 3:
-            area.thunderPlains.north_pathing()
+            area.thunder_plains.north_pathing()
             Gamestate = "Macalania"
             step_counter = 1
 
