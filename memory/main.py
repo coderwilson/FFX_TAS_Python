@@ -147,10 +147,10 @@ def start():
 
     global baseValue
     try:
-        import zz_rootMem
+        import zz_root_mem
 
         print("Process Modules:")
-        baseValue = zz_rootMem.list_process_modules(process.pid)
+        baseValue = zz_root_mem.list_process_modules(process.pid)
         print("Process Modules complete")
         print("Dynamically determined memory address:", hex(baseValue))
         success = True
