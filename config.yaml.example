@@ -1,0 +1,75 @@
+# Main gamestate and step to load
+# "none", "Baaj", "Besaid", "Boat1", "Kilika", "Luca", "Miihen", "MRR"
+# "Djose", "Moonflow", "Guadosalam", "Macalania", "Home", "rescueYuna"
+# "Gagazet", "Zanarkand", "Sin", "Nem_Farm"
+Gamestate     : "none" # valid values listed above
+step_counter  : 1      # valid step_counter values are dependent on Gamestate
+
+# RNG Seed (requires setting vars.setSeed: True)
+forceBlitzWin : False  #            - Missing documentation -
+seedHunt      : False  #            - Missing documentation -
+rngSeedNum    : 160    #            - Missing documentation -
+
+# Run configuration variables in vars.py
+vars:
+  # Important Values
+  artificialPauses    : False  # Set depending on hardware. True == less powerful hardware.
+  csrValue            : True   # Set automatically on new game. For testing (loading a save file) set for your environment.
+  nemesisValue        : False  # Set based on if you're doing any% (False) or Nemesis% (True)
+  forceLoop           : False  # After game is finished, start again on next seed.
+  blitzLoop           : False  # Loop on the same seed immediately after Blitzball.
+  blitzLossForceReset : True   # True == reset after blitz loss
+  setSeed             : False  # If you are using Rossy's patch, set to True. Otherwise set to False
+  kilikaSkip          : True   # True == Tidus OD on Evrae instead of Seymour. New strat.
+  perfectAeonKills    : False  # Before YuYevon, True is slower but more swag.
+  attemptDjose        : False  # Try Djose skip? (not likely to succeed)
+  legacySoundtrack    : True   # use the original Soundtrack instead of arranged
+  doNotSkipCutscenes  : False  #            - Missing documentation -
+
+  # Accessibility for blind
+  skip_cutscene_flag  : True   #            - Missing documentation -
+  skip_diag_flag      : True   # Set to same value as skip_cutscene_flag
+  play_TTS_flag       : False  #            - Missing documentation -
+  rails_trials        : True   #            - Missing documentation -
+  rails_egg_hunt      : True   #            - Missing documentation -
+
+  # Blitzball
+  blitzWinValue       : True   # No default value required
+  blitzOvertime       : False  # Set to False, no need to change ever.
+  blitzFirstShotVal   : False  #            - Missing documentation -
+  oblitzAttackVal     : "255"  # Used for RNG manip tracking
+
+  # Sphere grid
+  fullKilikMenu       : False  # Default to False
+  earlyTidusGridVal   : False  # Default False
+  earlyHasteVal       : 1      # Default -1
+  wakkaLateMenuVal    : False  # Default False
+  endGameVersionVal   : 1      # Default 0
+
+  # Equipment
+  zombieWeaponVal     : 255    # Default 255
+  lStrikeCount        : 1      # Default 0
+
+  # RNG Manip
+  yellows             : 0      #            - Missing documentation -
+  confirmedSeedNum    : 999    #            - Missing documentation -
+  skipZanLuck         : False  #            - Missing documentation -
+
+  # Other
+  newGame             : False  #            - Missing documentation -
+  selfDestruct        : False  # Default False
+  YTKFarm             : 0      # Default to 0
+  rescueCount         : 0      # Default to 0
+  fluxOverkillVar     : False  # Default to False
+  tryNEVal            : True   # Based on
+  # firstHits is still in vars.py
+  neArmorVal          : 255    # Default 255
+  neBattles           : 0      # Default to 0
+  neaZone             : 0      # Decides in which zone we charge Rikku OD after reaching Zanarkand.
+
+  # Nemesis variables, unused in any%
+  nemAPVal            : 1      # Default to 1
+  # areaResults is still in vars.py
+  # speciesResults is still in vars.py
+  # originalResults is still in vars.py
+  yojimboIndex        : 1  #            - Missing documentation -

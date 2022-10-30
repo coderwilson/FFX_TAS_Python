@@ -59,14 +59,18 @@ Currently, only the Windows version of the game is supported (due to the Cutscen
   - Open the game launcher and set language, change resolution and set to windowed or borderless mode.
   - Launch the base game (`FFX.exe`). Press `Escape` and go into `System Settings > Key Bindings > Controller` and set the `Talk/Examine/Confirm` option to `A`.
 * Make sure that there are no physical XBox/Playstation controllers connected. This is because the virtual gamepad needs to be controller 1 for the TAS to work.
-* Make sure the correct settings for the run are set in `config.yaml`:
-  - Set `setSeed: False` if you are not running a fixed RNG exe file.
-  - Set the correct GameState for your run. For a new game, use `GameState: "none"` and `step_counter: 1`. Other possible assignments can be found in comments near the top of `main.py`.
 
-In order for other starting GameStates to work, the saves in `TAS Saves` must be installed correctly. Please ask in the Discord how to do this, as it requires a few steps beyond just copying the files.
+It's possible to congigure parameters for the TAS. There are a lot of parameters that are possible to set, which are all read from a file called `config.yaml`. When you first download the repository, there won't be a `config.yaml` file; in this case the TAS will use default parameters for everything. If you want to configure something, make a copy the provided `config.example.yaml` file and name it `config.yaml`. Keep an eye on the example file, as more parameters may be added in the future.
+
+## Checkpoint saves
+
+One of the possible configuration options is to start in the middle of a run using a FFX save. Set the `GameState` and `step_counter` values in `config.yaml`, please refer to the comments near the top of `main.py` for valid checkpoints.
+
+In order for checkpoint saves to work, the saves in `TAS Saves` must be installed correctly. Please ask in the Discord how to do this, as it currently requires a few steps beyond just copying the files.
 
 ## Starting a run
 
+* [Optional] Set up `config.yaml` with desired run parameters.
 * [Optional] Start LiveSplit
 * Start the patched `FFX.exe`
 * [Optional] Start the Cutscene remover
