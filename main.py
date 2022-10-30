@@ -16,7 +16,7 @@ import area.mac_temple
 import area.mac_woods
 import area.miihen
 import area.moonflow
-import area.MRR
+import area.mrr
 import area.ne_armor
 import area.rescue_yuna
 import area.sin
@@ -671,16 +671,16 @@ while Gamestate != "End":
 
         if Gamestate == "MRR" and step_counter == 1:
             report_gamestate()
-            area.MRR.arrival()
-            area.MRR.main_path()
+            area.mrr.arrival()
+            area.mrr.main_path()
             if memory.main.game_over():
                 Gamestate = "gameOverError"
             step_counter = 2
 
         if Gamestate == "MRR" and step_counter == 2:
             report_gamestate()
-            area.MRR.battle_site()
-            area.MRR.gui_and_aftermath()
+            area.mrr.battle_site()
+            area.mrr.gui_and_aftermath()
             endTime = logs.time_stamp()
             totalTime = endTime - startTime
             print("End of Battle Site timer is:", str(totalTime))

@@ -13,7 +13,7 @@ import area.mac_temple
 import area.mac_woods
 import area.miihen
 import area.moonflow
-import area.MRR
+import area.mrr
 import area.rescue_yuna
 import area.sin
 import area.thunder_plains

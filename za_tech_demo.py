@@ -4,7 +4,7 @@ import area.dream_zan
 import area.guadosalam
 import area.mac_temple
 import area.miihen
-import area.MRR
+import area.mrr
 import load_game
 import logs
 import memory.main
@@ -71,7 +71,7 @@ while attempts < 20 and cycles < 50:
         # Fixes a low gil state for this save file.
         memory.main.set_gil_value(4000)
         load_game.load_mrr()
-        wakkaLateMenu = area.MRR.arrival()
+        wakkaLateMenu = area.mrr.arrival()
         SkipCount += 1
         SkipAttempts += 1
         print("------------------------------")
