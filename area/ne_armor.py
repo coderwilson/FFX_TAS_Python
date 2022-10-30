@@ -2,7 +2,7 @@ import battle.main
 import logs
 import memory.main
 import menu
-import rngTrack
+import rng_track
 import targetPathing
 import vars
 import xbox
@@ -15,7 +15,7 @@ FFXC = xbox.controller_handle()
 def loop_back_from_ronso(checkpoint=0):
     memory.main.full_party_format("rikku")
     battle.main.heal_up(full_menu_close=True)
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     print("Looping back to the Ronso")
     while checkpoint != 18:
         if memory.main.user_control():
@@ -35,7 +35,7 @@ def loop_back_from_ronso(checkpoint=0):
 def to_hidden_cave():
     memory.main.full_party_format("rikku")
     battle.main.heal_up(full_menu_close=True)
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     lastReport = False
     firstSave = False
     checkpoint = 0
@@ -47,7 +47,7 @@ def to_hidden_cave():
             if checkpoint == 7 and not firstSave:
                 memory.main.touch_save_sphere()
                 firstSave = True
-            _, nextDrop = rngTrack.nea_track()
+            _, nextDrop = rng_track.nea_track()
             if checkpoint == 8 and (
                 nextDrop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
@@ -72,10 +72,10 @@ def to_hidden_cave():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                _, nextDrop = rngTrack.nea_track()
+                _, nextDrop = rng_track.nea_track()
                 lastReport = False
                 print("### Starting manip battle")
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
                 memory.main.wait_frames(2)
                 if nextDrop >= 1:
                     if memory.main.next_chance_rng_10() != 0:
@@ -92,7 +92,7 @@ def to_hidden_cave():
                 prepBattles += 1
                 memory.main.full_party_format("rikku")
                 memory.main.touch_save_sphere()
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
     logs.write_stats("NEA extra manip battles:")
@@ -116,7 +116,7 @@ def drop_hunt():
 
     goGreen = next_green()
 
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     checkpoint = 0
     preGhostBattles = 0
     while game_vars.ne_armor() == 255:

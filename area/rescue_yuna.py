@@ -2,7 +2,7 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
-import rngTrack
+import rng_track
 import screen
 import targetPathing
 import vars
@@ -535,7 +535,7 @@ def evrae_altana():
                     FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.evrae_altana()
-            rngTrack.print_manip_info()
+            rng_track.print_manip_info()
         elif screen.battle_complete():
             xbox.menu_b()
         else:
@@ -574,7 +574,7 @@ def seymour_natus():
                         menu.seymour_natus_blitz_win()
                     else:
                         menu.seymour_natus_blitz_loss()
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
 
     # Movement for make-out scene
     memory.main.click_to_control()

@@ -4,6 +4,7 @@ import json
 import logs
 import memory.main
 import vars
+
 # from tracker.data.formations import allFormations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
 

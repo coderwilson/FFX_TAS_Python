@@ -4,7 +4,7 @@ import time
 import blitz_pathing
 import logs
 import memory.main
-import rngTrack
+import rng_track
 import vars
 import xbox
 
@@ -1099,5 +1099,5 @@ def blitz_main(forceBlitzWin):
     endTime = logs.time_stamp()
     timeDiff = endTime - startTime
     totalTime = int(timeDiff.total_seconds())
-    rngTrack.record_blitz_results(duration=totalTime)
+    rng_track.record_blitz_results(duration=totalTime)
     print("--Blitz Win value:", game_vars.get_blitz_win())

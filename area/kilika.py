@@ -86,7 +86,7 @@ def forest_1():
     optimalBattles = 0
     nextThree = []
     nextBattle = []
-    import rngTrack
+    import rng_track
 
     valeforCharge = False
     if game_vars.csr():
@@ -150,11 +150,11 @@ def forest_1():
             if memory.main.battle_active():
                 if checkpoint < 9:
                     battle.main.lancet_tutorial()
-                    nextTwo = rngTrack.coming_battles(
+                    nextTwo = rng_track.coming_battles(
                         area="kilika_woods", battleCount=2
                     )
                     bestOfTwo = select_best_of_two(nextTwo)
-                    nextBattle = rngTrack.coming_battles(
+                    nextBattle = rng_track.coming_battles(
                         area="kilika_woods", battleCount=1
                     )[0]
                     print("################# Next Battle:", nextBattle)
@@ -166,7 +166,7 @@ def forest_1():
                     valeforCharge = battle.main.kilika_woods(
                         valeforCharge, bestOfTwo, nextBattle
                     )
-                    nextBattle = rngTrack.coming_battles(
+                    nextBattle = rng_track.coming_battles(
                         area="kilika_woods", battleCount=1
                     )[0]
                     print("##########################", nextBattle)

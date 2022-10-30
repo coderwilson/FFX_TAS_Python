@@ -3,7 +3,7 @@ import battle.main
 import logs
 import memory.main
 import menu
-import rngTrack
+import rng_track
 import screen
 import targetPathing
 import vars
@@ -27,13 +27,14 @@ def check_gems():
     print("Total gems:", gems)
     return gems
 
+
 def calm_lands():
     memory.main.await_control()
     # Start by getting away from the save sphere
     memory.main.full_party_format("rikku", full_menu_close=True)
     battle.main.heal_up(full_menu_close=True)
 
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
     print("RNG10:", memory.main.rng_10())
     print("RNG12:", memory.main.rng_12())
     print("RNG13:", memory.main.rng_13())
@@ -64,11 +65,12 @@ def calm_lands():
                 memory.main.click_to_control_3()
                 memory.main.full_party_format("rikku", full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
+
 
 def defender_x():
     memory.main.await_control()
@@ -91,7 +93,8 @@ def defender_x():
                 battle.main.attack("none")
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
-    rngTrack.print_manip_info()
+    rng_track.print_manip_info()
+
 
 def to_the_ronso():
     checkpoint = 2
@@ -120,6 +123,7 @@ def to_the_ronso():
                     return
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+
 
 def gagazet_gates():
     # Should appear on the map just before the Ronso hymn
@@ -173,6 +177,7 @@ def gagazet_gates():
                 xbox.tap_b()
     print("Should now be on the map with Seymour Flux.")
 
+
 def flux():
     print("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
@@ -213,6 +218,7 @@ def flux():
                 xbox.tap_b()
         xbox.skip_scene()
 
+
 def dream(checkpoint: int = 0):
     memory.main.click_to_control()
     print("*********")
@@ -251,6 +257,7 @@ def dream(checkpoint: int = 0):
     print("*********")
     print("Dream sequence over")
     print("*********")
+
 
 def cave():
     checkpoint = 0
@@ -434,6 +441,7 @@ def cave():
 
     xbox.click_to_battle()
     battle.boss.s_keeper()
+
 
 def wrap_up():
     print("Cave section complete and Sanctuary Keeper is down.")

@@ -3,7 +3,7 @@ import logs
 import memory.get
 import memory.main
 import menu
-import rngTrack
+import rng_track
 import screen
 import targetPathing
 import vars
@@ -20,16 +20,16 @@ def print_nea_zone(battles: int):
 
 
 def decide_nea(bonus_advance: int = 0):
-    import rngTrack
+    import rng_track
 
     maxBattles = 1
-    zanOutdoors = rngTrack.coming_battles(
+    zanOutdoors = rng_track.coming_battles(
         area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonus_advance
     )
-    zanIndoors = rngTrack.coming_battles(
+    zanIndoors = rng_track.coming_battles(
         area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonus_advance
     )
-    seaSorrows = rngTrack.coming_battles(
+    seaSorrows = rng_track.coming_battles(
         area="inside_sin_(front)",
         battleCount=maxBattles,
         extraAdvances=bonus_advance + 6,
@@ -68,7 +68,7 @@ def arrival():
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         reEquipNE = True
 
-    game_vars.set_skip_zan_luck(rngTrack.decide_skip_zan_luck())
+    game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
     # gameVars.setSkipZanLuck(True) #For testing

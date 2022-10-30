@@ -830,9 +830,9 @@ while Gamestate != "End":
             report_gamestate()
             area.gagazet.calm_lands()
             area.gagazet.defender_x()
-            import rngTrack
+            import rng_track
 
-            advancePreX, advancePostX = rngTrack.nea_track()
+            advancePreX, advancePostX = rng_track.nea_track()
             if advancePostX in [0, 1]:
                 step_counter = 2
             else:

@@ -3,7 +3,7 @@ import battle.main
 import battle.overdrive
 import logs
 import memory.main
-import rngTrack
+import rng_track
 import targetPathing
 import tts
 import vars
@@ -187,7 +187,7 @@ def ammes_battle():
             print(hitsArray)
     print("#####################################")
     print("### Unconfirmed seed check:", memory.main.rng_seed())
-    correctSeed = rngTrack.hits_to_seed(hits_array=hitsArray)
+    correctSeed = rng_track.hits_to_seed(hits_array=hitsArray)
     logs.write_stats("Corrected RNG seed:")
     logs.write_stats(correctSeed)
     print("### Corrected RNG seed:", correctSeed)

@@ -1,7 +1,7 @@
 import battle.overdrive
 import logs
 import memory.main
-import rngTrack
+import rng_track
 import screen
 import vars
 import xbox
@@ -270,9 +270,9 @@ def revive_all():
 
 
 def get_advances(tros=True, report=False):
-    import rngTrack
+    import rng_track
 
-    tStrikeResults, yellows = rngTrack.t_strike_tracking(tros=tros, report=report)
+    tStrikeResults, yellows = rng_track.t_strike_tracking(tros=tros, report=report)
     if tStrikeResults[0] >= 1 and not yellows[0]:
         advances = 0
     elif tStrikeResults[1] >= 1 and not yellows[1]:
@@ -1784,7 +1784,7 @@ def seymour_guado_blitz_win():
                     elif memory.main.get_battle_char_slot(4) == i:
                         print("Wakka is dead")
             if turnchar == 0:
-                nextHit = rngTrack.next_action_hit(
+                nextHit = rng_track.next_action_hit(
                     character=memory.main.get_current_turn(), enemy="anima"
                 )
                 if tidusturns == 0:
@@ -3418,7 +3418,7 @@ def attack_self_tanker():
 
 
 def oblitz_rng_wait():
-    rngValues = rngTrack.oblitz_history()
+    rngValues = rng_track.oblitz_history()
     print(rngValues)
     lastRNG = memory.main.rng_from_index(index=2)
     comingSeeds = memory.main.rng_array_from_index(index=2, array_len=8)
@@ -4146,10 +4146,10 @@ def escape_action():
 def escape_one():
     print(
         "##### The next character will escape:",
-        rngTrack.next_action_escape(character=memory.main.get_current_turn()),
+        rng_track.next_action_escape(character=memory.main.get_current_turn()),
     )
     if (
-        not rngTrack.next_action_escape(character=memory.main.get_current_turn())
+        not rng_track.next_action_escape(character=memory.main.get_current_turn())
         and not memory.main.get_encounter_id() == 26
     ):
         if memory.main.get_story_progress() < 154:
@@ -4172,7 +4172,7 @@ def escape_one():
                     pass
                 elif replaceArray[i] in memory.main.get_active_battle_formation():
                     pass
-                elif rngTrack.next_action_escape(replaceArray[i]):
+                elif rng_track.next_action_escape(replaceArray[i]):
                     print("Character ", replaceArray[i], " can escape. Swapping.")
                     replacement = replaceArray[i]
                     buddy_swap_char(replacement)
@@ -4772,8 +4772,11 @@ def calm_lands_manip():
         calm_lands_gems()
     else:
         print("++++ Gems good. NEA manip logic.")
-        advancePreX, advancePostX = rngTrack.nea_track()  # returns integers
-        if advancePreX not in [0,2] and advancePostX not in [0,2]:  # Non-zero for both
+        advancePreX, advancePostX = rng_track.nea_track()  # returns integers
+        if advancePreX not in [0, 2] and advancePostX not in [
+            0,
+            2,
+        ]:  # Non-zero for both
             print("Not lined up for NEA")
             if rng10nextChanceLow == 0 and memory.main.get_encounter_id() in lowArray:
                 advance_rng_12()
@@ -4786,7 +4789,9 @@ def calm_lands_manip():
             else:  # If we can't advance on this battle, try to get the next "mid" level advance.
                 print("Can't drop off of this battle.")
                 advance_rng_10(rng10nextChanceMid)
-        elif advancePostX == 2:  # Lined up for non-drop defender X + drops on B&Y drops.
+        elif (
+            advancePostX == 2
+        ):  # Lined up for non-drop defender X + drops on B&Y drops.
             if memory.main.next_chance_rng_10() == 0:
                 advance_rng_10(1)
                 # Don't want to have Defender X drop an item
@@ -4971,7 +4976,7 @@ def advance_rng_12():
             print("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
-            preX, postX = rngTrack.nea_track()
+            preX, postX = rng_track.nea_track()
             if postX == 1:
                 advances = 1
             elif memory.main.get_map() == 223:
@@ -5028,9 +5033,9 @@ def advance_rng_12():
 
 
 def ghost_kill():
-    import rngTrack
+    import rng_track
 
-    nextDrop, _ = rngTrack.item_to_be_dropped()
+    nextDrop, _ = rng_track.item_to_be_dropped()
     owner1 = nextDrop.equipOwner
     owner2 = nextDrop.equipOwnerAlt
     silenceSlotCheck = memory.main.get_item_slot(39)
