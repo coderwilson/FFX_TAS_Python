@@ -5,7 +5,7 @@ import menu
 import pathing
 import vars
 import xbox
-import zz_eggHuntAuto
+import zz_egg_hunt_auto
 import zzairShipPath
 
 game_vars = vars.vars_handle()
@@ -187,7 +187,7 @@ def egg_hunt(auto_egg_hunt):
         FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 0.5)
     if auto_egg_hunt:
-        zz_eggHuntAuto.engage()
+        zz_egg_hunt_auto.engage()
     else:
         print("Start of egg hunt. User control expected.")
         waitCount = 0

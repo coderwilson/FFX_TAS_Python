@@ -40,9 +40,9 @@ while attempts < 10:
         print("Start egg hunt only program")
         print("--------------------------No-control method")
 
-        import zz_eggHuntAuto
+        import zz_egg_hunt_auto
 
-        zz_eggHuntAuto.engage()
+        zz_egg_hunt_auto.engage()
     else:
         # Initiate memory reading, after we know the game is open.
         print("Start egg hunt only program")
