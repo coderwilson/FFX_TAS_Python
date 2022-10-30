@@ -11,7 +11,8 @@ game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
-def loop_back_from_ronso(checkpoint = 0):
+
+def loop_back_from_ronso(checkpoint=0):
     memory.main.full_party_format("rikku")
     battle.main.heal_up(full_menu_close=True)
     rngTrack.print_manip_info()
@@ -20,13 +21,16 @@ def loop_back_from_ronso(checkpoint = 0):
         if memory.main.user_control():
             if checkpoint < 13 and memory.main.get_map() == 279:
                 checkpoint = 13
-            elif targetPathing.set_movement(targetPathing.gagazet_nea_loop_back(checkpoint)):
+            elif targetPathing.set_movement(
+                targetPathing.gagazet_nea_loop_back(checkpoint)
+            ):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
+
 
 def to_hidden_cave():
     memory.main.full_party_format("rikku")

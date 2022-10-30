@@ -17,7 +17,7 @@ import area.mac_woods
 import area.miihen
 import area.moonflow
 import area.MRR
-import area.neArmor
+import area.ne_armor
 import area.rescueYuna
 import area.sin
 import area.thunderPlains
@@ -844,11 +844,11 @@ while Gamestate != "End":
                 manipTime1 = logs.time_stamp()
 
                 print("Mark 1")
-                area.neArmor.to_hidden_cave()
+                area.ne_armor.to_hidden_cave()
                 print("Mark 2")
-                area.neArmor.drop_hunt()
+                area.ne_armor.drop_hunt()
                 print("Mark 3")
-                area.neArmor.return_to_gagazet()
+                area.ne_armor.return_to_gagazet()
                 manipTime2 = logs.time_stamp()
                 try:
                     manipTime = manipTime2 - manipTime1
@@ -863,7 +863,7 @@ while Gamestate != "End":
             report_gamestate()
             area.gagazet.to_the_ronso()
             if game_vars.ne_armor() == 255:
-                area.neArmor.loop_back_from_ronso()
+                area.ne_armor.loop_back_from_ronso()
                 step_counter = 2
             else:
                 area.gagazet.gagazet_gates()
