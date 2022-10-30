@@ -10,7 +10,7 @@ import logs
 import memory.main
 import reset
 import screen
-import Showcase.chocoEater
+import showcase.chocoEater
 import vars
 import xbox
 
@@ -112,8 +112,8 @@ while attempts < 20 and cycles < 50:
         print("###  Just for fun - Chocobo Eater Stomp")
         print("###  Please engage the CSR now!")
         load_game.load_save_num(28)
-        Showcase.chocoEater.engage()
-        Showcase.chocoEater.battle()
+        showcase.chocoEater.engage()
+        showcase.chocoEater.battle()
     else:  # Breaks the loop when everything is complete.
         attempts = 100
 
