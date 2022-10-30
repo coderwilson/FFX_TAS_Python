@@ -1,6 +1,6 @@
 import time
 
-import area.dreamZan
+import area.dream_zan
 import area.guadosalam
 import area.miihen
 import area.MRR
@@ -41,7 +41,7 @@ while attempts < 20 and cycles < 50:
     print(FFXC)
     print("Waiting to initialize - waiting on New Game screen")
     # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-    area.dreamZan.new_game("techdemo")
+    area.dream_zan.new_game("techdemo")
 
     print("Game start screen")
     screen.clear_mouse(0)

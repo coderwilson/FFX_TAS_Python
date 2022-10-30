@@ -3,7 +3,7 @@ import area.baaj
 import area.besaid
 import area.boats
 import area.djose
-import area.dreamZan
+import area.dream_zan
 import area.gagazet
 import area.guadosalam
 import area.home
@@ -43,7 +43,7 @@ else:
 
 if Gamestate != "none":
     if not (Gamestate == "Luca" and step_counter == 3):
-        area.dreamZan.new_game(Gamestate)
+        area.dream_zan.new_game(Gamestate)
 
     if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
         loadGame.load_save_num(9)

@@ -2,13 +2,11 @@
 import random
 import sys
 
-import config
-
 import area.baaj
 import area.besaid
 import area.boats
 import area.djose
-import area.dreamZan
+import area.dream_zan
 import area.gagazet
 import area.guadosalam
 import area.home
@@ -19,14 +17,15 @@ import area.moonflow
 import area.MRR
 import area.mTemple
 import area.mWoods
+import area.neArmor
 import area.rescueYuna
 import area.sin
 import area.thunderPlains
 import area.zanarkand
-import area.neArmor
 import battle.boss
 import battle.main
 import blitz
+import config
 import logs
 import memory.main
 import reset
@@ -81,29 +80,29 @@ step_counter = 1  # NEW GAME!
 # step_counter = 2 # x2 After Extractor
 # Gamestate = "Guadosalam"
 # step_counter = 2 # x3 before Guadosalam Skip
-#Gamestate = "Macalania"
+# Gamestate = "Macalania"
 # step_counter = 1 # x9
 # step_counter = 2 # x7
-#step_counter = 4 # x10 Seymour
+# step_counter = 4 # x10 Seymour
 # step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
 # Gamestate = "Home"
 # step_counter = 1 # x60
 # step_counter = 2 # x11
-#Gamestate = "rescueYuna"
+# Gamestate = "rescueYuna"
 # step_counter = 1 # x56 First save chance on airship, before any movement.
 # step_counter = 2 # x15
-#step_counter = 4 # x30 Altana (any%) / x12 Altana (nemesis)
+# step_counter = 4 # x30 Altana (any%) / x12 Altana (nemesis)
 # step_counter = 5 # x42 regular, 67 nemesis
-#Gamestate = "Gagazet"
-#step_counter = 1 # x43
+# Gamestate = "Gagazet"
+# step_counter = 1 # x43
 # step_counter = 3 # x138 After B&Y
-#step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
+# step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
 # step_counter = 10 # Nemesis variant, blitz win logic (not working)
 # step_counter = 11 # Remiem racing
-#Gamestate = "Zanarkand"
+# Gamestate = "Zanarkand"
 # step_counter = 1 # x99 Campfire
 # step_counter = 4 # x44 Before Yunalesca
-#step_counter = 5 # x48 After Yunalesca any%, x13 for Nemesis
+# step_counter = 5 # x48 After Yunalesca any%, x13 for Nemesis
 # Gamestate = "Sin"
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
@@ -112,9 +111,9 @@ Gamestate = "none"
 step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
-#Gamestate = "Nem_Farm"
-#step_counter = 1 # x14 Inside Sin, right at start of the branching logic.
-#step_counter = 13 # x17 Just before Djose farm
+# Gamestate = "Nem_Farm"
+# step_counter = 1 # x14 Inside Sin, right at start of the branching logic.
+# step_counter = 13 # x17 Just before Djose farm
 # step_counter = 14 #Just before Thunder Plains farm
 # step_counter = 16 #Just before Bikanel farm
 # step_counter = 18 #Just before Fayth Cave farm
@@ -143,14 +142,14 @@ rngSeedNum = 160  # If you don't randomly select below, this will be the seed yo
 # Open the config file and parse game configuration
 # This may overwrite configuration above
 try:
-    config_data     = config.open_config()
+    config_data = config.open_config()
     # Gamestate
-    Gamestate       = config_data['Gamestate']
-    step_counter    = config_data['step_counter']
+    Gamestate = config_data["Gamestate"]
+    step_counter = config_data["step_counter"]
     # RNG
-    forceBlitzWin   = config_data['forceBlitzWin']
-    seedHunt        = config_data['seedHunt']
-    rngSeedNum      = config_data['rngSeedNum']
+    forceBlitzWin = config_data["forceBlitzWin"]
+    seedHunt = config_data["seedHunt"]
+    rngSeedNum = config_data["rngSeedNum"]
 except Exception as E:
     print("Failed to load configuration: ", E)
 
@@ -225,7 +224,7 @@ logs.write_stats(rngSeed)
 # Next, check if we are loading to a save file
 if Gamestate != "none":
     if not (Gamestate == "Luca" and step_counter == 3):
-        area.dreamZan.new_game(Gamestate)
+        area.dream_zan.new_game(Gamestate)
         startTime = logs.time_stamp()
         logs.write_stats("Start time:")
         logs.write_stats(str(startTime))
@@ -293,6 +292,7 @@ if Gamestate != "none":
         loadGame.load_save_num(190)
         loadGame.load_mac_temple()
         import menu
+
         menu.equip_weapon(character=0, special="brotherhood")
         menu.mac_temple()
     # Outside temple, before escaping.
@@ -309,8 +309,8 @@ if Gamestate != "none":
         loadGame.load_save_num(15)
     if Gamestate == "rescueYuna" and step_counter == 4:  # Altana
         loadGame.load_save_num(12)
-        #memory.main.setEncounterRate(setVal=0)
-        #memory.main.setGameSpeed(setVal=1)
+        # memory.main.setEncounterRate(setVal=0)
+        # memory.main.setGameSpeed(setVal=1)
     # Highbridge before Seymour Natus
     if Gamestate == "rescueYuna" and step_counter == 5:
         loadGame.load_save_num(42)  # Regular
@@ -454,7 +454,7 @@ while Gamestate != "End":
     try:
         # Blitzball testing logic
         if Gamestate == "Luca" and step_counter == 3:
-            area.dreamZan.new_game(Gamestate)
+            area.dream_zan.new_game(Gamestate)
             loadGame.load_save_num(37)
 
         if rngSeedNum >= 256:
@@ -464,7 +464,7 @@ while Gamestate != "End":
         if Gamestate == "none" and step_counter == 1:
             report_gamestate()
             print("New Game 1 function initiated.")
-            area.dreamZan.new_game(Gamestate)
+            area.dream_zan.new_game(Gamestate)
             print("New Game 1 function complete.")
             game_vars.set_new_game()
             game_vars.set_csr(True)
@@ -472,16 +472,16 @@ while Gamestate != "End":
             Gamestate = "DreamZan"
             memory.main.wait_frames(30 * 0.5)
             print("New Game 2 function initiated.")
-            area.dreamZan.new_game_2()
+            area.dream_zan.new_game_2()
             startTime = logs.time_stamp()
             logs.write_stats("Start time:")
             logs.write_stats(str(startTime))
             print("Timer starts now.")
-            area.dreamZan.listen_story()
+            area.dream_zan.listen_story()
             # Gamestate, step_counter = reset.midRunReset()
             # Start of the game, up through the start of Sinspawn Ammes fight
             step_counter = 2
-            area.dreamZan.ammes_battle()
+            area.dream_zan.ammes_battle()
 
         if Gamestate == "DreamZan" and step_counter == 2:
             report_gamestate()
@@ -490,7 +490,7 @@ while Gamestate != "End":
             report_gamestate()
 
         if Gamestate == "DreamZan" and step_counter == 3:
-            area.dreamZan.after_ammes()
+            area.dream_zan.after_ammes()
             # Sin drops us near Baaj temple.
             Gamestate = "Baaj"
             step_counter = 1
@@ -831,8 +831,9 @@ while Gamestate != "End":
             area.gagazet.calm_lands()
             area.gagazet.defender_x()
             import rngTrack
+
             advancePreX, advancePostX = rngTrack.nea_track()
-            if advancePostX in [0,1]:
+            if advancePostX in [0, 1]:
                 step_counter = 2
             else:
                 step_counter = 3

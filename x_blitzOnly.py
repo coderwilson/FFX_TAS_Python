@@ -1,6 +1,6 @@
 import time
 
-import area.dreamZan
+import area.dream_zan
 import area.luca
 import blitz
 import loadGame
@@ -39,7 +39,7 @@ rngMod19Array = [0] * 200
 rngMod20Array = [0] * 200
 
 while attempts < 20:
-    area.dreamZan.new_game("BlitzballTesting")
+    area.dream_zan.new_game("BlitzballTesting")
     loadGame.load_save_num(37)
     memory.main.reset_battle_end()
     rngRootArray[attempts] = memory.main.rng_02()

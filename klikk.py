@@ -1,4 +1,4 @@
-import area.dreamZan
+import area.dream_zan
 import loadGame
 import logs
 import memory.main
@@ -14,7 +14,7 @@ memory.main.start()
 # Plug in controller
 FFXC = xbox.controller_handle()
 
-area.dreamZan.new_game("Klikk testing")
+area.dream_zan.new_game("Klikk testing")
 loadGame.load_save_num(101)
 memory.main.await_control()
 while memory.main.user_control():

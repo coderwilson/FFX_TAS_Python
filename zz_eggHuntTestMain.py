@@ -1,6 +1,6 @@
 import time
 
-import area.dreamZan
+import area.dream_zan
 import battle.main
 import memory.main
 import reset
@@ -19,7 +19,7 @@ while attempts < 10:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-        area.dreamZan.new_game("rescueYuna")
+        area.dream_zan.new_game("rescueYuna")
         print("Game start screen")
         screen.clear_mouse(0)
 
