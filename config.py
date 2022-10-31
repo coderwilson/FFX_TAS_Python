@@ -17,6 +17,8 @@ def open_config():
             try:
                 return yaml.load(config_file, Loader=Loader)
             except Exception as E:
-                print("Failed to parse config file: ", E)
+                print(f"Error: Failed to parse config file {CONFIG_FILE_PATH}: {E}")
+                return {}
     except Exception as E:
-        print("Unable to load config file: ", CONFIG_FILE_PATH, E)
+        print(f"Didn't find config file {CONFIG_FILE_PATH}, using default values for run.")
+        return {}
