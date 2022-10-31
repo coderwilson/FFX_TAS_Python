@@ -6,6 +6,7 @@ import menu
 import targetPathing
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -112,7 +113,7 @@ def arrival():
                 checkpoint += 1
             elif checkpoint == 46 or checkpoint == 55:
                 print("Event: Touch Save Sphere")
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 48:  # Oblitzerator
                 print("Event: Oblitzerator fight")

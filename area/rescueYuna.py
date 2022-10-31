@@ -8,6 +8,7 @@ import targetPathing
 import vars
 import xbox
 import zzairShipPath
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -29,7 +30,7 @@ def pre_evrae():
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 13:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 memory.main.full_party_format("evrae")
                 checkpoint += 1
             elif checkpoint == 18:
@@ -555,7 +556,7 @@ def seymour_natus():
             menu.seymour_natus_blitz_loss()
 
     memory.main.full_party_format("highbridge")
-    memory.main.touch_save_sphere()
+    save_sphere.touch_and_go()
     complete = 0
     while complete == 0:
         if memory.main.user_control():

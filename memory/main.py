@@ -2038,10 +2038,11 @@ def get_actor_array_size():
 
 
 def get_actor_id(actor_num):
+    actor_index = actor_num
     global baseValue
     basePointer = baseValue + 0x01FC44E4
     basePointerAddress = process.read(basePointer)
-    offsetX = 0x880 * actor_num
+    offsetX = 0x880 * actor_index
     return process.readBytes(basePointerAddress + offsetX, 2)
 
 

@@ -6,6 +6,7 @@ import screen
 import targetPathing
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -40,7 +41,7 @@ def approach(do_grid=True):
     memory.main.await_control()
     if do_grid:
         menu.mac_temple()
-    memory.main.touch_save_sphere()
+    save_sphere.touch_and_go()
 
 
 def arrival():
@@ -58,7 +59,7 @@ def arrival():
                 checkpoint += 1
             elif checkpoint == 2 and not touchSave:
                 touchSave = True
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
             elif checkpoint == 2 and game_vars.csr():
                 checkpoint = 11
             elif checkpoint == 4:  # Talking to Trommell
@@ -267,7 +268,7 @@ def escape():
         if memory.main.user_control():
             # Events
             if checkpoint == 2:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
                 print("Touching save sphere. Update checkpoint:", checkpoint)
             elif checkpoint == 18 and forceBattle:

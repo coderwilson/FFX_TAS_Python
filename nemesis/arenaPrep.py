@@ -9,6 +9,7 @@ import screen
 import vars
 import xbox
 import menu
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -1725,7 +1726,7 @@ def miihen_farm(cap_num: int = 1):
             # Save Sphere / Exit logic
             if checkpoint in [47, 61, 62, 63, 164] and prefArea in [8, 9]:
                 if prefArea == 8:
-                    memory.main.touch_save_sphere()
+                    save_sphere.touch_and_go()
                     prefArea = miihen_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                 else:
@@ -1889,7 +1890,7 @@ def miihen_farm_old(cap_num: int = 1):
             elif checkpoint in [31, 42] and memory.main.get_map() == 59:
                 checkpoint += 1
             elif checkpoint in [34, 47]:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 39:
                 memory.main.click_to_event_temple(4)
@@ -2069,7 +2070,7 @@ def djose_farm(cap_num: int = 10):
             # Reset/End logic
             elif checkpoint == 37:
                 if prefArea == 3:
-                    memory.main.touch_save_sphere()
+                    save_sphere.touch_and_go()
                     checkpoint += 1
                 else:
                     return_to_airship()
@@ -2238,7 +2239,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 print("Map change: ", checkpoint)
             if checkpoint == 23:
                 if prefArea == 3:
-                    memory.main.touch_save_sphere()
+                    save_sphere.touch_and_go()
                     menu.remove_all_nea()
                     neEquip = False
                     prefArea = plains_next(end_goal=cap_num)
@@ -2408,7 +2409,7 @@ def mac_woods(cap_num: int = 10):
                 checkpoint += 1
             elif checkpoint in [10, 15] and prefArea in [3, 4]:
                 if prefArea == 3:
-                    memory.main.touch_save_sphere()
+                    save_sphere.touch_and_go()
                     prefArea = woods_next(end_goal=cap_num)
                     print("Next area: ", prefArea)
                     if prefArea == 1:
@@ -3081,7 +3082,7 @@ def gagazet(cap_num: int = 10):
             # End decisions
             if checkpoint == 43:
                 if prefArea == 8:
-                    memory.main.touch_save_sphere()
+                    save_sphere.touch_and_go()
                     checkpoint = 0
                 else:
                     return_to_airship()
@@ -3473,7 +3474,7 @@ def inside_sin(cap_num: int = 10):
                 FFXC.set_neutral()
                 memory.main.wait_frames(3)
                 memory.main.await_control()
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 nemesis.targetPath.set_movement([-200, -525])
                 memory.main.await_event()
                 FFXC.set_neutral()
@@ -3528,7 +3529,7 @@ def omega_ruins(cap_num: int = 10):
                 checkpoint -= 2
                 print("Checkpoint reached: ", checkpoint)
             elif memory.main.get_tidus_mp() < 20:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
             elif checkpoint == 3:
                 return_to_airship()
             elif (

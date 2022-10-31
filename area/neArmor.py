@@ -6,6 +6,7 @@ import rngTrack
 import targetPathing
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -41,7 +42,7 @@ def to_hidden_cave():
             if checkpoint < 5 and memory.main.get_map() == 266:
                 checkpoint = 5
             if checkpoint == 7 and not firstSave:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 firstSave = True
             _, nextDrop = rngTrack.nea_track()
             if checkpoint == 8 and (
@@ -87,7 +88,7 @@ def to_hidden_cave():
                     battle.main.flee_all()
                 prepBattles += 1
                 memory.main.full_party_format("rikku")
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 rngTrack.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
@@ -104,7 +105,13 @@ def next_green():
     if nextGreen < nextWhite and memory.main.next_chance_rng_10() == 0:
         if nextGreen >= 2:
             goGreen = True
-
+    if game_vars.accessibilityVars()[2]:
+        if goGreen:
+            tts.message("Green")
+            tts.message(str(nextGreen))
+        else:
+            tts.message("White")
+            tts.message(str(nextWhite))
 
 def drop_hunt():
     print("Now in the cave. Ready to try to get the NE armor.")
@@ -188,7 +195,7 @@ def return_to_gagazet():
                 menu.equip_armor(character=game_vars.ne_armor(), ability=99)
                 unequip = False
             elif checkpoint == 2:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint < 7 and memory.main.get_map() == 279:
                 checkpoint = 7

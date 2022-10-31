@@ -8,6 +8,7 @@ import targetPathing
 import tts
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -230,7 +231,7 @@ def after_ammes():
             else:
                 # Map changes and events
                 if checkpoint == 6:  # Save sphere
-                    memory.main.touch_save_sphere()
+                    save_sphere.touch_and_go()
                     checkpoint += 1
                 # Swim to Jecht
                 elif checkpoint < 9 and memory.main.get_story_progress() >= 20:

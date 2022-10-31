@@ -6,6 +6,7 @@ import menu
 import targetPathing
 import vars
 import xbox
+import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -128,7 +129,7 @@ def forest_1():
                 else:
                     checkpoint += 1
             elif checkpoint == 86:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 if not game_vars.did_full_kilik_menu():
                     menu.geneaux()
                 checkpoint += 1

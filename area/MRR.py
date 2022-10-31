@@ -9,6 +9,7 @@ import screen
 import targetPathing
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -98,7 +99,7 @@ def main_path():
             status[5] = 3
         if memory.main.user_control():
             if checkpoint == 1:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 memory.main.full_party_format("mrr1")
                 checkpoint += 1
             elif checkpoint == 4:
@@ -257,7 +258,7 @@ def battle_site():
                 )
                 checkpoint += 1
             elif checkpoint == 8:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 print(
                     "======== Next Kimahri crit:",
                     memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),

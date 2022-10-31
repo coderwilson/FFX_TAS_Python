@@ -6,6 +6,7 @@ import screen
 import targetPathing
 import vars
 import xbox
+import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -72,7 +73,7 @@ def baaj_puzzle():
         if memory.main.user_control():
             # Events
             if checkpoint == 3:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 5:  # Flint room
                 memory.main.click_to_event_temple(0)
@@ -213,7 +214,7 @@ def ab_swimming_2():
     memory.main.await_control()
     FFXC.set_movement(1, -1)
     FFXC.set_value("BtnA", 1)
-    memory.main.touch_save_sphere()
+    save_sphere.touch_and_go()
 
     memory.main.clear_save_menu_cursor_2()
     # Now to get to it
