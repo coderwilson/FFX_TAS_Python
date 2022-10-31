@@ -33,8 +33,6 @@ class AllVars:
         # use the original Soundtrack instead of arranged
         self.legacySoundtrack = config_vars.get("legacySoundtrack", True)
         self.doNotSkipCutscenes = config_vars.get("doNotSkipCutscenes", False)
-        # Sin egg hunt
-        self.autoEggHunt = config_vars.get("autoEggHunt", True)
 
         # ----Accessibility for blind
         self.skip_cutscene_flag = config_vars.get("skip_cutscene_flag", True)
@@ -340,9 +338,6 @@ class AllVars:
 
     def get_skip_zan_luck(self):
         return self.skipZanLuck
-
-    def get_sin_auto_egg_hunt(self):
-        return self.autoEggHunt
 
 
 def init_vars():
