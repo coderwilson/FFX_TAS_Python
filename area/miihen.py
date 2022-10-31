@@ -6,6 +6,7 @@ import pathing
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -309,7 +310,7 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
         if memory.main.user_control():
             # Utility stuff
             if checkpoint == 2:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 26 and not game_vars.self_destruct_get():
                 checkpoint = 24

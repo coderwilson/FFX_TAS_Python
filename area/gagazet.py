@@ -8,6 +8,7 @@ import rng_track
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -189,7 +190,7 @@ def flux():
             if checkpoint == 7:
                 FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 8:
                 while memory.main.user_control():
