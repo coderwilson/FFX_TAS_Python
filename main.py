@@ -153,11 +153,11 @@ rng_seed_num = config_data.get("rng_seed_num", 160)
 use_favored_seed = config_data.get("use_favored_seed", False)
 
 # Set these to False by default. Overwritten below in some cases.
-blitzTesting = False
+blitz_testing = False
 rngReviewOnly = False
 
 if gamestate == "Luca" and step_counter == 3:
-    blitzTesting = True
+    blitz_testing = True
     gameLength = "Testing Blitzball only"
 elif gamestate != "none":  # Loading a save file, no RNG manip here
     rng_seed_num = 255
