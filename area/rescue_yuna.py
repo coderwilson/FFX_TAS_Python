@@ -7,7 +7,7 @@ import rng_track
 import screen
 import vars
 import xbox
-import zzairShipPath
+import zz_airship_path
 import save_sphere
 
 game_vars = vars.vars_handle()

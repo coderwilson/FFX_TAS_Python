@@ -33,6 +33,7 @@ import screen
 import vars
 import xbox
 
+game_vars = vars.init_vars()
 game_vars = vars.vars_handle()
 game_vars.set_start_vars()
 
@@ -164,20 +165,6 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     # gameVars.setCSR(True)
 elif game_vars.use_set_seed():
     gameLength = f"Full Run, set seed [{rngSeedNum}]"
-elif not seedHunt:  # Full run starting from New Game
-    # Select a seed randomly, overrules the set seed above.
-    # rngSeedNum = random.choice(range(256))
-    # Select a favorite seed randomly, overrules the set seed above.
-    # rngSeedNum = random.choice(rngSelectArray)
-    # Current WR is on seed 160 for both any% and CSR%
-    rngReviewOnly = False
-    gameLength = "Full Run"
-    blitzTesting = False
-else:  # Don't use this.
-    step_counter = 1
-    rngReviewOnly = True
-    gameLength = "Seed Hunt"
-# Full run starting from New Game, using a favored seed
 elif useFavoredSeed:
     rngSeedNum = random.choice(rngSelectArray)
     gameLength = "Full Run, favored seed"
