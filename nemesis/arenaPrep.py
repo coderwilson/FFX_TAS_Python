@@ -1776,7 +1776,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint == 151 and not neArmor:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
-            elif checkpoint == 69 and prefArea != 3:
+            elif checkpoint == 69 and prefArea != 3 and not neArmor:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 
