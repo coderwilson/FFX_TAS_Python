@@ -8,7 +8,8 @@ step_counter  : 1      # valid step_counter values are dependent on Gamestate
 # RNG Seed (requires setting vars.setSeed: True)
 forceBlitzWin : False  #            - Missing documentation -
 seedHunt      : False  #            - Missing documentation -
-rngSeedNum    : 160    #            - Missing documentation -
+rngSeedNum    : 160    # If starting a new run and using setSeed, use this RNG seed
+useFavoredSeed: False  # If starting a new run and not using setSeed, use a curated array of seeds
 
 # Run configuration variables in vars.py
 vars:
