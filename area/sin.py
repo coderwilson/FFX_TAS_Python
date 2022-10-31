@@ -181,21 +181,12 @@ def inside_sin():
                 xbox.tap_b()
 
 
-def egg_hunt(auto_egg_hunt):
+def egg_hunt():
     # Done with pathing, now for egg hunt.
     while not memory.main.user_control():
         FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 0.5)
-    if auto_egg_hunt:
-        zz_egg_hunt_auto.engage()
-    else:
-        print("Start of egg hunt. User control expected.")
-        waitCount = 0
-        while memory.main.get_map() != 325:
-            memory.main.wait_frames(30 * 1)
-            waitCount += 1
-            if waitCount % 10 == 0:
-                print("Still waiting on user to do this section. ", waitCount / 10)
+    zz_egg_hunt_auto.engage()
     print("Done with the egg hunt. Final prep for BFA.")
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
