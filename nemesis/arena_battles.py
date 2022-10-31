@@ -8,6 +8,7 @@ import reset
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -71,7 +72,7 @@ def touch_save(real_save=False):
         pass
     while not nemesis.targetPath.set_movement([-2, -2]):
         pass
-    memory.main.touch_save_sphere()
+    save_sphere.touch_and_go()
     while not nemesis.targetPath.set_movement([-6, -27]):
         pass
     while not nemesis.targetPath.set_movement([2, -25]):

@@ -85,10 +85,10 @@ step_counter = 1  # NEW GAME!
 # step_counter = 2 # x7
 # step_counter = 4 # x10 Seymour
 # step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
-# Gamestate = "Home"
+Gamestate = "Home"
 # step_counter = 1 # x60
-# step_counter = 2 # x11
-# Gamestate = "rescueYuna"
+step_counter = 2 # x11
+#Gamestate = "rescueYuna"
 # step_counter = 1 # x56 First save chance on airship, before any movement.
 # step_counter = 2 # x15
 # step_counter = 4 # x30 Altana (any%) / x12 Altana (nemesis)
@@ -107,8 +107,8 @@ step_counter = 1  # NEW GAME!
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-Gamestate = "none"
-step_counter = 1  # NEW GAME!
+#Gamestate = "none"
+#step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
@@ -164,7 +164,16 @@ elif Gamestate != "none":  # Loading a save file, no RNG manip here
     # gameVars.setCSR(True)
 elif game_vars.use_set_seed():
     gameLength = f"Full Run, set seed [{rngSeedNum}]"
-elif seedHunt:  # Don't use this.
+elif not seedHunt:  # Full run starting from New Game
+    # Select a seed randomly, overrules the set seed above.
+    # rngSeedNum = random.choice(range(256))
+    # Select a favorite seed randomly, overrules the set seed above.
+    # rngSeedNum = random.choice(rngSelectArray)
+    # Current WR is on seed 160 for both any% and CSR%
+    rngReviewOnly = False
+    gameLength = "Full Run"
+    blitzTesting = False
+else:  # Don't use this.
     step_counter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"

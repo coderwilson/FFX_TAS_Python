@@ -7,6 +7,7 @@ import pathing
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -77,7 +78,7 @@ def arrival(rikku_charged):
     memory.main.wait_frames(2)
     memory.main.await_control()
     memory.main.wait_frames(1)
-    memory.main.touch_save_sphere()
+    save_sphere.touch_and_go()
     FFXC.set_neutral()
 
 

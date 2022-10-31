@@ -6,6 +6,7 @@ import menu
 import pathing
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -122,7 +123,7 @@ def desert():
             elif checkpoint == 2 or checkpoint == 24:  # Save sphere
                 FFXC.set_neutral()
                 memory.main.wait_frames(30 * 0.2)
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 53:
                 print("Going for first Sandragora and chest")
@@ -246,7 +247,7 @@ def find_summoners():
             # events
             if checkpoint == 7:
                 FFXC.set_neutral()
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
 
                 checkpoint += 1
             elif checkpoint < 12 and memory.main.get_map() == 276:
