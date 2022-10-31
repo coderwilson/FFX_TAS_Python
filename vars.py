@@ -74,7 +74,7 @@ class AllVars:
 
         # ----Other
         self.newGame = config_vars.get("newGame", False)  # ?
-        self.selfDestruct = config_vars.get("selfDestruct", False)  # Default False
+        self.self_destruct = config_vars.get("self_destruct", False)  # Default False
         self.YTKFarm = config_vars.get("YTKFarm", 0)  # Default to 0
         self.rescueCount = config_vars.get("rescueCount", 0)  # Default to 0
         # Default to False
@@ -308,10 +308,10 @@ class AllVars:
         return self.endGameVersionVal
 
     def self_destruct_learned(self):
-        self.selfDestruct = True
+        self.self_destruct = True
 
     def self_destruct_get(self):
-        return self.selfDestruct
+        return self.self_destruct
 
     def add_rescue_count(self):
         self.rescueCount += 1

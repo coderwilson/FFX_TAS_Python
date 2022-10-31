@@ -4,9 +4,9 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -14,7 +14,7 @@ game_vars = vars.vars_handle()
 
 def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
-    # if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
+    # if memory.main.rng_seed() == 31 and gameVars.skipKilikaLuck():
     #    gameVars.dontSkipKilikaLuck()
 
     print("Arrived at Kilika docks.")

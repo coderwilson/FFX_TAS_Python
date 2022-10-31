@@ -84,10 +84,10 @@ def south_pathing():
 
 
 def agency_shop():
-    speedCount = memory.main.get_speed()
+    speed_count = memory.main.get_speed()
 
     # 15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
-    speedNeeded = max(0, min(2, 14 - speedCount))
+    speedNeeded = max(0, min(2, 14 - speed_count))
     if (
         memory.main.rng_seed() == 160
         and not game_vars.get_blitz_win()

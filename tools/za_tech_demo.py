@@ -26,7 +26,7 @@ print(FFXC)
 print("Starting tech-demo program.")
 
 memory.main.start()
-startTime = logs.time_stamp()
+start_time = logs.time_stamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
@@ -137,11 +137,11 @@ while attempts < 20 and cycles < 50:
         print("Final demo is complete. Thanks for playing.")
 
 
-endTime = logs.time_stamp()
+end_time = logs.time_stamp()
 print("------------------------------")
 print("------------------------------")
-totalTime = endTime - startTime
-print("The program duration (real time) was:", str(totalTime))
+total_time = end_time - start_time
+print("The program duration (real time) was:", str(total_time))
 print("------------------------------")
 print("------------------------------")
 

@@ -58,7 +58,7 @@ vars:
 
   # Other
   newGame             : False  #            - Missing documentation -
-  selfDestruct        : False  # Default False
+  self_destruct        : False  # Default False
   YTKFarm             : 0      # Default to 0
   rescueCount         : 0      # Default to 0
   fluxOverkillVar     : False  # Default to False

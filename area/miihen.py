@@ -3,10 +3,10 @@ import battle.main
 import logs
 import memory.main
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -218,7 +218,7 @@ def arrival():
     return [game_vars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]
 
 
-def arrival_2(selfDestruct, battleCount, SDencounterID):
+def arrival_2(self_destruct, battleCount, SDencounterID):
     print("Start of the second map")
     checkpoint = 15
     while memory.main.get_map() != 171:

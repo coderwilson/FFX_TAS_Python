@@ -154,36 +154,36 @@ use_favored_seed = config_data.get("use_favored_seed", False)
 
 # Set these to False by default. Overwritten below in some cases.
 blitz_testing = False
-rngReviewOnly = False
+rng_review_only = False
 
 if gamestate == "Luca" and step_counter == 3:
     blitz_testing = True
-    gameLength = "Testing Blitzball only"
+    game_length = "Testing Blitzball only"
 elif gamestate != "none":  # Loading a save file, no RNG manip here
     rng_seed_num = 255
-    gameLength = "Loading mid point for testing."
-    # gameVars.setCSR(True)
+    game_length = "Loading mid point for testing."
+    # game_vars.set_csr(True)
 elif game_vars.use_set_seed():
-    gameLength = f"Full Run, set seed [{rng_seed_num}]"
+    game_length = f"Full Run, set seed [{rng_seed_num}]"
 elif use_favored_seed:
     rng_seed_num = random.choice(rng_select_array)
-    gameLength = "Full Run, favored seed"
+    game_length = "Full Run, favored seed"
 # Full run starting from New Game, random seed
 else:
     rng_seed_num = random.choice(range(256))
     # Current WR is on seed 160 for both any% and CSR%
-    gameLength = "Full Run, random seed"
+    game_length = "Full Run, random seed"
 
-print("Game type will be:", gameLength)
-maxLoops = 12
+print("Game type will be:", game_length)
+max_loops = 12
 
 # Other variables
-rngSeedOrig = rng_seed_num
-speedCount = 0
-strengthCount = 0
+rng_seed_orig = rng_seed_num
+speed_count = 0
+strength_count = 0
 gems = 0  # Set to 2 if loading in after Evrae Altana with two gems
-autoEggHunt = True
-specialZanLoad = False
+auto_egg_hunt = True
+special_zan_load = False
 
 
 # Main functions
@@ -211,23 +211,23 @@ screen.clear_mouse(0)
 if game_vars.use_set_seed():
     memory.main.set_rng_seed(rng_seed_num)
 
-rngSeed = memory.main.rng_seed()
-print("---RNG seed:", rngSeed)
-logs.next_stats(rngSeed)
+rng_seed = memory.main.rng_seed()
+print("---RNG seed:", rng_seed)
+logs.next_stats(rng_seed)
 logs.write_stats("RNG seed:")
-logs.write_stats(rngSeed)
+logs.write_stats(rng_seed)
 
 # Next, check if we are loading to a save file
 if gamestate != "none":
     if not (gamestate == "Luca" and step_counter == 3):
         area.dream_zan.new_game(gamestate)
-        startTime = logs.time_stamp()
+        start_time = logs.time_stamp()
         logs.write_stats("Start time:")
-        logs.write_stats(str(startTime))
+        logs.write_stats(str(start_time))
         report_gamestate()
     import load_game
 
-    # Need to update these to use loadGame.loadSaveNum(number) for all.
+    # Need to update these to use load_game.load_save_num(number) for all.
 
     if gamestate == "Baaj" and step_counter == 1:
         load_game.load_save_num(40)
@@ -265,7 +265,7 @@ if gamestate != "none":
         load_game.load_miihen_start_laugh()
     if gamestate == "Miihen" and step_counter == 2:  # Agency
         load_game.load_save_num(28)
-        returnArray = [False, 0, 0, False]
+        return_array = [False, 0, 0, False]
     if gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
         load_game.load_save_num(38)
         memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
@@ -305,12 +305,12 @@ if gamestate != "none":
         load_game.load_save_num(15)
     if gamestate == "rescueYuna" and step_counter == 4:  # Altana
         load_game.load_save_num(12)
-        # memory.main.setEncounterRate(setVal=0)
-        # memory.main.setGameSpeed(setVal=1)
+        # memory.main.set_encounter_rate(set_val=0)
+        # memory.main.set_game_speed(set_val=1)
     # Highbridge before Seymour Natus
     if gamestate == "rescueYuna" and step_counter == 5:
         load_game.load_save_num(42)  # Regular
-        # loadGame.loadSaveNum(67) #Nemesis
+        # load_game.load_save_num(67)  # Nemesis
     if gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
         load_game.load_save_num(43)
         load_game.load_calm()
@@ -319,7 +319,7 @@ if gamestate != "none":
         load_game.load_save_num(57)
     if gamestate == "Gagazet" and step_counter == 3:  # Gagazet gates, after B&Y
         load_game.load_save_num(138)  # Blitz Win
-        # loadGame.loadSaveNum(53) # Blitz Loss
+        # load_game.load_save_num(53)  # Blitz Loss
         game_vars.end_game_version_set(4)
         load_game.load_gagazet_gates()
     if gamestate == "Gagazet" and step_counter == 6:  # After the dream
@@ -357,7 +357,7 @@ if gamestate != "none":
         game_vars.end_game_version_set(4)
     if gamestate == "Zanarkand" and step_counter == 5:  # After Yunalesca
         load_game.load_save_num(13)
-        specialZanLoad = True
+        special_zan_load = True
     # Save sphere on the Highbridge before talking to Shedinja
     if gamestate == "Sin" and step_counter == 2:
         # loadGame.loadSaveNum(49)
@@ -389,7 +389,7 @@ if gamestate != "none":
     if gamestate == "Nem_Farm" and step_counter == 3:
         load_game.load_save_num(84)
         game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
-        # import nemesis.arenaPrep
+        # import nemesis.arena_prep
         nemesis.arenaPrep.arena_return()
     if gamestate == "Nem_Farm" and step_counter == 5:
         load_game.load_save_num(71)
@@ -426,7 +426,7 @@ if gamestate != "none":
     if gamestate == "Nem_Farm" and step_counter == 22:
         load_game.load_save_num(82)
         # import nemesis.menu
-        # nemesis.menu.rikkuHaste()
+        # nemesis.menu.rikku_haste()
         game_vars.set_nem_checkpoint_ap(24)  # See nemesis.menu
     if gamestate == "Nem_Farm" and step_counter == 23:
         load_game.load_save_num(80)
@@ -442,8 +442,8 @@ if gamestate != "none":
         memory.main.check_nea_armor()
     memory.main.check_nea_armor()
 
-rikkuCharged = 0
-blitzLoops = 0
+rikku_charged = 0
+blitz_loops = 0
 
 while gamestate != "End":
 
@@ -469,12 +469,12 @@ while gamestate != "End":
             memory.main.wait_frames(30 * 0.5)
             print("New Game 2 function initiated.")
             area.dream_zan.new_game_2()
-            startTime = logs.time_stamp()
+            start_time = logs.time_stamp()
             logs.write_stats("Start time:")
-            logs.write_stats(str(startTime))
+            logs.write_stats(str(start_time))
             print("Timer starts now.")
             area.dream_zan.listen_story()
-            # gamestate, step_counter = reset.midRunReset()
+            # gamestate, step_counter = reset.mid_run_reset()
             # Start of the game, up through the start of Sinspawn Ammes fight
             step_counter = 2
             area.dream_zan.ammes_battle()
@@ -594,11 +594,11 @@ while gamestate != "End":
 
         if gamestate == "Luca" and step_counter == 2:
             report_gamestate()
-            endTime = logs.time_stamp()
-            totalTime = endTime - startTime
-            print("Pre-Blitz time:", str(totalTime))
+            end_time = logs.time_stamp()
+            total_time = end_time - start_time
+            print("Pre-Blitz time:", str(total_time))
             logs.write_stats("Pre Blitz time:")
-            logs.write_stats(totalTime)
+            logs.write_stats(total_time)
             step_counter = 3
 
         if gamestate == "Luca" and step_counter == 3:
@@ -614,14 +614,14 @@ while gamestate != "End":
             if not game_vars.csr():
                 xbox.await_save()
 
-            if game_vars.loop_blitz() and blitzLoops < maxLoops:
+            if game_vars.loop_blitz() and blitz_loops < max_loops:
                 FFXC.set_neutral()
                 print("-------------")
                 print("- Resetting -")
                 print("-------------")
                 screen.await_turn()
                 gamestate, step_counter = reset.mid_run_reset()
-                blitzLoops += 1
+                blitz_loops += 1
             elif game_vars.blitz_loss_reset() and not game_vars.get_blitz_win():
                 FFXC.set_neutral()
                 print("------------------------------")
@@ -644,9 +644,9 @@ while gamestate != "End":
         # Just to make sure we set this variable somewhere.
         if gamestate == "Miihen" and step_counter == 1:
             report_gamestate()
-            returnArray = area.miihen.arrival()
-            selfDestruct = area.miihen.arrival_2(
-                returnArray[0], returnArray[1], returnArray[2]
+            return_array = area.miihen.arrival()
+            self_destruct = area.miihen.arrival_2(
+                return_array[0], return_array[1], return_array[2]
             )
             step_counter = 2
 
@@ -654,14 +654,14 @@ while gamestate != "End":
             report_gamestate()
             area.miihen.mid_point()
             print("End of Mi'ihen mid point section.")
-            area.miihen.low_road(returnArray[0], returnArray[1], returnArray[2])
+            area.miihen.low_road(return_array[0], return_array[1], return_array[2])
 
             # Report duration at the end of Mi'ihen section for all runs.
-            endTime = logs.time_stamp()
-            totalTime = endTime - startTime
-            print("Mi'ihen End timer is:", str(totalTime))
+            end_time = logs.time_stamp()
+            total_time = end_time - start_time
+            print("Mi'ihen End timer is:", str(total_time))
             logs.write_stats("Miihen End time:")
-            logs.write_stats(totalTime)
+            logs.write_stats(total_time)
             gamestate = "MRR"
             step_counter = 1
 
@@ -677,11 +677,11 @@ while gamestate != "End":
             report_gamestate()
             area.mrr.battle_site()
             area.mrr.gui_and_aftermath()
-            endTime = logs.time_stamp()
-            totalTime = endTime - startTime
-            print("End of Battle Site timer is:", str(totalTime))
+            end_time = logs.time_stamp()
+            total_time = end_time - start_time
+            print("End of Battle Site timer is:", str(total_time))
             logs.write_stats("Djose-Start time:")
-            logs.write_stats(totalTime)
+            logs.write_stats(total_time)
             gamestate = "Djose"
             step_counter = 1
 
@@ -828,8 +828,8 @@ while gamestate != "End":
             area.gagazet.defender_x()
             import rng_track
 
-            advancePreX, advancePostX = rng_track.nea_track()
-            if advancePostX in [0, 1]:
+            advance_pre_x, advance_post_x = rng_track.nea_track()
+            if advance_post_x in [0, 1]:
                 step_counter = 2
             else:
                 step_counter = 3
@@ -837,7 +837,7 @@ while gamestate != "End":
         if gamestate == "Gagazet" and step_counter == 2:
             report_gamestate()
             if game_vars.try_for_ne():
-                manipTime1 = logs.time_stamp()
+                manip_time_1 = logs.time_stamp()
 
                 print("Mark 1")
                 area.ne_armor.to_hidden_cave()
@@ -845,12 +845,12 @@ while gamestate != "End":
                 area.ne_armor.drop_hunt()
                 print("Mark 3")
                 area.ne_armor.return_to_gagazet()
-                manipTime2 = logs.time_stamp()
+                manip_time_2 = logs.time_stamp()
                 try:
-                    manipTime = manipTime2 - manipTime1
-                    print("NEA Manip duration:", str(manipTime))
+                    manip_time = manip_time_2 - manip_time_1
+                    print("NEA Manip duration:", str(manip_time))
                     logs.write_stats("NEA Manip duration:")
-                    logs.write_stats(manipTime)
+                    logs.write_stats(manip_time)
                 except:
                     pass
             step_counter = 3
@@ -931,7 +931,7 @@ while gamestate != "End":
             step_counter = 4
 
         if gamestate == "Sin" and step_counter == 4:
-            area.sin.egg_hunt(autoEggHunt)
+            area.sin.egg_hunt(auto_egg_hunt)
             if game_vars.nemesis():
                 battle.main.bfa_nem()
             else:
@@ -989,8 +989,8 @@ while gamestate != "End":
             step_counter = 7
 
         if gamestate == "Nem_Farm" and step_counter == 7:
-            # reportGamestate()
-            # nemesis.arenaPrep.mrrFarm(capNum=1)
+            # report_gamestate()
+            # nemesis.arena_prep.mrr_farm(cap_num=1)
             step_counter = 8
 
         if gamestate == "Nem_Farm" and step_counter == 8:
@@ -1014,8 +1014,8 @@ while gamestate != "End":
             step_counter = 12
 
         if gamestate == "Nem_Farm" and step_counter == 12:
-            # reportGamestate()
-            # nemesis.arenaPrep.mrrFarm(capNum=10)
+            # report_gamestate()
+            # nemesis.arena_prep.mrr_farm(cap_num=10)
             step_counter = 13
 
         if gamestate == "Nem_Farm" and step_counter == 13:
@@ -1052,9 +1052,9 @@ while gamestate != "End":
         if gamestate == "Nem_Farm" and step_counter == 19:
             report_gamestate()
             nemesis.arenaPrep.gagazet()
-            # nemesis.arenaPrep.gagazet1()
-            # nemesis.arenaPrep.gagazet2()
-            # nemesis.arenaPrep.gagazet3()
+            # nemesis.arena_prep.gagazet_1()
+            # nemesis.arena_prep.gagazet_2()
+            # nemesis.arena_prep.gagazet_3()
             # gamestate = "End" #Testing only
             step_counter = 20
 
@@ -1126,11 +1126,11 @@ while gamestate != "End":
         if (
             gamestate == "End"
             and game_vars.loop_seeds()
-            and rng_seed_num - rngSeedOrig < maxLoops
+            and rng_seed_num - rng_seed_orig < max_loops
         ):
             # End of seed logic.
             gamestate, step_counter = reset.mid_run_reset(
-                land_run=True, start_time=startTime
+                land_run=True, start_time=start_time
             )
 
         print("------------------------------")
@@ -1144,13 +1144,13 @@ while gamestate != "End":
 
 print("Time! The game is now over.")
 
-endTime = logs.time_stamp()
+end_time = logs.time_stamp()
 
 if memory.main.get_story_progress() > 3210:
-    totalTime = endTime - startTime
+    total_time = end_time - start_time
     logs.write_stats("Total time:")
-    logs.write_stats(str(totalTime))
-    print("The game duration was:", str(totalTime))
+    logs.write_stats(str(total_time))
+    print("The game duration was:", str(total_time))
     print("This duration is intended for internal comparisons only.")
     print("It is not comparable to non-TAS runs.")
     memory.main.wait_frames(30)

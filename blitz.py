@@ -958,7 +958,7 @@ def blitz_main(force_blitz_win):
     print("-First, clicking to the start of the match.")
     memory.main.click_to_story_progress(535)
     print("-Match is now starting.")
-    startTime = logs.time_stamp()
+    start_time = logs.time_stamp()
 
     game_vars.blitz_first_shot_reset()
     movementSetFlag = False
@@ -1096,8 +1096,8 @@ def blitz_main(force_blitz_win):
     else:
         game_vars.set_blitz_win(False)
 
-    endTime = logs.time_stamp()
-    timeDiff = endTime - startTime
-    totalTime = int(timeDiff.total_seconds())
-    rng_track.record_blitz_results(duration=totalTime)
+    end_time = logs.time_stamp()
+    timeDiff = end_time - start_time
+    total_time = int(timeDiff.total_seconds())
+    rng_track.record_blitz_results(duration=total_time)
     print("--Blitz Win value:", game_vars.get_blitz_win())

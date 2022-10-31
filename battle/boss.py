@@ -292,7 +292,7 @@ def echuilles():
                     print("Tidus attack")
                     battle.main.attack("none")
             elif screen.turn_wakka():
-                if tidusCounter == 1:  # and memory.main.rngSeed() != 160:
+                if tidusCounter == 1:  # and memory.main.rng_seed() != 160:
                     print("Dark Attack")
                     battle.main.use_skill(0)  # Dark Attack
                 # elif memory.main.get_enemy_current_hp()[0] <= 558:

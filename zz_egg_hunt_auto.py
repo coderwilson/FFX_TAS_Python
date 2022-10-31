@@ -57,7 +57,7 @@ def path_around(player, circle, target, radius=11):
 def engage():
     FFXC = xbox.controller_handle()
     print("Start egg hunt")
-    startTime = time.time()
+    start_time = time.time()
     checkpoint = 0
     battleCount = 0
     lookingCount = 0
@@ -178,10 +178,10 @@ def engage():
             else:
                 print("Targeting egg: |", checkpoint)
             xbox.tap_b()
-    endTime = time.time()
+    end_time = time.time()
     print("End egg hunt")
     FFXC.set_neutral()
-    duration = endTime - startTime
+    duration = end_time - start_time
     print("Duration:", str(duration))
     print("Battle count:", battleCount)
     while memory.main.get_map() != 325:

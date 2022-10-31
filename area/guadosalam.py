@@ -255,10 +255,10 @@ def guado_skip():
 
         if not recovery:
             # Time limit for safety
-            startTime = time.time()
+            start_time = time.time()
             # Max number of seconds that we will wait for the skip to occur.
             timeLimit = 8
-            maxTime = startTime + timeLimit
+            maxTime = start_time + timeLimit
 
             # Waiting for walking guado to push us into the door
             while memory.main.get_camera()[0] < 0.6:

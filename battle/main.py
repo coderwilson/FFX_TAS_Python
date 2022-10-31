@@ -886,7 +886,7 @@ def miihen_road(self_destruct=False):
         FFXC.set_value("BtnB", 0)
         memory.main.wait_frames(3)
 
-    print("selfDestruct flag:", game_vars.self_destruct_get())
+    print("self_destruct flag:", game_vars.self_destruct_get())
 
 
 def aeon_shield():
@@ -2333,7 +2333,7 @@ def zu():
 
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # status should be an array length 2
-    # [rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
+    # [rikku_charged, speedNeeded, powerNeeded, itemsNeeded]
     encounterID = memory.main.get_encounter_id()
     itemStolen = False
     itemThrown = False
@@ -2549,7 +2549,7 @@ def sandragora(version):
                 memory.main.await_event()
                 FFXC.set_neutral()
                 screen.await_turn()
-        # elif FX_memory.rngSeed() == 31:
+        # elif FX_memory.rng_seed() == 31:
         #    print("Manipulating known seed 31")
         #    fleeAll()
         #    memory.clickToControl()
@@ -4772,8 +4772,8 @@ def calm_lands_manip():
         calm_lands_gems()
     else:
         print("++++ Gems good. NEA manip logic.")
-        advancePreX, advancePostX = rng_track.nea_track()  # returns integers
-        if advancePreX not in [0, 2] and advancePostX not in [0, 2]:
+        advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
+        if advance_pre_x not in [0, 2] and advance_post_x not in [0, 2]:
             # Non-zero for both
             print("Not lined up for NEA")
             if rng10nextChanceLow == 0 and memory.main.get_encounter_id() in lowArray:
@@ -4787,14 +4787,14 @@ def calm_lands_manip():
             else:  # If we can't advance on this battle, try to get the next "mid" level advance.
                 print("Can't drop off of this battle.")
                 advance_rng_10(rng10nextChanceMid)
-        elif advancePostX == 2:
+        elif advance_post_x == 2:
             # Lined up for non-drop defender X + drops on B&Y drops.
             if memory.main.next_chance_rng_10() == 0:
                 advance_rng_10(1)
                 # Don't want to have Defender X drop an item
             else:
                 flee_all()
-        elif advancePostX == 0:  # Lined up for next drop NEA before defender X.
+        elif advance_post_x == 0:  # Lined up for next drop NEA before defender X.
             print("The next equipment to drop will be NEA")
             if memory.main.get_coords()[0] > 1300:
                 print("--Near Gagazet, just get off RNG10 equipment drop.")
@@ -4809,13 +4809,13 @@ def calm_lands_manip():
             else:
                 print("Lined up OK, ready for NEA. Just flee.")
                 flee_all()
-        elif advancePreX == 2:  # Lined up for drops on defender X + B&Y drops.
+        elif advance_pre_x == 2:  # Lined up for drops on defender X + B&Y drops.
             if memory.main.next_chance_rng_10() != 0:
                 advance_rng_10(memory.main.next_chance_rng_10())
             else:
                 print("Perfectly lined up pre-X + B&Y. Just flee.")
                 flee_all()
-        elif advancePreX == 0:
+        elif advance_pre_x == 0:
             print("The second equipment drop from now will be NEA.")
             if memory.main.next_chance_rng_10() != 0:
                 advance_rng_10(memory.main.next_chance_rng_10())

@@ -6,10 +6,10 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -52,10 +52,10 @@ def arrival():
                 xbox.menu_b()
 
                 # Now to wait for the skip to happen, or 60 second maximum limit
-                startTime = time.time()
+                start_time = time.time()
                 # Max number of seconds that we will wait for the skip to occur.
                 timeLimit = 60
-                maxTime = startTime + timeLimit
+                maxTime = start_time + timeLimit
                 while memory.main.get_actor_coords(6)[0] < -50:
                     currentTime = time.time()
                     if currentTime > maxTime:
