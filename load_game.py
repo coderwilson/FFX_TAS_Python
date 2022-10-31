@@ -8,6 +8,8 @@ import screen
 import vars
 import xbox
 import zz_airship_path
+import area.dream_zan
+import logs
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
@@ -22,7 +24,6 @@ def load_into_game(Gamestate:str, step_counter:str):
         startTime = logs.time_stamp()
         logs.write_stats("Start time:")
         logs.write_stats(str(startTime))
-        report_gamestate()
     import load_game
 
     # Need to update these to use loadGame.loadSaveNum(number) for all.

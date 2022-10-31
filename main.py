@@ -32,10 +32,9 @@ import reset
 import screen
 import vars
 import xbox
-if game_vars.nemesis():
-    import nemesis.arena_battles
-    import nemesis.arenaPrep
-    import nemesis.changes
+import nemesis.arena_battles
+import nemesis.arenaPrep
+import nemesis.changes
 
 # Initialize parameters, and plug in controller
 game_vars = vars.init_vars()
@@ -117,6 +116,7 @@ print("---RNG seed:", rngSeed)
 
 # Next, check if we are loading to a save file, or record the RNG seed on full runs.
 if Gamestate != "none":
+    import load_game
     load_game.load_into_game(Gamestate=Gamestate, step_counter=step_counter)
 else:
     logs.next_stats(rngSeed)
