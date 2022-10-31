@@ -129,7 +129,7 @@ step_counter = 1  # NEW GAME!
 
 force_blitz_win = False
 seed_hunt = False  # Update this to decide new seed or known seed
-rngSelectArray = [31, 160]
+rng_select_array = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
 favoriteSeedsSoFar = [31, 160]
@@ -166,7 +166,7 @@ elif gamestate != "none":  # Loading a save file, no RNG manip here
 elif game_vars.use_set_seed():
     gameLength = f"Full Run, set seed [{rngSeedNum}]"
 elif useFavoredSeed:
-    rngSeedNum = random.choice(rngSelectArray)
+    rngSeedNum = random.choice(rng_select_array)
     gameLength = "Full Run, favored seed"
 # Full run starting from New Game, random seed
 else:
