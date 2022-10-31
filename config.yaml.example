@@ -26,6 +26,7 @@ vars:
   attemptDjose        : False  # Try Djose skip? (not likely to succeed)
   legacySoundtrack    : True   # use the original Soundtrack instead of arranged
   doNotSkipCutscenes  : False  #            - Missing documentation -
+  autoEggHunt         : True   # Perform auto egg hunt in Sin
 
   # Accessibility for blind
   skip_cutscene_flag  : True   #            - Missing documentation -
