@@ -1662,18 +1662,18 @@ def diag_skip_possible_old():
 def diag_skip_possible():
     global baseValue
     if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
-        print("Skip 2")
+        #print("Skip 2")
         return False
     else:
         key = baseValue + 0x0085A03C
         if process.readBytes(key, 1) == 1:
-            print("Skip 3")
+            #print("Skip 3")
             if game_vars.accessibilityVars()[2]:
                 # Placeholder for accessibility, to be implemented later.
                 pass
             return True
         else:
-            print("Skip 4")
+            #print("Skip 4")
             return False
 
 
