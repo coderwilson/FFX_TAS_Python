@@ -133,7 +133,7 @@ rng_select_array = [31, 160]
 maybe_good_seeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 rta_good_seeds = [160, 142, 34, 62, 210, 31, 159]
 favorite_seeds_so_far = [31, 160]
-rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
+rng_seed_num = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
 # Need review on the others
@@ -149,7 +149,7 @@ step_counter = config_data.get("step_counter", 1)
 # RNG
 force_blitz_win = config_data.get("force_blitz_win", False)
 seed_hunt = config_data.get("seed_hunt", False)
-rngSeedNum = config_data.get("rngSeedNum", 160)
+rng_seed_num = config_data.get("rng_seed_num", 160)
 useFavoredSeed = config_data.get("useFavoredSeed", False)
 
 # Set these to False by default. Overwritten below in some cases.
@@ -160,17 +160,17 @@ if gamestate == "Luca" and step_counter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
 elif gamestate != "none":  # Loading a save file, no RNG manip here
-    rngSeedNum = 255
+    rng_seed_num = 255
     gameLength = "Loading mid point for testing."
     # gameVars.setCSR(True)
 elif game_vars.use_set_seed():
-    gameLength = f"Full Run, set seed [{rngSeedNum}]"
+    gameLength = f"Full Run, set seed [{rng_seed_num}]"
 elif useFavoredSeed:
-    rngSeedNum = random.choice(rng_select_array)
+    rng_seed_num = random.choice(rng_select_array)
     gameLength = "Full Run, favored seed"
 # Full run starting from New Game, random seed
 else:
-    rngSeedNum = random.choice(range(256))
+    rng_seed_num = random.choice(range(256))
     # Current WR is on seed 160 for both any% and CSR%
     gameLength = "Full Run, random seed"
 
@@ -178,7 +178,7 @@ print("Game type will be:", gameLength)
 maxLoops = 12
 
 # Other variables
-rngSeedOrig = rngSeedNum
+rngSeedOrig = rng_seed_num
 speedCount = 0
 strengthCount = 0
 gems = 0  # Set to 2 if loading in after Evrae Altana with two gems
@@ -209,7 +209,7 @@ screen.clear_mouse(0)
 
 # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 if game_vars.use_set_seed():
-    memory.main.set_rng_seed(rngSeedNum)
+    memory.main.set_rng_seed(rng_seed_num)
 
 rngSeed = memory.main.rng_seed()
 print("---RNG seed:", rngSeed)
@@ -453,7 +453,7 @@ while gamestate != "End":
             area.dream_zan.new_game(gamestate)
             load_game.load_save_num(37)
 
-        if rngSeedNum >= 256:
+        if rng_seed_num >= 256:
             gamestate = "End"
 
         # Start of the game, start of Dream Zanarkand section
@@ -1126,7 +1126,7 @@ while gamestate != "End":
         if (
             gamestate == "End"
             and game_vars.loop_seeds()
-            and rngSeedNum - rngSeedOrig < maxLoops
+            and rng_seed_num - rngSeedOrig < maxLoops
         ):
             # End of seed logic.
             gamestate, step_counter = reset.mid_run_reset(
