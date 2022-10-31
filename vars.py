@@ -89,10 +89,7 @@ class AllVars:
         self.nemAPVal = config_vars.get("nemAPVal", 1)  # Default to 1
         self.yojimboIndex = config_vars.get("yojimboIndex", 1)
 
-        # ===================================================================
         # Can't set these particular fields with this syntax in the yaml file
-        # ===================================================================
-
         self.firstHits = [0] * 8
         # Nemesis variables
         self.areaResults = [0] * 13
