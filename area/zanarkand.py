@@ -8,6 +8,7 @@ import rng_track
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -188,7 +189,7 @@ def arrival():
                         FFXC.set_movement(1, 1)
                         xbox.tap_b()
             elif checkpoint == 29:  # Save sphere
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
             elif (
                 memory.main.get_map() == 316 and checkpoint < 21
@@ -399,7 +400,7 @@ def yunalesca():
 
     print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
 
-    memory.main.touch_save_sphere()
+    save_sphere.touch_and_go()
 
     checkpoint = 0
     # Gets us to Yunalesca battle through multiple rooms.
@@ -452,7 +453,7 @@ def post_yunalesca(checkpoint=0):
                 checkpoint = 4
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint == 7:
-                memory.main.touch_save_sphere()
+                save_sphere.touch_and_go()
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
             elif checkpoint < 10 and memory.main.get_map() == 320:
