@@ -1,0 +1,87 @@
+
+# List below is kept as a reference, use config.yaml instead
+# Gamestate, "none" for new game, or set to a specific section to start from the first save.
+# See the if statement tree below to determine starting position for Gamestate.
+# These are the popular ones. New Game ('none') is the last one.
+# Gamestate = "Baaj"
+# step_counter = 1 # x40 Baaj temple, before Geos boss
+# step_counter = 4 # x100 Al Bhed boat before Tros
+# Gamestate = "Besaid"
+# step_counter = 1 # x111 Before first viewing Besaid beach
+# step_counter = 2 # x6 Crusader's hut before trials
+# step_counter = 3 # x39 Crusader's hut after trials
+# Gamestate = "Boat1"
+# step_counter = 1 # 31 NOT WORKING
+# Gamestate = "Kilika"
+# step_counter = 1 # x22
+# Gamestate = "Luca"
+# step_counter = 1 # x112 Boat lands, first movement
+# step_counter = 3 # Blitzball only, do not use
+# step_counter = 5 # x5 between Blitz and swimmers/Garuda REMAKE THIS SAVE
+# Gamestate = "Miihen"
+# step_counter = 1 # x16 with laughing scene, 26 after laughing scene
+# step_counter = 2 # x28 (Agency before Chocobo Eater)
+# Gamestate = "MRR"
+# step_counter = 1 # x38, includes a low-gil fix
+# Gamestate = "Djose"
+# step_counter = 1 # x27
+# Gamestate = "Moonflow"
+# step_counter = 2 # x2 After Extractor
+# Gamestate = "Guadosalam"
+# step_counter = 2 # x3 before Guadosalam Skip
+# Gamestate = "Macalania"
+# step_counter = 1 # x9
+# step_counter = 2 # x7
+# step_counter = 4 # x10 Seymour
+# step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
+# Gamestate = "Home"
+# step_counter = 1 # x60
+# step_counter = 2 # x11
+# Gamestate = "rescueYuna"
+# step_counter = 1 # x56 First save chance on airship, before any movement.
+# step_counter = 2 # x15
+# step_counter = 4 # x30 Altana (any%) / x12 Altana (nemesis)
+# step_counter = 5 # x42 regular, 67 nemesis
+# Gamestate = "Gagazet"
+# step_counter = 1 # x43
+# step_counter = 3 # x138 After B&Y
+# step_counter = 6 # x98 After Flux/Dream. Can select version 3 or 4 below.
+# step_counter = 10 # Nemesis variant, blitz win logic (not working)
+# step_counter = 11 # Remiem racing
+# Gamestate = "Zanarkand"
+# step_counter = 1 # x99 Campfire
+# step_counter = 4 # x44 Before Yunalesca
+# step_counter = 5 # x48 After Yunalesca any%, x13 for Nemesis
+# Gamestate = "Sin"
+# step_counter = 2 # x70 Shedinja Highbridge
+# step_counter = 3 # x50 Start of Sea of Sorrows
+# step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
+# Gamestate = "none"
+# step_counter = 1  # NEW GAME!
+
+# Nemesis load testing
+# Gamestate = "Nem_Farm"
+# step_counter = 1 # x14 Inside Sin, right at start of the branching logic.
+# step_counter = 13 # x17 Just before Djose farm
+# step_counter = 14 #Just before Thunder Plains farm
+# step_counter = 16 #Just before Bikanel farm
+# step_counter = 18 #Just before Fayth Cave farm
+# step_counter = 19 #Gagazet farm
+# step_counter = 20 #After Gagazet, before Calm Lands farm
+# step_counter = 22 #Before Sin/Omega farms, AFTER picking up oneMP weapon
+# step_counter = 24 #Final Prep before arena bosses
+
+
+
+############################################################################################
+# RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+
+maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
+rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
+favoriteSeedsSoFar = [31, 160]
+
+# TAS PB is on seed 31
+# 160 is WR for both categories, just has a bad start
+# Need review on the others
+
+############################################################################################

@@ -45,7 +45,6 @@ while attempts < 20 and cycles < 50:
     area.dream_zan.new_game("techdemo")
 
     print("Game start screen")
-    screen.clear_mouse(0)
 
     # Now to run the appropriate section depending on attempt number.
     if attempts == 1:

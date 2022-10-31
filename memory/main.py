@@ -1659,22 +1659,28 @@ def diag_skip_possible_old():
         return False
 
 
-def diag_skip_possible(ignore_audio=False):
-    if not ignore_audio and auditory_dialog_playing():
-        return False
+def diag_skip_possible():
     global baseValue
-
     if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
-        return True
+        print("Skip 2")
+        return False
     else:
         key = baseValue + 0x0085A03C
-        return process.readBytes(key, 1) == 1
+        if process.readBytes(key, 1) == 1:
+            print("Skip 3")
+            if game_vars.accessibilityVars()[2]:
+                # Placeholder for accessibility, to be implemented later.
+                pass
+            return True
+        else:
+            print("Skip 4")
+            return False
 
 
 def cutscene_skip_possible():
-    return False
+    if not game_vars.accessibilityVars()[0]:
+        return False
     global baseValue
-
     key = baseValue + 0x00D2A008
     return process.readBytes(key, 1) == 1
 

@@ -47,8 +47,6 @@ while attempts < 20:
     offset = 1
     blitzoffWin = False
 
-    screen.clear_mouse(0)
-
     # ---------This is the actual movement/code/logic/etc---------------
 
     rolledArray = memory.main.rng_02_array()
