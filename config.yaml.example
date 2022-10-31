@@ -9,7 +9,7 @@ step_counter  : 1      # valid step_counter values are dependent on gamestate
 force_blitz_win : False  #            - Missing documentation -
 seed_hunt      : False  #            - Missing documentation -
 rng_seed_num    : 160    # If starting a new run and using setSeed, use this RNG seed
-useFavoredSeed: False  # If starting a new run and not using setSeed, use a curated array of seeds
+use_favored_seed: False  # If starting a new run and not using setSeed, use a curated array of seeds
 
 # Run configuration variables in vars.py
 vars:

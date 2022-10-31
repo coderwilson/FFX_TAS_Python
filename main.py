@@ -150,7 +150,7 @@ step_counter = config_data.get("step_counter", 1)
 force_blitz_win = config_data.get("force_blitz_win", False)
 seed_hunt = config_data.get("seed_hunt", False)
 rng_seed_num = config_data.get("rng_seed_num", 160)
-useFavoredSeed = config_data.get("useFavoredSeed", False)
+use_favored_seed = config_data.get("use_favored_seed", False)
 
 # Set these to False by default. Overwritten below in some cases.
 blitzTesting = False
@@ -165,7 +165,7 @@ elif gamestate != "none":  # Loading a save file, no RNG manip here
     # gameVars.setCSR(True)
 elif game_vars.use_set_seed():
     gameLength = f"Full Run, set seed [{rng_seed_num}]"
-elif useFavoredSeed:
+elif use_favored_seed:
     rng_seed_num = random.choice(rng_select_array)
     gameLength = "Full Run, favored seed"
 # Full run starting from New Game, random seed
