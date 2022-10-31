@@ -2,9 +2,9 @@ import area.gagazet
 import battle.main
 import memory.main
 import nemesis.targetPath
+import rng_track
 import vars
 import xbox
-import rngTrack
 
 game_vars = vars.vars_handle()
 
@@ -122,7 +122,7 @@ def calm_lands_1():
                     battle.main.calm_lands_manip()
                 memory.main.full_party_format("rikku", full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 

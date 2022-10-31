@@ -1,10 +1,11 @@
 import battle.boss
 import battle.main
 import memory.main
+import menu
 import nemesis.arenaSelect
 import nemesis.menu
 import nemesis.targetPath
-import rngTrack
+import rng_track
 import screen
 import vars
 import xbox
@@ -1584,11 +1585,11 @@ def kilika_farm(cap_num: int = 1):
 
 
 def miihen_next(end_goal: int):
-    next1 = rngTrack.coming_battles(area="mi'ihen_(newroad)", battleCount=2)[0]
-    next2 = rngTrack.coming_battles(area="old_road", battleCount=2)[0]
-    next3 = rngTrack.coming_battles(area="clasko_skip_screen", battleCount=2)[0]
-    next4 = rngTrack.coming_battles(area="mrr_-_valley", battleCount=2)[0]
-    next6 = rngTrack.coming_battles(area="mrr_-_precipice", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="mi'ihen_(newroad)", battleCount=2)[0]
+    next2 = rng_track.coming_battles(area="old_road", battleCount=2)[0]
+    next3 = rng_track.coming_battles(area="clasko_skip_screen", battleCount=2)[0]
+    next4 = rng_track.coming_battles(area="mrr_-_valley", battleCount=2)[0]
+    next6 = rng_track.coming_battles(area="mrr_-_precipice", battleCount=2)[0]
     farmArray1 = memory.main.arena_farm_check(
         zone="miihen", end_goal=end_goal, return_array=True
     )
@@ -1851,9 +1852,7 @@ def miihen_farm(cap_num: int = 1):
 def miihen_farm_old(cap_num: int = 1):
     air_ship_destination(dest_num=4)
     if game_vars.ne_armor() == 0:
-        menu.equip_armor(
-            character=game_vars.ne_armor(), ability=0x8056
-        )  # Auto-Haste
+        menu.equip_armor(character=game_vars.ne_armor(), ability=0x8056)  # Auto-Haste
     else:
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)  # Unequip
 
@@ -1999,8 +1998,10 @@ def mrrFarm_old(capNum: int = 1):
 
 
 def djose_next(end_goal: int):
-    next1 = rngTrack.coming_battles(area="djose_highroad_(back_half)", battleCount=2)[0]
-    next2 = rngTrack.coming_battles(area="moonflow_(south)", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="djose_highroad_(back_half)", battleCount=2)[
+        0
+    ]
+    next2 = rng_track.coming_battles(area="moonflow_(south)", battleCount=2)[0]
     farmArray = memory.main.arena_farm_check(
         zone="djose", end_goal=end_goal, return_array=True
     )
@@ -2119,10 +2120,10 @@ def djose_farm(cap_num: int = 10):
 
 
 def plains_next(end_goal: int):
-    next1 = rngTrack.coming_battles(
+    next1 = rng_track.coming_battles(
         area="thunder_plains_(north)_(1_stone)", battleCount=2
     )[0]
-    next2 = rngTrack.coming_battles(
+    next2 = rng_track.coming_battles(
         area="thunder_plains_(south)_(2_stones)", battleCount=2
     )[0]
     farmArray = memory.main.arena_farm_check(
@@ -2342,8 +2343,8 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
 
 
 def woods_next(end_goal: int):
-    next1 = rngTrack.coming_battles(area="lake_macalania", battleCount=2)[0]
-    next2 = rngTrack.coming_battles(area="macalania_woods", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="lake_macalania", battleCount=2)[0]
+    next2 = rng_track.coming_battles(area="macalania_woods", battleCount=2)[0]
     farmArray1 = memory.main.arena_farm_check(
         zone="maclake", end_goal=end_goal, return_array=True
     )
@@ -2503,9 +2504,9 @@ def mac_woods_old(cap_num: int = 10):
 
 
 def bikanel_next(end_goal: int):
-    next1 = rngTrack.coming_battles(area="sanubia_desert_(central)", battleCount=1)[0]
-    next2 = rngTrack.coming_battles(area="sanubia_desert_(ruins)", battleCount=1)[0]
-    next3 = rngTrack.coming_battles(area="sanubia_desert_(west)", battleCount=1)[0]
+    next1 = rng_track.coming_battles(area="sanubia_desert_(central)", battleCount=1)[0]
+    next2 = rng_track.coming_battles(area="sanubia_desert_(ruins)", battleCount=1)[0]
+    next3 = rng_track.coming_battles(area="sanubia_desert_(west)", battleCount=1)[0]
     farmArray = memory.main.arena_farm_check(
         zone="bikanel", end_goal=end_goal, return_array=True
     )
@@ -2649,11 +2650,11 @@ def bikanel(cap_num: int = 10):
 
 
 def calm_next(end_goal: int, force_levels: int):
-    next1 = rngTrack.coming_battles(area="calm_lands_(south)", battleCount=1)[0]
-    next2 = rngTrack.coming_battles(
+    next1 = rng_track.coming_battles(area="calm_lands_(south)", battleCount=1)[0]
+    next2 = rng_track.coming_battles(
         area="calm_lands_(central-north-east)", battleCount=1
     )[0]
-    next3 = rngTrack.coming_battles(area="calm_lands_(north-west)", battleCount=1)[0]
+    next3 = rng_track.coming_battles(area="calm_lands_(north-west)", battleCount=1)[0]
     farmArray = memory.main.arena_farm_check(
         zone="calm", end_goal=end_goal, return_array=True
     )
@@ -2892,10 +2893,10 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
 
 
 def gagazet_next(end_goal: int):
-    next1 = rngTrack.coming_battles(area="gagazet_(mountain)", battleCount=2)[0]
-    next2 = rngTrack.coming_battles(area="gagazet_(cave)", battleCount=2)[0]
-    next3 = rngTrack.coming_battles(area="zanarkand_(overpass)", battleCount=2)[0]
-    next4 = rngTrack.coming_battles(area="gagazet_(underwater)", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="gagazet_(mountain)", battleCount=2)[0]
+    next2 = rng_track.coming_battles(area="gagazet_(cave)", battleCount=2)[0]
+    next3 = rng_track.coming_battles(area="zanarkand_(overpass)", battleCount=2)[0]
+    next4 = rng_track.coming_battles(area="gagazet_(underwater)", battleCount=2)[0]
     farmArray = memory.main.arena_farm_check(
         zone="gagazet", end_goal=end_goal, return_array=True
     )
@@ -3269,8 +3270,8 @@ def gagazet_3(cap_num: int = 10):  # No longer used
 
 
 def fayth_next(endGoal: int):
-    next1 = rngTrack.coming_battles(area="cave_(white_zone)", battleCount=1)[0]
-    next2 = rngTrack.coming_battles(area="cave_(green_zone)", battleCount=1)[0]
+    next1 = rng_track.coming_battles(area="cave_(white_zone)", battleCount=1)[0]
+    next2 = rng_track.coming_battles(area="cave_(green_zone)", battleCount=1)[0]
     farmArray = memory.main.arena_farm_check(
         zone="stolenfayth", end_goal=endGoal, return_array=True
     )

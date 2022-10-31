@@ -3,7 +3,7 @@ import battle.main
 import logs
 import memory.main
 import menu
-import targetPathing
+import pathing
 import vars
 import xbox
 import save_sphere
@@ -133,7 +133,7 @@ def arrival():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.luca_1(checkpoint)):
+            elif pathing.set_movement(pathing.luca_1(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -189,9 +189,9 @@ def blitz_start():
             ):
                 checkpoint = 4
             elif checkpoint == 8:
-                targetPathing.set_movement([-111, -4])
+                pathing.set_movement([-111, -4])
                 xbox.tap_b()
-            elif targetPathing.set_movement(targetPathing.luca_pre_blitz(checkpoint)):
+            elif pathing.set_movement(pathing.luca_pre_blitz(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -212,7 +212,7 @@ def after_blitz():
                     memory.main.close_menu()
                 print("First chest")
                 while memory.main.user_control():
-                    targetPathing.set_movement([-635, -410])
+                    pathing.set_movement([-635, -410])
                     xbox.menu_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
@@ -220,7 +220,7 @@ def after_blitz():
             elif checkpoint == 10:  # Second chest
                 print("Second chest")
                 while memory.main.user_control():
-                    targetPathing.set_movement([-620, -424])
+                    pathing.set_movement([-620, -424])
                     xbox.menu_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
@@ -230,7 +230,7 @@ def after_blitz():
                     # First Auron affection, always zero
                     while memory.main.affection_array()[2] == 0:
                         auronCoords = memory.main.get_actor_coords(3)
-                        targetPathing.set_movement(auronCoords)
+                        pathing.set_movement(auronCoords)
                         xbox.tap_b()
                 checkpoint += 1  # After affection changes
             elif checkpoint == 35:  # Bring the party together
@@ -239,7 +239,7 @@ def after_blitz():
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.luca_3(checkpoint)):
+            elif pathing.set_movement(pathing.luca_3(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
 

@@ -3,7 +3,7 @@ import xbox
 FFXC = xbox.controller_handle()
 import math
 import json
-import targetPathing
+import pathing
 import vars
 game_vars = vars.vars_handle()
 
@@ -51,7 +51,7 @@ def approach_save_sphere():
         memory.main.diag_progress_flag() == target_details[2] and
         memory.main.diag_skip_possible()):
         if memory.main.user_control():
-            targetPathing.set_movement([target_coords[0], target_coords[1]])
+            pathing.set_movement([target_coords[0], target_coords[1]])
             xbox.tap_b()
         else:
             FFXC.set_neutral()
@@ -69,7 +69,7 @@ def approach_save_sphere():
                 memory.main.clear_save_menu_cursor()
                 memory.main.clear_save_menu_cursor_2()
                 while memory.main.user_control():
-                    targetPathing.set_movement([target_coords[0], target_coords[1]])
+                    pathing.set_movement([target_coords[0], target_coords[1]])
                     xbox.tap_b()
                     memory.main.wait_frames(6)
                 memory.main.wait_frames(20)

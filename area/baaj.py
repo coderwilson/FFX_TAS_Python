@@ -2,8 +2,8 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
+import pathing
 import screen
-import targetPathing
 import vars
 import xbox
 import save_sphere
@@ -27,7 +27,7 @@ def entrance(checkpoint: int = 0):
                 checkpoint += 1
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.baaj_ramp(checkpoint)):
+            elif pathing.set_movement(pathing.baaj_ramp(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -56,7 +56,7 @@ def entrance(checkpoint: int = 0):
                 memory.main.await_event()
                 FFXC.set_neutral()
             # General pathing
-            elif targetPathing.set_movement(targetPathing.baaj_hallway(checkpoint)):
+            elif pathing.set_movement(pathing.baaj_hallway(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -94,11 +94,11 @@ def baaj_puzzle():
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 33:  # To the fireplace
-                targetPathing.set_movement([1, 1])
+                pathing.set_movement([1, 1])
                 xbox.menu_b()
 
             # General pathing
-            elif targetPathing.set_movement(targetPathing.baaj_puzzle(checkpoint)):
+            elif pathing.set_movement(pathing.baaj_puzzle(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -136,7 +136,7 @@ def ab_boat_1():
     while memory.main.get_actor_coords(actor_number=0)[0] > -50:
         rikkuNum = memory.main.actor_index(actor_num=41)
         target = memory.main.get_actor_coords(actor_number=rikkuNum)
-        targetPathing.set_movement(target)
+        pathing.set_movement(target)
         if distance(0, rikkuNum) < 10:
             xbox.tap_b()
         elif memory.main.menu_open():
@@ -170,7 +170,7 @@ def ab_swimming_1():
     print("Swimming down from the boat")
     while memory.main.get_map() != 288:
         if memory.main.user_control():
-            targetPathing.set_movement([-300, -300])
+            pathing.set_movement([-300, -300])
             FFXC.set_value("BtnA", 1)
         else:
             FFXC.set_neutral()
@@ -193,9 +193,9 @@ def ab_swimming_1():
             else:
                 FFXC.set_value("BtnA", 0)
                 if pos[1] > -230:
-                    targetPathing.set_movement([-343, -284])
+                    pathing.set_movement([-343, -284])
                 elif pos[1] > -410:
-                    targetPathing.set_movement([-421, -463])
+                    pathing.set_movement([-421, -463])
                 else:
                     FFXC.set_movement(0, 1)
         else:
@@ -267,14 +267,14 @@ def ab_swimming_2():
                 memory.main.wait_frames(4)
             elif memory.main.get_map() == 64:
                 if memory.main.get_coords()[0] < -4:
-                    targetPathing.set_movement([-2, 47])
+                    pathing.set_movement([-2, 47])
                 else:
-                    targetPathing.set_movement([73, 1])
+                    pathing.set_movement([73, 1])
             elif memory.main.get_map() == 380:
-                targetPathing.set_movement([700, 300])
+                pathing.set_movement([700, 300])
             elif memory.main.get_map() == 71:
                 rikkuNum = memory.main.actor_index(actor_num=41)
-                targetPathing.set_movement(memory.main.get_actor_coords(rikkuNum))
+                pathing.set_movement(memory.main.get_actor_coords(rikkuNum))
                 if distance(0, rikkuNum) < 30:
                     xbox.tap_b()
         else:

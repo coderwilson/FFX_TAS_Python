@@ -1,8 +1,10 @@
 import yaml
+
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CDumper as Dumper
+    from yaml import CLoader as Loader
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import Dumper, Loader
 
 # TODO: Make this be set by an argument instead
 CONFIG_FILE_PATH = "config.yaml"

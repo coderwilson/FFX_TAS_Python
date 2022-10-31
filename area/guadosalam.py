@@ -1,7 +1,7 @@
 import time
 
 import memory.main
-import targetPathing
+import pathing
 import vars
 import xbox
 
@@ -38,79 +38,79 @@ def arrival():
     # Adjusted branch CSR logic, start
     memory.main.click_to_control_3()
     if game_vars.csr():
-        while not targetPathing.set_movement([-13, -67]):
+        while not pathing.set_movement([-13, -67]):
             pass
         print("Mark3")
         while memory.main.user_control():  # Lulu conversation
-            targetPathing.set_movement([-11, -55])
+            pathing.set_movement([-11, -55])
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.click_to_control_3()
 
-        while not targetPathing.set_movement([-39, -77]):
+        while not pathing.set_movement([-39, -77]):
             pass
         print("Mark2")
         while memory.main.user_control():  # Start conversation with Wakka
-            targetPathing.set_movement([-49, -61])
+            pathing.set_movement([-49, -61])
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.click_to_control_3()
 
-        while not targetPathing.set_movement([4, -114]):
+        while not pathing.set_movement([4, -114]):
             pass
         print("Mark1")
         while memory.main.user_control():  # Talk to Auron
-            targetPathing.set_movement([18, -119])
+            pathing.set_movement([18, -119])
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.click_to_control_3()
 
     else:
-        while not targetPathing.set_movement([4, -114]):
+        while not pathing.set_movement([4, -114]):
             pass
         print("Mark1")
         while memory.main.user_control():  # Talk to Auron (first for affection)
-            targetPathing.set_movement([18, -119])
+            pathing.set_movement([18, -119])
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.click_to_control_3()
 
-        while not targetPathing.set_movement([-39, -77]):
+        while not pathing.set_movement([-39, -77]):
             pass
         print("Mark2")
         while memory.main.user_control():  # Start conversation with Wakka
-            targetPathing.set_movement([-49, -61])
+            pathing.set_movement([-49, -61])
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.click_to_control_3()
 
-        while not targetPathing.set_movement([-13, -67]):
+        while not pathing.set_movement([-13, -67]):
             pass
         print("Mark3")
         while memory.main.user_control():  # Lulu conversation
-            targetPathing.set_movement([-11, -55])
+            pathing.set_movement([-11, -55])
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.click_to_control_3()
 
     # Line up for Rikku/Yuna
-    while not targetPathing.set_movement([15, -52]):
+    while not pathing.set_movement([15, -52]):
         pass
 
-    while not targetPathing.set_movement([22, -25]):
+    while not pathing.set_movement([22, -25]):
         pass
     print("Mark5")
     while memory.main.user_control():  # Start conversation with Rikku
-        targetPathing.set_movement([8, -26])
+        pathing.set_movement([8, -26])
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_control_3()
 
-    while not targetPathing.set_movement([27, -37]):
+    while not pathing.set_movement([27, -37]):
         pass
     print("Mark4")
     while memory.main.user_control():  # Yunas turn
-        targetPathing.set_movement([39, -33])
+        pathing.set_movement([39, -33])
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_control_3()
@@ -155,7 +155,7 @@ def after_speech(checkpoint=0):
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
 
-            elif targetPathing.set_movement(targetPathing.guado_storyline(checkpoint)):
+            elif pathing.set_movement(pathing.guado_storyline(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -207,7 +207,7 @@ def guado_skip():
             guadoPos = memory.main.get_actor_coords(17)
             if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
                 while memory.main.user_control():
-                    targetPathing.set_movement(guadoPos[0], guadoPos[1])
+                    pathing.set_movement(guadoPos[0], guadoPos[1])
                     xbox.tap_b()
                 recovery = True
             else:
@@ -222,7 +222,7 @@ def guado_skip():
             guadoPos = memory.main.get_actor_coords(17)
             if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
                 while memory.main.user_control():
-                    targetPathing.set_movement([guadoPos[0], guadoPos[1]])
+                    pathing.set_movement([guadoPos[0], guadoPos[1]])
                     xbox.tap_b()
                 recovery = True
             else:
@@ -298,7 +298,7 @@ def guado_skip():
 
             # General pathing
             elif memory.main.user_control():
-                if targetPathing.set_movement(targetPathing.guado_skip(checkpoint)):
+                if pathing.set_movement(pathing.guado_skip(checkpoint)):
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
         else:
