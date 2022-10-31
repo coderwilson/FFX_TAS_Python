@@ -74,13 +74,15 @@ def approach_save_sphere():
                     memory.main.wait_frames(6)
                 memory.main.wait_frames(20)
                 target_details = get_save_sphere_settings(target_actor)
-            elif memory.main.battle_active():
-                print("Mark 2", memory.main.diag_progress_flag())
-                battle.main.flee_all()
-                memory.main.click_to_control()
-            elif memory.main.diag_skip_possible():
-                print("Mark 3", memory.main.diag_progress_flag())
-                xbox.tap_b()
+            else:
+                FFXC.set_neutral()
+                if memory.main.battle_active():
+                    print("Mark 2", memory.main.diag_progress_flag())
+                    battle.main.flee_all()
+                    memory.main.click_to_control()
+                elif memory.main.diag_skip_possible():
+                    print("Mark 3", memory.main.diag_progress_flag())
+                    xbox.tap_b()
 
 def disengage_save_sphere():
     while memory.main.save_menu_cursor() == 0 and memory.main.save_menu_cursor_2() == 0:
