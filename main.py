@@ -149,30 +149,34 @@ step_counter = config_data.get("step_counter", 1)
 forceBlitzWin = config_data.get("forceBlitzWin", False)
 seedHunt = config_data.get("seedHunt", False)
 rngSeedNum = config_data.get("rngSeedNum", 160)
+useFavoredSeed = config_data.get("useFavoredSeed", False)
+
+# Set these to False by default. Overwritten below in some cases.
+blitzTesting = False
+rngReviewOnly = False
 
 if Gamestate == "Luca" and step_counter == 3:
     blitzTesting = True
     gameLength = "Testing Blitzball only"
 elif Gamestate != "none":  # Loading a save file, no RNG manip here
     rngSeedNum = 255
-    rngReviewOnly = False
     gameLength = "Loading mid point for testing."
-    blitzTesting = False
     # gameVars.setCSR(True)
-elif not seedHunt:  # Full run starting from New Game
-    # Select a seed randomly, overrules the set seed above.
-    rngSeedNum = random.choice(range(256))
-    # Select a favorite seed randomly, overrules the set seed above.
-    # rngSeedNum = random.choice(rngSelectArray)
-    # Current WR is on seed 160 for both any% and CSR%
-    rngReviewOnly = False
-    gameLength = "Full Run"
-    blitzTesting = False
-else:  # Don't use this.
+elif game_vars.use_set_seed():
+    gameLength = f"Full Run, set seed [{rngSeedNum}]"
+elif seedHunt:  # Don't use this.
     step_counter = 1
     rngReviewOnly = True
     gameLength = "Seed Hunt"
-    blitzTesting = False
+# Full run starting from New Game, using a favored seed
+elif useFavoredSeed:
+    rngSeedNum = random.choice(rngSelectArray)
+    gameLength = "Full Run, favored seed"
+# Full run starting from New Game, random seed
+else:
+    rngSeedNum = random.choice(range(256))
+    # Current WR is on seed 160 for both any% and CSR%
+    gameLength = "Full Run, random seed"
 
 print("Game type will be:", gameLength)
 maxLoops = 12
