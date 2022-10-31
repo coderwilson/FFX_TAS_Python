@@ -46,15 +46,15 @@ if game_vars.nemesis():
     import nemesis.arenaPrep
     import nemesis.changes
 
-# Set default gamestate
-Gamestate = "none"
-step_counter = 1  # NEW GAME!
-
 # List below is kept as a reference, use config.yaml instead
 
 # Gamestate, "none" for new game, or set to a specific section to start from the first save.
 # See the if statement tree below to determine starting position for Gamestate.
-# These are the popular ones. New Game ('none') is the last one.
+# These are only here for reference, set the value in config.yaml!
+
+# These are the popular ones.
+# Gamestate = "none"
+# step_counter = 1  # NEW GAME!
 # Gamestate = "Baaj"
 # step_counter = 1 # x40 Baaj temple, before Geos boss
 # step_counter = 4 # x100 Al Bhed boat before Tros
@@ -86,10 +86,10 @@ step_counter = 1  # NEW GAME!
 # step_counter = 2 # x7
 # step_counter = 4 # x10 Seymour
 # step_counter = 6 # x4 Before escape sequence - RE-CHECK SPHERE GRID
-Gamestate = "Home"
+# Gamestate = "Home"
 # step_counter = 1 # x60
-step_counter = 2 # x11
-#Gamestate = "rescueYuna"
+# step_counter = 2 # x11
+# Gamestate = "rescueYuna"
 # step_counter = 1 # x56 First save chance on airship, before any movement.
 # step_counter = 2 # x15
 # step_counter = 4 # x30 Altana (any%) / x12 Altana (nemesis)
@@ -108,8 +108,6 @@ step_counter = 2 # x11
 # step_counter = 2 # x70 Shedinja Highbridge
 # step_counter = 3 # x50 Start of Sea of Sorrows
 # step_counter = 4 # x51 Before point of no return, with zombiestrike weapons (not Kimahri)
-#Gamestate = "none"
-#step_counter = 1  # NEW GAME!
 
 # Nemesis load testing
 # Gamestate = "Nem_Farm"
