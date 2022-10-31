@@ -16,6 +16,229 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
+def load_into_game(Gamestate:str, step_counter:str):
+    if not (Gamestate == "Luca" and step_counter == 3):
+        area.dream_zan.new_game(Gamestate)
+        startTime = logs.time_stamp()
+        logs.write_stats("Start time:")
+        logs.write_stats(str(startTime))
+        report_gamestate()
+    import load_game
+
+    # Need to update these to use loadGame.loadSaveNum(number) for all.
+
+    if Gamestate == "Baaj" and step_counter == 1:
+        load_save_num(40)
+    if Gamestate == "Baaj" and step_counter == 4:
+        load_save_num(100)
+    # Save pop-up after falling off of Rikkus boat
+    if Gamestate == "Besaid" and step_counter == 1:
+        load_save_num(111)
+    # Save pop-up after falling off of Rikkus boat
+    if Gamestate == "Besaid" and step_counter == 2:
+        load_save_num(6)
+        besaid_trials()
+    # Crusader's lodge after "Enough, Wakka!"
+    if Gamestate == "Besaid" and step_counter == 3:
+        load_save_num(39)
+        print("Load complete")
+        while memory.main.user_control():
+            if memory.main.get_coords()[0] > 0.5:
+                FFXC.set_movement(1, 1)
+            else:
+                FFXC.set_movement(0, 1)
+        print("Ready for regular path")
+    # Besaid beach before boarding SS Liki ( nice alliteration :D )
+    if Gamestate == "Boat1":
+        load_save_num(31)
+        boat_1()
+    if Gamestate == "Kilika" and step_counter == 1:  # Just after entering the woods
+        load_save_num(22)
+    if Gamestate == "Luca" and step_counter == 1:  # Approaching Luca via boat
+        load_save_num(112)
+    if Gamestate == "Luca" and step_counter == 5:
+        load_save_num(5)
+    if Gamestate == "Miihen" and step_counter == 1:  # After the talk with Auron
+        load_save_num(16)  # With laughing scene
+        load_miihen_start_laugh()
+    if Gamestate == "Miihen" and step_counter == 2:  # Agency
+        load_save_num(28)
+        returnArray = [False, 0, 0, False]
+    if Gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
+        load_save_num(38)
+        memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
+        load_mrr()
+    # Aftermath, after talking to Seymour and then Auron
+    if Gamestate == "Djose" and step_counter == 1:
+        load_save_num(27)
+        after_gui()
+    if Gamestate == "Moonflow" and step_counter == 2:  # North bank, before Rikku
+        load_save_num(2)
+        moonflow_2()
+    if Gamestate == "Guadosalam" and step_counter == 2:  # After the Farplane
+        load_save_num(3)
+        load_guado_skip()
+    if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
+        load_save_num(9)
+    if Gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
+        load_save_num(7)
+    if Gamestate == "Macalania" and step_counter == 4:  # Right before Jyscal skip
+        load_save_num(190)
+        load_mac_temple()
+        import menu
+
+        menu.equip_weapon(character=0, special="brotherhood")
+        menu.mac_temple()
+    # Outside temple, before escaping.
+    if Gamestate == "Macalania" and step_counter == 6:
+        load_save_num(4)
+    if Gamestate == "Home" and step_counter == 1:
+        load_save_num(60)
+    if Gamestate == "Home" and step_counter == 2:
+        load_save_num(11)
+    if Gamestate == "rescueYuna" and step_counter == 1:  # Airship, first movement.
+        # Blitz Win, save less speed/power spheres
+        load_save_num(56)
+    if Gamestate == "rescueYuna" and step_counter == 2:  # Bevelle trials
+        load_save_num(15)
+    if Gamestate == "rescueYuna" and step_counter == 4:  # Altana
+        load_save_num(12)
+        # memory.main.setEncounterRate(setVal=0)
+        # memory.main.setGameSpeed(setVal=1)
+    # Highbridge before Seymour Natus
+    if Gamestate == "rescueYuna" and step_counter == 5:
+        load_save_num(42)  # Regular
+        # loadGame.loadSaveNum(67) #Nemesis
+    if Gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
+        load_save_num(43)
+        load_calm()
+        game_vars.set_blitz_win(True)
+    if Gamestate == "Gagazet" and step_counter == 2:  # NE armor save
+        load_save_num(57)
+    if Gamestate == "Gagazet" and step_counter == 3:  # Gagazet gates, after B&Y
+        load_save_num(138)  # Blitz Win
+        # loadGame.loadSaveNum(53) # Blitz Loss
+        game_vars.end_game_version_set(4)
+        load_gagazet_gates()
+    if Gamestate == "Gagazet" and step_counter == 6:  # After the dream
+        load_save_num(98)
+        game_vars.end_game_version_set(4)
+        load_gagazet_dream()
+        game_vars.flux_overkill_success()
+    if Gamestate == "Gagazet" and step_counter == 10:  # Calm Lands, but Nemesis version
+        load_save_num(43)
+        load_calm()
+    if Gamestate == "Gagazet" and step_counter == 11:  # Calm Lands, but Nemesis version
+        load_save_num(64)
+        FFXC.set_movement(1, 0)
+        memory.main.wait_frames(60)
+        FFXC.set_movement(0, 1)
+        memory.main.wait_frames(60)
+        FFXC.set_neutral()
+        import menu
+
+        menu.prep_calm_lands()
+    if Gamestate == "Zanarkand" and step_counter == 1:  # Intro scene revisited
+        load_save_num(99)
+        game_vars.end_game_version_set(1)
+        game_vars.flux_overkill_success()
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 2:  # Just before the trials.
+        load_offset(35)
+        zan_trials()
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 3:  # After trials, before boss
+        load_save_num(45)
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 4:  # After Sanctuary Keeper
+        load_save_num(44)
+        game_vars.end_game_version_set(4)
+    if Gamestate == "Zanarkand" and step_counter == 5:  # After Yunalesca
+        load_save_num(13)
+    # Save sphere on the Highbridge before talking to Shedinja
+    if Gamestate == "Sin" and step_counter == 2:
+        # loadGame.loadSaveNum(49)
+        # Nemesis logic, double friend sphere drops from B&Y
+        load_save_num(70)
+        while not memory.main.oaka_gil_cursor() in [8, 20]:
+            if memory.main.user_control():
+                import pathing
+
+                pathing.set_movement([-251, 340])
+            else:
+                FFXC.set_neutral()
+            xbox.menu_b()
+        memory.main.check_nea_armor()
+    if Gamestate == "Sin" and step_counter == 3:  # Start of "Sea of Sorrows" section
+        load_save_num(50)
+    if Gamestate == "Sin" and step_counter == 4:  # Before point of no return
+        # This save has zombiestrike weapons for all except Kimahri
+        # Please use for egg hunt and zombie weapon testing.
+        load_save_num(51)
+        game_vars.set_zombie(5)
+        load_egg_hunt()
+
+    # Nemesis run loads
+    if Gamestate == "Nem_Farm" and step_counter == 1:
+        load_save_num(14)
+    if Gamestate == "Nem_Farm" and step_counter == 2:
+        load_save_num(69)
+    if Gamestate == "Nem_Farm" and step_counter == 3:
+        load_save_num(84)
+        game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
+        # import nemesis.arenaPrep
+        nemesis.arenaPrep.arena_return()
+    if Gamestate == "Nem_Farm" and step_counter == 5:
+        load_save_num(71)
+    if Gamestate == "Nem_Farm" and step_counter == 6:
+        load_save_num(72)
+        game_vars.set_nem_checkpoint_ap(2)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 8:
+        load_save_num(73)
+    if Gamestate == "Nem_Farm" and step_counter == 9:
+        load_save_num(75)
+        game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 13:
+        load_save_num(17)
+        game_vars.set_nem_checkpoint_ap(7)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 14:
+        load_save_num(76)
+        game_vars.set_nem_checkpoint_ap(10)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 16:
+        load_save_num(113)
+        game_vars.set_nem_checkpoint_ap(12)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 17:
+        load_save_num(111)
+        game_vars.set_nem_checkpoint_ap(14)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 18:
+        load_save_num(114)
+        game_vars.set_nem_checkpoint_ap(15)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 19:  # Gagazet
+        load_save_num(115)
+        game_vars.set_nem_checkpoint_ap(19)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 21:
+        load_save_num(79)
+        nemesis.arenaPrep.arena_return()
+        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 22:
+        load_save_num(82)
+        # import nemesis.menu
+        # nemesis.menu.rikkuHaste()
+        game_vars.set_nem_checkpoint_ap(24)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 23:
+        load_save_num(80)
+        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 24:
+        load_save_num(81)
+        game_vars.set_nem_checkpoint_ap(30)
+        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+    if Gamestate == "Nem_Farm" and step_counter == 20:
+        load_save_num(85)
+        game_vars.set_nem_checkpoint_ap(30)
+    if Gamestate == "Nem_Farm":
+        memory.main.check_nea_armor()
+    memory.main.check_nea_armor()
+
 def get_saved_files():
     saveFilesFull = sorted(
         Path(game_vars.game_save_path()).iterdir(), key=os.path.getmtime
