@@ -126,7 +126,7 @@ step_counter = 1  # NEW GAME!
 ############################################################################################
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
-forceBlitzWin = False
+force_blitz_win = False
 seedHunt = False  # Update this to decide new seed or known seed
 rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
@@ -146,7 +146,7 @@ config_data = config.open_config()
 Gamestate = config_data.get("Gamestate", "none")
 step_counter = config_data.get("step_counter", 1)
 # RNG
-forceBlitzWin = config_data.get("forceBlitzWin", False)
+force_blitz_win = config_data.get("force_blitz_win", False)
 seedHunt = config_data.get("seedHunt", False)
 rngSeedNum = config_data.get("rngSeedNum", 160)
 useFavoredSeed = config_data.get("useFavoredSeed", False)
@@ -613,7 +613,7 @@ while Gamestate != "End":
         if Gamestate == "Luca" and step_counter == 4:
             report_gamestate()
             print("------Blitz Start")
-            blitz.blitz_main(forceBlitzWin)
+            blitz.blitz_main(force_blitz_win)
             print("------Blitz End")
             if not game_vars.csr():
                 xbox.await_save()

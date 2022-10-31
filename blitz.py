@@ -953,7 +953,7 @@ def update_player_array():
         playerArray[i].update_coords()
 
 
-def blitz_main(forceBlitzWin):
+def blitz_main(force_blitz_win):
     print("-Start of Blitzball program")
     print("-First, clicking to the start of the match.")
     memory.main.click_to_story_progress(535)
@@ -1070,14 +1070,14 @@ def blitz_main(forceBlitzWin):
                     ):  # Skip through everything else
                         xbox.menu_b()
                 elif new_half():
-                    if forceBlitzWin:
+                    if force_blitz_win:
                         memory.main.blitzball_patriots_style()
                     if memory.main.diag_progress_flag() == 347:
                         # Used for repeated Blitz games, not for story.
                         movementSetFlag = False
                     prep_half()
                 else:
-                    storyline(forceBlitzWin)
+                    storyline(force_blitz_win)
         except Exception as xVal:
             print("Caught exception in blitz memory.main.:")
             print(xVal)
