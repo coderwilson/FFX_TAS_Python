@@ -128,7 +128,7 @@ step_counter = 1  # NEW GAME!
 # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
 
 force_blitz_win = False
-seedHunt = False  # Update this to decide new seed or known seed
+seed_hunt = False  # Update this to decide new seed or known seed
 rngSelectArray = [31, 160]
 maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
 rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
@@ -148,7 +148,7 @@ gamestate = config_data.get("gamestate", "none")
 step_counter = config_data.get("step_counter", 1)
 # RNG
 force_blitz_win = config_data.get("force_blitz_win", False)
-seedHunt = config_data.get("seedHunt", False)
+seed_hunt = config_data.get("seed_hunt", False)
 rngSeedNum = config_data.get("rngSeedNum", 160)
 useFavoredSeed = config_data.get("useFavoredSeed", False)
 
