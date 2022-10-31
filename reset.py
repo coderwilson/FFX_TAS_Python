@@ -64,10 +64,10 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
     logs.next_stats(rngSeed)
     logs.write_stats("RNG seed:")
     logs.write_stats(rngSeed)
-    Gamestate = "none"
+    gamestate = "none"
     step_counter = 1
 
-    return Gamestate, step_counter
+    return gamestate, step_counter
 
 
 def reset_to_main_menu():

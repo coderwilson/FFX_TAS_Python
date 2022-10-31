@@ -7,7 +7,7 @@ import xbox
 FFXC = xbox.controller_handle()
 
 memory.main.start()
-Gamestate = "none"
+gamestate = "none"
 step_counter = 1
 
 area.dream_zan.new_game("Extractor testing")

@@ -2,8 +2,8 @@
 # "none", "Baaj", "Besaid", "Boat1", "Kilika", "Luca", "Miihen", "MRR"
 # "Djose", "Moonflow", "Guadosalam", "Macalania", "Home", "rescueYuna"
 # "Gagazet", "Zanarkand", "Sin", "Nem_Farm"
-Gamestate     : "none" # valid values listed above
-step_counter  : 1      # valid step_counter values are dependent on Gamestate
+gamestate     : "none" # valid values listed above
+step_counter  : 1      # valid step_counter values are dependent on gamestate
 
 # RNG Seed (requires setting vars.setSeed: True)
 force_blitz_win : False  #            - Missing documentation -
