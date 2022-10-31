@@ -130,9 +130,9 @@ step_counter = 1  # NEW GAME!
 force_blitz_win = False
 seed_hunt = False  # Update this to decide new seed or known seed
 rng_select_array = [31, 160]
-maybeGoodSeeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
-rtaGoodSeeds = [160, 142, 34, 62, 210, 31, 159]
-favoriteSeedsSoFar = [31, 160]
+maybe_good_seeds = [2, 31, 142, 157, 160, 172, 177, 182, 183, 200, 224, 254]
+rta_good_seeds = [160, 142, 34, 62, 210, 31, 159]
+favorite_seeds_so_far = [31, 160]
 rngSeedNum = 160  # If you don't randomly select below, this will be the seed you run.
 # TAS PB is on seed 31
 # 160 is WR for both categories, just has a bad start
