@@ -4,9 +4,9 @@ import memory.main
 import menu
 import pathing
 import rng_track
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -91,7 +91,7 @@ def to_hidden_cave():
                 prepBattles += 1
                 memory.main.full_party_format("rikku")
                 save_sphere.touch_and_go()
-                rngTrack.print_manip_info()
+                rng_track.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
     logs.write_stats("NEA extra manip battles:")
@@ -107,13 +107,14 @@ def next_green():
     if nextGreen < nextWhite and memory.main.next_chance_rng_10() == 0:
         if nextGreen >= 2:
             goGreen = True
-    if game_vars.accessibilityVars()[2]:
+    if game_vars.accessibility_vars()[2]:
         if goGreen:
             tts.message("Green")
             tts.message(str(nextGreen))
         else:
             tts.message("White")
             tts.message(str(nextWhite))
+
 
 def drop_hunt():
     print("Now in the cave. Ready to try to get the NE armor.")

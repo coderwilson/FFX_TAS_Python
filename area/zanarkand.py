@@ -74,7 +74,7 @@ def arrival():
     game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
-    # gameVars.setSkipZanLuck(True) #For testing
+    # game_vars.setSkipZanLuck(True) #For testing
     print("Outdoor Zanarkand pathing section")
     while memory.main.get_map() != 225:
         if memory.main.user_control():

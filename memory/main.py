@@ -1661,14 +1661,14 @@ def diag_skip_possible_old():
 
 def diag_skip_possible():
     global baseValue
-    if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
+    if auditory_dialog_playing() and not game_vars.accessibility_vars()[1]:
         # print("Skip 2")
         return False
     else:
         key = baseValue + 0x0085A03C
         if process.readBytes(key, 1) == 1:
             # print("Skip 3")
-            if game_vars.accessibilityVars()[2]:
+            if game_vars.accessibility_vars()[2]:
                 # Placeholder for accessibility, to be implemented later.
                 pass
             return True
@@ -1678,7 +1678,7 @@ def diag_skip_possible():
 
 
 def cutscene_skip_possible():
-    if not game_vars.accessibilityVars()[0]:
+    if not game_vars.accessibility_vars()[0]:
         return False
     global baseValue
     key = baseValue + 0x00D2A008
@@ -1819,28 +1819,28 @@ def full_party_format(front_line, *, full_menu_close=True):
                 wait_frames(1)
         while menu_number() != 14:
             xbox.tap_b()
-        startPos = 0
+        start_pos = 0
         while Counter(order[:3]) != Counter(orderFinal[:3]):
             print("==Full Party Format function, original")
             # Select target in the wrong spot.
             print("Selecting start position")
-            if order[startPos] == orderFinal[startPos]:
-                while order[startPos] == orderFinal[startPos] and order != orderFinal:
-                    startPos += 1
-                    if startPos == partyMembers:
-                        startPos = 0
+            if order[start_pos] == orderFinal[start_pos]:
+                while order[start_pos] == orderFinal[start_pos] and order != orderFinal:
+                    start_pos += 1
+                    if start_pos == partyMembers:
+                        start_pos = 0
             print(
                 "Character",
-                name_from_number(orderFinal[startPos]),
+                name_from_number(orderFinal[start_pos]),
                 "should be in position",
-                startPos,
+                start_pos,
             )
 
             # Set target, end position
             print("Selecting destination position.")
             endPos = 0
-            if orderFinal[startPos] != order[endPos]:
-                while orderFinal[startPos] != order[endPos] and order != orderFinal:
+            if orderFinal[start_pos] != order[endPos]:
+                while orderFinal[start_pos] != order[endPos] and order != orderFinal:
                     endPos += 1
 
             print(
@@ -1851,18 +1851,18 @@ def full_party_format(front_line, *, full_menu_close=True):
             )
 
             print("Looking for character.")
-            if startPos < 3 and endPos < 3:
-                startPos += 1
-                if startPos == partyMembers:
-                    startPos = 0
+            if start_pos < 3 and endPos < 3:
+                start_pos += 1
+                if start_pos == partyMembers:
+                    start_pos = 0
                 continue
 
             # Move cursor to start position
             print("Moving to start position")
-            if party_format_cursor_1() != startPos:
+            if party_format_cursor_1() != start_pos:
                 # print("Cursor not in right spot")
-                while party_format_cursor_1() != startPos:
-                    menu_direction(party_format_cursor_1(), startPos, partyMembers)
+                while party_format_cursor_1() != start_pos:
+                    menu_direction(party_format_cursor_1(), start_pos, partyMembers)
                     if game_vars.use_pause():
                         wait_frames(1)
 
@@ -1878,9 +1878,9 @@ def full_party_format(front_line, *, full_menu_close=True):
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
             print("Start and destination positions have been swapped.")
-            startPos += 1
-            if startPos == partyMembers:
-                startPos = 0
+            start_pos += 1
+            if start_pos == partyMembers:
+                start_pos = 0
 
             print("Reporting results")
             print("Converting from formation:")
@@ -2105,12 +2105,12 @@ def miihen_guy_coords():
 
 
 def actor_index(actor_num: int = 41):
-    actorIndex = 255
+    actor_index = 255
     for x in range(get_actor_array_size()):
         actorMem = get_actor_id(x)
         if actor_num == actorMem:
-            actorIndex = x
-    return actorIndex
+            actor_index = x
+    return actor_index
 
 
 def mrr_guy_coords():
@@ -3721,7 +3721,7 @@ def touch_save_sphere(save_cursor_num: int = 0):
         pass
     wait_frames(1)
     print("Mark 2")
-    # waitFrames(300)
+    # wait_frames(300)
     inc = 0
 
     while not (
@@ -3806,7 +3806,7 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
         pass
     wait_frames(1)
     print("Mark 2")
-    # waitFrames(300)
+    # wait_frames(300)
 
     xbox.tap_a()
     # while saveMenuCursor() == 0:

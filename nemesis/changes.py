@@ -129,7 +129,7 @@ def calm_lands_1():
     print("Now talk to NPC")
     # arenaNPC()
     # arenaPurchase()
-    # memory.waitFrames(6)
+    # memory.wait_frames(6)
     # xbox.tapB() #I want to ride a chocobo.
 
 
@@ -171,7 +171,7 @@ def choco_tame_1():
         memory.main.wait_frames(12)
         xbox.tap_down()  # Up for next race, down for quit
         xbox.tap_b()
-        # memory.waitFrames(20)
+        # memory.wait_frames(20)
         xbox.tap_up()
         xbox.tap_b()
         return True
@@ -356,22 +356,22 @@ def choco_tame_4():
         if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
             checkpoint += 1
             FFXC.set_value('d_pad', 8) #Right
-            memory.waitFrames(5)
+            memory.wait_frames(5)
             FFXC.set_value('d_pad', 0)
         if position[1] > -1200 and checkpoint == 1: #Slight left
             checkpoint += 1
             FFXC.set_value('d_pad', 4)#Left
-            memory.waitFrames(10)
+            memory.wait_frames(10)
             FFXC.set_value('d_pad', 0)
         if position[1] > -770 and checkpoint == 3: #Left between balls
             checkpoint += 1
             FFXC.set_value('d_pad', 4)#Left
-            memory.waitFrames(10)
+            memory.wait_frames(10)
             FFXC.set_value('d_pad', 0)
         if position[1] > -600 and checkpoint == 4: #Straighten out
             checkpoint += 1
             FFXC.set_value('d_pad', 8) #Right
-            memory.waitFrames(6)
+            memory.wait_frames(6)
             FFXC.set_value('d_pad', 0)
         if position[1] > -100:
             if position[0] > -40:
@@ -543,7 +543,7 @@ def choco_race_3():
                 checkpoint += 1
             # if checkpoint == 42: #Since it's not tight enough movement yet
             #     FFXC.set_neutral()
-            #     memory.waitFrames(120)
+            #     memory.wait_frames(120)
             #     memory.clickToControl3()
             #     break
             if (
@@ -615,7 +615,7 @@ def arena_purchase():
     memory.main.wait_frames(15)
     # xbox.tapUp()
     xbox.tap_b()  # Let's see your weapons
-    # memory.waitFrames(9000)
+    # memory.wait_frames(9000)
     nemesis.menu.arena_purchase_1()
     # Sell all undesirable equipment
     # Purchase the following weapons:

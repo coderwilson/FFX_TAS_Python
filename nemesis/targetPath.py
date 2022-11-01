@@ -35,7 +35,7 @@ def set_movement(target) -> bool:
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
-    # memory.waitFrames(frames=1)
+    # memory.wait_frames(frames=1)
 
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 9:
         return True  # Checkpoint reached

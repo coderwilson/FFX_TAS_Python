@@ -1392,16 +1392,16 @@ def biran_yenke():
         battle.main.steal_right()
 
     screen.await_turn()
-    gemSlot = memory.main.get_use_items_slot(34)
-    if gemSlot == 255:
-        gemSlot = memory.main.get_use_items_slot(28)
-    battle.main.use_item(gemSlot, "none")
+    gem_slot = memory.main.get_use_items_slot(34)
+    if gem_slot == 255:
+        gem_slot = memory.main.get_use_items_slot(28)
+    battle.main.use_item(gem_slot, "none")
 
     xbox.click_to_battle()
-    gemSlot = memory.main.get_use_items_slot(34)
-    if gemSlot == 255:
-        gemSlot = memory.main.get_use_items_slot(28)
-    battle.main.use_item(gemSlot, "none")
+    gem_slot = memory.main.get_use_items_slot(34)
+    if gem_slot == 255:
+        gem_slot = memory.main.get_use_items_slot(28)
+    battle.main.use_item(gem_slot, "none")
 
     while not memory.main.user_control():
         xbox.tap_b()

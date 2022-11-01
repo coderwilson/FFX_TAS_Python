@@ -188,7 +188,7 @@ def agency_shop():
             menu.sell_weapon(loc)
             if memory.main.get_gil_value() >= 9550:
                 break
-    # if not gameVars.getBlitzWin(): # This may come back later.
+    # if not game_vars.getBlitzWin(): # This may come back later.
     #    menu.buyWeapon(0, equip=False)
     menu.buy_weapon(5, equip=False)
     memory.main.close_menu()

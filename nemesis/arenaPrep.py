@@ -669,7 +669,7 @@ def arena_npc():
 def arena_return(checkpoint: int = 0):
     if checkpoint == 0:
         air_ship_destination(dest_num=12)
-    # menu.equip_armor(character=gameVars.neArmor(),ability=0x801D)
+    # menu.equip_armor(character=game_vars.neArmor(),ability=0x801D)
 
     while memory.main.get_map() != 307:
         if memory.main.user_control():
@@ -717,14 +717,14 @@ def kilika_shop():
     # xbox.tapDown()
     # xbox.tapDown()
     # xbox.tapB()
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     # xbox.tapB() #Buy
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     # getEquipment(equip=False) #Tidus second catcher weapon
     # xbox.menuA()
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     # xbox.menuA()
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     xbox.menu_a()
     xbox.tap_b()  # Exit
     memory.main.wait_frames(60)
@@ -899,7 +899,7 @@ def farm_feathers():
 
     while not memory.main.menu_open():
         pass
-    # memory.waitFrames(300)
+    # memory.wait_frames(300)
 
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
@@ -1391,16 +1391,16 @@ def yojimbo_dialog():
     xbox.tap_b()
     memory.main.wait_frames(12)  # Eff it, just pay the man!
     # memory.clickToDiagProgress(5) #150,001
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # Xbox.tapDown()
     # Xbox.tapDown()
     # xbox.tapLeft()
     # xbox.tapDown()
     # xbox.tapDown()
     # xbox.tapB()
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # memory.clickToDiagProgress(5) #138,001
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # xbox.tapUp()
     # xbox.tapUp()
     # xbox.tapLeft()
@@ -1409,9 +1409,9 @@ def yojimbo_dialog():
     # xbox.tapUp()
     # xbox.tapUp()
     # xbox.tapB()
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # memory.clickToDiagProgress(5) #170,001
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # xbox.tapLeft()
     # xbox.tapUp()
     # xbox.tapUp()
@@ -1716,7 +1716,7 @@ def miihen_farm(cap_num: int = 1):
                 checkpoint = 40
             elif checkpoint in [50, 63] and memory.main.get_map() == 79:  # Clasko map
                 # FFXC.set_neutral()
-                # memory.waitFrames(6)
+                # memory.wait_frames(6)
                 checkpoint += 1
             elif checkpoint == 60 and memory.main.get_map() == 92:  # MRR lower map
                 checkpoint += 1
@@ -3550,12 +3550,12 @@ def omega_ruins(cap_num: int = 10):
                 xbox.tap_b()
 
     # Keep this so we can add in the Omega kill later.
-    # if gameVars.neArmor() == 0:
-    #    menu.equip_armor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    # elif gameVars.neArmor() in [4,6]:
-    #    menu.equip_armor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
+    # if game_vars.neArmor() == 0:
+    #    menu.equip_armor(character=game_vars.neArmor(),ability=0x8056) #Auto-Haste
+    # elif game_vars.neArmor() in [4,6]:
+    #    menu.equip_armor(character=game_vars.neArmor(),ability=0x800A) #Auto-Phoenix
     # else:
-    #    menu.equip_armor(character=gameVars.neArmor(),ability=99) #Unequip
+    #    menu.equip_armor(character=game_vars.neArmor(),ability=99) #Unequip
 
 
 def get_equipment(equip=True):

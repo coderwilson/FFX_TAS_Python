@@ -17,10 +17,10 @@ def path():
     memory.main.full_party_format("djose")
     memory.main.close_menu()
 
-    countBattles = 0
+    count_battles = 0
     checkpoint = 0
     last_cp = 0
-    stoneBreath = 0
+    stone_breath = 0
     print("Starting Djose pathing section")
 
     while memory.main.get_map() != 81:  # All the way into the temple
@@ -29,9 +29,9 @@ def path():
             last_cp = checkpoint
 
         if memory.main.user_control():
-            if checkpoint in [47, 48] and stoneBreath == 1:
+            if checkpoint in [47, 48] and stone_breath == 1:
                 checkpoint = 49
-            elif checkpoint == 49 and stoneBreath == 0:
+            elif checkpoint == 49 and stone_breath == 0:
                 checkpoint = 47
             # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
             elif checkpoint == 42 and game_vars.try_djose_skip():
@@ -85,18 +85,18 @@ def path():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 print("Starting battle")
-                if stoneBreath == 0:
+                if stone_breath == 0:
                     print("Still looking for Stone Breath.")
-                stoneBreath = battle.main.djose(stoneBreath)
+                stone_breath = battle.main.djose(stone_breath)
                 print("Battles complete.")
-                countBattles += 1
+                count_battles += 1
             elif memory.main.menu_open():
                 xbox.menu_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
 
     # logs.write_stats("Djose battles:")
-    # logs.write_stats(countBattles)
+    # logs.write_stats(count_battles)
 
 
 def temple():
@@ -378,7 +378,7 @@ def leaving_djose():
                     memory.main.click_to_event_temple(6)
                 checkpoint += 1
             # Do we need this chest for kilika luck skip? I think not.
-            elif checkpoint == 11:  # and not gameVars.skipKilikaLuck():
+            elif checkpoint == 11:  # and not game_vars.skip_kilika_luck():
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 memory.main.click_to_event_temple(0)

@@ -1530,7 +1530,7 @@ def zombie_track(report=False):
     advance10 = 0
     advance12 = [0] * 3
     advance13 = [0] * 3
-    zombieResults = [99] * 3
+    zombie_results = [99] * 3
     partySize = 7
 
     # "sanctuary_keeper"
@@ -1655,7 +1655,7 @@ def zombie_track(report=False):
         if report_dropped_item(
             enemy=enemy, drop=finalItem, pref_type=0, pref_ability=0x8032, report=report
         ):
-            zombieResults[0] = finalItem.equipOwnerAlt
+            zombie_results[0] = finalItem.equipOwnerAlt
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = item_to_be_dropped(
             enemy=enemy,
@@ -1672,7 +1672,7 @@ def zombie_track(report=False):
             pref_ability=0x8032,
             report=report,
         ):
-            zombieResults[1] = finalItem.equipOwnerAlt
+            zombie_results[1] = finalItem.equipOwnerAlt
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = item_to_be_dropped(
             enemy=enemy,
@@ -1689,11 +1689,11 @@ def zombie_track(report=False):
             pref_ability=0x8032,
             report=report,
         ):
-            zombieResults[2] = finalItem.equipOwnerAlt
+            zombie_results[2] = finalItem.equipOwnerAlt
     advance10 += 3
     advance01 += 1
 
-    return zombieResults
+    return zombie_results
 
 
 def nea_track():

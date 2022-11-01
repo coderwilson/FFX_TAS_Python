@@ -19,35 +19,35 @@ def new_game(gamestate):
     print("Starting the game")
     print("Gamestate:", gamestate)
 
-    lastMessage = 0
+    last_message = 0
     # New version
     if gamestate == "none":  # New Game
         while memory.main.get_map() != 0:
             if memory.main.get_map() != 23:
-                if lastMessage != 1:
-                    lastMessage = 1
+                if last_message != 1:
+                    last_message = 1
                     print("Attempting to get to New Game screen")
                 FFXC.set_value("btn_start", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_start", 0)
                 memory.main.wait_frames(1)
             elif memory.main.save_menu_open():
-                if lastMessage != 2:
-                    lastMessage = 2
+                if last_message != 2:
+                    last_message = 2
                     print("Load Game menu is open. Backing out.")
                 xbox.tap_a()
             elif memory.main.save_menu_cursor() == 1:
-                if lastMessage != 3:
-                    lastMessage = 3
+                if last_message != 3:
+                    last_message = 3
                     print("New Game is not selected. Switching.")
                 xbox.menu_up()
             else:
-                if lastMessage != 4:
-                    lastMessage = 4
+                if last_message != 4:
+                    last_message = 4
                     print("New Game is selected. Starting game.")
                 xbox.menu_b()
         memory.main.click_to_diag_progress(6)
-        if game_vars.useLegacySoundtrack():
+        if game_vars.use_legacy_soundtrack():
             tts.message("Setting original soundtrack")
             memory.main.wait_frames(20)
             xbox.tap_down()
@@ -70,15 +70,15 @@ def new_game(gamestate):
 
 def new_game_2():
     # New game selected. Next, select options.
-    timeBuffer = 15
+    time_buffer = 15
     print("====================================")
     print("Starting in")
     print("3")
-    memory.main.wait_frames(timeBuffer)
+    memory.main.wait_frames(time_buffer)
     print("2")
-    memory.main.wait_frames(timeBuffer)
+    memory.main.wait_frames(time_buffer)
     print("1")
-    memory.main.wait_frames(timeBuffer)
+    memory.main.wait_frames(time_buffer)
     print("GO!!! Good fortune!")
     print("====================================")
     print("Set seed:", memory.main.rng_seed())
@@ -95,7 +95,7 @@ def listen_story():
                 game_vars.set_csr(False)
                 print("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
-            if not game_vars.accessibilityVars()[0]:
+            if not game_vars.accessibility_vars()[0]:
                 FFXC.set_value("btn_back", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_back", 0)
@@ -174,26 +174,26 @@ def ammes_battle():
     memory.main.last_hit_init()
     battle.main.defend()
     # logs.write_stats("First Six Hits:")
-    hitsArray = []
+    hits_array = []
 
     print("Killing Sinspawn")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             battle.main.attack("none")
-            lastHit = memory.main.last_hit_check_change()
-            while lastHit == 9999:
-                lastHit = memory.main.last_hit_check_change()
-            print("Confirm - last hit:", lastHit)
-            hitsArray.append(lastHit)
-            print(hitsArray)
+            last_hit = memory.main.last_hit_check_change()
+            while last_hit == 9999:
+                last_hit = memory.main.last_hit_check_change()
+            print("Confirm - last hit:", last_hit)
+            hits_array.append(last_hit)
+            print(hits_array)
     print("#####################################")
     print("### Unconfirmed seed check:", memory.main.rng_seed())
-    correctSeed = rng_track.hits_to_seed(hits_array=hitsArray)
+    correct_seed = rng_track.hits_to_seed(hits_array=hits_array)
     logs.write_stats("Corrected RNG seed:")
-    logs.write_stats(correctSeed)
-    print("### Corrected RNG seed:", correctSeed)
-    if correctSeed != "Err_seed_not_found":
-        game_vars.set_confirmed_seed(correctSeed)
+    logs.write_stats(correct_seed)
+    print("### Corrected RNG seed:", correct_seed)
+    if correct_seed != "Err_seed_not_found":
+        game_vars.set_confirmed_seed(correct_seed)
     print("Confirming RNG seed:", memory.main.rng_seed())
     print("#####################################")
     print("Done Killing Sinspawn")
@@ -209,15 +209,15 @@ def ammes_battle():
 def after_ammes():
     memory.main.click_to_control()
     checkpoint = 0
-    # memory.main.waitFrames(90)
+    # memory.main.wait_frames(90)
     # print("#### MARK ####")
-    # memory.main.ammesFix(actorIndex=0)
-    # memory.main.waitFrames(90)
+    # memory.main.ammes_fix(actor_index=0)
+    # memory.main.wait_frames(90)
 
     while memory.main.get_map() != 49:
         if memory.main.user_control():
-            startPos = memory.main.get_coords()
-            if int(startPos[0]) in [866, 867, 868, 869, 870] and int(startPos[1]) in [
+            start_pos = memory.main.get_coords()
+            if int(start_pos[0]) in [866, 867, 868, 869, 870] and int(start_pos[1]) in [
                 -138,
                 -139,
                 -140,

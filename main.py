@@ -73,7 +73,7 @@ def configuration_setup():
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game.rng_seed_num = 255
         gameLength = "Loading mid point for testing."
-        # gameVars.setCSR(True)
+        # game_vars.setCSR(True)
     elif game_vars.use_set_seed():
         gameLength = f"Full Run, set seed [{game.rng_seed_num}]"
     elif useFavoredSeed:

@@ -14,8 +14,8 @@ game_vars = vars.vars_handle()
 
 def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
-    # if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
-    #    gameVars.dontSkipKilikaLuck()
+    # if memory.main.rngSeed() == 31 and game_vars.skip_kilika_luck():
+    #    game_vars.dontSkipKilikaLuck()
 
     print("Arrived at Kilika docks.")
     memory.main.click_to_control()
@@ -239,10 +239,10 @@ def trials():
                 memory.main.wait_frames(30 * 0.07)
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
-            # elif checkpoint == 53 and gameVars.csr():
+            # elif checkpoint == 53 and game_vars.csr():
             #    memory.main.awaitControl()
             #    FFXC.set_movement(0, 1)
-            #    memory.main.waitFrames(2)
+            #    memory.main.wait_frames(2)
             #    memory.main.awaitEvent()
             #    FFXC.set_neutral()
             #    xbox.nameAeon("Ifrit")  # Set Ifrit name

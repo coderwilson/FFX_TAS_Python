@@ -2335,7 +2335,7 @@ def zu():
 
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # status should be an array length 2
-    # [rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
+    # [rikkuCharged, speedNeeded, power_needed, itemsNeeded]
     encounter_id = memory.main.get_encounter_id()
     itemStolen = False
     itemThrown = False
@@ -2945,7 +2945,7 @@ def evrae_altana_steal():
     print("====================================")
     print("End of steal logic. Back to regular.")
     print("====================================")
-    # memory.main.waitFrames(180)
+    # memory.main.wait_frames(180)
 
 
 def attack_highbridge():
@@ -4747,15 +4747,15 @@ def faint_check_with_escapes():
 
 
 def check_gems():
-    gemSlot = memory.main.get_item_slot(34)
-    if gemSlot < 200:
-        gems = memory.main.get_item_count_slot(gemSlot)
+    gem_slot = memory.main.get_item_slot(34)
+    if gem_slot < 200:
+        gems = memory.main.get_item_count_slot(gem_slot)
     else:
         gems = 0
 
-    gemSlot = memory.main.get_item_slot(28)
-    if gemSlot < 200:
-        gems += memory.main.get_item_count_slot(gemSlot)
+    gem_slot = memory.main.get_item_slot(28)
+    if gem_slot < 200:
+        gems += memory.main.get_item_count_slot(gem_slot)
     print("Total gems:", gems)
     return gems
 

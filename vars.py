@@ -103,7 +103,7 @@ class AllVars:
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
 
-    def accessibilityVars(self):
+    def accessibility_vars(self):
         return [
             self.skip_cutscene_flag,
             self.skip_diag_flag,
@@ -112,7 +112,7 @@ class AllVars:
             self.rails_egg_hunt,
         ]
 
-    def useLegacySoundtrack(self):
+    def use_legacy_soundtrack(self):
         return self.legacySoundtrack
 
     def try_djose_skip(self):
