@@ -2,22 +2,24 @@ import battle.main
 import memory.main
 import screen
 import xbox
+import logging
 
 FFXC = xbox.controller_handle()
 
+od_log = logging.getLogger('battle.OD')
 
 def auron(style="dragon fang"):
     while not memory.main.other_battle_menu():
         xbox.tap_left()
     while not memory.main.interior_battle_menu():
         xbox.tap_b()
-    print("Style:", style)
+    od_log.info(f"Auron overdrive. Style: {style}")
     # Doing the actual overdrive
     if style == "dragon fang":
         battle.main._navigate_to_position(0, battle_cursor=memory.main.battle_cursor_3)
         while not memory.main.auron_overdrive_active():
             xbox.tap_b()
-        print("Starting")
+        od_log.debug("Starting")
         for i in range(2):  # Do it twice in case there's a miss on the first one.
             FFXC.set_value("Dpad", 2)  # down
             memory.main.wait_frames(1)
@@ -72,7 +74,7 @@ def auron(style="dragon fang"):
 
 
 def kimahri(pos):
-    print("Kimahri using Overdrive, pos -", pos)
+    od_log.info(f"Kimahri using Overdrive, pos - {pos}")
     while not memory.main.other_battle_menu():
         xbox.tap_left()
     while memory.main.other_battle_menu():
@@ -84,7 +86,7 @@ def kimahri(pos):
 
 
 def tidus(direction=None, version: int = 0, character=99):
-    print("Tidus overdrive activating")
+    od_log.info("Tidus overdrive activating")
     while not memory.main.other_battle_menu():
         xbox.tap_left()
     while not memory.main.interior_battle_menu():
@@ -107,7 +109,7 @@ def tidus(direction=None, version: int = 0, character=99):
     while not memory.main.overdrive_menu_active():
         xbox.tap_b()
     memory.main.wait_frames(12)
-    print("Hit Overdrive")
+    od_log.info("Hit Overdrive")
     xbox.tap_b()  # First try pog
     memory.main.wait_frames(8)
     xbox.tap_b()  # Extra attempt in case of miss
@@ -125,7 +127,7 @@ def valefor(sin_fin=0, version=0):
     memory.main.wait_frames(6)
     while memory.main.main_battle_menu():
         xbox.tap_left()
-    print("Overdrive:", version)
+    od_log.info(f"Valefor Overdrive: {version}")
     if version == 1:
         while memory.main.battle_cursor_2() != 1:
             xbox.tap_down()
@@ -138,7 +140,7 @@ def valefor(sin_fin=0, version=0):
 
 
 def wakka():
-    print("Wakka overdrive activating")
+    od_log.info("Wakka overdrive activating")
     while not memory.main.other_battle_menu():
         xbox.tap_left()
     while not memory.main.interior_battle_menu():
@@ -152,7 +154,7 @@ def wakka():
     while memory.main.overdrive_menu_active_wakka() == 0:
         pass
     memory.main.wait_frames(76)
-    print("Hit Overdrive")
+    od_log.info("Hit Overdrive")
     xbox.tap_b()  # First reel
     memory.main.wait_frames(13)
     xbox.tap_b()  # Second reel
@@ -161,7 +163,7 @@ def wakka():
 
 
 def yojimbo(gil_value: int = 263000):
-    print("Yojimbo overdrive")
+    od_log.info("Yojimbo overdrive")
     screen.await_turn()
     if not screen.turn_aeon():
         return
@@ -169,7 +171,7 @@ def yojimbo(gil_value: int = 263000):
         xbox.tap_up()
     memory.main.wait_frames(6)
     xbox.menu_b()
-    print("Selecting amount")
+    od_log.info("Selecting amount")
     memory.main.wait_frames(15)
     xbox.tap_left()
     xbox.tap_left()
@@ -187,7 +189,7 @@ def yojimbo(gil_value: int = 263000):
     xbox.tap_left()
     xbox.tap_up()
     xbox.tap_up()
-    print("Amount selected")
+    od_log.info("Amount selected")
     xbox.tap_b()
     xbox.tap_b()
     xbox.tap_b()
@@ -197,7 +199,7 @@ def yojimbo(gil_value: int = 263000):
 
 
 def yuna(aeon_num: int = 5):
-    print("Awaiting Yunas turn")
+    od_log.info(f"Summoning Aeon {aeon_num}. Awaiting Yunas turn")
     while not screen.turn_yuna():
         if memory.main.turn_ready():
             battle.main.defend()
