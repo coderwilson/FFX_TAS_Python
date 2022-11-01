@@ -32,7 +32,7 @@ def entrance(checkpoint: int = 0):
             # General pathing
             elif pathing.set_movement(pathing.baaj_ramp(checkpoint)):
                 checkpoint += 1
-                baaj_log.debug("Checkpoint reached:", checkpoint)
+                baaj_log.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
 
@@ -61,7 +61,7 @@ def entrance(checkpoint: int = 0):
             # General pathing
             elif pathing.set_movement(pathing.baaj_hallway(checkpoint)):
                 checkpoint += 1
-                baaj_log.debug("Checkpoint reached:", checkpoint)
+                baaj_log.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -103,7 +103,7 @@ def baaj_puzzle():
             # General pathing
             elif pathing.set_movement(pathing.baaj_puzzle(checkpoint)):
                 checkpoint += 1
-                baaj_log.debug("Checkpoint reached:", checkpoint)
+                baaj_log.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
