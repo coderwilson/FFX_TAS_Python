@@ -99,8 +99,8 @@ while attempts < 20 and cycles < 50:
         load_game.load_save_num(97)
         load_game.load_mac_temple()
         SkipAttempts += 1
-        jyscalSkipStatus = area.mac_temple.arrival()
-        if jyscalSkipStatus:
+        jyscal_skip_status = area.mac_temple.arrival()
+        if jyscal_skip_status:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")

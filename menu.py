@@ -229,20 +229,20 @@ def luca_workers():
     print("+++ sGridNodes:", memory.main.s_grid_node_selected())
     if memory.main.s_grid_node_selected()[0] == 2:
         print("No early haste")
-        earlyHaste = 0
+        early_haste = 0
     else:
         print("Early haste, can haste for Oblitzerator")
-        earlyHaste = 1
+        early_haste = 1
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("mana", "none")
-    if earlyHaste == 1:
+    if early_haste == 1:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("ability", "none")  # Haste
 
     menu_grid.use_and_quit()
     memory.main.close_menu()
-    return earlyHaste
+    return early_haste
 
 
 def late_haste():
