@@ -2,6 +2,12 @@
 import random
 import sys
 
+# This needs to be before the other imports in case they decide to log things when imported
+import logger
+import logging
+# This sets up console and file logging (should only be called once)
+logger.initialize_logging()
+
 import area.baaj
 import area.besaid
 import area.boats
