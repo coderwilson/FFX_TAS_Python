@@ -815,8 +815,8 @@ if __name__ == '__main__':
     rng_seed_setup()
 
     # Next, check if we are loading to a save file
-    if game.state != "none":
-        load_game_state()
+    #if game.state != "none":
+    #    load_game_state()
 
     # Run the TAS itself
     perform_TAS()
