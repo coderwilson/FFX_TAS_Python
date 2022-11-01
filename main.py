@@ -311,7 +311,7 @@ def perform_TAS():
             if game.state == "Miihen":
                 if game.step == 1:
                     returnArray = area.miihen.arrival()
-                    selfDestruct = area.miihen.arrival_2(
+                    self_destruct = area.miihen.arrival_2(
                         returnArray[0], returnArray[1], returnArray[2]
                     )
                     game.step = 2

@@ -158,9 +158,9 @@ def tros():
 
             # Assuming battle is not complete:
             if memory.main.battle_active():
-                partyHP = memory.main.get_battle_hp()
+                party_hp = memory.main.get_battle_hp()
                 # Someone requires reviving.
-                if partyHP[0] == 0 or partyHP[1] == 0:
+                if party_hp[0] == 0 or party_hp[1] == 0:
                     print("Tros: Someone fainted.")
                     battle.main.revive()
                     Revives += 1
@@ -732,7 +732,7 @@ def spherimorph():
             if game_vars.use_pause():
                 memory.main.wait_frames(2)
             turnchar = memory.main.get_battle_char_turn()
-            partyHP = memory.main.get_battle_hp()
+            party_hp = memory.main.get_battle_hp()
             if turnchar == 0:
                 if tidusturns == 0:
                     battle.main.equip_in_battle(equip_type="armor", ability_num=0x8028)
@@ -743,7 +743,7 @@ def spherimorph():
                 tidusturns += 1
             elif turnchar == 1:
                 rikkuslotnum = memory.main.get_battle_char_slot(6)
-                if rikkuslotnum < 3 and partyHP[rikkuslotnum] == 0:
+                if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
                     battle.main.revive()
                     yunaTurn = True
                 elif not yunaTurn:
@@ -763,7 +763,7 @@ def spherimorph():
                     yunaTurn = True
             elif turnchar == 3:
                 rikkuslotnum = memory.main.get_battle_char_slot(6)
-                if rikkuslotnum < 3 and partyHP[rikkuslotnum] == 0:
+                if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
                     battle.main.revive()
                     kimTurn = True
                 elif not kimTurn:
@@ -933,11 +933,11 @@ def wendigo():
         pass
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            partyHP = memory.main.get_battle_hp()
+            party_hp = memory.main.get_battle_hp()
             turnchar = memory.main.get_battle_char_turn()
             tidusSlot = memory.main.get_battle_char_slot(0)
 
-            if partyHP[memory.main.get_battle_char_slot(0)] == 0:
+            if party_hp[memory.main.get_battle_char_slot(0)] == 0:
                 print("Tidus is dead")
                 tidushaste = False
                 powerbreak = True
@@ -998,7 +998,7 @@ def wendigo():
                 ):
                     battle.overdrive.tidus("left", character=21)
                 elif tidushealself:
-                    if partyHP[memory.main.get_battle_char_slot(0)] < tidusmaxHP:
+                    if party_hp[memory.main.get_battle_char_slot(0)] < tidusmaxHP:
                         print(
                             "Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself"
                         )
@@ -1185,8 +1185,8 @@ def evrae():
                     battle.main.rikku_full_od("Evrae")
                 elif not game_vars.get_blitz_win() and not lunarCurtain:
                     print("Use Lunar Curtain")
-                    lunarSlot = memory.main.get_use_items_slot(56)
-                    battle.main.use_item(lunarSlot, direction="l", target=0)
+                    lunar_slot = memory.main.get_use_items_slot(56)
+                    battle.main.use_item(lunar_slot, direction="l", target=0)
                     lunarCurtain = True
                 elif memory.main.get_battle_hp()[
                     memory.main.get_battle_char_slot(0)
@@ -1218,8 +1218,8 @@ def evrae():
                 print("Registering Kimahri's turn")
                 if not game_vars.get_blitz_win() and not lunarCurtain:
                     print("Use Lunar Curtain")
-                    lunarSlot = memory.main.get_use_items_slot(56)
-                    battle.main.use_item(lunarSlot, direction="l", target=0)
+                    lunar_slot = memory.main.get_use_items_slot(56)
+                    battle.main.use_item(lunar_slot, direction="l", target=0)
                     lunarCurtain = True
                 elif memory.main.get_battle_hp()[
                     memory.main.get_battle_char_slot(0)
@@ -1407,9 +1407,9 @@ def biran_yenke():
         xbox.tap_b()
 
     retSlot = memory.main.get_item_slot(96)  # Return sphere
-    friendSlot = memory.main.get_item_slot(97)  # Friend sphere
+    friend_slot = memory.main.get_item_slot(97)  # Friend sphere
 
-    if friendSlot == 255:  # Four return sphere method.
+    if friend_slot == 255:  # Four return sphere method.
         print("Double return sphere drops.")
         endGameVersion = 4
     elif retSlot == 255:

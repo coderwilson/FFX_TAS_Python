@@ -431,7 +431,7 @@ def battle_site_oaka_2():
         other_slots = [
             i
             for i, handle in enumerate(all_equipment)
-            if (i > 5 and handle.equipStatus == 255 and not handle.is_brotherhood())
+            if (i > 5 and handle.equip_status == 255 and not handle.is_brotherhood())
         ]
         for cur in other_slots:
             sell_weapon(cur)

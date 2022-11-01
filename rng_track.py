@@ -24,14 +24,14 @@ def area_formations(area: str):
 
 
 def coming_battles(
-    area: str = "kilika_woods", battle_count: int = 10, extraAdvances: int = 0
+    area: str = "kilika_woods", battle_count: int = 10, extra_advances: int = 0
 ):
     formations = area_formations(area=area)
-    advances = memory.main.rng_01_advances((battle_count * 2) + extraAdvances)
-    if extraAdvances != 0:
-        while extraAdvances != 0:
+    advances = memory.main.rng_01_advances((battle_count * 2) + extra_advances)
+    if extra_advances != 0:
+        while extra_advances != 0:
             del advances[0]
-            extraAdvances -= 1
+            extra_advances -= 1
     battles = []
     for i in range(battle_count):
         nextValue = formations[(advances[(i * 2) + 1] & 0x7FFFFFFF) % len(formations)]
@@ -365,7 +365,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
 
     # Lagoon
     lagoonBattles = coming_battles(
-        area="besaid_lagoon", battle_count=lagoonCount, extraAdvances=advance01
+        area="besaid_lagoon", battle_count=lagoonCount, extra_advances=advance01
     )
     for i in range(len(lagoonBattles)):
         logs.write_rng_track("Lagoon battle:")
@@ -973,7 +973,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
     # Kilika
     geneauxTrack = False
     kilika_battles = coming_battles(
-        area="kilika_woods", battle_count=3, extraAdvances=advance01
+        area="kilika_woods", battle_count=3, extra_advances=advance01
     )
     logs.write_rng_track("Kilika battles:")
     import area.kilika as kilika
@@ -1040,7 +1040,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             geneauxTrack = True
 
         battleFormations = coming_battles(
-            area="kilika_woods", battle_count=1, extraAdvances=advance01
+            area="kilika_woods", battle_count=1, extra_advances=advance01
         )
         logs.write_rng_track(str(battleFormations))
         for x in range(len(battleFormations)):
@@ -1193,7 +1193,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
     partySize = 5
     # Workers
     battleFormations = coming_battles(
-        area="machina_1", battle_count=1, extraAdvances=advance01
+        area="machina_1", battle_count=1, extra_advances=advance01
     )
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
@@ -1257,7 +1257,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             advance10 += 3
         advance01 += 1
     battleFormations = coming_battles(
-        area="machina_2", battle_count=1, extraAdvances=advance01
+        area="machina_2", battle_count=1, extra_advances=advance01
     )
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
@@ -1321,7 +1321,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             advance10 += 3
         advance01 += 1
     battleFormations = coming_battles(
-        area="machina_3", battle_count=1, extraAdvances=advance01
+        area="machina_3", battle_count=1, extra_advances=advance01
     )
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):

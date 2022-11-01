@@ -2635,8 +2635,8 @@ def bikanel(cap_num: int = 10):
                 memory.main.arena_farm_check(
                     zone="bikanel", end_goal=cap_num, report=True
                 )
-                hpCheck = memory.main.get_hp()
-                if hpCheck[0] < 800:
+                hp_check = memory.main.get_hp()
+                if hp_check[0] < 800:
                     battle.main.heal_up(3)
                 prefArea = bikanel_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
@@ -3405,8 +3405,8 @@ def stolen_fayth_cave(cap_num: int = 10):
                     battle_farm_all(fayth_cave=True)
 
                 memory.main.click_to_control()
-                hpCheck = memory.main.get_hp()
-                if hpCheck[0] < 795:
+                hp_check = memory.main.get_hp()
+                if hp_check[0] < 795:
                     battle.main.heal_up(3)
                 prefArea = fayth_next(endGoal=cap_num)
                 print("Next area: ", prefArea)

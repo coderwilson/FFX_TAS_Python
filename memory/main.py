@@ -2830,7 +2830,7 @@ class Equipment:
         self.equipOwner = get_equip_owner(equip_num)
         self.equipOwnerAlt = get_equip_owner(equip_num)
         self.equipAbilities = get_equip_abilities(equip_num)
-        self.equipStatus = get_equip_currently_equipped(equip_num)
+        self.equip_status = get_equip_currently_equipped(equip_num)
         self.slots = get_equip_slot_count(equip_num)
         self.exists = get_equip_exists(equip_num)
         self.brotherhood = is_equip_brotherhood(equip_num)
@@ -2842,7 +2842,7 @@ class Equipment:
         self.equipOwner = eOwner1
         self.equipOwnerAlt = eOwner2
         self.equipAbilities = eAbilities
-        self.equipStatus = 0
+        self.equip_status = 0
         self.slots = eSlots
         self.exists = 1
         self.brotherhood = False
@@ -2862,7 +2862,7 @@ class Equipment:
         return False
 
     def is_equipped(self):
-        return self.equipStatus
+        return self.equip_status
 
     def slot_count(self):
         return self.slots

@@ -55,8 +55,8 @@ def guards():
     if not game_vars.get_blitz_win():
         menu.equip_sonic_steel(full_menu_close=False)
 
-    sleepingPowders = memory.main.get_item_slot(37) != 255
-    if not sleepingPowders:
+    sleeping_powders = memory.main.get_item_slot(37) != 255
+    if not sleeping_powders:
         if memory.main.get_lulu_slvl() < 35:
             memory.main.full_party_format("guards_lulu", full_menu_close=False)
         else:
@@ -69,7 +69,7 @@ def guards():
     memory.main.close_menu()
     memory.main.wait_frames(2)
 
-    guardNum = 1
+    guard_num = 1
     while memory.main.get_map() != 182:
         if memory.main.user_control():
             if memory.main.get_map() == 180:
@@ -83,16 +83,16 @@ def guards():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                battle.main.guards(guardNum, sleepingPowders)
-                if guardNum == 2:
+                battle.main.guards(guard_num, sleeping_powders)
+                if guard_num == 2:
                     memory.main.click_to_control()
                     memory.main.full_party_format("guards_lulu")
-                elif guardNum == 5:
+                elif guard_num == 5:
                     pass
                 else:
                     memory.main.click_to_control()
                     memory.main.full_party_format("guards_no_lulu")
-                guardNum += 1
+                guard_num += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():

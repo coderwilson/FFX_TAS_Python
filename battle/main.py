@@ -617,8 +617,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         defend()
     FFXC.set_neutral()
     memory.main.click_to_control()  # Rewards screen
-    hpCheck = memory.main.get_hp()
-    if hpCheck[0] < 250 or hpCheck[1] < 250 or hpCheck[4] < 250:
+    hp_check = memory.main.get_hp()
+    if hp_check[0] < 250 or hp_check[1] < 250 or hp_check[4] < 250:
         heal_up(3)
     else:
         print("No need to heal up. Moving onward.")
@@ -886,7 +886,7 @@ def miihen_road(self_destruct=False):
         FFXC.set_value("btn_b", 0)
         memory.main.wait_frames(3)
 
-    print("selfDestruct flag:", game_vars.self_destruct_get())
+    print("self_destruct flag:", game_vars.self_destruct_get())
 
 
 def aeon_shield():
@@ -967,7 +967,7 @@ def mrr_battle(status):
     print("Fight start: MRR")
     encounter_id = memory.main.get_encounter_id()
     print("Battle number:", encounter_id)
-    # nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
+    # next_crit_kim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
     if encounter_id == 102:
         print("Garuda battle, we want nothing to do with this.")
@@ -1012,8 +1012,8 @@ def mrr_battle(status):
                         elif screen.turn_tidus():
                             buddy_swap_kimahri()
                         elif screen.turn_kimahri():
-                            # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                            #    nextCritKim = mrrTarget()
+                            # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                            #    next_crit_kim = mrrTarget()
                             # else:
                             defend()
                         elif screen.turn_wakka():
@@ -1036,8 +1036,8 @@ def mrr_battle(status):
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
                     elif screen.turn_kimahri():
-                        # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                        #     nextCritKim = mrrTarget()
+                        # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                        #     next_crit_kim = mrrTarget()
                         # else:
                         defend()
                     elif screen.turn_wakka():
@@ -1067,7 +1067,7 @@ def mrr_battle(status):
                         print("No petrify issues.")
                         if screen.turn_tidus():
                             buddy_swap_kimahri()
-                            nextCritKim = mrr_target()
+                            next_crit_kim = mrr_target()
                         elif screen.turn_wakka():
                             wakkaTurns += 1
                             if wakkaTurns == 1:
@@ -1099,7 +1099,7 @@ def mrr_battle(status):
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
-                        nextCritKim = mrr_target()
+                        next_crit_kim = mrr_target()
                     elif screen.turn_wakka():
                         defend()
                     elif screen.turn_auron():
@@ -1131,7 +1131,7 @@ def mrr_battle(status):
                         if screen.turn_tidus():
                             buddy_swap_kimahri()
                         elif screen.turn_kimahri():
-                            nextCritKim = mrr_target()
+                            next_crit_kim = mrr_target()
                         elif screen.turn_wakka():
                             attack("none")
                         elif screen.turn_auron():
@@ -1160,8 +1160,8 @@ def mrr_battle(status):
                         print("No petrify issues.")
                         if screen.turn_tidus():
                             buddy_swap_kimahri()
-                            # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                            #     nextCritKim = mrrTarget()
+                            # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                            #     next_crit_kim = mrrTarget()
                             # else:
                             defend()
                         elif screen.turn_wakka():
@@ -1194,7 +1194,7 @@ def mrr_battle(status):
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
-                        nextCritKim = mrr_target()
+                        next_crit_kim = mrr_target()
                     elif screen.turn_wakka():
                         attack_by_num(22, "l")
                     elif memory.main.get_enemy_current_hp()[2] != 0:
@@ -1239,8 +1239,8 @@ def mrr_battle(status):
                         buddy_swap_tidus()
                     elif screen.turn_kimahri():
                         if memory.main.get_kimahri_slvl() >= 6 and yunaTurnCount:
-                            # if nextCritKim > 9 - status[3] and nextCritKim < 23 - (status[3] * 2):
-                            #     nextCritKim = mrrTarget()
+                            # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                            #     next_crit_kim = mrrTarget()
                             # else:
                             flee_all()
                         else:
@@ -1292,11 +1292,11 @@ def mrr_battle(status):
         memory.main.full_party_format("mrr1", full_menu_close=False)
 
     # Now checking health values
-    hpCheck = memory.main.get_hp()
-    print("HP values:", hpCheck)
+    hp_check = memory.main.get_hp()
+    print("HP values:", hp_check)
     if status[5] == 2:
         heal_up(3, full_menu_close=False)
-    elif hpCheck != [520, 475, 1030, 644, 818, 380]:
+    elif hp_check != [520, 475, 1030, 644, 818, 380]:
         heal_up(full_menu_close=False)
     # donezo. Back to the main path.
     print("Clean-up is now complete.")
@@ -1305,10 +1305,10 @@ def mrr_battle(status):
 
 def mrr_manip(kim_max_advance: int = 6):
     screen.await_turn()
-    nextCritKim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    print("======== Next Kimahri crit:", nextCritKim)
+    next_crit_kim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
+    print("======== Next Kimahri crit:", next_crit_kim)
     attemptManip = False
-    if nextCritKim >= 3:
+    if next_crit_kim >= 3:
         kimTurn = True
     else:
         kimTurn = False
@@ -1316,19 +1316,19 @@ def mrr_manip(kim_max_advance: int = 6):
         pass
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            nextCritKim = memory.main.next_crit(
+            next_crit_kim = memory.main.next_crit(
                 character=3, char_luck=18, enemy_luck=15
             )
             print("||| Manip - Battle number:", memory.main.get_encounter_id())
-            print("||| Next Kimahri Crit vs Gui:", nextCritKim)
-            if nextCritKim > kim_max_advance:
+            print("||| Next Kimahri Crit vs Gui:", next_crit_kim)
+            if next_crit_kim > kim_max_advance:
                 flee_all()
             elif kimTurn:
                 attemptManip = True
                 if 3 not in memory.main.get_active_battle_formation():
                     buddy_swap_kimahri()
                 elif screen.turn_kimahri():
-                    nextCritKim = mrr_target()
+                    next_crit_kim = mrr_target()
                     kimTurn = False
                 else:
                     defend()
@@ -1336,14 +1336,14 @@ def mrr_manip(kim_max_advance: int = 6):
                 flee_all()
     wrap_up()
     # Now checking health values
-    hpCheck = memory.main.get_hp()
-    print("HP values:", hpCheck)
-    if hpCheck != [520, 475, 1030, 644, 818, 380]:
+    hp_check = memory.main.get_hp()
+    print("HP values:", hp_check)
+    if hp_check != [520, 475, 1030, 644, 818, 380]:
         heal_up(full_menu_close=False)
     memory.main.full_party_format("mrr1")
-    nextCritKim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
+    next_crit_kim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
     print("||| Manip - Battle number:", memory.main.get_encounter_id())
-    print("||| Next Kimahri Crit vs Gui:", nextCritKim)
+    print("||| Next Kimahri Crit vs Gui:", next_crit_kim)
     return attemptManip
 
 
@@ -1373,9 +1373,9 @@ def djose(stone_breath):
     print("Mark 2")
     memory.main.click_to_control()
     print("Mark 3")
-    partyHP = memory.main.get_hp()
-    print(partyHP)
-    if partyHP[0] < 300 or partyHP[4] < 300:
+    party_hp = memory.main.get_hp()
+    print(party_hp)
+    if party_hp[0] < 300 or party_hp[4] < 300:
         print("Djose: recovering HP")
         heal_up(3)
     else:
@@ -1402,7 +1402,7 @@ def thunder_plains(section):
     useGrenades = nadeCount > 3 and memory.main.get_speed() < 14
     print("++Use Grenades decision:", useGrenades)
     useNadeSlot = memory.main.get_use_items_slot(35)
-    lunarSlot = game_vars.get_blitz_win() or memory.main.get_item_slot(56) != 255
+    lunar_slot = game_vars.get_blitz_win() or memory.main.get_item_slot(56) != 255
     lightSlot = memory.main.get_item_slot(57) != 255
     petrifySlot = memory.main.get_item_slot(49) != 255
 
@@ -1415,14 +1415,14 @@ def thunder_plains(section):
         print("--- Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif encID in [152, 155, 162]:  # Any battle with Larvae
-        if lunarSlot:
+        if lunar_slot:
             # No longer need Lunar Curtain for Evrae fight, Blitz win logic.
             flee_all()
         else:  # Blitz loss strat
             print("Battle with Larvae. Battle number:", encID)
             while not memory.main.battle_complete():
                 if memory.main.turn_ready():
-                    if not lunarSlot and memory.main.turn_ready():
+                    if not lunar_slot and memory.main.turn_ready():
                         if screen.turn_tidus():
                             if tidusturns == 0:
                                 buddy_swap_rikku()
@@ -1431,7 +1431,7 @@ def thunder_plains(section):
                             tidusturns += 1
                         elif screen.turn_rikku():
                             steal()
-                            lunarSlot = (
+                            lunar_slot = (
                                 game_vars.get_blitz_win()
                                 or memory.main.get_item_slot(56) != 255
                             )
@@ -1655,8 +1655,8 @@ def m_woods(woods_vars):
     print("Checking battle formation.")
     print("Party format is now good. Let's check health.")
     # Heal logic
-    partyHP = memory.main.get_hp()
-    if partyHP[0] < 450 or partyHP[6] < 180 or partyHP[2] + partyHP[4] < 500:
+    party_hp = memory.main.get_hp()
+    if party_hp[0] < 450 or party_hp[6] < 180 or party_hp[2] + party_hp[4] < 500:
         heal_up()
     memory.main.close_menu()
     print("And last, we'll update variables.")
@@ -2284,7 +2284,7 @@ def fullheal(target: int, direction: str):
 # Process written by CrimsonInferno
 def wendigo_res_heal(turnchar: int, use_power_break: int, tidus_max_hp: int):
     print("Wendigo Res/Heal function")
-    partyHP = memory.main.get_battle_hp()
+    party_hp = memory.main.get_battle_hp()
     if screen.faint_check() == 2:
         print("2 Characters are dead")
         if memory.main.get_throw_items_slot(7) < 255:
@@ -2292,14 +2292,14 @@ def wendigo_res_heal(turnchar: int, use_power_break: int, tidus_max_hp: int):
         elif memory.main.get_throw_items_slot(6) < 255:
             revive()  # This should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
-    elif partyHP[memory.main.get_battle_char_slot(0)] == 0:
+    elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
         print("Reviving tidus")
         revive()
     elif use_power_break:
         print("Swapping to Auron to Power Break")
         buddy_swap_auron()
     # If tidus is less than max HP heal him
-    elif partyHP[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
+    elif party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
         print("Tidus need healing")
         if fullheal(target=0, direction="l") == 0:
             if screen.faint_check():
@@ -2335,7 +2335,7 @@ def zu():
 
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # status should be an array length 2
-    # [rikkuCharged, speedNeeded, power_needed, items_needed]
+    # [rikkuCharged, speed_needed, power_needed, items_needed]
     encounter_id = memory.main.get_encounter_id()
     itemStolen = False
     itemThrown = False
@@ -5034,9 +5034,9 @@ def advance_rng_12():
 def ghost_kill():
     import rng_track
 
-    nextDrop, _ = rng_track.item_to_be_dropped()
-    owner1 = nextDrop.equipOwner
-    owner2 = nextDrop.equipOwnerAlt
+    next_drop, _ = rng_track.item_to_be_dropped()
+    owner1 = next_drop.equipOwner
+    owner2 = next_drop.equipOwnerAlt
     silenceSlotCheck = memory.main.get_item_slot(39)
     if silenceSlotCheck == 255:
         silenceSlot = 255
