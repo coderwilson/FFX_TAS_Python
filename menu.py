@@ -2,11 +2,13 @@ import memory.main
 import menu_grid
 import vars
 import xbox
+import logging
 
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
+menu_log = logging.getLogger('menu')
 
 def grid_up():
     menu_grid.grid_up()
@@ -25,9 +27,9 @@ def grid_right():
 
 
 def await_move():
-    print("Sphere Grid: Waiting for Move command to be highlighted")
+    menu_log.debug("Sphere Grid: Waiting for Move command to be highlighted")
     while not memory.main.s_grid_active():
-        print("The Sphere Grid isn't even open! Awaiting manual recovery.")
+        menu_log.critical("The Sphere Grid isn't even open! Awaiting manual recovery.")
         memory.main.wait_frames(30 * 1)
     complete = False
     while not complete:
@@ -41,18 +43,18 @@ def await_move():
             xbox.menu_b()
             complete = True
             memory.main.wait_frames(30 * 0.25)
-    print("Move command highlighted. Good to go.")
+    menu_log.debug("Move command highlighted. Good to go.")
 
 
 def await_use():
-    print("Sphere Grid: Waiting for Use command to be highlighted")
+    menu_log.debug("Sphere Grid: Waiting for Use command to be highlighted")
     while not memory.main.s_grid_active():
-        print("The Sphere Grid isn't even open! Awaiting manual recovery.")
+        menu_log.critical("The Sphere Grid isn't even open! Awaiting manual recovery.")
         memory.main.wait_frames(30 * 1)
     complete = False
     while not complete:
         menuVal = memory.main.s_grid_menu()
-        print("Menu value:", menuVal)
+        menu_log.debug(f"Menu value: {menuVal}")
         if menuVal == 7:
             cursorLoc = memory.main.cursor_location()
             if cursorLoc[0] == 102 or cursorLoc[1] == 14:
@@ -62,11 +64,11 @@ def await_use():
             memory.main.wait_frames(30 * 0.25)
         else:
             xbox.menu_b()
-    print("Use command highlighted. Good to go.")
+    menu_log.debug("Use command highlighted. Good to go.")
 
 
 def await_quit_sg():
-    print("Sphere Grid: attempting to quit")
+    menu_log.debug("Sphere Grid: attempting to quit")
     while memory.main.s_grid_active():
         menuVal = memory.main.s_grid_menu()
         if menuVal == 255:
@@ -75,7 +77,7 @@ def await_quit_sg():
             xbox.menu_b()
         else:
             xbox.menu_a()
-    print("Back to the main menu")
+    menu_log.info("Back to the main menu")
 
 
 def auto_sort_items(manual="n"):
@@ -132,9 +134,9 @@ def short_aeons():
     memory.main.print_memory_log()
     memory.main.open_menu()
     cursorTarget = 4
-    print("Aiming at", cursorTarget)
+    menu_log.debug(f"Aiming at {cursorTarget}")
     while memory.main.get_menu_cursor_pos() != cursorTarget:
-        print(memory.main.get_menu_cursor_pos())
+        menu_log.debug(memory.main.get_menu_cursor_pos())
         xbox.tap_up()
     while memory.main.menu_number() == 5:
         xbox.tap_b()
@@ -150,12 +152,12 @@ def short_aeons():
 
 
 def liki():
-    print("Menu - SS Liki")
+    menu_log.debug("Menu - SS Liki")
     open_grid(character=0)
     memory.main.wait_frames(10)
 
     # Move to the Def node just to the left
-    print("Sphere grid on Tidus, learn Cheer and Str +1")
+    menu_log.debug("Sphere grid on Tidus, learn Cheer and Str +1")
     menu_grid.move_first()
     grid_up()
     grid_up()
@@ -226,12 +228,12 @@ def luca_workers():
     grid_right()
 
     menu_grid.move_and_use()
-    print("+++ sGridNodes:", memory.main.s_grid_node_selected())
+    menu_log.debug(f"+++ sGridNodes: {memory.main.s_grid_node_selected()}")
     if memory.main.s_grid_node_selected()[0] == 2:
-        print("No early haste")
+        menu_log.info("No early haste")
         earlyHaste = 0
     else:
-        print("Early haste, can haste for Oblitzerator")
+        menu_log.info("Early haste, can haste for Oblitzerator")
         earlyHaste = 1
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
@@ -257,27 +259,27 @@ def late_haste():
 
 
 def mrr_grid_1():
-    print("Menuing: start of MRR ")
+    menu_log.info("Menuing: start of MRR ")
     open_grid(character=4)
     menu_grid.move_first()
     grid_right()
     grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
-    print("Determining state of Wakka late menu")
+    menu_log.debug("Determining state of Wakka late menu")
     if memory.main.get_slvl_wakka() < 3:
         wakkaLateMenu = True
-        print("Deferring Wakkas remaining grid for later.")
+        menu_log.debug("Deferring Wakkas remaining grid for later.")
     else:
         wakkaLateMenu = False
-        print("Completing Wakkas remaining grid now.")
+        menu_log.debug("Completing Wakkas remaining grid now.")
         menu_grid.use_and_move()
         grid_down()
         grid_down()
         grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
-    print("Wakka late menu (before):", wakkaLateMenu)
+    menu_log.debug("Wakka late menu (before):", wakkaLateMenu)
 
     menu_grid.use_and_quit()
 
@@ -288,7 +290,7 @@ def mrr_grid_1():
 
 def mrr_grid_2():
     if memory.main.get_slvl_wakka() >= 3:
-        print("Catching up Wakkas sphere grid.")
+        menu_log.debug("Catching up Wakkas sphere grid.")
         open_grid(character=4)
 
         menu_grid.move_first()
@@ -301,13 +303,13 @@ def mrr_grid_2():
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_quit()
         game_vars.wakka_late_menu_set(False)
-        print("Wakka late menu updated:", game_vars.wakka_late_menu())
+        menu_log.debug("Wakka late menu updated:", game_vars.wakka_late_menu())
     else:
-        print("Not enough sphere levels yet.")
+        menu_log.debug("Not enough sphere levels yet.")
 
 
 def mrr_grid_yuna():
-    print("Yuna levels good to level up.")
+    menu_log.debug("Yuna levels good to level up.")
     open_grid(character=1)
     menu_grid.use_first()  # Sphere grid on Yuna first
     menu_grid.sel_sphere("magic", "none")
@@ -328,7 +330,7 @@ def mrr_grid_yuna():
 
 
 def battle_site_grid():
-    print("Doing the menu stuff")
+    menu_log.debug("Doing the menu stuff")
     open_grid(character=1)
     menu_grid.move_first()
     grid_left()
@@ -367,14 +369,14 @@ def _navigate_to_position(position, battle_cursor):
     while battle_cursor() == 255:
         pass
     if battle_cursor() != position:
-        print("Wrong position targeted", battle_cursor() % 2, position % 2)
+        menu_log.debug(f"Wrong position targeted {battle_cursor() % 2} {position % 2}")
         while battle_cursor() % 2 != position % 2:
             if battle_cursor() % 2 < position % 2:
                 xbox.tap_right()
             else:
                 xbox.tap_left()
         while battle_cursor() != position:
-            print(battle_cursor())
+            menu_log.debug(battle_cursor())
             if battle_cursor() > position:
                 xbox.tap_up()
             else:
@@ -399,16 +401,16 @@ def battle_site_oaka_1():
         items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2, 8]]
     else:
         items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2]]
-    print(items_to_sell)
+    menu_log.debug(items_to_sell)
     for slot, cur_item in items_to_sell:
-        print(slot, cur_item)
+        menu_log.debug(f"{slot} {cur_item}")
         _navigate_to_position(slot, memory.main.equip_sell_row)
         cur_amount = memory.main.get_item_count_slot(slot)
         if memory.main.rng_seed() == 160:
             amount_to_sell = max(cur_amount - {0: 0, 1: 0, 2: 0}[cur_item], 0)
         else:
             amount_to_sell = max(cur_amount - {0: 0, 1: 0, 2: 0, 8: 0}[cur_item], 0)
-        print("Selling from", cur_amount, "to", amount_to_sell)
+        menu_log.debug(f"Selling from {cur_amount} to {amount_to_sell}")
         while memory.main.item_shop_menu() != 27:
             xbox.tap_b()
         while memory.main.equip_buy_row() != amount_to_sell:
@@ -494,7 +496,7 @@ def sell_weapon(location):
         pass
     while memory.main.equip_confirmation_row() != 0:
         xbox.tap_up()
-    print("Selling")
+    menu_log.debug("Selling")
     while memory.main.equip_shop_menu() != 25:
         xbox.tap_b()
 
@@ -737,7 +739,7 @@ def before_guards(item_to_use: int = 3):
     megaPotSlot = memory.main.get_item_slot(item_to_use)
     column = megaPotSlot % 2
     row = (megaPotSlot - column) / 2
-    print(megaPotSlot, column, row)
+    menu_log.debug(f"megaPotSlot: {megaPotSlot} column: {column} row: {row}")
 
     while memory.main.item_menu_column() != column:
         if memory.main.item_menu_column() > column:
@@ -782,13 +784,13 @@ def sort_items(full_menu_close=True):
 
 
 def equip_weapon(*, character, ability=None, full_menu_close=True, special="none"):
-    print("Equipping Weapon with ability ", ability)
+    menu_log.debug(f"Equipping Weapon with ability {ability}")
     memory.main.await_control()
 
     weaponHandles = memory.main.weapon_array_character(character)
-    print("@@@@@")
-    print(len(weaponHandles))
-    print("@@@@@")
+    menu_log.debug("@@@@@")
+    menu_log.debug(len(weaponHandles))
+    menu_log.debug("@@@@@")
     weaponNum = 255
 
     abilityarray = []
@@ -819,7 +821,7 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
         ):
             weaponNum = index
             break
-    print("Weapon is in slot ", weaponNum)
+    menu_log.debug(f"Weapon is in slot {weaponNum}")
     if weaponNum == 255:
         if full_menu_close:
             memory.main.close_menu()
@@ -872,13 +874,13 @@ def equip_scout(full_menu_close=True):
 
 
 def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
-    print("Equipping Armor with ability ", ability)
+    menu_log.debug(f"Equipping Armor with ability {ability}")
     memory.main.await_control()
 
     armorHandles = memory.main.armor_array_character(character)
-    print("@@@@@")
-    print(len(armorHandles))
-    print("@@@@@")
+    menu_log.debug("@@@@@")
+    menu_log.debug(len(armorHandles))
+    menu_log.debug("@@@@@")
     if ability == 99:
         armorNum = len(armorHandles)
     elif len(armorHandles) != 0:
@@ -910,7 +912,7 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     else:
         armorNum = 0
 
-    print("Armor is in slot ", armorNum)
+    menu_log.debug(f"Armor is in slot {armorNum}")
     if memory.main.menu_number() != 26:
         if not memory.main.menu_open():
             memory.main.open_menu()
@@ -1267,7 +1269,7 @@ def after_ronso():
 
     elif game_vars.end_game_version() == 3:  # Four friend spheres
         if game_vars.get_blitz_win():
-            print("Four friend spheres, Blitz Win")
+            menu_log.debug("Four friend spheres, Blitz Win")
             menu_grid.move_shift_right("tidus")
             menu_grid.move_first()
             grid_right()
@@ -1291,7 +1293,7 @@ def after_ronso():
             menu_grid.sel_sphere("ability", "none")
             menu_grid.move_shift_right("yuna")
         else:
-            print("Four friend spheres, Blitz Loss")
+            menu_log.debug("Four friend spheres, Blitz Loss")
             menu_grid.move_shift_right("tidus")
             menu_grid.move_first()
             grid_right()
@@ -1367,29 +1369,20 @@ def after_ronso():
 
 def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
     equipArray = memory.main.all_equipment()
-    print(owner, equipment_type, ability_array, slotcount)
+    menu_log.debug(f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slotcount: {slotcount}")
     if not ability_array:
         ability_array = [255, 255, 255, 255]
     # auron baroque sword - [0x800B, 0x8063, 255, 255]
-    print("Looking for:", ability_array)
+    menu_log.debug(f"Looking for: {ability_array}")
     for current_index, currentHandle in enumerate(equipArray):
-        print(
-            "Slot:",
-            current_index,
-            " | Owner:",
-            currentHandle.owner(),
-            " | Abilities:",
-            currentHandle.abilities(),
-            " | Slots:",
-            currentHandle.slot_count(),
-        )
+        menu_log.debug(f"Slot: {current_index} | Owner: {currentHandle.owner()} | Abilities: {currentHandle.abilities()} | Slots: {currentHandle.slot_count()}")
         if (
             currentHandle.owner() == owner
             and currentHandle.equipment_type() == equipment_type
             and currentHandle.abilities() == ability_array
             and currentHandle.slot_count() == slotcount
         ):
-            print("Equipment found in slot:", current_index)
+            menu_log.debug(f"Equipment found in slot: {current_index}")
             return current_index
 
 
@@ -1490,7 +1483,7 @@ def add_first_strike(
 
 
 def auron_first_strike():
-    print("Starting Auron")
+    menu_log.debug("Starting Auron")
     add_first_strike(
         owner=2,
         equipment_type=0,
@@ -1500,11 +1493,11 @@ def auron_first_strike():
         fullMenuClose=False,
         navigateToEquipMenu=False,
     )
-    print("Done with Auron")
+    menu_log.debug("Done with Auron")
 
 
 def yuna_first_strike():
-    print("Starting Yuna")
+    menu_log.debug("Starting Yuna")
     if game_vars.nemesis():
         add_first_strike(
             owner=1,
@@ -1522,7 +1515,7 @@ def yuna_first_strike():
             closeMenu=False,
             navigateToEquipMenu=True,
         )
-    print("Done with Yuna")
+    menu_log.debug("Done with Yuna")
 
 
 def tidus_slayer(od_pos: int = 2):
@@ -1854,7 +1847,7 @@ def open_grid(character):
             while memory.main.menu_number() == 5:
                 xbox.tap_b()
         elif memory.main.menu_number() == 7:  # Cursor selecting party member
-            print("Selecting party member")
+            menu_log.debug("Selecting party member")
             target_pos = memory.main.get_character_index_in_main_menu(character)
             while memory.main.get_char_cursor_pos() != target_pos:
                 # After B&Y, party size is evaluated weird.
