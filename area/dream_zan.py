@@ -5,10 +5,10 @@ import logs
 import memory.main
 import pathing
 import rng_track
+import save_sphere
 import tts
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -27,9 +27,9 @@ def new_game(Gamestate):
                 if lastMessage != 1:
                     lastMessage = 1
                     print("Attempting to get to New Game screen")
-                FFXC.set_value("BtnStart", 1)
+                FFXC.set_value("btn_start", 1)
                 memory.main.wait_frames(1)
-                FFXC.set_value("BtnStart", 0)
+                FFXC.set_value("btn_start", 0)
                 memory.main.wait_frames(1)
             elif memory.main.save_menu_open():
                 if lastMessage != 2:
@@ -58,9 +58,9 @@ def new_game(Gamestate):
     else:  # Load Game
         while not memory.main.save_menu_open():
             if memory.main.get_map() != 23:
-                FFXC.set_value("BtnStart", 1)
+                FFXC.set_value("btn_start", 1)
                 memory.main.wait_frames(1)
-                FFXC.set_value("BtnStart", 0)
+                FFXC.set_value("btn_start", 0)
                 memory.main.wait_frames(1)
             elif memory.main.save_menu_cursor() == 0:
                 xbox.menu_down()
@@ -96,9 +96,9 @@ def listen_story():
                 print("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
             if not game_vars.accessibilityVars()[0]:
-                FFXC.set_value("BtnBack", 1)
+                FFXC.set_value("btn_back", 1)
                 memory.main.wait_frames(1)
-                FFXC.set_value("BtnBack", 0)
+                FFXC.set_value("btn_back", 0)
                 memory.main.wait_frames(1)
 
     print("### CSR check:", game_vars.csr())
@@ -157,9 +157,9 @@ def listen_story():
                     print("Special Skip")
                     memory.main.wait_frames(130)
                     # Generate button to skip later
-                    FFXC.set_value("BtnStart", 1)
+                    FFXC.set_value("btn_start", 1)
                     memory.main.wait_frames(1)
-                    FFXC.set_value("BtnStart", 0)
+                    FFXC.set_value("btn_start", 0)
                     xbox.skip_dialog(10)
                 else:
                     if game_vars.use_pause():
@@ -257,14 +257,14 @@ def after_ammes():
 def swim_to_jecht():
     print("Swimming to Jecht")
 
-    FFXC.set_value("BtnA", 1)
+    FFXC.set_value("btn_a", 1)
     FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 8)
     while memory.main.user_control():
         FFXC.set_movement(-1, 1)
 
     FFXC.set_neutral()
-    FFXC.set_value("BtnA", 0)
+    FFXC.set_value("btn_a", 0)
     print("We've now reached Jecht.")
     xbox.skip_dialog(5)
 

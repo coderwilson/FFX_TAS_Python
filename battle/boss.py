@@ -114,7 +114,7 @@ def klikk():
     ):
         # print(memory.main.getMap())
         if game_vars.csr():
-            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("btn_b", 1)
         else:
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
@@ -1273,9 +1273,9 @@ def isaaru():
                 battle.main.attack("none")  # Aeon turn
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
 
 
 def evrae_altana():

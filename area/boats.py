@@ -143,32 +143,32 @@ def ss_winno_2():
 
 
 def jecht_shot_success():
-    FFXC.set_value("Dpad", 1)  # Up
+    FFXC.set_value("d_pad", 1)  # Up
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 1)  # Up
-    FFXC.set_value("Dpad", 8)  # Right
+    FFXC.set_value("d_pad", 1)  # Up
+    FFXC.set_value("d_pad", 8)  # Right
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 8)  # Right
+    FFXC.set_value("d_pad", 8)  # Right
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 8)  # Right
-    FFXC.set_value("Dpad", 2)  # Down
+    FFXC.set_value("d_pad", 8)  # Right
+    FFXC.set_value("d_pad", 2)  # Down
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 2)  # Down
+    FFXC.set_value("d_pad", 2)  # Down
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 2)  # Down
-    FFXC.set_value("Dpad", 4)  # Left
+    FFXC.set_value("d_pad", 2)  # Down
+    FFXC.set_value("d_pad", 4)  # Left
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 4)  # Left
+    FFXC.set_value("d_pad", 4)  # Left
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 4)  # Left
-    FFXC.set_value("Dpad", 1)  # Up
+    FFXC.set_value("d_pad", 4)  # Left
+    FFXC.set_value("d_pad", 1)  # Up
     xbox.tap_b()
     FFXC.set_neutral()
     xbox.tap_b()
@@ -180,15 +180,15 @@ def jecht_shot():
     memory.main.click_to_diag_progress(96)
     while memory.main.diag_progress_flag() != 100:
         if memory.main.diag_progress_flag() == 97:
-            FFXC.set_value("Dpad", 1)  # Up
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 1)  # Up
+            FFXC.set_value("d_pad", 8)  # Right
             xbox.tap_b()
         elif memory.main.diag_progress_flag() == 98:
-            FFXC.set_value("Dpad", 4)  # Left
+            FFXC.set_value("d_pad", 4)  # Left
             xbox.tap_b()
         elif memory.main.diag_progress_flag() == 99:
-            FFXC.set_value("Dpad", 2)  # Down
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 2)  # Down
+            FFXC.set_value("d_pad", 8)  # Right
             xbox.tap_b()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()

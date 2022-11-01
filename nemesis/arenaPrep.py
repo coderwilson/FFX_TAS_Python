@@ -6,11 +6,10 @@ import nemesis.arenaSelect
 import nemesis.menu
 import nemesis.targetPath
 import rng_track
+import save_sphere
 import screen
 import vars
 import xbox
-import menu
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -95,19 +94,19 @@ def unlock_omega():
     while memory.main.diag_progress_flag() == 0:
         print(memory.main.get_coords())
         if memory.main.get_coords()[0] < 65:
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
         if memory.main.get_coords()[0] < 70:
             nemesis.menu.grid_right()
         elif memory.main.get_coords()[0] > 78:
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
         elif memory.main.get_coords()[0] > 73:
             nemesis.menu.grid_left()
         elif memory.main.get_coords()[1] > -28:
-            FFXC.set_value("Dpad", 2)
+            FFXC.set_value("d_pad", 2)
         elif memory.main.get_coords()[1] > -34:
             nemesis.menu.grid_down()
         elif memory.main.get_coords()[1] < -40:
-            FFXC.set_value("Dpad", 1)
+            FFXC.set_value("d_pad", 1)
         elif memory.main.get_coords()[1] < -37:
             nemesis.menu.grid_up()
         else:
@@ -633,9 +632,9 @@ def bribe_battle(spare_change_value: int = 12000):
     print("Battle is complete.")
     while not memory.main.menu_open():
         pass
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
     print("Now back in control.")
 
 
@@ -902,9 +901,9 @@ def farm_feathers():
         pass
     # memory.waitFrames(300)
 
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
     print("Now back in control.")
     nemesis.arenaSelect.arena_menu_select(4)
 

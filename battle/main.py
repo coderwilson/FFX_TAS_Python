@@ -774,9 +774,9 @@ def after_blitz_3(early_haste):
                 use_potion_character(0, "u")
             else:
                 defend()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 4)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
     print("Battle complete (Garuda)")
     # Get to control
     while not memory.main.user_control():
@@ -833,9 +833,9 @@ def after_blitz_3_late_haste(early_haste):
                 revive()
             else:
                 attack("none")
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 4)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
     print("Battle complete (Garuda)")
     # Get to control
     while not memory.main.user_control():
@@ -881,9 +881,9 @@ def miihen_road(self_destruct=False):
 
     FFXC.set_movement(0, 1)
     while not memory.main.user_control():
-        FFXC.set_value("BtnB", 1)
+        FFXC.set_value("btn_b", 1)
         memory.main.wait_frames(2)
-        FFXC.set_value("BtnB", 0)
+        FFXC.set_value("btn_b", 0)
         memory.main.wait_frames(3)
 
     print("selfDestruct flag:", game_vars.self_destruct_get())
@@ -1994,9 +1994,9 @@ def seymour_guado_blitz_win():
             xbox.tap_b()
             print("Diag skip")
     print("Battle summary screen")
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
 
 
 def seymour_guado_blitz_loss():
@@ -2213,9 +2213,9 @@ def seymour_guado_blitz_loss():
             xbox.tap_b()
             print("Diag skip")
     print("Battle summary screen")
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
 
 
 def seymour_guado():

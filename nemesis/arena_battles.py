@@ -5,10 +5,10 @@ import nemesis.arenaSelect
 import nemesis.menu
 import nemesis.targetPath
 import reset
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -257,7 +257,7 @@ def yojimbo_battle():
     while not memory.main.menu_open():
         xbox.tap_b()
     print("Battle is complete.")
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(180)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -314,7 +314,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -345,7 +345,7 @@ def basic_attack(
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -824,9 +824,9 @@ def quick_reset_logic():
     reset.reset_to_main_menu()
     memory.ain.waitFrames(90)
     while memory.main.get_map() != 23:
-        FFXC.set_value("BtnStart", 1)
+        FFXC.set_value("btn_start", 1)
         memory.main.wait_frames(2)
-        FFXC.set_value("BtnStart", 0)
+        FFXC.set_value("btn_start", 0)
         memory.main.wait_frames(2)
     memory.main.wait_frames(60)
     xbox.menu_b()
@@ -896,7 +896,7 @@ def shinryu_battle():
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
     FFXC.set_neutral()
     memory.main.wait_frames(2)

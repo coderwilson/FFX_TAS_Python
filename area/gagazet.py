@@ -5,10 +5,10 @@ import memory.main
 import menu
 import pathing
 import rng_track
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -389,7 +389,7 @@ def cave():
                     memory.main.wait_frames(90)
                     xbox.menu_b()
                     memory.main.wait_frames(45)
-                    FFXC.set_value("Dpad", 8)
+                    FFXC.set_value("d_pad", 8)
                     memory.main.wait_frames(45)
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()
@@ -398,7 +398,7 @@ def cave():
                 elif memory.main.diag_progress_flag() == 3:
                     # CSR second trial
                     memory.main.wait_frames(10)
-                    FFXC.set_value("Dpad", 8)
+                    FFXC.set_value("d_pad", 8)
                     memory.main.wait_frames(45)
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()

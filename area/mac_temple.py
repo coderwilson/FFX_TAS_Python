@@ -3,10 +3,10 @@ import battle.main
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -75,9 +75,9 @@ def arrival():
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 while memory.main.get_coords()[1] < -101.5:
-                    FFXC.set_value("Dpad", 8)
+                    FFXC.set_value("d_pad", 8)
                     memory.main.wait_frames(2)
-                    FFXC.set_value("Dpad", 0)
+                    FFXC.set_value("d_pad", 0)
                     memory.main.wait_frames(5)
 
                 print("Turning back")
@@ -90,9 +90,9 @@ def arrival():
                 print("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
                 memory.main.wait_frames(3)
-                FFXC.set_value("BtnB", 1)
+                FFXC.set_value("btn_b", 1)
                 memory.main.wait_frames(4)
-                FFXC.set_value("BtnB", 0)
+                FFXC.set_value("btn_b", 0)
                 memory.main.wait_frames(45)
                 FFXC.set_neutral()
                 checkpoint += 1

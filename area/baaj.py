@@ -3,10 +3,10 @@ import battle.main
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -143,18 +143,18 @@ def ab_boat_1():
             xbox.menu_a()
             xbox.menu_b()
     print("In the water!")
-    FFXC.set_value("BtnA", 1)
+    FFXC.set_value("btn_a", 1)
     while not memory.main.user_control():
-        FFXC.set_value("BtnB", 1)
+        FFXC.set_value("btn_b", 1)
         memory.main.wait_frames(1)
-        FFXC.set_value("BtnB", 0)
+        FFXC.set_value("btn_b", 0)
         memory.main.wait_frames(1)
-    FFXC.set_value("BtnA", 1)
+    FFXC.set_value("btn_a", 1)
     FFXC.set_movement(-1, -1)
     memory.main.wait_frames(20)
 
     while memory.main.get_map() != 288:
-        FFXC.set_value("BtnA", 1)
+        FFXC.set_value("btn_a", 1)
         FFXC.set_movement(0, -1)
         if memory.main.battle_active():
             FFXC.set_neutral()
@@ -171,7 +171,7 @@ def ab_swimming_1():
     while memory.main.get_map() != 288:
         if memory.main.user_control():
             pathing.set_movement([-300, -300])
-            FFXC.set_value("BtnA", 1)
+            FFXC.set_value("btn_a", 1)
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -189,9 +189,9 @@ def ab_swimming_1():
         if memory.main.user_control():
             if memory.main.get_map() == 71:
                 FFXC.set_movement(0, -1)
-                FFXC.set_value("BtnA", 1)
+                FFXC.set_value("btn_a", 1)
             else:
-                FFXC.set_value("BtnA", 0)
+                FFXC.set_value("btn_a", 0)
                 if pos[1] > -230:
                     pathing.set_movement([-343, -284])
                 elif pos[1] > -410:
@@ -213,7 +213,7 @@ def ab_swimming_2():
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)
-    FFXC.set_value("BtnA", 1)
+    FFXC.set_value("btn_a", 1)
     save_sphere.touch_and_go()
 
     memory.main.clear_save_menu_cursor_2()

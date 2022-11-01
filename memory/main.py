@@ -443,11 +443,11 @@ def click_to_control_special():
     waitCounter = 0
     print("Awaiting control (clicking)")
     while not user_control():
-        FFXC.set_value("BtnB", 1)
-        FFXC.set_value("BtnY", 1)
+        FFXC.set_value("btn_b", 1)
+        FFXC.set_value("btn_y", 1)
         wait_frames(30 * 0.035)
-        FFXC.set_value("BtnB", 0)
-        FFXC.set_value("BtnY", 0)
+        FFXC.set_value("btn_b", 0)
+        FFXC.set_value("btn_y", 0)
         wait_frames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 10000 == 0:
@@ -458,12 +458,12 @@ def click_to_control_special():
 
 def click_to_event():
     while user_control():
-        FFXC.set_value("BtnB", 1)
+        FFXC.set_value("btn_b", 1)
         if game_vars.use_pause():
             wait_frames(2)
         else:
             wait_frames(1)
-        FFXC.set_value("BtnB", 0)
+        FFXC.set_value("btn_b", 0)
         if game_vars.use_pause():
             wait_frames(3)
         else:
@@ -1662,18 +1662,18 @@ def diag_skip_possible_old():
 def diag_skip_possible():
     global baseValue
     if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
-        #print("Skip 2")
+        # print("Skip 2")
         return False
     else:
         key = baseValue + 0x0085A03C
         if process.readBytes(key, 1) == 1:
-            #print("Skip 3")
+            # print("Skip 3")
             if game_vars.accessibilityVars()[2]:
                 # Placeholder for accessibility, to be implemented later.
                 pass
             return True
         else:
-            #print("Skip 4")
+            # print("Skip 4")
             return False
 
 
@@ -1732,11 +1732,11 @@ def click_to_story_progress(destination):
     print("Story goal:", destination, "| Awaiting progress state:", currentState)
     while currentState < destination:
         if menu_control():
-            FFXC.set_value("BtnB", 1)
-            FFXC.set_value("BtnA", 1)
+            FFXC.set_value("btn_b", 1)
+            FFXC.set_value("btn_a", 1)
             wait_frames(1)
-            FFXC.set_value("BtnB", 0)
-            FFXC.set_value("BtnA", 0)
+            FFXC.set_value("btn_b", 0)
+            FFXC.set_value("btn_a", 0)
             wait_frames(1)
         if counter % 100000 == 0:
             print(

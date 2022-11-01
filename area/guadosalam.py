@@ -211,9 +211,9 @@ def guado_skip():
                     xbox.tap_b()
                 recovery = True
             else:
-                FFXC.set_value("Dpad", 4)
+                FFXC.set_value("d_pad", 4)
                 memory.main.wait_frames(3)
-                FFXC.set_value("Dpad", 0)
+                FFXC.set_value("d_pad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
         print("Adjustment 3")
@@ -226,9 +226,9 @@ def guado_skip():
                     xbox.tap_b()
                 recovery = True
             else:
-                FFXC.set_value("Dpad", 1)
+                FFXC.set_value("d_pad", 1)
                 memory.main.wait_frames(3)
-                FFXC.set_value("Dpad", 0)
+                FFXC.set_value("d_pad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
 
@@ -247,9 +247,9 @@ def guado_skip():
                     print("MARK")
                     xbox.skip_dialog(0.5)
             elif pos[1] > -9:
-                FFXC.set_value("Dpad", 2)
+                FFXC.set_value("d_pad", 2)
                 memory.main.wait_frames(2)
-                FFXC.set_value("Dpad", 0)
+                FFXC.set_value("d_pad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
 
@@ -262,8 +262,8 @@ def guado_skip():
 
             # Waiting for walking guado to push us into the door
             while memory.main.get_camera()[0] < 0.6:
-                currentTime = time.time()
-                if currentTime > maxTime:
+                current_time = time.time()
+                if current_time > maxTime:
                     print("Skip failed for some reason. Moving on without skip.")
                     break
             memory.main.wait_frames(30 * 0.035)  # Guado potions good!

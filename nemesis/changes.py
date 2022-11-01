@@ -142,25 +142,25 @@ def choco_tame_1():
         # print("Position: ", position)
         if position[0] < -110:  # Need to move right
             if angle > 1.4:
-                FFXC.set_value("Dpad", 8)
+                FFXC.set_value("d_pad", 8)
             elif angle < 1.2:
-                FFXC.set_value("Dpad", 4)
+                FFXC.set_value("d_pad", 4)
             else:
-                FFXC.set_value("Dpad", 0)
+                FFXC.set_value("d_pad", 0)
         elif position[0] > -60:  # Need to move left
             if angle > 1.8:
-                FFXC.set_value("Dpad", 8)
+                FFXC.set_value("d_pad", 8)
             elif angle < 1.6:
-                FFXC.set_value("Dpad", 4)
+                FFXC.set_value("d_pad", 4)
             else:
-                FFXC.set_value("Dpad", 0)
+                FFXC.set_value("d_pad", 0)
         else:
             if angle > 1.6:  # Stay straight
-                FFXC.set_value("Dpad", 8)
+                FFXC.set_value("d_pad", 8)
             elif angle < 1.4:
-                FFXC.set_value("Dpad", 4)
+                FFXC.set_value("d_pad", 4)
             else:
-                FFXC.set_value("Dpad", 0)
+                FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
 
     while not memory.main.diag_progress_flag() in [51, 69, 74]:
@@ -193,49 +193,49 @@ def choco_tame_2():
             position[1] > -1360 and checkpoint == 0
         ):  # Start off aiming right to manip balls
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 8)  # Right
             memory.main.wait_frames(5)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -1200 and checkpoint == 1:  # Slight left
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)  # Left
+            FFXC.set_value("d_pad", 4)  # Left
             memory.main.wait_frames(11)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -1000 and checkpoint == 2:  # Straighten out
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 8)  # Right
             memory.main.wait_frames(7)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -800 and checkpoint == 3:  # Juke right
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 8)  # Right
             memory.main.wait_frames(5)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -650 and checkpoint == 4:  # Back to the left
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)  # Left
+            FFXC.set_value("d_pad", 4)  # Left
             memory.main.wait_frames(11)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -550 and checkpoint == 5:  # Straighten out
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 8)  # Right
             memory.main.wait_frames(6)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -450 and checkpoint == 6:  # Juke right again
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
             memory.main.wait_frames(6)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -250 and checkpoint == 7:  # Straighten out
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(14)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -90 and checkpoint == 8:  # The final juke!
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
             memory.main.wait_frames(13)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
 
     while not memory.main.diag_progress_flag() in [54, 69, 77]:
@@ -264,65 +264,65 @@ def choco_tame_3():
         position = memory.main.get_actor_coords(0)
         if position[1] > -1370 and checkpoint == 0:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)  # Left
+            FFXC.set_value("d_pad", 4)  # Left
             memory.main.wait_frames(3)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -1200 and checkpoint == 1:
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 8)  # Right
             memory.main.wait_frames(10)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -1100 and checkpoint == 2:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(12)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -1040 and checkpoint == 3:
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
             memory.main.wait_frames(9)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -950 and checkpoint == 4:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(12)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -700 and checkpoint == 5:
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
             memory.main.wait_frames(12)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -600 and checkpoint == 6:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(12)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -500 and checkpoint == 7:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(6)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -400 and checkpoint == 8:
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
             memory.main.wait_frames(16)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -250 and checkpoint == 9:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(16)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         # Still dialing in on this one.
         if position[1] > -120 and checkpoint == 10:
             checkpoint += 1
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
             memory.main.wait_frames(16)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
         if position[1] > -20 and checkpoint == 11:
             checkpoint += 1
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
             memory.main.wait_frames(10)
-            FFXC.set_value("Dpad", 0)
+            FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
 
     while not memory.main.diag_progress_flag() in [56, 69, 77]:
@@ -355,35 +355,35 @@ def choco_tame_4():
         """
         if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('d_pad', 8) #Right
             memory.waitFrames(5)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value('d_pad', 0)
         if position[1] > -1200 and checkpoint == 1: #Slight left
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)#Left
+            FFXC.set_value('d_pad', 4)#Left
             memory.waitFrames(10)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value('d_pad', 0)
         if position[1] > -770 and checkpoint == 3: #Left between balls
             checkpoint += 1
-            FFXC.set_value('Dpad', 4)#Left
+            FFXC.set_value('d_pad', 4)#Left
             memory.waitFrames(10)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value('d_pad', 0)
         if position[1] > -600 and checkpoint == 4: #Straighten out
             checkpoint += 1
-            FFXC.set_value('Dpad', 8) #Right
+            FFXC.set_value('d_pad', 8) #Right
             memory.waitFrames(6)
-            FFXC.set_value('Dpad', 0)
+            FFXC.set_value('d_pad', 0)
         if position[1] > -100:
             if position[0] > -40:
-                FFXC.set_value('Dpad', 4)#Left
+                FFXC.set_value('d_pad', 4)#Left
             elif position[0] < -100:
-                FFXC.set_value('Dpad', 8) #Right
+                FFXC.set_value('d_pad', 8) #Right
             elif angle > 1.7:
-                FFXC.set_value('Dpad', 8) #Right
+                FFXC.set_value('d_pad', 8) #Right
             elif angle < 1.3:
-                FFXC.set_value('Dpad', 4)#Left
+                FFXC.set_value('d_pad', 4)#Left
             else:
-                FFXC.set_value('Dpad', 0)
+                FFXC.set_value('d_pad', 0)
     """
     print("Race complete.")
     FFXC.set_neutral()

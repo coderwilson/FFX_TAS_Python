@@ -2,15 +2,15 @@
 import os
 from pathlib import Path
 
+import area.dream_zan
+import logs
 import memory.main
 import pathing
 import screen
 import vars
-from gamestate import game
 import xbox
 import zz_airship_path
-import area.dream_zan
-import logs
+from gamestate import game
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
@@ -19,7 +19,7 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def load_into_game(Gamestate:str, step_counter:str):
+def load_into_game(Gamestate: str, step_counter: str):
     if not (Gamestate == "Luca" and step_counter == 3):
         area.dream_zan.new_game(Gamestate)
         game.start_time = logs.time_stamp()
@@ -241,6 +241,7 @@ def load_into_game(Gamestate:str, step_counter:str):
         memory.main.check_nea_armor()
     memory.main.check_nea_armor()
 
+
 def get_saved_files():
     saveFilesFull = sorted(
         Path(game_vars.game_save_path()).iterdir(), key=os.path.getmtime
@@ -356,45 +357,45 @@ def load_post_blitz():
 
     while not screen.Minimap1():
         if screen.Minimap4():
-            FFXC.set_value("AxisLx", -1)
-            FFXC.set_value("AxisLy", -1)
+            FFXC.set_value("axis_lx", -1)
+            FFXC.set_value("axis_ly", -1)
             memory.main.wait_frames(30 * 0.5)
-            FFXC.set_value("AxisLx", 0)
+            FFXC.set_value("axis_lx", 0)
             memory.main.wait_frames(30 * 1)
-            FFXC.set_value("AxisLy", 0)
+            FFXC.set_value("axis_ly", 0)
         else:
             xbox.menu_b()
 
     # Reverse T screen
-    FFXC.set_value("AxisLx", 1)
+    FFXC.set_value("axis_lx", 1)
     memory.main.wait_frames(30 * 4.5)
-    FFXC.set_value("AxisLy", -1)
+    FFXC.set_value("axis_ly", -1)
     memory.main.wait_frames(30 * 1)
-    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("axis_ly", 0)
     memory.main.wait_frames(30 * 5)
-    FFXC.set_value("AxisLx", 0)
+    FFXC.set_value("axis_lx", 0)
 
     # Carnival vendor screen
     memory.main.await_control()
-    FFXC.set_value("AxisLy", 1)
+    FFXC.set_value("axis_ly", 1)
     memory.main.wait_frames(30 * 1.5)
-    FFXC.set_value("AxisLx", 1)
+    FFXC.set_value("axis_lx", 1)
     memory.main.wait_frames(30 * 3)
-    FFXC.set_value("AxisLx", 0)
+    FFXC.set_value("axis_lx", 0)
     memory.main.wait_frames(30 * 1)
-    FFXC.set_value("AxisLx", 1)
+    FFXC.set_value("axis_lx", 1)
     memory.main.wait_frames(30 * 3)
-    FFXC.set_value("AxisLx", 0)
-    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("axis_lx", 0)
+    FFXC.set_value("axis_ly", 0)
 
     print("Rejoining the party.")
     memory.main.click_to_control()  # Scene, rejoining the party
     print("Walking up to Yuna.")
-    FFXC.set_value("AxisLy", -1)
-    FFXC.set_value("AxisLx", -1)
+    FFXC.set_value("axis_ly", -1)
+    FFXC.set_value("axis_lx", -1)
     memory.main.wait_frames(30 * 3)
-    FFXC.set_value("AxisLx", 0)
-    FFXC.set_value("AxisLy", 0)  # Enters laughing scene, ends Luca section.
+    FFXC.set_value("axis_lx", 0)
+    FFXC.set_value("axis_ly", 0)  # Enters laughing scene, ends Luca section.
     print("End of loading section.")
 
 
@@ -435,13 +436,13 @@ def besaid_trials():
 def boat_1():
     memory.main.wait_frames(30 * 3)
     # To the junction screen, then back.
-    FFXC.set_value("AxisLy", -1)
+    FFXC.set_value("axis_ly", -1)
     memory.main.wait_frames(30 * 1)
-    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("axis_ly", 0)
     memory.main.wait_frames(30 * 6)
-    FFXC.set_value("AxisLy", -1)
+    FFXC.set_value("axis_ly", -1)
     memory.main.wait_frames(30 * 1)
-    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("axis_ly", 0)
 
 
 def kilika():
@@ -612,11 +613,11 @@ def after_gui():
 def djose_temple():
     load_offset(19)
     memory.main.wait_frames(30 * 6)
-    FFXC.set_value("AxisLy", -1)
-    FFXC.set_value("AxisLx", -1)
+    FFXC.set_value("axis_ly", -1)
+    FFXC.set_value("axis_lx", -1)
     memory.main.wait_frames(30 * 1.7)
-    FFXC.set_value("AxisLy", 0)
-    FFXC.set_value("AxisLx", 0)
+    FFXC.set_value("axis_ly", 0)
+    FFXC.set_value("axis_lx", 0)
     memory.main.wait_frames(30 * 0.5)
 
 
@@ -710,12 +711,12 @@ def load_rescue():
 def load_bahamut():
     load_offset(1)
     memory.main.await_control()
-    FFXC.set_value("AxisLy", 1)
-    FFXC.set_value("AxisLx", 1)
+    FFXC.set_value("axis_ly", 1)
+    FFXC.set_value("axis_lx", 1)
     memory.main.wait_frames(30 * 0.2)
-    FFXC.set_value("AxisLx", 0)
+    FFXC.set_value("axis_lx", 0)
     memory.main.wait_frames(30 * 2)
-    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("axis_ly", 0)
 
 
 def load_calm():

@@ -30,12 +30,12 @@ while attempts < 10:
 
         load_game.load_save_num(number=51)
 
-        FFXC.set_value("AxisLy", 1)
-        FFXC.set_value("AxisLx", 1)
+        FFXC.set_value("axis_ly", 1)
+        FFXC.set_value("axis_lx", 1)
         time.sleep(0.7)
-        FFXC.set_value("AxisLx", 0)
+        FFXC.set_value("axis_lx", 0)
         time.sleep(34)
-        FFXC.set_value("AxisLy", 0)
+        FFXC.set_value("axis_ly", 0)
 
         print("Start egg hunt only program")
         print("--------------------------No-control method")

@@ -5,10 +5,10 @@ import memory.main
 import menu
 import pathing
 import rng_track
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -418,11 +418,11 @@ def yunalesca():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            FFXC.set_value("BtnB", 1)
-            FFXC.set_value("BtnA", 1)
+            FFXC.set_value("btn_b", 1)
+            FFXC.set_value("btn_a", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnB", 0)
-            FFXC.set_value("BtnA", 0)
+            FFXC.set_value("btn_b", 0)
+            FFXC.set_value("btn_a", 0)
             memory.main.wait_frames(1)
     xbox.click_to_battle()
     battle.main.aeon_summon(4)  # Summon Bahamut and attack.

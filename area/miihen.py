@@ -3,10 +3,10 @@ import battle.main
 import logs
 import memory.main
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -205,14 +205,14 @@ def arrival():
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menu_open():
-                    FFXC.set_value("BtnB", 1)
+                    FFXC.set_value("btn_b", 1)
                     memory.main.wait_frames(2)
-                    FFXC.set_value("BtnB", 0)
+                    FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
                 elif memory.main.diag_skip_possible():
-                    FFXC.set_value("BtnB", 1)
+                    FFXC.set_value("btn_b", 1)
                     memory.main.wait_frames(2)
-                    FFXC.set_value("BtnB", 0)
+                    FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
     print("Mi'ihen skip status:", miihenSkip)
     return [game_vars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]

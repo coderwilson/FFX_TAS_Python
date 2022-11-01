@@ -6,10 +6,10 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -57,8 +57,8 @@ def arrival():
                 timeLimit = 60
                 maxTime = startTime + timeLimit
                 while memory.main.get_actor_coords(6)[0] < -50:
-                    currentTime = time.time()
-                    if currentTime > maxTime:
+                    current_time = time.time()
+                    if current_time > maxTime:
                         print("Skip failed for some reason. Moving on without skip.")
                         claskoSkip = False
                         break

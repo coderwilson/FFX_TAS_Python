@@ -4,11 +4,11 @@ import memory.main
 import menu
 import pathing
 import rng_track
+import save_sphere
 import screen
 import vars
 import xbox
 import zz_airship_path
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -143,16 +143,16 @@ def trials():
                 while not memory.main.user_control():
                     if memory.main.get_actor_coords(0)[1] < -100:
                         if memory.main.bt_bi_direction() == 1:
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
                     elif (
                         memory.main.get_actor_coords(0)[1] > 30
                         and memory.main.get_actor_coords(0)[1] < 90
                     ):
-                        FFXC.set_value("BtnB", 1)
+                        FFXC.set_value("btn_b", 1)
                     else:
-                        FFXC.set_value("BtnB", 0)
+                        FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
                 if memory.main.get_actor_coords(0)[0] < -20:
                     print("Correct alcove. Moving on with swiftness.")
@@ -190,11 +190,11 @@ def trials():
                 FFXC.set_neutral()
                 print("Mark 1")
                 memory.main.wait_frames(30 * 1)
-                FFXC.set_value("BtnB", 1)
+                FFXC.set_value("btn_b", 1)
                 print("Mark 2")
                 memory.main.await_control()
                 print("Mark 3")
-                FFXC.set_value("BtnB", 0)
+                FFXC.set_value("btn_b", 0)
                 checkpoint += 1
             elif checkpoint == 10:  # Insert Bevelle sphere. Activate lower areas.
                 memory.main.click_to_event_temple(0)
@@ -212,9 +212,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
 
                     elif memory.main.get_actor_coords(0)[1] < -10:
                         if (
@@ -233,9 +233,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 293
                             and memory.main.get_actor_coords(0)[1] < 432
                         ):
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 16:  # Take Glyph sphere from second alcove
@@ -252,12 +252,12 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
 
                     elif memory.main.get_actor_coords(0)[1] > 425:
-                        FFXC.set_value("BtnB", 1)
+                        FFXC.set_value("btn_b", 1)
                     elif (
                         memory.main.get_actor_coords(0)[1] < -30
                         and memory.main.bt_bi_direction() == 0
@@ -271,7 +271,7 @@ def trials():
                             xbox.menu_b()
                             memory.main.wait_frames(20)
                     else:
-                        FFXC.set_value("BtnB", 0)
+                        FFXC.set_value("btn_b", 0)
                 # Go ahead and insert Glyph sphere.
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
@@ -322,9 +322,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
 
                     elif memory.main.get_actor_coords(0)[1] < -30:
                         if (
@@ -342,9 +342,9 @@ def trials():
                         memory.main.get_actor_coords(0)[1] > 250
                         and memory.main.get_actor_coords(0)[1] < 450
                     ):
-                        FFXC.set_value("BtnB", 1)
+                        FFXC.set_value("btn_b", 1)
                     else:
-                        FFXC.set_value("BtnB", 0)
+                        FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
                 print("Arriving in the second alcove again.")
                 checkpoint += 1
@@ -372,9 +372,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
 
                     elif memory.main.get_actor_coords(0)[1] < -30:
                         if (
@@ -390,9 +390,9 @@ def trials():
                                 memory.main.wait_frames(20)
                     else:
                         if memory.main.get_actor_coords(0)[1] < 250:
-                            FFXC.set_value("BtnB", 1)
+                            FFXC.set_value("btn_b", 1)
                         else:
-                            FFXC.set_value("BtnB", 0)
+                            FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
                 memory.main.await_control()
                 FFXC.set_movement(0, -1)
