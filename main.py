@@ -1,10 +1,11 @@
 # Libraries and Core Files
+import logging
 import random
 import sys
 
 # This needs to be before the other imports in case they decide to log things when imported
 import logger
-import logging
+
 # This sets up console and file logging (should only be called once)
 logger.initialize_logging()
 
@@ -34,27 +35,30 @@ import blitz
 import config
 import logs
 import memory.main
+import nemesis.arena_battles
+import nemesis.arenaPrep
+import nemesis.changes
 import reset
 import screen
 import vars
 import xbox
-import nemesis.arena_battles
-import nemesis.arenaPrep
-import nemesis.changes
 from gamestate import game
+
 
 def configuration_setup():
     game_vars = vars.vars_handle()
     # Open the config file and parse game configuration
     # This may overwrite configuration above
     config_data = config.open_config()
-    # Gamestate
-    game.state = config_data.get("Gamestate", "none")
+    # gamestate
+    game.state = config_data.get("gamestate", "none")
     game.step = config_data.get("step_counter", 1)
 
     ############################################################################################
     # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-    game.rng_seed_num = config_data.get("rngSeedNum", 160) # If you don't randomly select below, this will be the seed you run.
+    game.rng_seed_num = config_data.get(
+        "rngSeedNum", 160
+    )  # If you don't randomly select below, this will be the seed you run.
     useFavoredSeed = config_data.get("useFavoredSeed", False)
 
     rngSelectArray = [31, 160]
@@ -108,7 +112,8 @@ def rng_seed_setup():
     # Next, check if we are loading to a save file, or record the RNG seed on full runs.
     if game.state != "none":
         import load_game
-        load_game.load_into_game(Gamestate=game.state, step_counter=game.step)
+
+        load_game.load_into_game(gamestate=game.state, step_counter=game.step)
     else:
         logs.next_stats(rngSeed)
         logs.write_stats("RNG seed:")
@@ -121,7 +126,7 @@ def perform_TAS():
     # Original seed for when looping
     rngSeedOrig = game.rng_seed_num
     blitzLoops = 0
-    maxLoops = 12 # TODO: Move into config.yaml?
+    maxLoops = 12  # TODO: Move into config.yaml?
 
     while game.state != "End":
 
@@ -129,7 +134,7 @@ def perform_TAS():
             # Blitzball testing logic
             if game.state == "Luca" and game.step == 3:
                 area.dream_zan.new_game(game.state)
-                load_game.load_save_num(37) # TODO: Magic number
+                load_game.load_save_num(37)  # TODO: Magic number
 
             if game.rng_seed_num >= 256:
                 game.state = "End"
@@ -682,7 +687,9 @@ def perform_TAS():
                     game.step = 20
 
                 if game.step == 20:
-                    nemesis.arenaPrep.calm(cap_num=10, airship_return=False, force_levels=27)
+                    nemesis.arenaPrep.calm(
+                        cap_num=10, airship_return=False, force_levels=27
+                    )
                     game.step = 21
 
                 if game.step == 21:
@@ -767,7 +774,6 @@ def perform_TAS():
     print("Time! The game is now over.")
 
 
-
 def write_final_logs():
     if memory.main.get_story_progress() > 3210:
         endTime = logs.time_stamp()
@@ -799,13 +805,12 @@ def write_final_logs():
     print("Automation complete. Shutting down. Have a great day!")
 
 
-
 # Main entry point of TAS
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Load up vars.py
     vars.init_vars()
 
-    # Set up Gamestate and rng-related variables
+    # Set up gamestate and rng-related variables
     configuration_setup()
 
     # Initialize memory access
@@ -815,7 +820,7 @@ if __name__ == '__main__':
     rng_seed_setup()
 
     # Next, check if we are loading to a save file
-    #if game.state != "none":
+    # if game.state != "none":
     #    load_game_state()
 
     # Run the TAS itself

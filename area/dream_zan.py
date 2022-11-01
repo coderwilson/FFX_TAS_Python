@@ -15,13 +15,13 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 
-def new_game(Gamestate):
+def new_game(gamestate):
     print("Starting the game")
-    print("Gamestate:", Gamestate)
+    print("gamestate:", gamestate)
 
     lastMessage = 0
     # New version
-    if Gamestate == "none":  # New Game
+    if gamestate == "none":  # New Game
         while memory.main.get_map() != 0:
             if memory.main.get_map() != 23:
                 if lastMessage != 1:
