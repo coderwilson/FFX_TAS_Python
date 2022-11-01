@@ -8,6 +8,8 @@ import logging
 # This sets up console and file logging (should only be called once)
 logger.initialize_logging()
 
+main_log = logging.getLogger('main')
+
 import area.baaj
 import area.besaid
 import area.boats
@@ -81,7 +83,7 @@ def configuration_setup():
         # Current WR is on seed 160 for both any% and CSR%
         gameLength = "Full Run, random seed"
 
-    print("Game type will be:", gameLength)
+    main_log.info(f"Game type will be: {gameLength}")
 
 
 def memory_setup():
@@ -93,7 +95,7 @@ def memory_setup():
     if memory.main.get_map not in [23, 348, 349]:
         reset.reset_to_main_menu()
 
-    print("Game start screen")
+    main_log.info("Game start screen")
 
 
 def rng_seed_setup():
@@ -103,7 +105,7 @@ def rng_seed_setup():
         memory.main.set_rng_seed(game.rng_seed_num)
 
     rngSeed = memory.main.rng_seed()
-    print("---RNG seed:", rngSeed)
+    main_log.info(f"---RNG seed: {rngSeed}")
     if game.state == "none":
         # record the RNG seed on full runs.
         logs.next_stats(rngSeed)
@@ -138,24 +140,24 @@ def perform_TAS():
 
             # Start of the game, start of Dream Zanarkand section
             if game.state == "none" and game.step == 1:
-                print("New Game 1 function initiated.")
+                main_log.info("New Game 1 function initiated.")
                 area.dream_zan.new_game(game.state)
-                print("New Game 1 function complete.")
+                main_log.info("New Game 1 function complete.")
                 game_vars.set_new_game()
                 game_vars.set_csr(True)
-                print("Variables initialized.")
+                main_log.info("Variables initialized.")
                 game.state = "DreamZan"
                 game.step = 1
 
             if game.state == "DreamZan":
                 if game.step == 1:
                     memory.main.wait_frames(30 * 0.5)
-                    print("New Game 2 function initiated.")
+                    main_log.info("New Game 2 function initiated.")
                     area.dream_zan.new_game_2()
                     game.start_time = logs.time_stamp()
                     logs.write_stats("Start time:")
                     logs.write_stats(str(game.start_time))
-                    print("Timer starts now.")
+                    main_log.info("Timer starts now.")
                     area.dream_zan.listen_story()
                     # game.state, game.step = reset.midRunReset()
                     # Start of the game, up through the start of Sinspawn Ammes fight
@@ -174,7 +176,7 @@ def perform_TAS():
 
             if game.state == "Baaj":
                 if game.step == 1:
-                    print("Starting Baaj temple section")
+                    main_log.info("Starting Baaj temple section")
                     area.baaj.entrance()
                     game.step = 2
 
@@ -188,7 +190,7 @@ def perform_TAS():
 
                 if game.step == 4:
                     # Klikk fight done. Now to wait for the Al Bhed ship.
-                    print("Al Bhed boat part 1")
+                    main_log.info("Al Bhed boat part 1")
                     area.baaj.ab_boat_1()
                     game.step = 5
 
@@ -197,7 +199,7 @@ def perform_TAS():
                     game.step = 6
 
                 if game.step == 6:
-                    print("Underwater Airship section")
+                    main_log.info("Underwater Airship section")
                     area.baaj.ab_swimming_2()
                     game.state = "Besaid"
                     game.step = 1
@@ -215,9 +217,9 @@ def perform_TAS():
                     area.besaid.leaving()
                     game.state = "Boat1"
                     if memory.main.get_tidus_slvl() < 3:
-                        print("=========================")
-                        print("=== Under-levelled!!! ===")
-                        print("=========================")
+                        main_log.warning("=========================")
+                        main_log.warning("=== Under-levelled!!! ===")
+                        main_log.warning("=========================")
                         game.state, game.step = reset.mid_run_reset()
                     else:
                         game.step = 1
@@ -261,7 +263,7 @@ def perform_TAS():
                 if game.step == 2:
                     endTime = logs.time_stamp()
                     totalTime = endTime - game.start_time
-                    print("Pre-Blitz time:", str(totalTime))
+                    main_log.info(f"Pre-Blitz time: {str(totalTime)}")
                     logs.write_stats("Pre Blitz time:")
                     logs.write_stats(totalTime)
                     game.step = 3
@@ -271,32 +273,32 @@ def perform_TAS():
                     game.step = 4
 
                 if game.step == 4:
-                    print("------Blitz Start")
+                    main_log.info("------Blitz Start")
                     forceBlitzWin = game_vars.get_force_blitz_win()
                     blitz.blitz_main(forceBlitzWin)
-                    print("------Blitz End")
+                    main_log.info("------Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
 
                     if game_vars.loop_blitz() and blitzLoops < maxLoops:
                         FFXC.set_neutral()
-                        print("-------------")
-                        print("- Resetting -")
-                        print("-------------")
+                        main_log.info("-------------")
+                        main_log.info("- Resetting -")
+                        main_log.info("-------------")
                         screen.await_turn()
                         game.state, game.step = reset.mid_run_reset()
                         blitzLoops += 1
                     elif game_vars.blitz_loss_reset() and not game_vars.get_blitz_win():
                         FFXC.set_neutral()
-                        print("------------------------------")
-                        print("- Resetting - Lost Blitzball -")
-                        print("------------------------------")
+                        main_log.info("------------------------------")
+                        main_log.info("- Resetting - Lost Blitzball -")
+                        main_log.info("------------------------------")
                         screen.await_turn()
                         game.state, game.step = reset.mid_run_reset()
                     else:
-                        print("--------------")
-                        print("- Post-Blitz -")
-                        print("--------------")
+                        main_log.info("--------------")
+                        main_log.info("- Post-Blitz -")
+                        main_log.info("--------------")
                         game.step = 5
 
                 if game.step == 5:
@@ -315,13 +317,13 @@ def perform_TAS():
 
                 if game.step == 2:
                     area.miihen.mid_point()
-                    print("End of Mi'ihen mid point section.")
+                    main_log.info("End of Mi'ihen mid point section.")
                     area.miihen.low_road(returnArray[0], returnArray[1], returnArray[2])
 
                     # Report duration at the end of Mi'ihen section for all runs.
                     endTime = logs.time_stamp()
                     totalTime = endTime - game.start_time
-                    print("Mi'ihen End timer is:", str(totalTime))
+                    main_log.info(f"Mi'ihen End timer is: {str(totalTime)}")
                     logs.write_stats("Miihen End time:")
                     logs.write_stats(totalTime)
                     game.state = "MRR"
@@ -340,7 +342,7 @@ def perform_TAS():
                     area.mrr.gui_and_aftermath()
                     endTime = logs.time_stamp()
                     totalTime = endTime - game.start_time
-                    print("End of Battle Site timer is:", str(totalTime))
+                    main_log.info(f"End of Battle Site timer is: {str(totalTime)}")
                     logs.write_stats("Djose-Start time:")
                     logs.write_stats(totalTime)
                     game.state = "Djose"
@@ -488,16 +490,16 @@ def perform_TAS():
                     if game_vars.try_for_ne():
                         manipTime1 = logs.time_stamp()
 
-                        print("Mark 1")
+                        main_log.debug("Mark 1")
                         area.ne_armor.to_hidden_cave()
-                        print("Mark 2")
+                        main_log.debug("Mark 2")
                         area.ne_armor.drop_hunt()
-                        print("Mark 3")
+                        main_log.debug("Mark 3")
                         area.ne_armor.return_to_gagazet()
                         manipTime2 = logs.time_stamp()
                         try:
                             manipTime = manipTime2 - manipTime1
-                            print("NEA Manip duration:", str(manipTime))
+                            main_log.info(f"NEA Manip duration: {str(manipTime)}")
                             logs.write_stats("NEA Manip duration:")
                             logs.write_stats(manipTime)
                         except:
@@ -557,11 +559,11 @@ def perform_TAS():
                     game.step = 2
 
                 if game.step == 2:
-                    print("Test 1")
+                    main_log.debug("Test 1")
                     area.sin.shedinja()
-                    print("Test 2")
+                    main_log.debug("Test 2")
                     area.sin.facing_sin()
-                    print("Test 3")
+                    main_log.debug("Test 3")
                     if game_vars.nemesis():
                         game.state = "Nem_Farm"
                         game.step = 1
@@ -593,7 +595,7 @@ def perform_TAS():
                     game.step += 1
 
                 if game.step == 12:
-                    print("MAAAAARK")
+                    main_log.debug("MAAAAARK")
                     memory.main.await_control()
                     nemesis.changes.arena_purchase()
                     area.gagazet.defender_x()
@@ -757,16 +759,16 @@ def perform_TAS():
                     land_run=True, start_time=game.start_time
                 )
 
-            print("------------------------------")
-            print("Looping")
-            print(f"{game.state} | {game.step}")
-            print("------------------------------")
+            main_log.debug("------------------------------")
+            main_log.debug("Looping")
+            main_log.debug(f"{game.state} | {game.step}")
+            main_log.debug("------------------------------")
 
         except KeyboardInterrupt:
-            print("Keyboard Interrupt - Exiting.")
+            main_log.info("Keyboard Interrupt - Exiting.")
             sys.exit(0)
 
-    print("Time! The game is now over.")
+    main_log.info("Time! The game is now over.")
 
 
 
@@ -776,16 +778,16 @@ def write_final_logs():
         totalTime = endTime - game.start_time
         logs.write_stats("Total time:")
         logs.write_stats(str(totalTime))
-        print("The game duration was:", str(totalTime))
-        print("This duration is intended for internal comparisons only.")
-        print("It is not comparable to non-TAS runs.")
+        main_log.info(f"The game duration was: {str(totalTime)}")
+        main_log.info("This duration is intended for internal comparisons only.")
+        main_log.info("It is not comparable to non-TAS runs.")
         memory.main.wait_frames(30)
-        print("--------")
-        print("In order to conform to the speedrun.com/ffx ruleset,")
+        main_log.info("--------")
+        main_log.info("In order to conform to the speedrun.com/ffx ruleset,")
         memory.main.wait_frames(60)
-        print("we now wait until the end of the credits and open")
+        main_log.info("we now wait until the end of the credits and open")
         memory.main.wait_frames(60)
-        print("the Load Game menu to show the last autosave.")
+        main_log.info("the Load Game menu to show the last autosave.")
 
         while memory.main.get_map() != 23:
             if memory.main.get_map() in [348, 349]:
@@ -798,7 +800,7 @@ def write_final_logs():
 
     memory.main.end()
 
-    print("Automation complete. Shutting down. Have a great day!")
+    main_log.info("Automation complete. Shutting down. Have a great day!")
 
 
 
