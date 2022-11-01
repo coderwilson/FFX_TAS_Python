@@ -104,15 +104,16 @@ def rng_seed_setup():
 
     rngSeed = memory.main.rng_seed()
     print("---RNG seed:", rngSeed)
-
-    # Next, check if we are loading to a save file, or record the RNG seed on full runs.
-    if game.state != "none":
-        import load_game
-        load_game.load_into_game(Gamestate=game.state, step_counter=game.step)
-    else:
+    if game.state == "none":
+        # record the RNG seed on full runs.
         logs.next_stats(rngSeed)
         logs.write_stats("RNG seed:")
         logs.write_stats(rngSeed)
+
+def load_game_state():
+    # loading from a save file
+    import load_game
+    load_game.load_into_game(Gamestate=game.state, step_counter=game.step)
 
 
 def perform_TAS():
@@ -129,6 +130,7 @@ def perform_TAS():
             # Blitzball testing logic
             if game.state == "Luca" and game.step == 3:
                 area.dream_zan.new_game(game.state)
+                import load_game
                 load_game.load_save_num(37) # TODO: Magic number
 
             if game.rng_seed_num >= 256:
@@ -815,8 +817,8 @@ if __name__ == '__main__':
     rng_seed_setup()
 
     # Next, check if we are loading to a save file
-    #if game.state != "none":
-    #    load_game_state()
+    if game.state != "none":
+        load_game_state()
 
     # Run the TAS itself
     perform_TAS()
