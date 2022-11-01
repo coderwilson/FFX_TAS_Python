@@ -15,8 +15,8 @@ game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
-new_game_log = logging.getLogger('new_game')
-area_log = logging.getLogger('dream_zan')
+new_game_log = logging.getLogger('NewGame')
+area_log = logging.getLogger('DreamZan')
 
 def new_game(Gamestate):
     new_game_log.info("Starting the game")

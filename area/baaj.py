@@ -9,7 +9,7 @@ import xbox
 import save_sphere
 import logging
 
-baaj_log = logging.getLogger('baaj')
+baaj_log = logging.getLogger('Baaj')
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
