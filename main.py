@@ -35,11 +35,10 @@ import xbox
 import nemesis.arena_battles
 import nemesis.arenaPrep
 import nemesis.changes
-from game import get_gamestate
+from gamestate import game
 
 def configuration_setup():
     game_vars = vars.vars_handle()
-    game = get_gamestate()
     # Open the config file and parse game configuration
     # This may overwrite configuration above
     config_data = config.open_config()
@@ -92,7 +91,6 @@ def memory_setup():
 
 
 def rng_seed_setup():
-    game = get_gamestate()
     game_vars = vars.vars_handle()
     # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
     if game_vars.use_set_seed():
@@ -112,7 +110,6 @@ def rng_seed_setup():
 
 
 def perform_TAS():
-    game = get_gamestate()
     game_vars = vars.vars_handle()
 
     # Original seed for when looping
@@ -766,8 +763,6 @@ def perform_TAS():
 
 
 def write_final_logs():
-    game = get_gamestate()
-
     if memory.main.get_story_progress() > 3210:
         endTime = logs.time_stamp()
         totalTime = endTime - game.start_time
@@ -801,8 +796,6 @@ def write_final_logs():
 
 # Main entry point of TAS
 if __name__ == '__main__':
-    game = get_gamestate()
-
     # Load up vars.py
     vars.init_vars()
 

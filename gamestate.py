@@ -7,7 +7,4 @@ class GameState:
         self.start_time = 0
 
 # Global
-_game = GameState()
-
-def get_gamestate():
-    return _game
+game = GameState()
