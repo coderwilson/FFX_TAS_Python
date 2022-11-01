@@ -22,7 +22,6 @@ while attempts < 10:
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
         area.dream_zan.new_game("rescueYuna")
         print("Game start screen")
-        screen.clear_mouse(0)
 
         # Initiate memory reading, after we know the game is open.
         memory.main.start()

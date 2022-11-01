@@ -22,10 +22,6 @@ class AllVars:
         self.nemesisValue = config_vars.get("nemesisValue", False)
         # After game is finished, start again on next seed.
         self.forceLoop = config_vars.get("forceLoop", False)
-        # Loop on the same seed immediately after Blitzball.
-        self.blitzLoop = config_vars.get("blitzLoop", False)
-        # True = reset after blitz loss
-        self.blitzLossForceReset = config_vars.get("blitzLossForceReset", True)
         # If you are using Rossy's patch, set to True. Otherwise set to False
         self.setSeed = config_vars.get("setSeed", False)
         # True == Tidus OD on Evrae instead of Seymour. New strat.
@@ -46,6 +42,11 @@ class AllVars:
         self.rails_egg_hunt = config_vars.get("rails_egg_hunt", True)
 
         # ----Blitzball
+        self.forceBlitzWin = config_vars.get("forceBlitzWin", False)
+        # Loop on the same seed immediately after Blitzball.
+        self.blitzLoop = config_vars.get("blitzLoop", False)
+        # True = reset after blitz loss
+        self.blitzLossForceReset = config_vars.get("blitzLossForceReset", True)
         # No default value required
         self.blitzWinValue = config_vars.get("blitzWinValue", True)
         # Set to False, no need to change ever.
@@ -116,6 +117,9 @@ class AllVars:
 
     def try_djose_skip(self):
         return self.attemptDjose
+
+    def get_force_blitz_win(self):
+        return self.forceBlitzWin
 
     def blitz_loss_reset(self):
         return self.blitzLossForceReset

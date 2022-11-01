@@ -6,6 +6,7 @@ import memory.main
 import pathing
 import screen
 import vars
+from gamestate import game
 import xbox
 import zz_airship_path
 import area.dream_zan
@@ -21,9 +22,9 @@ game_vars = vars.vars_handle()
 def load_into_game(Gamestate:str, step_counter:str):
     if not (Gamestate == "Luca" and step_counter == 3):
         area.dream_zan.new_game(Gamestate)
-        startTime = logs.time_stamp()
+        game.start_time = logs.time_stamp()
         logs.write_stats("Start time:")
-        logs.write_stats(str(startTime))
+        logs.write_stats(str(game.start_time))
     import load_game
 
     # Need to update these to use loadGame.loadSaveNum(number) for all.

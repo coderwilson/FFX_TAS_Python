@@ -11,8 +11,6 @@ verbosity     : DEBUG  # Verbosity of log messages in the console.
                        # Full log will always be available in a file.
 
 # RNG Seed (requires setting vars.setSeed: True)
-forceBlitzWin : False  #            - Missing documentation -
-seedHunt      : False  #            - Missing documentation -
 rngSeedNum    : 160    # If starting a new run and using setSeed, use this RNG seed
 useFavoredSeed: False  # If starting a new run and not using setSeed, use a curated array of seeds
 
@@ -23,8 +21,6 @@ vars:
   csrValue            : True   # Set automatically on new game. For testing (loading a save file) set for your environment.
   nemesisValue        : False  # Set based on if you're doing any% (False) or Nemesis% (True)
   forceLoop           : False  # After game is finished, start again on next seed.
-  blitzLoop           : False  # Loop on the same seed immediately after Blitzball.
-  blitzLossForceReset : True   # True == reset after blitz loss
   setSeed             : False  # If you are using Rossy's patch, set to True. Otherwise set to False
   kilikaSkip          : True   # True == Tidus OD on Evrae instead of Seymour. New strat.
   perfectAeonKills    : False  # Before YuYevon, True is slower but more swag.
@@ -40,6 +36,9 @@ vars:
   rails_egg_hunt      : True   #            - Missing documentation -
 
   # Blitzball
+  forceBlitzWin       : False  #            - Missing documentation -
+  blitzLoop           : False  # Loop on the same seed immediately after Blitzball.
+  blitzLossForceReset : True   # True == reset after blitz loss
   blitzWinValue       : True   # No default value required
   blitzOvertime       : False  # Set to False, no need to change ever.
   blitzFirstShotVal   : False  #            - Missing documentation -

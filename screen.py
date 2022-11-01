@@ -4,16 +4,6 @@ import vars
 game_vars = vars.vars_handle()
 
 
-def clear_mouse(counter):
-    try:
-        return
-    except Exception:
-        if counter > 10:
-            return
-        else:
-            return
-
-
 def battle_screen():
     if memory.main.turn_ready():
         return True
