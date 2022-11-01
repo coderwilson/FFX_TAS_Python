@@ -262,8 +262,8 @@ def perform_TAS():
                     game.step = 2
 
                 if game.step == 2:
-                    endTime = logs.time_stamp()
-                    totalTime = endTime - game.start_time
+                    end_time = logs.time_stamp()
+                    totalTime = end_time - game.start_time
                     print("Pre-Blitz time:", str(totalTime))
                     logs.write_stats("Pre Blitz time:")
                     logs.write_stats(totalTime)
@@ -322,8 +322,8 @@ def perform_TAS():
                     area.miihen.low_road(returnArray[0], returnArray[1], returnArray[2])
 
                     # Report duration at the end of Mi'ihen section for all runs.
-                    endTime = logs.time_stamp()
-                    totalTime = endTime - game.start_time
+                    end_time = logs.time_stamp()
+                    totalTime = end_time - game.start_time
                     print("Mi'ihen End timer is:", str(totalTime))
                     logs.write_stats("Miihen End time:")
                     logs.write_stats(totalTime)
@@ -341,8 +341,8 @@ def perform_TAS():
                 if game.step == 2:
                     area.mrr.battle_site()
                     area.mrr.gui_and_aftermath()
-                    endTime = logs.time_stamp()
-                    totalTime = endTime - game.start_time
+                    end_time = logs.time_stamp()
+                    totalTime = end_time - game.start_time
                     print("End of Battle Site timer is:", str(totalTime))
                     logs.write_stats("Djose-Start time:")
                     logs.write_stats(totalTime)
@@ -776,8 +776,8 @@ def perform_TAS():
 
 def write_final_logs():
     if memory.main.get_story_progress() > 3210:
-        endTime = logs.time_stamp()
-        totalTime = endTime - game.start_time
+        end_time = logs.time_stamp()
+        totalTime = end_time - game.start_time
         logs.write_stats("Total time:")
         logs.write_stats(str(totalTime))
         print("The game duration was:", str(totalTime))

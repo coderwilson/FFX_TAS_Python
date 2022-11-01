@@ -4,9 +4,9 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -152,11 +152,11 @@ def forest_1():
                 if checkpoint < 9:
                     battle.main.lancet_tutorial()
                     nextTwo = rng_track.coming_battles(
-                        area="kilika_woods", battleCount=2
+                        area="kilika_woods", battle_count=2
                     )
                     bestOfTwo = select_best_of_two(nextTwo)
                     nextBattle = rng_track.coming_battles(
-                        area="kilika_woods", battleCount=1
+                        area="kilika_woods", battle_count=1
                     )[0]
                     print("################# Next Battle:", nextBattle)
                 elif checkpoint > 86:
@@ -168,7 +168,7 @@ def forest_1():
                         valeforCharge, bestOfTwo, nextBattle
                     )
                     nextBattle = rng_track.coming_battles(
-                        area="kilika_woods", battleCount=1
+                        area="kilika_woods", battle_count=1
                     )[0]
                     print("##########################", nextBattle)
                     kilikaBattles += 1

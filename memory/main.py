@@ -2392,7 +2392,7 @@ class Egg:
         self.x = egg_x(self.num)
         self.y = egg_y(self.num)
         self.distance = get_egg_distance(self.num)
-        self.eggLife = get_egg_life(egg_num)
+        self.egg_life = get_egg_life(egg_num)
         self.eggPicked = get_egg_picked(egg_num)
 
         if self.distance != 0 and self.eggPicked == 0:
@@ -2401,15 +2401,15 @@ class Egg:
             self.isActive = False
 
         if self.eggPicked == 1:
-            self.goForEgg = False
-        elif self.eggLife > 100 and self.distance > 100:
-            self.goForEgg = False
+            self.go_for_egg = False
+        elif self.egg_life > 100 and self.distance > 100:
+            self.go_for_egg = False
         elif self.distance > 250:
-            self.goForEgg = False
+            self.go_for_egg = False
         elif self.distance == 0:
-            self.goForEgg = False
+            self.go_for_egg = False
         else:
-            self.goForEgg = True
+            self.go_for_egg = True
 
     def report_vars(self):
         varArray = [
@@ -2417,7 +2417,7 @@ class Egg:
             self.isActive,
             self.x,
             self.y,
-            150 - self.eggLife,
+            150 - self.egg_life,
             self.eggPicked,
             self.distance,
         ]

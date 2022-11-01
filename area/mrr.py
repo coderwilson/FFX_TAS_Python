@@ -52,10 +52,10 @@ def arrival():
                 xbox.menu_b()
 
                 # Now to wait for the skip to happen, or 60 second maximum limit
-                startTime = time.time()
+                start_time = time.time()
                 # Max number of seconds that we will wait for the skip to occur.
                 timeLimit = 60
-                maxTime = startTime + timeLimit
+                maxTime = start_time + timeLimit
                 while memory.main.get_actor_coords(6)[0] < -50:
                     current_time = time.time()
                     if current_time > maxTime:
@@ -90,7 +90,7 @@ def main_path():
     print("Resetting checkpoint.")
     lastGilValue = 0
     checkpoint = 0
-    battleCount = 0
+    battle_count = 0
     while memory.main.get_map() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
             status[2] = 2  # No need to do Valefor's overdrive and recharge.
@@ -214,7 +214,7 @@ def main_path():
                     "======== Next Kimahri crit:",
                     memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),
                 )
-                battleCount += 1
+                battle_count += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
@@ -227,7 +227,7 @@ def main_path():
         if memory.main.game_over():
             return
     # logs.writeStats("MRR Battles:")
-    # logs.writeStats(battleCount)
+    # logs.writeStats(battle_count)
     logs.write_stats("MRR crit manip:")
     logs.write_stats(critManip)
     print("End of MRR section. Status:")

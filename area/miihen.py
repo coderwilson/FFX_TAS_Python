@@ -38,7 +38,7 @@ def arrival():
     memory.main.click_to_control()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
     miihenSkip = False
-    battleCount = 0
+    battle_count = 0
     SDencounterID = 0
 
     checkpoint = 0
@@ -192,7 +192,7 @@ def arrival():
                 else:
                     FFXC.set_neutral()
                     print("Starting battle")
-                    battleCount += 1
+                    battle_count += 1
                     battle.main.miihen_road()
                     print("Battle complete")
                     post_battle_logic()
@@ -215,10 +215,10 @@ def arrival():
                     FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
     print("Mi'ihen skip status:", miihenSkip)
-    return [game_vars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]
+    return [game_vars.self_destruct_get(), battle_count, SDencounterID, miihenSkip]
 
 
-def arrival_2(selfDestruct, battleCount, SDencounterID):
+def arrival_2(selfDestruct, battle_count, SDencounterID):
     print("Start of the second map")
     checkpoint = 15
     while memory.main.get_map() != 171:
@@ -243,7 +243,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                battleCount += 1
+                battle_count += 1
                 if (
                     checkpoint == 27 and not memory.main.battle_active()
                 ):  # Shelinda dialog
@@ -266,7 +266,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
                 checkpoint = 20
             elif checkpoint < 31 and memory.main.get_map() == 58:
                 checkpoint = 31
-    return [game_vars.self_destruct_get(), battleCount, SDencounterID]
+    return [game_vars.self_destruct_get(), battle_count, SDencounterID]
 
 
 def mid_point():

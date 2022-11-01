@@ -10,17 +10,17 @@ import xbox
 
 
 def line_sphere_intersect(start, end, circle, radius=11):
-    numHits = 0
+    num_hits = 0
     hits = []
 
     direction = end - start
-    sphereToStart = start - circle
+    sphere_to_start = start - circle
     a = np.dot(direction, direction)
-    b = 2 * np.dot(sphereToStart, direction)
-    c = np.dot(sphereToStart, sphereToStart) - radius**2
+    b = 2 * np.dot(sphere_to_start, direction)
+    c = np.dot(sphere_to_start, sphere_to_start) - radius**2
     d = b**2 - 4 * a * c
     if d < 0:  # no intersection
-        return (numHits, hits)
+        return (num_hits, hits)
 
     d = np.sqrt(d)
     # Solve quadratic equation
@@ -28,12 +28,12 @@ def line_sphere_intersect(start, end, circle, radius=11):
     t2 = (-b + d) / (2 * a)
 
     if t1 >= 0 and t1 <= 1:
-        numHits += 1
+        num_hits += 1
         hits.append(start + direction * t1)
     if t2 >= 0 and t2 <= 1:
-        numHits += 1
+        num_hits += 1
         hits.append(start + direction * t2)
-    return (numHits, hits)
+    return (num_hits, hits)
 
 
 def path_around(player, circle, target, radius=11):
@@ -42,10 +42,10 @@ def path_around(player, circle, target, radius=11):
     angle = np.arctan2(line[1], line[0])
 
     # Create two points rotated 90 degrees from player -> circle intersection
-    newAngle1 = angle + 0.5 * np.pi
-    newAngle2 = angle - 0.5 * np.pi
-    p1 = circle + [radius * np.cos(newAngle1), radius * np.sin(newAngle1)]
-    p2 = circle + [radius * np.cos(newAngle2), radius * np.sin(newAngle2)]
+    new_angle_1 = angle + 0.5 * np.pi
+    new_angle_2 = angle - 0.5 * np.pi
+    p1 = circle + [radius * np.cos(new_angle_1), radius * np.sin(new_angle_1)]
+    p2 = circle + [radius * np.cos(new_angle_2), radius * np.sin(new_angle_2)]
     # Find which of two possible points gives shortest path
     p1length = np.linalg.norm(p1 - player) + np.linalg.norm(target - p1)
     p2length = np.linalg.norm(p2 - player) + np.linalg.norm(target - p2)
@@ -57,43 +57,45 @@ def path_around(player, circle, target, radius=11):
 def engage():
     FFXC = xbox.controller_handle()
     print("Start egg hunt")
-    startTime = time.time()
+    start_time = time.time()
     checkpoint = 0
-    battleCount = 0
-    lookingCount = 0
+    battle_count = 0
+    looking_count = 0
     print("Generating Plot file (the X/Y kind)")
-    activeEgg = 99
+    active_egg = 99
     target = [10, -10]
     checkpoint = 0
     print("Ready for movement.")
     while memory.main.get_story_progress() < 3251:
-        lookingCount += 1
-        if lookingCount % 40 == 0:
+        looking_count += 1
+        if looking_count % 40 == 0:
             checkpoint += 1
         if memory.main.battle_active():
             print("Battle engaged - using flee.")
             FFXC.set_neutral()
             battle.main.flee_all()
-            battleCount += 1
+            battle_count += 1
         else:  # User control is different for this section.
-            eggArray = memory.main.build_eggs()
-            iceArray = memory.main.build_icicles()  # Added for additional pathing needs
-            if activeEgg == 99:
+            egg_array = memory.main.build_eggs()
+            ice_array = (
+                memory.main.build_icicles()
+            )  # Added for additional pathing needs
+            if active_egg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
                     if (
-                        activeEgg == 99
-                        and eggArray[marker].goForEgg
-                        and eggArray[marker].eggLife < 150
+                        active_egg == 99
+                        and egg_array[marker].go_for_egg
+                        and egg_array[marker].egg_life < 150
                     ):
-                        activeEgg = marker
-                        target = [eggArray[marker].x, eggArray[marker].y]
+                        active_egg = marker
+                        target = [egg_array[marker].x, egg_array[marker].y]
                         # We will hunt for this egg for this many seconds.
-            elif not eggArray[activeEgg].goForEgg:
-                activeEgg = 99
-            elif eggArray[activeEgg].eggLife == 150:
-                activeEgg = 99
+            elif not egg_array[active_egg].go_for_egg:
+                active_egg = 99
+            elif egg_array[active_egg].egg_life == 150:
+                active_egg = 99
 
-            if activeEgg == 99:  # Positions to go to if we are stalling.
+            if active_egg == 99:  # Positions to go to if we are stalling.
                 if checkpoint == 0:
                     target = [-20, -20]
                 elif checkpoint == 1:
@@ -106,31 +108,31 @@ def engage():
                     checkpoint = 0
 
             # And now the code to move to the target.
-            oldTarget = target
+            old_target = target
             player = memory.main.get_coords()
-            iceArray = memory.main.build_icicles()
+            ice_array = memory.main.build_icicles()
             (forward, right) = memory.main.get_movement_vectors()
 
-            targetPos = np.array([target[0], target[1]])
-            playerPos = np.array(player)
+            target_pos = np.array([target[0], target[1]])
+            player_pos = np.array(player)
 
-            closestIntersect = 9999
-            intersectPoint = []
-            for icicle in iceArray:
-                numIntersect, hits = line_sphere_intersect(
-                    playerPos, targetPos, np.array([icicle.x, icicle.y])
+            closest_intersect = 9999
+            intersect_point = []
+            for icicle in ice_array:
+                num_intersect, hits = line_sphere_intersect(
+                    player_pos, target_pos, np.array([icicle.x, icicle.y])
                 )
-                if numIntersect > 0:
-                    intersectDistance = (player[0] - hits[0][0]) ** 2 + (
+                if num_intersect > 0:
+                    intersect_distance = (player[0] - hits[0][0]) ** 2 + (
                         player[1] - hits[0][1]
                     ) ** 2
-                    if intersectDistance < closestIntersect:
-                        closestIntersect = intersectDistance
-                        intersectPoint = hits[0]
+                    if intersect_distance < closest_intersect:
+                        closest_intersect = intersect_distance
+                        intersect_point = hits[0]
 
-            if closestIntersect < 9999:
+            if closest_intersect < 9999:
                 # Move around icicle instead
-                target = path_around(playerPos, np.array(intersectPoint), targetPos)
+                target = path_around(player_pos, np.array(intersect_point), target_pos)
 
             # Calculate forward and right directions relative to camera space
             pX = player[0]
@@ -144,11 +146,11 @@ def engage():
 
             Ly = fX * (eX - pX) + rX * (eY - pY)
             Lx = fY * (eX - pX) + rY * (eY - pY)
-            sumsUp = abs(Lx) + abs(Ly)
-            if sumsUp == 0:
-                sumsUp = 0.01
-            Lx /= sumsUp
-            Ly /= sumsUp
+            sums_up = abs(Lx) + abs(Ly)
+            if sums_up == 0:
+                sums_up = 0.01
+            Lx /= sums_up
+            Ly /= sums_up
             if abs(Lx) > abs(Ly):
                 Ly = copysign(Ly / Lx if Lx else 0, Ly)
                 Lx = copysign(1, Lx)
@@ -160,30 +162,30 @@ def engage():
                 FFXC.set_movement(Lx, Ly)
             except Exception:
                 pass
-            target = oldTarget
+            target = old_target
 
             # Now if we're close, we want to slow down a bit.
             if (
-                activeEgg != 99
-                and eggArray[activeEgg].distance < 15
-                and eggArray[activeEgg].eggLife < 130
+                active_egg != 99
+                and egg_array[active_egg].distance < 15
+                and egg_array[active_egg].egg_life < 130
             ):
                 time.sleep(0.15)
                 FFXC.set_neutral()
                 print("Stutter-step to egg. |", checkpoint)
                 xbox.tap_b()
-            elif activeEgg == 99:
+            elif active_egg == 99:
                 print("Looking for a new egg. |", checkpoint)
                 xbox.tap_b()
             else:
                 print("Targeting egg: |", checkpoint)
             xbox.tap_b()
-    endTime = time.time()
+    end_time = time.time()
     print("End egg hunt")
     FFXC.set_neutral()
-    duration = endTime - startTime
+    duration = end_time - start_time
     print("Duration:", str(duration))
-    print("Battle count:", battleCount)
+    print("Battle count:", battle_count)
     while memory.main.get_map() != 325:
         if memory.main.battle_active():
             battle.main.flee_all()
@@ -191,6 +193,6 @@ def engage():
         logs.write_stats("Egg hunt duration (seconds):")
         logs.write_stats(str(round(duration, 2)))
         logs.write_stats("Egg hunt battles:")
-        logs.write_stats(str(battleCount))
+        logs.write_stats(str(battle_count))
     except Exception:
         print("No log file.")

@@ -25,14 +25,16 @@ def decide_nea(bonus_advance: int = 0):
 
     maxBattles = 1
     zanOutdoors = rng_track.coming_battles(
-        area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonus_advance
+        area="zanarkand_(overpass)",
+        battle_count=maxBattles,
+        extraAdvances=bonus_advance,
     )
     zanIndoors = rng_track.coming_battles(
-        area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonus_advance
+        area="zanarkand_(dome)", battle_count=maxBattles, extraAdvances=bonus_advance
     )
     seaSorrows = rng_track.coming_battles(
         area="inside_sin_(front)",
-        battleCount=maxBattles,
+        battle_count=maxBattles,
         extraAdvances=bonus_advance + 6,
     )
 

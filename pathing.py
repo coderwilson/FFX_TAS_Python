@@ -23,11 +23,11 @@ def set_movement(target) -> bool:
 
     Ly = fX * (eX - pX) + rX * (eY - pY)
     Lx = fY * (eX - pX) + rY * (eY - pY)
-    sumsUp = abs(Lx) + abs(Ly)
-    if sumsUp == 0:
-        sumsUp = 0.01
-    Lx /= sumsUp
-    Ly /= sumsUp
+    sums_up = abs(Lx) + abs(Ly)
+    if sums_up == 0:
+        sums_up = 0.01
+    Lx /= sums_up
+    Ly /= sums_up
     if abs(Lx) > abs(Ly):
         Ly = copysign(Ly / Lx if Lx else 0, Ly)
         Lx = copysign(1, Lx)
