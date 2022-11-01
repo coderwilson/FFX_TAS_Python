@@ -71,8 +71,8 @@ def _set_index_to_value(index, value, power):
 
 def ss_winno():
     memory.main.click_to_control()
-    # logs.writeStats("Winno Speed Count:")
-    # logs.writeStats(memory.getSpeed())
+    # logs.write_stats("Winno Speed Count:")
+    # logs.write_stats(memory.get_speed())
 
     while memory.main.user_control():
         pathing.set_movement([28, -36])  # Through first door
@@ -84,15 +84,15 @@ def ss_winno():
     memory.main.wait_frames(2)
 
     # Talk to O'aka XXIII
-    oakaCoords = [
+    oaka_coords = [
         memory.main.get_actor_coords(1)[0],
         memory.main.get_actor_coords(1)[1],
     ]
     while memory.main.user_control():
-        pathing.set_movement(oakaCoords)
+        pathing.set_movement(oaka_coords)
         xbox.tap_b()
         memory.main.wait_frames(3)
-        oakaCoords = [
+        oaka_coords = [
             memory.main.get_actor_coords(1)[0],
             memory.main.get_actor_coords(1)[1],
         ]
@@ -201,5 +201,5 @@ def jecht_shot():
 
     # Success logic
     # for i in range(15):
-    #    jechtShotSuccess()
+    #    jecht_shot_success()
     # Does not work with CSR version 1.2.0

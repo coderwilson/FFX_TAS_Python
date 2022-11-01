@@ -312,109 +312,109 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
 
 
 def advanced_complete_check():
-    encounterID = memory.main.get_encounter_id()
+    encounter_id = memory.main.get_encounter_id()
     arenaArray = memory.main.arena_array()
     # Common monsters
     if False:
         pass
 
     # Inside Sin
-    elif encounterID == 374:  # Ahriman
+    elif encounter_id == 374:  # Ahriman
         print("For this battle, count:", arenaArray[37])
         if arenaArray[37] == 10:
             return True
-    elif encounterID in [375, 380]:  # Exoray (with a bonus Ahriman)
+    elif encounter_id in [375, 380]:  # Exoray (with a bonus Ahriman)
         print("For this battle, count:", arenaArray[93])
         if arenaArray[93] == 10 and arenaArray[37] == 10:
             return True
-    elif encounterID in [376, 381]:  # Adamantoise
+    elif encounter_id in [376, 381]:  # Adamantoise
         print("For this battle, count:", arenaArray[81])
         if arenaArray[81] == 10:
             return True
-    elif encounterID in [377, 382]:  # Both kinds of Gemini
+    elif encounter_id in [377, 382]:  # Both kinds of Gemini
         print("For this battle, count:", arenaArray[77])
         print("For this battle, count:", arenaArray[78])
         if arenaArray[77] == 10 and arenaArray[78] == 10:
             return True
-    elif encounterID in [378, 384]:  # Behemoth King
+    elif encounter_id in [378, 384]:  # Behemoth King
         print("For this battle, count:", arenaArray[70])
         if arenaArray[70] == 10:
             return True
-    elif encounterID == 383:  # Demonolith
+    elif encounter_id == 383:  # Demonolith
         print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
-    elif encounterID == 385:  # Great Malboro
+    elif encounter_id == 385:  # Great Malboro
         print("For this battle, count:", arenaArray[56])
         if arenaArray[56] == 10:
             return True
-    elif encounterID == 386:  # Barbatos
+    elif encounter_id == 386:  # Barbatos
         print("For this battle, count:", arenaArray[90])
         if arenaArray[90] == 10:
             return True
-    elif encounterID == 387:  # Wraith
+    elif encounter_id == 387:  # Wraith
         print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
 
     # Omega dungeon
-    elif encounterID == 421:  # Master Coeurl and Floating Death
+    elif encounter_id == 421:  # Master Coeurl and Floating Death
         print("For this battle, count:", arenaArray[74])
         print("For this battle, count:", arenaArray[102])
         if arenaArray[74] == 10 and arenaArray[102] == 10:
             return True
-    elif encounterID == 422:  # Halma and Spirit
+    elif encounter_id == 422:  # Halma and Spirit
         print("For this battle, count:", arenaArray[96])
         print("For this battle, count:", arenaArray[101])
         if arenaArray[96] == 10 and arenaArray[101] == 10:
             return True
-    elif encounterID == 423:  # Zaurus and Floating Death
+    elif encounter_id == 423:  # Zaurus and Floating Death
         print("For this battle, count:", arenaArray[100])
         print("For this battle, count:", arenaArray[102])
         if arenaArray[100] == 10 and arenaArray[102] == 10:
             return True
-    elif encounterID == 424:  # Black Element and Spirit
+    elif encounter_id == 424:  # Black Element and Spirit
         print("For this battle, count:", arenaArray[67])
         print("For this battle, count:", arenaArray[96])
         if arenaArray[67] == 10 and arenaArray[96] == 10:
             return True
-    elif encounterID == 425:  # Varuna
+    elif encounter_id == 425:  # Varuna
         print("For this battle, count:", arenaArray[82])
         if arenaArray[82] == 10:
             return True
-    elif encounterID == 426:  # Master Tonberry
+    elif encounter_id == 426:  # Master Tonberry
         print("For this battle, count:", arenaArray[99])
         if arenaArray[99] == 10:
             return True
-    elif encounterID == 428:  # Machea (blade thing)
+    elif encounter_id == 428:  # Machea (blade thing)
         print("For this battle, count:", arenaArray[103])
         if arenaArray[103] == 10:
             return True
-    elif encounterID == 430:  # Demonolith x2
+    elif encounter_id == 430:  # Demonolith x2
         print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
-    elif encounterID in [432, 433, 434, 435, 436]:  # Just Zaurus
+    elif encounter_id in [432, 433, 434, 435, 436]:  # Just Zaurus
         print("For this battle, count:", arenaArray[100])
         if arenaArray[100] == 10:
             return True
-    elif encounterID == 437:  # Puroboros
+    elif encounter_id == 437:  # Puroboros
         print("For this battle, count:", arenaArray[95])
         if arenaArray[95] == 10:
             return True
-    elif encounterID == 438:  # Wraith
+    elif encounter_id == 438:  # Wraith
         print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
 
     # Other
-    if encounterID in [429, 445]:
+    if encounter_id in [429, 445]:
         # Rock monsters, just leave.
         return True
-    if encounterID == 383:
+    if encounter_id == 383:
         # Demonolith inside Sin, not worth.
         return True
-    if encounterID == 427:
+    if encounter_id == 427:
         # Adamantoise in Omega, dealt with inside Sin
         return True
 
@@ -457,9 +457,9 @@ def advanced_battle_logic():
             print("---Regular battle:", memory.main.get_encounter_id())
             sleepPowder = False
             while memory.main.battle_active():
-                encounterID = memory.main.get_encounter_id()
+                encounter_id = memory.main.get_encounter_id()
                 if memory.main.turn_ready():
-                    if encounterID in [442]:
+                    if encounter_id in [442]:
                         # Damned malboros in Omega
                         battle.main.buddy_swap_yuna()
                         battle.main.aeon_summon(4)
@@ -469,7 +469,7 @@ def advanced_battle_logic():
                             auto_life()
                             autoLifeUsed = True
                         elif (
-                            encounterID == 383
+                            encounter_id == 383
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -479,7 +479,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif (
-                            encounterID == 426
+                            encounter_id == 426
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -489,7 +489,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif (
-                            encounterID == 430
+                            encounter_id == 430
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -499,7 +499,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif (
-                            encounterID == 437
+                            encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -508,12 +508,12 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.use_skill(1)
-                        elif encounterID == 431:
+                        elif encounter_id == 431:
                             battle.main.tidus_flee()
                         else:
                             battle.main.use_skill(1)  # Quick hit
                     elif screen.turn_rikku():
-                        if encounterID in [377, 382]:
+                        if encounter_id in [377, 382]:
                             print(
                                 "Shining Gems for Gemini, better to save other items for other enemies."
                             )
@@ -524,7 +524,7 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID == 386:
+                        elif encounter_id == 386:
                             # Armor bomber guys
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
@@ -532,7 +532,7 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID in [430]:
+                        elif encounter_id in [430]:
                             # Demonolith
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
@@ -540,7 +540,7 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID == 422:
+                        elif encounter_id == 422:
                             # Provoke on Spirit
                             battle.main.use_special(
                                 position=3, target=21, direction="u"
@@ -551,13 +551,13 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID == 424:
+                        elif encounter_id == 424:
                             # Provoke on Spirit
                             battle.main.use_special(
                                 position=3, target=21, direction="r"
                             )
                         elif (
-                            encounterID == 425
+                            encounter_id == 425
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             # Varuna, use purifying salt to remove haste
@@ -565,7 +565,7 @@ def advanced_battle_logic():
                             battle.main.use_item(
                                 memory.main.get_use_items_slot(63), rikku_flee=False
                             )
-                        elif encounterID == 426:
+                        elif encounter_id == 426:
                             # Master Tonberry
                             if not sleepPowder:
                                 battle.main.use_item(
@@ -578,10 +578,10 @@ def advanced_battle_logic():
                                     )
                                 else:
                                     battle.main.defend()
-                        elif encounterID == 431:
+                        elif encounter_id == 431:
                             battle.main.tidus_flee()
                         elif (
-                            encounterID == 437
+                            encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if not sleepPowder:
@@ -1688,13 +1688,13 @@ def miihen_farm(cap_num: int = 1):
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
-    lastCP = checkpoint
+    last_cp = checkpoint
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
             # Checkpoint notify
-            if lastCP != checkpoint:
+            if last_cp != checkpoint:
                 print("Checkpoint reached: ", checkpoint)
-                lastCP = checkpoint
+                last_cp = checkpoint
             if checkpoint == 92:
                 FFXC.set_neutral()
                 while memory.main.user_control():
@@ -2052,11 +2052,11 @@ def djose_farm(cap_num: int = 10):
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     while not memory.main.get_map() in [194, 374]:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached: ", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
             if checkpoint in [7, 27, 45] and memory.main.get_map() == 93:
@@ -2976,12 +2976,12 @@ def gagazet(cap_num: int = 10):
         neArmor = False
     print("Next area: ", prefArea)
 
-    lastCP = 0
+    last_cp = 0
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("+++ Checkpoint reached: ", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
             if checkpoint == 9 and memory.main.get_map() == 310:

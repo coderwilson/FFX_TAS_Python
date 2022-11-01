@@ -350,8 +350,8 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
             elif memory.main.diag_skip_possible():
                 if checkpoint < 6 or checkpoint > 12:
                     xbox.tap_b()
-    # logs.writeStats('Miihen encounters:')
-    # logs.writeStats(battle_count)
+    # logs.write_stats('Miihen encounters:')
+    # logs.write_stats(battle_count)
 
 
 def wrap_up():

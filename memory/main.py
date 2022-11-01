@@ -3971,7 +3971,7 @@ def last_hit_check_change() -> int:
             changeFound = True
             changeValue = memVal
             print("**Registered hit:", changeValue)
-            # logs.writeStats(changeValue)
+            # logs.write_stats(changeValue)
             last_hit_init()
             print("Mark 1")
             return int(changeValue)

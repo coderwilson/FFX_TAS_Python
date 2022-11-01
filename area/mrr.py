@@ -226,8 +226,8 @@ def main_path():
 
         if memory.main.game_over():
             return
-    # logs.writeStats("MRR Battles:")
-    # logs.writeStats(battle_count)
+    # logs.write_stats("MRR Battles:")
+    # logs.write_stats(battle_count)
     logs.write_stats("MRR crit manip:")
     logs.write_stats(critManip)
     print("End of MRR section. Status:")

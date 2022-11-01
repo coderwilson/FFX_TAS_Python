@@ -4,10 +4,10 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -71,8 +71,8 @@ def arrival(rikku_charged):
             elif not memory.main.battle_active() and memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    # logs.writeStats("Mac Woods battles:")
-    # logs.writeStats(totalBattles)
+    # logs.write_stats("Mac Woods battles:")
+    # logs.write_stats(totalBattles)
     # Save sphere
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(2)
@@ -226,11 +226,11 @@ def after_crawler():
     memory.main.click_to_control()
 
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     while checkpoint != 100:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached:", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         pos = memory.main.get_coords()
         if checkpoint == 0:
             if pos[0] > 130:

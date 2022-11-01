@@ -293,7 +293,7 @@ def get_advances(tros=True, report=False):
 
 
 def piranhas():
-    encounterID = memory.main.get_encounter_id()
+    encounter_id = memory.main.get_encounter_id()
     print("#########Seed:", memory.main.rng_seed())
     # 11 = two piranhas
     # 12 = three piranhas with one being a triple formation (takes two hits)
@@ -304,8 +304,8 @@ def piranhas():
         if memory.main.turn_ready():
             if memory.main.rng_seed() == 105:
                 attack("none")
-            elif encounterID == 11 or (
-                encounterID == 12 and memory.main.battle_type() == 1
+            elif encounter_id == 11 or (
+                encounter_id == 12 and memory.main.battle_type() == 1
             ):
                 attack("none")
             else:
@@ -322,8 +322,8 @@ def besaid():
     print("Besaid battle format number:", battleFormat)
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            enemyHP = memory.main.get_enemy_current_hp()
-            print("Enemy HP:", enemyHP)
+            enemy_hp = memory.main.get_enemy_current_hp()
+            print("Enemy HP:", enemy_hp)
             if screen.turn_yuna():
                 buddy_swap_wakka()
             elif memory.main.get_encounter_id() == 27:
@@ -854,7 +854,7 @@ def after_blitz_3_late_haste(early_haste):
 def miihen_road(self_destruct=False):
     print("Fight start: Mi'ihen Road")
     print("Mi'ihen battle. Self-destruct:", game_vars.self_destruct_get())
-    encounterID = memory.main.get_encounter_id()
+    encounter_id = memory.main.get_encounter_id()
 
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.battle_type() == 2 and not checkTidusOk():
@@ -864,11 +864,11 @@ def miihen_road(self_destruct=False):
         if memory.main.turn_ready():
             if screen.turn_tidus():
                 if not game_vars.self_destruct_get():
-                    if encounterID in [51, 64, 66, 87]:
+                    if encounter_id in [51, 64, 66, 87]:
                         lancet_swap("none")
                         game_vars.self_destruct_learned()
                         break
-                    elif encounterID == 65 or encounterID == 84:
+                    elif encounter_id == 65 or encounter_id == 84:
                         lancet_swap("right")
                         game_vars.self_destruct_learned()
                         break
@@ -965,11 +965,11 @@ def mrr_battle(status):
     print("------------------------------")
     print("------------------------------")
     print("Fight start: MRR")
-    encounterID = memory.main.get_encounter_id()
-    print("Battle number:", encounterID)
+    encounter_id = memory.main.get_encounter_id()
+    print("Battle number:", encounter_id)
     # nextCritKim = memory.nextCrit(character=3, charLuck=18, enemyLuck=15)
 
-    if encounterID == 102:
+    if encounter_id == 102:
         print("Garuda battle, we want nothing to do with this.")
     elif status[5] == 0:
         print("If funguar present or more than three flees already, Valefor overdrive.")
@@ -996,12 +996,14 @@ def mrr_battle(status):
     elif check_petrify():
         print("--- Character petrified. Unhandled case -> Escaping")
         flee_all()
-    elif encounterID == 102:  # Garuda, flee no matter what.
+    elif encounter_id == 102:  # Garuda, flee no matter what.
         flee_all()
     elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
         if status[3] < 3 and memory.main.rng_seed() != 160:
             # Battle number (zero-index)
-            if encounterID == 100 or encounterID == 101:  # The two battles with Funguar
+            if (
+                encounter_id == 100 or encounter_id == 101
+            ):  # The two battles with Funguar
                 while memory.main.battle_active():  # end of battle screen
                     if memory.main.turn_ready():
                         if check_petrify():
@@ -1053,7 +1055,7 @@ def mrr_battle(status):
             for _ in range(3):
                 screen.await_turn()
                 defend()
-        if encounterID == 96:  # Gandarewa, Red Element, Raptor (camera front)
+        if encounter_id == 96:  # Gandarewa, Red Element, Raptor (camera front)
             wakkaTurns = 0
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
@@ -1089,7 +1091,7 @@ def mrr_battle(status):
                                 aeonTurn = 2
                             else:
                                 aeon_spell_2(3, "none")
-        elif encounterID == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
+        elif encounter_id == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
@@ -1117,7 +1119,7 @@ def mrr_battle(status):
                             aeonTurn = 2
                         else:
                             aeon_spell(3)
-        elif encounterID == 98:  # Raptor, Red Element, Gandarewa (camera side)
+        elif encounter_id == 98:  # Raptor, Red Element, Gandarewa (camera side)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
@@ -1147,7 +1149,7 @@ def mrr_battle(status):
                             else:
                                 aeon_spell_2(3, "right")
         # battle 99 is never used.
-        elif encounterID == 100:  # Raptor, Funguar, Red Element (camera front)
+        elif encounter_id == 100:  # Raptor, Funguar, Red Element (camera front)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
@@ -1184,7 +1186,7 @@ def mrr_battle(status):
                             else:
                                 aeon_spell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
-        elif encounterID == 101:
+        elif encounter_id == 101:
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
@@ -1250,12 +1252,12 @@ def mrr_battle(status):
                         else:
                             flee_all()
                     elif screen.turn_wakka():
-                        if encounterID in [96, 97, 101]:
-                            if encounterID == 101:
+                        if encounter_id in [96, 97, 101]:
+                            if encounter_id == 101:
                                 attack_by_num(22, "l")
                             else:
                                 attack_by_num(21, "l")
-                        elif encounterID == 98 or encounterID == 100:
+                        elif encounter_id == 98 or encounter_id == 100:
                             attack("none")
                         else:
                             flee_all()
@@ -1348,17 +1350,17 @@ def mrr_manip(kim_max_advance: int = 6):
 def djose(stone_breath):
     print("Fight start: Djose road")
     while not memory.main.battle_complete():  # AKA end of battle screen
-        encounterID = memory.main.get_encounter_id()
+        encounter_id = memory.main.get_encounter_id()
         if memory.main.turn_ready():
             if stone_breath == 1:  # Stone Breath already learned
                 print("Djose: Stone breath already learned.")
                 flee_all()
             else:  # Stone breath not yet learned
-                if encounterID == 128 or encounterID == 134 or encounterID == 136:
+                if encounter_id == 128 or encounter_id == 134 or encounter_id == 136:
                     print("Djose: Learning Stone Breath.")
                     lancet_swap("none")
                     stone_breath = 1
-                elif encounterID == 127:
+                elif encounter_id == 127:
                     print("Djose: Learning Stone Breath")
                     # One basilisk with two wasps
                     lancet_swap("up")
@@ -1544,14 +1546,14 @@ def m_woods(woods_vars):
     print("Logic depends on completion of specific goals. In Order:")
     print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
     print(woods_vars)
-    encounterID = memory.main.get_encounter_id()
-    print("------------- Battle Start - Battle Number:", encounterID)
+    encounter_id = memory.main.get_encounter_id()
+    print("------------- Battle Start - Battle Number:", encounter_id)
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             turnchar = memory.main.get_battle_char_turn()
             if not woods_vars[1] or not woods_vars[2]:
-                if encounterID in [171, 172, 175]:
-                    if encounterID == 175 and memory.main.next_steal_rare():
+                if encounter_id in [171, 172, 175]:
+                    if encounter_id == 175 and memory.main.next_steal_rare():
                         print("No steal on Chimera, it will be rare which is no good.")
                         flee_all()
                     elif (
@@ -1562,12 +1564,12 @@ def m_woods(woods_vars):
                         flee_all()
                     elif 6 not in memory.main.get_active_battle_formation():
                         if (
-                            encounterID == 175
+                            encounter_id == 175
                             and memory.main.get_use_items_slot(24) == 255
                         ):
                             buddy_swap_rikku()
                         elif (
-                            encounterID in [171, 172]
+                            encounter_id in [171, 172]
                             and memory.main.get_use_items_slot(32) == 255
                         ):
                             buddy_swap_rikku()
@@ -1575,19 +1577,19 @@ def m_woods(woods_vars):
                             flee_all()
                     elif turnchar == 6:
                         if (
-                            encounterID == 175
+                            encounter_id == 175
                             and memory.main.get_use_items_slot(24) == 255
                         ):
                             print("Marker 2")
                             steal()
                         elif (
-                            encounterID == 172
+                            encounter_id == 172
                             and memory.main.get_use_items_slot(32) == 255
                         ):
                             print("Marker 3")
                             steal_down()
                         elif (
-                            encounterID == 171
+                            encounter_id == 171
                             and memory.main.get_use_items_slot(32) == 255
                         ):
                             print("Marker 4")
@@ -1601,12 +1603,12 @@ def m_woods(woods_vars):
                     else:
                         if woods_vars[0] or memory.main.get_overdrive_battle(6) == 100:
                             if (
-                                encounterID in [171, 172]
+                                encounter_id in [171, 172]
                                 and memory.main.get_use_items_slot(32) == 255
                             ):
                                 escape_one()
                             elif (
-                                encounterID == 175
+                                encounter_id == 175
                                 and memory.main.get_use_items_slot(24) == 255
                             ):
                                 escape_one()
@@ -2334,66 +2336,66 @@ def zu():
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # status should be an array length 2
     # [rikkuCharged, speedNeeded, powerNeeded, itemsNeeded]
-    encounterID = memory.main.get_encounter_id()
+    encounter_id = memory.main.get_encounter_id()
     itemStolen = False
     itemThrown = False
     throwPower = False
     throwSpeed = False
     stealDirection = "none"
-    print("---------------Starting desert battle:", encounterID)
+    print("---------------Starting desert battle:", encounter_id)
 
     # First, determine what the best case scenario is for each battle.
-    if encounterID == 199:
+    if encounter_id == 199:
         stealDirection = "none"
         if status[1]:
             throwSpeed = True
         if status[2]:
             throwPower = True
-    if encounterID == 200:
+    if encounter_id == 200:
         stealDirection = "none"
         if status[1]:
             throwSpeed = True
         if status[2]:
             throwPower = True
-    if encounterID == 208:
+    if encounter_id == 208:
         stealDirection = "none"
         if status[1]:
             throwSpeed = True
         if status[2]:
             throwPower = True
-    if encounterID == 209:
+    if encounter_id == 209:
         stealDirection = "right"
         if status[1]:
             throwSpeed = True
         if status[2]:
             throwPower = True
-    if encounterID == 218:
+    if encounter_id == 218:
         stealDirection = "none"
         if status[2]:
             throwPower = True
-    if encounterID == 221:
+    if encounter_id == 221:
         stealDirection = "up"
         if status[1]:
             throwSpeed = True
         if status[2]:
             throwPower = True
-    if encounterID == 222:
+    if encounter_id == 222:
         stealDirection = "left"
         if status[2]:
             throwPower = True
-    if encounterID == 226:
+    if encounter_id == 226:
         stealDirection = "none"
 
     zuBattles = [202, 211, 216, 225]
-    if encounterID in zuBattles:  # Zu battles
+    if encounter_id in zuBattles:  # Zu battles
         stealDirection = "none"
-    if encounterID == 217:  # Special Zu battle
+    if encounter_id == 217:  # Special Zu battle
         stealDirection = "up"  # Not confirmed
     # Flee from these battles
     fleeBattles = [201, 203, 204, 205, 210, 212, 213, 215, 217, 219, 223, 224, 226, 227]
 
     # Next, determine what we want to do
-    if encounterID in fleeBattles:
+    if encounter_id in fleeBattles:
         if status[0]:
             battleGoal = 3  # Nothing to do here, we just want to flee.
         else:
@@ -3550,8 +3552,8 @@ def attack_oblitz_end():
     rngWaitResults = oblitz_rng_wait()
     xbox.tap_b()
     xbox.tap_b()
-    # logs.writeStats("RNG02 on attack:")
-    # logs.writeStats(memory.s32(rngWaitResults))
+    # logs.write_stats("RNG02 on attack:")
+    # logs.write_stats(memory.s32(rngWaitResults))
 
 
 def attack(direction="none"):

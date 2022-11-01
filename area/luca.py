@@ -4,9 +4,9 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -201,7 +201,7 @@ def blitz_start():
 
 def after_blitz():
     xbox.click_to_battle()
-    encounterID = 0
+    encounter_id = 0
     checkpoint = 0
     while checkpoint < 36:
         if memory.main.user_control():
@@ -246,16 +246,16 @@ def after_blitz():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                encounterID += 1
-                print("After-Blitz Battle Number:", encounterID)
-                if encounterID == 1:
+                encounter_id += 1
+                print("After-Blitz Battle Number:", encounter_id)
+                if encounter_id == 1:
                     battle.main.after_blitz_1(game_vars.early_haste())
-                elif encounterID == 2:
+                elif encounter_id == 2:
                     xbox.click_to_battle()
                     battle.main.attack("none")  # Hardest boss in the game.
                     print("Well that boss was difficult.")
                     memory.main.wait_frames(30 * 6)
-                elif encounterID == 3:
+                elif encounter_id == 3:
                     if game_vars.early_haste() == -1:
                         battle.main.after_blitz_3_late_haste(game_vars.early_haste())
                     else:

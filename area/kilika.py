@@ -183,10 +183,10 @@ def forest_1():
                 checkpoint = 94
             elif checkpoint < 96 and memory.main.get_map() == 96:  # Temple interior
                 checkpoint = 96
-    # logs.writeStats("Kilika battles (North):")
-    # logs.writeStats(str(kilikaBattles))
-    # logs.writeStats("Kilika optimal battles (North):")
-    # logs.writeStats(str(optimalBattles))
+    # logs.write_stats("Kilika battles (North):")
+    # logs.write_stats(str(kilikaBattles))
+    # logs.write_stats("Kilika optimal battles (North):")
+    # logs.write_stats(str(optimalBattles))
 
 
 def trials():
@@ -348,7 +348,7 @@ def forest_3():
                 checkpoint = 53
             elif checkpoint < 64 and memory.main.get_map() == 16:  # Map with boat
                 checkpoint = 64
-    # logs.writeStats("Kilika battles (South):")
-    # logs.writeStats(str(kilikaBattles))
-    # logs.writeStats("Kilika optimal battles (South):")
-    # logs.writeStats(str(optimalBattles))
+    # logs.write_stats("Kilika battles (South):")
+    # logs.write_stats(str(kilikaBattles))
+    # logs.write_stats("Kilika optimal battles (South):")
+    # logs.write_stats(str(optimalBattles))

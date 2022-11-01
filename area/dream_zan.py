@@ -173,7 +173,7 @@ def ammes_battle():
     xbox.click_to_battle()
     memory.main.last_hit_init()
     battle.main.defend()
-    # logs.writeStats("First Six Hits:")
+    # logs.write_stats("First Six Hits:")
     hitsArray = []
 
     print("Killing Sinspawn")

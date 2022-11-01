@@ -134,10 +134,10 @@ def ab_boat_1():
     print("Control restored.")
     print("On the boat!")
     while memory.main.get_actor_coords(actor_number=0)[0] > -50:
-        rikkuNum = memory.main.actor_index(actor_num=41)
-        target = memory.main.get_actor_coords(actor_number=rikkuNum)
+        rikku_num = memory.main.actor_index(actor_num=41)
+        target = memory.main.get_actor_coords(actor_number=rikku_num)
         pathing.set_movement(target)
-        if distance(0, rikkuNum) < 10:
+        if distance(0, rikku_num) < 10:
             xbox.tap_b()
         elif memory.main.menu_open():
             xbox.menu_a()
@@ -273,9 +273,9 @@ def ab_swimming_2():
             elif memory.main.get_map() == 380:
                 pathing.set_movement([700, 300])
             elif memory.main.get_map() == 71:
-                rikkuNum = memory.main.actor_index(actor_num=41)
-                pathing.set_movement(memory.main.get_actor_coords(rikkuNum))
-                if distance(0, rikkuNum) < 30:
+                rikku_num = memory.main.actor_index(actor_num=41)
+                pathing.set_movement(memory.main.get_actor_coords(rikku_num))
+                if distance(0, rikku_num) < 30:
                     xbox.tap_b()
         else:
             FFXC.set_neutral()

@@ -479,11 +479,11 @@ def evrae_altana():
     FFXC.set_neutral()
 
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     while checkpoint < 100:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached:", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         if memory.main.get_story_progress() > 2220:
             print("End of Evrae Altana section.")
             FFXC.set_neutral()

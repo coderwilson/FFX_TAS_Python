@@ -385,8 +385,8 @@ def oblitzerator(early_haste):
             xbox.tap_b()
     print("End of fight, Oblitzerator")
     memory.main.click_to_control()
-    # logs.writeStats("RNG02 after battle:")
-    # logs.writeStats(memory.s32(memory.rng02()))
+    # logs.write_stats("RNG02 after battle:")
+    # logs.write_stats(memory.s32(memory.rng02()))
 
 
 def chocobo_eater():
@@ -482,8 +482,8 @@ def chocobo_eater():
         elif memory.main.diag_skip_possible():
             print("Skipping dialog")
             xbox.tap_b()
-    # logs.writeStats("Chocobo eater turns:")
-    # logs.writeStats(str(turns))
+    # logs.write_stats("Chocobo eater turns:")
+    # logs.write_stats(str(turns))
     print("Chocobo Eater battle complete.")
 
 
@@ -829,21 +829,21 @@ def spherimorph():
                         battle.main.defend()
                 else:
                     print("Starting Rikkus overdrive")
-                    # logs.writeStats("Spherimorph spell used:")
+                    # logs.write_stats("Spherimorph spell used:")
                     if spellNum == 1:
-                        # ogs.writeStats("Fire")
+                        # ogs.write_stats("Fire")
                         print("Creating Ice")
                         battle.main.rikku_full_od("spherimorph1")
                     elif spellNum == 2:
-                        # logs.writeStats("Water")
+                        # logs.write_stats("Water")
                         print("Creating Water")
                         battle.main.rikku_full_od("spherimorph2")
                     elif spellNum == 3:
-                        # logs.writeStats("Thunder")
+                        # logs.write_stats("Thunder")
                         print("Creating Thunder")
                         battle.main.rikku_full_od("spherimorph3")
                     elif spellNum == 4:
-                        # logs.writeStats("Ice")
+                        # logs.write_stats("Ice")
                         print("Creating Fire")
                         battle.main.rikku_full_od("spherimorph4")
 
@@ -1648,8 +1648,8 @@ def bfa():
 
     while memory.main.get_story_progress() < 3380:
         if memory.main.turn_ready():
-            encounterID = memory.main.get_encounter_id()
-            print("Battle engaged. Battle number:", encounterID)
+            encounter_id = memory.main.get_encounter_id()
+            print("Battle engaged. Battle number:", encounter_id)
             if screen.turn_yuna():
                 if memory.main.battle_menu_cursor() != 20:
                     while memory.main.battle_menu_cursor() != 20:

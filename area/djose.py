@@ -19,14 +19,14 @@ def path():
 
     countBattles = 0
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     stoneBreath = 0
     print("Starting Djose pathing section")
 
     while memory.main.get_map() != 81:  # All the way into the temple
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached:", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
 
         if memory.main.user_control():
             if checkpoint in [47, 48] and stoneBreath == 1:
@@ -95,8 +95,8 @@ def path():
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
 
-    # logs.writeStats("Djose battles:")
-    # logs.writeStats(countBattles)
+    # logs.write_stats("Djose battles:")
+    # logs.write_stats(countBattles)
 
 
 def temple():
@@ -366,11 +366,11 @@ def leaving_djose():
     memory.main.await_control()
 
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     while memory.main.get_map() != 75:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached: ", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         if memory.main.user_control():
             if checkpoint == 1:
                 if not game_vars.csr():
