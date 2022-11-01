@@ -145,11 +145,11 @@ def arrival():
     else:
         friendCount = memory.main.get_item_count_slot(friendSlot)
 
-    luckSlot = memory.main.get_item_slot(94)
-    if luckSlot == 255:
+    luck_slot = memory.main.get_item_slot(94)
+    if luck_slot == 255:
         friendCount = 0
     else:
-        luckCount = memory.main.get_item_count_slot(luckSlot)
+        luckCount = memory.main.get_item_count_slot(luck_slot)
 
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 2:
         memory.main.full_party_format("rikku", full_menu_close=False)
@@ -177,13 +177,13 @@ def arrival():
             if checkpoint == 23 and game_vars.get_skip_zan_luck():
                 checkpoint = 25
             elif checkpoint == 24:  # Third chest
-                luckSlot = memory.main.get_item_slot(94)
-                if luckSlot == 255:
+                luck_slot = memory.main.get_item_slot(94)
+                if luck_slot == 255:
                     luckCount = 0
                     FFXC.set_movement(1, 1)
                     xbox.tap_b()
                 else:
-                    if memory.main.get_item_count_slot(luckSlot) > luckCount:
+                    if memory.main.get_item_count_slot(luck_slot) > luckCount:
                         checkpoint += 1
                         print("Updating checkpoint:", checkpoint)
                         memory.main.click_to_control()

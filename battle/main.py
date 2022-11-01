@@ -2335,7 +2335,7 @@ def zu():
 
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # status should be an array length 2
-    # [rikkuCharged, speedNeeded, power_needed, itemsNeeded]
+    # [rikkuCharged, speedNeeded, power_needed, items_needed]
     encounter_id = memory.main.get_encounter_id()
     itemStolen = False
     itemThrown = False
@@ -2551,12 +2551,12 @@ def sandragora(version):
                 memory.main.await_event()
                 FFXC.set_neutral()
                 screen.await_turn()
-        # elif FX_memory.rngSeed() == 31:
+        # elif FX_memory.rng_seed() == 31:
         #    print("Manipulating known seed 31")
         #    fleeAll()
         #    memory.clickToControl()
         #    FFXC.set_movement(0, 1)
-        #    memory.awaitEvent()
+        #    memory.await_event()
         #    FFXC.set_neutral()
         #    screen.awaitTurn()
         else:

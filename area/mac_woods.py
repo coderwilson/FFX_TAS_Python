@@ -102,18 +102,18 @@ def lake_road():
     while not memory.main.battle_active():
         if memory.main.user_control():
             mapVal = memory.main.get_map()
-            tidusPos = memory.main.get_coords()
+            tidus_pos = memory.main.get_coords()
             if mapVal == 221:
-                if tidusPos[0] > 35:
+                if tidus_pos[0] > 35:
                     pathing.set_movement([33, -35])
                 else:
                     pathing.set_movement([-4, 15])
             elif mapVal == 248:
-                if tidusPos[0] < -131:
+                if tidus_pos[0] < -131:
                     pathing.set_movement([-129, -343])
-                elif tidusPos[1] < -235:
+                elif tidus_pos[1] < -235:
                     pathing.set_movement([-49, -233])
-                elif tidusPos[1] < -95:
+                elif tidus_pos[1] < -95:
                     pathing.set_movement([-1, -93])
                 else:
                     pathing.set_movement([-1, 100])

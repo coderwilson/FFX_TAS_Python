@@ -106,8 +106,8 @@ def rng_seed_setup():
     if game_vars.use_set_seed():
         memory.main.set_rng_seed(game.rng_seed_num)
 
-    rngSeed = memory.main.rng_seed()
-    print("---RNG seed:", rngSeed)
+    rng_seed = memory.main.rng_seed()
+    print("---RNG seed:", rng_seed)
 
     # Next, check if we are loading to a save file, or record the RNG seed on full runs.
     if game.state != "none":
@@ -115,9 +115,9 @@ def rng_seed_setup():
 
         load_game.load_into_game(gamestate=game.state, step_counter=game.step)
     else:
-        logs.next_stats(rngSeed)
+        logs.next_stats(rng_seed)
         logs.write_stats("RNG seed:")
-        logs.write_stats(rngSeed)
+        logs.write_stats(rng_seed)
 
 
 def perform_TAS():

@@ -85,8 +85,8 @@ while attempts < 20 and cycles < 50:
         load_game.load_save_num(3)
         load_game.load_guado_skip()
         SkipAttempts += 1
-        guadoSkipStatus = area.guadosalam.guado_skip()
-        if guadoSkipStatus:
+        guado_skip_status = area.guadosalam.guado_skip()
+        if guado_skip_status:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")

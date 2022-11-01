@@ -54,11 +54,11 @@ def arrival():
                 # Now to wait for the skip to happen, or 60 second maximum limit
                 start_time = time.time()
                 # Max number of seconds that we will wait for the skip to occur.
-                timeLimit = 60
-                maxTime = start_time + timeLimit
+                time_limit = 60
+                max_time = start_time + time_limit
                 while memory.main.get_actor_coords(6)[0] < -50:
                     current_time = time.time()
-                    if current_time > maxTime:
+                    if current_time > max_time:
                         print("Skip failed for some reason. Moving on without skip.")
                         claskoSkip = False
                         break

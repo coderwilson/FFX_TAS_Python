@@ -972,13 +972,13 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
     partySize = 5
     # Kilika
     geneauxTrack = False
-    kilikaBattles = coming_battles(
+    kilika_battles = coming_battles(
         area="kilika_woods", battle_count=3, extraAdvances=advance01
     )
     logs.write_rng_track("Kilika battles:")
     import area.kilika as kilika
 
-    bestBattle = kilika.select_best_of_two(kilikaBattles)
+    bestBattle = kilika.select_best_of_two(kilika_battles)
     ragoraKills = [0, 0, 0]
     if "ragora" in bestBattle:
         for i in range(len(bestBattle)):
