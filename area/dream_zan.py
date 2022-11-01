@@ -17,7 +17,7 @@ FFXC = xbox.controller_handle()
 
 def new_game(gamestate):
     print("Starting the game")
-    print("gamestate:", gamestate)
+    print("Gamestate:", gamestate)
 
     lastMessage = 0
     # New version
