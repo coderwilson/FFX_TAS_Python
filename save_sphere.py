@@ -55,7 +55,14 @@ def approach_save_sphere():
             xbox.tap_b()
         else:
             FFXC.set_neutral()
-            if memory.main.save_menu_open():
+            if memory.main.get_map() == 347:
+                print("Blitzball menu opened")
+                memory.main.wait_frames(30)
+                while memory.main.save_popup_cursor() != 5:
+                    xbox.tap_a()
+                xbox.tap_b()
+                memory.main.wait_frames(90)
+            elif memory.main.save_menu_open():
                 print("Mark 1 - ", memory.main.diag_progress_flag())
                 record_save_sphere(
                     x_val=target_coords[0],
