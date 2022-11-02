@@ -9,7 +9,7 @@ import memory.main
 import vars
 import logging
 
-xbox_log = logging.getLogger('xbox')
+logger = logging.getLogger(__name__)
 
 game_vars = vars.vars_handle()
 
@@ -78,13 +78,13 @@ class VgTranslator:
 
         # Error states
         elif xKey == "AxisLx" or xKey == "AxisLy":
-            xbox_log.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            xbox_log.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            xbox_log.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            xbox_log.error(f"ERROR - {xKey}")
-            xbox_log.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            xbox_log.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            xbox_log.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error(f"ERROR - {xKey}")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
             self.set_neutral()
 
         self.gamepad.update()
@@ -126,7 +126,7 @@ def skip_scene(fast_mode: bool = False):
     cutsceneID = memory.get.cutscene_id()
     print(cutsceneID)
     if not fast_mode or cutsceneID not in processed_cutscenes:
-        xbox_log.info("Skip cutscene")
+        logger.info("Skip cutscene")
         memory.main.wait_frames(2)
         FFXC.set_value("BtnStart", 1)  # Generate button to skip
         memory.main.wait_frames(1)
@@ -139,7 +139,7 @@ def skip_scene(fast_mode: bool = False):
 
 
 def skip_scene_spec():
-    xbox_log.debug("Skip cutscene and store an additional skip for a future scene")
+    logger.debug("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value("BtnStart", 1)  # Generate button to skip
     memory.main.wait_frames(30 * 0.07)
     FFXC.set_value("BtnStart", 0)
@@ -155,22 +155,22 @@ def skip_scene_spec():
 
 
 def skip_stored_scene(skipTimer):
-    xbox_log.debug("Mashing skip button")
+    logger.debug("Mashing skip button")
     currentTime = time.time()
-    xbox_log.debug(f"Current Time: {currentTime}")
+    logger.debug(f"Current Time: {currentTime}")
     clickTimer = currentTime + skipTimer
-    xbox_log.debug(f"Click Until: {clickTimer}")
+    logger.debug(f"Click Until: {clickTimer}")
     while currentTime < clickTimer:
         FFXC.set_value("BtnX", 1)  # Perform the skip
         memory.main.wait_frames(30 * 0.035)
         FFXC.set_value("BtnX", 0)
         memory.main.wait_frames(30 * 0.035)
         currentTime = time.time()
-    xbox_log.debug("Mashing skip button - Complete")
+    logger.debug("Mashing skip button - Complete")
 
 
 def attack():
-    xbox_log.debug("Basic attack")
+    logger.debug("Basic attack")
     FFXC.set_value("BtnB", 1)
     memory.main.wait_frames(30 * 0.08)
     FFXC.set_value("BtnB", 0)
@@ -183,7 +183,7 @@ def attack():
 
 def touch_save_sphere():
     FFXC.set_neutral()
-    xbox_log.debug("Touching the save sphere")
+    logger.debug("Touching the save sphere")
     while memory.main.user_control():
         tap_b()
         memory.main.wait_frames(3)
@@ -202,15 +202,15 @@ def touch_save_sphere():
 def skip_dialog(keystrokes):
     # 2 frames per button mash
     num_repetitions = math.ceil(round(keystrokes * 30) / 2)
-    xbox_log.debug(f"Mashing B {num_repetitions} times.")
+    logger.debug(f"Mashing B {num_repetitions} times.")
     for _ in range(num_repetitions):
         tap_b()
-    xbox_log.debug("Mashing B - Complete")
+    logger.debug("Mashing B - Complete")
 
 
 def skip_dialog_special(keystrokes):
     num_repetitions = math.ceil(round(keystrokes * 30) / 2)
-    xbox_log.debug(f"Mashing A and B {num_repetitions} times.")
+    logger.debug(f"Mashing A and B {num_repetitions} times.")
     for _ in range(num_repetitions):
         FFXC.set_value("BtnB", 1)
         FFXC.set_value("BtnA", 1)
@@ -218,7 +218,7 @@ def skip_dialog_special(keystrokes):
         FFXC.set_value("BtnB", 0)
         FFXC.set_value("BtnA", 0)
         memory.main.wait_frames(1)
-    xbox_log.debug("Mashing A and B - Complete")
+    logger.debug("Mashing A and B - Complete")
 
 
 def menu_up():
@@ -409,7 +409,7 @@ def tap_start():
 
 
 def weap_swap(position):
-    xbox_log.info(f"Weapon swap, weapon in position: {position}")
+    logger.info(f"Weapon swap, weapon in position: {position}")
     while memory.main.main_battle_menu():
         tap_right()
     while memory.main.other_battle_menu():
@@ -421,7 +421,7 @@ def weap_swap(position):
 
 
 def armor_swap(position):
-    xbox_log.info(f"Armor swap, armor in position: {position}")
+    logger.info(f"Armor swap, armor in position: {position}")
     menu_right()
     memory.main.wait_frames(30 * 0.5)
     menu_down()
@@ -446,7 +446,7 @@ def clear_save_popup(clickToDiagNum=0):
     while complete == 0:
         counter += 1
         if counter % 100 == 0:
-            xbox_log.debug(f"Waiting for Save dialog: {counter / 100}")
+            logger.debug(f"Waiting for Save dialog: {counter / 100}")
 
         if (
             memory.main.diag_progress_flag() != clickToDiagNum
@@ -468,7 +468,7 @@ def await_save(index=0):
 
 
 def remove():
-    xbox_log.warning("Controller may freeze the program here. If so, please restart your PC.")
+    logger.warning("Controller may freeze the program here. If so, please restart your PC.")
 
 
 def grid_up():
@@ -500,7 +500,7 @@ def grid_right():
 
 
 def click_to_battle():
-    xbox_log.debug("Mashing A until first turn in battle")
+    logger.debug("Mashing A until first turn in battle")
     FFXC.set_neutral()
     while not (memory.main.battle_active() and memory.main.turn_ready()):
         if memory.main.user_control():
@@ -613,7 +613,7 @@ def navigate_to_character(curCharacter):
 
 
 def name_aeon(character=""):
-    xbox_log.info("Waiting for aeon naming screen")
+    logger.info("Waiting for aeon naming screen")
 
     while not memory.main.name_aeon_ready():
         if memory.main.diag_skip_possible() or memory.main.menu_open():
@@ -631,7 +631,7 @@ def name_aeon(character=""):
                 navigate_to_character(curCharacter)
                 tap_b()
 
-    xbox_log.info("Naming screen is up.")
+    logger.info("Naming screen is up.")
     while memory.main.equip_sell_row() != 1:
         tap_start()
     while memory.main.equip_sell_row() != 0:

@@ -11,10 +11,10 @@ import logging
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
-bes_log = logging.getLogger('Besaid')
+logger = logging.getLogger(__name__)
 
 def beach():
-    bes_log.info("Starting Besaid section. Beach")
+    logger.info("Starting Besaid section. Beach")
     if game_vars.csr():
         FFXC.set_neutral()
         memory.main.await_control()
@@ -31,19 +31,19 @@ def beach():
     lastCP = 0
     while memory.main.get_map() != 122:
         if checkpoint != lastCP:
-            bes_log.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             lastCP = checkpoint
 
         # map changes
         if checkpoint < 2 and memory.main.get_map() == 20:
             checkpoint = 2
-            bes_log.debug(f"Map change. Checkpoint: {checkpoint}")
+            logger.debug(f"Map change. Checkpoint: {checkpoint}")
         elif checkpoint < 6 and memory.main.get_map() == 41:
             checkpoint = 6
-            bes_log.debug(f"Map change. Checkpoint: {checkpoint}")
+            logger.debug(f"Map change. Checkpoint: {checkpoint}")
         elif checkpoint < 22 and memory.main.get_map() == 69:
             checkpoint = 22
-            bes_log.debug(f"Map change. Checkpoint: {checkpoint}")
+            logger.debug(f"Map change. Checkpoint: {checkpoint}")
         elif checkpoint < 29 and memory.main.get_map() == 133:
             if not game_vars.csr():
                 # You do remember the prayer?
@@ -71,7 +71,7 @@ def beach():
                 memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 45:  # Exiting tent
-                bes_log.info("Exiting tent")
+                logger.info("Exiting tent")
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
 
@@ -162,7 +162,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(pathing.besaid_trials(checkpoint)):
                 checkpoint += 1
-                bes_log.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -179,7 +179,7 @@ def trials():
 
 
 def leaving():
-    bes_log.info("Ready to leave Besaid")
+    logger.info("Ready to leave Besaid")
     memory.main.click_to_control()
     checkpoint = 0
 
@@ -221,14 +221,14 @@ def leaving():
                 logs.write_rng_track("###########################")
                 logs.write_rng_track("Pre-tutorial array")
                 logs.write_rng_track(memory.main.rng_10_array(array_len=1))
-                bes_log.debug("Tutorial - Tidus and Wakka")
+                logger.debug("Tutorial - Tidus and Wakka")
                 FFXC.set_movement(1, -1)
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 23:  # Second tutorial
-                bes_log.debug("Tutorial - Lulu magic")
+                logger.debug("Tutorial - Lulu magic")
                 while memory.main.user_control():
                     FFXC.set_movement(1, 0)
                 FFXC.set_neutral()
@@ -240,7 +240,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 24:  # Hilltop
                 memory.main.click_to_event_temple(2)
-                bes_log.debug(f"Ready for SS Liki menu - (var) {game_vars.early_tidus_grid()}")
+                logger.debug(f"Ready for SS Liki menu - (var) {game_vars.early_tidus_grid()}")
                 if memory.main.get_tidus_slvl() >= 3:
                     menu.liki()
                     game_vars.early_tidus_grid_set_true()
@@ -261,7 +261,7 @@ def leaving():
             # General pathing
             elif pathing.set_movement(pathing.besaid_2(checkpoint)):
                 checkpoint += 1
-                bes_log.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -312,7 +312,7 @@ def leaving():
                 while memory.main.battle_active():
                     if memory.main.turn_ready():
                         battle.main.aeon_spell(1)
-                bes_log.info("Now to open the menu")
+                logger.info("Now to open the menu")
                 memory.main.click_to_control()
                 memory.main.full_party_format("Besaid")
                 checkpoint += 1

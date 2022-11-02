@@ -9,7 +9,7 @@ import xbox
 import save_sphere
 import logging
 
-baaj_log = logging.getLogger('Baaj')
+logger = logging.getLogger(__name__)
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -17,7 +17,7 @@ game_vars = vars.vars_handle()
 
 def entrance(checkpoint: int = 0):
     memory.main.await_control()
-    baaj_log.info("Starting Baaj exterior area")
+    logger.info("Starting Baaj exterior area")
     FFXC.set_neutral()
     menu.short_aeons()
 
@@ -32,7 +32,7 @@ def entrance(checkpoint: int = 0):
             # General pathing
             elif pathing.set_movement(pathing.baaj_ramp(checkpoint)):
                 checkpoint += 1
-                baaj_log.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
 
@@ -50,7 +50,7 @@ def entrance(checkpoint: int = 0):
 
     # Out of the frying pan, into the furnace
     memory.main.click_to_control()
-    baaj_log.info("Hallway before main puzzle.")
+    logger.info("Hallway before main puzzle.")
     checkpoint = 0
     while memory.main.get_map() != 63:
         if memory.main.user_control():
@@ -61,7 +61,7 @@ def entrance(checkpoint: int = 0):
             # General pathing
             elif pathing.set_movement(pathing.baaj_hallway(checkpoint)):
                 checkpoint += 1
-                baaj_log.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -70,7 +70,7 @@ def entrance(checkpoint: int = 0):
 
 def baaj_puzzle():
     memory.main.click_to_control()
-    baaj_log.info("Ready for the main puzzle.")
+    logger.info("Ready for the main puzzle.")
     checkpoint = 0
     while not memory.main.battle_active():
         if memory.main.user_control():
@@ -103,7 +103,7 @@ def baaj_puzzle():
             # General pathing
             elif pathing.set_movement(pathing.baaj_puzzle(checkpoint)):
                 checkpoint += 1
-                baaj_log.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -128,14 +128,14 @@ def distance(n1, n2):
         player2 = memory.main.get_actor_coords(actor_number=n2)
         return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
     except Exception as x:
-        baaj_log.error("Exception:", x)
+        logger.error(f"Exception: {x}")
         return 999
 
 
 def ab_boat_1():
-    baaj_log.info("Start of Al Bhed boat section.")
-    baaj_log.debug("Control restored.")
-    baaj_log.info("On the boat!")
+    logger.info("Start of Al Bhed boat section.")
+    logger.debug("Control restored.")
+    logger.info("On the boat!")
     while memory.main.get_actor_coords(actor_number=0)[0] > -50:
         rikkuNum = memory.main.actor_index(actor_num=41)
         target = memory.main.get_actor_coords(actor_number=rikkuNum)
@@ -145,7 +145,7 @@ def ab_boat_1():
         elif memory.main.menu_open():
             xbox.menu_a()
             xbox.menu_b()
-    baaj_log.info("In the water!")
+    logger.info("In the water!")
     FFXC.set_value("BtnA", 1)
     while not memory.main.user_control():
         FFXC.set_value("BtnB", 1)
@@ -161,16 +161,16 @@ def ab_boat_1():
         FFXC.set_movement(0, -1)
         if memory.main.battle_active():
             FFXC.set_neutral()
-            baaj_log.info("Battle Start (Al Bhed swimming section)")
+            logger.info("Battle Start (Al Bhed swimming section)")
             battle.main.steal_and_attack()
-            baaj_log.info("Battle End (Al Bhed swimming section)")
+            logger.info("Battle End (Al Bhed swimming section)")
         elif memory.main.menu_open() or memory.main.diag_skip_possible():
-            baaj_log.info("Battle Complete screen")
+            logger.info("Battle Complete screen")
             xbox.tap_b()
 
 
 def ab_swimming_1():
-    baaj_log.info("Swimming down from the boat")
+    logger.info("Swimming down from the boat")
     while memory.main.get_map() != 288:
         if memory.main.user_control():
             pathing.set_movement([-300, -300])
@@ -178,15 +178,15 @@ def ab_swimming_1():
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                baaj_log.info("Battle Start (Al Bhed swimming section)")
+                logger.info("Battle Start (Al Bhed swimming section)")
                 battle.main.steal_and_attack()
-                baaj_log.info("Battle End (Al Bhed swimming section)")
+                logger.info("Battle End (Al Bhed swimming section)")
             elif memory.main.menu_open():
-                baaj_log.info("Battle Complete screen")
+                logger.info("Battle Complete screen")
                 xbox.menu_b()
 
     FFXC.set_neutral()
-    baaj_log.info("Swimming towards airship")
+    logger.info("Swimming towards airship")
     while memory.main.get_map() != 64:
         pos = memory.main.get_coords()
         if memory.main.user_control():
@@ -204,11 +204,11 @@ def ab_swimming_1():
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                baaj_log.info("Battle Start (Al Bhed swimming section)")
+                logger.info("Battle Start (Al Bhed swimming section)")
                 battle.main.steal_and_attack()
-                baaj_log.info("Battle End (Al Bhed swimming section)")
+                logger.info("Battle End (Al Bhed swimming section)")
             elif memory.main.menu_open():
-                baaj_log.info("Battle Complete screen")
+                logger.info("Battle Complete screen")
                 xbox.menu_b()
 
 
@@ -242,13 +242,13 @@ def ab_swimming_2():
     battle.main.steal_and_attack_pre_tros()
     memory.main.await_control()
     FFXC.set_movement(0, 1)
-    baaj_log.info("Technical Support Tidus")
+    logger.info("Technical Support Tidus")
     xbox.skip_dialog(2)
     FFXC.set_movement(0, 0)
     memory.main.click_to_control()
     while not memory.main.battle_active():
         FFXC.set_movement(0, -1)
-    baaj_log.info("Engaging Tros")
+    logger.info("Engaging Tros")
     FFXC.set_neutral()
 
     # Tros fight
@@ -287,7 +287,7 @@ def ab_swimming_2():
             elif memory.main.diag_skip_possible() and not game_vars.csr():
                 xbox.tap_b()
 
-    baaj_log.info("Should now be ready for Besaid")
+    logger.info("Should now be ready for Besaid")
 
     if not game_vars.csr():
         xbox.clear_save_popup(0)

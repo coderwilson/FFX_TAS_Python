@@ -15,12 +15,11 @@ game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
-new_game_log = logging.getLogger('NewGame')
-area_log = logging.getLogger('DreamZan')
+logger = logging.getLogger(__name__)
 
 def new_game(Gamestate):
-    new_game_log.info("Starting the game")
-    new_game_log.debug(f"Gamestate: {Gamestate}")
+    logger.info("Starting the game")
+    logger.debug(f"Gamestate: {Gamestate}")
 
     lastMessage = 0
     # New version
@@ -29,7 +28,7 @@ def new_game(Gamestate):
             if memory.main.get_map() != 23:
                 if lastMessage != 1:
                     lastMessage = 1
-                    new_game_log.info("Attempting to get to New Game screen")
+                    logger.info("Attempting to get to New Game screen")
                 FFXC.set_value("BtnStart", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("BtnStart", 0)
@@ -37,17 +36,17 @@ def new_game(Gamestate):
             elif memory.main.save_menu_open():
                 if lastMessage != 2:
                     lastMessage = 2
-                    new_game_log.info("Load Game menu is open. Backing out.")
+                    logger.info("Load Game menu is open. Backing out.")
                 xbox.tap_a()
             elif memory.main.save_menu_cursor() == 1:
                 if lastMessage != 3:
                     lastMessage = 3
-                    new_game_log.info("New Game is not selected. Switching.")
+                    logger.info("New Game is not selected. Switching.")
                 xbox.menu_up()
             else:
                 if lastMessage != 4:
                     lastMessage = 4
-                    new_game_log.info("New Game is selected. Starting game.")
+                    logger.info("New Game is selected. Starting game.")
                 xbox.menu_b()
         memory.main.click_to_diag_progress(6)
         if game_vars.useLegacySoundtrack():
@@ -74,17 +73,17 @@ def new_game(Gamestate):
 def new_game_2():
     # New game selected. Next, select options.
     timeBuffer = 15
-    new_game_log.info("====================================")
-    new_game_log.info("Starting in")
-    new_game_log.info("3")
+    logger.info("====================================")
+    logger.info("Starting in")
+    logger.info("3")
     memory.main.wait_frames(timeBuffer)
-    new_game_log.info("2")
+    logger.info("2")
     memory.main.wait_frames(timeBuffer)
-    new_game_log.info("1")
+    logger.info("1")
     memory.main.wait_frames(timeBuffer)
-    new_game_log.info("GO!!! Good fortune!")
-    new_game_log.info("====================================")
-    new_game_log.info(f"Set seed: {memory.main.rng_seed()}")
+    logger.info("GO!!! Good fortune!")
+    logger.info("====================================")
+    logger.info(f"Set seed: {memory.main.rng_seed()}")
     xbox.menu_b()
     xbox.menu_b()
 
@@ -96,7 +95,7 @@ def listen_story():
         if memory.main.get_map() == 132:
             if memory.main.diag_progress_flag() == 1:
                 game_vars.set_csr(False)
-                area_log.info("Skipping intro scene, we'll watch this properly in ~8 hours")
+                logger.info("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
             if not game_vars.accessibilityVars()[0]:
                 FFXC.set_value("BtnBack", 1)
@@ -104,7 +103,7 @@ def listen_story():
                 FFXC.set_value("BtnBack", 0)
                 memory.main.wait_frames(1)
 
-    area_log.info(f"### CSR check: {game_vars.csr()}")
+    logger.info(f"### CSR check: {game_vars.csr()}")
     checkpoint = 0
     while memory.main.get_encounter_id() != 414:  # Sinspawn Ammes
         if memory.main.user_control():
@@ -113,13 +112,13 @@ def listen_story():
                 FFXC.set_movement(0, -1)
                 while not memory.main.name_aeon_ready():
                     xbox.tap_b()
-                area_log.info("Ready to name Tidus")
+                logger.info("Ready to name Tidus")
                 FFXC.set_neutral()
                 memory.main.wait_frames(1)
 
                 # Name Tidus
                 xbox.name_aeon("Tidus")
-                area_log.info("Tidus name complete.")
+                logger.info("Tidus name complete.")
 
                 checkpoint += 1
             # elif checkpoint == 7 and game_vars.csr():
@@ -130,7 +129,7 @@ def listen_story():
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.await_control()
-                area_log.debug("Done clicking")
+                logger.debug("Done clicking")
                 checkpoint += 1
             elif checkpoint < 11 and memory.main.get_story_progress() >= 5:
                 checkpoint = 11
@@ -147,7 +146,7 @@ def listen_story():
             # General pathing
             elif pathing.set_movement(pathing.tidus_home(checkpoint)):
                 checkpoint += 1
-                area_log.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -157,7 +156,7 @@ def listen_story():
                     memory.main.get_story_progress() == 10
                     and memory.main.diag_progress_flag() == 2
                 ):
-                    area_log.info("Special Skip")
+                    logger.info("Special Skip")
                     memory.main.wait_frames(130)
                     # Generate button to skip later
                     FFXC.set_value("BtnStart", 1)
@@ -172,39 +171,39 @@ def listen_story():
 
 
 def ammes_battle():
-    area_log.info("Starting ammes")
+    logger.info("Starting ammes")
     xbox.click_to_battle()
     memory.main.last_hit_init()
     battle.main.defend()
     # logs.writeStats("First Six Hits:")
     hitsArray = []
 
-    area_log.info("Killing Sinspawn")
+    logger.info("Killing Sinspawn")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             battle.main.attack("none")
             lastHit = memory.main.last_hit_check_change()
             while lastHit == 9999:
                 lastHit = memory.main.last_hit_check_change()
-            area_log.debug(f"Confirm - last hit: {lastHit}")
+            logger.debug(f"Confirm - last hit: {lastHit}")
             hitsArray.append(lastHit)
-            area_log.debug(f"{hitsArray}")
-    area_log.debug("#####################################")
-    area_log.debug(f"### Unconfirmed seed check: {memory.main.rng_seed()}")
+            logger.debug(f"{hitsArray}")
+    logger.debug("#####################################")
+    logger.debug(f"### Unconfirmed seed check: {memory.main.rng_seed()}")
     correctSeed = rng_track.hits_to_seed(hits_array=hitsArray)
     logs.write_stats("Corrected RNG seed:")
     logs.write_stats(correctSeed)
-    area_log.debug(f"### Corrected RNG seed: {correctSeed}")
+    logger.debug(f"### Corrected RNG seed: {correctSeed}")
     if correctSeed != "Err_seed_not_found":
         game_vars.set_confirmed_seed(correctSeed)
-    area_log.debug(f"Confirming RNG seed: {memory.main.rng_seed()}")
-    area_log.debug("#####################################")
-    area_log.info("Done Killing Sinspawn")
+    logger.debug(f"Confirming RNG seed: {memory.main.rng_seed()}")
+    logger.debug("#####################################")
+    logger.info("Done Killing Sinspawn")
     memory.main.wait_frames(6)  # Just for no overlap
-    area_log.debug("Clicking to battle.")
+    logger.debug("Clicking to battle.")
     xbox.click_to_battle()
-    area_log.debug("Waiting for Auron's Turn")
-    area_log.debug("At Overdrive")
+    logger.debug("Waiting for Auron's Turn")
+    logger.debug("At Overdrive")
     # Auron overdrive tutorial
     battle.overdrive.auron()
 
@@ -226,7 +225,7 @@ def after_ammes():
                 -140,
                 -141,
             ]:
-                area_log.warning("Positioning error")
+                logger.warning("Positioning error")
                 FFXC.set_neutral()
                 memory.main.wait_frames(20)
                 memory.main.ammes_fix(actor_index=0)
@@ -246,7 +245,7 @@ def after_ammes():
                 # General pathing
                 elif pathing.set_movement(pathing.all_starts_here(checkpoint)):
                     checkpoint += 1
-                    area_log.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.turn_ready():
@@ -258,7 +257,7 @@ def after_ammes():
 
 
 def swim_to_jecht():
-    area_log.info("Swimming to Jecht")
+    logger.info("Swimming to Jecht")
 
     FFXC.set_value("BtnA", 1)
     FFXC.set_movement(-1, -1)
@@ -268,7 +267,7 @@ def swim_to_jecht():
 
     FFXC.set_neutral()
     FFXC.set_value("BtnA", 0)
-    area_log.info("We've now reached Jecht.")
+    logger.info("We've now reached Jecht.")
     xbox.skip_dialog(5)
 
     # Next, swim to Baaj temple
