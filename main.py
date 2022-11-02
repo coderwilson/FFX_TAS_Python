@@ -766,8 +766,9 @@ def perform_TAS():
             logger.debug(f"{game.state} | {game.step}")
             logger.debug("------------------------------")
 
-        except KeyboardInterrupt:
+        except KeyboardInterrupt as e:
             logger.info("Keyboard Interrupt - Exiting.")
+            logging.exception(e)
             sys.exit(0)
 
     logger.info("Time! The game is now over.")
