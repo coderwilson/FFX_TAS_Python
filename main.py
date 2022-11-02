@@ -45,6 +45,8 @@ import nemesis.arenaPrep
 import nemesis.changes
 from gamestate import game
 
+FFXC = xbox.controller_handle()
+
 def configuration_setup():
     game_vars = vars.vars_handle()
     # Open the config file and parse game configuration
