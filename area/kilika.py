@@ -4,9 +4,9 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -14,8 +14,8 @@ game_vars = vars.vars_handle()
 
 def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
-    # if memory.main.rngSeed() == 31 and gameVars.skipKilikaLuck():
-    #    gameVars.dontSkipKilikaLuck()
+    # if memory.main.rng_seed() == 31 and game_vars.skip_kilika_luck():
+    #    game_vars.dont_skip_kilika_luck()
 
     print("Arrived at Kilika docks.")
     memory.main.click_to_control()
@@ -83,13 +83,13 @@ def select_best_of_two(coming_battles):
 
 
 def forest_1():
-    kilikaBattles = 0
-    optimalBattles = 0
-    nextThree = []
-    nextBattle = []
+    kilika_battles = 0
+    optimal_battles = 0
+    next_three = []
+    next_battle = []
     import rng_track
 
-    valeforCharge = False
+    valefor_charge = False
     if game_vars.csr():
         checkpoint = 0
     else:
@@ -107,9 +107,9 @@ def forest_1():
                 FFXC.set_movement(0, 1)
         elif memory.main.user_control():
             if checkpoint == 81 or checkpoint == 82:
-                if valeforCharge:
+                if valefor_charge:
                     checkpoint = 83
-            if checkpoint == 83 and not valeforCharge:
+            if checkpoint == 83 and not valefor_charge:
                 checkpoint = 81
             if checkpoint == 83 and memory.main.get_map() == 65:
                 checkpoint = 84
@@ -122,8 +122,8 @@ def forest_1():
                 menu.woods_menuing()
                 checkpoint += 1
             elif checkpoint == 47:  # Luck sphere chest
-                luckSlot = memory.main.get_item_slot(94)
-                if luckSlot == 255:
+                luck_slot = memory.main.get_item_slot(94)
+                if luck_slot == 255:
                     pathing.set_movement([-250, 200])
                     xbox.tap_b()
                 else:
@@ -151,27 +151,27 @@ def forest_1():
             if memory.main.battle_active():
                 if checkpoint < 9:
                     battle.main.lancet_tutorial()
-                    nextTwo = rng_track.coming_battles(
-                        area="kilika_woods", battleCount=2
+                    next_two = rng_track.coming_battles(
+                        area="kilika_woods", battle_count=2
                     )
-                    bestOfTwo = select_best_of_two(nextTwo)
-                    nextBattle = rng_track.coming_battles(
-                        area="kilika_woods", battleCount=1
+                    best_of_two = select_best_of_two(next_two)
+                    next_battle = rng_track.coming_battles(
+                        area="kilika_woods", battle_count=1
                     )[0]
-                    print("################# Next Battle:", nextBattle)
+                    print("################# Next Battle:", next_battle)
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
-                    print("------------This should be battle number:", kilikaBattles)
-                    print("------------Reminder (north-bound only):", nextThree)
-                    valeforCharge = battle.main.kilika_woods(
-                        valeforCharge, bestOfTwo, nextBattle
+                    print("------------This should be battle number:", kilika_battles)
+                    print("------------Reminder (north-bound only):", next_three)
+                    valefor_charge = battle.main.kilika_woods(
+                        valefor_charge, best_of_two, next_battle
                     )
-                    nextBattle = rng_track.coming_battles(
-                        area="kilika_woods", battleCount=1
+                    next_battle = rng_track.coming_battles(
+                        area="kilika_woods", battle_count=1
                     )[0]
-                    print("##########################", nextBattle)
-                    kilikaBattles += 1
+                    print("##########################", next_battle)
+                    kilika_battles += 1
                 memory.main.full_party_format("kilika")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -183,10 +183,10 @@ def forest_1():
                 checkpoint = 94
             elif checkpoint < 96 and memory.main.get_map() == 96:  # Temple interior
                 checkpoint = 96
-    # logs.writeStats("Kilika battles (North):")
-    # logs.writeStats(str(kilikaBattles))
-    # logs.writeStats("Kilika optimal battles (North):")
-    # logs.writeStats(str(optimalBattles))
+    # logs.write_stats("Kilika battles (North):")
+    # logs.write_stats(str(kilika_battles))
+    # logs.write_stats("Kilika optimal battles (North):")
+    # logs.write_stats(str(optimal_battles))
 
 
 def trials():
@@ -239,13 +239,13 @@ def trials():
                 memory.main.wait_frames(30 * 0.07)
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
-            # elif checkpoint == 53 and gameVars.csr():
-            #    memory.main.awaitControl()
+            # elif checkpoint == 53 and game_vars.csr():
+            #    memory.main.await_control()
             #    FFXC.set_movement(0, 1)
-            #    memory.main.waitFrames(2)
-            #    memory.main.awaitEvent()
+            #    memory.main.wait_frames(2)
+            #    memory.main.await_event()
             #    FFXC.set_neutral()
-            #    xbox.nameAeon("Ifrit")  # Set Ifrit name
+            #    xbox.name_aeon("Ifrit")  # Set Ifrit name
             #    checkpoint = 55
             elif checkpoint == 54 and not game_vars.csr():  # Talk to Wakka
                 memory.main.click_to_event_temple(7)
@@ -307,8 +307,8 @@ def trials_end():
 def forest_3():
     # First, re-order the party
     memory.main.full_party_format("kilika")
-    kilikaBattles = 0
-    optimalBattles = 0
+    kilika_battles = 0
+    optimal_battles = 0
     checkpoint = 0
     while checkpoint < 69:  # All the way to the boats
         if memory.main.user_control():
@@ -333,10 +333,10 @@ def forest_3():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.kilika_woods(True)
-                kilikaBattles += 1
+                kilika_battles += 1
                 if memory.main.get_encounter_id() in [32, 34, 37]:
-                    optimalBattles += 1
-                if kilikaBattles == 1 and memory.main.rng_seed() == 31:
+                    optimal_battles += 1
+                if kilika_battles == 1 and memory.main.rng_seed() == 31:
                     memory.main.full_party_format("kilikawoodsbackup")
                 else:
                     memory.main.full_party_format("kilika")
@@ -348,7 +348,7 @@ def forest_3():
                 checkpoint = 53
             elif checkpoint < 64 and memory.main.get_map() == 16:  # Map with boat
                 checkpoint = 64
-    # logs.writeStats("Kilika battles (South):")
-    # logs.writeStats(str(kilikaBattles))
-    # logs.writeStats("Kilika optimal battles (South):")
-    # logs.writeStats(str(optimalBattles))
+    # logs.write_stats("Kilika battles (South):")
+    # logs.write_stats(str(kilika_battles))
+    # logs.write_stats("Kilika optimal battles (South):")
+    # logs.write_stats(str(optimal_battles))

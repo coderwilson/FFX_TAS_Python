@@ -3,10 +3,10 @@ import battle.main
 import logs
 import memory.main
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -23,9 +23,9 @@ def post_battle_logic(force_charge=False):
             memory.main.full_party_format("miihen", full_menu_close=False)
         else:
             memory.main.full_party_format("djose", full_menu_close=False)
-    hpCheck = memory.main.get_hp()
-    print("------------------ HP check:", hpCheck)
-    if hpCheck[0] < 520 or hpCheck[1] < 220:
+    hp_check = memory.main.get_hp()
+    print("------------------ HP check:", hp_check)
+    if hp_check[0] < 520 or hp_check[1] < 220:
         battle.main.heal_up()
     else:
         print("No need to heal up. Moving onward.")
@@ -37,9 +37,9 @@ def arrival():
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
     print("Now onward to scenes and Mi'ihen skip. Good luck!")
-    miihenSkip = False
-    battleCount = 0
-    SDencounterID = 0
+    miihen_skip = False
+    battle_count = 0
+    sd_encounter_id = 0
 
     checkpoint = 0
     while memory.main.get_map() != 120:
@@ -48,17 +48,17 @@ def arrival():
             if checkpoint > 3 and checkpoint < 11:
                 if game_vars.csr():
                     # Only run this branch if CSR is online.
-                    tidusCoords = memory.main.get_coords()
-                    hunterCoords = memory.main.miihen_guy_coords()
-                    hunterDistance = abs(tidusCoords[1] - hunterCoords[1]) + abs(
-                        tidusCoords[0] - hunterCoords[0]
+                    tidus_coords = memory.main.get_coords()
+                    hunter_coords = memory.main.miihen_guy_coords()
+                    hunter_distance = abs(tidus_coords[1] - hunter_coords[1]) + abs(
+                        tidus_coords[0] - hunter_coords[0]
                     )
 
                     # Get spear
                     if memory.main.hunter_spear():
                         checkpoint = 11
-                    elif hunterDistance < 200 or checkpoint in [6, 7, 8, 9, 10]:
-                        pathing.set_movement(hunterCoords)
+                    elif hunter_distance < 200 or checkpoint in [6, 7, 8, 9, 10]:
+                        pathing.set_movement(hunter_coords)
                         xbox.tap_b()
 
                     elif pathing.set_movement(pathing.miihen(checkpoint)):
@@ -67,9 +67,9 @@ def arrival():
 
                 else:
                     # Run this branch on a normal Any% run, no CSR
-                    tidusCoords = memory.main.get_coords()
-                    hunterCoords = memory.main.miihen_guy_coords()
-                    if hunterCoords[1] < tidusCoords[1]:
+                    tidus_coords = memory.main.get_coords()
+                    hunter_coords = memory.main.miihen_guy_coords()
+                    if hunter_coords[1] < tidus_coords[1]:
                         checkpoint = 11
                         print("**Late for Mi'ihen skip, forcing recovery.")
                     elif checkpoint == 6:
@@ -148,12 +148,12 @@ def arrival():
                                     memory.main.lucille_miihen_coords()[1] > 1400
                                     and memory.main.user_control()
                                 ):
-                                    miihenSkip = True
+                                    miihen_skip = True
                                 else:
                                     memory.main.click_to_control_3()
                             except Exception:
-                                miihenSkip = False
-                            print("Skip successful:", miihenSkip)
+                                miihen_skip = False
+                            print("Skip successful:", miihen_skip)
                             checkpoint += 1
                     elif pathing.set_movement(pathing.miihen(checkpoint)):
                         checkpoint += 1
@@ -192,33 +192,33 @@ def arrival():
                 else:
                     FFXC.set_neutral()
                     print("Starting battle")
-                    battleCount += 1
+                    battle_count += 1
                     battle.main.miihen_road()
                     print("Battle complete")
                     post_battle_logic()
 
                 # Kimahri manip
-                nextCritKim = memory.main.next_crit(
+                next_crit_kim = memory.main.next_crit(
                     character=3, char_luck=18, enemy_luck=15
                 )
-                print("#### Next Kimahri crit:", nextCritKim)
+                print("#### Next Kimahri crit:", next_crit_kim)
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menu_open():
-                    FFXC.set_value("BtnB", 1)
+                    FFXC.set_value("btn_b", 1)
                     memory.main.wait_frames(2)
-                    FFXC.set_value("BtnB", 0)
+                    FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
                 elif memory.main.diag_skip_possible():
-                    FFXC.set_value("BtnB", 1)
+                    FFXC.set_value("btn_b", 1)
                     memory.main.wait_frames(2)
-                    FFXC.set_value("BtnB", 0)
+                    FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
-    print("Mi'ihen skip status:", miihenSkip)
-    return [game_vars.self_destruct_get(), battleCount, SDencounterID, miihenSkip]
+    print("Mi'ihen skip status:", miihen_skip)
+    return [game_vars.self_destruct_get(), battle_count, sd_encounter_id, miihen_skip]
 
 
-def arrival_2(selfDestruct, battleCount, SDencounterID):
+def arrival_2(self_destruct, battle_count, sd_encounter_id):
     print("Start of the second map")
     checkpoint = 15
     while memory.main.get_map() != 171:
@@ -243,7 +243,7 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                battleCount += 1
+                battle_count += 1
                 if (
                     checkpoint == 27 and not memory.main.battle_active()
                 ):  # Shelinda dialog
@@ -266,20 +266,20 @@ def arrival_2(selfDestruct, battleCount, SDencounterID):
                 checkpoint = 20
             elif checkpoint < 31 and memory.main.get_map() == 58:
                 checkpoint = 31
-    return [game_vars.self_destruct_get(), battleCount, SDencounterID]
+    return [game_vars.self_destruct_get(), battle_count, sd_encounter_id]
 
 
 def mid_point():
     checkpoint = 0
     while memory.main.get_map() != 115:
         if memory.main.user_control():
-            pDownSlot = memory.main.get_item_slot(6)
+            p_down_slot = memory.main.get_item_slot(6)
             if memory.main.get_map() == 58:
                 memory.main.full_party_format("tidkimwak")
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-            # elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
+            # elif checkpoint == 2 and memory.main.get_item_count_slot(p_down_slot) >= 10:
             #    checkpoint = 4
             elif checkpoint in [2, 3]:
                 checkpoint = 4
@@ -350,8 +350,8 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
             elif memory.main.diag_skip_possible():
                 if checkpoint < 6 or checkpoint > 12:
                     xbox.tap_b()
-    # logs.writeStats('Miihen encounters:')
-    # logs.writeStats(battle_count)
+    # logs.write_stats('Miihen encounters:')
+    # logs.write_stats(battle_count)
 
 
 def wrap_up():

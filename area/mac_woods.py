@@ -4,10 +4,10 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -20,29 +20,29 @@ def arrival(rikku_charged):
     memory.main.close_menu()
 
     # Rikkus charge, Fish Scales, and Arctic Winds
-    woodsVars = [False, False, False]
-    woodsVars[0] = rikku_charged
+    woods_vars = [False, False, False]
+    woods_vars[0] = rikku_charged
 
-    lastGil = 0  # for first chest
+    last_gil = 0  # for first chest
     checkpoint = 0
-    totalBattles = 0
+    total_battles = 0
     while memory.main.get_map() != 221:  # All the way to O'aka
         if memory.main.user_control():
             # Events
             if checkpoint == 14:  # First chest
-                if lastGil != memory.main.get_gil_value():
-                    if lastGil == memory.main.get_gil_value() - 2000:
+                if last_gil != memory.main.get_gil_value():
+                    if last_gil == memory.main.get_gil_value() - 2000:
                         checkpoint += 1
                         print("Chest obtained. Updating checkpoint:", checkpoint)
                     else:
-                        lastGil = memory.main.get_gil_value()
+                        last_gil = memory.main.get_gil_value()
                 else:
                     FFXC.set_movement(1, 1)
                     xbox.tap_b()
             elif checkpoint == 59:
-                if not woodsVars[0]:
+                if not woods_vars[0]:
                     checkpoint -= 2
-                elif not woodsVars[1] and not woodsVars[2]:
+                elif not woods_vars[1] and not woods_vars[2]:
                     checkpoint -= 2
                 else:  # All good to proceed
                     checkpoint += 1
@@ -60,19 +60,19 @@ def arrival(rikku_charged):
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                print("variable check 1:", woodsVars)
-                woodsVars = battle.main.m_woods(woodsVars)
-                print("variable check 2:", woodsVars)
+                print("variable check 1:", woods_vars)
+                woods_vars = battle.main.m_woods(woods_vars)
+                print("variable check 2:", woods_vars)
                 if memory.main.overdrive_state()[6] == 100:
                     memory.main.full_party_format("mwoodsgotcharge")
                 else:
                     memory.main.full_party_format("mwoodsneedcharge")
-                totalBattles += 1
+                total_battles += 1
             elif not memory.main.battle_active() and memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    # logs.writeStats("Mac Woods battles:")
-    # logs.writeStats(totalBattles)
+    # logs.write_stats("Mac Woods battles:")
+    # logs.write_stats(total_battles)
     # Save sphere
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(2)
@@ -101,19 +101,19 @@ def lake_road():
 
     while not memory.main.battle_active():
         if memory.main.user_control():
-            mapVal = memory.main.get_map()
-            tidusPos = memory.main.get_coords()
-            if mapVal == 221:
-                if tidusPos[0] > 35:
+            map_val = memory.main.get_map()
+            tidus_pos = memory.main.get_coords()
+            if map_val == 221:
+                if tidus_pos[0] > 35:
                     pathing.set_movement([33, -35])
                 else:
                     pathing.set_movement([-4, 15])
-            elif mapVal == 248:
-                if tidusPos[0] < -131:
+            elif map_val == 248:
+                if tidus_pos[0] < -131:
                     pathing.set_movement([-129, -343])
-                elif tidusPos[1] < -235:
+                elif tidus_pos[1] < -235:
                     pathing.set_movement([-49, -233])
-                elif tidusPos[1] < -95:
+                elif tidus_pos[1] < -95:
                     pathing.set_movement([-1, -93])
                 else:
                     pathing.set_movement([-1, 100])
@@ -159,11 +159,11 @@ def lake_road_2():
         memory.main.click_to_control()  # Auron's musings.
         print("Affection (before):", memory.main.affection_array())
         memory.main.wait_frames(30 * 0.2)
-        auronAffection = memory.main.affection_array()[2]
+        auron_affection = memory.main.affection_array()[2]
         # Make sure we get Auron affection
-        while memory.main.affection_array()[2] == auronAffection:
-            auronCoords = memory.main.get_actor_coords(3)
-            pathing.set_movement(auronCoords)
+        while memory.main.affection_array()[2] == auron_affection:
+            auron_coords = memory.main.get_actor_coords(3)
+            pathing.set_movement(auron_coords)
             xbox.tap_b()
         print("Affection (after):", memory.main.affection_array())
     while memory.main.user_control():
@@ -226,11 +226,11 @@ def after_crawler():
     memory.main.click_to_control()
 
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     while checkpoint != 100:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached:", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         pos = memory.main.get_coords()
         if checkpoint == 0:
             if pos[0] > 130:

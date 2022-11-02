@@ -74,10 +74,10 @@ def south_bank(checkpoint: int = 0):
     FFXC.set_neutral()
 
     memory.main.click_to_control_3()
-    partyHP = memory.main.get_hp()
-    if partyHP[4] < 800:
+    party_hp = memory.main.get_hp()
+    if party_hp[4] < 800:
         battle.main.heal_up(2)
-    elif partyHP[0] < 700:
+    elif party_hp[0] < 700:
         battle.main.heal_up(1)
     memory.main.close_menu()
 

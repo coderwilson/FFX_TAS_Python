@@ -26,7 +26,7 @@ print(FFXC)
 print("Starting tech-demo program.")
 
 memory.main.start()
-startTime = logs.time_stamp()
+start_time = logs.time_stamp()
 print("Timer starts now.")
 SkipCount = 0
 SkipAttempts = 0
@@ -85,8 +85,8 @@ while attempts < 20 and cycles < 50:
         load_game.load_save_num(3)
         load_game.load_guado_skip()
         SkipAttempts += 1
-        guadoSkipStatus = area.guadosalam.guado_skip()
-        if guadoSkipStatus:
+        guado_skip_status = area.guadosalam.guado_skip()
+        if guado_skip_status:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")
@@ -99,8 +99,8 @@ while attempts < 20 and cycles < 50:
         load_game.load_save_num(97)
         load_game.load_mac_temple()
         SkipAttempts += 1
-        jyscalSkipStatus = area.mac_temple.arrival()
-        if jyscalSkipStatus:
+        jyscal_skip_status = area.mac_temple.arrival()
+        if jyscal_skip_status:
             SkipCount += 1
         print("------------------------------")
         print("------------------------------")
@@ -136,10 +136,10 @@ while attempts < 20 and cycles < 50:
         print("Final demo is complete. Thanks for playing.")
 
 
-endTime = logs.time_stamp()
+end_time = logs.time_stamp()
 print("------------------------------")
 print("------------------------------")
-totalTime = endTime - startTime
+totalTime = end_time - start_time
 print("The program duration (real time) was:", str(totalTime))
 print("------------------------------")
 print("------------------------------")

@@ -5,10 +5,10 @@ import logs
 import memory.main
 import pathing
 import rng_track
+import save_sphere
 import tts
 import vars
 import xbox
-import save_sphere
 import logging
 
 game_vars = vars.vars_handle()
@@ -17,39 +17,39 @@ FFXC = xbox.controller_handle()
 
 logger = logging.getLogger(__name__)
 
-def new_game(Gamestate):
+def new_game(gamestate):
     logger.info("Starting the game")
-    logger.debug(f"Gamestate: {Gamestate}")
+    logger.debug(f"Gamestate: {gamestate}")
 
-    lastMessage = 0
+    last_message = 0
     # New version
-    if Gamestate == "none":  # New Game
+    if gamestate == "none":  # New Game
         while memory.main.get_map() != 0:
             if memory.main.get_map() != 23:
-                if lastMessage != 1:
-                    lastMessage = 1
+                if last_message != 1:
+                    last_message = 1
                     logger.info("Attempting to get to New Game screen")
-                FFXC.set_value("BtnStart", 1)
+                FFXC.set_value("btn_start", 1)
                 memory.main.wait_frames(1)
-                FFXC.set_value("BtnStart", 0)
+                FFXC.set_value("btn_start", 0)
                 memory.main.wait_frames(1)
             elif memory.main.save_menu_open():
-                if lastMessage != 2:
-                    lastMessage = 2
+                if last_message != 2:
+                    last_message = 2
                     logger.info("Load Game menu is open. Backing out.")
                 xbox.tap_a()
             elif memory.main.save_menu_cursor() == 1:
-                if lastMessage != 3:
-                    lastMessage = 3
+                if last_message != 3:
+                    last_message = 3
                     logger.info("New Game is not selected. Switching.")
                 xbox.menu_up()
             else:
-                if lastMessage != 4:
-                    lastMessage = 4
+                if last_message != 4:
+                    last_message = 4
                     logger.info("New Game is selected. Starting game.")
                 xbox.menu_b()
         memory.main.click_to_diag_progress(6)
-        if game_vars.useLegacySoundtrack():
+        if game_vars.use_legacy_soundtrack():
             tts.message("Setting original soundtrack")
             memory.main.wait_frames(20)
             xbox.tap_down()
@@ -60,9 +60,9 @@ def new_game(Gamestate):
     else:  # Load Game
         while not memory.main.save_menu_open():
             if memory.main.get_map() != 23:
-                FFXC.set_value("BtnStart", 1)
+                FFXC.set_value("btn_start", 1)
                 memory.main.wait_frames(1)
-                FFXC.set_value("BtnStart", 0)
+                FFXC.set_value("btn_start", 0)
                 memory.main.wait_frames(1)
             elif memory.main.save_menu_cursor() == 0:
                 xbox.menu_down()
@@ -72,15 +72,15 @@ def new_game(Gamestate):
 
 def new_game_2():
     # New game selected. Next, select options.
-    timeBuffer = 15
+    time_buffer = 15
     logger.info("====================================")
     logger.info("Starting in")
     logger.info("3")
-    memory.main.wait_frames(timeBuffer)
+    memory.main.wait_frames(time_buffer)
     logger.info("2")
-    memory.main.wait_frames(timeBuffer)
+    memory.main.wait_frames(time_buffer)
     logger.info("1")
-    memory.main.wait_frames(timeBuffer)
+    memory.main.wait_frames(time_buffer)
     logger.info("GO!!! Good fortune!")
     logger.info("====================================")
     logger.info(f"Set seed: {memory.main.rng_seed()}")
@@ -97,10 +97,10 @@ def listen_story():
                 game_vars.set_csr(False)
                 logger.info("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
-            if not game_vars.accessibilityVars()[0]:
-                FFXC.set_value("BtnBack", 1)
+            if not game_vars.accessibility_vars()[0]:
+                FFXC.set_value("btn_back", 1)
                 memory.main.wait_frames(1)
-                FFXC.set_value("BtnBack", 0)
+                FFXC.set_value("btn_back", 0)
                 memory.main.wait_frames(1)
 
     logger.info(f"### CSR check: {game_vars.csr()}")
@@ -159,9 +159,9 @@ def listen_story():
                     logger.info("Special Skip")
                     memory.main.wait_frames(130)
                     # Generate button to skip later
-                    FFXC.set_value("BtnStart", 1)
+                    FFXC.set_value("btn_start", 1)
                     memory.main.wait_frames(1)
-                    FFXC.set_value("BtnStart", 0)
+                    FFXC.set_value("btn_start", 0)
                     xbox.skip_dialog(10)
                 else:
                     if game_vars.use_pause():
@@ -175,27 +175,27 @@ def ammes_battle():
     xbox.click_to_battle()
     memory.main.last_hit_init()
     battle.main.defend()
-    # logs.writeStats("First Six Hits:")
-    hitsArray = []
+    # logs.write_stats("First Six Hits:")
+    hits_array = []
 
     logger.info("Killing Sinspawn")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             battle.main.attack("none")
-            lastHit = memory.main.last_hit_check_change()
-            while lastHit == 9999:
-                lastHit = memory.main.last_hit_check_change()
-            logger.debug(f"Confirm - last hit: {lastHit}")
-            hitsArray.append(lastHit)
-            logger.debug(f"{hitsArray}")
+            last_hit = memory.main.last_hit_check_change()
+            while last_hit == 9999:
+                last_hit = memory.main.last_hit_check_change()
+            logger.debug(f"Confirm - last hit: {last_hit}")
+            hits_array.append(last_hit)
+            logger.debug(f"{hits_array}")
     logger.debug("#####################################")
     logger.debug(f"### Unconfirmed seed check: {memory.main.rng_seed()}")
-    correctSeed = rng_track.hits_to_seed(hits_array=hitsArray)
+    correct_seed = rng_track.hits_to_seed(hits_array=hits_array)
     logs.write_stats("Corrected RNG seed:")
-    logs.write_stats(correctSeed)
-    logger.debug(f"### Corrected RNG seed: {correctSeed}")
-    if correctSeed != "Err_seed_not_found":
-        game_vars.set_confirmed_seed(correctSeed)
+    logs.write_stats(correct_seed)
+    logger.debug(f"### Corrected RNG seed: {correct_seed}")
+    if correct_seed != "Err_seed_not_found":
+        game_vars.set_confirmed_seed(correct_seed)
     logger.debug(f"Confirming RNG seed: {memory.main.rng_seed()}")
     logger.debug("#####################################")
     logger.info("Done Killing Sinspawn")
@@ -211,15 +211,15 @@ def ammes_battle():
 def after_ammes():
     memory.main.click_to_control()
     checkpoint = 0
-    # memory.main.waitFrames(90)
+    # memory.main.wait_frames(90)
     # print("#### MARK ####")
-    # memory.main.ammesFix(actorIndex=0)
-    # memory.main.waitFrames(90)
+    # memory.main.ammes_fix(actor_index=0)
+    # memory.main.wait_frames(90)
 
     while memory.main.get_map() != 49:
         if memory.main.user_control():
-            startPos = memory.main.get_coords()
-            if int(startPos[0]) in [866, 867, 868, 869, 870] and int(startPos[1]) in [
+            start_pos = memory.main.get_coords()
+            if int(start_pos[0]) in [866, 867, 868, 869, 870] and int(start_pos[1]) in [
                 -138,
                 -139,
                 -140,
@@ -259,14 +259,14 @@ def after_ammes():
 def swim_to_jecht():
     logger.info("Swimming to Jecht")
 
-    FFXC.set_value("BtnA", 1)
+    FFXC.set_value("btn_a", 1)
     FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 8)
     while memory.main.user_control():
         FFXC.set_movement(-1, 1)
 
     FFXC.set_neutral()
-    FFXC.set_value("BtnA", 0)
+    FFXC.set_value("btn_a", 0)
     logger.info("We've now reached Jecht.")
     xbox.skip_dialog(5)
 

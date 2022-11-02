@@ -5,10 +5,10 @@ import nemesis.arenaSelect
 import nemesis.menu
 import nemesis.targetPath
 import reset
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -102,73 +102,73 @@ def airship_destination(dest_num=0):  # Default to Sin.
 
 
 def get_save_sphere_details():
-    mapVal = memory.main.get_map()
+    map_val = memory.main.get_map()
     storyVal = memory.main.get_story_progress()
-    print("Map:", mapVal, "| Story:", storyVal)
+    print("Map:", map_val, "| Story:", storyVal)
     x = 0
     y = 0
     diag = 0
-    if mapVal == 322:
+    if map_val == 322:
         # Inside Sin, next to airship
         x = 225
         y = -250
         diag = 15
-    if mapVal == 19:
+    if map_val == 19:
         # Besaid beach
         x = -310
         y = -475
         diag = 55
-    if mapVal == 263:
+    if map_val == 263:
         # Thunder Plains agency
         x = -30
         y = -10
         diag = 114
-    if mapVal == 307:
+    if map_val == 307:
         # Monster Arena
         x = 4
         y = 5
         diag = 166
-    if mapVal == 98:
+    if map_val == 98:
         # Kilika docks
         x = 46
         y = -252
         diag = 34
-    if mapVal == 92:
+    if map_val == 92:
         # MRR start
         x = -1
         y = -740
         diag = 43
-    if mapVal == 266:
+    if map_val == 266:
         # Calm Lands Gorge
         x = -310
         y = 190
         diag = 43
-    if mapVal == 82:
+    if map_val == 82:
         # Djose temple
         x = 100
         y = -240
         diag = 89
-    if mapVal == 221:
+    if map_val == 221:
         # Macalania Woods, near Spherimorph
         x = 197
         y = -120
         diag = 23
-    if mapVal == 137:
+    if map_val == 137:
         # Bikanel Desert
         x = -15
         y = 240
         diag = 31
-    if mapVal == 313:
+    if map_val == 313:
         # Zanarkand campfire
         x = 135
         y = -1
         diag = 4
-    if mapVal == 327:
+    if map_val == 327:
         # Sin, end zone
         x = -37
         y = -508
         diag = 10
-    if mapVal == 258:
+    if map_val == 258:
         # Omega (only used in Nemesis)
         x = -112
         y = -1066
@@ -257,7 +257,7 @@ def yojimbo_battle():
     while not memory.main.menu_open():
         xbox.tap_b()
     print("Battle is complete.")
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(180)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -314,7 +314,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -345,7 +345,7 @@ def basic_attack(
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -822,11 +822,11 @@ def item_dump():
 
 def quick_reset_logic():
     reset.reset_to_main_menu()
-    memory.ain.waitFrames(90)
+    memory.ain.wait_frames(90)
     while memory.main.get_map() != 23:
-        FFXC.set_value("BtnStart", 1)
+        FFXC.set_value("btn_start", 1)
         memory.main.wait_frames(2)
-        FFXC.set_value("BtnStart", 0)
+        FFXC.set_value("btn_start", 0)
         memory.main.wait_frames(2)
     memory.main.wait_frames(60)
     xbox.menu_b()
@@ -896,7 +896,7 @@ def shinryu_battle():
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
     FFXC.set_neutral()
     memory.main.wait_frames(2)

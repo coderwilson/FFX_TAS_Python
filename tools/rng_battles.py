@@ -15,15 +15,15 @@ def all_formations(area: int):
         return [380, 381, 382, 383, 384, 385, 386, 387]
 
 
-def coming_battles(area: int = 10, battleCount: int = 10, extraAdvances: int = 0):
+def coming_battles(area: int = 10, battle_count: int = 10, extra_advances: int = 0):
     formations = all_formations(area)
-    advances = memory.main.rng_01_advances((battleCount * 2) + extraAdvances)
-    if extraAdvances != 0:
-        while extraAdvances != 0:
+    advances = memory.main.rng_01_advances((battle_count * 2) + extra_advances)
+    if extra_advances != 0:
+        while extra_advances != 0:
             del advances[0]
-            extraAdvances -= 1
+            extra_advances -= 1
     battles = []
-    for i in range(battleCount):
+    for i in range(battle_count):
         nextValue = formations[(advances[(i * 2) + 1] & 0x7FFFFFFF) % len(formations)]
         battles.append(nextValue)
     print("Upcoming battles:", battles)

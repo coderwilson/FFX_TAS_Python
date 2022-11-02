@@ -6,10 +6,10 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -19,7 +19,7 @@ FFXC = xbox.controller_handle()
 def arrival():
     memory.main.click_to_control()
     memory.main.close_menu()
-    claskoSkip = True
+    clasko_skip = True
 
     checkpoint = 0
     while memory.main.get_map() != 92:
@@ -52,15 +52,15 @@ def arrival():
                 xbox.menu_b()
 
                 # Now to wait for the skip to happen, or 60 second maximum limit
-                startTime = time.time()
+                start_time = time.time()
                 # Max number of seconds that we will wait for the skip to occur.
-                timeLimit = 60
-                maxTime = startTime + timeLimit
+                time_limit = 60
+                max_time = start_time + time_limit
                 while memory.main.get_actor_coords(6)[0] < -50:
-                    currentTime = time.time()
-                    if currentTime > maxTime:
+                    current_time = time.time()
+                    if current_time > max_time:
                         print("Skip failed for some reason. Moving on without skip.")
-                        claskoSkip = False
+                        clasko_skip = False
                         break
                 memory.main.click_to_control()
                 FFXC.set_neutral()
@@ -79,18 +79,18 @@ def arrival():
                 xbox.tap_b()
     FFXC.set_neutral()
     print("Done with prelim MRR area, now for the real deal.")
-    return claskoSkip
+    return clasko_skip
 
 
 def main_path():
     memory.main.await_control()
-    critManip = False
+    crit_manip = False
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
     print("Resetting checkpoint.")
-    lastGilValue = 0
+    last_gil_value = 0
     checkpoint = 0
-    battleCount = 0
+    battle_count = 0
     while memory.main.get_map() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
             status[2] = 2  # No need to do Valefor's overdrive and recharge.
@@ -128,13 +128,13 @@ def main_path():
             elif checkpoint >= 54 and checkpoint <= 56:  # 400 gil guy
                 if memory.main.rng_seed() in [160, 31]:
                     checkpoint = 57
-                elif memory.main.get_gil_value() != lastGilValue:
+                elif memory.main.get_gil_value() != last_gil_value:
                     # check if we got the 400 from the guy
-                    if memory.main.get_gil_value() == lastGilValue + 400:
+                    if memory.main.get_gil_value() == last_gil_value + 400:
                         print("We've procured the 400 gil from the guy.")
                         checkpoint = 57  # now to the actual lift
                     else:
-                        lastGilValue = memory.main.get_gil_value()
+                        last_gil_value = memory.main.get_gil_value()
                 else:
                     pathing.set_movement(memory.main.mrr_guy_coords())
                     xbox.tap_b()
@@ -164,16 +164,8 @@ def main_path():
                 if checkpoint == 61:
                     if memory.main.next_crit(
                         character=3, char_luck=18, enemy_luck=15
-                    ) in [
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7,
-                        9,
-                    ]:
-                        critManip = True
+                    ) in [2, 3, 4, 5, 6, 7, 9]:
+                        crit_manip = True
                         # Try to end on 1.
                         print(
                             "+++++++++++ We can manip:",
@@ -199,7 +191,7 @@ def main_path():
                     status[3] += 1
                 else:
                     if battle.main.mrr_manip(kim_max_advance=9):
-                        critManip = True
+                        crit_manip = True
 
                 if memory.main.get_yuna_slvl() >= 8 and status[4] == 0:
                     print("Yuna has enough levels now. Going to do her grid.")
@@ -214,7 +206,7 @@ def main_path():
                     "======== Next Kimahri crit:",
                     memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),
                 )
-                battleCount += 1
+                battle_count += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
@@ -226,10 +218,10 @@ def main_path():
 
         if memory.main.game_over():
             return
-    # logs.writeStats("MRR Battles:")
-    # logs.writeStats(battleCount)
+    # logs.write_stats("MRR Battles:")
+    # logs.write_stats(battle_count)
     logs.write_stats("MRR crit manip:")
-    logs.write_stats(critManip)
+    logs.write_stats(crit_manip)
     print("End of MRR section. Status:")
     print("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
     print(status)

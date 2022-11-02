@@ -4,9 +4,9 @@ import logs
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -19,7 +19,7 @@ def arrival():
     print("Starting Luca section")
     memory.main.click_to_control()
 
-    earlyHaste = 0
+    early_haste = 0
     checkpoint = 0
     while checkpoint < 56:
         if memory.main.user_control():
@@ -97,18 +97,18 @@ def arrival():
                 print("Tidus XP:", memory.main.get_tidus_xp())
                 if memory.main.get_tidus_xp() >= 312:
                     FFXC.set_neutral()
-                    earlyHaste = menu.luca_workers()
-                    if earlyHaste != 0:
-                        earlyHaste = 2
+                    early_haste = menu.luca_workers()
+                    if early_haste != 0:
+                        early_haste = 2
                 print("Event: Third battle")
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
                 FFXC.set_neutral()
-                battle.main.luca_workers_2(earlyHaste)
+                battle.main.luca_workers_2(early_haste)
                 print("Tidus XP:", memory.main.get_tidus_xp())
                 memory.main.click_to_control()
-                if earlyHaste == 0 and memory.main.get_tidus_xp() >= 312:
-                    earlyHaste = menu.luca_workers()
+                if early_haste == 0 and memory.main.get_tidus_xp() >= 312:
+                    early_haste = menu.luca_workers()
 
                 checkpoint += 1
             elif checkpoint == 46 or checkpoint == 55:
@@ -120,13 +120,13 @@ def arrival():
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
                 FFXC.set_neutral()
-                battle.boss.oblitzerator(earlyHaste)
+                battle.boss.oblitzerator(early_haste)
                 checkpoint += 1
             elif checkpoint == 50:
                 memory.main.click_to_event_temple(4)
 
-                if earlyHaste == 0:
-                    earlyHaste = menu.luca_workers() - 1
+                if early_haste == 0:
+                    early_haste = menu.luca_workers() - 1
                 checkpoint += 1
             elif checkpoint == 52:
                 memory.main.click_to_event_temple(5)
@@ -144,29 +144,29 @@ def arrival():
                 xbox.skip_scene()
 
     logs.write_stats("Early Haste:")
-    logs.write_stats(earlyHaste)
-    game_vars.early_haste_set(earlyHaste)
+    logs.write_stats(early_haste)
+    game_vars.early_haste_set(early_haste)
 
     print("##Checking for thunderstrike weapons for Tidus or Wakka")
-    thunderStrike = memory.main.check_thunder_strike()
-    if thunderStrike == 0:
+    thunder_strike = memory.main.check_thunder_strike()
+    if thunder_strike == 0:
         print("##Neither character got a thunderstrike weapon.")
-    elif thunderStrike == 1:
+    elif thunder_strike == 1:
         print("##Tidus got a thunderstrike weapon.")
-    elif thunderStrike == 2:
+    elif thunder_strike == 2:
         print("##Wakka got a thunderstrike weapon.")
     else:
         print("##Both Tidus and Wakka somehow got a thunderstrike weapon.")
 
     logs.write_stats("Thunderstrike results:")
-    logs.write_stats(thunderStrike)
+    logs.write_stats(thunder_strike)
 
-    if thunderStrike != 0:
-        if thunderStrike % 2 == 1:
+    if thunder_strike != 0:
+        if thunder_strike % 2 == 1:
             print("Equipping Tidus")
-            fullClose = True
-            menu.equip_weapon(character=0, ability=0x8026, full_menu_close=fullClose)
-    game_vars.set_l_strike(thunderStrike)
+            full_close = True
+            menu.equip_weapon(character=0, ability=0x8026, full_menu_close=full_close)
+    game_vars.set_l_strike(thunder_strike)
 
 
 def blitz_start():
@@ -201,7 +201,7 @@ def blitz_start():
 
 def after_blitz():
     xbox.click_to_battle()
-    encounterID = 0
+    encounter_id = 0
     checkpoint = 0
     while checkpoint < 36:
         if memory.main.user_control():
@@ -229,8 +229,8 @@ def after_blitz():
                 if not game_vars.csr():
                     # First Auron affection, always zero
                     while memory.main.affection_array()[2] == 0:
-                        auronCoords = memory.main.get_actor_coords(3)
-                        pathing.set_movement(auronCoords)
+                        auron_coords = memory.main.get_actor_coords(3)
+                        pathing.set_movement(auron_coords)
                         xbox.tap_b()
                 checkpoint += 1  # After affection changes
             elif checkpoint == 35:  # Bring the party together
@@ -246,16 +246,16 @@ def after_blitz():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                encounterID += 1
-                print("After-Blitz Battle Number:", encounterID)
-                if encounterID == 1:
+                encounter_id += 1
+                print("After-Blitz Battle Number:", encounter_id)
+                if encounter_id == 1:
                     battle.main.after_blitz_1(game_vars.early_haste())
-                elif encounterID == 2:
+                elif encounter_id == 2:
                     xbox.click_to_battle()
                     battle.main.attack("none")  # Hardest boss in the game.
                     print("Well that boss was difficult.")
                     memory.main.wait_frames(30 * 6)
-                elif encounterID == 3:
+                elif encounter_id == 3:
                     if game_vars.early_haste() == -1:
                         battle.main.after_blitz_3_late_haste(game_vars.early_haste())
                     else:

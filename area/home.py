@@ -4,9 +4,9 @@ import battle.main
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -15,9 +15,9 @@ FFXC = xbox.controller_handle()
 
 def check_spheres():
     # Speed sphere stuff. Improve this later.
-    needSpeed = False
+    need_speed = False
     if memory.main.get_speed() < 5:
-        needSpeed = True
+        need_speed = True
         # Reprogram battle logic to throw some kind of grenades.
 
     # Same for Power spheres
@@ -31,9 +31,9 @@ def check_spheres():
             )
             or (memory.main.get_speed() >= 9 and memory.main.get_power() >= 23)
         ):
-            needPower = False
+            need_power = False
         else:
-            needPower = True
+            need_power = True
 
     elif (
         memory.main.get_power() >= 19
@@ -44,37 +44,37 @@ def check_spheres():
         )
         or (memory.main.get_speed() >= 9 and memory.main.get_power() >= 15)
     ):
-        needPower = False
+        need_power = False
     else:
-        needPower = True
-    return needSpeed, needPower
+        need_power = True
+    return need_speed, need_power
 
 
 def desert():
     memory.main.click_to_control()
 
-    needSpeed, needPower = check_spheres()
+    need_speed, need_power = check_spheres()
     # Logic for finding Teleport Spheres x2 (only chest in this area)
-    teleSlot = memory.main.get_item_slot(98)
-    if teleSlot == 255:
-        teleCount = 0
+    tele_slot = memory.main.get_item_slot(98)
+    if tele_slot == 255:
+        tele_count = 0
     else:
-        teleCount = memory.main.get_item_count_slot(teleSlot)
+        tele_count = memory.main.get_item_count_slot(tele_slot)
 
-    chargeState = memory.main.overdrive_state()[6] == 100
+    charge_state = memory.main.overdrive_state()[6] == 100
     # Bomb cores, sleeping powders, smoke bombs, silence grenades
-    stealItems = [0, 0, 0, 0]
-    itemsNeeded = 0
+    steal_items = [0, 0, 0, 0]
+    items_needed = 0
 
     # Now to figure out how many items we need.
-    stealItems = battle.main.update_steal_items_desert()
-    itemsNeeded = 7 - sum(stealItems)
+    steal_items = battle.main.update_steal_items_desert()
+    items_needed = 7 - sum(steal_items)
 
     menu.equip_sonic_steel()
     memory.main.close_menu()
 
     checkpoint = 0
-    firstFormat = False
+    first_format = False
     sandy1 = False
     while memory.main.get_map() != 130:
         if memory.main.user_control():
@@ -127,17 +127,17 @@ def desert():
                 checkpoint += 1
             elif checkpoint == 53:
                 print("Going for first Sandragora and chest")
-                teleSlot = memory.main.get_item_slot(98)
-                if teleSlot == 255 or teleCount == memory.main.get_item_count_slot(
-                    teleSlot
+                tele_slot = memory.main.get_item_slot(98)
+                if tele_slot == 255 or tele_count == memory.main.get_item_count_slot(
+                    tele_slot
                 ):
                     pathing.set_movement([-44, 446])
                     xbox.tap_b()
                 else:
                     checkpoint += 1
                     print("Checkpoint reached:", checkpoint)
-            elif checkpoint == 12 and not firstFormat:
-                firstFormat = True
+            elif checkpoint == 12 and not first_format:
+                first_format = True
                 memory.main.full_party_format("desert9")
 
             # Sandragora skip logic
@@ -161,9 +161,11 @@ def desert():
 
             # After Sandy2 logic
             elif checkpoint == 64:
-                if itemsNeeded >= 1:  # Cannot move on if we're short on throwable items
+                if (
+                    items_needed >= 1
+                ):  # Cannot move on if we're short on throwable items
                     checkpoint -= 2
-                elif needSpeed:  # Cannot move on if we're short on speed spheres
+                elif need_speed:  # Cannot move on if we're short on speed spheres
                     checkpoint -= 2
                 else:
                     checkpoint += 1
@@ -195,7 +197,7 @@ def desert():
                         checkpoint = 58
                 else:
                     battle.main.bikanel_battle_logic(
-                        [chargeState, needSpeed, needPower, itemsNeeded],
+                        [charge_state, need_speed, need_power, items_needed],
                         sandy_fight_complete=sandy1,
                     )
 
@@ -206,32 +208,32 @@ def desert():
                 if checkpoint > 10:
                     if checkpoint < 23 and checkpoint > 10:
                         memory.main.full_party_format("desert9")
-                    elif not chargeState:
+                    elif not charge_state:
                         memory.main.full_party_format("desert1")
-                    elif needPower:
+                    elif need_power:
                         memory.main.full_party_format("desert1")
-                    elif needSpeed:
+                    elif need_speed:
                         memory.main.full_party_format("desert1")
-                    elif itemsNeeded >= 1:
+                    elif items_needed >= 1:
                         memory.main.full_party_format("desert1")
                     else:  # Catchall
                         memory.main.full_party_format("desert1")
 
                 # Next, figure out how many items we need.
-                stealItems = battle.main.update_steal_items_desert()
+                steal_items = battle.main.update_steal_items_desert()
                 print("-----------------------------")
-                print("Items status:", stealItems)
+                print("Items status:", steal_items)
                 print("-----------------------------")
-                itemsNeeded = 7 - sum(stealItems)
+                items_needed = 7 - sum(steal_items)
 
                 # Finally, check for other factors and report to console.
-                chargeState = memory.main.overdrive_state()[6] == 100
-                needSpeed, needPower = check_spheres()
+                charge_state = memory.main.overdrive_state()[6] == 100
+                need_speed, need_power = check_spheres()
                 print("-----------------------------Flag statuses")
-                print("Rikku is charged up:", chargeState)
-                print("Need more Speed spheres:", needSpeed)
-                print("Need more Power spheres:", needPower)
-                print("Number of additional items needed before Home:", itemsNeeded)
+                print("Rikku is charged up:", charge_state)
+                print("Need more Speed spheres:", need_speed)
+                print("Need more Power spheres:", need_power)
+                print("Number of additional items needed before Home:", items_needed)
                 print("-----------------------------Flag statuses (end)")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -261,7 +263,7 @@ def find_summoners():
             elif checkpoint == 63:
                 memory.main.click_to_event_temple(6)
                 checkpoint = 35
-            # Bonus room, blitzLoss only
+            # Bonus room, blitz loss only
             elif checkpoint in [81, 82, 83] and memory.main.get_map() == 286:
                 checkpoint = 84
             elif checkpoint == 86:

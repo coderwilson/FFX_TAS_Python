@@ -33,7 +33,7 @@ def south_pathing():
             elif checkpoint == 2 and not game_vars.get_blitz_win():
                 checkpoint = 20
             elif checkpoint == 21:
-                # memory.touchSaveSphere()
+                # memory.touch_save_sphere()
                 checkpoint += 1
             elif checkpoint == 25:
                 while memory.main.user_control():
@@ -84,22 +84,22 @@ def south_pathing():
 
 
 def agency_shop():
-    speedCount = memory.main.get_speed()
+    speed_count = memory.main.get_speed()
 
     # 15 plus two (Spherimorph, Flux), minus 1 because it starts on 1
-    speedNeeded = max(0, min(2, 14 - speedCount))
+    speed_needed = max(0, min(2, 14 - speed_count))
     if (
         memory.main.rng_seed() == 160
         and not game_vars.get_blitz_win()
         and game_vars.new_game_check()
     ):
-        speedNeeded = 0
+        speed_needed = 0
     grenade_slot = memory.main.get_item_slot(35)
     if grenade_slot == 255:
         cur_grenades = 0
     else:
         cur_grenades = memory.main.get_item_count_slot(grenade_slot)
-    total_grenades_needed = 3 + speedNeeded - cur_grenades
+    total_grenades_needed = 3 + speed_needed - cur_grenades
     # Don't panic if we have more grenades than expected.
     if total_grenades_needed < 0:
         total_grenades_needed = 0
@@ -171,7 +171,7 @@ def agency_shop():
         for i, handle in enumerate(all_equipment)
         if (
             i not in [tidus_longsword, auron_katana]
-            and handle.equipStatus == 255
+            and handle.equip_status == 255
             and not handle.is_brotherhood()
         )
     ]
@@ -188,8 +188,8 @@ def agency_shop():
             menu.sell_weapon(loc)
             if memory.main.get_gil_value() >= 9550:
                 break
-    # if not gameVars.getBlitzWin(): # This may come back later.
-    #    menu.buyWeapon(0, equip=False)
+    # if not game_vars.get_blitz_win(): # This may come back later.
+    #    menu.buy_weapon(0, equip=False)
     menu.buy_weapon(5, equip=False)
     memory.main.close_menu()
 
@@ -200,7 +200,7 @@ def agency():
     checkpoint = 0
 
     while memory.main.get_map() != 162:
-        strCount = memory.main.get_item_count_slot(memory.main.get_item_slot(87))
+        str_count = memory.main.get_item_count_slot(memory.main.get_item_slot(87))
         if memory.main.user_control():
             if checkpoint == 1:
                 while not memory.main.diag_skip_possible():
@@ -218,9 +218,9 @@ def agency():
                 checkpoint += 1
             elif checkpoint == 7:
                 if not game_vars.csr():
-                    kimahriAffection = memory.main.affection_array()[3]
-                    print("Kimahri affection, ", kimahriAffection)
-                    while memory.main.affection_array()[3] == kimahriAffection:
+                    kimahri_affection = memory.main.affection_array()[3]
+                    print("Kimahri affection, ", kimahri_affection)
+                    while memory.main.affection_array()[3] == kimahri_affection:
                         pathing.set_movement([27, -44])
                         xbox.tap_b()
                     print("Updated, full affection array:")
@@ -247,7 +247,7 @@ def agency():
             elif (
                 checkpoint == 9
                 and (game_vars.nemesis() or not game_vars.get_blitz_win())
-                and strCount < 3
+                and str_count < 3
             ):
                 pathing.set_movement([-73, 45])
                 xbox.tap_b()
@@ -268,19 +268,19 @@ def agency():
 def north_pathing():
     memory.main.click_to_control()
 
-    lStrikeCount = memory.main.l_strike_count()
-    lunarSlot = memory.main.get_item_slot(56) != 255
+    l_strike_count = memory.main.l_strike_count()
+    lunar_slot = memory.main.get_item_slot(56) != 255
 
     checkpoint = 0
     while memory.main.get_map() != 110:
         if memory.main.user_control():
             # Lightning dodging
-            if memory.main.dodge_lightning(lStrikeCount):
+            if memory.main.dodge_lightning(l_strike_count):
                 print("Dodge")
-                lStrikeCount = memory.main.l_strike_count()
+                l_strike_count = memory.main.l_strike_count()
             elif game_vars.csr() and checkpoint == 14:
                 checkpoint = 16
-            elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunarSlot:
+            elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunar_slot:
                 checkpoint -= 2
                 print("No lunar curtain. Checkpoint:", checkpoint)
 
@@ -295,7 +295,7 @@ def north_pathing():
                 xbox.menu_b()
             if screen.battle_screen():
                 battle.main.thunder_plains(1)
-                lunarSlot = memory.main.get_item_slot(56) != 255
+                lunar_slot = memory.main.get_item_slot(56) != 255
             elif memory.main.menu_open():
                 xbox.tap_b()
 

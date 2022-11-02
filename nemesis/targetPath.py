@@ -22,11 +22,11 @@ def set_movement(target) -> bool:
 
     Ly = fX * (eX - pX) + rX * (eY - pY)
     Lx = fY * (eX - pX) + rY * (eY - pY)
-    sumsUp = abs(Lx) + abs(Ly)
-    if sumsUp == 0:
-        sumsUp = 0.01
-    Lx /= sumsUp
-    Ly /= sumsUp
+    sums_up = abs(Lx) + abs(Ly)
+    if sums_up == 0:
+        sums_up = 0.01
+    Lx /= sums_up
+    Ly /= sums_up
     if abs(Lx) > abs(Ly):
         Ly = copysign(Ly / Lx if Lx else 0, Ly)
         Lx = copysign(1, Lx)
@@ -35,7 +35,7 @@ def set_movement(target) -> bool:
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
-    # memory.waitFrames(frames=1)
+    # memory.wait_frames(frames=1)
 
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 9:
         return True  # Checkpoint reached

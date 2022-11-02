@@ -447,11 +447,11 @@ def click_to_control_special():
     waitCounter = 0
     logger.debug("Awaiting control (clicking)")
     while not user_control():
-        FFXC.set_value("BtnB", 1)
-        FFXC.set_value("BtnY", 1)
+        FFXC.set_value("btn_b", 1)
+        FFXC.set_value("btn_y", 1)
         wait_frames(30 * 0.035)
-        FFXC.set_value("BtnB", 0)
-        FFXC.set_value("BtnY", 0)
+        FFXC.set_value("btn_b", 0)
+        FFXC.set_value("btn_y", 0)
         wait_frames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 10000 == 0:
@@ -462,12 +462,12 @@ def click_to_control_special():
 
 def click_to_event():
     while user_control():
-        FFXC.set_value("BtnB", 1)
+        FFXC.set_value("btn_b", 1)
         if game_vars.use_pause():
             wait_frames(2)
         else:
             wait_frames(1)
-        FFXC.set_value("BtnB", 0)
+        FFXC.set_value("btn_b", 0)
         if game_vars.use_pause():
             wait_frames(3)
         else:
@@ -1665,24 +1665,24 @@ def diag_skip_possible_old():
 
 def diag_skip_possible():
     global baseValue
-    if auditory_dialog_playing() and not game_vars.accessibilityVars()[1]:
-        #print("Skip 2")
+    if auditory_dialog_playing() and not game_vars.accessibility_vars()[1]:
+        # print("Skip 2")
         return False
     else:
         key = baseValue + 0x0085A03C
         if process.readBytes(key, 1) == 1:
-            #print("Skip 3")
-            if game_vars.accessibilityVars()[2]:
+            # print("Skip 3")
+            if game_vars.accessibility_vars()[2]:
                 # Placeholder for accessibility, to be implemented later.
                 pass
             return True
         else:
-            #print("Skip 4")
+            # print("Skip 4")
             return False
 
 
 def cutscene_skip_possible():
-    if not game_vars.accessibilityVars()[0]:
+    if not game_vars.accessibility_vars()[0]:
         return False
     global baseValue
     key = baseValue + 0x00D2A008
@@ -1736,11 +1736,11 @@ def click_to_story_progress(destination):
     print("Story goal:", destination, "| Awaiting progress state:", currentState)
     while currentState < destination:
         if menu_control():
-            FFXC.set_value("BtnB", 1)
-            FFXC.set_value("BtnA", 1)
+            FFXC.set_value("btn_b", 1)
+            FFXC.set_value("btn_a", 1)
             wait_frames(1)
-            FFXC.set_value("BtnB", 0)
-            FFXC.set_value("BtnA", 0)
+            FFXC.set_value("btn_b", 0)
+            FFXC.set_value("btn_a", 0)
             wait_frames(1)
         if counter % 100000 == 0:
             print(
@@ -1823,28 +1823,28 @@ def full_party_format(front_line, *, full_menu_close=True):
                 wait_frames(1)
         while menu_number() != 14:
             xbox.tap_b()
-        startPos = 0
+        start_pos = 0
         while Counter(order[:3]) != Counter(orderFinal[:3]):
             print("==Full Party Format function, original")
             # Select target in the wrong spot.
             print("Selecting start position")
-            if order[startPos] == orderFinal[startPos]:
-                while order[startPos] == orderFinal[startPos] and order != orderFinal:
-                    startPos += 1
-                    if startPos == partyMembers:
-                        startPos = 0
+            if order[start_pos] == orderFinal[start_pos]:
+                while order[start_pos] == orderFinal[start_pos] and order != orderFinal:
+                    start_pos += 1
+                    if start_pos == partyMembers:
+                        start_pos = 0
             print(
                 "Character",
-                name_from_number(orderFinal[startPos]),
+                name_from_number(orderFinal[start_pos]),
                 "should be in position",
-                startPos,
+                start_pos,
             )
 
             # Set target, end position
             print("Selecting destination position.")
             endPos = 0
-            if orderFinal[startPos] != order[endPos]:
-                while orderFinal[startPos] != order[endPos] and order != orderFinal:
+            if orderFinal[start_pos] != order[endPos]:
+                while orderFinal[start_pos] != order[endPos] and order != orderFinal:
                     endPos += 1
 
             print(
@@ -1855,18 +1855,18 @@ def full_party_format(front_line, *, full_menu_close=True):
             )
 
             print("Looking for character.")
-            if startPos < 3 and endPos < 3:
-                startPos += 1
-                if startPos == partyMembers:
-                    startPos = 0
+            if start_pos < 3 and endPos < 3:
+                start_pos += 1
+                if start_pos == partyMembers:
+                    start_pos = 0
                 continue
 
             # Move cursor to start position
             print("Moving to start position")
-            if party_format_cursor_1() != startPos:
+            if party_format_cursor_1() != start_pos:
                 # print("Cursor not in right spot")
-                while party_format_cursor_1() != startPos:
-                    menu_direction(party_format_cursor_1(), startPos, partyMembers)
+                while party_format_cursor_1() != start_pos:
+                    menu_direction(party_format_cursor_1(), start_pos, partyMembers)
                     if game_vars.use_pause():
                         wait_frames(1)
 
@@ -1882,9 +1882,9 @@ def full_party_format(front_line, *, full_menu_close=True):
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
             print("Start and destination positions have been swapped.")
-            startPos += 1
-            if startPos == partyMembers:
-                startPos = 0
+            start_pos += 1
+            if start_pos == partyMembers:
+                start_pos = 0
 
             print("Reporting results")
             print("Converting from formation:")
@@ -2109,12 +2109,12 @@ def miihen_guy_coords():
 
 
 def actor_index(actor_num: int = 41):
-    actorIndex = 255
+    actor_index = 255
     for x in range(get_actor_array_size()):
         actorMem = get_actor_id(x)
         if actor_num == actorMem:
-            actorIndex = x
-    return actorIndex
+            actor_index = x
+    return actor_index
 
 
 def mrr_guy_coords():
@@ -2396,7 +2396,7 @@ class Egg:
         self.x = egg_x(self.num)
         self.y = egg_y(self.num)
         self.distance = get_egg_distance(self.num)
-        self.eggLife = get_egg_life(egg_num)
+        self.egg_life = get_egg_life(egg_num)
         self.eggPicked = get_egg_picked(egg_num)
 
         if self.distance != 0 and self.eggPicked == 0:
@@ -2405,15 +2405,15 @@ class Egg:
             self.isActive = False
 
         if self.eggPicked == 1:
-            self.goForEgg = False
-        elif self.eggLife > 100 and self.distance > 100:
-            self.goForEgg = False
+            self.go_for_egg = False
+        elif self.egg_life > 100 and self.distance > 100:
+            self.go_for_egg = False
         elif self.distance > 250:
-            self.goForEgg = False
+            self.go_for_egg = False
         elif self.distance == 0:
-            self.goForEgg = False
+            self.go_for_egg = False
         else:
-            self.goForEgg = True
+            self.go_for_egg = True
 
     def report_vars(self):
         varArray = [
@@ -2421,7 +2421,7 @@ class Egg:
             self.isActive,
             self.x,
             self.y,
-            150 - self.eggLife,
+            150 - self.egg_life,
             self.eggPicked,
             self.distance,
         ]
@@ -2834,7 +2834,7 @@ class Equipment:
         self.equipOwner = get_equip_owner(equip_num)
         self.equipOwnerAlt = get_equip_owner(equip_num)
         self.equipAbilities = get_equip_abilities(equip_num)
-        self.equipStatus = get_equip_currently_equipped(equip_num)
+        self.equip_status = get_equip_currently_equipped(equip_num)
         self.slots = get_equip_slot_count(equip_num)
         self.exists = get_equip_exists(equip_num)
         self.brotherhood = is_equip_brotherhood(equip_num)
@@ -2846,7 +2846,7 @@ class Equipment:
         self.equipOwner = eOwner1
         self.equipOwnerAlt = eOwner2
         self.equipAbilities = eAbilities
-        self.equipStatus = 0
+        self.equip_status = 0
         self.slots = eSlots
         self.exists = 1
         self.brotherhood = False
@@ -2866,7 +2866,7 @@ class Equipment:
         return False
 
     def is_equipped(self):
-        return self.equipStatus
+        return self.equip_status
 
     def slot_count(self):
         return self.slots
@@ -3483,68 +3483,68 @@ def gt_inner_ring():
 
 
 def get_save_sphere_details():
-    mapVal = get_map()
+    map_val = get_map()
     storyVal = get_story_progress()
-    print("Map:", mapVal, "| Story:", storyVal)
+    print("Map:", map_val, "| Story:", storyVal)
     x = 0
     y = 0
     diag = 0
-    if mapVal == 389:
+    if map_val == 389:
         # Ammes
         x = 994
         y = -263
         diag = 9
-    if mapVal == 49:
+    if map_val == 49:
         # Baaj
         x = 230
         y = -215
         diag = 17
-    if mapVal == 63:
+    if map_val == 63:
         # Before Klikk
         x = -100
         y = 143
         diag = 29
-    if mapVal == 64:
+    if map_val == 64:
         # Before Tros
         x = 5
         y = -170
         diag = 3
-    if mapVal == 19:
+    if map_val == 19:
         # Besaid beach
         x = -310
         y = -475
         diag = 48
-    if mapVal == 65:
+    if map_val == 65:
         # Kilika - before Geneaux
         x = -3
         y = 175
         diag = 46
-    if mapVal == 88:
+    if map_val == 88:
         # Luca before Oblitzerator
         x = 175
         y = -310
         diag = 62
-    if mapVal == 123:
+    if map_val == 123:
         # Luca after Oblitzerator
         x = -270
         y = -45
         diag = 90
-    if mapVal == 171:
+    if map_val == 171:
         # Mi'ihen agency
         x = 35
         y = -10
         diag = 85
-    if mapVal == 115:
+    if map_val == 115:
         # Old Road
         x = 48
         y = -910
         diag = 40
-    if mapVal == 59 and get_story_progress() > 1000:
+    if map_val == 59 and get_story_progress() > 1000:
         # Miihen last screen, late game
         x = 15
         y = 125
         diag = 121
-    if mapVal == 92:
+    if map_val == 92:
         # MRR
         x = 5
         y = -740
@@ -3552,17 +3552,17 @@ def get_save_sphere_details():
             diag = 39
         else:
             diag = 43  # Nemesis run
-    if mapVal == 119:
+    if map_val == 119:
         # Battle Site
         x = -55
         y = 3335
         diag = 115
-    if mapVal == 110:
+    if map_val == 110:
         # Mac woods start
         x = 255
         y = -15
         diag = 84
-    if mapVal == 221:
+    if map_val == 221:
         # Mac woods before Spherimorph
         x = 195
         y = -123
@@ -3570,37 +3570,37 @@ def get_save_sphere_details():
             diag = 19
         else:
             diag = 23
-    if mapVal == 106:
+    if map_val == 106:
         # Mac Temple entrance
         x = -22
         y = -127
         diag = 68
-    if mapVal == 153:
+    if map_val == 153:
         # Mac Temple exit
         x = 820
         y = -235
         diag = 44
-    if mapVal == 129:
+    if map_val == 129:
         # Bikanel start
         x = 19
         y = -60
         diag = 35
-    if mapVal == 136:
+    if map_val == 136:
         # Bikanel Rikku tent
         x = 205
         y = 30
         diag = 59
-    if mapVal == 130:
+    if map_val == 130:
         # Home entrance screen
         x = 61
         y = 92
         diag = 25
-    if mapVal == 208:
+    if map_val == 208:
         # Highbridge before Natus
         x = 33
         y = 1251
         diag = 124
-    if mapVal == 194:
+    if map_val == 194:
         # Airship while rescuing Yuna, cockpit
         x = -275
         y = 344
@@ -3608,99 +3608,99 @@ def get_save_sphere_details():
             diag = 217
         else:  # Before Shedinja/Highbridge
             diag = 220
-    if mapVal == 266:
+    if map_val == 266:
         x = -305
         y = 185
         if get_story_progress() < 3000:  # NEA trip
             diag = 39
         else:
             diag = 43
-    if mapVal == 285:
+    if map_val == 285:
         # After Flux
         x = 140
         y = -640
         diag = 84
-    if mapVal == 316:
+    if map_val == 316:
         # Just before Zan trials
         x = -20
         y = 358
         diag = 25
-    if mapVal == 318:
+    if map_val == 318:
         # Before Yunalesca
         x = -5
         y = -170
         diag = 26
-    if mapVal == 140:
+    if map_val == 140:
         # Thunder plains
         x = -45
         y = -870
         diag = 77
-    if mapVal == 322:  # Nemesis run
+    if map_val == 322:  # Nemesis run
         # Inside Sin, next to airship
         x = 225
         y = -250
         diag = 15
-    if mapVal == 19:  # Nemesis run
+    if map_val == 19:  # Nemesis run
         # Besaid beach
         x = -310
         y = -475
         diag = 55
-    if mapVal == 263:  # Nemesis run
+    if map_val == 263:  # Nemesis run
         # Thunder Plains agency
         x = -30
         y = -10
         diag = 114
-    if mapVal == 307:  # Nemesis run
+    if map_val == 307:  # Nemesis run
         # Monster Arena
         x = 4
         y = 5
         diag = 166
-    if mapVal == 98:  # Nemesis run
+    if map_val == 98:  # Nemesis run
         # Kilika docks
         x = 46
         y = -252
         diag = 34
-    if mapVal == 82:  # Nemesis run
+    if map_val == 82:  # Nemesis run
         # Djose temple
         x = 100
         y = -240
         diag = 89
-    if mapVal == 137:  # Nemesis run
+    if map_val == 137:  # Nemesis run
         # Bikanel Desert
         x = -15
         y = 240
         diag = 31
-    if mapVal == 313:  # Nemesis run
+    if map_val == 313:  # Nemesis run
         # Zanarkand campfire
         x = 135
         y = -1
         diag = 4
-    if mapVal == 327:  # Nemesis run
+    if map_val == 327:  # Nemesis run
         # Sin, end zone
         x = -37
         y = -508
         diag = 10
-    if mapVal == 258:  # Nemesis run
+    if map_val == 258:  # Nemesis run
         # Omega (only used in Nemesis)
         x = -112
         y = -1066
         diag = 23
-    if mapVal == 307:
+    if map_val == 307:
         # Monster Arena (only used in Nemesis)
         x = 2
         y = 5
         diag = 166
-    if mapVal == 259:  # Nemesis run
+    if map_val == 259:  # Nemesis run
         # Gagazet (only used in Nemesis)
         x = -59
         y = 99
         diag = 219
-    if mapVal == 82:
+    if map_val == 82:
         # Djose temple (only used in Nemesis)
         x = 97
         y = -241
         diag = 89
-    if mapVal == 128:  # Nemesis run
+    if map_val == 128:  # Nemesis run
         # MRR upper lift (only used in Nemesis)
         x = 230
         y = 140
@@ -3725,7 +3725,7 @@ def touch_save_sphere(save_cursor_num: int = 0):
         pass
     wait_frames(1)
     print("Mark 2")
-    # waitFrames(300)
+    # wait_frames(300)
     inc = 0
 
     while not (
@@ -3810,7 +3810,7 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
         pass
     wait_frames(1)
     print("Mark 2")
-    # waitFrames(300)
+    # wait_frames(300)
 
     xbox.tap_a()
     # while saveMenuCursor() == 0:
