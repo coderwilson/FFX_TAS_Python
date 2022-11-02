@@ -44,6 +44,7 @@ import vars
 import xbox
 from gamestate import game
 
+FFXC = xbox.controller_handle()
 
 def configuration_setup():
     game_vars = vars.vars_handle()
