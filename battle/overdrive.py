@@ -19,56 +19,56 @@ def auron(style="dragon fang"):
             xbox.tap_b()
         print("Starting")
         for i in range(2):  # Do it twice in case there's a miss on the first one.
-            FFXC.set_value("Dpad", 2)  # down
+            FFXC.set_value("d_pad", 2)  # down
             memory.main.wait_frames(1)
-            FFXC.set_value("Dpad", 0)
-            FFXC.set_value("Dpad", 4)  # left
+            FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 4)  # left
             memory.main.wait_frames(1)
-            FFXC.set_value("Dpad", 0)
-            FFXC.set_value("Dpad", 1)  # up
+            FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 1)  # up
             memory.main.wait_frames(1)
-            FFXC.set_value("Dpad", 0)
-            FFXC.set_value("Dpad", 8)  # right
+            FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 8)  # right
             memory.main.wait_frames(1)
-            FFXC.set_value("Dpad", 0)
-            FFXC.set_value("BtnShoulderL", 1)
+            FFXC.set_value("d_pad", 0)
+            FFXC.set_value("btn_shoulder_l", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnShoulderL", 0)
-            FFXC.set_value("BtnShoulderR", 1)
+            FFXC.set_value("btn_shoulder_l", 0)
+            FFXC.set_value("btn_shoulder_r", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnShoulderR", 0)
-            FFXC.set_value("BtnA", 1)
+            FFXC.set_value("btn_shoulder_r", 0)
+            FFXC.set_value("btn_a", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnA", 0)
-            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("btn_a", 0)
+            FFXC.set_value("btn_b", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnB", 0)
+            FFXC.set_value("btn_b", 0)
     elif style == "shooting star":
         battle.main._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
         while not memory.main.auron_overdrive_active():
             xbox.tap_b()
         for i in range(2):  # Do it twice in case there's a miss on the first one.
-            FFXC.set_value("BtnY", 1)
+            FFXC.set_value("btn_y", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnY", 0)
-            FFXC.set_value("BtnA", 1)
+            FFXC.set_value("btn_y", 0)
+            FFXC.set_value("btn_a", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnA", 0)
-            FFXC.set_value("BtnX", 1)
+            FFXC.set_value("btn_a", 0)
+            FFXC.set_value("btn_x", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnX", 0)
-            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("btn_x", 0)
+            FFXC.set_value("btn_b", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnB", 0)
-            FFXC.set_value("Dpad", 4)  # left
+            FFXC.set_value("btn_b", 0)
+            FFXC.set_value("d_pad", 4)  # left
             memory.main.wait_frames(1)
-            FFXC.set_value("Dpad", 0)
-            FFXC.set_value("Dpad", 8)  # right
+            FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 8)  # right
             memory.main.wait_frames(1)
-            FFXC.set_value("Dpad", 0)
-            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("d_pad", 0)
+            FFXC.set_value("btn_b", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("BtnB", 0)
+            FFXC.set_value("btn_b", 0)
 
 
 def kimahri(pos):

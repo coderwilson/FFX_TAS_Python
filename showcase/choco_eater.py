@@ -10,13 +10,13 @@ def engage():
     input("Confirm that CSR is running!!!")
     while not memory.main.battle_active():
         if memory.main.user_control():
-            pDownSlot = memory.main.get_item_slot(6)
+            p_down_slot = memory.main.get_item_slot(6)
             if memory.main.get_map() == 58:
                 memory.main.full_party_format("tidkimwak")
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-            # elif checkpoint == 2 and memory.main.getItemCountSlot(pDownSlot) >= 10:
+            # elif checkpoint == 2 and memory.main.get_item_count_slot(p_down_slot) >= 10:
             #    checkpoint = 4
             elif checkpoint in [2, 3]:
                 checkpoint = 4

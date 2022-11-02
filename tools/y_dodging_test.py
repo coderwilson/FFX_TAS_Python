@@ -6,15 +6,15 @@ import xbox
 FFXC = xbox.FFXC
 
 memory.main.start()
-lStrikeCount = memory.main.l_strike_count()
-print("Starting count of lightning strikes:", lStrikeCount)
-lStrikeStart = lStrikeCount
+l_strike_count = memory.main.l_strike_count()
+print("Starting count of lightning strikes:", l_strike_count)
+lStrikeStart = l_strike_count
 
 complete = False
-while lStrikeCount - lStrikeStart < 250:
-    if memory.main.dodge_lightning(lStrikeCount):
-        lStrikeCount = memory.main.l_strike_count()
-        print("Dodge,", lStrikeCount - lStrikeStart)
+while l_strike_count - lStrikeStart < 250:
+    if memory.main.dodge_lightning(l_strike_count):
+        l_strike_count = memory.main.l_strike_count()
+        print("Dodge,", l_strike_count - lStrikeStart)
     elif memory.main.user_control():
         pathing.set_movement([62, 780])
 

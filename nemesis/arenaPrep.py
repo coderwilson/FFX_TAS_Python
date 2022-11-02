@@ -6,11 +6,10 @@ import nemesis.arenaSelect
 import nemesis.menu
 import nemesis.targetPath
 import rng_track
+import save_sphere
 import screen
 import vars
 import xbox
-import menu
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -95,19 +94,19 @@ def unlock_omega():
     while memory.main.diag_progress_flag() == 0:
         print(memory.main.get_coords())
         if memory.main.get_coords()[0] < 65:
-            FFXC.set_value("Dpad", 8)
+            FFXC.set_value("d_pad", 8)
         if memory.main.get_coords()[0] < 70:
             nemesis.menu.grid_right()
         elif memory.main.get_coords()[0] > 78:
-            FFXC.set_value("Dpad", 4)
+            FFXC.set_value("d_pad", 4)
         elif memory.main.get_coords()[0] > 73:
             nemesis.menu.grid_left()
         elif memory.main.get_coords()[1] > -28:
-            FFXC.set_value("Dpad", 2)
+            FFXC.set_value("d_pad", 2)
         elif memory.main.get_coords()[1] > -34:
             nemesis.menu.grid_down()
         elif memory.main.get_coords()[1] < -40:
-            FFXC.set_value("Dpad", 1)
+            FFXC.set_value("d_pad", 1)
         elif memory.main.get_coords()[1] < -37:
             nemesis.menu.grid_up()
         else:
@@ -123,83 +122,83 @@ def get_save_sphere_details():
 
 
 def get_save_sphere_details_old():
-    mapVal = memory.main.get_map()
+    map_val = memory.main.get_map()
     storyVal = memory.main.get_story_progress()
-    print("Map:", mapVal, "| Story:", storyVal)
+    print("Map:", map_val, "| Story:", storyVal)
     x = 0
     y = 0
     diag = 0
-    if mapVal == 322:
+    if map_val == 322:
         # Inside Sin, next to airship
         x = 225
         y = -250
         diag = 15
-    if mapVal == 19:
+    if map_val == 19:
         # Besaid beach
         x = -310
         y = -475
         diag = 55
-    if mapVal == 263:
+    if map_val == 263:
         # Thunder Plains agency
         x = -30
         y = -10
         diag = 114
-    if mapVal == 307:
+    if map_val == 307:
         # Monster Arena
         x = 4
         y = 5
         diag = 166
-    if mapVal == 98:
+    if map_val == 98:
         # Kilika docks
         x = 46
         y = -252
         diag = 34
-    if mapVal == 92:
+    if map_val == 92:
         # MRR start
         x = -1
         y = -740
         diag = 43
-    if mapVal == 266:
+    if map_val == 266:
         # Calm Lands Gorge
         x = -310
         y = 190
         diag = 43
-    if mapVal == 82:
+    if map_val == 82:
         # Djose temple
         x = 100
         y = -240
         diag = 89
-    if mapVal == 221:
+    if map_val == 221:
         # Macalania Woods, near Spherimorph
         x = 197
         y = -120
         diag = 23
-    if mapVal == 137:
+    if map_val == 137:
         # Bikanel Desert
         x = -15
         y = 240
         diag = 31
-    if mapVal == 313:
+    if map_val == 313:
         # Zanarkand campfire
         x = 135
         y = -1
         diag = 4
-    if mapVal == 327:
+    if map_val == 327:
         # Sin, end zone
         x = -37
         y = -508
         diag = 10
-    if mapVal == 258:
+    if map_val == 258:
         # Omega (only used in Nemesis)
         x = -112
         y = -1066
         diag = 23
-    if mapVal == 259:
+    if map_val == 259:
         # Gagazet (only used in Nemesis)
         x = -59
         y = 99
         diag = 219
-    if mapVal == 128:
+    if map_val == 128:
         # MRR upper lift (only used in Nemesis)
         x = 230
         y = 140
@@ -313,109 +312,109 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
 
 
 def advanced_complete_check():
-    encounterID = memory.main.get_encounter_id()
+    encounter_id = memory.main.get_encounter_id()
     arenaArray = memory.main.arena_array()
     # Common monsters
     if False:
         pass
 
     # Inside Sin
-    elif encounterID == 374:  # Ahriman
+    elif encounter_id == 374:  # Ahriman
         print("For this battle, count:", arenaArray[37])
         if arenaArray[37] == 10:
             return True
-    elif encounterID in [375, 380]:  # Exoray (with a bonus Ahriman)
+    elif encounter_id in [375, 380]:  # Exoray (with a bonus Ahriman)
         print("For this battle, count:", arenaArray[93])
         if arenaArray[93] == 10 and arenaArray[37] == 10:
             return True
-    elif encounterID in [376, 381]:  # Adamantoise
+    elif encounter_id in [376, 381]:  # Adamantoise
         print("For this battle, count:", arenaArray[81])
         if arenaArray[81] == 10:
             return True
-    elif encounterID in [377, 382]:  # Both kinds of Gemini
+    elif encounter_id in [377, 382]:  # Both kinds of Gemini
         print("For this battle, count:", arenaArray[77])
         print("For this battle, count:", arenaArray[78])
         if arenaArray[77] == 10 and arenaArray[78] == 10:
             return True
-    elif encounterID in [378, 384]:  # Behemoth King
+    elif encounter_id in [378, 384]:  # Behemoth King
         print("For this battle, count:", arenaArray[70])
         if arenaArray[70] == 10:
             return True
-    elif encounterID == 383:  # Demonolith
+    elif encounter_id == 383:  # Demonolith
         print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
-    elif encounterID == 385:  # Great Malboro
+    elif encounter_id == 385:  # Great Malboro
         print("For this battle, count:", arenaArray[56])
         if arenaArray[56] == 10:
             return True
-    elif encounterID == 386:  # Barbatos
+    elif encounter_id == 386:  # Barbatos
         print("For this battle, count:", arenaArray[90])
         if arenaArray[90] == 10:
             return True
-    elif encounterID == 387:  # Wraith
+    elif encounter_id == 387:  # Wraith
         print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
 
     # Omega dungeon
-    elif encounterID == 421:  # Master Coeurl and Floating Death
+    elif encounter_id == 421:  # Master Coeurl and Floating Death
         print("For this battle, count:", arenaArray[74])
         print("For this battle, count:", arenaArray[102])
         if arenaArray[74] == 10 and arenaArray[102] == 10:
             return True
-    elif encounterID == 422:  # Halma and Spirit
+    elif encounter_id == 422:  # Halma and Spirit
         print("For this battle, count:", arenaArray[96])
         print("For this battle, count:", arenaArray[101])
         if arenaArray[96] == 10 and arenaArray[101] == 10:
             return True
-    elif encounterID == 423:  # Zaurus and Floating Death
+    elif encounter_id == 423:  # Zaurus and Floating Death
         print("For this battle, count:", arenaArray[100])
         print("For this battle, count:", arenaArray[102])
         if arenaArray[100] == 10 and arenaArray[102] == 10:
             return True
-    elif encounterID == 424:  # Black Element and Spirit
+    elif encounter_id == 424:  # Black Element and Spirit
         print("For this battle, count:", arenaArray[67])
         print("For this battle, count:", arenaArray[96])
         if arenaArray[67] == 10 and arenaArray[96] == 10:
             return True
-    elif encounterID == 425:  # Varuna
+    elif encounter_id == 425:  # Varuna
         print("For this battle, count:", arenaArray[82])
         if arenaArray[82] == 10:
             return True
-    elif encounterID == 426:  # Master Tonberry
+    elif encounter_id == 426:  # Master Tonberry
         print("For this battle, count:", arenaArray[99])
         if arenaArray[99] == 10:
             return True
-    elif encounterID == 428:  # Machea (blade thing)
+    elif encounter_id == 428:  # Machea (blade thing)
         print("For this battle, count:", arenaArray[103])
         if arenaArray[103] == 10:
             return True
-    elif encounterID == 430:  # Demonolith x2
+    elif encounter_id == 430:  # Demonolith x2
         print("For this battle, count:", arenaArray[75])
         if arenaArray[75] == 10:
             return True
-    elif encounterID in [432, 433, 434, 435, 436]:  # Just Zaurus
+    elif encounter_id in [432, 433, 434, 435, 436]:  # Just Zaurus
         print("For this battle, count:", arenaArray[100])
         if arenaArray[100] == 10:
             return True
-    elif encounterID == 437:  # Puroboros
+    elif encounter_id == 437:  # Puroboros
         print("For this battle, count:", arenaArray[95])
         if arenaArray[95] == 10:
             return True
-    elif encounterID == 438:  # Wraith
+    elif encounter_id == 438:  # Wraith
         print("For this battle, count:", arenaArray[97])
         if arenaArray[97] == 10:
             return True
 
     # Other
-    if encounterID in [429, 445]:
+    if encounter_id in [429, 445]:
         # Rock monsters, just leave.
         return True
-    if encounterID == 383:
+    if encounter_id == 383:
         # Demonolith inside Sin, not worth.
         return True
-    if encounterID == 427:
+    if encounter_id == 427:
         # Adamantoise in Omega, dealt with inside Sin
         return True
 
@@ -458,9 +457,9 @@ def advanced_battle_logic():
             print("---Regular battle:", memory.main.get_encounter_id())
             sleepPowder = False
             while memory.main.battle_active():
-                encounterID = memory.main.get_encounter_id()
+                encounter_id = memory.main.get_encounter_id()
                 if memory.main.turn_ready():
-                    if encounterID in [442]:
+                    if encounter_id in [442]:
                         # Damned malboros in Omega
                         battle.main.buddy_swap_yuna()
                         battle.main.aeon_summon(4)
@@ -470,7 +469,7 @@ def advanced_battle_logic():
                             auto_life()
                             autoLifeUsed = True
                         elif (
-                            encounterID == 383
+                            encounter_id == 383
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -480,7 +479,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif (
-                            encounterID == 426
+                            encounter_id == 426
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -490,7 +489,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif (
-                            encounterID == 430
+                            encounter_id == 430
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -500,7 +499,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif (
-                            encounterID == 437
+                            encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if memory.main.get_use_items_slot(41) < 100:
@@ -509,12 +508,12 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.use_skill(1)
-                        elif encounterID == 431:
+                        elif encounter_id == 431:
                             battle.main.tidus_flee()
                         else:
                             battle.main.use_skill(1)  # Quick hit
                     elif screen.turn_rikku():
-                        if encounterID in [377, 382]:
+                        if encounter_id in [377, 382]:
                             print(
                                 "Shining Gems for Gemini, better to save other items for other enemies."
                             )
@@ -525,7 +524,7 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID == 386:
+                        elif encounter_id == 386:
                             # Armor bomber guys
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
@@ -533,7 +532,7 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID in [430]:
+                        elif encounter_id in [430]:
                             # Demonolith
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
@@ -541,7 +540,7 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID == 422:
+                        elif encounter_id == 422:
                             # Provoke on Spirit
                             battle.main.use_special(
                                 position=3, target=21, direction="u"
@@ -552,13 +551,13 @@ def advanced_battle_logic():
                                 )
                             else:
                                 battle.main.defend()
-                        elif encounterID == 424:
+                        elif encounter_id == 424:
                             # Provoke on Spirit
                             battle.main.use_special(
                                 position=3, target=21, direction="r"
                             )
                         elif (
-                            encounterID == 425
+                            encounter_id == 425
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             # Varuna, use purifying salt to remove haste
@@ -566,7 +565,7 @@ def advanced_battle_logic():
                             battle.main.use_item(
                                 memory.main.get_use_items_slot(63), rikku_flee=False
                             )
-                        elif encounterID == 426:
+                        elif encounter_id == 426:
                             # Master Tonberry
                             if not sleepPowder:
                                 battle.main.use_item(
@@ -579,10 +578,10 @@ def advanced_battle_logic():
                                     )
                                 else:
                                     battle.main.defend()
-                        elif encounterID == 431:
+                        elif encounter_id == 431:
                             battle.main.tidus_flee()
                         elif (
-                            encounterID == 437
+                            encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
                             if not sleepPowder:
@@ -633,9 +632,9 @@ def bribe_battle(spare_change_value: int = 12000):
     print("Battle is complete.")
     while not memory.main.menu_open():
         pass
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
     print("Now back in control.")
 
 
@@ -670,7 +669,7 @@ def arena_npc():
 def arena_return(checkpoint: int = 0):
     if checkpoint == 0:
         air_ship_destination(dest_num=12)
-    # menu.equip_armor(character=gameVars.neArmor(),ability=0x801D)
+    # menu.equip_armor(character=game_vars.neArmor(),ability=0x801D)
 
     while memory.main.get_map() != 307:
         if memory.main.user_control():
@@ -718,14 +717,14 @@ def kilika_shop():
     # xbox.tapDown()
     # xbox.tapDown()
     # xbox.tapB()
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     # xbox.tapB() #Buy
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     # getEquipment(equip=False) #Tidus second catcher weapon
     # xbox.menuA()
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     # xbox.menuA()
-    # memory.waitFrames(30)
+    # memory.wait_frames(30)
     xbox.menu_a()
     xbox.tap_b()  # Exit
     memory.main.wait_frames(60)
@@ -900,11 +899,11 @@ def farm_feathers():
 
     while not memory.main.menu_open():
         pass
-    # memory.waitFrames(300)
+    # memory.wait_frames(300)
 
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(150)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
     print("Now back in control.")
     nemesis.arenaSelect.arena_menu_select(4)
 
@@ -1392,16 +1391,16 @@ def yojimbo_dialog():
     xbox.tap_b()
     memory.main.wait_frames(12)  # Eff it, just pay the man!
     # memory.clickToDiagProgress(5) #150,001
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # Xbox.tapDown()
     # Xbox.tapDown()
     # xbox.tapLeft()
     # xbox.tapDown()
     # xbox.tapDown()
     # xbox.tapB()
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # memory.clickToDiagProgress(5) #138,001
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # xbox.tapUp()
     # xbox.tapUp()
     # xbox.tapLeft()
@@ -1410,9 +1409,9 @@ def yojimbo_dialog():
     # xbox.tapUp()
     # xbox.tapUp()
     # xbox.tapB()
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # memory.clickToDiagProgress(5) #170,001
-    # memory.waitFrames(12)
+    # memory.wait_frames(12)
     # xbox.tapLeft()
     # xbox.tapUp()
     # xbox.tapUp()
@@ -1585,11 +1584,11 @@ def kilika_farm(cap_num: int = 1):
 
 
 def miihen_next(end_goal: int):
-    next1 = rng_track.coming_battles(area="mi'ihen_(newroad)", battleCount=2)[0]
-    next2 = rng_track.coming_battles(area="old_road", battleCount=2)[0]
-    next3 = rng_track.coming_battles(area="clasko_skip_screen", battleCount=2)[0]
-    next4 = rng_track.coming_battles(area="mrr_-_valley", battleCount=2)[0]
-    next6 = rng_track.coming_battles(area="mrr_-_precipice", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="mi'ihen_(newroad)", battle_count=2)[0]
+    next2 = rng_track.coming_battles(area="old_road", battle_count=2)[0]
+    next3 = rng_track.coming_battles(area="clasko_skip_screen", battle_count=2)[0]
+    next4 = rng_track.coming_battles(area="mrr_-_valley", battle_count=2)[0]
+    next6 = rng_track.coming_battles(area="mrr_-_precipice", battle_count=2)[0]
     farmArray1 = memory.main.arena_farm_check(
         zone="miihen", end_goal=end_goal, return_array=True
     )
@@ -1689,13 +1688,13 @@ def miihen_farm(cap_num: int = 1):
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
-    lastCP = checkpoint
+    last_cp = checkpoint
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
             # Checkpoint notify
-            if lastCP != checkpoint:
+            if last_cp != checkpoint:
                 print("Checkpoint reached: ", checkpoint)
-                lastCP = checkpoint
+                last_cp = checkpoint
             if checkpoint == 92:
                 FFXC.set_neutral()
                 while memory.main.user_control():
@@ -1717,7 +1716,7 @@ def miihen_farm(cap_num: int = 1):
                 checkpoint = 40
             elif checkpoint in [50, 63] and memory.main.get_map() == 79:  # Clasko map
                 # FFXC.set_neutral()
-                # memory.waitFrames(6)
+                # memory.wait_frames(6)
                 checkpoint += 1
             elif checkpoint == 60 and memory.main.get_map() == 92:  # MRR lower map
                 checkpoint += 1
@@ -1998,10 +1997,10 @@ def mrrFarm_old(capNum: int = 1):
 
 
 def djose_next(end_goal: int):
-    next1 = rng_track.coming_battles(area="djose_highroad_(back_half)", battleCount=2)[
+    next1 = rng_track.coming_battles(area="djose_highroad_(back_half)", battle_count=2)[
         0
     ]
-    next2 = rng_track.coming_battles(area="moonflow_(south)", battleCount=2)[0]
+    next2 = rng_track.coming_battles(area="moonflow_(south)", battle_count=2)[0]
     farmArray = memory.main.arena_farm_check(
         zone="djose", end_goal=end_goal, return_array=True
     )
@@ -2053,11 +2052,11 @@ def djose_farm(cap_num: int = 10):
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
-    lastCP = 0
+    last_cp = 0
     while not memory.main.get_map() in [194, 374]:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("Checkpoint reached: ", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
             if checkpoint in [7, 27, 45] and memory.main.get_map() == 93:
@@ -2121,10 +2120,10 @@ def djose_farm(cap_num: int = 10):
 
 def plains_next(end_goal: int):
     next1 = rng_track.coming_battles(
-        area="thunder_plains_(north)_(1_stone)", battleCount=2
+        area="thunder_plains_(north)_(1_stone)", battle_count=2
     )[0]
     next2 = rng_track.coming_battles(
-        area="thunder_plains_(south)_(2_stones)", battleCount=2
+        area="thunder_plains_(south)_(2_stones)", battle_count=2
     )[0]
     farmArray = memory.main.arena_farm_check(
         zone="tplains", end_goal=end_goal, return_array=True
@@ -2343,8 +2342,8 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
 
 
 def woods_next(end_goal: int):
-    next1 = rng_track.coming_battles(area="lake_macalania", battleCount=2)[0]
-    next2 = rng_track.coming_battles(area="macalania_woods", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="lake_macalania", battle_count=2)[0]
+    next2 = rng_track.coming_battles(area="macalania_woods", battle_count=2)[0]
     farmArray1 = memory.main.arena_farm_check(
         zone="maclake", end_goal=end_goal, return_array=True
     )
@@ -2504,9 +2503,9 @@ def mac_woods_old(cap_num: int = 10):
 
 
 def bikanel_next(end_goal: int):
-    next1 = rng_track.coming_battles(area="sanubia_desert_(central)", battleCount=1)[0]
-    next2 = rng_track.coming_battles(area="sanubia_desert_(ruins)", battleCount=1)[0]
-    next3 = rng_track.coming_battles(area="sanubia_desert_(west)", battleCount=1)[0]
+    next1 = rng_track.coming_battles(area="sanubia_desert_(central)", battle_count=1)[0]
+    next2 = rng_track.coming_battles(area="sanubia_desert_(ruins)", battle_count=1)[0]
+    next3 = rng_track.coming_battles(area="sanubia_desert_(west)", battle_count=1)[0]
     farmArray = memory.main.arena_farm_check(
         zone="bikanel", end_goal=end_goal, return_array=True
     )
@@ -2636,8 +2635,8 @@ def bikanel(cap_num: int = 10):
                 memory.main.arena_farm_check(
                     zone="bikanel", end_goal=cap_num, report=True
                 )
-                hpCheck = memory.main.get_hp()
-                if hpCheck[0] < 800:
+                hp_check = memory.main.get_hp()
+                if hp_check[0] < 800:
                     battle.main.heal_up(3)
                 prefArea = bikanel_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
@@ -2650,11 +2649,11 @@ def bikanel(cap_num: int = 10):
 
 
 def calm_next(end_goal: int, force_levels: int):
-    next1 = rng_track.coming_battles(area="calm_lands_(south)", battleCount=1)[0]
+    next1 = rng_track.coming_battles(area="calm_lands_(south)", battle_count=1)[0]
     next2 = rng_track.coming_battles(
-        area="calm_lands_(central-north-east)", battleCount=1
+        area="calm_lands_(central-north-east)", battle_count=1
     )[0]
-    next3 = rng_track.coming_battles(area="calm_lands_(north-west)", battleCount=1)[0]
+    next3 = rng_track.coming_battles(area="calm_lands_(north-west)", battle_count=1)[0]
     farmArray = memory.main.arena_farm_check(
         zone="calm", end_goal=end_goal, return_array=True
     )
@@ -2893,10 +2892,10 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
 
 
 def gagazet_next(end_goal: int):
-    next1 = rng_track.coming_battles(area="gagazet_(mountain)", battleCount=2)[0]
-    next2 = rng_track.coming_battles(area="gagazet_(cave)", battleCount=2)[0]
-    next3 = rng_track.coming_battles(area="zanarkand_(overpass)", battleCount=2)[0]
-    next4 = rng_track.coming_battles(area="gagazet_(underwater)", battleCount=2)[0]
+    next1 = rng_track.coming_battles(area="gagazet_(mountain)", battle_count=2)[0]
+    next2 = rng_track.coming_battles(area="gagazet_(cave)", battle_count=2)[0]
+    next3 = rng_track.coming_battles(area="zanarkand_(overpass)", battle_count=2)[0]
+    next4 = rng_track.coming_battles(area="gagazet_(underwater)", battle_count=2)[0]
     farmArray = memory.main.arena_farm_check(
         zone="gagazet", end_goal=end_goal, return_array=True
     )
@@ -2977,12 +2976,12 @@ def gagazet(cap_num: int = 10):
         neArmor = False
     print("Next area: ", prefArea)
 
-    lastCP = 0
+    last_cp = 0
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
-        if lastCP != checkpoint:
+        if last_cp != checkpoint:
             print("+++ Checkpoint reached: ", checkpoint)
-            lastCP = checkpoint
+            last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
             if checkpoint == 9 and memory.main.get_map() == 310:
@@ -3270,8 +3269,8 @@ def gagazet_3(cap_num: int = 10):  # No longer used
 
 
 def fayth_next(endGoal: int):
-    next1 = rng_track.coming_battles(area="cave_(white_zone)", battleCount=1)[0]
-    next2 = rng_track.coming_battles(area="cave_(green_zone)", battleCount=1)[0]
+    next1 = rng_track.coming_battles(area="cave_(white_zone)", battle_count=1)[0]
+    next2 = rng_track.coming_battles(area="cave_(green_zone)", battle_count=1)[0]
     farmArray = memory.main.arena_farm_check(
         zone="stolenfayth", end_goal=endGoal, return_array=True
     )
@@ -3406,8 +3405,8 @@ def stolen_fayth_cave(cap_num: int = 10):
                     battle_farm_all(fayth_cave=True)
 
                 memory.main.click_to_control()
-                hpCheck = memory.main.get_hp()
-                if hpCheck[0] < 795:
+                hp_check = memory.main.get_hp()
+                if hp_check[0] < 795:
                     battle.main.heal_up(3)
                 prefArea = fayth_next(endGoal=cap_num)
                 print("Next area: ", prefArea)
@@ -3551,12 +3550,12 @@ def omega_ruins(cap_num: int = 10):
                 xbox.tap_b()
 
     # Keep this so we can add in the Omega kill later.
-    # if gameVars.neArmor() == 0:
-    #    menu.equip_armor(character=gameVars.neArmor(),ability=0x8056) #Auto-Haste
-    # elif gameVars.neArmor() in [4,6]:
-    #    menu.equip_armor(character=gameVars.neArmor(),ability=0x800A) #Auto-Phoenix
+    # if game_vars.neArmor() == 0:
+    #    menu.equip_armor(character=game_vars.neArmor(),ability=0x8056) #Auto-Haste
+    # elif game_vars.neArmor() in [4,6]:
+    #    menu.equip_armor(character=game_vars.neArmor(),ability=0x800A) #Auto-Phoenix
     # else:
-    #    menu.equip_armor(character=gameVars.neArmor(),ability=99) #Unequip
+    #    menu.equip_armor(character=game_vars.neArmor(),ability=99) #Unequip
 
 
 def get_equipment(equip=True):

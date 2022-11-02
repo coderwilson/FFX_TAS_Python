@@ -66,7 +66,7 @@ class AllVars:
 
         # ----Equipment
         self.zombieWeaponVal = config_vars.get("zombieWeaponVal", 255)  # Default 255
-        self.lStrikeCount = config_vars.get("lStrikeCount", 1)  # Default 0
+        self.l_strike_count = config_vars.get("l_strike_count", 1)  # Default 0
 
         # ----RNG Manip
         self.yellows = config_vars.get("yellows", 0)  # ?
@@ -75,7 +75,7 @@ class AllVars:
 
         # ----Other
         self.newGame = config_vars.get("newGame", False)  # ?
-        self.selfDestruct = config_vars.get("selfDestruct", False)  # Default False
+        self.self_destruct = config_vars.get("self_destruct", False)  # Default False
         self.YTKFarm = config_vars.get("YTKFarm", 0)  # Default to 0
         self.rescueCount = config_vars.get("rescueCount", 0)  # Default to 0
         # Default to False
@@ -103,7 +103,7 @@ class AllVars:
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
 
-    def accessibilityVars(self):
+    def accessibility_vars(self):
         return [
             self.skip_cutscene_flag,
             self.skip_diag_flag,
@@ -112,7 +112,7 @@ class AllVars:
             self.rails_egg_hunt,
         ]
 
-    def useLegacySoundtrack(self):
+    def use_legacy_soundtrack(self):
         return self.legacySoundtrack
 
     def try_djose_skip(self):
@@ -276,10 +276,10 @@ class AllVars:
         return self.blitzOvertime
 
     def set_l_strike(self, value):
-        self.lStrikeCount = value
+        self.l_strike_count = value
 
     def get_l_strike(self):
-        return self.lStrikeCount
+        return self.l_strike_count
 
     def zombie_weapon(self):
         return self.zombieWeaponVal
@@ -312,10 +312,10 @@ class AllVars:
         return self.endGameVersionVal
 
     def self_destruct_learned(self):
-        self.selfDestruct = True
+        self.self_destruct = True
 
     def self_destruct_get(self):
-        return self.selfDestruct
+        return self.self_destruct
 
     def add_rescue_count(self):
         self.rescueCount += 1
