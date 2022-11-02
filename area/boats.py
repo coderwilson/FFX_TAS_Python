@@ -71,8 +71,8 @@ def _set_index_to_value(index, value, power):
 
 def ss_winno():
     memory.main.click_to_control()
-    # logs.writeStats("Winno Speed Count:")
-    # logs.writeStats(memory.getSpeed())
+    # logs.write_stats("Winno Speed Count:")
+    # logs.write_stats(memory.get_speed())
 
     while memory.main.user_control():
         pathing.set_movement([28, -36])  # Through first door
@@ -84,15 +84,15 @@ def ss_winno():
     memory.main.wait_frames(2)
 
     # Talk to O'aka XXIII
-    oakaCoords = [
+    oaka_coords = [
         memory.main.get_actor_coords(1)[0],
         memory.main.get_actor_coords(1)[1],
     ]
     while memory.main.user_control():
-        pathing.set_movement(oakaCoords)
+        pathing.set_movement(oaka_coords)
         xbox.tap_b()
         memory.main.wait_frames(3)
-        oakaCoords = [
+        oaka_coords = [
             memory.main.get_actor_coords(1)[0],
             memory.main.get_actor_coords(1)[1],
         ]
@@ -143,32 +143,32 @@ def ss_winno_2():
 
 
 def jecht_shot_success():
-    FFXC.set_value("Dpad", 1)  # Up
+    FFXC.set_value("d_pad", 1)  # Up
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 1)  # Up
-    FFXC.set_value("Dpad", 8)  # Right
+    FFXC.set_value("d_pad", 1)  # Up
+    FFXC.set_value("d_pad", 8)  # Right
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 8)  # Right
+    FFXC.set_value("d_pad", 8)  # Right
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 8)  # Right
-    FFXC.set_value("Dpad", 2)  # Down
+    FFXC.set_value("d_pad", 8)  # Right
+    FFXC.set_value("d_pad", 2)  # Down
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 2)  # Down
+    FFXC.set_value("d_pad", 2)  # Down
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 2)  # Down
-    FFXC.set_value("Dpad", 4)  # Left
+    FFXC.set_value("d_pad", 2)  # Down
+    FFXC.set_value("d_pad", 4)  # Left
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 4)  # Left
+    FFXC.set_value("d_pad", 4)  # Left
     xbox.tap_b()
     FFXC.set_neutral()
-    FFXC.set_value("Dpad", 4)  # Left
-    FFXC.set_value("Dpad", 1)  # Up
+    FFXC.set_value("d_pad", 4)  # Left
+    FFXC.set_value("d_pad", 1)  # Up
     xbox.tap_b()
     FFXC.set_neutral()
     xbox.tap_b()
@@ -180,15 +180,15 @@ def jecht_shot():
     memory.main.click_to_diag_progress(96)
     while memory.main.diag_progress_flag() != 100:
         if memory.main.diag_progress_flag() == 97:
-            FFXC.set_value("Dpad", 1)  # Up
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 1)  # Up
+            FFXC.set_value("d_pad", 8)  # Right
             xbox.tap_b()
         elif memory.main.diag_progress_flag() == 98:
-            FFXC.set_value("Dpad", 4)  # Left
+            FFXC.set_value("d_pad", 4)  # Left
             xbox.tap_b()
         elif memory.main.diag_progress_flag() == 99:
-            FFXC.set_value("Dpad", 2)  # Down
-            FFXC.set_value("Dpad", 8)  # Right
+            FFXC.set_value("d_pad", 2)  # Down
+            FFXC.set_value("d_pad", 8)  # Right
             xbox.tap_b()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
@@ -201,5 +201,5 @@ def jecht_shot():
 
     # Success logic
     # for i in range(15):
-    #    jechtShotSuccess()
+    #    jecht_shot_success()
     # Does not work with CSR version 1.2.0

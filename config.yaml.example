@@ -2,8 +2,8 @@
 # "none", "Baaj", "Besaid", "Boat1", "Kilika", "Luca", "Miihen", "MRR"
 # "Djose", "Moonflow", "Guadosalam", "Macalania", "Home", "rescueYuna"
 # "Gagazet", "Zanarkand", "Sin", "Nem_Farm"
-Gamestate     : "none" # valid values listed above
-step_counter  : 1      # valid step_counter values are dependent on Gamestate
+gamestate     : "none" # valid values listed above
+step_counter  : 1      # valid step_counter values are dependent on gamestate
 
 # Logging
 verbosity     : DEBUG  # Verbosity of log messages in the console.
@@ -53,7 +53,7 @@ vars:
 
   # Equipment
   zombieWeaponVal     : 255    # Default 255
-  lStrikeCount        : 1      # Default 0
+  l_strike_count        : 1      # Default 0
 
   # RNG Manip
   yellows             : 0      #            - Missing documentation -
@@ -62,7 +62,7 @@ vars:
 
   # Other
   newGame             : False  #            - Missing documentation -
-  selfDestruct        : False  # Default False
+  self_destruct        : False  # Default False
   YTKFarm             : 0      # Default to 0
   rescueCount         : 0      # Default to 0
   fluxOverkillVar     : False  # Default to False
