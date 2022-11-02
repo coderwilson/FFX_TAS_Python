@@ -44,6 +44,7 @@ import vars
 import xbox
 from gamestate import game
 
+FFXC = xbox.controller_handle()
 
 def configuration_setup():
     game_vars = vars.vars_handle()
@@ -659,7 +660,8 @@ def perform_TAS():
 
                 if game.step == 13:
                     nemesis.arenaPrep.djose_farm(cap_num=10)
-                    game.step = 14
+                    # NOTE There does not appear to be a step 14 for Nem Farming.
+                    game.step = 15
 
                 if game.step == 15:
                     nemesis.arenaPrep.bikanel(cap_num=10)
