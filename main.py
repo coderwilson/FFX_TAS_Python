@@ -3,10 +3,10 @@ import random
 import sys
 
 # This needs to be before the other imports in case they decide to log things when imported
-import logger
+import log_init
 import logging
 # This sets up console and file logging (should only be called once)
-logger.initialize_logging()
+log_init.initialize_logging()
 
 main_log = logging.getLogger('main')
 
@@ -157,6 +157,8 @@ def perform_TAS():
                     game.start_time = logs.time_stamp()
                     logs.write_stats("Start time:")
                     logs.write_stats(str(game.start_time))
+                    # reset reference timestamp so that log output is synced to run time
+                    log_init.reset_logging_time_reference()
                     main_log.info("Timer starts now.")
                     area.dream_zan.listen_story()
                     # game.state, game.step = reset.midRunReset()
