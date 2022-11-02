@@ -13,7 +13,7 @@ def initialize_logging():
     date_format = '%Y-%m-%d %H:%M:%S'
     # Get current time in order to create log file name
     timeNow = datetime.datetime.now()
-    timeStr = f"{timeNow.year}{timeNow.month}{timeNow.day}_{timeNow.hour}_{timeNow.minute}_{timeNow.second}"
+    timeStr = f"{timeNow.year}{timeNow.month:02d}{timeNow.day:02d}_{timeNow.hour:02d}_{timeNow.minute:02d}_{timeNow.second:02d}"
     # Set up logging to file
     logging.basicConfig(
         level=logging.DEBUG,
