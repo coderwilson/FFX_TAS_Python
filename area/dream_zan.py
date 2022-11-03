@@ -9,15 +9,17 @@ import save_sphere
 import tts
 import vars
 import xbox
+import logging
 
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
+logger = logging.getLogger(__name__)
 
 def new_game(gamestate):
-    print("Starting the game")
-    print("Gamestate:", gamestate)
+    logger.info("Starting the game")
+    logger.debug(f"Gamestate: {gamestate}")
 
     last_message = 0
     # New version
@@ -26,7 +28,7 @@ def new_game(gamestate):
             if memory.main.get_map() != 23:
                 if last_message != 1:
                     last_message = 1
-                    print("Attempting to get to New Game screen")
+                    logger.info("Attempting to get to New Game screen")
                 FFXC.set_value("btn_start", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_start", 0)
@@ -34,17 +36,17 @@ def new_game(gamestate):
             elif memory.main.save_menu_open():
                 if last_message != 2:
                     last_message = 2
-                    print("Load Game menu is open. Backing out.")
+                    logger.info("Load Game menu is open. Backing out.")
                 xbox.tap_a()
             elif memory.main.save_menu_cursor() == 1:
                 if last_message != 3:
                     last_message = 3
-                    print("New Game is not selected. Switching.")
+                    logger.info("New Game is not selected. Switching.")
                 xbox.menu_up()
             else:
                 if last_message != 4:
                     last_message = 4
-                    print("New Game is selected. Starting game.")
+                    logger.info("New Game is selected. Starting game.")
                 xbox.menu_b()
         memory.main.click_to_diag_progress(6)
         if game_vars.use_legacy_soundtrack():
@@ -71,17 +73,17 @@ def new_game(gamestate):
 def new_game_2():
     # New game selected. Next, select options.
     time_buffer = 15
-    print("====================================")
-    print("Starting in")
-    print("3")
+    logger.info("====================================")
+    logger.info("Starting in")
+    logger.info("3")
     memory.main.wait_frames(time_buffer)
-    print("2")
+    logger.info("2")
     memory.main.wait_frames(time_buffer)
-    print("1")
+    logger.info("1")
     memory.main.wait_frames(time_buffer)
-    print("GO!!! Good fortune!")
-    print("====================================")
-    print("Set seed:", memory.main.rng_seed())
+    logger.info("GO!!! Good fortune!")
+    logger.info("====================================")
+    logger.info(f"Set seed: {memory.main.rng_seed()}")
     xbox.menu_b()
     xbox.menu_b()
 
@@ -93,7 +95,7 @@ def listen_story():
         if memory.main.get_map() == 132:
             if memory.main.diag_progress_flag() == 1:
                 game_vars.set_csr(False)
-                print("Skipping intro scene, we'll watch this properly in ~8 hours")
+                logger.info("Skipping intro scene, we'll watch this properly in ~8 hours")
                 memory.main.await_control()
             if not game_vars.accessibility_vars()[0]:
                 FFXC.set_value("btn_back", 1)
@@ -101,7 +103,7 @@ def listen_story():
                 FFXC.set_value("btn_back", 0)
                 memory.main.wait_frames(1)
 
-    print("### CSR check:", game_vars.csr())
+    logger.info(f"### CSR check: {game_vars.csr()}")
     checkpoint = 0
     while memory.main.get_encounter_id() != 414:  # Sinspawn Ammes
         if memory.main.user_control():
@@ -110,13 +112,13 @@ def listen_story():
                 FFXC.set_movement(0, -1)
                 while not memory.main.name_aeon_ready():
                     xbox.tap_b()
-                print("Ready to name Tidus")
+                logger.info("Ready to name Tidus")
                 FFXC.set_neutral()
                 memory.main.wait_frames(1)
 
                 # Name Tidus
                 xbox.name_aeon("Tidus")
-                print("Tidus name complete.")
+                logger.info("Tidus name complete.")
 
                 checkpoint += 1
             # elif checkpoint == 7 and game_vars.csr():
@@ -127,7 +129,7 @@ def listen_story():
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.await_control()
-                print("Done clicking")
+                logger.debug("Done clicking")
                 checkpoint += 1
             elif checkpoint < 11 and memory.main.get_story_progress() >= 5:
                 checkpoint = 11
@@ -144,7 +146,7 @@ def listen_story():
             # General pathing
             elif pathing.set_movement(pathing.tidus_home(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -154,7 +156,7 @@ def listen_story():
                     memory.main.get_story_progress() == 10
                     and memory.main.diag_progress_flag() == 2
                 ):
-                    print("Special Skip")
+                    logger.info("Special Skip")
                     memory.main.wait_frames(130)
                     # Generate button to skip later
                     FFXC.set_value("btn_start", 1)
@@ -169,39 +171,39 @@ def listen_story():
 
 
 def ammes_battle():
-    print("Starting ammes")
+    logger.info("Starting ammes")
     xbox.click_to_battle()
     memory.main.last_hit_init()
     battle.main.defend()
     # logs.write_stats("First Six Hits:")
     hits_array = []
 
-    print("Killing Sinspawn")
+    logger.info("Killing Sinspawn")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             battle.main.attack("none")
             last_hit = memory.main.last_hit_check_change()
             while last_hit == 9999:
                 last_hit = memory.main.last_hit_check_change()
-            print("Confirm - last hit:", last_hit)
+            logger.debug(f"Confirm - last hit: {last_hit}")
             hits_array.append(last_hit)
-            print(hits_array)
-    print("#####################################")
-    print("### Unconfirmed seed check:", memory.main.rng_seed())
+            logger.debug(f"{hits_array}")
+    logger.debug("#####################################")
+    logger.debug(f"### Unconfirmed seed check: {memory.main.rng_seed()}")
     correct_seed = rng_track.hits_to_seed(hits_array=hits_array)
     logs.write_stats("Corrected RNG seed:")
     logs.write_stats(correct_seed)
-    print("### Corrected RNG seed:", correct_seed)
+    logger.debug(f"### Corrected RNG seed: {correct_seed}")
     if correct_seed != "Err_seed_not_found":
         game_vars.set_confirmed_seed(correct_seed)
-    print("Confirming RNG seed:", memory.main.rng_seed())
-    print("#####################################")
-    print("Done Killing Sinspawn")
+    logger.debug(f"Confirming RNG seed: {memory.main.rng_seed()}")
+    logger.debug("#####################################")
+    logger.info("Done Killing Sinspawn")
     memory.main.wait_frames(6)  # Just for no overlap
-    print("Clicking to battle.")
+    logger.debug("Clicking to battle.")
     xbox.click_to_battle()
-    print("Waiting for Auron's Turn")
-    print("At Overdrive")
+    logger.debug("Waiting for Auron's Turn")
+    logger.debug("At Overdrive")
     # Auron overdrive tutorial
     battle.overdrive.auron()
 
@@ -223,7 +225,7 @@ def after_ammes():
                 -140,
                 -141,
             ]:
-                print("Positioning error")
+                logger.warning("Positioning error")
                 FFXC.set_neutral()
                 memory.main.wait_frames(20)
                 memory.main.ammes_fix(actor_index=0)
@@ -243,7 +245,7 @@ def after_ammes():
                 # General pathing
                 elif pathing.set_movement(pathing.all_starts_here(checkpoint)):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.turn_ready():
@@ -255,7 +257,7 @@ def after_ammes():
 
 
 def swim_to_jecht():
-    print("Swimming to Jecht")
+    logger.info("Swimming to Jecht")
 
     FFXC.set_value("btn_a", 1)
     FFXC.set_movement(-1, -1)
@@ -265,7 +267,7 @@ def swim_to_jecht():
 
     FFXC.set_neutral()
     FFXC.set_value("btn_a", 0)
-    print("We've now reached Jecht.")
+    logger.info("We've now reached Jecht.")
     xbox.skip_dialog(5)
 
     # Next, swim to Baaj temple

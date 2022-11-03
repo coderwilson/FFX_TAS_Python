@@ -7,6 +7,9 @@ import vgamepad as vg
 import memory.get
 import memory.main
 import vars
+import logging
+
+logger = logging.getLogger(__name__)
 
 game_vars = vars.vars_handle()
 
@@ -75,13 +78,13 @@ class VgTranslator:
 
         # Error states
         elif x_key == "axis_lx" or x_key == "axis_ly":
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - ", x_key)
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
-            print("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error(f"ERROR - {x_key}")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
+            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
             self.set_neutral()
 
         self.gamepad.update()
@@ -123,7 +126,7 @@ def skip_scene(fast_mode: bool = False):
     cutscene_id = memory.get.cutscene_id()
     print(cutscene_id)
     if not fast_mode or cutscene_id not in processed_cutscenes:
-        print("Skip cutscene")
+        logger.info("Skip cutscene")
         memory.main.wait_frames(2)
         FFXC.set_value("btn_start", 1)  # Generate button to skip
         memory.main.wait_frames(1)
@@ -136,7 +139,7 @@ def skip_scene(fast_mode: bool = False):
 
 
 def skip_scene_spec():
-    print("Skip cutscene and store an additional skip for a future scene")
+    logger.debug("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value("btn_start", 1)  # Generate button to skip
     memory.main.wait_frames(30 * 0.07)
     FFXC.set_value("btn_start", 0)
@@ -152,22 +155,22 @@ def skip_scene_spec():
 
 
 def skip_stored_scene(skip_timer):
-    print("Mashing skip button")
+    logger.debug("Mashing skip button")
     current_time = time.time()
-    print("Current Time:", current_time)
+    logger.debug(f"Current Time: {current_time}")
     click_timer = current_time + skip_timer
-    print("Click Until:", click_timer)
+    logger.debug(f"Click Until: {click_timer}")
     while current_time < click_timer:
         FFXC.set_value("btn_x", 1)  # Perform the skip
         memory.main.wait_frames(30 * 0.035)
         FFXC.set_value("btn_x", 0)
         memory.main.wait_frames(30 * 0.035)
         current_time = time.time()
-    print("Mashing skip button - Complete")
+    logger.debug("Mashing skip button - Complete")
 
 
 def attack():
-    print("Basic attack")
+    logger.debug("Basic attack")
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 0.08)
     FFXC.set_value("btn_b", 0)
@@ -180,7 +183,7 @@ def attack():
 
 def touch_save_sphere():
     FFXC.set_neutral()
-    print("Touching the save sphere")
+    logger.debug("Touching the save sphere")
     while memory.main.user_control():
         tap_b()
         memory.main.wait_frames(3)
@@ -199,15 +202,15 @@ def touch_save_sphere():
 def skip_dialog(keystrokes):
     # 2 frames per button mash
     num_repetitions = math.ceil(round(keystrokes * 30) / 2)
-    print(f"Mashing B {num_repetitions} times.")
+    logger.debug(f"Mashing B {num_repetitions} times.")
     for _ in range(num_repetitions):
         tap_b()
-    print("Mashing B - Complete")
+    logger.debug("Mashing B - Complete")
 
 
 def skip_dialog_special(keystrokes):
     num_repetitions = math.ceil(round(keystrokes * 30) / 2)
-    print(f"Mashing A and B {num_repetitions} times.")
+    logger.debug(f"Mashing A and B {num_repetitions} times.")
     for _ in range(num_repetitions):
         FFXC.set_value("btn_b", 1)
         FFXC.set_value("btn_a", 1)
@@ -215,7 +218,7 @@ def skip_dialog_special(keystrokes):
         FFXC.set_value("btn_b", 0)
         FFXC.set_value("btn_a", 0)
         memory.main.wait_frames(1)
-    print("Mashing A and B - Complete")
+    logger.debug("Mashing A and B - Complete")
 
 
 def menu_up():
@@ -406,7 +409,7 @@ def tap_start():
 
 
 def weap_swap(position):
-    print("Weapon swap, weapon in position:", position)
+    logger.info(f"Weapon swap, weapon in position: {position}")
     while memory.main.main_battle_menu():
         tap_right()
     while memory.main.other_battle_menu():
@@ -418,7 +421,7 @@ def weap_swap(position):
 
 
 def armor_swap(position):
-    print("Armor swap, armor in position:", position)
+    logger.info(f"Armor swap, armor in position: {position}")
     menu_right()
     memory.main.wait_frames(30 * 0.5)
     menu_down()
@@ -443,7 +446,7 @@ def clear_save_popup(click_to_diag_num=0):
     while complete == 0:
         counter += 1
         if counter % 100 == 0:
-            print("Waiting for Save dialog:", counter / 100)
+            logger.debug(f"Waiting for Save dialog: {counter / 100}")
 
         if (
             memory.main.diag_progress_flag() != click_to_diag_num
@@ -465,7 +468,7 @@ def await_save(index=0):
 
 
 def remove():
-    print("Controller may freeze the program here. If so, please restart your PC.")
+    logger.warning("Controller may freeze the program here. If so, please restart your PC.")
 
 
 def grid_up():
@@ -497,7 +500,7 @@ def grid_right():
 
 
 def click_to_battle():
-    print("Mashing A until first turn in battle")
+    logger.debug("Mashing A until first turn in battle")
     FFXC.set_neutral()
     while not (memory.main.battle_active() and memory.main.turn_ready()):
         if memory.main.user_control():
@@ -610,7 +613,7 @@ def navigate_to_character(cur_character):
 
 
 def name_aeon(character=""):
-    print("Waiting for aeon naming screen")
+    logger.info("Waiting for aeon naming screen")
 
     while not memory.main.name_aeon_ready():
         if memory.main.diag_skip_possible() or memory.main.menu_open():
@@ -628,7 +631,7 @@ def name_aeon(character=""):
                 navigate_to_character(cur_character)
                 tap_b()
 
-    print("Naming screen is up.")
+    logger.info("Naming screen is up.")
     while memory.main.equip_sell_row() != 1:
         tap_start()
     while memory.main.equip_sell_row() != 0:
