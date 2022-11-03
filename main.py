@@ -5,7 +5,7 @@ import sys
 
 # This needs to be before the other imports in case they decide to log things when imported
 import log_init
-import logging
+
 # This sets up console and file logging (should only be called once)
 log_init.initialize_logging()
 
@@ -48,6 +48,7 @@ import xbox
 from gamestate import game
 
 FFXC = xbox.controller_handle()
+
 
 def configuration_setup():
     game_vars = vars.vars_handle()
@@ -118,6 +119,7 @@ def rng_seed_setup():
         logs.write_stats("RNG seed:")
         logs.write_stats(rng_seed)
 
+
 def load_game_state():
     # loading from a save file
     load_game.load_into_game(gamestate=game.state, step_counter=game.step)
@@ -137,7 +139,7 @@ def perform_TAS():
             # Blitzball testing logic
             if game.state == "Luca" and game.step == 3:
                 area.dream_zan.new_game(game.state)
-                load_game.load_save_num(37) # TODO: Magic number
+                load_game.load_save_num(37)  # TODO: Magic number
 
             if game.rng_seed_num >= 256:
                 game.state = "End"
@@ -780,6 +782,7 @@ def perform_TAS():
 
     logger.info("Time! The game is now over.")
 
+
 def write_final_logs():
     if memory.main.get_story_progress() > 3210:
         end_time = logs.time_stamp()
@@ -809,6 +812,7 @@ def write_final_logs():
     memory.main.end()
 
     logger.info("Automation complete. Shutting down. Have a great day!")
+
 
 # Main entry point of TAS
 if __name__ == "__main__":
