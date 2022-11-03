@@ -2,12 +2,14 @@ import math
 import time
 
 import blitz_pathing
+import logging
 import logs
 import memory.main
 import rng_track
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 tidusXP = False
 
@@ -103,7 +105,7 @@ def game_clock():
 
 def prep_half():
     # Map = 347, Dialog = 20
-    print("Prepping for next period of play.")
+    logger.info("Prepping for next period of play.")
     while memory.main.get_map() != 62:
         if (
             memory.main.diag_progress_flag() == 135
@@ -124,7 +126,7 @@ def prep_half():
                 xbox.menu_b()
                 memory.main.wait_frames(5)
         elif memory.main.diag_progress_flag() == 40:
-            print("Attempting to proceed.")
+            logger.info("Attempting to proceed.")
             if memory.main.blitz_proceed_cursor() != 0:
                 xbox.menu_up()
             else:
@@ -152,7 +154,7 @@ def prep_half():
                 time.sleep(6)
         elif memory.main.diag_skip_possible():
             xbox.menu_b()
-    print("Prep complete.")
+    logger.info("Prep complete.")
 
 
 def storyline(force_blitz_win):
@@ -161,11 +163,11 @@ def storyline(force_blitz_win):
         if current == 540:
             if force_blitz_win:
                 memory.main.blitzball_patriots_style()
-            print("Halftime hype")
+            logger.info("Halftime hype")
             memory.main.click_to_diag_progress(164)
             memory.main.click_to_diag_progress(20)
         elif current == 560 and memory.main.diag_progress_flag() > 1:
-            print("Wakka story happening.")
+            logger.info("Wakka story happening.")
             memory.main.click_to_diag_progress(11)
             while not active_clock():
                 xbox.tap_b()
@@ -245,7 +247,7 @@ def game_stage():
         if game_vars.get_blitz_ot():
             stages = [0, 2, 2, 2, 300, 300]
         else:
-            # print("After Wakka")
+            # logger.info("After Wakka")
             stages = [
                 0,
                 160,
@@ -298,12 +300,12 @@ def game_stage():
             ):
                 currentStage = 2
     if currentStage == 3 and not engageDefender:
-        print("Start engaging defender!")
+        logger.debug("Start engaging defender!")
         engageDefender = True
     elif currentStage == 2 and engageDefender:
         currentStage = 3
     elif currentStage in [0, 1, 20, 30] and engageDefender:
-        print("Disengaging defender logic")
+        logger.debug("Disengaging defender logic")
         engageDefender = False
 
     if currentStage < 3 and controlling_player() == 0:
@@ -315,10 +317,9 @@ def distance_special():
     try:
         player1 = playerArray[6].get_coords()
         player2 = [222, -238]  # Formerly 230,-260
-        totalDistance = abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
-        return totalDistance
+        return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
     except Exception as x:
-        print("Exception:", x)
+        logger.exception(x)
         return 999
 
 
@@ -329,8 +330,8 @@ def get_char_radius(player_index: int = 10):
             (playerCoords[0] * playerCoords[0]) + (playerCoords[1] * playerCoords[1])
         )
     except Exception as E:
-        print("Math error, using default value.")
-        print(playerCoords[0] ** 2)
+        logger.error("Math error, using default value.")
+        logger.error(f"Coords: {playerCoords[0] ** 2}")
         result = 999
     return result
 
@@ -392,7 +393,7 @@ def working_forward():
     # if distance(3,10) < 330:
     #    radiusMovement(direction='back')
     if cPlayer[1] > -180:
-        # print("In position")
+        # logger.debug("In position")
         blitz_pathing.set_movement([-585, -130])
     else:
         radius_movement()
@@ -442,7 +443,7 @@ def find_safe_place():
 
 
 def jassu_train():
-    print("All aboard the Jassu train! Choo choo!")
+    logger.debug("All aboard the Jassu train! Choo choo!")
     jassuCoords = playerArray[3].get_coords()
     if abs(jassuCoords[0]) < 30:
         if jassuCoords[1] > 400:
@@ -562,7 +563,7 @@ def player_guarded(player_num):
 def tidus_move():
     currentStage = game_stage()
     if reportState:
-        print("Tidus movement")
+        logger.debug("Tidus movement")
     graavDistance = distance(0, 8)
 
     otherDistance = 0
@@ -617,7 +618,7 @@ def tidus_move():
 def tidus_act():
     currentStage = game_stage()
     if reportState:
-        print("Tidus act")
+        logger.debug("Tidus act")
 
     otherDistance = 0
     if distance(0, 6) < 280:
@@ -637,10 +638,10 @@ def tidus_act():
     elif currentStage in [4, 5]:
         # Late on the timer. Shoot at all costs.
         if memory.main.get_story_progress() < 540:
-            print("First half, shooting without breakthrough.")
+            logger.debug("First half, shooting without breakthrough.")
             shoot_ball(break_through=0)
         else:
-            print("Stage 5 - shoot the ball!")
+            logger.debug("Stage 5 - shoot the ball!")
             shoot_ball(break_through=0)
     elif currentStage in [0, 1, 2]:
         # Early game. Try to get the ball to Jassu.
@@ -658,7 +659,7 @@ def tidus_act():
 
 def letty_move():
     if reportState:
-        print("Letty movement")
+        logger.debug("Letty movement")
     currentStage = game_stage()
     graavDistance = distance(2, 8)
 
@@ -709,11 +710,11 @@ def letty_act():
     elif currentStage >= 4:
         pass_ball(target=0)
         if reportState:
-            print("Letty Action 1")
+            logger.debug("Letty Action 1")
     elif currentStage == 3:
         pass_ball(target=3)
         if reportState:
-            print("Letty Action 2")
+            logger.debug("Letty Action 2")
     elif playerArray[2].current_hp() < 10:
         pass_ball(target=3)
     elif currentStage == 2:
@@ -731,10 +732,10 @@ def letty_act():
         pass_ball(target=tar, break_through=breakThroughVal)
     else:
         if not game_vars.blitz_first_shot() and distance(0, 8) > 400:
-            print("Letty pass to Tidus")
+            logger.debug("Letty pass to Tidus")
             pass_ball(target=0)
         else:
-            print("Letty pass to Jassu")
+            logger.debug("Letty pass to Jassu")
             pass_ball(target=3)
 
 
@@ -832,8 +833,8 @@ def jassu_act():
     findSafety = False
     currentStage = game_stage()
     if reportState:
-        print("Jassu Action")
-        print("Stage:", currentStage)
+        logger.debug("Jassu Action")
+        logger.debug(f"Stage: {currentStage}")
     graavDistance = distance(3, 8)
     otherDistance = 0
     if distance(3, 6) < 350:
@@ -895,8 +896,8 @@ def other_act():
     currentStage = game_stage()
 
     if reportState:
-        print("Botta/Datto action")
-        print("Stage:", currentStage)
+        logger.debug("Botta/Datto action")
+        logger.debug(f"Stage: {currentStage}")
 
     if memory.main.get_story_progress() > 700:
         if controlling_player() == 1:
@@ -944,7 +945,7 @@ def distance(n1, n2):
         player2 = playerArray[n2].get_coords()
         return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
     except Exception as x:
-        print("Exception:", x)
+        logger.exception(x)
         return 999
 
 
@@ -954,10 +955,10 @@ def update_player_array():
 
 
 def blitz_main(forceBlitzWin):
-    print("-Start of Blitzball program")
-    print("-First, clicking to the start of the match.")
+    logger.info("-Start of Blitzball program")
+    logger.info("-First, clicking to the start of the match.")
     memory.main.click_to_story_progress(535)
-    print("-Match is now starting.")
+    logger.info("-Match is now starting.")
     start_time = logs.time_stamp()
 
     game_vars.blitz_first_shot_reset()
@@ -971,23 +972,23 @@ def blitz_main(forceBlitzWin):
         try:
             if lastPhase != game_stage() and game_clock() > 0 and game_clock() < 301:
                 lastPhase = game_stage()
-                print("------------------------------")
-                print("New phase reached.", lastPhase)
-                print("------------------------------")
+                logger.debug("------------------------------")
+                logger.debug(f"New phase reached: {lastPhase}")
+                logger.debug("------------------------------")
             if goers_score_first() or halftime_dialog():
                 if lastMenu != 3:
-                    print("Dialog on-screen")
+                    logger.debug("Dialog on-screen")
                     lastMenu = 3
                 FFXC.set_neutral()
                 xbox.menu_b()
             if memory.main.get_map() == 62:
                 if active_clock():
                     if lastState != 1:
-                        print("Clock running.")
+                        logger.debug("Clock running.")
                         lastState = 1
                     if aurochs_control():
                         if lastMenu != 2:
-                            # print("Camera focusing Aurochs player")
+                            # logger.debug("Camera focusing Aurochs player")
                             lastMenu = 2
                         if not movementSetFlag:
                             xbox.tap_y()
@@ -995,26 +996,26 @@ def blitz_main(forceBlitzWin):
                             blitz_movement()
                     else:
                         if lastMenu != 8:
-                            # print("Camera focusing opposing player")
+                            # logger.debug("Camera focusing opposing player")
                             lastMenu = 8
                 else:
                     FFXC.set_neutral()
                     if lastState != 2:
-                        print("Menu should be coming up")
+                        logger.debug("Menu should be coming up")
                         lastState = 2
                     if select_movement():
                         if lastMenu != 4:
-                            print("Selecting movement method")
+                            logger.debug("Selecting movement method")
                             lastMenu = 4
                         if cursor_1() == 1:
                             xbox.menu_b()
                             movementSetFlag = True
                         else:
                             xbox.menu_down()
-                            print(cursor_1())
+                            logger.debug(cursor_1())
                     elif select_formation():
                         if lastMenu != 5:
-                            print("Selecting Formation")
+                            logger.debug("Selecting Formation")
                             lastMenu = 5
                         if cursor_1() == 0:
                             xbox.menu_b()
@@ -1022,7 +1023,7 @@ def blitz_main(forceBlitzWin):
                             xbox.menu_up()
                     elif select_formation_2():
                         if lastMenu != 5:
-                            print("Selecting Formation")
+                            logger.debug("Selecting Formation")
                             lastMenu = 5
                         if cursor_1() == 7:
                             xbox.menu_b()
@@ -1030,18 +1031,18 @@ def blitz_main(forceBlitzWin):
                             xbox.menu_up()
                     elif select_breakthrough():
                         if lastMenu != 6:
-                            print("Selecting Break-through")
+                            logger.debug("Selecting Break-through")
                             memory.main.wait_frames(2)
                             lastMenu = 6
                         decide_action()
                     elif select_pass_target():
                         if lastMenu != 11:
-                            print("Selecting pass target.")
+                            logger.debug("Selecting pass target.")
                             lastMenu = 11
                         decide_action()
                     elif select_shot_type():
                         if lastMenu != 12:
-                            print("Selecting shot type")
+                            logger.debug("Selecting shot type")
                             lastMenu = 12
                         if cursor_1() == 1:
                             xbox.menu_b()
@@ -1050,13 +1051,13 @@ def blitz_main(forceBlitzWin):
                             memory.main.wait_frames(3)
                     elif select_action():
                         if lastMenu != 7:
-                            print("Selecting action (Shoot/Pass/Dribble)")
+                            logger.debug("Selecting action (Shoot/Pass/Dribble)")
                             lastMenu = 7
                         decide_action()
             else:
                 FFXC.set_neutral()
                 if lastState != 3:
-                    print("Screen outside the Blitz sphere")
+                    logger.debug("Screen outside the Blitz sphere")
                     lastState = 3
                 if half_summary_screen():
                     if memory.main.diag_progress_flag() == 113:
@@ -1079,16 +1080,13 @@ def blitz_main(forceBlitzWin):
                 else:
                     storyline(forceBlitzWin)
         except Exception as xVal:
-            print("Caught exception in blitz memory.main.:")
-            print(xVal)
+            logger.error("Caught exception in blitz memory.main.:")
+            logger.exception(xVal)
 
-    print("Blitz game has completed.")
+    logger.info("Blitz game has completed.")
     # Set the blitzWin flag for the rest of the run.
-    print(
-        "Final scores: Aurochs:",
-        memory.main.blitz_own_score(),
-        ", Opponent score:",
-        memory.main.blitz_opp_score(),
+    logger.info(
+        f"Final scores: Aurochs: {memory.main.blitz_own_score()}, Opponent score: {memory.main.blitz_opp_score()}"
     )
     FFXC.set_neutral()
     if memory.main.blitz_own_score() > memory.main.blitz_opp_score():
@@ -1100,4 +1098,4 @@ def blitz_main(forceBlitzWin):
     timeDiff = end_time - start_time
     totalTime = int(timeDiff.total_seconds())
     rng_track.record_blitz_results(duration=totalTime)
-    print("--Blitz Win value:", game_vars.get_blitz_win())
+    logger.info(f"--Blitz Win value: {game_vars.get_blitz_win()}")
