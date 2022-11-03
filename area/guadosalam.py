@@ -1,17 +1,19 @@
 import time
 
+import logging
 import memory.main
 import pathing
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def arrival():
-    print("Starting Guadosalam section")
+    logger.info("Starting Guadosalam section")
     memory.main.click_to_control()
 
     FFXC.set_movement(-1, 1)
@@ -34,13 +36,13 @@ def arrival():
     memory.main.wait_frames(30 * 2)
     FFXC.set_neutral()  # Enter the room where we meet Seymour
 
-    print("Test Var -", game_vars.csr)
+    logger.debug(f"Test Var (CSR) - {game_vars.csr}")
     # Adjusted branch CSR logic, start
     memory.main.click_to_control_3()
     if game_vars.csr():
         while not pathing.set_movement([-13, -67]):
             pass
-        print("Mark3")
+        logger.debug("Lulu conversation")
         while memory.main.user_control():  # Lulu conversation
             pathing.set_movement([-11, -55])
             xbox.tap_b()
@@ -49,7 +51,7 @@ def arrival():
 
         while not pathing.set_movement([-39, -77]):
             pass
-        print("Mark2")
+        logger.debug("Wakka conversation")
         while memory.main.user_control():  # Start conversation with Wakka
             pathing.set_movement([-49, -61])
             xbox.tap_b()
@@ -58,7 +60,7 @@ def arrival():
 
         while not pathing.set_movement([4, -114]):
             pass
-        print("Mark1")
+        logger.debug("Talk to Auron")
         while memory.main.user_control():  # Talk to Auron
             pathing.set_movement([18, -119])
             xbox.tap_b()
@@ -68,7 +70,7 @@ def arrival():
     else:
         while not pathing.set_movement([4, -114]):
             pass
-        print("Mark1")
+        logger.debug("Talk to Auron")
         while memory.main.user_control():  # Talk to Auron (first for affection)
             pathing.set_movement([18, -119])
             xbox.tap_b()
@@ -77,7 +79,7 @@ def arrival():
 
         while not pathing.set_movement([-39, -77]):
             pass
-        print("Mark2")
+        logger.debug("Wakka conversation")
         while memory.main.user_control():  # Start conversation with Wakka
             pathing.set_movement([-49, -61])
             xbox.tap_b()
@@ -86,7 +88,7 @@ def arrival():
 
         while not pathing.set_movement([-13, -67]):
             pass
-        print("Mark3")
+        logger.debug("Lulu conversation")
         while memory.main.user_control():  # Lulu conversation
             pathing.set_movement([-11, -55])
             xbox.tap_b()
@@ -99,7 +101,7 @@ def arrival():
 
     while not pathing.set_movement([22, -25]):
         pass
-    print("Mark5")
+    logger.debug("Rikku conversation")
     while memory.main.user_control():  # Start conversation with Rikku
         pathing.set_movement([8, -26])
         xbox.tap_b()
@@ -108,7 +110,7 @@ def arrival():
 
     while not pathing.set_movement([27, -37]):
         pass
-    print("Mark4")
+    logger.debug("Yuna conversation")
     while memory.main.user_control():  # Yunas turn
         pathing.set_movement([39, -33])
         xbox.tap_b()
@@ -120,13 +122,13 @@ def arrival():
             xbox.tap_b()
         xbox.skip_stored_scene(3)
     # Adjusted CSR branch logic, end
-    print("Ready for next movement.")
+    logger.debug("Ready for next movement.")
 
 
 def after_speech(checkpoint=0):
     memory.main.click_to_control()  # Skips through the long cutscene
-    print("Starting movement.")
-    print("Starting checkpoint:", checkpoint)
+    logger.debug("Starting movement.")
+    logger.debug(f"Starting checkpoint: {checkpoint}")
 
     if checkpoint == 0:
         memory.main.click_to_event_temple(4)
@@ -157,7 +159,7 @@ def after_speech(checkpoint=0):
 
             elif pathing.set_movement(pathing.guado_storyline(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -181,19 +183,19 @@ def guado_skip():
         xbox.menu_b()  # Close dialog
         memory.main.wait_frames(30 * 0.2)
         FFXC.set_movement(0, 1)
-        print("Past walking guado")
+        logger.debug("Past walking guado")
         while pos[1] < 50:
             pos = memory.main.get_coords()
         FFXC.set_movement(1, 0)
-        print("Angle right")
+        logger.debug("Angle right")
         while pos[0] < -44:
             pos = memory.main.get_coords()
         FFXC.set_movement(1, -1)
-        print("Towards position")
+        logger.debug("Towards position")
         while pos[0] < 9:
             pos = memory.main.get_coords()
         FFXC.set_movement(0, -1)
-        print("Adjustment 1")
+        logger.debug("Adjustment 1")
         while pos[1] > -7.5:
             pos = memory.main.get_coords()
         FFXC.set_neutral()
@@ -201,7 +203,7 @@ def guado_skip():
 
         pos = memory.main.get_coords()
         recovery = False
-        print("Adjustment 2")
+        logger.debug("Adjustment 2")
         while pos[0] > 8 and not recovery:
             tidus_pos = memory.main.get_coords()
             guado_pos = memory.main.get_actor_coords(17)
@@ -216,7 +218,7 @@ def guado_skip():
                 FFXC.set_value("d_pad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
-        print("Adjustment 3")
+        logger.debug("Adjustment 3")
         while pos[1] < -8.5 and not recovery:
             tidus_pos = memory.main.get_coords()
             guado_pos = memory.main.get_actor_coords(17)
@@ -244,7 +246,7 @@ def guado_skip():
             if abs(tidus_pos[0] - guado_pos[0]) + abs(tidus_pos[1] - guado_pos[1]) < 30:
                 if guado_pos[0] < 10:
                     skip_activate = True
-                    print("MARK")
+                    logger.debug("MARK")
                     xbox.skip_dialog(0.5)
             elif pos[1] > -9:
                 FFXC.set_value("d_pad", 2)
@@ -264,7 +266,7 @@ def guado_skip():
             while memory.main.get_camera()[0] < 0.6:
                 current_time = time.time()
                 if current_time > max_time:
-                    print("Skip failed for some reason. Moving on without skip.")
+                    logger.warning("Skip failed for some reason. Moving on without skip.")
                     break
             memory.main.wait_frames(30 * 0.035)  # Guado potions good!
             xbox.tap_b()
@@ -274,9 +276,9 @@ def guado_skip():
     while memory.main.get_map() != 140:
         if memory.main.user_control():
             if checkpoint == 5:
-                print(memory.main.get_camera())
+                logger.debug(f"Get camera: {memory.main.get_camera()}")
                 if memory.main.get_camera()[1] < -9:
-                    print("Guado skip success.")
+                    logger.info("Guado skip success.")
                     if game_vars.csr():
                         guado_skip_status = False
                         checkpoint = 18
@@ -284,15 +286,15 @@ def guado_skip():
                         guado_skip_status = True
                         checkpoint += 1
                 else:
-                    print("Guado skip fail. Back-up strats.")
+                    logger.warning("Guado skip fail. Back-up strats.")
                     guado_skip_status = False
                     checkpoint = 18
             elif checkpoint == 21:  # Shelinda conversation
-                print("Shelinda")
+                logger.debug("Shelinda")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 24:  # Back to party
-                print("Back to party")
+                logger.debug("Back to party")
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
 
@@ -300,7 +302,7 @@ def guado_skip():
             elif memory.main.user_control():
                 if pathing.set_movement(pathing.guado_skip(checkpoint)):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
