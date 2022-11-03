@@ -57,7 +57,6 @@ def approach_save_sphere():
     target_coords = memory.main.get_actor_coords(target_actor)
     target_details = get_save_sphere_settings(target_actor)
     print("Approaching actor: ", target_actor)
-    FFXC.set_neutral()
     while not (
         memory.main.diag_progress_flag() == target_details[2]
         and memory.main.diag_skip_possible()
@@ -87,11 +86,11 @@ def approach_save_sphere():
                 memory.main.wait_frames(2)
                 memory.main.clear_save_menu_cursor()
                 memory.main.clear_save_menu_cursor_2()
-                while memory.main.user_control():
-                    pathing.set_movement([target_coords[0], target_coords[1]])
-                    xbox.tap_b()
-                    memory.main.wait_frames(6)
-                memory.main.wait_frames(20)
+                # while memory.main.user_control():
+                #     pathing.set_movement([target_coords[0], target_coords[1]])
+                #     xbox.tap_b()
+                #     memory.main.wait_frames(6)
+                # memory.main.wait_frames(20)
                 target_details = get_save_sphere_settings(target_actor)
             else:
                 FFXC.set_neutral()
@@ -102,6 +101,8 @@ def approach_save_sphere():
                 elif memory.main.diag_skip_possible():
                     print("Mark 3", memory.main.diag_progress_flag())
                     xbox.tap_b()
+    FFXC.set_neutral()
+
 
 
 def disengage_save_sphere():

@@ -4464,7 +4464,6 @@ def arena_array():
         retArray.append(process.readBytes(key, 1))
     return retArray
 
-
 def arena_farm_check(
     zone: str = "besaid", end_goal: int = 10, report=False, return_array=False
 ):

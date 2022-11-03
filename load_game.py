@@ -2,15 +2,15 @@
 import os
 from pathlib import Path
 
-import area.dream_zan
-import logs
 import memory.main
 import pathing
 import screen
 import vars
+from gamestate import game
 import xbox
 import zz_airship_path
-from gamestate import game
+import area.dream_zan
+import logs
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
@@ -19,7 +19,7 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def load_into_game(gamestate: str, step_counter: str):
+def load_into_game(gamestate:str, step_counter:str):
     if not (gamestate == "Luca" and step_counter == 3):
         area.dream_zan.new_game(gamestate)
         game.start_time = logs.time_stamp()
@@ -198,8 +198,20 @@ def load_into_game(gamestate: str, step_counter: str):
     if gamestate == "Nem_Farm" and step_counter == 8:
         load_save_num(73)
     if gamestate == "Nem_Farm" and step_counter == 9:
-        load_save_num(75)
-        game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
+        #Start of Nemesis farm
+        #import nemesis.menu
+        #import memory.main
+        load_save_num(19)
+        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
+        #memory.main.arena_array_nines()
+        #while not memory.main.get_tidus_slvl() >= 70:
+        #    nemesis.menu.perform_next_grid()
+        #    memory.main.set_tidus_slvl(memory.main.get_tidus_slvl()+1)
+    if gamestate == "Nem_Farm" and step_counter == 11:
+        load_save_num(20)
+        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 13:
         load_save_num(17)
         game_vars.set_nem_checkpoint_ap(7)  # See nemesis.menu
@@ -240,7 +252,6 @@ def load_into_game(gamestate: str, step_counter: str):
     if gamestate == "Nem_Farm":
         memory.main.check_nea_armor()
     memory.main.check_nea_armor()
-
 
 def get_saved_files():
     saveFilesFull = sorted(

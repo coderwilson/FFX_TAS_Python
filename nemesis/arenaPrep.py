@@ -217,44 +217,14 @@ def return_to_airship():
         while not nemesis.targetPath.set_movement([-4, -3]):
             pass
 
-    if memory.main.get_map() == 263:  # Thunder plains
-        while not nemesis.targetPath.set_movement([-39, -18]):
-            pass
-
-    if memory.main.user_control():
-        while memory.main.user_control():
-            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
-            xbox.tap_b()
-            memory.main.wait_frames(1)
-    try:
-        FFXC.set_neutral()
-    except:
-        FFXC = xbox.controller_handle()
-        FFXC.set_neutral()
+    save_sphere.approach_save_sphere()
     FFXC.set_neutral()
-
-    while not memory.main.get_map() in [194, 374]:
-        if memory.main.get_map() == 307 and memory.main.get_coords()[1] < -5:
-            while not nemesis.targetPath.set_movement([-4, -21]):
-                pass
-            while not nemesis.targetPath.set_movement([-2, -2]):
-                pass
-        else:
-            FFXC.set_neutral()
-            if memory.main.save_menu_open():
-                xbox.tap_a()
-            elif memory.main.diag_progress_flag() == ssDetails[2]:
-                # print("Cursor test:", memory.saveMenuCursor())
-                if memory.main.save_menu_cursor() != 1:
-                    xbox.menu_down()
-                else:
-                    xbox.menu_b()
-            elif memory.main.user_control():
-                nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
-                xbox.menu_b()
-            elif memory.main.diag_skip_possible():
-                xbox.menu_b()
-            memory.main.wait_frames(4)
+    while memory.main.save_menu_cursor() != 1:
+        FFXC.set_neutral()
+        xbox.menu_down()
+        memory.main.wait_frames(1)
+    xbox.menu_b()
+    memory.main.await_control()
     print("Return to Airship Complete.")
     memory.main.clear_save_menu_cursor()
     memory.main.clear_save_menu_cursor_2()
@@ -1541,12 +1511,14 @@ def kilika_farm(cap_num: int = 1):
                 and checkpoint < 14
             ):
                 checkpoint = 14
-            elif checkpoint == 14 and not memory.main.arena_farm_check(
-                zone="kilika", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
-
+            elif checkpoint == 14:
+                if not memory.main.arena_farm_check(
+                    zone="kilika", end_goal=cap_num, report=False
+                ):
+                    checkpoint -= 2
+                    print("Checkpoint reached: ", checkpoint)
+                else:
+                    return_to_airship()
             elif checkpoint == 4:
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
@@ -1690,11 +1662,11 @@ def miihen_farm(cap_num: int = 1):
     checkpoint = 0
     last_cp = checkpoint
     while not memory.main.get_map() in [194, 374]:
+        # Checkpoint notify
+        if last_cp != checkpoint:
+            print("Checkpoint reached: ", checkpoint)
+            last_cp = checkpoint
         if memory.main.user_control():
-            # Checkpoint notify
-            if last_cp != checkpoint:
-                print("Checkpoint reached: ", checkpoint)
-                last_cp = checkpoint
             if checkpoint == 92:
                 FFXC.set_neutral()
                 while memory.main.user_control():
@@ -1784,6 +1756,13 @@ def miihen_farm(cap_num: int = 1):
             # Garuda late farming logic
             elif checkpoint in [61, 62, 63] and prefArea >= 5:
                 checkpoint = 100
+            elif checkpoint == 146 and prefArea == 5:
+                checkpoint -= 2
+                if neArmor:
+                    menu.remove_all_nea()
+                    miihen_next(end_goal=cap_num)
+                    print("Next area: ", prefArea)
+                    neArmor = False
             elif checkpoint in [104, 146, 158]:
                 FFXC.set_neutral()
                 memory.main.click_to_event()
@@ -1801,13 +1780,6 @@ def miihen_farm(cap_num: int = 1):
                 miihen_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
                 neArmor = False
-            elif checkpoint == 145 and prefArea == 5:
-                checkpoint -= 2
-                if neArmor:
-                    menu.remove_all_nea()
-                    miihen_next(end_goal=cap_num)
-                    print("Next area: ", prefArea)
-                    neArmor = False
             elif checkpoint == 150 and prefArea == 6:
                 checkpoint -= 2
                 if neArmor:
