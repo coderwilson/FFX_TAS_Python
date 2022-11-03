@@ -2,6 +2,7 @@ import time
 
 import battle.boss
 import battle.main
+import logging
 import logs
 import memory.main
 import menu
@@ -11,12 +12,14 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def arrival():
+    logger.info("Arrival at MRR")
     memory.main.click_to_control()
     memory.main.close_menu()
     clasko_skip = True
@@ -25,9 +28,9 @@ def arrival():
     while memory.main.get_map() != 92:
         if memory.main.user_control():
             if game_vars.csr() and checkpoint == 1:
-                print("CSR, skipping forward")
+                logger.debug("CSR, skipping forward")
                 checkpoint = 4
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -48,7 +51,7 @@ def arrival():
                     memory.main.wait_frames(30 * 0.035)
                     FFXC.set_neutral()
                     memory.main.wait_frames(30 * 0.3)
-                print("Attempting skip.")
+                logger.info("Attempting skip.")
                 xbox.menu_b()
 
                 # Now to wait for the skip to happen, or 60 second maximum limit
@@ -59,7 +62,7 @@ def arrival():
                 while memory.main.get_actor_coords(6)[0] < -50:
                     current_time = time.time()
                     if current_time > max_time:
-                        print("Skip failed for some reason. Moving on without skip.")
+                        logger.warning("Skip failed for some reason. Moving on without skip.")
                         clasko_skip = False
                         break
                 memory.main.click_to_control()
@@ -67,7 +70,7 @@ def arrival():
                 checkpoint += 1
             elif pathing.set_movement(pathing.mrr_start(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -78,16 +81,19 @@ def arrival():
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()
-    print("Done with prelim MRR area, now for the real deal.")
+    logger.info("Done with prelim MRR area, now for the real deal.")
     return clasko_skip
 
+def log_mrr_kimahri_crit_chance():
+    crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
+    logger.debug(f"======== Next Kimahri crit: {crit_chance}")
 
 def main_path():
     memory.main.await_control()
     crit_manip = False
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
-    print("Resetting checkpoint.")
+    logger.debug("Resetting checkpoint.")
     last_gil_value = 0
     checkpoint = 0
     battle_count = 0
@@ -103,7 +109,7 @@ def main_path():
                 memory.main.full_party_format("mrr1")
                 checkpoint += 1
             elif checkpoint == 4:
-                print("Up the first lift")
+                logger.info("Up the first lift")
                 xbox.skip_dialog(1)
                 checkpoint += 1
             elif checkpoint == 45:
@@ -115,15 +121,15 @@ def main_path():
                         checkpoint += 1
 
             elif checkpoint == 46:
-                print("Up the second lift.")
+                logger.info("Up the second lift.")
                 FFXC.set_neutral()
                 xbox.skip_dialog(1)
                 checkpoint += 1
-                print("Lift checkpoint:", checkpoint)
+                logger.debug(f"Lift checkpoint: {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
                 if not memory.main.rng_seed() in [31]:
                     memory.main.click_to_event_temple(7)
-                    print("Got X-potion")
+                    logger.info("Got X-potion")
                 checkpoint += 1
             elif checkpoint >= 54 and checkpoint <= 56:  # 400 gil guy
                 if memory.main.rng_seed() in [160, 31]:
@@ -131,7 +137,7 @@ def main_path():
                 elif memory.main.get_gil_value() != last_gil_value:
                     # check if we got the 400 from the guy
                     if memory.main.get_gil_value() == last_gil_value + 400:
-                        print("We've procured the 400 gil from the guy.")
+                        logger.info("We've procured the 400 gil from the guy.")
                         checkpoint = 57  # now to the actual lift
                     else:
                         last_gil_value = memory.main.get_gil_value()
@@ -139,18 +145,15 @@ def main_path():
                     pathing.set_movement(memory.main.mrr_guy_coords())
                     xbox.tap_b()
             elif checkpoint == 58:
-                print("Up the third lift")
+                logger.info("Up the third lift")
                 while memory.main.user_control():
                     pathing.set_movement([29, 227])
                     xbox.tap_b()
                 checkpoint += 1
             elif checkpoint == 66:
                 xbox.skip_dialog(1)
-                print("Up the final lift")
-                print(
-                    "======== Next Kimahri crit:",
-                    memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),
-                )
+                logger.info("Up the final lift")
+                log_mrr_kimahri_crit_chance()
                 checkpoint += 1
             elif checkpoint == 68:
                 FFXC.set_movement(0, -1)
@@ -167,12 +170,7 @@ def main_path():
                     ) in [2, 3, 4, 5, 6, 7, 9]:
                         crit_manip = True
                         # Try to end on 1.
-                        print(
-                            "+++++++++++ We can manip:",
-                            memory.main.next_crit(
-                                character=3, char_luck=18, enemy_luck=15
-                            ),
-                        )
+                        logger.debug(f"+++++++++++ We can manip: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}")
                         checkpoint = 59
                     else:
                         checkpoint += 1
@@ -180,32 +178,29 @@ def main_path():
                     checkpoint = 62
                 else:
                     checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                print("Starting battle MRR")
+                logger.info("Starting battle MRR")
                 if checkpoint < 47:
                     status = battle.main.mrr_battle(status)
-                    print("Status update:", status)
+                    logger.debug(f"Status update: {status}")
                     status[3] += 1
                 else:
                     if battle.main.mrr_manip(kim_max_advance=9):
                         crit_manip = True
 
                 if memory.main.get_yuna_slvl() >= 8 and status[4] == 0:
-                    print("Yuna has enough levels now. Going to do her grid.")
+                    logger.info("Yuna has enough levels now. Going to do her grid.")
                     menu.mrr_grid_yuna()
-                    print("Yunas gridding is complete for now.")
+                    logger.info("Yunas gridding is complete for now.")
                     status[4] = 1
                 if memory.main.get_slvl_wakka() >= 7:
                     menu.mrr_grid_2()
                 memory.main.close_menu()
-                print("MRR battle complete")
-                print(
-                    "======== Next Kimahri crit:",
-                    memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),
-                )
+                logger.info("MRR battle complete")
+                log_mrr_kimahri_crit_chance()
                 battle_count += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -222,9 +217,9 @@ def main_path():
     # logs.write_stats(battle_count)
     logs.write_stats("MRR crit manip:")
     logs.write_stats(crit_manip)
-    print("End of MRR section. Status:")
-    print("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
-    print(status)
+    logger.info("End of MRR section. Status:")
+    logger.info("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
+    logger.info(status)
 
 
 def battle_site():
@@ -237,24 +232,18 @@ def battle_site():
     while checkpoint < 99:
         if memory.main.user_control():
             if checkpoint == 5:
-                print("O'aka menu section")
+                logger.info("O'aka menu section")
                 while memory.main.user_control():
                     pathing.set_movement([-45, 3425])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 menu.battle_site_oaka_1()
                 menu.battle_site_oaka_2()
-                print(
-                    "======== Next Kimahri crit:",
-                    memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),
-                )
+                log_mrr_kimahri_crit_chance()
                 checkpoint += 1
             elif checkpoint == 8:
                 save_sphere.touch_and_go()
-                print(
-                    "======== Next Kimahri crit:",
-                    memory.main.next_crit(character=3, char_luck=18, enemy_luck=15),
-                )
+                log_mrr_kimahri_crit_chance()
                 checkpoint += 1
             elif checkpoint == 12:
                 FFXC.set_movement(1, 0)
@@ -273,7 +262,7 @@ def battle_site():
                 checkpoint = 100
             elif pathing.set_movement(pathing.battle_site(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -302,7 +291,7 @@ def gui_and_aftermath():
                 checkpoint += 1
             elif pathing.set_movement(pathing.battle_site_aftermath(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             memory.main.click_to_control_3()
