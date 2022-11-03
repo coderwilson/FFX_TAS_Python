@@ -74,6 +74,6 @@ def initialize_logging():
 # import logging
 #
 # #setting up named logger
-# logger = logging.getLogger('battle')
+# logger = logging.getLogger(__name__)
 #
-# logger.info('In the battle module')
+# logger.info('In the submodule')
