@@ -34,7 +34,7 @@ def arrival():
     memory.main.wait_frames(30 * 2)
     FFXC.set_neutral()  # Enter the room where we meet Seymour
 
-    print("Test Var -", game_vars.csr)
+    print("TestVar -", game_vars.csr)
     # Adjusted branch CSR logic, start
     memory.main.click_to_control_3()
     if game_vars.csr():
@@ -203,32 +203,32 @@ def guado_skip():
         recovery = False
         print("Adjustment 2")
         while pos[0] > 8 and not recovery:
-            tidus_pos = memory.main.get_coords()
-            guado_pos = memory.main.get_actor_coords(17)
-            if abs(tidus_pos[0] - guado_pos[0]) + abs(tidus_pos[1] - guado_pos[1]) < 30:
+            tidusPos = memory.main.get_coords()
+            guadoPos = memory.main.get_actor_coords(17)
+            if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
                 while memory.main.user_control():
-                    pathing.set_movement(guado_pos[0], guado_pos[1])
+                    pathing.set_movement(guadoPos[0], guadoPos[1])
                     xbox.tap_b()
                 recovery = True
             else:
-                FFXC.set_value("d_pad", 4)
+                FFXC.set_value("Dpad", 4)
                 memory.main.wait_frames(3)
-                FFXC.set_value("d_pad", 0)
+                FFXC.set_value("Dpad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
         print("Adjustment 3")
         while pos[1] < -8.5 and not recovery:
-            tidus_pos = memory.main.get_coords()
-            guado_pos = memory.main.get_actor_coords(17)
-            if abs(tidus_pos[0] - guado_pos[0]) + abs(tidus_pos[1] - guado_pos[1]) < 30:
+            tidusPos = memory.main.get_coords()
+            guadoPos = memory.main.get_actor_coords(17)
+            if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
                 while memory.main.user_control():
-                    pathing.set_movement([guado_pos[0], guado_pos[1]])
+                    pathing.set_movement([guadoPos[0], guadoPos[1]])
                     xbox.tap_b()
                 recovery = True
             else:
-                FFXC.set_value("d_pad", 1)
+                FFXC.set_value("Dpad", 1)
                 memory.main.wait_frames(3)
-                FFXC.set_value("d_pad", 0)
+                FFXC.set_value("Dpad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
 
@@ -237,40 +237,40 @@ def guado_skip():
         memory.main.wait_frames(30 * 0.04)
         FFXC.set_neutral()  # Face downward
         memory.main.wait_frames(4)
-        skip_activate = False
-        while not skip_activate and not recovery:
-            tidus_pos = memory.main.get_coords()
-            guado_pos = memory.main.get_actor_coords(17)
-            if abs(tidus_pos[0] - guado_pos[0]) + abs(tidus_pos[1] - guado_pos[1]) < 30:
-                if guado_pos[0] < 10:
-                    skip_activate = True
+        skipActivate = False
+        while not skipActivate and not recovery:
+            tidusPos = memory.main.get_coords()
+            guadoPos = memory.main.get_actor_coords(17)
+            if abs(tidusPos[0] - guadoPos[0]) + abs(tidusPos[1] - guadoPos[1]) < 30:
+                if guadoPos[0] < 10:
+                    skipActivate = True
                     print("MARK")
                     xbox.skip_dialog(0.5)
             elif pos[1] > -9:
-                FFXC.set_value("d_pad", 2)
+                FFXC.set_value("Dpad", 2)
                 memory.main.wait_frames(2)
-                FFXC.set_value("d_pad", 0)
+                FFXC.set_value("Dpad", 0)
                 memory.main.wait_frames(5)
                 pos = memory.main.get_coords()
 
         if not recovery:
             # Time limit for safety
-            start_time = time.time()
+            startTime = time.time()
             # Max number of seconds that we will wait for the skip to occur.
-            time_limit = 8
-            max_time = start_time + time_limit
+            timeLimit = 8
+            maxTime = startTime + timeLimit
 
             # Waiting for walking guado to push us into the door
             while memory.main.get_camera()[0] < 0.6:
-                current_time = time.time()
-                if current_time > max_time:
+                currentTime = time.time()
+                if currentTime > maxTime:
                     print("Skip failed for some reason. Moving on without skip.")
                     break
             memory.main.wait_frames(30 * 0.035)  # Guado potions good!
             xbox.tap_b()
         checkpoint = 0
 
-    guado_skip_status = False
+    guadoSkipStatus = False
     while memory.main.get_map() != 140:
         if memory.main.user_control():
             if checkpoint == 5:
@@ -278,14 +278,14 @@ def guado_skip():
                 if memory.main.get_camera()[1] < -9:
                     print("Guado skip success.")
                     if game_vars.csr():
-                        guado_skip_status = False
+                        guadoSkipStatus = False
                         checkpoint = 18
                     else:
-                        guado_skip_status = True
+                        guadoSkipStatus = True
                         checkpoint += 1
                 else:
                     print("Guado skip fail. Back-up strats.")
-                    guado_skip_status = False
+                    guadoSkipStatus = False
                     checkpoint = 18
             elif checkpoint == 21:  # Shelinda conversation
                 print("Shelinda")
@@ -306,4 +306,4 @@ def guado_skip():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()
-    return guado_skip_status
+    return guadoSkipStatus

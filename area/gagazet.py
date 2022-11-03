@@ -5,10 +5,10 @@ import memory.main
 import menu
 import pathing
 import rng_track
-import save_sphere
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -16,15 +16,15 @@ FFXC = xbox.controller_handle()
 
 
 def check_gems():
-    gem_slot = memory.main.get_item_slot(34)
-    if gem_slot < 200:
-        gems = memory.main.get_item_count_slot(gem_slot)
+    gemSlot = memory.main.get_item_slot(34)
+    if gemSlot < 200:
+        gems = memory.main.get_item_count_slot(gemSlot)
     else:
         gems = 0
 
-    gem_slot = memory.main.get_item_slot(28)
-    if gem_slot < 200:
-        gems += memory.main.get_item_count_slot(gem_slot)
+    gemSlot = memory.main.get_item_slot(28)
+    if gemSlot < 200:
+        gems += memory.main.get_item_count_slot(gemSlot)
     print("Total gems:", gems)
     return gems
 
@@ -128,12 +128,12 @@ def to_the_ronso():
 
 def gagazet_gates():
     # Should appear on the map just before the Ronso hymn
-    end_ver = game_vars.end_game_version()
-    print("Grid version: " + str(end_ver))
+    endVer = game_vars.end_game_version()
+    print("Grid version: " + str(endVer))
     logs.write_stats("B&Y Return spheres:")
-    if end_ver == 4:
+    if endVer == 4:
         logs.write_stats("4")
-    elif end_ver == 3:
+    elif endVer == 3:
         logs.write_stats("0")
     else:
         logs.write_stats("2")
@@ -282,7 +282,7 @@ def cave():
     print("Gagazet cave section")
 
     checkpoint = 0
-    power_needed = 6
+    powerNeeded = 6
     while memory.main.get_map() != 311:
         if memory.main.user_control():
             if checkpoint == 7:
@@ -374,10 +374,10 @@ def cave():
                 checkpoint += 1
 
                 # Determine drops from Yunalesca
-                # logs.open_rng_track()
-                # import rng_track
-                # zombie_results = rng_track.zombie_track(report=True)
-                # logs.write_rng_track("Final results:"+str(zombie_results))
+                # logs.openRNGTrack()
+                # import rngTrack
+                # zombieResults = rngTrack.zombieTrack(report=True)
+                # logs.writeRNGTrack("Final results:"+str(zombieResults))
             elif pathing.set_movement(pathing.gagazet_cave(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
@@ -389,7 +389,7 @@ def cave():
                     memory.main.wait_frames(90)
                     xbox.menu_b()
                     memory.main.wait_frames(45)
-                    FFXC.set_value("d_pad", 8)
+                    FFXC.set_value("Dpad", 8)
                     memory.main.wait_frames(45)
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()
@@ -398,7 +398,7 @@ def cave():
                 elif memory.main.diag_progress_flag() == 3:
                     # CSR second trial
                     memory.main.wait_frames(10)
-                    FFXC.set_value("d_pad", 8)
+                    FFXC.set_value("Dpad", 8)
                     memory.main.wait_frames(45)
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()
@@ -408,7 +408,7 @@ def cave():
                 elif memory.main.diag_skip_possible() or memory.main.menu_open():
                     xbox.tap_b()
             elif memory.main.battle_active():
-                if memory.main.get_power() < power_needed:
+                if memory.main.get_power() < powerNeeded:
                     if memory.main.get_encounter_id() == 351:
                         # Two maelstroms and a splasher
                         battle.main.gagazet_cave("down")
@@ -482,79 +482,79 @@ def wrap_up():
         memory.main.await_event()
         FFXC.set_neutral()
 
-        sleep_time = 4
+        sleepTime = 4
         print("Sadness cutscene")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("This is gunna be a while.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Maybe you should go get a drink or something.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Like... what even is this???")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("I just")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("I just can't")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Do you realize that some poor soul")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("not only wrote the entire program for this by himself")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("And then wasted ten minutes to put in this ridiculous dialog?")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Talk about not having a life.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Ah well, still have some time. Might as well shout out a few people.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "First and most importantly, my wife for putting up with me for two years through this project.",
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("My wife is the best!")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Next, DwangoAC. He encouraged me to write my own code to do this.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("And he put together the TASbot community which has been hugely helpful.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.",
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("You will see Inverted's work right before the final bosses.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Next, some people from the FFX speedrunning community.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "CrimsonInferno, current world record holder for this category. Dude knows everything about this run!"
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more."
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory."
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "He also taught me a number of things about memory scans, pointers, etc. Dude is super smart."
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("Peppy too. He has found a few key things in memory too.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code."
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("He has also done a lot of optimizations I just couldn't get back to.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print(
             "Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam."
         )
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
         print("OK that wraps it up for this bit. I'll catch you when it's done.")
-        memory.main.wait_frames(30 * sleep_time)
+        memory.main.wait_frames(30 * sleepTime)
 
         memory.main.click_to_control()
         print("OMG finally! Let's get to it! (Do kids say that any more?)")

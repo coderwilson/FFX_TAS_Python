@@ -5,10 +5,10 @@ import memory.main
 import menu
 import pathing
 import rng_track
-import save_sphere
 import screen
 import vars
 import xbox
+import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -23,35 +23,33 @@ def print_nea_zone(battles: int):
 def decide_nea(bonus_advance: int = 0):
     import rng_track
 
-    max_battles = 1
-    zan_outdoors = rng_track.coming_battles(
-        area="zanarkand_(overpass)",
-        battle_count=max_battles,
-        extra_advances=bonus_advance,
+    maxBattles = 1
+    zanOutdoors = rng_track.coming_battles(
+        area="zanarkand_(overpass)", battleCount=maxBattles, extraAdvances=bonus_advance
     )
-    zan_indoors = rng_track.coming_battles(
-        area="zanarkand_(dome)", battle_count=max_battles, extra_advances=bonus_advance
+    zanIndoors = rng_track.coming_battles(
+        area="zanarkand_(dome)", battleCount=maxBattles, extraAdvances=bonus_advance
     )
-    sea_sorrows = rng_track.coming_battles(
+    seaSorrows = rng_track.coming_battles(
         area="inside_sin_(front)",
-        battle_count=max_battles,
-        extra_advances=bonus_advance + 6,
+        battleCount=maxBattles,
+        extraAdvances=bonus_advance + 6,
     )
 
-    for i in range(max_battles):
-        if "behemoth" in zan_outdoors[i]:
+    for i in range(maxBattles):
+        if "behemoth" in zanOutdoors[i]:
             game_vars.set_nea_zone(1)
             print_nea_zone(i + 1)
             return
-        elif "defender_z" in zan_indoors[i]:
+        elif "defender_z" in zanIndoors[i]:
             game_vars.set_nea_zone(2)
             print_nea_zone(i + 1)
             return
-        elif "behemoth_king" in sea_sorrows[i]:
+        elif "behemoth_king" in seaSorrows[i]:
             game_vars.set_nea_zone(3)
             print_nea_zone(i + 1)
             return
-        elif "adamantoise" in sea_sorrows[i]:
+        elif "adamantoise" in seaSorrows[i]:
             game_vars.set_nea_zone(3)
             print_nea_zone(i + 1)
             return
@@ -65,16 +63,16 @@ def arrival():
     memory.main.await_control()
     decide_nea()
     # Starts from the map just after the fireplace chat.
-    re_equip_ne = False
+    reEquipNE = False
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 1:
         memory.main.full_party_format("rikku", full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-        re_equip_ne = True
+        reEquipNE = True
 
     game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
-    # game_vars.set_skip_zan_luck(True) #For testing
+    # gameVars.setSkipZanLuck(True) #For testing
     print("Outdoor Zanarkand pathing section")
     while memory.main.get_map() != 225:
         if memory.main.user_control():
@@ -87,11 +85,11 @@ def arrival():
         else:
             FFXC.set_neutral()
 
-    fortune_slot = memory.main.get_item_slot(74)
-    if fortune_slot == 255:
-        fortune_count = 0
+    fortuneSlot = memory.main.get_item_slot(74)
+    if fortuneSlot == 255:
+        fortuneCount = 0
     else:
-        fortune_count = memory.main.get_item_count_slot(fortune_slot)
+        fortuneCount = memory.main.get_item_count_slot(fortuneSlot)
 
     checkpoint = 0
     while memory.main.get_map() != 314:
@@ -99,13 +97,13 @@ def arrival():
             if checkpoint == 3 and game_vars.get_skip_zan_luck():
                 checkpoint = 5
             elif checkpoint == 4:  # First chest
-                fortune_slot = memory.main.get_item_slot(74)
-                if fortune_slot == 255:
-                    fortune_count = 0
+                fortuneSlot = memory.main.get_item_slot(74)
+                if fortuneSlot == 255:
+                    fortuneCount = 0
                     FFXC.set_movement(-1, 1)
                     xbox.tap_b()
                 else:
-                    if memory.main.get_item_count_slot(fortune_slot) > fortune_count:
+                    if memory.main.get_item_count_slot(fortuneSlot) > fortuneCount:
                         checkpoint += 1
                         memory.main.click_to_control()
                     else:
@@ -119,8 +117,8 @@ def arrival():
 
             if screen.battle_screen():
                 battle.main.charge_rikku_od()
-                if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
-                    re_equip_ne = False
+                if reEquipNE and memory.main.overdrive_state_2()[6] == 100:
+                    reEquipNE = False
                     memory.main.click_to_control()
                     memory.main.full_party_format("yuna", full_menu_close=False)
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -139,35 +137,35 @@ def arrival():
         xbox.tap_b()
 
     print("Start of Zanarkand Dome section")
-    friend_slot = memory.main.get_item_slot(97)
-    if friend_slot == 255:
-        friend_count = 0
+    friendSlot = memory.main.get_item_slot(97)
+    if friendSlot == 255:
+        friendCount = 0
     else:
-        friend_count = memory.main.get_item_count_slot(friend_slot)
+        friendCount = memory.main.get_item_count_slot(friendSlot)
 
-    luck_slot = memory.main.get_item_slot(94)
-    if luck_slot == 255:
-        friend_count = 0
+    luckSlot = memory.main.get_item_slot(94)
+    if luckSlot == 255:
+        friendCount = 0
     else:
-        luck_count = memory.main.get_item_count_slot(luck_slot)
+        luckCount = memory.main.get_item_count_slot(luckSlot)
 
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 2:
         memory.main.full_party_format("rikku", full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-        re_equip_ne = True
+        reEquipNE = True
 
     checkpoint = 0
     while memory.main.get_map() != 320:
         if memory.main.user_control():
             if checkpoint == 13:  # Second chest
-                friend_slot = memory.main.get_item_slot(97)
-                if friend_slot == 255:
-                    friend_count = 0
+                friendSlot = memory.main.get_item_slot(97)
+                if friendSlot == 255:
+                    friendCount = 0
                     pathing.set_movement([8, 90])
                     memory.main.wait_frames(1)
                     xbox.tap_b()
                 else:
-                    if memory.main.get_item_count_slot(friend_slot) > friend_count:
+                    if memory.main.get_item_count_slot(friendSlot) > friendCount:
                         checkpoint += 1
                         memory.main.click_to_control()
                     else:
@@ -177,13 +175,13 @@ def arrival():
             if checkpoint == 23 and game_vars.get_skip_zan_luck():
                 checkpoint = 25
             elif checkpoint == 24:  # Third chest
-                luck_slot = memory.main.get_item_slot(94)
-                if luck_slot == 255:
-                    luck_count = 0
+                luckSlot = memory.main.get_item_slot(94)
+                if luckSlot == 255:
+                    luckCount = 0
                     FFXC.set_movement(1, 1)
                     xbox.tap_b()
                 else:
-                    if memory.main.get_item_count_slot(luck_slot) > luck_count:
+                    if memory.main.get_item_count_slot(luckSlot) > luckCount:
                         checkpoint += 1
                         print("Updating checkpoint:", checkpoint)
                         memory.main.click_to_control()
@@ -205,8 +203,8 @@ def arrival():
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle.main.charge_rikku_od()
-                if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
-                    re_equip_ne = False
+                if reEquipNE and memory.main.overdrive_state_2()[6] == 100:
+                    reEquipNE = False
                     memory.main.click_to_control()
                     memory.main.full_party_format("yuna", full_menu_close=False)
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -420,11 +418,11 @@ def yunalesca():
                 print("Checkpoint reached:", checkpoint)
         else:
             FFXC.set_neutral()
-            FFXC.set_value("btn_b", 1)
-            FFXC.set_value("btn_a", 1)
+            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("BtnA", 1)
             memory.main.wait_frames(1)
-            FFXC.set_value("btn_b", 0)
-            FFXC.set_value("btn_a", 0)
+            FFXC.set_value("BtnB", 0)
+            FFXC.set_value("BtnA", 0)
             memory.main.wait_frames(1)
     xbox.click_to_battle()
     battle.main.aeon_summon(4)  # Summon Bahamut and attack.

@@ -4,7 +4,6 @@ import json
 import logs
 import memory.main
 import vars
-
 # from tracker.data.formations import allFormations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
 
@@ -24,16 +23,16 @@ def area_formations(area: str):
 
 
 def coming_battles(
-    area: str = "kilika_woods", battle_count: int = 10, extra_advances: int = 0
+    area: str = "kilika_woods", battleCount: int = 10, extraAdvances: int = 0
 ):
     formations = area_formations(area=area)
-    advances = memory.main.rng_01_advances((battle_count * 2) + extra_advances)
-    if extra_advances != 0:
-        while extra_advances != 0:
+    advances = memory.main.rng_01_advances((battleCount * 2) + extraAdvances)
+    if extraAdvances != 0:
+        while extraAdvances != 0:
             del advances[0]
-            extra_advances -= 1
+            extraAdvances -= 1
     battles = []
-    for i in range(battle_count):
+    for i in range(battleCount):
         nextValue = formations[(advances[(i * 2) + 1] & 0x7FFFFFFF) % len(formations)]
         battles.append(nextValue)
     return battles
@@ -365,7 +364,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
 
     # Lagoon
     lagoonBattles = coming_battles(
-        area="besaid_lagoon", battle_count=lagoonCount, extra_advances=advance01
+        area="besaid_lagoon", battleCount=lagoonCount, extraAdvances=advance01
     )
     for i in range(len(lagoonBattles)):
         logs.write_rng_track("Lagoon battle:")
@@ -972,13 +971,13 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
     partySize = 5
     # Kilika
     geneauxTrack = False
-    kilika_battles = coming_battles(
-        area="kilika_woods", battle_count=3, extra_advances=advance01
+    kilikaBattles = coming_battles(
+        area="kilika_woods", battleCount=3, extraAdvances=advance01
     )
     logs.write_rng_track("Kilika battles:")
     import area.kilika as kilika
 
-    bestBattle = kilika.select_best_of_two(kilika_battles)
+    bestBattle = kilika.select_best_of_two(kilikaBattles)
     ragoraKills = [0, 0, 0]
     if "ragora" in bestBattle:
         for i in range(len(bestBattle)):
@@ -1040,7 +1039,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             geneauxTrack = True
 
         battleFormations = coming_battles(
-            area="kilika_woods", battle_count=1, extra_advances=advance01
+            area="kilika_woods", battleCount=1, extraAdvances=advance01
         )
         logs.write_rng_track(str(battleFormations))
         for x in range(len(battleFormations)):
@@ -1193,7 +1192,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
     partySize = 5
     # Workers
     battleFormations = coming_battles(
-        area="machina_1", battle_count=1, extra_advances=advance01
+        area="machina_1", battleCount=1, extraAdvances=advance01
     )
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
@@ -1257,7 +1256,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             advance10 += 3
         advance01 += 1
     battleFormations = coming_battles(
-        area="machina_2", battle_count=1, extra_advances=advance01
+        area="machina_2", battleCount=1, extraAdvances=advance01
     )
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
@@ -1321,7 +1320,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             advance10 += 3
         advance01 += 1
     battleFormations = coming_battles(
-        area="machina_3", battle_count=1, extra_advances=advance01
+        area="machina_3", battleCount=1, extraAdvances=advance01
     )
     for x in range(len(battleFormations)):
         for i in range(len(battleFormations[x])):
@@ -1530,7 +1529,7 @@ def zombie_track(report=False):
     advance10 = 0
     advance12 = [0] * 3
     advance13 = [0] * 3
-    zombie_results = [99] * 3
+    zombieResults = [99] * 3
     partySize = 7
 
     # "sanctuary_keeper"
@@ -1655,7 +1654,7 @@ def zombie_track(report=False):
         if report_dropped_item(
             enemy=enemy, drop=finalItem, pref_type=0, pref_ability=0x8032, report=report
         ):
-            zombie_results[0] = finalItem.equipOwnerAlt
+            zombieResults[0] = finalItem.equipOwnerAlt
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = item_to_be_dropped(
             enemy=enemy,
@@ -1672,7 +1671,7 @@ def zombie_track(report=False):
             pref_ability=0x8032,
             report=report,
         ):
-            zombie_results[1] = finalItem.equipOwnerAlt
+            zombieResults[1] = finalItem.equipOwnerAlt
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = item_to_be_dropped(
             enemy=enemy,
@@ -1689,11 +1688,11 @@ def zombie_track(report=False):
             pref_ability=0x8032,
             report=report,
         ):
-            zombie_results[2] = finalItem.equipOwnerAlt
+            zombieResults[2] = finalItem.equipOwnerAlt
     advance10 += 3
     advance01 += 1
 
-    return zombie_results
+    return zombieResults
 
 
 def nea_track():

@@ -229,20 +229,20 @@ def luca_workers():
     print("+++ sGridNodes:", memory.main.s_grid_node_selected())
     if memory.main.s_grid_node_selected()[0] == 2:
         print("No early haste")
-        early_haste = 0
+        earlyHaste = 0
     else:
         print("Early haste, can haste for Oblitzerator")
-        early_haste = 1
+        earlyHaste = 1
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("mana", "none")
-    if early_haste == 1:
+    if earlyHaste == 1:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("ability", "none")  # Haste
 
     menu_grid.use_and_quit()
     memory.main.close_menu()
-    return early_haste
+    return earlyHaste
 
 
 def late_haste():
@@ -431,7 +431,7 @@ def battle_site_oaka_2():
         other_slots = [
             i
             for i, handle in enumerate(all_equipment)
-            if (i > 5 and handle.equip_status == 255 and not handle.is_brotherhood())
+            if (i > 5 and handle.equipStatus == 255 and not handle.is_brotherhood())
         ]
         for cur in other_slots:
             sell_weapon(cur)

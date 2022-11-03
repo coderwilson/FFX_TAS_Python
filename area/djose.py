@@ -17,21 +17,21 @@ def path():
     memory.main.full_party_format("djose")
     memory.main.close_menu()
 
-    count_battles = 0
+    countBattles = 0
     checkpoint = 0
-    last_cp = 0
-    stone_breath = 0
+    lastCP = 0
+    stoneBreath = 0
     print("Starting Djose pathing section")
 
     while memory.main.get_map() != 81:  # All the way into the temple
-        if last_cp != checkpoint:
+        if lastCP != checkpoint:
             print("Checkpoint reached:", checkpoint)
-            last_cp = checkpoint
+            lastCP = checkpoint
 
         if memory.main.user_control():
-            if checkpoint in [47, 48] and stone_breath == 1:
+            if checkpoint in [47, 48] and stoneBreath == 1:
                 checkpoint = 49
-            elif checkpoint == 49 and stone_breath == 0:
+            elif checkpoint == 49 and stoneBreath == 0:
                 checkpoint = 47
             # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
             elif checkpoint == 42 and game_vars.try_djose_skip():
@@ -85,18 +85,18 @@ def path():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 print("Starting battle")
-                if stone_breath == 0:
+                if stoneBreath == 0:
                     print("Still looking for Stone Breath.")
-                stone_breath = battle.main.djose(stone_breath)
+                stoneBreath = battle.main.djose(stoneBreath)
                 print("Battles complete.")
-                count_battles += 1
+                countBattles += 1
             elif memory.main.menu_open():
                 xbox.menu_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
 
-    # logs.write_stats("Djose battles:")
-    # logs.write_stats(count_battles)
+    # logs.writeStats("Djose battles:")
+    # logs.writeStats(countBattles)
 
 
 def temple():
@@ -366,11 +366,11 @@ def leaving_djose():
     memory.main.await_control()
 
     checkpoint = 0
-    last_cp = 0
+    lastCP = 0
     while memory.main.get_map() != 75:
-        if last_cp != checkpoint:
+        if lastCP != checkpoint:
             print("Checkpoint reached: ", checkpoint)
-            last_cp = checkpoint
+            lastCP = checkpoint
         if memory.main.user_control():
             if checkpoint == 1:
                 if not game_vars.csr():
@@ -378,7 +378,7 @@ def leaving_djose():
                     memory.main.click_to_event_temple(6)
                 checkpoint += 1
             # Do we need this chest for kilika luck skip? I think not.
-            elif checkpoint == 11:  # and not game_vars.skip_kilika_luck():
+            elif checkpoint == 11:  # and not gameVars.skipKilikaLuck():
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 memory.main.click_to_event_temple(0)

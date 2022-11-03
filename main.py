@@ -1,11 +1,10 @@
 # Libraries and Core Files
-import logging
 import random
 import sys
 
 # This needs to be before the other imports in case they decide to log things when imported
 import logger
-
+import logging
 # This sets up console and file logging (should only be called once)
 logger.initialize_logging()
 
@@ -35,31 +34,27 @@ import blitz
 import config
 import logs
 import memory.main
-import nemesis.arena_battles
-import nemesis.arenaPrep
-import nemesis.changes
 import reset
 import screen
 import vars
 import xbox
+import nemesis.arena_battles
+import nemesis.arenaPrep
+import nemesis.changes
 from gamestate import game
-
-FFXC = xbox.controller_handle()
 
 def configuration_setup():
     game_vars = vars.vars_handle()
     # Open the config file and parse game configuration
     # This may overwrite configuration above
     config_data = config.open_config()
-    # gamestate
-    game.state = config_data.get("gamestate", "none")
+    # Gamestate
+    game.state = config_data.get("Gamestate", "none")
     game.step = config_data.get("step_counter", 1)
 
     ############################################################################################
     # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-    game.rng_seed_num = config_data.get(
-        "rngSeedNum", 160
-    )  # If you don't randomly select below, this will be the seed you run.
+    game.rng_seed_num = config_data.get("rngSeedNum", 160) # If you don't randomly select below, this will be the seed you run.
     useFavoredSeed = config_data.get("useFavoredSeed", False)
 
     rngSelectArray = [31, 160]
@@ -74,7 +69,7 @@ def configuration_setup():
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game.rng_seed_num = 255
         gameLength = "Loading mid point for testing."
-        # game_vars.setCSR(True)
+        # gameVars.setCSR(True)
     elif game_vars.use_set_seed():
         gameLength = f"Full Run, set seed [{game.rng_seed_num}]"
     elif useFavoredSeed:
@@ -107,18 +102,17 @@ def rng_seed_setup():
     if game_vars.use_set_seed():
         memory.main.set_rng_seed(game.rng_seed_num)
 
-    rng_seed = memory.main.rng_seed()
-    print("---RNG seed:", rng_seed)
+    rngSeed = memory.main.rng_seed()
+    print("---RNG seed:", rngSeed)
 
     # Next, check if we are loading to a save file, or record the RNG seed on full runs.
     if game.state != "none":
         import load_game
-
-        load_game.load_into_game(gamestate=game.state, step_counter=game.step)
+        load_game.load_into_game(Gamestate=game.state, step_counter=game.step)
     else:
-        logs.next_stats(rng_seed)
+        logs.next_stats(rngSeed)
         logs.write_stats("RNG seed:")
-        logs.write_stats(rng_seed)
+        logs.write_stats(rngSeed)
 
 
 def perform_TAS():
@@ -127,7 +121,7 @@ def perform_TAS():
     # Original seed for when looping
     rngSeedOrig = game.rng_seed_num
     blitzLoops = 0
-    maxLoops = 12  # TODO: Move into config.yaml?
+    maxLoops = 12 # TODO: Move into config.yaml?
 
     while game.state != "End":
 
@@ -135,7 +129,7 @@ def perform_TAS():
             # Blitzball testing logic
             if game.state == "Luca" and game.step == 3:
                 area.dream_zan.new_game(game.state)
-                load_game.load_save_num(37)  # TODO: Magic number
+                load_game.load_save_num(37) # TODO: Magic number
 
             if game.rng_seed_num >= 256:
                 game.state = "End"
@@ -263,8 +257,8 @@ def perform_TAS():
                     game.step = 2
 
                 if game.step == 2:
-                    end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
+                    endTime = logs.time_stamp()
+                    totalTime = endTime - game.start_time
                     print("Pre-Blitz time:", str(totalTime))
                     logs.write_stats("Pre Blitz time:")
                     logs.write_stats(totalTime)
@@ -312,7 +306,7 @@ def perform_TAS():
             if game.state == "Miihen":
                 if game.step == 1:
                     returnArray = area.miihen.arrival()
-                    self_destruct = area.miihen.arrival_2(
+                    selfDestruct = area.miihen.arrival_2(
                         returnArray[0], returnArray[1], returnArray[2]
                     )
                     game.step = 2
@@ -323,8 +317,8 @@ def perform_TAS():
                     area.miihen.low_road(returnArray[0], returnArray[1], returnArray[2])
 
                     # Report duration at the end of Mi'ihen section for all runs.
-                    end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
+                    endTime = logs.time_stamp()
+                    totalTime = endTime - game.start_time
                     print("Mi'ihen End timer is:", str(totalTime))
                     logs.write_stats("Miihen End time:")
                     logs.write_stats(totalTime)
@@ -342,8 +336,8 @@ def perform_TAS():
                 if game.step == 2:
                     area.mrr.battle_site()
                     area.mrr.gui_and_aftermath()
-                    end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
+                    endTime = logs.time_stamp()
+                    totalTime = endTime - game.start_time
                     print("End of Battle Site timer is:", str(totalTime))
                     logs.write_stats("Djose-Start time:")
                     logs.write_stats(totalTime)
@@ -660,7 +654,6 @@ def perform_TAS():
 
                 if game.step == 13:
                     nemesis.arenaPrep.djose_farm(cap_num=10)
-                    # NOTE There does not appear to be a step 14 for Nem Farming.
                     game.step = 15
 
                 if game.step == 15:
@@ -689,9 +682,7 @@ def perform_TAS():
                     game.step = 20
 
                 if game.step == 20:
-                    nemesis.arenaPrep.calm(
-                        cap_num=10, airship_return=False, force_levels=27
-                    )
+                    nemesis.arenaPrep.calm(cap_num=10, airship_return=False, force_levels=27)
                     game.step = 21
 
                 if game.step == 21:
@@ -776,10 +767,11 @@ def perform_TAS():
     print("Time! The game is now over.")
 
 
+
 def write_final_logs():
     if memory.main.get_story_progress() > 3210:
-        end_time = logs.time_stamp()
-        totalTime = end_time - game.start_time
+        endTime = logs.time_stamp()
+        totalTime = endTime - game.start_time
         logs.write_stats("Total time:")
         logs.write_stats(str(totalTime))
         print("The game duration was:", str(totalTime))
@@ -807,12 +799,13 @@ def write_final_logs():
     print("Automation complete. Shutting down. Have a great day!")
 
 
+
 # Main entry point of TAS
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Load up vars.py
     vars.init_vars()
 
-    # Set up gamestate and rng-related variables
+    # Set up Gamestate and rng-related variables
     configuration_setup()
 
     # Initialize memory access
@@ -822,8 +815,8 @@ if __name__ == "__main__":
     rng_seed_setup()
 
     # Next, check if we are loading to a save file
-    # if game.state != "none":
-    #    load_game_state()
+    #if game.state != "none":
+    #    load_game.load_into_game(Gamestate=game.state, step_counter=game.step)
 
     # Run the TAS itself
     perform_TAS()

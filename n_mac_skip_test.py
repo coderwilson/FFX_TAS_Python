@@ -30,7 +30,7 @@ game_vars.set_start_vars()
 
 # Plug in controller
 FFXC = xbox.controller_handle()
-gamestate = "Macalania"
+Gamestate = "Macalania"
 step_counter = 1  # x9
 while not memory.main.start():
     pass
@@ -41,13 +41,13 @@ else:
     reset.reset_to_main_menu()
 
 
-if gamestate != "none":
-    if not (gamestate == "Luca" and step_counter == 3):
-        area.dream_zan.new_game(gamestate)
+if Gamestate != "none":
+    if not (Gamestate == "Luca" and step_counter == 3):
+        area.dream_zan.new_game(Gamestate)
 
-    if gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
+    if Gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
         load_game.load_save_num(9)
-    if gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
+    if Gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
         load_game.load_save_num(7)
 
 # Approach the position

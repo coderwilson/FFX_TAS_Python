@@ -215,52 +215,52 @@ def air_ship_return():
     pos = memory.main.get_coords()
     print("Ready to run back to the cockpit.")
     while pos[1] > -90:  # Leaving Yuna/Kimahri, heading back down.
-        FFXC.set_value("axis_ly", -1)
-        FFXC.set_value("axis_lx", 0)
+        FFXC.set_value("AxisLy", -1)
+        FFXC.set_value("AxisLx", 0)
         pos = memory.main.get_coords()
     print("Turn East")
     while pos[0] < -1:
-        FFXC.set_value("axis_lx", 1)
-        FFXC.set_value("axis_ly", 0)
+        FFXC.set_value("AxisLx", 1)
+        FFXC.set_value("AxisLy", 0)
         pos = memory.main.get_coords()
     print("Turn North")
     while memory.main.user_control():
-        FFXC.set_value("axis_lx", 0)
-        FFXC.set_value("axis_ly", 1)
+        FFXC.set_value("AxisLx", 0)
+        FFXC.set_value("AxisLy", 1)
         pos = memory.main.get_coords()
 
-    FFXC.set_value("axis_ly", 0)
-    FFXC.set_value("axis_lx", 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.await_control()
 
     while memory.main.user_control():
-        FFXC.set_value("axis_lx", 0)
-        FFXC.set_value("axis_ly", 1)
+        FFXC.set_value("AxisLx", 0)
+        FFXC.set_value("AxisLy", 1)
 
-    FFXC.set_value("axis_ly", 0)
-    FFXC.set_value("axis_lx", 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.await_control()
 
     while memory.main.user_control():
         pos = memory.main.get_coords()
         memory.main.wait_frames(30 * 0.05)
-        FFXC.set_value("axis_ly", 1)
+        FFXC.set_value("AxisLy", 1)
         if pos[0] < -1:
-            FFXC.set_value("axis_lx", 1)
+            FFXC.set_value("AxisLx", 1)
         else:
-            FFXC.set_value("axis_lx", 0)
+            FFXC.set_value("AxisLx", 0)
 
-    FFXC.set_value("axis_ly", 0)
-    FFXC.set_value("axis_lx", 0)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)
     memory.main.await_control()
-    FFXC.set_value("axis_ly", 1)
+    FFXC.set_value("AxisLy", 1)
     memory.main.wait_frames(30 * 1.2)
-    FFXC.set_value("axis_ly", 0)
-    FFXC.set_value("axis_lx", -1)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", -1)
     memory.main.wait_frames(30 * 0.5)
 
     while memory.main.user_control():
-        FFXC.set_value("axis_ly", 1)
-        FFXC.set_value("axis_lx", -1)
-    FFXC.set_value("axis_ly", 0)
-    FFXC.set_value("axis_lx", 0)
+        FFXC.set_value("AxisLy", 1)
+        FFXC.set_value("AxisLx", -1)
+    FFXC.set_value("AxisLy", 0)
+    FFXC.set_value("AxisLx", 0)

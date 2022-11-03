@@ -8,30 +8,30 @@ FFXC = xbox.controller_handle()
 
 
 def grid_up():
-    FFXC.set_value("d_pad", 1)
+    FFXC.set_value("Dpad", 1)
     memory.main.wait_frames(2)
-    FFXC.set_value("d_pad", 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(3)
 
 
 def grid_down():
-    FFXC.set_value("d_pad", 2)
+    FFXC.set_value("Dpad", 2)
     memory.main.wait_frames(2)
-    FFXC.set_value("d_pad", 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(3)
 
 
 def grid_left():
-    FFXC.set_value("d_pad", 4)
+    FFXC.set_value("Dpad", 4)
     memory.main.wait_frames(2)
-    FFXC.set_value("d_pad", 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(3)
 
 
 def grid_right():
-    FFXC.set_value("d_pad", 8)
+    FFXC.set_value("Dpad", 8)
     memory.main.wait_frames(2)
-    FFXC.set_value("d_pad", 0)
+    FFXC.set_value("Dpad", 0)
     memory.main.wait_frames(3)
 
 

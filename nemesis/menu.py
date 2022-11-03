@@ -211,7 +211,7 @@ def perform_next_grid(limit: int = 255):
             )  # Decrement
         game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)  # Increment
     # else:
-    # print("###Not enough Slvl:", memory.getTidusSlvl() - nextAPneeded(game_vars.nemCheckpointAP()))
+    # print("###Not enough Slvl:", memory.getTidusSlvl() - nextAPneeded(gameVars.nemCheckpointAP()))
 
 
 def next_ap_needed(checkpoint):

@@ -23,14 +23,14 @@ def beach():
         FFXC.set_neutral()
 
     # Pathing, lots of pathing.
-    besaid_battles = 0
-    good_battles = 0
+    besaidBattles = 0
+    goodBattles = 0
     checkpoint = 0
-    last_cp = 0
+    lastCP = 0
     while memory.main.get_map() != 122:
-        if checkpoint != last_cp:
+        if checkpoint != lastCP:
             print("Checkpoint reached:", checkpoint)
-            last_cp = checkpoint
+            lastCP = checkpoint
 
         # map changes
         if checkpoint < 2 and memory.main.get_map() == 20:
@@ -80,18 +80,18 @@ def beach():
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle.main.piranhas()
-                besaid_battles += 1
-                encounter_id = memory.main.get_encounter_id()
-                if encounter_id == 11 or (
-                    encounter_id == 12 and memory.main.battle_type() == 1
+                besaidBattles += 1
+                encounterID = memory.main.get_encounter_id()
+                if encounterID == 11 or (
+                    encounterID == 12 and memory.main.battle_type() == 1
                 ):
-                    good_battles += 1
+                    goodBattles += 1
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
     logs.write_stats("piranha battles:")
-    logs.write_stats(str(besaid_battles))
-    # logs.write_stats("Optimal piranha battles:")
-    # logs.write_stats(str(good_battles))
+    logs.write_stats(str(besaidBattles))
+    # logs.writeStats("Optimal piranha battles:")
+    # logs.writeStats(str(goodBattles))
 
 
 def trials():
@@ -269,27 +269,27 @@ def leaving():
             # Kimahri fight
             elif checkpoint > 25 and checkpoint < 30 and screen.battle_screen():
                 FFXC.set_neutral()
-                heal_count = 0
+                healCount = 0
                 while memory.main.battle_active():
                     if screen.battle_screen():
-                        battle_hp = memory.main.get_battle_hp()
-                        enemy_hp = memory.main.get_enemy_current_hp()
+                        battleHP = memory.main.get_battle_hp()
+                        enemyHP = memory.main.get_enemy_current_hp()
                         if (
                             not game_vars.early_tidus_grid()
-                            and battle_hp[0] < 120
-                            and enemy_hp[0] > 119
+                            and battleHP[0] < 120
+                            and enemyHP[0] > 119
                         ):
                             if memory.main.rng_seed() == 31:
                                 battle.main.attack("none")
                             else:
                                 battle.main.use_potion_character(0, "l")
-                                heal_count += 1
+                                healCount += 1
                         else:
                             battle.main.attack("none")
                     elif memory.main.diag_skip_possible():
                         xbox.tap_b()
-                # logs.write_stats("Kimahri heal count:")
-                # logs.write_stats(heal_count)
+                # logs.writeStats("Kimahri heal count:")
+                # logs.writeStats(healCount)
                 memory.main.click_to_control()
             # Valefor summon tutorial
             elif (
