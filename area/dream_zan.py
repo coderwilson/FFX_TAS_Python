@@ -212,7 +212,7 @@ def after_ammes():
     memory.main.click_to_control()
     checkpoint = 0
     # memory.main.wait_frames(90)
-    # print("#### MARK ####")
+    # logger.debug("#### MARK ####")
     # memory.main.ammes_fix(actor_index=0)
     # memory.main.wait_frames(90)
 
