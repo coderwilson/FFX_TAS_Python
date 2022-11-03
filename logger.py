@@ -1,16 +1,18 @@
-import logging
 import datetime
+import logging
+
 import config
 
 # Python has a logging library that will do what we want.
 # Basic documentation here:     https://docs.python.org/3/howto/logging.html
 # Advanced documentation here:  https://docs.python.org/3/howto/logging-cookbook.html
 
+
 # This should be called once in main, before any calls to the logging library
 def initialize_logging():
     # Defines the format of the logs
-    log_format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-    date_format = '%Y-%m-%d %H:%M:%S'
+    log_format = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
+    date_format = "%Y-%m-%d %H:%M:%S"
     # Get current time in order to create log file name
     timeNow = datetime.datetime.now()
     timeStr = f"{timeNow.year}{timeNow.month}{timeNow.day}_{timeNow.hour}_{timeNow.minute}_{timeNow.second}"
@@ -20,7 +22,7 @@ def initialize_logging():
         format=log_format,
         datefmt=date_format,
         filename=f"Logs/FFX_Log_{timeStr}.txt",
-        filemode='w'
+        filemode="w",
     )
 
     # Set up the console logger, which may have different visible log level
@@ -33,9 +35,10 @@ def initialize_logging():
     formatter = logging.Formatter(fmt=log_format, datefmt=date_format)
     console.setFormatter(formatter)
     # Add the console handler to the root logger
-    logging.getLogger('').addHandler(console)
+    logging.getLogger("").addHandler(console)
 
     # Now the logging to file/console is configured!
+
 
 # Examples of using logging:
 #
