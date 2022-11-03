@@ -1,5 +1,6 @@
 import battle.boss
 import battle.main
+import logging
 import memory.main
 import menu
 import pathing
@@ -8,6 +9,7 @@ import xbox
 import zz_airship_path
 import zz_egg_hunt_auto
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -15,7 +17,7 @@ FFXC = xbox.controller_handle()
 
 def making_plans():
     memory.main.click_to_control_3()
-    print("Final Push! Let's get this show on the road!!! (Highbridge)")
+    logger.info("Final Push! Let's get this show on the road!!! (Highbridge)")
 
     # Start by touching the save sphere
     while not pathing.set_movement([-267, 347]):
@@ -33,20 +35,20 @@ def making_plans():
 
 
 def shedinja():  # shelinda
-    print("The hymn is the key")
+    logger.info("The hymn is the key")
     while memory.main.get_map() != 382:
-        print("Mark 1")
+        logger.debug("Mark 1")
         xbox.tap_b()
     while not memory.main.diag_progress_flag() in [4, 255]:
-        print("Mark 2")
+        logger.debug("Mark 2")
         xbox.tap_b()
     while memory.main.map_cursor() != 10:
-        print("The destination is the key")
+        logger.debug("The destination is the key")
         memory.main.menu_direction(memory.main.map_cursor(), 10, 13)
     memory.main.click_to_control_dumb()
 
     memory.main.await_control()
-    print("Moving to Shedinja")
+    logger.info("Moving to Shedinja")
     FFXC.set_movement(1, 1)
     memory.main.wait_frames(45)
     FFXC.set_movement(0, 1)
@@ -66,7 +68,7 @@ def shedinja():  # shelinda
 
 
 def exit_cockpit():
-    print("Attempting to exit cockpit")
+    logger.info("Attempting to exit cockpit")
     while memory.main.get_map() != 265:
         if memory.main.user_control():
             tidus_coords = memory.main.get_coords()
@@ -107,7 +109,7 @@ def facing_sin():
     zz_airship_path.air_ship_path(3)
     battle.main.sin_arms()
     memory.main.click_to_control()
-    print("To the deck, talk to Yuna")
+    logger.info("To the deck, talk to Yuna")
     if memory.main.get_map() in [255, 374]:
         exit_cockpit()
     FFXC.set_neutral()
@@ -117,13 +119,13 @@ def facing_sin():
     FFXC.set_neutral()
     memory.main.click_to_control()
 
-    print("To the deck, Sin's face battle.")
+    logger.info("To the deck, Sin's face battle.")
     if memory.main.get_map() in [255, 374]:
         exit_cockpit()
     FFXC.set_neutral()
     zz_airship_path.air_ship_path(5)
     battle.main.sin_face()
-    print("End of battle with Sin's face.")
+    logger.info("End of battle with Sin's face.")
 
 
 def inside_sin():
@@ -152,7 +154,7 @@ def inside_sin():
         if memory.main.user_control():
             # Events
             if memory.main.get_map() == 296:  # Seymour battle
-                print("We've reached the Seymour screen.")
+                logger.info("We've reached the Seymour screen.")
                 memory.main.full_party_format("yuna")
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 5)
@@ -167,7 +169,7 @@ def inside_sin():
             # General Pathing
             elif pathing.set_movement(pathing.inside_sin(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.turn_ready():
@@ -187,7 +189,7 @@ def egg_hunt():
         FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 0.5)
     zz_egg_hunt_auto.engage()
-    print("Done with the egg hunt. Final prep for BFA.")
+    logger.info("Done with the egg hunt. Final prep for BFA.")
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
         FFXC.set_movement(1, 1)
