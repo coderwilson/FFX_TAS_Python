@@ -1,5 +1,6 @@
 import ctypes
 import ctypes.wintypes
+import logging
 import os.path
 import struct
 import time
@@ -12,7 +13,6 @@ import logs
 import pathing
 import vars
 import xbox
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -808,8 +808,8 @@ def get_battle_hp():
     hp2 = process.read(key)
     key = baseValue + 0x00F3F8C4
     hp3 = process.read(key)
-    hpArray = [hp1, hp2, hp3]
-    return hpArray
+    hp_array = [hp1, hp2, hp3]
+    return hp_array
 
 
 def get_encounter_id():
@@ -948,24 +948,24 @@ def get_items_order():
 
 
 def get_use_items_order():
-    itemArray = get_items_order()
+    item_array = get_items_order()
     x = 0
-    while x < len(itemArray):
+    while x < len(item_array):
         try:
-            if itemArray[x] == 20:
+            if item_array[x] == 20:
                 ignoreThisValue = True
                 x += 1
-            elif itemArray[x] < 23:
-                del itemArray[x]
-            elif itemArray[x] > 69:
-                del itemArray[x]
+            elif item_array[x] < 23:
+                del item_array[x]
+            elif item_array[x] > 69:
+                del item_array[x]
             else:
                 x += 1
         except Exception as y:
             print(y)
             retryThisValue = True
             print("Retrying value")
-    return itemArray
+    return item_array
 
 
 def get_use_items_slot(item_num):
@@ -980,21 +980,21 @@ def get_use_items_slot(item_num):
 
 
 def get_throw_items_order():
-    itemArray = get_items_order()
-    print(itemArray)
+    item_array = get_items_order()
+    print(item_array)
     x = 0
-    while x < len(itemArray):
+    while x < len(item_array):
         try:
-            if itemArray[x] > 18:
-                itemArray.remove(itemArray[x])
+            if item_array[x] > 18:
+                item_array.remove(item_array[x])
             else:
                 x += 1
         except Exception as y:
             print(y)
             retryThisValue = True
             print("Retrying value")
-    print(itemArray)
-    return itemArray
+    print(item_array)
+    return item_array
 
 
 def get_throw_items_slot(itemNum):
@@ -1009,19 +1009,19 @@ def get_throw_items_slot(itemNum):
 
 
 def get_grid_items_order():
-    itemArray = get_items_order()
+    item_array = get_items_order()
     x = 0
-    while x < len(itemArray):
+    while x < len(item_array):
         try:
-            if itemArray[x] < 70 or itemArray[x] > 99:
-                itemArray.remove(itemArray[x])
+            if item_array[x] < 70 or item_array[x] > 99:
+                item_array.remove(item_array[x])
             else:
                 x += 1
         except Exception as y:
             print(y)
             retryThisValue = True
             print("Retrying value")
-    return itemArray
+    return item_array
 
 
 def get_grid_items_slot(item_num) -> int:
@@ -2277,7 +2277,9 @@ def click_to_diag_progress(num):
                 xbox.tap_b()
             if diag_progress_flag() != lastNum:
                 lastNum = diag_progress_flag()
-                logger.debug(f"Dialog change: {diag_progress_flag()} - clicking to {num}")
+                logger.debug(
+                    f"Dialog change: {diag_progress_flag()} - clicking to {num}"
+                )
     return True
 
 
@@ -2831,8 +2833,8 @@ class Equipment:
     def __init__(self, equip_num):
         self.num = equip_num
         self.equipType = get_equip_type(equip_num)
-        self.equipOwner = get_equip_owner(equip_num)
-        self.equipOwnerAlt = get_equip_owner(equip_num)
+        self.equip_owner = get_equip_owner(equip_num)
+        self.equip_owner_alt = get_equip_owner(equip_num)
         self.equipAbilities = get_equip_abilities(equip_num)
         self.equip_status = get_equip_currently_equipped(equip_num)
         self.slots = get_equip_slot_count(equip_num)
@@ -2843,8 +2845,8 @@ class Equipment:
         self, eType: int, eOwner1: int, eOwner2: int, eSlots: int, eAbilities
     ):
         self.equipType = eType
-        self.equipOwner = eOwner1
-        self.equipOwnerAlt = eOwner2
+        self.equip_owner = eOwner1
+        self.equip_owner_alt = eOwner2
         self.equipAbilities = eAbilities
         self.equip_status = 0
         self.slots = eSlots
@@ -2855,7 +2857,7 @@ class Equipment:
         return self.equipType
 
     def owner(self):
-        return self.equipOwner
+        return self.equip_owner
 
     def abilities(self):
         return self.equipAbilities
@@ -2881,8 +2883,8 @@ class Equipment:
 def all_equipment():
     firstEquipment = True
     for i in range(200):
-        currentHandle = Equipment(i)
-        if get_equip_legit(i) and currentHandle.equip_exists():
+        current_handle = Equipment(i)
+        if get_equip_legit(i) and current_handle.equip_exists():
             if firstEquipment:
                 equipHandleArray = [Equipment(i)]
                 firstEquipment = False
@@ -2892,28 +2894,28 @@ def all_equipment():
 
 
 def weapon_array_character(char_num):
-    equipHandles = all_equipment()
+    equip_handles = all_equipment()
     firstEquipment = True
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.owner() == char_num and currentHandle.equipment_type() == 0:
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.owner() == char_num and current_handle.equipment_type() == 0:
             if firstEquipment:
-                charWeaps = [currentHandle]
+                charWeaps = [current_handle]
                 firstEquipment = False
             else:
-                charWeaps.append(currentHandle)
+                charWeaps.append(current_handle)
     return charWeaps
 
 
 def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
-    equipHandles = weapon_array_character(char_num)
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.is_equipped() == char_num:
-            print("## Owner:", currentHandle.owner())
-            print("## Equipped:", currentHandle.is_equipped())
-            print("## Has Ability:", currentHandle.has_ability(ability_num))
-            if currentHandle.has_ability(ability_num):
+    equip_handles = weapon_array_character(char_num)
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.is_equipped() == char_num:
+            print("## Owner:", current_handle.owner())
+            print("## Equipped:", current_handle.is_equipped())
+            print("## Has Ability:", current_handle.has_ability(ability_num))
+            if current_handle.has_ability(ability_num):
                 return True
             else:
                 return False
@@ -2923,15 +2925,15 @@ def check_thunder_strike() -> int:
     results = 0
     tidusWeaps = weapon_array_character(0)
     while len(tidusWeaps) > 0:
-        currentHandle = tidusWeaps.pop(0)
-        if currentHandle.has_ability(0x8026):
+        current_handle = tidusWeaps.pop(0)
+        if current_handle.has_ability(0x8026):
             results += 1
             break
 
     wakkaWeaps = weapon_array_character(4)
     while len(wakkaWeaps) > 0:
-        currentHandle = wakkaWeaps.pop(0)
-        if currentHandle.has_ability(0x8026):
+        current_handle = wakkaWeaps.pop(0)
+        if current_handle.has_ability(0x8026):
             results += 2
             break
     return results
@@ -2942,50 +2944,50 @@ def check_zombie_strike():
 
     charWeaps = weapon_array_character(0)  # Tidus
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(0)
             return True
 
     charWeaps = weapon_array_character(1)  # Yuna
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(1)
             return True
 
     charWeaps = weapon_array_character(2)  # Auron
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(2)
             return True
 
     charWeaps = weapon_array_character(3)  # Kimahri
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(3)
             return True
 
     charWeaps = weapon_array_character(4)  # Wakka
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(4)
             return True
 
     charWeaps = weapon_array_character(5)  # Lulu
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(5)
             return True
 
     charWeaps = weapon_array_character(6)  # Rikku
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(6)
             return True
 
@@ -2997,44 +2999,44 @@ def check_ability(ability=0x8032):
 
     charWeaps = weapon_array_character(0)  # Tidus
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[0] = True
 
     charWeaps = weapon_array_character(1)  # Yuna
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[1] = True
 
     charWeaps = weapon_array_character(2)  # Auron
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[2] = True
 
     charWeaps = weapon_array_character(3)  # Kimahri
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[3] = True
 
     charWeaps = weapon_array_character(4)  # Wakka
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[4] = True
 
     charWeaps = weapon_array_character(5)  # Lulu
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[5] = True
 
     charWeaps = weapon_array_character(6)  # Rikku
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             results[6] = True
 
     return results
@@ -3045,10 +3047,10 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(0)  # Tidus
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[0] = False
                 else:
                     results[0] = True
@@ -3057,10 +3059,10 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(1)  # Yuna
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[1] = False
                 else:
                     results[1] = True
@@ -3069,10 +3071,10 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(2)  # Auron
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[2] = False
                 else:
                     results[2] = True
@@ -3081,10 +3083,10 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(3)  # Kimahri
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[3] = False
                 else:
                     results[3] = True
@@ -3093,10 +3095,10 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(4)  # Wakka
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[4] = False
                 else:
                     results[4] = True
@@ -3105,10 +3107,10 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(5)  # Lulu
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[5] = False
                 else:
                     results[5] = True
@@ -3117,11 +3119,11 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
 
     charWeaps = armor_array_character(6)  # Rikku
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        print(currentHandle.abilities())
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        print(current_handle.abilities())
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[6] = False
                 else:
                     results[6] = True
@@ -3153,50 +3155,50 @@ def check_nea_armor():
 
     charWeaps = armor_array_character(0)  # Tidus
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(0)
             return True
 
     charWeaps = armor_array_character(1)  # Yuna
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(1)
             return True
 
     charWeaps = armor_array_character(2)  # Auron
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(2)
             return True
 
     charWeaps = armor_array_character(3)  # Kimahri
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(3)
             return True
 
     charWeaps = armor_array_character(4)  # Wakka
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(4)
             return True
 
     charWeaps = armor_array_character(5)  # Lulu
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(5)
             return True
 
     charWeaps = armor_array_character(6)  # Rikku
     while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+        current_handle = charWeaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(6)
             return True
 
@@ -3217,24 +3219,24 @@ def hunter_spear():
         return False
     else:
         while len(kimWeapHandles) > 0:
-            currentHandle = kimWeapHandles.pop(0)
-            if currentHandle.abilities() == [0x800B, 0x8000, 0x8064, 0x00FF]:
+            current_handle = kimWeapHandles.pop(0)
+            if current_handle.abilities() == [0x800B, 0x8000, 0x8064, 0x00FF]:
                 return True
     return False
 
 
 def armor_array_character(charNum):
-    equipHandles = all_equipment()
+    equip_handles = all_equipment()
     firstEquipment = True
     charWeaps = []
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.owner() == charNum and currentHandle.equipment_type() == 1:
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.owner() == charNum and current_handle.equipment_type() == 1:
             if firstEquipment:
-                charWeaps = [currentHandle]
+                charWeaps = [current_handle]
                 firstEquipment = False
             else:
-                charWeaps.append(currentHandle)
+                charWeaps.append(current_handle)
     try:
         return charWeaps
     except Exception:
@@ -3242,14 +3244,14 @@ def armor_array_character(charNum):
 
 
 def equipped_armor_has_ability(charNum: int, abilityNum: int = 0x801D):
-    equipHandles = armor_array_character(charNum)
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.is_equipped() == charNum:
-            print("## Owner:", currentHandle.owner())
-            print("## Equipped:", currentHandle.is_equipped())
-            print("## Has Ability:", currentHandle.has_ability(abilityNum))
-            if currentHandle.has_ability(abilityNum):
+    equip_handles = armor_array_character(charNum)
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.is_equipped() == charNum:
+            print("## Owner:", current_handle.owner())
+            print("## Equipped:", current_handle.is_equipped())
+            print("## Has Ability:", current_handle.has_ability(abilityNum))
+            if current_handle.has_ability(abilityNum):
                 return True
             else:
                 return False
@@ -4463,6 +4465,7 @@ def arena_array():
         key = baseValue + 0xD30C9C + i
         retArray.append(process.readBytes(key, 1))
     return retArray
+
 
 def arena_farm_check(
     zone: str = "besaid", end_goal: int = 10, report=False, return_array=False

@@ -303,8 +303,10 @@ def report_dropped_item(
         logs.write_rng_track(
             "+Item drop off of:" + str(enemy) + "| advances:" + str(need_adv)
         )
-        logs.write_rng_track("+Owner, char-killed (9 = killer):" + str(drop.equipOwner))
-        logs.write_rng_track("+Owner, aeon-killed:" + str(drop.equipOwnerAlt))
+        logs.write_rng_track(
+            "+Owner, char-killed (9 = killer):" + str(drop.equip_owner)
+        )
+        logs.write_rng_track("+Owner, aeon-killed:" + str(drop.equip_owner_alt))
         if drop.equipType == 0:
             logs.write_rng_track("+Type: Weapon")
         else:
@@ -320,8 +322,8 @@ def report_dropped_item(
             + " | advances:"
             + str(need_adv)
         )
-        logs.write_rng_track("-Owner, char-killed: " + str(drop.equipOwner))
-        logs.write_rng_track("-Owner, aeon-killed: " + str(drop.equipOwnerAlt))
+        logs.write_rng_track("-Owner, char-killed: " + str(drop.equip_owner))
+        logs.write_rng_track("-Owner, aeon-killed: " + str(drop.equip_owner_alt))
         if drop.equipType == 0:
             logs.write_rng_track("-Type: Weapon")
         else:
@@ -1039,13 +1041,13 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
             advance01 += 1
             geneauxTrack = True
 
-        battleFormations = coming_battles(
+        battle_formations = coming_battles(
             area="kilika_woods", battle_count=1, extra_advances=advance01
         )
-        logs.write_rng_track(str(battleFormations))
-        for x in range(len(battleFormations)):
-            for i in range(len(battleFormations[x])):
-                thisBattle = battleFormations[x]
+        logs.write_rng_track(str(battle_formations))
+        for x in range(len(battle_formations)):
+            for i in range(len(battle_formations[x])):
+                thisBattle = battle_formations[x]
                 if thisBattle == ["ragora"] and ragoraKills[0] == 0:
                     pass
                 else:
@@ -1192,12 +1194,12 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
 
     partySize = 5
     # Workers
-    battleFormations = coming_battles(
+    battle_formations = coming_battles(
         area="machina_1", battle_count=1, extra_advances=advance01
     )
-    for x in range(len(battleFormations)):
-        for i in range(len(battleFormations[x])):
-            thisBattle = battleFormations[x]
+    for x in range(len(battle_formations)):
+        for i in range(len(battle_formations[x])):
+            thisBattle = battle_formations[x]
             dropChances = track_drops(
                 enemy=thisBattle, battles=1, extra_advances=advance10
             )
@@ -1256,12 +1258,12 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
                         thunderCount[2] += 1
             advance10 += 3
         advance01 += 1
-    battleFormations = coming_battles(
+    battle_formations = coming_battles(
         area="machina_2", battle_count=1, extra_advances=advance01
     )
-    for x in range(len(battleFormations)):
-        for i in range(len(battleFormations[x])):
-            thisBattle = battleFormations[x]
+    for x in range(len(battle_formations)):
+        for i in range(len(battle_formations[x])):
+            thisBattle = battle_formations[x]
             dropChances = track_drops(
                 enemy=thisBattle, battles=1, extra_advances=advance10
             )
@@ -1320,12 +1322,12 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
                         thunderCount[2] += 1
             advance10 += 3
         advance01 += 1
-    battleFormations = coming_battles(
+    battle_formations = coming_battles(
         area="machina_3", battle_count=1, extra_advances=advance01
     )
-    for x in range(len(battleFormations)):
-        for i in range(len(battleFormations[x])):
-            thisBattle = battleFormations[x]
+    for x in range(len(battle_formations)):
+        for i in range(len(battle_formations[x])):
+            thisBattle = battle_formations[x]
             dropChances = track_drops(
                 enemy=thisBattle, battles=1, extra_advances=advance10
             )
@@ -1458,69 +1460,69 @@ def decide_skip_zan_luck() -> bool:
     arm2Crit = False
     faceCrit = False
 
-    attackCount = extraXP
+    attack_count = extraXP
     if keeperCrit:
         print("### Expecting crit on SK")
-        attackCount += 1
+        attack_count += 1
     else:
-        attackCount += 2
+        attack_count += 2
 
     # Now to test the Yunalesca fight. Crits do not matter here, only hit chance.
     for i in range(3):
-        print("### YL attack num", i, "|", attackCount)
+        print("### YL attack num", i, "|", attack_count)
         if not future_attack_hit(
-            character=7, enemy="yunalesca", attack_index=attackCount
+            character=7, enemy="yunalesca", attack_index=attack_count
         ):
             print("### Miss on Yunalesca, attack number", i)
             return False
-        attackCount += 1
+        attack_count += 1
     if game_vars.nemesis():  # BFA miss does not factor in for Nemesis route.
         return True
 
     arm1Crit = memory.main.future_attack_will_crit(
-        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attackCount
+        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attack_count
     )
     if arm1Crit:
         print("### Expecting crit on Arm 1")
-        attackCount += 1
+        attack_count += 1
     else:
-        attackCount += 2
+        attack_count += 2
     arm2Crit = memory.main.future_attack_will_crit(
-        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attackCount
+        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attack_count
     )
     if arm2Crit:
         print("### Expecting crit on Arm 2")
-        attackCount += 1
+        attack_count += 1
     else:
-        attackCount += 2
-    attackCount += 1  # Core is always one attack
+        attack_count += 2
+    attack_count += 1  # Core is always one attack
     faceCrit = memory.main.future_attack_will_crit(
-        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attackCount
+        character=7, char_luck=bahamutLuck, enemy_luck=15, attack_index=attack_count
     )
     if not faceCrit:
         faceCrit = memory.main.future_attack_will_crit(
             character=7,
             char_luck=bahamutLuck,
             enemy_luck=15,
-            attack_index=attackCount + 1,
+            attack_index=attack_count + 1,
         )
     if faceCrit:
         print("### Expecting crit on Face")
-        attackCount += 2
+        attack_count += 2
     else:
-        attackCount += 3
+        attack_count += 3
     if not future_attack_hit(
-        character=7, enemy="seymour_flux", attack_index=attackCount
+        character=7, enemy="seymour_flux", attack_index=attack_count
     ):
         print("### Miss on Omnis")
         return False
-    attackCount += 1  # One attack on Seymour
+    attack_count += 1  # One attack on Seymour
     for i in range(3):
-        print("### BFA attack num ", i, " | ", attackCount)
-        if not future_attack_hit(character=7, enemy="bfa", attack_index=attackCount):
+        print("### BFA attack num ", i, " | ", attack_count)
+        if not future_attack_hit(character=7, enemy="bfa", attack_index=attack_count):
             print("### Miss on BFA, attack number", i)
             return False
-        attackCount += 1
+        attack_count += 1
     print("### No misses registered. Should be good to skip Luck/Fortune chests.")
     return True
 
@@ -1655,7 +1657,7 @@ def zombie_track(report=False):
         if report_dropped_item(
             enemy=enemy, drop=finalItem, pref_type=0, pref_ability=0x8032, report=report
         ):
-            zombie_results[0] = finalItem.equipOwnerAlt
+            zombie_results[0] = finalItem.equip_owner_alt
     if len(dropChances[1]) >= 1:
         finalItem, advance13[1] = item_to_be_dropped(
             enemy=enemy,
@@ -1672,7 +1674,7 @@ def zombie_track(report=False):
             pref_ability=0x8032,
             report=report,
         ):
-            zombie_results[1] = finalItem.equipOwnerAlt
+            zombie_results[1] = finalItem.equip_owner_alt
     if len(dropChances[2]) >= 1:
         finalItem, advance13[2] = item_to_be_dropped(
             enemy=enemy,
@@ -1689,7 +1691,7 @@ def zombie_track(report=False):
             pref_ability=0x8032,
             report=report,
         ):
-            zombie_results[2] = finalItem.equipOwnerAlt
+            zombie_results[2] = finalItem.equip_owner_alt
     advance10 += 3
     advance01 += 1
 
@@ -1723,10 +1725,10 @@ def nea_track():
 
 
 def print_manip_info():
-    preX, postX = nea_track()
+    pre_x, post_x = nea_track()
     print("--------------------------")
     print("Upcoming RNGs:")
-    print("Next, before X:", preX, "| Next, after X: ", postX)
+    print("Next, before X:", pre_x, "| Next, after X: ", post_x)
     print(
         "RNG10:",
         memory.main.next_chance_rng_10(),
@@ -1810,8 +1812,8 @@ def hit_chance_table(index: int):
 def oblitz_history():
     filepath = "json_ai_files\\oblitz_results.json"
     with open(filepath, "r") as fp:
-        rngValues = json.load(fp)
-    return rngValues
+        rng_values = json.load(fp)
+    return rng_values
 
 
 def save_oblitz_history(rng_vals):

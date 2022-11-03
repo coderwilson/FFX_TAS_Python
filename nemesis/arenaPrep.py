@@ -267,7 +267,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                     else:
                         battle.main.escape_one()
                 elif screen.turn_rikku() or screen.turn_wakka():
-                    if not battle.main.checkTidusOk():
+                    if not battle.main.check_tidus_ok():
                         battle.main.escape_one()
                     elif memory.main.get_encounter_id() == 219:
                         battle.main.escape_one()

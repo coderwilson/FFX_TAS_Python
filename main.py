@@ -488,8 +488,8 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     import rng_track
 
-                    advancePreX, advancePostX = rng_track.nea_track()
-                    if advancePostX in [0, 1]:
+                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    if advance_post_x in [0, 1]:
                         game.step = 2
                     else:
                         game.step = 3

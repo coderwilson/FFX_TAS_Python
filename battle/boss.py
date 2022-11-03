@@ -1,15 +1,17 @@
+import logging
+
 import battle.main
 import logs
 import memory.main
 import screen
 import vars
 import xbox
-import logging
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 logger = logging.getLogger(__name__)
+
 
 def ammes():
     BattleComplete = 0
@@ -65,7 +67,7 @@ def klikk():
     logger.info("Fight start: Klikk")
     klikkAttacks = 0
     klikkRevives = 0
-    stealCount = 0
+    steal_count = 0
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             BattleHP = memory.main.get_battle_hp()
@@ -79,7 +81,7 @@ def klikk():
                     battle.main.attack("none")
                 klikkAttacks += 1
             elif screen.turn_rikku():
-                grenadeCount = memory.main.get_item_count_slot(
+                gregrenade_count = memory.main.get_item_count_slot(
                     memory.main.get_item_slot(35)
                 )
                 if (
@@ -95,12 +97,12 @@ def klikk():
                 elif memory.main.get_enemy_current_hp()[0] < 58:
                     battle.main.attack("none")
                     klikkAttacks += 1
-                elif grenadeCount < 6 and memory.main.next_steal(
-                    steal_count=stealCount
+                elif gregrenade_count < 6 and memory.main.next_steal(
+                    steal_count=steal_count
                 ):
                     logger.info("Attempting to steal from Klikk")
                     battle.main.steal()
-                    stealCount += 1
+                    steal_count += 1
                 else:
                     battle.main.attack("none")
                     klikkAttacks += 1
@@ -168,20 +170,20 @@ def tros():
                     Revives += 1
                 elif screen.turn_rikku():
                     logger.debug("Rikku turn")
-                    grenadeSlot = memory.main.get_item_slot(35)
-                    grenadeCount = memory.main.get_item_count_slot(grenadeSlot)
+                    grenade_slot = memory.main.get_item_slot(35)
+                    gregrenade_count = memory.main.get_item_count_slot(grenade_slot)
                     logger.debug("------------------------------")
-                    logger.debug(f"Current grenade count: {grenadeCount}")
+                    logger.debug(f"Current grenade count: {gregrenade_count}")
                     logger.debug(f"Grenades used: {Grenades}")
                     logger.debug("------------------------------")
-                    totalNades = grenadeCount + Grenades
+                    totalNades = gregrenade_count + Grenades
                     if totalNades < 6:
                         if trosPos == 1:
                             battle.main.defend()
                         else:
                             battle.main.steal()
                             Steals += 1
-                    elif grenadeCount == 0:
+                    elif gregrenade_count == 0:
                         if trosPos == 1:
                             battle.main.defend()
                         else:
@@ -192,8 +194,8 @@ def tros():
                             battle.main.steal()
                             Steals += 1
                         else:
-                            grenadeSlot = memory.main.get_use_items_slot(35)
-                            battle.main.use_item(grenadeSlot, "none")
+                            grenade_slot = memory.main.get_use_items_slot(35)
+                            battle.main.use_item(grenade_slot, "none")
                             Grenades += 1
                 elif screen.turn_tidus():
                     logger.debug("Tidus turn")
@@ -217,7 +219,7 @@ def sin_fin():
     logger.info("Fight start: Sin's Fin")
     screen.await_turn()
     finTurns = 0
-    kimTurn = False
+    kim_turn = False
     complete = False
     while not complete:
         if memory.main.turn_ready():
@@ -231,27 +233,27 @@ def sin_fin():
                 battle.main.thunder_target(target=23, direction="r")
             elif screen.turn_kimahri():
                 battle.main.lancet_target(target=23, direction="r")
-                kimTurn = True
+                kim_turn = True
             elif screen.turn_lulu():
                 battle.main.thunder_target(target=23, direction="r")
             else:
                 battle.main.defend()
-        if finTurns >= 3 and kimTurn:
+        if finTurns >= 3 and kim_turn:
             complete = True
 
     logger.info("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
-    turnCounter = 0
+    turn_counter = 0
     while not memory.main.battle_complete():
         if memory.main.turn_ready():
-            turnCounter += 1
+            turn_counter += 1
             if screen.turn_kimahri():
                 screen.await_turn()
                 battle.main.lancet_target(23, "r")
             elif screen.turn_lulu():
                 battle.main.thunder_target(23, "r")
             elif screen.turn_tidus():
-                if turnCounter < 4:
+                if turn_counter < 4:
                     battle.main.defend()
                     memory.main.wait_frames(30 * 0.2)
                 else:
@@ -460,7 +462,7 @@ def chocobo_eater():
                     else:
                         battle.main.buddy_swap_auron()
                 battle.main.revive()
-            # elif 0 not in memory.main.getActiveBattleFormation():
+            # elif 0 not in memory.main.getActivebattle_formation():
             # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
             #    buddySwapTidus()
             elif (
@@ -493,15 +495,17 @@ def gui():
     logger.info("Fight start: Sinspawn Gui")
     xbox.click_to_battle()
     logger.info("Engaging Gui")
-    logger.debug(f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}")
+    logger.debug(
+        f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+    )
     wakkaTurn = False
     yunaTurn = False
     auronTurn = False
-    tidusTurn = False
-    aeonTurn = False
+    tidus_turn = False
+    aeon_turn = False
     kimahriCrit = False
 
-    while not aeonTurn:
+    while not aeon_turn:
         if memory.main.turn_ready():
             if screen.turn_yuna():
                 if not yunaTurn:
@@ -515,7 +519,9 @@ def gui():
                     wakkaTurn = True
                 else:
                     battle.main.buddy_swap_kimahri()
-                    logger.debug(f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}")
+                    logger.debug(
+                        f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                    )
             elif screen.turn_kimahri():
                 dmgBefore = memory.main.get_enemy_current_hp()[0]
                 battle.overdrive.kimahri(2)
@@ -530,9 +536,9 @@ def gui():
                 else:
                     logs.write_stats("False")
             elif screen.turn_tidus():
-                if not tidusTurn:
+                if not tidus_turn:
                     battle.main.defend()
-                    tidusTurn = True
+                    tidus_turn = True
                 elif screen.faint_check() > 0:
                     battle.main.buddy_swap_kimahri()
                 else:
@@ -547,7 +553,7 @@ def gui():
                     battle.main.defend()
             elif screen.turn_aeon():
                 battle.overdrive.valefor()
-                aeonTurn = True
+                aeon_turn = True
 
     screen.await_turn()
     nextHP = memory.main.get_battle_hp()[0]
@@ -718,10 +724,10 @@ def spherimorph():
     FFXC.set_neutral()
 
     spellNum = 0
-    tidusturns = 0
+    tidus_turns = 0
     rikkuturns = 0
     yunaTurn = False
-    kimTurn = False
+    kim_turn = False
     while not memory.main.turn_ready():
         pass
     while memory.main.battle_active():  # AKA end of battle screen
@@ -731,13 +737,13 @@ def spherimorph():
             turnchar = memory.main.get_battle_char_turn()
             party_hp = memory.main.get_battle_hp()
             if turnchar == 0:
-                if tidusturns == 0:
+                if tidus_turns == 0:
                     battle.main.equip_in_battle(equip_type="armor", ability_num=0x8028)
-                elif tidusturns == 1:
+                elif tidus_turns == 1:
                     battle.main.defend()
                 else:
                     battle.main.buddy_swap_rikku()
-                tidusturns += 1
+                tidus_turns += 1
             elif turnchar == 1:
                 rikkuslotnum = memory.main.get_battle_char_slot(6)
                 if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
@@ -762,9 +768,11 @@ def spherimorph():
                 rikkuslotnum = memory.main.get_battle_char_slot(6)
                 if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
                     battle.main.revive()
-                    kimTurn = True
-                elif not kimTurn:
-                    logger.debug(f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}")
+                    kim_turn = True
+                elif not kim_turn:
+                    logger.debug(
+                        f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}"
+                    )
                     logs.write_rng_track("RNG11 before Spherimorph")
                     logs.write_rng_track(
                         memory.main.rng_array_from_index(index=11, array_len=30)
@@ -775,7 +783,7 @@ def spherimorph():
                     #    _steal()
                     # else:
                     battle.main.defend()
-                    kimTurn = True
+                    kim_turn = True
                 elif 6 not in memory.main.get_active_battle_formation():
                     battle.main.buddy_swap_rikku()
                 elif 5 not in memory.main.get_active_battle_formation():
@@ -859,7 +867,7 @@ def crawler():
         # One each for two Negators, Crawler, and guados.
         battle.main.negator_with_steal()
     else:
-        tidusturns = 0
+        tidus_turns = 0
         rikkuturns = 0
         kimahriturns = 0
         luluturns = 0
@@ -872,12 +880,12 @@ def crawler():
             if memory.main.turn_ready():
                 turnchar = memory.main.get_battle_char_turn()
                 if turnchar == 0:
-                    if tidusturns == 0:
+                    if tidus_turns == 0:
                         logger.debug("Swapping Tidus for Rikku")
                         battle.main.buddy_swap_rikku()
                     else:
                         battle.main.defend()
-                    tidusturns += 1
+                    tidus_turns += 1
                 elif turnchar == 6:
                     if luluturns < 2:
                         logger.debug("Using Lightning Marble")
@@ -1004,7 +1012,9 @@ def wendigo():
                         )
                         if battle.main.fullheal(target=0, direction="l") == 0:
                             if screen.faint_check():
-                                logger.debug("No healing items so revive someone instead")
+                                logger.debug(
+                                    "No healing items so revive someone instead"
+                                )
                                 battle.main.revive()
                             else:
                                 logger.debug("No healing items so just go face")
@@ -1046,8 +1056,8 @@ def wendigo():
                     ):
                         battle.main.steal()
                         guadosteal = True
-                    # elif memory.main.get_enemy_current_hp().count(0) == 2 and not 5 in memory.main.getActiveBattleFormation():
-                    #    buddySwapLulu()
+                    # elif memory.main.get_enemy_current_hp().count(0) == 2 and not 5 in memory.main.getActivebattle_formation():
+                    #    buddy_swap_lulu()
                     else:
                         battle.main.defend()
             elif turnchar == 2:
@@ -1114,9 +1124,9 @@ def evrae():
     kimahriTurns = 0
     lunarCurtain = False
     if memory.main.rng_seed() == 31:
-        stealCount = 2
+        steal_count = 2
     else:
-        stealCount = 0
+        steal_count = 0
     FFXC.set_neutral()
     # This gets us past the tutorial and all the dialog.
     xbox.click_to_battle()
@@ -1201,20 +1211,20 @@ def evrae():
                         logger.debug("Heal should be successful.")
                 elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
-                        throwSlot = memory.main.get_use_items_slot(32)
+                        throw_slot = memory.main.get_use_items_slot(32)
                     elif memory.main.get_use_items_slot(24) != 255:
-                        throwSlot = memory.main.get_use_items_slot(24)
+                        throw_slot = memory.main.get_use_items_slot(24)
                     elif memory.main.get_use_items_slot(27) != 255:
-                        throwSlot = memory.main.get_use_items_slot(27)
+                        throw_slot = memory.main.get_use_items_slot(27)
                     else:
-                        throwSlot = memory.main.get_use_items_slot(30)
-                    if throwSlot == 255:
+                        throw_slot = memory.main.get_use_items_slot(30)
+                    if throw_slot == 255:
                         battle.main.steal()
                     else:
-                        battle.main.use_item(throwSlot)
+                        battle.main.use_item(throw_slot)
                 else:
                     battle.main.steal()
-                    stealCount += 1
+                    steal_count += 1
             elif turnchar == 3:
                 logger.debug("Registering Kimahri's turn")
                 if not game_vars.get_blitz_win() and not lunarCurtain:
@@ -1234,20 +1244,20 @@ def evrae():
                         logger.debug("Heal should be successful.")
                 elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
-                        throwSlot = memory.main.get_use_items_slot(32)
+                        throw_slot = memory.main.get_use_items_slot(32)
                     elif memory.main.get_use_items_slot(24) != 255:
-                        throwSlot = memory.main.get_use_items_slot(24)
+                        throw_slot = memory.main.get_use_items_slot(24)
                     elif memory.main.get_use_items_slot(27) != 255:
-                        throwSlot = memory.main.get_use_items_slot(27)
+                        throw_slot = memory.main.get_use_items_slot(27)
                     else:
-                        throwSlot = memory.main.get_use_items_slot(30)
-                    if throwSlot == 255:
+                        throw_slot = memory.main.get_use_items_slot(30)
+                    if throw_slot == 255:
                         battle.main.steal()
                     else:
-                        battle.main.use_item(throwSlot)
+                        battle.main.use_item(throw_slot)
                 else:
                     battle.main.steal()
-                    stealCount += 1
+                    steal_count += 1
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
 
@@ -1505,6 +1515,7 @@ def seymour_flux():
     logger.info("-----------------------------")
     # time.sleep(60) #Testing only
 
+
 def s_keeper_bahamut_crit() -> int:
     bahamut_crit = memory.main.next_crit(character=7, char_luck=17, enemy_luck=15)
     logger.debug(f"Next Aeon Crit: {bahamut_crit}")
@@ -1754,8 +1765,8 @@ def yu_yevon():
                         xbox.tap_down()
                     while memory.main.main_battle_menu():
                         xbox.tap_b()
-                    itemPos = memory.main.get_throw_items_slot(itemNum)
-                    battle.main._navigate_to_position(itemPos)
+                    item_pos = memory.main.get_throw_items_slot(itemNum)
+                    battle.main._navigate_to_position(item_pos)
                     while memory.main.other_battle_menu():
                         xbox.tap_b()
                     while not memory.main.enemy_targetted():
