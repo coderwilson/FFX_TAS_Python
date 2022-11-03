@@ -1658,7 +1658,7 @@ def bfa():
                     xbox.tap_b()
                 while memory.main.other_battle_menu():
                     xbox.tap_b()
-                logger.log(f"Enemy max hp: {memory.main.get_enemy_max_hp()}")
+                logger.info(f"Enemy max hp: {memory.main.get_enemy_max_hp()}")
                 aeon_hp = memory.main.get_enemy_max_hp()[0]
                 if swagMode or aeon_hp % 1000 == 0:
                     useGil = aeon_hp * 10
