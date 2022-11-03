@@ -1,4 +1,5 @@
 # Libraries and Core Files
+import logging
 import os
 from pathlib import Path
 
@@ -15,6 +16,7 @@ from gamestate import game
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
 
+logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
