@@ -1,5 +1,6 @@
 import battle.boss
 import battle.main
+import logging
 import memory.main
 import menu
 import pathing
@@ -7,20 +8,21 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def arrival():
-    print("Starting Moonflow section")
+    logger.info("Starting Moonflow section")
 
     checkpoint = 0
     while memory.main.get_map() != 235:
         if memory.main.user_control():
             # Chests
             if checkpoint == 2:  # Gil outside Djose temple
-                print("Djose gil chest")
+                logger.info("Djose gil chest")
                 FFXC.set_movement(-1, 1)
                 xbox.skip_dialog(1)
                 FFXC.set_movement(1, -1)
@@ -44,15 +46,15 @@ def arrival():
                 checkpoint = 49
             elif checkpoint < 54 and memory.main.get_story_progress() == 1045:
                 checkpoint = 54
-                print("Updating checkpoint based on story/map progress:", checkpoint)
+                logger.debug(f"Updating checkpoint based on story/map progress: {checkpoint}")
             elif checkpoint == 54 and memory.main.get_map() == 188:
                 checkpoint = 55
-                print("Updating checkpoint based on story/map progress:", checkpoint)
+                logger.debug(f"Updating checkpoint based on story/map progress: {checkpoint}")
 
             # General pathing
             elif pathing.set_movement(pathing.moonflow(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -61,12 +63,12 @@ def arrival():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-    print("End of approaching section, should now be talking to Lucille/Elma/etc.")
+    logger.info("End of approaching section, should now be talking to Lucille/Elma/etc.")
 
 
 def south_bank(checkpoint: int = 0):
     # Arrive at the south bank of the moonflow.
-    print("South bank, Save sphere screen")
+    logger.info("South bank, Save sphere screen")
 
     memory.main.click_to_control_3()  # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
@@ -95,7 +97,7 @@ def south_bank(checkpoint: int = 0):
 
             elif pathing.set_movement(pathing.moonflow_bank_south(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -131,7 +133,7 @@ def north_bank():
         menu.equip_weapon(character=0, special="brotherhoodearly")
 
     checkpoint = 0
-    print("Miihen North Bank pattern. Starts after talking to Auron.")
+    logger.info("Miihen North Bank pattern. Starts after talking to Auron.")
     while memory.main.get_map() != 135:
         if memory.main.user_control():
             if checkpoint == 7:  # Rikku steal/mix tutorial
@@ -144,7 +146,7 @@ def north_bank():
                 checkpoint += 1
             elif memory.main.get_story_progress() >= 1085 and checkpoint < 4:
                 checkpoint = 4
-                print("Rikku scene, updating checkpoint:", checkpoint)
+                logger.debug(f"Rikku scene, updating checkpoint: {checkpoint}")
 
             # Map changes
             elif checkpoint < 2 and memory.main.get_map() == 109:
@@ -155,7 +157,7 @@ def north_bank():
             # General pathing
             elif pathing.set_movement(pathing.moonflow_bank_north(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
