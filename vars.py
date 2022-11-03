@@ -42,7 +42,7 @@ class AllVars:
         self.rails_egg_hunt = config_vars.get("rails_egg_hunt", True)
 
         # ----Blitzball
-        self.forceBlitzWin = config_vars.get("forceBlitzWin", False)
+        self.force_blitz_win = config_vars.get("force_blitz_win", False)
         # Loop on the same seed immediately after Blitzball.
         self.blitzLoop = config_vars.get("blitzLoop", False)
         # True = reset after blitz loss
@@ -119,7 +119,7 @@ class AllVars:
         return self.attemptDjose
 
     def get_force_blitz_win(self):
-        return self.forceBlitzWin
+        return self.force_blitz_win
 
     def blitz_loss_reset(self):
         return self.blitzLossForceReset

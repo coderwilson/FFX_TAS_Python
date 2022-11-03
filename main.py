@@ -270,10 +270,10 @@ def perform_TAS():
 
                 if game.step == 2:
                     end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
-                    logger.info(f"Pre-Blitz time: {totalTime}")
+                    total_time = end_time - game.start_time
+                    logger.info(f"Pre-Blitz time: {total_time}")
                     logs.write_stats("Pre Blitz time:")
-                    logs.write_stats(totalTime)
+                    logs.write_stats(total_time)
                     game.step = 3
 
                 if game.step == 3:
@@ -282,8 +282,8 @@ def perform_TAS():
 
                 if game.step == 4:
                     logger.info("------Blitz Start")
-                    forceBlitzWin = game_vars.get_force_blitz_win()
-                    blitz.blitz_main(forceBlitzWin)
+                    force_blitz_win = game_vars.get_force_blitz_win()
+                    blitz.blitz_main(force_blitz_win)
                     logger.info("------Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
@@ -330,10 +330,10 @@ def perform_TAS():
 
                     # Report duration at the end of Mi'ihen section for all runs.
                     end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
-                    logger.info(f"Mi'ihen End timer is: {totalTime}")
+                    total_time = end_time - game.start_time
+                    logger.info(f"Mi'ihen End timer is: {total_time}")
                     logs.write_stats("Miihen End time:")
-                    logs.write_stats(totalTime)
+                    logs.write_stats(total_time)
                     game.state = "MRR"
                     game.step = 1
 
@@ -349,10 +349,10 @@ def perform_TAS():
                     area.mrr.battle_site()
                     area.mrr.gui_and_aftermath()
                     end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
-                    logger.info(f"End of Battle Site timer is: {totalTime}")
+                    total_time = end_time - game.start_time
+                    logger.info(f"End of Battle Site timer is: {total_time}")
                     logs.write_stats("Djose-Start time:")
-                    logs.write_stats(totalTime)
+                    logs.write_stats(total_time)
                     game.state = "Djose"
                     game.step = 1
 
@@ -786,10 +786,10 @@ def perform_TAS():
 def write_final_logs():
     if memory.main.get_story_progress() > 3210:
         end_time = logs.time_stamp()
-        totalTime = end_time - game.start_time
+        total_time = end_time - game.start_time
         logs.write_stats("Total time:")
-        logs.write_stats(str(totalTime))
-        logger.info(f"The game duration was: {str(totalTime)}")
+        logs.write_stats(str(total_time))
+        logger.info(f"The game duration was: {str(total_time)}")
         logger.info("This duration is intended for internal comparisons only.")
         logger.info("It is not comparable to non-TAS runs.")
         memory.main.wait_frames(30)

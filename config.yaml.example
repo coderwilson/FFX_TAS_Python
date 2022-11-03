@@ -36,7 +36,7 @@ vars:
   rails_egg_hunt      : True   #            - Missing documentation -
 
   # Blitzball
-  forceBlitzWin       : False  #            - Missing documentation -
+  force_blitz_win       : False  #            - Missing documentation -
   blitzLoop           : False  # Loop on the same seed immediately after Blitzball.
   blitzLossForceReset : True   # True == reset after blitz loss
   blitzWinValue       : True   # No default value required
