@@ -110,7 +110,7 @@ def open_grid(character):
                 elif memory.main.party_size() < 3:
                     xbox.menu_down()
                 else:
-                    # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.partySize())
+                    # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.party_size())
                     # Not working. Use this instead.
                     memory.main.menu_direction(
                         memory.main.get_char_cursor_pos(), target_pos, 7
