@@ -1831,7 +1831,7 @@ def miihen_farm_old(cap_num: int = 1):
     while memory.main.get_map() != 79:
         if memory.main.user_control():
             # print(checkpoint)
-            # if memory.getMap() == 171:
+            # if memory.get_map() == 171:
             #    if memory.get_coords()[0] > -2:
             #        FFXC.set_movement(-1,-1)
             #    else:
