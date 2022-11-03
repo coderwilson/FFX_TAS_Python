@@ -1,4 +1,4 @@
-fimport battle.boss
+import battle.boss
 import battle.main
 import memory.main
 import menu
