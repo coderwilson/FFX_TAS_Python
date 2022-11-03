@@ -10,7 +10,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_bool("setup_saves", False, "Will set up the TAS saves and store your saves in a new folder called 'Save Backups'")
 flags.DEFINE_bool("restore_saves", False, "Will restore your saves and remove the TAS saves.")
 
-flags.DEFINE_string("user_path", "", "Set this is your Documents folder, and thus your 'SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster folder' is in a different location.")
+flags.DEFINE_string("user_path", "", "Set this if your Documents folder, and thus your 'SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster folder' is in a different location.")
 
 def _move_file(name, src_dir, dest_dir, mod_time):
     src_full_path = os.path.join(src_dir, name)
