@@ -3,9 +3,9 @@ import datetime
 import memory.main
 
 try:
-    from memory.main import baseValue
+    from memory.main import base_value
 except Exception:
-    baseValue = 0x0
+    base_value = 0x0
 game = "FFX_"
 ext = ".txt"
 fileName = "none"
@@ -177,7 +177,7 @@ class MemChangeMonitor:
         if self.isPointer:
             self.ptrOffset = ptrOffsetRef
         self.varType = typeRef
-        self.key = baseValue + 0x003988A5
+        self.key = base_value + 0x003988A5
 
         self.set_last_value()
 
@@ -323,7 +323,7 @@ def mem_change_list():
 
 
 def mem_change_handle():
-    retArray = [0]
+    ret_array = [0]
     firstEle = True
     memRefList = mem_change_list()
 
@@ -331,7 +331,7 @@ def mem_change_handle():
         if firstEle:
             firstEle = False
             variables = memRefList.pop()
-            retArray[0] = MemChangeMonitor(
+            ret_array[0] = MemChangeMonitor(
                 baseOffsetRef=variables[0],
                 isPointerRef=variables[1],
                 ptrOffsetRef=variables[2],
@@ -340,7 +340,7 @@ def mem_change_handle():
             )
         else:
             variables = memRefList.pop()
-            retArray.append(
+            ret_array.append(
                 MemChangeMonitor(
                     baseOffsetRef=variables[0],
                     isPointerRef=variables[1],
@@ -349,7 +349,7 @@ def mem_change_handle():
                     childReport=variables[4],
                 )
             )
-    return retArray
+    return ret_array
 
 
 def time_stamp():

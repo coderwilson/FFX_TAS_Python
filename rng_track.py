@@ -98,14 +98,14 @@ def drop_ability_list(enemy: str = "ghost", equip_type: int = 0):
         array = MONSTERS[enemy].equipment["ability_arrays"]["Tidus"]["Weapon"]
     else:
         array = MONSTERS[enemy].equipment["ability_arrays"]["Tidus"]["Armor"]
-    retVal = []
+    ret_val = []
     for i in range(len(array)):
         try:
-            retVal.append(array[i].tas_id)
+            ret_val.append(array[i].tas_id)
         except Exception:
-            retVal.append(255)
+            ret_val.append(255)
 
-    return retVal
+    return ret_val
 
 
 def early_battle_count():
@@ -148,7 +148,7 @@ def item_to_be_dropped(
 ):
     testMode = False  # Doesn't functionally change, but prints more stuff.
     slotMod = slot_mod(enemy=enemy)
-    abilityMod = ability_mod(enemy=enemy)
+    ability_mod = ability_mod(enemy=enemy)
 
     if party_size == 2:
         partyChars = [0, 4]
@@ -182,7 +182,7 @@ def item_to_be_dropped(
     user1 = partyChars[(testArray12[0] & 0x7FFFFFFF) % len(partyChars)]
 
     # Type
-    equipType = (testArray12[1] & 0x7FFFFFFF) % 2
+    equip_type = (testArray12[1] & 0x7FFFFFFF) % 2
 
     # Slots
     baseSlots = (slotMod + ((testArray12[2] & 0x7FFFFFFF) & 7)) - 4
@@ -191,14 +191,14 @@ def item_to_be_dropped(
         slots = 1
 
     # Abilities
-    baseMod = (abilityMod + ((testArray12[3] & 0x7FFFFFFF) & 7)) - 4
-    abilityCount = (baseMod + ((baseMod >> 31) & 7)) >> 3
+    base_mod = (ability_mod + ((testArray12[3] & 0x7FFFFFFF) & 7)) - 4
+    abilityCount = (base_mod + ((base_mod >> 31) & 7)) >> 3
     if slots < abilityCount:
         abilityCount = slots
 
     # rng13 logic here, determine which ability goes where.
     newAbilities = ability_to_be_dropped(
-        enemy=enemy, equip_type=equipType, slots=abilityCount, advances=pre_advance_13
+        enemy=enemy, equip_type=equip_type, slots=abilityCount, advances=pre_advance_13
     )
     abilityList = newAbilities[0]
     pre_advance_13 += newAbilities[1]
@@ -207,11 +207,11 @@ def item_to_be_dropped(
 
     finalItem = memory.main.Equipment(equip_num=0)
     finalItem.create_custom(
-        eType=equipType,
-        eOwner1=user1,
-        eOwner2=user2,
-        eSlots=slots,
-        eAbilities=abilityList,
+        e_type=equip_type,
+        e_owner_1=user1,
+        e_owner_2=user2,
+        e_slots=slots,
+        e_abilities=abilityList,
     )
 
     return finalItem, pre_advance_13
@@ -227,58 +227,58 @@ def ability_to_be_dropped(
     #    print("o: ", outcomes)
     if slots == 0:
         slots = 1
-    filledSlots = [99] * slots
+    filled_slots = [99] * slots
     # if testMode:
-    #    print("fs: ", filledSlots)
+    #    print("fs: ", filled_slots)
 
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
-    testArray = memory.main.rng_13_array(array_len=50 + advances)
+    test_array = memory.main.rng_13_array(array_len=50 + advances)
     # if testMode:
-    #    print("ta: ", testArray)
+    #    print("ta: ", test_array)
 
     # if outcomes[0]:
-    #    filledSlots.append(outcomes[0])
-    #    filledSlots.remove(99)
+    #    filled_slots.append(outcomes[0])
+    #    filled_slots.remove(99)
     if testMode:
         print("E: ", enemy, " - O: ", outcomes)
 
-    while 99 in filledSlots and ptr < 50 + advances:
+    while 99 in filled_slots and ptr < 50 + advances:
         # Increment to match the first (and subsequent) advance(s)
         try:
             ptr += 1
             if testMode:
                 print("==================================")
                 print("ptr: ", ptr)
-                print("Try: ", testArray[ptr + advances])
-            arrayPos = ((testArray[ptr + advances] & 0x7FFFFFFF) % 7) + 1
+                print("Try: ", test_array[ptr + advances])
+            arrayPos = ((test_array[ptr + advances] & 0x7FFFFFFF) % 7) + 1
             if testMode:
                 print("AP: ", arrayPos)
                 print("Res: ", outcomes[arrayPos])
                 print("==================================")
-            if outcomes[arrayPos] in filledSlots:
+            if outcomes[arrayPos] in filled_slots:
                 pass
             else:
-                filledSlots.remove(99)
-                filledSlots.append(int(outcomes[arrayPos]))
+                filled_slots.remove(99)
+                filled_slots.append(int(outcomes[arrayPos]))
                 found += 1
                 if testMode:
-                    print(filledSlots)
+                    print(filled_slots)
         except Exception as e:
             print("ERR: ", e)
     if testMode:
-        print("FS: ", filledSlots)
+        print("FS: ", filled_slots)
 
-    while 99 in filledSlots:
-        filledSlots.remove(99)
+    while 99 in filled_slots:
+        filled_slots.remove(99)
 
     # Format so that we have four slots always.
-    if len(filledSlots) < 4:
-        while len(filledSlots) < 4:
-            filledSlots.append(255)
+    if len(filled_slots) < 4:
+        while len(filled_slots) < 4:
+            filled_slots.append(255)
     if testMode:
-        print("FSfin: ", filledSlots)
+        print("FSfin: ", filled_slots)
 
-    return [filledSlots, found]
+    return [filled_slots, found]
 
 
 def report_dropped_item(
@@ -292,11 +292,11 @@ def report_dropped_item(
     abiStr = str(pref_ability)
     pref_type
     report = True
-    if pref_ability != 255 and abiStr not in drop.equipAbilities:
+    if pref_ability != 255 and abiStr not in drop.equip_abilities:
         report = False
-    elif pref_type != 99 and pref_type != drop.equipType:
+    elif pref_type != 99 and pref_type != drop.equip_type:
         print(pref_type)
-        print(drop.equipType)
+        print(drop.equip_type)
         report = False
 
     if report:
@@ -307,12 +307,12 @@ def report_dropped_item(
             "+Owner, char-killed (9 = killer):" + str(drop.equip_owner)
         )
         logs.write_rng_track("+Owner, aeon-killed:" + str(drop.equip_owner_alt))
-        if drop.equipType == 0:
+        if drop.equip_type == 0:
             logs.write_rng_track("+Type: Weapon")
         else:
             logs.write_rng_track("+Type: Armor")
         logs.write_rng_track("+Open Slots: " + str(drop.slots))
-        logs.write_rng_track("+Abilities: " + str(drop.equipAbilities))
+        logs.write_rng_track("+Abilities: " + str(drop.equip_abilities))
         logs.write_rng_track("===================")
         return True
     else:
@@ -324,12 +324,12 @@ def report_dropped_item(
         )
         logs.write_rng_track("-Owner, char-killed: " + str(drop.equip_owner))
         logs.write_rng_track("-Owner, aeon-killed: " + str(drop.equip_owner_alt))
-        if drop.equipType == 0:
+        if drop.equip_type == 0:
             logs.write_rng_track("-Type: Weapon")
         else:
             logs.write_rng_track("-Type: Armor")
         logs.write_rng_track("-Open Slots: " + str(drop.slots))
-        logs.write_rng_track("-Abilities: " + str(drop.equipAbilities))
+        logs.write_rng_track("-Abilities: " + str(drop.equip_abilities))
         logs.write_rng_track("===================")
         return False
 
@@ -1065,7 +1065,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
                         if thisBattle == "ragora":
                             ragoraKills[0] -= 1
                         elif thisBattle == "yellow_element":
-                            if finalItem.equipType == 0:
+                            if finalItem.equip_type == 0:
                                 if report_dropped_item(
                                     enemy=thisBattle[i],
                                     drop=finalItem,
@@ -1110,7 +1110,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
                         if thisBattle == "ragora":
                             ragoraKills[1] -= 1
                         elif thisBattle == "yellow_element":
-                            if finalItem.equipType == 0:
+                            if finalItem.equip_type == 0:
                                 if report_dropped_item(
                                     enemy=thisBattle[i],
                                     drop=finalItem,
@@ -1155,7 +1155,7 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
                         if thisBattle == "ragora":
                             ragoraKills[2] -= 1
                         elif thisBattle == "yellow_element":
-                            if finalItem.equipType == 0:
+                            if finalItem.equip_type == 0:
                                 if report_dropped_item(
                                     enemy=thisBattle[i],
                                     drop=finalItem,

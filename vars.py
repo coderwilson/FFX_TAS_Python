@@ -32,7 +32,7 @@ class AllVars:
         self.attemptDjose = config_vars.get("attemptDjose", False)
         # use the original Soundtrack instead of arranged
         self.legacySoundtrack = config_vars.get("legacySoundtrack", True)
-        self.doNotSkipCutscenes = config_vars.get("doNotSkipCutscenes", False)
+        self.do_not_skip_cutscenes = config_vars.get("do_not_skip_cutscenes", False)
 
         # ----Accessibility for blind
         self.skip_cutscene_flag = config_vars.get("skip_cutscene_flag", True)

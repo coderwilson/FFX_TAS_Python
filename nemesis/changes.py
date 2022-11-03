@@ -130,14 +130,14 @@ def calm_lands_1():
     # arenaNPC()
     # arenaPurchase()
     # memory.wait_frames(6)
-    # xbox.tapB() #I want to ride a chocobo.
+    # xbox.tap_b() #I want to ride a chocobo.
 
 
 def choco_tame_1():
     memory.main.click_to_diag_progress(43)
     while not memory.main.diag_progress_flag() in [44, 74]:
         angle = memory.main.get_actor_angle(0)
-        # print("Angle: ", retVal)
+        # print("Angle: ", ret_val)
         position = memory.main.get_actor_coords(0)
         # print("Position: ", position)
         if position[0] < -110:  # Need to move right
@@ -335,7 +335,7 @@ def choco_tame_3():
         xbox.tap_b()
         memory.main.wait_frames(30)
         # xbox.tapUp()
-        # xbox.tapB()
+        # xbox.tap_b()
         return True
     else:
         memory.main.click_to_diag_progress(77)

@@ -66,8 +66,8 @@ def select_shot_type():
 
 
 def targeted_player():
-    retVal = memory.main.blitz_target_player() - 2
-    return retVal
+    ret_val = memory.main.blitz_target_player() - 2
+    return ret_val
 
 
 def active_clock():
@@ -79,9 +79,9 @@ def aurochs_control():
 
 
 def controlling_player():
-    retVal = memory.main.blitz_current_player() - 2
-    if retVal < 200:
-        return retVal
+    ret_val = memory.main.blitz_current_player() - 2
+    if ret_val < 200:
+        return ret_val
     return 1
 
 
@@ -1078,9 +1078,9 @@ def blitz_main(forceBlitzWin):
                     prep_half()
                 else:
                     storyline(forceBlitzWin)
-        except Exception as xVal:
+        except Exception as x_val:
             print("Caught exception in blitz memory.main.:")
-            print(xVal)
+            print(x_val)
 
     print("Blitz game has completed.")
     # Set the blitzWin flag for the rest of the run.

@@ -556,8 +556,8 @@ def gui():
                 aeon_turn = True
 
     screen.await_turn()
-    nextHP = memory.main.get_battle_hp()[0]
-    lastHP = nextHP
+    next_hp = memory.main.get_battle_hp()[0]
+    lastHP = next_hp
     turn1 = False
     nextTurn = 20
     lastTurn = 20
@@ -566,7 +566,7 @@ def gui():
         pass
     while memory.main.battle_active():
         if memory.main.turn_ready() and memory.main.get_battle_char_turn() == 8:
-            nextHP = memory.main.get_battle_hp()[0]
+            next_hp = memory.main.get_battle_hp()[0]
             lastTurn = nextTurn
             nextTurn = memory.main.get_next_turn()
             if went and kimahriCrit:
@@ -582,14 +582,14 @@ def gui():
             elif lastTurn == 8:  # Valefor takes two turns in a row
                 logger.debug("------Two turns in a row")
                 battle.main.aeon_shield()
-            elif nextHP > lastHP - 40 and not nextHP == lastHP:
+            elif next_hp > lastHP - 40 and not next_hp == lastHP:
                 # Gravity spell was used
                 logger.debug("------Gravity was used")
                 battle.main.aeon_shield()
             else:
                 logger.debug("------Attack was just used. Now boost.")
                 battle.main.aeon_boost()
-            lastHP = nextHP
+            lastHP = next_hp
         elif memory.main.turn_ready() and memory.main.get_battle_char_turn() == 1:
             logger.warning("Yuna turn, something went wrong.")
         elif memory.main.turn_ready() and memory.main.get_battle_char_turn() == 2:
@@ -1757,15 +1757,15 @@ def yu_yevon():
                 else:
                     battle.main.defend()
             elif zombieAttack:  # Throw P.down to end game
-                itemNum = battle.main.yu_yevon_item()
-                if itemNum == 99:
+                item_num = battle.main.yu_yevon_item()
+                if item_num == 99:
                     battle.main.attack("none")
                 else:
                     while memory.main.battle_menu_cursor() != 1:
                         xbox.tap_down()
                     while memory.main.main_battle_menu():
                         xbox.tap_b()
-                    item_pos = memory.main.get_throw_items_slot(itemNum)
+                    item_pos = memory.main.get_throw_items_slot(item_num)
                     battle.main._navigate_to_position(item_pos)
                     while memory.main.other_battle_menu():
                         xbox.tap_b()

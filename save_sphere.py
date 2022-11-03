@@ -27,10 +27,10 @@ def nearest_save_actor() -> int:
     save_actors = []
     FFXC.set_neutral()
     for x in range(memory.main.get_actor_array_size()):
-        actorMem = memory.main.get_actor_id(x)
-        if actorMem != 52685:
-            print(actorMem, " | ", x)
-        if actorMem in [20481, 20482, 20651]:
+        actor_mem = memory.main.get_actor_id(x)
+        if actor_mem != 52685:
+            print(actor_mem, " | ", x)
+        if actor_mem in [20481, 20482, 20651]:
             save_actors.append(x)
     print(save_actors)
     if len(save_actors) == 0:
@@ -102,7 +102,6 @@ def approach_save_sphere():
                     print("Mark 3", memory.main.diag_progress_flag())
                     xbox.tap_b()
     FFXC.set_neutral()
-
 
 
 def disengage_save_sphere():

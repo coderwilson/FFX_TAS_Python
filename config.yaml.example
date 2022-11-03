@@ -26,7 +26,7 @@ vars:
   perfectAeonKills    : False  # Before YuYevon, True is slower but more swag.
   attemptDjose        : False  # Try Djose skip? (not likely to succeed)
   legacySoundtrack    : True   # use the original Soundtrack instead of arranged
-  doNotSkipCutscenes  : False  #            - Missing documentation -
+  do_not_skip_cutscenes  : False  #            - Missing documentation -
 
   # Accessibility for blind
   skip_cutscene_flag  : True   #            - Missing documentation -
