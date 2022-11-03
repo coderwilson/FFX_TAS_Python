@@ -12,6 +12,9 @@ import logs
 import pathing
 import vars
 import xbox
+import logging
+
+logger = logging.getLogger(__name__)
 
 game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
@@ -137,25 +140,25 @@ def start():
 
     # rwm = ReadWriteMemory()
     rwm = FFXMemory()
-    print("#############")
-    print(type(rwm))
+    logger.info("#############")
+    logger.info(type(rwm))
     process = rwm.get_process_by_name("FFX.exe")
-    print("#############")
-    print(type(process))
-    print("#############")
+    logger.info("#############")
+    logger.info(type(process))
+    logger.info("#############")
     process.open()
 
     global baseValue
     try:
         import zz_root_mem
 
-        print("Process Modules:")
+        logger.info("Process Modules:")
         baseValue = zz_root_mem.list_process_modules(process.pid)
-        print("Process Modules complete")
-        print("Dynamically determined memory address:", hex(baseValue))
+        logger.info("Process Modules complete")
+        logger.info(f"Dynamically determined memory address: {hex(baseValue)}")
         success = True
     except Exception as errCode:
-        print("Could not get memory address dynamically. ", errCode)
+        logger.error(f"Could not get memory address dynamically. Error code: {errCode}")
         baseValue = 0x00FF0000
         time.sleep(10)
     return success
@@ -191,9 +194,9 @@ def rng_seed():
 def set_rng_seed(value):
     global baseValue
     key = baseValue + 0x003988A5
-    print("+++++++++++++++++")
-    print(type(process))
-    print("+++++++++++++++++")
+    logger.info("+++++++++++++++++")
+    logger.info(type(process))
+    logger.info("+++++++++++++++++")
     return process.writeBytes(key, value, 1)
 
 
@@ -350,7 +353,7 @@ def battle_target_id():
     global baseValue
     key = baseValue + 0x00F3D1B4
     retVal = process.readBytes(key, 1)
-    print("Battle Target ID:", retVal)
+    logger.debug(f"Battle Target ID: {retVal}")
     return retVal
 
 
@@ -366,7 +369,7 @@ def battle_target_active():
     global baseValue
     key = baseValue + 0x00F3D1B4
     retVal = process.readBytes(key, 1)
-    print("Battle Target ID:", retVal)
+    logger.debug(f"Battle Target ID: {retVal}")
     return retVal != 255
 
 
@@ -384,30 +387,31 @@ def user_control():
 
 def await_control():
     waitCounter = 0
-    print("Awaiting control (no clicking)")
+    logger.debug("Awaiting control (no clicking)")
     while not user_control():
         waitCounter += 1
         if waitCounter % 10000000 == 0:
-            print("Awaiting control -", waitCounter / 100000)
+            # TODO: flush instead?
+            logger.debug(f"Awaiting control - {waitCounter / 100000}")
     wait_frames(1)
     return True
 
 
 def click_to_control_dumb():
     waitCounter = 0
-    print("Awaiting control (clicking)")
+    logger.debug("Awaiting control (clicking)")
     while not user_control():
         xbox.tap_b()
         waitCounter += 1
         if waitCounter % 1000 == 0:
-            print("Awaiting control -", waitCounter / 1000)
-    print("Control restored.")
+            logger.debug(f"Awaiting control - {waitCounter / 1000}")
+    logger.debug("Control restored.")
     return True
 
 
 def click_to_control_smart():
     waitCounter = 0
-    print("Awaiting control (clicking only when appropriate - dialog)")
+    logger.debug("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
     while not user_control():
         if battle_active():
@@ -416,14 +420,14 @@ def click_to_control_smart():
         if diag_skip_possible():
             xbox.tap_b()
         elif menu_open():
-            print("Post-battle menu open")
+            logger.debug("Post-battle menu open")
             xbox.tap_b()
         else:
             pass
         waitCounter += 1
         if waitCounter % 10000 == 0:
-            print("Awaiting control -", waitCounter / 10000)
-    print("User control restored.")
+            logger.debug(f"Awaiting control - {waitCounter / 10000}")
+    logger.debug("User control restored.")
     return True
 
 
@@ -441,7 +445,7 @@ def click_to_control_3():
 
 def click_to_control_special():
     waitCounter = 0
-    print("Awaiting control (clicking)")
+    logger.debug("Awaiting control (clicking)")
     while not user_control():
         FFXC.set_value("btn_b", 1)
         FFXC.set_value("btn_y", 1)
@@ -451,7 +455,7 @@ def click_to_control_special():
         wait_frames(30 * 0.035)
         waitCounter += 1
         if waitCounter % 10000 == 0:
-            print("Awaiting control -", waitCounter / 10000)
+            logger.debug(f"Awaiting control - {waitCounter / 10000}")
     wait_frames(30 * 0.05)
     return True
 
@@ -542,7 +546,7 @@ def extractor_height():
     global process
     global baseValue
     height = get_actor_coords(3)[2]
-    print("^^Extractor Height:", height)
+    logger.debug(f"^^Extractor Height: {height}")
     return height
 
 
@@ -678,7 +682,7 @@ def get_order():
     pos7 = process.readBytes(coord, 1)
 
     formation = [255, pos1, pos2, pos3, pos4, pos5, pos6, pos7]
-    print("Party formation:", formation)
+    logger.debug(f"Party formation: {formation}")
     return formation
 
 
@@ -1171,7 +1175,7 @@ def get_overdrive_battle(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xF90 * character) + 0x5BC
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    print("In-Battle Overdrive values:\n", retVal)
+    logger.debug(f"In-Battle Overdrive values: {retVal}")
     return retVal
 
 
@@ -1183,7 +1187,7 @@ def get_char_weakness(character):
     basePointerAddress = process.read(basePointer)
     offset = (0xF90 * character) + 0x5DD
     retVal = process.readBytes(basePointerAddress + offset, 1)
-    print("In-Battle Overdrive values:\n", retVal)
+    logger.debug(f"In-Battle char weakness values: {retVal}")
     return retVal
 
 
@@ -1194,7 +1198,7 @@ def tidus_escaped_state():
     basePointerAddress = process.read(basePointer)
     offset = 0xDC8
     retVal = not process.readBytes(basePointerAddress + offset, 1)
-    print("Tidus Escaped State:", retVal)
+    logger.debug(f"Tidus Escaped State: {retVal}")
     return retVal
 
 
@@ -2263,7 +2267,7 @@ def diag_progress_flag():
 
 
 def click_to_diag_progress(num):
-    print("Clicking to dialog progress:", num)
+    logger.debug(f"Clicking to dialog progress: {num}")
     lastNum = diag_progress_flag()
     while diag_progress_flag() != num:
         if user_control():
@@ -2273,7 +2277,7 @@ def click_to_diag_progress(num):
                 xbox.tap_b()
             if diag_progress_flag() != lastNum:
                 lastNum = diag_progress_flag()
-                print("Dialog change:", diag_progress_flag(), "- clicking to", num)
+                logger.debug(f"Dialog change: {diag_progress_flag()} - clicking to {num}")
     return True
 
 
@@ -2304,7 +2308,7 @@ def print_rng_36():
 def end():
     global process
     process.close()
-    print("Memory reading process is now closed.")
+    logger.info("Memory reading process is now closed.")
 
 
 def get_frame_count():
@@ -3944,7 +3948,7 @@ def luca_workers_battle_id():
 
 def last_hit_init():
     global baseValue
-    print("Initializing values")
+    logger.debug("Initializing values")
     key = baseValue + 0xD334CC
     ptrVal = process.read(key)
     lastHitVals = [0] * 8
@@ -3970,12 +3974,11 @@ def last_hit_check_change() -> int:
         if memVal != game_vars.first_hits_value(x) and not changeFound:
             changeFound = True
             changeValue = memVal
-            print("**Registered hit:", changeValue)
-            # logs.write_stats(changeValue)
+            logger.info(f"**Registered hit: {changeValue}")
+            # logs.writeStats(changeValue)
             last_hit_init()
-            print("Mark 1")
+            logger.debug("Mark 1")
             return int(changeValue)
-            print("Mark 2")
     return 9999
 
 

@@ -16,20 +16,20 @@ def _move_file(name, src_dir, dest_dir, mod_time):
     src_full_path = os.path.join(src_dir, name)
     dest_full_path = os.path.join(dest_dir, name)
     shutil.copy(src_full_path, dest_full_path)
-    os.utime(dest_full_path, (mod_time, mod_time))  
+    os.utime(dest_full_path, (mod_time, mod_time))
     return
 
 
 def check_flags():
     """Checks flags."""
-    if not FLAGS.setup_saves != FLAGS.restore_saves:
+    if FLAGS.setup_saves == FLAGS.restore_saves:
         print("Exactly one of --setup_saves or --restore_saves must be set.")
         sys.exit(1)
 
-        
+
 def setup_saves():
     """Moves the TAS saves to the correct location."""
-    square_saves = f"{FLAGS.user_path if FLAGS.user_path else os.path.expanduser('~')}\\Documents\\SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster\\FINAL FANTASY X\\"
+    square_saves = f"{FLAGS.user_path or os.path.expanduser('~')}\\Documents\\SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster\\FINAL FANTASY X\\"
     tas_saves = ".\\tas_saves"
     print(f"Copying save files from '{square_saves}' to '.\\Save Backups'")
     shutil.copytree(square_saves, ".\\Save Backups")
@@ -43,13 +43,14 @@ def setup_saves():
 
 def restore_saves():
     """Restores the backed up saves."""
-    square_saves = f"{FLAGS.user_path if FLAGS.user_path else os.path.expanduser('~')}\\Documents\\SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster\\FINAL FANTASY X\\"
+    square_saves = f"{FLAGS.user_path or os.path.expanduser('~')}\\Documents\\SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster\\FINAL FANTASY X\\"
     shutil.rmtree(square_saves)
     shutil.copytree(".\\Save Backups", square_saves)
     shutil.rmtree(".\\Save Backups")
-    
+
 
 def main(argv):
+    print("TAS Save fixer utility. Ensure that the script is run from the main folder of the repo.")
     check_flags()
     if FLAGS.setup_saves:
         print("Setting TAS Saves Up.")
@@ -58,8 +59,8 @@ def main(argv):
         print("Restoring Backed Up Saves.")
         restore_saves()
     print("Done")
-  
+
 
 
 if __name__ == "__main__":
-  app.run(main)
+    app.run(main)
