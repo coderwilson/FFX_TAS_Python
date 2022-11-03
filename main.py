@@ -120,7 +120,7 @@ def rng_seed_setup():
 
 def load_game_state():
     # loading from a save file
-    load_game.load_into_game(Gamestate=game.state, step_counter=game.step)
+    load_game.load_into_game(gamestate=game.state, step_counter=game.step)
 
 
 def perform_TAS():
