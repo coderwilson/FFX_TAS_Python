@@ -4461,14 +4461,6 @@ def arena_array():
         retArray.append(process.readBytes(key, 1))
     return retArray
 
-
-def arena_array_nines():
-    global baseValue
-    for i in range(104):
-        key = baseValue + 0xD30C9C + i
-        process.writeBytes(key, 9, 1)
-
-
 def arena_farm_check(
     zone: str = "besaid", end_goal: int = 10, report=False, return_array=False
 ):
