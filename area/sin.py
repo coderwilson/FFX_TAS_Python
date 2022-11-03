@@ -69,8 +69,8 @@ def exit_cockpit():
     print("Attempting to exit cockpit")
     while memory.main.get_map() != 265:
         if memory.main.user_control():
-            tidusCoords = memory.main.get_coords()
-            if tidusCoords[1] > 318:
+            tidus_coords = memory.main.get_coords()
+            if tidus_coords[1] > 318:
                 pathing.set_movement([-244, 315])
             else:
                 FFXC.set_movement(0, -1)
@@ -139,11 +139,11 @@ def inside_sin():
     FFXC.set_neutral()
 
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
-        reEquipNE = True
+        re_equip_ne = True
         memory.main.full_party_format("rikku", full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
     else:
-        reEquipNE = False
+        re_equip_ne = False
         memory.main.full_party_format("yuna", full_menu_close=False)
     memory.main.close_menu()
 
@@ -172,8 +172,8 @@ def inside_sin():
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.turn_ready():
                 battle.main.charge_rikku_od()
-                if reEquipNE and memory.main.overdrive_state_2()[6] == 100:
-                    reEquipNE = False
+                if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
+                    re_equip_ne = False
                     memory.main.click_to_control()
                     memory.main.full_party_format("yuna", full_menu_close=False)
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)

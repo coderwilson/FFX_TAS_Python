@@ -114,7 +114,7 @@ def klikk():
     ):
         # print(memory.main.getMap())
         if game_vars.csr():
-            FFXC.set_value("BtnB", 1)
+            FFXC.set_value("btn_b", 1)
         else:
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
@@ -158,9 +158,9 @@ def tros():
 
             # Assuming battle is not complete:
             if memory.main.battle_active():
-                partyHP = memory.main.get_battle_hp()
+                party_hp = memory.main.get_battle_hp()
                 # Someone requires reviving.
-                if partyHP[0] == 0 or partyHP[1] == 0:
+                if party_hp[0] == 0 or party_hp[1] == 0:
                     print("Tros: Someone fainted.")
                     battle.main.revive()
                     Revives += 1
@@ -292,7 +292,7 @@ def echuilles():
                     print("Tidus attack")
                     battle.main.attack("none")
             elif screen.turn_wakka():
-                if tidusCounter == 1:  # and memory.main.rngSeed() != 160:
+                if tidusCounter == 1:  # and memory.main.rng_seed() != 160:
                     print("Dark Attack")
                     battle.main.use_skill(0)  # Dark Attack
                 # elif memory.main.get_enemy_current_hp()[0] <= 558:
@@ -385,8 +385,8 @@ def oblitzerator(early_haste):
             xbox.tap_b()
     print("End of fight, Oblitzerator")
     memory.main.click_to_control()
-    # logs.writeStats("RNG02 after battle:")
-    # logs.writeStats(memory.s32(memory.rng02()))
+    # logs.write_stats("RNG02 after battle:")
+    # logs.write_stats(memory.s32(memory.rng02()))
 
 
 def chocobo_eater():
@@ -482,8 +482,8 @@ def chocobo_eater():
         elif memory.main.diag_skip_possible():
             print("Skipping dialog")
             xbox.tap_b()
-    # logs.writeStats("Chocobo eater turns:")
-    # logs.writeStats(str(turns))
+    # logs.write_stats("Chocobo eater turns:")
+    # logs.write_stats(str(turns))
     print("Chocobo Eater battle complete.")
 
 
@@ -732,7 +732,7 @@ def spherimorph():
             if game_vars.use_pause():
                 memory.main.wait_frames(2)
             turnchar = memory.main.get_battle_char_turn()
-            partyHP = memory.main.get_battle_hp()
+            party_hp = memory.main.get_battle_hp()
             if turnchar == 0:
                 if tidusturns == 0:
                     battle.main.equip_in_battle(equip_type="armor", ability_num=0x8028)
@@ -743,7 +743,7 @@ def spherimorph():
                 tidusturns += 1
             elif turnchar == 1:
                 rikkuslotnum = memory.main.get_battle_char_slot(6)
-                if rikkuslotnum < 3 and partyHP[rikkuslotnum] == 0:
+                if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
                     battle.main.revive()
                     yunaTurn = True
                 elif not yunaTurn:
@@ -763,7 +763,7 @@ def spherimorph():
                     yunaTurn = True
             elif turnchar == 3:
                 rikkuslotnum = memory.main.get_battle_char_slot(6)
-                if rikkuslotnum < 3 and partyHP[rikkuslotnum] == 0:
+                if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
                     battle.main.revive()
                     kimTurn = True
                 elif not kimTurn:
@@ -829,21 +829,21 @@ def spherimorph():
                         battle.main.defend()
                 else:
                     print("Starting Rikkus overdrive")
-                    # logs.writeStats("Spherimorph spell used:")
+                    # logs.write_stats("Spherimorph spell used:")
                     if spellNum == 1:
-                        # ogs.writeStats("Fire")
+                        # ogs.write_stats("Fire")
                         print("Creating Ice")
                         battle.main.rikku_full_od("spherimorph1")
                     elif spellNum == 2:
-                        # logs.writeStats("Water")
+                        # logs.write_stats("Water")
                         print("Creating Water")
                         battle.main.rikku_full_od("spherimorph2")
                     elif spellNum == 3:
-                        # logs.writeStats("Thunder")
+                        # logs.write_stats("Thunder")
                         print("Creating Thunder")
                         battle.main.rikku_full_od("spherimorph3")
                     elif spellNum == 4:
-                        # logs.writeStats("Ice")
+                        # logs.write_stats("Ice")
                         print("Creating Fire")
                         battle.main.rikku_full_od("spherimorph4")
 
@@ -933,11 +933,11 @@ def wendigo():
         pass
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            partyHP = memory.main.get_battle_hp()
+            party_hp = memory.main.get_battle_hp()
             turnchar = memory.main.get_battle_char_turn()
             tidusSlot = memory.main.get_battle_char_slot(0)
 
-            if partyHP[memory.main.get_battle_char_slot(0)] == 0:
+            if party_hp[memory.main.get_battle_char_slot(0)] == 0:
                 print("Tidus is dead")
                 tidushaste = False
                 powerbreak = True
@@ -998,7 +998,7 @@ def wendigo():
                 ):
                     battle.overdrive.tidus("left", character=21)
                 elif tidushealself:
-                    if partyHP[memory.main.get_battle_char_slot(0)] < tidusmaxHP:
+                    if party_hp[memory.main.get_battle_char_slot(0)] < tidusmaxHP:
                         print(
                             "Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself"
                         )
@@ -1185,8 +1185,8 @@ def evrae():
                     battle.main.rikku_full_od("Evrae")
                 elif not game_vars.get_blitz_win() and not lunarCurtain:
                     print("Use Lunar Curtain")
-                    lunarSlot = memory.main.get_use_items_slot(56)
-                    battle.main.use_item(lunarSlot, direction="l", target=0)
+                    lunar_slot = memory.main.get_use_items_slot(56)
+                    battle.main.use_item(lunar_slot, direction="l", target=0)
                     lunarCurtain = True
                 elif memory.main.get_battle_hp()[
                     memory.main.get_battle_char_slot(0)
@@ -1218,8 +1218,8 @@ def evrae():
                 print("Registering Kimahri's turn")
                 if not game_vars.get_blitz_win() and not lunarCurtain:
                     print("Use Lunar Curtain")
-                    lunarSlot = memory.main.get_use_items_slot(56)
-                    battle.main.use_item(lunarSlot, direction="l", target=0)
+                    lunar_slot = memory.main.get_use_items_slot(56)
+                    battle.main.use_item(lunar_slot, direction="l", target=0)
                     lunarCurtain = True
                 elif memory.main.get_battle_hp()[
                     memory.main.get_battle_char_slot(0)
@@ -1273,9 +1273,9 @@ def isaaru():
                 battle.main.attack("none")  # Aeon turn
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-    FFXC.set_value("BtnB", 1)
+    FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
-    FFXC.set_value("BtnB", 0)
+    FFXC.set_value("btn_b", 0)
 
 
 def evrae_altana():
@@ -1392,24 +1392,24 @@ def biran_yenke():
         battle.main.steal_right()
 
     screen.await_turn()
-    gemSlot = memory.main.get_use_items_slot(34)
-    if gemSlot == 255:
-        gemSlot = memory.main.get_use_items_slot(28)
-    battle.main.use_item(gemSlot, "none")
+    gem_slot = memory.main.get_use_items_slot(34)
+    if gem_slot == 255:
+        gem_slot = memory.main.get_use_items_slot(28)
+    battle.main.use_item(gem_slot, "none")
 
     xbox.click_to_battle()
-    gemSlot = memory.main.get_use_items_slot(34)
-    if gemSlot == 255:
-        gemSlot = memory.main.get_use_items_slot(28)
-    battle.main.use_item(gemSlot, "none")
+    gem_slot = memory.main.get_use_items_slot(34)
+    if gem_slot == 255:
+        gem_slot = memory.main.get_use_items_slot(28)
+    battle.main.use_item(gem_slot, "none")
 
     while not memory.main.user_control():
         xbox.tap_b()
 
     retSlot = memory.main.get_item_slot(96)  # Return sphere
-    friendSlot = memory.main.get_item_slot(97)  # Friend sphere
+    friend_slot = memory.main.get_item_slot(97)  # Friend sphere
 
-    if friendSlot == 255:  # Four return sphere method.
+    if friend_slot == 255:  # Four return sphere method.
         print("Double return sphere drops.")
         endGameVersion = 4
     elif retSlot == 255:
@@ -1648,8 +1648,8 @@ def bfa():
 
     while memory.main.get_story_progress() < 3380:
         if memory.main.turn_ready():
-            encounterID = memory.main.get_encounter_id()
-            print("Battle engaged. Battle number:", encounterID)
+            encounter_id = memory.main.get_encounter_id()
+            print("Battle engaged. Battle number:", encounter_id)
             if screen.turn_yuna():
                 if memory.main.battle_menu_cursor() != 20:
                     while memory.main.battle_menu_cursor() != 20:

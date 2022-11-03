@@ -3,10 +3,10 @@ import battle.main
 import memory.main
 import menu
 import pathing
+import save_sphere
 import screen
 import vars
 import xbox
-import save_sphere
 
 game_vars = vars.vars_handle()
 
@@ -46,17 +46,17 @@ def arrival():
     print("Starting Macalania Temple section")
 
     # Movement:
-    jyscalSkipStatus = False
+    jyscal_skip_status = False
     checkpoint = 0
-    skipStatus = True
-    touchSave = False
+    skip_status = True
+    touch_save = False
     while memory.main.get_map() != 80:
         if memory.main.user_control():
             # Main events
             if checkpoint == 1:
                 checkpoint += 1
-            elif checkpoint == 2 and not touchSave:
-                touchSave = True
+            elif checkpoint == 2 and not touch_save:
+                touch_save = True
                 save_sphere.touch_and_go()
             elif checkpoint == 2 and game_vars.csr():
                 checkpoint = 11
@@ -75,9 +75,9 @@ def arrival():
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 while memory.main.get_coords()[1] < -101.5:
-                    FFXC.set_value("Dpad", 8)
+                    FFXC.set_value("d_pad", 8)
                     memory.main.wait_frames(2)
-                    FFXC.set_value("Dpad", 0)
+                    FFXC.set_value("d_pad", 0)
                     memory.main.wait_frames(5)
 
                 print("Turning back")
@@ -90,9 +90,9 @@ def arrival():
                 print("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
                 memory.main.wait_frames(3)
-                FFXC.set_value("BtnB", 1)
+                FFXC.set_value("btn_b", 1)
                 memory.main.wait_frames(4)
-                FFXC.set_value("BtnB", 0)
+                FFXC.set_value("btn_b", 0)
                 memory.main.wait_frames(45)
                 FFXC.set_neutral()
                 checkpoint += 1
@@ -102,23 +102,23 @@ def arrival():
             elif checkpoint == 11:
                 print("Check if skip is online")
                 if game_vars.csr():
-                    jyscalSkipStatus = True
+                    jyscal_skip_status = True
                     checkpoint += 1
                 elif memory.main.get_story_progress() < 1505:
-                    jyscalSkipStatus = True
+                    jyscal_skip_status = True
                     checkpoint += 1
                 else:
-                    jyscalSkipStatus = False
+                    jyscal_skip_status = False
                     checkpoint = 20
-                    skipStatus = False
-                print("Jyscal Skip results:", skipStatus)
+                    skip_status = False
+                print("Jyscal Skip results:", skip_status)
             elif checkpoint == 14 and game_vars.csr():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 14:  # Pause so we don't mess up the skip
-                if skipStatus:
+                if skip_status:
                     FFXC.set_neutral()
                     xbox.skip_dialog(5)
                     FFXC.set_movement(0, -1)
@@ -146,7 +146,7 @@ def arrival():
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
-    return jyscalSkipStatus
+    return jyscal_skip_status
 
 
 def start_seymour_fight():
@@ -249,17 +249,17 @@ def trials():
 def escape():
     memory.main.click_to_control()
     print("First, some menuing")
-    menuDone = False
+    menu_done = False
     if game_vars.nemesis():
         memory.main.full_party_format("yuna", full_menu_close=False)
     else:
         menu.after_seymour()
-        menuDone = True
+        menu_done = True
         memory.main.full_party_format("macalaniaescape", full_menu_close=False)
     menu.equip_sonic_steel(full_menu_close=True)
 
     print("Now to escape the Guado")
-    forceBattle = False
+    force_battle = False
 
     checkpoint = 0
     while memory.main.get_encounter_id() != 195:
@@ -269,7 +269,7 @@ def escape():
                 save_sphere.touch_and_go()
                 checkpoint += 1
                 print("Touching save sphere. Update checkpoint:", checkpoint)
-            elif checkpoint == 18 and forceBattle:
+            elif checkpoint == 18 and force_battle:
                 FFXC.set_neutral()
 
             # Map changes
@@ -287,11 +287,11 @@ def escape():
                 screen.await_turn()
                 if checkpoint < 19:
                     battle.main.flee_all()
-                    forceBattle = False
-                elif not menuDone:
+                    force_battle = False
+                elif not menu_done:
                     battle.main.escape_with_xp()
                     menu.after_seymour()
-                    menuDone = True
+                    menu_done = True
                     memory.main.full_party_format("macalaniaescape")
                 elif memory.main.get_encounter_id() == 195:
                     break

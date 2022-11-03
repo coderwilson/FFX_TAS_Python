@@ -22,11 +22,11 @@ def set_movement(target) -> bool:
 
     Ly = fX * (eX - pX) + rX * (eY - pY)
     Lx = fY * (eX - pX) + rY * (eY - pY)
-    sumsUp = abs(Lx) + abs(Ly)
-    if sumsUp == 0:
-        sumsUp = 0.01
-    Lx /= sumsUp
-    Ly /= sumsUp
+    sums_up = abs(Lx) + abs(Ly)
+    if sums_up == 0:
+        sums_up = 0.01
+    Lx /= sums_up
+    Ly /= sums_up
     if abs(Lx) > abs(Ly):
         Ly = copysign(Ly / Lx if Lx else 0, Ly)
         Lx = copysign(1, Lx)
@@ -35,7 +35,7 @@ def set_movement(target) -> bool:
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
-    # memory.waitFrames(frames=1)
+    # memory.wait_frames(frames=1)
 
     if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 9:
         return True  # Checkpoint reached
@@ -677,11 +677,11 @@ def tp_farm(checkpoint):
         x = 0
         y = 300
     if checkpoint == 4:  # North pos 1
-        x = -104
-        y = -1236
+        x = -127
+        y = -1083
     if checkpoint == 5:  # North pos 2
-        x = -139
-        y = -1239
+        x = -106
+        y = -1185
     if checkpoint == 6:  # Back to agency front
         x = -115
         y = -1400
@@ -1355,13 +1355,13 @@ def miihen_farm(checkpoint):
         x = -300
         y = -350
     if checkpoint == 61:  # Farm area 4
-        x = 58
-        y = -689
+        x = 3
+        y = -732
     if checkpoint == 62:  # Farm area 4 and save sphere
-        x = 23
-        y = -725
+        x = 44
+        y = -705
     if checkpoint == 63:  # Back to Clasko map
-        x = 230
+        x = 66
         y = -850
     if checkpoint == 64:
         x = -118

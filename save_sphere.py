@@ -74,12 +74,12 @@ def approach_save_sphere():
                 memory.main.wait_frames(2)
                 memory.main.clear_save_menu_cursor()
                 memory.main.clear_save_menu_cursor_2()
+                # while memory.main.user_control():
+                #     pathing.set_movement([target_coords[0], target_coords[1]])
+                #     xbox.tap_b()
+                #     memory.main.wait_frames(6)
+                # memory.main.wait_frames(20)
                 target_details = get_save_sphere_settings(target_actor)
-                #while memory.main.user_control():
-                #    pathing.set_movement([target_coords[0], target_coords[1]])
-                #    xbox.tap_b()
-                #    memory.main.wait_frames(6)
-                #memory.main.wait_frames(20)
             else:
                 FFXC.set_neutral()
                 if memory.main.battle_active():
@@ -90,6 +90,7 @@ def approach_save_sphere():
                     print("Mark 3", memory.main.diag_progress_flag())
                     xbox.tap_b()
     FFXC.set_neutral()
+
 
 def disengage_save_sphere():
     while memory.main.save_menu_cursor() == 0 and memory.main.save_menu_cursor_2() == 0:
