@@ -25,11 +25,11 @@ def save_game(first_save=False):
     print("Arena - Touch Save Sphere, and actually save")
     FFXC = xbox.controller_handle()
     FFXC.set_neutral()
-    ssDetails = memory.main.get_save_sphere_details()
+    ss_details = memory.main.get_save_sphere_details()
 
     if memory.main.user_control():
         while memory.main.user_control():
-            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+            nemesis.targetPath.set_movement([ss_details[0], ss_details[1]])
             xbox.tap_b()
             memory.main.wait_frames(1)
     try:
@@ -103,8 +103,8 @@ def airship_destination(dest_num=0):  # Default to Sin.
 
 def get_save_sphere_details():
     map_val = memory.main.get_map()
-    storyVal = memory.main.get_story_progress()
-    print("Map:", map_val, "| Story:", storyVal)
+    story_val = memory.main.get_story_progress()
+    print("Map:", map_val, "| Story:", story_val)
     x = 0
     y = 0
     diag = 0
@@ -181,11 +181,11 @@ def get_save_sphere_details():
 def return_to_airship():
     print("Attempting Return to Airship")
 
-    ssDetails = get_save_sphere_details()
+    ss_details = get_save_sphere_details()
 
     if memory.main.user_control():
         while memory.main.user_control():
-            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+            nemesis.targetPath.set_movement([ss_details[0], ss_details[1]])
             xbox.tap_b()
             memory.main.wait_frames(1)
     try:
@@ -205,14 +205,14 @@ def return_to_airship():
             FFXC.set_neutral()
             if memory.main.save_menu_open():
                 xbox.tap_a()
-            elif memory.main.diag_progress_flag() == ssDetails[2]:
-                # print("Cursor test:", memory.saveMenuCursor())
+            elif memory.main.diag_progress_flag() == ss_details[2]:
+                # print("Cursor test:", memory.save_menu_cursor())
                 if memory.main.save_menu_cursor() != 1:
                     xbox.menu_down()
                 else:
                     xbox.menu_b()
             elif memory.main.user_control():
-                nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
+                nemesis.targetPath.set_movement([ss_details[0], ss_details[1]])
                 xbox.menu_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
@@ -419,9 +419,9 @@ def restock_downs():
 
 
 def battles_1():
-    if not memory.main.equipped_armor_has_ability(charNum=1, abilityNum=0x800A):
+    if not memory.main.equipped_armor_has_ability(char_num=1, ability_num=0x800A):
         nemesis.menu.equipArmor(character=1, ability=0x800A, fullMenuClose=False)
-    if not memory.main.equipped_armor_has_ability(charNum=4, abilityNum=0x800A):
+    if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
         nemesis.menu.equipArmor(character=4, ability=0x800A)
     memory.main.close_menu()
     arena_npc()

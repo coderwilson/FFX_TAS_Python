@@ -4040,19 +4040,21 @@ def m_woods(checkpoint):
         y = 144
     if checkpoint == 59:  # Check for completion status
         print("Check for completion status")
-    if checkpoint == 60:
+    if checkpoint == 60:  # Check for RNG2
+        x, y = [-614,123]
+    if checkpoint == 61:
         x = -601
         y = 126
-    if checkpoint == 61:
+    if checkpoint == 62:
         x = -596
         y = 59
-    if checkpoint == 62:
+    if checkpoint == 63:
         x = -613
         y = -53
-    if checkpoint == 63:
+    if checkpoint == 64:
         x = -654
         y = -98
-    if checkpoint == 64:
+    if checkpoint == 65:
         x = -750
         y = -200
     return [x, y]
@@ -4934,7 +4936,7 @@ def home(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    if checkpoint == 60:  # Used for kilikaSkip and Nemesis, extra chest.
+    if checkpoint == 60:  # Used for Kilika skip and Nemesis, extra chest.
         x = -343
         y = 189
     if checkpoint == 61:
