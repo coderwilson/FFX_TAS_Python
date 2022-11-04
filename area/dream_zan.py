@@ -1,3 +1,5 @@
+import logging
+
 import battle.boss
 import battle.main
 import battle.overdrive
@@ -9,13 +11,13 @@ import save_sphere
 import tts
 import vars
 import xbox
-import logging
 
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 logger = logging.getLogger(__name__)
+
 
 def new_game(gamestate):
     logger.info("Starting the game")
@@ -95,7 +97,7 @@ def listen_story():
         if memory.main.get_map() == 132:
             if memory.main.diag_progress_flag() == 1:
                 game_vars.set_csr(False)
-                logger.info("Skipping intro scene, we'll watch this properly in ~8 hours")
+                logger.info("Skipping intro scene, we'll watch this properly later")
                 memory.main.await_control()
             if not game_vars.accessibility_vars()[0]:
                 FFXC.set_value("btn_back", 1)

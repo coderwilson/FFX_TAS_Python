@@ -25,6 +25,22 @@
         "328977576": {
             "duration": 432,
             "victory": true
+        },
+        "201515561": {
+            "duration": 482,
+            "victory": false
+        },
+        "314267917": {
+            "duration": 572,
+            "victory": true
+        },
+        "1645092309": {
+            "duration": 452,
+            "victory": true
+        },
+        "130720005": {
+            "duration": 479,
+            "victory": true
         }
     },
     "160": {
@@ -35,11 +51,23 @@
     },
     "56": {
         "141125788": {
-            "duration": 550,
+            "duration": 587,
             "victory": true
         },
         "777968232": {
             "duration": 427,
+            "victory": true
+        },
+        "508694108": {
+            "duration": 438,
+            "victory": true
+        },
+        "2110203785": {
+            "duration": 413,
+            "victory": true
+        },
+        "2036938795": {
+            "duration": 498,
             "victory": true
         }
     },
@@ -124,6 +152,12 @@
     "248": {
         "95207898": {
             "duration": 521,
+            "victory": true
+        }
+    },
+    "164": {
+        "279306185": {
+            "duration": 551,
             "victory": true
         }
     }

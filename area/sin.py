@@ -1,6 +1,7 @@
+import logging
+
 import battle.boss
 import battle.main
-import logging
 import memory.main
 import menu
 import pathing

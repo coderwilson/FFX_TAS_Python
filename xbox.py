@@ -1,4 +1,5 @@
 import json
+import logging
 import math
 import time
 
@@ -7,7 +8,6 @@ import vgamepad as vg
 import memory.get
 import memory.main
 import vars
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -465,10 +465,6 @@ def clear_save_popup(click_to_diag_num=0):
 
 def await_save(index=0):
     clear_save_popup(click_to_diag_num=index)
-
-
-def remove():
-    logger.warning("Controller may freeze the program here. If so, please restart your PC.")
 
 
 def grid_up():

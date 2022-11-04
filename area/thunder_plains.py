@@ -1,5 +1,6 @@
-import battle.main
 import logging
+
+import battle.main
 import memory.main
 import menu
 import pathing
@@ -304,7 +305,7 @@ def north_pathing():
 
     FFXC.set_neutral()
     memory.main.await_control()
-    logger.info("Thunder Plains North complete. Moving up to the Macalania save sphere.")
+    logger.info("Thunder Plains North complete. Moving to the Macalania save sphere.")
     if not game_vars.csr():
         FFXC.set_movement(0, 1)
         xbox.skip_dialog(6)

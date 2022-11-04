@@ -1,6 +1,7 @@
+import logging
+
 import battle.boss
 import battle.main
-import logging
 import memory.main
 import menu
 import pathing
@@ -46,10 +47,10 @@ def arrival():
                 checkpoint = 49
             elif checkpoint < 54 and memory.main.get_story_progress() == 1045:
                 checkpoint = 54
-                logger.debug(f"Updating checkpoint based on story/map progress: {checkpoint}")
+                logger.debug(f"Updating checkpoint based on progress: {checkpoint}")
             elif checkpoint == 54 and memory.main.get_map() == 188:
                 checkpoint = 55
-                logger.debug(f"Updating checkpoint based on story/map progress: {checkpoint}")
+                logger.debug(f"Updating checkpoint based on progress: {checkpoint}")
 
             # General pathing
             elif pathing.set_movement(pathing.moonflow(checkpoint)):
@@ -63,7 +64,7 @@ def arrival():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-    logger.info("End of approaching section, should now be talking to Lucille/Elma/etc.")
+    logger.info("End of approach section, should now be talking to Lucille/Elma/etc.")
 
 
 def south_bank(checkpoint: int = 0):

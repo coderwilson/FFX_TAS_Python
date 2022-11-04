@@ -1,5 +1,6 @@
-import battle.main
 import logging
+
+import battle.main
 import logs
 import memory.main
 import menu

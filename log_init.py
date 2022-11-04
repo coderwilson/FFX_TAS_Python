@@ -1,12 +1,15 @@
-import logging
-import datetime
-import config
 import copy
+import datetime
+import logging
 import time
+
+import config
+
 
 # Used to reset time reference at start of run
 def reset_logging_time_reference():
     logging._startTime = time.time()
+
 
 # Python has a logging library that will do what we want.
 # Basic documentation here:     https://docs.python.org/3/howto/logging.html
@@ -23,10 +26,11 @@ class DeltaTimeFormatter(logging.Formatter):
         record.delta = f"{duration.strftime('%H:%M:%S')}.{int(duration.strftime('%f')) // 1000:03d}"
         return super().format(record)
 
+
 # This should be called once in main, before any calls to the logging library
 def initialize_logging():
     # Defines the format of the logs
-    log_format = '[%(delta)s] %(name)-12s %(levelname)-8s %(message)s'
+    log_format = "[%(delta)s] %(name)-12s %(levelname)-8s %(message)s"
     formatter = DeltaTimeFormatter(fmt=log_format)
     # Get current time in order to create log file name
     timeNow = datetime.datetime.now()
@@ -35,10 +39,11 @@ def initialize_logging():
     # Set up logging to file
     logging.basicConfig(
         filename=f"Logs/FFX_Log_{timeStr}.txt",
-        filemode='w', # Log everything in the file
-        level=logging.DEBUG
+        filemode="w",  # Log everything in the file
+        level=logging.DEBUG,
     )
-    logging.getLogger('').root.handlers[0].setFormatter(formatter)    # Apply DeltaTimeFormatter formatter
+    logging.getLogger("").root.handlers[0].setFormatter(formatter)
+    # Apply DeltaTimeFormatter formatter
 
     # Get the visible log level for the console logger from config.yaml
     config_data = config.open_config()
@@ -46,16 +51,17 @@ def initialize_logging():
 
     # Set up the console logger
     console = logging.StreamHandler()
-    console.setLevel(console_log_level) # Log the appropriate information to console
-    console.setFormatter(formatter)     # Apply DeltaTimeFormatter formatter
+    console.setLevel(console_log_level)  # Log the appropriate information to console
+    console.setFormatter(formatter)  # Apply DeltaTimeFormatter formatter
 
     # Add the handlers to the root logger
-    logging.getLogger('').addHandler(console)
+    logging.getLogger("").addHandler(console)
 
     # Turn off logging in specific sublibraries to prevent even more spam
-    logging.getLogger('comtypes').setLevel(logging.WARNING) # For pyttsx3
+    logging.getLogger("comtypes").setLevel(logging.WARNING)  # For pyttsx3
 
     # Now the logging to file/console is configured!
+
 
 # Examples of using logging:
 #

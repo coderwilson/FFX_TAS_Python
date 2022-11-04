@@ -1,6 +1,7 @@
+import logging
+
 import battle.boss
 import battle.main
-import logging
 import logs
 import memory.main
 import menu
@@ -28,7 +29,7 @@ def ss_liki():
                 checkpoint += 1
             elif checkpoint == 3:  # Talk to Wakka
                 memory.main.click_to_event_temple(3)
-                logger.info(f"Ready for SS Liki menu - (var) {game_vars.early_tidus_grid()}")
+                logger.info(f"Ready for SS Liki menu: {game_vars.early_tidus_grid()}")
                 if not game_vars.early_tidus_grid():
                     menu.liki()
                     memory.main.close_menu()

@@ -1,8 +1,8 @@
+import logging
 import time
 
 import battle.boss
 import battle.main
-import logging
 import logs
 import memory.main
 import menu
@@ -62,7 +62,7 @@ def arrival():
                 while memory.main.get_actor_coords(6)[0] < -50:
                     current_time = time.time()
                     if current_time > max_time:
-                        logger.warning("Skip failed for some reason. Moving on without skip.")
+                        logger.warning("Skip seemingly failed. Moving on without it.")
                         clasko_skip = False
                         break
                 memory.main.click_to_control()
@@ -84,9 +84,11 @@ def arrival():
     logger.info("Done with prelim MRR area, now for the real deal.")
     return clasko_skip
 
+
 def log_mrr_kimahri_crit_chance():
     crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
     logger.debug(f"======== Next Kimahri crit: {crit_chance}")
+
 
 def main_path():
     memory.main.await_control()
@@ -170,7 +172,9 @@ def main_path():
                     ) in [2, 3, 4, 5, 6, 7, 9]:
                         crit_manip = True
                         # Try to end on 1.
-                        logger.debug(f"+++++++++++ We can manip: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}")
+                        logger.debug(
+                            f"+++++++++++ We can manip: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                        )
                         checkpoint = 59
                     else:
                         checkpoint += 1

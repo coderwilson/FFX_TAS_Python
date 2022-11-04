@@ -739,7 +739,7 @@ def spherimorph():
 
     spell_num = 0
     tidus_turns = 0
-    rikkuturns = 0
+    rikku_turns = 0
     yuna_turn = False
     kim_turn = False
     while not memory.main.turn_ready():
@@ -748,9 +748,9 @@ def spherimorph():
         if memory.main.turn_ready():
             if game_vars.use_pause():
                 memory.main.wait_frames(2)
-            turnchar = memory.main.get_battle_char_turn()
+            turn_char = memory.main.get_battle_char_turn()
             party_hp = memory.main.get_battle_hp()
-            if turnchar == 0:
+            if turn_char == 0:
                 if tidus_turns == 0:
                     battle.main.equip_in_battle(equip_type="armor", ability_num=0x8028)
                 elif tidus_turns == 1:
@@ -758,9 +758,9 @@ def spherimorph():
                 else:
                     battle.main.buddy_swap_rikku()
                 tidus_turns += 1
-            elif turnchar == 1:
-                rikkuslotnum = memory.main.get_battle_char_slot(6)
-                if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
+            elif turn_char == 1:
+                rikku_slot_num = memory.main.get_battle_char_slot(6)
+                if rikku_slot_num < 3 and party_hp[rikku_slot_num] == 0:
                     battle.main.revive()
                     yuna_turn = True
                 elif not yuna_turn:
@@ -778,9 +778,9 @@ def spherimorph():
                 else:
                     battle.main.defend()
                     yuna_turn = True
-            elif turnchar == 3:
-                rikkuslotnum = memory.main.get_battle_char_slot(6)
-                if rikkuslotnum < 3 and party_hp[rikkuslotnum] == 0:
+            elif turn_char == 3:
+                rikku_slot_num = memory.main.get_battle_char_slot(6)
+                if rikku_slot_num < 3 and party_hp[rikku_slot_num] == 0:
                     battle.main.revive()
                     kim_turn = True
                 elif not kim_turn:
@@ -804,7 +804,7 @@ def spherimorph():
                     battle.main.buddy_swap_lulu()
                 else:
                     battle.main.defend()
-            elif turnchar == 5:
+            elif turn_char == 5:
                 if not battle.main.spheri_spell_item_ready():
                     if spell_num == 1:
                         battle.main.ice()
@@ -827,32 +827,32 @@ def spherimorph():
                     battle.main.buddy_swap_rikku()
                 else:
                     battle.main.defend()
-            elif turnchar == 6:
+            elif turn_char == 6:
                 mix_dmg_rolls = sum(memory.main.rikku_mix_damage())
                 logger.debug(f"Mix will do {mix_dmg_rolls} damage.")
                 if mix_dmg_rolls < memory.main.get_enemy_current_hp()[0]:
                     logger.debug("Throwing Grenade because of damage rolls")
-                    grenadeslotnum = memory.main.get_use_items_slot(35)
-                    battle.main.use_item(grenadeslotnum, "none")
+                    grenade_slot_num = memory.main.get_use_items_slot(35)
+                    battle.main.use_item(grenade_slot_num, "none")
                 elif not battle.main.spheri_spell_item_ready():
                     if 5 not in memory.main.get_active_battle_formation():
                         battle.main.buddy_swap_lulu()
                     else:
                         battle.main.defend()
-                elif yunaTurn and kimTurn:
+                elif yuna_turn and kim_turn:
                     logger.debug("Starting Rikkus overdrive")
                     logger.debug("Full Damage Values:")
                     logger.debug(memory.main.rikku_mix_damage())
-                    if spellNum == 1:
+                    if spell_num == 1:
                         logger.debug("Creating Ice")
                         battle.main.rikku_full_od("spherimorph1")
-                    elif spellNum == 2:
+                    elif spell_num == 2:
                         logger.debug("Creating Water")
                         battle.main.rikku_full_od("spherimorph2")
-                    elif spellNum == 3:
+                    elif spell_num == 3:
                         logger.debug("Creating Thunder")
                         battle.main.rikku_full_od("spherimorph3")
-                    elif spellNum == 4:
+                    elif spell_num == 4:
                         logger.debug("Creating Fire")
                         battle.main.rikku_full_od("spherimorph4")
                 else:
@@ -872,7 +872,7 @@ def crawler():
         battle.main.negator_with_steal()
     else:
         tidus_turns = 0
-        rikkuturns = 0
+        rikku_turns = 0
         kimahriturns = 0
         luluturns = 0
         yunaturns = 0
@@ -882,37 +882,37 @@ def crawler():
         while memory.main.battle_active():  # AKA end of battle screen
             FFXC.set_neutral()
             if memory.main.turn_ready():
-                turnchar = memory.main.get_battle_char_turn()
-                if turnchar == 0:
+                turn_char = memory.main.get_battle_char_turn()
+                if turn_char == 0:
                     if tidus_turns == 0:
                         logger.debug("Swapping Tidus for Rikku")
                         battle.main.buddy_swap_rikku()
                     else:
                         battle.main.defend()
                     tidus_turns += 1
-                elif turnchar == 6:
+                elif turn_char == 6:
                     if luluturns < 2:
                         logger.debug("Using Lightning Marble")
                         lightningmarbleslot = memory.main.get_use_items_slot(30)
-                        if rikkuturns < 1:
+                        if rikku_turns < 1:
                             battle.main.use_item(lightningmarbleslot, target=21)
                         else:
                             battle.main.use_item(lightningmarbleslot, target=21)
                     else:
                         logger.debug("Starting Rikkus overdrive")
                         battle.main.rikku_full_od("crawler")
-                    rikkuturns += 1
-                elif turnchar == 3:
+                    rikku_turns += 1
+                elif turn_char == 3:
                     if kimahriturns == 0:
                         lightningmarbleslot = memory.main.get_use_items_slot(30)
                         battle.main.use_item(lightningmarbleslot, target=21)
                     else:
                         battle.main.buddy_swap_yuna()
                     kimahriturns += 1
-                elif turnchar == 5:
+                elif turn_char == 5:
                     battle.main.revive()
                     luluturns += 1
-                elif turnchar == 1:
+                elif turn_char == 1:
                     if yunaturns == 0:
                         battle.main.defend()
                     else:
@@ -947,7 +947,7 @@ def wendigo():
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             party_hp = memory.main.get_battle_hp()
-            turnchar = memory.main.get_battle_char_turn()
+            turn_char = memory.main.get_battle_char_turn()
             tidus_slot = memory.main.get_battle_char_slot(0)
 
             if party_hp[memory.main.get_battle_char_slot(0)] == 0:
@@ -956,7 +956,7 @@ def wendigo():
                 powerbreak = True
                 usepowerbreak = powerbreak and not powerbreakused
 
-            if turnchar == 1:
+            if turn_char == 1:
                 logger.debug("Yunas Turn")
                 # If Yuna still needs AP:
                 if not yuna_ap:
@@ -964,7 +964,7 @@ def wendigo():
                     # If both other characters are dead Mega-Phoenix if available, otherwise PD
                     if (
                         battle.main.wendigo_res_heal(
-                            turnchar=turnchar,
+                            turn_char=turn_char,
                             use_power_break=usepowerbreak,
                             tidus_max_hp=tidus_max_hp,
                         )
@@ -981,7 +981,7 @@ def wendigo():
                         battle.main.buddy_swap_rikku()
                     else:
                         xbox.weap_swap(0)
-            elif turnchar == 0:
+            elif turn_char == 0:
                 if not tidushaste:
                     logger.debug("Tidus Haste self")
                     battle.main.tidus_haste("none")
@@ -1032,7 +1032,7 @@ def wendigo():
                     logger.debug("No need to heal. Ver 2")
                     battle.main.attack_by_num(21, "l")
                 memory.main.wait_frames(30 * 0.2)
-            elif turnchar == 6:
+            elif turn_char == 6:
                 if phase == 2:
                     phase += 1
                     lightcurtainslot = memory.main.get_use_items_slot(57)
@@ -1049,7 +1049,7 @@ def wendigo():
                 #    defend()
                 elif (
                     battle.main.wendigo_res_heal(
-                        turnchar=turnchar,
+                        turn_char=turn_char,
                         use_power_break=usepowerbreak,
                         tidus_max_hp=tidus_max_hp,
                     )
@@ -1065,7 +1065,7 @@ def wendigo():
                     #    buddy_swap_lulu()
                     else:
                         battle.main.defend()
-            elif turnchar == 2:
+            elif turn_char == 2:
                 if usepowerbreak:
                     logger.debug("Using Power Break")
                     battle.main.use_skill(position=0, target=21)
@@ -1075,17 +1075,17 @@ def wendigo():
                 #    defend()
                 elif (
                     battle.main.wendigo_res_heal(
-                        turnchar=turnchar,
+                        turn_char=turn_char,
                         use_power_break=usepowerbreak,
                         tidus_max_hp=tidus_max_hp,
                     )
                     == 0
                 ):
                     battle.main.buddy_swap_kimahri()
-            elif turnchar == 5:
+            elif turn_char == 5:
                 if (
                     battle.main.wendigo_res_heal(
-                        turnchar=turnchar,
+                        turn_char=turn_char,
                         use_power_break=usepowerbreak,
                         tidus_max_hp=tidus_max_hp,
                     )
@@ -1109,7 +1109,7 @@ def wendigo():
                 ):
                     if (
                         battle.main.wendigo_res_heal(
-                            turnchar=turnchar,
+                            turn_char=turn_char,
                             use_power_break=usepowerbreak,
                             tidus_max_hp=tidus_max_hp,
                         )
@@ -1139,9 +1139,9 @@ def evrae():
 
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            turnchar = memory.main.get_battle_char_turn()
+            turn_char = memory.main.get_battle_char_turn()
             logger.debug(f"Tidus prep turns: {tidus_prep}")
-            if turnchar == 0:
+            if turn_char == 0:
                 logger.debug("Registering Tidus' turn")
                 if game_vars.skip_kilika_luck():
                     if tidus_prep == 0:
@@ -1194,7 +1194,7 @@ def evrae():
                     else:
                         tidus_attacks += 1
                         battle.main.attack("none")
-            elif turnchar == 6:
+            elif turn_char == 6:
                 logger.debug("Registering Rikkus turn")
                 if rikku_turns == 0:
                     rikku_turns += 1
@@ -1231,7 +1231,7 @@ def evrae():
                 else:
                     battle.main.steal()
                     steal_count += 1
-            elif turnchar == 3:
+            elif turn_char == 3:
                 logger.debug("Registering Kimahri's turn")
                 if not game_vars.get_blitz_win() and not lunar_curtain:
                     logger.debug("Use Lunar Curtain")

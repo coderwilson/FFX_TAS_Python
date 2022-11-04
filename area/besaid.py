@@ -1,3 +1,5 @@
+import logging
+
 import battle.main
 import logs
 import memory.main
@@ -6,12 +8,12 @@ import pathing
 import screen
 import vars
 import xbox
-import logging
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 logger = logging.getLogger(__name__)
+
 
 def beach():
     logger.info("Starting Besaid section. Beach")
@@ -240,7 +242,7 @@ def leaving():
                 checkpoint += 1
             elif checkpoint == 24:  # Hilltop
                 memory.main.click_to_event_temple(2)
-                logger.debug(f"Ready for SS Liki menu - (var) {game_vars.early_tidus_grid()}")
+                logger.debug(f"Ready for SS Liki menu: {game_vars.early_tidus_grid()}")
                 if memory.main.get_tidus_slvl() >= 3:
                     menu.liki()
                     game_vars.early_tidus_grid_set_true()

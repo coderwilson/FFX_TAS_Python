@@ -4041,7 +4041,7 @@ def m_woods(checkpoint):
     if checkpoint == 59:  # Check for completion status
         print("Check for completion status")
     if checkpoint == 60:  # Check for RNG2
-        x, y = [-614,123]
+        x, y = [-614, 123]
     if checkpoint == 61:
         x = -601
         y = 126
