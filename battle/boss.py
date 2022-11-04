@@ -738,8 +738,16 @@ def spherimorph():
     FFXC.set_neutral()
 
     spell_num = 0
+    # We know what the weakness is from RNG2 Manip
+    if memory.main.get_char_weakness(20) == 1:
+        spell_num = 4  # Ice
+    elif memory.main.get_char_weakness(20) == 2:
+        spell_num = 1  # Fire
+    elif memory.main.get_char_weakness(20) == 4:
+        spell_num = 3  # Water
+    elif memory.main.get_char_weakness(20) == 8:
+        spell_num = 2  # Thunder
     tidus_turns = 0
-    rikku_turns = 0
     yuna_turn = False
     kim_turn = False
     while not memory.main.turn_ready():
