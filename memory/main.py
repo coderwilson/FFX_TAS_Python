@@ -4,6 +4,7 @@ import logging
 import os.path
 import struct
 import time
+from typing import List
 from collections import Counter
 from math import cos, sin
 
@@ -4159,6 +4160,13 @@ def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
                 return x
     return 255
 
+def rikku_mix_damage() -> List[int]:
+    initial_rng_vals = rng_array_from_index(index=26, array_len = 9)
+    dmg_rng = [(s32(x) & 31) + 0xf0 for x in initial_rng_vals[1:]]
+    base_dmg = 18 * 50
+    initial_damage = [(x * base_dmg) // 256 for x in dmg_rng]
+    weakness_damage = [int(x * 1.5) for x in initial_damage]
+    return weakness_damage
 
 def future_attack_will_crit(
     character: int, char_luck: int, enemy_luck: int, attack_index: int = 0
@@ -4557,6 +4565,8 @@ def rng_from_index(index: int = 20):
     global base_value
     return process.read(base_value + mem_target)
 
+def get_next_rng2():
+    return roll_next_rng(rng_from_index(2), 2) & 0x7FFFFFFF & 0xFFFF
 
 def rng_array_from_index(index: int = 20, array_len: int = 20):
     ret_val = [rng_from_index(index)]  # First value is the current value

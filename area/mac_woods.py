@@ -1,6 +1,8 @@
+import logging
+from typing import List
+
 import battle.boss
 import battle.main
-import logging
 import logs
 import memory.main
 import menu
@@ -11,9 +13,30 @@ import vars
 import xbox
 
 logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
+
+
+def wait_for_rng2_weakness(valid_weakness: List[int]):
+    while True:
+        current_weakness = memory.main.get_next_rng2() % 4
+        logger.debug(
+            f"Valid Weakness: {valid_weakness}, Current Weakness: {current_weakness}"
+        )
+        if current_weakness in valid_weakness:
+            logger.info("Weakness has lined up.")
+            return
+
+
+def calculate_possible_weaknesses() -> List[int]:
+    items_contained = []
+    for i, item_val in enumerate([27, 24, 30, 32]):
+        if memory.main.get_use_items_slot(item_val) != 255:
+            items_contained.append(i)
+    return items_contained
 
 
 def arrival(rikku_charged):
@@ -22,13 +45,8 @@ def arrival(rikku_charged):
     memory.main.full_party_format("mwoodsneedcharge")
     memory.main.close_menu()
 
-    # Rikkus charge, Fish Scales, and Arctic Winds
-    woods_vars = [False, False, False]
-    woods_vars[0] = rikku_charged
-
     last_gil = 0  # for first chest
     checkpoint = 0
-    total_battles = 0
     while memory.main.get_map() != 221:  # All the way to O'aka
         if memory.main.user_control():
             # Events
@@ -36,19 +54,27 @@ def arrival(rikku_charged):
                 if last_gil != memory.main.get_gil_value():
                     if last_gil == memory.main.get_gil_value() - 2000:
                         checkpoint += 1
-                        logger.debug(f"Chest obtained. Updating checkpoint: {checkpoint}")
+                        logger.debug(
+                            f"Chest obtained. Updating checkpoint: {checkpoint}"
+                        )
                     else:
                         last_gil = memory.main.get_gil_value()
                 else:
                     FFXC.set_movement(1, 1)
                     xbox.tap_b()
             elif checkpoint == 59:
-                if not woods_vars[0]:
-                    checkpoint -= 2
-                elif not woods_vars[1] and not woods_vars[2]:
+                logger.debug(f"Rikku Charge: {rikku_charged}")
+                if not rikku_charged:
                     checkpoint -= 2
                 else:  # All good to proceed
                     checkpoint += 1
+            elif checkpoint == 60:
+                logger.info("Waiting for RNG2 to sync up for Sphermiroph Weakness.")
+                items_contained = calculate_possible_weaknesses()
+                logger.info(f"We currently can do: {items_contained}")
+                FFXC.set_neutral()
+                wait_for_rng2_weakness(items_contained)
+                checkpoint += 1
 
             # Map changes
             elif checkpoint < 18 and memory.main.get_map() == 241:
@@ -63,19 +89,28 @@ def arrival(rikku_charged):
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                logger.debug(f"variable check 1: {woods_vars}")
-                woods_vars = battle.main.m_woods(woods_vars)
-                logger.debug(f"variable check 2: {woods_vars}")
-                if memory.main.overdrive_state()[6] == 100:
+                battle.main.m_woods()
+                rikku_charged = memory.main.overdrive_state()[6] == 100
+                logger.info(
+                    "Rikku charged" if rikku_charged else "Rikku is not charged."
+                )
+                party_hp = memory.main.get_hp()
+                if (
+                    party_hp[0] < 450
+                    or (party_hp[6] < 180 and not rikku_charged)
+                    or party_hp[2] + party_hp[4] < 500
+                ):
+                    battle.main.heal_up(full_menu_close=False)
+                if rikku_charged:
                     memory.main.full_party_format("mwoodsgotcharge")
                 else:
                     memory.main.full_party_format("mwoodsneedcharge")
-                total_battles += 1
+                memory.main.close_menu()
+                if checkpoint == 61:
+                    checkpoint = 60
             elif not memory.main.battle_active() and memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    # logs.write_stats("Mac Woods battles:")
-    # logs.write_stats(total_battles)
     # Save sphere
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(2)

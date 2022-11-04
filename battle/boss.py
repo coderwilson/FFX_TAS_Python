@@ -828,46 +828,35 @@ def spherimorph():
                 else:
                     battle.main.defend()
             elif turnchar == 6:
-                if rikkuturns == 0:
-                    logger.debug("Throwing Grenade to check element")
+                mix_dmg_rolls = sum(memory.main.rikku_mix_damage())
+                logger.debug(f"Mix will do {mix_dmg_rolls} damage.")
+                if mix_dmg_rolls < memory.main.get_enemy_current_hp()[0]:
+                    logger.debug("Throwing Grenade because of damage rolls")
                     grenadeslotnum = memory.main.get_use_items_slot(35)
                     battle.main.use_item(grenadeslotnum, "none")
-                    if memory.main.get_char_weakness(20) == 1:
-                        spell_num = 4  # Ice
-                    elif memory.main.get_char_weakness(20) == 2:
-                        spell_num = 1  # Fire
-                    elif memory.main.get_char_weakness(20) == 4:
-                        spell_num = 3  # Water
-                    elif memory.main.get_char_weakness(20) == 8:
-                        spell_num = 2  # Thunder
-
-                    # spell_num = screen.spherimorph_spell()
                 elif not battle.main.spheri_spell_item_ready():
                     if 5 not in memory.main.get_active_battle_formation():
                         battle.main.buddy_swap_lulu()
                     else:
                         battle.main.defend()
-                else:
+                elif yunaTurn and kimTurn:
                     logger.debug("Starting Rikkus overdrive")
-                    # logs.write_stats("Spherimorph spell used:")
-                    if spell_num == 1:
-                        # ogs.write_stats("Fire")
+                    logger.debug("Full Damage Values:")
+                    logger.debug(memory.main.rikku_mix_damage())
+                    if spellNum == 1:
                         logger.debug("Creating Ice")
                         battle.main.rikku_full_od("spherimorph1")
-                    elif spell_num == 2:
-                        # logs.write_stats("Water")
+                    elif spellNum == 2:
                         logger.debug("Creating Water")
                         battle.main.rikku_full_od("spherimorph2")
-                    elif spell_num == 3:
-                        # logs.write_stats("Thunder")
+                    elif spellNum == 3:
                         logger.debug("Creating Thunder")
                         battle.main.rikku_full_od("spherimorph3")
-                    elif spell_num == 4:
-                        # logs.write_stats("Ice")
+                    elif spellNum == 4:
                         logger.debug("Creating Fire")
                         battle.main.rikku_full_od("spherimorph4")
-
-                rikkuturns += 1
+                else:
+                    battle.main.defend()
 
     if not game_vars.csr():
         xbox.skip_dialog(5)
