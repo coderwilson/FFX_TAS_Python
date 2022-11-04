@@ -61,7 +61,7 @@ def arrival(rikku_charged):
             elif checkpoint == 60:
                 logger.info("Waiting for RNG2 to sync up for Sphermiroph Weakness.")
                 items_contained = calculate_possible_weaknesses()
-                logger.info("We currently can do: {items_contained}")
+                logger.info(f"We currently can do: {items_contained}")
                 FFXC.set_neutral()
                 wait_for_rng2_weakness(items_contained)
                 checkpoint += 1
@@ -83,13 +83,15 @@ def arrival(rikku_charged):
                 rikku_charged = memory.main.overdrive_state()[6] == 100
                 logger.info("Rikku charged" if rikku_charged else "Rikku is not charged.")
                 party_hp = memory.main.get_hp()
-                if party_hp[0] < 450 or party_hp[6] < 180 or party_hp[2] + party_hp[4] < 500:
+                if party_hp[0] < 450 or (party_hp[6] < 180 and not rikku_charged) or party_hp[2] + party_hp[4] < 500:
                     battle.main.heal_up(full_menu_close=False)
                 if rikku_charged:
                     memory.main.full_party_format("mwoodsgotcharge")
                 else:
                     memory.main.full_party_format("mwoodsneedcharge")
                 memory.main.close_menu()
+                if checkpoint == 61:
+                    checkpoint = 60
             elif not memory.main.battle_active() and memory.main.diag_skip_possible():
                 xbox.tap_b()
 
