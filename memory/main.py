@@ -1795,13 +1795,10 @@ def full_party_format(front_line, *, full_menu_close=True):
     orderFinal = get_party_format_from_text(front_line)
     orderFinal.extend(x for x in order if x not in orderFinal)
     if Counter(order[:3]) == Counter(orderFinal[:3]):
-        print("Good to go, no action taken.")
+        logger.info("Good to go, no action taken.")
     else:
-        print("Converting from formation:")
-        print(order)
-        print("Into formation:")
-        print(orderFinal)
-        print("Manipulating final formation to minimize movements")
+        logger.info(f"Converting from formation:\n\t{order}\n into formation:\n\t{orderFinal}")
+        logger.debug("Manipulating final formation to minimize movements")
         replacement_dict = {}
         new_characters = [x for x in orderFinal[:3] if x not in order[:3]]
         for i in range(3):
@@ -1811,8 +1808,7 @@ def full_party_format(front_line, *, full_menu_close=True):
                 replacement_dict[i] = new_characters.pop()
         for i in range(3):
             orderFinal[i] = replacement_dict[i]
-        print("New Final Order:")
-        print(orderFinal)
+        logger.info("New Final Order: {orderFinal}")
         while not menu_open():
             if not open_menu():
                 return
@@ -1825,15 +1821,15 @@ def full_party_format(front_line, *, full_menu_close=True):
             xbox.tap_b()
         start_pos = 0
         while Counter(order[:3]) != Counter(orderFinal[:3]):
-            print("==Full Party Format function, original")
+            logger.debug("==Full Party Format function, original")
             # Select target in the wrong spot.
-            print("Selecting start position")
+            logger.debug("Selecting start position")
             if order[start_pos] == orderFinal[start_pos]:
                 while order[start_pos] == orderFinal[start_pos] and order != orderFinal:
                     start_pos += 1
                     if start_pos == partyMembers:
                         start_pos = 0
-            print(
+            logger.debug(
                 "Character",
                 name_from_number(orderFinal[start_pos]),
                 "should be in position",
@@ -1841,20 +1837,20 @@ def full_party_format(front_line, *, full_menu_close=True):
             )
 
             # Set target, end position
-            print("Selecting destination position.")
+            logger.debug("Selecting destination position.")
             endPos = 0
             if orderFinal[start_pos] != order[endPos]:
                 while orderFinal[start_pos] != order[endPos] and order != orderFinal:
                     endPos += 1
 
-            print(
+            logger.debug(
                 "Character",
                 name_from_number(order[endPos]),
                 "found in position",
                 endPos,
             )
 
-            print("Looking for character.")
+            logger.debug("Looking for character.")
             if start_pos < 3 and endPos < 3:
                 start_pos += 1
                 if start_pos == partyMembers:
@@ -1862,9 +1858,8 @@ def full_party_format(front_line, *, full_menu_close=True):
                 continue
 
             # Move cursor to start position
-            print("Moving to start position")
+            logger.debug("Moving to start position")
             if party_format_cursor_1() != start_pos:
-                # print("Cursor not in right spot")
                 while party_format_cursor_1() != start_pos:
                     menu_direction(party_format_cursor_1(), start_pos, partyMembers)
                     if game_vars.use_pause():
@@ -1874,25 +1869,21 @@ def full_party_format(front_line, *, full_menu_close=True):
                 xbox.menu_b()  # Click on Start location
 
             # Move cursor to end position
-            print("Moving to destination position.")
+            logger.debug("Moving to destination position.")
             while party_format_cursor_2() != endPos:
                 menu_direction(party_format_cursor_2(), endPos, partyMembers)
                 if game_vars.use_pause():
                     wait_frames(1)
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
-            print("Start and destination positions have been swapped.")
+            logger.debug("Start and destination positions have been swapped.")
             start_pos += 1
             if start_pos == partyMembers:
                 start_pos = 0
 
-            print("Reporting results")
-            print("Converting from formation:")
-            print(order)
-            print("Into formation:")
-            print(orderFinal)
+            logger.info(f"Converted from formation:\n\t{order}\n into formation:\n\t{orderFinal}")
             order = get_order_seven()
-        print("Party format is good now.")
+        logger.info("Party format is good now.")
         if full_menu_close:
             close_menu()
         else:
