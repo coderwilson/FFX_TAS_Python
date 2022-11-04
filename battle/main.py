@@ -1,4 +1,5 @@
 import battle.overdrive
+import battle.utils
 import logs
 import logging
 import memory.main
@@ -296,6 +297,7 @@ def get_advances(tros=True, report=False):
     return advances
 
 
+@battle.utils.speedup_decorator
 def piranhas():
     encounter_id = memory.main.get_encounter_id()
     print("#########Seed:", memory.main.rng_seed())
@@ -317,6 +319,7 @@ def piranhas():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def besaid():
     print("Fight start: Besaid battle")
     FFXC.set_neutral()
@@ -345,6 +348,7 @@ def besaid():
     memory.main.click_to_control_3()
 
 
+@battle.utils.speedup_decorator
 def lancet_tutorial():
     print("Fight start: Lancet tutorial fight (Kilika)")
     xbox.click_to_battle()
@@ -366,6 +370,7 @@ def lancet_tutorial():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
     print("Fight start: Kilika battle")
     print("Formation:", next_battle)
@@ -649,6 +654,7 @@ def sonic_wings():
     print("Valefor attempting to use Sonic Wings - 2")
 
 
+@battle.utils.speedup_decorator
 def luca_workers():
     print("Fight start: Workers in Luca")
     xbox.click_to_battle()
@@ -669,6 +675,7 @@ def luca_workers():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def luca_workers_2(early_haste):
     print("Fight start: Workers in Luca")
     hasted = False
@@ -712,6 +719,7 @@ def luca_workers_2(early_haste):
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def after_blitz_1(early_haste):
     print("Fight start: After Blitzball (the fisheys)")
     print(early_haste)
@@ -740,6 +748,7 @@ def after_blitz_1(early_haste):
                     defend()
 
 
+@battle.utils.speedup_decorator
 def after_blitz_3(early_haste):
     print("Ready to take on Garuda")
     print(early_haste)
@@ -796,6 +805,7 @@ def after_blitz_3(early_haste):
             xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def after_blitz_3_late_haste(early_haste):
     print("Ready to take on Zu")
     print(early_haste)
@@ -855,6 +865,7 @@ def after_blitz_3_late_haste(early_haste):
             xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def miihen_road(self_destruct=False):
     print("Fight start: Mi'ihen Road")
     print("Mi'ihen battle. Self-destruct:", game_vars.self_destruct_get())
@@ -964,6 +975,7 @@ def mrr_target():
     return memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
 
 
+@battle.utils.speedup_decorator
 def mrr_battle(status):
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
     print("------------------------------")
@@ -1307,6 +1319,7 @@ def mrr_battle(status):
     return status
 
 
+@battle.utils.speedup_decorator
 def mrr_manip(kim_max_advance: int = 6):
     screen.await_turn()
     next_crit_kim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
@@ -1351,6 +1364,7 @@ def mrr_manip(kim_max_advance: int = 6):
     return attemptManip
 
 
+@battle.utils.speedup_decorator
 def djose(stone_breath):
     print("Fight start: Djose road")
     while not memory.main.battle_complete():  # AKA end of battle screen
@@ -1388,6 +1402,7 @@ def djose(stone_breath):
     return stone_breath
 
 
+@battle.utils.speedup_decorator
 def mix_tutorial():
     xbox.click_to_battle()
     steal()
@@ -1396,6 +1411,7 @@ def mix_tutorial():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def thunder_plains(section):
     encID = memory.main.get_encounter_id()
     nadeSlot = memory.main.get_item_slot(35)
@@ -1546,6 +1562,7 @@ def thunder_plains(section):
     print("Ready to continue onward.")
     
 
+@battle.utils.speedup_decorator
 def m_woods():
     print("Logic depends on completion of specific goals. In Order:")
     encounter_id = memory.main.get_encounter_id()
@@ -1652,6 +1669,7 @@ def spheri_spell_item_ready():
     return True
 
 
+@battle.utils.speedup_decorator
 def negator_with_steal():
     tidusturns = 0
     rikkuturns = 0
@@ -1726,6 +1744,7 @@ def get_anima_item_slot():
 
 
 # Process written by CrimsonInferno
+@battle.utils.speedup_decorator
 def seymour_guado_blitz_win():
     tidushaste = False
     kimahriconfused = False
@@ -1971,6 +1990,7 @@ def seymour_guado_blitz_win():
     FFXC.set_value("btn_b", 0)
 
 
+@battle.utils.speedup_decorator
 def seymour_guado_blitz_loss():
     screen.await_turn()
 
@@ -2252,6 +2272,7 @@ def fullheal(target: int, direction: str):
 
 
 # Process written by CrimsonInferno
+@battle.utils.speedup_decorator
 def wendigo_res_heal(turnchar: int, use_power_break: int, tidus_max_hp: int):
     print("Wendigo Res/Heal function")
     party_hp = memory.main.get_battle_hp()
@@ -2289,6 +2310,7 @@ def wendigo_res_heal(turnchar: int, use_power_break: int, tidus_max_hp: int):
     return True
 
 
+@battle.utils.speedup_decorator
 def zu():
     screen.await_turn()
     attack("none")
@@ -2303,6 +2325,7 @@ def zu():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # status should be an array length 2
     # [rikkuCharged, speed_needed, power_needed, items_needed]
@@ -2505,6 +2528,7 @@ def update_steal_items_desert():
     return itemArray
 
 
+@battle.utils.speedup_decorator
 def sandragora(version):
     screen.await_turn()
     if version != 1:  # Kimahri's turn
@@ -2543,6 +2567,7 @@ def sandragora(version):
         memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def home_1():
     FFXC.set_neutral()
     xbox.click_to_battle()
@@ -2562,6 +2587,7 @@ def home_1():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def home_2():
     xbox.click_to_battle()
 
@@ -2581,6 +2607,7 @@ def home_2():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def home_3():
     xbox.click_to_battle()
     if memory.main.get_use_items_slot(49) > 200:
@@ -2629,6 +2656,7 @@ def home_3_item():
     return 255
 
 
+@battle.utils.speedup_decorator
 def home_4():
     xbox.click_to_battle()
 
@@ -2646,6 +2674,7 @@ def home_4():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def guards(group_num, sleeping_powders):
     xbox.click_to_battle()
     throw_distiller = (
@@ -2927,6 +2956,7 @@ def attack_highbridge():
         attack("none")
 
 
+@battle.utils.speedup_decorator
 def calm_lands_gems():
     while not memory.main.turn_ready():
         pass
@@ -2958,6 +2988,7 @@ def calm_lands_gems():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def gagazet_path():
     while not memory.main.turn_ready():
         pass
@@ -2972,6 +3003,7 @@ def gagazet_path():
         flee_all()
 
 
+@battle.utils.speedup_decorator
 def cave_charge_rikku():
     while not memory.main.turn_ready():
         pass
@@ -3640,6 +3672,7 @@ def steal_and_attack():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def steal_and_attack_pre_tros():
     print("Steal/Attack function before Tros")
     turnCounter = 0
@@ -4271,6 +4304,7 @@ def impulse(direction=None, target_far_line=False):
     xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def sin_arms():
     print("Fight start: Sin's Arms")
     # Area for improvement later. Multiple skippable FMVs
@@ -4328,6 +4362,7 @@ def sin_arms():
     print("Done with Sin's Arms section")
 
 
+@battle.utils.speedup_decorator
 def sin_face():
     print("Fight start: Sin's Face")
     xbox.click_to_battle()
@@ -4350,6 +4385,7 @@ def sin_face():
             xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def yojimbo():
     while not memory.main.turn_ready():
         pass
@@ -4387,6 +4423,7 @@ def omnis_items():
     return [item1, item2]
 
 
+@battle.utils.speedup_decorator
 def bfa_nem():
     FFXC.set_movement(1, 0)
     memory.main.wait_frames(30 * 0.4)
@@ -4730,6 +4767,7 @@ def check_gems():
     return gems
 
 
+@battle.utils.speedup_decorator
 def calm_lands_manip():
     print("++Battle number:", memory.main.get_encounter_id())
     rng10nextChanceLow = memory.main.next_chance_rng_10(12)
@@ -5001,6 +5039,7 @@ def advance_rng_12():
     memory.main.click_to_control_3()
 
 
+@battle.utils.speedup_decorator
 def ghost_kill():
     import rng_track
 
