@@ -1,5 +1,6 @@
 import battle.overdrive
 import logs
+import logging
 import memory.main
 import rng_track
 import screen
@@ -7,9 +8,12 @@ import vars
 import xbox
 from memory.main import s32
 
+
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
+
+logger = logging.getLogger(__name__)
 
 
 def tap_targeting():
@@ -1540,23 +1544,32 @@ def thunder_plains(section):
         heal_up()
     memory.main.close_menu()
     print("Ready to continue onward.")
+    
+def speedup_decorator(func):
+  def wrapper():
+    memory.main.set_game_speed(2)
+    func()
+    memory.main.set_game_speed(0)
+  return wrapper
 
-
-def m_woods(woods_vars):
+@speedup_decorator
+def m_woods():
     print("Logic depends on completion of specific goals. In Order:")
-    print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
-    print(woods_vars)
     encounter_id = memory.main.get_encounter_id()
     print("------------- Battle Start - Battle Number:", encounter_id)
+    need_arctic_wind, need_fish_scale = False, False
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
+            if memory.main.get_use_items_slot(24) == 255:
+                need_arctic_wind = True
+            if memory.main.get_use_items_slot(32) == 255:
+                need_fish_scale = True
             turnchar = memory.main.get_battle_char_turn()
-            if not woods_vars[1] or not woods_vars[2]:
-                if encounter_id in [171, 172, 175]:
-                    if encounter_id == 175 and memory.main.next_steal_rare():
-                        print("No steal on Chimera, it will be rare which is no good.")
-                        flee_all()
-                    elif (
+            rikku_charged = memory.main.get_overdrive_battle(6) == 100
+            logging.info(f"Rikku charge state: {rikku_charged}")
+            if not rikku_charged:
+                if need_arctic_wind or need_fish_scale and encounter_id in [171, 172, 175]:
+                    if (
                         check_petrify_tidus()
                         or 6 not in memory.main.get_battle_formation()
                     ):
@@ -1565,12 +1578,12 @@ def m_woods(woods_vars):
                     elif 6 not in memory.main.get_active_battle_formation():
                         if (
                             encounter_id == 175
-                            and memory.main.get_use_items_slot(24) == 255
+                            and need_arctic_wind
                         ):
                             buddy_swap_rikku()
                         elif (
                             encounter_id in [171, 172]
-                            and memory.main.get_use_items_slot(32) == 255
+                            and need_fish_scale
                         ):
                             buddy_swap_rikku()
                         else:
@@ -1578,19 +1591,19 @@ def m_woods(woods_vars):
                     elif turnchar == 6:
                         if (
                             encounter_id == 175
-                            and memory.main.get_use_items_slot(24) == 255
+                            and need_arctic_wind
                         ):
                             print("Marker 2")
                             steal()
                         elif (
                             encounter_id == 172
-                            and memory.main.get_use_items_slot(32) == 255
+                            and need_fish_scale
                         ):
                             print("Marker 3")
                             steal_down()
                         elif (
                             encounter_id == 171
-                            and memory.main.get_use_items_slot(32) == 255
+                            and need_fish_scale
                         ):
                             print("Marker 4")
                             steal_right()
@@ -1600,36 +1613,18 @@ def m_woods(woods_vars):
                         else:
                             print("Escaping")
                             flee_all()
+                    elif memory.main.get_overdrive_battle(6) != 100:
+                        escape_one()
                     else:
-                        if woods_vars[0] or memory.main.get_overdrive_battle(6) == 100:
-                            if (
-                                encounter_id in [171, 172]
-                                and memory.main.get_use_items_slot(32) == 255
-                            ):
-                                escape_one()
-                            elif (
-                                encounter_id == 175
-                                and memory.main.get_use_items_slot(24) == 255
-                            ):
-                                escape_one()
-                            else:
-                                flee_all()
-                        else:
-                            escape_one()
-                else:
-                    print("Fleeing with ", turnchar)
-                    flee_all()
-            elif not woods_vars[0]:
-                if turnchar == 6:
+                        flee_all()
+                elif turnchar == 6:
                     if memory.main.next_steal_rare(pre_advance=2):
                         # Manip for crit
                         _steal()
                     else:
-                        attack_by_num(num=6)
+                        defend()
                 elif 6 not in memory.main.get_active_battle_formation():
                     buddy_swap_rikku()
-                elif memory.main.get_overdrive_battle(6) == 100:
-                    flee_all()
                 else:
                     escape_one()
             elif memory.main.next_steal_rare(pre_advance=2):
@@ -1643,27 +1638,13 @@ def m_woods(woods_vars):
                 print("##Looking ahead, no need to manip")
                 flee_all()
 
-    print("Battle complete, now to deal with the aftermath.")
+    logger.info("Battle complete, now to deal with the aftermath.")
     memory.main.click_to_control_3()
-    print("M.woods, back in control")
+    logger.debug("M.woods, back in control")
     if memory.main.overdrive_state()[6] == 100:
-        woods_vars[0] = True
-    if memory.main.get_use_items_slot(32) != 255:
-        woods_vars[1] = True
-    if memory.main.get_use_items_slot(24) != 255:
-        woods_vars[2] = True
-    print("Checking battle formation.")
-    print("Party format is now good. Let's check health.")
-    # Heal logic
-    party_hp = memory.main.get_hp()
-    if party_hp[0] < 450 or party_hp[6] < 180 or party_hp[2] + party_hp[4] < 500:
-        heal_up()
-    memory.main.close_menu()
-    print("And last, we'll update variables.")
-    print("Rikku charged, stolen Fish Scale, stolen Arctic Wind")
-    print(woods_vars)
-    print("HP is good. Onward!")
-    return woods_vars
+        rikku_charged = True
+    logger.info("Rikku charged" if rikku_charged else "Rikku is not charged.")
+    return rikku_charged
 
 
 def spheri_spell_item_ready():

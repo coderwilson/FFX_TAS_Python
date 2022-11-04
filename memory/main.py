@@ -4548,6 +4548,8 @@ def rng_from_index(index: int = 20):
     global baseValue
     return process.read(baseValue + memTarget)
 
+def get_next_rng2():
+    return roll_next_rng(rng_from_index(2), 2) & 0x7FFFFFFF & 0xFFFF
 
 def rng_array_from_index(index: int = 20, array_len: int = 20):
     retVal = [rng_from_index(index)]  # First value is the current value
