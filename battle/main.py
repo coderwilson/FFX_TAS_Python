@@ -1545,14 +1545,7 @@ def thunder_plains(section):
     memory.main.close_menu()
     print("Ready to continue onward.")
     
-def speedup_decorator(func):
-  def wrapper():
-    memory.main.set_game_speed(2)
-    func()
-    memory.main.set_game_speed(0)
-  return wrapper
 
-@speedup_decorator
 def m_woods():
     print("Logic depends on completion of specific goals. In Order:")
     encounter_id = memory.main.get_encounter_id()
@@ -1641,10 +1634,6 @@ def m_woods():
     logger.info("Battle complete, now to deal with the aftermath.")
     memory.main.click_to_control_3()
     logger.debug("M.woods, back in control")
-    if memory.main.overdrive_state()[6] == 100:
-        rikku_charged = True
-    logger.info("Rikku charged" if rikku_charged else "Rikku is not charged.")
-    return rikku_charged
 
 
 def spheri_spell_item_ready():
