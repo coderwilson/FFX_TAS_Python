@@ -2,15 +2,15 @@
 import os
 from pathlib import Path
 
+import area.dream_zan
+import logs
 import memory.main
 import pathing
 import screen
 import vars
-from gamestate import game
 import xbox
 import zz_airship_path
-import area.dream_zan
-import logs
+from gamestate import game
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
@@ -19,7 +19,7 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def load_into_game(gamestate:str, step_counter:str):
+def load_into_game(gamestate: str, step_counter: str):
     if not (gamestate == "Luca" and step_counter == 3):
         area.dream_zan.new_game(gamestate)
         game.start_time = logs.time_stamp()
@@ -65,7 +65,7 @@ def load_into_game(gamestate:str, step_counter:str):
         load_miihen_start_laugh()
     if gamestate == "Miihen" and step_counter == 2:  # Agency
         load_save_num(28)
-        returnArray = [False, 0, 0, False]
+        return_array = [False, 0, 0, False]
     if gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
         load_save_num(38)
         memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
@@ -98,17 +98,17 @@ def load_into_game(gamestate:str, step_counter:str):
         load_save_num(60)
     if gamestate == "Home" and step_counter == 2:
         load_save_num(11)
-    if gamestate == "rescueYuna" and step_counter == 1:  # Airship, first movement.
+    if gamestate == "rescue_yuna" and step_counter == 1:  # Airship, first movement.
         # Blitz Win, save less speed/power spheres
         load_save_num(56)
-    if gamestate == "rescueYuna" and step_counter == 2:  # Bevelle trials
+    if gamestate == "rescue_yuna" and step_counter == 2:  # Bevelle trials
         load_save_num(15)
-    if gamestate == "rescueYuna" and step_counter == 4:  # Altana
+    if gamestate == "rescue_yuna" and step_counter == 4:  # Altana
         load_save_num(12)
         # memory.main.setEncounterRate(setVal=0)
         # memory.main.setGameSpeed(setVal=1)
     # Highbridge before Seymour Natus
-    if gamestate == "rescueYuna" and step_counter == 5:
+    if gamestate == "rescue_yuna" and step_counter == 5:
         load_save_num(42)  # Regular
         # loadGame.loadSaveNum(67) #Nemesis
     if gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
@@ -198,14 +198,14 @@ def load_into_game(gamestate:str, step_counter:str):
     if gamestate == "Nem_Farm" and step_counter == 8:
         load_save_num(73)
     if gamestate == "Nem_Farm" and step_counter == 9:
-        #Start of Nemesis farm
-        #import nemesis.menu
-        #import memory.main
+        # Start of Nemesis farm
+        # import nemesis.menu
+        # import memory.main
         load_save_num(19)
         game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
         game_vars.end_game_version_set(4)
-        #memory.main.arena_array_nines()
-        #while not memory.main.get_tidus_slvl() >= 70:
+        # memory.main.arena_array_nines()
+        # while not memory.main.get_tidus_slvl() >= 70:
         #    nemesis.menu.perform_next_grid()
         #    memory.main.set_tidus_slvl(memory.main.get_tidus_slvl()+1)
     if gamestate == "Nem_Farm" and step_counter == 11:
@@ -252,6 +252,7 @@ def load_into_game(gamestate:str, step_counter:str):
     if gamestate == "Nem_Farm":
         memory.main.check_nea_armor()
     memory.main.check_nea_armor()
+
 
 def get_saved_files():
     saveFilesFull = sorted(

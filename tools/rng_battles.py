@@ -24,8 +24,8 @@ def coming_battles(area: int = 10, battle_count: int = 10, extra_advances: int =
             extra_advances -= 1
     battles = []
     for i in range(battle_count):
-        nextValue = formations[(advances[(i * 2) + 1] & 0x7FFFFFFF) % len(formations)]
-        battles.append(nextValue)
+        next_value = formations[(advances[(i * 2) + 1] & 0x7FFFFFFF) % len(formations)]
+        battles.append(next_value)
     print("Upcoming battles:", battles)
     print("=========================")
     return battles

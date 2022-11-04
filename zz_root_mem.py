@@ -93,7 +93,7 @@ def list_process_modules(ProcessID):
                 "   Adjusted address   = 0x%08X",
                 hex(ctypes.addressof(me32.modBaseAddr.contents)),
             )
-            retVal = ctypes.addressof(me32.modBaseAddr.contents)
+            ret_val = ctypes.addressof(me32.modBaseAddr.contents)
         except Exception as x:
             print("adjusted 3 error:", x)
         print("   base size      = %d", me32.modBaseSize)
@@ -104,4 +104,4 @@ def list_process_modules(ProcessID):
             ret = Module32Next(hModuleSnap, pointer(me32))
 
     CloseHandle(hModuleSnap)
-    return retVal
+    return ret_val
