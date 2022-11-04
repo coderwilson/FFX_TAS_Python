@@ -1,5 +1,6 @@
-import battle.main
 import logging
+
+import battle.main
 import logs
 import memory.get
 import memory.main
@@ -358,6 +359,7 @@ def trials_4(checkpoint):
 def s_keeper_print_bahamut_crit_chance():
     crit_chance = memory.main.next_crit(character=7, char_luck=17, enemy_luck=15)
     logger.debug(f"Next Aeon Crit: {crit_chance}")
+
 
 def sanctuary_keeper():
     ver = game_vars.end_game_version()

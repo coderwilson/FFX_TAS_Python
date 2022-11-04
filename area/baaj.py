@@ -1,3 +1,5 @@
+import logging
+
 import battle.boss
 import battle.main
 import memory.main
@@ -7,7 +9,6 @@ import save_sphere
 import screen
 import vars
 import xbox
-import logging
 
 logger = logging.getLogger(__name__)
 

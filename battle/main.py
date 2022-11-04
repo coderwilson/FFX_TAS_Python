@@ -1,14 +1,14 @@
+import logging
+
 import battle.overdrive
 import battle.utils
 import logs
-import logging
 import memory.main
 import rng_track
 import screen
 import vars
 import xbox
 from memory.main import s32
-
 
 game_vars = vars.vars_handle()
 
@@ -1570,7 +1570,7 @@ def thunder_plains(section):
         heal_up()
     memory.main.close_menu()
     print("Ready to continue onward.")
-    
+
 
 @battle.utils.speedup_decorator
 def m_woods():
@@ -1588,7 +1588,11 @@ def m_woods():
             rikku_charged = memory.main.get_overdrive_battle(6) == 100
             logging.info(f"Rikku charge state: {rikku_charged}")
             if not rikku_charged:
-                if need_arctic_wind or need_fish_scale and encounter_id in [171, 172, 175]:
+                if (
+                    need_arctic_wind
+                    or need_fish_scale
+                    and encounter_id in [171, 172, 175]
+                ):
                     if (
                         check_petrify_tidus()
                         or 6 not in memory.main.get_battle_formation()
@@ -1596,35 +1600,20 @@ def m_woods():
                         print("Tidus or Rikku incapacitated, fleeing")
                         flee_all()
                     elif 6 not in memory.main.get_active_battle_formation():
-                        if (
-                            encounter_id == 175
-                            and need_arctic_wind
-                        ):
+                        if encounter_id == 175 and need_arctic_wind:
                             buddy_swap_rikku()
-                        elif (
-                            encounter_id in [171, 172]
-                            and need_fish_scale
-                        ):
+                        elif encounter_id in [171, 172] and need_fish_scale:
                             buddy_swap_rikku()
                         else:
                             flee_all()
                     elif turnchar == 6:
-                        if (
-                            encounter_id == 175
-                            and need_arctic_wind
-                        ):
+                        if encounter_id == 175 and need_arctic_wind:
                             print("Marker 2")
                             steal()
-                        elif (
-                            encounter_id == 172
-                            and need_fish_scale
-                        ):
+                        elif encounter_id == 172 and need_fish_scale:
                             print("Marker 3")
                             steal_down()
-                        elif (
-                            encounter_id == 171
-                            and need_fish_scale
-                        ):
+                        elif encounter_id == 171 and need_fish_scale:
                             print("Marker 4")
                             steal_right()
                         elif memory.main.get_overdrive_battle(6) != 100:

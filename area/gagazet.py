@@ -1,6 +1,7 @@
+import logging
+
 import battle.boss
 import battle.main
-import logging
 import logs
 import memory.main
 import menu
@@ -501,7 +502,9 @@ def wrap_up():
         memory.main.wait_frames(30 * sleep_time)
         logger.info("Talk about not having a life.")
         memory.main.wait_frames(30 * sleep_time)
-        logger.info("Ah well, still have some time. Might as well shout out a few people.")
+        logger.info(
+            "Ah well, still have some time. Might as well shout out a few people."
+        )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
             "First and most importantly, my wife for putting up with me for two years through this project.",
@@ -511,7 +514,9 @@ def wrap_up():
         memory.main.wait_frames(30 * sleep_time)
         logger.info("Next, DwangoAC. He encouraged me to write my own code to do this.")
         memory.main.wait_frames(30 * sleep_time)
-        logger.info("And he put together the TASbot community which has been hugely helpful.")
+        logger.info(
+            "And he put together the TASbot community which has been hugely helpful."
+        )
         memory.main.wait_frames(30 * sleep_time)
         logger.info("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
         memory.main.wait_frames(30 * sleep_time)
@@ -545,7 +550,9 @@ def wrap_up():
             "And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code."
         )
         memory.main.wait_frames(30 * sleep_time)
-        logger.info("He has also done a lot of optimizations I just couldn't get back to.")
+        logger.info(
+            "He has also done a lot of optimizations I just couldn't get back to."
+        )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
             "Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam."

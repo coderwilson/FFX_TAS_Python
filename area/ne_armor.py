@@ -1,5 +1,6 @@
-import battle.main
 import logging
+
+import battle.main
 import logs
 import memory.main
 import menu
@@ -62,7 +63,7 @@ def to_hidden_cave():
                 and memory.main.next_chance_rng_10()
             ):
                 if not last_report:
-                    logger.info("Need more advances before cave enter | no silence grenade")
+                    logger.info("No silence grenade | Advancing further before cave")
                     last_report = True
                 checkpoint -= 2
             elif checkpoint == 9:

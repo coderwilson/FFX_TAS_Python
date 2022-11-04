@@ -1,6 +1,7 @@
+import logging
+
 import battle.boss
 import battle.main
-import logging
 import logs
 import memory.main
 import menu
@@ -165,8 +166,8 @@ def forest_1():
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
-                    logger.debug(f"------------This should be battle number: {kilika_battles}")
-                    logger.debug(f"------------Reminder (north-bound only): {next_three}")
+                    logger.debug(f"---- This should be battle number: {kilika_battles}")
+                    logger.debug(f"---- Reminder (north-bound only): {next_three}")
                     valefor_charge = battle.main.kilika_woods(
                         valefor_charge, best_of_two, next_battle
                     )

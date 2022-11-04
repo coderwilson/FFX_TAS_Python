@@ -1,6 +1,6 @@
+import logging
 import time
 
-import logging
 import memory.main
 import pathing
 import vars
@@ -266,7 +266,7 @@ def guado_skip():
             while memory.main.get_camera()[0] < 0.6:
                 current_time = time.time()
                 if current_time > max_time:
-                    logger.warning("Skip failed for some reason. Moving on without skip.")
+                    logger.warning("Skip failed for some reason. Moving on without it.")
                     break
             memory.main.wait_frames(30 * 0.035)  # Guado potions good!
             xbox.tap_b()

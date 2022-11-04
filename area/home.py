@@ -1,7 +1,7 @@
+import logging
 import math
 
 import battle.main
-import logging
 import memory.main
 import menu
 import pathing
@@ -237,7 +237,7 @@ def desert():
                 logger.debug(f"Rikku is charged up: {charge_state}")
                 logger.debug(f"Need more Speed spheres: {need_speed}")
                 logger.debug(f"Need more Power spheres: {need_power}")
-                logger.debug(f"Number of additional items needed before Home: {items_needed}")
+                logger.debug(f"Additional items needed before Home: {items_needed}")
                 logger.debug("-----------------------------Flag statuses (end)")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
