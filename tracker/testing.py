@@ -11,13 +11,13 @@ print("=================")
 print("=================")
 print("=================")
 
-equipType = 0
+equip_type = 0
 enemy = "chocobo_eater"
-if equipType == 0:
+if equip_type == 0:
     array = MONSTERS[enemy].equipment["ability_arrays"]["Tidus"]["Weapon"]
 else:
     array = MONSTERS[enemy].equipment["ability_arrays"]["Tidus"]["Armor"]
-retVal = []
+ret_val = []
 print(array)
 print("=================")
 print("=================")
@@ -27,14 +27,14 @@ for i in range(len(array)):
         auto = array[i]
         print(auto)
         print(auto.tas_id)
-        retVal.append(array[i].tas_id)
+        ret_val.append(array[i].tas_id)
     except:
-        retVal.append(255)
+        ret_val.append(255)
 
 print("=================")
 print("=================")
 print("=================")
-print(retVal)
+print(ret_val)
 
 # except Exception as e:
 #    print("Failure:",e)

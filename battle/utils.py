@@ -1,13 +1,14 @@
-
 import logging
-import memory
 import threading
+
+import memory
 import vars
 
 logger = logging.getLogger(__name__)
 
 
 game_vars = vars.vars_handle()
+
 
 def speedup_decorator(func):
     def _monitor_battle():
@@ -22,15 +23,17 @@ def speedup_decorator(func):
                 memory.main.set_game_speed(2)
                 fast = True
         memory.main.set_game_speed(0)
-    
-    def wrapper():
+
+    def wrapper(*args, **kwargs):
         if game_vars.get_battle_speedup():
             logger.debug(f"Speeding battle up: {func.__name__}")
             monitor = threading.Thread(target=_monitor_battle)
             monitor.start()
-            func()
+            ret_val = func(*args, **kwargs)
             monitor.join()
             logger.debug(f"Stopping speedup for {func.__name__}")
+            return ret_val
         else:
-            func()
+            return func(*args, **kwargs)
+
     return wrapper

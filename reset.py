@@ -13,10 +13,10 @@ FFXC = xbox.controller_handle()
 def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
     if land_run:
         end_time = logs.time_stamp()
-        totalTime = end_time - start_time
+        total_time = end_time - start_time
         logs.write_stats("Total time:")
-        logs.write_stats(str(totalTime))
-        print("The game duration was:", str(totalTime))
+        logs.write_stats(str(total_time))
+        print("The game duration was:", str(total_time))
         print(
             "This duration is intended for comparison reference only, not as a true timer."
         )

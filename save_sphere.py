@@ -27,10 +27,10 @@ def nearest_save_actor() -> int:
     save_actors = []
     FFXC.set_neutral()
     for x in range(memory.main.get_actor_array_size()):
-        actorMem = memory.main.get_actor_id(x)
-        if actorMem != 52685:
-            print(actorMem, " | ", x)
-        if actorMem in [20481, 20482, 20651]:
+        actor_mem = memory.main.get_actor_id(x)
+        if actor_mem != 52685:
+            print(actor_mem, " | ", x)
+        if actor_mem in [20481, 20482, 20651]:
             save_actors.append(x)
     print(save_actors)
     if len(save_actors) == 0:
@@ -102,7 +102,6 @@ def approach_save_sphere():
                     print("Mark 3", memory.main.diag_progress_flag())
                     xbox.tap_b()
     FFXC.set_neutral()
-
 
 
 def disengage_save_sphere():
@@ -202,7 +201,7 @@ def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
     diag_num = str(memory.main.get_story_progress())
     actor_num = str(actor)
     print("========================")
-    newVal = {
+    new_val = {
         map_num: {diag_num: {actor_num: {"x": x_val, "y": y_val, "diag": diag_prog}}}
     }
     if map_num in records.keys():
@@ -210,24 +209,24 @@ def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
             if actor_num in records[map_num][diag_num]:
                 if (
                     records[map_num][diag_num][actor_num]["diag"]
-                    != newVal[map_num][diag_num][actor_num]["diag"]
+                    != new_val[map_num][diag_num][actor_num]["diag"]
                 ):
 
-                    records[map_num][diag_num][actor_num]["x"] = newVal[map_num][
+                    records[map_num][diag_num][actor_num]["x"] = new_val[map_num][
                         diag_num
                     ][actor_num]["x"]
-                    records[map_num][diag_num][actor_num]["y"] = newVal[map_num][
+                    records[map_num][diag_num][actor_num]["y"] = new_val[map_num][
                         diag_num
                     ][actor_num]["y"]
-                    records[map_num][diag_num][actor_num]["diag"] = newVal[map_num][
+                    records[map_num][diag_num][actor_num]["diag"] = new_val[map_num][
                         diag_num
                     ][actor_num]["diag"]
             else:
-                records[map_num][diag_num].update(newVal[map_num][diag_num])
+                records[map_num][diag_num].update(new_val[map_num][diag_num])
         else:
-            records[map_num].update(newVal[map_num])
+            records[map_num].update(new_val[map_num])
     else:
-        records.update(newVal)
+        records.update(new_val)
 
     with open(filepath, "w") as fp:
         json.dump(records, fp, indent=4)
