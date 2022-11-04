@@ -1584,7 +1584,7 @@ def m_woods():
                 need_arctic_wind = True
             if memory.main.get_use_items_slot(32) == 255:
                 need_fish_scale = True
-            turnchar = memory.main.get_battle_char_turn()
+            turn_char = memory.main.get_battle_char_turn()
             rikku_charged = memory.main.get_overdrive_battle(6) == 100
             logging.info(f"Rikku charge state: {rikku_charged}")
             if not rikku_charged:
@@ -1606,7 +1606,7 @@ def m_woods():
                             buddy_swap_rikku()
                         else:
                             flee_all()
-                    elif turnchar == 6:
+                    elif turn_char == 6:
                         if encounter_id == 175 and need_arctic_wind:
                             print("Marker 2")
                             steal()
@@ -1626,7 +1626,7 @@ def m_woods():
                         escape_one()
                     else:
                         flee_all()
-                elif turnchar == 6:
+                elif turn_char == 6:
                     if memory.main.next_steal_rare(pre_advance=2):
                         # Manip for crit
                         _steal()
@@ -1671,7 +1671,7 @@ def spheri_spell_item_ready():
 @battle.utils.speedup_decorator
 def negator_with_steal():
     tidus_turns = 0
-    rikkuturns = 0
+    rikku_turns = 0
     kimahriturns = 0
     luluturns = 0
     yunaturns = 0
@@ -1679,7 +1679,7 @@ def negator_with_steal():
         if memory.main.turn_ready():
             turn_char = memory.main.get_battle_char_turn()
             if turn_char == 0:
-                if rikkuturns == 0:
+                if rikku_turns == 0:
                     buddy_swap_rikku()
                 # elif faint_check(): #Optional revive on Kimahri
                 #    revive()
@@ -1713,20 +1713,20 @@ def negator_with_steal():
                 yunaturns += 1
             elif turn_char == 6:
                 lightningmarbleslot = memory.main.get_use_items_slot(30)
-                if rikkuturns == 0:
+                if rikku_turns == 0:
                     use_item(lightningmarbleslot, target=21)
                     while memory.main.get_enemy_current_hp()[1] == 1000:
                         pass
                     if memory.main.get_enemy_current_hp()[1] != 0:
-                        rikkuturns -= 1
-                elif rikkuturns in [1, 2]:
+                        rikku_turns -= 1
+                elif rikku_turns in [1, 2]:
                     use_item(lightningmarbleslot)
                 elif tidus_turns < 2:
                     xbox.weap_swap(0)
                 else:
                     print("Starting Rikkus overdrive")
                     rikku_full_od("crawler")
-                rikkuturns += 1
+                rikku_turns += 1
 
 
 def get_anima_item_slot():
@@ -1754,7 +1754,7 @@ def seymour_guado_blitz_win():
     kimahriturns = 0
     auronturns = 0
     wakka_turns = 0
-    rikkuturns = 0
+    rikku_turns = 0
     animahits = 0
     animamiss = 0
 
@@ -1763,7 +1763,7 @@ def seymour_guado_blitz_win():
     screen.await_turn()
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            turnchar = memory.main.get_battle_char_turn()
+            turn_char = memory.main.get_battle_char_turn()
             for i in range(0, 3):
                 if memory.main.get_battle_hp()[i] == 0:
                     if memory.main.get_battle_char_slot(2) == i:
@@ -1773,7 +1773,7 @@ def seymour_guado_blitz_win():
                         kimahridead = True
                     elif memory.main.get_battle_char_slot(4) == i:
                         print("Wakka is dead")
-            if turnchar == 0:
+            if turn_char == 0:
                 next_hit = rng_track.next_action_hit(
                     character=memory.main.get_current_turn(), enemy="anima"
                 )
@@ -1820,7 +1820,7 @@ def seymour_guado_blitz_win():
                     attack(direction="none")
                 tidus_turns += 1
                 print("Tidus turns: %d" % tidus_turns)
-            elif turnchar == 1:
+            elif turn_char == 1:
                 if yunaturns == 0:
                     xbox.weap_swap(0)
                 else:
@@ -1836,7 +1836,7 @@ def seymour_guado_blitz_win():
                         defend()
                 yunaturns += 1
                 print("Yuna turn, complete")
-            elif turnchar == 3:
+            elif turn_char == 3:
                 if kimahriconfused:
                     tidusposition = memory.main.get_battle_char_slot(0)
                     rikkuposition = memory.main.get_battle_char_slot(6)
@@ -1873,7 +1873,7 @@ def seymour_guado_blitz_win():
                         steal()
                 kimahriturns += 1
                 print("Kimahri turn, complete")
-            elif turnchar == 2:
+            elif turn_char == 2:
                 if auronturns == 0:
                     print("Confused states:")
                     print("Yuna confusion:", memory.main.state_confused(1))
@@ -1888,7 +1888,7 @@ def seymour_guado_blitz_win():
                 elif auronturns == 1:  # Stone Breath logic
                     defend()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
-                    if kimahridead and rikkuturns == 0:
+                    if kimahridead and rikku_turns == 0:
                         buddy_swap_rikku()
                     else:
                         xbox.weap_swap(1)
@@ -1903,11 +1903,11 @@ def seymour_guado_blitz_win():
                         defend()
                 auronturns += 1
                 print("Auron turn, complete")
-            elif turnchar == 4:
+            elif turn_char == 4:
                 if wakka_turns == 0:
                     xbox.weap_swap(0)
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
-                    if kimahridead and rikkuturns == 0:
+                    if kimahridead and rikku_turns == 0:
                         buddy_swap_rikku()
                     else:
                         xbox.weap_swap(0)
@@ -1922,13 +1922,13 @@ def seymour_guado_blitz_win():
                         defend()
                 wakka_turns += 1
                 print("Wakka turn, complete")
-            elif turnchar == 6:
+            elif turn_char == 6:
                 if screen.faint_check() == 2:
                     revive_all()
                     missbackup = True
                     tidushaste = False
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
-                    if kimahridead and rikkuturns == 0:
+                    if kimahridead and rikku_turns == 0:
                         if not memory.main.next_steal_rare(pre_advance=0):
                             steal()
                         elif memory.main.next_steal(steal_count=1, pre_advance=1):
@@ -1962,9 +1962,9 @@ def seymour_guado_blitz_win():
                     revive_target(target=0)
                 else:
                     defend()
-                rikkuturns += 1
+                rikku_turns += 1
                 print("Rikku turn, complete")
-            elif turnchar == 5:
+            elif turn_char == 5:
                 if not missbackup:
                     revive()
                     missbackup = True
@@ -2001,14 +2001,14 @@ def seymour_guado_blitz_loss():
     yunaturns = 0
     kimahriturns = 0
     wakka_turns = 0
-    rikkuturns = 0
+    rikku_turns = 0
     animahits = 0
     animamiss = 0
     thrown_items = 0
 
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
-            turnchar = memory.main.get_battle_char_turn()
+            turn_char = memory.main.get_battle_char_turn()
             for i in range(0, 3):
                 if memory.main.get_battle_hp()[i] == 0:
                     if memory.main.get_battle_char_slot(2) == i:
@@ -2018,7 +2018,7 @@ def seymour_guado_blitz_loss():
                         kimahridead = True
                     elif memory.main.get_battle_char_slot(4) == i:
                         print("Wakka is dead")
-            if turnchar == 0:
+            if turn_char == 0:
                 if memory.main.get_enemy_current_hp()[1] < 2999:
                     attack(direction="none")
                     print("Should be last attack of the fight.")
@@ -2070,7 +2070,7 @@ def seymour_guado_blitz_loss():
                     attack(direction="none")
                 tidus_turns += 1
                 print("Tidus turns: %d" % tidus_turns)
-            elif turnchar == 1:
+            elif turn_char == 1:
                 if yunaturns == 0:
                     xbox.weap_swap(0)
                 else:
@@ -2088,7 +2088,7 @@ def seymour_guado_blitz_loss():
                         xbox.weap_swap(0)
                 yunaturns += 1
                 print("Yuna turn, complete")
-            elif turnchar == 5:
+            elif turn_char == 5:
                 if animahits == 0:
                     print("Confused states:")
                     print("Yuna confusion:", memory.main.state_confused(1))
@@ -2103,7 +2103,7 @@ def seymour_guado_blitz_loss():
                 else:
                     buddy_swap_tidus()
                     attack(direction="none")
-            elif turnchar == 3:
+            elif turn_char == 3:
                 if kimahriconfused:
                     tidusposition = memory.main.get_battle_char_slot(0)
                     rikkuposition = memory.main.get_battle_char_slot(6)
@@ -2148,11 +2148,11 @@ def seymour_guado_blitz_loss():
                         steal()
                 kimahriturns += 1
                 print("Kimahri turn, complete")
-            elif turnchar == 4:
+            elif turn_char == 4:
                 if wakka_turns == 0:
                     xbox.weap_swap(0)
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
-                    if kimahridead and rikkuturns < 2:
+                    if kimahridead and rikku_turns < 2:
                         buddy_swap_rikku()
                     else:
                         xbox.weap_swap(0)
@@ -2167,7 +2167,7 @@ def seymour_guado_blitz_loss():
                         defend()
                 wakka_turns += 1
                 print("Wakka turn, complete")
-            elif turnchar == 6:
+            elif turn_char == 6:
                 if screen.faint_check() == 2:
                     revive_all()
                     missbackup = True
@@ -2196,7 +2196,7 @@ def seymour_guado_blitz_loss():
                         revive_target(target=0)
                     else:
                         defend()
-                rikkuturns += 1
+                rikku_turns += 1
                 print("Rikku turn, complete")
             else:
                 print("No turn. Holding for next action.")
@@ -2272,7 +2272,7 @@ def fullheal(target: int, direction: str):
 
 # Process written by CrimsonInferno
 @battle.utils.speedup_decorator
-def wendigo_res_heal(turnchar: int, use_power_break: int, tidus_max_hp: int):
+def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
     print("Wendigo Res/Heal function")
     party_hp = memory.main.get_battle_hp()
     if screen.faint_check() == 2:
@@ -4743,8 +4743,8 @@ def charge_rikku_od():
         else:
             while not memory.main.battle_complete():
                 if memory.main.turn_ready():
-                    turnchar = memory.main.get_battle_char_turn()
-                    if turnchar == 6:
+                    turn_char = memory.main.get_battle_char_turn()
+                    if turn_char == 6:
                         attack_by_num(6, direction="u")
                     elif memory.main.get_overdrive_battle(6) == 100:
                         flee_all()
