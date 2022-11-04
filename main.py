@@ -91,6 +91,8 @@ def configuration_setup():
         gameLength = "Full Run, random seed"
 
     logger.info(f"Game type will be: {gameLength}")
+    if game_vars.get_battle_speedup():
+        logger.warning("THIS RUN IS USING AUTOMATIC 4X BATTLE SPEEDUP. ONLY USE FOR TESTING.")
 
 
 def memory_setup():

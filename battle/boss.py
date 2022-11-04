@@ -11,6 +11,7 @@ game_vars = vars.vars_handle()
 
 logger = logging.getLogger(__name__)
 
+@battle.utils.speedup_decorator
 def ammes():
     BattleComplete = 0
     countAttacks = 0
@@ -34,6 +35,7 @@ def ammes():
             logger.info("Ammes battle complete")
 
 
+@battle.utils.speedup_decorator
 def tanker():
     logger.info("Fight start: Tanker")
     countAttacks = 0
@@ -61,6 +63,7 @@ def tanker():
             xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def klikk():
     logger.info("Fight start: Klikk")
     klikkAttacks = 0
@@ -123,6 +126,7 @@ def klikk():
     memory.main.wait_frames(1)
 
 
+@battle.utils.speedup_decorator
 def tros():
     logs.open_rng_track()
     logger.info("Fight start: Tros")
@@ -213,6 +217,7 @@ def tros():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def sin_fin():
     logger.info("Fight start: Sin's Fin")
     screen.await_turn()
@@ -264,6 +269,7 @@ def sin_fin():
     xbox.click_to_battle()
 
 
+@battle.utils.speedup_decorator
 def echuilles():
     logger.info("Fight start: Sinspawn Echuilles")
     screen.await_turn()
@@ -314,6 +320,7 @@ def echuilles():
     logs.write_rng_track(memory.main.rng_10_array(array_len=1))
 
 
+@battle.utils.speedup_decorator
 def geneaux():
     logger.info("Fight start: Sinspawn Geneaux")
     xbox.click_to_battle()
@@ -345,6 +352,7 @@ def geneaux():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def oblitzerator(early_haste):
     logger.info("Fight start: Oblitzerator")
     xbox.click_to_battle()
@@ -391,6 +399,7 @@ def oblitzerator(early_haste):
     # logs.write_stats(memory.s32(memory.rng02()))
 
 
+@battle.utils.speedup_decorator
 def chocobo_eater():
     logger.info("Fight start: Chocobo Eater")
     rng44Last = memory.main.rng_from_index(44)
@@ -489,6 +498,7 @@ def chocobo_eater():
     logger.info("Chocobo Eater battle complete.")
 
 
+@battle.utils.speedup_decorator
 def gui():
     logger.info("Fight start: Sinspawn Gui")
     xbox.click_to_battle()
@@ -653,6 +663,7 @@ def gui():
             xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def extractor():
     logger.info("Fight start: Extractor")
     FFXC.set_neutral()
@@ -711,6 +722,7 @@ def extractor():
 
 
 # Process written by CrimsonInferno
+@battle.utils.speedup_decorator
 def spherimorph():
     logger.info("Fight start: Spherimorph")
     xbox.click_to_battle()
@@ -851,6 +863,7 @@ def spherimorph():
         xbox.skip_dialog(5)
 
 
+@battle.utils.speedup_decorator
 def crawler():
     logger.info("Starting battle with Crawler")
     xbox.click_to_battle()
@@ -914,6 +927,7 @@ def crawler():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def wendigo():
     logger.info("Starting battle with Wendigo")
 
@@ -1106,6 +1120,7 @@ def wendigo():
 
 
 # Process written by CrimsonInferno
+@battle.utils.speedup_decorator
 def evrae():
     logger.info("Starting battle: Evrae")
     tidusPrep = 0
@@ -1258,6 +1273,7 @@ def evrae():
         xbox.skip_scene_spec()
 
 
+@battle.utils.speedup_decorator
 def isaaru():
     xbox.click_to_battle()
     if memory.main.get_encounter_id() < 258:
@@ -1280,6 +1296,7 @@ def isaaru():
     FFXC.set_value("btn_b", 0)
 
 
+@battle.utils.speedup_decorator
 def evrae_altana():
     xbox.click_to_battle()
     if memory.main.get_encounter_id() != 266:
@@ -1308,6 +1325,7 @@ def evrae_altana():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def seymour_natus():
     aeonSummoned = False
     while not memory.main.user_control():
@@ -1384,6 +1402,7 @@ def seymour_natus():
     return 0
 
 
+@battle.utils.speedup_decorator
 def biran_yenke():
     logger.info("Starting battle with Biran & Yenke")
     xbox.click_to_battle()
@@ -1425,6 +1444,7 @@ def biran_yenke():
     game_vars.end_game_version_set(endGameVersion)
 
 
+@battle.utils.speedup_decorator
 def seymour_flux():
     stage = 1
     logger.info("Start: Seymour Flux battle")
@@ -1511,6 +1531,7 @@ def s_keeper_bahamut_crit() -> int:
     return bahamut_crit
 
 
+@battle.utils.speedup_decorator
 def s_keeper():
     xbox.click_to_battle()
     logger.info("Start of Sanctuary Keeper fight")
@@ -1557,6 +1578,7 @@ def s_keeper():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def omnis():
     logger.info("Fight start: Seymour Omnis")
     xbox.click_to_battle()
@@ -1602,6 +1624,7 @@ def omnis():
     memory.main.click_to_control()
 
 
+@battle.utils.speedup_decorator
 def bfa():
     if memory.main.get_gil_value() < 150000:
         swagMode = True
@@ -1676,6 +1699,7 @@ def bfa():
             xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def yu_yevon():
     logger.info("Ready for Yu Yevon.")
     screen.await_turn()  # No need for skipping dialog
