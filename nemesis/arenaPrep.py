@@ -123,8 +123,8 @@ def get_save_sphere_details():
 
 def get_save_sphere_details_old():
     map_val = memory.main.get_map()
-    storyVal = memory.main.get_story_progress()
-    print("Map:", map_val, "| Story:", storyVal)
+    story_val = memory.main.get_story_progress()
+    print("Map:", map_val, "| Story:", story_val)
     x = 0
     y = 0
     diag = 0
@@ -211,7 +211,7 @@ def get_save_sphere_details_old():
 def return_to_airship():
     print("Attempting Return to Airship")
 
-    ssDetails = get_save_sphere_details()
+    ss_details = get_save_sphere_details()
 
     if memory.main.get_map() == 307:  # Monster arena
         while not nemesis.targetPath.set_movement([-4, -3]):
@@ -267,7 +267,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                     else:
                         battle.main.escape_one()
                 elif screen.turn_rikku() or screen.turn_wakka():
-                    if not battle.main.checkTidusOk():
+                    if not battle.main.check_tidus_ok():
                         battle.main.escape_one()
                     elif memory.main.get_encounter_id() == 219:
                         battle.main.escape_one()
@@ -686,9 +686,9 @@ def kilika_shop():
     arena_npc()
     # xbox.tapDown()
     # xbox.tapDown()
-    # xbox.tapB()
+    # xbox.tap_b()
     # memory.wait_frames(30)
-    # xbox.tapB() #Buy
+    # xbox.tap_b() #Buy
     # memory.wait_frames(30)
     # getEquipment(equip=False) #Tidus second catcher weapon
     # xbox.menuA()
@@ -847,7 +847,7 @@ def farm_feathers():
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=7, monster_index=5)
     memory.main.wait_frames(1)
-    waitCounter = 0
+    wait_counter = 0
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_rikku():
@@ -862,9 +862,9 @@ def farm_feathers():
                 print("+++ Qactar defend command")
                 battle.main.defend()
                 print("+++ Qactar defend command done")
-        waitCounter += 1
-        if waitCounter % 10 == 0:
-            print("Waiting for next turn: ", waitCounter)
+        wait_counter += 1
+        if wait_counter % 10 == 0:
+            print("Waiting for next turn: ", wait_counter)
     print("Battle is complete.")
 
     while not memory.main.menu_open():
@@ -1367,7 +1367,7 @@ def yojimbo_dialog():
     # xbox.tapLeft()
     # xbox.tapDown()
     # xbox.tapDown()
-    # xbox.tapB()
+    # xbox.tap_b()
     # memory.wait_frames(12)
     # memory.clickToDiagProgress(5) #138,001
     # memory.wait_frames(12)
@@ -1378,14 +1378,14 @@ def yojimbo_dialog():
     # xbox.tapUp()
     # xbox.tapUp()
     # xbox.tapUp()
-    # xbox.tapB()
+    # xbox.tap_b()
     # memory.wait_frames(12)
     # memory.clickToDiagProgress(5) #170,001
     # memory.wait_frames(12)
     # xbox.tapLeft()
     # xbox.tapUp()
     # xbox.tapUp()
-    # xbox.tapB()
+    # xbox.tap_b()
     print("Fayth accepts the contract.")
     xbox.name_aeon("Yojimbo")
     print("Naming complete.")
@@ -1831,7 +1831,7 @@ def miihen_farm_old(cap_num: int = 1):
     while memory.main.get_map() != 79:
         if memory.main.user_control():
             # print(checkpoint)
-            # if memory.getMap() == 171:
+            # if memory.get_map() == 171:
             #    if memory.get_coords()[0] > -2:
             #        FFXC.set_movement(-1,-1)
             #    else:

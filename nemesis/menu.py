@@ -110,7 +110,7 @@ def open_grid(character):
                 elif memory.main.party_size() < 3:
                     xbox.menu_down()
                 else:
-                    # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.partySize())
+                    # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.party_size())
                     # Not working. Use this instead.
                     memory.main.menu_direction(
                         memory.main.get_char_cursor_pos(), target_pos, 7
@@ -1286,7 +1286,7 @@ def arena_purchase_1():
 
 def remove_all_nea():
     for i in range(7):
-        if memory.main.equipped_armor_has_ability(charNum=i):  # Defaults to NEA
+        if memory.main.equipped_armor_has_ability(char_num=i):  # Defaults to NEA
             if i == 0:
                 if memory.main.check_ability_armor(ability=0x8056)[i]:
                     equip_armor(character=i, ability=0x8056)  # Auto-Haste

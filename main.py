@@ -62,11 +62,11 @@ def configuration_setup():
     ############################################################################################
     # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
     game.rng_seed_num = config_data.get(
-        "rngSeedNum", 160
+        "rng_seed_num", 160
     )  # If you don't randomly select below, this will be the seed you run.
-    useFavoredSeed = config_data.get("useFavoredSeed", False)
+    use_favored_seed = config_data.get("use_favored_seed", False)
 
-    rngSelectArray = [31, 160]
+    rng_select_array = [31, 160]
 
     # TAS PB is on seed 31
     # 160 is WR for both categories, just has a bad start
@@ -74,25 +74,27 @@ def configuration_setup():
     ############################################################################################
 
     if game.state == "Luca" and game.step == 3:
-        gameLength = "Testing Blitzball only"
+        game_length = "Testing Blitzball only"
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game.rng_seed_num = 255
-        gameLength = "Loading mid point for testing."
+        game_length = "Loading mid point for testing."
         # game_vars.setCSR(True)
     elif game_vars.use_set_seed():
-        gameLength = f"Full Run, set seed [{game.rng_seed_num}]"
-    elif useFavoredSeed:
-        game.rng_seed_num = random.choice(rngSelectArray)
-        gameLength = "Full Run, favored seed"
+        game_length = f"Full Run, set seed [{game.rng_seed_num}]"
+    elif use_favored_seed:
+        game.rng_seed_num = random.choice(rng_select_array)
+        game_length = "Full Run, favored seed"
     # Full run starting from New Game, random seed
     else:
         game.rng_seed_num = random.choice(range(256))
         # Current WR is on seed 160 for both any% and CSR%
-        gameLength = "Full Run, random seed"
+        game_length = "Full Run, random seed"
 
-    logger.info(f"Game type will be: {gameLength}")
+    logger.info(f"Game type will be: {game_length}")
     if game_vars.get_battle_speedup():
-        logger.warning("THIS RUN IS USING AUTOMATIC 4X BATTLE SPEEDUP. ONLY USE FOR TESTING.")
+        logger.warning(
+            "THIS RUN IS USING AUTOMATIC 4X BATTLE SPEEDUP. ONLY USE FOR TESTING."
+        )
 
 
 def memory_setup():
@@ -131,9 +133,9 @@ def perform_TAS():
     game_vars = vars.vars_handle()
 
     # Original seed for when looping
-    rngSeedOrig = game.rng_seed_num
-    blitzLoops = 0
-    maxLoops = 12  # TODO: Move into config.yaml?
+    rng_seed_orig = game.rng_seed_num
+    blitz_loops = 0
+    max_loops = 12  # TODO: Move into config.yaml?
 
     while game.state != "End":
 
@@ -169,7 +171,7 @@ def perform_TAS():
                     log_init.reset_logging_time_reference()
                     logger.info("Timer starts now.")
                     area.dream_zan.listen_story()
-                    # game.state, game.step = reset.midRunReset()
+                    # game.state, game.step = reset.mid_run_reset()
                     # Start of the game, up through the start of Sinspawn Ammes fight
                     game.step = 2
                     area.dream_zan.ammes_battle()
@@ -272,10 +274,10 @@ def perform_TAS():
 
                 if game.step == 2:
                     end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
-                    logger.info(f"Pre-Blitz time: {totalTime}")
+                    total_time = end_time - game.start_time
+                    logger.info(f"Pre-Blitz time: {total_time}")
                     logs.write_stats("Pre Blitz time:")
-                    logs.write_stats(totalTime)
+                    logs.write_stats(total_time)
                     game.step = 3
 
                 if game.step == 3:
@@ -284,20 +286,20 @@ def perform_TAS():
 
                 if game.step == 4:
                     logger.info("------Blitz Start")
-                    forceBlitzWin = game_vars.get_force_blitz_win()
-                    blitz.blitz_main(forceBlitzWin)
+                    force_blitz_win = game_vars.get_force_blitz_win()
+                    blitz.blitz_main(force_blitz_win)
                     logger.info("------Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
 
-                    if game_vars.loop_blitz() and blitzLoops < maxLoops:
+                    if game_vars.loop_blitz() and blitz_loops < max_loops:
                         FFXC.set_neutral()
                         logger.info("-------------")
                         logger.info("- Resetting -")
                         logger.info("-------------")
                         screen.await_turn()
                         game.state, game.step = reset.mid_run_reset()
-                        blitzLoops += 1
+                        blitz_loops += 1
                     elif game_vars.blitz_loss_reset() and not game_vars.get_blitz_win():
                         FFXC.set_neutral()
                         logger.info("------------------------------")
@@ -319,23 +321,25 @@ def perform_TAS():
             # Just to make sure we set this variable somewhere.
             if game.state == "Miihen":
                 if game.step == 1:
-                    returnArray = area.miihen.arrival()
+                    return_array = area.miihen.arrival()
                     self_destruct = area.miihen.arrival_2(
-                        returnArray[0], returnArray[1], returnArray[2]
+                        return_array[0], return_array[1], return_array[2]
                     )
                     game.step = 2
 
                 if game.step == 2:
                     area.miihen.mid_point()
                     logger.info("End of Mi'ihen mid point section.")
-                    area.miihen.low_road(returnArray[0], returnArray[1], returnArray[2])
+                    area.miihen.low_road(
+                        return_array[0], return_array[1], return_array[2]
+                    )
 
                     # Report duration at the end of Mi'ihen section for all runs.
                     end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
-                    logger.info(f"Mi'ihen End timer is: {totalTime}")
+                    total_time = end_time - game.start_time
+                    logger.info(f"Mi'ihen End timer is: {total_time}")
                     logs.write_stats("Miihen End time:")
-                    logs.write_stats(totalTime)
+                    logs.write_stats(total_time)
                     game.state = "MRR"
                     game.step = 1
 
@@ -344,17 +348,17 @@ def perform_TAS():
                     area.mrr.arrival()
                     area.mrr.main_path()
                     if memory.main.game_over():
-                        game.state = "gameOverError"
+                        game.state = "game_over_error"
                     game.step = 2
 
                 if game.step == 2:
                     area.mrr.battle_site()
                     area.mrr.gui_and_aftermath()
                     end_time = logs.time_stamp()
-                    totalTime = end_time - game.start_time
-                    logger.info(f"End of Battle Site timer is: {totalTime}")
+                    total_time = end_time - game.start_time
+                    logger.info(f"End of Battle Site timer is: {total_time}")
                     logs.write_stats("Djose-Start time:")
-                    logs.write_stats(totalTime)
+                    logs.write_stats(total_time)
                     game.state = "Djose"
                     game.step = 1
 
@@ -452,10 +456,10 @@ def perform_TAS():
                 if game.step == 2:
                     area.home.find_summoners()
                     game.step = 1
-                    game.state = "rescueYuna"
+                    game.state = "rescue_yuna"
 
             # Rescuing Yuna
-            if game.state == "rescueYuna":
+            if game.state == "rescue_yuna":
                 if game.step == 1:
                     area.rescue_yuna.pre_evrae()
                     battle.boss.evrae()
@@ -490,15 +494,15 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     import rng_track
 
-                    advancePreX, advancePostX = rng_track.nea_track()
-                    if advancePostX in [0, 1]:
+                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    if advance_post_x in [0, 1]:
                         game.step = 2
                     else:
                         game.step = 3
 
                 if game.step == 2:
                     if game_vars.try_for_ne():
-                        manipTime1 = logs.time_stamp()
+                        manip_time_1 = logs.time_stamp()
 
                         logger.debug("Mark 1")
                         area.ne_armor.to_hidden_cave()
@@ -506,12 +510,12 @@ def perform_TAS():
                         area.ne_armor.drop_hunt()
                         logger.debug("Mark 3")
                         area.ne_armor.return_to_gagazet()
-                        manipTime2 = logs.time_stamp()
+                        manip_time_2 = logs.time_stamp()
                         try:
-                            manipTime = manipTime2 - manipTime1
-                            logger.info(f"NEA Manip duration: {str(manipTime)}")
+                            manip_time = manip_time_2 - manip_time_1
+                            logger.info(f"NEA Manip duration: {str(manip_time)}")
                             logs.write_stats("NEA Manip duration:")
-                            logs.write_stats(manipTime)
+                            logs.write_stats(manip_time)
                         except:
                             pass
                     game.step = 3
@@ -642,7 +646,7 @@ def perform_TAS():
 
                 if game.step == 7:
                     # reportGamestate()
-                    # nemesis.arenaPrep.mrrFarm(capNum=1)
+                    # nemesis.arena_prep.mrr_farm(cap_num=1)
                     game.step = 8
 
                 if game.step == 8:
@@ -662,8 +666,8 @@ def perform_TAS():
                     game.step = 12
 
                 if game.step == 12:
-                    # reportGamestate()
-                    # nemesis.arenaPrep.mrrFarm(capNum=10)
+                    # report_gamestate()
+                    # nemesis.arena_prep.mrr_farm(cap_num=10)
                     game.step = 13
 
                 if game.step == 13:
@@ -690,10 +694,10 @@ def perform_TAS():
 
                 if game.step == 19:
                     nemesis.arenaPrep.gagazet()
-                    # nemesis.arenaPrep.gagazet1()
-                    # nemesis.arenaPrep.gagazet2()
-                    # nemesis.arenaPrep.gagazet3()
-                    # game.state = "End" #Testing only
+                    # nemesis.arena_prep.gagazet_1()
+                    # nemesis.arena_prep.gagazet_2()
+                    # nemesis.arena_prep.gagazet_3()
+                    # game.state = "End"  # Testing only
                     game.step = 20
 
                 if game.step == 20:
@@ -765,7 +769,7 @@ def perform_TAS():
             if (
                 game.state == "End"
                 and game_vars.loop_seeds()
-                and game.rng_seed_num - rngSeedOrig < maxLoops
+                and game.rng_seed_num - rng_seed_orig < max_loops
             ):
                 # End of seed logic.
                 game.state, game.step = reset.mid_run_reset(
@@ -788,10 +792,10 @@ def perform_TAS():
 def write_final_logs():
     if memory.main.get_story_progress() > 3210:
         end_time = logs.time_stamp()
-        totalTime = end_time - game.start_time
+        total_time = end_time - game.start_time
         logs.write_stats("Total time:")
-        logs.write_stats(str(totalTime))
-        logger.info(f"The game duration was: {str(totalTime)}")
+        logs.write_stats(str(total_time))
+        logger.info(f"The game duration was: {str(total_time)}")
         logger.info("This duration is intended for internal comparisons only.")
         logger.info("It is not comparable to non-TAS runs.")
         memory.main.wait_frames(30)

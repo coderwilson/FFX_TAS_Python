@@ -139,8 +139,8 @@ while attempts < 20 and cycles < 50:
 end_time = logs.time_stamp()
 print("------------------------------")
 print("------------------------------")
-totalTime = end_time - start_time
-print("The program duration (real time) was:", str(totalTime))
+total_time = end_time - start_time
+print("The program duration (real time) was:", str(total_time))
 print("------------------------------")
 print("------------------------------")
 

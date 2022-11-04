@@ -20,7 +20,7 @@ while attempts < 10:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
-        area.dream_zan.new_game("rescueYuna")
+        area.dream_zan.new_game("rescue_yuna")
         print("Game start screen")
 
         # Initiate memory reading, after we know the game is open.

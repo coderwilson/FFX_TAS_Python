@@ -4934,7 +4934,7 @@ def home(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    if checkpoint == 60:  # Used for kilikaSkip and Nemesis, extra chest.
+    if checkpoint == 60:  # Used for Kilika skip and Nemesis, extra chest.
         x = -343
         y = 189
     if checkpoint == 61:
