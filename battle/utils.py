@@ -37,6 +37,6 @@ def speedup_decorator(func):
             monitor.join()
             logger.debug(f"Stopping speedup for {func.__name__}")
         else:
-            func()
+            func(*args, **kwargs)
 
     return wrapper
