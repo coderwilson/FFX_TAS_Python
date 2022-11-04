@@ -1,4 +1,5 @@
 import battle.main
+import logging
 import logs
 import memory.main
 import menu
@@ -8,6 +9,7 @@ import save_sphere
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -17,14 +19,14 @@ def loop_back_from_ronso(checkpoint=0):
     memory.main.full_party_format("rikku")
     battle.main.heal_up(full_menu_close=True)
     rng_track.print_manip_info()
-    print("Looping back to the Ronso")
+    logger.info("Looping back to the Ronso")
     while checkpoint != 18:
         if memory.main.user_control():
             if checkpoint < 13 and memory.main.get_map() == 279:
                 checkpoint = 13
             elif pathing.set_movement(pathing.gagazet_nea_loop_back(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() or memory.main.menu_open():
@@ -51,7 +53,7 @@ def to_hidden_cave():
                 next_drop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
                 if not last_report:
-                    print("Need more advances before entering cave.")
+                    logger.info("Need more advances before entering cave.")
                     last_report = True
                 checkpoint -= 2
             elif (
@@ -60,20 +62,20 @@ def to_hidden_cave():
                 and memory.main.next_chance_rng_10()
             ):
                 if not last_report:
-                    print("Need more advances before cave enter | no silence grenade")
+                    logger.info("Need more advances before cave enter | no silence grenade")
                     last_report = True
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
             elif pathing.set_movement(pathing.ne_approach(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
                 _, next_drop = rng_track.nea_track()
                 last_report = False
-                print("### Starting manip battle")
+                logger.info("### Starting manip battle")
                 rng_track.print_manip_info()
                 memory.main.wait_frames(2)
                 if next_drop >= 1:
@@ -84,9 +86,9 @@ def to_hidden_cave():
                 elif memory.main.next_chance_rng_10():
                     battle.main.advance_rng_10(memory.main.next_chance_rng_10())
                 else:
-                    print("Failed to determine next steps, requires dev review.")
-                    print("RNG10: ", memory.main.next_chance_rng_10())
-                    print("RNG12: ", memory.main.next_chance_rng_12())
+                    logger.error("Failed to determine next steps, requires dev review.")
+                    logger.error(f"RNG10: {memory.main.next_chance_rng_10()}")
+                    logger.error(f"RNG12: {memory.main.next_chance_rng_12()}")
                     battle.main.flee_all()
                 prep_battles += 1
                 memory.main.full_party_format("rikku")
@@ -101,9 +103,9 @@ def to_hidden_cave():
 def next_green():
     next_green = memory.main.next_chance_rng_01(version="green")[0][0]
     next_white = memory.main.next_chance_rng_01()[0][0]
-    print("## Next Ghost coming up:")
-    print("## Green: ", next_green)
-    print("## White: ", next_white)
+    logger.debug("## Next Ghost coming up:")
+    logger.debug(f"## Green: {next_green}")
+    logger.debug(f"## White: {next_white}")
     if next_green < next_white and memory.main.next_chance_rng_10() == 0:
         if next_green >= 2:
             go_green = True
@@ -117,7 +119,7 @@ def next_green():
 
 
 def drop_hunt():
-    print("Now in the cave. Ready to try to get the NE armor.")
+    logger.info("Now in the cave. Ready to try to get the NE armor.")
     memory.main.full_party_format("rikku")
 
     go_green = next_green()
@@ -134,13 +136,13 @@ def drop_hunt():
                     pathing.ne_force_encounters_green(checkpoint)
                 ):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
             else:
                 if pathing.set_movement(pathing.ne_force_encounters_white(checkpoint)):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not go_green:
                         checkpoint = 0
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -159,7 +161,7 @@ def drop_hunt():
                 memory.main.close_menu()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
-    print("The NE armor hunt is complete. Char:", game_vars.ne_armor())
+    logger.info(f"The NE armor hunt is complete. Char: {game_vars.ne_armor()}")
     logs.write_stats("Pre-Ghost flees:")
     logs.write_stats(pre_ghost_battles)
     logs.write_stats("NEA char:")
@@ -187,7 +189,7 @@ def return_to_gagazet():
                     checkpoint = 0
                 elif pathing.set_movement(pathing.ne_return_green(checkpoint)):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 1 and memory.main.get_map() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
@@ -200,7 +202,7 @@ def return_to_gagazet():
                 checkpoint = 7
             elif pathing.set_movement(pathing.ne_return(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

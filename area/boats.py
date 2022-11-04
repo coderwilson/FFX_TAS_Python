@@ -1,5 +1,6 @@
 import battle.boss
 import battle.main
+import logging
 import logs
 import memory.main
 import menu
@@ -7,13 +8,13 @@ import pathing
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
-
 FFXC = xbox.controller_handle()
 
 
 def boat_dance():
-    print("No dancing this time")
+    logger.info("No dancing this time")
     memory.main.wait_frames(30 * 50)
 
 
@@ -27,7 +28,7 @@ def ss_liki():
                 checkpoint += 1
             elif checkpoint == 3:  # Talk to Wakka
                 memory.main.click_to_event_temple(3)
-                print("Ready for SS Liki menu - (var) ", game_vars.early_tidus_grid())
+                logger.info(f"Ready for SS Liki menu - (var) {game_vars.early_tidus_grid()}")
                 if not game_vars.early_tidus_grid():
                     menu.liki()
                     memory.main.close_menu()
@@ -36,7 +37,7 @@ def ss_liki():
             # General pathing
             elif pathing.set_movement(pathing.liki(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
         else:
             FFXC.set_neutral()
@@ -45,11 +46,11 @@ def ss_liki():
             elif memory.main.cutscene_skip_possible():
                 xbox.skip_scene()
             elif memory.main.battle_active():
-                print("Ready to start fight with Sin's Fin")
+                logger.info("Ready to start fight with Sin's Fin")
                 battle.boss.sin_fin()
-                print("Sin's Fin fight complete. Waiting for next fight")
+                logger.info("Sin's Fin fight complete. Waiting for next fight")
                 battle.boss.echuilles()
-                print("Sinspawn Echuilles fight complete")
+                logger.info("Sinspawn Echuilles fight complete")
 
 
 def get_digit(number, n):
@@ -83,6 +84,7 @@ def ss_winno():
     FFXC.set_movement(1, -1)
     memory.main.wait_frames(2)
 
+    logger.info("Talk to O'aka")
     # Talk to O'aka XXIII
     oaka_coords = [
         memory.main.get_actor_coords(1)[0],
@@ -99,11 +101,11 @@ def ss_winno():
     FFXC.set_neutral()
     while memory.main.oaka_interface() != 12:
         xbox.tap_b()
-    print("Setting Hundreds")
+    logger.debug("Setting Hundreds")
     _set_index_to_value(5, 0, 2)
-    print("Setting Thousands")
+    logger.debug("Setting Thousands")
     _set_index_to_value(4, 1, 3)
-    print("Setting Zeroes")
+    logger.debug("Setting Zeroes")
     _set_index_to_value(7, 1, 0)
     while memory.main.oaka_interface() != 0:
         xbox.tap_b()
@@ -132,7 +134,7 @@ def ss_winno_2():
                 checkpoint += 1
             elif pathing.set_movement(pathing.winno(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -176,7 +178,7 @@ def jecht_shot_success():
 
 def jecht_shot():
     # Jecht shot tutorial
-    print("Ready for Jecht Shot")
+    logger.info("Ready for Jecht Shot")
     memory.main.click_to_diag_progress(96)
     while memory.main.diag_progress_flag() != 100:
         if memory.main.diag_progress_flag() == 97:
@@ -196,8 +198,8 @@ def jecht_shot():
 
     # Failure logic
     xbox.skip_dialog(2)
-    print("End Jecht Shot")
-    print("We are intentionally failing the Jecht shot. Save the frames!")
+    logger.info("End Jecht Shot")
+    logger.info("We are intentionally failing the Jecht shot. Save the frames!")
 
     # Success logic
     # for i in range(15):

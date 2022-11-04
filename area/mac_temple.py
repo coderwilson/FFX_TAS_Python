@@ -1,5 +1,6 @@
 import battle.boss
 import battle.main
+import logging
 import memory.main
 import menu
 import pathing
@@ -8,17 +9,18 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def approach(do_grid=True):
-    print("------------------------------Affection array:")
-    print(memory.main.affection_array())
-    print("------------------------------")
+    logger.debug("------------------------------Affection array:")
+    logger.debug(memory.main.affection_array())
+    logger.debug("------------------------------")
     memory.main.click_to_control()
-    print("Approaching Macalania Temple")
+    logger.info("Approaching Macalania Temple")
 
     checkpoint = 0
     while memory.main.get_map() != 106:
@@ -30,7 +32,7 @@ def approach(do_grid=True):
             # General pathing
             elif pathing.set_movement(pathing.m_temple_approach(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -43,7 +45,7 @@ def approach(do_grid=True):
 
 
 def arrival():
-    print("Starting Macalania Temple section")
+    logger.info("Starting Macalania Temple section")
 
     # Movement:
     jyscal_skip_status = False
@@ -70,7 +72,7 @@ def arrival():
                     memory.main.wait_frames(4)
                 checkpoint += 1
             elif checkpoint == 5:  # Skip (new)
-                print("Lining up for skip.")
+                logger.info("Lining up for skip.")
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
@@ -80,14 +82,14 @@ def arrival():
                     FFXC.set_value("d_pad", 0)
                     memory.main.wait_frames(5)
 
-                print("Turning back")
+                logger.info("Turning back")
                 memory.main.wait_frames(3)
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(2)
                 FFXC.set_neutral()
                 memory.main.wait_frames(15)
 
-                print("Now lined up. Here we go.")
+                logger.info("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
                 memory.main.wait_frames(3)
                 FFXC.set_value("btn_b", 1)
@@ -100,7 +102,7 @@ def arrival():
             elif checkpoint == 6:
                 checkpoint = 11
             elif checkpoint == 11:
-                print("Check if skip is online")
+                logger.info("Check if skip is online")
                 if game_vars.csr():
                     jyscal_skip_status = True
                     checkpoint += 1
@@ -111,7 +113,7 @@ def arrival():
                     jyscal_skip_status = False
                     checkpoint = 20
                     skip_status = False
-                print("Jyscal Skip results:", skip_status)
+                logger.info(f"Jyscal Skip results: {skip_status}")
             elif checkpoint == 14 and game_vars.csr():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
@@ -141,7 +143,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(pathing.temple_foyer(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -159,6 +161,7 @@ def start_seymour_fight():
 
 
 def seymour_fight():
+    logger.info("Fighting Seymour Guado")
     battle.main.seymour_guado()
 
     # Name for Shiva
@@ -189,7 +192,7 @@ def trials():
             # Spheres and Pedestals
             elif checkpoint == 2:
                 memory.main.await_control()
-                print("Activate the trials")
+                logger.info("Activate the trials")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 9:  # Push pedestal - 1
@@ -210,7 +213,7 @@ def trials():
             elif checkpoint == 23:  # Grab glyph sphere
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
-                print("Checkpoint:", checkpoint)
+                logger.debug(f"Checkpoint: {checkpoint}")
             elif checkpoint == 29:  # Push pedestal - 3
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
@@ -241,14 +244,14 @@ def trials():
             # General pathing
             elif pathing.set_movement(pathing.m_temple_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
 
 
 def escape():
     memory.main.click_to_control()
-    print("First, some menuing")
+    logger.info("First, some menuing")
     menu_done = False
     if game_vars.nemesis():
         memory.main.full_party_format("yuna", full_menu_close=False)
@@ -258,7 +261,7 @@ def escape():
         memory.main.full_party_format("macalaniaescape", full_menu_close=False)
     menu.equip_sonic_steel(full_menu_close=True)
 
-    print("Now to escape the Guado")
+    logger.info("Now to escape the Guado")
     force_battle = False
 
     checkpoint = 0
@@ -268,19 +271,19 @@ def escape():
             if checkpoint == 2:
                 save_sphere.touch_and_go()
                 checkpoint += 1
-                print("Touching save sphere. Update checkpoint:", checkpoint)
+                logger.debug(f"Touching save sphere. Update checkpoint: {checkpoint}")
             elif checkpoint == 18 and force_battle:
                 FFXC.set_neutral()
 
             # Map changes
             elif checkpoint < 19 and memory.main.get_map() == 192:
                 checkpoint = 19
-                print("Map change. Update checkpoint:", checkpoint)
+                logger.debug(f"Map change. Update checkpoint: {checkpoint}")
 
             # General pathing
             elif pathing.set_movement(pathing.m_temple_escape(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -302,9 +305,9 @@ def escape():
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    print("Done pathing. Now for the Wendigo fight.")
+    logger.info("Done pathing. Now for the Wendigo fight.")
     battle.boss.wendigo()
-    print("Wendigo fight over")
+    logger.info("Wendigo fight over")
 
 
 def under_lake():
@@ -337,7 +340,7 @@ def under_lake():
             # General pathing
             elif pathing.set_movement(pathing.under_mac_temple(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

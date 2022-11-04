@@ -1,5 +1,6 @@
 import battle.boss
 import battle.main
+import logging
 import logs
 import memory.main
 import menu
@@ -8,6 +9,7 @@ import save_sphere
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
@@ -17,7 +19,7 @@ def arrival():
     # if memory.main.rng_seed() == 31 and game_vars.skip_kilika_luck():
     #    game_vars.dont_skip_kilika_luck()
 
-    print("Arrived at Kilika docks.")
+    logger.info("Arrived at Kilika docks.")
     memory.main.click_to_control()
 
     checkpoint = 0
@@ -50,7 +52,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(pathing.kilika_1(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
         else:
             FFXC.set_neutral()
@@ -77,12 +79,13 @@ def select_best_of_two(coming_battles):
     ]
     for i in range(len(priority)):
         if priority[i] in coming_battles:
-            print("--------------Best charge, battle num:", priority[i])
+            logger.debug(f"--------------Best charge, battle num: {priority[i]}")
             return priority[i]
     return 99
 
 
 def forest_1():
+    logger.info("Kilika forest 1")
     kilika_battles = 0
     optimal_battles = 0
     next_three = []
@@ -144,7 +147,7 @@ def forest_1():
             # General pathing
             elif pathing.set_movement(pathing.kilika_2(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
         else:
             FFXC.set_neutral()
@@ -158,19 +161,19 @@ def forest_1():
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]
-                    print("################# Next Battle:", next_battle)
+                    logger.debug(f"################# Next Battle: {next_battle}")
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
-                    print("------------This should be battle number:", kilika_battles)
-                    print("------------Reminder (north-bound only):", next_three)
+                    logger.debug(f"------------This should be battle number: {kilika_battles}")
+                    logger.debug(f"------------Reminder (north-bound only): {next_three}")
                     valefor_charge = battle.main.kilika_woods(
                         valefor_charge, best_of_two, next_battle
                     )
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]
-                    print("##########################", next_battle)
+                    logger.debug(f"########################## {next_battle}")
                     kilika_battles += 1
                 memory.main.full_party_format("kilika")
             elif memory.main.diag_skip_possible():
@@ -190,6 +193,7 @@ def forest_1():
 
 
 def trials():
+    logger.info("Kilika trials")
     memory.main.click_to_control()
     checkpoint = 0
     while memory.main.get_map() != 45:
@@ -263,7 +267,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(pathing.kilika_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -275,6 +279,7 @@ def trials():
 
 
 def trials_end():
+    logger.info("Kilika trials end")
     # Talking to Wakka
     while memory.main.get_story_progress() < 346:
         if memory.main.user_control():
@@ -305,6 +310,7 @@ def trials_end():
 
 
 def forest_3():
+    logger.info("Kilika forest 3")
     # First, re-order the party
     memory.main.full_party_format("kilika")
     kilika_battles = 0
@@ -328,7 +334,7 @@ def forest_3():
             # General pathing
             elif pathing.set_movement(pathing.kilika_3(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

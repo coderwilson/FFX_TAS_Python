@@ -1,4 +1,5 @@
 import battle.main
+import logging
 import memory.main
 import menu
 import pathing
@@ -6,6 +7,7 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -27,7 +29,7 @@ def south_pathing():
                 game_vars.set_l_strike(memory.main.l_strike_count())
                 if checkpoint == 34:
                     count50 += 1
-                    print("Dodge:", count50)
+                    logger.debug(f"Dodge: {count50}")
             elif checkpoint == 2 and game_vars.nemesis():
                 checkpoint = 20
             elif checkpoint == 2 and not game_vars.get_blitz_win():
@@ -45,7 +47,7 @@ def south_pathing():
                     pathing.set_movement([205, 160])
                     xbox.tap_x()
                 checkpoint += 1
-                print("Now ready to dodge some lightning.")
+                logger.info("Now ready to dodge some lightning.")
             elif checkpoint == 34:
                 if count50 == 50:
                     checkpoint += 1
@@ -58,7 +60,7 @@ def south_pathing():
             elif memory.main.user_control():
                 if pathing.set_movement(pathing.t_plains_south(checkpoint)):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -159,13 +161,13 @@ def agency_shop():
         for i, handle in enumerate(all_equipment)
         if (handle.abilities() == [255, 255, 255, 255] and handle.owner() == 0)
     ][0]
-    print("Tidus Longsword in slot:", tidus_longsword)
+    logger.debug(f"Tidus Longsword in slot: {tidus_longsword}")
     auron_katana = [
         i
         for i, handle in enumerate(all_equipment)
         if (handle.abilities() == [0x800B, 255, 255, 255] and handle.owner() == 2)
     ][0]
-    print("Auron Katana in slot:", auron_katana)
+    logger.debug(f"Auron Katana in slot: {auron_katana}")
     other_slots = [
         i
         for i, handle in enumerate(all_equipment)
@@ -175,7 +177,7 @@ def agency_shop():
             and not handle.is_brotherhood()
         )
     ]
-    print("Sellable Items in :", other_slots)
+    logger.debug(f"Sellable Items in slot: {other_slots}")
     menu.sell_weapon(tidus_longsword)
     menu.sell_weapon(auron_katana)
     if game_vars.get_blitz_win() and memory.main.get_gil_value() < 8725:
@@ -195,6 +197,7 @@ def agency_shop():
 
 
 def agency():
+    logger.info("Arriving at travel agency")
     # Arrive at the travel agency
     memory.main.click_to_control_3()
     checkpoint = 0
@@ -219,12 +222,12 @@ def agency():
             elif checkpoint == 7:
                 if not game_vars.csr():
                     kimahri_affection = memory.main.affection_array()[3]
-                    print("Kimahri affection, ", kimahri_affection)
+                    logger.debug(f"Kimahri affection, {kimahri_affection}")
                     while memory.main.affection_array()[3] == kimahri_affection:
                         pathing.set_movement([27, -44])
                         xbox.tap_b()
-                    print("Updated, full affection array:")
-                    print(memory.main.affection_array())
+                    logger.debug("Updated, full affection array:")
+                    logger.debug(memory.main.affection_array())
                 checkpoint += 1
             elif checkpoint == 8:
                 while not memory.main.get_map() == 256:
@@ -258,7 +261,7 @@ def agency():
 
             elif pathing.set_movement(pathing.t_plains_agency(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -276,19 +279,19 @@ def north_pathing():
         if memory.main.user_control():
             # Lightning dodging
             if memory.main.dodge_lightning(l_strike_count):
-                print("Dodge")
+                logger.debug("Dodge")
                 l_strike_count = memory.main.l_strike_count()
             elif game_vars.csr() and checkpoint == 14:
                 checkpoint = 16
             elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunar_slot:
                 checkpoint -= 2
-                print("No lunar curtain. Checkpoint:", checkpoint)
+                logger.debug(f"No lunar curtain. Checkpoint: {checkpoint}")
 
             # General pathing
             elif memory.main.user_control():
                 if pathing.set_movement(pathing.t_plains_north(checkpoint)):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -301,7 +304,7 @@ def north_pathing():
 
     FFXC.set_neutral()
     memory.main.await_control()
-    print("Thunder Plains North complete. Moving up to the Macalania save sphere.")
+    logger.info("Thunder Plains North complete. Moving up to the Macalania save sphere.")
     if not game_vars.csr():
         FFXC.set_movement(0, 1)
         xbox.skip_dialog(6)
