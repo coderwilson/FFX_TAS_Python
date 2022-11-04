@@ -33,6 +33,7 @@ class AllVars:
         # use the original Soundtrack instead of arranged
         self.legacy_soundtrack = config_vars.get("legacy_soundtrack", True)
         self.do_not_skip_cutscenes = config_vars.get("do_not_skip_cutscenes", False)
+        self.battle_speedup = config_vars.get("battle_speedup", False)
 
         # ----Accessibility for blind
         self.skip_cutscene_flag = config_vars.get("skip_cutscene_flag", True)
@@ -344,6 +345,9 @@ class AllVars:
 
     def get_skip_zan_luck(self):
         return self.skip_zan_luck
+
+    def get_battle_speedup(self):
+        return self.battle_speedup
 
 
 def init_vars():

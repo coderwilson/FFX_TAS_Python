@@ -27,6 +27,7 @@ vars:
   attempt_djose        : False  # Try Djose skip? (not likely to succeed)
   legacy_soundtrack    : True   # use the original Soundtrack instead of arranged
   do_not_skip_cutscenes  : False  #            - Missing documentation -
+  battle_speedup      : False  # Use 4x speed when doing battles.
 
   # Accessibility for blind
   skip_cutscene_flag  : True   #            - Missing documentation -
