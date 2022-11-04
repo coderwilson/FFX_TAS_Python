@@ -33,10 +33,11 @@ def speedup_decorator(func):
             logger.debug(f"Speeding battle up: {func.__name__}")
             monitor = threading.Thread(target=_monitor_battle)
             monitor.start()
-            func(*args, **kwargs)
+            ret_val = func(*args, **kwargs)
             monitor.join()
             logger.debug(f"Stopping speedup for {func.__name__}")
+            return ret_val
         else:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
 
     return wrapper
