@@ -124,7 +124,7 @@ processed_cutscenes = set()
 
 def skip_scene(fast_mode: bool = False):
     cutscene_id = memory.get.cutscene_id()
-    print(cutscene_id)
+    logger.info(f"Cutscene ID: {cutscene_id}")
     if not fast_mode or cutscene_id not in processed_cutscenes:
         logger.info("Skip cutscene")
         memory.main.wait_frames(2)
