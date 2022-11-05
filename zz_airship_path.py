@@ -1,3 +1,4 @@
+import logging
 import math
 
 import battle.main
@@ -6,6 +7,7 @@ import pathing
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -99,9 +101,9 @@ def air_ship_path(version):
                 # Optional save sphere can be touched here.
                 # Should not be necessary, we should be touching save sphere in Home
             elif checkpoint == 14 and version == 2:
-                print("Talking to Yuna/Kimahri in the gallery")
+                logger.info("Talking to Yuna/Kimahri in the gallery")
                 checkpoint = 23
-                print("Checkpoint update:", checkpoint)
+                logger.debug(f"Checkpoint update: {checkpoint}")
             elif checkpoint == 16:
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
@@ -141,13 +143,13 @@ def air_ship_path(version):
 
             # Complete states
             elif checkpoint == 19 and version == 1:
-                print("Pre-Evrae pathing")
+                logger.info("Pre-Evrae pathing")
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 3)
                 FFXC.set_neutral()
                 complete = True
             elif checkpoint == 19 and version == 3:
-                print("Sin's Arms")
+                logger.info("Sin's Arms")
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 3)
                 FFXC.set_neutral()
@@ -158,7 +160,7 @@ def air_ship_path(version):
                         xbox.skip_scene()
                 complete = True
             elif checkpoint == 19 and version == 4:
-                print("Straight to the deck, talking to Yuna.")
+                logger.info("Straight to the deck, talking to Yuna.")
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 3)
                 FFXC.set_neutral()
@@ -176,7 +178,7 @@ def air_ship_path(version):
                         xbox.skip_scene()
                 complete = True
             elif checkpoint == 19 and version == 5:
-                print("Again to the deck, three skips.")
+                logger.info("Again to the deck, three skips.")
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 3)
                 FFXC.set_neutral()
@@ -187,7 +189,7 @@ def air_ship_path(version):
                         xbox.skip_scene()
                 complete = True
             elif checkpoint == 19 and version == 6:
-                print("Sin's Face")
+                logger.info("Sin's Face")
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 3)
                 FFXC.set_neutral()
@@ -196,34 +198,34 @@ def air_ship_path(version):
             # General Pathing
             elif pathing.set_movement(pathing.air_ship(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.flee_all()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                print("Mark")
+                logger.debug("Mark")
                 xbox.tap_b()
 
-    print("End of section, Airship pathing")
+    logger.info("End of section, Airship pathing")
 
 
 def air_ship_return():
-    print("Conversation with Yuna/Kimahri.")
+    logger.info("Conversation with Yuna/Kimahri.")
     memory.main.click_to_control()
 
     pos = memory.main.get_coords()
-    print("Ready to run back to the cockpit.")
+    logger.info("Ready to run back to the cockpit.")
     while pos[1] > -90:  # Leaving Yuna/Kimahri, heading back down.
         FFXC.set_value("axis_ly", -1)
         FFXC.set_value("axis_lx", 0)
         pos = memory.main.get_coords()
-    print("Turn East")
+    logger.debug("Turn East")
     while pos[0] < -1:
         FFXC.set_value("axis_lx", 1)
         FFXC.set_value("axis_ly", 0)
         pos = memory.main.get_coords()
-    print("Turn North")
+    logger.debug("Turn North")
     while memory.main.user_control():
         FFXC.set_value("axis_lx", 0)
         FFXC.set_value("axis_ly", 1)
