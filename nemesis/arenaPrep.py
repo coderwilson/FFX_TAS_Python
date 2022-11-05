@@ -1118,8 +1118,8 @@ def kilika_final_shop():
     menu.auto_sort_equipment()
 
     gilNeeded = 3500000 - memory.main.get_gil_value()
-    weaponBuys = int(gilNeeded / 26150)
-    weaponBuys += 1  # for safety
+    # Get minimum needed, plus one for safety. Max 99 total.
+    weaponBuys = min(int(gilNeeded / 26150), 98) + 1
 
     air_ship_destination(dest_num=2)
     while not nemesis.targetPath.set_movement([-25, -246]):
