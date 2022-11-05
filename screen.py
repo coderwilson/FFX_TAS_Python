@@ -1,6 +1,9 @@
+import logging
+
 import memory.main
 import vars
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 
@@ -15,8 +18,8 @@ def faint_check():
     faints = 0
     charHP = memory.main.get_battle_hp()
     frontParty = memory.main.get_active_battle_formation()
-    print("##", frontParty, "##")
-    print("##", charHP, "##")
+    logger.debug(f"faint_check() ## {frontParty} ##")
+    logger.debug(f"faint_check() ## {charHP} ##")
     if turn_aeon():
         return 0
     if frontParty[0] != 255 and charHP[0] == 0:
@@ -25,7 +28,7 @@ def faint_check():
         faints += 1
     if frontParty[2] != 255 and charHP[2] == 0:
         faints += 1
-    print("## Fainted Characters:", faints, "##")
+    logger.debug(f"faint_check() ## Fainted Characters: {faints} ##")
     return faints
 
 
@@ -38,7 +41,7 @@ def battle_complete():
 
 def await_turn():
     counter = 0
-    print("Waiting for next turn in combat.")
+    logger.debug("Waiting for next turn in combat.")
     # Just to make sure there's no overlap from the previous character's turn
 
     # Now let's do this.
@@ -47,7 +50,7 @@ def await_turn():
             pass
         counter += 1
         if counter % 100000 == 0:
-            print("Waiting for player turn:", counter / 10000)
+            logger.debug(f"Waiting for player turn: {counter / 10000}")
         if memory.main.game_over():
             return False
     while not memory.main.main_battle_menu():
@@ -118,7 +121,7 @@ def turn_seymour():
 def turn_aeon():
     turn = memory.main.get_battle_char_turn()
     if turn > 7 and turn <= 19:
-        print("Aeon's turn:")
+        logger.debug(f"Aeon's turn: {turn}")
         return True
     else:
         return False
