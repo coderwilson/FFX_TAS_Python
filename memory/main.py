@@ -2296,10 +2296,7 @@ def set_encounter_rate(set_val):
 
 
 def get_game_speed():
-    global base_value
-
-    key = base_value + 0x008E82A4
-    return process.read_bytes(key, 1)
+    return read_val(0x008E82A4)
 
 
 def set_game_speed(set_val):
