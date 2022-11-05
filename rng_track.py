@@ -1,5 +1,6 @@
 import csv
 import json
+import logging
 
 import logs
 import memory.main
@@ -8,6 +9,7 @@ import vars
 # from tracker.data.formations import all_formations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 
@@ -20,7 +22,7 @@ def area_formations(area: str):
     elif area in all_formations["bosses"].keys():
         return all_formations["bosses"][area]["formation"]
     else:
-        print("Key not found:", area)
+        logger.debug(f"Key not found: {area}")
 
 
 def coming_battles(
@@ -203,7 +205,7 @@ def item_to_be_dropped(
     ability_list = new_abilities[0]
     pre_advance_13 += new_abilities[1]
     if test_mode:
-        print("New Abilities: ", ability_list)
+        logger.debug(f"New Abilities: {ability_list}")
 
     final_item = memory.main.Equipment(equip_num=0)
     final_item.create_custom(
@@ -224,37 +226,37 @@ def ability_to_be_dropped(
     outcomes = drop_ability_list(enemy=enemy, equip_type=equip_type)
     found = 0
     # if test_mode:
-    #    print("o: ", outcomes)
+    #    logger.debug(f"outcomes: {outcomes}")
     if slots == 0:
         slots = 1
     filled_slots = [99] * slots
     # if test_mode:
-    #    print("fs: ", filled_slots)
+    #    logger.debug(f"fs: {filled_slots}")
 
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
     test_array = memory.main.rng_13_array(array_len=50 + advances)
     # if test_mode:
-    #    print("ta: ", test_array)
+    #    logger.debug(f"ta: {test_array}")
 
     # if outcomes[0]:
     #    filled_slots.append(outcomes[0])
     #    filled_slots.remove(99)
     if test_mode:
-        print("E: ", enemy, " - O: ", outcomes)
+        logger.debug(f"Enemy: {enemy} - Outcomes: {outcomes}")
 
     while 99 in filled_slots and ptr < 50 + advances:
         # Increment to match the first (and subsequent) advance(s)
         try:
             ptr += 1
             if test_mode:
-                print("==================================")
-                print("ptr: ", ptr)
-                print("Try: ", test_array[ptr + advances])
+                logger.debug("==================================")
+                logger.debug(f"ptr: {ptr}")
+                logger.debug(f"Try: {test_array[ptr + advances]}")
             array_pos = ((test_array[ptr + advances] & 0x7FFFFFFF) % 7) + 1
             if test_mode:
-                print("AP: ", array_pos)
-                print("Res: ", outcomes[array_pos])
-                print("==================================")
+                logger.debug(f"AP: {array_pos}")
+                logger.debug(f"Res: {outcomes[array_pos]}")
+                logger.debug("==================================")
             if outcomes[array_pos] in filled_slots:
                 pass
             else:
@@ -262,11 +264,11 @@ def ability_to_be_dropped(
                 filled_slots.append(int(outcomes[array_pos]))
                 found += 1
                 if test_mode:
-                    print(filled_slots)
+                    logger.debug(filled_slots)
         except Exception as e:
-            print("ERR: ", e)
+            logger.exception(e)
     if test_mode:
-        print("FS: ", filled_slots)
+        logger.debug(f"Filled Slots: {filled_slots}")
 
     while 99 in filled_slots:
         filled_slots.remove(99)
@@ -276,7 +278,7 @@ def ability_to_be_dropped(
         while len(filled_slots) < 4:
             filled_slots.append(255)
     if test_mode:
-        print("FSfin: ", filled_slots)
+        logger.debug(f"Filled Slots fin: {filled_slots}")
 
     return [filled_slots, found]
 
@@ -295,8 +297,8 @@ def report_dropped_item(
     if pref_ability != 255 and abi_str not in drop.equip_abilities:
         report = False
     elif pref_type != 99 and pref_type != drop.equip_type:
-        print(pref_type)
-        print(drop.equip_type)
+        logger.debug(pref_type)
+        logger.debug(drop.equip_type)
         report = False
 
     if report:
@@ -1470,18 +1472,18 @@ def decide_skip_zan_luck() -> bool:
 
     attack_count = extra_xp
     if keeper_crit:
-        print("### Expecting crit on SK")
+        logger.debug("### Expecting crit on SK")
         attack_count += 1
     else:
         attack_count += 2
 
     # Now to test the Yunalesca fight. Crits do not matter here, only hit chance.
     for i in range(3):
-        print("### YL attack num", i, "|", attack_count)
+        logger.debug(f"### Yunalesca attack num {i} | {attack_count}")
         if not future_attack_hit(
             character=7, enemy="yunalesca", attack_index=attack_count
         ):
-            print("### Miss on Yunalesca, attack number", i)
+            logger.debug(f"### Miss on Yunalesca, attack number {i}")
             return False
         attack_count += 1
     if game_vars.nemesis():  # BFA miss does not factor in for Nemesis route.
@@ -1491,7 +1493,7 @@ def decide_skip_zan_luck() -> bool:
         character=7, char_luck=bahamut_luck, enemy_luck=15, attack_index=attack_count
     )
     if arm1Crit:
-        print("### Expecting crit on Arm 1")
+        logger.debug("### Expecting crit on Arm 1")
         attack_count += 1
     else:
         attack_count += 2
@@ -1499,7 +1501,7 @@ def decide_skip_zan_luck() -> bool:
         character=7, char_luck=bahamut_luck, enemy_luck=15, attack_index=attack_count
     )
     if arm2Crit:
-        print("### Expecting crit on Arm 2")
+        logger.debug("### Expecting crit on Arm 2")
         attack_count += 1
     else:
         attack_count += 2
@@ -1515,23 +1517,25 @@ def decide_skip_zan_luck() -> bool:
             attack_index=attack_count + 1,
         )
     if face_crit:
-        print("### Expecting crit on Face")
+        logger.debug("### Expecting crit on Face")
         attack_count += 2
     else:
         attack_count += 3
     if not future_attack_hit(
         character=7, enemy="seymour_flux", attack_index=attack_count
     ):
-        print("### Miss on Omnis")
+        logger.debug("### Miss on Omnis")
         return False
     attack_count += 1  # One attack on Seymour
     for i in range(3):
-        print("### BFA attack num ", i, " | ", attack_count)
+        logger.debug(f"### BFA attack num {i} | {attack_count}")
         if not future_attack_hit(character=7, enemy="bfa", attack_index=attack_count):
-            print("### Miss on BFA, attack number", i)
+            logger.debug(f"### Miss on BFA, attack number {i}")
             return False
         attack_count += 1
-    print("### No misses registered. Should be good to skip Luck/Fortune chests.")
+    logger.debug(
+        "### No misses registered. Should be good to skip Luck/Fortune chests."
+    )
     return True
 
 
@@ -1744,22 +1748,19 @@ def nea_track():
                 total_advance_post_x = int(pre_advance_12 / 4)
             if total_advance_pre_x == 999:
                 total_advance_pre_x = int((pre_advance_12 / 4) - 1)
-    # print("/// Pre-X: ", total_advance_pre_x, " /// Post-X", total_advance_post_x)
+    # logger.debug(f"/// Pre-X: {total_advance_pre_x} /// Post-X {total_advance_post_x}")
     return total_advance_pre_x, total_advance_post_x
 
 
 def print_manip_info():
     pre_x, post_x = nea_track()
-    print("--------------------------")
-    print("Upcoming RNGs:")
-    print("Next, before X:", pre_x, "| Next, after X: ", post_x)
-    print(
-        "RNG10:",
-        memory.main.next_chance_rng_10(),
-        "| Pre Defender X: ",
-        memory.main.next_chance_rng_10_calm(),
+    logger.debug("--------------------------")
+    logger.debug("Upcoming RNGs:")
+    logger.debug(f"Next, before X: {pre_x} | Next, after X: {post_x}")
+    logger.debug(
+        f"RNG10: {memory.main.next_chance_rng_10()} | Pre Defender X: {memory.main.next_chance_rng_10_calm()}"
     )
-    print("--------------------------")
+    logger.debug("--------------------------")
 
 
 def next_action_escape(character: int = 0):
@@ -1776,8 +1777,8 @@ def next_action_hit(character: int = 0, enemy: str = "anima"):
 
 
 def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: int = 0):
-    # print("=========================")
-    # print("Checking hit chance - character:", character)
+    # logger.debug("=========================")
+    # logger.debug(f"Checking hit chance - character: {character}")
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
     index = 36 + character
@@ -1790,9 +1791,9 @@ def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: in
     else:
         # Data directly from the tracker
         target_luck = MONSTERS[enemy].stats["Luck"]
-        # print("Enemy luck: ", target_luck)
+        # logger.debug(f"Enemy luck: {target_luck}")
         target_evasion = MONSTERS[enemy].stats["Evasion"]
-        # print("Enemy evasion:", target_evasion)
+        # logger.debug(f"Enemy evasion: {target_evasion}")
 
     # Unused, but technically part of the formula
     aims = 0
@@ -1875,11 +1876,11 @@ def record_blitz_results_tyton(duration, test_mode=False):
 def record_blitz_results(duration, test_mode=False):
     filepath = "json_ai_files\\oblitz_results.json"
     records = oblitz_history()
-    print("========================")
+    logger.debug("========================")
     if test_mode:
         new_val = {31: {9999: {"duration": duration, "victory": False}}}
         if str(31) in records.keys():
-            print(new_val[31].keys())
+            logger.debug(new_val[31].keys())
             if 9999 in new_val[31].keys():
                 records["31"]["9999"]["victory"] = True
                 records["31"]["9999"]["duration"] = duration
@@ -1937,10 +1938,10 @@ def record_blitz_results(duration, test_mode=False):
                 )
         else:
             records.update(new_val)
-    print(new_val)
+    logger.debug(new_val)
 
-    print("========================")
-    print(records)
+    logger.debug("========================")
+    logger.debug(records)
 
     with open(filepath, "w") as fp:
         json.dump(records, fp, indent=4)
