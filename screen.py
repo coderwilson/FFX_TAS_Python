@@ -1,5 +1,8 @@
 import logging
 
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 import memory.main
 import vars
 
@@ -40,21 +43,20 @@ def battle_complete():
 
 
 def await_turn():
-    counter = 0
     logger.debug("Waiting for next turn in combat.")
     # Just to make sure there's no overlap from the previous character's turn
 
     # Now let's do this.
-    while not battle_screen() or memory.main.user_control():
-        if not memory.main.battle_active():
+    fmt = "Waiting for player turn... elapsed {elapsed}"
+    with tqdm(bar_format=fmt) as pbar:
+        while not battle_screen() or memory.main.user_control():
+            pbar.update()
+            if not memory.main.battle_active():
+                pass
+            if memory.main.game_over():
+                return False
+        while not memory.main.main_battle_menu():
             pass
-        counter += 1
-        if counter % 100000 == 0:
-            logger.debug(f"Waiting for player turn: {counter / 10000}")
-        if memory.main.game_over():
-            return False
-    while not memory.main.main_battle_menu():
-        pass
     return True
 
 

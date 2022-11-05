@@ -9,6 +9,8 @@ from math import cos, sin
 from typing import List
 
 from ReadWriteMemory import Process, ReadWriteMemory
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
 import logs
 import pathing
@@ -389,47 +391,48 @@ def user_control():
 
 
 def await_control():
-    wait_counter = 0
     logger.debug("Awaiting control (no clicking)")
-    while not user_control():
-        wait_counter += 1
-        if wait_counter % 10000000 == 0:
-            # TODO: flush instead?
-            logger.debug(f"Awaiting control - {wait_counter / 100000}")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                pbar.update()
     wait_frames(1)
+    logger.debug("User control restored.")
     return True
 
 
 def click_to_control_dumb():
-    wait_counter = 0
     logger.debug("Awaiting control (clicking)")
-    while not user_control():
-        xbox.tap_b()
-        wait_counter += 1
-        if wait_counter % 1000 == 0:
-            logger.debug(f"Awaiting control - {wait_counter / 1000}")
-    logger.debug("Control restored.")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                xbox.tap_b()
+    logger.debug("User control restored.")
     return True
 
 
 def click_to_control_smart():
-    wait_counter = 0
     logger.debug("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
-    while not user_control():
-        if battle_active():
-            while battle_active():
-                xbox.tap_b()
-        if diag_skip_possible():
-            xbox.tap_b()
-        elif menu_open():
-            logger.debug("Post-battle menu open")
-            xbox.tap_b()
-        else:
-            pass
-        wait_counter += 1
-        if wait_counter % 10000 == 0:
-            logger.debug(f"Awaiting control - {wait_counter / 10000}")
+    with logging_redirect_tqdm():
+        fmt = "{desc}... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            pbar.set_description("Awaiting control")
+            while not user_control():
+                if battle_active():
+                    while battle_active():
+                        xbox.tap_b()
+                if diag_skip_possible():
+                    xbox.tap_b()
+                elif menu_open():
+                    xbox.tap_b()
+
+                if menu_open():
+                    pbar.set_description("Post-battle menu open")
+                else:
+                    pbar.set_description("Awaiting control")
     logger.debug("User control restored.")
     return True
 
@@ -447,19 +450,19 @@ def click_to_control_3():
 
 
 def click_to_control_special():
-    wait_counter = 0
     logger.debug("Awaiting control (clicking)")
-    while not user_control():
-        FFXC.set_value("btn_b", 1)
-        FFXC.set_value("btn_y", 1)
-        wait_frames(30 * 0.035)
-        FFXC.set_value("btn_b", 0)
-        FFXC.set_value("btn_y", 0)
-        wait_frames(30 * 0.035)
-        wait_counter += 1
-        if wait_counter % 10000 == 0:
-            logger.debug(f"Awaiting control - {wait_counter / 10000}")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                FFXC.set_value("btn_b", 1)
+                FFXC.set_value("btn_y", 1)
+                wait_frames(30 * 0.035)
+                FFXC.set_value("btn_b", 0)
+                FFXC.set_value("btn_y", 0)
+                wait_frames(30 * 0.035)
     wait_frames(30 * 0.05)
+    logger.debug("User control restored.")
     return True
 
 

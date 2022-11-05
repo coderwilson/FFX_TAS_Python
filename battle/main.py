@@ -19,12 +19,12 @@ logger = logging.getLogger(__name__)
 
 def tap_targeting():
     logger.debug(
-        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()} Battle active: {memory.main.battle_active()}"
+        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
     )
     while (not memory.main.main_battle_menu()) and memory.main.battle_active():
         xbox.tap_b()
     logger.debug(
-        f"Done. Not battle menu: {not memory.main.main_battle_menu()} Battle active {memory.main.battle_active()}"
+        f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
     )
 
 
