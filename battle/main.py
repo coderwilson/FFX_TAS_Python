@@ -1,5 +1,8 @@
 import logging
 
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 import battle.overdrive
 import battle.utils
 import logs
@@ -3874,12 +3877,12 @@ def aeon_summon(position):
             xbox.tap_up()
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    aeon_wait_timer = 0
-    while not memory.main.turn_ready():
-        if aeon_wait_timer % 10000 == 0:
-            logger.debug(f"Waiting for Aeon's turn. {int(aeon_wait_timer % 10000)}")
-        pass
-        aeon_wait_timer += 1
+
+    with logging_redirect_tqdm():
+        fmt = "Waiting for Aeon's turn... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not memory.main.turn_ready():
+                pbar.update()
 
 
 def aeon_spell(position):
