@@ -30,7 +30,7 @@ class DeltaTimeFormatter(logging.Formatter):
 # This should be called once in main, before any calls to the logging library
 def initialize_logging():
     # Defines the format of the logs
-    log_format = "[%(delta)s] %(name)-12s %(levelname)-8s %(message)s"
+    log_format = "[%(delta)s] %(name)-16s %(levelname)-8s %(message)s"
     formatter = DeltaTimeFormatter(fmt=log_format)
     # Get current time in order to create log file name
     timeNow = datetime.datetime.now()
