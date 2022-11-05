@@ -1,9 +1,12 @@
+import logging
+
 import memory.main
 import menu
 import menu_grid
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()

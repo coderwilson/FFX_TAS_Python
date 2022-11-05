@@ -1,3 +1,5 @@
+import logging
+
 import yaml
 
 try:
@@ -5,6 +7,8 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Dumper, Loader
+
+logger = logging.getLogger(__name__)
 
 # TODO: Make this be set by an argument instead
 CONFIG_FILE_PATH = "config.yaml"
@@ -18,10 +22,11 @@ def open_config():
             try:
                 return yaml.load(config_file, Loader=Loader)
             except Exception as E:
-                print(f"Error: Failed to parse config file {CONFIG_FILE_PATH}: {E}")
+                logger.error(f"Error: Failed to parse config file {CONFIG_FILE_PATH}")
+                logger.exception(E)
                 return {}
     except Exception as E:
-        print(
+        logger.info(
             f"Didn't find config file {CONFIG_FILE_PATH}, using default values for run."
         )
         return {}
