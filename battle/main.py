@@ -4954,7 +4954,7 @@ def advance_rng_10(num_advances: int):
                 else:
                     defend()
             elif num_advances in [1, 2]:
-                logger.debug("+++Registering advances:", num_advances)
+                logger.debug(f"+++Registering advances: {num_advances}")
                 if screen.turn_kimahri():
                     logger.debug("+++Registering turn, steal character")
                     calm_steal()
