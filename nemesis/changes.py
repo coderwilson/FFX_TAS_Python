@@ -1,3 +1,5 @@
+import logging
+
 import area.gagazet
 import battle.main
 import memory.main
@@ -6,6 +8,7 @@ import rng_track
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()

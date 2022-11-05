@@ -9,6 +9,8 @@ from math import cos, sin
 from typing import List
 
 from ReadWriteMemory import Process, ReadWriteMemory
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
 import logs
 import pathing
@@ -389,47 +391,48 @@ def user_control():
 
 
 def await_control():
-    wait_counter = 0
     logger.debug("Awaiting control (no clicking)")
-    while not user_control():
-        wait_counter += 1
-        if wait_counter % 10000000 == 0:
-            # TODO: flush instead?
-            logger.debug(f"Awaiting control - {wait_counter / 100000}")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                pbar.update()
     wait_frames(1)
+    logger.debug("User control restored.")
     return True
 
 
 def click_to_control_dumb():
-    wait_counter = 0
     logger.debug("Awaiting control (clicking)")
-    while not user_control():
-        xbox.tap_b()
-        wait_counter += 1
-        if wait_counter % 1000 == 0:
-            logger.debug(f"Awaiting control - {wait_counter / 1000}")
-    logger.debug("Control restored.")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                xbox.tap_b()
+    logger.debug("User control restored.")
     return True
 
 
 def click_to_control_smart():
-    wait_counter = 0
     logger.debug("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
-    while not user_control():
-        if battle_active():
-            while battle_active():
-                xbox.tap_b()
-        if diag_skip_possible():
-            xbox.tap_b()
-        elif menu_open():
-            logger.debug("Post-battle menu open")
-            xbox.tap_b()
-        else:
-            pass
-        wait_counter += 1
-        if wait_counter % 10000 == 0:
-            logger.debug(f"Awaiting control - {wait_counter / 10000}")
+    with logging_redirect_tqdm():
+        fmt = "{desc}... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            pbar.set_description("Awaiting control")
+            while not user_control():
+                if battle_active():
+                    while battle_active():
+                        xbox.tap_b()
+                if diag_skip_possible():
+                    xbox.tap_b()
+                elif menu_open():
+                    xbox.tap_b()
+
+                if menu_open():
+                    pbar.set_description("Post-battle menu open")
+                else:
+                    pbar.set_description("Awaiting control")
     logger.debug("User control restored.")
     return True
 
@@ -447,19 +450,19 @@ def click_to_control_3():
 
 
 def click_to_control_special():
-    wait_counter = 0
     logger.debug("Awaiting control (clicking)")
-    while not user_control():
-        FFXC.set_value("btn_b", 1)
-        FFXC.set_value("btn_y", 1)
-        wait_frames(30 * 0.035)
-        FFXC.set_value("btn_b", 0)
-        FFXC.set_value("btn_y", 0)
-        wait_frames(30 * 0.035)
-        wait_counter += 1
-        if wait_counter % 10000 == 0:
-            logger.debug(f"Awaiting control - {wait_counter / 10000}")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                FFXC.set_value("btn_b", 1)
+                FFXC.set_value("btn_y", 1)
+                wait_frames(30 * 0.035)
+                FFXC.set_value("btn_b", 0)
+                FFXC.set_value("btn_y", 0)
+                wait_frames(30 * 0.035)
     wait_frames(30 * 0.05)
+    logger.debug("User control restored.")
     return True
 
 
@@ -709,7 +712,7 @@ def get_order_six():
     pos7 = process.read_bytes(coord, 1)
 
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
-    print(formation)
+    logger.debug(f"Party formation: {formation}")
     while 255 in formation:
         formation.remove(255)
     return formation
@@ -760,7 +763,7 @@ def get_phoenix():
 
     key = get_item_slot(6)
     p_downs = get_item_count_slot(key)
-    print("Phoenix Down count:", p_downs)
+    logger.debug(f"Phoenix Down count: {p_downs}")
     return p_downs
 
 
@@ -769,7 +772,7 @@ def get_power():
 
     key = get_item_slot(70)
     power = get_item_count_slot(key)
-    print("Power spheres:", power)
+    logger.debug(f"Power spheres: {power}")
     return power
 
 
@@ -788,7 +791,7 @@ def get_speed():
 
     key = get_item_slot(72)
     speed = get_item_count_slot(key)
-    print("Speed spheres:", speed)
+    logger.debug(f"Speed spheres: {speed}")
     return speed
 
 
@@ -870,14 +873,14 @@ def get_battle_formation():
     char10 = process.read_bytes(key, 1)
 
     battle_form = [char4, char5, char6, char7, char8, char9, char10]
-    print(battle_form)
+    logger.debug(f"Battle formation before: {battle_form}")
     if 255 in battle_form:
         while 255 in battle_form:
             battle_form.remove(255)
     battle_form.insert(0, char3)
     battle_form.insert(0, char2)
     battle_form.insert(0, char1)
-    print(battle_form)
+    logger.debug(f"Battle formation after: {battle_form}")
     return battle_form
 
 
@@ -934,7 +937,7 @@ def get_slvl_wakka():
 
     key = base_value + 0x00D322E7
     s_lvl = process.read_bytes(key, 1)
-    print("Wakka current Slvl", s_lvl)
+    logger.debug(f"Wakka current Slvl: {s_lvl}")
     return s_lvl
 
 
@@ -965,9 +968,9 @@ def get_use_items_order():
             else:
                 x += 1
         except Exception as y:
-            print(y)
+            logger.exception(y)
             retry_this_value = True
-            print("Retrying value")
+            logger.debug("Retrying value")
     return item_array
 
 
@@ -975,7 +978,7 @@ def get_use_items_slot(item_num):
     items = get_use_items_order()
     x = 0
     for x in range(len(items)):
-        print(items[x], "|", item_num, "|", x)
+        logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
         if items[x] == item_num:
             return x
         x += 1
@@ -984,7 +987,7 @@ def get_use_items_slot(item_num):
 
 def get_throw_items_order():
     item_array = get_items_order()
-    print(item_array)
+    logger.debug(f"get_throw_items_order(), item_array: {item_array}")
     x = 0
     while x < len(item_array):
         try:
@@ -993,10 +996,10 @@ def get_throw_items_order():
             else:
                 x += 1
         except Exception as y:
-            print(y)
+            logger.exception(y)
             retry_this_value = True
-            print("Retrying value")
-    print(item_array)
+            logger.debug("Retrying value")
+    logger.debug(f"item_array: {item_array}")
     return item_array
 
 
@@ -1005,7 +1008,7 @@ def get_throw_items_slot(item_num):
     x = 0
     while x < len(items):
         if items[x] == item_num:
-            print("Desired item", item_num, "is in slot", x)
+            logger.debug(f"Desired item {item_num} is in slot {x}")
             return x
         x += 1
     return 255
@@ -1021,9 +1024,9 @@ def get_grid_items_order():
             else:
                 x += 1
         except Exception as y:
-            print(y)
+            logger.exception(y)
             retry_this_value = True
-            print("Retrying value")
+            logger.debug("Retrying value")
     return item_array
 
 
@@ -1032,7 +1035,7 @@ def get_grid_items_slot(item_num) -> int:
     x = 0
     while x < len(items):
         if items[x] == item_num:
-            print("Desired item", item_num, "is in slot", x)
+            logger.debug(f"Desired item {item_num} is in slot {x}")
             return x
         x += 1
     return 255
@@ -1110,7 +1113,7 @@ def check_items_macalania():
         max_spot = bomb_core
 
     ret_val = [bomb_core, l_marble, f_scale, a_wind, grenade, lunar, light, max_spot]
-    print("Returning values:", ret_val)
+    logger.debug(f"check_items_macalania(). Returning values: {ret_val}")
     return ret_val
 
 
@@ -1136,9 +1139,9 @@ def get_menu_display_characters():
     characters = []
     for cur in range(7):
         char = read_val(base + cur)
-        print(cur, char)
+        logger.debug(f"get_menu_display_charaters(). Cur: {cur}, Char: {char}")
         characters.append(char)
-    print(characters)
+    logger.debug(f"get_menu_display_charaters(), characters: {characters}")
     return characters
 
 
@@ -1267,10 +1270,10 @@ def state_confused(character):
     ret_val = process.read_bytes(key, 1)
 
     if ret_val % 2 == 1:
-        print("Character %d is confused" % character)
+        logger.debug(f"Character {character} is confused")
         return True
     else:
-        print("Character %d is not confused" % character)
+        logger.debug(f"Character {character} is not confused")
         return False
 
 
@@ -1285,10 +1288,10 @@ def state_sleep(character):
     ret_val = process.read_bytes(key, 1)
 
     if ret_val == 3:
-        print("Character %d is asleep" % character)
+        logger.debug(f"Character {character} is asleep")
         return True
     else:
-        print("Character %d is not asleep" % character)
+        logger.debug(f"Character {character} is not asleep")
         return False
 
 
@@ -1303,10 +1306,10 @@ def state_auto_life(character: int = 0):
     ret_val = process.read_bytes(key, 1)
 
     if ret_val % 4 >= 2:
-        print("Character autolife is active", character)
+        logger.debug(f"Character autolife is active on: {character}")
         return True
     else:
-        print("Character autolife is not active", character)
+        logger.debug(f"Character autolife is not active on: {character}")
         return False
 
 
@@ -1346,7 +1349,7 @@ def get_enemy_current_hp():
                 max_hp.append(next_hp)
                 current_hp.append(process.read_bytes(key2, 4))
         enemy_num += 1
-    print("Enemy HP current values:", current_hp)
+    logger.debug(f"Enemy HP current values: {current_hp}")
     return current_hp
 
 
@@ -1370,10 +1373,8 @@ def get_enemy_max_hp():
                 max_hp.append(process.read_bytes(key1, 4))
                 current_hp.append(process.read_bytes(key2, 4))
         enemy_num += 1
-    print("Enemy HP max values:")
-    print(max_hp)
-    print("Enemy HP current values:")
-    print(current_hp)
+    logger.debug(f"Enemy HP max values: {max_hp}")
+    logger.debug(f"Enemy HP current values: {current_hp}")
     return max_hp
 
 
@@ -1418,23 +1419,27 @@ def open_menu():
     menu_counter = 0
     while not (user_control() and menu_open() and menu_number() == 5):
         if menu_open() and not user_control():
-            print("Post-Battle summary screen is open. Attempting close.", menu_counter)
+            logger.debug(
+                f"Post-Battle summary screen is open. Attempting close. menu_counter: {menu_counter}"
+            )
             xbox.menu_b()
         elif user_control() and not menu_open():
-            print("Menu is not open, attempting to open.", menu_counter)
+            logger.debug(
+                f"Menu is not open, attempting to open. menu_counter: {menu_counter}"
+            )
             xbox.tap_y()
             menu_counter += 1
         elif menu_open() and user_control() and menu_number() > 5:
-            print("The wrong menu is open.", menu_counter)
+            logger.debug(f"The wrong menu is open. menu_counter: {menu_counter}")
             xbox.tap_a()
             menu_counter += 1
         elif battle_active():
-            print("Can't open menu during battle.", menu_counter)
+            logger.debug(f"Can't open menu during battle. menu_counter: {menu_counter}")
             return False
         else:
             pass
     FFXC.set_neutral()
-    print("Menu open returning")
+    logger.debug("Menu open returning")
     return True
 
 
@@ -1556,9 +1561,9 @@ def map_cursor():
     global base_value
     base_pointer = base_value + 0x00F2FF14
     base_pointer_address = process.read(base_pointer)
-    print(base_pointer_address)
+    logger.debug(f"map_cursor(), base_pointer_address: {base_pointer_address}")
     ret = process.read_bytes(base_pointer_address + 272, 1)
-    print(ret)
+    logger.debug(f"map_cursor(), ret: {ret}")
     return ret
 
 
@@ -1669,18 +1674,18 @@ def diag_skip_possible_old():
 def diag_skip_possible():
     global base_value
     if auditory_dialog_playing() and not game_vars.accessibility_vars()[1]:
-        # print("Skip 2")
+        # logger.debug("Skip 2")
         return False
     else:
         key = base_value + 0x0085A03C
         if process.read_bytes(key, 1) == 1:
-            # print("Skip 3")
+            # logger.debug("Skip 3")
             if game_vars.accessibility_vars()[2]:
                 # Placeholder for accessibility, to be implemented later.
                 pass
             return True
         else:
-            # print("Skip 4")
+            # logger.debug("Skip 4")
             return False
 
 
@@ -1730,13 +1735,15 @@ def await_menu_control():
     while not menu_control():
         counter += 1
         if counter % 100000 == 0:
-            print("Waiting for menu control.", counter)
+            logger.debug(f"Waiting for menu control. {counter}")
 
 
 def click_to_story_progress(destination):
     counter = 0
     current_state = get_story_progress()
-    print("Story goal:", destination, "| Awaiting progress state:", current_state)
+    logger.debug(
+        f"Story goal: {destination} | Awaiting progress state: {current_state}"
+    )
     while current_state < destination:
         if menu_control():
             FFXC.set_value("btn_b", 1)
@@ -1746,23 +1753,18 @@ def click_to_story_progress(destination):
             FFXC.set_value("btn_a", 0)
             wait_frames(1)
         if counter % 100000 == 0:
-            print(
-                "Story goal:",
-                destination,
-                "| Awaiting progress state:",
-                current_state,
-                "| counter:",
-                counter / 100000,
+            logger.debug(
+                f"Story goal: {destination} | Awaiting progress state: {current_state} | counter: {counter / 100000}"
             )
         counter += 1
         current_state = get_story_progress()
-    print("Story progress has reached destination. Value:", destination)
+    logger.debug(f"Story progress has reached destination. Value: {destination}")
 
 
 def desert_format(rikku_charge):
     order = get_order_six()
     if order == [0, 3, 2, 4, 6, 5]:
-        print("Formation is fine, moving on.")
+        logger.debug("desert_format(): Formation is fine, moving on.")
     elif not rikku_charge:
         full_party_format("desert1")
     else:
@@ -1787,7 +1789,7 @@ def active_party_size():
 
 def get_character_index_in_main_menu(character):
     res = get_menu_display_characters().index(character)
-    print("Char is in position", res)
+    logger.debug(f"get_character_index_in_main_menu(): Char is in position {res}")
     return res
 
 
@@ -1798,13 +1800,11 @@ def full_party_format(front_line, *, full_menu_close=True):
     order_final = get_party_format_from_text(front_line)
     order_final.extend(x for x in order if x not in order_final)
     if Counter(order[:3]) == Counter(order_final[:3]):
-        print("Good to go, no action taken.")
+        logger.debug("Good to go, no action taken.")
     else:
-        print("Converting from formation:")
-        print(order)
-        print("Into formation:")
-        print(order_final)
-        print("Manipulating final formation to minimize movements")
+        logger.debug(f"Converting from formation: {order}")
+        logger.debug(f"Into formation: {order_final}")
+        logger.debug("Manipulating final formation to minimize movements")
         replacement_dict = {}
         new_characters = [x for x in order_final[:3] if x not in order[:3]]
         for i in range(3):
@@ -1814,8 +1814,7 @@ def full_party_format(front_line, *, full_menu_close=True):
                 replacement_dict[i] = new_characters.pop()
         for i in range(3):
             order_final[i] = replacement_dict[i]
-        print("New Final Order:")
-        print(order_final)
+        logger.debug(f"New Final Order: {order_final}")
         while not menu_open():
             if not open_menu():
                 return
@@ -1828,9 +1827,9 @@ def full_party_format(front_line, *, full_menu_close=True):
             xbox.tap_b()
         start_pos = 0
         while Counter(order[:3]) != Counter(order_final[:3]):
-            print("==Full Party Format function, original")
+            logger.debug("==Full Party Format function, original")
             # Select target in the wrong spot.
-            print("Selecting start position")
+            logger.debug("Selecting start position")
             if order[start_pos] == order_final[start_pos]:
                 while (
                     order[start_pos] == order_final[start_pos] and order != order_final
@@ -1838,28 +1837,20 @@ def full_party_format(front_line, *, full_menu_close=True):
                     start_pos += 1
                     if start_pos == party_members:
                         start_pos = 0
-            print(
-                "Character",
-                name_from_number(order_final[start_pos]),
-                "should be in position",
-                start_pos,
-            )
+            char_name = name_from_number(order_final[start_pos])
+            logger.debug(f"Character {char_name} should be in position {start_pos}")
 
             # Set target, end position
-            print("Selecting destination position.")
+            logger.debug("Selecting destination position.")
             end_pos = 0
             if order_final[start_pos] != order[end_pos]:
                 while order_final[start_pos] != order[end_pos] and order != order_final:
                     end_pos += 1
 
-            print(
-                "Character",
-                name_from_number(order[end_pos]),
-                "found in position",
-                end_pos,
-            )
+            char_name = name_from_number(order[end_pos])
+            logger.debug(f"Character {char_name} found in position {end_pos}")
 
-            print("Looking for character.")
+            logger.debug("Looking for character.")
             if start_pos < 3 and end_pos < 3:
                 start_pos += 1
                 if start_pos == party_members:
@@ -1867,9 +1858,9 @@ def full_party_format(front_line, *, full_menu_close=True):
                 continue
 
             # Move cursor to start position
-            print("Moving to start position")
+            logger.debug("Moving to start position")
             if party_format_cursor_1() != start_pos:
-                # print("Cursor not in right spot")
+                # logger.debug("Cursor not in right spot")
                 while party_format_cursor_1() != start_pos:
                     menu_direction(party_format_cursor_1(), start_pos, party_members)
                     if game_vars.use_pause():
@@ -1879,25 +1870,23 @@ def full_party_format(front_line, *, full_menu_close=True):
                 xbox.menu_b()  # Click on Start location
 
             # Move cursor to end position
-            print("Moving to destination position.")
+            logger.debug("Moving to destination position.")
             while party_format_cursor_2() != end_pos:
                 menu_direction(party_format_cursor_2(), end_pos, party_members)
                 if game_vars.use_pause():
                     wait_frames(1)
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
-            print("Start and destination positions have been swapped.")
+            logger.debug("Start and destination positions have been swapped.")
             start_pos += 1
             if start_pos == party_members:
                 start_pos = 0
 
-            print("Reporting results")
-            print("Converting from formation:")
-            print(order)
-            print("Into formation:")
-            print(order_final)
+            logger.debug("Reporting results")
+            logger.debug(f"Converting from formation: {order}")
+            logger.debug(f"Into formation: {order_final}")
             order = get_order_seven()
-        print("Party format is good now.")
+        logger.debug("Party format is good now.")
         if full_menu_close:
             close_menu()
         else:
@@ -1925,24 +1914,24 @@ def menu_direction(current_menu_position, target_menu_position, menu_size):
 def side_to_side_direction(current_menu_position, target_menu_position, menu_size):
     distance = abs(current_menu_position - target_menu_position)
     distance_unsigned = current_menu_position - target_menu_position
-    print("Menu Size:", menu_size)
+    logger.debug(f"Menu Size: {menu_size}")
     halfmenusize = menu_size / 2
     if distance == halfmenusize:
-        print("Marker 1")
+        logger.debug("Marker 1")
         xbox.tap_left()
     elif distance < halfmenusize:
         if distance_unsigned > 0:
-            print("Marker 2")
+            logger.debug("Marker 2")
             xbox.tap_right()
         else:
-            print("Marker 3")
+            logger.debug("Marker 3")
             xbox.tap_left()
     else:
         if distance_unsigned > 0:
-            print("Marker 4")
+            logger.debug("Marker 4")
             xbox.tap_left()
         else:
-            print("Marker 5")
+            logger.debug("Marker 5")
             xbox.tap_right()
 
 
@@ -1963,7 +1952,7 @@ def party_format_cursor_2():
 
 
 def get_party_format_from_text(front_line):
-    print("||| FRONT LINE VARIABLE:", front_line)
+    logger.debug(f"||| FRONT LINE VARIABLE: {front_line}")
     if front_line == "kimahri":
         order_final = [0, 3, 2, 6, 4, 5, 1]
     elif front_line == "rikku":
@@ -2123,14 +2112,14 @@ def actor_index(actor_num: int = 41):
 
 
 def mrr_guy_coords():
-    print("+++Searching for MRR guy")
+    logger.debug("+++Searching for MRR guy")
     mrr_guy = 255
     for x in range(get_actor_array_size()):
         actor_num = get_actor_id(x)
-        # print("Actor", x, ":", hex(actor_num))
+        # logger.debug(f"Actor {x}: {hex(actor_num)}")
         if actor_num == 0x2083:
             mrr_guy = x
-    print("+++MRR guy in position:", mrr_guy)
+    logger.debug(f"+++MRR guy in position: {mrr_guy}")
     mrr_guy_pos = get_actor_coords(mrr_guy)
     return [mrr_guy_pos[0], mrr_guy_pos[1]]
 
@@ -2193,7 +2182,7 @@ def overdrive_state():
     for x in range(20):
         offset = (0x94 * x) + 0x39
         ret_val[x] = process.read_bytes(base_pointer_address + offset, 1)
-    print("Overdrive values:\n", ret_val)
+    logger.debug(f"Overdrive values: {ret_val}")
     return ret_val
 
 
@@ -2207,7 +2196,7 @@ def overdrive_state_2():
     for x in range(7):
         offset = (0x94 * x) + 0x39
         ret_val[x] = process.read_bytes(base_pointer_address + offset, 1)
-    print("Overdrive values:\n", ret_val)
+    logger.debug(f"Overdrive values: {ret_val}")
     return ret_val
 
 
@@ -2311,9 +2300,9 @@ def print_rng_36():
 
     coord = base_value + 0x00D35F68
     ret_val = process.read_bytes(coord, 1)
-    print("------------------------------")
-    print("RNG36 value:", ret_val)
-    print("------------------------------")
+    logger.debug("------------------------------")
+    logger.debug(f"RNG36 value: {ret_val}")
+    logger.debug("------------------------------")
 
 
 def end():
@@ -2436,8 +2425,8 @@ class Egg:
             self.egg_picked,
             self.distance,
         ]
-        print("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
-        print(var_array)
+        logger.debug("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
+        logger.debug(f"  {var_array}")
 
 
 def build_eggs():
@@ -2502,8 +2491,8 @@ class Icicle:
 
     def report_vars(self):
         var_array = [self.num, self.x, self.y]
-        print("Ice_num, X, Y")
-        print(var_array)
+        logger.debug("Ice_num, X, Y")
+        logger.debug(f"  {var_array}")
 
 
 def build_icicles():
@@ -2921,9 +2910,9 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            print("## Owner:", current_handle.owner())
-            print("## Equipped:", current_handle.is_equipped())
-            print("## Has Ability:", current_handle.has_ability(ability_num))
+            logger.debug(f"## Owner: {current_handle.owner()}")
+            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:
@@ -3129,7 +3118,7 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
     char_weaps = armor_array_character(6)  # Rikku
     while len(char_weaps) > 0:
         current_handle = char_weaps.pop(0)
-        print(current_handle.abilities())
+        logger.debug(current_handle.abilities())
         if current_handle.has_ability(ability):
             if slot_count != 99:
                 if current_handle.slot_count() != slot_count:
@@ -3138,7 +3127,7 @@ def check_ability_armor(ability=0x8032, slot_count: int = 99):
                     results[6] = True
             else:
                 results[6] = True
-        print(results[6])
+        logger.debug(results[6])
 
     return results
 
@@ -3154,8 +3143,7 @@ def customize_menu_array():
     for x in range(60):
         offset = 0x1197730 + (x * 4)
         ret_array.append(process.read_bytes(base_value + offset, 2))
-    print("Customize menu: ")
-    print(ret_array)
+    logger.debug(f"Customize menu: {ret_array}")
     return ret_array
 
 
@@ -3257,9 +3245,9 @@ def equipped_armor_has_ability(char_num: int, ability_num: int = 0x801D):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            print("## Owner:", current_handle.owner())
-            print("## Equipped:", current_handle.is_equipped())
-            print("## Has Ability:", current_handle.has_ability(ability_num))
+            logger.debug(f"## Owner: {current_handle.owner()}")
+            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:
@@ -3496,7 +3484,7 @@ def gt_inner_ring():
 def get_save_sphere_details():
     map_val = get_map()
     story_val = get_story_progress()
-    print("Map:", map_val, "| Story:", story_val)
+    logger.debug(f"Map: {map_val} | Story: {story_val}")
     x = 0
     y = 0
     diag = 0
@@ -3716,12 +3704,12 @@ def get_save_sphere_details():
         x = 230
         y = 140
         diag = 68
-    print("Values: [", x, ",", y, "] -", diag)
+    logger.debug(f"Values: [{x}, {y}] - {diag}")
     return [x, y, diag]
 
 
 def touch_save_sphere(save_cursor_num: int = 0):
-    print("MEM - Touch Save Sphere")
+    logger.debug("Touch Save Sphere")
     clear_save_menu_cursor()
     clear_save_menu_cursor_2()
 
@@ -3731,11 +3719,11 @@ def touch_save_sphere(save_cursor_num: int = 0):
         xbox.tap_b()
         wait_frames(1)
     FFXC.set_neutral()
-    print("Waiting for cursor to reset before we do things - Mark 1")
+    logger.debug("Waiting for cursor to reset before we do things - Mark 1")
     while menu_control() == 0:
         pass
     wait_frames(1)
-    print("Mark 2")
+    logger.debug("Mark 2")
     # wait_frames(300)
     inc = 0
 
@@ -3744,15 +3732,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
         and save_menu_cursor_2() == 0
         and diag_progress_flag() == ss_details[2]
     ):
-        print(
-            "Cursor test: A",
-            get_story_progress(),
-            "|",
-            diag_progress_flag(),
-            "|",
-            get_map(),
-            "|",
-            inc,
+        logger.debug(
+            f"Cursor test A: {get_story_progress()} | {diag_progress_flag()} | {get_map()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -3760,15 +3741,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
         elif diag_skip_possible() and diag_progress_flag() != ss_details[2]:
             xbox.tap_b()
     while not (save_menu_cursor() == 0 and save_menu_cursor_2() == 0):
-        print(
-            "Cursor test: B",
-            save_menu_cursor(),
-            "|",
-            save_menu_cursor_2(),
-            "|",
-            diag_skip_possible(),
-            "|",
-            inc,
+        logger.debug(
+            f"Cursor test B: {save_menu_cursor()} | {save_menu_cursor_2()} | {diag_skip_possible()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -3776,17 +3750,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
         elif diag_skip_possible():
             xbox.tap_a()
     while save_menu_cursor() == 0 and save_menu_cursor_2() == 0:
-        print(
-            "Cursor test: C",
-            save_menu_cursor(),
-            "|",
-            save_menu_cursor_2(),
-            "|",
-            diag_skip_possible(),
-            "|",
-            get_story_progress(),
-            "|",
-            inc,
+        logger.debug(
+            f"Cursor test C: {save_menu_cursor()} | {save_menu_cursor_2()} | {diag_skip_possible()} | {get_story_progress()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -3797,18 +3762,22 @@ def touch_save_sphere(save_cursor_num: int = 0):
             else:
                 xbox.tap_a()
     while not user_control():
-        print("Cursor test: D", save_menu_cursor(), "|", save_menu_cursor_2(), "|", inc)
+        logger.debug(
+            f"Cursor test D: {save_menu_cursor()} | {save_menu_cursor_2()} | {inc}"
+        )
         inc += 1
         if save_menu_open():
             xbox.tap_a()
         else:
             xbox.tap_b()
-    print("Cursor test: E", save_menu_cursor(), "|", save_menu_cursor_2(), "|", inc)
+    logger.debug(
+        f"Cursor test E: {save_menu_cursor()} | {save_menu_cursor_2()} | {inc}"
+    )
     inc += 1
 
 
 def touch_save_sphere_not_working(save_cursor_num: int = 0):
-    print("MEM - Touch Save Sphere")
+    logger.debug("Touch Save Sphere")
 
     ss_details = get_save_sphere_details()
     while user_control():
@@ -3816,11 +3785,11 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
         xbox.tap_b()
         wait_frames(1)
     FFXC.set_neutral()
-    print("Waiting for cursor to reset before we do things - Mark 1")
+    logger.debug("Waiting for cursor to reset before we do things - Mark 1")
     while menu_control() == 0:
         pass
     wait_frames(1)
-    print("Mark 2")
+    logger.debug("Mark 2")
     # wait_frames(300)
 
     xbox.tap_a()
@@ -3836,8 +3805,8 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
         if save_menu_open():
             xbox.tap_a()
         elif diag_progress_flag() == ss_details[2]:
-            print("Cursor test:", save_menu_cursor())
-            print("Cursor test2:", save_menu_cursor_2())
+            logger.debug(f"Cursor test: {save_menu_cursor()}")
+            logger.debug(f"Cursor test2: {save_menu_cursor_2()}")
             if save_cursor_num == 0 and save_menu_cursor() == 0:
                 xbox.tap_a()
             elif save_cursor_num == 1 and save_menu_cursor_2() == 0:
@@ -3852,9 +3821,9 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
 
 def csr_baaj_save_clear():
     if user_control():
-        print("No need to clear. User is in control.")
+        logger.debug("No need to clear. User is in control.")
     else:
-        print("Save dialog has popped up for some reason. Attempting clear.")
+        logger.debug("Save dialog has popped up for some reason. Attempting clear.")
         try:
             FFXC.set_neutral()
         except Exception:
@@ -3966,8 +3935,8 @@ def last_hit_init():
     try:
         for x in range(8):
             last_hit_vals[x] = process.read(ptr_val + ((x + 20) * 0xF90) + 0x7AC)
-            # print("Val:", last_hit_vals[x])
-        # print(last_hit_vals)
+            # logger.debug(f"Val: {last_hit_vals[x]}")
+        # logger.debug(last_hit_vals)
         game_vars.first_hits_set(last_hit_vals)
         return True
     except Exception:
@@ -4230,11 +4199,11 @@ def next_chance_rng_01(version="white"):
         if (test_array[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battle_index:
             even_array.append(i)
 
-    # print("------------------------------")
-    # print("Next event will appear on the odd array without manip. Area:", version)
-    # print("odd_array:", odd_array[0])
-    # print("even_array:", even_array[0])
-    # print("------------------------------")
+    # logger.debug("------------------------------")
+    # logger.debug(f"Next event will appear on the odd array without manip. Area: {version}")
+    # logger.debug(f"odd_array: {odd_array[0]}")
+    # logger.debug(f"even_array: {even_array[0]}")
+    # logger.debug("------------------------------")
     return [odd_array, even_array]
 
 
@@ -4352,16 +4321,16 @@ def next_chance_rng_12(before_natus: bool = False) -> int:
         if ptr > 250:
             return 256
         elif (test_array[ptr + 1] & 0x7FFFFFFF) % 2 == 1:  # equipment
-            # print("RNG12 ptr: ", ptr)
+            # logger.debug(f"RNG12 ptr: {ptr}")
             base_mod = (ability_mod + ((test_array[ptr + 3] & 0x7FFFFFFF) & 7)) - 4
             abilities = (base_mod + ((base_mod >> 31) & 7)) >> 3
 
             if ptr == 1:
                 if next_drop_rng_13(abilities, before_natus):
-                    print("Mark1")
+                    logger.debug("next_chance_rng_12(): Mark1")
                     next_chance = 0
                 else:
-                    print("Mark2")
+                    logger.debug("next_chance_rng_12(): Mark2")
                     next_chance = 1
                 if before_natus:
                     next_chance += 1
@@ -4413,7 +4382,7 @@ def next_drop_rng_13(a_slots: int, before_natus: bool = False) -> int:
             pass
         ptr += 1
 
-    # print("RNG13: ", filled_slots)
+    # logger.debug(f"RNG13: {filled_slots}")
 
     if 1 in filled_slots:
         return True
@@ -4428,12 +4397,12 @@ def next_chance_rng_13() -> int:
     next_chance = 0
     test_array = rng_13_array()
     while next_chance == 0:
-        # print("RNG13 outcome: ", outcomes[(((test_array[ptr] & 0x7fffffff) % 7) + 1)])
+        # logger.debug(f"RNG13 outcome: {outcomes[(((test_array[ptr] & 0x7fffffff) % 7) + 1)]}")
         if outcomes[(((test_array[ptr] & 0x7FFFFFFF) % 7) + 1)] == 1:
             next_chance = ptr
         else:
             ptr += 1
-    print("Value found. ", ptr)
+    logger.debug(f"next_chance_rng_13: Value found. {ptr}")
     return int(next_chance)
 
 
@@ -4535,20 +4504,16 @@ def arena_farm_check(
         if test_array[zone_indexes[i]] < end_goal:
             complete = False
     if report:
-        print("############")
-        print("Next Sphere Grid checkpoint:", game_vars.nem_checkpoint_ap())
-        print(
-            "Tidus S.levels:",
-            get_tidus_slvl(),
-            "- need levels:",
-            menu.next_ap_needed(game_vars.nem_checkpoint_ap()),
+        ap_needed = menu.next_ap_needed(game_vars.nem_checkpoint_ap())
+        logger.debug("############")
+        logger.debug(f"Next Sphere Grid checkpoint: {game_vars.nem_checkpoint_ap()}")
+        logger.debug(f"Tidus S.levels: {get_tidus_slvl()} - need levels: {ap_needed}")
+        logger.debug("Number of captures in this zone:")
+        logger.debug(result_array)
+        logger.debug(
+            f"End goal is {end_goal} minimum before leaving this zone for each index."
         )
-        print("Number of captures in this zone:")
-        print(result_array)
-        print(
-            "End goal is", end_goal, "minimum before leaving this zone for each index."
-        )
-        print("############")
+        logger.debug("############")
     if return_array:
         return result_array
     else:
@@ -4596,17 +4561,12 @@ def next_steal(steal_count: int = 0, pre_advance: int = 0):
     use_array = rng_array_from_index(index=10, array_len=1 + pre_advance)
     steal_rng = use_array[1 + pre_advance] % 255
     steal_chance = 2**steal_count
-    print(
-        "=== ",
-        use_array[1],
-        " === ",
-        steal_rng,
-        " < ",
-        255 // steal_chance,
-        " = ",
-        steal_rng < (255 // steal_chance),
+    steal_threshold = 255 // steal_chance
+    ret_val = steal_rng < steal_threshold
+    logger.debug(
+        f"next_steal(): === {use_array[1]} === {steal_rng} < {steal_threshold} = {ret_val}"
     )
-    return steal_rng < (255 // steal_chance)
+    return ret_val
 
 
 def next_steal_rare(pre_advance: int = 0):

@@ -1,5 +1,8 @@
 import logging
 
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 import battle.overdrive
 import battle.utils
 import logs
@@ -18,25 +21,25 @@ logger = logging.getLogger(__name__)
 
 
 def tap_targeting():
-    print(
-        "In Tap Targeting",
-        not memory.main.main_battle_menu(),
-        memory.main.battle_active(),
+    logger.debug(
+        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
     )
     while (not memory.main.main_battle_menu()) and memory.main.battle_active():
         xbox.tap_b()
-    print("Done", not memory.main.main_battle_menu(), memory.main.battle_active())
+    logger.debug(
+        f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+    )
 
 
 def defend():
-    print("Defending")
+    logger.debug("Defending")
     for _ in range(5):
         xbox.tap_y()
 
 
 def tidus_flee():
     if memory.main.battle_active():
-        print("Tidus Flee (or similar command pattern)")
+        logger.debug("Tidus Flee (or similar command pattern)")
         while memory.main.battle_menu_cursor() != 20:
             if memory.main.battle_menu_cursor() == 255:
                 xbox.tap_up()
@@ -48,7 +51,7 @@ def tidus_flee():
                 xbox.tap_down()
             if memory.main.other_battle_menu():
                 xbox.tap_a()
-        print("Out")
+        logger.debug("Out")
         while not memory.main.other_battle_menu():
             xbox.tap_b()
         _navigate_to_position(0)
@@ -60,7 +63,7 @@ def tidus_flee():
 def yuna_cure_omnis():
     while memory.main.battle_menu_cursor() != 22:
         if not screen.turn_yuna():
-            print("Attempting Cure, but it's not Yunas turn")
+            logger.debug("Attempting Cure, but it's not Yunas turn")
             return
         if memory.main.battle_menu_cursor() == 1:
             xbox.tap_up()
@@ -85,7 +88,7 @@ def tidus_haste(direction, character=255):
     direction = direction.lower()
     while memory.main.battle_menu_cursor() != 22:
         if not screen.turn_tidus():
-            print("Attempting Haste, but it's not Tidus' turn")
+            logger.debug("Attempting Haste, but it's not Tidus' turn")
             xbox.tap_up()
             xbox.tap_up()
             return
@@ -136,9 +139,9 @@ def tidus_haste(direction, character=255):
 
 
 def use_skill(position: int = 0, target: int = 20):
-    print("Using skill in position:", position)
+    logger.debug(f"Using skill in position: {position}")
     while memory.main.battle_menu_cursor() != 19:
-        print(memory.main.battle_menu_cursor())
+        logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
         if memory.main.battle_menu_cursor() == 255:
             pass
         elif memory.main.battle_menu_cursor() == 1:
@@ -169,9 +172,9 @@ def use_skill(position: int = 0, target: int = 20):
 
 
 def use_special(position, target: int = 20, direction: int = "u"):
-    print("Using skill in position:", position)
+    logger.debug(f"Using skill in position: {position}")
     while memory.main.battle_menu_cursor() != 20:
-        print(memory.main.battle_menu_cursor())
+        logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
         if memory.main.battle_menu_cursor() == 255:
             pass
         elif memory.main.battle_menu_cursor() == 1:
@@ -202,7 +205,7 @@ def use_special(position, target: int = 20, direction: int = "u"):
 
 
 def remedy(character: int, direction: str):
-    print("Remedy")
+    logger.debug("Remedy")
     if memory.main.get_throw_items_slot(15) < 250:
         itemnum = 15
     else:
@@ -211,12 +214,12 @@ def remedy(character: int, direction: str):
         _use_healing_item(character, direction, itemnum)
         return 1
     else:
-        print("No restorative items available")
+        logger.debug("No restorative items available")
         return 0
 
 
 def revive(item_num=6, report_for_rng=False):
-    print("Using Phoenix Down")
+    logger.debug("Using Phoenix Down")
     if report_for_rng:
         logs.write_rng_track("Reviving character")
         logs.write_rng_track("Battle: " + str(memory.main.get_encounter_id()))
@@ -239,7 +242,7 @@ def revive(item_num=6, report_for_rng=False):
 
 def revive_target(item_num=6, target=0):
     direction = "l"
-    print("Using Phoenix Down")
+    logger.debug("Using Phoenix Down")
     if memory.main.get_throw_items_slot(item_num) > 250:
         flee_all()
         return
@@ -291,16 +294,18 @@ def get_advances(tros=True, report=False):
     else:
         advances = 0
     game_vars.set_yellows(yellows[advances])
-    print("#############################################")
-    print("### Advances updated:", t_strike_results, "|", yellows, "|", advances, "###")
-    print("#############################################")
+    logger.debug("#############################################")
+    logger.debug(
+        f"### Advances updated: {t_strike_results} | {yellows} | {advances} ###"
+    )
+    logger.debug("#############################################")
     return advances
 
 
 @battle.utils.speedup_decorator
 def piranhas():
     encounter_id = memory.main.get_encounter_id()
-    print("#########Seed:", memory.main.rng_seed())
+    logger.debug("#########Seed: {memory.main.rng_seed()}")
     # 11 = two piranhas
     # 12 = three piranhas with one being a triple formation (takes two hits)
     # 13 = four piranhas
@@ -321,16 +326,16 @@ def piranhas():
 
 @battle.utils.speedup_decorator
 def besaid():
-    print("Fight start: Besaid battle")
+    logger.info("Fight start: Besaid battle")
     FFXC.set_neutral()
     while not memory.main.turn_ready():
         pass
     battle_format = memory.main.get_encounter_id()
-    print("Besaid battle format number:", battle_format)
+    logger.debug(f"Besaid battle format number: {battle_format}")
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             enemy_hp = memory.main.get_enemy_current_hp()
-            print("Enemy HP:", enemy_hp)
+            logger.debug(f"Enemy HP: {enemy_hp}")
             if screen.turn_yuna():
                 buddy_swap_wakka()
             elif memory.main.get_encounter_id() == 27:
@@ -350,7 +355,7 @@ def besaid():
 
 @battle.utils.speedup_decorator
 def lancet_tutorial():
-    print("Fight start: Lancet tutorial fight (Kilika)")
+    logger.info("Fight start: Lancet tutorial fight (Kilika)")
     xbox.click_to_battle()
     lancet("none")
 
@@ -372,13 +377,12 @@ def lancet_tutorial():
 
 @battle.utils.speedup_decorator
 def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
-    print("Fight start: Kilika battle")
-    print("Formation:", next_battle)
+    logger.info("Fight start: Kilika battle")
+    logger.debug(f"Formation: {next_battle}")
     skip_charge = False
     turn_counter = 0
     enc_id = memory.main.get_encounter_id()
-    print("Charge values:")
-    print(memory.main.overdrive_state())
+    logger.debug(f"Charge values: {memory.main.overdrive_state()}")
     screen.await_turn()
 
     FFXC.set_neutral()
@@ -390,7 +394,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
     elif best_charge == 99:
         best_charge = enc_id
 
-    print("Kilika battle")
+    logger.info("Kilika battle")
     aeon_turn = False
     yuna_went = False
     while not memory.main.turn_ready():
@@ -400,11 +404,11 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
             not valefor_charge and not skip_charge and best_charge == next_battle
         ):  # Still to charge Valefor
             if memory.main.turn_ready():
-                print("------------------------------")
-                print("Battle Turn")
-                print("Battle Number:", enc_id)
-                print("Valefor charge state:", valefor_charge)
-                print("skip_charge state:", skip_charge)
+                logger.debug("------------------------------")
+                logger.debug("Battle Turn")
+                logger.debug(f"Battle Number: {enc_id}")
+                logger.debug(f"Valefor charge state: {valefor_charge}")
+                logger.debug(f"skip_charge state: {skip_charge}")
                 turn_counter += 1
                 if (
                     not (
@@ -427,7 +431,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     else:
                         buddy_swap_yuna()
                 elif enc_id == 31:  # Working just fine.
-                    print("Logic for battle number 31")
+                    logger.debug("Logic for battle number 31")
                     if screen.turn_tidus():
                         attack("none")
                     elif screen.turn_yuna():
@@ -447,7 +451,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     else:
                         defend()
                 elif enc_id == 33:
-                    print("Logic for battle number 33")
+                    logger.debug("Logic for battle number 33")
                     if screen.turn_yuna():
 
                         aeon_summon(0)
@@ -465,7 +469,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         defend()
 
                 elif enc_id == 34:
-                    print("Logic for battle number 34")
+                    logger.debug("Logic for battle number 34")
                     if screen.turn_tidus():
                         attack("none")
                     elif screen.turn_yuna():
@@ -483,7 +487,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     else:
                         defend()
                 elif enc_id == 35:
-                    print("Logic for battle number 35")
+                    logger.debug("Logic for battle number 35")
                     if screen.turn_tidus():
                         defend()
                     elif screen.turn_yuna():
@@ -503,7 +507,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     else:
                         defend()
                 elif enc_id == 37:
-                    print("Logic for battle number 37 - two bees and a plant thingey")
+                    logger.debug(
+                        "Logic for battle number 37 - two bees and a plant thingey"
+                    )
                     if screen.turn_tidus():
                         attack("none")
                     elif screen.turn_yuna():
@@ -524,14 +530,14 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         defend()
                 else:
                     skip_charge = True
-                    print("Not going to charge Valefor. Battle num:", enc_id)
+                    logger.debug(f"Not going to charge Valefor. Battle num: {enc_id}")
         else:
             if memory.main.turn_ready():
-                print("------------------------------")
-                print("Battle Turn")
-                print("Battle Number:", enc_id)
-                print("Valefor charge state:", valefor_charge)
-                print("skip_charge state:", skip_charge)
+                logger.debug("------------------------------")
+                logger.debug("Battle Turn")
+                logger.debug(f"Battle Number: {enc_id}")
+                logger.debug(f"Valefor charge state: {valefor_charge}")
+                logger.debug(f"skip_charge state: {skip_charge}")
                 turn_counter += 1
                 if (
                     not (
@@ -630,15 +636,15 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
     if hp_check[0] < 250 or hp_check[1] < 250 or hp_check[4] < 250:
         heal_up(3)
     else:
-        print("No need to heal up. Moving onward.")
+        logger.debug("No need to heal up. Moving onward.")
     if not valefor_charge and memory.main.overdrive_state()[8] == 20:
         valefor_charge = True
-    print("Returning Valefor Charge value:", valefor_charge)
+    logger.debug(f"Returning Valefor Charge value: {valefor_charge}")
     return valefor_charge
 
 
 def sonic_wings():
-    print("Valefor attempting to use Sonic Wings - 1")
+    logger.debug("Valefor attempting to use Sonic Wings - 1")
     while memory.main.battle_menu_cursor() != 204:
         if memory.main.battle_menu_cursor() == 203:
             xbox.tap_down()
@@ -651,12 +657,12 @@ def sonic_wings():
     xbox.tap_b()
     xbox.tap_b()
     xbox.tap_b()
-    print("Valefor attempting to use Sonic Wings - 2")
+    logger.debug("Valefor attempting to use Sonic Wings - 2")
 
 
 @battle.utils.speedup_decorator
 def luca_workers():
-    print("Fight start: Workers in Luca")
+    logger.info("Fight start: Workers in Luca")
     xbox.click_to_battle()
 
     while not memory.main.turn_ready():
@@ -677,7 +683,7 @@ def luca_workers():
 
 @battle.utils.speedup_decorator
 def luca_workers_2(early_haste):
-    print("Fight start: Workers in Luca")
+    logger.info("Fight start: Workers in Luca")
     hasted = False
     xbox.click_to_battle()
 
@@ -721,8 +727,8 @@ def luca_workers_2(early_haste):
 
 @battle.utils.speedup_decorator
 def after_blitz_1(early_haste):
-    print("Fight start: After Blitzball (the fisheys)")
-    print(early_haste)
+    logger.info("Fight start: After Blitzball (the fisheys)")
+    logger.debug(f"Early haste: {early_haste}")
     if early_haste != -1:
         screen.await_turn()
 
@@ -732,7 +738,7 @@ def after_blitz_1(early_haste):
 
     while not memory.main.battle_complete():
         if memory.main.turn_ready():
-            print("Enemy HP:", memory.main.get_enemy_current_hp())
+            logger.debug(f"Enemy HP: {memory.main.get_enemy_current_hp()}")
             if screen.turn_tidus():
                 attack("none")
             else:
@@ -750,8 +756,8 @@ def after_blitz_1(early_haste):
 
 @battle.utils.speedup_decorator
 def after_blitz_3(early_haste):
-    print("Ready to take on Garuda")
-    print(early_haste)
+    logger.info("Ready to take on Garuda")
+    logger.debug(f"Early haste: {early_haste}")
     # Wakka dark attack, or Auron power break
     screen.await_turn()
     tidus_turn = 0
@@ -762,10 +768,10 @@ def after_blitz_3(early_haste):
             pass
         hp_values = memory.main.get_battle_hp()
         if screen.turn_auron():
-            print("Auron Turn")
+            logger.debug("Auron Turn")
             attack("none")
         elif screen.turn_tidus():
-            print("Tidus Turn: ", tidus_turn)
+            logger.debug(f"Tidus Turn: {tidus_turn}")
             if tidus_turn == 0:
                 tidus_haste("d", character=2)
                 tidus_turn += 1
@@ -777,7 +783,7 @@ def after_blitz_3(early_haste):
             else:
                 defend()
         elif screen.turn_wakka():
-            print("Wakka Turn")
+            logger.debug("Wakka Turn")
             if hp_values[0] < 202 and (
                 memory.main.get_next_turn() != 2
                 or memory.main.get_enemy_current_hp()[0] > 268
@@ -790,7 +796,7 @@ def after_blitz_3(early_haste):
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 4)
     FFXC.set_value("btn_b", 0)
-    print("Battle complete (Garuda)")
+    logger.info("Battle complete (Garuda)")
     # Get to control
     while not memory.main.user_control():
         if memory.main.cutscene_skip_possible():
@@ -807,21 +813,21 @@ def after_blitz_3(early_haste):
 
 @battle.utils.speedup_decorator
 def after_blitz_3_late_haste(early_haste):
-    print("Ready to take on Zu")
-    print(early_haste)
+    logger.info("Ready to take on Zu")
+    logger.debug(f"Early haste: {early_haste}")
     # Wakka dark attack, or Auron power break
     screen.await_turn()
     if screen.turn_auron():
-        print("Auron's turn")
+        logger.debug("Auron's turn")
         use_skill(0)
     elif screen.turn_tidus():
-        print("Tidus' turn")
+        logger.debug("Tidus' turn")
         if early_haste != -1:
             tidus_haste("up")
         else:
             attack("none")
     else:
-        print("Wakkas turn")
+        logger.debug("Wakkas turn")
         use_skill(0)
     screen.await_turn()
     if screen.turn_auron():
@@ -850,7 +856,7 @@ def after_blitz_3_late_haste(early_haste):
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 4)
     FFXC.set_value("btn_b", 0)
-    print("Battle complete (Garuda)")
+    logger.info("Battle complete (Garuda)")
     # Get to control
     while not memory.main.user_control():
         if memory.main.cutscene_skip_possible():
@@ -867,13 +873,13 @@ def after_blitz_3_late_haste(early_haste):
 
 @battle.utils.speedup_decorator
 def miihen_road(self_destruct=False):
-    print("Fight start: Mi'ihen Road")
-    print("Mi'ihen battle. Self-destruct:", game_vars.self_destruct_get())
+    logger.info("Fight start: Mi'ihen Road")
+    logger.debug(f"Mi'ihen battle. Self-destruct: {game_vars.self_destruct_get()}")
     encounter_id = memory.main.get_encounter_id()
 
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.battle_type() == 2 and not check_tidus_ok():
-            print("Looks like we got ambushed. Skipping this battle.")
+            logger.info("Looks like we got ambushed. Skipping this battle.")
             flee_all()
             break
         if memory.main.turn_ready():
@@ -901,11 +907,11 @@ def miihen_road(self_destruct=False):
         FFXC.set_value("btn_b", 0)
         memory.main.wait_frames(3)
 
-    print("self_destruct flag:", game_vars.self_destruct_get())
+    logger.debug(f"self_destruct flag: {game_vars.self_destruct_get()}")
 
 
 def aeon_shield():
-    print("Aeon Shield function")
+    logger.info("Aeon Shield function")
     screen.await_turn()
     memory.main.wait_frames(6)
     while not memory.main.other_battle_menu():
@@ -921,7 +927,7 @@ def aeon_shield():
 
 
 def aeon_boost():
-    print("Aeon Boost function")
+    logger.info("Aeon Boost function")
     screen.await_turn()
     memory.main.wait_frames(6)
     while not memory.main.other_battle_menu():
@@ -939,7 +945,7 @@ def aeon_boost():
 
 
 def aeon_dismiss():
-    print("Aeon Dismiss function")
+    logger.info("Aeon Dismiss function")
     screen.await_turn()
     memory.main.wait_frames(6)
     while not memory.main.other_battle_menu():
@@ -978,23 +984,25 @@ def mrr_target():
 @battle.utils.speedup_decorator
 def mrr_battle(status):
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
-    print("------------------------------")
-    print("------------------------------")
-    print("Fight start: MRR")
+    logger.info("------------------------------")
+    logger.info("------------------------------")
+    logger.info("Fight start: MRR")
     encounter_id = memory.main.get_encounter_id()
-    print("Battle number:", encounter_id)
+    logger.info(f"Battle number: {encounter_id}")
     # next_crit_kim = memory.next_crit(character=3, char_luck=18, enemy_luck=15)
 
     if encounter_id == 102:
-        print("Garuda battle, we want nothing to do with this.")
+        logger.info("Garuda battle, we want nothing to do with this.")
     elif status[5] == 0:
-        print("If funguar present or more than three flees already, Valefor overdrive.")
+        logger.info(
+            "If funguar present or more than three flees already, Valefor overdrive."
+        )
     elif status[5] == 1:
-        print("Now we're going to try to charge Valefor's overdrive again.")
+        logger.info("Now we're going to try to charge Valefor's overdrive again.")
     elif status[5] == 2:
-        print("Yuna still needs levels.")
+        logger.info("Yuna still needs levels.")
     else:
-        print("Nothing else, going to flee.")
+        logger.info("Nothing else, going to flee.")
     screen.await_turn()
 
     aeon_turn = 0
@@ -1004,13 +1012,13 @@ def mrr_battle(status):
     hp_total = hp_array[0] + hp_array[1] + hp_array[2]
     # Final charging for Yuna is a lower overall party HP
     if hp_total < 1800 and status[5] != 2:
-        print("----- We got ambushed. Not going to attempt to recover.")
+        logger.info("----- We got ambushed. Not going to attempt to recover.")
         flee_all()
     elif screen.faint_check() >= 1:
-        print("--- Character is dead from the start of battle -> Escaping")
+        logger.info("--- Character is dead from the start of battle -> Escaping")
         flee_all()
     elif check_petrify():
-        print("--- Character petrified. Unhandled case -> Escaping")
+        logger.warning("--- Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif encounter_id == 102:  # Garuda, flee no matter what.
         flee_all()
@@ -1023,7 +1031,9 @@ def mrr_battle(status):
                 while memory.main.battle_active():  # end of battle screen
                     if memory.main.turn_ready():
                         if check_petrify():
-                            print("--- Character petrified. Unhandled case -> Escaping")
+                            logger.warning(
+                                "--- Character petrified. Unhandled case -> Escaping"
+                            )
                             flee_all()
                         elif screen.turn_tidus():
                             buddy_swap_kimahri()
@@ -1047,7 +1057,9 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("--- Character petrified. Unhandled case -> Escaping")
+                        logger.warning(
+                            "--- Character petrified. Unhandled case -> Escaping"
+                        )
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
@@ -1076,11 +1088,11 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("Someone is pretrified. Escaping battle.")
+                        logger.info("Someone is pretrified. Escaping battle.")
                         flee_all()
                         valefor_charge_complete = False
                     else:
-                        print("No petrify issues.")
+                        logger.debug("No petrify issues.")
                         if screen.turn_tidus():
                             buddy_swap_kimahri()
                             next_crit_kim = mrr_target()
@@ -1111,7 +1123,9 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("--- Character petrified. Unhandled case -> Escaping")
+                        logger.warning(
+                            "--- Character petrified. Unhandled case -> Escaping"
+                        )
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
@@ -1139,11 +1153,11 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("Someone is pretrified. Escaping battle.")
+                        logger.info("Someone is pretrified. Escaping battle.")
                         flee_all()
                         valefor_charge_complete = False
                     else:
-                        print("No petrify issues.")
+                        logger.debug("No petrify issues.")
                         if screen.turn_tidus():
                             buddy_swap_kimahri()
                         elif screen.turn_kimahri():
@@ -1169,11 +1183,11 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("Someone is pretrified. Escaping battle.")
+                        logger.info("Someone is pretrified. Escaping battle.")
                         flee_all()
                         valefor_charge_complete = False
                     else:
-                        print("No petrify issues.")
+                        logger.debug("No petrify issues.")
                         if screen.turn_tidus():
                             buddy_swap_kimahri()
                             # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
@@ -1206,7 +1220,9 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("--- Character petrified. Unhandled case -> Escaping")
+                        logger.warning(
+                            "--- Character petrified. Unhandled case -> Escaping"
+                        )
                         flee_all()
                     elif screen.turn_tidus():
                         buddy_swap_kimahri()
@@ -1247,7 +1263,9 @@ def mrr_battle(status):
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
-                        print("--- Character petrified. Unhandled case -> Escaping")
+                        logger.warning(
+                            "--- Character petrified. Unhandled case -> Escaping"
+                        )
                         flee_all()
                     elif screen.turn_tidus():
                         tidus_flee()
@@ -1281,9 +1299,9 @@ def mrr_battle(status):
                         buddy_swap_tidus()
     else:  # Everything is done.
         flee_all()
-    print("+++")
-    print(game_vars.wakka_late_menu())
-    print("+++")
+    logger.debug("+++")
+    logger.debug(f"Wakka late menu: {game_vars.wakka_late_menu()}")
+    logger.debug("+++")
     # OK the battle should be complete now. Let's do some wrap-up stuff.
     wrap_up()
 
@@ -1303,27 +1321,34 @@ def mrr_battle(status):
         memory.main.full_party_format("mrr1", full_menu_close=False)
     elif status[5] == 2:  # Still levelling Yuna or Kimahri
         memory.main.full_party_format("mrr2", full_menu_close=False)
-        print("Yuna in front party, trying to get some more experience.")
+        logger.debug("Yuna in front party, trying to get some more experience.")
     else:
         memory.main.full_party_format("mrr1", full_menu_close=False)
 
     # Now checking health values
     hp_check = memory.main.get_hp()
-    print("HP values:", hp_check)
+    logger.debug(f"HP values: {hp_check}")
     if status[5] == 2:
         heal_up(3, full_menu_close=False)
     elif hp_check != [520, 475, 1030, 644, 818, 380]:
         heal_up(full_menu_close=False)
     # donezo. Back to the main path.
-    print("Clean-up is now complete.")
+    logger.debug("Clean-up is now complete.")
     return status
+
+
+def _mrr_manip_kimahri_crit():
+    next_crit_kim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
+    logger.debug(f"||| Manip - Battle number: {memory.main.get_encounter_id()}")
+    logger.debug(f"||| Next Kimahri Crit vs Gui: {next_crit_kim}")
+    return next_crit_kim
 
 
 @battle.utils.speedup_decorator
 def mrr_manip(kim_max_advance: int = 6):
     screen.await_turn()
     next_crit_kim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    print("======== Next Kimahri crit:", next_crit_kim)
+    logger.debug(f"======== Next Kimahri crit: {next_crit_kim}")
     attempt_manip = False
     if next_crit_kim >= 3:
         kim_turn = True
@@ -1333,11 +1358,7 @@ def mrr_manip(kim_max_advance: int = 6):
         pass
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            next_crit_kim = memory.main.next_crit(
-                character=3, char_luck=18, enemy_luck=15
-            )
-            print("||| Manip - Battle number:", memory.main.get_encounter_id())
-            print("||| Next Kimahri Crit vs Gui:", next_crit_kim)
+            next_crit_kim = _mrr_manip_kimahri_crit()
             if next_crit_kim > kim_max_advance:
                 flee_all()
             elif kim_turn:
@@ -1354,50 +1375,48 @@ def mrr_manip(kim_max_advance: int = 6):
     wrap_up()
     # Now checking health values
     hp_check = memory.main.get_hp()
-    print("HP values:", hp_check)
+    logger.debug(f"HP values: {hp_check}")
     if hp_check != [520, 475, 1030, 644, 818, 380]:
         heal_up(full_menu_close=False)
     memory.main.full_party_format("mrr1")
-    next_crit_kim = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    print("||| Manip - Battle number:", memory.main.get_encounter_id())
-    print("||| Next Kimahri Crit vs Gui:", next_crit_kim)
+    _mrr_manip_kimahri_crit()
     return attempt_manip
 
 
 @battle.utils.speedup_decorator
 def djose(stone_breath):
-    print("Fight start: Djose road")
+    logger.info("Fight start: Djose road")
     while not memory.main.battle_complete():  # AKA end of battle screen
         encounter_id = memory.main.get_encounter_id()
         if memory.main.turn_ready():
             if stone_breath == 1:  # Stone Breath already learned
-                print("Djose: Stone breath already learned.")
+                logger.debug("Djose: Stone breath already learned.")
                 flee_all()
             else:  # Stone breath not yet learned
                 if encounter_id == 128 or encounter_id == 134 or encounter_id == 136:
-                    print("Djose: Learning Stone Breath.")
+                    logger.info("Djose: Learning Stone Breath.")
                     lancet_swap("none")
                     stone_breath = 1
                 elif encounter_id == 127:
-                    print("Djose: Learning Stone Breath")
+                    logger.info("Djose: Learning Stone Breath")
                     # One basilisk with two wasps
                     lancet_swap("up")
                     stone_breath = 1
                     break
                 else:
-                    print("Djose: Cannot learn Stone Breath here.")
+                    logger.info("Djose: Cannot learn Stone Breath here.")
                     flee_all()
 
-    print("Mark 2")
+    logger.debug("Mark 2")
     memory.main.click_to_control()
-    print("Mark 3")
+    logger.debug("Mark 3")
     party_hp = memory.main.get_hp()
-    print(party_hp)
+    logger.debug(f"Party hp: {party_hp}")
     if party_hp[0] < 300 or party_hp[4] < 300:
-        print("Djose: recovering HP")
+        logger.debug("Djose: recovering HP")
         heal_up(3)
     else:
-        print("Djose: No need to heal.")
+        logger.debug("Djose: No need to heal.")
     memory.main.full_party_format("djose")
     return stone_breath
 
@@ -1415,12 +1434,13 @@ def mix_tutorial():
 def thunder_plains(section):
     enc_id = memory.main.get_encounter_id()
     grenade_slot = memory.main.get_item_slot(35)
-    print("++Grenade Slot %d" % grenade_slot)
+    logger.debug(f"++Grenade Slot {grenade_slot}")
     grenade_count = memory.main.get_item_count_slot(grenade_slot)
-    print("++Grenade count: %d" % grenade_count)
-    print("++Speed sphere count: %d" % memory.main.get_speed())
-    use_grenades = grenade_count > 3 and memory.main.get_speed() < 14
-    print("++Use Grenades decision:", use_grenades)
+    logger.debug(f"++Grenade count: {grenade_count}")
+    speed_count = memory.main.get_speed()
+    logger.debug(f"++Speed sphere count: {speed_count}")
+    use_grenades = grenade_count > 3 and speed_count < 14
+    logger.debug(f"++Use Grenades decision: {use_grenades}")
     use_grenade_slot = memory.main.get_use_items_slot(35)
     lunar_slot = game_vars.get_blitz_win() or memory.main.get_item_slot(56) != 255
     light_slot = memory.main.get_item_slot(57) != 255
@@ -1432,14 +1452,14 @@ def thunder_plains(section):
 
     # Petrify check is not working. Requires review.
     if check_petrify():
-        print("--- Character petrified. Unhandled case -> Escaping")
+        logger.warning("--- Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif enc_id in [152, 155, 162]:  # Any battle with Larvae
         if lunar_slot:
             # No longer need Lunar Curtain for Evrae fight, Blitz win logic.
             flee_all()
         else:  # Blitz loss strat
-            print("Battle with Larvae. Battle number:", enc_id)
+            logger.info(f"Battle with Larvae. Battle number: {enc_id}")
             while not memory.main.battle_complete():
                 if memory.main.turn_ready():
                     if not lunar_slot and memory.main.turn_ready():
@@ -1460,7 +1480,7 @@ def thunder_plains(section):
                     else:
                         flee_all()
     elif enc_id == 160:
-        print("Battle with Iron Giant. Battle number:", enc_id)
+        logger.info(f"Battle with Iron Giant. Battle number: {enc_id}")
         while not memory.main.battle_complete():
             screen.await_turn()
             if light_slot:
@@ -1485,7 +1505,9 @@ def thunder_plains(section):
                     else:
                         flee_all()
     elif enc_id == 161:
-        print("Battle with Iron Giant and Buer monsters. Battle number:", enc_id)
+        logger.info(
+            f"Battle with Iron Giant and Buer monsters. Battle number: {enc_id}"
+        )
         while not memory.main.battle_complete():
             screen.await_turn()
             if use_grenades or not light_slot:
@@ -1495,7 +1517,7 @@ def thunder_plains(section):
                     if memory.main.turn_ready():
                         if screen.turn_rikku():
                             if use_grenades and not grenade_thrown:
-                                print("Grenade Slot %d" % use_grenade_slot)
+                                logger.debug(f"Grenade Slot {use_grenade_slot}")
                                 use_item(use_grenade_slot, "none")
                                 grenade_thrown = True
                             elif not light_slot:
@@ -1517,7 +1539,7 @@ def thunder_plains(section):
             else:
                 flee_all()
     elif enc_id in [154, 156, 164] and use_grenades:
-        print("Battle with random mobs including Buer. Battle number:", enc_id)
+        logger.info(f"Battle with random mobs including Buer. Battle number: {enc_id}")
         while not memory.main.battle_complete():
             screen.await_turn()
             if use_grenades:
@@ -1527,7 +1549,7 @@ def thunder_plains(section):
     elif (
         not game_vars.get_blitz_win() and not petrify_slot and enc_id in [153, 154, 163]
     ):
-        print("Grabbing petrify grenade. Blitz Loss only strat.")
+        logger.debug("Grabbing petrify grenade. Blitz Loss only strat.")
         while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 if enc_id in [153, 163]:
@@ -1551,15 +1573,15 @@ def thunder_plains(section):
     else:  # Nothing useful this battle. Moving on.
         flee_all()
 
-    print("Battle is ended - Thunder Plains")
+    logger.info("Battle is ended - Thunder Plains")
     memory.main.click_to_control()
     memory.main.wait_frames(2)  # Allow lightning to attemt a strike
     if memory.main.dodge_lightning(game_vars.get_l_strike()):
-        print("Dodge")
+        logger.debug("Dodge")
         game_vars.set_l_strike(memory.main.l_strike_count())
-    print("Checking party format and resolving if needed.")
+    logger.debug("Checking party format and resolving if needed.")
     memory.main.full_party_format("postbunyip", full_menu_close=False)
-    print("Party format is good. Now checking health values.")
+    logger.debug("Party format is good. Now checking health values.")
     hp_values = memory.main.get_hp()
     if (
         hp_values[0] < 400
@@ -1569,14 +1591,14 @@ def thunder_plains(section):
     ):
         heal_up()
     memory.main.close_menu()
-    print("Ready to continue onward.")
+    logger.debug("Ready to continue onward.")
 
 
 @battle.utils.speedup_decorator
 def m_woods():
-    print("Logic depends on completion of specific goals. In Order:")
+    logger.debug("Logic depends on completion of specific goals. In Order:")
     encounter_id = memory.main.get_encounter_id()
-    print("------------- Battle Start - Battle Number:", encounter_id)
+    logger.debug(f"------------- Battle Start - Battle Number: {encounter_id}")
     need_arctic_wind, need_fish_scale = False, False
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
@@ -1597,7 +1619,7 @@ def m_woods():
                         check_petrify_tidus()
                         or 6 not in memory.main.get_battle_formation()
                     ):
-                        print("Tidus or Rikku incapacitated, fleeing")
+                        logger.info("Tidus or Rikku incapacitated, fleeing")
                         flee_all()
                     elif 6 not in memory.main.get_active_battle_formation():
                         if encounter_id == 175 and need_arctic_wind:
@@ -1608,19 +1630,19 @@ def m_woods():
                             flee_all()
                     elif turn_char == 6:
                         if encounter_id == 175 and need_arctic_wind:
-                            print("Marker 2")
+                            logger.debug("Marker 2")
                             steal()
                         elif encounter_id == 172 and need_fish_scale:
-                            print("Marker 3")
+                            logger.debug("Marker 3")
                             steal_down()
                         elif encounter_id == 171 and need_fish_scale:
-                            print("Marker 4")
+                            logger.debug("Marker 4")
                             steal_right()
                         elif memory.main.get_overdrive_battle(6) != 100:
-                            print("Charging")
+                            logger.debug("Charging")
                             attack_by_num(6, "u")
                         else:
-                            print("Escaping")
+                            logger.debug("Escaping")
                             flee_all()
                     elif memory.main.get_overdrive_battle(6) != 100:
                         escape_one()
@@ -1637,14 +1659,14 @@ def m_woods():
                 else:
                     escape_one()
             elif memory.main.next_steal_rare(pre_advance=2):
-                print("##Looking ahead, manip for non-crit steal")
+                logger.debug("##Looking ahead, manip for non-crit steal")
                 if 6 not in memory.main.get_active_battle_formation():
                     buddy_swap_rikku()
                     _steal()
                 else:
                     flee_all()
             else:
-                print("##Looking ahead, no need to manip")
+                logger.debug("##Looking ahead, no need to manip")
                 flee_all()
 
     logger.info("Battle complete, now to deal with the aftermath.")
@@ -1724,7 +1746,7 @@ def negator_with_steal():
                 elif tidus_turns < 2:
                     xbox.weap_swap(0)
                 else:
-                    print("Starting Rikkus overdrive")
+                    logger.debug("Starting Rikkus overdrive")
                     rikku_full_od("crawler")
                 rikku_turns += 1
 
@@ -1740,6 +1762,15 @@ def get_anima_item_slot():
     if useable_slot > 200:
         useable_slot = 255
     return useable_slot
+
+
+def _print_confused_state():
+    logger.debug("Confused states:")
+    logger.debug(f"Yuna confusion: {memory.main.state_confused(1)}")
+    logger.debug(f"Tidus confusion: {memory.main.state_confused(0)}")
+    logger.debug(f"Kimahri confusion: {memory.main.state_confused(3)}")
+    logger.debug(f"Auron confusion: {memory.main.state_confused(2)}")
+    logger.debug(f"Lulu confusion: {memory.main.state_confused(5)}")
 
 
 # Process written by CrimsonInferno
@@ -1767,22 +1798,22 @@ def seymour_guado_blitz_win():
             for i in range(0, 3):
                 if memory.main.get_battle_hp()[i] == 0:
                     if memory.main.get_battle_char_slot(2) == i:
-                        print("Auron is dead")
+                        logger.debug("Auron is dead")
                     elif memory.main.get_battle_char_slot(3) == i:
-                        print("Kimahri is dead")
+                        logger.debug("Kimahri is dead")
                         kimahridead = True
                     elif memory.main.get_battle_char_slot(4) == i:
-                        print("Wakka is dead")
+                        logger.debug("Wakka is dead")
             if turn_char == 0:
                 next_hit = rng_track.next_action_hit(
                     character=memory.main.get_current_turn(), enemy="anima"
                 )
                 if tidus_turns == 0:
-                    print("Tidus Haste self")
+                    logger.debug("Tidus Haste self")
                     tidus_haste("none")
                     tidushaste = True
                 elif tidus_turns == 1:
-                    print("Talk to Seymour")
+                    logger.debug("Talk to Seymour")
                     while not memory.main.other_battle_menu():
                         xbox.tap_left()
                     while memory.main.battle_cursor_2() != 1:
@@ -1803,7 +1834,7 @@ def seymour_guado_blitz_win():
                     buddy_swap_lulu()
                     animamiss += 1
                 elif not tidushaste:
-                    print("Tidus Haste self")
+                    logger.debug("Tidus Haste self")
                     tidus_haste("none")
                     tidushaste = True
                 elif animahits < 4:
@@ -1811,15 +1842,15 @@ def seymour_guado_blitz_win():
                     attack(direction="none")
                     new_hp = memory.main.get_enemy_current_hp()[3]
                     if new_hp < old_hp:
-                        print("Hit Anima")
+                        logger.debug("Hit Anima")
                         animahits += 1
                     else:
-                        print("Miss Anima")
+                        logger.debug("Miss Anima")
                         animamiss += 1
                 else:
                     attack(direction="none")
                 tidus_turns += 1
-                print("Tidus turns: %d" % tidus_turns)
+                logger.debug(f"Tidus turns: {tidus_turns}")
             elif turn_char == 1:
                 if yunaturns == 0:
                     xbox.weap_swap(0)
@@ -1835,7 +1866,7 @@ def seymour_guado_blitz_win():
                     else:
                         defend()
                 yunaturns += 1
-                print("Yuna turn, complete")
+                logger.debug("Yuna turn, complete")
             elif turn_char == 3:
                 if kimahriconfused:
                     tidusposition = memory.main.get_battle_char_slot(0)
@@ -1872,14 +1903,10 @@ def seymour_guado_blitz_win():
                     else:
                         steal()
                 kimahriturns += 1
-                print("Kimahri turn, complete")
+                logger.debug("Kimahri turn, complete")
             elif turn_char == 2:
                 if auronturns == 0:
-                    print("Confused states:")
-                    print("Yuna confusion:", memory.main.state_confused(1))
-                    print("Tidus confusion:", memory.main.state_confused(0))
-                    print("Kimahri confusion:", memory.main.state_confused(3))
-                    print("Auron confusion:", memory.main.state_confused(2))
+                    _print_confused_state()
                     if memory.main.state_confused(3):
                         remedy(character=3, direction="l")
                         kimahriconfused = True
@@ -1902,7 +1929,7 @@ def seymour_guado_blitz_win():
                     else:
                         defend()
                 auronturns += 1
-                print("Auron turn, complete")
+                logger.debug("Auron turn, complete")
             elif turn_char == 4:
                 if wakka_turns == 0:
                     xbox.weap_swap(0)
@@ -1921,7 +1948,7 @@ def seymour_guado_blitz_win():
                     else:
                         defend()
                 wakka_turns += 1
-                print("Wakka turn, complete")
+                logger.debug("Wakka turn, complete")
             elif turn_char == 6:
                 if screen.faint_check() == 2:
                     revive_all()
@@ -1963,7 +1990,7 @@ def seymour_guado_blitz_win():
                 else:
                     defend()
                 rikku_turns += 1
-                print("Rikku turn, complete")
+                logger.debug("Rikku turn, complete")
             elif turn_char == 5:
                 if not missbackup:
                     revive()
@@ -1977,13 +2004,13 @@ def seymour_guado_blitz_win():
                         buddy_swap_rikku()
                     else:
                         defend()
-                print("Lulu turn, complete")
+                logger.debug("Lulu turn, complete")
             else:
-                print("No turn. Holding for next action.")
+                logger.debug("No turn. Holding for next action.")
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-            print("Diag skip")
-    print("Battle summary screen")
+            logger.debug("Diag skip")
+    logger.info("Battle summary screen")
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
     FFXC.set_value("btn_b", 0)
@@ -2012,24 +2039,24 @@ def seymour_guado_blitz_loss():
             for i in range(0, 3):
                 if memory.main.get_battle_hp()[i] == 0:
                     if memory.main.get_battle_char_slot(2) == i:
-                        print("Auron is dead")
+                        logger.debug("Auron is dead")
                     elif memory.main.get_battle_char_slot(3) == i:
-                        print("Kimahri is dead")
+                        logger.debug("Kimahri is dead")
                         kimahridead = True
                     elif memory.main.get_battle_char_slot(4) == i:
-                        print("Wakka is dead")
+                        logger.debug("Wakka is dead")
             if turn_char == 0:
                 if memory.main.get_enemy_current_hp()[1] < 2999:
                     attack(direction="none")
-                    print("Should be last attack of the fight.")
+                    logger.debug("Should be last attack of the fight.")
                 elif tidus_turns == 0:
-                    print("Tidus Haste self")
+                    logger.debug("Tidus Haste self")
                     tidus_haste("none")
                     tidushaste = True
                 elif tidus_turns == 1:
                     cheer()
                 elif tidus_turns == 2:
-                    print("Talk to Seymour")
+                    logger.debug("Talk to Seymour")
                     while not memory.main.other_battle_menu():
                         xbox.tap_left()
                     while memory.main.battle_cursor_2() != 1:
@@ -2039,10 +2066,10 @@ def seymour_guado_blitz_loss():
                     xbox.tap_left()
                     tap_targeting()
                 elif tidus_turns == 3:
-                    print("Swap to Brotherhood")
+                    logger.debug("Swap to Brotherhood")
                     equip_in_battle(special="brotherhood")
                 elif tidus_turns == 4:
-                    print("Tidus overdrive activating")
+                    logger.debug("Tidus overdrive activating")
                     screen.await_turn()
                     battle.overdrive.tidus("left")
                 elif tidus_turns == 5:
@@ -2052,7 +2079,7 @@ def seymour_guado_blitz_loss():
                     defend()
                     missbackup = True
                 elif not tidushaste:
-                    print("Tidus Haste self")
+                    logger.debug("Tidus Haste self")
                     tidus_haste("none")
                     tidushaste = True
                 elif animahits < 4:
@@ -2060,41 +2087,33 @@ def seymour_guado_blitz_loss():
                     attack(direction="none")
                     new_hp = memory.main.get_enemy_current_hp()[3]
                     if new_hp < old_hp:
-                        print("Hit Anima")
+                        logger.debug("Hit Anima")
                         animahits += 1
                     else:
-                        print("Miss Anima")
+                        logger.debug("Miss Anima")
                         animamiss += 1
                 else:
-                    print("Plain Attacking")
+                    logger.debug("Plain Attacking")
                     attack(direction="none")
                 tidus_turns += 1
-                print("Tidus turns: %d" % tidus_turns)
+                logger.debug(f"Tidus turns: {tidus_turns}")
             elif turn_char == 1:
                 if yunaturns == 0:
                     xbox.weap_swap(0)
                 else:
                     buddy_swap_lulu()
                     screen.await_turn()
-                    print("Confused states:")
-                    print("Yuna confusion:", memory.main.state_confused(1))
-                    print("Tidus confusion:", memory.main.state_confused(0))
-                    print("Kimahri confusion:", memory.main.state_confused(3))
-                    print("Auron confusion:", memory.main.state_confused(2))
+                    _print_confused_state()
                     if memory.main.state_confused(3):
                         remedy(character=3, direction="l")
                         kimahriconfused = True
                     else:
                         xbox.weap_swap(0)
                 yunaturns += 1
-                print("Yuna turn, complete")
+                logger.debug("Yuna turn, complete")
             elif turn_char == 5:
                 if animahits == 0:
-                    print("Confused states:")
-                    print("Yuna confusion:", memory.main.state_confused(1))
-                    print("Tidus confusion:", memory.main.state_confused(0))
-                    print("Kimahri confusion:", memory.main.state_confused(3))
-                    print("Lulu confusion:", memory.main.state_confused(5))
+                    _print_confused_state()
                     buddy_swap_rikku()
                     if memory.main.state_confused(0):
                         remedy(character=0, direction="l")
@@ -2114,12 +2133,7 @@ def seymour_guado_blitz_loss():
                     else:
                         defend()
                 elif kimahriturns == 0:
-                    print("Confused states:")
-                    print("Yuna confusion:", memory.main.state_confused(1))
-                    print("Tidus confusion:", memory.main.state_confused(0))
-                    print("Kimahri confusion:", memory.main.state_confused(3))
-                    print("Auron confusion:", memory.main.state_confused(2))
-                    print("Lulu confusion:", memory.main.state_confused(5))
+                    _print_confused_state()
                     if memory.main.state_confused(0):
                         remedy(character=0, direction="l")
                     elif memory.main.state_confused(1):
@@ -2147,7 +2161,7 @@ def seymour_guado_blitz_loss():
                     else:
                         steal()
                 kimahriturns += 1
-                print("Kimahri turn, complete")
+                logger.debug("Kimahri turn, complete")
             elif turn_char == 4:
                 if wakka_turns == 0:
                     xbox.weap_swap(0)
@@ -2166,7 +2180,7 @@ def seymour_guado_blitz_loss():
                     else:
                         defend()
                 wakka_turns += 1
-                print("Wakka turn, complete")
+                logger.debug("Wakka turn, complete")
             elif turn_char == 6:
                 if screen.faint_check() == 2:
                     revive_all()
@@ -2197,13 +2211,13 @@ def seymour_guado_blitz_loss():
                     else:
                         defend()
                 rikku_turns += 1
-                print("Rikku turn, complete")
+                logger.debug("Rikku turn, complete")
             else:
-                print("No turn. Holding for next action.")
+                logger.debug("No turn. Holding for next action.")
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-            print("Diag skip")
-    print("Battle summary screen")
+            logger.debug("Diag skip")
+    logger.info("Battle summary screen")
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
     FFXC.set_value("btn_b", 0)
@@ -2246,7 +2260,7 @@ def escape_with_xp():
 
 
 def fullheal(target: int, direction: str):
-    print("Full Heal function")
+    logger.info("Full Heal function")
     if memory.main.get_throw_items_slot(2) < 255:
         itemnum = 2
         itemname = "X-Potion"
@@ -2260,39 +2274,39 @@ def fullheal(target: int, direction: str):
     else:
         itemnum = -1
         itemname = "noitemfound"
+
     if itemnum >= 0:
-        print("Using %s" % itemname)
+        logger.debug(f"Using item: {itemname}")
         _use_healing_item(target, direction, itemnum)
         return 1
-
     else:
-        print("No restorative items available")
+        logger.warning("No restorative items available")
         return 0
 
 
 # Process written by CrimsonInferno
 def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
-    print("Wendigo Res/Heal function")
+    logger.debug("Wendigo Res/Heal function")
     party_hp = memory.main.get_battle_hp()
     if screen.faint_check() == 2:
-        print("2 Characters are dead")
+        logger.debug("2 Characters are dead")
         if memory.main.get_throw_items_slot(7) < 255:
             revive_all()
         elif memory.main.get_throw_items_slot(6) < 255:
             revive()  # This should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
     elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
-        print("Reviving tidus")
+        logger.debug("Reviving tidus")
         revive()
     elif use_power_break:
-        print("Swapping to Auron to Power Break")
+        logger.debug("Swapping to Auron to Power Break")
         buddy_swap_auron()
     # If tidus is less than max HP heal him
     elif party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
-        print("Tidus need healing")
+        logger.debug("Tidus need healing")
         if fullheal(target=0, direction="l") == 0:
             if screen.faint_check():
-                print("No healing available so reviving instead")
+                logger.debug("No healing available so reviving instead")
                 if memory.main.get_throw_items_slot(6) < 255:
                     revive()
                 elif memory.main.get_throw_items_slot(7) < 255:
@@ -2300,7 +2314,7 @@ def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
             else:
                 defend()
     elif screen.faint_check():
-        print("Reviving non-Tidus")
+        logger.debug("Reviving non-Tidus")
         revive()
     else:
         return False
@@ -2333,7 +2347,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     throw_power = False
     throw_speed = False
     steal_direction = "none"
-    print("---------------Starting desert battle:", encounter_id)
+    logger.debug(f"---------------Starting desert battle: {encounter_id}")
 
     # First, determine what the best case scenario is for each battle.
     if encounter_id == 199:
@@ -2426,7 +2440,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     # Then we take action.
     while not memory.main.battle_complete():
         if battle_goal == 0:  # Steal an item
-            print("Looking to steal an item.")
+            logger.debug("Looking to steal an item.")
             if memory.main.turn_ready():
                 if memory.main.get_battle_char_turn() == 0:
                     buddy_swap_kimahri()
@@ -2457,7 +2471,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
                     screen.await_turn()
                     flee_all()
         elif battle_goal == 1:  # Throw an item
-            print("Throw item with Kimahri, everyone else escape.")
+            logger.debug("Throw item with Kimahri, everyone else escape.")
             if memory.main.turn_ready():
                 items = update_steal_items_desert()
                 if memory.main.get_battle_char_turn() == 0:
@@ -2485,7 +2499,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
                 else:
                     flee_all()
         elif battle_goal == 2:  # Charge Rikku
-            print("Attack/Steal with Rikku, everyone else escape.")
+            logger.debug("Attack/Steal with Rikku, everyone else escape.")
             if memory.main.turn_ready():
                 if memory.main.get_battle_char_turn() == 6:
                     attack("none")
@@ -2502,7 +2516,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
                 else:
                     escape_one()
             else:
-                print("Flee all battles, nothing more to do.")
+                logger.debug("Flee all battles, nothing more to do.")
                 flee_all()
 
 
@@ -2551,7 +2565,7 @@ def sandragora(version):
         # Manip for NE armor
         if memory.main.battle_type() == 2:
             while memory.main.battle_type() == 2:
-                print("Ambushed, swapping out.")
+                logger.debug("Ambushed, swapping out.")
                 flee_all()
                 memory.main.click_to_control()
                 FFXC.set_movement(0, 1)
@@ -2559,7 +2573,7 @@ def sandragora(version):
                 FFXC.set_neutral()
                 screen.await_turn()
         # elif FX_memory.rng_seed() == 31:
-        #    print("Manipulating known seed 31")
+        #    logger.debug("Manipulating known seed 31")
         #    flee_all()
         #    memory.click_to_control()
         #    FFXC.set_movement(0, 1)
@@ -2567,15 +2581,15 @@ def sandragora(version):
         #    FFXC.set_neutral()
         #    screen.await_turn()
         else:
-            print("DO NOT Swap odd/even seeds on RNG01")
+            logger.debug("DO NOT Swap odd/even seeds on RNG01")
 
         tidus_haste("l", character=2)
         screen.await_turn()
         if screen.turn_kimahri() or screen.turn_rikku():
-            print("Kimahri/Rikku taking a spare turn. Just defend.")
+            logger.debug("Kimahri/Rikku taking a spare turn. Just defend.")
             defend()
             screen.await_turn()
-        print("Setting up Auron overdrive")
+        logger.debug("Setting up Auron overdrive")
         battle.overdrive.auron(style="shooting star")
         memory.main.click_to_control()
 
@@ -2584,7 +2598,7 @@ def sandragora(version):
 def home_1():
     FFXC.set_neutral()
     xbox.click_to_battle()
-    print("Tidus vs Bombs")
+    logger.debug("Tidus vs Bombs")
     tidus_haste("none")
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
@@ -2596,7 +2610,7 @@ def home_1():
                 attack("none")
             else:
                 defend()
-    print("Home 1 shows as fight complete.")
+    logger.debug("Home 1 shows as fight complete.")
     memory.main.click_to_control()
 
 
@@ -2604,7 +2618,7 @@ def home_1():
 def home_2():
     xbox.click_to_battle()
 
-    print("Kimahri vs dual horns")
+    logger.debug("Kimahri vs dual horns")
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
 
@@ -2615,13 +2629,14 @@ def home_2():
                 lancet_home("none")
             else:
                 defend()
-    print("Home 2 shows as fight complete.")
+    logger.debug("Home 2 shows as fight complete.")
     FFXC.set_neutral()
     memory.main.click_to_control()
 
 
 @battle.utils.speedup_decorator
 def home_3():
+    logger.debug("Home 3 fight")
     xbox.click_to_battle()
     if memory.main.get_use_items_slot(49) > 200:
         tidus_haste("none")
@@ -2634,26 +2649,26 @@ def home_3():
     rikku_item_thrown = 0
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
-            print("- Turn:")
+            logger.debug("- Turn:")
             if screen.turn_tidus():
-                print("  Tidus")
+                logger.debug("  Tidus")
                 if memory.main.get_use_items_slot(49) != 255:
                     defend()
                 else:
                     attack("none")
             elif screen.turn_rikku() and rikku_item_thrown < 1 and home_3_item() != 255:
-                print("  Rikku")
+                logger.debug("  Rikku")
                 use_item_slot = home_3_item()
                 use_item(use_item_slot, "none")
                 rikku_item_thrown += 1
             elif screen.faint_check() > 0:
-                print("  any, revive")
+                logger.debug("  any, revive")
                 revive()
             else:
-                print("  any, defend")
+                logger.debug("  any, defend")
                 defend()
     FFXC.set_neutral()
-    print("Home 3 shows as fight complete.")
+    logger.debug("Home 3 shows as fight complete.")
 
 
 def home_3_item():
@@ -2673,7 +2688,7 @@ def home_3_item():
 def home_4():
     xbox.click_to_battle()
 
-    print("Kimahri vs Chimera")
+    logger.debug("Kimahri vs Chimera")
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if screen.turn_kimahri():
@@ -2683,7 +2698,7 @@ def home_4():
                 lancet_home("none")
             else:
                 defend()
-    print("Home 4 shows as fight complete.")
+    logger.debug("Home 4 shows as fight complete.")
     memory.main.click_to_control()
 
 
@@ -2889,7 +2904,7 @@ def altana_heal():
         itemnum = -1
         itemname = "noitemfound"
     if itemnum >= 0:
-        print("Using %s" % itemname)
+        logger.debug(f"Using item: {itemname}")
         while not memory.main.turn_ready():
             pass
         while memory.main.main_battle_menu():
@@ -2900,48 +2915,48 @@ def altana_heal():
         while memory.main.main_battle_menu():
             xbox.tap_b()
         item_pos = memory.main.get_throw_items_slot(itemnum)
-        print("Position:", item_pos)
+        logger.debug(f"Position: {item_pos}")
         _navigate_to_position(item_pos)
         while memory.main.other_battle_menu():
             xbox.tap_b()
-        print("Direction:", direction)
+        logger.debug(f"Direction: {direction}")
         while not memory.main.targeting_enemy():
             if direction == "l":
                 xbox.tap_left()
                 if not memory.main.targeting_enemy():
-                    print("Wrong battle line targeted.")
+                    logger.debug("Wrong battle line targeted.")
                     xbox.tap_right()
                     direction = "u"
             elif direction == "r":
                 xbox.tap_right()
                 if not memory.main.targeting_enemy():
-                    print("Wrong battle line targeted.")
+                    logger.debug("Wrong battle line targeted.")
                     xbox.tap_left()
                     direction = "d"
             elif direction == "u":
                 xbox.tap_up()
                 if not memory.main.targeting_enemy():
-                    print("Wrong battle line targeted.")
+                    logger.debug("Wrong battle line targeted.")
                     xbox.tap_down()
                     direction = "l"
             elif direction == "d":
                 xbox.tap_down()
                 if not memory.main.targeting_enemy():
-                    print("Wrong battle line targeted.")
+                    logger.debug("Wrong battle line targeted.")
                     xbox.tap_up()
                     direction = "r"
         tap_targeting()
         return 1
 
     else:
-        print("No restorative items available")
+        logger.debug("No restorative items available")
         return 0
 
 
 def evrae_altana_steal():
-    print("=================================")
-    print("Steal logic, we will get two gems")
-    print("=================================")
+    logger.debug("=================================")
+    logger.debug("Steal logic, we will get two gems")
+    logger.debug("=================================")
     haste_count = False
     steal_count = False
     while memory.main.get_item_slot(34) == 255:
@@ -2954,9 +2969,9 @@ def evrae_altana_steal():
                 steal_count = True
             else:
                 defend()
-    print("====================================")
-    print("End of steal logic. Back to regular.")
-    print("====================================")
+    logger.debug("====================================")
+    logger.debug("End of steal logic. Back to regular.")
+    logger.debug("====================================")
     # memory.main.wait_frames(180)
 
 
@@ -2969,7 +2984,6 @@ def attack_highbridge():
         attack("none")
 
 
-@battle.utils.speedup_decorator
 def calm_lands_gems():
     while not memory.main.turn_ready():
         pass
@@ -2986,11 +3000,11 @@ def calm_lands_gems():
                 elif screen.turn_kimahri():
                     # Red element in center slot, with machina and dog
                     if memory.main.get_encounter_id() in [273, 281]:
-                        print("Grabbing a gem here.")
+                        logger.debug("Grabbing a gem here.")
                         steal_left()
                     # Red element in top slot, with bee and tank
                     elif memory.main.get_encounter_id() in [275, 283]:
-                        print("Grabbing a gem here.")
+                        logger.debug("Grabbing a gem here.")
                         buddy_swap_kimahri()
                         steal_down()
                     else:
@@ -3039,14 +3053,14 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
     while battle_cursor() == 255:
         pass
     if battle_cursor() != position:
-        print("Wrong position targeted", battle_cursor() % 2, position % 2)
+        logger.debug(f"Wrong position targeted {battle_cursor() % 2}, {position % 2}")
         while battle_cursor() % 2 != position % 2:
             if battle_cursor() < position:
                 xbox.tap_right()
             else:
                 xbox.tap_left()
         while battle_cursor() != position:
-            print(battle_cursor())
+            logger.debug(f"Battle_cursor: {battle_cursor()}")
             if battle_cursor() > position:
                 xbox.tap_up()
             else:
@@ -3054,12 +3068,12 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
 
 
 def use_item(slot: int, direction="none", target=255, rikku_flee=False):
-    print("Using items via the Use command")
-    print("Item slot:", slot)
-    print("Direction:", direction)
+    logger.debug("Using items via the Use command")
+    logger.debug(f"Item slot: {slot}")
+    logger.debug(f"Direction: {direction}")
     while not memory.main.main_battle_menu():
         pass
-    print("Mark 1, turn is active.")
+    logger.debug("Mark 1, turn is active.")
     while memory.main.battle_menu_cursor() != 20:
         if not screen.turn_rikku() and not screen.turn_kimahri():
             return
@@ -3076,9 +3090,9 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
     while memory.main.main_battle_menu():
         xbox.tap_b()
     if rikku_flee:
-        print("Mark 2, selecting 'Use' command in position", 2)
+        logger.debug("Mark 2, selecting 'Use' command in position 2")
     else:
-        print("Mark 2, selecting 'Use' command in position", 1)
+        logger.debug("Mark 2, selecting 'Use' command in position 1")
     if rikku_flee:
         _navigate_to_position(2)
     else:
@@ -3087,7 +3101,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
         memory.main.wait_frames(3)
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    print("Mark 3, navigating to item slot")
+    logger.debug("Mark 3, navigating to item slot")
     _navigate_to_position(slot, memory.main.battle_cursor_3)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
@@ -3095,7 +3109,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
         xbox.tap_b()
     if target != 255:
         try:
-            print("Targetting based on character number")
+            logger.debug("Targetting based on character number")
             if target >= 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
                 direction = "l"
                 while memory.main.battle_target_id() != target:
@@ -3136,10 +3150,10 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
             xbox.tap_b()
             xbox.tap_b()
     elif direction == "none":
-        print("No direction variation")
+        logger.debug("No direction variation")
         tap_targeting()
     else:
-        print("Direction variation:", direction)
+        logger.debug(f"Direction variation: {direction}")
         if direction == "left":
             xbox.tap_left()
         elif direction == "right":
@@ -3152,12 +3166,12 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
 
 
 def use_item_tidus(slot: int, direction="none", target=255):
-    print("Using items via the Use command")
-    print("Item slot:", slot)
-    print("Direction:", direction)
+    logger.debug("Using items via the Use command")
+    logger.debug(f"Item slot: {slot}")
+    logger.debug(f"Direction: {direction}")
     while not memory.main.main_battle_menu():
         pass
-    print("Mark 1")
+    logger.debug("Mark 1")
     while memory.main.battle_menu_cursor() != 20:
         if not screen.turn_tidus():
             return
@@ -3173,13 +3187,13 @@ def use_item_tidus(slot: int, direction="none", target=255):
         xbox.tap_b()
     if game_vars.use_pause():
         memory.main.wait_frames(3)
-    print("Mark 2")
+    logger.debug("Mark 2")
     _navigate_to_position(2)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if game_vars.use_pause():
         memory.main.wait_frames(3)
-    print("Mark 3")
+    logger.debug("Mark 3")
     _navigate_to_position(slot, memory.main.battle_cursor_3)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
@@ -3187,7 +3201,7 @@ def use_item_tidus(slot: int, direction="none", target=255):
         xbox.tap_b()
     if target != 255:
         try:
-            print("Targetting based on character number")
+            logger.debug("Targetting based on character number")
             if target >= 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
                 direction = "l"
                 while memory.main.battle_target_id() != target:
@@ -3228,10 +3242,10 @@ def use_item_tidus(slot: int, direction="none", target=255):
             xbox.tap_b()
             xbox.tap_b()
     elif direction == "none":
-        print("No direction variation")
+        logger.debug("No direction variation")
         tap_targeting()
     else:
-        print("Direction variation:", direction)
+        logger.debug(f"Direction variation: {direction}")
         if direction == "left":
             xbox.tap_left()
         elif direction == "right":
@@ -3244,7 +3258,7 @@ def use_item_tidus(slot: int, direction="none", target=255):
 
 
 def cheer():
-    print("Cheer command")
+    logger.debug("Cheer command")
     while memory.main.battle_menu_cursor() != 20:
         if not screen.turn_tidus():
             return
@@ -3261,21 +3275,21 @@ def cheer():
 
 
 def seymour_spell(target_face=True):
-    print("Seymour casting tier 2 spell")
+    logger.debug("Seymour casting tier 2 spell")
     num = 21  # Should be the enemy number for the head
     if not memory.main.turn_ready():
-        print("Battle menu isn't up.")
+        logger.debug("Battle menu isn't up.")
         screen.await_turn()
 
     while memory.main.battle_menu_cursor() != 21:
-        print(memory.main.battle_menu_cursor())
+        logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
         if memory.main.battle_menu_cursor() == 0:
             xbox.tap_down()
         else:
             xbox.tap_up()
     while memory.main.main_battle_menu():
         xbox.tap_b()  # Black magic
-    print(memory.main.battle_cursor_2())
+    logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
     _navigate_to_position(5)
     while memory.main.other_battle_menu():
         xbox.tap_b()
@@ -3290,10 +3304,10 @@ def seymour_spell(target_face=True):
 
 
 def _use_healing_item(num=None, direction="l", item_id=0):
-    print("Healing character, ", num)
+    logger.debug(f"Healing character, {num}")
     direction = direction.lower()
     while not memory.main.turn_ready():
-        print("Battle menu isn't up.")
+        logger.debug("Battle menu isn't up.")
         pass
     while not memory.main.main_battle_menu():
         pass
@@ -3303,8 +3317,10 @@ def _use_healing_item(num=None, direction="l", item_id=0):
         xbox.tap_b()
     while not memory.main.other_battle_menu():
         pass
-    print(memory.main.battle_cursor_2())
-    print(memory.main.get_throw_items_slot(item_id))
+    logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
+    logger.debug(
+        f"get_throw_items_slot({item_id}): {memory.main.get_throw_items_slot(item_id)}"
+    )
     _navigate_to_position(memory.main.get_throw_items_slot(item_id))
     while memory.main.other_battle_menu():
         xbox.tap_b()
@@ -3312,28 +3328,28 @@ def _use_healing_item(num=None, direction="l", item_id=0):
         while memory.main.battle_target_id() != num:
             if direction == "l":
                 if memory.main.battle_target_id() >= 20:
-                    print("Wrong battle line targeted.")
+                    logger.debug("Wrong battle line targeted.")
                     xbox.tap_right()
                     direction = "u"
                 else:
                     xbox.tap_left()
             elif direction == "r":
                 if memory.main.battle_target_id() >= 20:
-                    print("Wrong character targeted.")
+                    logger.debug("Wrong character targeted.")
                     xbox.tap_left()
                     direction = "d"
                 else:
                     xbox.tap_right()
             elif direction == "u":
                 if memory.main.battle_target_id() >= 20:
-                    print("Wrong character targeted.")
+                    logger.debug("Wrong character targeted.")
                     xbox.tap_down()
                     direction = "l"
                 else:
                     xbox.tap_up()
             elif direction == "d":
                 if memory.main.battle_target_id() >= 20:
-                    print("Wrong character targeted.")
+                    logger.debug("Wrong character targeted.")
                     xbox.tap_up()
                     direction = "r"
                 else:
@@ -3342,7 +3358,7 @@ def _use_healing_item(num=None, direction="l", item_id=0):
 
 
 def use_potion_character(num, direction):
-    print("Healing character, ", num)
+    logger.debug(f"Healing character, {num}")
     _use_healing_item(num=num, direction=direction, item_id=0)
 
 
@@ -3351,10 +3367,10 @@ def attack_by_num(num, direction="u"):
         friendly_target = True
     else:
         friendly_target = False
-    print("Attacking specific character, ", num)
+    logger.debug(f"Attacking specific character, {num}")
     direction = direction.lower()
     if not memory.main.turn_ready():
-        print("Battle menu isn't up.")
+        logger.debug("Battle menu isn't up.")
         while not memory.main.turn_ready():
             # Waiting for battle menu to come up.
             pass
@@ -3410,9 +3426,9 @@ def attack_by_num(num, direction="u"):
 
 
 def attack_self_tanker():
-    print("Attacking specific character, Auron (self)")
+    logger.debug("Attacking specific character, Auron (self)")
     if not memory.main.turn_ready():
-        print("Battle menu isn't up.")
+        logger.debug("Battle menu isn't up.")
         while not memory.main.turn_ready():
             # Waiting for battle menu to come up.
             pass
@@ -3436,53 +3452,53 @@ def attack_self_tanker():
 
 def oblitz_rng_wait():
     rng_values = rng_track.oblitz_history()
-    print(rng_values)
+    logger.debug(f"rng_values: {rng_values}")
     last_rng = memory.main.rng_from_index(index=2)
     coming_seeds = memory.main.rng_array_from_index(index=2, array_len=8)
     seed_num = str(memory.main.rng_seed())
-    print(coming_seeds)
+    logger.debug(f"coming_seeds: {coming_seeds}")
     pos = 0
 
     if seed_num not in rng_values:
-        print("## No values for this RNG seed -", memory.main.rng_seed())
+        logger.debug(f"## No values for this RNG seed - {memory.main.rng_seed()}")
         first_result = [coming_seeds[1], 10, True, 1]
         second_result = [coming_seeds[2], 20, True, 2]
     else:
-        print("## Scanning values for this RNG seed")
+        logger.debug("## Scanning values for this RNG seed")
         if game_vars.loop_blitz():  # This will cause us to prefer results hunting
-            print("### Looping on blitz, we will try a new value.")
+            logger.debug("### Looping on blitz, we will try a new value.")
             # Seed value, time to completion, Win/Loss, and position
             first_result = [coming_seeds[1], 9999, True, 0]
             second_result = [coming_seeds[2], 9999, True, 0]
         else:  # For full runs, take the best result.
-            print("### This is a full run. Selecting best known result.")
+            logger.debug("### This is a full run. Selecting best known result.")
             first_result = [coming_seeds[1], 9999, False, 0]
             second_result = [coming_seeds[2], 9999, False, 0]
         for i in range(len(coming_seeds)):
-            # print("Checking seed ", coming_seeds[i])
+            # logger.debug(f"Checking seed {coming_seeds[i]}")
             # Set up duration and victory values
             if str(coming_seeds[i]) in rng_values[seed_num]:
                 duration = (
                     int(rng_values[seed_num][str(coming_seeds[i])]["duration"]) + pos
                 )
-                # print(duration)
+                # logger.debug(duration)
                 victory = bool(rng_values[seed_num][str(coming_seeds[i])]["victory"])
-                print("Known result.", [coming_seeds[i], duration, victory, pos])
-                # print(victory)
+                logger.debug(
+                    f"Known result: {[coming_seeds[i], duration, victory, pos]}"
+                )
+                # logger.debug(victory)
             elif game_vars.loop_blitz():
                 duration = 1 + pos
                 victory = True
-                print(
-                    "No result (preferred), loop.",
-                    [coming_seeds[i], duration, victory, pos],
+                logger.debug(
+                    f"No result (preferred), loop. {[coming_seeds[i], duration, victory, pos]}"
                 )
             else:
                 duration = 540 + pos
                 # 540 is about the maximum duration we desire.
                 victory = False
-                print(
-                    "No result (undesirable), full.",
-                    [coming_seeds[i], duration, victory, pos],
+                logger.debug(
+                    f"No result (undesirable), full. {[coming_seeds[i], duration, victory, pos]}"
                 )
             # Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
             if i == 0:
@@ -3490,30 +3506,30 @@ def oblitz_rng_wait():
             elif first_result[2] and not second_result[2]:
                 if duration < second_result[1] and victory:
                     second_result = [coming_seeds[i], duration, victory, pos]
-                    # print("Better Result for Second: ", pos, " - A")
+                    # logger.debug(f"Better Result for Second: {pos} - A")
                 else:
-                    # print("Result for ", pos, " is not as good. - A")
+                    # logger.debug(f"Result for {pos} is not as good. - A")
                     pass
             elif second_result[2] and not first_result[2]:
                 if duration < first_result[1] and victory:
                     first_result = [coming_seeds[i], duration, victory, pos]
-                    # print("Better Result for First: ", pos, " - B")
+                    # logger.debug(f"Better Result for First: {pos} - B")
                 else:
-                    # print("Result for ", pos, " is not as good. - B")
+                    # logger.debug(f"Result for {pos} is not as good. - B")
                     pass
             elif second_result[1] < first_result[1]:
                 if duration < second_result[1] and victory:
                     second_result = [coming_seeds[i], duration, victory, pos]
-                    # print("Better Result for Second: ", pos, " - C")
+                    # logger.debug(f"Better Result for Second: {pos} - C")
                 else:
-                    # print("Result for ", pos, " is not as good. - C")
+                    # logger.debug(f"Result for {pos} is not as good. - C")
                     pass
             else:
                 if duration < first_result[1] and victory:
                     first_result = [coming_seeds[i], duration, victory, pos]
-                    # print("Better Result for First: ", pos, " - D")
+                    # logger.debug(f"Better Result for First: {pos} - D")
                 else:
-                    # print("Result for ", pos, " is not as good. - D")
+                    # logger.debug(f"Result for {pos} is not as good. - D")
                     pass
             pos += 1
     if first_result[1] <= second_result[1]:
@@ -3525,39 +3541,33 @@ def oblitz_rng_wait():
 
     next_rng = last_rng
     j = 0
-    print("====================================")
-    print("Chosen results (RNG, duration, victory, waits):")
-    print(best)
-    print("====================================")
+    logger.debug("====================================")
+    logger.debug("Chosen results (RNG, duration, victory, waits):")
+    logger.debug(best)
+    logger.debug("====================================")
     # Now wait for one of the two results to come up
     while next_rng != best[0] and j < 15:
         next_rng = memory.main.rng_from_index(index=2) & 0x7FFFFFFF
         if last_rng != next_rng:
-            print(
-                j,
-                " | ",
-                s32(next_rng),
-                " | ",
-                s32(memory.main.rng_from_index(index=2)),
-                " | ",
-                s32(best[0]),
+            logger.debug(
+                f"{j} | {s32(next_rng)} | {s32(memory.main.rng_from_index(index=2))} | {s32(best[0])}"
             )
             j += 1
             last_rng = next_rng
-    print("====================================")
-    print("Success. Attacking. ", j, " | ", next_rng)
+    logger.debug("====================================")
+    logger.debug(f"Success. Attacking. {j} | {next_rng}")
     game_vars.set_oblitz_rng(value=next_rng)
     return next_rng
 
 
 def attack_oblitz_end():
-    print("Attack")
+    logger.debug("Attack")
     if not memory.main.turn_ready():
         while not memory.main.turn_ready():
             pass
     while memory.main.main_battle_menu():
         if not memory.main.battle_menu_cursor() in [0, 203, 210, 216]:
-            print(memory.main.battle_menu_cursor(), ", Battle Menu Cursor")
+            logger.debug(f"Battle Menu Cursor: {memory.main.battle_menu_cursor()}")
             xbox.tap_up()
         elif screen.battle_complete():
             return
@@ -3572,14 +3582,14 @@ def attack_oblitz_end():
 
 
 def attack(direction="none"):
-    print("Attack")
+    logger.debug("Attack")
     direction = direction.lower()
     if not memory.main.turn_ready():
         while not memory.main.turn_ready():
             pass
     while memory.main.main_battle_menu():
         if not memory.main.battle_menu_cursor() in [0, 203, 210, 216]:
-            print("Battle Menu Cursor:", memory.main.battle_menu_cursor())
+            logger.debug(f"Battle Menu Cursor: {memory.main.battle_menu_cursor()}")
             xbox.tap_up()
         elif screen.battle_complete():
             return
@@ -3619,10 +3629,10 @@ def _steal(direction=None):
     while not memory.main.other_battle_menu():
         xbox.tap_b()
     _navigate_to_position(0)
-    print(memory.main.other_battle_menu())
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Use the Steal
-    print(memory.main.other_battle_menu())
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
     if direction == "down":
         xbox.tap_down()
     elif direction == "up":
@@ -3631,12 +3641,12 @@ def _steal(direction=None):
         xbox.tap_right()
     elif direction == "left":
         xbox.tap_left()
-    print("Firing steal")
+    logger.debug("Firing steal")
     tap_targeting()
 
 
 def steal():
-    print("Steal")
+    logger.debug("Steal")
     if memory.main.get_encounter_id() in [273, 281]:
         _steal("left")
     elif memory.main.get_encounter_id() in [276, 279, 289]:
@@ -3646,27 +3656,27 @@ def steal():
 
 
 def steal_down():
-    print("Steal Down")
+    logger.debug("Steal Down")
     _steal("down")
 
 
 def steal_up():
-    print("Steal Up")
+    logger.debug("Steal Up")
     _steal("up")
 
 
 def steal_right():
-    print("Steal Right")
+    logger.debug("Steal Right")
     _steal("right")
 
 
 def steal_left():
-    print("Steal Left")
+    logger.debug("Steal Left")
     _steal("left")
 
 
 def steal_and_attack():
-    print("Steal/Attack function")
+    logger.debug("Steal/Attack function")
     FFXC.set_neutral()
     screen.await_turn()
     while not memory.main.battle_complete():
@@ -3687,7 +3697,7 @@ def steal_and_attack():
 
 @battle.utils.speedup_decorator
 def steal_and_attack_pre_tros():
-    print("Steal/Attack function before Tros")
+    logger.debug("Steal/Attack function before Tros")
     turn_counter = 0
     advances = get_advances(tros=False)
     FFXC.set_neutral()
@@ -3726,10 +3736,10 @@ def steal_and_attack_pre_tros():
 
 def cast_spell(direction, spell_id):
     if not screen.turn_lulu():
-        print("Lulu is not the current person. Deferring turn.")
+        logger.debug("Lulu is not the current person. Deferring turn.")
         return
     while memory.main.battle_menu_cursor() != 21:
-        print(memory.main.battle_menu_cursor())
+        logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
         if memory.main.battle_menu_cursor() == 0:
             xbox.tap_down()
         else:
@@ -3764,75 +3774,75 @@ def cast_spell(direction, spell_id):
     elif not direction or direction == "none":
         pass
     else:
-        print("UNSURE DIRECTION:", direction)
+        logger.error(f"UNSURE DIRECTION: {direction}")
         raise ValueError("Unsure direction")
     tap_targeting()
 
 
 def thunder(direction="none"):
-    print("Black magic - Thunder")
+    logger.debug("Black magic - Thunder")
     cast_spell(direction, 1)
 
 
 def fire(direction="none"):
-    print("Black magic - Fire")
+    logger.debug("Black magic - Fire")
     cast_spell(direction, 0)
 
 
 def water(direction="none"):
-    print("Black magic - Water")
+    logger.debug("Black magic - Water")
     cast_spell(direction, 2)
 
 
 def ice(direction="none"):
-    print("Black magic - Ice")
+    logger.debug("Black magic - Ice")
     cast_spell(direction, 3)
 
 
 def thunder_target(target, direction):
-    print("Black magic - Thunder")
+    logger.debug("Black magic - Thunder")
     if not screen.turn_lulu():
-        print("Lulu is not the current person. Deferring turn.")
+        logger.debug("Lulu is not the current person. Deferring turn.")
         return
     direction = direction.lower()
     while memory.main.main_battle_menu():
         if memory.main.battle_menu_cursor() != 21:
-            print(memory.main.battle_menu_cursor())
+            logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
             if memory.main.battle_menu_cursor() == 0:
                 xbox.tap_down()
             else:
                 xbox.tap_up()
         else:
             xbox.tap_b()
-    print(memory.main.battle_cursor_2())
+    logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
     _navigate_to_position(1)
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Thunder
     while memory.main.battle_target_id() != target:
         if direction == "l":
             if memory.main.battle_target_id() < 20:
-                print("Wrong battle line targeted.")
+                logger.debug("Wrong battle line targeted.")
                 xbox.tap_right()
                 direction = "u"
             else:
                 xbox.tap_left()
         elif direction == "r":
             if memory.main.battle_target_id() < 20:
-                print("Wrong character targeted.")
+                logger.debug("Wrong character targeted.")
                 xbox.tap_left()
                 direction = "d"
             else:
                 xbox.tap_right()
         elif direction == "u":
             if memory.main.battle_target_id() < 20:
-                print("Wrong character targeted.")
+                logger.debug("Wrong character targeted.")
                 xbox.tap_down()
                 direction = "l"
             else:
                 xbox.tap_up()
         elif direction == "d":
             if memory.main.battle_target_id() < 20:
-                print("Wrong character targeted.")
+                logger.debug("Wrong character targeted.")
                 xbox.tap_up()
                 direction = "r"
             else:
@@ -3841,7 +3851,7 @@ def thunder_target(target, direction):
 
 
 def aeon_summon(position):
-    print("Summoning Aeon " + str(position))
+    logger.debug(f"Summoning Aeon {position}")
     while not memory.main.main_battle_menu():
         pass
     while memory.main.battle_menu_cursor() != 23:
@@ -3859,19 +3869,19 @@ def aeon_summon(position):
     while memory.main.main_battle_menu():
         xbox.tap_b()
     while position != memory.main.battle_cursor_2():
-        print(memory.main.battle_cursor_2())
+        logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
         if memory.main.battle_cursor_2() < position:
             xbox.tap_down()
         else:
             xbox.tap_up()
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    aeon_wait_timer = 0
-    while not memory.main.turn_ready():
-        if aeon_wait_timer % 10000 == 0:
-            print("Waiting for Aeon's turn.", int(aeon_wait_timer % 10000))
-        pass
-        aeon_wait_timer += 1
+
+    with logging_redirect_tqdm():
+        fmt = "Waiting for Aeon's turn... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not memory.main.turn_ready():
+                pbar.update()
 
 
 def aeon_spell(position):
@@ -3883,17 +3893,17 @@ def aeon_spell_2(position, direction):
 
 
 def aeon_spell_direction(position, direction):
-    print("Aeon casting a spell. Special direction:", direction)
+    logger.debug(f"Aeon casting a spell. Special direction: {direction}")
     while memory.main.battle_menu_cursor() != 21:
         xbox.tap_down()
     while memory.main.main_battle_menu():
         xbox.tap_b()  # Black magic
-    print("In Black Magic")
+    logger.debug("In Black Magic")
     _navigate_to_position(position)
-    print(memory.main.other_battle_menu())
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Cast the Spell
-    print(memory.main.other_battle_menu())
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
     if direction == "left":
         xbox.tap_left()
     elif direction == "right":
@@ -3903,14 +3913,14 @@ def aeon_spell_direction(position, direction):
     elif direction == "down":
         xbox.tap_down()
     tap_targeting()
-    print("Aeon casting spell")
+    logger.debug("Aeon casting spell")
 
 
 def heal_up(chars=3, *, full_menu_close=True):
-    print("Menuing, healing characters:", chars)
+    logger.info(f"Menuing, healing characters: {chars}")
     if memory.main.get_hp() == memory.main.get_max_hp():
-        print("No need to heal. Exiting menu.")
-        print(memory.main.menu_number())
+        logger.debug("No need to heal. Exiting menu.")
+        logger.debug(memory.main.menu_number())
         if full_menu_close:
             memory.main.close_menu()
         else:
@@ -3921,21 +3931,21 @@ def heal_up(chars=3, *, full_menu_close=True):
         memory.main.open_menu()
     FFXC.set_neutral()
     while memory.main.get_menu_cursor_pos() != 2:
-        print("Selecting Ability command -", memory.main.get_menu_cursor_pos())
+        logger.debug(f"Selecting Ability command - {memory.main.get_menu_cursor_pos()}")
         memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 2, 11)
     while memory.main.menu_number() == 5:
-        print("Select Ability -", memory.main.menu_number())
+        logger.debug(f"Select Ability - {memory.main.menu_number()}")
         xbox.tap_b()
-    print("Mark 1")
+    logger.debug("Mark 1")
     target_pos = memory.main.get_character_index_in_main_menu(1)
-    print(target_pos)
+    logger.debug(f"Target pos: {target_pos}")
     while memory.main.get_char_cursor_pos() != target_pos:
         memory.main.menu_direction(
             memory.main.get_char_cursor_pos(),
             target_pos,
             len(memory.main.get_order_seven()),
         )
-    print("Mark 2")
+    logger.debug("Mark 2")
     while memory.main.menu_number() != 26:
         if memory.main.get_menu_2_char_num() == 1:
             xbox.tap_b()
@@ -3952,20 +3962,20 @@ def heal_up(chars=3, *, full_menu_close=True):
         5: memory.main.get_char_formation_slot(5),  # Lulu
         6: memory.main.get_char_formation_slot(6),  # Rikku
     }
-    print(character_positions)
+    logger.debug(f"Character positions: {character_positions}")
     positions_to_characters = {
         val: key for key, val in character_positions.items() if val != 255
     }
-    print(positions_to_characters)
+    logger.debug(f"Positions to characters: {positions_to_characters}")
     maximal_hp = memory.main.get_max_hp()
-    print("Max HP:", maximal_hp)
+    logger.debug(f"Max HP: {maximal_hp}")
     current_hp = memory.main.get_hp()
     for cur_position in range(len(positions_to_characters)):
         while (
             current_hp[positions_to_characters[cur_position]]
             < maximal_hp[positions_to_characters[cur_position]]
         ):
-            print(current_hp)
+            logger.debug(f"Current hp: {current_hp}")
             while memory.main.assign_ability_to_equip_cursor() != cur_position:
                 if memory.main.assign_ability_to_equip_cursor() < cur_position:
                     xbox.tap_down()
@@ -3975,8 +3985,8 @@ def heal_up(chars=3, *, full_menu_close=True):
             current_hp = memory.main.get_hp()
         if current_hp == maximal_hp or memory.main.get_yuna_mp() < 4:
             break
-    print("Healing complete. Exiting menu.")
-    print(memory.main.menu_number())
+    logger.debug("Healing complete. Exiting menu.")
+    logger.debug(memory.main.menu_number())
     if full_menu_close:
         memory.main.close_menu()
     else:
@@ -3984,7 +3994,7 @@ def heal_up(chars=3, *, full_menu_close=True):
 
 
 def lancet_swap(direction):
-    print("Lancet Swap function")
+    logger.debug("Lancet Swap function")
     # Assumption is formation: Tidus, Wakka, Auron, Kimahri, and Yuna in last slot.
     direction = direction.lower()
     buddy_swap_kimahri()
@@ -3996,7 +4006,7 @@ def lancet_swap(direction):
 
 
 def lancet(direction):
-    print("Casting Lancet with variation:", direction)
+    logger.debug(f"Casting Lancet with variation: {direction}")
     while memory.main.battle_menu_cursor() != 20:
         if memory.main.battle_menu_cursor() == 255:
             pass
@@ -4023,7 +4033,7 @@ def lancet(direction):
 
 
 def lancet_target(target, direction):
-    print("Casting Lancet with variation:", direction)
+    logger.debug(f"Casting Lancet with variation: {direction}")
     while memory.main.battle_menu_cursor() != 20:
         if memory.main.battle_menu_cursor() == 255:
             pass
@@ -4044,7 +4054,7 @@ def lancet_target(target, direction):
             if direction == "l":
                 if retry > 5:
                     retry = 0
-                    print("Wrong battle line targeted.")
+                    logger.debug("Wrong battle line targeted.")
                     xbox.tap_right()
                     direction = "u"
                     retry = 0
@@ -4053,7 +4063,7 @@ def lancet_target(target, direction):
             elif direction == "r":
                 if retry > 5:
                     retry = 0
-                    print("Wrong character targeted.")
+                    logger.debug("Wrong character targeted.")
                     xbox.tap_left()
                     direction = "d"
                 else:
@@ -4061,7 +4071,7 @@ def lancet_target(target, direction):
             elif direction == "u":
                 if retry > 5:
                     retry = 0
-                    print("Wrong character targeted.")
+                    logger.debug("Wrong character targeted.")
                     xbox.tap_down()
                     direction = "l"
                 else:
@@ -4069,7 +4079,7 @@ def lancet_target(target, direction):
             elif direction == "d":
                 if retry > 5:
                     retry = 0
-                    print("Wrong character targeted.")
+                    logger.debug("Wrong character targeted.")
                     xbox.tap_up()
                     direction = "r"
                 else:
@@ -4080,7 +4090,7 @@ def lancet_target(target, direction):
 
 
 def lancet_home(direction):
-    print("Lancet (home) function")
+    logger.debug("Lancet (home) function")
     while memory.main.battle_menu_cursor() != 20:
         if memory.main.battle_menu_cursor() == 255:
             pass
@@ -4107,14 +4117,14 @@ def lancet_home(direction):
 
 
 def flee_all():
-    print("Attempting escape (all party members and end screen)")
+    logger.debug("Attempting escape (all party members and end screen)")
     if memory.main.battle_active():
         while memory.main.battle_active():
             if memory.main.user_control():
                 return
             if memory.main.turn_ready():
                 tidus_position = memory.main.get_battle_char_slot(0)
-                print("Tidus Position:", tidus_position)
+                logger.debug(f"Tidus Position: {tidus_position}")
                 if screen.turn_tidus():
                     tidus_flee()
                 elif tidus_position >= 3 and tidus_position != 255:
@@ -4128,11 +4138,11 @@ def flee_all():
                 else:
                     defend()
     memory.main.click_to_control_3()
-    print("Flee complete")
+    logger.info("Flee complete")
 
 
 def escape_all():
-    print("escape_all function")
+    logger.info("escape_all function")
     while not screen.battle_complete():
         if memory.main.turn_ready():
             escape_one()
@@ -4144,37 +4154,34 @@ def escape_action():
             break
         else:
             xbox.tap_right()
-    print("In other battle menu")
+    logger.debug("In other battle menu")
     while memory.main.battle_cursor_2() != 2:
         if memory.main.battle_complete():
             break
         else:
             xbox.tap_down()
-    print("Targeted Escape")
+    logger.debug("Targeted Escape")
     while memory.main.other_battle_menu():
         if memory.main.battle_complete():
             break
         else:
             xbox.tap_b()
     if memory.main.battle_active():
-        print("Selected Escaping")
+        logger.debug("Selected Escaping")
         tap_targeting()
 
 
 def escape_one():
-    print(
-        "##### The next character will escape:",
-        rng_track.next_action_escape(character=memory.main.get_current_turn()),
+    next_action_escape = rng_track.next_action_escape(
+        character=memory.main.get_current_turn()
     )
-    if (
-        not rng_track.next_action_escape(character=memory.main.get_current_turn())
-        and not memory.main.get_encounter_id() == 26
-    ):
+    logger.debug(f"##### The next character will escape: {next_action_escape}")
+    if not next_action_escape and not memory.main.get_encounter_id() == 26:
         if memory.main.get_story_progress() < 154:
-            print("Character cannot escape (Lagoon). Attacking instead.")
+            logger.debug("Character cannot escape (Lagoon). Attacking instead.")
             attack("none")
         else:
-            print("Character will not escape. Looking for a replacement.")
+            logger.debug("Character will not escape. Looking for a replacement.")
             replacement = 255
             replace_array = memory.main.get_battle_formation()
             for i in range(len(replace_array)):
@@ -4191,14 +4198,14 @@ def escape_one():
                 elif replace_array[i] in memory.main.get_active_battle_formation():
                     pass
                 elif rng_track.next_action_escape(replace_array[i]):
-                    print("Character ", replace_array[i], " can escape. Swapping.")
+                    logger.debug(f"Character {replace_array[i]} can escape. Swapping.")
                     replacement = replace_array[i]
                     buddy_swap_char(replacement)
                     return escape_one()
                 else:
                     pass
             if replacement == 255:
-                print("No character could be found.")
+                logger.debug("No character could be found.")
                 if memory.main.get_current_turn() == 0:
                     tidus_flee()
                     return False
@@ -4209,20 +4216,19 @@ def escape_one():
                     return False
     else:
         escape_action()
-        print("Attempting escape, one person")
+        logger.debug("Attempting escape, one person")
         return True
 
 
 def buddy_swap_char(character):
     memory.main.wait_frames(6)
-    print("Swapping characters (in battle) - by char num")
+    logger.debug("Swapping characters (in battle) - by char num")
     position = memory.main.get_battle_char_slot(character)
 
     if position < 3:
-        print(
-            "Cannot swap with character ",
-            memory.main.name_from_number(character),
-            ", that character is in the front party.",
+        char_name = memory.main.name_from_number(character)
+        logger.debug(
+            f"Cannot swap with character {char_name}, that character is in the front party."
         )
         return
     else:
@@ -4230,7 +4236,7 @@ def buddy_swap_char(character):
             xbox.l_bumper()
         position -= 3
         reserveposition = position % 4
-        print("Character is in position", reserveposition)
+        logger.debug(f"Character is in reserve position {reserveposition}")
         if reserveposition == 3:  # Swap with last slot
             direction = "up"
         else:
@@ -4250,51 +4256,51 @@ def buddy_swap_char(character):
 
 
 def buddy_swap_tidus():
-    print("++Swapping in Tidus")
+    logger.debug("++Swapping in Tidus")
     buddy_swap_char(0)
 
 
 def buddy_swap_yuna():
-    print("++Swapping in Yuna")
+    logger.debug("++Swapping in Yuna")
     buddy_swap_char(1)
 
 
 def buddy_swap_auron():
-    print("++Swapping in Auron")
+    logger.debug("++Swapping in Auron")
     buddy_swap_char(2)
 
 
 def buddy_swap_kimahri():
-    print("++Swapping in Kimahri")
+    logger.debug("++Swapping in Kimahri")
     buddy_swap_char(3)
 
 
 def buddy_swap_wakka():
-    print("++Swapping in Wakka")
+    logger.debug("++Swapping in Wakka")
     buddy_swap_char(4)
 
 
 def buddy_swap_lulu():
-    print("++Swapping in Lulu")
+    logger.debug("++Swapping in Lulu")
     buddy_swap_char(5)
 
 
 def buddy_swap_rikku():
-    print("++Swapping in Rikku")
+    logger.debug("++Swapping in Rikku")
     buddy_swap_char(6)
 
 
 def wrap_up():
-    print("^^Wrapping up battle.")
+    logger.debug("^^Wrapping up battle.")
     while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.turn_ready():
-            print("^^Still someone's turn. Could not wrap up battle.")
+            logger.debug("^^Still someone's turn. Could not wrap up battle.")
             return False
         else:
             pass
-    print("^^Wrap up complete.")
+    logger.debug("^^Wrap up complete.")
     return True
 
 
@@ -4319,7 +4325,7 @@ def impulse(direction=None, target_far_line=False):
 
 @battle.utils.speedup_decorator
 def sin_arms():
-    print("Fight start: Sin's Arms")
+    logger.info("Fight start: Sin's Arms")
     # Area for improvement later. Multiple skippable FMVs
     xbox.click_to_battle()
     aeon_summon(4)
@@ -4372,12 +4378,12 @@ def sin_arms():
             xbox.tap_b()
         elif memory.main.cutscene_skip_possible():
             xbox.skip_scene()
-    print("Done with Sin's Arms section")
+    logger.info("Done with Sin's Arms section")
 
 
 @battle.utils.speedup_decorator
 def sin_face():
-    print("Fight start: Sin's Face")
+    logger.info("Fight start: Sin's Face")
     xbox.click_to_battle()
     FFXC.set_neutral()
 
@@ -4503,11 +4509,11 @@ def yu_yevon_item():
 def check_petrify():
     # This function is always returning as if someone is petrified, needs review.
     for iter_var in range(7):
-        print(iter_var)
+        logger.debug(f"Checking character {iter_var} for petrification")
         if memory.main.state_petrified(iter_var):
-            print("Character ", iter_var, " is petrified.")
+            logger.debug(f"Character {iter_var} is petrified.")
             return True
-    print("Everyone looks good - no petrification")
+    logger.debug("Everyone looks good - no petrification")
     return False
 
 
@@ -4523,66 +4529,66 @@ def rikku_full_od(battle):
     # First, determine which items we are using
     if battle == "tutorial":
         item1 = memory.main.get_item_slot(73)
-        print("Ability sphere in slot:", item1)
+        logger.debug(f"Ability sphere in slot: {item1}")
         item2 = item1
     elif battle == "Evrae":
         if game_vars.skip_kilika_luck():
             item1 = memory.main.get_item_slot(81)
-            print("Lv1 sphere in slot:", item1)
+            logger.debug(f"Lv1 sphere in slot: {item1}")
             item2 = memory.main.get_item_slot(84)
-            print("Lv4 sphere in slot:", item2)
+            logger.debug(f"Lv4 sphere in slot: {item2}")
         else:
             item1 = memory.main.get_item_slot(94)
-            print("Luck sphere in slot:", item1)
+            logger.debug(f"Luck sphere in slot: {item1}")
             item2 = memory.main.get_item_slot(100)
-            print("Map in slot:", item2)
+            logger.debug(f"Map in slot: {item2}")
     elif battle == "Flux":
         item1 = memory.main.get_item_slot(35)
-        print("Grenade in slot:", item1)
+        logger.debug(f"Grenade in slot: {item1}")
         item2 = memory.main.get_item_slot(85)
-        print("HP Sphere in slot:", item2)
+        logger.debug(f"HP Sphere in slot: {item2}")
     elif battle == "trio":
         item1 = 108
         item2 = 108
-        print("Wings are in slot:", item1)
+        logger.debug(f"Wings are in slot: {item1}")
     elif battle == "crawler":
         item1 = memory.main.get_item_slot(30)
-        print("Lightning Marble in slot:", item1)
+        logger.debug(f"Lightning Marble in slot: {item1}")
         item2 = memory.main.get_item_slot(85)
-        print("Mdef Sphere in slot:", item2)
+        logger.debug(f"Mdef Sphere in slot: {item2}")
     elif battle == "spherimorph1":
         item1 = memory.main.get_item_slot(24)
-        print("Arctic Wind in slot:", item1)
+        logger.debug(f"Arctic Wind in slot: {item1}")
         item2 = memory.main.get_item_slot(90)
-        print("Mag Def Sphere in slot:", item2)
+        logger.debug(f"Mag Def Sphere in slot: {item2}")
     elif battle == "spherimorph2":
         item1 = memory.main.get_item_slot(32)
-        print("Fish Scale in slot:", item1)
+        logger.debug(f"Fish Scale in slot: {item1}")
         item2 = memory.main.get_item_slot(90)
-        print("Mag Sphere in slot:", item2)
+        logger.debug(f"Mag Sphere in slot: {item2}")
     elif battle == "spherimorph3":
         item1 = memory.main.get_item_slot(30)
-        print("Lightning Marble in slot:", item1)
+        logger.debug(f"Lightning Marble in slot: {item1}")
         item2 = memory.main.get_item_slot(90)
-        print("Mag Sphere in slot:", item2)
+        logger.debug(f"Mag Sphere in slot: {item2}")
     elif battle == "spherimorph4":
         item1 = memory.main.get_item_slot(27)
-        print("Bomb Core in slot:", item1)
+        logger.debug(f"Bomb Core in slot: {item1}")
         item2 = memory.main.get_item_slot(90)
-        print("Mag Sphere in slot:", item2)
+        logger.debug(f"Mag Sphere in slot: {item2}")
     elif battle == "bfa":
         item1 = memory.main.get_item_slot(35)
-        print("Grenade in slot:", item1)
+        logger.debug(f"Grenade in slot: {item1}")
         item2 = memory.main.get_item_slot(85)
-        print("HP Sphere in slot:", item2)
+        logger.debug(f"HP Sphere in slot: {item2}")
     elif battle == "shinryu":
         item1 = memory.main.get_item_slot(109)
-        print("Gambler's Spirit in slot:", item1)
+        logger.debug(f"Gambler's Spirit in slot: {item1}")
         item2 = memory.main.get_item_slot(58)
-        print("Star Curtain in slot:", item2)
+        logger.debug(f"Star Curtain in slot: {item2}")
     elif battle == "omnis":
         both_items = omnis_items()
-        print("Omnis items, many possible combinations.")
+        logger.debug("Omnis items, many possible combinations.")
         item1 = memory.main.get_item_slot(both_items[0])
         item2 = memory.main.get_item_slot(both_items[1])
 
@@ -4620,17 +4626,17 @@ def equip_in_battle(equip_type="weap", ability_num=0, character=0, special="none
     while memory.main.other_battle_menu():
         xbox.tap_b()
 
-    print("@@@@@")
-    print("Character:", character)
-    print("Equipment type:", equip_type)
-    print("Number of items:", len(equip_handles))
-    print("Special:", special)
-    print("@@@@@")
+    logger.debug("@@@@@")
+    logger.debug(f"Character: {character}")
+    logger.debug(f"Equipment type: {equip_type}")
+    logger.debug(f"Number of items: {len(equip_handles)}")
+    logger.debug(f"Special: {special}")
+    logger.debug("@@@@@")
     equip_num = 255
     i = 0
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
-        print(current_handle.abilities())
+        logger.debug(current_handle.abilities())
         if special == "baroque":
             if current_handle.abilities() == [0x8063, 255, 255, 255]:
                 equip_num = i
@@ -4638,14 +4644,14 @@ def equip_in_battle(equip_type="weap", ability_num=0, character=0, special="none
             if current_handle.abilities() == [32867, 32868, 32810, 32768]:
                 equip_num = i
         elif ability_num == 0:
-            print("Equipping just the first available equipment.")
+            logger.debug("Equipping just the first available equipment.")
             equip_num = 0
         elif current_handle.has_ability(ability_num):  # First Strike for example
             equip_num = i
         i += 1
     while memory.main.battle_cursor_3() != equip_num:
-        print("'''Battle cursor 3:", memory.main.battle_cursor_3())
-        print("'''equip_num:", equip_num)
+        logger.debug(f"'''Battle cursor 3: {memory.main.battle_cursor_3()}")
+        logger.debug(f"'''equip_num: {equip_num}")
         if memory.main.battle_cursor_3() < equip_num:
             xbox.tap_down()
         else:
@@ -4653,7 +4659,7 @@ def equip_in_battle(equip_type="weap", ability_num=0, character=0, special="none
     while memory.main.interior_battle_menu():
         xbox.tap_b()
 
-    print("Desired equipment is in slot ", equip_num)
+    logger.debug(f"Desired equipment is in slot {equip_num}")
 
 
 def check_character_ok(char_num):
@@ -4699,7 +4705,7 @@ def calculate_spare_change_movement(gil_amount):
         if amount > 5:
             gil_amount += 10 ** (index + 1)
         position[index] = amount
-    print(position)
+    logger.debug(position)
     for cur in range(6, -1, -1):
         if not position[cur]:
             continue
@@ -4719,7 +4725,7 @@ def calculate_spare_change_movement(gil_amount):
 
 
 def charge_rikku_od():
-    print("#####Battle Number:", memory.main.get_encounter_id())
+    logger.debug(f"#####Battle Number: {memory.main.get_encounter_id()}")
     if memory.main.get_overdrive_battle(
         6
     ) != 100 and memory.main.get_encounter_id() in [
@@ -4734,10 +4740,10 @@ def charge_rikku_od():
         if (
             not memory.main.tidus_escaped_state() and not check_tidus_ok()
         ) or not check_rikku_ok():
-            print("Tidus or Rikku incapacitated, fleeing")
-            print("--", not memory.main.tidus_escaped_state())
-            print("--", not check_tidus_ok())
-            print("--", not check_rikku_ok())
+            logger.debug("Tidus or Rikku incapacitated, fleeing")
+            logger.debug(f"-- {not memory.main.tidus_escaped_state()}")
+            logger.debug(f"-- {not check_tidus_ok()}")
+            logger.debug(f"-- {not check_rikku_ok()}")
             flee_all()
         else:
             while not memory.main.battle_complete():
@@ -4776,13 +4782,13 @@ def check_gems():
     gem_slot = memory.main.get_item_slot(28)
     if gem_slot < 200:
         gems += memory.main.get_item_count_slot(gem_slot)
-    print("Total gems:", gems)
+    logger.debug(f"Total gems: {gems}")
     return gems
 
 
 @battle.utils.speedup_decorator
 def calm_lands_manip():
-    print("++Battle number:", memory.main.get_encounter_id())
+    logger.debug(f"++ Calm Lands Battle number: {memory.main.get_encounter_id()}")
     rng_10_next_chance_low = memory.main.next_chance_rng_10(12)
     low_array = [273, 275, 276, 281, 283, 284]
     rng_10_next_chance_mid = memory.main.next_chance_rng_10(60)
@@ -4790,15 +4796,15 @@ def calm_lands_manip():
     rng_10_next_chance_high = memory.main.next_chance_rng_10(128)
     high_array = [278, 286, 288]
     if check_gems() < 2:
-        print("++++ Gems: ", check_gems())
-        print("++++ Calm Lands battle, need gems.")
+        logger.debug(f"++++ Gems: {check_gems()}")
+        logger.debug("++++ Calm Lands battle, need gems.")
         calm_lands_gems()
     else:
-        print("++++ Gems good. NEA manip logic.")
+        logger.debug("++++ Gems good. NEA manip logic.")
         advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
         if advance_pre_x not in [0, 2] and advance_post_x not in [0, 2]:
             # Non-zero for both
-            print("Not lined up for NEA")
+            logger.debug("Not lined up for NEA")
             if (
                 rng_10_next_chance_low == 0
                 and memory.main.get_encounter_id() in low_array
@@ -4815,7 +4821,7 @@ def calm_lands_manip():
             ):
                 advance_rng_12()
             else:  # If we can't advance on this battle, try to get the next "mid" level advance.
-                print("Can't drop off of this battle.")
+                logger.debug("Can't drop off of this battle.")
                 advance_rng_10(rng_10_next_chance_mid)
         elif advance_post_x == 2:
             # Lined up for non-drop defender X + drops on B&Y drops.
@@ -4825,9 +4831,9 @@ def calm_lands_manip():
             else:
                 flee_all()
         elif advance_post_x == 0:  # Lined up for next drop NEA before defender X.
-            print("The next equipment to drop will be NEA")
+            logger.debug("The next equipment to drop will be NEA")
             if memory.main.get_coords()[0] > 1300:
-                print("--Near Gagazet, just get off RNG10 equipment drop.")
+                logger.debug("--Near Gagazet, just get off RNG10 equipment drop.")
                 if memory.main.next_chance_rng_10() == 0:
                     advance_rng_10(1)
                     # Gets us off of a drop on defender X - probably. :D
@@ -4837,24 +4843,24 @@ def calm_lands_manip():
             elif memory.main.next_chance_rng_10_calm():
                 advance_rng_10(memory.main.next_chance_rng_10_calm())
             else:
-                print("Lined up OK, ready for NEA. Just flee.")
+                logger.debug("Lined up OK, ready for NEA. Just flee.")
                 flee_all()
         elif advance_pre_x == 2:  # Lined up for drops on defender X + B&Y drops.
             if memory.main.next_chance_rng_10() != 0:
                 advance_rng_10(memory.main.next_chance_rng_10())
             else:
-                print("Perfectly lined up pre-X + B&Y. Just flee.")
+                logger.debug("Perfectly lined up pre-X + B&Y. Just flee.")
                 flee_all()
         elif advance_pre_x == 0:
-            print("The second equipment drop from now will be NEA.")
+            logger.debug("The second equipment drop from now will be NEA.")
             if memory.main.next_chance_rng_10() != 0:
                 advance_rng_10(memory.main.next_chance_rng_10())
                 # Trying to get onto a good drop.
             else:
-                print("Perfectly lined up pre-X. Just flee.")
+                logger.debug("Perfectly lined up pre-X. Just flee.")
                 flee_all()
         else:
-            print("Fallback logic, not sure.")
+            logger.debug("Fallback logic, not sure.")
             memory.main.wait_frames(180)
             flee_all()
 
@@ -4872,32 +4878,32 @@ def calm_steal():
 
 def advance_rng_10(num_advances: int):
     escape_success_count = 0
-    print("#################")
-    print("###RNG10 logic###")
-    print("##    ", num_advances, "      ##")
-    print("##    ", screen.faint_check(), "      ##")
-    print("#################")
+    logger.debug("#################")
+    logger.debug("###RNG10 logic###")
+    logger.debug(f"##    {num_advances}      ##")
+    logger.debug(f"##    {screen.faint_check()}      ##")
+    logger.debug("#################")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            print("+++Registering advances:", num_advances)
+            logger.debug(f"+++Registering advances: {num_advances}")
             if memory.main.battle_type() == 2:
-                print("+++Registering ambush")
+                logger.debug("+++Registering ambush")
                 flee_all()
             elif memory.main.get_encounter_id() == 321:
-                print("+++Registering evil jar guy, fleeing.")
+                logger.debug("+++Registering evil jar guy, fleeing.")
                 flee_all()
             elif memory.main.get_encounter_id() == 287:
-                print("+++Registering Anaconadeur - I am French!!! - fleeing")
+                logger.debug("+++Registering Anaconadeur - I am French!!! - fleeing")
                 flee_all()
             elif num_advances >= 6:
                 if escape_success_count == 0:
                     if escape_one():
                         escape_success_count += 1
                 elif faint_check_with_escapes() == 2:
-                    print("+++Registering two people down. Escaping.")
+                    logger.debug("+++Registering two people down. Escaping.")
                     flee_all()
                 elif screen.turn_kimahri() or screen.turn_rikku():
-                    print("+++Registering turn, steal character")
+                    logger.debug("+++Registering turn, steal character")
                     # Most convenient since overdrive is needed for Flux.
                     if num_advances % 3 != 0:
                         calm_steal()
@@ -4928,7 +4934,7 @@ def advance_rng_10(num_advances: int):
                     if escape_one():
                         escape_success_count += 1
                 elif screen.turn_kimahri():
-                    print("+++Registering turn, steal character")
+                    logger.debug("+++Registering turn, steal character")
                     # Most convenient since overdrive is needed for Flux.
                     if num_advances % 3 != 0:
                         calm_steal()
@@ -4947,9 +4953,9 @@ def advance_rng_10(num_advances: int):
                 else:
                     defend()
             elif num_advances in [1, 2]:
-                print("+++Registering advances:", num_advances)
+                logger.debug(f"+++Registering advances: {num_advances}")
                 if screen.turn_kimahri():
-                    print("+++Registering turn, steal character")
+                    logger.debug("+++Registering turn, steal character")
                     calm_steal()
                     num_advances -= 1
                 elif 3 not in memory.main.get_active_battle_formation():
@@ -4961,15 +4967,15 @@ def advance_rng_10(num_advances: int):
                 else:
                     defend()  # should not occur.
             else:  # any other scenarios, ready to advance.
-                print("+++Registering no advances needed, forcing flee.")
+                logger.debug("+++Registering no advances needed, forcing flee.")
                 flee_all()
     memory.main.click_to_control_3()
 
 
 def rng_12_attack(try_impulse=False):
-    print("#################")
-    print("###RNG12 logic (attack only) ###")
-    print("#################")
+    logger.debug("#################")
+    logger.debug("###RNG12 logic (attack only) ###")
+    logger.debug("#################")
     if screen.turn_aeon():
         if memory.main.get_encounter_id() in [283, 309, 313]:
             attack_by_num(21, "u")  # Second target
@@ -4990,17 +4996,17 @@ def rng_12_attack(try_impulse=False):
 
 
 def advance_rng_12():
-    print("#################")
-    print("###RNG12 logic (decision logic) ###")
-    print("#################")
+    logger.debug("#################")
+    logger.debug("###RNG12 logic (decision logic) ###")
+    logger.debug("#################")
     attack_count = False
     aeon_turn = False
     use_impulse = False
     double_drop = False
     while memory.main.battle_active():
         if memory.main.get_encounter_id() == 321:
-            print("+++Registering evil jar guy")
-            print("Aw hell naw, we want nothing to do with this guy!")
+            logger.debug("+++Registering evil jar guy")
+            logger.debug("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
             pre_x, post_x = rng_track.nea_track()
@@ -5017,10 +5023,10 @@ def advance_rng_12():
                     aeon_summon(4)
             elif screen.turn_aeon():
                 num_enemies = len(memory.main.get_enemy_current_hp())
-                print("+++ ", memory.main.get_enemy_current_hp())
-                print("+++ ", num_enemies)
+                logger.debug(f"+++ {memory.main.get_enemy_current_hp()}")
+                logger.debug(f"+++ {num_enemies}")
                 check_ahead = num_enemies * 3
-                print("+++ ", check_ahead)
+                logger.debug(f"+++ {check_ahead}")
                 ahead_array = memory.main.next_chance_rng_10_full()
                 for h in range(check_ahead):
                     if h == 3:
@@ -5080,26 +5086,26 @@ def ghost_kill():
         silence_slot = 255  # will be used while prepping RNG10 anyway.
 
     if owner2 in [0, 4, 6]:
-        print("Aeon kill results in NEA on char:", owner2)
+        logger.debug(f"Aeon kill results in NEA on char:{owner2}")
         ghost_kill_aeon()
     elif silence_slot > 200:
-        print("No silence grenade, going with aeon kill: ", owner2)
+        logger.debug(f"No silence grenade, going with aeon kill: {owner2}")
         ghost_kill_aeon()
     elif owner1 in [0, 4, 6]:
-        print("Any character kill results in NEA on char:", owner1)
+        logger.debug(f"Any character kill results in NEA on char:{owner1}")
         ghost_kill_any(silence_slot=silence_slot, self_haste=tidus_hasted)
     elif owner1 == 9:
-        print("Has to be Tidus kill: ", owner1)
+        logger.debug(f"Has to be Tidus kill: {owner1}")
         ghost_kill_tidus(silence_slot=silence_slot, self_haste=tidus_hasted)
     else:
-        print("No way to get an optimal drop. Resorting to aeon: ", owner2)
+        logger.debug(f"No way to get an optimal drop. Resorting to aeon: {owner2}")
         ghost_kill_aeon()
 
     memory.main.click_to_control_3()
 
 
 def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
-    print("RNG10 is not aligned. Special logic to align.")
+    logger.debug("RNG10 is not aligned. Special logic to align.")
     # Premise is that we must have a silence grenade in inventory.
     # We should force extra manip in gorge if no silence grenade,
     # so should be guaranteed if this triggers.
@@ -5150,17 +5156,17 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     attack()
                 else:
                     defend()
+    logger.debug("RNG10 is now aligned.")
     return tidus_hasted
-    print("RNG10 is now aligned.")
 
 
 def ghost_kill_tidus(silence_slot: int, self_haste: bool):
-    print("++Silence slot:", silence_slot)
+    logger.debug(f"++Silence slot: {silence_slot}")
     while memory.main.battle_active():
         # Try to get NEA on Tidus
         if memory.main.turn_ready():
             if 0 not in memory.main.get_active_battle_formation():
-                print("+++Get Tidus back in")
+                logger.debug("+++Get Tidus back in")
                 buddy_swap_tidus()
             elif screen.turn_tidus():
                 if not self_haste:
@@ -5174,7 +5180,7 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                 else:
                     attack("none")
             elif 1 not in memory.main.get_active_battle_formation():
-                print("+++Get Yuna in for extra smacks")
+                logger.debug("+++Get Yuna in for extra smacks")
                 buddy_swap_yuna()
             elif screen.turn_yuna() and memory.main.get_enemy_current_hp()[0] > 3000:
                 attack("none")
@@ -5185,11 +5191,11 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
 def ghost_kill_any(silence_slot: int, self_haste: bool):
     yuna_haste = False
     item_thrown = silence_slot >= 200
-    print("++Silence slot:", silence_slot)
+    logger.debug(f"++Silence slot: {silence_slot}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if 0 not in memory.main.get_active_battle_formation():
-                print("+++Get Tidus back in")
+                logger.debug("+++Get Tidus back in")
                 buddy_swap_tidus()
             elif screen.turn_tidus():
                 if not self_haste:
@@ -5210,7 +5216,7 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                 else:
                     attack("none")
             elif 1 not in memory.main.get_active_battle_formation():
-                print("+++Get Yuna in for extra smacks")
+                logger.debug("+++Get Yuna in for extra smacks")
                 buddy_swap_yuna()
             elif screen.turn_yuna():
                 attack("none")

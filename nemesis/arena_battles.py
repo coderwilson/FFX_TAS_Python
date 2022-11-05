@@ -1,3 +1,5 @@
+import logging
+
 import battle.main
 import battle.overdrive
 import memory.main
@@ -10,6 +12,7 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()

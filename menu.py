@@ -281,7 +281,7 @@ def mrr_grid_1():
         grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
-    logger.debug("Wakka late menu (before):", wakkaLateMenu)
+    logger.debug(f"Wakka late menu (before): {wakkaLateMenu}")
 
     menu_grid.use_and_quit()
 
@@ -305,7 +305,7 @@ def mrr_grid_2():
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_quit()
         game_vars.wakka_late_menu_set(False)
-        logger.debug("Wakka late menu updated:", game_vars.wakka_late_menu())
+        logger.debug(f"Wakka late menu updated: {game_vars.wakka_late_menu()}")
     else:
         logger.debug("Not enough sphere levels yet.")
 
