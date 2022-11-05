@@ -2969,7 +2969,6 @@ def attack_highbridge():
         attack("none")
 
 
-@battle.utils.speedup_decorator
 def calm_lands_gems():
     while not memory.main.turn_ready():
         pass
