@@ -27,7 +27,7 @@ def speedup_decorator(func):
     def wrapper(*args, **kwargs):
         if game_vars.get_battle_speedup():
             logger.debug(f"Speeding battle up: {func.__name__}")
-            monitor = threading.Thread(target=_monitor_battle)
+            monitor = threading.Thread(target=_monitor_battle, daemon=True)
             monitor.start()
             ret_val = func(*args, **kwargs)
             monitor.join()
