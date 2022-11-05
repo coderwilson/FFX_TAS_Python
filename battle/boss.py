@@ -119,7 +119,7 @@ def klikk():
         and memory.main.user_control()
         and memory.main.get_coords()[1] < 15
     ):
-        # print(memory.main.get_map())
+        # logger.debug(memory.main.get_map())
         if game_vars.csr():
             FFXC.set_value("btn_b", 1)
         else:
@@ -306,7 +306,7 @@ def echuilles():
                     logger.debug("Dark Attack")
                     battle.main.use_skill(0)  # Dark Attack
                 # elif memory.main.get_enemy_current_hp()[0] <= 558:
-                #    print("Ready for Tidus Overdrive. Wakka defends.")
+                #    logger.debug("Ready for Tidus Overdrive. Wakka defends.")
                 #    defend()
                 else:
                     logger.debug("Wakka attack")
@@ -704,7 +704,7 @@ def extractor():
             ):
                 battle.main.revive()
             elif screen.turn_tidus():
-                print(memory.main.get_actor_coords(3))
+                logger.debug(memory.main.get_actor_coords(3))
                 if tidus_cheer:
                     cheer_count += 1
                     battle.main.cheer()
