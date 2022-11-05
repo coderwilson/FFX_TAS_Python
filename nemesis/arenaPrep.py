@@ -490,7 +490,7 @@ def advanced_battle_logic():
                             # Double Gemini, two different locations
                             if memory.main.get_use_items_slot(42) < 100:
                                 battle.main.use_item(
-                                    memory.main.get_use_items_slot(42), rikku_flee=False
+                                    memory.main.get_use_items_slot(42), rikku_flee=True
                                 )
                             else:
                                 battle.main.defend()
@@ -498,7 +498,7 @@ def advanced_battle_logic():
                             # Armor bomber guys
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
-                                    memory.main.get_use_items_slot(41), rikku_flee=False
+                                    memory.main.get_use_items_slot(41), rikku_flee=True
                                 )
                             else:
                                 battle.main.defend()
@@ -506,7 +506,7 @@ def advanced_battle_logic():
                             # Demonolith
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
-                                    memory.main.get_use_items_slot(41), rikku_flee=False
+                                    memory.main.get_use_items_slot(41), rikku_flee=True
                                 )
                             else:
                                 battle.main.defend()
@@ -517,7 +517,7 @@ def advanced_battle_logic():
                             )
                             if memory.main.get_use_items_slot(41) < 100:
                                 battle.main.use_item(
-                                    memory.main.get_use_items_slot(41), rikku_flee=False
+                                    memory.main.get_use_items_slot(41), rikku_flee=True
                                 )
                             else:
                                 battle.main.defend()
@@ -533,13 +533,13 @@ def advanced_battle_logic():
                             # Varuna, use purifying salt to remove haste
                             # Safety potions are fun.
                             battle.main.use_item(
-                                memory.main.get_use_items_slot(63), rikku_flee=False
+                                memory.main.get_use_items_slot(63), rikku_flee=True
                             )
                         elif encounter_id == 426:
                             # Master Tonberry
                             if not sleepPowder:
                                 battle.main.use_item(
-                                    memory.main.get_use_items_slot(37), rikku_flee=False
+                                    memory.main.get_use_items_slot(37), rikku_flee=True
                                 )
                             else:
                                 if memory.main.get_use_items_slot(41) < 100:
@@ -556,7 +556,7 @@ def advanced_battle_logic():
                         ):
                             if not sleepPowder:
                                 battle.main.use_item(
-                                    memory.main.get_use_items_slot(37), rikku_flee=False
+                                    memory.main.get_use_items_slot(37), rikku_flee=True
                                 )
                             else:
                                 if memory.main.get_use_items_slot(41) < 100:
