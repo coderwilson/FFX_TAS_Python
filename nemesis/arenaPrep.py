@@ -74,9 +74,6 @@ def air_ship_destination(dest_num=0, force_omega=False):
 
 
 def unlock_omega():
-    if game_vars.csr():
-        return
-
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
             nemesis.targetPath.set_movement([-251, 340])
