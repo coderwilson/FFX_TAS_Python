@@ -2271,7 +2271,6 @@ def fullheal(target: int, direction: str):
 
 
 # Process written by CrimsonInferno
-@battle.utils.speedup_decorator
 def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
     print("Wendigo Res/Heal function")
     party_hp = memory.main.get_battle_hp()
