@@ -81,7 +81,7 @@ def drop_slots(enemy: str = "ghost"):
     return MONSTERS[enemy].equipment["slots_range"]
 
 
-def slot_mod(enemy: str = "ghost"):
+def slot_modifier(enemy: str = "ghost"):
     return MONSTERS[enemy].equipment["slots_modifier"]
 
 
@@ -89,7 +89,7 @@ def drop_ability_count(enemy: str = "ghost"):
     return MONSTERS[enemy].equipment["max_ability_rolls_range"]
 
 
-def ability_mod(enemy: str = "ghost"):
+def ability_modifier(enemy: str = "ghost"):
     return MONSTERS[enemy].equipment["max_ability_rolls_modifier"]
 
 
@@ -147,8 +147,8 @@ def item_to_be_dropped(
     party_size: int = 7,
 ):
     test_mode = False  # Doesn't functionally change, but prints more stuff.
-    slot_mod = slot_mod(enemy=enemy)
-    ability_mod = ability_mod(enemy=enemy)
+    slot_mod = slot_modifier(enemy=enemy)
+    ability_mod = ability_modifier(enemy=enemy)
 
     if party_size == 2:
         party_chars = [0, 4]
