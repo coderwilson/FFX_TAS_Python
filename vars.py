@@ -1,6 +1,9 @@
+import logging
 import os
 
 import config
+
+logger = logging.getLogger(__name__)
 
 
 class AllVars:
@@ -135,14 +138,14 @@ class AllVars:
         return self.set_seed
 
     def print_arena_status(self):
-        print("###############################")
-        print("Area:", self.area_results)
-        print("Species:", self.species_results)
-        print("Original:", self.original_results)
-        print("###############################")
+        logger.debug("###############################")
+        logger.debug(f"Area: {self.area_results}")
+        logger.debug(f"Species: {self.species_results}")
+        logger.debug(f"Original: {self.original_results}")
+        logger.debug("###############################")
 
     def arena_success(self, array_num, index):
-        print(array_num, "|", index)
+        logger.debug(f"arena_success(): {array_num} | {index}")
         if array_num == 0:
             self.area_results[index] = 1
         elif array_num == 1:
@@ -234,7 +237,7 @@ class AllVars:
         return self.first_hits[index]
 
     def print_first_hits(self):
-        print(self.first_hits)
+        logger.debug(f"print_first_hits(): {self.first_hits}")
 
     def game_save_path(self):
         return self.savePath
@@ -258,7 +261,7 @@ class AllVars:
         return self.csr_value
 
     def set_csr(self, value):
-        print("Setting CSR:", value)
+        logger.debug(f"Setting CSR: {value}")
         self.csr_value = value
 
     def complete_full_kilik_menu(self):
@@ -328,7 +331,7 @@ class AllVars:
         self.rescue_count += 1
 
     def completed_rescue_fights(self):
-        print(f"Completed {self.rescue_count} exp kills")
+        logger.debug(f"Completed {self.rescue_count} exp kills")
         return self.rescue_count >= 4
 
     def add_ytk_farm(self):
