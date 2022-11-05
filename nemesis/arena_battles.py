@@ -822,7 +822,7 @@ def item_dump():
 
 def quick_reset_logic():
     reset.reset_to_main_menu()
-    memory.ain.wait_frames(90)
+    memory.main.wait_frames(90)
     while memory.main.get_map() != 23:
         FFXC.set_value("btn_start", 1)
         memory.main.wait_frames(2)
