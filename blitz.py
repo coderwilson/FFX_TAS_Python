@@ -348,8 +348,10 @@ def get_char_radius(player_index: int = 10):
 def radius_movement(radius: int = 580, direction="forward"):
     player_coords = player_array[controlling_player()].get_coords()
     target_coords = [-400, -400]
-    player_coords[0] *= radius / get_char_radius(controlling_player())
-    player_coords[1] *= radius / get_char_radius(controlling_player())
+    char_radius = get_char_radius(controlling_player())
+    if char_radius != 0:
+        player_coords[0] *= radius / char_radius
+        player_coords[1] *= radius / char_radius
 
     if direction == "forward" and -30 < player_coords[0] < 30:
         FFXC.set_movement(-1, -1)
@@ -365,8 +367,11 @@ def radius_movement(radius: int = 580, direction="forward"):
         except:
             player_coords = player_array[controlling_player()].get_coords()
             target_coords = [-400, -400]
-            player_coords[0] *= radius / get_char_radius(controlling_player())
-            player_coords[1] *= radius / get_char_radius(controlling_player())
+            char_radius = get_char_radius(controlling_player())
+            if char_radius != 0:
+                player_coords[0] *= radius / char_radius
+                player_coords[1] *= radius / char_radius
+
             if direction == "forward":
                 target_coords = [player_coords[0], player_coords[1]]
             else:
