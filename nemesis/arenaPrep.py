@@ -3041,7 +3041,7 @@ def gagazet(cap_num: int = 10):
                 checkpoint = 12
 
             # NEA decisions
-            if neArmor == True and checkpoint in [7,18]:
+            if neArmor == True and checkpoint in [7, 20]:
                 menu.remove_all_nea()
                 neArmor = False
             elif neArmor == False and checkpoint == 4:
