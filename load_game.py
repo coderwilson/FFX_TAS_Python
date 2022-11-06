@@ -230,8 +230,11 @@ def load_into_game(gamestate: str, step_counter: str):
         load_save_num(114)
         game_vars.set_nem_checkpoint_ap(15)  # See nemesis.menu
     if gamestate == "Nem_Farm" and step_counter == 19:  # Gagazet
-        load_save_num(115)
-        game_vars.set_nem_checkpoint_ap(19)  # See nemesis.menu
+        # load_save_num(115)
+        # game_vars.set_nem_checkpoint_ap(19)  # See nemesis.menu
+        load_save_num(29)
+        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 21:
         load_save_num(79)
         nemesis.arenaPrep.arena_return()

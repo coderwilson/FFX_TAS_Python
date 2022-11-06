@@ -3041,13 +3041,13 @@ def gagazet(cap_num: int = 10):
                 checkpoint = 12
 
             # NEA decisions
-            if neArmor == True and checkpoint in [9, 17]:
+            if neArmor == True and checkpoint in [7,18]:
                 menu.remove_all_nea()
                 neArmor = False
             elif neArmor == False and checkpoint == 4:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
-            elif neArmor == False and checkpoint == 13 and prefArea != 2:
+            elif neArmor == False and checkpoint == 15 and prefArea != 2:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 
