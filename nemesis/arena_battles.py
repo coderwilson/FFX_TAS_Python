@@ -1,5 +1,6 @@
 import logging
 
+import menu
 import battle.main
 import battle.overdrive
 import memory.main
@@ -461,7 +462,7 @@ def battles_1():
     restock_downs()
     nemesis.arenaSelect.arena_menu_select(4)
     memory.main.full_party_format("kilikawoods1")
-    nemesis.menu.tidusSlayer(odPos=0)
+    menu.tidus_slayer(odPos=0)
 
     check_yojimbo_possible()
 
@@ -519,7 +520,7 @@ def battles_1():
     check_yojimbo_possible()
 
     nemesis.arenaSelect.arena_menu_select(4)
-    nemesis.menu.tidusSlayer(odPos=2)
+    menu.tidus_slayer(odPos=2)
     arena_npc()
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=13, monster_index=6)
@@ -560,7 +561,7 @@ def battles_1():
     check_yojimbo_possible()
 
     nemesis.arenaSelect.arena_menu_select(4)
-    nemesis.menu.tidusSlayer(odPos=0)
+    menu.tidus_slayer(odPos=0)
     arena_npc()
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
