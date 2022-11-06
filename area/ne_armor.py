@@ -107,6 +107,7 @@ def next_green():
     logger.debug("## Next Ghost coming up:")
     logger.debug(f"## Green: {next_green}")
     logger.debug(f"## White: {next_white}")
+    go_green = False
     if next_green < next_white and memory.main.next_chance_rng_10() == 0:
         if next_green >= 2:
             go_green = True
@@ -117,6 +118,7 @@ def next_green():
         else:
             tts.message("White")
             tts.message(str(next_white))
+    return go_green
 
 
 def drop_hunt():
