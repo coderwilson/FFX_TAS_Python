@@ -75,10 +75,12 @@ def initialize_logging():
     # Set up the console logger
     console = logging.StreamHandler()
     console.setLevel(console_log_level)  # Log the appropriate information to console
+
+    # Apply black&white formatter by default
+    formatter_to_use = bw_log_formatter
     if color_log:
-        console.setFormatter(color_log_formatter)  # Apply color formatter
-    else:
-        console.setFormatter(bw_log_formatter)  # Apply black&white formatter
+        formatter_to_use = color_log_formatter  # Apply color formatter
+    console.setFormatter(formatter_to_use)
 
     # Add the handlers to the root logger
     logging.getLogger("").addHandler(console)
