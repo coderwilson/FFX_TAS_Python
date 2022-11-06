@@ -101,7 +101,7 @@ def to_hidden_cave():
     logs.write_stats(prep_battles)
 
 
-def next_green():
+def next_green() -> bool:
     next_green = memory.main.next_chance_rng_01(version="green")[0][0]
     next_white = memory.main.next_chance_rng_01()[0][0]
     logger.debug("## Next Ghost coming up:")
