@@ -184,7 +184,10 @@ def cursor_1():
 def jassu_pass_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
-    if 540 <= memory.main.get_story_progress() < 570:
+    if (
+        memory.main.get_story_progress() >= 540
+        and memory.main.get_story_progress() < 570
+    ):
         base_timing = int(155 - shot_mod)
     else:
         base_timing = int(265 - shot_mod)
@@ -198,7 +201,10 @@ def jassu_pass_timing() -> int:
 def tidus_shot_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
-    if 540 < memory.main.get_story_progress() < 570:
+    if (
+        memory.main.get_story_progress() >= 540
+        and memory.main.get_story_progress() < 570
+    ):
         base_timing = int(169 - shot_mod)
     else:
         base_timing = int(288 - shot_mod)
@@ -265,7 +271,8 @@ def game_stage():
         current_stage = 30
     elif (
         memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 1
-        and 570 < memory.main.get_story_progress() < 700
+        and 570 < memory.main.get_story_progress()
+        and memory.main.get_story_progress() < 700
     ):
         # Ahead by 1 goal after Wakka enters, just end the game.
         current_stage = 30
@@ -274,7 +281,7 @@ def game_stage():
             current_stage = 20
         else:
             current_stage = 30
-    else:
+    elif current_stage == 0:
         for i in range(6):
             if stages[i] < game_clock():
                 current_stage = i
