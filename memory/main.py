@@ -958,10 +958,9 @@ def get_use_items_order():
     x = 0
     while x < len(item_array):
         try:
-            if item_array[x] == 20:
-                ignore_this_value = True
-                x += 1
-            elif item_array[x] < 23:
+            if item_array[x] in [52]:
+                del item_array[x]
+            elif item_array[x] < 20:
                 del item_array[x]
             elif item_array[x] > 69:
                 del item_array[x]
@@ -969,8 +968,6 @@ def get_use_items_order():
                 x += 1
         except Exception as y:
             logger.exception(y)
-            retry_this_value = True
-            logger.debug("Retrying value")
     return item_array
 
 

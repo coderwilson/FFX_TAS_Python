@@ -2397,25 +2397,10 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     if encounter_id == 217:  # Special Zu battle
         steal_direction = "up"  # Not confirmed
     # Flee from these battles
-    flee_battles = [
-        201,
-        203,
-        204,
-        205,
-        210,
-        212,
-        213,
-        215,
-        217,
-        219,
-        223,
-        224,
-        226,
-        227,
-    ]
+    flee_battle = [201, 203, 204, 205, 210, 212, 213, 215, 217, 219, 223, 224, 226, 227]
 
     # Next, determine what we want to do
-    if encounter_id in flee_battles:
+    if encounter_id in flee_battle:
         if status[0]:
             battle_goal = 3  # Nothing to do here, we just want to flee.
         else:
@@ -3683,8 +3668,8 @@ def steal_and_attack():
         if memory.main.turn_ready():
             if screen.turn_rikku():
                 grenade_slot = memory.main.get_item_slot(35)
-                gregrenade_count = memory.main.get_item_count_slot(grenade_slot)
-                if gregrenade_count < 5:
+                grenade_count = memory.main.get_item_count_slot(grenade_slot)
+                if grenade_count < 5:
                     steal()
                 else:
                     attack("none")
@@ -3707,8 +3692,8 @@ def steal_and_attack_pre_tros():
                 turn_counter += 1
                 if turn_counter == 1:
                     grenade_slot = memory.main.get_item_slot(35)
-                    gregrenade_count = memory.main.get_item_count_slot(grenade_slot)
-                    if gregrenade_count < 5:
+                    grenade_count = memory.main.get_item_count_slot(grenade_slot)
+                    if grenade_count < 5:
                         steal()
                     elif advances in [1, 2]:
                         steal()
@@ -3717,8 +3702,8 @@ def steal_and_attack_pre_tros():
                         attack("none")
                 elif turn_counter == 2:
                     grenade_slot = memory.main.get_item_slot(35)
-                    gregrenade_count = memory.main.get_item_count_slot(grenade_slot)
-                    if gregrenade_count < 6:
+                    grenade_count = memory.main.get_item_count_slot(grenade_slot)
+                    if grenade_count < 6:
                         steal()
                     elif advances in [1, 2]:
                         steal()

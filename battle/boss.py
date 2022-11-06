@@ -84,7 +84,7 @@ def klikk():
                     battle.main.attack("none")
                 klikk_attacks += 1
             elif screen.turn_rikku():
-                gregrenade_count = memory.main.get_item_count_slot(
+                grenade_count = memory.main.get_item_count_slot(
                     memory.main.get_item_slot(35)
                 )
                 if (
@@ -100,7 +100,7 @@ def klikk():
                 elif memory.main.get_enemy_current_hp()[0] < 58:
                     battle.main.attack("none")
                     klikk_attacks += 1
-                elif gregrenade_count < 6 and memory.main.next_steal(
+                elif grenade_count < 6 and memory.main.next_steal(
                     steal_count=steal_count
                 ):
                     logger.info("Attempting to steal from Klikk")
@@ -175,19 +175,19 @@ def tros():
                 elif screen.turn_rikku():
                     logger.debug("Rikku turn")
                     grenade_slot = memory.main.get_item_slot(35)
-                    gregrenade_count = memory.main.get_item_count_slot(grenade_slot)
+                    grenade_count = memory.main.get_item_count_slot(grenade_slot)
                     logger.debug("------------------------------")
-                    logger.debug(f"Current grenade count: {gregrenade_count}")
+                    logger.debug(f"Current grenade count: {grenade_count}")
                     logger.debug(f"Grenades used: {Grenades}")
                     logger.debug("------------------------------")
-                    total_grenades = gregrenade_count + Grenades
+                    total_grenades = grenade_count + Grenades
                     if total_grenades < 6:
                         if tros_pos == 1:
                             battle.main.defend()
                         else:
                             battle.main.steal()
                             Steals += 1
-                    elif gregrenade_count == 0:
+                    elif grenade_count == 0:
                         if tros_pos == 1:
                             battle.main.defend()
                         else:
