@@ -1,7 +1,10 @@
+import logging
+
 import memory.main
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -166,7 +169,7 @@ def quit_grid_ready():
 
 
 def use_first():
-    print("use first")
+    logger.debug("use first")
     while not ready_select_sphere():
         if first_position():
             xbox.menu_b()
@@ -178,7 +181,7 @@ def use_first():
 
 
 def move_first():
-    print("move first")
+    logger.debug("move first")
     while not move_active():
         if first_position():
             xbox.menu_b()
@@ -191,7 +194,7 @@ def move_first():
 
 
 def move_and_use():
-    print("move and use")
+    logger.debug("move and use")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
@@ -206,7 +209,7 @@ def move_and_use():
 
 
 def use_and_move():
-    print("use and move")
+    logger.debug("use and move")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
@@ -223,7 +226,7 @@ def use_and_move():
 
 
 def use_and_use_again():
-    print("use and use again")
+    logger.debug("use and use again")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
@@ -240,7 +243,7 @@ def use_and_use_again():
 
 
 def use_shift_left(toon):
-    print("use and shift")
+    logger.debug("use and shift")
     memory.main.wait_frames(1)
     xbox.menu_b()
     toon = toon.lower()
@@ -300,11 +303,11 @@ def use_shift_left(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_left()
-    print("Ready for grid: " + toon)
+    logger.debug(f"Ready for grid: {toon}")
 
 
 def use_shift_right(toon):
-    print("use and shift")
+    logger.debug("use and shift")
     xbox.menu_b()
     toon = toon.lower()
     if toon == "yuna":
@@ -364,11 +367,11 @@ def use_shift_right(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_right()
-    print("Ready for grid: " + toon)
+    logger.debug(f"Ready for grid: {toon}")
 
 
 def move_shift_left(toon):
-    print("Move and shift, left")
+    logger.debug("Move and shift, left")
     memory.main.wait_frames(2)
     xbox.menu_b()
     memory.main.wait_frames(2)
@@ -405,11 +408,11 @@ def move_shift_left(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_left()
-    print("Ready for grid: " + toon)
+    logger.debug(f"Ready for grid: {toon}")
 
 
 def move_shift_right(toon):
-    print("Move and shift, right")
+    logger.debug("Move and shift, right")
     memory.main.wait_frames(2)
     xbox.menu_b()
     memory.main.wait_frames(2)
@@ -446,7 +449,7 @@ def move_shift_right(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_right()
-    print("Ready for grid: " + toon)
+    logger.debug(f"Ready for grid: {toon}")
 
 
 def use_and_quit():
@@ -454,13 +457,13 @@ def use_and_quit():
     xbox.menu_b()
     while memory.main.s_grid_active():
         if ready_use_sphere():
-            print("Using the current item.")
+            logger.debug("Using the current item.")
             xbox.menu_b()
         elif first_position():
-            print("Opening the Quit menu")
+            logger.debug("Opening the Quit menu")
             xbox.menu_a()
         elif quit_grid_ready():
-            print("quitting sphere grid")
+            logger.debug("quitting sphere grid")
             xbox.menu_b()
     while memory.main.menu_number() != 5:
         pass
@@ -535,15 +538,15 @@ def sphere_num(sType) -> int:
 def sel_sphere(sType, shift):
     sNum = 255
     menuPos = 0
-    print("------------------------------")
-    print(sType)
+    logger.debug("------------------------------")
+    logger.debug(sType)
     sNum = sphere_num(sType)
-    print(sNum)
+    logger.debug(sNum)
     menuPos = memory.main.get_grid_items_slot(sNum)
-    print(menuPos)
-    print("------------------------------")
+    logger.debug(menuPos)
+    logger.debug("------------------------------")
     if menuPos == 255:
-        print("Sphere", sType, "is not in inventory.")
+        logger.debug(f"Sphere {sType} is not in inventory.")
         return
     while menuPos != memory.main.get_grid_cursor_pos():
         if menuPos > memory.main.get_grid_cursor_pos():

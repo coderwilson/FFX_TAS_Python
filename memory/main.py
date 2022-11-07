@@ -1,18 +1,21 @@
 import ctypes
 import ctypes.wintypes
+import logging
 import os.path
 import struct
 import time
 from collections import Counter
 from math import cos, sin
+from typing import List
 
 from ReadWriteMemory import Process, ReadWriteMemory
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
 import logs
 import pathing
 import vars
 import xbox
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -27,14 +30,14 @@ PROCESS_VM_WRITE = 0x0020
 
 MAX_PATH = 260
 
-baseValue = 0
+base_value = 0
 
 
 class LocProcess(Process):
     def __init__(self, *args, **kwargs):
         super(LocProcess, self).__init__(*args, **kwargs)
 
-    def readBytes(self, lp_base_address: int, size: int = 4):
+    def read_bytes(self, lp_base_address: int, size: int = 4):
         """
         See the original ReadWriteMemory values for details on how this works. This version allows us to pass
         the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
@@ -60,7 +63,7 @@ class LocProcess(Process):
             }
             ReadWriteMemoryError(error)
 
-    def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
+    def write_bytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
         """
         Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
         """
@@ -132,10 +135,10 @@ class FFXMemory(ReadWriteMemory):
 
 def start():
     global process
-    global xPtr
-    global yPtr
-    global coordsCounter
-    coordsCounter = 0
+    global x_ptr
+    global y_ptr
+    global coords_counter
+    coords_counter = 0
     success = False
 
     # rwm = ReadWriteMemory()
@@ -148,18 +151,20 @@ def start():
     logger.info("#############")
     process.open()
 
-    global baseValue
+    global base_value
     try:
         import zz_root_mem
 
         logger.info("Process Modules:")
-        baseValue = zz_root_mem.list_process_modules(process.pid)
+        base_value = zz_root_mem.list_process_modules(process.pid)
         logger.info("Process Modules complete")
-        logger.info(f"Dynamically determined memory address: {hex(baseValue)}")
+        logger.info(f"Dynamically determined memory address: {hex(base_value)}")
         success = True
-    except Exception as errCode:
-        logger.error(f"Could not get memory address dynamically. Error code: {errCode}")
-        baseValue = 0x00FF0000
+    except Exception as err_code:
+        logger.error(
+            f"Could not get memory address dynamically. Error code: {err_code}"
+        )
+        base_value = 0x00FF0000
         time.sleep(10)
     return success
 
@@ -170,98 +175,98 @@ def float_from_integer(integer):
 
 def wait_frames(frames: int):
     frames = max(round(frames), 1)
-    global baseValue
-    key = baseValue + 0x0088FDD8
-    current = process.readBytes(key, 4)
+    global base_value
+    key = base_value + 0x0088FDD8
+    current = process.read_bytes(key, 4)
     final = current + frames
     previous = current - 1
     while current < final:
         if not (current == previous or current == previous + 1):
             final = final - previous
         previous = current
-        current = process.readBytes(key, 4)
+        current = process.read_bytes(key, 4)
     return
 
 
 def rng_seed():
     if int(game_vars.confirmed_seed()) == 999:
-        global baseValue
-        key = baseValue + 0x003988A5
-        return process.readBytes(key, 1)
+        global base_value
+        key = base_value + 0x003988A5
+        return process.read_bytes(key, 1)
     return int(game_vars.confirmed_seed())
 
 
 def set_rng_seed(value):
-    global baseValue
-    key = baseValue + 0x003988A5
+    global base_value
+    key = base_value + 0x003988A5
     logger.info("+++++++++++++++++")
     logger.info(type(process))
     logger.info("+++++++++++++++++")
-    return process.writeBytes(key, value, 1)
+    return process.write_bytes(key, value, 1)
 
 
 def game_over():
-    global baseValue
-    key = baseValue + 0x00D2C9F1
-    if process.readBytes(key, 1) == 1:
+    global base_value
+    key = base_value + 0x00D2C9F1
+    if process.read_bytes(key, 1) == 1:
         return True
     else:
         return False
 
 
 def battle_complete():
-    global baseValue
-    key = baseValue + 0x00D2C9F1
-    if process.readBytes(key, 1) == 2:
+    global base_value
+    key = base_value + 0x00D2C9F1
+    if process.read_bytes(key, 1) == 2:
         return True
-    elif process.readBytes(key, 1) == 3:
+    elif process.read_bytes(key, 1) == 3:
         return True
     else:
         return False
 
 
 def battle_arena_results():
-    global baseValue
-    if process.readBytes(baseValue + 0x00D2C9F1, 1) == 2:
+    global base_value
+    if process.read_bytes(base_value + 0x00D2C9F1, 1) == 2:
         return True
     return False
 
 
 def game_over_reset():
-    global baseValue
-    key = baseValue + 0x00D2C9F1
-    process.writeBytes(key, 0, 1)
+    global base_value
+    key = base_value + 0x00D2C9F1
+    process.write_bytes(key, 0, 1)
 
 
 def battle_active():
-    global baseValue
-    key = baseValue + 0x00D2C9F1
-    return process.readBytes(key, 1) == 0
+    global base_value
+    key = base_value + 0x00D2C9F1
+    return process.read_bytes(key, 1) == 0
 
 
 def get_current_turn():
-    global baseValue
-    key = baseValue + 0x00D2AA00
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00D2AA00
+    return process.read_bytes(key, 1)
 
 
 def get_next_turn():
-    global baseValue
-    key = baseValue + 0x00D2AA04
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00D2AA04
+    return process.read_bytes(key, 1)
 
 
 def battle_menu_cursor():
-    global baseValue
+    global base_value
     if not turn_ready():
         return 255
-    key2 = baseValue + 0x00F3C926
-    return process.readBytes(key2, 1)
+    key2 = base_value + 0x00F3C926
+    return process.read_bytes(key2, 1)
 
 
 def battle_screen():
     if main_battle_menu():
-        global baseValue
+        global base_value
         if battle_menu_cursor() == 255:
             return False
         else:
@@ -272,9 +277,9 @@ def battle_screen():
 
 
 def turn_ready():
-    global baseValue
-    key = baseValue + 0x00F3F77B
-    if process.readBytes(key, 1) == 0:
+    global base_value
+    key = base_value + 0x00F3F77B
+    if process.read_bytes(key, 1) == 0:
         return False
     else:
         while not main_battle_menu():
@@ -286,75 +291,75 @@ def turn_ready():
 
 
 def battle_cursor_2():
-    global baseValue
-    key = baseValue + 0x00F3CA01
-    if process.readBytes(key, 1) != 0:
-        key = baseValue + 0x00F3CA0E
-        return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00F3CA01
+    if process.read_bytes(key, 1) != 0:
+        key = base_value + 0x00F3CA0E
+        return process.read_bytes(key, 1)
     else:
         return 255
 
 
 def battle_cursor_3():
-    global baseValue
-    key = baseValue + 0x00F3CAFE
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00F3CAFE
+    return process.read_bytes(key, 1)
 
 
 def overdrive_menu_active():
-    global baseValue
-    key = baseValue + 0x00F3D6F4
-    return process.readBytes(key, 1) == 4
+    global base_value
+    key = base_value + 0x00F3D6F4
+    return process.read_bytes(key, 1) == 4
 
 
 def overdrive_menu_active_wakka():
-    global baseValue
-    key = baseValue + 0x00DA0BD0
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00DA0BD0
+    return process.read_bytes(key, 1)
 
 
 def auron_overdrive_active():
-    global baseValue
-    key = baseValue + 0x00F3D6B4
-    return process.readBytes(key, 1) == 4
+    global base_value
+    key = base_value + 0x00F3D6B4
+    return process.read_bytes(key, 1) == 4
 
 
 def main_battle_menu():
-    global baseValue
-    key = baseValue + 0x00F3C911
-    if process.readBytes(key, 1) > 0:
+    global base_value
+    key = base_value + 0x00F3C911
+    if process.read_bytes(key, 1) > 0:
         return True
     else:
         return False
 
 
 def other_battle_menu():
-    global baseValue
-    key = baseValue + 0x00F3CA01
-    if process.readBytes(key, 1) > 0:
+    global base_value
+    key = base_value + 0x00F3CA01
+    if process.read_bytes(key, 1) > 0:
         return True
     else:
         return False
 
 
 def interior_battle_menu():
-    global baseValue
-    key = baseValue + 0x00F3CAF1
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00F3CAF1
+    return process.read_bytes(key, 1)
 
 
 def super_interior_battle_menu():
-    global baseValue
-    key = baseValue + 0x00F3CBE1
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00F3CBE1
+    return process.read_bytes(key, 1)
 
 
 def battle_target_id():
-    global baseValue
-    key = baseValue + 0x00F3D1B4
-    retVal = process.readBytes(key, 1)
-    logger.debug(f"Battle Target ID: {retVal}")
-    return retVal
+    global base_value
+    key = base_value + 0x00F3D1B4
+    ret_val = process.read_bytes(key, 1)
+    logger.debug(f"Battle Target ID: {ret_val}")
+    return ret_val
 
 
 def battle_line_target():
@@ -366,67 +371,68 @@ def enemy_targetted():
 
 
 def battle_target_active():
-    global baseValue
-    key = baseValue + 0x00F3D1B4
-    retVal = process.readBytes(key, 1)
-    logger.debug(f"Battle Target ID: {retVal}")
-    return retVal != 255
+    global base_value
+    key = base_value + 0x00F3D1B4
+    ret_val = process.read_bytes(key, 1)
+    logger.debug(f"Battle Target ID: {ret_val}")
+    return ret_val != 255
 
 
 def user_control():
-    global baseValue
-    # Auto updating via reference to the baseValue above
-    controlStruct = baseValue + 0x00F00740
-    inControl = process.read(controlStruct)
+    global base_value
+    # Auto updating via reference to the base_value above
+    control_struct = base_value + 0x00F00740
+    in_control = process.read(control_struct)
 
-    if inControl == 0:
+    if in_control == 0:
         return False
     else:
         return True
 
 
 def await_control():
-    waitCounter = 0
     logger.debug("Awaiting control (no clicking)")
-    while not user_control():
-        waitCounter += 1
-        if waitCounter % 10000000 == 0:
-            # TODO: flush instead?
-            logger.debug(f"Awaiting control - {waitCounter / 100000}")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                pbar.update()
     wait_frames(1)
+    logger.debug("User control restored.")
     return True
 
 
 def click_to_control_dumb():
-    waitCounter = 0
     logger.debug("Awaiting control (clicking)")
-    while not user_control():
-        xbox.tap_b()
-        waitCounter += 1
-        if waitCounter % 1000 == 0:
-            logger.debug(f"Awaiting control - {waitCounter / 1000}")
-    logger.debug("Control restored.")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                xbox.tap_b()
+    logger.debug("User control restored.")
     return True
 
 
 def click_to_control_smart():
-    waitCounter = 0
     logger.debug("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)
-    while not user_control():
-        if battle_active():
-            while battle_active():
-                xbox.tap_b()
-        if diag_skip_possible():
-            xbox.tap_b()
-        elif menu_open():
-            logger.debug("Post-battle menu open")
-            xbox.tap_b()
-        else:
-            pass
-        waitCounter += 1
-        if waitCounter % 10000 == 0:
-            logger.debug(f"Awaiting control - {waitCounter / 10000}")
+    with logging_redirect_tqdm():
+        fmt = "{desc}... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            pbar.set_description("Awaiting control")
+            while not user_control():
+                if battle_active():
+                    while battle_active():
+                        xbox.tap_b()
+                if diag_skip_possible():
+                    xbox.tap_b()
+                elif menu_open():
+                    xbox.tap_b()
+
+                if menu_open():
+                    pbar.set_description("Post-battle menu open")
+                else:
+                    pbar.set_description("Awaiting control")
     logger.debug("User control restored.")
     return True
 
@@ -444,19 +450,19 @@ def click_to_control_3():
 
 
 def click_to_control_special():
-    waitCounter = 0
     logger.debug("Awaiting control (clicking)")
-    while not user_control():
-        FFXC.set_value("btn_b", 1)
-        FFXC.set_value("btn_y", 1)
-        wait_frames(30 * 0.035)
-        FFXC.set_value("btn_b", 0)
-        FFXC.set_value("btn_y", 0)
-        wait_frames(30 * 0.035)
-        waitCounter += 1
-        if waitCounter % 10000 == 0:
-            logger.debug(f"Awaiting control - {waitCounter / 10000}")
+    with logging_redirect_tqdm():
+        fmt = "Awaiting control... elapsed {elapsed}"
+        with tqdm(bar_format=fmt) as pbar:
+            while not user_control():
+                FFXC.set_value("btn_b", 1)
+                FFXC.set_value("btn_y", 1)
+                wait_frames(30 * 0.035)
+                FFXC.set_value("btn_b", 0)
+                FFXC.set_value("btn_y", 0)
+                wait_frames(30 * 0.035)
     wait_frames(30 * 0.05)
+    logger.debug("User control restored.")
     return True
 
 
@@ -509,42 +515,42 @@ def await_event():
 
 def get_coords():
     global process
-    global baseValue
-    global xPtr
-    global yPtr
-    global coordsCounter
-    coordsCounter += 1
-    xPtr = baseValue + 0x0084DED0
-    yPtr = baseValue + 0x0084DED8
-    coord1 = process.get_pointer(xPtr)
-    x = float_from_integer(process.read(coord1))
-    coord2 = process.get_pointer(yPtr)
-    y = float_from_integer(process.read(coord2))
+    global base_value
+    global x_ptr
+    global y_ptr
+    global coords_counter
+    coords_counter += 1
+    x_ptr = base_value + 0x0084DED0
+    y_ptr = base_value + 0x0084DED8
+    coord_1 = process.get_pointer(x_ptr)
+    x = float_from_integer(process.read(coord_1))
+    coord_2 = process.get_pointer(y_ptr)
+    y = float_from_integer(process.read(coord_2))
 
     return [x, y]
 
 
 def ammes_fix(actor_index: int = 0):
     global process
-    global baseValue
-    basePtr = baseValue + 0x1FC44E4
-    baseAddr = process.read(basePtr)
-    # xCoord = 749, yCoord = -71
-    process.write(baseAddr + (0x880 * actor_index) + 0x0C, 0x443B4000)
-    process.write(baseAddr + (0x880 * actor_index) + 0x14, 0xC28E0000)
+    global base_value
+    base_ptr = base_value + 0x1FC44E4
+    base_addr = process.read(base_ptr)
+    # x_coord = 749, y_coord = -71
+    process.write(base_addr + (0x880 * actor_index) + 0x0C, 0x443B4000)
+    process.write(base_addr + (0x880 * actor_index) + 0x14, 0xC28E0000)
 
 
 def choco_eater_fun(actor_index: int = 0):
     global process
-    global baseValue
-    basePtr = baseValue + 0x1FC44E4
-    baseAddr = process.read(basePtr)
-    process.write(baseAddr + (0x880 * actor_index) + 0x14, 0xC4BB8000)
+    global base_value
+    base_ptr = base_value + 0x1FC44E4
+    base_addr = process.read(base_ptr)
+    process.write(base_addr + (0x880 * actor_index) + 0x14, 0xC4BB8000)
 
 
 def extractor_height():
     global process
-    global baseValue
+    global base_value
     height = get_actor_coords(3)[2]
     logger.debug(f"^^Extractor Height: {height}")
     return height
@@ -552,18 +558,18 @@ def extractor_height():
 
 def get_height():
     global process
-    global baseValue
-    global zPtr
+    global base_value
+    global z_ptr
 
-    zPtr = baseValue + 0x0084DED0
-    coord1 = process.get_pointer(zPtr)
-    return float_from_integer(process.read(coord1))
+    z_ptr = base_value + 0x0084DED0
+    coord_1 = process.get_pointer(z_ptr)
+    return float_from_integer(process.read(coord_1))
 
 
 def get_movement_vectors():
     global process
-    global baseValue
-    addr = baseValue + 0x00F00754
+    global base_value
+    addr = base_value + 0x00F00754
     ptr = process.get_pointer(addr)
     angle = float_from_integer(process.read(ptr))
     forward = [cos(angle), sin(angle)]
@@ -572,114 +578,114 @@ def get_movement_vectors():
 
 
 def get_camera():
-    global baseValue
-    angle = baseValue + 0x008A86B8
-    x = baseValue + 0x008A86F8
-    y = baseValue + 0x008A8700
-    z = baseValue + 0x008A86FC
-    angle2 = baseValue + 0x008A86C0
+    global base_value
+    angle = base_value + 0x008A86B8
+    x = base_value + 0x008A86F8
+    y = base_value + 0x008A8700
+    z = base_value + 0x008A86FC
+    angle2 = base_value + 0x008A86C0
 
     key = process.get_pointer(angle)
-    angleVal = round(float_from_integer(process.read(key)), 2)
+    angle_val = round(float_from_integer(process.read(key)), 2)
     key = process.get_pointer(x)
-    xVal = round(float_from_integer(process.read(key)), 2)
+    x_val = round(float_from_integer(process.read(key)), 2)
     key = process.get_pointer(y)
-    yVal = round(float_from_integer(process.read(key)), 2)
+    y_val = round(float_from_integer(process.read(key)), 2)
     key = process.get_pointer(z)
-    zVal = round(float_from_integer(process.read(key)), 2)
+    z_val = round(float_from_integer(process.read(key)), 2)
     key = process.get_pointer(angle2)
-    angleVal2 = round(float_from_integer(process.read(key)), 2)
+    angle_val_2 = round(float_from_integer(process.read(key)), 2)
 
-    retVal = [angleVal, xVal, yVal, zVal, angleVal2]
-    return retVal
+    ret_val = [angle_val, x_val, y_val, z_val, angle_val_2]
+    return ret_val
 
 
 def get_hp():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D32078
+    coord = base_value + 0x00D32078
     HP_Tidus = process.read(coord)
 
-    coord = baseValue + 0x00D3210C
+    coord = base_value + 0x00D3210C
     HP_Yuna = process.read(coord)
 
-    coord = baseValue + 0x00D321A0
+    coord = base_value + 0x00D321A0
     HP_Auron = process.read(coord)
 
-    coord = baseValue + 0x00D32234
+    coord = base_value + 0x00D32234
     HP_Kimahri = process.read(coord)
 
-    coord = baseValue + 0x00D322C8
+    coord = base_value + 0x00D322C8
     HP_Wakka = process.read(coord)
 
-    coord = baseValue + 0x00D3235C
+    coord = base_value + 0x00D3235C
     HP_Lulu = process.read(coord)
 
-    coord = baseValue + 0x00D323F0
+    coord = base_value + 0x00D323F0
     HP_Rikku = process.read(coord)
 
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
 
 def get_max_hp():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D32080
+    coord = base_value + 0x00D32080
     HP_Tidus = process.read(coord)
 
-    coord = baseValue + 0x00D32114
+    coord = base_value + 0x00D32114
     HP_Yuna = process.read(coord)
 
-    coord = baseValue + 0x00D321A8
+    coord = base_value + 0x00D321A8
     HP_Auron = process.read(coord)
 
-    coord = baseValue + 0x00D3223C
+    coord = base_value + 0x00D3223C
     HP_Kimahri = process.read(coord)
 
-    coord = baseValue + 0x00D322D0
+    coord = base_value + 0x00D322D0
     HP_Wakka = process.read(coord)
 
-    coord = baseValue + 0x00D32364
+    coord = base_value + 0x00D32364
     HP_Lulu = process.read(coord)
 
-    coord = baseValue + 0x00D323F8
+    coord = base_value + 0x00D323F8
     HP_Rikku = process.read(coord)
 
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
 
 def get_tidus_mp():
-    global baseValue
-    retVal = process.read(baseValue + 0xD3207C)
-    return retVal
+    global base_value
+    ret_val = process.read(base_value + 0xD3207C)
+    return ret_val
 
 
 def get_yuna_mp():
-    global baseValue
-    retVal = process.read(baseValue + 0xD32110)
-    return retVal
+    global base_value
+    ret_val = process.read(base_value + 0xD32110)
+    return ret_val
 
 
 def get_order():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D307E8
-    pos1 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307E9
-    pos2 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EA
-    pos3 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EB
-    pos4 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EC
-    pos5 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307ED
-    pos6 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EE
-    pos7 = process.readBytes(coord, 1)
+    coord = base_value + 0x00D307E8
+    pos1 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307E9
+    pos2 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EA
+    pos3 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EB
+    pos4 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EC
+    pos5 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307ED
+    pos6 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EE
+    pos7 = process.read_bytes(coord, 1)
 
     formation = [255, pos1, pos2, pos3, pos4, pos5, pos6, pos7]
     logger.debug(f"Party formation: {formation}")
@@ -687,53 +693,53 @@ def get_order():
 
 
 def get_order_six():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D307E8
-    pos1 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307E9
-    pos2 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EA
-    pos3 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EB
-    pos4 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EC
-    pos5 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307ED
-    pos6 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EE
-    pos7 = process.readBytes(coord, 1)
+    coord = base_value + 0x00D307E8
+    pos1 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307E9
+    pos2 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EA
+    pos3 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EB
+    pos4 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EC
+    pos5 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307ED
+    pos6 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EE
+    pos7 = process.read_bytes(coord, 1)
 
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
-    print(formation)
+    logger.debug(f"Party formation: {formation}")
     while 255 in formation:
         formation.remove(255)
     return formation
 
 
 def get_order_seven():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D307E8
-    pos1 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307E9
-    pos2 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EA
-    pos3 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EB
-    pos4 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EC
-    pos5 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307ED
-    pos6 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EE
-    pos7 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307EF
-    pos8 = process.readBytes(coord, 1)
-    coord = baseValue + 0x00D307F0
-    pos9 = process.readBytes(coord, 1)
+    coord = base_value + 0x00D307E8
+    pos1 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307E9
+    pos2 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EA
+    pos3 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EB
+    pos4 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EC
+    pos5 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307ED
+    pos6 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EE
+    pos7 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307EF
+    pos8 = process.read_bytes(coord, 1)
+    coord = base_value + 0x00D307F0
+    pos9 = process.read_bytes(coord, 1)
 
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
     while 255 in formation:
@@ -742,10 +748,10 @@ def get_order_seven():
 
 
 def get_char_formation_slot(char_num):
-    allSlots = get_order_seven()
+    all_slots = get_order_seven()
     x = 0
-    while x < len(allSlots):
-        if allSlots[x] == char_num:
+    while x < len(all_slots):
+        if all_slots[x] == char_num:
             return x
         else:
             x += 1
@@ -753,191 +759,191 @@ def get_char_formation_slot(char_num):
 
 
 def get_phoenix():
-    global baseValue
+    global base_value
 
     key = get_item_slot(6)
-    pDowns = get_item_count_slot(key)
-    print("Phoenix Down count:", pDowns)
-    return pDowns
+    p_downs = get_item_count_slot(key)
+    logger.debug(f"Phoenix Down count: {p_downs}")
+    return p_downs
 
 
 def get_power():
-    global baseValue
+    global base_value
 
     key = get_item_slot(70)
     power = get_item_count_slot(key)
-    print("Power spheres:", power)
+    logger.debug(f"Power spheres: {power}")
     return power
 
 
 def set_power(qty):
-    global baseValue
+    global base_value
 
     slot = get_item_slot(70)
-    key = baseValue + item_count_addr(slot)
-    process.writeBytes(key, qty, 1)
+    key = base_value + item_count_addr(slot)
+    process.write_bytes(key, qty, 1)
     power = get_power()
     return power
 
 
 def get_speed():
-    global baseValue
+    global base_value
 
     key = get_item_slot(72)
     speed = get_item_count_slot(key)
-    print("Speed spheres:", speed)
+    logger.debug(f"Speed spheres: {speed}")
     return speed
 
 
 def set_speed(qty):
-    global baseValue
+    global base_value
 
     slot = get_item_slot(72)
-    key = baseValue + item_count_addr(slot)
-    process.writeBytes(key, qty, 1)
+    key = base_value + item_count_addr(slot)
+    process.write_bytes(key, qty, 1)
     speed = get_speed()
     return speed
 
 
 def get_battle_hp():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F3F7A4
+    key = base_value + 0x00F3F7A4
     hp1 = process.read(key)
-    key = baseValue + 0x00F3F834
+    key = base_value + 0x00F3F834
     hp2 = process.read(key)
-    key = baseValue + 0x00F3F8C4
+    key = base_value + 0x00F3F8C4
     hp3 = process.read(key)
-    hpArray = [hp1, hp2, hp3]
-    return hpArray
+    hp_array = [hp1, hp2, hp3]
+    return hp_array
 
 
 def get_encounter_id():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2A8EC
+    key = base_value + 0x00D2A8EC
     formation = process.read(key)
 
     return formation
 
 
 def clear_encounter_id():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2A8EC
+    key = base_value + 0x00D2A8EC
     process.write(key, 0)
 
 
 def get_active_battle_formation():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F3F76C
-    char1 = process.readBytes(key, 1)
-    key = baseValue + 0x00F3F76E
-    char2 = process.readBytes(key, 1)
-    key = baseValue + 0x00F3F770
-    char3 = process.readBytes(key, 1)
+    key = base_value + 0x00F3F76C
+    char1 = process.read_bytes(key, 1)
+    key = base_value + 0x00F3F76E
+    char2 = process.read_bytes(key, 1)
+    key = base_value + 0x00F3F770
+    char3 = process.read_bytes(key, 1)
 
-    battleForm = [char1, char2, char3]
-    return battleForm
+    battle_form = [char1, char2, char3]
+    return battle_form
 
 
 def get_battle_formation():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F3F76C
-    char1 = process.readBytes(key, 1)
-    key = baseValue + 0x00F3F76E
-    char2 = process.readBytes(key, 1)
-    key = baseValue + 0x00F3F770
-    char3 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A3
-    char4 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A4
-    char5 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A5
-    char6 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A6
-    char7 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A7
-    char8 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A8
-    char9 = process.readBytes(key, 1)
-    key = baseValue + 0x00D2C8A9
-    char10 = process.readBytes(key, 1)
+    key = base_value + 0x00F3F76C
+    char1 = process.read_bytes(key, 1)
+    key = base_value + 0x00F3F76E
+    char2 = process.read_bytes(key, 1)
+    key = base_value + 0x00F3F770
+    char3 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A3
+    char4 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A4
+    char5 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A5
+    char6 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A6
+    char7 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A7
+    char8 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A8
+    char9 = process.read_bytes(key, 1)
+    key = base_value + 0x00D2C8A9
+    char10 = process.read_bytes(key, 1)
 
-    battleForm = [char4, char5, char6, char7, char8, char9, char10]
-    print(battleForm)
-    if 255 in battleForm:
-        while 255 in battleForm:
-            battleForm.remove(255)
-    battleForm.insert(0, char3)
-    battleForm.insert(0, char2)
-    battleForm.insert(0, char1)
-    print(battleForm)
-    return battleForm
+    battle_form = [char4, char5, char6, char7, char8, char9, char10]
+    logger.debug(f"Battle formation before: {battle_form}")
+    if 255 in battle_form:
+        while 255 in battle_form:
+            battle_form.remove(255)
+    battle_form.insert(0, char3)
+    battle_form.insert(0, char2)
+    battle_form.insert(0, char1)
+    logger.debug(f"Battle formation after: {battle_form}")
+    return battle_form
 
 
 def get_battle_char_slot(char_num) -> int:
-    battleForm = get_battle_formation()
-    if char_num not in battleForm:
+    battle_form = get_battle_formation()
+    if char_num not in battle_form:
         return 255
     try:
-        if battleForm[0] == char_num:
+        if battle_form[0] == char_num:
             return 0
-        if battleForm[1] == char_num:
+        if battle_form[1] == char_num:
             return 1
-        if battleForm[2] == char_num:
+        if battle_form[2] == char_num:
             return 2
-        if battleForm[3] == char_num:
+        if battle_form[3] == char_num:
             return 3
-        if battleForm[4] == char_num:
+        if battle_form[4] == char_num:
             return 4
-        if battleForm[5] == char_num:
+        if battle_form[5] == char_num:
             return 5
-        if battleForm[6] == char_num:
+        if battle_form[6] == char_num:
             return 6
     except Exception:
         return 255
 
 
 def get_battle_char_turn():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D36A68
-    battleCharacter = process.read(key)
-    return battleCharacter
+    key = base_value + 0x00D36A68
+    battle_character = process.read(key)
+    return battle_character
 
 
 def get_slvl_yuna():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D32104
+    coord = base_value + 0x00D32104
     return process.read(coord)
 
 
 def get_slvl_kim():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    coord = baseValue + 0x00D3222C
+    coord = base_value + 0x00D3222C
     return process.read(coord)
 
 
 def get_slvl_wakka():
-    global baseValue
+    global base_value
     # Out of combat HP only
 
-    key = baseValue + 0x00D322E7
-    sLvl = process.readBytes(key, 1)
-    print("Wakka current Slvl", sLvl)
-    return sLvl
+    key = base_value + 0x00D322E7
+    s_lvl = process.read_bytes(key, 1)
+    logger.debug(f"Wakka current Slvl: {s_lvl}")
+    return s_lvl
 
 
 def item_address(num):
-    global baseValue
-    return baseValue + 0x00D3095C + (num * 0x2)
+    global base_value
+    return base_value + 0x00D3095C + (num * 0x2)
 
 
 def get_items_order():
@@ -948,9 +954,9 @@ def get_items_order():
 
 
 def get_use_items_order():
-    itemArray = get_items_order()
+    item_array = get_items_order()
     x = 0
-    while x < len(itemArray):
+    while x < len(item_array):
         try:
             if itemArray[x] in [52]:
                 del itemArray[x]
@@ -973,6 +979,7 @@ def get_use_items_slot(item_num):
     items = get_use_items_order()
     x = 0
     for x in range(len(items)):
+        logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
         if items[x] == item_num:
             print("============================")
             print("FOUND ITEM: ", items[x], "|", item_num, "|", x)
@@ -983,51 +990,48 @@ def get_use_items_slot(item_num):
 
 
 def get_throw_items_order():
-    itemArray = get_items_order()
-    #print(itemArray)
+    item_array = get_items_order()
+    logger.debug(f"get_throw_items_order(), item_array: {item_array}")
     x = 0
-    while x < len(itemArray):
+    while x < len(item_array):
         try:
-            if itemArray[x] > 18:
-                itemArray.remove(itemArray[x])
+            if item_array[x] > 18:
+                item_array.remove(item_array[x])
             else:
                 x += 1
         except Exception as y:
-            print(y)
-            retryThisValue = True
-            print("Retrying value")
-    print("============================")
-    print("Throw items order: ")
-    print(itemArray)
-    print("============================")
-    return itemArray
+            logger.exception(y)
+            retry_this_value = True
+            logger.debug("Retrying value")
+    logger.debug(f"item_array: {item_array}")
+    return item_array
 
 
-def get_throw_items_slot(itemNum):
+def get_throw_items_slot(item_num):
     items = get_throw_items_order()
     x = 0
     while x < len(items):
-        if items[x] == itemNum:
-            print("Desired item", itemNum, "is in slot", x)
+        if items[x] == item_num:
+            logger.debug(f"Desired item {item_num} is in slot {x}")
             return x
         x += 1
     return 255
 
 
 def get_grid_items_order():
-    itemArray = get_items_order()
+    item_array = get_items_order()
     x = 0
-    while x < len(itemArray):
+    while x < len(item_array):
         try:
-            if itemArray[x] < 70 or itemArray[x] > 99:
-                itemArray.remove(itemArray[x])
+            if item_array[x] < 70 or item_array[x] > 99:
+                item_array.remove(item_array[x])
             else:
                 x += 1
         except Exception as y:
-            print(y)
-            retryThisValue = True
-            print("Retrying value")
-    return itemArray
+            logger.exception(y)
+            retry_this_value = True
+            logger.debug("Retrying value")
+    return item_array
 
 
 def get_grid_items_slot(item_num) -> int:
@@ -1035,37 +1039,37 @@ def get_grid_items_slot(item_num) -> int:
     x = 0
     while x < len(items):
         if items[x] == item_num:
-            print("Desired item", item_num, "is in slot", x)
+            logger.debug(f"Desired item {item_num} is in slot {x}")
             return x
         x += 1
     return 255
 
 
 def get_grid_cursor_pos():
-    global baseValue
-    key = baseValue + 0x012ACB78
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x012ACB78
+    return process.read_bytes(key, 1)
 
 
 def get_grid_move_use_pos():
-    global baseValue
-    key = baseValue + 0x012AC838
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x012AC838
+    return process.read_bytes(key, 1)
 
 
 def get_grid_move_active():
-    global baseValue
-    key = baseValue + 0x012AC82B
-    if process.readBytes(key, 1):
+    global base_value
+    key = base_value + 0x012AC82B
+    if process.read_bytes(key, 1):
         return True
     else:
         return False
 
 
 def get_grid_use_active():
-    global baseValue
-    key = baseValue + 0x012ACB6B
-    if process.readBytes(key, 1):
+    global base_value
+    key = base_value + 0x012ACB6B
+    if process.read_bytes(key, 1):
         return True
     else:
         return False
@@ -1080,41 +1084,41 @@ def get_item_slot(item_num):
 
 
 def check_items_macalania():
-    bombCore = 0
-    lMarble = 0
-    fScale = 0
-    aWind = 0
+    bomb_core = 0
+    l_marble = 0
+    f_scale = 0
+    a_wind = 0
     grenade = 0
     lunar = 0
     light = 0
 
-    bombCore = get_item_slot(27)
-    lMarble = get_item_slot(30)
-    fScale = get_item_slot(32)
-    aWind = get_item_slot(24)
+    bomb_core = get_item_slot(27)
+    l_marble = get_item_slot(30)
+    f_scale = get_item_slot(32)
+    a_wind = get_item_slot(24)
     grenade = get_item_slot(35)
     lunar = get_item_slot(56)
     light = get_item_slot(57)
 
-    # Set MaxSpot to one more than the last undesirable item
+    # Set max_spot to one more than the last undesirable item
     if light - lunar != 1:
-        maxSpot = light
+        max_spot = light
     elif lunar - grenade != 1:
-        maxSpot = lunar
-    elif grenade - aWind != 1:
-        maxSpot = grenade
-    elif aWind - fScale != 1:
-        maxSpot = aWind
-    elif fScale - lMarble != 1:
-        maxSpot = fScale
-    elif lMarble - bombCore != 1:
-        maxSpot = lMarble
+        max_spot = lunar
+    elif grenade - a_wind != 1:
+        max_spot = grenade
+    elif a_wind - f_scale != 1:
+        max_spot = a_wind
+    elif f_scale - l_marble != 1:
+        max_spot = f_scale
+    elif l_marble - bomb_core != 1:
+        max_spot = l_marble
     else:
-        maxSpot = bombCore
+        max_spot = bomb_core
 
-    retVal = [bombCore, lMarble, fScale, aWind, grenade, lunar, light, maxSpot]
-    print("Returning values:", retVal)
-    return retVal
+    ret_val = [bomb_core, l_marble, f_scale, a_wind, grenade, lunar, light, max_spot]
+    logger.debug(f"check_items_macalania(). Returning values: {ret_val}")
+    return ret_val
 
 
 def item_count_addr(num):
@@ -1122,16 +1126,16 @@ def item_count_addr(num):
 
 
 def get_items_count():
-    global baseValue
-    itemCounts = []
+    global base_value
+    item_counts = []
     for x in range(60):
-        itemCounts.append(process.readBytes(baseValue + 0x00D30B5C + x, 1))
-    return itemCounts
+        item_counts.append(process.read_bytes(base_value + 0x00D30B5C + x, 1))
+    return item_counts
 
 
 def get_item_count_slot(item_slot) -> int:
-    global baseValue
-    return process.readBytes(baseValue + 0x00D30B5C + item_slot, 1)
+    global base_value
+    return process.read_bytes(base_value + 0x00D30B5C + item_slot, 1)
 
 
 def get_menu_display_characters():
@@ -1139,34 +1143,34 @@ def get_menu_display_characters():
     characters = []
     for cur in range(7):
         char = read_val(base + cur)
-        print(cur, char)
+        logger.debug(f"get_menu_display_charaters(). Cur: {cur}, Char: {char}")
         characters.append(char)
-    print(characters)
+    logger.debug(f"get_menu_display_charaters(), characters: {characters}")
     return characters
 
 
 def get_gil_value():
-    global baseValue
-    key = baseValue + 0x00D307D8
+    global base_value
+    key = base_value + 0x00D307D8
     return process.read(key)
 
 
 def set_gil_value(new_value):
-    global baseValue
-    key = baseValue + 0x00D307D8
+    global base_value
+    key = base_value + 0x00D307D8
     return process.write(key, new_value)
 
 
 def set_story(new_value):
-    global baseValue
-    key = baseValue + 0x00D2D67C
-    return process.writeBytes(key, new_value, 2)
+    global base_value
+    key = base_value + 0x00D2D67C
+    return process.write_bytes(key, new_value, 2)
 
 
 def rikku_od_cursor_1():
-    global baseValue
-    key = baseValue + 0x00F3CB32
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00F3CB32
+    return process.read_bytes(key, 1)
 
 
 def rikku_od_cursor_2():
@@ -1175,50 +1179,50 @@ def rikku_od_cursor_2():
 
 def get_overdrive_battle(character):
     global process
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D334CC
-    basePointerAddress = process.read(basePointer)
+    base_pointer = base_value + 0x00D334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x5BC
-    retVal = process.readBytes(basePointerAddress + offset, 1)
-    logger.debug(f"In-Battle Overdrive values: {retVal}")
-    return retVal
+    ret_val = process.read_bytes(base_pointer_address + offset, 1)
+    logger.debug(f"In-Battle Overdrive values: {ret_val}")
+    return ret_val
 
 
 def get_char_weakness(character):
     global process
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D334CC
-    basePointerAddress = process.read(basePointer)
+    base_pointer = base_value + 0x00D334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x5DD
-    retVal = process.readBytes(basePointerAddress + offset, 1)
-    logger.debug(f"In-Battle char weakness values: {retVal}")
-    return retVal
+    ret_val = process.read_bytes(base_pointer_address + offset, 1)
+    logger.debug(f"In-Battle char weakness values: {ret_val}")
+    return ret_val
 
 
 def tidus_escaped_state():
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D334CC
-    basePointerAddress = process.read(basePointer)
+    base_pointer = base_value + 0x00D334CC
+    base_pointer_address = process.read(base_pointer)
     offset = 0xDC8
-    retVal = not process.readBytes(basePointerAddress + offset, 1)
-    logger.debug(f"Tidus Escaped State: {retVal}")
-    return retVal
+    ret_val = not process.read_bytes(base_pointer_address + offset, 1)
+    logger.debug(f"Tidus Escaped State: {ret_val}")
+    return ret_val
 
 
 def state_dead(character):
     global process
-    global baseValue
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x606
 
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    key = base_pointer_address + offset
+    ret_val = process.read_bytes(key, 1)
 
-    if retVal % 2 == 1:
+    if ret_val % 2 == 1:
         return True
     else:
         return False
@@ -1226,15 +1230,15 @@ def state_dead(character):
 
 def state_berserk(character):
     global process
-    global baseValue
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x607
 
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    key = base_pointer_address + offset
+    ret_val = process.read_bytes(key, 1)
 
-    if retVal % 4 >= 2:
+    if ret_val % 4 >= 2:
         return True
     else:
         return False
@@ -1245,15 +1249,15 @@ def state_petrified(character):
         return False
 
     global process
-    global baseValue
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x606
 
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    key = base_pointer_address + offset
+    ret_val = process.read_bytes(key, 1)
 
-    if retVal % 8 >= 4:
+    if ret_val % 8 >= 4:
         return True
     else:
         return False
@@ -1261,64 +1265,64 @@ def state_petrified(character):
 
 def state_confused(character):
     global process
-    global baseValue
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x607
 
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    key = base_pointer_address + offset
+    ret_val = process.read_bytes(key, 1)
 
-    if retVal % 2 == 1:
-        print("Character %d is confused" % character)
+    if ret_val % 2 == 1:
+        logger.debug(f"Character {character} is confused")
         return True
     else:
-        print("Character %d is not confused" % character)
+        logger.debug(f"Character {character} is not confused")
         return False
 
 
 def state_sleep(character):
     global process
-    global baseValue
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x608
 
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    key = base_pointer_address + offset
+    ret_val = process.read_bytes(key, 1)
 
-    if retVal == 3:
-        print("Character %d is asleep" % character)
+    if ret_val == 3:
+        logger.debug(f"Character {character} is asleep")
         return True
     else:
-        print("Character %d is not asleep" % character)
+        logger.debug(f"Character {character} is not asleep")
         return False
 
 
 def state_auto_life(character: int = 0):
     global process
-    global baseValue
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x617
 
-    key = basePointerAddress + offset
-    retVal = process.readBytes(key, 1)
+    key = base_pointer_address + offset
+    ret_val = process.read_bytes(key, 1)
 
-    if retVal % 4 >= 2:
-        print("Character autolife is active", character)
+    if ret_val % 4 >= 2:
+        logger.debug(f"Character autolife is active on: {character}")
         return True
     else:
-        print("Character autolife is not active", character)
+        logger.debug(f"Character autolife is not active on: {character}")
         return False
 
 
 def state_confused_by_pos(position):
-    posArray = get_battle_formation()
+    pos_array = get_battle_formation()
     x = 0
-    if position in posArray:
-        if posArray[x] == position:
-            return state_confused(posArray[x])
+    if position in pos_array:
+        if pos_array[x] == position:
+            return state_confused(pos_array[x])
         else:
             x += 1
 
@@ -1330,62 +1334,60 @@ def battle_type():
 
 def get_enemy_current_hp():
     global process
-    global baseValue
-    enemyNum = 20
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    enemy_num = 20
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
 
-    while enemyNum < 27:
-        offset1 = (0xF90 * enemyNum) + 0x594
-        key1 = basePointerAddress + offset1
-        offset2 = (0xF90 * enemyNum) + 0x5D0
-        key2 = basePointerAddress + offset2
-        if enemyNum == 20:
-            maxHP = [process.readBytes(key1, 4)]
-            current_hp = [process.readBytes(key2, 4)]
+    while enemy_num < 27:
+        offset1 = (0xF90 * enemy_num) + 0x594
+        key1 = base_pointer_address + offset1
+        offset2 = (0xF90 * enemy_num) + 0x5D0
+        key2 = base_pointer_address + offset2
+        if enemy_num == 20:
+            max_hp = [process.read_bytes(key1, 4)]
+            current_hp = [process.read_bytes(key2, 4)]
         else:
-            nextHP = process.readBytes(key1, 4)
-            if nextHP != 0:
-                maxHP.append(nextHP)
-                current_hp.append(process.readBytes(key2, 4))
-        enemyNum += 1
-    print("Enemy HP current values:", current_hp)
+            next_hp = process.read_bytes(key1, 4)
+            if next_hp != 0:
+                max_hp.append(next_hp)
+                current_hp.append(process.read_bytes(key2, 4))
+        enemy_num += 1
+    logger.debug(f"Enemy HP current values: {current_hp}")
     return current_hp
 
 
 def get_enemy_max_hp():
     global process
-    global baseValue
-    enemyNum = 20
-    basePointer = baseValue + 0xD334CC
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    enemy_num = 20
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
 
-    while enemyNum < 25:
-        offset1 = (0xF90 * enemyNum) + 0x594
-        key1 = basePointerAddress + offset1
-        offset2 = (0xF90 * enemyNum) + 0x5D0
-        key2 = basePointerAddress + offset2
-        if enemyNum == 20:
-            maxHP = [process.readBytes(key1, 4)]
-            current_hp = [process.readBytes(key2, 4)]
+    while enemy_num < 25:
+        offset1 = (0xF90 * enemy_num) + 0x594
+        key1 = base_pointer_address + offset1
+        offset2 = (0xF90 * enemy_num) + 0x5D0
+        key2 = base_pointer_address + offset2
+        if enemy_num == 20:
+            max_hp = [process.read_bytes(key1, 4)]
+            current_hp = [process.read_bytes(key2, 4)]
         else:
-            if maxHP != 0:
-                maxHP.append(process.readBytes(key1, 4))
-                current_hp.append(process.readBytes(key2, 4))
-        enemyNum += 1
-    print("Enemy HP max values:")
-    print(maxHP)
-    print("Enemy HP current values:")
-    print(current_hp)
-    return maxHP
+            if max_hp != 0:
+                max_hp.append(process.read_bytes(key1, 4))
+                current_hp.append(process.read_bytes(key2, 4))
+        enemy_num += 1
+    logger.debug(f"Enemy HP max values: {max_hp}")
+    logger.debug(f"Enemy HP current values: {current_hp}")
+    return max_hp
 
 
 def menu_open():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F407E4
-    menuOpen = process.readBytes(key, 1)
-    if menuOpen == 0:
+    key = base_value + 0x00F407E4
+    menu_open = process.read_bytes(key, 1)
+    if menu_open == 0:
         return False
     else:
         return True
@@ -1397,11 +1399,11 @@ def close_menu():
 
 
 def save_menu_open():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x008E7300
-    menuOpen = process.readBytes(key, 1)
-    if menuOpen == 1:
+    key = base_value + 0x008E7300
+    menu_open = process.read_bytes(key, 1)
+    if menu_open == 1:
         return True
     else:
         return False
@@ -1418,130 +1420,134 @@ def back_to_main_menu():
 
 
 def open_menu():
-    menuCounter = 0
+    menu_counter = 0
     while not (user_control() and menu_open() and menu_number() == 5):
         if menu_open() and not user_control():
-            print("Post-Battle summary screen is open. Attempting close.", menuCounter)
+            logger.debug(
+                f"Post-Battle summary screen is open. Attempting close. menu_counter: {menu_counter}"
+            )
             xbox.menu_b()
         elif user_control() and not menu_open():
-            print("Menu is not open, attempting to open.", menuCounter)
+            logger.debug(
+                f"Menu is not open, attempting to open. menu_counter: {menu_counter}"
+            )
             xbox.tap_y()
-            menuCounter += 1
+            menu_counter += 1
         elif menu_open() and user_control() and menu_number() > 5:
-            print("The wrong menu is open.", menuCounter)
+            logger.debug(f"The wrong menu is open. menu_counter: {menu_counter}")
             xbox.tap_a()
-            menuCounter += 1
+            menu_counter += 1
         elif battle_active():
-            print("Can't open menu during battle.", menuCounter)
+            logger.debug(f"Can't open menu during battle. menu_counter: {menu_counter}")
             return False
         else:
             pass
     FFXC.set_neutral()
-    print("Menu open returning")
+    logger.debug("Menu open returning")
     return True
 
 
 def menu_number():
-    global baseValue
-    return process.readBytes(baseValue + 0x85B2CC, 1)
+    global base_value
+    return process.read_bytes(base_value + 0x85B2CC, 1)
 
 
 def s_grid_active():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0085B30C
-    menuOpen = process.readBytes(key, 1)
-    if menuOpen == 1:
+    key = base_value + 0x0085B30C
+    menu_open = process.read_bytes(key, 1)
+    if menu_open == 1:
         return True
     else:
         return False
 
 
 def s_grid_menu():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0012AD860
-    menuOpen = process.readBytes(key, 1)
-    return menuOpen
+    key = base_value + 0x0012AD860
+    menu_open = process.read_bytes(key, 1)
+    return menu_open
 
 
 def s_grid_char():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0012BEE2C
-    character = process.readBytes(key, 1)
+    key = base_value + 0x0012BEE2C
+    character = process.read_bytes(key, 1)
     return character
 
 
 def s_grid_node_selected():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0012BEB7E
-    nodeNumber = process.readBytes(key, 1)
-    key = baseValue + 0x0012BEB7F
-    nodeRegion = process.readBytes(key, 1)
-    return [nodeNumber, nodeRegion]
+    key = base_value + 0x0012BEB7E
+    node_number = process.read_bytes(key, 1)
+    key = base_value + 0x0012BEB7F
+    node_region = process.read_bytes(key, 1)
+    return [node_number, node_region]
 
 
 def cursor_location():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0021D09A4
-    menu1 = process.readBytes(key, 1)
-    key = baseValue + 0x0021D09A6
-    menu2 = process.readBytes(key, 1)
+    key = base_value + 0x0021D09A4
+    menu1 = process.read_bytes(key, 1)
+    key = base_value + 0x0021D09A6
+    menu2 = process.read_bytes(key, 1)
 
     return [menu1, menu2]
 
 
 def get_menu_cursor_pos():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x01471508
-    pos = process.readBytes(key, 1)
+    key = base_value + 0x01471508
+    pos = process.read_bytes(key, 1)
 
     return pos
 
 
 def get_menu_2_char_num():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0147150C
-    pos = process.readBytes(key, 1)
+    key = base_value + 0x0147150C
+    pos = process.read_bytes(key, 1)
 
     return pos
 
 
 def get_char_cursor_pos():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x01441BE8
-    pos = process.readBytes(key, 1)
+    key = base_value + 0x01441BE8
+    pos = process.read_bytes(key, 1)
 
     return pos
 
 
 def get_story_progress():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2D67C
-    progress = process.readBytes(key, 2)
+    key = base_value + 0x00D2D67C
+    progress = process.read_bytes(key, 2)
     return progress
 
 
 def get_map():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2CA90
-    progress = process.readBytes(key, 2)
+    key = base_value + 0x00D2CA90
+    progress = process.read_bytes(key, 2)
     return progress
 
 
 def touching_save_sphere():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0021D09A6
-    value = process.readBytes(key, 1)
+    key = base_value + 0x0021D09A6
+    value = process.read_bytes(key, 1)
     if value != 0:
         return True
     else:
@@ -1549,48 +1555,48 @@ def touching_save_sphere():
 
 
 def save_menu_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x001467942
-    return process.readBytes(key, 1)
+    key = base_value + 0x001467942
+    return process.read_bytes(key, 1)
 
 
 def map_cursor():
-    global baseValue
-    basePointer = baseValue + 0x00F2FF14
-    basePointerAddress = process.read(basePointer)
-    print(basePointerAddress)
-    ret = process.readBytes(basePointerAddress + 272, 1)
-    print(ret)
+    global base_value
+    base_pointer = base_value + 0x00F2FF14
+    base_pointer_address = process.read(base_pointer)
+    logger.debug(f"map_cursor(), base_pointer_address: {base_pointer_address}")
+    ret = process.read_bytes(base_pointer_address + 272, 1)
+    logger.debug(f"map_cursor(), ret: {ret}")
     return ret
 
 
 def clear_save_menu_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x001467942
-    return process.writeBytes(key, 0, 1)
+    key = base_value + 0x001467942
+    return process.write_bytes(key, 0, 1)
 
 
 def clear_save_menu_cursor_2():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x001468302
-    return process.writeBytes(key, 0, 1)
+    key = base_value + 0x001468302
+    return process.write_bytes(key, 0, 1)
 
 
 def save_menu_cursor_2():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x001468302
-    return process.readBytes(key, 1)
+    key = base_value + 0x001468302
+    return process.read_bytes(key, 1)
 
 
 def new_game_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x001467942
-    value = process.readBytes(key, 1)
+    key = base_value + 0x001467942
+    value = process.read_bytes(key, 1)
     return value
 
 
@@ -1603,27 +1609,27 @@ def targeting_enemy():
 
 
 def get_yuna_slvl():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D3212B
-    sLvl = process.readBytes(key, 1)
-    return sLvl
+    key = base_value + 0x00D3212B
+    s_lvl = process.read_bytes(key, 1)
+    return s_lvl
 
 
 def get_tidus_slvl():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D32097
-    sLvl = process.readBytes(key, 1)
-    return sLvl
+    key = base_value + 0x00D32097
+    s_lvl = process.read_bytes(key, 1)
+    return s_lvl
 
 
 def get_kimahri_slvl():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D32253
-    sLvl = process.readBytes(key, 1)
-    return sLvl
+    key = base_value + 0x00D32253
+    s_lvl = process.read_bytes(key, 1)
+    return s_lvl
 
 
 def get_lulu_slvl():
@@ -1631,26 +1637,26 @@ def get_lulu_slvl():
 
 
 def get_tidus_xp():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D32070
+    key = base_value + 0x00D32070
     Lvl = process.read(key)
     return Lvl
 
 
 def set_tidus_slvl(levels):
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D32097
-    sLvl = process.writeBytes(key, levels, 1)
-    return sLvl
+    key = base_value + 0x00D32097
+    s_lvl = process.write_bytes(key, levels, 1)
+    return s_lvl
 
 
 def menu_control():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0085A03C
-    control = process.readBytes(key, 1)
+    key = base_value + 0x0085A03C
+    control = process.read_bytes(key, 1)
     if control == 1:
         return True
     else:
@@ -1658,10 +1664,10 @@ def menu_control():
 
 
 def diag_skip_possible_old():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0085A03C
-    control = process.readBytes(key, 1)
+    key = base_value + 0x0085A03C
+    control = process.read_bytes(key, 1)
     if control == 1:
         wait_frames(1)
         return True
@@ -1670,58 +1676,58 @@ def diag_skip_possible_old():
 
 
 def diag_skip_possible():
-    global baseValue
+    global base_value
     if auditory_dialog_playing() and not game_vars.accessibility_vars()[1]:
-        # print("Skip 2")
+        # logger.debug("Skip 2")
         return False
     else:
-        key = baseValue + 0x0085A03C
-        if process.readBytes(key, 1) == 1:
-            # print("Skip 3")
+        key = base_value + 0x0085A03C
+        if process.read_bytes(key, 1) == 1:
+            # logger.debug("Skip 3")
             if game_vars.accessibility_vars()[2]:
                 # Placeholder for accessibility, to be implemented later.
                 pass
             return True
         else:
-            # print("Skip 4")
+            # logger.debug("Skip 4")
             return False
 
 
 def cutscene_skip_possible():
     if not game_vars.accessibility_vars()[0]:
         return False
-    global baseValue
-    key = baseValue + 0x00D2A008
-    return process.readBytes(key, 1) == 1
+    global base_value
+    key = base_value + 0x00D2A008
+    return process.read_bytes(key, 1) == 1
 
 
 def auditory_dialog_playing():
-    global baseValue
-    key = baseValue + 0x00F2FED4
-    return process.readBytes(key, 1) == 1
+    global base_value
+    key = base_value + 0x00F2FED4
+    return process.read_bytes(key, 1) == 1
 
 
 def auditory_dialog_playing():
-    # This is usually a no-op unless doNotSkipCutscenes is set.
-    if game_vars.doNotSkipCutscenes:
+    # This is usually a no-op unless do_not_skip_cutscenes is set.
+    if game_vars.do_not_skip_cutscenes:
         return false
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F30038
-    control = process.readBytes(key, 1)
+    key = base_value + 0x00F30038
+    control = process.read_bytes(key, 1)
     return control == 1
 
 
 def special_text_open():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x01466D30
-    control = process.readBytes(key, 1)
+    key = base_value + 0x01466D30
+    control = process.read_bytes(key, 1)
     if control == 1:
         return True
     else:
-        key = baseValue + 0x01476988
-        control = process.readBytes(key, 1)
+        key = base_value + 0x01476988
+        control = process.read_bytes(key, 1)
         if control == 1:
             return True
         else:
@@ -1733,14 +1739,16 @@ def await_menu_control():
     while not menu_control():
         counter += 1
         if counter % 100000 == 0:
-            print("Waiting for menu control.", counter)
+            logger.debug(f"Waiting for menu control. {counter}")
 
 
 def click_to_story_progress(destination):
     counter = 0
-    currentState = get_story_progress()
-    print("Story goal:", destination, "| Awaiting progress state:", currentState)
-    while currentState < destination:
+    current_state = get_story_progress()
+    logger.debug(
+        f"Story goal: {destination} | Awaiting progress state: {current_state}"
+    )
+    while current_state < destination:
         if menu_control():
             FFXC.set_value("btn_b", 1)
             FFXC.set_value("btn_a", 1)
@@ -1749,23 +1757,18 @@ def click_to_story_progress(destination):
             FFXC.set_value("btn_a", 0)
             wait_frames(1)
         if counter % 100000 == 0:
-            print(
-                "Story goal:",
-                destination,
-                "| Awaiting progress state:",
-                currentState,
-                "| counter:",
-                counter / 100000,
+            logger.debug(
+                f"Story goal: {destination} | Awaiting progress state: {current_state} | counter: {counter / 100000}"
             )
         counter += 1
-        currentState = get_story_progress()
-    print("Story progress has reached destination. Value:", destination)
+        current_state = get_story_progress()
+    logger.debug(f"Story progress has reached destination. Value: {destination}")
 
 
 def desert_format(rikku_charge):
     order = get_order_six()
     if order == [0, 3, 2, 4, 6, 5]:
-        print("Formation is fine, moving on.")
+        logger.debug("desert_format(): Formation is fine, moving on.")
     elif not rikku_charge:
         full_party_format("desert1")
     else:
@@ -1773,52 +1776,49 @@ def desert_format(rikku_charge):
 
 
 def party_size():
-    battleForm = get_battle_formation()
-    if 255 in battleForm:
-        while 255 in battleForm:
-            battleForm.remove(255)
-    return len(battleForm)
+    battle_form = get_battle_formation()
+    if 255 in battle_form:
+        while 255 in battle_form:
+            battle_form.remove(255)
+    return len(battle_form)
 
 
 def active_party_size():
-    battleForm = get_active_battle_formation()
-    if 255 in battleForm:
-        while 255 in battleForm:
-            battleForm.remove(255)
-    return len(battleForm)
+    battle_form = get_active_battle_formation()
+    if 255 in battle_form:
+        while 255 in battle_form:
+            battle_form.remove(255)
+    return len(battle_form)
 
 
 def get_character_index_in_main_menu(character):
     res = get_menu_display_characters().index(character)
-    print("Char is in position", res)
+    logger.debug(f"get_character_index_in_main_menu(): Char is in position {res}")
     return res
 
 
 def full_party_format(front_line, *, full_menu_close=True):
     order = get_order_seven()
-    partyMembers = len(order)
+    party_members = len(order)
     front_line = front_line.lower()
-    orderFinal = get_party_format_from_text(front_line)
-    orderFinal.extend(x for x in order if x not in orderFinal)
-    if Counter(order[:3]) == Counter(orderFinal[:3]):
-        print("Good to go, no action taken.")
+    order_final = get_party_format_from_text(front_line)
+    order_final.extend(x for x in order if x not in order_final)
+    if Counter(order[:3]) == Counter(order_final[:3]):
+        logger.debug("Good to go, no action taken.")
     else:
-        print("Converting from formation:")
-        print(order)
-        print("Into formation:")
-        print(orderFinal)
-        print("Manipulating final formation to minimize movements")
+        logger.debug(f"Converting from formation: {order}")
+        logger.debug(f"Into formation: {order_final}")
+        logger.debug("Manipulating final formation to minimize movements")
         replacement_dict = {}
-        new_characters = [x for x in orderFinal[:3] if x not in order[:3]]
+        new_characters = [x for x in order_final[:3] if x not in order[:3]]
         for i in range(3):
-            if order[i] in orderFinal[:3]:
+            if order[i] in order_final[:3]:
                 replacement_dict[i] = order[i]
             else:
                 replacement_dict[i] = new_characters.pop()
         for i in range(3):
-            orderFinal[i] = replacement_dict[i]
-        print("New Final Order:")
-        print(orderFinal)
+            order_final[i] = replacement_dict[i]
+        logger.debug(f"New Final Order: {order_final}")
         while not menu_open():
             if not open_menu():
                 return
@@ -1830,49 +1830,43 @@ def full_party_format(front_line, *, full_menu_close=True):
         while menu_number() != 14:
             xbox.tap_b()
         start_pos = 0
-        while Counter(order[:3]) != Counter(orderFinal[:3]):
-            print("==Full Party Format function, original")
+        while Counter(order[:3]) != Counter(order_final[:3]):
+            logger.debug("==Full Party Format function, original")
             # Select target in the wrong spot.
-            print("Selecting start position")
-            if order[start_pos] == orderFinal[start_pos]:
-                while order[start_pos] == orderFinal[start_pos] and order != orderFinal:
+            logger.debug("Selecting start position")
+            if order[start_pos] == order_final[start_pos]:
+                while (
+                    order[start_pos] == order_final[start_pos] and order != order_final
+                ):
                     start_pos += 1
-                    if start_pos == partyMembers:
+                    if start_pos == party_members:
                         start_pos = 0
-            print(
-                "Character",
-                name_from_number(orderFinal[start_pos]),
-                "should be in position",
-                start_pos,
-            )
+            char_name = name_from_number(order_final[start_pos])
+            logger.debug(f"Character {char_name} should be in position {start_pos}")
 
             # Set target, end position
-            print("Selecting destination position.")
-            endPos = 0
-            if orderFinal[start_pos] != order[endPos]:
-                while orderFinal[start_pos] != order[endPos] and order != orderFinal:
-                    endPos += 1
+            logger.debug("Selecting destination position.")
+            end_pos = 0
+            if order_final[start_pos] != order[end_pos]:
+                while order_final[start_pos] != order[end_pos] and order != order_final:
+                    end_pos += 1
 
-            print(
-                "Character",
-                name_from_number(order[endPos]),
-                "found in position",
-                endPos,
-            )
+            char_name = name_from_number(order[end_pos])
+            logger.debug(f"Character {char_name} found in position {end_pos}")
 
-            print("Looking for character.")
-            if start_pos < 3 and endPos < 3:
+            logger.debug("Looking for character.")
+            if start_pos < 3 and end_pos < 3:
                 start_pos += 1
-                if start_pos == partyMembers:
+                if start_pos == party_members:
                     start_pos = 0
                 continue
 
             # Move cursor to start position
-            print("Moving to start position")
+            logger.debug("Moving to start position")
             if party_format_cursor_1() != start_pos:
-                # print("Cursor not in right spot")
+                # logger.debug("Cursor not in right spot")
                 while party_format_cursor_1() != start_pos:
-                    menu_direction(party_format_cursor_1(), start_pos, partyMembers)
+                    menu_direction(party_format_cursor_1(), start_pos, party_members)
                     if game_vars.use_pause():
                         wait_frames(1)
 
@@ -1880,25 +1874,23 @@ def full_party_format(front_line, *, full_menu_close=True):
                 xbox.menu_b()  # Click on Start location
 
             # Move cursor to end position
-            print("Moving to destination position.")
-            while party_format_cursor_2() != endPos:
-                menu_direction(party_format_cursor_2(), endPos, partyMembers)
+            logger.debug("Moving to destination position.")
+            while party_format_cursor_2() != end_pos:
+                menu_direction(party_format_cursor_2(), end_pos, party_members)
                 if game_vars.use_pause():
                     wait_frames(1)
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
-            print("Start and destination positions have been swapped.")
+            logger.debug("Start and destination positions have been swapped.")
             start_pos += 1
-            if start_pos == partyMembers:
+            if start_pos == party_members:
                 start_pos = 0
 
-            print("Reporting results")
-            print("Converting from formation:")
-            print(order)
-            print("Into formation:")
-            print(orderFinal)
+            logger.debug("Reporting results")
+            logger.debug(f"Converting from formation: {order}")
+            logger.debug(f"Into formation: {order_final}")
             order = get_order_seven()
-        print("Party format is good now.")
+        logger.debug("Party format is good now.")
         if full_menu_close:
             close_menu()
         else:
@@ -1907,17 +1899,17 @@ def full_party_format(front_line, *, full_menu_close=True):
 
 def menu_direction(current_menu_position, target_menu_position, menu_size):
     distance = abs(current_menu_position - target_menu_position)
-    distanceUnsigned = current_menu_position - target_menu_position
+    distance_unsigned = current_menu_position - target_menu_position
     halfmenusize = menu_size / 2
     if distance == halfmenusize:
         xbox.tap_up()
     elif distance < halfmenusize:
-        if distanceUnsigned > 0:
+        if distance_unsigned > 0:
             xbox.tap_up()
         else:
             xbox.tap_down()
     else:
-        if distanceUnsigned > 0:
+        if distance_unsigned > 0:
             xbox.tap_down()
         else:
             xbox.tap_up()
@@ -1925,117 +1917,117 @@ def menu_direction(current_menu_position, target_menu_position, menu_size):
 
 def side_to_side_direction(current_menu_position, target_menu_position, menu_size):
     distance = abs(current_menu_position - target_menu_position)
-    distanceUnsigned = current_menu_position - target_menu_position
-    print("Menu Size:", menu_size)
+    distance_unsigned = current_menu_position - target_menu_position
+    logger.debug(f"Menu Size: {menu_size}")
     halfmenusize = menu_size / 2
     if distance == halfmenusize:
-        print("Marker 1")
+        logger.debug("Marker 1")
         xbox.tap_left()
     elif distance < halfmenusize:
-        if distanceUnsigned > 0:
-            print("Marker 2")
+        if distance_unsigned > 0:
+            logger.debug("Marker 2")
             xbox.tap_right()
         else:
-            print("Marker 3")
+            logger.debug("Marker 3")
             xbox.tap_left()
     else:
-        if distanceUnsigned > 0:
-            print("Marker 4")
+        if distance_unsigned > 0:
+            logger.debug("Marker 4")
             xbox.tap_left()
         else:
-            print("Marker 5")
+            logger.debug("Marker 5")
             xbox.tap_right()
 
 
 def party_format_cursor_1():
-    global baseValue
+    global base_value
 
-    coord = baseValue + 0x0147151C
-    retVal = process.readBytes(coord, 1)
-    return retVal
+    coord = base_value + 0x0147151C
+    ret_val = process.read_bytes(coord, 1)
+    return ret_val
 
 
 def party_format_cursor_2():
-    global baseValue
+    global base_value
 
-    coord = baseValue + 0x01471520
-    retVal = process.readBytes(coord, 1)
-    return retVal
+    coord = base_value + 0x01471520
+    ret_val = process.read_bytes(coord, 1)
+    return ret_val
 
 
 def get_party_format_from_text(front_line):
-    print("||| FRONT LINE VARIABLE:", front_line)
+    logger.debug(f"||| FRONT LINE VARIABLE: {front_line}")
     if front_line == "kimahri":
-        orderFinal = [0, 3, 2, 6, 4, 5, 1]
+        order_final = [0, 3, 2, 6, 4, 5, 1]
     elif front_line == "rikku":
-        orderFinal = [0, 6, 2, 3, 4, 5, 1]
+        order_final = [0, 6, 2, 3, 4, 5, 1]
     elif front_line == "yuna":
-        orderFinal = [0, 1, 2, 6, 4, 5, 3]
+        order_final = [0, 1, 2, 6, 4, 5, 3]
     elif front_line == "kilikawoods1":
-        orderFinal = [0, 1, 4, 3, 5, 2]
+        order_final = [0, 1, 4, 3, 5, 2]
     elif front_line == "kilikawoodsbackup":
-        orderFinal = [3, 1, 4, 0, 5]
+        order_final = [3, 1, 4, 0, 5]
     elif front_line == "gauntlet":
-        orderFinal = [0, 1, 3, 2, 4, 5, 6]
+        order_final = [0, 1, 3, 2, 4, 5, 6]
     elif front_line == "miihen":
-        orderFinal = [0, 4, 2, 3, 5, 1]
+        order_final = [0, 4, 2, 3, 5, 1]
     elif front_line == "macalaniaescape":
-        orderFinal = [0, 1, 6, 2, 4, 3, 5]
+        order_final = [0, 1, 6, 2, 4, 3, 5]
     elif front_line == "desert1":
-        orderFinal = [0, 6, 2, 3, 4, 5]
+        order_final = [0, 6, 2, 3, 4, 5]
     elif front_line == "desert2":
-        orderFinal = [0, 3, 2, 6, 4, 5]
+        order_final = [0, 3, 2, 6, 4, 5]
     elif front_line == "desert3":
-        orderFinal = [0, 5, 2, 6, 4, 3]
+        order_final = [0, 5, 2, 6, 4, 3]
     elif front_line == "desert9":
-        orderFinal = [0, 4, 2, 3, 5]
+        order_final = [0, 4, 2, 3, 5]
     elif front_line == "guards":
-        orderFinal = [0, 2, 3, 6, 4, 5]
+        order_final = [0, 2, 3, 6, 4, 5]
     elif front_line == "evrae":
-        orderFinal = [0, 6, 3, 2, 4, 5]
+        order_final = [0, 6, 3, 2, 4, 5]
     elif front_line == "djose":
-        orderFinal = [0, 4, 2, 3, 1, 5]
+        order_final = [0, 4, 2, 3, 1, 5]
     elif front_line == "spheri":
-        orderFinal = [0, 3, 1, 4, 2, 6, 5]
+        order_final = [0, 3, 1, 4, 2, 6, 5]
     elif front_line == "crawler":
-        orderFinal = [0, 3, 5, 4, 2, 6, 1]
+        order_final = [0, 3, 5, 4, 2, 6, 1]
     elif front_line == "besaid1":
-        orderFinal = [0, 1, 5, 3, 4]
+        order_final = [0, 1, 5, 3, 4]
     elif front_line == "besaid2":
-        orderFinal = [0, 4, 5, 3, 5]
+        order_final = [0, 4, 5, 3, 5]
     elif front_line == "kilika":
-        orderFinal = [0, 1, 4, 3, 5]
+        order_final = [0, 1, 4, 3, 5]
     elif front_line == "mrr1":
-        orderFinal = [0, 4, 2, 3, 5, 1]
+        order_final = [0, 4, 2, 3, 5, 1]
     elif front_line == "mrr2":
-        orderFinal = [1, 4, 3, 5, 2, 0]
+        order_final = [1, 4, 3, 5, 2, 0]
     elif front_line == "battlesite":
-        orderFinal = [0, 1, 4, 5, 2, 3]
+        order_final = [0, 1, 4, 5, 2, 3]
     elif front_line == "postbunyip":
-        orderFinal = [0, 4, 2, 6, 1, 3, 5]
+        order_final = [0, 4, 2, 6, 1, 3, 5]
     elif front_line == "mwoodsneedcharge":
-        orderFinal = [0, 6, 2, 4, 1, 3, 5]
+        order_final = [0, 6, 2, 4, 1, 3, 5]
     elif front_line == "mwoodsgotcharge":
-        orderFinal = [0, 4, 2, 6, 1, 3, 5]
+        order_final = [0, 4, 2, 6, 1, 3, 5]
     elif front_line == "mwoodsdone":
-        orderFinal = [0, 3, 2, 4, 1, 6, 5]
+        order_final = [0, 3, 2, 4, 1, 6, 5]
     elif front_line == "besaid":
-        orderFinal = [5, 1, 0, 4]
+        order_final = [5, 1, 0, 4]
     elif front_line == "highbridge":
-        orderFinal = [0, 1, 2, 6, 4, 5]
+        order_final = [0, 1, 2, 6, 4, 5]
     elif front_line == "guards_no_lulu":
-        orderFinal = [0, 3, 6]
+        order_final = [0, 3, 6]
     elif front_line == "guards_lulu":
-        orderFinal = [0, 5, 6]
+        order_final = [0, 5, 6]
     elif front_line == "tidkimwak":
-        orderFinal = [0, 4, 3, 6, 1, 2, 5]
+        order_final = [0, 4, 3, 6, 1, 2, 5]
     elif front_line == "nemlulu":
-        orderFinal = [0, 1, 5, 2, 3, 4, 6]
+        order_final = [0, 1, 5, 2, 3, 4, 6]
     elif front_line == "initiative":
-        orderFinal = [0, 4, 6, 1, 2, 3, 5]
+        order_final = [0, 4, 6, 1, 2, 3, 5]
     else:
-        orderFinal = [6, 5, 4, 3, 2, 1, 0]
-    return orderFinal
+        order_final = [6, 5, 4, 3, 2, 1, 0]
+    return order_final
 
 
 def name_from_number(char_num):
@@ -2056,84 +2048,84 @@ def name_from_number(char_num):
 
 
 def get_actor_array_size():
-    global baseValue
-    return process.read(baseValue + 0x01FC44E0)
+    global base_value
+    return process.read(base_value + 0x01FC44E0)
 
 
 def get_actor_id(actor_num):
     actor_index = actor_num
-    global baseValue
-    basePointer = baseValue + 0x01FC44E4
-    basePointerAddress = process.read(basePointer)
-    offsetX = 0x880 * actor_index
-    return process.readBytes(basePointerAddress + offsetX, 2)
+    global base_value
+    base_pointer = base_value + 0x01FC44E4
+    base_pointer_address = process.read(base_pointer)
+    offset_x = 0x880 * actor_index
+    return process.read_bytes(base_pointer_address + offset_x, 2)
 
 
 def get_actor_coords(actor_number):
     global process
-    global baseValue
-    retVal = [0, 0, 0]
+    global base_value
+    ret_val = [0, 0, 0]
     try:
-        basePointer = baseValue + 0x01FC44E4
-        basePointerAddress = process.read(basePointer)
-        offsetX = (0x880 * actor_number) + 0x0C
-        offsetY = (0x880 * actor_number) + 0x14
-        offsetZ = (0x880 * actor_number) + 0x10
+        base_pointer = base_value + 0x01FC44E4
+        base_pointer_address = process.read(base_pointer)
+        offset_x = (0x880 * actor_number) + 0x0C
+        offset_y = (0x880 * actor_number) + 0x14
+        offset_z = (0x880 * actor_number) + 0x10
 
-        keyX = basePointerAddress + offsetX
-        retVal[0] = float_from_integer(process.read(keyX))
-        keyY = basePointerAddress + offsetY
-        retVal[1] = float_from_integer(process.read(keyY))
-        keyZ = basePointerAddress + offsetZ
-        retVal[2] = float_from_integer(process.read(keyZ))
+        key_x = base_pointer_address + offset_x
+        ret_val[0] = float_from_integer(process.read(key_x))
+        key_y = base_pointer_address + offset_y
+        ret_val[1] = float_from_integer(process.read(key_y))
+        key_z = base_pointer_address + offset_z
+        ret_val[2] = float_from_integer(process.read(key_z))
 
-        return retVal
+        return ret_val
     except Exception:
         pass
 
 
 def get_actor_angle(actor_number):
     global process
-    global baseValue
+    global base_value
     try:
-        basePointer = baseValue + 0x01FC44E4
-        basePointerAddress = process.read(basePointer)
+        base_pointer = base_value + 0x01FC44E4
+        base_pointer_address = process.read(base_pointer)
         offset = (0x880 * actor_number) + 0x158
-        retVal = float_from_integer(process.read(basePointerAddress + offset))
-        return retVal
+        ret_val = float_from_integer(process.read(base_pointer_address + offset))
+        return ret_val
     except Exception:
         pass
 
 
 def miihen_guy_coords():
-    spearGuy = 255
+    spear_guy = 255
     for x in range(get_actor_array_size()):
-        actorNum = get_actor_id(x)
-        if actorNum == 0x202D:
-            spearGuy = x
-    return get_actor_coords(spearGuy)
+        actor_num = get_actor_id(x)
+        if actor_num == 0x202D:
+            spear_guy = x
+    return get_actor_coords(spear_guy)
 
 
 def actor_index(actor_num: int = 41):
     actor_index = 255
     for x in range(get_actor_array_size()):
-        actorMem = get_actor_id(x)
-        if actor_num == actorMem:
+        actor_mem = get_actor_id(x)
+        if actor_num == actor_mem:
             actor_index = x
     return actor_index
 
 
 def mrr_guy_coords():
-    print("+++Searching for MRR guy")
-    mrrGuy = 255
+    logger.debug("+++Searching for MRR guy")
+    mrr_guy = 255
     for x in range(get_actor_array_size()):
-        actorNum = get_actor_id(x)
-        # print("Actor", x, ":", hex(actorNum))
-        if actorNum == 0x2083:
-            mrrGuy = x
-    print("+++MRR guy in position:", mrrGuy)
-    mrrGuyPos = get_actor_coords(mrrGuy)
-    return [mrrGuyPos[0], mrrGuyPos[1]]
+        actor_num = get_actor_id(x)
+        # logger.debug(f"Actor {x}: {hex(actor_num)}")
+        if actor_num == 0x2083:
+            mrr_guy = x
+    logger.debug(f"+++MRR guy in position: {mrr_guy}")
+    mrr_guy_pos = get_actor_coords(mrr_guy)
+    return [mrr_guy_pos[0], mrr_guy_pos[1]]
 
 
 def lucille_miihen_coords():
@@ -2146,94 +2138,94 @@ def lucille_djose_coords():
 
 def lucille_djose_angle():
     global process
-    global baseValue
-    retVal = [0, 0]
+    global base_value
+    ret_val = [0, 0]
 
-    basePointer = baseValue + 0x01FC44E4
-    basePointerAddress = process.read(basePointer)
-    offsetX = 0x91D8
-    offsetY = 0x91E8
+    base_pointer = base_value + 0x01FC44E4
+    base_pointer_address = process.read(base_pointer)
+    offset_x = 0x91D8
+    offset_y = 0x91E8
 
-    keyX = basePointerAddress + offsetX
-    retVal[0] = float_from_integer(process.read(keyX))
-    keyY = basePointerAddress + offsetY
-    retVal[1] = float_from_integer(process.read(keyY))
+    key_x = base_pointer_address + offset_x
+    ret_val[0] = float_from_integer(process.read(key_x))
+    key_y = base_pointer_address + offset_y
+    ret_val[1] = float_from_integer(process.read(key_y))
 
-    return retVal
+    return ret_val
 
 
 def affection_array():
     global process
-    global baseValue
+    global base_value
 
     tidus = 255
-    key = baseValue + 0x00D2CAC0
-    yuna = process.readBytes(key, 1)
-    key = baseValue + 0x00D2CAC4
-    auron = process.readBytes(key, 1)
-    key = baseValue + 0x00D2CAC8
-    kimahri = process.readBytes(key, 1)
-    key = baseValue + 0x00D2CACC
-    wakka = process.readBytes(key, 1)
-    key = baseValue + 0x00D2CAD0
-    lulu = process.readBytes(key, 1)
-    key = baseValue + 0x00D2CAD4
-    rikku = process.readBytes(key, 1)
+    key = base_value + 0x00D2CAC0
+    yuna = process.read_bytes(key, 1)
+    key = base_value + 0x00D2CAC4
+    auron = process.read_bytes(key, 1)
+    key = base_value + 0x00D2CAC8
+    kimahri = process.read_bytes(key, 1)
+    key = base_value + 0x00D2CACC
+    wakka = process.read_bytes(key, 1)
+    key = base_value + 0x00D2CAD0
+    lulu = process.read_bytes(key, 1)
+    key = base_value + 0x00D2CAD4
+    rikku = process.read_bytes(key, 1)
 
     return [tidus, yuna, auron, kimahri, wakka, lulu, rikku]
 
 
 def overdrive_state():
     global process
-    global baseValue
-    retVal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    global base_value
+    ret_val = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     x = 0
 
-    basePointer = baseValue + 0x00386DD4
-    basePointerAddress = process.read(basePointer)
+    base_pointer = base_value + 0x00386DD4
+    base_pointer_address = process.read(base_pointer)
     for x in range(20):
         offset = (0x94 * x) + 0x39
-        retVal[x] = process.readBytes(basePointerAddress + offset, 1)
-    print("Overdrive values:\n", retVal)
-    return retVal
+        ret_val[x] = process.read_bytes(base_pointer_address + offset, 1)
+    logger.debug(f"Overdrive values: {ret_val}")
+    return ret_val
 
 
 def overdrive_state_2():
     global process
-    global baseValue
-    retVal = [0, 0, 0, 0, 0, 0, 0]
+    global base_value
+    ret_val = [0, 0, 0, 0, 0, 0, 0]
     x = 0
-    basePointer = baseValue + 0x003AB9B0
-    basePointerAddress = process.read(basePointer)
+    base_pointer = base_value + 0x003AB9B0
+    base_pointer_address = process.read(base_pointer)
     for x in range(7):
         offset = (0x94 * x) + 0x39
-        retVal[x] = process.readBytes(basePointerAddress + offset, 1)
-    print("Overdrive values:\n", retVal)
-    return retVal
+        ret_val[x] = process.read_bytes(base_pointer_address + offset, 1)
+    logger.debug(f"Overdrive values: {ret_val}")
+    return ret_val
 
 
 def char_luck(character: int = 0):
     global process
-    global baseValue
-    basePointer = baseValue + 0x003AB9B0
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0x003AB9B0
+    base_pointer_address = process.read(base_pointer)
     offset = (0x94 * character) + 0x34
-    retVal = process.readBytes(basePointerAddress + offset, 1)
-    return retVal
+    ret_val = process.read_bytes(base_pointer_address + offset, 1)
+    return ret_val
 
 
 def char_accuracy(character: int = 0):
     global process
-    global baseValue
-    basePointer = baseValue + 0x003AB9B0
-    basePointerAddress = process.read(basePointer)
+    global base_value
+    base_pointer = base_value + 0x003AB9B0
+    base_pointer_address = process.read(base_pointer)
     offset = (0x94 * character) + 0x36
-    retVal = process.readBytes(basePointerAddress + offset, 1)
-    return retVal
+    ret_val = process.read_bytes(base_pointer_address + offset, 1)
+    return ret_val
 
 
 def dodge_lightning(l_dodge_num):
-    global baseValue
+    global base_value
 
     if l_strike_count() != l_dodge_num or (l_strike_count() == 1 and l_dodge_num == 0):
         wait_frames(3)
@@ -2245,70 +2237,76 @@ def dodge_lightning(l_dodge_num):
 
 
 def l_strike_count():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2CE8C
-    return process.readBytes(key, 2)
+    key = base_value + 0x00D2CE8C
+    return process.read_bytes(key, 2)
 
 
 def l_dodge_count():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2CE8E
-    return process.readBytes(key, 2)
+    key = base_value + 0x00D2CE8E
+    return process.read_bytes(key, 2)
 
 
 def save_popup_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0146780A
-    return process.readBytes(key, 1)
+    key = base_value + 0x0146780A
+    return process.read_bytes(key, 1)
 
 
 def diag_progress_flag():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F25A80
-    return process.readBytes(key, 4)
+    key = base_value + 0x00F25A80
+    return process.read_bytes(key, 4)
 
 
 def click_to_diag_progress(num):
     logger.debug(f"Clicking to dialog progress: {num}")
-    lastNum = diag_progress_flag()
+    last_num = diag_progress_flag()
     while diag_progress_flag() != num:
         if user_control():
             return False
         else:
             if not auditory_dialog_playing():
                 xbox.tap_b()
-            if diag_progress_flag() != lastNum:
-                lastNum = diag_progress_flag()
-                logger.debug(f"Dialog change: {diag_progress_flag()} - clicking to {num}")
+            if diag_progress_flag() != last_num:
+                last_num = diag_progress_flag()
+                logger.debug(
+                    f"Dialog change: {diag_progress_flag()} - clicking to {num}"
+                )
     return True
 
 
 def set_encounter_rate(set_val):
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x008421C8
-    process.writeBytes(key, set_val, 1)
+    key = base_value + 0x008421C8
+    process.write_bytes(key, set_val, 1)
+
+
+def get_game_speed():
+    return read_val(0x008E82A4)
 
 
 def set_game_speed(set_val):
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x008E82A4
-    process.writeBytes(key, set_val, 1)
+    key = base_value + 0x008E82A4
+    process.write_bytes(key, set_val, 1)
 
 
 def print_rng_36():
-    global baseValue
+    global base_value
 
-    coord = baseValue + 0x00D35F68
-    retVal = process.readBytes(coord, 1)
-    print("------------------------------")
-    print("RNG36 value:", retVal)
-    print("------------------------------")
+    coord = base_value + 0x00D35F68
+    ret_val = process.read_bytes(coord, 1)
+    logger.debug("------------------------------")
+    logger.debug(f"RNG36 value: {ret_val}")
+    logger.debug("------------------------------")
 
 
 def end():
@@ -2318,15 +2316,15 @@ def end():
 
 
 def get_frame_count():
-    global baseValue
-    key = baseValue + 0x0088FDD8
-    return process.readBytes(key, 4)
+    global base_value
+    key = base_value + 0x0088FDD8
+    return process.read_bytes(key, 4)
 
 
 def name_aeon_ready():
-    global baseValue
-    key = baseValue + 0x01440A30
-    return process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x01440A30
+    return process.read_bytes(key, 1)
 
 
 # Naming
@@ -2346,54 +2344,54 @@ def name_has_characters():
 # Egg hunt section
 def egg_x(egg_num):
     global process
-    global baseValue
+    global base_value
     egg_num += 23
-    basePointer = baseValue + 0x1FC44E4
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + (0x880 * egg_num) + 0x0C
-    retVal = float_from_integer(process.read(key))
-    return retVal
+    base_pointer = base_value + 0x1FC44E4
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + (0x880 * egg_num) + 0x0C
+    ret_val = float_from_integer(process.read(key))
+    return ret_val
 
 
 def egg_y(egg_num):
     global process
-    global baseValue
+    global base_value
     egg_num += 23
-    basePointer = baseValue + 0x1FC44E4
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + (0x880 * egg_num) + 0x14
-    retVal = float_from_integer(process.read(key))
-    return retVal
+    base_pointer = base_value + 0x1FC44E4
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + (0x880 * egg_num) + 0x14
+    ret_val = float_from_integer(process.read(key))
+    return ret_val
 
 
 def get_egg_distance(egg_num):
     global process
-    global baseValue
-    basePointer = baseValue + 0xF270B8
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + 0x1C4CC + (0x40 * egg_num)
-    retVal = float_from_integer(process.read(key))
-    return retVal
+    global base_value
+    base_pointer = base_value + 0xF270B8
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + 0x1C4CC + (0x40 * egg_num)
+    ret_val = float_from_integer(process.read(key))
+    return ret_val
 
 
 def get_egg_life(egg_num):
     global process
-    global baseValue
-    basePointer = baseValue + 0xF270B8
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + 0x1C4CC + (0x40 * egg_num) + 4
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    base_pointer = base_value + 0xF270B8
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + 0x1C4CC + (0x40 * egg_num) + 4
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def get_egg_picked(egg_num):
     global process
-    global baseValue
-    basePointer = baseValue + 0xF270B8
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + 0x1C4CC + (0x40 * egg_num) + 5
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    base_pointer = base_value + 0xF270B8
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + 0x1C4CC + (0x40 * egg_num) + 5
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 class Egg:
@@ -2403,14 +2401,14 @@ class Egg:
         self.y = egg_y(self.num)
         self.distance = get_egg_distance(self.num)
         self.egg_life = get_egg_life(egg_num)
-        self.eggPicked = get_egg_picked(egg_num)
+        self.egg_picked = get_egg_picked(egg_num)
 
-        if self.distance != 0 and self.eggPicked == 0:
-            self.isActive = True
+        if self.distance != 0 and self.egg_picked == 0:
+            self.is_active = True
         else:
-            self.isActive = False
+            self.is_active = False
 
-        if self.eggPicked == 1:
+        if self.egg_picked == 1:
             self.go_for_egg = False
         elif self.egg_life > 100 and self.distance > 100:
             self.go_for_egg = False
@@ -2422,70 +2420,70 @@ class Egg:
             self.go_for_egg = True
 
     def report_vars(self):
-        varArray = [
+        var_array = [
             self.num,
-            self.isActive,
+            self.is_active,
             self.x,
             self.y,
             150 - self.egg_life,
-            self.eggPicked,
+            self.egg_picked,
             self.distance,
         ]
-        print("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
-        print(varArray)
+        logger.debug("Egg_num, Is_Active, X, Y, Egg Life, Picked up, distance")
+        logger.debug(f"  {var_array}")
 
 
 def build_eggs():
-    retArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ret_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for x in range(10):
-        retArray[x] = Egg(x)
-    return retArray
+        ret_array[x] = Egg(x)
+    return ret_array
 
 
 def ice_x(actor):
     global process
-    global baseValue
+    global base_value
     # Icicle 0 is actor 7 in the array, incremented for each additional icicle.
     offset = actor + 7
 
-    basePointer = baseValue + 0x1FC44E4
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + (0x880 * offset) + 0x0C
-    retVal = float_from_integer(process.read(key))
-    return retVal
+    base_pointer = base_value + 0x1FC44E4
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + (0x880 * offset) + 0x0C
+    ret_val = float_from_integer(process.read(key))
+    return ret_val
 
 
 def ice_y(actor):
     global process
-    global baseValue
+    global base_value
     # Icicle 0 is actor 7 in the array, incremented for each additional icicle.
     offset = actor + 7
 
-    basePointer = baseValue + 0x1FC44E4
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + (0x880 * offset) + 0x14
-    retVal = float_from_integer(process.read(key))
-    return retVal
+    base_pointer = base_value + 0x1FC44E4
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + (0x880 * offset) + 0x14
+    ret_val = float_from_integer(process.read(key))
+    return ret_val
 
 
 def get_ice_distance(ice_num):
     global process
-    global baseValue
-    basePointer = baseValue + 0xF270B8
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + 0x1C0CC + (0x40 * ice_num)
-    retVal = float_from_integer(process.read(key))
-    return retVal
+    global base_value
+    base_pointer = base_value + 0xF270B8
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + 0x1C0CC + (0x40 * ice_num)
+    ret_val = float_from_integer(process.read(key))
+    return ret_val
 
 
 def get_ice_life(ice_num):
     global process
-    global baseValue
-    basePointer = baseValue + 0xF270B8
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + 0x1C0CC + (0x40 * ice_num) + 4
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    base_pointer = base_value + 0xF270B8
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + 0x1C0CC + (0x40 * ice_num) + 4
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 class Icicle:
@@ -2493,19 +2491,19 @@ class Icicle:
         self.num = ice_num
         self.x = ice_x(self.num)
         self.y = ice_y(self.num)
-        self.isActive = True
+        self.is_active = True
 
     def report_vars(self):
-        varArray = [self.num, self.x, self.y]
-        print("Ice_num, X, Y")
-        print(varArray)
+        var_array = [self.num, self.x, self.y]
+        logger.debug("Ice_num, X, Y")
+        logger.debug(f"  {var_array}")
 
 
 def build_icicles():
-    retArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ret_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for x in range(16):
-        retArray[x] = Icicle(x)
-    return retArray
+        ret_array[x] = Icicle(x)
+    return ret_array
 
 
 # ------------------------------
@@ -2513,30 +2511,30 @@ def build_icicles():
 
 
 def set_map_reset():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2CA90
-    process.writeBytes(key, 23, 2)
+    key = base_value + 0x00D2CA90
+    process.write_bytes(key, 23, 2)
 
 
 def force_map_load():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F3080C
-    process.writeBytes(key, 1, 1)
+    key = base_value + 0x00F3080C
+    process.write_bytes(key, 1, 1)
 
 
 def reset_battle_end():
-    global baseValue
-    key = baseValue + 0x00D2C9F1
-    process.writeBytes(key, 1, 1)
+    global base_value
+    key = base_value + 0x00D2C9F1
+    process.write_bytes(key, 1, 1)
 
 
 def set_rng_2():
-    global baseValue
+    global base_value
     global process
-    key = baseValue + 0x00D35EE0
-    process.writeBytes(key, 0x7E9F20D2, 4)
+    key = base_value + 0x00D35EE0
+    process.write_bytes(key, 0x7E9F20D2, 4)
 
 
 # ------------------------------
@@ -2565,8 +2563,8 @@ class BlitzActor:
 
 
 def get_blitz_aggro(player_index: int = 99):
-    global baseValue
-    ptrKey = process.read(baseValue + 0x00F2FF14)
+    global base_value
+    ptr_key = process.read(base_value + 0x00F2FF14)
     if player_index == 6:
         offset = 0x2DC35
     elif player_index == 7:
@@ -2579,7 +2577,7 @@ def get_blitz_aggro(player_index: int = 99):
         offset = 0x47AF5
 
     if player_index in [6, 7, 8, 9, 10]:
-        if process.readBytes(ptrKey + offset, 1) == 255:
+        if process.read_bytes(ptr_key + offset, 1) == 255:
             return False
         else:
             return True
@@ -2588,96 +2586,96 @@ def get_blitz_aggro(player_index: int = 99):
 
 
 def blitz_hp(player_index=99):
-    global baseValue
+    global base_value
     if player_index == 99:
         return 9999
     else:
-        ptrKey = process.read(baseValue + 0x00F2FF14)
+        ptr_key = process.read(base_value + 0x00F2FF14)
         offset = 0x1C8 + (0x4 * player_index)
-        hpValue = process.read(ptrKey + offset)
-        return hpValue
+        hp_value = process.read(ptr_key + offset)
+        return hp_value
 
 
 def blitz_own_score():
-    global baseValue
-    key = baseValue + 0x00D2E0CE
-    score = process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00D2E0CE
+    score = process.read_bytes(key, 1)
     return score
 
 
 def blitz_opp_score():
-    global baseValue
-    key = baseValue + 0x00D2E0CF
-    score = process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x00D2E0CF
+    score = process.read_bytes(key, 1)
     return score
 
 
 def blitzball_patriots_style():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2E0CE
+    key = base_value + 0x00D2E0CE
 
 
 def blitz_clock_menu():
-    global baseValue
-    key = baseValue + 0x014765FA
-    status = process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x014765FA
+    status = process.read_bytes(key, 1)
     return status
 
 
 def blitz_clock_pause():
-    global baseValue
-    key = baseValue + 0x014663B0
-    status = process.readBytes(key, 1)
+    global base_value
+    key = base_value + 0x014663B0
+    status = process.read_bytes(key, 1)
     return status
 
 
 def blitz_menu_num():
-    global baseValue
+    global base_value
     # 20 = Movement menu (auto, type A, or type B)
     # 29 = Formation menu
     # 38 = Breakthrough
     # 24 = Pass To menu (other variations are set to 24)
     # Unsure about other variations, would take more testing.
 
-    key = baseValue + 0x014765DA
-    status = process.readBytes(key, 1)
+    key = base_value + 0x014765DA
+    status = process.read_bytes(key, 1)
     if status == 17 or status == 27:
         status = 24
     return status
 
 
 def reset_blitz_menu_num():
-    global baseValue
-    key = baseValue + 0x014765DA
-    process.writeBytes(key, 1, 1)
+    global base_value
+    key = base_value + 0x014765DA
+    process.write_bytes(key, 1, 1)
 
 
 def blitz_current_player():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00F25B6A
-    player = process.readBytes(key, 1)
+    key = base_value + 0x00F25B6A
+    player = process.read_bytes(key, 1)
     return player
 
 
 def blitz_target_player():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D3761C
-    player = process.readBytes(key, 1)
+    key = base_value + 0x00D3761C
+    player = process.read_bytes(key, 1)
     return player
 
 
 def blitz_coords():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D37698
-    xVal = process.readBytes(key, 1)
-    xVal = xVal * -1
-    key = baseValue + 0x00D37690
-    yVal = process.readBytes(key, 1)
-    return [xVal, yVal]
+    key = base_value + 0x00D37698
+    x_val = process.read_bytes(key, 1)
+    x_val = x_val * -1
+    key = base_value + 0x00D37690
+    y_val = process.read_bytes(key, 1)
+    return [x_val, y_val]
 
 
 def blitz_game_active():
@@ -2688,36 +2686,36 @@ def blitz_game_active():
 
 
 def blitz_clock():
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00F2FF14
-    basePointerAddress = process.read(basePointer)
-    key = basePointerAddress + 0x24C
-    clockValue = process.read(key)
-    return clockValue
+    base_pointer = base_value + 0x00F2FF14
+    base_pointer_address = process.read(base_pointer)
+    key = base_pointer_address + 0x24C
+    clock_value = process.read(key)
+    return clock_value
 
 
 def blitz_char_select_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x0146780A
-    cursor = process.readBytes(key, 1)
+    key = base_value + 0x0146780A
+    cursor = process.read_bytes(key, 1)
     return cursor
 
 
 def blitz_proceed_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x01467CEA
-    cursor = process.readBytes(key, 1)
+    key = base_value + 0x01467CEA
+    cursor = process.read_bytes(key, 1)
     return cursor
 
 
 def blitz_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x014676D2
-    cursor = process.readBytes(key, 1)
+    key = base_value + 0x014676D2
+    cursor = process.read_bytes(key, 1)
     return cursor
 
 
@@ -2726,7 +2724,7 @@ def blitz_cursor():
 
 
 def read_bytes(key, size):
-    return process.readBytes(key, size)
+    return process.read_bytes(key, size)
 
 
 # ------------------------------
@@ -2749,21 +2747,21 @@ def read_bytes(key, size):
 
 
 def get_equip_type(equip_num):
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x05
-    retVal = process.readBytes(key, 1)
-    return retVal
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x05
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def get_equip_legit(equip_num):
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x03
-    retVal = process.readBytes(key, 1)
-    if retVal in [0, 8, 9]:
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x03
+    ret_val = process.read_bytes(key, 1)
+    if ret_val in [0, 8, 9]:
         return True
     else:
         return False
@@ -2771,103 +2769,103 @@ def get_equip_legit(equip_num):
 
 def is_equip_brotherhood(equip_num):
     if get_equip_owner(equip_num) == 0:
-        global baseValue
-        basePointer = baseValue + 0x00D30F2C
-        key = basePointer + (0x16 * equip_num) + 0x03
-        retVal = process.readBytes(key, 1)
-        if retVal == 9:
+        global base_value
+        base_pointer = base_value + 0x00D30F2C
+        key = base_pointer + (0x16 * equip_num) + 0x03
+        ret_val = process.read_bytes(key, 1)
+        if ret_val == 9:
             return True
     return False
 
 
 def get_equip_owner(equip_num):
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x04
-    retVal = process.readBytes(key, 1)
-    return retVal
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x04
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def get_equip_slot_count(equip_num):
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x0B
-    retVal = process.readBytes(key, 1)
-    return retVal
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x0B
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def get_equip_currently_equipped(equip_num):
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x06
-    retVal = process.readBytes(key, 1)
-    return retVal
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x06
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def get_equip_abilities(equip_num):
-    global baseValue
-    retVal = [255, 255, 255, 255]
+    global base_value
+    ret_val = [255, 255, 255, 255]
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x0E
-    retVal[0] = process.readBytes(key, 2)
-    key = basePointer + (0x16 * equip_num) + 0x10
-    retVal[1] = process.readBytes(key, 2)
-    key = basePointer + (0x16 * equip_num) + 0x12
-    retVal[2] = process.readBytes(key, 2)
-    key = basePointer + (0x16 * equip_num) + 0x14
-    retVal[3] = process.readBytes(key, 2)
-    return retVal
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x0E
+    ret_val[0] = process.read_bytes(key, 2)
+    key = base_pointer + (0x16 * equip_num) + 0x10
+    ret_val[1] = process.read_bytes(key, 2)
+    key = base_pointer + (0x16 * equip_num) + 0x12
+    ret_val[2] = process.read_bytes(key, 2)
+    key = base_pointer + (0x16 * equip_num) + 0x14
+    ret_val[3] = process.read_bytes(key, 2)
+    return ret_val
 
 
 def get_equip_exists(equip_num):
-    global baseValue
+    global base_value
 
-    basePointer = baseValue + 0x00D30F2C
-    key = basePointer + (0x16 * equip_num) + 0x02
-    retVal = process.readBytes(key, 1)
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x02
+    ret_val = process.read_bytes(key, 1)
 
-    return retVal
+    return ret_val
 
 
 class Equipment:
     def __init__(self, equip_num):
         self.num = equip_num
-        self.equipType = get_equip_type(equip_num)
-        self.equipOwner = get_equip_owner(equip_num)
-        self.equipOwnerAlt = get_equip_owner(equip_num)
-        self.equipAbilities = get_equip_abilities(equip_num)
+        self.equip_type = get_equip_type(equip_num)
+        self.equip_owner = get_equip_owner(equip_num)
+        self.equip_owner_alt = get_equip_owner(equip_num)
+        self.equip_abilities = get_equip_abilities(equip_num)
         self.equip_status = get_equip_currently_equipped(equip_num)
         self.slots = get_equip_slot_count(equip_num)
         self.exists = get_equip_exists(equip_num)
         self.brotherhood = is_equip_brotherhood(equip_num)
 
     def create_custom(
-        self, eType: int, eOwner1: int, eOwner2: int, eSlots: int, eAbilities
+        self, e_type: int, e_owner_1: int, e_owner_2: int, e_slots: int, e_abilities
     ):
-        self.equipType = eType
-        self.equipOwner = eOwner1
-        self.equipOwnerAlt = eOwner2
-        self.equipAbilities = eAbilities
+        self.equip_type = e_type
+        self.equip_owner = e_owner_1
+        self.equip_owner_alt = e_owner_2
+        self.equip_abilities = e_abilities
         self.equip_status = 0
-        self.slots = eSlots
+        self.slots = e_slots
         self.exists = 1
         self.brotherhood = False
 
     def equipment_type(self):
-        return self.equipType
+        return self.equip_type
 
     def owner(self):
-        return self.equipOwner
+        return self.equip_owner
 
     def abilities(self):
-        return self.equipAbilities
+        return self.equip_abilities
 
     def has_ability(self, ability_num):
-        if ability_num in self.equipAbilities:
+        if ability_num in self.equip_abilities:
             return True
         return False
 
@@ -2885,41 +2883,41 @@ class Equipment:
 
 
 def all_equipment():
-    firstEquipment = True
+    first_equipment = True
     for i in range(200):
-        currentHandle = Equipment(i)
-        if get_equip_legit(i) and currentHandle.equip_exists():
-            if firstEquipment:
-                equipHandleArray = [Equipment(i)]
-                firstEquipment = False
+        current_handle = Equipment(i)
+        if get_equip_legit(i) and current_handle.equip_exists():
+            if first_equipment:
+                equip_handle_array = [Equipment(i)]
+                first_equipment = False
             else:
-                equipHandleArray.append(Equipment(i))
-    return equipHandleArray
+                equip_handle_array.append(Equipment(i))
+    return equip_handle_array
 
 
 def weapon_array_character(char_num):
-    equipHandles = all_equipment()
-    firstEquipment = True
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.owner() == char_num and currentHandle.equipment_type() == 0:
-            if firstEquipment:
-                charWeaps = [currentHandle]
-                firstEquipment = False
+    equip_handles = all_equipment()
+    first_equipment = True
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.owner() == char_num and current_handle.equipment_type() == 0:
+            if first_equipment:
+                char_weaps = [current_handle]
+                first_equipment = False
             else:
-                charWeaps.append(currentHandle)
-    return charWeaps
+                char_weaps.append(current_handle)
+    return char_weaps
 
 
 def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
-    equipHandles = weapon_array_character(char_num)
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.is_equipped() == char_num:
-            print("## Owner:", currentHandle.owner())
-            print("## Equipped:", currentHandle.is_equipped())
-            print("## Has Ability:", currentHandle.has_ability(ability_num))
-            if currentHandle.has_ability(ability_num):
+    equip_handles = weapon_array_character(char_num)
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.is_equipped() == char_num:
+            logger.debug(f"## Owner: {current_handle.owner()}")
+            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
+            if current_handle.has_ability(ability_num):
                 return True
             else:
                 return False
@@ -2927,17 +2925,17 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
 
 def check_thunder_strike() -> int:
     results = 0
-    tidusWeaps = weapon_array_character(0)
-    while len(tidusWeaps) > 0:
-        currentHandle = tidusWeaps.pop(0)
-        if currentHandle.has_ability(0x8026):
+    tidus_weaps = weapon_array_character(0)
+    while len(tidus_weaps) > 0:
+        current_handle = tidus_weaps.pop(0)
+        if current_handle.has_ability(0x8026):
             results += 1
             break
 
-    wakkaWeaps = weapon_array_character(4)
-    while len(wakkaWeaps) > 0:
-        currentHandle = wakkaWeaps.pop(0)
-        if currentHandle.has_ability(0x8026):
+    wakka_weaps = weapon_array_character(4)
+    while len(wakka_weaps) > 0:
+        current_handle = wakka_weaps.pop(0)
+        if current_handle.has_ability(0x8026):
             results += 2
             break
     return results
@@ -2946,52 +2944,52 @@ def check_thunder_strike() -> int:
 def check_zombie_strike():
     ability = 0x8032
 
-    charWeaps = weapon_array_character(0)  # Tidus
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(0)  # Tidus
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(0)
             return True
 
-    charWeaps = weapon_array_character(1)  # Yuna
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(1)  # Yuna
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(1)
             return True
 
-    charWeaps = weapon_array_character(2)  # Auron
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(2)  # Auron
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(2)
             return True
 
-    charWeaps = weapon_array_character(3)  # Kimahri
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(3)  # Kimahri
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(3)
             return True
 
-    charWeaps = weapon_array_character(4)  # Wakka
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(4)  # Wakka
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(4)
             return True
 
-    charWeaps = weapon_array_character(5)  # Lulu
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(5)  # Lulu
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(5)
             return True
 
-    charWeaps = weapon_array_character(6)  # Rikku
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(6)  # Rikku
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_zombie(6)
             return True
 
@@ -3001,46 +2999,46 @@ def check_zombie_strike():
 def check_ability(ability=0x8032):
     results = [False, False, False, False, False, False, False]
 
-    charWeaps = weapon_array_character(0)  # Tidus
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(0)  # Tidus
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[0] = True
 
-    charWeaps = weapon_array_character(1)  # Yuna
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(1)  # Yuna
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[1] = True
 
-    charWeaps = weapon_array_character(2)  # Auron
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(2)  # Auron
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[2] = True
 
-    charWeaps = weapon_array_character(3)  # Kimahri
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(3)  # Kimahri
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[3] = True
 
-    charWeaps = weapon_array_character(4)  # Wakka
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(4)  # Wakka
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[4] = True
 
-    charWeaps = weapon_array_character(5)  # Lulu
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(5)  # Lulu
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[5] = True
 
-    charWeaps = weapon_array_character(6)  # Rikku
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = weapon_array_character(6)  # Rikku
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             results[6] = True
 
     return results
@@ -3049,160 +3047,159 @@ def check_ability(ability=0x8032):
 def check_ability_armor(ability=0x8032, slot_count: int = 99):
     results = [False, False, False, False, False, False, False]
 
-    charWeaps = armor_array_character(0)  # Tidus
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(0)  # Tidus
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[0] = False
                 else:
                     results[0] = True
             else:
                 results[0] = True
 
-    charWeaps = armor_array_character(1)  # Yuna
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(1)  # Yuna
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[1] = False
                 else:
                     results[1] = True
             else:
                 results[1] = True
 
-    charWeaps = armor_array_character(2)  # Auron
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(2)  # Auron
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[2] = False
                 else:
                     results[2] = True
             else:
                 results[2] = True
 
-    charWeaps = armor_array_character(3)  # Kimahri
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(3)  # Kimahri
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[3] = False
                 else:
                     results[3] = True
             else:
                 results[3] = True
 
-    charWeaps = armor_array_character(4)  # Wakka
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(4)  # Wakka
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[4] = False
                 else:
                     results[4] = True
             else:
                 results[4] = True
 
-    charWeaps = armor_array_character(5)  # Lulu
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(5)  # Lulu
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[5] = False
                 else:
                     results[5] = True
             else:
                 results[5] = True
 
-    charWeaps = armor_array_character(6)  # Rikku
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        print(currentHandle.abilities())
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(6)  # Rikku
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        logger.debug(current_handle.abilities())
+        if current_handle.has_ability(ability):
             if slot_count != 99:
-                if currentHandle.slot_count() != slot_count:
+                if current_handle.slot_count() != slot_count:
                     results[6] = False
                 else:
                     results[6] = True
             else:
                 results[6] = True
-        print(results[6])
+        logger.debug(results[6])
 
     return results
 
 
 def weapon_armor_cursor():
-    global baseValue
-    return process.readBytes(baseValue + 0x0146A5E4, 1)
+    global base_value
+    return process.read_bytes(base_value + 0x0146A5E4, 1)
 
 
 def customize_menu_array():
-    retArray = []
-    global baseValue
+    ret_array = []
+    global base_value
     for x in range(60):
         offset = 0x1197730 + (x * 4)
-        retArray.append(process.readBytes(baseValue + offset, 2))
-    print("Customize menu: ")
-    print(retArray)
-    return retArray
+        ret_array.append(process.read_bytes(base_value + offset, 2))
+    logger.debug(f"Customize menu: {ret_array}")
+    return ret_array
 
 
 def check_nea_armor():
     ability = 0x801D
 
-    charWeaps = armor_array_character(0)  # Tidus
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(0)  # Tidus
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(0)
             return True
 
-    charWeaps = armor_array_character(1)  # Yuna
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(1)  # Yuna
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(1)
             return True
 
-    charWeaps = armor_array_character(2)  # Auron
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(2)  # Auron
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(2)
             return True
 
-    charWeaps = armor_array_character(3)  # Kimahri
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(3)  # Kimahri
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(3)
             return True
 
-    charWeaps = armor_array_character(4)  # Wakka
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(4)  # Wakka
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(4)
             return True
 
-    charWeaps = armor_array_character(5)  # Lulu
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(5)  # Lulu
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(5)
             return True
 
-    charWeaps = armor_array_character(6)  # Rikku
-    while len(charWeaps) > 0:
-        currentHandle = charWeaps.pop(0)
-        if currentHandle.has_ability(ability):
+    char_weaps = armor_array_character(6)  # Rikku
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
             game_vars.set_ne_armor(6)
             return True
 
@@ -3218,62 +3215,62 @@ def airship_shop_dialogue_row():
 
 
 def hunter_spear():
-    kimWeapHandles = weapon_array_character(3)
-    if len(kimWeapHandles) == 1:
+    kim_weap_handles = weapon_array_character(3)
+    if len(kim_weap_handles) == 1:
         return False
     else:
-        while len(kimWeapHandles) > 0:
-            currentHandle = kimWeapHandles.pop(0)
-            if currentHandle.abilities() == [0x800B, 0x8000, 0x8064, 0x00FF]:
+        while len(kim_weap_handles) > 0:
+            current_handle = kim_weap_handles.pop(0)
+            if current_handle.abilities() == [0x800B, 0x8000, 0x8064, 0x00FF]:
                 return True
     return False
 
 
-def armor_array_character(charNum):
-    equipHandles = all_equipment()
-    firstEquipment = True
-    charWeaps = []
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.owner() == charNum and currentHandle.equipment_type() == 1:
-            if firstEquipment:
-                charWeaps = [currentHandle]
-                firstEquipment = False
+def armor_array_character(char_num):
+    equip_handles = all_equipment()
+    first_equipment = True
+    char_weaps = []
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.owner() == char_num and current_handle.equipment_type() == 1:
+            if first_equipment:
+                char_weaps = [current_handle]
+                first_equipment = False
             else:
-                charWeaps.append(currentHandle)
+                char_weaps.append(current_handle)
     try:
-        return charWeaps
+        return char_weaps
     except Exception:
         return []
 
 
-def equipped_armor_has_ability(charNum: int, abilityNum: int = 0x801D):
-    equipHandles = armor_array_character(charNum)
-    while len(equipHandles) > 0:
-        currentHandle = equipHandles.pop(0)
-        if currentHandle.is_equipped() == charNum:
-            print("## Owner:", currentHandle.owner())
-            print("## Equipped:", currentHandle.is_equipped())
-            print("## Has Ability:", currentHandle.has_ability(abilityNum))
-            if currentHandle.has_ability(abilityNum):
+def equipped_armor_has_ability(char_num: int, ability_num: int = 0x801D):
+    equip_handles = armor_array_character(char_num)
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.is_equipped() == char_num:
+            logger.debug(f"## Owner: {current_handle.owner()}")
+            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
+            if current_handle.has_ability(ability_num):
                 return True
             else:
                 return False
 
 
 def equip_weap_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x01440A38
-    retVal = process.readBytes(key, 1)
-    return retVal
+    key = base_value + 0x01440A38
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def assign_ability_to_equip_cursor():
-    global baseValue
-    key = baseValue + 0x01440AD0
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440AD0
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 # ------------------------------
@@ -3281,59 +3278,59 @@ def assign_ability_to_equip_cursor():
 
 
 def item_shop_menu():
-    global baseValue
-    key = baseValue + 0x0085A860
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x0085A860
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def equip_shop_menu():
-    global baseValue
-    key = baseValue + 0x0085A83C
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x0085A83C
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def cure_menu_open():
-    global baseValue
-    key = baseValue + 0x01440A35
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440A35
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def item_menu_number():
-    global baseValue
-    key = baseValue + 0x0085A318
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x0085A318
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def item_menu_column():
-    global baseValue
-    key = baseValue + 0x01440A48
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440A48
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def information_active():
-    global baseValue
-    key = baseValue + 0x0146AA28
-    retVal = process.readBytes(key, 1)
-    return retVal == 7
+    global base_value
+    key = base_value + 0x0146AA28
+    ret_val = process.read_bytes(key, 1)
+    return ret_val == 7
 
 
 def item_menu_row():
-    global baseValue
-    key = baseValue + 0x01440A38
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440A38
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def equip_sell_row():
-    global baseValue
-    key = baseValue + 0x01440C00
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440C00
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def name_confirm_open():
@@ -3341,45 +3338,45 @@ def name_confirm_open():
 
 
 def equip_buy_row():
-    global baseValue
-    key = baseValue + 0x01440B68
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440B68
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def cursor_enabled_in_equip():
-    global baseValue
-    key = baseValue + 0x008CC7EC
-    retVal = process.readBytes(key, 1)
-    return retVal == 12
+    global base_value
+    key = base_value + 0x008CC7EC
+    ret_val = process.read_bytes(key, 1)
+    return ret_val == 12
 
 
 def equip_confirmation_row():
-    global baseValue
-    key = baseValue + 0x01440C98
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x01440C98
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def equip_menu_open_from_char():
-    global baseValue
-    key = baseValue + 0x01440A2A
-    retVal = process.readBytes(key, 1)
-    return retVal == 5
+    global base_value
+    key = base_value + 0x01440A2A
+    ret_val = process.read_bytes(key, 1)
+    return ret_val == 5
 
 
 def config_cursor():
-    global baseValue
-    key = baseValue + 0x0146A404
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x0146A404
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def read_val(address, bytes=1):
-    global baseValue
-    key = baseValue + address
-    retVal = process.readBytes(key, bytes)
-    return retVal
+    global base_value
+    key = base_value + address
+    ret_val = process.read_bytes(key, bytes)
+    return ret_val
 
 
 def spare_change_amount():
@@ -3407,10 +3404,10 @@ def spare_change_open():
 
 
 def config_cursor_column():
-    global baseValue
-    key = baseValue + 0x0085A3FC
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x0085A3FC
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def purchasing_amount_items():
@@ -3418,38 +3415,38 @@ def purchasing_amount_items():
 
 
 def config_aeon_cursor_column():
-    global baseValue
-    key = baseValue + 0x0085A454
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x0085A454
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def load_menu_cursor():
-    global baseValue
-    key = baseValue + 0x008E72E0
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x008E72E0
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def rikku_overdrive_item_selected_number():
-    global baseValue
-    key = baseValue + 0x00D2C948
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x00D2C948
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def sphere_grid_placement_open():
-    global baseValue
-    key = baseValue + 0x012ACB6B
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x012ACB6B
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def moving_prompt_open():
-    global baseValue
-    key = baseValue + 0x012AD543
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x012AD543
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 # ------------------------------
@@ -3457,13 +3454,13 @@ def moving_prompt_open():
 
 
 def bt_bi_direction():
-    key = baseValue + 0x0092DEED
-    return process.readBytes(key, 1)
+    key = base_value + 0x0092DEED
+    return process.read_bytes(key, 1)
 
 
 def bt_tri_direction_main():
-    key = baseValue + 0x0092E1ED
-    return process.readBytes(key, 1)
+    key = base_value + 0x0092E1ED
+    return process.read_bytes(key, 1)
 
 
 # ------------------------------
@@ -3471,15 +3468,15 @@ def bt_tri_direction_main():
 
 
 def gt_outer_ring():
-    global baseValue
-    key = baseValue + 0x014DFC34
+    global base_value
+    key = base_value + 0x014DFC34
     height = float_from_integer(process.read(key))
     return height
 
 
 def gt_inner_ring():
-    global baseValue
-    key = baseValue + 0x014DFDA0
+    global base_value
+    key = base_value + 0x014DFDA0
     height = float_from_integer(process.read(key))
     return height
 
@@ -3490,8 +3487,8 @@ def gt_inner_ring():
 
 def get_save_sphere_details():
     map_val = get_map()
-    storyVal = get_story_progress()
-    print("Map:", map_val, "| Story:", storyVal)
+    story_val = get_story_progress()
+    logger.debug(f"Map: {map_val} | Story: {story_val}")
     x = 0
     y = 0
     diag = 0
@@ -3711,59 +3708,45 @@ def get_save_sphere_details():
         x = 230
         y = 140
         diag = 68
-    print("Values: [", x, ",", y, "] -", diag)
+    logger.debug(f"Values: [{x}, {y}] - {diag}")
     return [x, y, diag]
 
 
 def touch_save_sphere(save_cursor_num: int = 0):
-    print("MEM - Touch Save Sphere")
+    logger.debug("Touch Save Sphere")
     clear_save_menu_cursor()
     clear_save_menu_cursor_2()
 
-    ssDetails = get_save_sphere_details()
+    ss_details = get_save_sphere_details()
     while user_control():
-        pathing.set_movement([ssDetails[0], ssDetails[1]])
+        pathing.set_movement([ss_details[0], ss_details[1]])
         xbox.tap_b()
         wait_frames(1)
     FFXC.set_neutral()
-    print("Waiting for cursor to reset before we do things - Mark 1")
+    logger.debug("Waiting for cursor to reset before we do things - Mark 1")
     while menu_control() == 0:
         pass
     wait_frames(1)
-    print("Mark 2")
+    logger.debug("Mark 2")
     # wait_frames(300)
     inc = 0
 
     while not (
         save_menu_cursor() == 0
         and save_menu_cursor_2() == 0
-        and diag_progress_flag() == ssDetails[2]
+        and diag_progress_flag() == ss_details[2]
     ):
-        print(
-            "Cursor test: A",
-            get_story_progress(),
-            "|",
-            diag_progress_flag(),
-            "|",
-            get_map(),
-            "|",
-            inc,
+        logger.debug(
+            f"Cursor test A: {get_story_progress()} | {diag_progress_flag()} | {get_map()} | {inc}"
         )
         inc += 1
         if save_menu_open():
             xbox.tap_a()
-        elif diag_skip_possible() and diag_progress_flag() != ssDetails[2]:
+        elif diag_skip_possible() and diag_progress_flag() != ss_details[2]:
             xbox.tap_b()
     while not (save_menu_cursor() == 0 and save_menu_cursor_2() == 0):
-        print(
-            "Cursor test: B",
-            save_menu_cursor(),
-            "|",
-            save_menu_cursor_2(),
-            "|",
-            diag_skip_possible(),
-            "|",
-            inc,
+        logger.debug(
+            f"Cursor test B: {save_menu_cursor()} | {save_menu_cursor_2()} | {diag_skip_possible()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -3771,68 +3754,63 @@ def touch_save_sphere(save_cursor_num: int = 0):
         elif diag_skip_possible():
             xbox.tap_a()
     while save_menu_cursor() == 0 and save_menu_cursor_2() == 0:
-        print(
-            "Cursor test: C",
-            save_menu_cursor(),
-            "|",
-            save_menu_cursor_2(),
-            "|",
-            diag_skip_possible(),
-            "|",
-            get_story_progress(),
-            "|",
-            inc,
+        logger.debug(
+            f"Cursor test C: {save_menu_cursor()} | {save_menu_cursor_2()} | {diag_skip_possible()} | {get_story_progress()} | {inc}"
         )
         inc += 1
         if save_menu_open():
             xbox.tap_a()
         elif diag_skip_possible():
-            if diag_progress_flag() != ssDetails[2]:
+            if diag_progress_flag() != ss_details[2]:
                 xbox.tap_b()
             else:
                 xbox.tap_a()
     while not user_control():
-        print("Cursor test: D", save_menu_cursor(), "|", save_menu_cursor_2(), "|", inc)
+        logger.debug(
+            f"Cursor test D: {save_menu_cursor()} | {save_menu_cursor_2()} | {inc}"
+        )
         inc += 1
         if save_menu_open():
             xbox.tap_a()
         else:
             xbox.tap_b()
-    print("Cursor test: E", save_menu_cursor(), "|", save_menu_cursor_2(), "|", inc)
+    logger.debug(
+        f"Cursor test E: {save_menu_cursor()} | {save_menu_cursor_2()} | {inc}"
+    )
     inc += 1
 
 
 def touch_save_sphere_not_working(save_cursor_num: int = 0):
-    print("MEM - Touch Save Sphere")
+    logger.debug("Touch Save Sphere")
 
-    ssDetails = get_save_sphere_details()
+    ss_details = get_save_sphere_details()
     while user_control():
-        pathing.set_movement([ssDetails[0], ssDetails[1]])
+        pathing.set_movement([ss_details[0], ss_details[1]])
         xbox.tap_b()
         wait_frames(1)
     FFXC.set_neutral()
-    print("Waiting for cursor to reset before we do things - Mark 1")
+    logger.debug("Waiting for cursor to reset before we do things - Mark 1")
     while menu_control() == 0:
         pass
     wait_frames(1)
-    print("Mark 2")
+    logger.debug("Mark 2")
     # wait_frames(300)
 
     xbox.tap_a()
-    # while saveMenuCursor() == 0:
-    #    if saveMenuOpen():
-    #        xbox.tapA()
-    #    elif diagProgressFlag() != ssDetails[2] and diagSkipPossible():
-    #        xbox.tapB()
+    # while save_menu_cursor() == 0:
+    #    if save_menu_open():
+    #        xbox.tap_a()
+    #    elif diag_progress_flag() != ss_details[2] and diag_skip_possible():
+    #        xbox.tap_b()
     #    else:
-    #        xbox.tapA()
+    #        xbox.tap_a()
 
     while not user_control():
         if save_menu_open():
             xbox.tap_a()
-        elif diag_progress_flag() == ssDetails[2]:
-            print("Cursor test:", save_menu_cursor())
-            print("Cursor test2:", save_menu_cursor_2())
+        elif diag_progress_flag() == ss_details[2]:
+            logger.debug(f"Cursor test: {save_menu_cursor()}")
+            logger.debug(f"Cursor test2: {save_menu_cursor_2()}")
             if save_cursor_num == 0 and save_menu_cursor() == 0:
                 xbox.tap_a()
             elif save_cursor_num == 1 and save_menu_cursor_2() == 0:
@@ -3847,9 +3825,9 @@ def touch_save_sphere_not_working(save_cursor_num: int = 0):
 
 def csr_baaj_save_clear():
     if user_control():
-        print("No need to clear. User is in control.")
+        logger.debug("No need to clear. User is in control.")
     else:
-        print("Save dialog has popped up for some reason. Attempting clear.")
+        logger.debug("Save dialog has popped up for some reason. Attempting clear.")
         try:
             FFXC.set_neutral()
         except Exception:
@@ -3873,23 +3851,23 @@ def csr_baaj_save_clear():
 
 
 def mem_test_val_0():
-    key = baseValue + 0x00D35EE0
-    return process.readBytes(key, 1)
+    key = base_value + 0x00D35EE0
+    return process.read_bytes(key, 1)
 
 
 def mem_test_val_1():
-    key = baseValue + 0x00D35EE1
-    return process.readBytes(key, 1)
+    key = base_value + 0x00D35EE1
+    return process.read_bytes(key, 1)
 
 
 def mem_test_val_2():
-    key = baseValue + 0x00D35EE2
-    return process.readBytes(key, 1)
+    key = base_value + 0x00D35EE2
+    return process.read_bytes(key, 1)
 
 
 def mem_test_val_3():
-    key = baseValue + 0x00D35EE3
-    return process.readBytes(key, 1)
+    key = base_value + 0x00D35EE3
+    return process.read_bytes(key, 1)
 
 
 # ------------------------------
@@ -3900,26 +3878,26 @@ def print_memory_log():
 
 
 def print_memory_log_backup():
-    global baseValue
+    global base_value
     global process
     # (Pointer) [[ffx.exe + 8DED2C] + 0x6D0]
-    ptrVal = process.read(baseValue + 0x008DED2C)
-    finalCoords = ptrVal + 0x6D0
-    coord1 = process.read(finalCoords)
-    logs.write_stats("Temp Value 1: " + str(coord1))
+    ptr_val = process.read(base_value + 0x008DED2C)
+    final_coords = ptr_val + 0x6D0
+    coord_1 = process.read(final_coords)
+    logs.write_stats("Temp Value 1: " + str(coord_1))
 
     # (Pointer) [[ffx.exe + 8DED2C] + 0x704]
-    ptrVal = process.read(baseValue + 0x008DED2C)
-    finalCoords = ptrVal + 0x704
-    logs.write_stats("Temp Value 2: " + str(coord1))
+    ptr_val = process.read(base_value + 0x008DED2C)
+    final_coords = ptr_val + 0x704
+    logs.write_stats("Temp Value 2: " + str(coord_1))
 
     # (Pointer) [[ffx.exe + 8CB9D8] + 0x10D2E]
-    ptrVal = process.read(baseValue + 0x008CB9D8)
-    finalCoords = ptrVal + 0x10D2E
-    logs.write_stats("Temp Value 3: " + str(coord1))
+    ptr_val = process.read(base_value + 0x008CB9D8)
+    final_coords = ptr_val + 0x10D2E
+    logs.write_stats("Temp Value 3: " + str(coord_1))
 
     # ffx.exe + D2A00C
-    logs.write_stats("Temp Value 4: " + str(coord1))
+    logs.write_stats("Temp Value 4: " + str(coord_1))
 
 
 # ------------------------------
@@ -3927,17 +3905,17 @@ def print_memory_log_backup():
 
 
 def load_game_page():
-    global baseValue
-    key = baseValue + 0x008E72DC
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x008E72DC
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def load_game_cursor():
-    global baseValue
-    key = baseValue + 0x008E72E0
-    retVal = process.readBytes(key, 1)
-    return retVal
+    global base_value
+    key = base_value + 0x008E72E0
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
 
 
 def load_game_pos():
@@ -3953,38 +3931,38 @@ def luca_workers_battle_id():
 
 
 def last_hit_init():
-    global baseValue
+    global base_value
     logger.debug("Initializing values")
-    key = baseValue + 0xD334CC
-    ptrVal = process.read(key)
-    lastHitVals = [0] * 8
+    key = base_value + 0xD334CC
+    ptr_val = process.read(key)
+    last_hit_vals = [0] * 8
     try:
         for x in range(8):
-            lastHitVals[x] = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-            # print("Val:", lastHitVals[x])
-        # print(lastHitVals)
-        game_vars.first_hits_set(lastHitVals)
+            last_hit_vals[x] = process.read(ptr_val + ((x + 20) * 0xF90) + 0x7AC)
+            # logger.debug(f"Val: {last_hit_vals[x]}")
+        # logger.debug(last_hit_vals)
+        game_vars.first_hits_set(last_hit_vals)
         return True
     except Exception:
         return False
 
 
 def last_hit_check_change() -> int:
-    global baseValue
-    key = baseValue + 0xD334CC
-    ptrVal = process.read(key)
-    changeFound = False
-    changeValue = 9999
+    global base_value
+    key = base_value + 0xD334CC
+    ptr_val = process.read(key)
+    change_found = False
+    change_value = 9999
     for x in range(8):
-        memVal = process.read(ptrVal + ((x + 20) * 0xF90) + 0x7AC)
-        if memVal != game_vars.first_hits_value(x) and not changeFound:
-            changeFound = True
-            changeValue = memVal
-            logger.info(f"**Registered hit: {changeValue}")
-            # logs.writeStats(changeValue)
+        mem_val = process.read(ptr_val + ((x + 20) * 0xF90) + 0x7AC)
+        if mem_val != game_vars.first_hits_value(x) and not change_found:
+            change_found = True
+            change_value = mem_val
+            logger.info(f"**Registered hit: {change_value}")
+            # logs.write_stats(change_value)
             last_hit_init()
             logger.debug("Mark 1")
-            return int(changeValue)
+            return int(change_value)
     return 9999
 
 
@@ -4134,23 +4112,23 @@ RNG_CONSTANTS_2 = (
 
 
 def build_rng_array(index: int, array_size: int = 255):
-    global baseValue
-    offset = baseValue + 0xD35ED8 + (index * 4)
-    arrayVal = [process.read(offset)]
+    global base_value
+    offset = base_value + 0xD35ED8 + (index * 4)
+    array_val = [process.read(offset)]
     for x in range(array_size):
-        arrayVal.append(roll_next_rng(arrayVal[x], index))
-    return arrayVal
+        array_val.append(roll_next_rng(array_val[x], index))
+    return array_val
 
 
 def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
     # Returns the next time the character will critically strike, counting number of advances from present.
     # If 255 is returned, there will not be a next crit in the foreseeable future.
-    rngIndex = min(20 + character, 27)
-    rngArray = rng_array_from_index(index=rngIndex, array_len=200)
-    del rngArray[0]
-    del rngArray[0]
-    for x in range(len(rngArray)):
-        crit_roll = s32(rngArray[x]) % 101
+    rng_index = min(20 + character, 27)
+    rng_array = rng_array_from_index(index=rng_index, array_len=200)
+    del rng_array[0]
+    del rng_array[0]
+    for x in range(len(rng_array)):
+        crit_roll = s32(rng_array[x]) % 101
         crit_chance = char_luck - enemy_luck
         if crit_roll < crit_chance:
             if x == 0:
@@ -4160,19 +4138,28 @@ def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
     return 255
 
 
+def rikku_mix_damage() -> List[int]:
+    initial_rng_vals = rng_array_from_index(index=26, array_len=9)
+    dmg_rng = [(s32(x) & 31) + 0xF0 for x in initial_rng_vals[1:]]
+    base_dmg = 18 * 50
+    initial_damage = [(x * base_dmg) // 256 for x in dmg_rng]
+    weakness_damage = [int(x * 1.5) for x in initial_damage]
+    return weakness_damage
+
+
 def future_attack_will_crit(
     character: int, char_luck: int, enemy_luck: int, attack_index: int = 0
 ) -> bool:
     # Returns if a specific attack in the future will crit.
     # Attack Index 0 represents the next attack.
     # Assumes no escape attempts, primarily this is used for Aeons anyway.
-    rngIndex = min(20 + character, 27)
-    rngArray = rng_array_from_index(index=rngIndex, array_len=200)
-    del rngArray[0]
-    del rngArray[0]
+    rng_index = min(20 + character, 27)
+    rng_array = rng_array_from_index(index=rng_index, array_len=200)
+    del rng_array[0]
+    del rng_array[0]
     if attack_index > 90:
         return False
-    crit_roll = s32(rngArray[attack_index * 2]) % 101
+    crit_roll = s32(rng_array[attack_index * 2]) % 101
     crit_chance = char_luck - enemy_luck
     if crit_roll < crit_chance:
         return True
@@ -4180,268 +4167,270 @@ def future_attack_will_crit(
 
 
 def rng_01():
-    global baseValue
-    return process.read(baseValue + 0xD35EDC)
+    global base_value
+    return process.read(base_value + 0xD35EDC)
 
 
 def rng_01_array(array_len: int = 600):
-    retVal = [rng_01()]  # First value is the current value
+    ret_val = [rng_01()]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(retVal[x], 1))
-    return retVal
+        ret_val.append(roll_next_rng(ret_val[x], 1))
+    return ret_val
 
 
 def rng_01_advances(advance_count: int = 50):
-    testArray = rng_01_array()
-    rangeVal = advance_count
-    for i in range(rangeVal):
-        testArray.append(testArray[i] & 0x7FFFFFFF)
-    return testArray
+    test_array = rng_01_array()
+    range_val = advance_count
+    for i in range(range_val):
+        test_array.append(test_array[i] & 0x7FFFFFFF)
+    return test_array
 
 
 def next_chance_rng_01(version="white"):
-    testArray = rng_01_array()
-    evenArray = []
-    oddArray = []
-    rangeVal = int((len(testArray) - 1) / 2) - 2
+    test_array = rng_01_array()
+    even_array = []
+    odd_array = []
+    range_val = int((len(test_array) - 1) / 2) - 2
     if version == "white":
         modulo = 13
-        battleIndex = 8
+        battle_index = 8
     else:
         modulo = 10
-        battleIndex = 0
-    for i in range(rangeVal):
-        if (testArray[((i + 1) * 2) - 1] & 0x7FFFFFFF) % modulo == battleIndex:
-            oddArray.append(i)
-        if (testArray[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battleIndex:
-            evenArray.append(i)
+        battle_index = 0
+    for i in range(range_val):
+        if (test_array[((i + 1) * 2) - 1] & 0x7FFFFFFF) % modulo == battle_index:
+            odd_array.append(i)
+        if (test_array[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battle_index:
+            even_array.append(i)
 
-    # print("------------------------------")
-    # print("Next event will appear on the odd array without manip. Area:", version)
-    # print("oddArray:", oddArray[0])
-    # print("evenArray:", evenArray[0])
-    # print("------------------------------")
-    return [oddArray, evenArray]
+    # logger.debug("------------------------------")
+    # logger.debug(f"Next event will appear on the odd array without manip. Area: {version}")
+    # logger.debug(f"odd_array: {odd_array[0]}")
+    # logger.debug(f"even_array: {even_array[0]}")
+    # logger.debug("------------------------------")
+    return [odd_array, even_array]
 
 
 def advance_rng_01():
-    global baseValue
-    key = baseValue + 0xD35EDC
+    global base_value
+    key = base_value + 0xD35EDC
     process.write(key, rng_01_array()[2])
 
 
 def rng_02():
-    global baseValue
-    return process.read(baseValue + 0xD35EE0)
+    global base_value
+    return process.read(base_value + 0xD35EE0)
 
 
 def rng_02_array(array_len: int = 200000):
-    retVal = [rng_02()]  # First value is the current value
+    ret_val = [rng_02()]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(retVal[x], 2))
-    return retVal
+        ret_val.append(roll_next_rng(ret_val[x], 2))
+    return ret_val
 
 
 def set_test_rng_02():
-    global baseValue
-    key = baseValue + 0xD35EE0
+    global base_value
+    key = base_value + 0xD35EE0
     process.write(key, 3777588919)
 
 
 def rng_10():
-    global baseValue
-    return process.read(baseValue + 0xD35F00)
+    global base_value
+    return process.read(base_value + 0xD35F00)
 
 
 def rng_10_array(array_len: int = 256):
-    retVal = [rng_10()]  # First value is the current value
+    ret_val = [rng_10()]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(last_rng=retVal[x], index=10))
-    return retVal
+        ret_val.append(roll_next_rng(last_rng=ret_val[x], index=10))
+    return ret_val
 
 
 def next_chance_rng_10(drop_chance_val: int = 60) -> int:
-    testArray = rng_10_array()
-    for i in range(len(testArray)):
+    test_array = rng_10_array()
+    for i in range(len(test_array)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7FFFFFFF) % 255 < drop_chance_val:
+        elif (test_array[i] & 0x7FFFFFFF) % 255 < drop_chance_val:
             return i - 3
 
 
 def next_chance_rng_10_full(drop_chance_val: int = 60) -> int:
-    testArray = rng_10_array()
-    resultsArray = [False, False, False]
-    for i in range(len(testArray)):
+    test_array = rng_10_array()
+    results_array = [False, False, False]
+    for i in range(len(test_array)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7FFFFFFF) % 255 < drop_chance_val:
-            resultsArray.append(True)
+        elif (test_array[i] & 0x7FFFFFFF) % 255 < drop_chance_val:
+            results_array.append(True)
         else:
-            resultsArray.append(False)
-    return resultsArray
+            results_array.append(False)
+    return results_array
 
 
 def next_chance_rng_10_calm() -> int:
-    testArray = rng_10_array()
-    for i in range(len(testArray)):
+    test_array = rng_10_array()
+    for i in range(len(test_array)):
         if i < 3:
             pass
-        elif (testArray[i] & 0x7FFFFFFF) % 255 >= 60 and (
-            testArray[i + 3] & 0x7FFFFFFF
+        elif (test_array[i] & 0x7FFFFFFF) % 255 >= 60 and (
+            test_array[i + 3] & 0x7FFFFFFF
         ) % 255 < 60:
             return i - 3
 
 
 def no_chance_x3_rng_10_highbridge() -> int:
-    testArray = rng_10_array()
-    for i in range(len(testArray)):
+    test_array = rng_10_array()
+    for i in range(len(test_array)):
         if i < 3:
             pass
         elif (
-            (testArray[i] & 0x7FFFFFFF) % 255 < 30
-            and (testArray[i + 3] & 0x7FFFFFFF) % 255 < 30
-            and (testArray[i] & 0x7FFFFFFF) % 255 < 30
+            (test_array[i] & 0x7FFFFFFF) % 255 < 30
+            and (test_array[i + 3] & 0x7FFFFFFF) % 255 < 30
+            and (test_array[i] & 0x7FFFFFFF) % 255 < 30
         ):
             return i - 3
 
 
 def advance_rng_10():
-    global baseValue
-    key = baseValue + 0xD35F00
+    global base_value
+    key = base_value + 0xD35F00
     process.write(key, rng_10_array()[1])
 
 
 def rng_12():
-    global baseValue
-    return process.read(baseValue + 0xD35F08)
+    global base_value
+    return process.read(base_value + 0xD35F08)
 
 
 def rng_12_array(advances: int = 255):
-    retVal = [rng_12()]  # First value is the current value
+    ret_val = [rng_12()]  # First value is the current value
     for x in range(advances):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(retVal[x], 12))
-    return retVal
+        ret_val.append(roll_next_rng(ret_val[x], 12))
+    return ret_val
 
 
-def next_chance_rng_12(beforeNatus: bool = False) -> int:
-    abilityMod = 13
+def next_chance_rng_12(before_natus: bool = False) -> int:
+    ability_mod = 13
 
-    nextChance = 256
-    if beforeNatus:
+    next_chance = 256
+    if before_natus:
         ptr = 5
     else:
         ptr = 1
-    testArray = rng_12_array()
-    while nextChance == 256:
+    test_array = rng_12_array()
+    while next_chance == 256:
         # Assume killer is aeon
         if ptr > 250:
             return 256
-        elif (testArray[ptr + 1] & 0x7FFFFFFF) % 2 == 1:  # equipment
-            # print("RNG12 ptr: ", ptr)
-            baseMod = (abilityMod + ((testArray[ptr + 3] & 0x7FFFFFFF) & 7)) - 4
-            abilities = (baseMod + ((baseMod >> 31) & 7)) >> 3
+        elif (test_array[ptr + 1] & 0x7FFFFFFF) % 2 == 1:  # equipment
+            # logger.debug(f"RNG12 ptr: {ptr}")
+            base_mod = (ability_mod + ((test_array[ptr + 3] & 0x7FFFFFFF) & 7)) - 4
+            abilities = (base_mod + ((base_mod >> 31) & 7)) >> 3
 
             if ptr == 1:
-                if next_drop_rng_13(abilities, beforeNatus):
-                    print("Mark1")
-                    nextChance = 0
+                if next_drop_rng_13(abilities, before_natus):
+                    logger.debug("next_chance_rng_12(): Mark1")
+                    next_chance = 0
                 else:
-                    print("Mark2")
-                    nextChance = 1
-                if beforeNatus:
-                    nextChance += 1
+                    logger.debug("next_chance_rng_12(): Mark2")
+                    next_chance = 1
+                if before_natus:
+                    next_chance += 1
             else:
-                nextChance = int((ptr - 1) / 4)
+                next_chance = int((ptr - 1) / 4)
         else:
             ptr += 4
-    if beforeNatus:
-        nextChance -= 1
-    return int(nextChance)
+    if before_natus:
+        next_chance -= 1
+    return int(next_chance)
 
 
 def advance_rng_12():
-    global baseValue
-    key = baseValue + 0xD35F08
+    global base_value
+    key = base_value + 0xD35F08
     process.write(key, rng_12_array()[4])
 
 
 def rng_13():
-    global baseValue
-    return process.read(baseValue + 0xD35F0C)
+    global base_value
+    return process.read(base_value + 0xD35F0C)
 
 
 def rng_13_array(array_len: int = 20):
-    retVal = [rng_13()]  # First value is the current value
+    ret_val = [rng_13()]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(retVal[x], 13))
-    return retVal
+        ret_val.append(roll_next_rng(ret_val[x], 13))
+    return ret_val
 
 
 def next_drop_rng_13(a_slots: int, before_natus: bool = False) -> int:
     outcomes = [4, 1, 1, 1, 2, 2, 3, 3]
-    filledSlots = [9] * a_slots
+    filled_slots = [9] * a_slots
     if before_natus:
         ptr = 2
     else:
         ptr = 1
-    testArray = rng_13_array()
-    while 9 in filledSlots and ptr < 20:
+    test_array = rng_13_array()
+    while 9 in filled_slots and ptr < 20:
         try:
-            if outcomes[(((testArray[ptr] & 0x7FFFFFFF) % 7) + 1)] in filledSlots:
+            if outcomes[(((test_array[ptr] & 0x7FFFFFFF) % 7) + 1)] in filled_slots:
                 pass
             else:
-                filledSlots.remove(9)
-                filledSlots.append(outcomes[(((testArray[ptr] & 0x7FFFFFFF) % 7) + 1)])
+                filled_slots.remove(9)
+                filled_slots.append(
+                    outcomes[(((test_array[ptr] & 0x7FFFFFFF) % 7) + 1)]
+                )
         except Exception:
             pass
         ptr += 1
 
-    # print("RNG13: ", filledSlots)
+    # logger.debug(f"RNG13: {filled_slots}")
 
-    if 1 in filledSlots:
+    if 1 in filled_slots:
         return True
     else:
         return False
 
 
 def next_chance_rng_13() -> int:
-    nextChance = 256
+    next_chance = 256
     outcomes = [4, 1, 1, 1, 2, 2, 3, 3]
     ptr = 1
-    nextChance = 0
-    testArray = rng_13_array()
-    while nextChance == 0:
-        # print("RNG13 outcome: ", outcomes[(((testArray[ptr] & 0x7fffffff) % 7) + 1)])
-        if outcomes[(((testArray[ptr] & 0x7FFFFFFF) % 7) + 1)] == 1:
-            nextChance = ptr
+    next_chance = 0
+    test_array = rng_13_array()
+    while next_chance == 0:
+        # logger.debug(f"RNG13 outcome: {outcomes[(((test_array[ptr] & 0x7fffffff) % 7) + 1)]}")
+        if outcomes[(((test_array[ptr] & 0x7FFFFFFF) % 7) + 1)] == 1:
+            next_chance = ptr
         else:
             ptr += 1
-    print("Value found. ", ptr)
-    return int(nextChance)
+    logger.debug(f"next_chance_rng_13: Value found. {ptr}")
+    return int(next_chance)
 
 
 def advance_rng_13():
-    global baseValue
-    key = baseValue + 0xD35F0C
+    global base_value
+    key = base_value + 0xD35F0C
     process.write(key, rng_13_array()[4])
 
 
 def rng_23():
-    global baseValue
-    return process.read(baseValue + 0xD35F16)
+    global base_value
+    return process.read(base_value + 0xD35F16)
 
 
 def rng_23_array(array_len: int = 200):
-    retVal = [rng_23()]  # First value is the current value
+    ret_val = [rng_23()]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(retVal[x], 13))
-    return retVal
+        ret_val.append(roll_next_rng(ret_val[x], 13))
+    return ret_val
 
 
 def advance_rng_23():
-    global baseValue
-    key = baseValue + 0xD35F16
+    global base_value
+    key = base_value + 0xD35F16
     process.write(key, rng_23_array()[1])
 
 
@@ -4463,12 +4452,13 @@ def roll_next_rng(last_rng: int, index: int) -> int:
 
 
 def arena_array():
-    global baseValue
-    retArray = []
+    global base_value
+    ret_array = []
     for i in range(104):
-        key = baseValue + 0xD30C9C + i
-        retArray.append(process.readBytes(key, 1))
-    return retArray
+        key = base_value + 0xD30C9C + i
+        ret_array.append(process.read_bytes(key, 1))
+    return ret_array
+
 
 def arena_farm_check(
     zone: str = "besaid", end_goal: int = 10, report=False, return_array=False
@@ -4478,71 +4468,67 @@ def arena_farm_check(
     complete = True
     zone = zone.lower()
     if zone == "besaid":
-        zoneIndexes = [8, 15, 27]
+        zone_indexes = [8, 15, 27]
     if zone == "kilika":
-        zoneIndexes = [21, 30, 38, 61]
+        zone_indexes = [21, 30, 38, 61]
     if zone == "miihen":
-        zoneIndexes = [0, 9, 16, 22, 34, 47, 50, 62, 85]
+        zone_indexes = [0, 9, 16, 22, 34, 47, 50, 62, 85]
     if zone == "mrr":
-        zoneIndexes = [5, 23, 40, 51, 63, 91]
+        zone_indexes = [5, 23, 40, 51, 63, 91]
     if zone == "djose":
-        zoneIndexes = [1, 10, 17, 28, 31, 79, 83]
+        zone_indexes = [1, 10, 17, 28, 31, 79, 83]
     if zone == "tplains":
-        zoneIndexes = [6, 24, 35, 52, 64, 76, 89, 87]
+        zone_indexes = [6, 24, 35, 52, 64, 76, 89, 87]
     if zone == "maclake":
-        zoneIndexes = [3, 11, 18, 36]
+        zone_indexes = [3, 11, 18, 36]
     if zone == "macwoods":
-        zoneIndexes = [2, 25, 32, 65, 71, 94]
+        zone_indexes = [2, 25, 32, 65, 71, 94]
     if zone == "bikanel":
-        zoneIndexes = [12, 29, 41, 42, 53, 88]
+        zone_indexes = [12, 29, 41, 42, 53, 88]
     if zone == "calm":
-        zoneIndexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
+        zone_indexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
     if zone == "gagazet":
-        zoneIndexes = [14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86]
+        zone_indexes = [14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86]
     if zone == "stolenfayth":
-        zoneIndexes = [7, 26, 44, 48, 54, 66, 68, 92, 98]
+        zone_indexes = [7, 26, 44, 48, 54, 66, 68, 92, 98]
     if zone == "justtonberry":
-        zoneIndexes = [98]
+        zone_indexes = [98]
     if zone == "sin1":
-        zoneIndexes = [37]
+        zone_indexes = [37]
     if zone == "sin2":
-        zoneIndexes = [56, 70, 77, 78, 81, 93, 90, 97]
+        zone_indexes = [56, 70, 77, 78, 81, 93, 90, 97]
     if zone == "omega":
-        zoneIndexes = [67, 74, 75, 82, 95, 96, 99, 100, 101, 102, 103]
+        zone_indexes = [67, 74, 75, 82, 95, 96, 99, 100, 101, 102, 103]
 
-    testArray = arena_array()
-    resultArray = []
+    test_array = arena_array()
+    result_array = []
 
-    for i in range(len(zoneIndexes)):
-        resultArray.append(testArray[zoneIndexes[i]])
-        if testArray[zoneIndexes[i]] < end_goal:
+    for i in range(len(zone_indexes)):
+        result_array.append(test_array[zone_indexes[i]])
+        if test_array[zone_indexes[i]] < end_goal:
             complete = False
     if report:
-        print("############")
-        print("Next Sphere Grid checkpoint:", game_vars.nem_checkpoint_ap())
-        print(
-            "Tidus S.levels:",
-            get_tidus_slvl(),
-            "- need levels:",
-            menu.next_ap_needed(game_vars.nem_checkpoint_ap()),
+        ap_needed = menu.next_ap_needed(game_vars.nem_checkpoint_ap())
+        logger.debug("############")
+        logger.debug(f"Next Sphere Grid checkpoint: {game_vars.nem_checkpoint_ap()}")
+        logger.debug(f"Tidus S.levels: {get_tidus_slvl()} - need levels: {ap_needed}")
+        logger.debug("Number of captures in this zone:")
+        logger.debug(result_array)
+        logger.debug(
+            f"End goal is {end_goal} minimum before leaving this zone for each index."
         )
-        print("Number of captures in this zone:")
-        print(resultArray)
-        print(
-            "End goal is", end_goal, "minimum before leaving this zone for each index."
-        )
-        print("############")
+        logger.debug("############")
     if return_array:
-        return resultArray
+        return result_array
     else:
         return complete
 
 
 def arena_cursor():
-    global baseValue
+    global base_value
 
-    key = baseValue + 0x00D2A084
-    status = process.readBytes(key, 2)
+    key = base_value + 0x00D2A084
+    status = process.read_bytes(key, 2)
     return status
 
 
@@ -4550,45 +4536,44 @@ def arena_cursor():
 
 
 def rng_from_index(index: int = 20):
-    memTarget = 0xD35ED8 + (index * 0x4)
-    global baseValue
-    return process.read(baseValue + memTarget)
+    mem_target = 0xD35ED8 + (index * 0x4)
+    global base_value
+    return process.read(base_value + mem_target)
+
+
+def get_next_rng2():
+    return roll_next_rng(rng_from_index(2), 2) & 0x7FFFFFFF & 0xFFFF
 
 
 def rng_array_from_index(index: int = 20, array_len: int = 20):
-    retVal = [rng_from_index(index)]  # First value is the current value
+    ret_val = [rng_from_index(index)]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
-        retVal.append(roll_next_rng(retVal[x], index))
-    retVal = [
-        x & 0x7FFFFFFF for x in retVal
+        ret_val.append(roll_next_rng(ret_val[x], index))
+    ret_val = [
+        x & 0x7FFFFFFF for x in ret_val
     ]  # Anding it because that's the value that's actually used
-    return retVal
+    return ret_val
 
 
 def advance_rng_index(index: int = 43):
-    global baseValue
+    global base_value
     key = 0xD35ED8 + (index * 0x4)
-    process.write(baseValue + key, rng_array_from_index(index=index)[1])
+    process.write(base_value + key, rng_array_from_index(index=index)[1])
 
 
 def next_steal(steal_count: int = 0, pre_advance: int = 0):
-    useArray = rng_array_from_index(index=10, array_len=1 + pre_advance)
-    stealRNG = useArray[1 + pre_advance] % 255
-    stealChance = 2**steal_count
-    print(
-        "=== ",
-        useArray[1],
-        " === ",
-        stealRNG,
-        " < ",
-        255 // stealChance,
-        " = ",
-        stealRNG < (255 // stealChance),
+    use_array = rng_array_from_index(index=10, array_len=1 + pre_advance)
+    steal_rng = use_array[1 + pre_advance] % 255
+    steal_chance = 2**steal_count
+    steal_threshold = 255 // steal_chance
+    ret_val = steal_rng < steal_threshold
+    logger.debug(
+        f"next_steal(): === {use_array[1]} === {steal_rng} < {steal_threshold} = {ret_val}"
     )
-    return stealRNG < (255 // stealChance)
+    return ret_val
 
 
 def next_steal_rare(pre_advance: int = 0):
-    useArray = rng_array_from_index(index=11, array_len=1 + pre_advance)
-    stealCritRNG = useArray[1 + pre_advance] % 255
-    return stealCritRNG < 32
+    use_array = rng_array_from_index(index=11, array_len=1 + pre_advance)
+    steal_crit_rng = use_array[1 + pre_advance] % 255
+    return steal_crit_rng < 32

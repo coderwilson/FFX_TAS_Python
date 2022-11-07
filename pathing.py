@@ -1,8 +1,10 @@
+import logging
 from math import copysign
 
 import memory.main
 import xbox
 
+logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 
 
@@ -62,7 +64,7 @@ def tidus_home(checkpoint):
         x = 28
         y = 5
     if checkpoint == 5:
-        print("Talk to the kids")
+        logger.info("Talk to the kids")
     if checkpoint == 6:
         x = 13
         y = 3
@@ -70,7 +72,7 @@ def tidus_home(checkpoint):
         x = 10
         y = -5
     if checkpoint == 8:
-        print("Talk to the girls")
+        logger.info("Talk to the girls")
     if checkpoint == 9:
         x = 6
         y = -1
@@ -156,7 +158,7 @@ def all_starts_here(checkpoint):
         x = 987
         y = -257
     if checkpoint == 6:
-        print("Save sphere")
+        logger.info("Save sphere")
     if checkpoint == 7:
         x = 1003
         y = -253
@@ -275,16 +277,16 @@ def baaj_puzzle(checkpoint):
         x = -100
         y = 139
     if checkpoint == 3:
-        print("Save sphere")
+        logger.info("Save sphere")
     if checkpoint == 4:
         x = -113
         y = 119
     if checkpoint == 5:
-        print("Through first door")
+        logger.info("Through first door")
     if checkpoint == 6:
-        print("Flint obtained.")
+        logger.info("Flint obtained.")
     if checkpoint == 7:
-        print("Back to main room")
+        logger.info("Back to main room")
     if checkpoint == 8:
         x = -87
         y = 94
@@ -298,7 +300,7 @@ def baaj_puzzle(checkpoint):
         x = 135
         y = -137
     if checkpoint == 12:
-        print("Map change towards withered bouquet")
+        logger.info("Map change towards withered bouquet")
     if checkpoint == 13:
         x = 85
         y = 71
@@ -324,7 +326,7 @@ def baaj_puzzle(checkpoint):
         x = 8
         y = -78
     if checkpoint == 21:
-        print("Withered bouquet")
+        logger.info("Withered bouquet")
     if checkpoint == 22:
         x = 8
         y = -78
@@ -356,7 +358,7 @@ def baaj_puzzle(checkpoint):
         x = 75
         y = 90
     if checkpoint == 32:
-        print("Back to main room")
+        logger.info("Back to main room")
     return [x, y]
 
 
@@ -466,7 +468,7 @@ def besaid_1(checkpoint):
         x = -5
         y = -179
     if checkpoint == 34:  # Temple
-        print("Temple")
+        logger.info("Temple")
     if checkpoint == 35:
         x = 38
         y = 27
@@ -492,11 +494,11 @@ def besaid_1(checkpoint):
         x = -79
         y = 292
     if checkpoint == 43:  # Into Wakka's tent
-        print("Into Wakka's tent")
+        logger.info("Into Wakka's tent")
     if checkpoint == 44:
-        print("Sleep tight.")
+        logger.info("Sleep tight.")
     if checkpoint == 45:
-        print("Exit the tent")
+        logger.info("Exit the tent")
     if checkpoint == 46:
         x = -51
         y = 202
@@ -525,12 +527,12 @@ def besaid_trials(checkpoint):
         x = -30
         y = 126
     if checkpoint == 1:
-        print("First glyph")
+        logger.info("First glyph")
     if checkpoint == 2:
         x = -11
         y = 116
     if checkpoint == 3:
-        print("Second glyph")
+        logger.info("Second glyph")
     if checkpoint == 4:
         x = 7
         y = 117
@@ -541,7 +543,7 @@ def besaid_trials(checkpoint):
         x = 67
         y = 133
     if checkpoint == 7:
-        print("Pick up Besaid sphere")
+        logger.info("Pick up Besaid sphere")
     if checkpoint == 8:
         x = 41
         y = 146
@@ -555,7 +557,7 @@ def besaid_trials(checkpoint):
         x = -17
         y = 104
     if checkpoint == 12:
-        print("Insert Besaid sphere")
+        logger.info("Insert Besaid sphere")
     if checkpoint == 13:
         x = -22
         y = 78
@@ -578,7 +580,7 @@ def besaid_trials(checkpoint):
         x = -6
         y = -32
     if checkpoint == 20:
-        print("Touch the hidden door glyph")
+        logger.info("Touch the hidden door glyph")
     if checkpoint == 21:
         x = -17
         y = -24
@@ -586,7 +588,7 @@ def besaid_trials(checkpoint):
         x = -15
         y = 17
     if checkpoint == 23:
-        print("Besaid sphere")
+        logger.info("Besaid sphere")
     if checkpoint == 24:
         x = -14
         y = -26
@@ -594,7 +596,7 @@ def besaid_trials(checkpoint):
         x = -10
         y = -50
     if checkpoint == 26:
-        print("Insert Besaid sphere, and push to completion")
+        logger.info("Insert Besaid sphere, and push to completion")
     if checkpoint == 27:  # Back from the temple
         x = 0
         y = -107
@@ -617,12 +619,12 @@ def besaid_trials(checkpoint):
         x = 15
         y = 194
     if checkpoint == 34:
-        print("Talk to Yuna")
+        logger.info("Talk to Yuna")
     if checkpoint == 35:
         x = -3
         y = 174
     if checkpoint == 36:
-        print("Sleep tight")
+        logger.info("Sleep tight")
     if checkpoint == 37:
         x = 340
         y = 15
@@ -630,7 +632,7 @@ def besaid_trials(checkpoint):
         x = 343
         y = 105
     if checkpoint == 39:
-        print("Dream about girls")
+        logger.info("Dream about girls")
     if checkpoint == 40:  # Ready to leave village.
         x = 7
         y = 24
@@ -647,7 +649,7 @@ def besaid_2(checkpoint):
     x = 999
     y = 999
     if checkpoint == 0:
-        print("Back into the village")
+        logger.info("Back into the village")
     if checkpoint == 1:
         x = 7
         y = 413
@@ -655,32 +657,32 @@ def besaid_2(checkpoint):
         x = 42
         y = 375
     if checkpoint == 3:
-        print("Tent 1")
+        logger.info("Tent 1")
     if checkpoint == 4:
         x = -2
         y = 5
     if checkpoint == 5:
-        print("Shopkeeper")
+        logger.info("Shopkeeper")
     if checkpoint == 6:
         x = -2
         y = -18
     if checkpoint == 7:
-        print("Exit tent")
+        logger.info("Exit tent")
     if checkpoint == 8:
         x = -76
         y = 223
     if checkpoint == 9:
-        print("Tent 2")
+        logger.info("Tent 2")
     if checkpoint == 10:
         x = -3
         y = -4
     if checkpoint == 11:
-        print("Good doggo")
+        logger.info("Good doggo")
     if checkpoint == 12:
         x = -4
         y = -19
     if checkpoint == 13:
-        print("Exit tent")
+        logger.info("Exit tent")
     if checkpoint == 14:
         x = -37
         y = 406
@@ -688,12 +690,12 @@ def besaid_2(checkpoint):
         x = -12
         y = 502
     if checkpoint == 16:
-        print("Exit the front gates")
+        logger.info("Exit the front gates")
     if checkpoint == 17:  # Outside village
         x = 63
         y = -469
     if checkpoint == 18:
-        print("First tutorial")
+        logger.info("First tutorial")
     if checkpoint == 19:
         x = -10
         y = -270
@@ -707,9 +709,9 @@ def besaid_2(checkpoint):
         x = 43
         y = 21
     if checkpoint == 23:
-        print("Second tutorial")
+        logger.info("Second tutorial")
     if checkpoint == 24:
-        print("Hilltop")
+        logger.info("Hilltop")
     if checkpoint == 25:
         x = -24
         y = 124
@@ -816,7 +818,7 @@ def besaid_2(checkpoint):
         x = -318
         y = -472
     if checkpoint == 60:  # Save sphere, but no longer used.
-        print("Save sphere")
+        logger.info("Save sphere")
     if checkpoint == 61:
         x = -283
         y = -438
@@ -854,12 +856,12 @@ def liki(checkpoint):
         x = 5
         y = 176
     if checkpoint == 1:
-        print("Group around Yuna")
+        logger.info("Group around Yuna")
     if checkpoint == 2:
         x = -22
         y = 90
     if checkpoint == 3:
-        print("Talk to Wakka")
+        logger.info("Talk to Wakka")
     if checkpoint == 4:
         x = -15
         y = 127
@@ -885,17 +887,17 @@ def kilika_1(checkpoint):
         x = -59
         y = -195
     if checkpoint == 4:
-        print("Enter cutscene, Yunas dance")
+        logger.info("Enter cutscene, Yunas dance")
     if checkpoint == 5:
         x = 80
         y = -22
     if checkpoint == 6:
-        print("Yuna dancing, ends in the inn")
+        logger.info("Yuna dancing, ends in the inn")
     if checkpoint == 7:
         x = 41
         y = 2
     if checkpoint == 8:
-        print("Exit the inn")
+        logger.info("Exit the inn")
     if checkpoint == 9:
         x = 27
         y = 114
@@ -906,7 +908,7 @@ def kilika_1(checkpoint):
         x = 86
         y = 31
     if checkpoint == 12:
-        print("Back to first map")
+        logger.info("Back to first map")
     if checkpoint == 13:
         x = -31
         y = -179
@@ -917,12 +919,12 @@ def kilika_1(checkpoint):
         x = -1
         y = -245
     if checkpoint == 16:
-        print("Talking to Wakka")
+        logger.info("Talking to Wakka")
     if checkpoint == 17:
         x = -24
         y = -166
     if checkpoint == 18:
-        print("Back towards the inn")
+        logger.info("Back towards the inn")
     if checkpoint == 19:
         x = 84
         y = 99
@@ -975,7 +977,7 @@ def kilika_2(checkpoint):
         x = -224
         y = -336
     if checkpoint == 9:
-        print("Wakka Scout")
+        logger.info("Wakka Scout")
     if checkpoint == 10:
         x = -216
         y = -330
@@ -1088,7 +1090,7 @@ def kilika_2(checkpoint):
         x = -241
         y = 208
     if checkpoint == 47:
-        print("Picking up chest")
+        logger.info("Picking up chest")
     if checkpoint == 48:
         x = -230
         y = 212
@@ -1204,7 +1206,7 @@ def kilika_2(checkpoint):
         x = -20
         y = 172
     if checkpoint == 86:  # Stairs save sphere
-        print("Stairs")
+        logger.info("Stairs")
     if checkpoint == 87:
         x = -10
         y = 192
@@ -1242,7 +1244,7 @@ def kilika_2(checkpoint):
         x = -30
         y = 33
     if checkpoint == 99:  # non-CSR, pray to O'holland
-        print("non-CSR, pray to O'holland")
+        logger.info("non-CSR, pray to O'holland")
     if checkpoint == 100:
         x = 2
         y = 54
@@ -1259,7 +1261,7 @@ def kilika_trials(checkpoint):
         x = -17
         y = -215
     if checkpoint == 2:
-        print("Pick up Kilika sphere")
+        logger.info("Pick up Kilika sphere")
     if checkpoint == 3:
         x = -10
         y = -205
@@ -1267,7 +1269,7 @@ def kilika_trials(checkpoint):
         x = 8
         y = -188
     if checkpoint == 5:
-        print("Insert and remove, opens door")
+        logger.info("Insert and remove, opens door")
     if checkpoint == 6:
         x = 5
         y = -181
@@ -1278,17 +1280,17 @@ def kilika_trials(checkpoint):
         x = 0
         y = 11
     if checkpoint == 9:
-        print("Insert and remove, generate glyph")
+        logger.info("Insert and remove, generate glyph")
     if checkpoint == 10:
         x = 37
         y = -18
     if checkpoint == 11:
-        print("Insert, out of the way")
+        logger.info("Insert, out of the way")
     if checkpoint == 12:
         x = 1
         y = 11
     if checkpoint == 13:
-        print("Touch glyph")
+        logger.info("Touch glyph")
     if checkpoint == 14:
         x = 1
         y = 34
@@ -1302,7 +1304,7 @@ def kilika_trials(checkpoint):
         x = 52
         y = 167
     if checkpoint == 18:
-        print("Remove Kilika sphere")
+        logger.info("Remove Kilika sphere")
     if checkpoint == 19:
         x = 52
         y = 167
@@ -1322,12 +1324,12 @@ def kilika_trials(checkpoint):
         x = -37
         y = -8
     if checkpoint == 25:
-        print("Insert Kilika sphere")
+        logger.info("Insert Kilika sphere")
     if checkpoint == 26:
         x = -24
         y = -25
     if checkpoint == 27:
-        print("Pick up Glyph sphere")
+        logger.info("Pick up Glyph sphere")
     if checkpoint == 28:
         x = -2
         y = 15
@@ -1344,7 +1346,7 @@ def kilika_trials(checkpoint):
         x = 52
         y = 167
     if checkpoint == 33:
-        print("Insert Glyph sphere")
+        logger.info("Insert Glyph sphere")
     if checkpoint == 34:
         x = 30
         y = 165
@@ -1361,7 +1363,7 @@ def kilika_trials(checkpoint):
         x = 36
         y = -18
     if checkpoint == 39:
-        print("Pick up last Kilika sphere")
+        logger.info("Pick up last Kilika sphere")
     if checkpoint == 40:
         x = 1
         y = 15
@@ -1393,7 +1395,7 @@ def kilika_trials(checkpoint):
         x = 17
         y = 275
     if checkpoint == 50:
-        print("Insert and remove, opens door")
+        logger.info("Insert and remove, opens door")
     if checkpoint == 51:
         x = 5
         y = 278
@@ -1404,7 +1406,7 @@ def kilika_trials(checkpoint):
         x = -13
         y = -10
     if checkpoint == 54:  # Talk to Wakka
-        print("Talk to Wakka")
+        logger.info("Talk to Wakka")
     if checkpoint == 55:
         x = -6
         y = -20
@@ -1688,7 +1690,7 @@ def luca_1(checkpoint):
         x = 328
         y = 63
     if checkpoint == 6:  # Seymour intro scene
-        print("Seymour intro scene")
+        logger.info("Seymour intro scene")
     if checkpoint == 7:
         x = 0
         y = -200
@@ -1738,7 +1740,7 @@ def luca_1(checkpoint):
         x = -1
         y = 161
     if checkpoint == 23:  # Into the bar
-        print("Into the bar")
+        logger.info("Into the bar")
     if checkpoint == 24:  # buffer
         x = 37
         y = -26
@@ -1767,7 +1769,7 @@ def luca_1(checkpoint):
         x = -257
         y = 10
     if checkpoint == 33:
-        print("Back to the front of the Blitz dome")
+        logger.info("Back to the front of the Blitz dome")
     if checkpoint == 34:
         x = -395
         y = 38
@@ -1775,7 +1777,7 @@ def luca_1(checkpoint):
         x = -320
         y = 95
     if checkpoint == 36:
-        print("To the docks")
+        logger.info("To the docks")
     if checkpoint == 37:
         x = -239
         y = 160
@@ -1786,37 +1788,37 @@ def luca_1(checkpoint):
         x = -195
         y = 203
     if checkpoint == 40:  # First battle
-        print("First battle")
+        logger.info("First battle")
     if checkpoint == 41:
         x = 185
         y = 240
     if checkpoint == 42:  # Second battle
-        print("Second battle")
+        logger.info("Second battle")
     if checkpoint == 43:
         x = 281
         y = -75
     if checkpoint == 44:  # Third battle
-        print("Third battle")
+        logger.info("Third battle")
     if checkpoint == 45:
         x = 167
         y = -312
     if checkpoint == 46:
-        print("Touch save sphere")
+        logger.info("Touch save sphere")
     if checkpoint == 47:
         x = 150
         y = -337
     if checkpoint == 48:  # Start of Oblitzerator fight
-        print("Start of Oblitzerator fight")
+        logger.info("Start of Oblitzerator fight")
     if checkpoint == 49:
         x = -8
         y = -311
     if checkpoint == 50:
-        print("Screen change")
+        logger.info("Screen change")
     if checkpoint == 51:
         x = -304
         y = -53
     if checkpoint == 52:
-        print("Screen change")
+        logger.info("Screen change")
     if checkpoint == 53:
         x = -293
         y = -87
@@ -1824,7 +1826,7 @@ def luca_1(checkpoint):
         x = -275
         y = -50
     if checkpoint == 55:  # Save sphere and end of section
-        print("Save sphere and end of section")
+        logger.info("Save sphere and end of section")
     return [x, y]
 
 
@@ -1886,12 +1888,12 @@ def luca_3(checkpoint):
         x = -632
         y = -403
     if checkpoint == 6:  # First chest
-        print("First chest")
+        logger.info("First chest")
     if checkpoint == 9:
         x = -621
         y = -417
     if checkpoint == 10:  # Second chest
-        print("Second chest")
+        logger.info("Second chest")
     if checkpoint == 11:
         x = -627
         y = -404
@@ -1920,7 +1922,7 @@ def luca_3(checkpoint):
         x = -316
         y = -144
     if checkpoint == 20:  # Target Auron
-        print("Target Auron")
+        logger.info("Target Auron")
     if checkpoint == 21:
         x = -294
         y = -42
@@ -1964,7 +1966,7 @@ def luca_3(checkpoint):
         x = 140
         y = 92
     if checkpoint == 35:  # Bring the party together
-        print("Bring the party together")
+        logger.info("Bring the party together")
     return [x, y]
 
 
@@ -1990,7 +1992,7 @@ def miihen(checkpoint):
         x = -47
         y = 1351
     if checkpoint in [6, 7, 8, 9, 10]:
-        print("Attempting Mi'ihen skip")
+        logger.info("Attempting Mi'ihen skip")
     if checkpoint == 11:
         x = 17
         y = 1536
@@ -2040,7 +2042,7 @@ def miihen(checkpoint):
         x = -22
         y = 2783
     if checkpoint == 27:  # Shelinda
-        print("Shelinda")
+        logger.info("Shelinda")
     if checkpoint == 28:
         x = 5
         y = 2982
@@ -2090,7 +2092,7 @@ def low_road(checkpoint):
         x = 43
         y = -919
     if checkpoint == 2:
-        print("Touching save sphere")
+        logger.info("Touching save sphere")
     if checkpoint == 3:
         x = 37
         y = -903
@@ -2185,7 +2187,7 @@ def low_road(checkpoint):
         x = -57
         y = 288
     if checkpoint == 34:
-        print("Talk to the guard")
+        logger.info("Talk to the guard")
     if checkpoint == 35:
         x = -57
         y = 288
@@ -2208,7 +2210,7 @@ def mrr_start(checkpoint):
         x = -62
         y = -616
     if checkpoint == 3:
-        print("Attempt skip")
+        logger.info("Attempt skip")
     if checkpoint == 4:
         x = -21
         y = -593
@@ -2240,7 +2242,7 @@ def mrr_main(checkpoint):
         x = 12
         y = -738
     if checkpoint == 1:
-        print("Touching save sphere")
+        logger.info("Touching save sphere")
     if checkpoint == 2:
         x = -28
         y = -663
@@ -2248,7 +2250,7 @@ def mrr_main(checkpoint):
         x = -37
         y = -601
     if checkpoint == 4:
-        print("Up the first lift")
+        logger.info("Up the first lift")
     if checkpoint == 5:
         x = -48
         y = -571
@@ -2373,12 +2375,12 @@ def mrr_main(checkpoint):
         x = 59
         y = 898
     if checkpoint == 46:
-        print("Up the second lift")
+        logger.info("Up the second lift")
     if checkpoint == 47:
         x = -36
         y = -194
     if checkpoint == 48:
-        print("Grabbing X-potion from the dude")
+        logger.info("Grabbing X-potion from the dude")
     if checkpoint == 49:
         x = 24
         y = -157
@@ -2407,7 +2409,7 @@ def mrr_main(checkpoint):
         x = 29
         y = 227
     if checkpoint == 58:
-        print("Up the third lift")
+        logger.info("Up the third lift")
     if checkpoint == 59:
         x = 59
         y = 244
@@ -2430,7 +2432,7 @@ def mrr_main(checkpoint):
         x = 271
         y = 183
     if checkpoint == 66:
-        print("Up the final lift.")
+        logger.info("Up the final lift.")
     if checkpoint == 67:
         x = 304
         y = 186
@@ -2486,7 +2488,7 @@ def battle_site(checkpoint):
         x = -52
         y = 3414
     if checkpoint == 5:
-        print("O'aka menu")
+        logger.info("O'aka menu")
     if checkpoint == 6:
         x = -68
         y = 3354
@@ -2494,7 +2496,7 @@ def battle_site(checkpoint):
         x = -59
         y = 3345
     if checkpoint == 8:
-        print("Touching save sphere")
+        logger.info("Touching save sphere")
     if checkpoint == 9:
         x = -71
         y = 3324
@@ -2505,12 +2507,12 @@ def battle_site(checkpoint):
         x = -16
         y = 3276
     if checkpoint == 12:
-        print("Into the scene with Kinoc")
+        logger.info("Into the scene with Kinoc")
     if checkpoint == 13:
         x = 217
         y = 3134
     if checkpoint == 14:
-        print("Start of fight, Sinspawn Gui")
+        logger.info("Start of fight, Sinspawn Gui")
     return [x, y]
 
 
@@ -2536,7 +2538,7 @@ def battle_site_aftermath(checkpoint):
         x = 417
         y = -160
     if checkpoint == 7:
-        print("Start conversation with Auron")
+        logger.info("Start conversation with Auron")
     if checkpoint == 8:
         x = 428
         y = -116
@@ -2559,7 +2561,7 @@ def battle_site_aftermath(checkpoint):
         x = 978
         y = 77
     if checkpoint == 15:
-        print("Towards Djose section.")
+        logger.info("Towards Djose section.")
     return [x, y]
 
 
@@ -2741,22 +2743,22 @@ def djose_trials(checkpoint):
         x = -22
         y = -233
     if checkpoint == 1:
-        print("First sphere")
+        logger.info("First sphere")
     if checkpoint == 2:
         x = -6
         y = -193
     if checkpoint == 3:
-        print("Sphere door")
+        logger.info("Sphere door")
     if checkpoint == 4:
         x = 24
         y = -208
     if checkpoint == 5:
-        print("Second sphere")
+        logger.info("Second sphere")
     if checkpoint == 6:
         x = 6
         y = -191
     if checkpoint == 7:
-        print("Sphere door")
+        logger.info("Sphere door")
     if checkpoint == 8:
         x = 0
         y = -176
@@ -2773,7 +2775,7 @@ def djose_trials(checkpoint):
         x = -19
         y = 42
     if checkpoint == 13:
-        print("Left sphere")
+        logger.info("Left sphere")
     if checkpoint == 14:
         x = 34
         y = 31
@@ -2781,7 +2783,7 @@ def djose_trials(checkpoint):
         x = 69
         y = 34
     if checkpoint == 16:
-        print("Insert left sphere")
+        logger.info("Insert left sphere")
     if checkpoint == 17:
         x = 31
         y = 30
@@ -2789,7 +2791,7 @@ def djose_trials(checkpoint):
         x = 23
         y = 43
     if checkpoint == 19:
-        print("Right sphere")
+        logger.info("Right sphere")
     if checkpoint == 20:
         x = -18
         y = 22
@@ -2797,21 +2799,21 @@ def djose_trials(checkpoint):
         x = -7
         y = 24
     if checkpoint == 22:
-        print("Pushing pedestal")
+        logger.info("Pushing pedestal")
     if checkpoint == 23:
         x = 56
         y = 33
     if checkpoint == 24:
-        print("Insert right sphere")
+        logger.info("Insert right sphere")
     if checkpoint == 25:
-        print("Unused")
+        logger.info("Unused")
     if checkpoint == 26:
-        print("Unused")
+        logger.info("Unused")
     if checkpoint == 27:
         x = 57
         y = 34
     if checkpoint == 28:
-        print("Left sphere")
+        logger.info("Left sphere")
     if checkpoint == 29:
         x = 14
         y = 27
@@ -2819,7 +2821,7 @@ def djose_trials(checkpoint):
         x = -65
         y = 24
     if checkpoint == 31:
-        print("Reset switch")
+        logger.info("Reset switch")
     if checkpoint == 32:
         x = -41
         y = 24
@@ -2827,7 +2829,7 @@ def djose_trials(checkpoint):
         x = -10
         y = 22
     if checkpoint == 34:
-        print("Insert left sphere")
+        logger.info("Insert left sphere")
     if checkpoint == 35:
         x = -4
         y = 10
@@ -2838,12 +2840,12 @@ def djose_trials(checkpoint):
         x = 12
         y = 22
     if checkpoint == 38:
-        print("Powered sphere")
+        logger.info("Powered sphere")
     if checkpoint == 39:
         x = 22
         y = 39
     if checkpoint == 40:
-        print("Insert powered sphere")
+        logger.info("Insert powered sphere")
     if checkpoint == 41:
         x = 32
         y = 31
@@ -2851,12 +2853,12 @@ def djose_trials(checkpoint):
         x = 66
         y = 28
     if checkpoint == 43:
-        print("Right sphere")
+        logger.info("Right sphere")
     if checkpoint == 44:
         x = 8
         y = 24
     if checkpoint == 45:
-        print("Insert right sphere")
+        logger.info("Insert right sphere")
     if checkpoint == 46:
         x = 8
         y = 13
@@ -2864,7 +2866,7 @@ def djose_trials(checkpoint):
         x = 0
         y = 16
     if checkpoint == 48:
-        print("All the hidden room stuff.")
+        logger.info("All the hidden room stuff.")
     if checkpoint == 49:
         x = 2
         y = 47
@@ -2872,12 +2874,12 @@ def djose_trials(checkpoint):
         x = 20
         y = 47
     if checkpoint == 51:
-        print("Powered sphere")
+        logger.info("Powered sphere")
     if checkpoint == 52:
         x = -19
         y = 46
     if checkpoint == 53:
-        print("Insert powered sphere")
+        logger.info("Insert powered sphere")
     if checkpoint == 54:
         x = -14
         y = 24
@@ -2885,12 +2887,12 @@ def djose_trials(checkpoint):
         x = -65
         y = 24
     if checkpoint == 56:
-        print("Reset switch")
+        logger.info("Reset switch")
     if checkpoint == 57:
         x = -9
         y = 22
     if checkpoint == 58:
-        print("Left sphere")
+        logger.info("Left sphere")
     if checkpoint == 59:
         x = -2
         y = 1
@@ -2904,7 +2906,7 @@ def djose_trials(checkpoint):
         x = -26
         y = -216
     if checkpoint == 63:
-        print("Final insert Left sphere")
+        logger.info("Final insert Left sphere")
     if checkpoint == 64:
         x = -1
         y = -185
@@ -2918,7 +2920,7 @@ def djose_trials(checkpoint):
         x = 9
         y = 19  # Dial in
     if checkpoint == 68:
-        print("Right sphere")
+        logger.info("Right sphere")
     if checkpoint == 69:
         x = 6
         y = 5
@@ -2932,7 +2934,7 @@ def djose_trials(checkpoint):
         x = 26
         y = -214
     if checkpoint == 73:
-        print("Final insert Right sphere")
+        logger.info("Final insert Right sphere")
     if checkpoint == 74:
         x = 3
         y = -185
@@ -2952,12 +2954,12 @@ def djose_trials(checkpoint):
         x = -54
         y = 25
     if checkpoint == 80:  # Destro glyph
-        print("Destruction Glyph")
+        logger.info("Destruction Glyph")
     if checkpoint == 81:
         x = -62
         y = 55
     if checkpoint == 82:
-        print("Destruction Sphere")
+        logger.info("Destruction Sphere")
     if checkpoint == 83:
         x = -58
         y = 28
@@ -2965,7 +2967,7 @@ def djose_trials(checkpoint):
         x = -11
         y = 28
     if checkpoint == 85:
-        print("Ride ze lift")
+        logger.info("Ride ze lift")
     if checkpoint == 86:
         x = -11
         y = 110
@@ -2973,27 +2975,27 @@ def djose_trials(checkpoint):
         x = -21
         y = 115
     if checkpoint == 88:
-        print("Pedestal 1")
+        logger.info("Pedestal 1")
     if checkpoint == 89:
         x = -22
         y = 144
     if checkpoint == 90:
-        print("Pedestal 2")
+        logger.info("Pedestal 2")
     if checkpoint == 91:
         x = -3
         y = 157
     if checkpoint == 92:
-        print("Pedestal 3")
+        logger.info("Pedestal 3")
     if checkpoint == 93:
         x = 19
         y = 146
     if checkpoint == 94:
-        print("Pedestal 4")
+        logger.info("Pedestal 4")
     if checkpoint == 95:
         x = 20
         y = 117
     if checkpoint == 96:
-        print("Pedestal 5")
+        logger.info("Pedestal 5")
     if checkpoint == 97:
         x = 9
         y = 106
@@ -3004,17 +3006,17 @@ def djose_trials(checkpoint):
         x = 0
         y = 61
     if checkpoint == 100:
-        print("Insert destro sphere")
+        logger.info("Insert destro sphere")
     if checkpoint == 101:
         x = 22
         y = 42
     if checkpoint == 102:
-        print("Destro chest")
+        logger.info("Destro chest")
     if checkpoint == 103:
         x = -26
         y = 37
     if checkpoint == 104:
-        print("End of Trials")
+        logger.info("End of Trials")
     return [x, y]
 
 
@@ -3187,7 +3189,7 @@ def moonflow(checkpoint):
         x = -179
         y = -262
     if checkpoint == 2:
-        print("Picking up chest")
+        logger.info("Picking up chest")
     if checkpoint == 3:
         x = -114
         y = -291
@@ -3309,7 +3311,7 @@ def moonflow(checkpoint):
         x = -1812
         y = -476
     if checkpoint == 43:  # Moonflow chest
-        print("Moonflow chest")
+        logger.info("Moonflow chest")
     if checkpoint == 44:
         x = -1862
         y = -511
@@ -3392,7 +3394,7 @@ def moonflow_bank_north(checkpoint):
         x = -1125
         y = -627
     if checkpoint == 7:  # Rikku steal/mix tutorial.
-        print("Rikku steal/mix tutorial.")
+        logger.info("Rikku steal/mix tutorial.")
     if checkpoint == 8:
         x = -1076
         y = -553
@@ -3577,7 +3579,7 @@ def guado_skip(checkpoint):
         x = -33
         y = 92
     if checkpoint == 5:
-        print("Test if skip was successful.")
+        logger.info("Test if skip was successful.")
     if checkpoint == 6:
         x = -24
         y = 61
@@ -3603,11 +3605,11 @@ def guado_skip(checkpoint):
         x = -43
         y = 55
     if checkpoint == 20:
-        print("Guado skip failed.")
+        logger.info("Guado skip failed.")
         x = -44
         y = 56
     if checkpoint == 21:
-        print("Shelinda scene")
+        logger.info("Shelinda scene")
     if checkpoint == 22:
         x = -18
         y = 96
@@ -3615,7 +3617,7 @@ def guado_skip(checkpoint):
         x = -25
         y = 144
     if checkpoint == 24:
-        print("Back to the party")
+        logger.info("Back to the party")
     if checkpoint == 25:
         x = -33
         y = 92
@@ -3905,7 +3907,7 @@ def m_woods(checkpoint):
         x = -131
         y = 234
     if checkpoint == 14:  # First chest
-        print("First chest")
+        logger.info("First chest")
     if checkpoint == 15:
         x = -154
         y = 247
@@ -4039,20 +4041,22 @@ def m_woods(checkpoint):
         x = -612
         y = 144
     if checkpoint == 59:  # Check for completion status
-        print("Check for completion status")
-    if checkpoint == 60:
+        logger.info("Check for completion status")
+    if checkpoint == 60:  # Check for RNG2
+        x, y = [-614, 123]
+    if checkpoint == 61:
         x = -601
         y = 126
-    if checkpoint == 61:
+    if checkpoint == 62:
         x = -596
         y = 59
-    if checkpoint == 62:
+    if checkpoint == 63:
         x = -613
         y = -53
-    if checkpoint == 63:
+    if checkpoint == 64:
         x = -654
         y = -98
-    if checkpoint == 64:
+    if checkpoint == 65:
         x = -750
         y = -200
     return [x, y]
@@ -4161,7 +4165,7 @@ def temple_foyer(checkpoint):
         x = -18
         y = -124
     if checkpoint == 1:
-        print("Touch save sphere")
+        logger.info("Touch save sphere")
     if checkpoint == 2:
         x = 19
         y = -103
@@ -4169,9 +4173,9 @@ def temple_foyer(checkpoint):
         x = 23
         y = -102
     if checkpoint == 4:
-        print("Trommell")
+        logger.info("Trommell")
     if checkpoint == 5:
-        print("Lining up for skip")
+        logger.info("Lining up for skip")
     if checkpoint == 6:
         x = -73
         y = -14
@@ -4179,7 +4183,7 @@ def temple_foyer(checkpoint):
         x = -109
         y = -22
     if checkpoint == 8:
-        print("Chest")
+        logger.info("Chest")
     if checkpoint == 9:
         x = -73
         y = -14
@@ -4187,7 +4191,7 @@ def temple_foyer(checkpoint):
         x = -21
         y = 4
     if checkpoint == 11:
-        print("Check if skip successful")
+        logger.info("Check if skip successful")
     if checkpoint == 12:
         x = 2
         y = 38
@@ -4195,7 +4199,7 @@ def temple_foyer(checkpoint):
         x = 0
         y = 103
     if checkpoint == 14:
-        print("Check if pause necessary")
+        logger.info("Check if pause necessary")
     if checkpoint == 15:  # Into the room before Seymour
         x = 0
         y = 300
@@ -4212,9 +4216,9 @@ def temple_foyer(checkpoint):
         x = 59
         y = 118
     if checkpoint == 23:
-        print("Into the door, Jyscal sphere")
+        logger.info("Into the door, Jyscal sphere")
     if checkpoint == 24:
-        print("And back out again")
+        logger.info("And back out again")
     if checkpoint == 25:
         x = 35
         y = 48
@@ -4234,7 +4238,7 @@ def m_temple_trials(checkpoint):
         x = 2
         y = -200
     if checkpoint == 2:
-        print("Activate the trials")
+        logger.info("Activate the trials")
     if checkpoint == 3:
         x = -12
         y = -116
@@ -4254,7 +4258,7 @@ def m_temple_trials(checkpoint):
         x = 31
         y = 4
     if checkpoint == 9:
-        print("Push pedestal")
+        logger.info("Push pedestal")
     if checkpoint == 10:
         x = 18
         y = 52
@@ -4265,7 +4269,7 @@ def m_temple_trials(checkpoint):
         x = 2
         y = 107
     if checkpoint == 13:
-        print("Grab first Mac Sphere")
+        logger.info("Grab first Mac Sphere")
     if checkpoint == 14:
         x = 11
         y = 71
@@ -4276,7 +4280,7 @@ def m_temple_trials(checkpoint):
         x = 31
         y = 43
     if checkpoint == 17:
-        print("Place first Mac Sphere")
+        logger.info("Place first Mac Sphere")
     if checkpoint == 18:
         x = 41
         y = 44
@@ -4284,7 +4288,7 @@ def m_temple_trials(checkpoint):
         x = 42
         y = 49
     if checkpoint == 20:
-        print("Push pedestal")
+        logger.info("Push pedestal")
     if checkpoint == 21:
         x = 12
         y = 2
@@ -4292,7 +4296,7 @@ def m_temple_trials(checkpoint):
         x = 0
         y = 3
     if checkpoint == 23:
-        print("Pick up Glyph sphere")
+        logger.info("Pick up Glyph sphere")
     if checkpoint == 24:
         x = -8
         y = 4
@@ -4309,7 +4313,7 @@ def m_temple_trials(checkpoint):
         x = 0
         y = 4
     if checkpoint == 29:
-        print("Push pedestal")
+        logger.info("Push pedestal")
     if checkpoint == 30:
         x = -11
         y = -27
@@ -4317,7 +4321,7 @@ def m_temple_trials(checkpoint):
         x = -9
         y = -49
     if checkpoint == 32:
-        print("Insert glyph sphere")
+        logger.info("Insert glyph sphere")
     if checkpoint == 33:
         x = -15
         y = 7
@@ -4337,7 +4341,7 @@ def m_temple_trials(checkpoint):
         x = -19
         y = -53
     if checkpoint == 39:
-        print("Second Mac sphere")
+        logger.info("Second Mac sphere")
     if checkpoint == 40:
         x = -21
         y = -40
@@ -4357,7 +4361,7 @@ def m_temple_trials(checkpoint):
         x = 11
         y = -32
     if checkpoint == 46:
-        print("Second Mac sphere")
+        logger.info("Second Mac sphere")
     if checkpoint == 47:
         x = 10
         y = -27
@@ -4371,12 +4375,12 @@ def m_temple_trials(checkpoint):
         x = -77
         y = 54
     if checkpoint == 51:
-        print("Third Mac sphere")
+        logger.info("Third Mac sphere")
     if checkpoint == 52:
         x = -3
         y = 4
     if checkpoint == 53:
-        print("Third Mac sphere")
+        logger.info("Third Mac sphere")
     if checkpoint == 54:  # Ready to get out of here
         x = -68
         y = -17
@@ -4390,7 +4394,7 @@ def m_temple_trials(checkpoint):
         x = -5
         y = -106
     if checkpoint == 58:
-        print("Trials - end")
+        logger.info("Trials - end")
     return [x, y]
 
 
@@ -4404,7 +4408,7 @@ def m_temple_escape(checkpoint):
         x = 817
         y = -244
     if checkpoint == 2:
-        print("Touching save sphere")
+        logger.info("Touching save sphere")
     if checkpoint == 3:
         x = 815
         y = -227
@@ -4577,7 +4581,7 @@ def desert(checkpoint):
         x = 20
         y = -69
     if checkpoint == 2:
-        print("Touching save sphere")
+        logger.info("Touching save sphere")
     if checkpoint == 3:
         x = 3
         y = -79
@@ -4597,7 +4601,7 @@ def desert(checkpoint):
         x = 197
         y = -387
     if checkpoint == 9:
-        print("Map change")
+        logger.info("Map change")
     if checkpoint == 10:
         x = 172
         y = -569
@@ -4641,7 +4645,7 @@ def desert(checkpoint):
         x = 199
         y = 28
     if checkpoint == 24:
-        print("Touching save sphere")
+        logger.info("Touching save sphere")
     if checkpoint == 25:
         x = 187
         y = 26
@@ -4727,7 +4731,7 @@ def desert(checkpoint):
         x = -41
         y = 419
     if checkpoint == 53:  # Sandragora #1
-        print("Sandragora #1")
+        logger.info("Sandragora #1")
     if checkpoint == 54:
         x = -57
         y = 439
@@ -4753,7 +4757,7 @@ def desert(checkpoint):
         x = -294
         y = 886
     if checkpoint == 64:
-        print("Test for area completion")
+        logger.info("Test for area completion")
     if checkpoint == 65:
         x = -300
         y = 1000
@@ -4934,7 +4938,7 @@ def home(checkpoint):
     if checkpoint == 50:
         x = 0
         y = 0
-    if checkpoint == 60:  # Used for kilikaSkip and Nemesis, extra chest.
+    if checkpoint == 60:  # Used for Kilika skip and Nemesis, extra chest.
         x = -343
         y = 189
     if checkpoint == 61:
@@ -5082,9 +5086,9 @@ def bevelle_trials(checkpoint):
         x = -19
         y = -62
     if checkpoint == 3:
-        print("First pedestal.")
+        logger.info("First pedestal.")
     if checkpoint == 4:
-        print("Missed first alcove, recovering.")
+        logger.info("Missed first alcove, recovering.")
     if checkpoint == 5:
         x = -50
         y = 88
@@ -5092,7 +5096,7 @@ def bevelle_trials(checkpoint):
         x = -66
         y = 93
     if checkpoint == 7:
-        print("First Bevelle sphere, and then more gliding.")
+        logger.info("First Bevelle sphere, and then more gliding.")
     if checkpoint == 8:
         x = 13
         y = 88
@@ -5100,7 +5104,7 @@ def bevelle_trials(checkpoint):
         x = 13
         y = 93
     if checkpoint == 10:
-        print("Insert Bevelle sphere. Activate lower areas.")
+        logger.info("Insert Bevelle sphere. Activate lower areas.")
     if checkpoint == 11:
         x = 27
         y = 92
@@ -5108,7 +5112,7 @@ def bevelle_trials(checkpoint):
         x = 26
         y = 86
     if checkpoint == 13:
-        print("Down to the lower areas.")
+        logger.info("Down to the lower areas.")
     if checkpoint == 14:
         x = 397
         y = 357
@@ -5116,12 +5120,12 @@ def bevelle_trials(checkpoint):
         x = 501
         y = 363
     if checkpoint == 16:
-        print("Take sphere from second alcove")
+        logger.info("Take sphere from second alcove")
     if checkpoint == 17:
         x = 406
         y = 364
     if checkpoint == 18:
-        print("To third alcove, and insert Glyph sphere")
+        logger.info("To third alcove, and insert Glyph sphere")
     if checkpoint == 19:
         x = 353
         y = 531
@@ -5132,12 +5136,12 @@ def bevelle_trials(checkpoint):
         x = 370
         y = 526
     if checkpoint == 22:
-        print("Remove Bevelle sphere")
+        logger.info("Remove Bevelle sphere")
     if checkpoint == 23:
         x = 367
         y = 532
     if checkpoint == 24:
-        print("Insert Bevelle sphere")
+        logger.info("Insert Bevelle sphere")
     if checkpoint == 25:
         x = 353
         y = 531
@@ -5148,7 +5152,7 @@ def bevelle_trials(checkpoint):
         x = 352
         y = 525
     if checkpoint == 28:
-        print("Take Glyph sphere")
+        logger.info("Take Glyph sphere")
     if checkpoint == 29:
         x = 367
         y = 532
@@ -5159,12 +5163,12 @@ def bevelle_trials(checkpoint):
         x = 431
         y = 527
     if checkpoint == 32:
-        print("Insert Glyph sphere")
+        logger.info("Insert Glyph sphere")
     if checkpoint == 33:
         x = 499
         y = 522
     if checkpoint == 34:
-        print("Take Destro sphere")
+        logger.info("Take Destro sphere")
     if checkpoint == 35:
         x = 374
         y = 524
@@ -5172,22 +5176,22 @@ def bevelle_trials(checkpoint):
         x = 366
         y = 524
     if checkpoint == 37:
-        print("Insert Destro sphere")
+        logger.info("Insert Destro sphere")
     if checkpoint == 38:
         x = 367
         y = 532
     if checkpoint == 39:
-        print("Remove Bevelle sphere")
+        logger.info("Remove Bevelle sphere")
     if checkpoint == 40:
         x = 369
         y = 526
     if checkpoint == 41:
-        print("Back on track")
+        logger.info("Back on track")
     if checkpoint == 42:
         x = 392
         y = 366
     if checkpoint == 43:
-        print("Insert Bevelle sphere (back in second alcove)")
+        logger.info("Insert Bevelle sphere (back in second alcove)")
     if checkpoint == 44:
         x = 395
         y = 372
@@ -5198,7 +5202,7 @@ def bevelle_trials(checkpoint):
         x = 406
         y = 363
     if checkpoint == 47:
-        print("Take Destro sphere")
+        logger.info("Take Destro sphere")
     if checkpoint == 48:
         x = 493
         y = 371
@@ -5206,12 +5210,12 @@ def bevelle_trials(checkpoint):
         x = 493
         y = 371
     if checkpoint == 50:
-        print("Insert Destro sphere")
+        logger.info("Insert Destro sphere")
     if checkpoint == 51:
         x = 406
         y = 364
     if checkpoint == 52:
-        print("Back on track, to the exit")
+        logger.info("Back on track, to the exit")
     if checkpoint == 53:  # Final map with chests.
         x = 95
         y = 271
@@ -5228,7 +5232,7 @@ def bevelle_trials(checkpoint):
         x = -16
         y = 279
     if checkpoint == 58:
-        print("Picking up chest")
+        logger.info("Picking up chest")
     if checkpoint == 59:
         x = -5
         y = 302
@@ -5257,7 +5261,7 @@ def suteki_da_ne(checkpoint):
         x = 208
         y = 51
     if checkpoint == 5:  # Enjoy scene
-        print("Enjoy this very long scene")
+        logger.info("Enjoy this very long scene")
     if checkpoint == 7:
         x = 93
         y = -9
@@ -5926,7 +5930,7 @@ def gagazet_cave(checkpoint):
         x = 161
         y = -376
     if checkpoint == 7:
-        print("Map change, no target from this function.")
+        logger.info("Map change, no target from this function.")
     if checkpoint == 8:
         x = -45
         y = -393
@@ -5952,7 +5956,7 @@ def gagazet_cave(checkpoint):
         x = -52
         y = -477
     if checkpoint == 17:
-        print("Map change, no target from this function.")
+        logger.info("Map change, no target from this function.")
     if checkpoint == 18:
         x = 36
         y = -535
@@ -5987,7 +5991,7 @@ def gagazet_cave(checkpoint):
         x = 240
         y = -63
     if checkpoint == 29:
-        print("Map change, no target from this function.")
+        logger.info("Map change, no target from this function.")
     if checkpoint == 30:
         x = 183
         y = 66
@@ -6004,7 +6008,7 @@ def gagazet_cave(checkpoint):
         x = 140
         y = 301
     if checkpoint == 35:
-        print("Second trial, no target from this function.")
+        logger.info("Second trial, no target from this function.")
     if checkpoint == 36:
         x = 168
         y = 295
@@ -6024,7 +6028,7 @@ def gagazet_cave(checkpoint):
         x = 204
         y = -10
     if checkpoint == 42:
-        print("Map change, no target from this function.")
+        logger.info("Map change, no target from this function.")
     if checkpoint == 43:
         x = 229
         y = -274
@@ -6092,7 +6096,7 @@ def gagazet_peak(checkpoint):
         x = 787
         y = -839
     if checkpoint == 3:
-        print("Mi'ihen agency scene, no target from this function.")
+        logger.info("Mi'ihen agency scene, no target from this function.")
     if checkpoint == 4:
         x = 779
         y = -695
@@ -6100,7 +6104,7 @@ def gagazet_peak(checkpoint):
         x = 844
         y = -551
     if checkpoint == 6:
-        print("Map change, no target from this function.")
+        logger.info("Map change, no target from this function.")
     if checkpoint == 7:
         x = -135
         y = -669
@@ -6150,7 +6154,7 @@ def zanarkand_outdoors(checkpoint):
         x = -98
         y = -442
     if checkpoint == 4:
-        print("Fortune sphere, no direction from this function.")
+        logger.info("Fortune sphere, no direction from this function.")
     if checkpoint == 5:
         x = -108
         y = -418
@@ -6230,7 +6234,7 @@ def zanarkand_dome(checkpoint):
         x = 3
         y = 89
     if checkpoint == 13:
-        print("Friend sphere, no direction from this function.")
+        logger.info("Friend sphere, no direction from this function.")
     if checkpoint == 14:
         x = -127
         y = 68
@@ -6262,7 +6266,7 @@ def zanarkand_dome(checkpoint):
         x = 23
         y = -80
     if checkpoint == 24:
-        print("Luck sphere, no direction from this function.")
+        logger.info("Luck sphere, no direction from this function.")
     if checkpoint == 25:
         x = -15
         y = -49
@@ -6276,7 +6280,7 @@ def zanarkand_dome(checkpoint):
         x = -21
         y = 352
     if checkpoint == 29:
-        print("Touching save sphere, no direction from this function.")
+        logger.info("Touching save sphere, no direction from this function.")
     if checkpoint == 30:
         x = -3
         y = 360
@@ -6314,7 +6318,7 @@ def zanarkand_trials(checkpoint):
         x = 71
         y = 25
     if checkpoint == 8:
-        print("First pedetsol, no direction from here.")
+        logger.info("First pedetsol, no direction from here.")
     if checkpoint == 9:  # First pattern in big room
         x = -1
         y = 11
@@ -6349,7 +6353,7 @@ def zanarkand_trials(checkpoint):
         x = -90
         y = 123
     if checkpoint == 20:
-        print("Picking up Kilika sphere")
+        logger.info("Picking up Kilika sphere")
     if checkpoint == 21:
         x = -53
         y = 63
@@ -6366,17 +6370,17 @@ def zanarkand_trials(checkpoint):
         x = 71
         y = 4
     if checkpoint == 26:
-        print("Placing Kilika sphere")
+        logger.info("Placing Kilika sphere")
     if checkpoint == 27:
         x = 72
         y = -12
     if checkpoint == 28:
-        print("Activating second pedestal")
+        logger.info("Activating second pedestal")
     if checkpoint == 29:
         x = 77
         y = 43
     if checkpoint == 30:
-        print("Moving into next room.")
+        logger.info("Moving into next room.")
     if checkpoint == 31:  # Second pattern in big room
         x = -5
         y = 74
@@ -6423,12 +6427,12 @@ def zanarkand_trials(checkpoint):
         x = 137
         y = 23
     if checkpoint == 46:
-        print("Activating second pedestal")
+        logger.info("Activating second pedestal")
     if checkpoint == 47:
         x = 84
         y = 45
     if checkpoint == 48:
-        print("Moving into next room.")
+        logger.info("Moving into next room.")
     if checkpoint == 49:  # Third pattern in main room, start.
         x = -5
         y = 74
@@ -6481,12 +6485,12 @@ def zanarkand_trials(checkpoint):
         x = 137
         y = -22
     if checkpoint == 66:
-        print("Activating second pedestal")
+        logger.info("Activating second pedestal")
     if checkpoint == 67:
         x = 84
         y = 45
     if checkpoint == 68:
-        print("Moving into next room.")
+        logger.info("Moving into next room.")
     if checkpoint == 69:  # Last pattern in main room.
         x = -6
         y = 75
@@ -6524,7 +6528,7 @@ def zanarkand_trials(checkpoint):
         x = -68
         y = 110
     if checkpoint == 81:  # Pick up Besaid sphere
-        print("Picking up Besaid sphere")
+        logger.info("Picking up Besaid sphere")
     if checkpoint == 82:
         x = -67
         y = 94
@@ -6541,7 +6545,7 @@ def zanarkand_trials(checkpoint):
         x = 136
         y = -1
     if checkpoint == 87:
-        print("Placing Besaid sphere")
+        logger.info("Placing Besaid sphere")
     if checkpoint == 88:
         x = 110
         y = 20
@@ -6612,7 +6616,7 @@ def yunalesca_to_airship(checkpoint):
         x = 0
         y = -160
     if checkpoint == 7:
-        print("Touch save sphere")
+        logger.info("Touch save sphere")
         x = 0
         y = -160
     if checkpoint == 8:

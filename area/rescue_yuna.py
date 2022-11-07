@@ -1,3 +1,5 @@
+import logging
+
 import battle.boss
 import battle.main
 import memory.main
@@ -10,6 +12,7 @@ import vars
 import xbox
 import zz_airship_path
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -18,7 +21,7 @@ FFXC = xbox.controller_handle()
 def pre_evrae():
     FFXC.set_neutral()
     memory.main.click_to_control()
-    print("Starting first Airship section")
+    logger.info("Starting first Airship section")
     checkpoint = 0
     while checkpoint < 19:
         if memory.main.user_control():
@@ -39,7 +42,7 @@ def pre_evrae():
 
             elif pathing.set_movement(pathing.rescue_airship(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -49,7 +52,7 @@ def pre_evrae():
 
 
 def guards():
-    print("Start, Guards")
+    logger.info("Start, Guards")
     memory.main.click_to_control()
 
     if not game_vars.get_blitz_win():
@@ -102,7 +105,7 @@ def guards():
                     xbox.skip_scene()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
-    print("-------End of Bevelle guards")
+    logger.info("-------End of Bevelle guards")
 
     checkpoint = 0
     while checkpoint < 8:
@@ -113,7 +116,7 @@ def guards():
             # General pathing
             elif pathing.set_movement(pathing.bevelle_pre_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -125,7 +128,7 @@ def guards():
 
 
 def trials():
-    print("Starting Bevelle trials section.")
+    logger.info("Starting Bevelle trials section.")
 
     checkpoint = 0
     while checkpoint < 53:
@@ -155,10 +158,10 @@ def trials():
                         FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
                 if memory.main.get_actor_coords(0)[0] < -20:
-                    print("Correct alcove. Moving on with swiftness.")
+                    logger.info("Correct alcove. Moving on with swiftness.")
                     checkpoint += 2
                 else:
-                    print("Incorrect alcove. Recovering.")
+                    logger.warning("Incorrect alcove. Recovering.")
                     checkpoint += 1
             elif checkpoint == 4:  # Recovery
                 FFXC.set_movement(1, 0)
@@ -176,24 +179,24 @@ def trials():
                 xbox.skip_dialog(2)
                 memory.main.await_control()
                 if memory.main.get_coords()[0] < -10:
-                    print("Correct alcove. Moving on with swiftness.")
+                    logger.info("Correct alcove. Moving on with swiftness.")
                     checkpoint += 1
                 else:
-                    print("Incorrect alcove. Recovering.")
+                    logger.warning("Incorrect alcove. Recovering.")
             elif checkpoint == 7:  # First Bevelle sphere, and then more gliding.
-                print("Bevelle sphere")
+                logger.info("Bevelle sphere")
                 memory.main.click_to_event_temple(7)
                 while memory.main.get_actor_coords(0)[0] < -25:
                     FFXC.set_movement(0, -1)
                     if not memory.main.user_control():
                         xbox.menu_b()
                 FFXC.set_neutral()
-                print("Mark 1")
+                logger.debug("Mark 1")
                 memory.main.wait_frames(30 * 1)
                 FFXC.set_value("btn_b", 1)
-                print("Mark 2")
+                logger.debug("Mark 2")
                 memory.main.await_control()
-                print("Mark 3")
+                logger.debug("Mark 3")
                 FFXC.set_value("btn_b", 0)
                 checkpoint += 1
             elif checkpoint == 10:  # Insert Bevelle sphere. Activate lower areas.
@@ -346,7 +349,7 @@ def trials():
                     else:
                         FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
-                print("Arriving in the second alcove again.")
+                logger.info("Arriving in the second alcove again.")
                 checkpoint += 1
             elif checkpoint == 43:  # Place Bevelle sphere (second alcove)
                 memory.main.click_to_event_temple(7)
@@ -406,7 +409,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(pathing.bevelle_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -422,7 +425,7 @@ def trials_end():
         if memory.main.user_control():
             if pathing.set_movement(pathing.bevelle_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
         elif checkpoint == 58:
@@ -482,10 +485,10 @@ def evrae_altana():
     last_cp = 0
     while checkpoint < 100:
         if last_cp != checkpoint:
-            print("Checkpoint reached:", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
         if memory.main.get_story_progress() > 2220:
-            print("End of Evrae Altana section.")
+            logger.info("End of Evrae Altana section.")
             FFXC.set_neutral()
             checkpoint = 100
         if memory.main.user_control():
@@ -562,7 +565,7 @@ def seymour_natus():
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                print("Battle Start")
+                logger.info("Battle Start")
                 if memory.main.battle_type() == 2:
                     battle.main.flee_all()
                 else:
@@ -586,29 +589,29 @@ def seymour_natus():
                 memory.main.click_to_event_temple(4)
                 checkpoint += 1
             elif checkpoint == 5:
-                print("Checkpoint 5")
+                logger.debug("Checkpoint 5")
                 FFXC.set_movement(-1, 0)
                 memory.main.await_event()
                 FFXC.set_neutral()
                 memory.main.wait_frames(3)
                 checkpoint += 1
             elif checkpoint == 6:
-                print("Checkpoint 6")
+                logger.debug("Checkpoint 6")
                 if not game_vars.csr():
                     memory.main.click_to_event_temple(3)
                 checkpoint += 1
             elif checkpoint == 8:
-                print("Checkpoint 8")
+                logger.debug("Checkpoint 8")
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 12:
-                print("Checkpoint 12")
+                logger.debug("Checkpoint 12")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
             elif pathing.set_movement(pathing.suteki_da_ne(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

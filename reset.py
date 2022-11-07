@@ -1,10 +1,12 @@
 import datetime
+import logging
 
 import logs
 import memory.main
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -13,23 +15,23 @@ FFXC = xbox.controller_handle()
 def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
     if land_run:
         end_time = logs.time_stamp()
-        totalTime = end_time - start_time
+        total_time = end_time - start_time
         logs.write_stats("Total time:")
-        logs.write_stats(str(totalTime))
-        print("The game duration was:", str(totalTime))
-        print(
+        logs.write_stats(str(total_time))
+        logger.info(f"The game duration was: {total_time}")
+        logger.info(
             "This duration is intended for comparison reference only, not as a true timer."
         )
-        print("Please do not use this as your submitted time.")
+        logger.info("Please do not use this as your submitted time.")
         memory.main.wait_frames(30)
-        print("--------")
-        print("In order to conform with speedrun standards,")
+        logger.info("--------")
+        logger.info("In order to conform with speedrun standards,")
         memory.main.wait_frames(60)
-        print("we now wait until the end of the credits and stuff")
+        logger.info("we now wait until the end of the credits and stuff")
         memory.main.wait_frames(60)
-        print("and then will open up the list of saves.")
+        logger.info("and then will open up the list of saves.")
         memory.main.wait_frames(60)
-        print(
+        logger.info(
             "This will show the autosave values, which conforms to the speedrun rules."
         )
         # Bring up auto-save
@@ -60,7 +62,7 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
     logs.next_stats(rng_seed)  # Start next stats file
     if game_vars.use_set_seed():
         memory.main.set_rng_seed(rng_seed)
-    print("-------------This game will be using RNG seed:", rng_seed)
+    logger.info(f"-------------This game will be using RNG seed: {rng_seed}")
     logs.next_stats(rng_seed)
     logs.write_stats("RNG seed:")
     logs.write_stats(rng_seed)
@@ -70,34 +72,30 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
     return gamestate, step_counter
 
 
+def _attempt_reset():
+    memory.main.wait_frames(30 * 0.07)
+    while memory.main.get_map() not in [23, 348, 349]:
+        logger.info("----------Attempting reset")
+        logger.info(f"FFX map: {memory.main.get_map()}")
+        logger.info("----------")
+        memory.main.set_map_reset()
+        memory.main.wait_frames(30 * 0.1)
+        memory.main.force_map_load()
+        memory.main.wait_frames(30 * 1)
+
+
 def reset_to_main_menu():
     FFXC.set_neutral()
     if memory.main.get_story_progress() <= 8:
-        memory.main.wait_frames(30 * 0.07)
-        while not memory.main.get_map() in [23, 348, 349]:
-            print("----------Attempting reset")
-            print("FFX map:", memory.main.get_map())
-            print("----------")
-            memory.main.set_map_reset()
-            memory.main.wait_frames(30 * 0.1)
-            memory.main.force_map_load()
-            memory.main.wait_frames(30 * 1)
+        _attempt_reset()
     elif memory.main.battle_active():
-        print("Battle is active. Forcing battle to end so we can soft reset.")
+        logger.info("Battle is active. Forcing battle to end so we can soft reset.")
         while not memory.main.turn_ready():
             xbox.menu_a()
         memory.main.reset_battle_end()
-        while not memory.main.get_map() in [23, 348, 349]:
+        while memory.main.get_map() not in [23, 348, 349]:
             xbox.menu_b()
 
     else:
-        memory.main.wait_frames(30 * 0.07)
-        while not memory.main.get_map() in [23, 348, 349]:
-            print("----------Attempting reset")
-            print("FFX map:", memory.main.get_map())
-            print("----------")
-            memory.main.set_map_reset()
-            memory.main.wait_frames(30 * 0.1)
-            memory.main.force_map_load()
-            memory.main.wait_frames(30 * 1)
-    print("Resetting")
+        _attempt_reset()
+    logger.info("Resetting")

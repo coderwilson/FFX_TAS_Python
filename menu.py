@@ -1,14 +1,16 @@
+import logging
+
 import memory.main
 import menu_grid
 import vars
 import xbox
-import logging
 
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 logger = logging.getLogger(__name__)
+
 
 def grid_up():
     menu_grid.grid_up()
@@ -279,7 +281,7 @@ def mrr_grid_1():
         grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
-    logger.debug("Wakka late menu (before):", wakkaLateMenu)
+    logger.debug(f"Wakka late menu (before): {wakkaLateMenu}")
 
     menu_grid.use_and_quit()
 
@@ -303,7 +305,7 @@ def mrr_grid_2():
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_quit()
         game_vars.wakka_late_menu_set(False)
-        logger.debug("Wakka late menu updated:", game_vars.wakka_late_menu())
+        logger.debug(f"Wakka late menu updated: {game_vars.wakka_late_menu()}")
     else:
         logger.debug("Not enough sphere levels yet.")
 
@@ -1369,18 +1371,22 @@ def after_ronso():
 
 def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
     equipArray = memory.main.all_equipment()
-    logger.debug(f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slotcount: {slotcount}")
+    logger.debug(
+        f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slotcount: {slotcount}"
+    )
     if not ability_array:
         ability_array = [255, 255, 255, 255]
     # auron baroque sword - [0x800B, 0x8063, 255, 255]
     logger.debug(f"Looking for: {ability_array}")
-    for current_index, currentHandle in enumerate(equipArray):
-        logger.debug(f"Slot: {current_index} | Owner: {currentHandle.owner()} | Abilities: {currentHandle.abilities()} | Slots: {currentHandle.slot_count()}")
+    for current_index, current_handle in enumerate(equipArray):
+        logger.debug(
+            f"Slot: {current_index} | Owner: {current_handle.owner()} | Abilities: {current_handle.abilities()} | Slots: {current_handle.slot_count()}"
+        )
         if (
-            currentHandle.owner() == owner
-            and currentHandle.equipment_type() == equipment_type
-            and currentHandle.abilities() == ability_array
-            and currentHandle.slot_count() == slotcount
+            current_handle.owner() == owner
+            and current_handle.equipment_type() == equipment_type
+            and current_handle.abilities() == ability_array
+            and current_handle.slot_count() == slotcount
         ):
             logger.debug(f"Equipment found in slot: {current_index}")
             return current_index
@@ -1405,7 +1411,7 @@ def add_ability(
     navigateToEquipMenu=False,
     exitOutOfCurrentWeapon=True,
     closeMenu=True,
-    fullMenuClose=True
+    fullMenuClose=True,
 ):
     if navigateToEquipMenu:
         if not memory.main.menu_open():
@@ -1467,7 +1473,7 @@ def add_first_strike(
     navigateToEquipMenu=False,
     exitOutOfCurrentWeapon=True,
     closeMenu=True,
-    fullMenuClose=True
+    fullMenuClose=True,
 ):
     add_ability(
         owner=owner,
@@ -1910,7 +1916,7 @@ def arena_purchase_1():
 
 def remove_all_nea():
     for i in range(7):
-        if memory.main.equipped_armor_has_ability(charNum=i):  # Defaults to NEA
+        if memory.main.equipped_armor_has_ability(char_num=i):  # Defaults to NEA
             if i == 0:
                 if memory.main.check_ability_armor(ability=0x8056)[i]:
                     equip_armor(character=i, ability=0x8056)  # Auto-Haste

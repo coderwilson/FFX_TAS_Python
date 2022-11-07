@@ -1,13 +1,15 @@
+import json
+import logging
+import math
+
 import memory
+import pathing
+import vars
 import xbox
 
 FFXC = xbox.controller_handle()
-import json
-import math
 
-import pathing
-import vars
-
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 
@@ -27,12 +29,12 @@ def nearest_save_actor() -> int:
     save_actors = []
     FFXC.set_neutral()
     for x in range(memory.main.get_actor_array_size()):
-        actorMem = memory.main.get_actor_id(x)
-        if actorMem != 52685:
-            print(actorMem, " | ", x)
-        if actorMem in [20481, 20482, 20651]:
+        actor_mem = memory.main.get_actor_id(x)
+        if actor_mem != 52685:
+            logger.debug(f"nearest_save_actor: {actor_mem} | {x}")
+        if actor_mem in [20481, 20482, 20651]:
             save_actors.append(x)
-    print(save_actors)
+    logger.debug(save_actors)
     if len(save_actors) == 0:
         return 999
     elif len(save_actors) == 1:
@@ -56,7 +58,7 @@ def approach_save_sphere():
     target_actor = nearest_save_actor()
     target_coords = memory.main.get_actor_coords(target_actor)
     target_details = get_save_sphere_settings(target_actor)
-    print("Approaching actor: ", target_actor)
+    logger.debug(f"Approaching actor: {target_actor}")
     while not (
         memory.main.diag_progress_flag() == target_details[2]
         and memory.main.diag_skip_possible()
@@ -68,14 +70,14 @@ def approach_save_sphere():
         else:
             FFXC.set_neutral()
             if memory.main.get_map() == 347:
-                print("Blitzball menu opened")
+                logger.debug("Blitzball menu opened")
                 memory.main.wait_frames(30)
                 while memory.main.save_popup_cursor() != 5:
                     xbox.tap_a()
                 xbox.tap_b()
                 memory.main.wait_frames(90)
             elif memory.main.save_menu_open():
-                print("Mark 1 - ", memory.main.diag_progress_flag())
+                logger.debug(f"Mark 1 - {memory.main.diag_progress_flag()}")
                 record_save_sphere(
                     x_val=target_coords[0],
                     y_val=target_coords[1],
@@ -96,19 +98,18 @@ def approach_save_sphere():
             else:
                 FFXC.set_neutral()
                 if memory.main.battle_active():
-                    print("Mark 2", memory.main.diag_progress_flag())
+                    logger.debug(f"Mark 2 {memory.main.diag_progress_flag()}")
                     battle.main.flee_all()
                     memory.main.click_to_control()
                 elif memory.main.diag_skip_possible():
-                    print("Mark 3", memory.main.diag_progress_flag())
+                    logger.debug(f"Mark 3 {memory.main.diag_progress_flag()}")
                     xbox.tap_b()
     FFXC.set_neutral()
 
 
-
 def disengage_save_sphere():
     while memory.main.save_menu_cursor() == 0 and memory.main.save_menu_cursor_2() == 0:
-        print("Cursor")
+        logger.debug("Cursor")
         xbox.tap_a()
     while not memory.main.user_control():
         xbox.tap_b()
@@ -116,13 +117,13 @@ def disengage_save_sphere():
 
 def touch_and_go():
     approach_save_sphere()
-    print("Now touching save sphere.")
+    logger.debug("Now touching save sphere.")
     disengage_save_sphere()
 
 
 def touch_and_save(save_num: int = 999):
     if save_num >= 200:
-        print("Cannot save number ", save_num, ", out of bounds error")
+        logger.debug(f"Cannot save number {save_num} out of bounds error")
         save_num = 999
     save_pos = 999
     if save_num != 999:
@@ -170,17 +171,15 @@ def touch_and_save(save_num: int = 999):
         xbox.tap_a()
 
     if save_num != 999 and save_pos == 999:
-        saveFiles = load_game.get_saved_files()
-        print(
-            "File was expected as save number ",
-            save_num,
-            ", but could not find this file.",
+        saveFiles = loadGame.get_saved_files()
+        logger.debug(
+            f"File was expected as save number {save_num} but could not find this file."
         )
-        print("Actual save file: ", saveFiles[0])
+        logger.debug(f"Actual save file: {saveFiles[0]}")
         file_orig = game_vars.game_save_path() + saveFiles[0]
-        print(file_orig)
+        logger.debug(file_orig)
         file_dest = game_vars.game_save_path() + "ffx_" + str(save_num).zfill(3)
-        print(file_dest)
+        logger.debug(file_dest)
         import shutil
 
         shutil.move(src=file_orig, dst=file_dest)
@@ -209,13 +208,14 @@ def get_save_sphere_settings(actor_index: int):
 
 def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
     filepath = "json_ai_files\\save_sphere_details.json"
+    logger.debug(f"Recording save sphere to {filepath}")
     with open(filepath, "r") as fp:
         records = json.load(fp)
     map_num = str(memory.main.get_map())
     diag_num = str(memory.main.get_story_progress())
     actor_num = str(actor)
-    print("========================")
-    newVal = {
+    logger.debug("========================")
+    new_val = {
         map_num: {diag_num: {actor_num: {"x": x_val, "y": y_val, "diag": diag_prog}}}
     }
     if map_num in records.keys():
@@ -223,24 +223,24 @@ def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
             if actor_num in records[map_num][diag_num]:
                 if (
                     records[map_num][diag_num][actor_num]["diag"]
-                    != newVal[map_num][diag_num][actor_num]["diag"]
+                    != new_val[map_num][diag_num][actor_num]["diag"]
                 ):
 
-                    records[map_num][diag_num][actor_num]["x"] = newVal[map_num][
+                    records[map_num][diag_num][actor_num]["x"] = new_val[map_num][
                         diag_num
                     ][actor_num]["x"]
-                    records[map_num][diag_num][actor_num]["y"] = newVal[map_num][
+                    records[map_num][diag_num][actor_num]["y"] = new_val[map_num][
                         diag_num
                     ][actor_num]["y"]
-                    records[map_num][diag_num][actor_num]["diag"] = newVal[map_num][
+                    records[map_num][diag_num][actor_num]["diag"] = new_val[map_num][
                         diag_num
                     ][actor_num]["diag"]
             else:
-                records[map_num][diag_num].update(newVal[map_num][diag_num])
+                records[map_num][diag_num].update(new_val[map_num][diag_num])
         else:
-            records[map_num].update(newVal[map_num])
+            records[map_num].update(new_val[map_num])
     else:
-        records.update(newVal)
+        records.update(new_val)
 
     with open(filepath, "w") as fp:
         json.dump(records, fp, indent=4)

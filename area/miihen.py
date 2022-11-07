@@ -1,3 +1,5 @@
+import logging
+
 import battle.boss
 import battle.main
 import logs
@@ -8,6 +10,7 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -24,19 +27,19 @@ def post_battle_logic(force_charge=False):
         else:
             memory.main.full_party_format("djose", full_menu_close=False)
     hp_check = memory.main.get_hp()
-    print("------------------ HP check:", hp_check)
+    logger.debug(f"------------------ HP check: {hp_check}")
     if hp_check[0] < 520 or hp_check[1] < 220:
         battle.main.heal_up()
     else:
-        print("No need to heal up. Moving onward.")
+        logger.debug("No need to heal up. Moving onward.")
     memory.main.close_menu()
 
 
 def arrival():
-    print("Waiting for Yuna/Tidus to stop laughing.")
+    logger.info("Waiting for Yuna/Tidus to stop laughing.")
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
-    print("Now onward to scenes and Mi'ihen skip. Good luck!")
+    logger.info("Now onward to scenes and Mi'ihen skip. Good luck!")
     miihen_skip = False
     battle_count = 0
     sd_encounter_id = 0
@@ -63,7 +66,7 @@ def arrival():
 
                     elif pathing.set_movement(pathing.miihen(checkpoint)):
                         checkpoint += 1
-                        print("Checkpoint reached:", checkpoint)
+                        logger.debug(f"Checkpoint reached: {checkpoint}")
 
                 else:
                     # Run this branch on a normal Any% run, no CSR
@@ -71,12 +74,12 @@ def arrival():
                     hunter_coords = memory.main.miihen_guy_coords()
                     if hunter_coords[1] < tidus_coords[1]:
                         checkpoint = 11
-                        print("**Late for Mi'ihen skip, forcing recovery.")
+                        logger.debug("**Late for Mi'ihen skip, forcing recovery.")
                     elif checkpoint == 6:
                         FFXC.set_neutral()
                         memory.main.wait_frames(9)
-                        print("Updating checkpoint due to late skip.")
-                        print("Checkpoint reached:", checkpoint)
+                        logger.debug("Updating checkpoint due to late skip.")
+                        logger.debug(f"Checkpoint reached: {checkpoint}")
                         checkpoint += 1
                     elif checkpoint == 7:
                         if memory.main.get_coords()[1] > 1356.5:  # Into position
@@ -87,8 +90,8 @@ def arrival():
                                 memory.main.wait_frames(30 * 0.09)
                             else:
                                 checkpoint += 1
-                                print("Close to the spot")
-                            print(memory.main.get_coords())
+                                logger.debug("Close to the spot")
+                            logger.debug(f"Coords: {memory.main.get_coords()}")
                         elif memory.main.get_coords()[0] < -43.5:  # Into position
                             FFXC.set_movement(1, 1)
                             memory.main.wait_frames(2)
@@ -102,8 +105,8 @@ def arrival():
                     elif checkpoint == 8:
                         if memory.main.get_coords()[0] > -43.5:  # Into position
                             checkpoint += 1
-                            print("Adjusting for horizontal position - complete")
-                            print(memory.main.get_coords())
+                            logger.debug("Adjusting for horizontal position - complete")
+                            logger.debug(f"Coords: {memory.main.get_coords()}")
                         else:
                             FFXC.set_movement(1, 0)
                             memory.main.wait_frames(2)
@@ -112,8 +115,8 @@ def arrival():
                     elif checkpoint == 9:
                         if memory.main.get_coords()[1] > 1358.5:  # Into position
                             checkpoint = 10
-                            print("Stopped and ready for the skip.")
-                            print(memory.main.get_coords())
+                            logger.debug("Stopped and ready for the skip.")
+                            logger.debug(f"Coords: {memory.main.get_coords()}")
                         else:
                             FFXC.set_movement(0, 1)
                             memory.main.wait_frames(2)
@@ -122,7 +125,7 @@ def arrival():
                     elif checkpoint == 10:
                         # Spear guy's position when we start moving.
                         if memory.main.miihen_guy_coords()[1] < 1380:
-                            print("Skip engaging!!! Good luck!")
+                            logger.info("Skip engaging!!! Good luck!")
                             # Greater number for spear guy's position means we will start moving faster.
                             # Smaller number means moving later.
                             FFXC.set_movement(0, 1)
@@ -133,16 +136,16 @@ def arrival():
                             # Walk into the guy mashing B (or X, or whatever the key is)
                             xbox.skip_dialog(0.3)
                             FFXC.set_neutral()  # Stop trying to move. (recommended by Crimson)
-                            print("Starting special skipping.")
+                            logger.debug("Starting special skipping.")
                             xbox.skip_dialog_special(3)  # Mash two buttons
-                            print("End special skipping.")
-                            print("Should now be able to see if it worked.")
+                            logger.debug("End special skipping.")
+                            logger.debug("Should now be able to see if it worked.")
                             # Don't move, avoiding a possible extra battle
                             memory.main.wait_frames(30 * 3.5)
                             memory.main.click_to_control_3()
-                            print("Mark 1")
+                            logger.debug("Mark 1")
                             memory.main.wait_frames(30 * 1)
-                            print("Mark 2")
+                            logger.debug("Mark 2")
                             try:
                                 if (
                                     memory.main.lucille_miihen_coords()[1] > 1400
@@ -153,11 +156,11 @@ def arrival():
                                     memory.main.click_to_control_3()
                             except Exception:
                                 miihen_skip = False
-                            print("Skip successful:", miihen_skip)
+                            logger.debug(f"Skip successful: {miihen_skip}")
                             checkpoint += 1
                     elif pathing.set_movement(pathing.miihen(checkpoint)):
                         checkpoint += 1
-                        print("Checkpoint reached:", checkpoint)
+                        logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 11 and not memory.main.hunter_spear():
                 pathing.set_movement(
                     [
@@ -173,7 +176,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(pathing.miihen(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.turn_ready():
@@ -191,17 +194,17 @@ def arrival():
                     xbox.tap_b()
                 else:
                     FFXC.set_neutral()
-                    print("Starting battle")
+                    logger.debug("Starting battle")
                     battle_count += 1
                     battle.main.miihen_road()
-                    print("Battle complete")
+                    logger.debug("Battle complete")
                     post_battle_logic()
 
                 # Kimahri manip
                 next_crit_kim = memory.main.next_crit(
                     character=3, char_luck=18, enemy_luck=15
                 )
-                print("#### Next Kimahri crit:", next_crit_kim)
+                logger.debug(f"#### Next Kimahri crit: {next_crit_kim}")
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menu_open():
@@ -214,12 +217,12 @@ def arrival():
                     memory.main.wait_frames(2)
                     FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
-    print("Mi'ihen skip status:", miihen_skip)
+    logger.debug(f"Mi'ihen skip status: {miihen_skip}")
     return [game_vars.self_destruct_get(), battle_count, sd_encounter_id, miihen_skip]
 
 
 def arrival_2(self_destruct, battle_count, sd_encounter_id):
-    print("Start of the second map")
+    logger.info("Start of the second map")
     checkpoint = 15
     while memory.main.get_map() != 171:
         if memory.main.user_control():
@@ -239,7 +242,7 @@ def arrival_2(self_destruct, battle_count, sd_encounter_id):
             # General pathing
             elif pathing.set_movement(pathing.miihen(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -249,9 +252,9 @@ def arrival_2(self_destruct, battle_count, sd_encounter_id):
                 ):  # Shelinda dialog
                     xbox.tap_b()
                 else:
-                    print("Starting battle")
+                    logger.debug("Starting battle")
                     battle.main.miihen_road()
-                    print("Battle complete")
+                    logger.debug("Battle complete")
                     post_battle_logic()
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -290,16 +293,16 @@ def mid_point():
                 checkpoint = 4
             elif pathing.set_movement(pathing.miihen_agency(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
             elif memory.main.battle_active():
                 FFXC.set_neutral()
-                print("Mi'ihen - ready for Chocobo Eater")
+                logger.info("Mi'ihen - ready for Chocobo Eater")
                 battle.boss.chocobo_eater()
-                print("Mi'ihen - Chocobo Eater complete")
+                logger.info("Mi'ihen - Chocobo Eater complete")
 
 
 # Starts just after the save sphere.
@@ -334,16 +337,16 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
             # General pathing
             elif pathing.set_movement(pathing.low_road(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 25:  # Shelinda dialog
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle_count += 1
-                print("Starting battle")
+                logger.info("Starting battle")
                 battle.main.miihen_road()
-                print("Battle complete")
+                logger.info("Battle complete")
                 post_battle_logic(force_charge=True)
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -355,7 +358,7 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
 
 
 def wrap_up():
-    print("Now ready to meet Seymour")
+    logger.info("Now ready to meet Seymour")
     FFXC.set_movement(0, 1)
     memory.main.wait_frames(30 * 5)
     FFXC.set_neutral()

@@ -1,3 +1,4 @@
+import logging
 import time
 from math import copysign
 
@@ -7,6 +8,8 @@ import battle.main
 import logs
 import memory.main
 import xbox
+
+logger = logging.getLogger(__name__)
 
 
 def line_sphere_intersect(start, end, circle, radius=11):
@@ -56,22 +59,22 @@ def path_around(player, circle, target, radius=11):
 
 def engage():
     FFXC = xbox.controller_handle()
-    print("Start egg hunt")
+    logger.info("Start egg hunt")
     start_time = time.time()
     checkpoint = 0
     battle_count = 0
     looking_count = 0
-    print("Generating Plot file (the X/Y kind)")
+    logger.info("Generating Plot file (the X/Y kind)")
     active_egg = 99
     target = [10, -10]
     checkpoint = 0
-    print("Ready for movement.")
+    logger.info("Ready for movement.")
     while memory.main.get_story_progress() < 3251:
         looking_count += 1
         if looking_count % 40 == 0:
             checkpoint += 1
         if memory.main.battle_active():
-            print("Battle engaged - using flee.")
+            logger.info("Battle engaged - using flee.")
             FFXC.set_neutral()
             battle.main.flee_all()
             battle_count += 1
@@ -172,20 +175,20 @@ def engage():
             ):
                 time.sleep(0.15)
                 FFXC.set_neutral()
-                print("Stutter-step to egg. |", checkpoint)
+                logger.debug(f"Stutter-step to egg. | {checkpoint}")
                 xbox.tap_b()
             elif active_egg == 99:
-                print("Looking for a new egg. |", checkpoint)
+                logger.debug(f"Looking for a new egg. | {checkpoint}")
                 xbox.tap_b()
             else:
-                print("Targeting egg: |", checkpoint)
+                logger.debug(f"Targeting egg: | {checkpoint}")
             xbox.tap_b()
     end_time = time.time()
-    print("End egg hunt")
+    logger.info("End egg hunt")
     FFXC.set_neutral()
     duration = end_time - start_time
-    print("Duration:", str(duration))
-    print("Battle count:", battle_count)
+    logger.info(f"Duration: {duration}")
+    logger.info(f"Battle count: {battle_count}")
     while memory.main.get_map() != 325:
         if memory.main.battle_active():
             battle.main.flee_all()
@@ -194,5 +197,6 @@ def engage():
         logs.write_stats(str(round(duration, 2)))
         logs.write_stats("Egg hunt battles:")
         logs.write_stats(str(battle_count))
-    except Exception:
-        print("No log file.")
+    except Exception as E:
+        logger.error("No log file.")
+        logger.exception(E)

@@ -8,14 +8,14 @@ import memory.main
 
 PROCESS_QUERY_INFORMATION = 0x0400
 MAX_PATH = 260
-baseValue = 0
+base_value = 0
 
 
 class LocProcess(Process):
     def __init__(self, *args, **kwargs):
         super(LocProcess, self).__init__(*args, **kwargs)
 
-    def readBytes(self, lp_base_address: int, size: int = 4):
+    def read_bytes(self, lp_base_address: int, size: int = 4):
         """
         See the original ReadWriteMemory values for details on how this works. This version allows us to pass
         the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
@@ -41,7 +41,7 @@ class LocProcess(Process):
             }
             ReadWriteMemoryError(error)
 
-    def writeBytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
+    def write_bytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
         """
         Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
         """
@@ -114,9 +114,9 @@ process = rwm.get_process_by_name("FFX.exe")
 
 
 def cutscene_id():
-    global baseValue
-    key = baseValue + 0xD27C88
-    cutscene_alt = process.readBytes(key, 4)
+    global base_value
+    key = base_value + 0xD27C88
+    cutscene_alt = process.read_bytes(key, 4)
     storyline_prog = memory.main.get_story_progress()
     dialogue = memory.main.diag_progress_flag()
     return (cutscene_alt, storyline_prog, dialogue)

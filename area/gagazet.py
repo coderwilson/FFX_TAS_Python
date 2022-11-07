@@ -1,3 +1,5 @@
+import logging
+
 import battle.boss
 import battle.main
 import logs
@@ -10,6 +12,7 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -25,7 +28,7 @@ def check_gems():
     gem_slot = memory.main.get_item_slot(28)
     if gem_slot < 200:
         gems += memory.main.get_item_count_slot(gem_slot)
-    print("Total gems:", gems)
+    logger.debug(f"Total gems: {gems}")
     return gems
 
 
@@ -36,9 +39,9 @@ def calm_lands():
     battle.main.heal_up(full_menu_close=True)
 
     rng_track.print_manip_info()
-    print("RNG10:", memory.main.rng_10())
-    print("RNG12:", memory.main.rng_12())
-    print("RNG13:", memory.main.rng_13())
+    logger.debug(f"RNG10: {memory.main.rng_10()}")
+    logger.debug(f"RNG12: {memory.main.rng_12()}")
+    logger.debug(f"RNG13: {memory.main.rng_13()}")
     # Enter the cutscene where Yuna muses about ending her journey.
     while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
         if memory.main.user_control():
@@ -58,7 +61,7 @@ def calm_lands():
                         checkpoint -= 1
                         FFXC.set_movement(-1, -1)
                         memory.main.wait_frames(60)
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -103,7 +106,7 @@ def to_the_ronso():
         if memory.main.user_control():
             if pathing.set_movement(pathing.defender_x(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -115,7 +118,7 @@ def to_the_ronso():
         if memory.main.user_control():
             if pathing.set_movement(pathing.kelk_ronso(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.turn_ready():
@@ -129,7 +132,7 @@ def to_the_ronso():
 def gagazet_gates():
     # Should appear on the map just before the Ronso hymn
     end_ver = game_vars.end_game_version()
-    print("Grid version: " + str(end_ver))
+    logger.debug(f"Grid version: {end_ver}")
     logs.write_stats("B&Y Return spheres:")
     if end_ver == 4:
         logs.write_stats("4")
@@ -145,13 +148,13 @@ def gagazet_gates():
     menu.after_ronso()
     memory.main.close_menu()  # just in case
 
-    print("Gagazet path section")
+    logger.info("Gagazet path section")
     checkpoint = 0
     while memory.main.get_map() != 285:
         if memory.main.user_control():
             if pathing.set_movement(pathing.gagazet_snow(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.menu_open():
@@ -176,11 +179,11 @@ def gagazet_gates():
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-    print("Should now be on the map with Seymour Flux.")
+    logger.debug("Should now be on the map with Seymour Flux.")
 
 
 def flux():
-    print("Flux screen - ready for Seymour again.")
+    logger.info("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
     if game_vars.end_game_version() != 3:
         memory.main.full_party_format("yuna")
@@ -198,11 +201,11 @@ def flux():
                 FFXC.set_neutral()
             elif pathing.set_movement(pathing.flux(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                print("Flux battle start")
+                logger.info("Flux battle start")
                 battle.boss.seymour_flux()
                 # FFXC.set_movement(0,1)
                 memory.main.click_to_control_3()
@@ -222,9 +225,7 @@ def flux():
 
 def dream(checkpoint: int = 0):
     memory.main.click_to_control()
-    print("*********")
-    print("Dream sequence")
-    print("*********")
+    logger.info("Dream sequence")
     memory.main.wait_frames(3)
 
     while memory.main.get_map() != 309:
@@ -246,16 +247,14 @@ def dream(checkpoint: int = 0):
                 checkpoint += 1
             elif pathing.set_movement(pathing.gagazet_dream_seq(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
             # Start the final dialog
             if checkpoint == 25:
                 xbox.tap_b()
         else:
             xbox.tap_b()  # Skip all dialog
-    print("*********")
-    print("Dream sequence over")
-    print("*********")
+    logger.info("Dream sequence over")
 
 
 def cave():
@@ -270,7 +269,7 @@ def cave():
                 memory.main.wait_frames(6)
             elif pathing.set_movement(pathing.gagazet_post_dream(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -279,7 +278,7 @@ def cave():
                 xbox.tap_b()
 
     memory.main.await_control()
-    print("Gagazet cave section")
+    logger.info("Gagazet cave section")
 
     checkpoint = 0
     power_needed = 6
@@ -287,19 +286,19 @@ def cave():
         if memory.main.user_control():
             if checkpoint == 7:
                 if memory.main.get_map() == 310:
-                    print("Now in the trials map.")
+                    logger.debug("Now in the trials map.")
                     checkpoint += 1
                 else:
-                    print("Into swimming map, first trial.")
+                    logger.debug("Into swimming map, first trial.")
                     FFXC.set_movement(0, 1)
                     memory.main.wait_frames(30 * 0.5)
             elif checkpoint == 12:
-                print("Trial 1 - Let's Go!!!")
+                logger.info("Trial 1 - Let's Go!!!")
                 while memory.main.user_control():
                     FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
 
-                print("Now the trial has started.")
+                logger.debug("Now the trial has started.")
                 xbox.skip_dialog(2)
 
                 # Need logic here for when to start the trial
@@ -335,22 +334,22 @@ def cave():
                         ):
                             xbox.tap_b()
 
-                print("First trial complete")
+                logger.info("First trial complete")
                 checkpoint += 1
             elif checkpoint == 17:
                 if memory.main.get_map() == 272:
-                    print("Leaving the trials map.")
+                    logger.info("Leaving the trials map.")
                     checkpoint += 1
                 else:
-                    print("Back to main map after first trial.")
+                    logger.info("Back to main map after first trial.")
                     FFXC.set_movement(0, -1)
                     memory.main.wait_frames(30 * 0.5)
             elif checkpoint == 29:
                 if memory.main.get_map() == 310:
-                    print("Now in the trials map.")
+                    logger.info("Now in the trials map.")
                     checkpoint += 1
                 else:
-                    print("Into swimming map, second trial.")
+                    logger.info("Into swimming map, second trial.")
                     FFXC.set_movement(0, 1)
                     memory.main.wait_frames(30 * 0.5)
             elif checkpoint == 35:
@@ -360,16 +359,16 @@ def cave():
                     FFXC.set_neutral()
 
             elif checkpoint == 42:
-                print("Out of swimming map, second trial.")
+                logger.info("Out of swimming map, second trial.")
                 if memory.main.get_map() == 272:
-                    print("Leaving the trials map.")
+                    logger.info("Leaving the trials map.")
                     checkpoint += 1
                 else:
                     FFXC.set_movement(0, -1)
                     memory.main.wait_frames(30 * 0.5)
             elif checkpoint == 59:  # Just before sanctuary keeper
                 FFXC.set_neutral()
-                print("Prepping for Sanctuary Keeper")
+                logger.info("Prepping for Sanctuary Keeper")
                 memory.main.full_party_format("yuna")
                 checkpoint += 1
 
@@ -380,12 +379,12 @@ def cave():
                 # logs.write_rng_track("Final results:"+str(zombie_results))
             elif pathing.set_movement(pathing.gagazet_cave(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if checkpoint == 35:
                 if memory.main.diag_progress_flag() == 2:
-                    print("Second trial start")
+                    logger.info("Second trial start")
                     memory.main.wait_frames(90)
                     xbox.menu_b()
                     memory.main.wait_frames(45)
@@ -394,7 +393,7 @@ def cave():
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()
                     checkpoint += 1
-                    print("Second trial is complete")
+                    logger.info("Second trial is complete")
                 elif memory.main.diag_progress_flag() == 3:
                     # CSR second trial
                     memory.main.wait_frames(10)
@@ -441,14 +440,14 @@ def cave():
 
 
 def wrap_up():
-    print("Cave section complete and Sanctuary Keeper is down.")
-    print("Now onward to Zanarkand.")
+    logger.info("Cave section complete and Sanctuary Keeper is down.")
+    logger.info("Now onward to Zanarkand.")
 
     checkpoint = 0
     while memory.main.get_map() != 132:
         if memory.main.user_control():
             if memory.main.get_map() == 312 and checkpoint < 6:
-                print("Move forward to next map. Final path before making camp.")
+                logger.info("Move forward to next map. Final path before making camp.")
                 checkpoint = 7
             elif checkpoint == 3:
                 # Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
@@ -456,17 +455,17 @@ def wrap_up():
                     pathing.set_movement([786, -819])
                     xbox.tap_b()
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 6:
                 if memory.main.get_map() == 312:
-                    print("Final path before making camp.")
+                    logger.info("Final path before making camp.")
                     FFXC.set_neutral()
                     checkpoint += 1
                 else:
                     FFXC.set_movement(1, 1)
             elif pathing.set_movement(pathing.gagazet_peak(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -483,81 +482,87 @@ def wrap_up():
         FFXC.set_neutral()
 
         sleep_time = 4
-        print("Sadness cutscene")
+        logger.info("Sadness cutscene")
         memory.main.wait_frames(30 * sleep_time)
-        print("This is gunna be a while.")
+        logger.info("This is gunna be a while.")
         memory.main.wait_frames(30 * sleep_time)
-        print("Maybe you should go get a drink or something.")
+        logger.info("Maybe you should go get a drink or something.")
         memory.main.wait_frames(30 * sleep_time)
-        print("Like... what even is this???")
+        logger.info("Like... what even is this???")
         memory.main.wait_frames(30 * sleep_time)
-        print("I just")
+        logger.info("I just")
         memory.main.wait_frames(30 * sleep_time)
-        print("I just can't")
+        logger.info("I just can't")
         memory.main.wait_frames(30 * sleep_time)
-        print("Do you realize that some poor soul")
+        logger.info("Do you realize that some poor soul")
         memory.main.wait_frames(30 * sleep_time)
-        print("not only wrote the entire program for this by himself")
+        logger.info("not only wrote the entire program for this by himself")
         memory.main.wait_frames(30 * sleep_time)
-        print("And then wasted ten minutes to put in this ridiculous dialog?")
+        logger.info("And then wasted ten minutes to put in this ridiculous dialog?")
         memory.main.wait_frames(30 * sleep_time)
-        print("Talk about not having a life.")
+        logger.info("Talk about not having a life.")
         memory.main.wait_frames(30 * sleep_time)
-        print("Ah well, still have some time. Might as well shout out a few people.")
+        logger.info(
+            "Ah well, still have some time. Might as well shout out a few people."
+        )
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "First and most importantly, my wife for putting up with me for two years through this project.",
         )
         memory.main.wait_frames(30 * sleep_time)
-        print("My wife is the best!")
+        logger.info("My wife is the best!")
         memory.main.wait_frames(30 * sleep_time)
-        print("Next, DwangoAC. He encouraged me to write my own code to do this.")
+        logger.info("Next, DwangoAC. He encouraged me to write my own code to do this.")
         memory.main.wait_frames(30 * sleep_time)
-        print("And he put together the TASbot community which has been hugely helpful.")
+        logger.info(
+            "And he put together the TASbot community which has been hugely helpful."
+        )
         memory.main.wait_frames(30 * sleep_time)
-        print("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
+        logger.info("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.",
         )
         memory.main.wait_frames(30 * sleep_time)
-        print("You will see Inverted's work right before the final bosses.")
+        logger.info("You will see Inverted's work right before the final bosses.")
         memory.main.wait_frames(30 * sleep_time)
-        print("Next, some people from the FFX speedrunning community.")
+        logger.info("Next, some people from the FFX speedrunning community.")
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "CrimsonInferno, current world record holder for this category. Dude knows everything about this run!"
         )
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more."
         )
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory."
         )
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "He also taught me a number of things about memory scans, pointers, etc. Dude is super smart."
         )
         memory.main.wait_frames(30 * sleep_time)
-        print("Peppy too. He has found a few key things in memory too.")
+        logger.info("Peppy too. He has found a few key things in memory too.")
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code."
         )
         memory.main.wait_frames(30 * sleep_time)
-        print("He has also done a lot of optimizations I just couldn't get back to.")
+        logger.info(
+            "He has also done a lot of optimizations I just couldn't get back to."
+        )
         memory.main.wait_frames(30 * sleep_time)
-        print(
+        logger.info(
             "Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam."
         )
         memory.main.wait_frames(30 * sleep_time)
-        print("OK that wraps it up for this bit. I'll catch you when it's done.")
+        logger.info("OK that wraps it up for this bit. I'll catch you when it's done.")
         memory.main.wait_frames(30 * sleep_time)
 
         memory.main.click_to_control()
-        print("OMG finally! Let's get to it! (Do kids say that any more?)")
+        logger.info("OMG finally! Let's get to it! (Do kids say that any more?)")
         FFXC.set_movement(0, 1)
         memory.main.wait_frames(30 * 1)
         FFXC.set_movement(-1, 1)

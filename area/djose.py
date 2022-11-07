@@ -1,3 +1,5 @@
+import logging
+
 import battle.main
 import logs
 import memory.main
@@ -6,6 +8,7 @@ import pathing
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
@@ -21,11 +24,11 @@ def path():
     checkpoint = 0
     last_cp = 0
     stone_breath = 0
-    print("Starting Djose pathing section")
+    logger.info("Starting Djose pathing section")
 
     while memory.main.get_map() != 81:  # All the way into the temple
         if last_cp != checkpoint:
-            print("Checkpoint reached:", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
 
         if memory.main.user_control():
@@ -84,11 +87,11 @@ def path():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                print("Starting battle")
+                logger.debug("Starting battle")
                 if stone_breath == 0:
-                    print("Still looking for Stone Breath.")
+                    logger.debug("Still looking for Stone Breath.")
                 stone_breath = battle.main.djose(stone_breath)
-                print("Battles complete.")
+                logger.debug("Battles complete.")
                 count_battles += 1
             elif memory.main.menu_open():
                 xbox.menu_b()
@@ -100,6 +103,7 @@ def path():
 
 
 def temple():
+    logger.info("Djose Temple.")
     memory.main.click_to_control()
     menu.djose_temple()
     if not game_vars.csr():
@@ -126,100 +130,100 @@ def temple():
 
 
 def trials():
-    print("Starting Trials section.")
+    logger.info("Starting Trials section.")
     memory.main.click_to_control()
 
     checkpoint = 0
     while memory.main.get_map() != 90:
         if memory.main.user_control():
             if checkpoint == 1:  # First sphere
-                print("First sphere")
+                logger.info("First sphere")
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 3:  # Sphere door
-                print("Sphere door")
+                logger.info("Sphere door")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 5:  # Second sphere
-                print("Second sphere")
+                logger.info("Second sphere")
                 memory.main.click_to_event_temple(3)
                 checkpoint += 1
             elif checkpoint == 7:  # Sphere door opens
-                print("Sphere door opens")
+                logger.info("Sphere door opens")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 13:  # Left Sphere
-                print("Left sphere")
+                logger.info("Left sphere")
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 16:  # Insert Left Sphere
-                print("Insert left sphere")
+                logger.info("Insert left sphere")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 19:  # Right Sphere
-                print("Right sphere")
+                logger.info("Right sphere")
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 22:
-                print("Pushing pedestal")
+                logger.info("Pushing pedestal")
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
                 while memory.main.get_actor_coords(0)[0] < 62:
                     FFXC.set_movement(1, 0)
                 FFXC.set_neutral()
                 memory.main.wait_frames(15)
-                print("Push complete.")
+                logger.info("Push complete.")
                 checkpoint += 1
-                print("Insert right sphere")
+                logger.info("Insert right sphere")
                 memory.main.click_to_event_temple(0)
                 FFXC.set_movement(-1, 1)
                 memory.main.wait_frames(30 * 0.2)
                 checkpoint += 1
             elif checkpoint == 24:  # Insert Right Sphere
-                print("Insert right sphere")
+                logger.info("Insert right sphere")
                 memory.main.click_to_event_temple(1)
                 checkpoint = 27
             elif checkpoint == 28:
-                print("Left sphere")
+                logger.info("Left sphere")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 31 or checkpoint == 56:  # Reset switch event
-                print("Reset switch")
+                logger.info("Reset switch")
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
             elif checkpoint == 34:
-                print("Insert left sphere")
+                logger.info("Insert left sphere")
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 38:
-                print("Powered sphere")
+                logger.info("Powered sphere")
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
             elif checkpoint == 40:
-                print("Insert powered sphere")
+                logger.info("Insert powered sphere")
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 43:
-                print("Right sphere")
+                logger.info("Right sphere")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 45:
-                print("Insert right sphere")
+                logger.info("Insert right sphere")
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
             elif checkpoint == 48:  # All of the hidden room stuff at once
-                print("Pushing pedestal")
+                logger.info("Pushing pedestal")
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 memory.main.wait_frames(30 * 9)
-                print("Push complete.")
+                logger.info("Push complete.")
                 memory.main.await_control()
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 0.4)
                 FFXC.set_neutral()
                 memory.main.wait_frames(30 * 0.5)
                 memory.main.await_control()
-                print("Extra pedestal")
+                logger.info("Extra pedestal")
                 FFXC.set_movement(0, 1)
                 xbox.skip_dialog(2)
                 FFXC.set_neutral()
@@ -230,15 +234,15 @@ def trials():
                 memory.main.wait_frames(30 * 0.5)
                 checkpoint += 1
             elif checkpoint == 51:
-                print("Powered sphere")
+                logger.info("Powered sphere")
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 53:
-                print("Insert powered sphere")
+                logger.info("Insert powered sphere")
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 58:
-                print("Left sphere")
+                logger.info("Left sphere")
                 while memory.main.user_control():
                     pathing.set_movement([-5, 24])
                     memory.main.wait_frames(3)
@@ -249,11 +253,11 @@ def trials():
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 63:
-                print("Final insert Left sphere")
+                logger.info("Final insert Left sphere")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 68:
-                print("Right sphere")
+                logger.info("Right sphere")
                 while memory.main.user_control():
                     pathing.set_movement([5, 24])
                     memory.main.wait_frames(3)
@@ -265,13 +269,13 @@ def trials():
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 73:
-                print("Final insert Right sphere")
+                logger.info("Final insert Right sphere")
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 76:  # No longer doing Destruction Sphere stuff.
                 checkpoint = 85
             elif checkpoint == 80:
-                print("Destruction Glyph")
+                logger.info("Destruction Glyph")
                 while memory.main.user_control():
                     pathing.set_movement([-58, 38])
                     memory.main.wait_frames(3)
@@ -280,11 +284,11 @@ def trials():
                     xbox.tap_b()
                     memory.main.wait_frames(3)
                 FFXC.set_neutral()
-                print("Glyph touched.")
+                logger.info("Glyph touched.")
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 82:
-                print("Destruction sphere")
+                logger.info("Destruction sphere")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 85:  # Lift
@@ -292,25 +296,25 @@ def trials():
                     FFXC.set_neutral()
                     memory.main.wait_frames(30 * 0.2)
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 88:
-                print("Pedestal 1")
+                logger.info("Pedestal 1")
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
             elif checkpoint == 90:
-                print("Pedestal 2")
+                logger.info("Pedestal 2")
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 92:
-                print("Pedestal 3")
+                logger.info("Pedestal 3")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 94:
-                print("Pedestal 4")
+                logger.info("Pedestal 4")
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 96:
-                print("Pedestal 5")
+                logger.info("Pedestal 5")
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 100:
@@ -318,7 +322,7 @@ def trials():
             elif checkpoint == 102:
                 checkpoint += 1
             elif checkpoint == 104:
-                print("End of Trials")
+                logger.info("End of Trials")
                 if game_vars.csr():
                     FFXC.set_movement(-1, 1)
                     memory.main.await_event()
@@ -329,13 +333,13 @@ def trials():
                 checkpoint += 1
             elif pathing.set_movement(pathing.djose_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
     FFXC.set_neutral()
     if not game_vars.csr():
         memory.main.await_control()
         memory.main.wait_frames(30 * 0.3)
-        print("Talk to Auron while we wait.")
+        logger.info("Talk to Auron while we wait.")
         FFXC.set_movement(1, -1)
         memory.main.click_to_event()
         FFXC.set_movement(-1, -1)
@@ -347,13 +351,13 @@ def trials():
         while memory.main.user_control():
             if pathing.set_movement(pathing.djose_dance(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
             if checkpoint == 8:
                 checkpoint = 0
 
         memory.main.click_to_control()
-        print("Leaving the fayth room")
+        logger.info("Leaving the fayth room")
 
         FFXC.set_movement(1, 1)
         memory.main.await_event()
@@ -369,7 +373,7 @@ def leaving_djose():
     last_cp = 0
     while memory.main.get_map() != 75:
         if last_cp != checkpoint:
-            print("Checkpoint reached: ", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             if checkpoint == 1:

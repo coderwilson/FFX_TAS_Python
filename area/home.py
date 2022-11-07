@@ -1,3 +1,4 @@
+import logging
 import math
 
 import battle.main
@@ -8,12 +9,14 @@ import save_sphere
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def check_spheres():
+    logger.debug("Checking spheres")
     # Speed sphere stuff. Improve this later.
     need_speed = False
     if memory.main.get_speed() < 5:
@@ -51,6 +54,7 @@ def check_spheres():
 
 
 def desert():
+    logger.info("Desert")
     memory.main.click_to_control()
 
     need_speed, need_power = check_spheres()
@@ -126,7 +130,7 @@ def desert():
                 save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 53:
-                print("Going for first Sandragora and chest")
+                logger.info("Going for first Sandragora and chest")
                 tele_slot = memory.main.get_item_slot(98)
                 if tele_slot == 255 or tele_count == memory.main.get_item_count_slot(
                     tele_slot
@@ -135,7 +139,7 @@ def desert():
                     xbox.tap_b()
                 else:
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 12 and not first_format:
                 first_format = True
                 memory.main.full_party_format("desert9")
@@ -174,7 +178,7 @@ def desert():
             elif memory.main.user_control():
                 if pathing.set_movement(pathing.desert(checkpoint)):
                     checkpoint += 1
-                    print("Checkpoint reached:", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -185,7 +189,7 @@ def desert():
                     # First battle in desert
                     battle.main.zu()
                 elif memory.main.get_encounter_id() == 234:  # Sandragora logic
-                    print("Sandragora fight")
+                    logger.info("Sandragora fight")
                     if checkpoint < 55:
                         if not sandy1:
                             battle.main.sandragora(1)
@@ -221,26 +225,26 @@ def desert():
 
                 # Next, figure out how many items we need.
                 steal_items = battle.main.update_steal_items_desert()
-                print("-----------------------------")
-                print("Items status:", steal_items)
-                print("-----------------------------")
+                logger.debug("-----------------------------")
+                logger.debug(f"Items status: {steal_items}")
+                logger.debug("-----------------------------")
                 items_needed = 7 - sum(steal_items)
 
                 # Finally, check for other factors and report to console.
                 charge_state = memory.main.overdrive_state()[6] == 100
                 need_speed, need_power = check_spheres()
-                print("-----------------------------Flag statuses")
-                print("Rikku is charged up:", charge_state)
-                print("Need more Speed spheres:", need_speed)
-                print("Need more Power spheres:", need_power)
-                print("Number of additional items needed before Home:", items_needed)
-                print("-----------------------------Flag statuses (end)")
+                logger.debug("-----------------------------Flag statuses")
+                logger.debug(f"Rikku is charged up: {charge_state}")
+                logger.debug(f"Need more Speed spheres: {need_speed}")
+                logger.debug(f"Need more Power spheres: {need_power}")
+                logger.debug(f"Additional items needed before Home: {items_needed}")
+                logger.debug("-----------------------------Flag statuses (end)")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
 
 def find_summoners():
-    print("Desert complete. Starting Home section")
+    logger.info("Desert complete. Starting Home section")
     menu.home_grid()
 
     checkpoint = 0
@@ -314,31 +318,31 @@ def find_summoners():
                 checkpoint += 1
             elif pathing.set_movement(pathing.home(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
                 if memory.main.get_encounter_id() == 417:
-                    print("Home, battle 1")
+                    logger.info("Home, battle 1")
                     battle.main.home_1()
                 elif memory.main.get_encounter_id() == 419:
                     if memory.main.get_map() == 280:
-                        print("Home, battle 2")
+                        logger.info("Home, battle 2")
                         battle.main.home_2()
                         memory.main.full_party_format("desert1")
                     else:
-                        print("Home, bonus battle for Blitz loss")
+                        logger.info("Home, bonus battle for Blitz loss")
                         battle.main.home_3()
                 elif memory.main.get_encounter_id() == 420:
-                    print("Home, final battle")
+                    logger.info("Home, final battle")
                     battle.main.home_4()
                     memory.main.full_party_format("evrae")
                 else:
-                    print("Flee from battle:", memory.main.get_encounter_id())
+                    logger.debug(f"Flee from battle: {memory.main.get_encounter_id()}")
                     battle.main.flee_all()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
-    print("Let's go get that airship!")
+    logger.info("Let's go get that airship!")
     FFXC.set_neutral()
     if not game_vars.csr():
         memory.main.click_to_diag_progress(27)
@@ -356,4 +360,4 @@ def find_summoners():
             xbox.tap_b()
         elif memory.main.cutscene_skip_possible():
             xbox.skip_scene()
-    print("Airship is good to go. Now for Yuna.")
+    logger.info("Airship is good to go. Now for Yuna.")

@@ -1,8 +1,10 @@
+import logging
 from math import copysign
 
 import memory.main
 import xbox
 
+logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 
 

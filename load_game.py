@@ -1,25 +1,27 @@
 # Libraries and Core Files
+import logging
 import os
 from pathlib import Path
 
+import area.dream_zan
+import logs
 import memory.main
 import pathing
 import screen
 import vars
-from gamestate import game
 import xbox
 import zz_airship_path
-import area.dream_zan
-import logs
+from gamestate import game
 
 # This file is intended to load the game to a saved file.
 # This assumes that the save is the first non-auto-save in the list of saves.
 
+logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def load_into_game(gamestate:str, step_counter:str):
+def load_into_game(gamestate: str, step_counter: str):
     if not (gamestate == "Luca" and step_counter == 3):
         area.dream_zan.new_game(gamestate)
         game.start_time = logs.time_stamp()
@@ -43,13 +45,13 @@ def load_into_game(gamestate:str, step_counter:str):
     # Crusader's lodge after "Enough, Wakka!"
     if gamestate == "Besaid" and step_counter == 3:
         load_save_num(39)
-        print("Load complete")
+        logger.info("Load complete")
         while memory.main.user_control():
             if memory.main.get_coords()[0] > 0.5:
                 FFXC.set_movement(1, 1)
             else:
                 FFXC.set_movement(0, 1)
-        print("Ready for regular path")
+        logger.info("Ready for regular path")
     # Besaid beach before boarding SS Liki ( nice alliteration :D )
     if gamestate == "Boat1":
         load_save_num(31)
@@ -65,7 +67,7 @@ def load_into_game(gamestate:str, step_counter:str):
         load_miihen_start_laugh()
     if gamestate == "Miihen" and step_counter == 2:  # Agency
         load_save_num(28)
-        returnArray = [False, 0, 0, False]
+        return_array = [False, 0, 0, False]
     if gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
         load_save_num(38)
         memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
@@ -98,17 +100,17 @@ def load_into_game(gamestate:str, step_counter:str):
         load_save_num(60)
     if gamestate == "Home" and step_counter == 2:
         load_save_num(11)
-    if gamestate == "rescueYuna" and step_counter == 1:  # Airship, first movement.
+    if gamestate == "rescue_yuna" and step_counter == 1:  # Airship, first movement.
         # Blitz Win, save less speed/power spheres
         load_save_num(56)
-    if gamestate == "rescueYuna" and step_counter == 2:  # Bevelle trials
+    if gamestate == "rescue_yuna" and step_counter == 2:  # Bevelle trials
         load_save_num(15)
-    if gamestate == "rescueYuna" and step_counter == 4:  # Altana
+    if gamestate == "rescue_yuna" and step_counter == 4:  # Altana
         load_save_num(12)
         # memory.main.setEncounterRate(setVal=0)
         # memory.main.setGameSpeed(setVal=1)
     # Highbridge before Seymour Natus
-    if gamestate == "rescueYuna" and step_counter == 5:
+    if gamestate == "rescue_yuna" and step_counter == 5:
         load_save_num(42)  # Regular
         # loadGame.loadSaveNum(67) #Nemesis
     if gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
@@ -204,14 +206,14 @@ def load_into_game(gamestate:str, step_counter:str):
         load_save_num(73)
         game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 9:
-        #Start of Nemesis farm
-        #import nemesis.menu
-        #import memory.main
+        # Start of Nemesis farm
+        # import nemesis.menu
+        # import memory.main
         load_save_num(19)
         game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
         game_vars.end_game_version_set(4)
-        #memory.main.arena_array_nines()
-        #while not memory.main.get_tidus_slvl() >= 70:
+        # memory.main.arena_array_nines()
+        # while not memory.main.get_tidus_slvl() >= 70:
         #    nemesis.menu.perform_next_grid()
         #    memory.main.set_tidus_slvl(memory.main.get_tidus_slvl()+1)
     if gamestate == "Nem_Farm" and step_counter == 11:
@@ -267,6 +269,7 @@ def load_into_game(gamestate:str, step_counter:str):
         memory.main.check_nea_armor()
     memory.main.check_nea_armor()
 
+
 def get_saved_files():
     saveFilesFull = sorted(
         Path(game_vars.game_save_path()).iterdir(), key=os.path.getmtime
@@ -291,11 +294,11 @@ def load_save_num(number):
     savePos = 255
     #Then get the actual save position
     testString = "ffx_" + str(number).zfill(3)
-    print("Searching for string:", testString)
+    logger.debug(f"Searching for string: {testString}")
     savePos = 255
     for x in range(len(saveFiles)):
         if saveFiles[x] == testString:
-            print("Save file is in position:", x)
+            logger.info(f"Save file is in position: {x}")
             savePos = x
     if save_zero > savePos:
         savePos += 1
@@ -317,12 +320,12 @@ def load_save_num(number):
         # So that we don't evaluate battle as complete after loading.
         memory.main.reset_battle_end()
     else:
-        print("That save file does not exist. Quitting program.")
+        logger.error("That save file does not exist. Quitting program.")
         exit()
 
 
 def load_first():
-    print("Loading to first save file")
+    logger.info("Loading to first save file")
     xbox.menu_b()
     memory.main.wait_frames(30 * 2.5)
     xbox.menu_down()
@@ -334,7 +337,7 @@ def load_first():
 
 
 def load_offset(offset):
-    print("Loading to save file in position", offset)
+    logger.info(f"Loading to save file in position {offset}")
     totalOffset = offset
     memory.main.wait_frames(30 * 2.5)
     for _ in range(totalOffset):
@@ -348,7 +351,7 @@ def load_offset(offset):
 
 
 def load_offset_battle(offset):
-    print("Loading to save file in position", offset)
+    logger.info(f"Loading to save file in position {offset}")
     xbox.menu_b()
     memory.main.wait_frames(30 * 2.5)
     while offset > 0:
@@ -368,11 +371,11 @@ def load_mem_cursor():
         cursorTarget = 5
     else:
         cursorTarget = 8
-    print("Aiming at", cursorTarget)
+    logger.debug(f"Aiming at {cursorTarget}")
     while memory.main.get_menu_cursor_pos() != cursorTarget:
-        print(memory.main.get_menu_cursor_pos())
+        logger.debug(memory.main.get_menu_cursor_pos())
         xbox.tap_up()
-        print(memory.main.get_menu_cursor_pos())
+        logger.debug(memory.main.get_menu_cursor_pos())
         if game_vars.use_pause():
             memory.main.wait_frames(2)
     while memory.main.menu_number() == 5:
@@ -391,7 +394,7 @@ def load_mem_cursor():
 
 
 def load_post_blitz():
-    print("Loading to first save file")
+    logger.info("Loading to first save file")
     load_offset(1)
 
     while not screen.Minimap1():
@@ -427,15 +430,15 @@ def load_post_blitz():
     FFXC.set_value("axis_lx", 0)
     FFXC.set_value("axis_ly", 0)
 
-    print("Rejoining the party.")
+    logger.debug("Rejoining the party.")
     memory.main.click_to_control()  # Scene, rejoining the party
-    print("Walking up to Yuna.")
+    logger.debug("Walking up to Yuna.")
     FFXC.set_value("axis_ly", -1)
     FFXC.set_value("axis_lx", -1)
     memory.main.wait_frames(30 * 3)
     FFXC.set_value("axis_lx", 0)
     FFXC.set_value("axis_ly", 0)  # Enters laughing scene, ends Luca section.
-    print("End of loading section.")
+    logger.debug("End of loading section.")
 
 
 def load_neutral():
@@ -599,7 +602,7 @@ def load_miihen_start():
         pass
     memory.main.click_to_event_temple(1)
 
-    print("Load complete. Now for Mi'ihen area.")
+    logger.info("Load complete. Now for Mi'ihen area.")
 
 
 def load_mrr():
@@ -627,7 +630,7 @@ def load_mrr_2():
     memory.main.wait_frames(30 * 2)
     memory.main.await_control()
     for i in range(20):
-        print(f"Sleeping for {20-i} more seconds...")
+        logger.debug(f"Sleeping for {20-i} more seconds...")
         memory.main.wait_frames(30 * 1)
 
 
@@ -729,7 +732,7 @@ def load_wendigo():
     import battle.main
 
     battle.boss.wendigo()
-    print("Wendigo fight over - end of loading game to Wendigo fight")
+    logger.info("Wendigo fight over - end of loading game to Wendigo fight")
 
 
 def load_rescue():
@@ -792,11 +795,11 @@ def zan_trials():
 
 
 def load_gagazet_dream():
-    print("Positioning to next map")
+    logger.debug("Positioning to next map")
     while memory.main.get_map() != 309:
         FFXC.set_movement(1, 1)
     FFXC.set_neutral()
-    print("Positioning complete")
+    logger.debug("Positioning complete")
     memory.main.await_control()
 
 

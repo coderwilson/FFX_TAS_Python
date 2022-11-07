@@ -1,3 +1,6 @@
+import logging
+from typing import List
+
 import battle.boss
 import battle.main
 import logs
@@ -9,23 +12,41 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
+def wait_for_rng2_weakness(valid_weakness: List[int]):
+    while True:
+        current_weakness = memory.main.get_next_rng2() % 4
+        logger.debug(
+            f"Valid Weakness: {valid_weakness}, Current Weakness: {current_weakness}"
+        )
+        if current_weakness in valid_weakness:
+            logger.info("Weakness has lined up.")
+            return
+
+
+def calculate_possible_weaknesses() -> List[int]:
+    items_contained = []
+    for i, item_val in enumerate([27, 24, 30, 32]):
+        if memory.main.get_use_items_slot(item_val) != 255:
+            items_contained.append(i)
+    return items_contained
+
+
 def arrival(rikku_charged):
+    logger.info("Arriving at Macalania Woods")
     memory.main.click_to_control()
     memory.main.full_party_format("mwoodsneedcharge")
     memory.main.close_menu()
 
-    # Rikkus charge, Fish Scales, and Arctic Winds
-    woods_vars = [False, False, False]
-    woods_vars[0] = rikku_charged
-
     last_gil = 0  # for first chest
     checkpoint = 0
-    total_battles = 0
     while memory.main.get_map() != 221:  # All the way to O'aka
         if memory.main.user_control():
             # Events
@@ -33,19 +54,27 @@ def arrival(rikku_charged):
                 if last_gil != memory.main.get_gil_value():
                     if last_gil == memory.main.get_gil_value() - 2000:
                         checkpoint += 1
-                        print("Chest obtained. Updating checkpoint:", checkpoint)
+                        logger.debug(
+                            f"Chest obtained. Updating checkpoint: {checkpoint}"
+                        )
                     else:
                         last_gil = memory.main.get_gil_value()
                 else:
                     FFXC.set_movement(1, 1)
                     xbox.tap_b()
             elif checkpoint == 59:
-                if not woods_vars[0]:
-                    checkpoint -= 2
-                elif not woods_vars[1] and not woods_vars[2]:
+                logger.debug(f"Rikku Charge: {rikku_charged}")
+                if not rikku_charged:
                     checkpoint -= 2
                 else:  # All good to proceed
                     checkpoint += 1
+            elif checkpoint == 60:
+                logger.info("Waiting for RNG2 to sync up for Sphermiroph Weakness.")
+                items_contained = calculate_possible_weaknesses()
+                logger.info(f"We currently can do: {items_contained}")
+                FFXC.set_neutral()
+                wait_for_rng2_weakness(items_contained)
+                checkpoint += 1
 
             # Map changes
             elif checkpoint < 18 and memory.main.get_map() == 241:
@@ -56,23 +85,32 @@ def arrival(rikku_charged):
             # General pathing
             elif pathing.set_movement(pathing.m_woods(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                print("variable check 1:", woods_vars)
-                woods_vars = battle.main.m_woods(woods_vars)
-                print("variable check 2:", woods_vars)
-                if memory.main.overdrive_state()[6] == 100:
+                battle.main.m_woods()
+                rikku_charged = memory.main.overdrive_state()[6] == 100
+                logger.info(
+                    "Rikku charged" if rikku_charged else "Rikku is not charged."
+                )
+                party_hp = memory.main.get_hp()
+                if (
+                    party_hp[0] < 450
+                    or (party_hp[6] < 180 and not rikku_charged)
+                    or party_hp[2] + party_hp[4] < 500
+                ):
+                    battle.main.heal_up(full_menu_close=False)
+                if rikku_charged:
                     memory.main.full_party_format("mwoodsgotcharge")
                 else:
                     memory.main.full_party_format("mwoodsneedcharge")
-                total_battles += 1
+                memory.main.close_menu()
+                if checkpoint == 61:
+                    checkpoint = 60
             elif not memory.main.battle_active() and memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    # logs.write_stats("Mac Woods battles:")
-    # logs.write_stats(total_battles)
     # Save sphere
     FFXC.set_movement(-1, 1)
     memory.main.wait_frames(2)
@@ -83,6 +121,7 @@ def arrival(rikku_charged):
 
 
 def lake_road():
+    logger.info("Lake road")
     memory.main.await_control()
     while not pathing.set_movement([174, -96]):
         pass
@@ -124,8 +163,9 @@ def lake_road():
 
     FFXC.set_neutral()  # Engage Spherimorph
 
+    logger.info("Battle against the Spherimorph")
     battle.boss.spherimorph()
-    print("Battle is over.")
+    logger.info("Battle is over.")
     memory.main.click_to_control()  # Jecht's memories
 
 
@@ -157,7 +197,7 @@ def lake_road_2():
         FFXC.set_neutral()
 
         memory.main.click_to_control()  # Auron's musings.
-        print("Affection (before):", memory.main.affection_array())
+        logger.debug(f"Affection (before): {memory.main.affection_array()}")
         memory.main.wait_frames(30 * 0.2)
         auron_affection = memory.main.affection_array()[2]
         # Make sure we get Auron affection
@@ -165,7 +205,7 @@ def lake_road_2():
             auron_coords = memory.main.get_actor_coords(3)
             pathing.set_movement(auron_coords)
             xbox.tap_b()
-        print("Affection (after):", memory.main.affection_array())
+        logger.debug(f"Affection (after): {memory.main.affection_array()}")
     while memory.main.user_control():
         FFXC.set_movement(-1, -1)
     FFXC.set_neutral()
@@ -178,7 +218,7 @@ def lake_road_2():
 
 
 def lake():
-    print("Now to the frozen lake")
+    logger.info("Now to the frozen lake")
     if memory.main.get_hp()[3] < 1000:  # Otherwise we under-level Tidus off of Crawler
         battle.main.heal_up(full_menu_close=False)
 
@@ -186,16 +226,16 @@ def lake():
     menu.m_lake_grid()
     memory.main.await_control()
 
-    print("------------------------------Affection array:")
-    print(memory.main.affection_array())
-    print("------------------------------")
+    logger.debug("------------------------------Affection array:")
+    logger.debug(memory.main.affection_array())
+    logger.debug("------------------------------")
 
     checkpoint = 0
     while memory.main.get_encounter_id() != 194:
         if memory.main.user_control():
             if pathing.set_movement(pathing.m_lake(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.get_encounter_id() != 194:
@@ -207,9 +247,9 @@ def lake():
 
 
 def after_crawler():
-    print("--- Affection array ---")
-    print(memory.main.affection_array())
-    print("-----------------------")
+    logger.debug("--- Affection array ---")
+    logger.debug(memory.main.affection_array())
+    logger.debug("-----------------------")
     memory.main.click_to_control()
     while memory.main.get_map() != 153:
         pos = memory.main.get_coords()
@@ -229,7 +269,7 @@ def after_crawler():
     last_cp = 0
     while checkpoint != 100:
         if last_cp != checkpoint:
-            print("Checkpoint reached:", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
         pos = memory.main.get_coords()
         if checkpoint == 0:
@@ -277,4 +317,4 @@ def after_crawler():
                     FFXC.set_movement(-1, 1)
                 else:
                     FFXC.set_movement(0, 1)
-    print("End of Macalania Woods section. Next is temple section.")
+    logger.info("End of Macalania Woods section. Next is temple section.")

@@ -1,12 +1,14 @@
+import logging
+
 import battle.main
 import memory.main
 import screen
 import xbox
-import logging
 
 FFXC = xbox.controller_handle()
 
 logger = logging.getLogger(__name__)
+
 
 def auron(style="dragon fang"):
     while not memory.main.other_battle_menu():

@@ -1,3 +1,5 @@
+import logging
+
 import battle.main
 import logs
 import memory.get
@@ -10,14 +12,15 @@ import screen
 import vars
 import xbox
 
+logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
 
 def print_nea_zone(battles: int):
-    print("#### Charging Rikku zone:", game_vars.get_nea_zone())
-    print("#### This will take", battles, "number of battles (99 = unknown)")
+    logger.debug(f"#### Charging Rikku zone: {game_vars.get_nea_zone()}")
+    logger.debug(f"#### This will take {battles} number of battles (99 = unknown)")
 
 
 def decide_nea(bonus_advance: int = 0):
@@ -75,7 +78,7 @@ def arrival():
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
     # game_vars.set_skip_zan_luck(True) #For testing
-    print("Outdoor Zanarkand pathing section")
+    logger.info("Outdoor Zanarkand pathing section")
     while memory.main.get_map() != 225:
         if memory.main.user_control():
             if memory.main.get_coords()[1] > -52:
@@ -113,7 +116,7 @@ def arrival():
                         xbox.tap_b()
             elif pathing.set_movement(pathing.zanarkand_outdoors(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
 
@@ -131,14 +134,14 @@ def arrival():
                 xbox.tap_b()
 
     # Outside the dome
-    print("Now approaching the Blitz dome.")
-    print("Close observation will reveal this is the same blitz dome")
-    print("as the one from the opening of the game.")
+    logger.info("Now approaching the Blitz dome.")
+    logger.info("Close observation will reveal this is the same blitz dome")
+    logger.info("as the one from the opening of the game.")
     while memory.main.get_map() != 222:
         FFXC.set_movement(0, 1)
         xbox.tap_b()
 
-    print("Start of Zanarkand Dome section")
+    logger.info("Start of Zanarkand Dome section")
     friend_slot = memory.main.get_item_slot(97)
     if friend_slot == 255:
         friend_count = 0
@@ -185,7 +188,7 @@ def arrival():
                 else:
                     if memory.main.get_item_count_slot(luck_slot) > luck_count:
                         checkpoint += 1
-                        print("Updating checkpoint:", checkpoint)
+                        logger.debug(f"Updating checkpoint: {checkpoint}")
                         memory.main.click_to_control()
                     else:
                         FFXC.set_movement(1, 1)
@@ -196,11 +199,11 @@ def arrival():
             elif (
                 memory.main.get_map() == 316 and checkpoint < 21
             ):  # Final room before trials
-                print("Final room before trials")
+                logger.info("Final room before trials")
                 checkpoint = 21
             elif pathing.set_movement(pathing.zanarkand_dome(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -244,7 +247,7 @@ def trials_0(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
 
 
@@ -275,7 +278,7 @@ def trials_1(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
 
 
@@ -299,7 +302,7 @@ def trials_2(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
 
 
@@ -323,7 +326,7 @@ def trials_3(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
 
 
@@ -348,17 +351,22 @@ def trials_4(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
     FFXC.set_neutral()
     return checkpoint
 
 
+def s_keeper_print_bahamut_crit_chance():
+    crit_chance = memory.main.next_crit(character=7, char_luck=17, enemy_luck=15)
+    logger.debug(f"Next Aeon Crit: {crit_chance}")
+
+
 def sanctuary_keeper():
     ver = game_vars.end_game_version()
-    print("Now prepping for Sanctuary Keeper fight")
+    logger.info("Now prepping for Sanctuary Keeper fight")
 
     if ver == 4:
-        print("Pattern for four return spheres off of the B&Y fight")
+        logger.info("Pattern for four return spheres off of the B&Y fight")
         menu.sk_return()
     elif ver == 3:
         menu.sk_friend()
@@ -376,13 +384,10 @@ def sanctuary_keeper():
         battle.main.defend()
         xbox.click_to_battle()
     battle.main.aeon_summon(4)  # This is the whole fight. Kinda sad.
-    print(
-        "Next Aeon Crit:",
-        memory.main.next_crit(character=7, char_luck=17, enemy_luck=15),
-    )
+    s_keeper_print_bahamut_crit_chance()
     while not memory.main.battle_complete():
         if memory.main.turn_ready():
-            print(memory.main.rng_array_from_index(index=43, array_len=4))
+            logger.debug(memory.main.rng_array_from_index(index=43, array_len=4))
             battle.main.attack("none")
     memory.main.click_to_control()
 
@@ -394,13 +399,13 @@ def yunalesca():
             xbox.tap_b()
 
     if ver == 4:
-        print("Final pattern for four return spheres off of the B&Y fight")
+        logger.info("Final pattern for four return spheres off of the B&Y fight")
         menu.sk_return_2()
         memory.main.close_menu()
     else:
-        print("No further sphere gridding needed at this time.")
+        logger.info("No further sphere gridding needed at this time.")
 
-    print("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
+    logger.info("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
 
     save_sphere.touch_and_go()
 
@@ -414,10 +419,10 @@ def yunalesca():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif pathing.set_movement(pathing.yunalesca(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             FFXC.set_value("btn_b", 1)
@@ -431,15 +436,15 @@ def yunalesca():
     memory.main.click_to_control()  # This does all the attacking and dialog skipping
 
     # Now to check for zombie strike and then report to logs.
-    print("Ready to check for Zombiestrike")
+    logger.info("Ready to check for Zombiestrike")
     logs.write_stats("Zombiestrike:")
     logs.write_stats(game_vars.zombie_weapon())
-    print("++Zombiestrike:")
-    print("++", game_vars.zombie_weapon())
+    logger.info("++Zombiestrike:")
+    logger.info(f"++ {game_vars.zombie_weapon()}")
 
 
 def post_yunalesca(checkpoint=0):
-    print("Heading back outside.")
+    logger.info("Heading back outside.")
     FFXC.set_neutral()
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)
@@ -449,32 +454,32 @@ def post_yunalesca(checkpoint=0):
             if checkpoint < 2 and memory.main.get_map() == 319:
                 # Back to room before Yunalesca
                 checkpoint = 2
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 4 and memory.main.get_map() == 318:
                 # Exit to room with the inert Aeon
                 checkpoint = 4
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 7:
                 save_sphere.touch_and_go()
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 10 and memory.main.get_map() == 320:
                 # Back to larger of the puzzle rooms
                 checkpoint = 10
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 18 and memory.main.get_map() == 316:
                 # Hallway before puzzle rooms
                 checkpoint = 18
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 25 and memory.main.get_map() == 315:
                 # Hallway before puzzle rooms
                 checkpoint = 25
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 26:
                 FFXC.set_neutral()
             elif pathing.set_movement(pathing.yunalesca_to_airship(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -482,7 +487,7 @@ def post_yunalesca(checkpoint=0):
             elif memory.main.diag_skip_possible() and not memory.main.battle_active():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
-                print(memory.get.cutscene_id())
+                logger.debug(f"Cutscene ID: {memory.get.cutscene_id()}")
                 if memory.get.cutscene_id() == (5673, 2850, 3):
                     memory.main.wait_frames(10)
                     xbox.skip_scene()
