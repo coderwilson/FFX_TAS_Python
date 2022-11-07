@@ -184,10 +184,7 @@ def cursor_1():
 def jassu_pass_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
-    if (
-        memory.main.get_story_progress() >= 540
-        and memory.main.get_story_progress() < 570
-    ):
+    if 540 <= memory.main.get_story_progress() < 570:
         base_timing = int(155 - shot_mod)
     else:
         base_timing = int(265 - shot_mod)
@@ -201,10 +198,7 @@ def jassu_pass_timing() -> int:
 def tidus_shot_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
-    if (
-        memory.main.get_story_progress() >= 540
-        and memory.main.get_story_progress() < 570
-    ):
+    if 540 <= memory.main.get_story_progress() < 570:
         base_timing = int(169 - shot_mod)
     else:
         base_timing = int(288 - shot_mod)
@@ -225,10 +219,7 @@ def game_stage():
     current_stage = 0
     global engage_defender
     # Logic that immediately moves to scoring phases if in overtime.
-    if (
-        memory.main.get_story_progress() > 570
-        and memory.main.get_story_progress() < 700
-    ):
+    if 570 < memory.main.get_story_progress() < 700:
         if game_clock() in [2, 3, 4, 5, 6, 7]:
             game_vars.set_blitz_ot(True)
 
@@ -269,10 +260,8 @@ def game_stage():
         and memory.main.get_story_progress() >= 570
     ):
         current_stage = 30
-    elif (
-        memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 1
-        and 570 < memory.main.get_story_progress()
-        and memory.main.get_story_progress() < 700
+    elif memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 1 and (
+        570 < memory.main.get_story_progress() < 700
     ):
         # Ahead by 1 goal after Wakka enters, just end the game.
         current_stage = 30
