@@ -218,7 +218,8 @@ def ab_swimming_2():
     memory.main.await_control()
     FFXC.set_movement(1, -1)
     FFXC.set_value("btn_a", 1)
-    save_sphere.touch_and_go()
+    memory.main.touch_save_sphere()
+    # TODO: adapt save_sphere.touch_and_go() to handle this save sphere
 
     memory.main.clear_save_menu_cursor_2()
     # Now to get to it
