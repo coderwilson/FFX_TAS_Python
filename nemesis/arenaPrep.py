@@ -15,8 +15,8 @@ import xbox
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
-
 FFXC = xbox.controller_handle()
+test_mode = False
 
 # The following functions extend the regular Bahamut run. Farming sections.
 
@@ -52,6 +52,8 @@ def auto_life():
 
 # Default to Besaid. Maybe based on map number?
 def air_ship_destination(dest_num=0, force_omega=False):
+    if len(memory.main.all_equipment()) > 120:
+        rin_equip_dump()
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
             nemesis.targetPath.set_movement([-251, 340])
@@ -74,6 +76,8 @@ def air_ship_destination(dest_num=0, force_omega=False):
             xbox.skip_scene()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
+    if test_mode:
+        memory.main.set_game_speed(set_val=1)
 
 
 def unlock_omega():
@@ -95,7 +99,7 @@ def unlock_omega():
         print(memory.main.get_coords())
         if memory.main.get_coords()[0] < 65:
             FFXC.set_value("d_pad", 8)
-        if memory.main.get_coords()[0] < 70:
+        elif memory.main.get_coords()[0] < 70:
             nemesis.menu.grid_right()
         elif memory.main.get_coords()[0] > 78:
             FFXC.set_value("d_pad", 4)
@@ -210,6 +214,8 @@ def get_save_sphere_details_old():
 
 def return_to_airship():
     print("Attempting Return to Airship")
+    if test_mode:
+        memory.main.set_game_speed(set_val=0)
 
     ss_details = get_save_sphere_details()
 
@@ -276,7 +282,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                 else:
                     battle.main.escape_one()
     memory.main.click_to_control()
-    if float(memory.main.get_hp()[0]) / float(memory.main.get_max_hp()[0]) < 0.4:
+    if memory.main.get_hp()[0] < 1100:
         battle.main.heal_up(3)
     nemesis.menu.perform_next_grid(limit=ap_cp_limit)
 
@@ -568,11 +574,11 @@ def advanced_battle_logic():
                         else:
                             battle.main.defend()
                     else:
-                        battle.main.defend()
+                        battle.main.escape_one()
     memory.main.click_to_control()
     memory.main.full_party_format("initiative")
     nemesis.menu.perform_next_grid()
-    if float(memory.main.get_hp()[0]) / float(memory.main.get_max_hp()[0]) < 0.3:
+    if memory.main.get_hp()[0] < 1100:
         battle.main.heal_up(3)
 
 
@@ -632,7 +638,7 @@ def arena_npc():
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
     print("Mark 1")
-    memory.main.wait_frames(30)  # This buffer can be improved later.
+    memory.main.wait_frames(3)  # This buffer can be improved later.
     print("Mark 2")
 
 
@@ -704,6 +710,7 @@ def kilika_shop():
         pass
     return_to_airship()
     memory.main.await_control()
+    rin_equip_dump()
     # menu.equip_weapon(character=0,ability=0x807A, fullMenuClose=False)
     air_ship_destination(dest_num=2)
     while not nemesis.targetPath.set_movement([-25, -246]):
@@ -881,6 +888,7 @@ def farm_feathers():
 def auto_phoenix():  # Calm Lands items
     menu.auto_sort_equipment()
     nemesis.menu.lulu_bribe()
+    memory.main.full_party_format("initiative")
     arena_npc()
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
@@ -1112,17 +1120,69 @@ def one_mp_weapon():  # Break Damage Limit, or One MP cost
     FFXC.set_neutral()
     return_to_airship()
     nemesis.menu.rikku_haste()
-    rin_equip_dump()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    xbox.tap_down()
+    for x in range(armor_buys):
+        print("Buying armors, remaining - ", armor_buys - x)
+        memory.main.wait_frames(6)
+        xbox.menu_b()  # Purchase
+        memory.main.wait_frames(6)
+        xbox.menu_up()
+        xbox.menu_b()  # Confirm
+        memory.main.wait_frames(6)
+        xbox.menu_b()  # Do not equip
+    memory.main.wait_frames(6)
+    memory.main.close_menu()
 
+    for y in range(armor_buys):
+        if y == 0:  # First one
+            menu.add_ability(
+                owner=0,
+                equipment_type=1,
+                ability_array=[0x8072, 255, 255, 255],
+                ability_index=0x8075,
+                slotcount=4,
+                navigateToEquipMenu=True,
+                exitOutOfCurrentWeapon=True,
+                closeMenu=False,
+                fullMenuClose=False,
+            )
+        else:
+            menu.add_ability(
+                owner=0,
+                equipment_type=1,
+                ability_array=[0x8072, 255, 255, 255],
+                ability_index=0x8075,
+                slotcount=4,
+                navigateToEquipMenu=False,
+                exitOutOfCurrentWeapon=True,
+                closeMenu=False,
+                fullMenuClose=False,
+            )
+    memory.main.close_menu()
+    memory.main.wait_frames(9)
+    while memory.main.user_control():
+        FFXC.set_movement(-1, 0)
+        xbox.tap_b()
+    FFXC.set_neutral()  # Now talking to vendor
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Intro dialog
+    memory.main.wait_frames(60)
+    xbox.tap_right()
+    xbox.tap_b()  # Sell equipment
+    menu.sell_all()
+    memory.main.wait_frames(10)
+    xbox.tap_a()
 
 def kilika_final_shop():
     memory.main.await_control()
-    rin_equip_dump()
+    rin_equip_dump(sell_nea=True)
     menu.auto_sort_equipment()
-
-    gilNeeded = 3500000 - memory.main.get_gil_value()
-    # Get minimum needed, plus one for safety. Max 99 total.
-    weaponBuys = min(int(gilNeeded / 26150), 98) + 1
 
     air_ship_destination(dest_num=2)
     while not nemesis.targetPath.set_movement([-25, -246]):
@@ -1143,74 +1203,24 @@ def kilika_final_shop():
     xbox.tap_b()  # Buy equipment
     memory.main.wait_frames(60)
     get_equipment(equip=True)  # Weapon for Tidus
-    memory.main.wait_frames(60)
-    xbox.tap_down()
-    xbox.tap_down()
-    xbox.tap_down()
-    xbox.tap_down()
-    xbox.tap_down()
-    xbox.tap_down()
-    xbox.tap_down()
-    for x in range(weaponBuys):
-        print("Buying armors, remaining - ", weaponBuys - x)
-        memory.main.wait_frames(6)
-        xbox.menu_b()  # Purchase
-        memory.main.wait_frames(6)
-        xbox.menu_up()
-        xbox.menu_b()  # Confirm
-        memory.main.wait_frames(6)
-        xbox.menu_b()  # Do not equip
     memory.main.wait_frames(6)
-    memory.main.close_menu()
 
-    for y in range(weaponBuys):
-        if y == 0:  # First one
-            menu.add_ability(
-                owner=0,
-                equipment_type=1,
-                ability_array=[0x8072, 255, 255, 255],
-                ability_index=0x8075,
-                slotcount=4,
-                navigateToEquipMenu=True,
-                exitOutOfCurrentWeapon=True,
-                closeMenu=False,
-                fullMenuClose=False,
-            )
-        elif weaponBuys - y == 1:  # Last one
-            menu.add_ability(
-                owner=0,
-                equipment_type=1,
-                ability_array=[0x8072, 255, 255, 255],
-                ability_index=0x8075,
-                slotcount=4,
-                navigateToEquipMenu=True,
-                exitOutOfCurrentWeapon=True,
-                closeMenu=True,
-                fullMenuClose=True,
-            )
-        else:
-            menu.add_ability(
-                owner=0,
-                equipment_type=1,
-                ability_array=[0x8072, 255, 255, 255],
-                ability_index=0x8075,
-                slotcount=4,
-                navigateToEquipMenu=False,
-                exitOutOfCurrentWeapon=True,
-                closeMenu=False,
-                fullMenuClose=False,
-            )
+    gilNeeded = 3500000 - memory.main.get_gil_value()
+    # Get minimum needed, plus one for safety. Max 99 total.
+    armor_buys = min(int(gilNeeded / 26150), 98) + 1
+    can_afford = int(memory.main.get_gil_value() / 2250)
 
-    while memory.main.user_control():
-        FFXC.set_movement(-1, 0)
-        xbox.tap_b()
-    FFXC.set_neutral()  # Now talking to vendor
-    memory.main.wait_frames(60)
-    xbox.tap_b()  # Intro dialog
-    memory.main.wait_frames(60)
-    xbox.tap_right()
-    xbox.tap_b()  # Sell equipment
-    menu.sell_all()
+    while armor_buys >= 1:
+        #print("Buys needed: ", armor_buys)
+        #print(" Can afford: ", can_afford)
+        #memory.main.wait_frames(180)
+        kilika_gil_farm(min(armor_buys, can_afford))
+        armor_buys = int(max(armor_buys - can_afford, 0))
+        can_afford = int(memory.main.get_gil_value() / 2250)
+        if armor_buys >= 1:
+            memory.main.wait_frames(10)
+            xbox.menu_left()
+            xbox.menu_b()
     memory.main.close_menu()
 
     while not nemesis.targetPath.set_movement([-91, -199]):
@@ -1265,10 +1275,10 @@ def final_weapon():
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x800A,
         slotcount=4,
-        navigateToEquipMenu=False,
-        exitOutOfCurrentWeapon=True,
-        closeMenu=True,
-        fullMenuClose=True,
+        navigateToEquipMenu=True,
+        exitOutOfCurrentWeapon=False,
+        closeMenu=False,
+        fullMenuClose=False,
     )
     menu.add_ability(
         owner=1,
@@ -1276,15 +1286,16 @@ def final_weapon():
         ability_array=[0x8072, 0x800A, 255, 255],
         ability_index=0x801D,
         slotcount=4,
-        navigateToEquipMenu=True,
+        navigateToEquipMenu=False,
         exitOutOfCurrentWeapon=True,
         closeMenu=True,
-        fullMenuClose=True,
+        fullMenuClose=False,
     )
+    menu.equip_weapon(character=0, ability=0x8019)  # BDL (one MP)
     memory.main.full_party_format("kilikawoods1")
 
 
-def rin_equip_dump(buy_weapon=False):
+def rin_equip_dump(buy_weapon=False, sell_nea=False):
     while not nemesis.targetPath.set_movement([-242, 298]):
         pass
     while not nemesis.targetPath.set_movement([-241, 211]):
@@ -1305,7 +1316,7 @@ def rin_equip_dump(buy_weapon=False):
     xbox.tap_right()
     xbox.menu_b()
 
-    menu.sell_all()
+    menu.sell_all(nea=sell_nea)
     if buy_weapon:
         memory.main.wait_frames(60)
         xbox.menu_right()  # Removes any pop-ups
@@ -1714,7 +1725,7 @@ def miihen_farm(cap_num: int = 1):
                 checkpoint = 29
             elif checkpoint == 42 and prefArea == 2:  # Farm in area 2
                 checkpoint = 40
-            elif checkpoint in [53, 60, 68] and prefArea == 3:  # Farm in area 3
+            elif checkpoint in [53, 60, 66] and prefArea == 3:  # Farm in area 3
                 checkpoint -= 2
             elif checkpoint == 63 and prefArea == 4:  # Farm in area 4
                 checkpoint -= 2
@@ -1726,7 +1737,7 @@ def miihen_farm(cap_num: int = 1):
                 checkpoint = 34
             elif checkpoint == 77 and prefArea >= 3:
                 checkpoint = 46
-            elif checkpoint == 69 and prefArea >= 4:
+            elif checkpoint == 67 and prefArea >= 4:
                 checkpoint = 59
             elif checkpoint in [48, 53] and prefArea >= 4 and not neArmor:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -2015,8 +2026,9 @@ def djose_next(end_goal: int):
 
 
 def djose_farm(cap_num: int = 10):
-    rin_equip_dump()
+
     air_ship_destination(dest_num=5)
+    memory.main.full_party_format("initiative")
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     neArmor = True
     prefArea = djose_next(end_goal=cap_num)
@@ -2082,7 +2094,7 @@ def djose_farm(cap_num: int = 10):
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle_farm_all(yuna_attack=False)
-                if memory.main.get_hp()[0] < 800:
+                if memory.main.get_hp()[0] < 1100:
                     battle.main.heal_up(3)
                 prefArea = djose_next(end_goal=cap_num)
                 print("Next area:", prefArea)
@@ -2154,7 +2166,7 @@ def plains_next(end_goal: int):
 
 
 def t_plains(cap_num: int = 1, auto_haste: bool = False):
-    rin_equip_dump()
+
     air_ship_destination(dest_num=8)
     memory.main.full_party_format(front_line="yuna", full_menu_close=False)
     menu.remove_all_nea()
@@ -2248,7 +2260,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
 
 
 def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
-    rin_equip_dump()
+
     air_ship_destination(dest_num=8)
     menu.remove_all_nea()
 
@@ -2612,6 +2624,7 @@ def bikanel(cap_num: int = 10):
                     battle.main.heal_up(3)
                 prefArea = bikanel_next(end_goal=cap_num)
                 print("Next area: ", prefArea)
+                memory.main.full_party_format("initiative")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     initArray = memory.main.check_ability(ability=0x8002)
@@ -3041,7 +3054,7 @@ def gagazet(cap_num: int = 10):
                 checkpoint = 12
 
             # NEA decisions
-            if neArmor == True and checkpoint in [7, 20]:
+            if neArmor == True and checkpoint in [7, 18]:
                 menu.remove_all_nea()
                 neArmor = False
             elif neArmor == False and checkpoint == 4:
@@ -3075,169 +3088,6 @@ def gagazet(cap_num: int = 10):
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     print("Done with Swimmers, now ready for Path")
-
-
-def gagazet_1(cap_num: int = 10):  # No longer used
-    rin_equip_dump()
-    air_ship_destination(dest_num=13)
-    menu.remove_all_nea()
-    checkpoint = 0
-    while not (memory.main.get_map() == 259 and checkpoint == 20):
-        if memory.main.user_control():
-            if (
-                memory.main.arena_farm_check(
-                    zone="gagazet1", end_goal=cap_num, report=False
-                )
-                and checkpoint < 12
-            ):
-                checkpoint = 12
-            elif checkpoint == 12 and not memory.main.arena_farm_check(
-                zone="gagazet1", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
-
-            elif checkpoint == 2:
-                while memory.main.user_control():
-                    FFXC.set_movement(1, 1)
-                FFXC.set_neutral()
-                memory.main.wait_frames(90)
-                xbox.tap_down()
-                xbox.tap_b()
-                memory.main.await_control()
-                checkpoint += 1
-            elif checkpoint == 9 and memory.main.get_map() == 310:
-                checkpoint += 1
-            elif checkpoint == 12 and memory.main.get_map() == 272:
-                checkpoint += 1
-            elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.gagazet_1(checkpoint)
-                )
-                == True
-            ):
-                checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                if cap_num == 10:
-                    battle_farm_all(yuna_attack=False)
-                else:
-                    battle_farm_all()
-                memory.main.arena_farm_check(
-                    zone="gagazet1", end_goal=cap_num, report=True
-                )
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-    print("Done with Swimmers, now ready for Path")
-
-
-def gagazet_2(cap_num: int = 10):  # No longer used
-    if memory.main.get_map() in [194, 374]:
-        air_ship_destination(dest_num=13)
-
-    menu.remove_all_nea()
-    checkpoint = 0
-    while not checkpoint == 11:
-        if memory.main.user_control():
-            if (
-                memory.main.arena_farm_check(
-                    zone="gagazet2", end_goal=cap_num, report=False
-                )
-                and checkpoint < 7
-            ):
-                checkpoint = 7
-            elif checkpoint == 7 and not memory.main.arena_farm_check(
-                zone="gagazet2", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
-
-            elif checkpoint == 4 and memory.main.get_map() == 244:
-                checkpoint += 1
-            elif checkpoint == 7 and memory.main.get_map() == 259:
-                checkpoint += 1
-            elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.gagazet_2(checkpoint)
-                )
-                == True
-            ):
-                checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                battle_farm_all()
-                memory.main.arena_farm_check(
-                    zone="gagazet2", end_goal=cap_num, report=True
-                )
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-    print("Done with Path now ready for Zanarkand")
-
-
-def gagazet_3(cap_num: int = 10):  # No longer used
-    if memory.main.get_map() in [194, 374]:
-        air_ship_destination(dest_num=13)
-
-    menu.remove_all_nea()
-    checkpoint = 0
-    while not memory.main.get_map() in [194, 374]:
-        if memory.main.user_control():
-            if (
-                memory.main.arena_farm_check(
-                    zone="gagazet3", end_goal=cap_num, report=False
-                )
-                and checkpoint < 8
-            ):
-                checkpoint = 8
-            elif checkpoint == 8 and not memory.main.arena_farm_check(
-                zone="gagazet3", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-                print("Checkpoint reached: ", checkpoint)
-
-            elif checkpoint == 2:
-                while memory.main.user_control():
-                    FFXC.set_movement(1, 1)
-                FFXC.set_neutral()
-                memory.main.wait_frames(90)
-                xbox.tap_down()
-                xbox.tap_down()
-                xbox.tap_down()
-                xbox.tap_b()
-                memory.main.await_control()
-                checkpoint += 1
-            elif checkpoint == 5 and memory.main.get_map() == 225:
-                checkpoint += 1
-            elif checkpoint == 8 and memory.main.get_map() == 313:
-                checkpoint += 1
-            elif checkpoint == 11:
-                return_to_airship()
-            elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.gagazet_3(checkpoint)
-                )
-                == True
-            ):
-                checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                if cap_num == 10:
-                    battle_farm_all(yuna_attack=False)
-                else:
-                    battle_farm_all()
-                memory.main.arena_farm_check(
-                    zone="gagazet3", end_goal=cap_num, report=True
-                )
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-    print("All of Gagazet complete")
-    rin_equip_dump()
 
 
 def fayth_next(endGoal: int):

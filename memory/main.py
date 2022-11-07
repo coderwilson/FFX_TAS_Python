@@ -948,7 +948,7 @@ def item_address(num):
 
 def get_items_order():
     items = []
-    for x in range(100):
+    for x in range(150):
         items.append(process.read_bytes(item_address(x), 1))
     return items
 
@@ -968,6 +968,8 @@ def get_use_items_order():
                 x += 1
         except Exception as y:
             logger.exception(y)
+    print("Items set up:")
+    print(item_array)
     return item_array
 
 
@@ -977,6 +979,9 @@ def get_use_items_slot(item_num):
     for x in range(len(items)):
         logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
         if items[x] == item_num:
+            print("============================")
+            print("FOUND ITEM: ", items[x], "|", item_num, "|", x)
+            print("============================")
             return x
         x += 1
     return 255
