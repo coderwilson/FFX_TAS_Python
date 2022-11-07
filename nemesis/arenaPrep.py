@@ -1120,6 +1120,8 @@ def one_mp_weapon():  # Break Damage Limit, or One MP cost
     FFXC.set_neutral()
     return_to_airship()
     nemesis.menu.rikku_haste()
+
+def kilika_gil_farm(armor_buys:int):
     xbox.tap_down()
     xbox.tap_down()
     xbox.tap_down()
