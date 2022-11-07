@@ -46,14 +46,14 @@ class DeltaTimeFormatter(logging.Formatter):
 
 # This should be called once in main, before any calls to the logging library
 def initialize_logging():
-    # Defines the format of the console logs
-    log_format = (
+    # Defines the format of the colored logs
+    color_log_fmt = (
         "%(color)s[%(delta)s] %(name)-16s %(levelname)-8s %(message)s%(color_reset)s"
     )
-    formatter = DeltaTimeFormatter(fmt=log_format)
-    # Same format for the file, but without the coloring
-    log_file_format = "[%(delta)s] %(name)-16s %(levelname)-8s %(message)s"
-    file_formatter = DeltaTimeFormatter(fmt=log_file_format)
+    color_log_formatter = DeltaTimeFormatter(fmt=color_log_fmt)
+    # Same format, but without the coloring
+    bw_log_fmt = "[%(delta)s] %(name)-16s %(levelname)-8s %(message)s"
+    bw_log_formatter = DeltaTimeFormatter(fmt=bw_log_fmt)
     # Get current time in order to create log file name
     timeNow = datetime.datetime.now()
     timeStr = f"{timeNow.year}{timeNow.month:02d}{timeNow.day:02d}_{timeNow.hour:02d}_{timeNow.minute:02d}_{timeNow.second:02d}"
@@ -64,17 +64,23 @@ def initialize_logging():
         filemode="w",  # Log everything in the file
         level=logging.DEBUG,
     )
-    # Apply DeltaTimeFormatter formatter to file output
-    logging.getLogger("").root.handlers[0].setFormatter(file_formatter)
+    # Apply non-colored formatter to file output
+    logging.getLogger("").root.handlers[0].setFormatter(bw_log_formatter)
 
     # Get the visible log level for the console logger from config.yaml
     config_data = config.open_config()
     console_log_level = config_data.get("verbosity", "DEBUG")
+    color_log = config_data.get("color_log", False)
 
     # Set up the console logger
     console = logging.StreamHandler()
     console.setLevel(console_log_level)  # Log the appropriate information to console
-    console.setFormatter(formatter)  # Apply DeltaTimeFormatter formatter
+
+    # Apply black&white formatter by default
+    formatter_to_use = bw_log_formatter
+    if color_log:
+        formatter_to_use = color_log_formatter  # Apply color formatter
+    console.setFormatter(formatter_to_use)
 
     # Add the handlers to the root logger
     logging.getLogger("").addHandler(console)
