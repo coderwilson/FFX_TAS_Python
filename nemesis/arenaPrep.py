@@ -1206,12 +1206,12 @@ def kilika_final_shop():
     memory.main.wait_frames(60)
     get_equipment(equip=True)  # Weapon for Tidus
     memory.main.wait_frames(6)
-    
+
     gilNeeded = 3500000 - memory.main.get_gil_value()
     # Get minimum needed, plus one for safety. Max 99 total.
     armor_buys = min(int(gilNeeded / 26150), 98) + 1
     can_afford = int(memory.main.get_gil_value() / 2250)
-    
+
     while armor_buys >= 1:
         #print("Buys needed: ", armor_buys)
         #print(" Can afford: ", can_afford)
@@ -2028,7 +2028,7 @@ def djose_next(end_goal: int):
 
 
 def djose_farm(cap_num: int = 10):
-    
+
     air_ship_destination(dest_num=5)
     memory.main.full_party_format("initiative")
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -2168,7 +2168,7 @@ def plains_next(end_goal: int):
 
 
 def t_plains(cap_num: int = 1, auto_haste: bool = False):
-    
+
     air_ship_destination(dest_num=8)
     memory.main.full_party_format(front_line="yuna", full_menu_close=False)
     menu.remove_all_nea()
@@ -2262,7 +2262,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
 
 
 def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
-    
+
     air_ship_destination(dest_num=8)
     menu.remove_all_nea()
 
@@ -3056,7 +3056,7 @@ def gagazet(cap_num: int = 10):
                 checkpoint = 12
 
             # NEA decisions
-            if neArmor == True and checkpoint in [7,18]:
+            if neArmor == True and checkpoint in [7, 18]:
                 menu.remove_all_nea()
                 neArmor = False
             elif neArmor == False and checkpoint == 4:

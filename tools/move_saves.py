@@ -49,7 +49,7 @@ def setup_saves():
     )
     shutil.rmtree(square_saves)
     os.mkdir(square_saves)
-    current_time = time.time()
+    current_time = time.time() - 10000
     for cur_file in sorted(
         [
             f

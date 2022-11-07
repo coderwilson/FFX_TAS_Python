@@ -94,7 +94,8 @@ def tidus(direction=None, version: int = 0, character=99):
     while not memory.main.interior_battle_menu():
         xbox.tap_b()
     if version == 1:
-        memory.main.wait_frames(6)
+        # TODO check for cursor position rather than waiting time. 6 worked for wilson but did not for ward.
+        memory.main.wait_frames(10)
         xbox.menu_right()
     while memory.main.interior_battle_menu():
         xbox.tap_b()

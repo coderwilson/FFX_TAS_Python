@@ -281,7 +281,7 @@ def get_saved_files():
 
 def load_save_num(number):
     saveFiles = get_saved_files()
-    
+
     #First get the autosave position
     testString = "ffx_000"
     print("Searching for string:", testString)
