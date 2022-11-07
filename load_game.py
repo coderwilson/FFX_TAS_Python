@@ -248,9 +248,9 @@ def load_into_game(gamestate: str, step_counter: str):
         load_save_num(80)
         game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
     if gamestate == "Nem_Farm" and step_counter == 24:
-        load_save_num(81)
-        game_vars.set_nem_checkpoint_ap(30)
+        load_save_num(32)
         game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+        memory.main.set_gil_value(3400000)
     if gamestate == "Nem_Farm" and step_counter == 20:
         load_save_num(85)
         game_vars.set_nem_checkpoint_ap(30)
