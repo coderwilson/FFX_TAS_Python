@@ -65,7 +65,7 @@ def approach_save_sphere():
     ):
         if memory.main.user_control():
             pathing.set_movement([target_coords[0], target_coords[1]])
-            if distance(save_index = target_actor) < 15:
+            if distance(save_index=target_actor) < 15:
                 xbox.tap_b()
         else:
             FFXC.set_neutral()

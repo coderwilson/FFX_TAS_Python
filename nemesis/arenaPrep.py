@@ -1121,7 +1121,8 @@ def one_mp_weapon():  # Break Damage Limit, or One MP cost
     return_to_airship()
     nemesis.menu.rikku_haste()
 
-def kilika_gil_farm(armor_buys:int):
+
+def kilika_gil_farm(armor_buys: int):
     xbox.tap_down()
     xbox.tap_down()
     xbox.tap_down()
@@ -1181,6 +1182,7 @@ def kilika_gil_farm(armor_buys:int):
     memory.main.wait_frames(10)
     xbox.tap_a()
 
+
 def kilika_final_shop():
     memory.main.await_control()
     rin_equip_dump(sell_nea=True)
@@ -1213,9 +1215,9 @@ def kilika_final_shop():
     can_afford = int(memory.main.get_gil_value() / 2250)
 
     while armor_buys >= 1:
-        #print("Buys needed: ", armor_buys)
-        #print(" Can afford: ", can_afford)
-        #memory.main.wait_frames(180)
+        # print("Buys needed: ", armor_buys)
+        # print(" Can afford: ", can_afford)
+        # memory.main.wait_frames(180)
         kilika_gil_farm(min(armor_buys, can_afford))
         armor_buys = int(max(armor_buys - can_afford, 0))
         can_afford = int(memory.main.get_gil_value() / 2250)
