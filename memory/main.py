@@ -942,7 +942,7 @@ def item_address(num):
 
 def get_items_order():
     items = []
-    for x in range(100):
+    for x in range(150):
         items.append(process.readBytes(item_address(x), 1))
     return items
 
@@ -952,10 +952,9 @@ def get_use_items_order():
     x = 0
     while x < len(itemArray):
         try:
-            if itemArray[x] == 20:
-                ignoreThisValue = True
-                x += 1
-            elif itemArray[x] < 23:
+            if itemArray[x] in [52]:
+                del itemArray[x]
+            elif itemArray[x] < 20:
                 del itemArray[x]
             elif itemArray[x] > 69:
                 del itemArray[x]
@@ -965,6 +964,8 @@ def get_use_items_order():
             print(y)
             retryThisValue = True
             print("Retrying value")
+    print("Items set up:")
+    print(itemArray)
     return itemArray
 
 
@@ -972,8 +973,10 @@ def get_use_items_slot(item_num):
     items = get_use_items_order()
     x = 0
     for x in range(len(items)):
-        print(items[x], "|", item_num, "|", x)
         if items[x] == item_num:
+            print("============================")
+            print("FOUND ITEM: ", items[x], "|", item_num, "|", x)
+            print("============================")
             return x
         x += 1
     return 255
@@ -981,7 +984,7 @@ def get_use_items_slot(item_num):
 
 def get_throw_items_order():
     itemArray = get_items_order()
-    print(itemArray)
+    #print(itemArray)
     x = 0
     while x < len(itemArray):
         try:
@@ -993,7 +996,10 @@ def get_throw_items_order():
             print(y)
             retryThisValue = True
             print("Retrying value")
+    print("============================")
+    print("Throw items order: ")
     print(itemArray)
+    print("============================")
     return itemArray
 
 

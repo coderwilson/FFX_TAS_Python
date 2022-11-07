@@ -1355,11 +1355,11 @@ def miihen_farm(checkpoint):
         x = -300
         y = -350
     if checkpoint == 61:  # Farm area 4
-        x = 3
-        y = -732
+        x = 21
+        y = -725
     if checkpoint == 62:  # Farm area 4 and save sphere
-        x = 44
-        y = -705
+        x = 52
+        y = -690
     if checkpoint == 63:  # Back to Clasko map
         x = 66
         y = -850

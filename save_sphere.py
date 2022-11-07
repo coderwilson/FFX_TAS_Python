@@ -63,7 +63,8 @@ def approach_save_sphere():
     ):
         if memory.main.user_control():
             pathing.set_movement([target_coords[0], target_coords[1]])
-            xbox.tap_b()
+            if distance(save_index = target_actor) < 15:
+                xbox.tap_b()
         else:
             FFXC.set_neutral()
             if memory.main.get_map() == 347:
@@ -125,13 +126,21 @@ def touch_and_save(save_num: int = 999):
         save_num = 999
     save_pos = 999
     if save_num != 999:
-        import loadGame
+        import load_game
 
-        saveFiles = loadGame.get_saved_files()
+        saveFiles = load_game.get_saved_files()
+        testString = "ffx_000"
+        for y in range(len(saveFiles)):
+            if saveFiles[y] == testString:
+                save_pos = y
+        auto_save = save_pos
+        save_pos = 999
         testString = "ffx_" + str(save_num).zfill(3)
         for x in range(len(saveFiles)):
             if saveFiles[x] == testString:
                 save_pos = x
+        if auto_save > save_pos:
+            save_pos += 1
 
     approach_save_sphere()
     memory.main.wait_frames(2)
@@ -151,13 +160,17 @@ def touch_and_save(save_num: int = 999):
                 xbox.tap_up()
             memory.main.wait_frames(1)
     xbox.tap_b()
+    print("==== ", save_num, " ====")
     memory.main.wait_frames(2)
+    if save_num != 999:
+        xbox.menu_left()
+    xbox.tap_b()
     xbox.tap_b()
     while not memory.main.user_control():
         xbox.tap_a()
 
     if save_num != 999 and save_pos == 999:
-        saveFiles = loadGame.get_saved_files()
+        saveFiles = load_game.get_saved_files()
         print(
             "File was expected as save number ",
             save_num,

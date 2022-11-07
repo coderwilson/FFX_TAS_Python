@@ -3062,11 +3062,9 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
         xbox.tap_b()
     if rikku_flee:
         print("Mark 2, selecting 'Use' command in position", 2)
-    else:
-        print("Mark 2, selecting 'Use' command in position", 1)
-    if rikku_flee:
         _navigate_to_position(2)
     else:
+        print("Mark 2, selecting 'Use' command in position", 1)
         _navigate_to_position(1)
     if game_vars.use_pause():
         memory.main.wait_frames(3)

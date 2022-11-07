@@ -9,6 +9,8 @@ import save_sphere
 import screen
 import vars
 import xbox
+import menu
+import load_game
 
 game_vars = vars.vars_handle()
 
@@ -23,44 +25,7 @@ def save_game(first_save=False):
     while not nemesis.targetPath.set_movement([-2, -2]):
         pass
     print("Arena - Touch Save Sphere, and actually save")
-    FFXC = xbox.controller_handle()
-    FFXC.set_neutral()
-    ssDetails = memory.main.get_save_sphere_details()
-
-    if memory.main.user_control():
-        while memory.main.user_control():
-            nemesis.targetPath.set_movement([ssDetails[0], ssDetails[1]])
-            xbox.tap_b()
-            memory.main.wait_frames(1)
-    try:
-        FFXC.set_neutral()
-    except:
-        FFXC = xbox.controller_handle()
-        FFXC.set_neutral()
-    memory.main.wait_frames(30)
-    xbox.tap_b()
-    memory.main.wait_frames(10)
-
-    print("Controller is now neutral. Attemption to open save nemesis.menu.")
-    while not memory.main.save_menu_open():
-        pass
-    print("Save menu is open.")
-    memory.main.wait_frames(9)
-    if not first_save:
-        xbox.menu_down()
-        xbox.menu_b()
-        xbox.menu_left()
-    xbox.menu_b()  # Select the save file
-    xbox.menu_b()  # Confirm the save
-    memory.main.wait_frames(90)
-    xbox.menu_a()  # Back out
-    xbox.menu_a()  # Back out
-    xbox.menu_a()  # Back out
-    xbox.menu_a()  # Back out
-
-    print("Menu now closed. Back to the battles.")
-    memory.main.clear_save_menu_cursor()
-    memory.main.clear_save_menu_cursor_2()
+    save_sphere.touch_and_save(save_num=199)
     while not nemesis.targetPath.set_movement([-6, -27]):
         pass
     while not nemesis.targetPath.set_movement([2, -25]):
@@ -101,7 +66,7 @@ def airship_destination(dest_num=0):  # Default to Sin.
     memory.main.click_to_control_3()
 
 
-def get_save_sphere_details():
+def get_save_sphere_details(): # Should be obsolete
     map_val = memory.main.get_map()
     storyVal = memory.main.get_story_progress()
     print("Map:", map_val, "| Story:", storyVal)
@@ -382,7 +347,7 @@ def arena_npc():
             ):
                 xbox.tap_b()
     print("Mark 1")
-    memory.main.wait_frames(30)  # This buffer can be improved later.
+    memory.main.wait_frames(3)  # This buffer can be improved later.
     print("Mark 2")
 
 
@@ -458,7 +423,7 @@ def battles_1():
     restock_downs()
     nemesis.arenaSelect.arena_menu_select(4)
     memory.main.full_party_format("kilikawoods1")
-    nemesis.menu.tidusSlayer(odPos=0)
+    menu.tidus_slayer(od_pos=0)
 
     check_yojimbo_possible()
 
@@ -516,7 +481,7 @@ def battles_1():
     check_yojimbo_possible()
 
     nemesis.arenaSelect.arena_menu_select(4)
-    nemesis.menu.tidusSlayer(odPos=2)
+    menu.tidus_slayer(od_pos=2)
     arena_npc()
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=13, monster_index=6)
@@ -557,7 +522,7 @@ def battles_1():
     check_yojimbo_possible()
 
     nemesis.arenaSelect.arena_menu_select(4)
-    nemesis.menu.tidusSlayer(odPos=0)
+    menu.tidus_slayer(od_pos=0)
     arena_npc()
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
@@ -727,7 +692,7 @@ def battles_3():
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=14, monster_index=0)
     auto_life()
-    while not basic_quick_attacks(mega_phoenix=True, od_version=1):
+    while not basic_quick_attacks(mega_phoenix=True, od_version=1): # Should use Slice & Dice
         print("Battle not completed successfully.")
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
@@ -822,7 +787,7 @@ def item_dump():
 
 def quick_reset_logic():
     reset.reset_to_main_menu()
-    memory.ain.wait_frames(90)
+    #memory.main.wait_frames(90)
     while memory.main.get_map() != 23:
         FFXC.set_value("btn_start", 1)
         memory.main.wait_frames(2)
@@ -831,12 +796,10 @@ def quick_reset_logic():
     memory.main.wait_frames(60)
     xbox.menu_b()
     memory.main.wait_frames(60)
-    xbox.menu_down()
-    xbox.menu_b()
-    xbox.menu_b()
+    load_game.load_save_num(199)
     FFXC.set_neutral()
     game_vars.print_arena_status()
-    memory.main.wait_frames(30)
+    #memory.main.wait_frames(30)
 
 
 def check_yojimbo_possible():
@@ -897,7 +860,7 @@ def shinryu_battle():
     while not memory.main.menu_open():
         xbox.tap_b()
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(150)
+    memory.main.wait_frames(170)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
     return memory.main.battle_arena_results()

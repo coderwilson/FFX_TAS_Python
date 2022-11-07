@@ -183,20 +183,26 @@ def load_into_game(gamestate:str, step_counter:str):
     # Nemesis run loads
     if gamestate == "Nem_Farm" and step_counter == 1:
         load_save_num(14)
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 2:
         load_save_num(69)
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 3:
         load_save_num(84)
         game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
         # import nemesis.arenaPrep
         nemesis.arenaPrep.arena_return()
     if gamestate == "Nem_Farm" and step_counter == 5:
         load_save_num(71)
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 6:
         load_save_num(72)
+        game_vars.end_game_version_set(4)
         game_vars.set_nem_checkpoint_ap(2)  # See nemesis.menu
     if gamestate == "Nem_Farm" and step_counter == 8:
         load_save_num(73)
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 9:
         #Start of Nemesis farm
         #import nemesis.menu
@@ -215,37 +221,45 @@ def load_into_game(gamestate:str, step_counter:str):
     if gamestate == "Nem_Farm" and step_counter == 13:
         load_save_num(17)
         game_vars.set_nem_checkpoint_ap(7)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 14:
         load_save_num(76)
         game_vars.set_nem_checkpoint_ap(10)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 16:
         load_save_num(113)
         game_vars.set_nem_checkpoint_ap(12)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 17:
         load_save_num(111)
         game_vars.set_nem_checkpoint_ap(14)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 18:
         load_save_num(114)
         game_vars.set_nem_checkpoint_ap(15)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 19:  # Gagazet
-        load_save_num(115)
-        game_vars.set_nem_checkpoint_ap(19)  # See nemesis.menu
+        load_save_num(29)
+        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 21:
         load_save_num(79)
         nemesis.arenaPrep.arena_return()
         game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 22:
-        load_save_num(82)
-        # import nemesis.menu
-        # nemesis.menu.rikkuHaste()
-        game_vars.set_nem_checkpoint_ap(24)  # See nemesis.menu
+        load_save_num(25)
+        #import nemesis.menu
+        #nemesis.menu.rikku_haste()
+        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+        game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 23:
-        load_save_num(80)
+        load_save_num(21)
+        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
+    if gamestate == "Nem_Farm" and step_counter == 24: # Kilika final shop
+        load_save_num(32)
         game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
-    if gamestate == "Nem_Farm" and step_counter == 24:
-        load_save_num(81)
-        game_vars.set_nem_checkpoint_ap(30)
-        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
+        memory.main.set_gil_value(3400000)
     if gamestate == "Nem_Farm" and step_counter == 20:
         load_save_num(85)
         game_vars.set_nem_checkpoint_ap(30)
@@ -264,6 +278,18 @@ def get_saved_files():
 
 def load_save_num(number):
     saveFiles = get_saved_files()
+    
+    #First get the autosave position
+    testString = "ffx_000"
+    print("Searching for string:", testString)
+    savePos = 255
+    for x in range(len(saveFiles)):
+        if saveFiles[x] == testString:
+            print("Save file is in position:", x)
+            savePos = x
+    save_zero = savePos
+    savePos = 255
+    #Then get the actual save position
     testString = "ffx_" + str(number).zfill(3)
     print("Searching for string:", testString)
     savePos = 255
@@ -271,6 +297,8 @@ def load_save_num(number):
         if saveFiles[x] == testString:
             print("Save file is in position:", x)
             savePos = x
+    if save_zero > savePos:
+        savePos += 1
     memory.main.wait_frames(20)
     if savePos != 255:
         while memory.main.load_game_pos() != savePos:
