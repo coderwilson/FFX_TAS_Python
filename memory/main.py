@@ -949,7 +949,7 @@ def item_address(num):
 def get_items_order():
     items = []
     for x in range(150):
-        items.append(process.readBytes(item_address(x), 1))
+        items.append(process.read_bytes(item_address(x), 1))
     return items
 
 
@@ -958,12 +958,12 @@ def get_use_items_order():
     x = 0
     while x < len(item_array):
         try:
-            if itemArray[x] in [52]:
-                del itemArray[x]
-            elif itemArray[x] < 20:
-                del itemArray[x]
-            elif itemArray[x] > 69:
-                del itemArray[x]
+            if item_array[x] in [52]:
+                del item_array[x]
+            elif item_array[x] < 20:
+                del item_array[x]
+            elif item_array[x] > 69:
+                del item_array[x]
             else:
                 x += 1
         except Exception as y:
@@ -971,8 +971,8 @@ def get_use_items_order():
             retryThisValue = True
             print("Retrying value")
     print("Items set up:")
-    print(itemArray)
-    return itemArray
+    print(item_array)
+    return item_array
 
 
 def get_use_items_slot(item_num):
