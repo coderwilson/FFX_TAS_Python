@@ -1,9 +1,10 @@
 import logging
 
-import menu
 import battle.main
 import battle.overdrive
+import load_game
 import memory.main
+import menu
 import nemesis.arenaSelect
 import nemesis.menu
 import nemesis.targetPath
@@ -12,8 +13,6 @@ import save_sphere
 import screen
 import vars
 import xbox
-import menu
-import load_game
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -70,7 +69,7 @@ def airship_destination(dest_num=0):  # Default to Sin.
     memory.main.click_to_control_3()
 
 
-def get_save_sphere_details(): # Should be obsolete
+def get_save_sphere_details():  # Should be obsolete
     map_val = memory.main.get_map()
     story_val = memory.main.get_story_progress()
     print("Map:", map_val, "| Story:", story_val)
@@ -696,7 +695,8 @@ def battles_3():
     nemesis.arenaSelect.arena_menu_select(1)
     nemesis.arenaSelect.start_fight(area_index=14, monster_index=0)
     auto_life()
-    while not basic_quick_attacks(mega_phoenix=True, od_version=1): # Should use Slice & Dice
+    while not basic_quick_attacks(mega_phoenix=True, od_version=1):
+        # Should use Slice & Dice
         print("Battle not completed successfully.")
         restock_downs()
         nemesis.arenaSelect.arena_menu_select(1)
@@ -803,7 +803,7 @@ def quick_reset_logic():
     load_game.load_save_num(199)
     FFXC.set_neutral()
     game_vars.print_arena_status()
-    #memory.main.wait_frames(30)
+    # memory.main.wait_frames(30)
 
 
 def check_yojimbo_possible():

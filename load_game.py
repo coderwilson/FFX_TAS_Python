@@ -251,14 +251,14 @@ def load_into_game(gamestate: str, step_counter: str):
         game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 22:
         load_save_num(25)
-        #import nemesis.menu
-        #nemesis.menu.rikku_haste()
+        # import nemesis.menu
+        # nemesis.menu.rikku_haste()
         game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
         game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 23:
         load_save_num(21)
         game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-    if gamestate == "Nem_Farm" and step_counter == 24: # Kilika final shop
+    if gamestate == "Nem_Farm" and step_counter == 24:  # Kilika final shop
         load_save_num(32)
         game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
         memory.main.set_gil_value(3400000)
@@ -282,7 +282,7 @@ def get_saved_files():
 def load_save_num(number):
     saveFiles = get_saved_files()
 
-    #First get the autosave position
+    # First get the autosave position
     testString = "ffx_000"
     print("Searching for string:", testString)
     savePos = 255
@@ -292,7 +292,7 @@ def load_save_num(number):
             savePos = x
     save_zero = savePos
     savePos = 255
-    #Then get the actual save position
+    # Then get the actual save position
     testString = "ffx_" + str(number).zfill(3)
     logger.debug(f"Searching for string: {testString}")
     savePos = 255
