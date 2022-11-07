@@ -967,9 +967,7 @@ def get_use_items_order():
             else:
                 x += 1
         except Exception as y:
-            print(y)
-            retryThisValue = True
-            print("Retrying value")
+            logger.exception(y)
     print("Items set up:")
     print(item_array)
     return item_array
