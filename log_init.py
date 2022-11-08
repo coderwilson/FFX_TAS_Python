@@ -1,7 +1,7 @@
-import copy
 import datetime
 import logging
 import time
+from typing import Optional
 
 import config
 
@@ -51,7 +51,7 @@ class DeltaTimeFormatter(logging.Formatter):
 # This should be called once in main, before any calls to the logging library
 def initialize_logging():
     # Adds a new log level for manipulation/predictions
-    add_log_level("MANIP", _MANIP_LEVEL)
+    _add_log_level("MANIP", _MANIP_LEVEL)
 
     # Defines the format of the colored logs
     color_log_fmt = (
@@ -122,7 +122,7 @@ def initialize_logging():
 
 # Method for adding a custom log level. Adapted from:
 # https://stackoverflow.com/questions/2183233/how-to-add-a-custom-loglevel-to-pythons-logging-facility/35804945#35804945
-def add_log_level(level_name: str, level_num: int, method_name: str = None):
+def _add_log_level(level_name: str, level_num: int, method_name: Optional[str] = None):
     """
     Comprehensively adds a new logging level to the `logging` module and the
     currently configured logging class.
@@ -139,7 +139,7 @@ def add_log_level(level_name: str, level_num: int, method_name: str = None):
 
     Example
     -------
-    >>> addLoggingLevel('TRACE', logging.DEBUG - 5)
+    >>> _add_log_level('TRACE', logging.DEBUG - 5)
     >>> logging.getLogger(__name__).setLevel("TRACE")
     >>> logging.getLogger(__name__).trace('that worked')
     >>> logging.trace('so did this')
@@ -147,15 +147,15 @@ def add_log_level(level_name: str, level_num: int, method_name: str = None):
     5
 
     """
-    if not method_name:
-        method_name = level_name.lower()
+
+    method_name = method_name or level_name.lower()
 
     if hasattr(logging, level_name):
-        raise AttributeError("{} already defined in logging module".format(level_name))
+        raise AttributeError(f"{level_name} already defined in logging module")
     if hasattr(logging, method_name):
-        raise AttributeError("{} already defined in logging module".format(method_name))
+        raise AttributeError(f"{method_name} already defined in logging module")
     if hasattr(logging.getLoggerClass(), method_name):
-        raise AttributeError("{} already defined in logger class".format(method_name))
+        raise AttributeError(f"{method_name} already defined in logger class")
 
     # This method was inspired by the answers to Stack Overflow post
     # http://stackoverflow.com/q/2183233/2988730, especially
