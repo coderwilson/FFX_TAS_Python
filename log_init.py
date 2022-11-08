@@ -11,6 +11,8 @@ def reset_logging_time_reference():
     logging._startTime = time.time()
 
 
+_MANIP_LEVEL = logging.DEBUG + 5
+
 # Python has a logging library that will do what we want.
 # Basic documentation here:     https://docs.python.org/3/howto/logging.html
 # Advanced documentation here:  https://docs.python.org/3/howto/logging-cookbook.html
@@ -19,6 +21,7 @@ def reset_logging_time_reference():
 # This will hold the time from the start of the program
 class DeltaTimeFormatter(logging.Formatter):
     white = "\x1b[0m"
+    green = "\x1b[32;40m"
     blue = "\x1b[36;20m"
     yellow = "\x1b[33;20m"
     red = "\x1b[31;20m"
@@ -27,6 +30,7 @@ class DeltaTimeFormatter(logging.Formatter):
 
     COLOR = {
         logging.DEBUG: blue,
+        _MANIP_LEVEL: green,
         logging.INFO: white,
         logging.WARNING: yellow,
         logging.ERROR: red,
@@ -46,6 +50,9 @@ class DeltaTimeFormatter(logging.Formatter):
 
 # This should be called once in main, before any calls to the logging library
 def initialize_logging():
+    # Adds a new log level for manipulation/predictions
+    add_log_level("MANIP", _MANIP_LEVEL)
+
     # Defines the format of the colored logs
     color_log_fmt = (
         "%(color)s[%(delta)s] %(name)-16s %(levelname)-8s %(message)s%(color_reset)s"
@@ -111,3 +118,56 @@ def initialize_logging():
 # logger = logging.getLogger(__name__)
 #
 # logger.info('In the submodule')
+
+
+# Method for adding a custom log level. Adapted from:
+# https://stackoverflow.com/questions/2183233/how-to-add-a-custom-loglevel-to-pythons-logging-facility/35804945#35804945
+def add_log_level(level_name: str, level_num: int, method_name: str = None):
+    """
+    Comprehensively adds a new logging level to the `logging` module and the
+    currently configured logging class.
+
+    `level_name` becomes an attribute of the `logging` module with the value
+    `level_num`. `method_name` becomes a convenience method for both `logging`
+    itself and the class returned by `logging.getLoggerClass()` (usually just
+    `logging.Logger`). If `method_name` is not specified, `level_name.lower()` is
+    used.
+
+    To avoid accidental clobberings of existing attributes, this method will
+    raise an `AttributeError` if the level name is already an attribute of the
+    `logging` module or if the method name is already present
+
+    Example
+    -------
+    >>> addLoggingLevel('TRACE', logging.DEBUG - 5)
+    >>> logging.getLogger(__name__).setLevel("TRACE")
+    >>> logging.getLogger(__name__).trace('that worked')
+    >>> logging.trace('so did this')
+    >>> logging.TRACE
+    5
+
+    """
+    if not method_name:
+        method_name = level_name.lower()
+
+    if hasattr(logging, level_name):
+        raise AttributeError("{} already defined in logging module".format(level_name))
+    if hasattr(logging, method_name):
+        raise AttributeError("{} already defined in logging module".format(method_name))
+    if hasattr(logging.getLoggerClass(), method_name):
+        raise AttributeError("{} already defined in logger class".format(method_name))
+
+    # This method was inspired by the answers to Stack Overflow post
+    # http://stackoverflow.com/q/2183233/2988730, especially
+    # http://stackoverflow.com/a/13638084/2988730
+    def log_for_level(self, message, *args, **kwargs):
+        if self.isEnabledFor(level_num):
+            self._log(level_num, message, args, **kwargs)
+
+    def log_to_root(message, *args, **kwargs):
+        logging.log(level_num, message, *args, **kwargs)
+
+    logging.addLevelName(level_num, level_name)
+    setattr(logging, level_name, level_num)
+    setattr(logging.getLoggerClass(), method_name, log_for_level)
+    setattr(logging, method_name, log_to_root)
