@@ -1,5 +1,3 @@
-from paths.tidus_home import TidusHomeMovement
+from paths.dream_zan import AllStartsHere, TidusHomeMovement
 
-__all__ = [
-    "TidusHomeMovement",
-]
+__all__ = ["TidusHomeMovement", "AllStartsHere"]

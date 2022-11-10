@@ -11,7 +11,7 @@ import save_sphere
 import tts
 import vars
 import xbox
-from paths import TidusHomeMovement
+from paths import AllStartsHere, TidusHomeMovement
 
 game_vars = vars.vars_handle()
 
@@ -245,7 +245,7 @@ def after_ammes():
                     checkpoint = 11
 
                 # General pathing
-                elif pathing.set_movement(pathing.all_starts_here(checkpoint)):
+                elif pathing.set_movement(AllStartsHere.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

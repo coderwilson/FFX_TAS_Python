@@ -38,3 +38,31 @@ class TidusHomeMovement(AreaMovementBase):
         5: "Talk to the kids",
         8: "Talk to the girls",
     }
+
+
+class AllStartsHere(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [849, -92],
+        1: [885, -101],
+        2: [905, -149],
+        3: [918, -179],
+        4: [957, -219],
+        5: [987, -257],
+        7: [1003, -253],
+        8: [1100, -350],
+        9: [16, -67],
+        10: [16, -67],
+        11: [79, -457],
+        12: [99, -383],
+        13: [95, -171],
+        14: [68, 24],
+        15: [6, 348],
+        16: [-3, 492],
+        17: [-6, 559],
+        18: [-39, 610],
+        19: [-72, 642],
+        20: [-80, 680],
+    }
+    checkpoint_fallback = {
+        6: "Save sphere",
+    }
