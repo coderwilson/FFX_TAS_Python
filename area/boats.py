@@ -8,6 +8,7 @@ import menu
 import pathing
 import vars
 import xbox
+from paths import BoatsLiki
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -36,7 +37,7 @@ def ss_liki():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.liki(checkpoint)):
+            elif pathing.set_movement(BoatsLiki.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 

@@ -54,28 +54,6 @@ def set_movement(target) -> bool:
         return False
 
 
-def liki(checkpoint):
-    x = 999
-    y = 999
-    if checkpoint == 0:
-        x = 5
-        y = 176
-    if checkpoint == 1:
-        logger.info("Group around Yuna")
-    if checkpoint == 2:
-        x = -22
-        y = 90
-    if checkpoint == 3:
-        logger.info("Talk to Wakka")
-    if checkpoint == 4:
-        x = -15
-        y = 127
-    if checkpoint == 5:
-        x = 0
-        y = 350
-    return [x, y]
-
-
 def kilika_1(checkpoint):
     x = 999
     y = 999
