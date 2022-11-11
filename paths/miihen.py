@@ -33,7 +33,11 @@ class Miihen1(AreaMovementBase):
         31: [0, -227],
     }
     checkpoint_fallback = {
-        range(6, 10): "Attempting Mi'ihen skip",
+        6: "Attempting Mi'ihen skip",
+        7: "Attempting Mi'ihen skip",
+        8: "Attempting Mi'ihen skip",
+        9: "Attempting Mi'ihen skip",
+        10: "Attempting Mi'ihen skip",
         27: "Shelinda",
     }
 
