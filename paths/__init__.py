@@ -2,6 +2,7 @@ from paths.baaj import BaajHallway, BaajPuzzle, BaajRamp
 from paths.besaid import Besaid1, Besaid2, BesaidTrials
 from paths.boats import BoatsLiki, BoatsWinno
 from paths.dream_zan import AllStartsHere, TidusHomeMovement
+from paths.kilika import Kilika1, Kilika2, Kilika3, KilikaTrials
 
 __all__ = [
     "TidusHomeMovement",
@@ -13,5 +14,9 @@ __all__ = [
     "BesaidTrials",
     "Besaid2",
     "BoatsLiki",
+    "Kilika1",
+    "Kilika2",
+    "KilikaTrials",
+    "Kilika3",
     "BoatsWinno",
 ]
