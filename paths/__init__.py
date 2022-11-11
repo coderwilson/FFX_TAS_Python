@@ -4,6 +4,7 @@ from paths.boats import BoatsLiki, BoatsWinno
 from paths.djose import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 from paths.dream_zan import AllStartsHere, TidusHomeMovement
 from paths.guadosalam import GuadoSkip, GuadoStoryline
+from paths.home import BikanelDesert, BikanelHome
 from paths.kilika import Kilika1, Kilika2, Kilika3, KilikaTrials
 from paths.luca import Luca1, Luca3, LucaPreBlitz
 from paths.mac_temple import (
@@ -67,4 +68,6 @@ __all__ = [
     "MacalaniaTempleTrials",
     "MacalaniaTempleEscape",
     "MacalaniaUnderTemple",
+    "BikanelDesert",
+    "BikanelHome",
 ]
