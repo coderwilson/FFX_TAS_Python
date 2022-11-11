@@ -7,7 +7,7 @@ import menu
 import pathing
 import vars
 import xbox
-from paths import DjosePath
+from paths import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -333,7 +333,7 @@ def trials():
                 else:
                     memory.main.click_to_event_temple(7)
                 checkpoint += 1
-            elif pathing.set_movement(pathing.djose_trials(checkpoint)):
+            elif pathing.set_movement(DjoseTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -351,7 +351,7 @@ def trials():
         # Dance
         checkpoint = 0
         while memory.main.user_control():
-            if pathing.set_movement(pathing.djose_dance(checkpoint)):
+            if pathing.set_movement(DjoseDance.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -408,7 +408,7 @@ def leaving_djose():
                 FFXC.set_neutral()
                 memory.main.click_to_control()
                 checkpoint = 13
-            elif pathing.set_movement(pathing.djose_exit(checkpoint)):
+            elif pathing.set_movement(DjoseExit.execute(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
