@@ -85,7 +85,6 @@ def path():
                 # General pathing
                 elif pathing.set_movement(DjosePath.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
