@@ -8,6 +8,7 @@ import pathing
 import screen
 import vars
 import xbox
+from paths import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -53,7 +54,7 @@ def arrival():
                 logger.debug(f"Updating checkpoint based on progress: {checkpoint}")
 
             # General pathing
-            elif pathing.set_movement(pathing.moonflow(checkpoint)):
+            elif pathing.set_movement(Moonflow1.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -96,7 +97,7 @@ def south_bank(checkpoint: int = 0):
                 xbox.menu_b()  # All aboardz!
                 xbox.skip_dialog(3)  # Just to clear some dialog
 
-            elif pathing.set_movement(pathing.moonflow_bank_south(checkpoint)):
+            elif pathing.set_movement(MoonflowBankSouth.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -156,7 +157,7 @@ def north_bank():
                 checkpoint = 12
 
             # General pathing
-            elif pathing.set_movement(pathing.moonflow_bank_north(checkpoint)):
+            elif pathing.set_movement(MoonflowBankNorth.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

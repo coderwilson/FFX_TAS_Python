@@ -6,6 +6,7 @@ from paths.dream_zan import AllStartsHere, TidusHomeMovement
 from paths.kilika import Kilika1, Kilika2, Kilika3, KilikaTrials
 from paths.luca import Luca1, Luca3, LucaPreBlitz
 from paths.miihen import Miihen1, MiihenAgency, MiihenLowroad
+from paths.moonflow import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
 from paths.mrr import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 
 __all__ = [
@@ -37,4 +38,7 @@ __all__ = [
     "DjoseTrials",
     "DjoseDance",
     "DjoseExit",
+    "Moonflow1",
+    "MoonflowBankSouth",
+    "MoonflowBankNorth",
 ]
