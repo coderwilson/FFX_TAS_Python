@@ -7,6 +7,7 @@ import menu
 import pathing
 import vars
 import xbox
+from paths import DjosePath
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -68,22 +69,23 @@ def path():
                     memory.main.click_to_event_temple(0)
                     checkpoint += 1
                 elif (
-                    pathing.djose_path(checkpoint)[0]
+                    DjosePath.execute(checkpoint)[0]
                     < memory.main.get_actor_coords(0)[0]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 elif (
-                    pathing.djose_path(checkpoint)[1]
+                    DjosePath.execute(checkpoint)[1]
                     < memory.main.get_actor_coords(0)[1]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 # General pathing
-                elif pathing.set_movement(pathing.djose_path(checkpoint)):
+                elif pathing.set_movement(DjosePath.execute(checkpoint)):
                     checkpoint += 1
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
