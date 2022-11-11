@@ -3,6 +3,7 @@ from paths.besaid import Besaid1, Besaid2, BesaidTrials
 from paths.boats import BoatsLiki, BoatsWinno
 from paths.djose import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 from paths.dream_zan import AllStartsHere, TidusHomeMovement
+from paths.guadosalam import GuadoSkip, GuadoStoryline
 from paths.kilika import Kilika1, Kilika2, Kilika3, KilikaTrials
 from paths.luca import Luca1, Luca3, LucaPreBlitz
 from paths.miihen import Miihen1, MiihenAgency, MiihenLowroad
@@ -41,4 +42,6 @@ __all__ = [
     "Moonflow1",
     "MoonflowBankSouth",
     "MoonflowBankNorth",
+    "GuadoStoryline",
+    "GuadoSkip",
 ]
