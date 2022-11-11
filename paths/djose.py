@@ -63,7 +63,6 @@ class DjosePath(AreaMovementBase):
         57: [-4, -87],
         58: [0, 0],  # Transition into temple
     }
-    checkpoint_fallback = {}
 
 
 class DjoseTrials(AreaMovementBase):
@@ -226,7 +225,6 @@ class DjoseDance(AreaMovementBase):
         6: [-26, -13],
         7: [-8, -16],
     }
-    checkpoint_fallback = {}
 
 
 class DjoseExit(AreaMovementBase):
@@ -273,4 +271,3 @@ class DjoseExit(AreaMovementBase):
         39: [0, 0],
         40: [0, 0],
     }
-    checkpoint_fallback = {}

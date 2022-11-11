@@ -39,7 +39,6 @@ class ThunderPlainsSouth(AreaMovementBase):
         37: [116, 339],
         38: [58, 380],
     }
-    checkpoint_fallback = {}
 
 
 class ThunderPlainsAgency(AreaMovementBase):
@@ -57,7 +56,6 @@ class ThunderPlainsAgency(AreaMovementBase):
         10: [-44, 99],
         11: [0, 0],  # Lightning shield, and exit to North pathing.
     }
-    checkpoint_fallback = {}
 
 
 class ThunderPlainsNorth(AreaMovementBase):
@@ -85,4 +83,3 @@ class ThunderPlainsNorth(AreaMovementBase):
         20: [-73, 1025],
         21: [-73, 1300],
     }
-    checkpoint_fallback = {}

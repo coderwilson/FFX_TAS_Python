@@ -29,7 +29,6 @@ class BaajHallway(AreaMovementBase):
         7: [6, 240],
         8: [-2, 250],
     }
-    checkpoint_fallback = {}
 
 
 class BaajPuzzle(AreaMovementBase):

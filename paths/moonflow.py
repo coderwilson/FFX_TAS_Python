@@ -74,7 +74,6 @@ class MoonflowBankSouth(AreaMovementBase):
         2: [-83, 69],
         3: [-71, 48],
     }
-    checkpoint_fallback = {}
 
 
 class MoonflowBankNorth(AreaMovementBase):

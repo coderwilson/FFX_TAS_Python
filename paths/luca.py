@@ -92,7 +92,6 @@ class LucaPreBlitz(AreaMovementBase):
         6: [-75, -19],
         7: [-108, -10],
     }
-    checkpoint_fallback = {}
 
 
 class Luca3(AreaMovementBase):

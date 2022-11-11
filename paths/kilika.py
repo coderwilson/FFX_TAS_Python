@@ -306,4 +306,3 @@ class Kilika3(AreaMovementBase):
         # Just before the boat, after the hammer guy
         67: [-161, -241],
     }
-    checkpoint_fallback = {}

@@ -53,7 +53,6 @@ class MiihenAgency(AreaMovementBase):
         4: [-2, -56],
         5: [-10, -90],
     }
-    checkpoint_fallback = {}
 
 
 class MiihenLowroad(AreaMovementBase):

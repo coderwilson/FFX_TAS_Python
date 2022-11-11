@@ -33,4 +33,3 @@ class BoatsWinno(AreaMovementBase):
         11: [0, 152],
         12: [22, 104],
     }
-    checkpoint_fallback = {}

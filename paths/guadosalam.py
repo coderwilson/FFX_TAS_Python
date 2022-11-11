@@ -45,7 +45,6 @@ class GuadoStoryline(AreaMovementBase):
         39: [0, 0],
         40: [0, 0],
     }
-    checkpoint_fallback = {}
 
 
 class GuadoSkip(AreaMovementBase):

@@ -9,6 +9,8 @@ FFXC = xbox.controller_handle()
 
 
 class AreaMovementBase:
+    checkpoint_fallback = {}
+
     @classmethod
     def execute(cls, checkpoint):
         # If we have a message here, something has probably gone wrong
