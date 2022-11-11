@@ -8,7 +8,7 @@ import menu
 import pathing
 import vars
 import xbox
-from paths import BoatsLiki
+from paths import BoatsLiki, BoatsWinno
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -134,7 +134,7 @@ def ss_winno_2():
             elif checkpoint == 11:
                 jecht_shot()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.winno(checkpoint)):
+            elif pathing.set_movement(BoatsWinno.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
