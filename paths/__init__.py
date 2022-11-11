@@ -9,6 +9,11 @@ from paths.luca import Luca1, Luca3, LucaPreBlitz
 from paths.miihen import Miihen1, MiihenAgency, MiihenLowroad
 from paths.moonflow import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
 from paths.mrr import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
+from paths.thunder_plains import (
+    ThunderPlainsAgency,
+    ThunderPlainsNorth,
+    ThunderPlainsSouth,
+)
 
 __all__ = [
     "TidusHomeMovement",
@@ -44,4 +49,7 @@ __all__ = [
     "MoonflowBankNorth",
     "GuadoStoryline",
     "GuadoSkip",
+    "ThunderPlainsSouth",
+    "ThunderPlainsAgency",
+    "ThunderPlainsNorth",
 ]

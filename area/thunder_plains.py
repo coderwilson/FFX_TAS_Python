@@ -7,6 +7,7 @@ import pathing
 import screen
 import vars
 import xbox
+from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -59,7 +60,7 @@ def south_pathing():
 
             # General pathing
             elif memory.main.user_control():
-                if pathing.set_movement(pathing.t_plains_south(checkpoint)):
+                if pathing.set_movement(ThunderPlainsSouth.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -260,7 +261,7 @@ def agency():
                 FFXC.set_movement(0, 1)
                 memory.main.click_to_event()
 
-            elif pathing.set_movement(pathing.t_plains_agency(checkpoint)):
+            elif pathing.set_movement(ThunderPlainsAgency.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -290,7 +291,7 @@ def north_pathing():
 
             # General pathing
             elif memory.main.user_control():
-                if pathing.set_movement(pathing.t_plains_north(checkpoint)):
+                if pathing.set_movement(ThunderPlainsNorth.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
