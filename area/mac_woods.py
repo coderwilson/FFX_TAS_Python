@@ -11,6 +11,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import MacalaniaLake, MacalaniaWoods
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +84,7 @@ def arrival(rikku_charged):
                 checkpoint = 40
 
             # General pathing
-            elif pathing.set_movement(pathing.m_woods(checkpoint)):
+            elif pathing.set_movement(MacalaniaWoods.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -233,7 +234,7 @@ def lake():
     checkpoint = 0
     while memory.main.get_encounter_id() != 194:
         if memory.main.user_control():
-            if pathing.set_movement(pathing.m_lake(checkpoint)):
+            if pathing.set_movement(MacalaniaLake.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
