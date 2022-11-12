@@ -2,8 +2,8 @@
 # "none", "Baaj", "Besaid", "Boat1", "Kilika", "Luca", "Miihen", "MRR"
 # "Djose", "Moonflow", "Guadosalam", "Macalania", "Home", "rescue_yuna"
 # "Gagazet", "Zanarkand", "Sin", "Nem_Farm"
-gamestate               : "Nem_Farm"  # valid values listed above
-step_counter            : 18      # valid step_counter values are dependent on gamestate
+gamestate               : "none"  # valid values listed above
+step_counter            : 1      # valid step_counter values are dependent on gamestate
 
 # Logging
 color_log               : False  # Colors the console output. May not work on some systems
