@@ -2,7 +2,7 @@
 # "none", "Baaj", "Besaid", "Boat1", "Kilika", "Luca", "Miihen", "MRR"
 # "Djose", "Moonflow", "Guadosalam", "Macalania", "Home", "rescue_yuna"
 # "Gagazet", "Zanarkand", "Sin", "Nem_Farm"
-gamestate               : "none"  # valid values listed above
+gamestate               : "none" # valid values listed above
 step_counter            : 1      # valid step_counter values are dependent on gamestate
 
 # Logging
@@ -12,7 +12,7 @@ verbosity               : DEBUG  # Verbosity of log messages in the console.
                                  # Full log will always be available in a file.
 
 # RNG Seed (requires setting vars.set_seed: True)
-rng_seed_num            : 31     # If starting a new run and using set_seed, use this RNG seed
+rng_seed_num            : 160    # If starting a new run and using set_seed, use this RNG seed
 use_favored_seed        : False  # If starting a new run and not using set_seed, use a curated array of seeds
 
 # Run configuration variables in vars.py
@@ -20,9 +20,9 @@ vars:
   # Important Values
   artificial_pauses     : False  # Set depending on hardware. True == less powerful hardware.
   csr_value             : True   # Set automatically on new game. For testing (loading a save file) set for your environment.
-  nemesis_value         : True   # Set based on if you're doing any% (False) or Nemesis% (True)
+  nemesis_value         : False  # Set based on if you're doing any% (False) or Nemesis% (True)
   force_loop            : False  # After game is finished, start again on next seed.
-  set_seed              : True   # If you are using Rossy's patch, set to True. Otherwise set to False
+  set_seed              : False  # If you are using Rossy's patch, set to True. Otherwise set to False
   kilika_skip           : True   # True == Tidus OD on Evrae instead of Seymour. New strat.
   perfect_aeon_kills    : False  # Before YuYevon, True is slower but more swag.
   attempt_djose         : False  # Try Djose skip? (not likely to succeed)
@@ -38,7 +38,7 @@ vars:
   rails_egg_hunt        : True   #            - Missing documentation -
 
   # Blitzball
-  force_blitz_win       : True   # Sets Aurochs score to 50 at halftime, testing only.
+  force_blitz_win       : False  # Sets Aurochs score to 50 at halftime, testing only.
   blitz_loop            : False  # Loop on the same seed immediately after Blitzball.
   blitz_loss_force_reset: True   # True == reset after blitz loss
   blitz_win_value       : True   # No default value required
