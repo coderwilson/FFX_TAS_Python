@@ -1450,6 +1450,7 @@ def yunalesca_to_airship(checkpoint):
     return [x, y]
 
 
+# TODO: This appears to be unused
 def t_plains_dodging(checkpoint):
     x = 999
     y = 999

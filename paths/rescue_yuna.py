@@ -124,7 +124,7 @@ class BevelleTrials(AreaMovementBase):
         47: "Take Destro sphere",
         50: "Insert Destro sphere",
         52: "Back on track, to the exit",
-        58: "Picking up chest",
+        58: "Picking up chest",  # TODO: This line gets spammed in the log
     }
 
 
