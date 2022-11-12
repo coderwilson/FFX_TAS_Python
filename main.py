@@ -46,6 +46,8 @@ import screen
 import vars
 import xbox
 import save_sphere
+import pathing
+import rng_track
 from gamestate import game
 
 FFXC = xbox.controller_handle()
@@ -390,7 +392,6 @@ def perform_TAS():
                     area.djose.trials()
                     game.step = 3
                     if game_vars.create_saves():
-                        import pathing
                         while not pathing.set_movement([66,-227]):
                             pass
                         save_sphere.touch_and_save(save_num=29, game_state=game.state, step_count=game.step)
@@ -560,7 +561,7 @@ def perform_TAS():
                 if game.step == 1:
                     area.gagazet.calm_lands()
                     area.gagazet.defender_x()
-                    import rng_track
+                    
 
                     advance_pre_x, advance_post_x = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
