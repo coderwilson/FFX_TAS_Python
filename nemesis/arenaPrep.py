@@ -2188,7 +2188,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 print("Strike!")
                 game_vars.set_l_strike(memory.main.l_strike_count())
             if prefArea in [3, 4] and not neEquip:
-                logger.debug(f"No Encounters armor on character: {game_vars.ne_armor()}")
+                logger.debug(f"No Encounters armor on char: {game_vars.ne_armor()}")
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neEquip = True
                 if checkpoint in [4, 5]:
@@ -2993,7 +2993,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 41
                 else:
                     checkpoint = 1
-                #print("-- Reminder, next area: ", prefArea)
+                # print("-- Reminder, next area: ", prefArea)
 
             # Portal Combat
             if checkpoint == 2:
@@ -3068,7 +3068,7 @@ def gagazet(cap_num: int = 10):
                 # No need to re-equip while coming back from swimming
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
-            elif neArmor == False and checkpoint in [4,55]:
+            elif neArmor == False and checkpoint in [4, 55]:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 
