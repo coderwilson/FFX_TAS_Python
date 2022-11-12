@@ -1100,5 +1100,8 @@ def blitz_main(force_blitz_win):
     end_time = logs.time_stamp()
     time_diff = end_time - start_time
     total_time = int(time_diff.total_seconds())
-    rng_track.record_blitz_results(duration=total_time)
+    if game_vars.get_force_blitz_win():
+        pass
+    else:
+        rng_track.record_blitz_results(duration=total_time)
     logger.info(f"--Blitz Win value: {game_vars.get_blitz_win()}")

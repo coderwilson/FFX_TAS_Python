@@ -606,25 +606,18 @@ def get_hp():
 
     coord = base_value + 0x00D32078
     HP_Tidus = process.read(coord)
-
     coord = base_value + 0x00D3210C
     HP_Yuna = process.read(coord)
-
     coord = base_value + 0x00D321A0
     HP_Auron = process.read(coord)
-
     coord = base_value + 0x00D32234
     HP_Kimahri = process.read(coord)
-
     coord = base_value + 0x00D322C8
     HP_Wakka = process.read(coord)
-
     coord = base_value + 0x00D3235C
     HP_Lulu = process.read(coord)
-
     coord = base_value + 0x00D323F0
     HP_Rikku = process.read(coord)
-
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
 
@@ -634,25 +627,18 @@ def get_max_hp():
 
     coord = base_value + 0x00D32080
     HP_Tidus = process.read(coord)
-
     coord = base_value + 0x00D32114
     HP_Yuna = process.read(coord)
-
     coord = base_value + 0x00D321A8
     HP_Auron = process.read(coord)
-
     coord = base_value + 0x00D3223C
     HP_Kimahri = process.read(coord)
-
     coord = base_value + 0x00D322D0
     HP_Wakka = process.read(coord)
-
     coord = base_value + 0x00D32364
     HP_Lulu = process.read(coord)
-
     coord = base_value + 0x00D323F8
     HP_Rikku = process.read(coord)
-
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
 
@@ -2254,6 +2240,12 @@ def save_popup_cursor():
     key = base_value + 0x0146780A
     return process.read_bytes(key, 1)
 
+def save_conf_cursor():
+    global base_value
+
+    key = base_value + 0x008E72F0
+    return process.read_bytes(key, 1)
+    
 
 def diag_progress_flag():
     global base_value
@@ -2612,7 +2604,7 @@ def blitzball_patriots_style():
     global base_value
 
     key = base_value + 0x00D2E0CE
-
+    process.write_bytes(key, 50, 1)
 
 def blitz_clock_menu():
     global base_value

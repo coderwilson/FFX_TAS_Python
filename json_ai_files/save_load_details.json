@@ -1,0 +1,470 @@
+{
+    "game.state": {
+        "step.counter": {
+            "nemesis": {
+                "save_num": "999",
+                "blitz_win_value": "True",
+                "end_game_version_val": 123,
+                "nea_zone": 0,
+                "nem_ap_val": 1,
+                "special_movement": "none"
+            }
+        }
+    },
+    "Baaj": {
+        "1": {
+            "True": {
+                "save_num": "100",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "20",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "4": {
+            "True": {
+                "save_num": "101",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "21",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Kilika": {
+        "1": {
+            "True": {
+                "save_num": "103",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "23",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Luca": {
+        "3": {
+            "True": {
+                "save_num": "104",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "24",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Miihen": {
+        "1": {
+            "True": {
+                "save_num": "105",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "25",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "MRR": {
+        "1": {
+            "True": {
+                "save_num": "106",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "MRR"
+            }
+        },
+        "2": {
+            "True": {
+                "save_num": "107",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "27",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Djose": {
+        "1": {
+            "True": {
+                "save_num": "108",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "28",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "3": {
+            "True": {
+                "save_num": "109",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Moonflow": {
+        "2": {
+            "True": {
+                "save_num": "110",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Guadosalam": {
+        "1": {
+            "True": {
+                "save_num": "111",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Macalania": {
+        "1": {
+            "True": {
+                "save_num": "114",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "2": {
+            "True": {
+                "save_num": "115",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "4": {
+            "True": {
+                "save_num": "116",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "6": {
+            "True": {
+                "save_num": "117",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "7": {
+            "True": {
+                "save_num": "118",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Home": {
+        "1": {
+            "True": {
+                "save_num": "119",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "2": {
+            "True": {
+                "save_num": "120",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "rescue_yuna": {
+        "1": {
+            "True": {
+                "save_num": "121",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "4": {
+            "True": {
+                "save_num": "122",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "5": {
+            "True": {
+                "save_num": "123",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Gagazet": {
+        "10": {
+            "True": {
+                "save_num": "124",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Zanarkand": {
+        "4": {
+            "True": {
+                "save_num": "127",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Sin": {
+        "1": {
+            "True": {
+                "save_num": "128",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        }
+    },
+    "Nem_Farm": {
+        "1": {
+            "True": {
+                "save_num": "130",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "2": {
+            "True": {
+                "save_num": "131",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "2",
+                "special_movement": "none"
+            }
+        },
+        "4": {
+            "True": {
+                "save_num": "132",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "3",
+                "special_movement": "none"
+            }
+        },
+        "6": {
+            "True": {
+                "save_num": "133",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "3",
+                "special_movement": "none"
+            }
+        },
+        "7": {
+            "True": {
+                "save_num": "134",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "3",
+                "special_movement": "none"
+            }
+        },
+        "11": {
+            "True": {
+                "save_num": "135",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "4",
+                "special_movement": "none"
+            }
+        },
+        "12": {
+            "True": {
+                "save_num": "136",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "8",
+                "special_movement": "none"
+            }
+        },
+        "14": {
+            "True": {
+                "save_num": "137",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "9",
+                "special_movement": "none"
+            }
+        },
+        "15": {
+            "True": {
+                "save_num": "138",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "10",
+                "special_movement": "none"
+            }
+        },
+        "16": {
+            "True": {
+                "save_num": "139",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "11",
+                "special_movement": "none"
+            }
+        },
+        "17": {
+            "True": {
+                "save_num": "140",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "11",
+                "special_movement": "none"
+            }
+        },
+        "18": {
+            "True": {
+                "save_num": "141",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "14",
+                "special_movement": "none"
+            }
+        },
+        "19": {
+            "True": {
+                "save_num": "142",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "3",
+                "nem_ap_val": "18",
+                "special_movement": "none"
+            }
+        }
+    }
+}
