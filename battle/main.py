@@ -910,6 +910,7 @@ def miihen_road(self_destruct=False):
     logger.debug(f"self_destruct flag: {game_vars.self_destruct_get()}")
 
 
+# move to battle.aeon
 def aeon_shield():
     logger.info("Aeon Shield function")
     screen.await_turn()
@@ -926,6 +927,7 @@ def aeon_shield():
     tap_targeting()
 
 
+# move to battle.aeon
 def aeon_boost():
     logger.info("Aeon Boost function")
     screen.await_turn()
@@ -944,6 +946,7 @@ def aeon_boost():
     tap_targeting()
 
 
+# move to battle.aeon
 def aeon_dismiss():
     logger.info("Aeon Dismiss function")
     screen.await_turn()
@@ -3836,6 +3839,7 @@ def thunder_target(target, direction):
     tap_targeting()
 
 
+# move to battle.aeon
 def aeon_summon(position):
     logger.debug(f"Summoning Aeon {position}")
     while not memory.main.main_battle_menu():
@@ -3870,14 +3874,17 @@ def aeon_summon(position):
                 pbar.update()
 
 
+# move to battle.aeon
 def aeon_spell(position):
     aeon_spell_direction(position, None)
 
 
+# move to battle.aeon
 def aeon_spell_2(position, direction):
     aeon_spell_direction(position, direction)
 
 
+# move to battle.aeon
 def aeon_spell_direction(position, direction):
     logger.debug(f"Aeon casting a spell. Special direction: {direction}")
     while memory.main.battle_menu_cursor() != 21:

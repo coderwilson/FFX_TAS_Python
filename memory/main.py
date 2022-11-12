@@ -2240,12 +2240,13 @@ def save_popup_cursor():
     key = base_value + 0x0146780A
     return process.read_bytes(key, 1)
 
+
 def save_conf_cursor():
     global base_value
 
     key = base_value + 0x008E72F0
     return process.read_bytes(key, 1)
-    
+
 
 def diag_progress_flag():
     global base_value
@@ -2605,6 +2606,7 @@ def blitzball_patriots_style():
 
     key = base_value + 0x00D2E0CE
     process.write_bytes(key, 50, 1)
+
 
 def blitz_clock_menu():
     global base_value

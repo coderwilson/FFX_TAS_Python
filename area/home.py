@@ -241,13 +241,14 @@ def desert():
                 logger.debug("-----------------------------Flag statuses (end)")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-    
+
     # Move to save sphere
     checkpoint = 0
     while checkpoint < 7:
         if pathing.set_movement(pathing.home(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint reached: {checkpoint}")
+
 
 def find_summoners():
     logger.info("Desert complete. Starting Home section")

@@ -113,10 +113,10 @@ class AllVars:
             os.environ.get("userprofile")
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
-    
+
     def create_saves(self):
         return self.generate_saves
-    
+
     def accessibility_vars(self):
         return [
             self.skip_cutscene_flag,
@@ -206,7 +206,7 @@ class AllVars:
     def nemesis(self):
         return self.nemesis_value
 
-    def nemesis_set(self,value):
+    def nemesis_set(self, value):
         self.nemesis_value = value
 
     def get_nea_zone(self):

@@ -224,13 +224,14 @@ def main_path():
     logger.info("End of MRR section. Status:")
     logger.info("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
     logger.info(status)
-    
+
     # Get close to save sphere
     checkpoint = 0
     while checkpoint < 4:
         if pathing.set_movement(pathing.battle_site(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint reached: {checkpoint}")
+
 
 def battle_site():
     memory.main.await_control()

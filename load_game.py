@@ -1,9 +1,9 @@
 # Libraries and Core Files
+import json
 import logging
 import os
 from pathlib import Path
 
-import json
 import area.dream_zan
 import logs
 import memory.main
@@ -13,7 +13,7 @@ import vars
 import xbox
 import zz_airship_path
 from gamestate import game
-import logging
+
 logger = logging.getLogger(__name__)
 
 # This file is intended to load the game to a saved file.
@@ -23,27 +23,28 @@ logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
-def move_after_load(spec_move:str):
+
+def move_after_load(spec_move: str):
     if spec_move == "miihen_laugh":
         load_miihen_start_laugh()
     elif spec_move == "miihen_no_laugh":
         load_miihen_start()
     elif spec_move == "MRR":
         load_mrr()
-    
 
-def load_into_game(gamestate:str, step_counter:str):
+
+def load_into_game(gamestate: str, step_counter: str):
     logger.debug(f"Loading game state {gamestate} | {step_counter}")
     # If wrong maps are loaded in, try to reset.
     if memory.main.get_map() not in [23, 348, 349]:
         reset.reset_to_main_menu()
     area.dream_zan.new_game(gamestate=gamestate)
-    
+
     # Now to get details for the load/save files
-    filepath = os.path.join('json_ai_files', 'save_load_details.json')
+    filepath = os.path.join("json_ai_files", "save_load_details.json")
     with open(filepath, "r") as fp:
         results = json.load(fp)
-    
+
     # Try to use new method, otherwise try old method.
     try:
         step_counter = str(step_counter)
@@ -52,7 +53,7 @@ def load_into_game(gamestate:str, step_counter:str):
             logger.debug("Failure 1")
             load_into_game_old(gamestate=gamestate, step_counter=step_counter)
             return
-        
+
         # Init variables so we don't crash later
         save_num_conf = 0
         nemesis_conf = "none"
@@ -61,11 +62,11 @@ def load_into_game(gamestate:str, step_counter:str):
         nea_zone = "none"
         nem_ap = "none"
         spec_move = "none"
-        
+
         print(results[gamestate][step_counter].keys())
         for key in results[gamestate][step_counter]:
             save_num = int(results[gamestate][step_counter][key]["save_num"])
-            
+
             nemesis = key
             if save_num > 200:
                 pass
@@ -82,7 +83,7 @@ def load_into_game(gamestate:str, step_counter:str):
                 logger.debug(f"End game version {end_ver}")
                 logger.debug(f"NEA zone {nea_zone}")
                 logger.debug(f"Nemesis checkpoint {nem_ap}")
-        
+
         if save_num_conf == 0:
             logger.debug("Failure 2")
             load_into_game_old(gamestate=gamestate, step_counter=step_counter)
@@ -90,27 +91,28 @@ def load_into_game(gamestate:str, step_counter:str):
         else:
             # Perform the load
             load_save_num(int(save_num_conf))
-            game_vars.set_blitz_win(value=(blitz_win=="True"))
+            game_vars.set_blitz_win(value=(blitz_win == "True"))
             game_vars.end_game_version_set(value=int(end_ver))
             game_vars.set_nea_zone(value=int(nea_zone))
             game_vars.set_nem_checkpoint_ap(value=int(nem_ap))
-            
+
             if spec_move != "none":
                 logger.debug(f"Special movement needed: {spec_move}")
                 move_after_load(spec_move=spec_move)
             else:
                 logger.debug("No Special movement needed")
-        
+
             logger.debug(f"Blitz Win {game_vars.get_blitz_win()}")
             logger.debug(f"End game version {game_vars.end_game_version()}")
             logger.debug(f"NEA zone {game_vars.get_nea_zone()}")
             logger.debug(f"Nemesis checkpoint {game_vars.nem_checkpoint_ap()}")
             memory.main.check_nea_armor()
-        
+
     except Exception as err_msg:
         logger.debug(f"Error message: {err_msg}")
         logger.debug("Failure 3")
         load_into_game_old(gamestate=gamestate, step_counter=step_counter)
+
 
 def load_into_game_old(gamestate: str, step_counter: str):
     logger.debug(f"Loading game, old method: {gamestate} | {step_counter}")
@@ -699,17 +701,18 @@ def load_miihen_start():
 
 def load_mrr():
     memory.main.await_control()
-    while not pathing.set_movement([-49,166]):
+    while not pathing.set_movement([-49, 166]):
         pass
-    while not pathing.set_movement([-43,285]):
+    while not pathing.set_movement([-43, 285]):
         pass
-    while not pathing.set_movement([-39,354]):
+    while not pathing.set_movement([-39, 354]):
         pass
-    
+
     FFXC.set_movement(0, 1)
     memory.main.await_event()
     FFXC.set_neutral()
     memory.main.click_to_control()
+
 
 def load_mrr_2():
     FFXC.set_movement(0, 1)
