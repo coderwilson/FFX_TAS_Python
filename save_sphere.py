@@ -1,16 +1,18 @@
+import datetime
 import json
 import logging
 import math
+import os
+import shutil
 
+from jsonmerge import merge
+
+import battle.main
+import load_game
 import memory
 import pathing
 import vars
 import xbox
-import battle.main
-import datetime
-import load_game
-import shutil
-from jsonmerge import merge
 
 FFXC = xbox.controller_handle()
 
@@ -70,15 +72,15 @@ def approach_save_sphere():
     target_coords = memory.main.get_actor_coords(target_actor)
     target_details = get_save_sphere_settings(target_actor)
     logger.debug(f"Approaching actor: {target_actor}")
-    
+
     # Time-out logic
     start_timer = datetime.datetime.now()
     if target_actor == 999:
-        logger.debug(f"Disregard, save sphere could not be found.")
+        logger.debug("Disregard, save sphere could not be found.")
         return False
     else:
-        logger.debug(f"80 second time-out logic.")
-        logger.debug(f"The run is NOT SOFT LOCKED")
+        logger.debug("80 second time-out logic.")
+        logger.debug("The run is NOT SOFT LOCKED")
         while not (
             memory.main.diag_progress_flag() == target_details[2]
             and memory.main.diag_skip_possible()
@@ -89,7 +91,7 @@ def approach_save_sphere():
             if total_time.total_seconds() > 80:
                 logger.debug("Save sphere time out - could not reach save sphere.")
                 return False
-            
+
             # Touch sphere logic
             if memory.main.user_control():
                 pathing.set_movement([target_coords[0], target_coords[1]])
@@ -139,6 +141,7 @@ def approach_save_sphere():
     FFXC.set_neutral()
     return True
 
+
 def disengage_save_sphere():
     while memory.main.save_menu_cursor() == 0 and memory.main.save_menu_cursor_2() == 0:
         logger.debug("Cursor")
@@ -153,7 +156,7 @@ def touch_and_go():
         disengage_save_sphere()
 
 
-def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999):
+def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int = 999):
     if game_vars.nemesis():
         save_num += 80
     if save_num >= 200:
@@ -213,19 +216,19 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
             logger.debug(file_dest)
 
             shutil.move(src=file_orig, dst=file_dest)
-        
+
         # Finally, register save in json.
-        if save_num not in [199,999]:
+        if save_num not in [199, 999]:
             # 199 is used for Arena battles. Reserved.
             # 999 means any unused save. No special save for this.
-            if game_state == "tbd" or step_count==999:
+            if game_state == "tbd" or step_count == 999:
                 return
-            
+
             print("Registering save")
-            filepath = os.path.join('json_ai_files', 'save_load_details.json')
+            filepath = os.path.join("json_ai_files", "save_load_details.json")
             with open(filepath, "r") as fp:
                 results = json.load(fp)
-            
+
             # game_state already a string
             step_count_val = str(step_count)
             nem_value = str(game_vars.nemesis())
@@ -234,7 +237,7 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
             end_game_version_val = str(game_vars.end_game_version())
             nea_zone = str(game_vars.get_nea_zone())
             nem_ap_val = str(game_vars.nem_checkpoint_ap())
-            
+
             new_val = {
                 game_state: {
                     step_count_val: {
@@ -244,7 +247,7 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
                             "end_game_version_val": end_game_version_val,
                             "nea_zone": nea_zone,
                             "nem_ap_val": nem_ap_val,
-                            "special_movement": "none"
+                            "special_movement": "none",
                         }
                     }
                 }
@@ -253,8 +256,9 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
             with open(filepath, "w") as fp:
                 json.dump(results, fp, indent=4)
 
+
 def get_save_sphere_settings(actor_index: int):
-    filepath = os.path.join('json_ai_files', 'save_sphere_details.json')
+    filepath = os.path.join("json_ai_files", "save_sphere_details.json")
     with open(filepath, "r") as fp:
         results = json.load(fp)
 
@@ -275,7 +279,7 @@ def get_save_sphere_settings(actor_index: int):
 
 
 def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
-    filepath = os.path.join('json_ai_files', 'save_sphere_details.json')
+    filepath = os.path.join("json_ai_files", "save_sphere_details.json")
     logger.debug(f"Recording save sphere to {filepath}")
     with open(filepath, "r") as fp:
         records = json.load(fp)
