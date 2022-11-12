@@ -18,6 +18,12 @@ from paths.mac_woods import MacalaniaLake, MacalaniaWoods
 from paths.miihen import Miihen1, MiihenAgency, MiihenLowroad
 from paths.moonflow import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
 from paths.mrr import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
+from paths.rescue_yuna import (
+    BevelleAirship,
+    BevellePreTrials,
+    BevelleTrials,
+    SutekiDaNe,
+)
 from paths.thunder_plains import (
     ThunderPlainsAgency,
     ThunderPlainsNorth,
@@ -70,4 +76,8 @@ __all__ = [
     "MacalaniaUnderTemple",
     "BikanelDesert",
     "BikanelHome",
+    "BevelleAirship",
+    "BevellePreTrials",
+    "BevelleTrials",
+    "SutekiDaNe",
 ]
