@@ -8,17 +8,6 @@ logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 
 
-class AreaMovementBase:
-    checkpoint_fallback = {}
-
-    @classmethod
-    def execute(cls, checkpoint):
-        # If we have a message here, something has probably gone wrong
-        if message := cls.checkpoint_fallback.get(checkpoint):
-            logger.warning(message)
-        return cls.checkpoint_coordiantes.get(checkpoint, [999, 999])
-
-
 def set_movement(target) -> bool:
 
     player = memory.main.get_coords()

@@ -1,4 +1,4 @@
-from pathing import AreaMovementBase
+from paths.base import AreaMovementBase
 
 
 class BikanelDesert(AreaMovementBase):
