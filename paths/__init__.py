@@ -29,6 +29,14 @@ from paths.mac_woods import MacalaniaLake, MacalaniaWoods
 from paths.miihen import Miihen1, MiihenAgency, MiihenLowroad
 from paths.moonflow import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
 from paths.mrr import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
+from paths.ne_armor import (
+    GagazetNELoopback,
+    NEApproach,
+    NEForceEncountersGreen,
+    NEForceEncountersWhite,
+    NEReturn,
+    NEReturnGreen,
+)
 from paths.rescue_yuna import (
     BevelleAirship,
     BevellePreTrials,
@@ -100,4 +108,10 @@ __all__ = [
     "GagazetPostDream",
     "GagazetCave",
     "GagazetPeak",
+    "NEApproach",
+    "NEForceEncountersWhite",
+    "NEForceEncountersGreen",
+    "NEReturnGreen",
+    "NEReturn",
+    "GagazetNELoopback",
 ]

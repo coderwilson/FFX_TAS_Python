@@ -9,6 +9,14 @@ import rng_track
 import save_sphere
 import vars
 import xbox
+from paths import (
+    GagazetNELoopback,
+    NEApproach,
+    NEForceEncountersGreen,
+    NEForceEncountersWhite,
+    NEReturn,
+    NEReturnGreen,
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -25,7 +33,7 @@ def loop_back_from_ronso(checkpoint=0):
         if memory.main.user_control():
             if checkpoint < 13 and memory.main.get_map() == 279:
                 checkpoint = 13
-            elif pathing.set_movement(pathing.gagazet_nea_loop_back(checkpoint)):
+            elif pathing.set_movement(GagazetNELoopback.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -68,7 +76,7 @@ def to_hidden_cave():
                 checkpoint -= 2
             elif checkpoint == 9:
                 FFXC.set_movement(-1, 1)
-            elif pathing.set_movement(pathing.ne_approach(checkpoint)):
+            elif pathing.set_movement(NEApproach.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -135,13 +143,11 @@ def drop_hunt():
             if go_green:
                 if checkpoint == 15:
                     checkpoint -= 2
-                elif pathing.set_movement(
-                    pathing.ne_force_encounters_green(checkpoint)
-                ):
+                elif pathing.set_movement(NEForceEncountersGreen.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
             else:
-                if pathing.set_movement(pathing.ne_force_encounters_white(checkpoint)):
+                if pathing.set_movement(NEForceEncountersWhite.execute(checkpoint)):
                     checkpoint += 1
                     if checkpoint % 2 == 0 and not go_green:
                         checkpoint = 0
@@ -190,7 +196,7 @@ def return_to_gagazet():
                 if checkpoint == 10:
                     go_green = False
                     checkpoint = 0
-                elif pathing.set_movement(pathing.ne_return_green(checkpoint)):
+                elif pathing.set_movement(NEReturnGreen.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 1 and memory.main.get_map() == 266:
@@ -203,7 +209,7 @@ def return_to_gagazet():
                 checkpoint += 1
             elif checkpoint < 7 and memory.main.get_map() == 279:
                 checkpoint = 7
-            elif pathing.set_movement(pathing.ne_return(checkpoint)):
+            elif pathing.set_movement(NEReturn.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
