@@ -3,6 +3,17 @@ from paths.besaid import Besaid1, Besaid2, BesaidTrials
 from paths.boats import BoatsLiki, BoatsWinno
 from paths.djose import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 from paths.dream_zan import AllStartsHere, TidusHomeMovement
+from paths.gagazet import (
+    CalmLands,
+    DefenderX,
+    GagazetCave,
+    GagazetDreamSeq,
+    GagazetPeak,
+    GagazetPostDream,
+    GagazetSnow,
+    KelkRonso,
+    SeymourFlux,
+)
 from paths.guadosalam import GuadoSkip, GuadoStoryline
 from paths.home import BikanelDesert, BikanelHome
 from paths.kilika import Kilika1, Kilika2, Kilika3, KilikaTrials
@@ -80,4 +91,13 @@ __all__ = [
     "BevellePreTrials",
     "BevelleTrials",
     "SutekiDaNe",
+    "CalmLands",
+    "DefenderX",
+    "KelkRonso",
+    "GagazetSnow",
+    "SeymourFlux",
+    "GagazetDreamSeq",
+    "GagazetPostDream",
+    "GagazetCave",
+    "GagazetPeak",
 ]

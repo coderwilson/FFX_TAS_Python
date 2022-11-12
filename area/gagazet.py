@@ -11,6 +11,17 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import (
+    CalmLands,
+    DefenderX,
+    GagazetCave,
+    GagazetDreamSeq,
+    GagazetPeak,
+    GagazetPostDream,
+    GagazetSnow,
+    KelkRonso,
+    SeymourFlux,
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -54,7 +65,7 @@ def calm_lands():
     checkpoint = 0
     while memory.main.get_map() != 279:
         if memory.main.user_control():
-            if pathing.set_movement(pathing.calm_lands(checkpoint)):
+            if pathing.set_movement(CalmLands.execute(checkpoint)):
                 checkpoint += 1
                 if checkpoint == 15:
                     if check_gems() < 2:
@@ -104,7 +115,7 @@ def to_the_ronso():
     checkpoint = 2
     while memory.main.get_map() != 259:
         if memory.main.user_control():
-            if pathing.set_movement(pathing.defender_x(checkpoint)):
+            if pathing.set_movement(DefenderX.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -116,7 +127,7 @@ def to_the_ronso():
     checkpoint = 0
     while memory.main.get_map() != 244:
         if memory.main.user_control():
-            if pathing.set_movement(pathing.kelk_ronso(checkpoint)):
+            if pathing.set_movement(KelkRonso.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -152,7 +163,7 @@ def gagazet_gates():
     checkpoint = 0
     while memory.main.get_map() != 285:
         if memory.main.user_control():
-            if pathing.set_movement(pathing.gagazet_snow(checkpoint)):
+            if pathing.set_movement(GagazetSnow.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -199,7 +210,7 @@ def flux():
                 while memory.main.user_control():
                     FFXC.set_movement(1, 1)
                 FFXC.set_neutral()
-            elif pathing.set_movement(pathing.flux(checkpoint)):
+            elif pathing.set_movement(SeymourFlux.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -245,7 +256,7 @@ def dream(checkpoint: int = 0):
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.gagazet_dream_seq(checkpoint)):
+            elif pathing.set_movement(GagazetDreamSeq.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -267,7 +278,7 @@ def cave():
                 memory.main.wait_frames(3)
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(6)
-            elif pathing.set_movement(pathing.gagazet_post_dream(checkpoint)):
+            elif pathing.set_movement(GagazetPostDream.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -377,7 +388,7 @@ def cave():
                 # import rng_track
                 # zombie_results = rng_track.zombie_track(report=True)
                 # logs.write_rng_track("Final results:"+str(zombie_results))
-            elif pathing.set_movement(pathing.gagazet_cave(checkpoint)):
+            elif pathing.set_movement(GagazetCave.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -463,7 +474,7 @@ def wrap_up():
                     checkpoint += 1
                 else:
                     FFXC.set_movement(1, 1)
-            elif pathing.set_movement(pathing.gagazet_peak(checkpoint)):
+            elif pathing.set_movement(GagazetPeak.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
