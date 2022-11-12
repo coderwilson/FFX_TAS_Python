@@ -222,7 +222,7 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
                 return
             
             print("Registering save")
-            filepath = "json_ai_files\\save_load_details.json"
+            filepath = os.path.join('json_ai_files', 'save_load_details.json')
             with open(filepath, "r") as fp:
                 results = json.load(fp)
             
@@ -255,7 +255,7 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
                 json.dump(results, fp, indent=4)
 
 def get_save_sphere_settings(actor_index: int):
-    filepath = "json_ai_files\\save_sphere_details.json"
+    filepath = os.path.join('json_ai_files', 'save_sphere_details.json')
     with open(filepath, "r") as fp:
         results = json.load(fp)
 
@@ -276,7 +276,7 @@ def get_save_sphere_settings(actor_index: int):
 
 
 def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
-    filepath = "json_ai_files\\save_sphere_details.json"
+    filepath = os.path.join('json_ai_files', 'save_sphere_details.json')
     logger.debug(f"Recording save sphere to {filepath}")
     with open(filepath, "r") as fp:
         records = json.load(fp)

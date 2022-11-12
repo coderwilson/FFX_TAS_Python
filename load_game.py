@@ -40,7 +40,7 @@ def load_into_game(gamestate:str, step_counter:str):
     area.dream_zan.new_game(gamestate=gamestate)
     
     # Now to get details for the load/save files
-    filepath = "json_ai_files\\save_load_details.json"
+    filepath = os.path.join('json_ai_files', 'save_load_details.json')
     with open(filepath, "r") as fp:
         results = json.load(fp)
     
