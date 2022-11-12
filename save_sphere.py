@@ -7,6 +7,10 @@ import pathing
 import vars
 import xbox
 import battle.main
+import datetime
+import load_game
+import shutil
+from jsonmerge import merge
 
 FFXC = xbox.controller_handle()
 
@@ -68,7 +72,6 @@ def approach_save_sphere():
     logger.debug(f"Approaching actor: {target_actor}")
     
     # Time-out logic
-    import datetime
     start_timer = datetime.datetime.now()
     if target_actor == 999:
         logger.debug(f"Disregard, save sphere could not be found.")
@@ -158,8 +161,6 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
         save_num = 999
     save_pos = 999
     if save_num != 999:
-        import load_game
-
         saveFiles = load_game.get_saved_files()
         testString = "ffx_000"
         for y in range(len(saveFiles)):
@@ -210,7 +211,6 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
             logger.debug(file_orig)
             file_dest = game_vars.game_save_path() + "ffx_" + str(save_num).zfill(3)
             logger.debug(file_dest)
-            import shutil
 
             shutil.move(src=file_orig, dst=file_dest)
         
@@ -249,7 +249,6 @@ def touch_and_save(save_num: int = 999, game_state:str="tbd", step_count:int=999
                     }
                 }
             }
-            from jsonmerge import merge
             results = merge(results, new_val)
             with open(filepath, "w") as fp:
                 json.dump(results, fp, indent=4)
