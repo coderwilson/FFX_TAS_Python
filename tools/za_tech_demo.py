@@ -60,10 +60,8 @@ while attempts < 20 and cycles < 50:
         if return_val[3]:
             skip_count += 1
         print("------------------------------")
-        print("------------------------------")
         print("Attempts:", skip_attempts)
         print("Success:", skip_count)
-        print("------------------------------")
         print("------------------------------")
     elif attempts == 2:
         print("Demo - MRR skip")
@@ -75,10 +73,8 @@ while attempts < 20 and cycles < 50:
         skip_count += 1
         skip_attempts += 1
         print("------------------------------")
-        print("------------------------------")
         print("Attempts:", skip_attempts)
         print("Success:", skip_count)
-        print("------------------------------")
         print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
@@ -89,10 +85,8 @@ while attempts < 20 and cycles < 50:
         if guado_skip_status:
             skip_count += 1
         print("------------------------------")
-        print("------------------------------")
         print("Attempts:", skip_attempts)
         print("Success:", skip_count)
-        print("------------------------------")
         print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
@@ -103,10 +97,8 @@ while attempts < 20 and cycles < 50:
         if jyscal_skip_status:
             skip_count += 1
         print("------------------------------")
-        print("------------------------------")
         print("Attempts:", skip_attempts)
         print("Success:", skip_count)
-        print("------------------------------")
         print("------------------------------")
     elif attempts == 5:
         print("###  Just for fun - Chocobo Eater Stomp")
@@ -132,16 +124,13 @@ while attempts < 20 and cycles < 50:
         reset.reset_to_main_menu()
     else:
         print("------------------------------")
-        print("------------------------------")
         print("Final demo is complete. Thanks for playing.")
 
 
 end_time = logs.time_stamp()
 print("------------------------------")
-print("------------------------------")
 total_time = end_time - start_time
 print("The program duration (real time) was:", str(total_time))
-print("------------------------------")
 print("------------------------------")
 
 # print("--------TASgiving, please stop the timer-------------")

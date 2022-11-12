@@ -1369,10 +1369,10 @@ def after_ronso():
     memory.main.close_menu()
 
 
-def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
+def find_equipment_index(*, owner, equipment_type, ability_array=[], slot_count):
     equip_array = memory.main.all_equipment()
     logger.debug(
-        f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slotcount: {slotcount}"
+        f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slot_count: {slot_count}"
     )
     if not ability_array:
         ability_array = [255, 255, 255, 255]
@@ -1386,7 +1386,7 @@ def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
             current_handle.owner() == owner
             and current_handle.equipment_type() == equipment_type
             and current_handle.abilities() == ability_array
-            and current_handle.slot_count() == slotcount
+            and current_handle.slot_count() == slot_count
         ):
             logger.debug(f"Equipment found in slot: {current_index}")
             return current_index
@@ -1407,7 +1407,7 @@ def add_ability(
     equipment_type,
     ability_array=[],
     ability_index=255,
-    slotcount,
+    slot_count,
     navigate_to_equip_menu=False,
     exit_out_of_current_weapon=True,
     close_menu=True,
@@ -1424,7 +1424,7 @@ def add_ability(
         owner=owner,
         equipment_type=equipment_type,
         ability_array=ability_array,
-        slotcount=slotcount,
+        slot_count=slot_count,
     )
     while memory.main.item_menu_row() != item_to_modify:
         if memory.main.item_menu_row() < item_to_modify:
@@ -1469,7 +1469,7 @@ def add_first_strike(
     owner,
     equipment_type,
     ability_array=[],
-    slotcount,
+    slot_count,
     navigate_to_equip_menu=False,
     exit_out_of_current_weapon=True,
     close_menu=True,
@@ -1480,7 +1480,7 @@ def add_first_strike(
         equipment_type=equipment_type,
         ability_array=ability_array,
         ability_index=0x8001,
-        slotcount=slotcount,
+        slot_count=slot_count,
         navigate_to_equip_menu=navigate_to_equip_menu,
         exit_out_of_current_weapon=exit_out_of_current_weapon,
         close_menu=close_menu,
@@ -1494,7 +1494,7 @@ def auron_first_strike():
         owner=2,
         equipment_type=0,
         ability_array=[0x800B, 0x8063, 255, 255],
-        slotcount=3,
+        slot_count=3,
         close_menu=True,
         full_menu_close=False,
         navigate_to_equip_menu=False,
@@ -1509,7 +1509,7 @@ def yuna_first_strike():
             owner=1,
             equipment_type=0,
             ability_array=[0x807A, 255, 255, 255],
-            slotcount=2,
+            slot_count=2,
             close_menu=False,
             navigate_to_equip_menu=True,
         )
@@ -1517,7 +1517,7 @@ def yuna_first_strike():
         add_first_strike(
             owner=1,
             equipment_type=0,
-            slotcount=1,
+            slot_count=1,
             close_menu=False,
             navigate_to_equip_menu=True,
         )

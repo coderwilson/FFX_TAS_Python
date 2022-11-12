@@ -408,10 +408,10 @@ def advanced_battle_logic():
     FFXC.set_neutral()
 
     if memory.main.battle_type() == 2:
-        print(">>>>Ambushed! Escaping!")
+        print(">>> Ambushed! Escaping!")
         battle.main.tidus_flee()
     elif advanced_complete_check():
-        print(">>>>Complete collecting this monster.")
+        print(">>> Complete collecting this monster.")
         battle.main.tidus_flee()
     else:
         if memory.main.get_encounter_id() == 449:
@@ -432,7 +432,7 @@ def advanced_battle_logic():
                     else:
                         battle.main.defend()
         else:
-            print("---Regular battle:", memory.main.get_encounter_id())
+            print("--- Regular battle:", memory.main.get_encounter_id())
             sleep_powder = False
             while memory.main.battle_active():
                 encounter_id = memory.main.get_encounter_id()
@@ -680,7 +680,7 @@ def transition():
         equipment_type=0,
         ability_array=[0x807A, 255, 255, 255],
         ability_index=0x8001,
-        slotcount=2,
+        slot_count=2,
         navigate_to_equip_menu=True,
         full_menu_close=True,
     )
@@ -761,7 +761,7 @@ def kilika_shop():
         equipment_type=0,
         ability_array=[0x800B, 0x8000, 255, 255],
         ability_index=0x8001,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=True,
         full_menu_close=True,
     )
@@ -770,7 +770,7 @@ def kilika_shop():
         equipment_type=1,
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x8056,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=True,
         full_menu_close=True,
     )
@@ -836,7 +836,7 @@ def od_to_ap():  # Calm Lands purchases
         equipment_type=0,
         ability_array=[0x807A, 255, 255, 255],
         ability_index=0x8011,
-        slotcount=2,
+        slot_count=2,
         navigate_to_equip_menu=True,
         exit_out_of_current_weapon=True,
         close_menu=True,
@@ -935,7 +935,7 @@ def auto_phoenix():  # Calm Lands items
         equipment_type=1,
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x800A,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=True,
         exit_out_of_current_weapon=True,
         close_menu=True,
@@ -951,7 +951,7 @@ def auto_phoenix():  # Calm Lands items
             equipment_type=1,
             ability_array=[0x8072, 255, 255, 255],
             ability_index=0x800A,
-            slotcount=4,
+            slot_count=4,
             navigate_to_equip_menu=True,
             exit_out_of_current_weapon=True,
             close_menu=True,
@@ -965,7 +965,7 @@ def auto_phoenix():  # Calm Lands items
             equipment_type=1,
             ability_array=[0x8072, 255, 255, 255],
             ability_index=0x800A,
-            slotcount=4,
+            slot_count=4,
             navigate_to_equip_menu=True,
             exit_out_of_current_weapon=True,
             close_menu=True,
@@ -984,7 +984,7 @@ def auto_phoenix():  # Calm Lands items
             equipment_type=0,
             ability_array=[0x800B, 0x8000, 0x8001, 255],
             ability_index=0x8002,
-            slotcount=4,
+            slot_count=4,
             navigate_to_equip_menu=True,
             exit_out_of_current_weapon=True,
             close_menu=True,
@@ -1109,7 +1109,7 @@ def one_mp_weapon():  # Break Damage Limit, or One MP cost
         equipment_type=0,
         ability_array=[0x807A, 255, 255, 255],
         ability_index=0x800D,
-        slotcount=2,
+        slot_count=2,
         navigate_to_equip_menu=True,
         exit_out_of_current_weapon=True,
         close_menu=True,
@@ -1154,7 +1154,7 @@ def kilika_gil_farm(armor_buys: int):
                 equipment_type=1,
                 ability_array=[0x8072, 255, 255, 255],
                 ability_index=0x8075,
-                slotcount=4,
+                slot_count=4,
                 navigate_to_equip_menu=True,
                 exit_out_of_current_weapon=True,
                 close_menu=False,
@@ -1166,7 +1166,7 @@ def kilika_gil_farm(armor_buys: int):
                 equipment_type=1,
                 ability_array=[0x8072, 255, 255, 255],
                 ability_index=0x8075,
-                slotcount=4,
+                slot_count=4,
                 navigate_to_equip_menu=False,
                 exit_out_of_current_weapon=True,
                 close_menu=False,
@@ -1257,7 +1257,7 @@ def final_weapon():
         equipment_type=0,
         ability_array=[0x800B, 0x8000, 255, 255],
         ability_index=0x800D,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=True,
         exit_out_of_current_weapon=False,
         close_menu=False,
@@ -1268,22 +1268,22 @@ def final_weapon():
         equipment_type=0,
         ability_array=[0x800B, 0x8000, 0x800D, 255],
         ability_index=0x8019,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=False,
         exit_out_of_current_weapon=True,
         close_menu=False,
         full_menu_close=False,
     )
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,255,255,255], ability_index=29, slotcount=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,255,255], ability_index=33, slotcount=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,0x800F,255], ability_index=35, slotcount=4, navigate_to_equip_menu=False, exit_out_of_current_weapon=True, close_menu=True, full_menu_close=True)
+    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,255,255,255], ability_index=29, slot_count=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
+    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,255,255], ability_index=33, slot_count=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
+    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,0x800F,255], ability_index=35, slot_count=4, navigate_to_equip_menu=False, exit_out_of_current_weapon=True, close_menu=True, full_menu_close=True)
 
     menu.add_ability(
         owner=1,
         equipment_type=1,
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x800A,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=True,
         exit_out_of_current_weapon=False,
         close_menu=False,
@@ -1294,7 +1294,7 @@ def final_weapon():
         equipment_type=1,
         ability_array=[0x8072, 0x800A, 255, 255],
         ability_index=0x801D,
-        slotcount=4,
+        slot_count=4,
         navigate_to_equip_menu=False,
         exit_out_of_current_weapon=True,
         close_menu=True,

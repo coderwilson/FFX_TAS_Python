@@ -2100,7 +2100,7 @@ def actor_index(actor_num: int = 41):
 
 
 def mrr_guy_coords():
-    logger.debug("+++Searching for MRR guy")
+    logger.debug("+++ Searching for MRR guy")
     mrr_guy = 255
     for x in range(get_actor_array_size()):
         actor_num = get_actor_id(x)

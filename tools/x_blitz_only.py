@@ -162,12 +162,10 @@ while attempts < 20:
 
     attempts += 1
     print("------------------------------")
-    print("------------------------------")
     print("Attempts:", attempts)
     print("Success:", success)
     print("All attempts results:")
     print(rng_success_array)
-    print("------------------------------")
     print("------------------------------")
     time.sleep(5)
     if blitzoff_win:
@@ -183,12 +181,10 @@ while attempts < 20:
     else:
         print("Final Results:")
         print("------------------------------")
-        print("------------------------------")
         print("Attempts:", attempts)
         print("Success:", success)
         print("All attempts results:")
         print(rng_success_array)
-        print("------------------------------")
         print("------------------------------")
 
 time.sleep(5)

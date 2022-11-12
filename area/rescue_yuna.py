@@ -105,7 +105,7 @@ def guards():
                     xbox.skip_scene()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
-    logger.info("-------End of Bevelle guards")
+    logger.info("--- End of Bevelle guards")
 
     checkpoint = 0
     while checkpoint < 8:

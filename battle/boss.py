@@ -276,7 +276,7 @@ def echuilles():
     logger.info("Fight start: Sinspawn Echuilles")
     screen.await_turn()
     logger.info("Sinspawn Echuilles fight start")
-    logs.write_rng_track("######################################")
+    logs.write_rng_track("###########################")
     logs.write_rng_track("Echuilles start")
     logs.write_rng_track(memory.main.rng_10_array(array_len=1))
 
@@ -317,7 +317,7 @@ def echuilles():
             xbox.skip_scene()
         elif memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
-    logs.write_rng_track("######################################")
+    logs.write_rng_track("###########################")
     logs.write_rng_track("Echuilles end")
     logs.write_rng_track(memory.main.rng_10_array(array_len=1))
 
@@ -584,22 +584,22 @@ def gui():
             if went and kimahri_crit:
                 battle.main.aeon_spell(1)
             elif memory.main.get_overdrive_battle(8) == 20:
-                logger.debug("------Overdriving")
+                logger.debug("--- Overdriving")
                 battle.overdrive.valefor()
                 went = True
             elif not turn1:
                 turn1 = True
-                logger.debug("------Recharge unsuccessful. Attempting recovery.")
+                logger.debug("--- Recharge unsuccessful. Attempting recovery.")
                 battle.main.aeon_shield()
             elif last_turn == 8:  # Valefor takes two turns in a row
-                logger.debug("------Two turns in a row")
+                logger.debug("--- Two turns in a row")
                 battle.main.aeon_shield()
             elif next_hp > last_hp - 40 and not next_hp == last_hp:
                 # Gravity spell was used
-                logger.debug("------Gravity was used")
+                logger.debug("--- Gravity was used")
                 battle.main.aeon_shield()
             else:
-                logger.debug("------Attack was just used. Now boost.")
+                logger.debug("--- Attack was just used. Now boost.")
                 battle.main.aeon_boost()
             last_hp = next_hp
         elif memory.main.turn_ready() and memory.main.get_battle_char_turn() == 1:
@@ -1679,7 +1679,7 @@ def bfa():
     while memory.main.get_story_progress() < 3380:
         if memory.main.turn_ready():
             encounter_id = memory.main.get_encounter_id()
-            logger.info(f"Battle engaged. Battle number: {encounter_id}")
+            logger.info(f"Battle engaged. Encounter id: {encounter_id}")
             if screen.turn_yuna():
                 if memory.main.battle_menu_cursor() != 20:
                     while memory.main.battle_menu_cursor() != 20:
@@ -1720,11 +1720,9 @@ def yu_yevon():
     while memory.main.get_story_progress() < 3400:
         if memory.main.turn_ready():
             logger.debug("-----------------------")
-            logger.debug("-----------------------")
             logger.debug(f"za_char: {za_char}")
             logger.debug(f"zombie_attack: {zombie_attack}")
             logger.debug(f"weap_swap: {weap_swap}")
-            logger.debug("-----------------------")
             logger.debug("-----------------------")
             if za_char == 1 and not zombie_attack:  # Yuna logic
                 if not weap_swap and screen.turn_yuna():

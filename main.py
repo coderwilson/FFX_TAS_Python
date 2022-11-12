@@ -307,10 +307,10 @@ def perform_TAS():
                     game.step = 4
 
                 if game.step == 4:
-                    logger.info("------Blitz Start")
+                    logger.info("----- Blitz Start")
                     force_blitz_win = game_vars.get_force_blitz_win()
                     blitz.blitz_main(force_blitz_win)
-                    logger.info("------Blitz End")
+                    logger.info("----- Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
 

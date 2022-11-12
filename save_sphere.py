@@ -195,7 +195,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
                     xbox.tap_up()
                 memory.main.wait_frames(1)
         xbox.tap_b()
-        print("==== ", save_num, " ====")
+        print("====", save_num, "====")
         memory.main.wait_frames(2)
         while memory.main.save_conf_cursor() != 1:
             xbox.tap_left()

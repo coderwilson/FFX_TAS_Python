@@ -231,9 +231,9 @@ def lake():
     menu.m_lake_grid()
     memory.main.await_control()
 
-    logger.debug("------------------------------Affection array:")
+    logger.debug("--- Affection array: ---")
     logger.debug(memory.main.affection_array())
-    logger.debug("------------------------------")
+    logger.debug("------------------------")
 
     checkpoint = 0
     while memory.main.get_encounter_id() != 194:
