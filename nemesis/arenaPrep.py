@@ -589,22 +589,21 @@ def bribe_battle(spare_change_value: int = 12000):
         if memory.main.turn_ready():
             if screen.turn_lulu():
                 while memory.main.battle_menu_cursor() != 20:
-                    if memory.main.battle_menu_cursor() == 0:
+                    if memory.main.battle_menu_cursor() == 255:
+                        xbox.tap_down()
+                    elif memory.main.battle_menu_cursor() == 0:
                         xbox.tap_down()
                     else:
                         xbox.tap_up()
-                    if game_vars.use_pause():
-                        memory.main.wait_frames(6)
-                memory.main.wait_frames(8)
-                xbox.tap_b()
-                memory.main.wait_frames(8)
-                xbox.tap_b()
-                memory.main.wait_frames(8)
+                while not memory.main.other_battle_menu():
+                    xbox.tap_b()
+                battle.main._navigate_to_position(0)
+                while memory.main.other_battle_menu():
+                    xbox.tap_b()
                 battle.main.calculate_spare_change_movement(spare_change_value)
                 while memory.main.spare_change_open():
                     xbox.tap_b()
-                xbox.tap_b()
-                xbox.tap_b()
+                battle.main.tap_targeting()
             else:
                 battle.main.buddy_swap_lulu()
     print("Battle is complete.")
