@@ -72,7 +72,7 @@ vars:
   ne_armor_val          : 255    # Default 255
   ne_battles            : 0      # Default to 0
   nea_zone              : 0      # Decides in which zone we charge Rikku OD after reaching Zanarkand.
-  generate_saves        : True   # Generates a full set of saves throughout the run.
+  generate_saves        : False  # Generates a full set of saves throughout the run.
   # first_hits is still in vars.py
   
   # Nemesis variables, unused in any%
