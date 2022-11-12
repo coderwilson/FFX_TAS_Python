@@ -792,7 +792,7 @@ def spherimorph():
                     battle.main.revive()
                     kim_turn = True
                 elif not kim_turn:
-                    logger.debug(
+                    logger.manip(
                         f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}"
                     )
                     logs.write_rng_track("RNG11 before Spherimorph")
@@ -837,7 +837,7 @@ def spherimorph():
                     battle.main.defend()
             elif turn_char == 6:
                 mix_dmg_rolls = sum(memory.main.rikku_mix_damage())
-                logger.debug(f"Mix will do {mix_dmg_rolls} damage.")
+                logger.manip(f"Mix will do {mix_dmg_rolls} damage.")
                 if mix_dmg_rolls < memory.main.get_enemy_current_hp()[0]:
                     logger.debug("Throwing Grenade because of damage rolls")
                     grenade_slot_num = memory.main.get_use_items_slot(35)
@@ -848,9 +848,9 @@ def spherimorph():
                     else:
                         battle.main.defend()
                 elif yuna_turn and kim_turn:
-                    logger.debug("Starting Rikkus overdrive")
-                    logger.debug("Full Damage Values:")
-                    logger.debug(memory.main.rikku_mix_damage())
+                    logger.info("Starting Rikkus overdrive")
+                    logger.manip("Full Damage Values:")
+                    logger.manip(memory.main.rikku_mix_damage())
                     if spell_num == 1:
                         logger.debug("Creating Ice")
                         battle.main.rikku_full_od("spherimorph1")
