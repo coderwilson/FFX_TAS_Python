@@ -295,9 +295,7 @@ def get_advances(tros=True, report=False):
         advances = 0
     game_vars.set_yellows(yellows[advances])
     logger.debug("#############################################")
-    logger.debug(
-        f"### Advances updated: {t_strike_results} | {yellows} | {advances} ###"
-    )
+    logger.debug(f"# Advances updated: {t_strike_results} | {yellows} | {advances} #")
     logger.debug("#############################################")
     return advances
 
@@ -355,7 +353,7 @@ def besaid():
 
 @battle.utils.speedup_decorator
 def lancet_tutorial():
-    logger.info("Fight start: Lancet tutorial fight (Kilika)")
+    logger.info("Fight start: Lancet tutorial (Kilika)")
     xbox.click_to_battle()
     lancet("none")
 

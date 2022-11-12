@@ -80,9 +80,9 @@ def calm_lands():
 
     # print("Hyper Chocobo complete")
 
-    # catcherComplete = False
-    # while not catcherComplete:
-    #     catcherComplete = choco_tame_4()
+    # catcher_complete = False
+    # while not catcher_complete:
+    #     catcher_complete = choco_tame_4()
 
     print("Catcher Chocobo complete")
 
