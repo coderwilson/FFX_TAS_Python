@@ -8,7 +8,7 @@ step_counter            : 1      # valid step_counter values are dependent on ga
 # Logging
 color_log               : False  # Colors the console output. May not work on some systems
 verbosity               : DEBUG  # Verbosity of log messages in the console.
-                                 # These are the valid levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+                                 # These are the valid levels: DEBUG, MANIP, INFO, WARNING, ERROR, CRITICAL
                                  # Full log will always be available in a file.
 
 # RNG Seed (requires setting vars.set_seed: True)
