@@ -35,7 +35,6 @@ class TidusHomeMovement(AreaMovementBase):
         28: [2, 1200],
     }
     checkpoint_fallback = {
-        0: "Testing!",
         5: "Talk to the kids",
         8: "Talk to the girls",
     }
