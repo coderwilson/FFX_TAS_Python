@@ -355,23 +355,3 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
                     xbox.tap_b()
     # logs.write_stats('Miihen encounters:')
     # logs.write_stats(battle_count)
-
-
-def wrap_up():
-    logger.info("Now ready to meet Seymour")
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 5)
-    FFXC.set_neutral()
-
-    memory.main.click_to_control()
-    FFXC.set_movement(0, 1)
-    xbox.skip_dialog(4.5)
-    FFXC.set_neutral()
-    xbox.skip_dialog(2.5)
-    FFXC.set_movement(0, -1)
-    xbox.skip_dialog(12)
-    FFXC.set_neutral()
-    memory.main.click_to_control()  # Seymour scene
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 12)
-    FFXC.set_neutral()

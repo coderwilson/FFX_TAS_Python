@@ -95,6 +95,7 @@ class AllVars:
         self.ne_battles = config_vars.get("ne_battles", 0)  # Default to 0
         # Decides in which zone we charge Rikku OD after reaching Zanarkand.
         self.nea_zone = config_vars.get("nea_zone", 0)
+        self.generate_saves = config_vars.get("generate_saves", 0)
 
         # ----Nemesis variables, unused in any%
         self.nem_ap_val = config_vars.get("nem_ap_val", 1)  # Default to 1
@@ -112,7 +113,10 @@ class AllVars:
             os.environ.get("userprofile")
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
-
+    
+    def create_saves(self):
+        return self.generate_saves
+    
     def accessibility_vars(self):
         return [
             self.skip_cutscene_flag,
@@ -201,6 +205,9 @@ class AllVars:
 
     def nemesis(self):
         return self.nemesis_value
+
+    def nemesis_set(self,value):
+        self.nemesis_value = value
 
     def get_nea_zone(self):
         return self.nea_zone

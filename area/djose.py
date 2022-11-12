@@ -359,7 +359,9 @@ def trials():
         memory.main.click_to_control()
         logger.info("Leaving the fayth room")
 
-        FFXC.set_movement(1, 1)
+        while not pathing.set_movement([-1,-61]):
+            pass
+        FFXC.set_movement(1,1)
         memory.main.await_event()
         FFXC.set_neutral()
 
