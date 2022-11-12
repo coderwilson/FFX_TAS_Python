@@ -13,6 +13,28 @@
             "victory": true
         }
     },
+    "1": {
+        "78287081": {
+            "duration": 437,
+            "victory": true
+        },
+        "191289547": {
+            "duration": 534,
+            "victory": false
+        },
+        "596621567": {
+            "duration": 486,
+            "victory": false
+        },
+        "720440554": {
+            "duration": 548,
+            "victory": true
+        },
+        "1563227986": {
+            "duration": 473,
+            "victory": false
+        }
+    },
     "16": {
         "453439872": {
             "duration": 487,
@@ -47,8 +69,8 @@
             "victory": false
         },
         "314267917": {
-            "duration": 623,
-            "victory": false
+            "duration": 572,
+            "victory": true
         },
         "328977576": {
             "duration": 432,
