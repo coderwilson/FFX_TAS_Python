@@ -164,16 +164,16 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
         save_num = 999
     save_pos = 999
     if save_num != 999:
-        saveFiles = load_game.get_saved_files()
-        testString = "ffx_000"
-        for y in range(len(saveFiles)):
-            if saveFiles[y] == testString:
+        save_files = load_game.get_saved_files()
+        test_string = "ffx_000"
+        for y in range(len(save_files)):
+            if save_files[y] == test_string:
                 save_pos = y
         auto_save = save_pos
         save_pos = 999
-        testString = "ffx_" + str(save_num).zfill(3)
-        for x in range(len(saveFiles)):
-            if saveFiles[x] == testString:
+        test_string = "ffx_" + str(save_num).zfill(3)
+        for x in range(len(save_files)):
+            if save_files[x] == test_string:
                 save_pos = x
         if auto_save > save_pos:
             save_pos += 1
@@ -205,12 +205,12 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
             xbox.tap_a()
 
         if save_num != 999 and save_pos == 999:
-            saveFiles = load_game.get_saved_files()
+            save_files = load_game.get_saved_files()
             logger.debug(
                 f"File was expected as save number {save_num} but could not find this file."
             )
-            logger.debug(f"Actual save file: {saveFiles[0]}")
-            file_orig = game_vars.game_save_path() + saveFiles[0]
+            logger.debug(f"Actual save file: {save_files[0]}")
+            file_orig = game_vars.game_save_path() + save_files[0]
             logger.debug(file_orig)
             file_dest = game_vars.game_save_path() + "ffx_" + str(save_num).zfill(3)
             logger.debug(file_dest)

@@ -28,13 +28,13 @@ print("Starting tech-demo program.")
 memory.main.start()
 start_time = logs.time_stamp()
 print("Timer starts now.")
-SkipCount = 0
-SkipAttempts = 0
+skip_count = 0
+skip_attempts = 0
 game_vars.set_csr(False)
 
 attempts = 0  # Determines where in the showcase we start
 cycles = 0
-jyscalRetry = False
+jyscal_retry = False
 while attempts < 20 and cycles < 50:
     attempts += 1
     cycles += 1
@@ -54,15 +54,15 @@ while attempts < 20 and cycles < 50:
         FFXC.set_neutral()
         memory.main.set_encounter_rate(0)
         memory.main.await_control()
-        returnVal = area.miihen.arrival()
-        print(returnVal)
-        SkipAttempts += 1
-        if returnVal[3]:
-            SkipCount += 1
+        return_val = area.miihen.arrival()
+        print(return_val)
+        skip_attempts += 1
+        if return_val[3]:
+            skip_count += 1
         print("------------------------------")
         print("------------------------------")
-        print("Attempts:", SkipAttempts)
-        print("Success:", SkipCount)
+        print("Attempts:", skip_attempts)
+        print("Success:", skip_count)
         print("------------------------------")
         print("------------------------------")
     elif attempts == 2:
@@ -71,41 +71,41 @@ while attempts < 20 and cycles < 50:
         # Fixes a low gil state for this save file.
         memory.main.set_gil_value(4000)
         load_game.load_mrr()
-        wakkaLateMenu = area.mrr.arrival()
-        SkipCount += 1
-        SkipAttempts += 1
+        wakka_late_menu = area.mrr.arrival()
+        skip_count += 1
+        skip_attempts += 1
         print("------------------------------")
         print("------------------------------")
-        print("Attempts:", SkipAttempts)
-        print("Success:", SkipCount)
+        print("Attempts:", skip_attempts)
+        print("Success:", skip_count)
         print("------------------------------")
         print("------------------------------")
     elif attempts == 3:
         print("Demo - Guado skip")
         load_game.load_save_num(3)
         load_game.load_guado_skip()
-        SkipAttempts += 1
+        skip_attempts += 1
         guado_skip_status = area.guadosalam.guado_skip()
         if guado_skip_status:
-            SkipCount += 1
+            skip_count += 1
         print("------------------------------")
         print("------------------------------")
-        print("Attempts:", SkipAttempts)
-        print("Success:", SkipCount)
+        print("Attempts:", skip_attempts)
+        print("Success:", skip_count)
         print("------------------------------")
         print("------------------------------")
     elif attempts == 4:
         print("Demo - Jyscal skip")
         load_game.load_save_num(97)
         load_game.load_mac_temple()
-        SkipAttempts += 1
+        skip_attempts += 1
         jyscal_skip_status = area.mac_temple.arrival()
         if jyscal_skip_status:
-            SkipCount += 1
+            skip_count += 1
         print("------------------------------")
         print("------------------------------")
-        print("Attempts:", SkipAttempts)
-        print("Success:", SkipCount)
+        print("Attempts:", skip_attempts)
+        print("Success:", skip_count)
         print("------------------------------")
         print("------------------------------")
     elif attempts == 5:

@@ -123,7 +123,7 @@ def load_into_game_old(gamestate: str, step_counter: str):
         logs.write_stats(str(game.start_time))
     import load_game
 
-    # Need to update these to use loadGame.loadSaveNum(number) for all.
+    # Need to update these to use load_game.load_save_num(number) for all.
 
     if gamestate == "Baaj" and step_counter == 1:
         load_save_num(40)
@@ -201,12 +201,12 @@ def load_into_game_old(gamestate: str, step_counter: str):
         load_save_num(15)
     if gamestate == "rescue_yuna" and step_counter == 4:  # Altana
         load_save_num(12)
-        # memory.main.setEncounterRate(setVal=0)
-        # memory.main.setGameSpeed(setVal=1)
+        # memory.main.set_encounter_rate(set_val=0)
+        # memory.main.set_game_speed(set_val=1)
     # Highbridge before Seymour Natus
     if gamestate == "rescue_yuna" and step_counter == 5:
         load_save_num(42)  # Regular
-        # loadGame.loadSaveNum(67) #Nemesis
+        # load_game.load_save_num(67) #Nemesis
     if gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
         load_save_num(43)
         load_calm()
@@ -215,7 +215,7 @@ def load_into_game_old(gamestate: str, step_counter: str):
         load_save_num(57)
     if gamestate == "Gagazet" and step_counter == 3:  # Gagazet gates, after B&Y
         load_save_num(138)  # Blitz Win
-        # loadGame.loadSaveNum(53) # Blitz Loss
+        # load_game.load_save_num(53) # Blitz Loss
         game_vars.end_game_version_set(4)
         load_gagazet_gates()
     if gamestate == "Gagazet" and step_counter == 6:  # After the dream
@@ -255,7 +255,7 @@ def load_into_game_old(gamestate: str, step_counter: str):
         load_save_num(13)
     # Save sphere on the Highbridge before talking to Shedinja
     if gamestate == "Sin" and step_counter == 2:
-        # loadGame.loadSaveNum(49)
+        # load_game.load_save_num(49)
         # Nemesis logic, double friend sphere drops from B&Y
         load_save_num(70)
         while not memory.main.oaka_gil_cursor() in [8, 20]:
@@ -287,8 +287,8 @@ def load_into_game_old(gamestate: str, step_counter: str):
         load_save_num(84)
         game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
         game_vars.end_game_version_set(4)
-        # import nemesis.arenaPrep
-        nemesis.arenaPrep.arena_return()
+        # import nemesis.arena_prep
+        nemesis.arena_prep.arena_return()
     if gamestate == "Nem_Farm" and step_counter == 5:
         load_save_num(71)
         game_vars.end_game_version_set(4)
@@ -340,7 +340,7 @@ def load_into_game_old(gamestate: str, step_counter: str):
         game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 21:
         load_save_num(79)
-        nemesis.arenaPrep.arena_return()
+        nemesis.arena_prep.arena_return()
         game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
         game_vars.end_game_version_set(4)
     if gamestate == "Nem_Farm" and step_counter == 22:
@@ -365,43 +365,43 @@ def load_into_game_old(gamestate: str, step_counter: str):
 
 
 def get_saved_files():
-    saveFilesFull = sorted(
+    save_files_full = sorted(
         Path(game_vars.game_save_path()).iterdir(), key=os.path.getmtime
     )
-    saveFiles = [os.path.basename(i) for i in saveFilesFull]
-    saveFiles = saveFiles[::-1]
-    return saveFiles
+    save_files = [os.path.basename(i) for i in save_files_full]
+    save_files = save_files[::-1]
+    return save_files
 
 
 def load_save_num(number):
-    saveFiles = get_saved_files()
+    save_files = get_saved_files()
 
     # First get the autosave position
-    testString = "ffx_000"
-    print("Searching for string:", testString)
-    savePos = 255
-    for x in range(len(saveFiles)):
-        if saveFiles[x] == testString:
+    test_string = "ffx_000"
+    print("Searching for string:", test_string)
+    save_pos = 255
+    for x in range(len(save_files)):
+        if save_files[x] == test_string:
             print("Save file is in position:", x)
-            savePos = x
-    save_zero = savePos
-    savePos = 255
+            save_pos = x
+    save_zero = save_pos
+    save_pos = 255
     # Then get the actual save position
-    testString = "ffx_" + str(number).zfill(3)
-    logger.debug(f"Searching for string: {testString}")
-    savePos = 255
-    for x in range(len(saveFiles)):
-        if saveFiles[x] == testString:
+    test_string = "ffx_" + str(number).zfill(3)
+    logger.debug(f"Searching for string: {test_string}")
+    save_pos = 255
+    for x in range(len(save_files)):
+        if save_files[x] == test_string:
             logger.info(f"Save file is in position: {x}")
-            savePos = x
-    if save_zero > savePos:
-        savePos += 1
+            save_pos = x
+    if save_zero > save_pos:
+        save_pos += 1
     memory.main.wait_frames(20)
-    if savePos != 255:
-        while memory.main.load_game_pos() != savePos:
-            if memory.main.load_game_pos() + 4 < savePos:
+    if save_pos != 255:
+        while memory.main.load_game_pos() != save_pos:
+            if memory.main.load_game_pos() + 4 < save_pos:
                 xbox.trigger_r()
-            elif memory.main.load_game_pos() < savePos:
+            elif memory.main.load_game_pos() < save_pos:
                 xbox.tap_down()
             else:
                 xbox.tap_up()
@@ -432,9 +432,9 @@ def load_first():
 
 def load_offset(offset):
     logger.info(f"Loading to save file in position {offset}")
-    totalOffset = offset
+    total_offset = offset
     memory.main.wait_frames(30 * 2.5)
-    for _ in range(totalOffset):
+    for _ in range(total_offset):
         xbox.tap_down()
     for _ in range(7):
         xbox.tap_b()
@@ -462,11 +462,11 @@ def load_mem_cursor():
     memory.main.await_control()
     memory.main.open_menu()
     if memory.main.get_story_progress() <= 200:  # Up to Besaid save, after Trials
-        cursorTarget = 5
+        cursor_target = 5
     else:
-        cursorTarget = 8
-    logger.debug(f"Aiming at {cursorTarget}")
-    while memory.main.get_menu_cursor_pos() != cursorTarget:
+        cursor_target = 8
+    logger.debug(f"Aiming at {cursor_target}")
+    while memory.main.get_menu_cursor_pos() != cursor_target:
         logger.debug(memory.main.get_menu_cursor_pos())
         xbox.tap_up()
         logger.debug(memory.main.get_menu_cursor_pos())
@@ -549,8 +549,8 @@ def load_baaj():
 def besaid_trials():
     # Exit Tent
     while memory.main.get_map() != 17:
-        tCoords = memory.main.get_coords()
-        pathing.set_movement([-1, tCoords[1] - 15])
+        t_coords = memory.main.get_coords()
+        pathing.set_movement([-1, t_coords[1] - 15])
 
     # To the temple
     while not pathing.set_movement([35, 182]):
@@ -560,13 +560,13 @@ def besaid_trials():
     while not pathing.set_movement([14, -67]):
         pass
     while memory.main.get_map() != 42:
-        tCoords = memory.main.get_coords()
-        pathing.set_movement([-2, tCoords[1] - 15])
+        t_coords = memory.main.get_coords()
+        pathing.set_movement([-2, t_coords[1] - 15])
 
     # Start the trials
     while memory.main.get_map() != 122:
-        tCoords = memory.main.get_coords()
-        pathing.set_movement([-2, tCoords[1] + 15])
+        t_coords = memory.main.get_coords()
+        pathing.set_movement([-2, t_coords[1] + 15])
 
 
 def boat_1():

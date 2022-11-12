@@ -470,110 +470,110 @@ def use_and_quit():
     return True
 
 
-def sphere_num(sType) -> int:
-    sType = sType.lower()
-    if sType == "power":
+def sphere_num(s_type) -> int:
+    s_type = s_type.lower()
+    if s_type == "power":
         return 70
-    elif sType == "mana":
+    elif s_type == "mana":
         return 71
-    elif sType == "speed":
+    elif s_type == "speed":
         return 72
-    elif sType == "ability":
+    elif s_type == "ability":
         return 73
-    elif sType == "fortune":
+    elif s_type == "fortune":
         return 74
-    elif sType == "attribute":
+    elif s_type == "attribute":
         return 75
-    elif sType == "special":
+    elif s_type == "special":
         return 76
-    elif sType == "skill":
+    elif s_type == "skill":
         return 77
-    elif sType == "wmag":
+    elif s_type == "wmag":
         return 78
-    elif sType == "bmag":
+    elif s_type == "bmag":
         return 79
-    elif sType == "master":
+    elif s_type == "master":
         return 80
-    elif sType == "lv1":
+    elif s_type == "lv1":
         return 81
-    elif sType == "lv2":
+    elif s_type == "lv2":
         return 82
-    elif sType == "lv3":
+    elif s_type == "lv3":
         return 83
-    elif sType == "lv4":
+    elif s_type == "lv4":
         return 84
-    elif sType == "hp":
+    elif s_type == "hp":
         return 85
-    elif sType == "mp":
+    elif s_type == "mp":
         return 86
-    elif sType == "strength":
+    elif s_type == "strength":
         return 87
-    elif sType == "defense":
+    elif s_type == "defense":
         return 88
-    elif sType == "magic":
+    elif s_type == "magic":
         return 89
-    elif sType == "mdef":
+    elif s_type == "mdef":
         return 90
-    elif sType == "agility":
+    elif s_type == "agility":
         return 91
-    elif sType == "evasion":
+    elif s_type == "evasion":
         return 92
-    elif sType == "accuracy":
+    elif s_type == "accuracy":
         return 93
-    elif sType == "luck":
+    elif s_type == "luck":
         return 94
-    elif sType == "clear":
+    elif s_type == "clear":
         return 95
-    elif sType == "ret":
+    elif s_type == "ret":
         return 96
-    elif sType == "friend":
+    elif s_type == "friend":
         return 97
-    elif sType == "tele":
+    elif s_type == "tele":
         return 98
-    elif sType == "warp":
+    elif s_type == "warp":
         return 99
     return 255
 
 
-def sel_sphere(sType, shift):
-    sNum = 255
-    menuPos = 0
+def sel_sphere(s_type, shift):
+    s_num = 255
+    menu_pos = 0
     logger.debug("------------------------------")
-    logger.debug(sType)
-    sNum = sphere_num(sType)
-    logger.debug(sNum)
-    menuPos = memory.main.get_grid_items_slot(sNum)
-    logger.debug(menuPos)
+    logger.debug(s_type)
+    s_num = sphere_num(s_type)
+    logger.debug(s_num)
+    menu_pos = memory.main.get_grid_items_slot(s_num)
+    logger.debug(menu_pos)
     logger.debug("------------------------------")
-    if menuPos == 255:
-        logger.debug(f"Sphere {sType} is not in inventory.")
+    if menu_pos == 255:
+        logger.debug(f"Sphere {s_type} is not in inventory.")
         return
-    while menuPos != memory.main.get_grid_cursor_pos():
-        if menuPos > memory.main.get_grid_cursor_pos():
+    while menu_pos != memory.main.get_grid_cursor_pos():
+        if menu_pos > memory.main.get_grid_cursor_pos():
             if game_vars.use_pause():
                 xbox.tap_down()
             else:
                 if (
-                    menuPos - memory.main.get_grid_cursor_pos() >= 3
+                    menu_pos - memory.main.get_grid_cursor_pos() >= 3
                     and len(memory.main.get_grid_items_order()) > 4
                 ):
                     if (
-                        menuPos - memory.main.get_grid_cursor_pos() == 3
-                        and menuPos == len(memory.main.get_grid_items_order()) - 1
+                        menu_pos - memory.main.get_grid_cursor_pos() == 3
+                        and menu_pos == len(memory.main.get_grid_items_order()) - 1
                     ):
                         xbox.tap_down()
                     else:
                         xbox.trigger_r()
                 else:
                     xbox.tap_down()
-        elif menuPos < memory.main.get_grid_cursor_pos():
+        elif menu_pos < memory.main.get_grid_cursor_pos():
             if game_vars.use_pause():
                 xbox.tap_up()
             else:
-                if memory.main.get_grid_cursor_pos() - menuPos >= 3:
+                if memory.main.get_grid_cursor_pos() - menu_pos >= 3:
                     if (
-                        menuPos == 0
-                        and memory.main.get_grid_cursor_pos() - menuPos == 3
+                        menu_pos == 0
+                        and memory.main.get_grid_cursor_pos() - menu_pos == 3
                     ) or len(memory.main.get_grid_items_order()) <= 4:
                         xbox.tap_up()
                     else:
@@ -626,7 +626,7 @@ def sel_sphere(sType, shift):
         grid_right()
         memory.main.wait_frames(30 * 0.1)
         grid_left()
-    if shift == "afterBYSpec":
+    if shift == "after_by_spec":
         grid_right()
         grid_right()
         grid_up()

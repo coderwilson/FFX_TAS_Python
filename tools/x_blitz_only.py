@@ -17,39 +17,39 @@ memory.main.start()
 
 attempts = 0
 success = 0
-rngRootArray = [0] * 200
-rngSuccessArray = [0] * 21
-rngMod2Array = [0] * 200
-rngMod3Array = [0] * 200
-rngMod4Array = [0] * 200
-rngMod5Array = [0] * 200
-rngMod6Array = [0] * 200
-rngMod7Array = [0] * 200
-rngMod8Array = [0] * 200
-rngMod9Array = [0] * 200
-rngMod10Array = [0] * 200
-rngMod11Array = [0] * 200
-rngMod12Array = [0] * 200
-rngMod13Array = [0] * 200
-rngMod14Array = [0] * 200
-rngMod15Array = [0] * 200
-rngMod16Array = [0] * 200
-rngMod17Array = [0] * 200
-rngMod18Array = [0] * 200
-rngMod19Array = [0] * 200
-rngMod20Array = [0] * 200
+rng_root_array = [0] * 200
+rng_success_array = [0] * 21
+rng_mod_2_array = [0] * 200
+rng_mod_3_array = [0] * 200
+rng_mod_4_array = [0] * 200
+rng_mod_5_array = [0] * 200
+rng_mod_6_array = [0] * 200
+rng_mod_7_array = [0] * 200
+rng_mod_8_array = [0] * 200
+rng_mod_9_array = [0] * 200
+rng_mod_10_array = [0] * 200
+rng_mod_11_array = [0] * 200
+rng_mod_12_array = [0] * 200
+rng_mod_13_array = [0] * 200
+rng_mod_14_array = [0] * 200
+rng_mod_15_array = [0] * 200
+rng_mod_16_array = [0] * 200
+rng_mod_17_array = [0] * 200
+rng_mod_18_array = [0] * 200
+rng_mod_19_array = [0] * 200
+rng_mod_20_array = [0] * 200
 
 while attempts < 20:
     area.dream_zan.new_game("BlitzballTesting")
     load_game.load_save_num(37)
     memory.main.reset_battle_end()
-    rngRootArray[attempts] = memory.main.rng_02()
+    rng_root_array[attempts] = memory.main.rng_02()
     offset = 1
-    blitzoffWin = False
+    blitzoff_win = False
 
     # ---------This is the actual movement/code/logic/etc---------------
 
-    rolledArray = memory.main.rng_02_array()
+    rolled_array = memory.main.rng_02_array()
 
     area.luca.blitz_start()
     while not memory.main.blitz_clock() in [1, 2]:
@@ -59,106 +59,106 @@ while attempts < 20:
 
     FFXC.set_neutral()
     if blitz.select_movement():
-        blitzoffWin = True
+        blitzoff_win = True
     else:
-        blitzoffWin = False
+        blitzoff_win = False
 
-    rngMod2Array[attempts] = rolledArray[offset] % 2
-    rngMod3Array[attempts] = rolledArray[offset] % 3
-    rngMod4Array[attempts] = rolledArray[offset] % 4
-    rngMod5Array[attempts] = rolledArray[offset] % 5
-    rngMod6Array[attempts] = rolledArray[offset] % 6
-    rngMod7Array[attempts] = rolledArray[offset] % 7
-    rngMod8Array[attempts] = rolledArray[offset] % 8
-    rngMod9Array[attempts] = rolledArray[offset] % 9
-    rngMod10Array[attempts] = rolledArray[offset] % 10
-    rngMod11Array[attempts] = rolledArray[offset] % 11
-    rngMod12Array[attempts] = rolledArray[offset] % 12
-    rngMod13Array[attempts] = rolledArray[offset] % 13
-    rngMod14Array[attempts] = rolledArray[offset] % 14
-    rngMod15Array[attempts] = rolledArray[offset] % 15
-    rngMod16Array[attempts] = rolledArray[offset] % 16
-    rngMod17Array[attempts] = rolledArray[offset] % 17
-    rngMod18Array[attempts] = rolledArray[offset] % 18
-    rngMod19Array[attempts] = rolledArray[offset] % 19
-    rngMod20Array[attempts] = rolledArray[offset] % 20
+    rng_mod_2_array[attempts] = rolled_array[offset] % 2
+    rng_mod_3_array[attempts] = rolled_array[offset] % 3
+    rng_mod_4_array[attempts] = rolled_array[offset] % 4
+    rng_mod_5_array[attempts] = rolled_array[offset] % 5
+    rng_mod_6_array[attempts] = rolled_array[offset] % 6
+    rng_mod_7_array[attempts] = rolled_array[offset] % 7
+    rng_mod_8_array[attempts] = rolled_array[offset] % 8
+    rng_mod_9_array[attempts] = rolled_array[offset] % 9
+    rng_mod_10_array[attempts] = rolled_array[offset] % 10
+    rng_mod_11_array[attempts] = rolled_array[offset] % 11
+    rng_mod_12_array[attempts] = rolled_array[offset] % 12
+    rng_mod_13_array[attempts] = rolled_array[offset] % 13
+    rng_mod_14_array[attempts] = rolled_array[offset] % 14
+    rng_mod_15_array[attempts] = rolled_array[offset] % 15
+    rng_mod_16_array[attempts] = rolled_array[offset] % 16
+    rng_mod_17_array[attempts] = rolled_array[offset] % 17
+    rng_mod_18_array[attempts] = rolled_array[offset] % 18
+    rng_mod_19_array[attempts] = rolled_array[offset] % 19
+    rng_mod_20_array[attempts] = rolled_array[offset] % 20
 
-    if blitzoffWin and rngMod2Array[attempts]:
-        rngSuccessArray[2] += 1
-    elif not blitzoffWin and not rngMod2Array[attempts]:
-        rngSuccessArray[2] += 1
-    if blitzoffWin and rngMod3Array[attempts]:
-        rngSuccessArray[3] += 1
-    elif not blitzoffWin and not rngMod3Array[attempts]:
-        rngSuccessArray[3] += 1
-    if blitzoffWin and rngMod4Array[attempts]:
-        rngSuccessArray[4] += 1
-    elif not blitzoffWin and not rngMod4Array[attempts]:
-        rngSuccessArray[4] += 1
-    if blitzoffWin and rngMod5Array[attempts]:
-        rngSuccessArray[5] += 1
-    elif not blitzoffWin and not rngMod5Array[attempts]:
-        rngSuccessArray[5] += 1
-    if blitzoffWin and rngMod6Array[attempts]:
-        rngSuccessArray[6] += 1
-    elif not blitzoffWin and not rngMod6Array[attempts]:
-        rngSuccessArray[6] += 1
-    if blitzoffWin and rngMod7Array[attempts]:
-        rngSuccessArray[7] += 1
-    elif not blitzoffWin and not rngMod7Array[attempts]:
-        rngSuccessArray[7] += 1
-    if blitzoffWin and rngMod8Array[attempts]:
-        rngSuccessArray[8] += 1
-    elif not blitzoffWin and not rngMod8Array[attempts]:
-        rngSuccessArray[8] += 1
-    if blitzoffWin and rngMod9Array[attempts]:
-        rngSuccessArray[9] += 1
-    elif not blitzoffWin and not rngMod9Array[attempts]:
-        rngSuccessArray[9] += 1
-    if blitzoffWin and rngMod10Array[attempts]:
-        rngSuccessArray[10] += 1
-    elif not blitzoffWin and not rngMod10Array[attempts]:
-        rngSuccessArray[10] += 1
-    if blitzoffWin and rngMod11Array[attempts]:
-        rngSuccessArray[11] += 1
-    elif not blitzoffWin and not rngMod11Array[attempts]:
-        rngSuccessArray[11] += 1
-    if blitzoffWin and rngMod12Array[attempts]:
-        rngSuccessArray[12] += 1
-    elif not blitzoffWin and not rngMod12Array[attempts]:
-        rngSuccessArray[12] += 1
-    if blitzoffWin and rngMod13Array[attempts]:
-        rngSuccessArray[13] += 1
-    elif not blitzoffWin and not rngMod13Array[attempts]:
-        rngSuccessArray[13] += 1
-    if blitzoffWin and rngMod14Array[attempts]:
-        rngSuccessArray[14] += 1
-    elif not blitzoffWin and not rngMod14Array[attempts]:
-        rngSuccessArray[14] += 1
-    if blitzoffWin and rngMod15Array[attempts]:
-        rngSuccessArray[15] += 1
-    elif not blitzoffWin and not rngMod15Array[attempts]:
-        rngSuccessArray[15] += 1
-    if blitzoffWin and rngMod16Array[attempts]:
-        rngSuccessArray[16] += 1
-    elif not blitzoffWin and not rngMod16Array[attempts]:
-        rngSuccessArray[16] += 1
-    if blitzoffWin and rngMod17Array[attempts]:
-        rngSuccessArray[17] += 1
-    elif not blitzoffWin and not rngMod17Array[attempts]:
-        rngSuccessArray[17] += 1
-    if blitzoffWin and rngMod18Array[attempts]:
-        rngSuccessArray[18] += 1
-    elif not blitzoffWin and not rngMod18Array[attempts]:
-        rngSuccessArray[18] += 1
-    if blitzoffWin and rngMod19Array[attempts]:
-        rngSuccessArray[19] += 1
-    elif not blitzoffWin and not rngMod19Array[attempts]:
-        rngSuccessArray[19] += 1
-    if blitzoffWin and rngMod20Array[attempts]:
-        rngSuccessArray[20] += 1
-    elif not blitzoffWin and not rngMod20Array[attempts]:
-        rngSuccessArray[20] += 1
+    if blitzoff_win and rng_mod_2_array[attempts]:
+        rng_success_array[2] += 1
+    elif not blitzoff_win and not rng_mod_2_array[attempts]:
+        rng_success_array[2] += 1
+    if blitzoff_win and rng_mod_3_array[attempts]:
+        rng_success_array[3] += 1
+    elif not blitzoff_win and not rng_mod_3_array[attempts]:
+        rng_success_array[3] += 1
+    if blitzoff_win and rng_mod_4_array[attempts]:
+        rng_success_array[4] += 1
+    elif not blitzoff_win and not rng_mod_4_array[attempts]:
+        rng_success_array[4] += 1
+    if blitzoff_win and rng_mod_5_array[attempts]:
+        rng_success_array[5] += 1
+    elif not blitzoff_win and not rng_mod_5_array[attempts]:
+        rng_success_array[5] += 1
+    if blitzoff_win and rng_mod_6_array[attempts]:
+        rng_success_array[6] += 1
+    elif not blitzoff_win and not rng_mod_6_array[attempts]:
+        rng_success_array[6] += 1
+    if blitzoff_win and rng_mod_7_array[attempts]:
+        rng_success_array[7] += 1
+    elif not blitzoff_win and not rng_mod_7_array[attempts]:
+        rng_success_array[7] += 1
+    if blitzoff_win and rng_mod_8_array[attempts]:
+        rng_success_array[8] += 1
+    elif not blitzoff_win and not rng_mod_8_array[attempts]:
+        rng_success_array[8] += 1
+    if blitzoff_win and rng_mod_9_array[attempts]:
+        rng_success_array[9] += 1
+    elif not blitzoff_win and not rng_mod_9_array[attempts]:
+        rng_success_array[9] += 1
+    if blitzoff_win and rng_mod_10_array[attempts]:
+        rng_success_array[10] += 1
+    elif not blitzoff_win and not rng_mod_10_array[attempts]:
+        rng_success_array[10] += 1
+    if blitzoff_win and rng_mod_11_array[attempts]:
+        rng_success_array[11] += 1
+    elif not blitzoff_win and not rng_mod_11_array[attempts]:
+        rng_success_array[11] += 1
+    if blitzoff_win and rng_mod_12_array[attempts]:
+        rng_success_array[12] += 1
+    elif not blitzoff_win and not rng_mod_12_array[attempts]:
+        rng_success_array[12] += 1
+    if blitzoff_win and rng_mod_13_array[attempts]:
+        rng_success_array[13] += 1
+    elif not blitzoff_win and not rng_mod_13_array[attempts]:
+        rng_success_array[13] += 1
+    if blitzoff_win and rng_mod_14_array[attempts]:
+        rng_success_array[14] += 1
+    elif not blitzoff_win and not rng_mod_14_array[attempts]:
+        rng_success_array[14] += 1
+    if blitzoff_win and rng_mod_15_array[attempts]:
+        rng_success_array[15] += 1
+    elif not blitzoff_win and not rng_mod_15_array[attempts]:
+        rng_success_array[15] += 1
+    if blitzoff_win and rng_mod_16_array[attempts]:
+        rng_success_array[16] += 1
+    elif not blitzoff_win and not rng_mod_16_array[attempts]:
+        rng_success_array[16] += 1
+    if blitzoff_win and rng_mod_17_array[attempts]:
+        rng_success_array[17] += 1
+    elif not blitzoff_win and not rng_mod_17_array[attempts]:
+        rng_success_array[17] += 1
+    if blitzoff_win and rng_mod_18_array[attempts]:
+        rng_success_array[18] += 1
+    elif not blitzoff_win and not rng_mod_18_array[attempts]:
+        rng_success_array[18] += 1
+    if blitzoff_win and rng_mod_19_array[attempts]:
+        rng_success_array[19] += 1
+    elif not blitzoff_win and not rng_mod_19_array[attempts]:
+        rng_success_array[19] += 1
+    if blitzoff_win and rng_mod_20_array[attempts]:
+        rng_success_array[20] += 1
+    elif not blitzoff_win and not rng_mod_20_array[attempts]:
+        rng_success_array[20] += 1
 
     attempts += 1
     print("------------------------------")
@@ -166,11 +166,11 @@ while attempts < 20:
     print("Attempts:", attempts)
     print("Success:", success)
     print("All attempts results:")
-    print(rngSuccessArray)
+    print(rng_success_array)
     print("------------------------------")
     print("------------------------------")
     time.sleep(5)
-    if blitzoffWin:
+    if blitzoff_win:
         success += 1
 
     # ---------End of the actual movement/code/logic/etc---------------
@@ -187,7 +187,7 @@ while attempts < 20:
         print("Attempts:", attempts)
         print("Success:", success)
         print("All attempts results:")
-        print(rngSuccessArray)
+        print(rng_success_array)
         print("------------------------------")
         print("------------------------------")
 

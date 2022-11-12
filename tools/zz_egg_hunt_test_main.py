@@ -10,13 +10,13 @@ import xbox
 
 FFXC = xbox.FFXC
 
-selfAuto = True
+self_auto = True
 
 attempts = 0
 while attempts < 10:
     attempts += 1
 
-    if selfAuto is True:
+    if self_auto is True:
         print("Starting egg-hunt-only program.")
         print("Waiting to initialize - waiting on New Game screen")
         # ---------- MAKE SURE THIS IS ON FOR A FRESH RUN --------------------
@@ -51,7 +51,7 @@ while attempts < 10:
         import logs
 
         logs.next_plot()
-        waitCount = 0
+        wait_count = 0
         while memory.main.get_map() == 324:
             if memory.main.battle_active():
                 print("GTFO battle.")
@@ -59,14 +59,14 @@ while attempts < 10:
             elif memory.main.menu_open():
                 xbox.menu_b()
             else:
-                waitCount += 1
-                if waitCount % 10 == 0:
-                    print(waitCount)
+                wait_count += 1
+                if wait_count % 10 == 0:
+                    print(wait_count)
                     cam = memory.main.get_camera()
                     logs.write_plot(str(cam[0]) + "," + str(cam[4]))
                 else:
                     time.sleep(0.035)
-                if waitCount > 10000:
+                if wait_count > 10000:
                     break
 
     print("Allowing time for review.")

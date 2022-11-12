@@ -35,12 +35,12 @@ def await_move():
         memory.main.wait_frames(30 * 1)
     complete = False
     while not complete:
-        menuVal = memory.main.s_grid_menu()
-        if menuVal == 11 or menuVal == 255:
+        menu_val = memory.main.s_grid_menu()
+        if menu_val == 11 or menu_val == 255:
             xbox.menu_b()
-        elif menuVal == 7:
-            cursorLoc = memory.main.cursor_location()
-            if cursorLoc[0] == 51 or cursorLoc[1] == 243:
+        elif menu_val == 7:
+            cursor_loc = memory.main.cursor_location()
+            if cursor_loc[0] == 51 or cursor_loc[1] == 243:
                 xbox.menu_up()
             xbox.menu_b()
             complete = True
@@ -55,11 +55,11 @@ def await_use():
         memory.main.wait_frames(30 * 1)
     complete = False
     while not complete:
-        menuVal = memory.main.s_grid_menu()
-        logger.debug(f"Menu value: {menuVal}")
-        if menuVal == 7:
-            cursorLoc = memory.main.cursor_location()
-            if cursorLoc[0] == 102 or cursorLoc[1] == 14:
+        menu_val = memory.main.s_grid_menu()
+        logger.debug(f"Menu value: {menu_val}")
+        if menu_val == 7:
+            cursor_loc = memory.main.cursor_location()
+            if cursor_loc[0] == 102 or cursor_loc[1] == 14:
                 xbox.menu_down()
             xbox.menu_b()
             complete = True
@@ -72,10 +72,10 @@ def await_use():
 def await_quit_sg():
     logger.debug("Sphere Grid: attempting to quit")
     while memory.main.s_grid_active():
-        menuVal = memory.main.s_grid_menu()
-        if menuVal == 255:
+        menu_val = memory.main.s_grid_menu()
+        if menu_val == 255:
             xbox.menu_a()
-        elif menuVal == 11:
+        elif menu_val == 11:
             xbox.menu_b()
         else:
             xbox.menu_a()
@@ -135,9 +135,9 @@ def auto_sort_equipment(manual="n"):
 def short_aeons():
     memory.main.print_memory_log()
     memory.main.open_menu()
-    cursorTarget = 4
-    logger.debug(f"Aiming at {cursorTarget}")
-    while memory.main.get_menu_cursor_pos() != cursorTarget:
+    cursor_target = 4
+    logger.debug(f"Aiming at {cursor_target}")
+    while memory.main.get_menu_cursor_pos() != cursor_target:
         logger.debug(memory.main.get_menu_cursor_pos())
         xbox.tap_up()
     while memory.main.menu_number() == 5:
@@ -180,23 +180,23 @@ def woods_menuing():
     xbox.menu_b()
     xbox.menu_b()  # Sphere grid on Tidus
     menu_grid.move_first()
-    startNode = memory.main.s_grid_node_selected()[0]
-    if startNode == 242:
-        agiNeed = 2
+    start_node = memory.main.s_grid_node_selected()[0]
+    if start_node == 242:
+        agi_need = 2
     else:
-        agiNeed = 3
+        agi_need = 3
 
     menu_grid.grid_left()
-    if agiNeed == 3:
+    if agi_need == 3:
         menu_grid.grid_left()
-    fullMenu = False
-    if memory.main.get_tidus_slvl() >= agiNeed:
-        fullMenu = True
+    full_menu = False
+    if memory.main.get_tidus_slvl() >= agi_need:
+        full_menu = True
         menu_grid.grid_left()
 
     menu_grid.move_and_use()
     menu_grid.sel_sphere("ability", "none")
-    if fullMenu:
+    if full_menu:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
         game_vars.complete_full_kilik_menu()
@@ -230,7 +230,7 @@ def luca_workers():
     grid_right()
 
     menu_grid.move_and_use()
-    logger.debug(f"+++ sGridNodes: {memory.main.s_grid_node_selected()}")
+    logger.debug(f"+++ s_grid_nodes: {memory.main.s_grid_node_selected()}")
     if memory.main.s_grid_node_selected()[0] == 2:
         logger.info("No early haste")
         early_haste = 0
@@ -270,10 +270,10 @@ def mrr_grid_1():
     menu_grid.sel_sphere("power", "none")
     logger.debug("Determining state of Wakka late menu")
     if memory.main.get_slvl_wakka() < 3:
-        wakkaLateMenu = True
+        wakka_late_menu = True
         logger.debug("Deferring Wakkas remaining grid for later.")
     else:
-        wakkaLateMenu = False
+        wakka_late_menu = False
         logger.debug("Completing Wakkas remaining grid now.")
         menu_grid.use_and_move()
         grid_down()
@@ -281,13 +281,13 @@ def mrr_grid_1():
         grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
-    logger.debug(f"Wakka late menu (before): {wakkaLateMenu}")
+    logger.debug(f"Wakka late menu (before): {wakka_late_menu}")
 
     menu_grid.use_and_quit()
 
     memory.main.close_menu()
 
-    game_vars.wakka_late_menu_set(wakkaLateMenu)
+    game_vars.wakka_late_menu_set(wakka_late_menu)
 
 
 def mrr_grid_2():
@@ -364,7 +364,7 @@ def battle_site_grid():
         equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     else:
         equip_weapon(character=4, full_menu_close=False)
-    memory.main.full_party_format("battleSite")
+    memory.main.full_party_format("battle_site")
 
 
 def _navigate_to_position(position, battle_cursor):
@@ -398,11 +398,11 @@ def battle_site_oaka_1():
         if game_vars.use_pause():
             memory.main.wait_frames(2)
 
-    itemOrder = memory.main.get_items_order()
+    item_order = memory.main.get_items_order()
     if memory.main.rng_seed() != 160:
-        items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2, 8]]
+        items_to_sell = [(i, v) for i, v in enumerate(item_order) if v in [0, 1, 2, 8]]
     else:
-        items_to_sell = [(i, v) for i, v in enumerate(itemOrder) if v in [0, 1, 2]]
+        items_to_sell = [(i, v) for i, v in enumerate(item_order) if v in [0, 1, 2]]
     logger.debug(items_to_sell)
     for slot, cur_item in items_to_sell:
         logger.debug(f"{slot} {cur_item}")
@@ -738,10 +738,10 @@ def before_guards(item_to_use: int = 3):
         memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 1, 11)
     while memory.main.menu_number() != 26:
         xbox.tap_b()
-    megaPotSlot = memory.main.get_item_slot(item_to_use)
-    column = megaPotSlot % 2
-    row = (megaPotSlot - column) / 2
-    logger.debug(f"megaPotSlot: {megaPotSlot} column: {column} row: {row}")
+    mega_pot_slot = memory.main.get_item_slot(item_to_use)
+    column = mega_pot_slot % 2
+    row = (mega_pot_slot - column) / 2
+    logger.debug(f"mega_pot_slot: {mega_pot_slot} column: {column} row: {row}")
 
     while memory.main.item_menu_column() != column:
         if memory.main.item_menu_column() > column:
@@ -789,11 +789,11 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
     logger.debug(f"Equipping Weapon with ability {ability}")
     memory.main.await_control()
 
-    weaponHandles = memory.main.weapon_array_character(character)
+    weapon_handles = memory.main.weapon_array_character(character)
     logger.debug("@@@@@")
-    logger.debug(len(weaponHandles))
+    logger.debug(len(weapon_handles))
     logger.debug("@@@@@")
-    weaponNum = 255
+    weapon_num = 255
 
     abilityarray = []
     if not ability:
@@ -803,28 +803,28 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
     elif isinstance(ability, list):
         abilityarray = ability
 
-    for index, currentWeapon in enumerate(weaponHandles):
+    for index, current_weapon in enumerate(weapon_handles):
         if special == "brotherhood":
-            if currentWeapon.abilities() == [0x8063, 0x8064, 0x802A, 0x8000]:
-                weaponNum = index
+            if current_weapon.abilities() == [0x8063, 0x8064, 0x802A, 0x8000]:
+                weapon_num = index
                 break
         elif special == "brotherhoodearly":
             if (
-                currentWeapon.abilities() == [0x8063, 255, 255, 255]
-                and currentWeapon.slot_count() == 4
+                current_weapon.abilities() == [0x8063, 255, 255, 255]
+                and current_weapon.slot_count() == 4
             ):
-                weaponNum = index
+                weapon_num = index
                 break
-        elif not abilityarray and currentWeapon.abilities() == [255, 255, 255, 255]:
-            weaponNum = index
+        elif not abilityarray and current_weapon.abilities() == [255, 255, 255, 255]:
+            weapon_num = index
             break
         elif all(
-            currentWeapon.has_ability(cur_ability) for cur_ability in abilityarray
+            current_weapon.has_ability(cur_ability) for cur_ability in abilityarray
         ):
-            weaponNum = index
+            weapon_num = index
             break
-    logger.debug(f"Weapon is in slot {weaponNum}")
-    if weaponNum == 255:
+    logger.debug(f"Weapon is in slot {weapon_num}")
+    if weapon_num == 255:
         if full_menu_close:
             memory.main.close_menu()
         else:
@@ -851,8 +851,8 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
     while not memory.main.equip_menu_open_from_char():
         xbox.tap_b()
 
-    while memory.main.equip_weap_cursor() != weaponNum:
-        if memory.main.equip_weap_cursor() < weaponNum:
+    while memory.main.equip_weap_cursor() != weapon_num:
+        if memory.main.equip_weap_cursor() < weapon_num:
             xbox.tap_down()
         else:
             xbox.tap_up()
@@ -879,14 +879,14 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     logger.debug(f"Equipping Armor with ability {ability}")
     memory.main.await_control()
 
-    armorHandles = memory.main.armor_array_character(character)
+    armor_handles = memory.main.armor_array_character(character)
     logger.debug("@@@@@")
-    logger.debug(len(armorHandles))
+    logger.debug(len(armor_handles))
     logger.debug("@@@@@")
     if ability == 99:
-        armorNum = len(armorHandles)
-    elif len(armorHandles) != 0:
-        armorNum = 255
+        armor_num = len(armor_handles)
+    elif len(armor_handles) != 0:
+        armor_num = 255
 
         abilityarray = []
         if not ability:
@@ -895,26 +895,26 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
             abilityarray = [ability]
         elif isinstance(ability, list):
             abilityarray = ability
-        for index, currentArmor in enumerate(armorHandles):
-            if not abilityarray and currentArmor.abilities() == [255, 255, 255, 255]:
-                armorNum = index
+        for index, current_armor in enumerate(armor_handles):
+            if not abilityarray and current_armor.abilities() == [255, 255, 255, 255]:
+                armor_num = index
                 break
             elif all(
-                currentArmor.has_ability(cur_ability) for cur_ability in abilityarray
+                current_armor.has_ability(cur_ability) for cur_ability in abilityarray
             ):
                 if slot_count != 99:
-                    if slot_count == currentArmor.slot_count():
-                        armorNum = index
+                    if slot_count == current_armor.slot_count():
+                        armor_num = index
                         break
                 else:
-                    armorNum = index
+                    armor_num = index
                     break
-        if armorNum == 255:
-            armorNum = len(armorHandles) + 1
+        if armor_num == 255:
+            armor_num = len(armor_handles) + 1
     else:
-        armorNum = 0
+        armor_num = 0
 
-    logger.debug(f"Armor is in slot {armorNum}")
+    logger.debug(f"Armor is in slot {armor_num}")
     if memory.main.menu_number() != 26:
         if not memory.main.menu_open():
             memory.main.open_menu()
@@ -939,8 +939,8 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     while not memory.main.equip_menu_open_from_char():
         xbox.tap_b()
 
-    while memory.main.equip_weap_cursor() != armorNum:
-        if memory.main.equip_weap_cursor() < armorNum:
+    while memory.main.equip_weap_cursor() != armor_num:
+        if memory.main.equip_weap_cursor() < armor_num:
             xbox.tap_down()
         else:
             xbox.tap_up()
@@ -979,9 +979,9 @@ def via_purifico():
     grid_up()
     grid_up()
     memory.main.wait_frames(30 * 0.3)
-    gridLocation = memory.main.s_grid_node_selected()
+    grid_location = memory.main.s_grid_node_selected()
     # We have extra levels, changes the path slightly.
-    if gridLocation[0] != 242:
+    if grid_location[0] != 242:
         grid_up()
         grid_left()
     menu_grid.move_and_use()
@@ -1283,7 +1283,7 @@ def after_ronso():
             grid_right()
             menu_grid.move_shift_right("yuna")
             menu_grid.use_first()
-            menu_grid.sel_sphere("friend", "afterBYSpec")
+            menu_grid.sel_sphere("friend", "after_by_spec")
             menu_grid.use_and_use_again()
             menu_grid.sel_sphere("power", "none")
             menu_grid.use_shift_left("tidus")
@@ -1316,7 +1316,7 @@ def after_ronso():
             grid_down()
             menu_grid.move_shift_right("yuna")
             menu_grid.use_first()
-            menu_grid.sel_sphere("friend", "afterBYSpec")
+            menu_grid.sel_sphere("friend", "after_by_spec")
             menu_grid.use_and_use_again()
             menu_grid.sel_sphere("power", "left")
 
@@ -1370,7 +1370,7 @@ def after_ronso():
 
 
 def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
-    equipArray = memory.main.all_equipment()
+    equip_array = memory.main.all_equipment()
     logger.debug(
         f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slotcount: {slotcount}"
     )
@@ -1378,7 +1378,7 @@ def find_equipment_index(*, owner, equipment_type, ability_array=[], slotcount):
         ability_array = [255, 255, 255, 255]
     # auron baroque sword - [0x800B, 0x8063, 255, 255]
     logger.debug(f"Looking for: {ability_array}")
-    for current_index, current_handle in enumerate(equipArray):
+    for current_index, current_handle in enumerate(equip_array):
         logger.debug(
             f"Slot: {current_index} | Owner: {current_handle.owner()} | Abilities: {current_handle.abilities()} | Slots: {current_handle.slot_count()}"
         )
@@ -1408,12 +1408,12 @@ def add_ability(
     ability_array=[],
     ability_index=255,
     slotcount,
-    navigateToEquipMenu=False,
-    exitOutOfCurrentWeapon=True,
-    closeMenu=True,
-    fullMenuClose=True,
+    navigate_to_equip_menu=False,
+    exit_out_of_current_weapon=True,
+    close_menu=True,
+    full_menu_close=True,
 ):
-    if navigateToEquipMenu:
+    if navigate_to_equip_menu:
         if not memory.main.menu_open():
             memory.main.open_menu()
         while memory.main.get_menu_cursor_pos() != 8:
@@ -1454,11 +1454,11 @@ def add_ability(
         xbox.tap_up()
     while not memory.main.information_active():
         xbox.tap_b()
-    if exitOutOfCurrentWeapon:
+    if exit_out_of_current_weapon:
         while memory.main.cure_menu_open():
             xbox.tap_a()
-    if closeMenu:
-        if fullMenuClose:
+    if close_menu:
+        if full_menu_close:
             memory.main.close_menu()
         else:
             memory.main.back_to_main_menu()
@@ -1470,10 +1470,10 @@ def add_first_strike(
     equipment_type,
     ability_array=[],
     slotcount,
-    navigateToEquipMenu=False,
-    exitOutOfCurrentWeapon=True,
-    closeMenu=True,
-    fullMenuClose=True,
+    navigate_to_equip_menu=False,
+    exit_out_of_current_weapon=True,
+    close_menu=True,
+    full_menu_close=True,
 ):
     add_ability(
         owner=owner,
@@ -1481,10 +1481,10 @@ def add_first_strike(
         ability_array=ability_array,
         ability_index=0x8001,
         slotcount=slotcount,
-        navigateToEquipMenu=navigateToEquipMenu,
-        exitOutOfCurrentWeapon=exitOutOfCurrentWeapon,
-        closeMenu=closeMenu,
-        fullMenuClose=fullMenuClose,
+        navigate_to_equip_menu=navigate_to_equip_menu,
+        exit_out_of_current_weapon=exit_out_of_current_weapon,
+        close_menu=close_menu,
+        full_menu_close=full_menu_close,
     )
 
 
@@ -1495,9 +1495,9 @@ def auron_first_strike():
         equipment_type=0,
         ability_array=[0x800B, 0x8063, 255, 255],
         slotcount=3,
-        closeMenu=True,
-        fullMenuClose=False,
-        navigateToEquipMenu=False,
+        close_menu=True,
+        full_menu_close=False,
+        navigate_to_equip_menu=False,
     )
     logger.debug("Done with Auron")
 
@@ -1510,16 +1510,16 @@ def yuna_first_strike():
             equipment_type=0,
             ability_array=[0x807A, 255, 255, 255],
             slotcount=2,
-            closeMenu=False,
-            navigateToEquipMenu=True,
+            close_menu=False,
+            navigate_to_equip_menu=True,
         )
     else:
         add_first_strike(
             owner=1,
             equipment_type=0,
             slotcount=1,
-            closeMenu=False,
-            navigateToEquipMenu=True,
+            close_menu=False,
+            navigate_to_equip_menu=True,
         )
     logger.debug("Done with Yuna")
 
@@ -1547,53 +1547,53 @@ def tidus_slayer(od_pos: int = 2):
 
 def sell_all(nea=False):
     # Assume already on the sell items screen, index zero
-    fullArray = memory.main.all_equipment()
-    sellItem = True
+    full_array = memory.main.all_equipment()
+    sell_item = True
     xbox.menu_up()
     memory.main.wait_frames(9)
-    while memory.main.equip_sell_row() + 1 < len(fullArray):
+    while memory.main.equip_sell_row() + 1 < len(full_array):
         xbox.menu_down()
         memory.main.wait_frames(9)
-        if fullArray[memory.main.equip_sell_row()].is_equipped() != 255:
+        if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
             # Currently equipped
-            sellItem = False
-        if fullArray[memory.main.equip_sell_row()].is_equipped() == 0:
+            sell_item = False
+        if full_array[memory.main.equip_sell_row()].is_equipped() == 0:
             # Currently equipped
-            sellItem = False
-        if fullArray[memory.main.equip_sell_row()].has_ability(0x8056):
+            sell_item = False
+        if full_array[memory.main.equip_sell_row()].has_ability(0x8056):
             # Auto-haste
-            sellItem = False
-        if fullArray[memory.main.equip_sell_row()].has_ability(0x8001):
+            sell_item = False
+        if full_array[memory.main.equip_sell_row()].has_ability(0x8001):
             # First Strike
-            sellItem = False
-        if fullArray[memory.main.equip_sell_row()].abilities() == [
+            sell_item = False
+        if full_array[memory.main.equip_sell_row()].abilities() == [
             0x8072,
             255,
             255,
             255,
         ]:
             # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
-            if fullArray[memory.main.equip_sell_row()].owner() in [1, 2, 4, 6]:
-                sellItem = False
-        if not nea and fullArray[memory.main.equip_sell_row()].has_ability(0x801D):
+            if full_array[memory.main.equip_sell_row()].owner() in [1, 2, 4, 6]:
+                sell_item = False
+        if not nea and full_array[memory.main.equip_sell_row()].has_ability(0x801D):
             # No-Encounters
-            sellItem = False
-        if fullArray[memory.main.equip_sell_row()].abilities() == [
+            sell_item = False
+        if full_array[memory.main.equip_sell_row()].abilities() == [
             0x8063,
             0x8064,
             0x802A,
             0x8000,
         ]:
             # Brotherhood
-            sellItem = False
+            sell_item = False
 
-        if sellItem:
+        if sell_item:
             xbox.menu_b()
             xbox.tap_up()
             xbox.menu_b()
             memory.main.wait_frames(1)
         else:
-            sellItem = True
+            sell_item = True
 
 
 def after_flux():
