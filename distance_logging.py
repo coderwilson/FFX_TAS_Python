@@ -1,7 +1,5 @@
 
 from gamestate import game
-from collections import defaultdict
-from gamestate import game
 
 import memory
 import vars
