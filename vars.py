@@ -28,7 +28,7 @@ class AllVars:
         # If you are using Rossy's patch, set to True. Otherwise set to False
         self.set_seed = config_vars.get("set_seed", False)
         # True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.kilika_skip = config_vars.get("kilika_skip", True)
+        self.kilika_skip = True
         # Before YuYevon, True is slower but more swag.
         self.perfect_aeon_kills = config_vars.get("perfect_aeon_kills", False)
         # Try Djose skip? (not likely to succeed)
@@ -46,64 +46,60 @@ class AllVars:
         self.rails_egg_hunt = config_vars.get("rails_egg_hunt", True)
 
         # ----Blitzball
-        self.force_blitz_win = config_vars.get("force_blitz_win", False)
+        self.force_blitz_win = False
         # Loop on the same seed immediately after Blitzball.
         self.blitz_loop = config_vars.get("blitz_loop", False)
         # True = reset after blitz loss
         self.blitz_loss_force_reset = config_vars.get("blitz_loss_force_reset", True)
         # No default value required
-        self.blitz_win_value = config_vars.get("blitz_win_value", True)
+        self.blitz_win_value = True
         # Set to False, no need to change ever.
-        self.blitz_overtime = config_vars.get("blitz_overtime", False)
-        self.blitz_first_shot_val = config_vars.get("blitz_first_shot_val", False)
+        self.blitz_overtime = False
+        self.blitz_first_shot_val = False
         # Used for RNG manip tracking
-        self.oblitz_attack_val = config_vars.get("oblitz_attack_val", "255")
+        self.oblitz_attack_val = "255"
 
         # ----Sphere grid
-        self.full_kilik_menu = config_vars.get(
-            "full_kilik_menu", False
-        )  # Default to False
-        self.early_tidus_grid_val = config_vars.get("early_tidus_grid_val", False)
+        self.full_kilik_menu = False  # Default to False
+        self.early_tidus_grid_val = False
         # Default False
-        self.early_haste_val = config_vars.get("early_haste_val", 1)  # Default -1
+        self.early_haste_val = -1  # Default -1
         # Default False
-        self.wakka_late_menu_val = config_vars.get("wakka_late_menu_val", False)
-        self.end_game_version_val = config_vars.get(
-            "end_game_version_val", 1
-        )  # Default 0
+        self.wakka_late_menu_val = False
+        self.end_game_version_val = 0
+        # new Save logic will record if this needs to be different.
 
         # ----Equipment
-        self.zombie_weapon_val = config_vars.get(
-            "zombie_weapon_val", 255
-        )  # Default 255
-        self.l_strike_count = config_vars.get("l_strike_count", 1)  # Default 0
+        self.zombie_weapon_val = 255  # Default 255
+        self.l_strike_count = 0  # Default 0
 
         # ----RNG Manip
-        self.yellows = config_vars.get("yellows", 0)  # ?
-        self.confirmed_seed_num = config_vars.get("confirmed_seed_num", 999)  # ?
-        self.skip_zan_luck = config_vars.get("skip_zan_luck", False)  # ?
+        self.yellows = 0  # Not yet implemented. Part of thunderstrike weapon manip.
+        self.confirmed_seed_num = 999
+        self.skip_zan_luck = False # TAS will determine if we need luck sphere for Yuna
 
         # ----Other
         self.new_game = config_vars.get("new_game", False)  # ?
-        self.self_destruct = config_vars.get("self_destruct", False)  # Default False
-        self.ytk_farm = config_vars.get("ytk_farm", 0)  # Default to 0
+        self.self_destruct = False  # Used in Miihen only
+        self.ytk_farm = 0 # used by TAS.
         self.rescue_count = config_vars.get("rescue_count", 0)  # Default to 0
         # Default to False
-        self.flux_overkill_var = config_vars.get("flux_overkill_var", False)
-        self.try_ne_val = config_vars.get("try_ne_val", True)  # Based on
+        self.flux_overkill_var = False # Affects following battles.
+        self.try_ne_val = 255  # Char with NEA. Set on drop, or on loading into game.
         self.ne_armor_val = config_vars.get("ne_armor_val", 255)  # Default 255
-        self.ne_battles = config_vars.get("ne_battles", 0)  # Default to 0
+        self.ne_battles = 0  # Tracks number of forced manip battles outside cave.
         # Decides in which zone we charge Rikku OD after reaching Zanarkand.
-        self.nea_zone = config_vars.get("nea_zone", 0)
+        self.nea_zone = 0
         self.generate_saves = config_vars.get("generate_saves", 0)
 
         # ----Nemesis variables, unused in any%
-        self.nem_ap_val = config_vars.get("nem_ap_val", 1)  # Default to 1
-        self.yojimbo_index = config_vars.get("yojimbo_index", 1)
+        self.nem_ap_val = 1  # Nemesis route, determines Tidus level-up progress. Starts at 1
+        self.yojimbo_index = 1  # Used in arena battles to track Zanmatou progress.
 
-        # Can't set these particular fields with this syntax in the yaml file
-        self.first_hits = [0] * 8
-        # Nemesis variables
+        # TAS uses these to determine game state. No need for these in YAML
+        self.first_hits = [0]*8 # Confirms seed number, xref to csv file
+        # Nemesis Arena variables, sets to 1 after a boss is killed.
+        # Note, 0/1 are preferable to True/False for viewing in the console.
         self.area_results = [0] * 13
         self.species_results = [0] * 14
         self.original_results = [0] * 7
@@ -271,11 +267,11 @@ class AllVars:
         logger.debug(f"Setting CSR: {value}")
         self.csr_value = value
 
-    def complete_full_kilik_menu(self):
-        self.full_kilik_menu = True
+    def complete_full_klikk_menu(self):
+        self.full_klikk_menu = True
 
-    def did_full_kilik_menu(self):
-        return self.full_kilik_menu
+    def did_full_klikk_menu(self):
+        return self.full_klikk_menu
 
     def use_pause(self):
         return self.artificial_pauses

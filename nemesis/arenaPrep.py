@@ -275,7 +275,9 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                     else:
                         battle.main.escape_one()
                 elif screen.turn_rikku() or screen.turn_wakka():
-                    if not battle.main.check_tidus_ok():
+                    if memory.main.battle_type() == 2:
+                        battle.main.escape_one()
+                    elif not battle.main.check_tidus_ok():
                         battle.main.escape_one()
                     elif memory.main.get_encounter_id() == 219:
                         battle.main.escape_one()
@@ -1053,9 +1055,13 @@ def one_mp_ready():
     return True
 
 
-def one_mp_weapon():  # Break Damage Limit, or One MP cost
+def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     menu.auto_sort_equipment()
     memory.main.full_party_format("initiative")
+    # Set up for levelling if we are low
+    if force_levels > game_vars.nem_checkpoint_ap():
+        # Set overdrive mode
+        menu.tidus_slayer(od_pos=0)
     arena_npc()
     print(
         "###Sleeping powder count:",
@@ -1079,7 +1085,16 @@ def one_mp_weapon():  # Break Damage Limit, or One MP cost
         print("Trying to obtain Gambler's Soul and Purifying Salt items")
         nemesis.arenaSelect.arena_menu_select(4)
         arena_npc()
-    nemesis.arenaSelect.arena_menu_select(2)
+    
+    #Finish leveling before we make a 1mp weapon
+    if force_levels > game_vars.nem_checkpoint_ap():
+        while force_levels > game_vars.nem_checkpoint_ap():
+            
+        menu.tidus_slayer(od_pos=0)
+    else:
+        nemesis.arenaSelect.arena_menu_select(2)
+    
+    #Now ready to make item
     memory.main.wait_frames(60)
     xbox.menu_b()  # Buy
     memory.main.wait_frames(10)
@@ -1112,8 +1127,23 @@ def one_mp_weapon():  # Break Damage Limit, or One MP cost
         fullMenuClose=True,
     )
     restock_downs()
+    logger.debug(f"lv.4 slot: {memory.main.get_item_slot(84)}")
+    try:
+        logger.debug(f"lv.4 slot: {memory.main.get_item_count_slot(memory.main.get_item_slot(84))}")
+    except:
+        pass
+    if (
+        memory.main.get_item_slot(84) == 255 or
+        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+    ):
+        logger.debug("Need Lv.4 key sphere for sphere grid")
+        nemesis.arenaSelect.arena_menu_select(1)
+        nemesis.arenaSelect.start_fight(area_index=8, monster_index=7)
+        bribe_battle(spare_change_value=196000)
+    else:
+        logger.debug("Good on Lv.4 key spheres for sphere grid")
     nemesis.arenaSelect.arena_menu_select(4)
-
+    
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)

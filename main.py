@@ -687,10 +687,10 @@ def perform_TAS():
                     area.zanarkand.post_yunalesca()
                     game.step = 1
                     game.state = "Sin"
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=48, game_state=game.state, step_count=game.step
-                        )
+                    #if game_vars.create_saves():
+                    #    save_sphere.touch_and_save(
+                    #        save_num=48, game_state=game.state, step_count=game.step
+                    #    )
 
             # Sin section
             if game.state == "Sin":
@@ -716,7 +716,6 @@ def perform_TAS():
                             save_num=50, game_state=game.state, step_count=game.step
                         )
 
-            if game.state == "Sin":
                 if game.step == 3:
                     area.sin.inside_sin()
                     game.step = 4
@@ -889,7 +888,7 @@ def perform_TAS():
 
                 if game.step == 20:
                     nemesis.arenaPrep.calm(
-                        cap_num=10, airship_return=False, force_levels=27
+                        cap_num=10, airship_return=False, force_levels=26
                     )
                     game.step = 21
 
