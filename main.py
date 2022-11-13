@@ -35,6 +35,7 @@ import battle.boss
 import battle.main
 import blitz
 import config
+import distance_logging
 import load_game
 import logs
 import memory.main
@@ -242,13 +243,7 @@ def perform_TAS():
                 if game.step == 3:
                     area.besaid.leaving()
                     game.state = "Boat1"
-                    if memory.main.get_tidus_slvl() < 3:
-                        logger.warning("=========================")
-                        logger.warning("=== Under-levelled!!! ===")
-                        logger.warning("=========================")
-                        game.state, game.step = reset.mid_run_reset()
-                    else:
-                        game.step = 1
+                    game.step = 1
 
             if game.state == "Boat1":
                 area.boats.ss_liki()
