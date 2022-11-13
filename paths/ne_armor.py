@@ -17,7 +17,8 @@ class NEApproach(AreaMovementBase):
 
 
 class NEForceEncountersWhite(AreaMovementBase):
-    def execute(self, checkpoint: int):
+    @classmethod
+    def execute(cls, checkpoint: int):
         if checkpoint % 2 == 0:
             return [0, 70]
         return [0, 20]
