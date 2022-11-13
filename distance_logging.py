@@ -39,7 +39,7 @@ def perform_distance_logging():
                 if not distance_travelled or (distance_travelled == previously_added):
                     pass
                 else:
-                    logging.manip(f"Adding {distance_travelled}")
+                    logger.manip(f"Adding {distance_travelled}")
                     _update(distance_travelled, location, zone)
                     previously_added = distance_travelled
             distance_travelled = new_travelled
@@ -48,7 +48,7 @@ def perform_distance_logging():
                 location = memory.main.get_map()
                 last_updated_map_time = time.time()
             zone = memory.main.get_zone()
-        logging.manip("Done logging distances.")
+        logger.manip("Done logging distances.")
         # write_everything
         with open("./json_ai_files/distance_logging.json", "w") as fp:
             json.dump(distances, fp)
