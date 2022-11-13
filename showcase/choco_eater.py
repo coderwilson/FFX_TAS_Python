@@ -37,7 +37,7 @@ def engage():
 def battle():
     memory.main.wait_frames(10)
     choco_index = memory.main.actor_index(actor_num=4200)
-    chocoCoords = memory.main.get_actor_coords(actor_number=choco_index)
+    choco_coords = memory.main.get_actor_coords(actor_number=choco_index)
     input("Ready 1")
     memory.main.choco_eater_fun(actor_index=choco_index)
     input("Ready 2")

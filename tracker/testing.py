@@ -8,8 +8,6 @@ dingoTest = MONSTERS["dingo"].equipment["ability_arrays"]["Tidus"]["Armor"][2]
 
 print(dingoTest)
 print("=================")
-print("=================")
-print("=================")
 
 equip_type = 0
 enemy = "chocobo_eater"
@@ -20,8 +18,6 @@ else:
 ret_val = []
 print(array)
 print("=================")
-print("=================")
-print("=================")
 for i in range(len(array)):
     try:
         auto = array[i]
@@ -31,8 +27,6 @@ for i in range(len(array)):
     except:
         ret_val.append(255)
 
-print("=================")
-print("=================")
 print("=================")
 print(ret_val)
 

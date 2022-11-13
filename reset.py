@@ -75,7 +75,7 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
 def _attempt_reset():
     memory.main.wait_frames(30 * 0.07)
     while memory.main.get_map() not in [23, 348, 349]:
-        logger.info("----------Attempting reset")
+        logger.info("---------- Attempting reset")
         logger.info(f"FFX map: {memory.main.get_map()}")
         logger.info("----------")
         memory.main.set_map_reset()

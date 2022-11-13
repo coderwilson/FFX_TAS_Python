@@ -6,8 +6,6 @@ import os
 import logs
 import memory.main
 import vars
-
-# from tracker.data.formations import all_formations
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
 
 logger = logging.getLogger(__name__)
@@ -112,8 +110,8 @@ def drop_ability_list(enemy: str = "ghost", equip_type: int = 0):
 
 
 def early_battle_count():
-    with open("csv\\seed_battle_variance.csv", "r", newline="") as csvFile:
-        reader = csv.DictReader(csvFile)
+    with open("csv\\seed_battle_variance.csv", "r", newline="") as csv_file:
+        reader = csv.DictReader(csv_file)
         for row in reader:
             if int(row["Seed"]) == memory.main.rng_seed():
                 return row
@@ -1949,8 +1947,8 @@ def record_blitz_results(duration, test_mode=False):
 
 
 def hits_to_seed(hits_array: int):
-    with open("csv\\hits_to_seed.csv", "r", newline="") as csvFile:
-        reader = csv.DictReader(csvFile)
+    with open("csv\\hits_to_seed.csv", "r", newline="") as csv_file:
+        reader = csv.DictReader(csv_file)
         for row in reader:
             if row["hit0"] == "":
                 pass

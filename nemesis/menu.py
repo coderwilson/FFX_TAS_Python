@@ -35,12 +35,12 @@ def await_move():
         memory.main.wait_frames(30 * 1)
     complete = False
     while complete == False:
-        menuVal = memory.main.s_grid_menu()
-        if menuVal == 11 or menuVal == 255:
+        menu_val = memory.main.s_grid_menu()
+        if menu_val == 11 or menu_val == 255:
             xbox.menu_b()
-        elif menuVal == 7:
-            cursorLoc = memory.main.cursor_location()
-            if cursorLoc[0] == 51 or cursorLoc[1] == 243:
+        elif menu_val == 7:
+            cursor_loc = memory.main.cursor_location()
+            if cursor_loc[0] == 51 or cursor_loc[1] == 243:
                 xbox.menu_up()
             xbox.menu_b()
             complete = True
@@ -55,11 +55,11 @@ def await_use():
         memory.main.wait_frames(30 * 1)
     complete = False
     while complete == False:
-        menuVal = memory.main.s_grid_menu()
-        print("Menu value: ", menuVal)
-        if menuVal == 7:
-            cursorLoc = memory.main.cursor_location()
-            if cursorLoc[0] == 102 or cursorLoc[1] == 14:
+        menu_val = memory.main.s_grid_menu()
+        print("Menu value: ", menu_val)
+        if menu_val == 7:
+            cursor_loc = memory.main.cursor_location()
+            if cursor_loc[0] == 102 or cursor_loc[1] == 14:
                 xbox.menu_down()
             xbox.menu_b()
             complete = True
@@ -72,10 +72,10 @@ def await_use():
 def await_quit_sg():
     print("Sphere Grid: attempting to quit")
     while memory.main.s_grid_active():
-        menuVal = memory.main.s_grid_menu()
-        if menuVal == 255:
+        menu_val = memory.main.s_grid_menu()
+        if menu_val == 255:
             xbox.menu_a()
-        elif menuVal == 11:
+        elif menu_val == 11:
             xbox.menu_b()
         else:
             xbox.menu_a()
@@ -113,7 +113,7 @@ def open_grid(character):
                 elif memory.main.party_size() < 3:
                     xbox.menu_down()
                 else:
-                    # memory.menuDirection(memory.getCharCursorPos(), target_pos, memory.party_size())
+                    # memory.menu_direction(memory.get_char_cursor_pos(), target_pos, memory.party_size())
                     # Not working. Use this instead.
                     memory.main.menu_direction(
                         memory.main.get_char_cursor_pos(), target_pos, 7
@@ -214,7 +214,7 @@ def perform_next_grid(limit: int = 255):
             )  # Decrement
         game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)  # Increment
     # else:
-    # print("###Not enough Slvl:", memory.getTidusSlvl() - nextAPneeded(game_vars.nemCheckpointAP()))
+    # print("###Not enough Slvl:", memory.get_tidus_slvl() - next_ap_needed(game_vars.nem_checkpoint_ap()))
 
 
 def next_ap_needed(checkpoint):
@@ -289,20 +289,20 @@ def nem_gridding_1():
     grid_right()
     grid_right()
     menu_grid.move_and_use()
-    # menuGrid.selSphere('power','none') #HP sphere
-    # menuGrid.useAndUseAgain()
+    # menu_grid.sel_sphere('power','none') #HP sphere
+    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("lv3", "none")
     menu_grid.use_and_move()
     grid_right()
     grid_right()
     grid_right()
-    # menuGrid.moveAndUse()
-    # menuGrid.selSphere('power','none')
-    # menuGrid.useAndMove()
+    # menu_grid.move_and_use()
+    # menu_grid.sel_sphere('power','none')
+    # menu_grid.use_and_move()
     grid_right()
-    # menuGrid.moveAndUse()
-    # menuGrid.selSphere('power','none')
-    # menuGrid.useAndMove()
+    # menu_grid.move_and_use()
+    # menu_grid.sel_sphere('power','none')
+    # menu_grid.use_and_move()
     grid_right()
     grid_right()
     menu_grid.move_and_use()
@@ -341,8 +341,8 @@ def nem_gridding_3():
     grid_down()
     grid_down()
     menu_grid.move_and_use()
-    # menuGrid.selSphere('power','none')
-    # menuGrid.useAndUseAgain()
+    # menu_grid.sel_sphere('power','none')
+    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
     grid_left()
@@ -350,12 +350,12 @@ def nem_gridding_3():
     grid_down()
     grid_left()
     menu_grid.move_and_use()
-    # menuGrid.selSphere('hp','none')
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
-    # menuGrid.useAndUseAgain()
+    # menu_grid.sel_sphere('hp','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
+    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
@@ -369,8 +369,8 @@ def nem_gridding_4():
     grid_left()
     grid_left()
     menu_grid.move_and_use()
-    # menuGrid.selSphere('power','none')
-    # menuGrid.useAndUseAgain()
+    # menu_grid.sel_sphere('power','none')
+    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
     grid_left()
@@ -380,8 +380,8 @@ def nem_gridding_4():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "right")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
@@ -398,8 +398,8 @@ def nem_gridding_5():
     grid_right()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "left")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_move()
     grid_up()
     grid_right()
@@ -432,22 +432,22 @@ def nem_gridding_6():
     grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "left")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_move()
     grid_down()
     grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "right")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     if game_vars.end_game_version() in [1, 2]:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("lv1", "none")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('hp','none')
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('hp','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
@@ -472,16 +472,16 @@ def nem_gridding_7():
     menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_move()
     grid_right()
     grid_down()
     grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
-    # menuGrid.useAndUseAgain()
-    # menuGrid.selSphere('power','none')
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()

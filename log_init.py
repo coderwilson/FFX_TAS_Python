@@ -8,7 +8,7 @@ import config
 
 # Used to reset time reference at start of run
 def reset_logging_time_reference():
-    logging._startTime = time.time()
+    logging._start_time = time.time()
 
 
 _MANIP_LEVEL = logging.DEBUG + 5
@@ -62,12 +62,12 @@ def initialize_logging():
     bw_log_fmt = "[%(delta)s] %(name)-16s %(levelname)-8s %(message)s"
     bw_log_formatter = DeltaTimeFormatter(fmt=bw_log_fmt)
     # Get current time in order to create log file name
-    timeNow = datetime.datetime.now()
-    timeStr = f"{timeNow.year}{timeNow.month:02d}{timeNow.day:02d}_{timeNow.hour:02d}_{timeNow.minute:02d}_{timeNow.second:02d}"
+    time_now = datetime.datetime.now()
+    time_str = f"{time_now.year}{time_now.month:02d}{time_now.day:02d}_{time_now.hour:02d}_{time_now.minute:02d}_{time_now.second:02d}"
 
     # Set up logging to file
     logging.basicConfig(
-        filename=f"Logs/FFX_Log_{timeStr}.txt",
+        filename=f"Logs/FFX_Log_{time_str}.txt",
         filemode="w",  # Log everything in the file
         level=logging.DEBUG,
     )

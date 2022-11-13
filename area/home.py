@@ -233,12 +233,12 @@ def desert():
                 # Finally, check for other factors and report to console.
                 charge_state = memory.main.overdrive_state()[6] == 100
                 need_speed, need_power = check_spheres()
-                logger.debug("-----------------------------Flag statuses")
+                logger.debug("----- Flag statuses")
                 logger.debug(f"Rikku is charged up: {charge_state}")
                 logger.debug(f"Need more Speed spheres: {need_speed}")
                 logger.debug(f"Need more Power spheres: {need_power}")
                 logger.debug(f"Additional items needed before Home: {items_needed}")
-                logger.debug("-----------------------------Flag statuses (end)")
+                logger.debug("----- Flag statuses (end)")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 

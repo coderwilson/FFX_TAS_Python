@@ -8,145 +8,145 @@ except Exception:
     base_value = 0x0
 game = "FFX_"
 ext = ".txt"
-fileName = "none"
-fileStats = "none"
-filePlot = "none"
-fileMemChange = "none"
-fileRNG = "none"
+file_name = "none"
+file_stats = "none"
+file_plot = "none"
+file_mem_change = "none"
+file_rng = "none"
 
 
 def write_stats(message):
-    global statsFile
-    global fileStats
+    global stats_file
+    global file_stats
 
-    statsFile = open(fileStats, "a")
-    statsFile.write(str(message))
-    statsFile.write("\n")
-    statsFile.close()
+    stats_file = open(file_stats, "a")
+    stats_file.write(str(message))
+    stats_file.write("\n")
+    stats_file.close()
 
 
 def next_stats(rng_seed_num):
-    global fileStats
+    global file_stats
     global game
     global ext
-    if fileStats == "none":
-        timeNow = datetime.datetime.now()
-        fileStats = (
+    if file_stats == "none":
+        time_now = datetime.datetime.now()
+        file_stats = (
             "logs/"
             + game
             + "Stats_ "
             + str(rng_seed_num)
             + "_"
-            + str(timeNow.year)
-            + str(timeNow.month)
-            + str(timeNow.day)
+            + str(time_now.year)
+            + str(time_now.month)
+            + str(time_now.day)
             + "_"
-            + str(timeNow.hour)
+            + str(time_now.hour)
             + "_"
-            + str(timeNow.minute)
+            + str(time_now.minute)
             + "_"
-            + str(timeNow.second)
+            + str(time_now.second)
             + ext
         )
 
-        global statsFile
-        statsFile = open(fileStats, "x")
-        statsFile.close()
+        global stats_file
+        stats_file = open(file_stats, "x")
+        stats_file.close()
 
-        statsFile = open(fileStats, "a")
-        statsFile.write("Stats file is ready for writing!\n")
-        statsFile.write("\n")
-        statsFile.close()
+        stats_file = open(file_stats, "a")
+        stats_file.write("Stats file is ready for writing!\n")
+        stats_file.write("\n")
+        stats_file.close()
     print("Stats file is ready for writing!\n")
 
 
 def reset_stats_log():
-    global fileStats
-    fileStats = "none"
+    global file_stats
+    file_stats = "none"
 
 
 def write_plot(message):
-    global plotFile
-    global filePlot
+    global plot_file
+    global file_plot
 
-    plotFile = open(filePlot, "a")
-    plotFile.write(str(message))
-    plotFile.write("\n")
-    plotFile.close()
+    plot_file = open(file_plot, "a")
+    plot_file.write(str(message))
+    plot_file.write("\n")
+    plot_file.close()
 
 
 def next_plot():
-    global filePlot
+    global file_plot
     global game
     global ext
-    if filePlot == "none":
-        timeNow = datetime.datetime.now()
-        filePlot = (
+    if file_plot == "none":
+        time_now = datetime.datetime.now()
+        file_plot = (
             "logs/"
             + game
             + "Plot_ "
-            + str(timeNow.year)
-            + str(timeNow.month)
-            + str(timeNow.day)
+            + str(time_now.year)
+            + str(time_now.month)
+            + str(time_now.day)
             + "_"
-            + str(timeNow.hour)
+            + str(time_now.hour)
             + "_"
-            + str(timeNow.minute)
+            + str(time_now.minute)
             + "_"
-            + str(timeNow.second)
+            + str(time_now.second)
             + ext
         )
 
-        global plotFile
-        plotFile = open(filePlot, "x")
-        plotFile.close()
+        global plot_file
+        plot_file = open(file_plot, "x")
+        plot_file.close()
 
-        plotFile = open(filePlot, "a")
-        plotFile.write("plotting file is ready for writing!\n")
-        plotFile.write("\n")
-        plotFile.close()
+        plot_file = open(file_plot, "a")
+        plot_file.write("plotting file is ready for writing!\n")
+        plot_file.write("\n")
+        plot_file.close()
         print("X/Y plotting file is ready for writing!\n")
 
 
 def write_mem_change(message):
-    global memChangeFile
-    global fileMemChange
+    global mem_change_file
+    global file_mem_change
 
-    memChangeFile = open(fileMemChange, "a")
-    memChangeFile.write(str(message))
-    memChangeFile.write("\n")
-    memChangeFile.close()
+    mem_change_file = open(file_mem_change, "a")
+    mem_change_file.write(str(message))
+    mem_change_file.write("\n")
+    mem_change_file.close()
 
 
 def open_rng_track():
-    global fileRNG
+    global file_rng
     global game
     global ext
-    timeNow = datetime.datetime.now()
-    fileRNG = (
+    time_now = datetime.datetime.now()
+    file_rng = (
         "logs/"
         + game
         + "RNG_ "
-        + str(timeNow.year)
-        + str(timeNow.month)
-        + str(timeNow.day)
+        + str(time_now.year)
+        + str(time_now.month)
+        + str(time_now.day)
         + "_"
-        + str(timeNow.hour)
+        + str(time_now.hour)
         + "_"
-        + str(timeNow.minute)
+        + str(time_now.minute)
         + "_"
-        + str(timeNow.second)
+        + str(time_now.second)
         + ext
     )
 
     global RNGFile
     try:
-        RNGFile = open(fileRNG, "a")
+        RNGFile = open(file_rng, "a")
     except Exception:
-        RNGFile = open(fileRNG, "x")
+        RNGFile = open(file_rng, "x")
     RNGFile.close()
 
-    RNGFile = open(fileRNG, "a")
+    RNGFile = open(file_rng, "a")
     RNGFile.write("RNG log is ready for writing!\n")
     RNGFile.write("\n")
     RNGFile.close()
@@ -155,9 +155,9 @@ def open_rng_track():
 
 def write_rng_track(message):
     global RNGFile
-    global fileRNG
+    global file_rng
 
-    RNGFile = open(fileRNG, "a")
+    RNGFile = open(file_rng, "a")
     RNGFile.write(str(message))
     RNGFile.write("\n")
     RNGFile.close()
@@ -166,68 +166,68 @@ def write_rng_track(message):
 class MemChangeMonitor:
     def __init__(
         self,
-        baseOffsetRef,
-        isPointerRef=False,
-        ptrOffsetRef=0x0,
-        typeRef="4byte",
-        childReport: int = 0,
+        base_offset_ref,
+        is_pointer_ref=False,
+        ptr_offset_ref=0x0,
+        type_ref="4byte",
+        child_report: int = 0,
     ):
-        self.isPointer = isPointerRef
-        self.baseOffset = baseOffsetRef
-        if self.isPointer:
-            self.ptrOffset = ptrOffsetRef
-        self.varType = typeRef
+        self.is_pointer = is_pointer_ref
+        self.base_offset = base_offset_ref
+        if self.is_pointer:
+            self.ptr_offset = ptr_offset_ref
+        self.var_type = type_ref
         self.key = base_value + 0x003988A5
 
         self.set_last_value()
 
-        if childReport != 0:
-            self.reportOnChild = False
+        if child_report != 0:
+            self.report_on_child = False
         else:
-            self.reportOnChild = True
-            self.childHandle = MemChangeMonitor(
-                self.baseOffset, True, self.ptrOffset, self.typeRef, 0
+            self.report_on_child = True
+            self.child_handle = MemChangeMonitor(
+                self.base_offset, True, self.ptr_offset, self.type_ref, 0
             )
 
     def set_last_value(self):
-        if self.isPointer:
-            ptrRef = memory.main.read_bytes(key, 4)
+        if self.is_pointer:
+            ptr_ref = memory.main.read_bytes(key, 4)
 
-            if self.varType == "byte":
-                self.lastValue = memory.main.read_bytes(ptrRef + self.ptrOffset, 1)
-            elif self.varType == "2byte":
-                self.lastValue = memory.main.read_bytes(ptrRef + self.ptrOffset, 2)
-            elif self.varType == "4byte":
-                self.lastValue = memory.main.read_bytes(ptrRef + self.ptrOffset, 4)
-            elif self.varType == "float":
-                self.lastValue = memory.main.float_from_integer(
-                    memory.main.read_bytes(ptrRef + self.ptrOffset, 4)
+            if self.var_type == "byte":
+                self.last_value = memory.main.read_bytes(ptr_ref + self.ptr_offset, 1)
+            elif self.var_type == "2byte":
+                self.last_value = memory.main.read_bytes(ptr_ref + self.ptr_offset, 2)
+            elif self.var_type == "4byte":
+                self.last_value = memory.main.read_bytes(ptr_ref + self.ptr_offset, 4)
+            elif self.var_type == "float":
+                self.last_value = memory.main.float_from_integer(
+                    memory.main.read_bytes(ptr_ref + self.ptr_offset, 4)
                 )
         else:
-            if self.varType == "byte":
-                self.lastValue = memory.main.read_bytes(key, 1)
-            elif self.varType == "2byte":
-                self.lastValue = memory.main.read_bytes(key, 2)
-            elif self.varType == "4byte":
-                self.lastValue = memory.main.read_bytes(key, 4)
-            elif self.varType == "float":
-                self.lastValue = memory.main.float_from_integer(
+            if self.var_type == "byte":
+                self.last_value = memory.main.read_bytes(key, 1)
+            elif self.var_type == "2byte":
+                self.last_value = memory.main.read_bytes(key, 2)
+            elif self.var_type == "4byte":
+                self.last_value = memory.main.read_bytes(key, 4)
+            elif self.var_type == "float":
+                self.last_value = memory.main.float_from_integer(
                     memory.main.read_bytes(key, 4)
                 )
 
     def report_if_change(self):
         if self.check_change():
-            if self.reportOnChild:
+            if self.report_on_child:
                 write_mem_change("Value changed (parent)")
             else:
                 write_mem_change("Value changed")
-            write_mem_change("Base offset: " + str(self.baseOffset))
-            write_mem_change("Pointer value: " + str(self.isPointer))
-            if self.isPointer:
-                write_mem_change("Pointer offset: " + str(self.pointerOffset))
-            write_mem_change("Type of variable: " + str(self.varType))
-            write_mem_change("Previous value: " + self.lastValue)
-            write_mem_change("Updated value: " + self.getNewValue())
+            write_mem_change("Base offset: " + str(self.base_offset))
+            write_mem_change("Pointer value: " + str(self.is_pointer))
+            if self.is_pointer:
+                write_mem_change("Pointer offset: " + str(self.pointer_offset))
+            write_mem_change("Type of variable: " + str(self.var_type))
+            write_mem_change("Previous value: " + self.last_value)
+            write_mem_change("Updated value: " + self.get_new_value())
             write_mem_change("Time of change: " + time_stamp())
             write_mem_change("?? Game state ??")
             write_mem_change("Story progress: " + str(memory.main.get_story_progress()))
@@ -235,19 +235,19 @@ class MemChangeMonitor:
             write_mem_change("Battle Active: " + str(memory.main.battle_active()))
 
             write_mem_change("----------------------------")
-            if self.reportOnChild:
-                self.childHandle.force_report_child()
+            if self.report_on_child:
+                self.child_handle.force_report_child()
             self.set_last_value()
 
     def force_report_child(self):
         write_mem_change("Value changed (child)")
-        write_mem_change("Base offset: " + str(self.baseOffset))
-        write_mem_change("Pointer value: " + str(self.isPointer))
-        if self.isPointer:
-            write_mem_change("Pointer offset: " + str(self.pointerOffset))
-        write_mem_change("Type of variable: " + str(self.varType))
-        write_mem_change("Previous value: " + self.lastValue)
-        write_mem_change("Updated value: " + self.getNewValue())
+        write_mem_change("Base offset: " + str(self.base_offset))
+        write_mem_change("Pointer value: " + str(self.is_pointer))
+        if self.is_pointer:
+            write_mem_change("Pointer offset: " + str(self.pointer_offset))
+        write_mem_change("Type of variable: " + str(self.var_type))
+        write_mem_change("Previous value: " + self.last_value)
+        write_mem_change("Updated value: " + self.get_new_value())
         write_mem_change("Time of change: " + time_stamp())
         write_mem_change("?? Game state ??")
         write_mem_change("Story progress: " + str(memory.main.get_story_progress()))
@@ -258,13 +258,13 @@ class MemChangeMonitor:
 
     def force_report(self):
         write_mem_change("Value force-reported")
-        write_mem_change("Base offset: " + str(self.baseOffset))
-        write_mem_change("Pointer value: " + str(self.isPointer))
-        if self.isPointer:
-            write_mem_change("Pointer offset: " + str(self.pointerOffset))
-        write_mem_change("Type of variable: " + str(self.varType))
-        write_mem_change("Previous value: " + self.lastValue)
-        write_mem_change("Updated value: " + self.getNewValue())
+        write_mem_change("Base offset: " + str(self.base_offset))
+        write_mem_change("Pointer value: " + str(self.is_pointer))
+        if self.is_pointer:
+            write_mem_change("Pointer offset: " + str(self.pointer_offset))
+        write_mem_change("Type of variable: " + str(self.var_type))
+        write_mem_change("Previous value: " + self.last_value)
+        write_mem_change("Updated value: " + self.get_new_value())
         write_mem_change("Time of change: " + time_stamp())
         write_mem_change("?? Game state ??")
         write_mem_change("Story progress: " + str(memory.main.get_story_progress()))
@@ -274,36 +274,42 @@ class MemChangeMonitor:
         self.set_last_value()
 
     def check_change(self):
-        if self.isPointer:
-            ptrRef = memory.main.read_bytes(key, 4)
+        if self.is_pointer:
+            ptr_ref = memory.main.read_bytes(key, 4)
 
-            if self.varType == "byte":
-                if self.lastValue != memory.main.read_bytes(ptrRef + self.ptrOffset, 1):
+            if self.var_type == "byte":
+                if self.last_value != memory.main.read_bytes(
+                    ptr_ref + self.ptr_offset, 1
+                ):
                     return True
-            elif self.varType == "2byte":
-                if self.lastValue != memory.main.read_bytes(ptrRef + self.ptrOffset, 2):
+            elif self.var_type == "2byte":
+                if self.last_value != memory.main.read_bytes(
+                    ptr_ref + self.ptr_offset, 2
+                ):
                     return True
-            elif self.varType == "4byte":
-                if self.lastValue != memory.main.read_bytes(ptrRef + self.ptrOffset, 4):
+            elif self.var_type == "4byte":
+                if self.last_value != memory.main.read_bytes(
+                    ptr_ref + self.ptr_offset, 4
+                ):
                     return True
-            elif self.varType == "float":
-                if self.lastValue != memory.main.float_from_integer(
-                    memory.main.read_bytes(ptrRef + self.ptrOffset, 4)
+            elif self.var_type == "float":
+                if self.last_value != memory.main.float_from_integer(
+                    memory.main.read_bytes(ptr_ref + self.ptr_offset, 4)
                 ):
                     return True
             return False
         else:
-            if self.varType == "byte":
-                if self.lastValue != memory.main.read_bytes(key, 1):
+            if self.var_type == "byte":
+                if self.last_value != memory.main.read_bytes(key, 1):
                     return True
-            elif self.varType == "2byte":
-                if self.lastValue != memory.main.read_bytes(key, 2):
+            elif self.var_type == "2byte":
+                if self.last_value != memory.main.read_bytes(key, 2):
                     return True
-            elif self.varType == "4byte":
-                if self.lastValue != memory.main.read_bytes(key, 4):
+            elif self.var_type == "4byte":
+                if self.last_value != memory.main.read_bytes(key, 4):
                     return True
-            elif self.varType == "float":
-                if self.lastValue != memory.main.float_from_integer(
+            elif self.var_type == "float":
+                if self.last_value != memory.main.float_from_integer(
                     memory.main.read_bytes(key, 4)
                 ):
                     return True
@@ -314,39 +320,39 @@ def mem_change_list():
     # Base offset, pointer (True/False), pointer offset, type to be returned
     # Fifth element is to report on another offset, only works for pointers.
     # Types can be '1byte', '2byte', '4byte', or 'float'
-    fullList = [
+    full_list = [
         [0x8E9004, True, 0x1C, "4byte", 0x8],
         [0x8E9004, True, 0x1C, "4byte", 0xC],
     ]
 
-    return fullList
+    return full_list
 
 
 def mem_change_handle():
     ret_array = [0]
-    firstEle = True
-    memRefList = mem_change_list()
+    first_ele = True
+    mem_ref_list = mem_change_list()
 
-    while len(baseArray) != 0:
-        if firstEle:
-            firstEle = False
-            variables = memRefList.pop()
+    while len(base_array) != 0:
+        if first_ele:
+            first_ele = False
+            variables = mem_ref_list.pop()
             ret_array[0] = MemChangeMonitor(
-                baseOffsetRef=variables[0],
-                isPointerRef=variables[1],
-                ptrOffsetRef=variables[2],
-                typeRef=variables[3],
-                childReport=variables[4],
+                base_offset_ref=variables[0],
+                is_pointer_ref=variables[1],
+                ptr_offset_ref=variables[2],
+                type_ref=variables[3],
+                child_report=variables[4],
             )
         else:
-            variables = memRefList.pop()
+            variables = mem_ref_list.pop()
             ret_array.append(
                 MemChangeMonitor(
-                    baseOffsetRef=variables[0],
-                    isPointerRef=variables[1],
-                    ptrOffsetRef=variables[2],
-                    typeRef=variables[3],
-                    childReport=variables[4],
+                    base_offset_ref=variables[0],
+                    is_pointer_ref=variables[1],
+                    ptr_offset_ref=variables[2],
+                    type_ref=variables[3],
+                    child_report=variables[4],
                 )
             )
     return ret_array
