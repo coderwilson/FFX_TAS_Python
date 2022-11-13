@@ -22,10 +22,15 @@ FFXC = xbox.controller_handle()
 
 
 def wait_for_rng2_weakness(valid_weakness: List[int]):
+    prev_rng2_prediction = None
     while True:
-        current_weakness = memory.main.get_next_rng2() % 4
-        logger.debug(
-            f"Valid Weakness: {valid_weakness}, Current Weakness: {current_weakness}"
+        cur_next_rng2 = memory.main.get_next_rng2()
+        if cur_next_rng2 == prev_rng2_prediction:
+            continue
+        prev_rng2_prediction = cur_next_rng2
+        current_weakness = cur_next_rng2 % 4
+        logger.manip(
+            f"Next RNG2: {cur_next_rng2}, Valid Weakness: {valid_weakness}, Current Weakness: {current_weakness}"
         )
         if current_weakness in valid_weakness:
             logger.info("Weakness has lined up.")
@@ -72,7 +77,7 @@ def arrival(rikku_charged):
             elif checkpoint == 60:
                 logger.info("Waiting for RNG2 to sync up for Sphermiroph Weakness.")
                 items_contained = calculate_possible_weaknesses()
-                logger.info(f"We currently can do: {items_contained}")
+                logger.manip(f"We currently can do: {items_contained}")
                 FFXC.set_neutral()
                 wait_for_rng2_weakness(items_contained)
                 checkpoint += 1

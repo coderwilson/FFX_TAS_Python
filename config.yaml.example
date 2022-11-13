@@ -8,7 +8,7 @@ step_counter            : 1      # valid step_counter values are dependent on ga
 # Logging
 color_log               : False  # Colors the console output. May not work on some systems
 verbosity               : DEBUG  # Verbosity of log messages in the console.
-                                 # These are the valid levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+                                 # These are the valid levels: DEBUG, MANIP, INFO, WARNING, ERROR, CRITICAL
                                  # Full log will always be available in a file.
 
 # RNG Seed (requires setting vars.set_seed: True)
@@ -38,7 +38,7 @@ vars:
   rails_egg_hunt        : True   #            - Missing documentation -
 
   # Blitzball
-  force_blitz_win       : False  #            - Missing documentation -
+  force_blitz_win       : False  # Sets Aurochs score to 50 at halftime, testing only.
   blitz_loop            : False  # Loop on the same seed immediately after Blitzball.
   blitz_loss_force_reset: True   # True == reset after blitz loss
   blitz_win_value       : True   # No default value required
@@ -49,13 +49,13 @@ vars:
   # Sphere grid
   full_kilik_menu       : False  # Default to False
   early_tidus_grid_val  : False  # Default False
-  early_haste_val       : 1      # Default -1
+  early_haste_val       : -1      # Default -1
   wakka_late_menu_val   : False  # Default False
-  end_game_version_val  : 1      # Default 0
+  end_game_version_val  : 0      # Default 0
 
   # Equipment
   zombie_weapon_val     : 255    # Default 255
-  l_strike_count        : 1      # Default 0
+  l_strike_count        : 0      # Default 0
 
   # RNG Manip
   yellows               : 0      #            - Missing documentation -
@@ -72,11 +72,12 @@ vars:
   ne_armor_val          : 255    # Default 255
   ne_battles            : 0      # Default to 0
   nea_zone              : 0      # Decides in which zone we charge Rikku OD after reaching Zanarkand.
+  generate_saves        : False  # Generates a full set of saves throughout the run.
   # first_hits is still in vars.py
   
   # Nemesis variables, unused in any%
-  nem_ap_val            : 1      # Default to 1
-  yojimbo_index         : 1      #            - Missing documentation -
+  nem_ap_val            : 1      # Nemesis route, determines Tidus level-up progress. Default to 1
+  yojimbo_index         : 1      # Used in arena battles to track Zanmatou progress.
   # area_results is still in vars.py
   # species_results is still in vars.py
   # original_results is still in vars.py

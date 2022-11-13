@@ -54,6 +54,8 @@ def auto_life():
 def air_ship_destination(dest_num=0, force_omega=False):
     if len(memory.main.all_equipment()) > 120:
         rin_equip_dump()
+    while memory.main.get_coords()[0] < -257:
+        nemesis.targetPath.set_movement([-258, 345])
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
             nemesis.targetPath.set_movement([-251, 340])
@@ -587,22 +589,21 @@ def bribe_battle(spare_change_value: int = 12000):
         if memory.main.turn_ready():
             if screen.turn_lulu():
                 while memory.main.battle_menu_cursor() != 20:
-                    if memory.main.battle_menu_cursor() == 0:
+                    if memory.main.battle_menu_cursor() == 255:
+                        xbox.tap_down()
+                    elif memory.main.battle_menu_cursor() == 0:
                         xbox.tap_down()
                     else:
                         xbox.tap_up()
-                    if game_vars.use_pause():
-                        memory.main.wait_frames(6)
-                memory.main.wait_frames(8)
-                xbox.tap_b()
-                memory.main.wait_frames(8)
-                xbox.tap_b()
-                memory.main.wait_frames(8)
+                while not memory.main.other_battle_menu():
+                    xbox.tap_b()
+                battle.main._navigate_to_position(0)
+                while memory.main.other_battle_menu():
+                    xbox.tap_b()
                 battle.main.calculate_spare_change_movement(spare_change_value)
                 while memory.main.spare_change_open():
                     xbox.tap_b()
-                xbox.tap_b()
-                xbox.tap_b()
+                battle.main.tap_targeting()
             else:
                 battle.main.buddy_swap_lulu()
     print("Battle is complete.")
@@ -1302,7 +1303,7 @@ def final_weapon():
 def rin_equip_dump(buy_weapon=False, sell_nea=False):
     while not nemesis.targetPath.set_movement([-242, 298]):
         pass
-    while not nemesis.targetPath.set_movement([-241, 211]):
+    while not nemesis.targetPath.set_movement([-243, 160]):
         pass
     FFXC.set_movement(0, -1)
     while memory.main.user_control():
@@ -2186,6 +2187,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 print("Strike!")
                 game_vars.set_l_strike(memory.main.l_strike_count())
             if prefArea in [3, 4] and not neEquip:
+                logger.debug(f"No Encounters armor on char: {game_vars.ne_armor()}")
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neEquip = True
                 if checkpoint in [4, 5]:
@@ -2990,7 +2992,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 41
                 else:
                     checkpoint = 1
-                print("-- Reminder, next area: ", prefArea)
+                # print("-- Reminder, next area: ", prefArea)
 
             # Portal Combat
             if checkpoint == 2:
@@ -3058,13 +3060,14 @@ def gagazet(cap_num: int = 10):
                 checkpoint = 12
 
             # NEA decisions
-            if neArmor == True and checkpoint in [7, 18]:
+            if neArmor == True and checkpoint in [7, 19, 23, 33]:
                 menu.remove_all_nea()
                 neArmor = False
-            elif neArmor == False and checkpoint == 4:
+            elif neArmor == False and checkpoint == 15 and prefArea != 2:
+                # No need to re-equip while coming back from swimming
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
-            elif neArmor == False and checkpoint == 15 and prefArea != 2:
+            elif neArmor == False and checkpoint in [4, 55]:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
 

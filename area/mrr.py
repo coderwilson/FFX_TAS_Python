@@ -226,6 +226,13 @@ def main_path():
     logger.info("[Yuna AP, Kim AP, Valefor OD steps, then other stuff]")
     logger.info(status)
 
+    # Get close to save sphere
+    checkpoint = 0
+    while checkpoint < 4:
+        if pathing.set_movement(pathing.battle_site(checkpoint)):
+            checkpoint += 1
+            logger.debug(f"Checkpoint reached: {checkpoint}")
+
 
 def battle_site():
     memory.main.await_control()
@@ -233,7 +240,7 @@ def battle_site():
         menu.equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     menu.battle_site_grid()
 
-    checkpoint = 0
+    checkpoint = 4
     while checkpoint < 99:
         if memory.main.user_control():
             if checkpoint == 5:

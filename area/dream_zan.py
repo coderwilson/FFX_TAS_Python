@@ -100,7 +100,7 @@ def listen_story():
                 game_vars.set_csr(False)
                 logger.info("Skipping intro scene, we'll watch this properly later")
                 memory.main.await_control()
-            if not game_vars.accessibility_vars()[0]:
+            if game_vars.accessibility_vars()[0]:
                 FFXC.set_value("btn_back", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_back", 0)

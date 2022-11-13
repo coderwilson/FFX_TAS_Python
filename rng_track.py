@@ -1,6 +1,7 @@
 import csv
 import json
 import logging
+import os
 
 import logs
 import memory.main
@@ -1835,7 +1836,7 @@ def hit_chance_table(index: int):
 
 
 def oblitz_history():
-    filepath = "json_ai_files\\oblitz_results.json"
+    filepath = os.path.join("json_ai_files", "oblitz_results.json")
     with open(filepath, "r") as fp:
         rng_values = json.load(fp)
     return rng_values
@@ -1843,7 +1844,7 @@ def oblitz_history():
 
 def save_oblitz_history(rng_vals):
     writing = dict(rng_vals)
-    filepath = "json_ai_files\\oblitz_results.json"
+    filepath = os.path.join("json_ai_files", "oblitz_results.json")
     with open(filepath, "w") as fp:
         json.dump(writing, fp, indent=4)
 
@@ -1874,7 +1875,7 @@ def record_blitz_results_tyton(duration, test_mode=False):
 
 
 def record_blitz_results(duration, test_mode=False):
-    filepath = "json_ai_files\\oblitz_results.json"
+    filepath = os.path.join("json_ai_files", "oblitz_results.json")
     records = oblitz_history()
     logger.debug("========================")
     if test_mode:
