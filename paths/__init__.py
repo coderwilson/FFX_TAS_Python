@@ -1,3 +1,4 @@
+from paths.airship import Airship
 from paths.baaj import BaajHallway, BaajPuzzle, BaajRamp
 from paths.besaid import Besaid1, Besaid2, BesaidTrials
 from paths.boats import BoatsLiki, BoatsWinno
@@ -43,6 +44,7 @@ from paths.rescue_yuna import (
     BevelleTrials,
     SutekiDaNe,
 )
+from paths.sin import InsideSin
 from paths.thunder_plains import (
     ThunderPlainsAgency,
     ThunderPlainsNorth,
@@ -126,4 +128,6 @@ __all__ = [
     "ZanarkandTrials",
     "ZanarkandYunalesca",
     "YunalescaToAirship",
+    "InsideSin",
+    "Airship",
 ]

@@ -6,6 +6,7 @@ import memory.main
 import pathing
 import vars
 import xbox
+from paths import Airship
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -196,7 +197,7 @@ def air_ship_path(version):
                 complete = True
 
             # General Pathing
-            elif pathing.set_movement(pathing.air_ship(checkpoint)):
+            elif pathing.set_movement(Airship.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

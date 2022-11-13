@@ -9,6 +9,7 @@ import vars
 import xbox
 import zz_airship_path
 import zz_egg_hunt_auto
+from paths import InsideSin
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -168,7 +169,7 @@ def inside_sin():
                 checkpoint = 68
 
             # General Pathing
-            elif pathing.set_movement(pathing.inside_sin(checkpoint)):
+            elif pathing.set_movement(InsideSin.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
