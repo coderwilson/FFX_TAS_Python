@@ -48,6 +48,13 @@ from paths.thunder_plains import (
     ThunderPlainsNorth,
     ThunderPlainsSouth,
 )
+from paths.zanarkand import (
+    YunalescaToAirship,
+    ZanarkandDome,
+    ZanarkandOutdoors,
+    ZanarkandTrials,
+    ZanarkandYunalesca,
+)
 
 __all__ = [
     "TidusHomeMovement",
@@ -114,4 +121,9 @@ __all__ = [
     "NEReturnGreen",
     "NEReturn",
     "GagazetNELoopback",
+    "ZanarkandOutdoors",
+    "ZanarkandDome",
+    "ZanarkandTrials",
+    "ZanarkandYunalesca",
+    "YunalescaToAirship",
 ]
