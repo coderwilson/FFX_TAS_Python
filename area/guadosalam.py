@@ -5,6 +5,7 @@ import memory.main
 import pathing
 import vars
 import xbox
+from paths import GuadoSkip, GuadoStoryline
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -157,7 +158,7 @@ def after_speech(checkpoint=0):
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
 
-            elif pathing.set_movement(pathing.guado_storyline(checkpoint)):
+            elif pathing.set_movement(GuadoStoryline.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -300,7 +301,7 @@ def guado_skip():
 
             # General pathing
             elif memory.main.user_control():
-                if pathing.set_movement(pathing.guado_skip(checkpoint)):
+                if pathing.set_movement(GuadoSkip.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

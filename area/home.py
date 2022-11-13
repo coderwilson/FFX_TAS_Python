@@ -8,6 +8,7 @@ import pathing
 import save_sphere
 import vars
 import xbox
+from paths import BikanelDesert, BikanelHome
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -176,7 +177,7 @@ def desert():
 
             # General pathing
             elif memory.main.user_control():
-                if pathing.set_movement(pathing.desert(checkpoint)):
+                if pathing.set_movement(BikanelDesert.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -323,7 +324,7 @@ def find_summoners():
             elif checkpoint == 45:
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
-            elif pathing.set_movement(pathing.home(checkpoint)):
+            elif pathing.set_movement(BikanelHome.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

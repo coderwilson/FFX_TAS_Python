@@ -9,6 +9,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import Miihen1, MiihenAgency, MiihenLowroad
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -64,7 +65,7 @@ def arrival():
                         pathing.set_movement(hunter_coords)
                         xbox.tap_b()
 
-                    elif pathing.set_movement(pathing.miihen(checkpoint)):
+                    elif pathing.set_movement(Miihen1.execute(checkpoint)):
                         checkpoint += 1
                         logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -158,7 +159,7 @@ def arrival():
                                 miihen_skip = False
                             logger.debug(f"Skip successful: {miihen_skip}")
                             checkpoint += 1
-                    elif pathing.set_movement(pathing.miihen(checkpoint)):
+                    elif pathing.set_movement(Miihen1.execute(checkpoint)):
                         checkpoint += 1
                         logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 11 and not memory.main.hunter_spear():
@@ -174,7 +175,7 @@ def arrival():
             elif checkpoint < 15 and memory.main.get_map() == 120:
                 checkpoint = 15
             # General pathing
-            elif pathing.set_movement(pathing.miihen(checkpoint)):
+            elif pathing.set_movement(Miihen1.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -240,7 +241,7 @@ def arrival_2(self_destruct, battle_count, sd_encounter_id):
                     checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.miihen(checkpoint)):
+            elif pathing.set_movement(Miihen1.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -291,7 +292,7 @@ def mid_point():
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif pathing.set_movement(pathing.miihen_agency(checkpoint)):
+            elif pathing.set_movement(MiihenAgency.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -335,7 +336,7 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
                 checkpoint = 28
 
             # General pathing
-            elif pathing.set_movement(pathing.low_road(checkpoint)):
+            elif pathing.set_movement(MiihenLowroad.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 25:  # Shelinda dialog

@@ -8,6 +8,7 @@ import pathing
 import screen
 import vars
 import xbox
+from paths import Besaid1, Besaid2, BesaidTrials
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -78,7 +79,7 @@ def beach():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.besaid_1(checkpoint)):
+            elif pathing.set_movement(Besaid1.execute(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -162,7 +163,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.besaid_trials(checkpoint)):
+            elif pathing.set_movement(BesaidTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -261,7 +262,7 @@ def leaving():
                 checkpoint -= 2
 
             # General pathing
-            elif pathing.set_movement(pathing.besaid_2(checkpoint)):
+            elif pathing.set_movement(Besaid2.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

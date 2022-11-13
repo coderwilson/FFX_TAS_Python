@@ -9,6 +9,13 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import (
+    MacalaniaTempleApproach,
+    MacalaniaTempleEscape,
+    MacalaniaTempleFoyer,
+    MacalaniaTempleTrials,
+    MacalaniaUnderTemple,
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -31,7 +38,7 @@ def approach(do_grid=True):
                 checkpoint = 2
 
             # General pathing
-            elif pathing.set_movement(pathing.m_temple_approach(checkpoint)):
+            elif pathing.set_movement(MacalaniaTempleApproach.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -142,7 +149,7 @@ def arrival():
                 checkpoint = 12
 
             # General pathing
-            elif pathing.set_movement(pathing.temple_foyer(checkpoint)):
+            elif pathing.set_movement(MacalaniaTempleFoyer.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -243,7 +250,7 @@ def trials():
                 memory.main.click_to_event_temple(4)
 
             # General pathing
-            elif pathing.set_movement(pathing.m_temple_trials(checkpoint)):
+            elif pathing.set_movement(MacalaniaTempleTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -282,7 +289,7 @@ def escape():
                 logger.debug(f"Map change. Update checkpoint: {checkpoint}")
 
             # General pathing
-            elif pathing.set_movement(pathing.m_temple_escape(checkpoint)):
+            elif pathing.set_movement(MacalaniaTempleEscape.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -339,7 +346,7 @@ def under_lake():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.under_mac_temple(checkpoint)):
+            elif pathing.set_movement(MacalaniaUnderTemple.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -350,6 +357,7 @@ def under_lake():
     memory.main.click_to_control()
 
 
+# TODO: This is unused, remove?
 def under_lake_old():
     memory.main.click_to_control()
     FFXC.set_movement(0, 1)

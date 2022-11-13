@@ -9,6 +9,7 @@ import pathing
 import save_sphere
 import vars
 import xbox
+from paths import Luca1, Luca3, LucaPreBlitz
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -136,7 +137,7 @@ def arrival():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.luca_1(checkpoint)):
+            elif pathing.set_movement(Luca1.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -194,7 +195,7 @@ def blitz_start():
             elif checkpoint == 8:
                 pathing.set_movement([-111, -4])
                 xbox.tap_b()
-            elif pathing.set_movement(pathing.luca_pre_blitz(checkpoint)):
+            elif pathing.set_movement(LucaPreBlitz.execute(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -242,7 +243,7 @@ def after_blitz():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.luca_3(checkpoint)):
+            elif pathing.set_movement(Luca3.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 

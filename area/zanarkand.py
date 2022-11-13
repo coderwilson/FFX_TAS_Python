@@ -11,6 +11,13 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import (
+    YunalescaToAirship,
+    ZanarkandDome,
+    ZanarkandOutdoors,
+    ZanarkandTrials,
+    ZanarkandYunalesca,
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -114,7 +121,7 @@ def arrival():
                     else:
                         FFXC.set_movement(-1, 1)
                         xbox.tap_b()
-            elif pathing.set_movement(pathing.zanarkand_outdoors(checkpoint)):
+            elif pathing.set_movement(ZanarkandOutdoors.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -201,7 +208,7 @@ def arrival():
             ):  # Final room before trials
                 logger.info("Final room before trials")
                 checkpoint = 21
-            elif pathing.set_movement(pathing.zanarkand_dome(checkpoint)):
+            elif pathing.set_movement(ZanarkandDome.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -245,7 +252,7 @@ def trials_0(checkpoint):
                 memory.main.wait_frames(30 * 1.3)
                 FFXC.set_movement(0, 1)
                 checkpoint += 1
-            elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
@@ -276,7 +283,7 @@ def trials_1(checkpoint):
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
@@ -300,7 +307,7 @@ def trials_2(checkpoint):
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
@@ -324,7 +331,7 @@ def trials_3(checkpoint):
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
     return checkpoint
@@ -349,7 +356,7 @@ def trials_4(checkpoint):
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.zanarkand_trials(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
     FFXC.set_neutral()
@@ -420,7 +427,7 @@ def yunalesca():
                 memory.main.await_event()
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
-            elif pathing.set_movement(pathing.yunalesca(checkpoint)):
+            elif pathing.set_movement(ZanarkandYunalesca.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -477,7 +484,7 @@ def post_yunalesca(checkpoint=0):
                 logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 26:
                 FFXC.set_neutral()
-            elif pathing.set_movement(pathing.yunalesca_to_airship(checkpoint)):
+            elif pathing.set_movement(YunalescaToAirship.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

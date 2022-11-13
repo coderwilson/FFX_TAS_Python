@@ -7,6 +7,7 @@ import menu
 import pathing
 import vars
 import xbox
+from paths import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -68,21 +69,21 @@ def path():
                     memory.main.click_to_event_temple(0)
                     checkpoint += 1
                 elif (
-                    pathing.djose_path(checkpoint)[0]
+                    DjosePath.execute(checkpoint)[0]
                     < memory.main.get_actor_coords(0)[0]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 elif (
-                    pathing.djose_path(checkpoint)[1]
+                    DjosePath.execute(checkpoint)[1]
                     < memory.main.get_actor_coords(0)[1]
                     and checkpoint < 48
                     and checkpoint > 18
                 ):
                     checkpoint += 1
                 # General pathing
-                elif pathing.set_movement(pathing.djose_path(checkpoint)):
+                elif pathing.set_movement(DjosePath.execute(checkpoint)):
                     checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -331,7 +332,7 @@ def trials():
                 else:
                     memory.main.click_to_event_temple(7)
                 checkpoint += 1
-            elif pathing.set_movement(pathing.djose_trials(checkpoint)):
+            elif pathing.set_movement(DjoseTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -349,7 +350,7 @@ def trials():
         # Dance
         checkpoint = 0
         while memory.main.user_control():
-            if pathing.set_movement(pathing.djose_dance(checkpoint)):
+            if pathing.set_movement(DjoseDance.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -408,7 +409,7 @@ def leaving_djose():
                 FFXC.set_neutral()
                 memory.main.click_to_control()
                 checkpoint = 13
-            elif pathing.set_movement(pathing.djose_exit(checkpoint)):
+            elif pathing.set_movement(DjoseExit.execute(checkpoint)):
                 checkpoint += 1
         else:
             FFXC.set_neutral()
