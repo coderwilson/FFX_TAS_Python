@@ -70,19 +70,20 @@ def load_into_game(gamestate: str, step_counter: str):
             nemesis = key
             if save_num > 200:
                 pass
-            elif nemesis == str(game_vars.nemesis()):
+            else:
                 logger.debug(f"Found save {save_num}")
                 save_num_conf = save_num
-                nemesis_conf = nemesis
                 blitz_win = results[gamestate][step_counter][key]["blitz_win_value"]
                 end_ver = results[gamestate][step_counter][key]["end_game_version_val"]
-                nea_zone = results[gamestate][step_counter][key]["nea_zone"]
-                nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
-                spec_move = results[gamestate][step_counter][key]["special_movement"]
                 logger.debug(f"Blitz Win {blitz_win}")
                 logger.debug(f"End game version {end_ver}")
-                logger.debug(f"NEA zone {nea_zone}")
-                logger.debug(f"Nemesis checkpoint {nem_ap}")
+                if nemesis == str(game_vars.nemesis()):
+                    nemesis_conf = nemesis
+                    nea_zone = results[gamestate][step_counter][key]["nea_zone"]
+                    nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
+                    spec_move = results[gamestate][step_counter][key]["special_movement"]
+                    logger.debug(f"NEA zone {nea_zone}")
+                    logger.debug(f"Nemesis checkpoint {nem_ap}")
 
         if save_num_conf == 0:
             logger.debug("Failure 2")
@@ -93,8 +94,9 @@ def load_into_game(gamestate: str, step_counter: str):
             load_save_num(int(save_num_conf))
             game_vars.set_blitz_win(value=(blitz_win == "True"))
             game_vars.end_game_version_set(value=int(end_ver))
-            game_vars.set_nea_zone(value=int(nea_zone))
-            game_vars.set_nem_checkpoint_ap(value=int(nem_ap))
+            if nemesis == str(game_vars.nemesis()):
+                game_vars.set_nea_zone(value=int(nea_zone))
+                game_vars.set_nem_checkpoint_ap(value=int(nem_ap))
 
             if spec_move != "none":
                 logger.debug(f"Special movement needed: {spec_move}")
