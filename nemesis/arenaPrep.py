@@ -1089,7 +1089,8 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     #Finish leveling before we make a 1mp weapon
     if force_levels > game_vars.nem_checkpoint_ap():
         while force_levels > game_vars.nem_checkpoint_ap():
-            
+            nemesis.arenaSelect.arena_menu_select(1)
+            nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
         menu.tidus_slayer(od_pos=0)
     else:
         nemesis.arenaSelect.arena_menu_select(2)
