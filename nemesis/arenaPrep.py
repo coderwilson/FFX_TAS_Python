@@ -1054,6 +1054,24 @@ def one_mp_ready():
         return False
     return True
 
+def tonberry_levels_battle():
+    screen.await_turn()
+    while memory.main.battle_active():
+        if screen.turn_tidus():
+            if memory.main.get_overdrive_battle(character=0):
+                battle.overdrive.tidus()
+            else:
+                battle.main.attack()
+        else:
+            battle.main.escape_one()
+    
+    print("Battle is complete.")
+    while not memory.main.menu_open():
+        pass
+    FFXC.set_value("btn_b", 1)
+    memory.main.wait_frames(150)
+    FFXC.set_value("btn_b", 0)
+    print("Now back in control.")
 
 def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     menu.auto_sort_equipment()
@@ -1083,17 +1101,23 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         )
     while not one_mp_ready():
         print("Trying to obtain Gambler's Soul and Purifying Salt items")
-        nemesis.arenaSelect.arena_menu_select(4)
         arena_npc()
+        nemesis.arenaSelect.arena_menu_select(4)
     
     #Finish leveling before we make a 1mp weapon
     if force_levels > game_vars.nem_checkpoint_ap():
+        nemesis.arenaSelect.arena_menu_select(4)
         while force_levels > game_vars.nem_checkpoint_ap():
+            arena_npc()
             nemesis.arenaSelect.arena_menu_select(1)
             nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
+            tonberry_levels_battle()
+            nemesis.arenaSelect.arena_menu_select(4)
+            nemesis.menu.perform_next_grid()
         menu.tidus_slayer(od_pos=0)
-    else:
-        nemesis.arenaSelect.arena_menu_select(2)
+    
+    arena_npc()
+    nemesis.arenaSelect.arena_menu_select(2)
     
     #Now ready to make item
     memory.main.wait_frames(60)
