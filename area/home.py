@@ -8,6 +8,7 @@ import pathing
 import save_sphere
 import vars
 import xbox
+from paths import BikanelDesert, BikanelHome
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -176,7 +177,7 @@ def desert():
 
             # General pathing
             elif memory.main.user_control():
-                if pathing.set_movement(pathing.desert(checkpoint)):
+                if pathing.set_movement(BikanelDesert.execute(checkpoint)):
                     checkpoint += 1
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -233,19 +234,19 @@ def desert():
                 # Finally, check for other factors and report to console.
                 charge_state = memory.main.overdrive_state()[6] == 100
                 need_speed, need_power = check_spheres()
-                logger.debug("-----------------------------Flag statuses")
+                logger.debug("----- Flag statuses")
                 logger.debug(f"Rikku is charged up: {charge_state}")
                 logger.debug(f"Need more Speed spheres: {need_speed}")
                 logger.debug(f"Need more Power spheres: {need_power}")
                 logger.debug(f"Additional items needed before Home: {items_needed}")
-                logger.debug("-----------------------------Flag statuses (end)")
+                logger.debug("----- Flag statuses (end)")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
     # Move to save sphere
     checkpoint = 0
     while checkpoint < 7:
-        if pathing.set_movement(pathing.home(checkpoint)):
+        if pathing.set_movement(BikanelHome.execute(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -323,7 +324,7 @@ def find_summoners():
             elif checkpoint == 45:
                 memory.main.click_to_event_temple(1)
                 checkpoint += 1
-            elif pathing.set_movement(pathing.home(checkpoint)):
+            elif pathing.set_movement(BikanelHome.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

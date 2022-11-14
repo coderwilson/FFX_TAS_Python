@@ -6,6 +6,7 @@ import memory.main
 import pathing
 import vars
 import xbox
+from paths import Airship
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -15,7 +16,7 @@ FFXC = xbox.controller_handle()
 
 def air_ship_path(version):
     memory.main.click_to_control()
-    distillerPurchase = False
+    distiller_purchase = False
 
     complete = False
     checkpoint = 0
@@ -27,7 +28,7 @@ def air_ship_path(version):
                 checkpoint += 1
             elif (
                 version == 1
-                and not distillerPurchase
+                and not distiller_purchase
                 and checkpoint == 5
                 and (memory.main.get_speed() < 9 or memory.main.get_power() < 23)
             ):
@@ -91,7 +92,7 @@ def air_ship_path(version):
                         xbox.tap_b()
                 memory.main.close_menu()
                 memory.main.click_to_control_3()
-                distillerPurchase = True
+                distiller_purchase = True
             elif checkpoint < 6 and memory.main.get_map() == 351:  # Screen with Isaaru
                 checkpoint = 6
             elif (
@@ -196,7 +197,7 @@ def air_ship_path(version):
                 complete = True
 
             # General Pathing
-            elif pathing.set_movement(pathing.air_ship(checkpoint)):
+            elif pathing.set_movement(Airship.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

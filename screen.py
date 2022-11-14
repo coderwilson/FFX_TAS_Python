@@ -19,17 +19,17 @@ def battle_screen():
 
 def faint_check():
     faints = 0
-    charHP = memory.main.get_battle_hp()
-    frontParty = memory.main.get_active_battle_formation()
-    logger.debug(f"faint_check() ## {frontParty} ##")
-    logger.debug(f"faint_check() ## {charHP} ##")
+    char_hp = memory.main.get_battle_hp()
+    front_party = memory.main.get_active_battle_formation()
+    logger.debug(f"faint_check() ## {front_party} ##")
+    logger.debug(f"faint_check() ## {char_hp} ##")
     if turn_aeon():
         return 0
-    if frontParty[0] != 255 and charHP[0] == 0:
+    if front_party[0] != 255 and char_hp[0] == 0:
         faints += 1
-    if frontParty[1] != 255 and charHP[1] == 0:
+    if front_party[1] != 255 and char_hp[1] == 0:
         faints += 1
-    if frontParty[2] != 255 and charHP[2] == 0:
+    if front_party[2] != 255 and char_hp[2] == 0:
         faints += 1
     logger.debug(f"faint_check() ## Fainted Characters: {faints} ##")
     return faints

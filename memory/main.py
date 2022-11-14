@@ -1521,11 +1521,9 @@ def get_story_progress():
 
 def get_map():
     global base_value
-
     key = base_value + 0x00D2CA90
     progress = process.read_bytes(key, 2)
     return progress
-
 
 def touching_save_sphere():
     global base_value
@@ -2100,7 +2098,7 @@ def actor_index(actor_num: int = 41):
 
 
 def mrr_guy_coords():
-    logger.debug("+++Searching for MRR guy")
+    logger.debug("+++ Searching for MRR guy")
     mrr_guy = 255
     for x in range(get_actor_array_size()):
         actor_num = get_actor_id(x)
@@ -2711,14 +2709,18 @@ def blitz_cursor():
     return cursor
 
 
+
+
 # ------------------------------
 # Function for logging
 
 
-def read_bytes(key, size):
-    return process.read_bytes(key, size)
-
-
+def total_distance_travelled():
+    return float_from_integer(read_val(0x00D2A9DC, 4))
+    
+def get_zone():
+    return read_val(0x00D2CAA0, 2)
+    
 # ------------------------------
 # Equipment array
 

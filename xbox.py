@@ -79,11 +79,7 @@ class VgTranslator:
         # Error states
         elif x_key == "axis_lx" or x_key == "axis_ly":
             logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
             logger.error(f"ERROR - {x_key}")
-            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
-            logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
             logger.error("ERROR - OLD MOVEMENT COMMAND FOUND")
             self.set_neutral()
 

@@ -35,11 +35,12 @@ import battle.boss
 import battle.main
 import blitz
 import config
+import distance_logging
 import load_game
 import logs
 import memory.main
 import nemesis.arena_battles
-import nemesis.arenaPrep
+import nemesis.arena_prep
 import nemesis.changes
 import pathing
 import reset
@@ -81,7 +82,7 @@ def configuration_setup():
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game.rng_seed_num = 255
         game_length = "Loading mid point for testing."
-        # game_vars.setCSR(True)
+        # game_vars.set_csr(True)
     elif game_vars.use_set_seed():
         game_length = f"Full Run, set seed [{game.rng_seed_num}]"
     elif use_favored_seed:
@@ -242,13 +243,7 @@ def perform_TAS():
                 if game.step == 3:
                     area.besaid.leaving()
                     game.state = "Boat1"
-                    if memory.main.get_tidus_slvl() < 3:
-                        logger.warning("=========================")
-                        logger.warning("=== Under-levelled!!! ===")
-                        logger.warning("=========================")
-                        game.state, game.step = reset.mid_run_reset()
-                    else:
-                        game.step = 1
+                    game.step = 1
 
             if game.state == "Boat1":
                 area.boats.ss_liki()
@@ -307,10 +302,10 @@ def perform_TAS():
                     game.step = 4
 
                 if game.step == 4:
-                    logger.info("------Blitz Start")
+                    logger.info("----- Blitz Start")
                     force_blitz_win = game_vars.get_force_blitz_win()
                     blitz.blitz_main(force_blitz_win)
-                    logger.info("------Blitz End")
+                    logger.info("----- Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
 
@@ -749,8 +744,8 @@ def perform_TAS():
             # Nemesis farming section
             if game.state == "Nem_Farm":
                 if game.step == 1:
-                    nemesis.arenaPrep.transition()
-                    while not nemesis.arenaPrep.t_plains(cap_num=1):
+                    nemesis.arena_prep.transition()
+                    while not nemesis.arena_prep.t_plains(cap_num=1):
                         pass
                     game.step = 2
                     if game_vars.create_saves():
@@ -759,12 +754,12 @@ def perform_TAS():
                         )
 
                 if game.step == 2:
-                    while not nemesis.arenaPrep.calm(cap_num=1, airship_return=False):
+                    while not nemesis.arena_prep.calm(cap_num=1, airship_return=False):
                         pass
                     game.step = 3
 
                 if game.step == 3:
-                    nemesis.arenaPrep.kilika_shop()
+                    nemesis.arena_prep.kilika_shop()
                     game.step = 4
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -772,11 +767,11 @@ def perform_TAS():
                         )
 
                 if game.step == 4:
-                    nemesis.arenaPrep.besaid_farm(cap_num=1)
+                    nemesis.arena_prep.besaid_farm(cap_num=1)
                     game.step = 5
 
                 if game.step == 5:
-                    nemesis.arenaPrep.kilika_farm(cap_num=1)
+                    nemesis.arena_prep.kilika_farm(cap_num=1)
                     game.step = 6
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -784,7 +779,7 @@ def perform_TAS():
                         )
 
                 if game.step == 6:
-                    nemesis.arenaPrep.miihen_farm(cap_num=1)
+                    nemesis.arena_prep.miihen_farm(cap_num=1)
                     game.step = 7
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -792,20 +787,20 @@ def perform_TAS():
                         )
 
                 if game.step == 7:
-                    # reportGamestate()
+                    # report_gamestate()
                     # nemesis.arena_prep.mrr_farm(cap_num=1)
                     game.step = 8
 
                 if game.step == 8:
-                    nemesis.arenaPrep.od_to_ap()
+                    nemesis.arena_prep.od_to_ap()
                     game.step = 9
 
                 if game.step == 9:
-                    nemesis.arenaPrep.besaid_farm(cap_num=10)
+                    nemesis.arena_prep.besaid_farm(cap_num=10)
                     game.step = 10
 
                 if game.step == 10:
-                    nemesis.arenaPrep.kilika_farm(cap_num=10)
+                    nemesis.arena_prep.kilika_farm(cap_num=10)
                     game.step = 11
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -813,7 +808,7 @@ def perform_TAS():
                         )
 
                 if game.step == 11:
-                    nemesis.arenaPrep.miihen_farm(cap_num=10)
+                    nemesis.arena_prep.miihen_farm(cap_num=10)
                     game.step = 12
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -826,7 +821,7 @@ def perform_TAS():
                     game.step = 13
 
                 if game.step == 13:
-                    nemesis.arenaPrep.djose_farm(cap_num=10)
+                    nemesis.arena_prep.djose_farm(cap_num=10)
                     game.step = 14
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -834,7 +829,7 @@ def perform_TAS():
                         )
 
                 if game.step == 14:
-                    nemesis.arenaPrep.t_plains(cap_num=10)
+                    nemesis.arena_prep.t_plains(cap_num=10)
                     game.step = 15
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -842,7 +837,7 @@ def perform_TAS():
                         )
 
                 if game.step == 15:
-                    nemesis.arenaPrep.bikanel(cap_num=10)
+                    nemesis.arena_prep.bikanel(cap_num=10)
                     game.step = 16
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -850,8 +845,8 @@ def perform_TAS():
                         )
 
                 if game.step == 16:
-                    nemesis.arenaPrep.arena_return()
-                    nemesis.arenaPrep.auto_phoenix()
+                    nemesis.arena_prep.arena_return()
+                    nemesis.arena_prep.auto_phoenix()
                     game.step = 17
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -859,7 +854,7 @@ def perform_TAS():
                         )
 
                 if game.step == 17:
-                    nemesis.arenaPrep.mac_woods(cap_num=10)
+                    nemesis.arena_prep.mac_woods(cap_num=10)
                     game.step = 18
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -867,7 +862,7 @@ def perform_TAS():
                         )
 
                 if game.step == 18:
-                    nemesis.arenaPrep.stolen_fayth_cave()
+                    nemesis.arena_prep.stolen_fayth_cave()
                     game.step = 19
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -875,7 +870,7 @@ def perform_TAS():
                         )
 
                 if game.step == 19:
-                    nemesis.arenaPrep.gagazet()
+                    nemesis.arena_prep.gagazet()
                     # nemesis.arena_prep.gagazet_1()
                     # nemesis.arena_prep.gagazet_2()
                     # nemesis.arena_prep.gagazet_3()
@@ -893,7 +888,7 @@ def perform_TAS():
                     game.step = 21
 
                 if game.step == 21:
-                    nemesis.arenaPrep.one_mp_weapon()
+                    nemesis.arena_prep.one_mp_weapon()
                     game.step = 22
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -901,7 +896,7 @@ def perform_TAS():
                         )
 
                 if game.step == 22:
-                    nemesis.arenaPrep.inside_sin(cap_num=10)
+                    nemesis.arena_prep.inside_sin(cap_num=10)
                     game.step = 23
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -909,8 +904,8 @@ def perform_TAS():
                         )
 
                 if game.step == 23:
-                    nemesis.arenaPrep.unlock_omega()
-                    nemesis.arenaPrep.omega_ruins()
+                    nemesis.arena_prep.unlock_omega()
+                    nemesis.arena_prep.omega_ruins()
                     game.step = 24
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -918,7 +913,7 @@ def perform_TAS():
                         )
 
                 if game.step == 24:
-                    nemesis.arenaPrep.kilika_final_shop()
+                    nemesis.arena_prep.kilika_final_shop()
                     game.step = 25
                     if game_vars.create_saves():
                         save_sphere.touch_and_save(
@@ -926,8 +921,8 @@ def perform_TAS():
                         )
 
                 if game.step == 25:
-                    nemesis.arenaPrep.arena_return()
-                    nemesis.arenaPrep.final_weapon()
+                    nemesis.arena_prep.arena_return()
+                    nemesis.arena_prep.final_weapon()
                     game.state = "Nem_Arena"
                     game.step = 1
 

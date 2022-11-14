@@ -1,6 +1,7 @@
 import memory.main
 import pathing
 import xbox
+from paths import MiihenAgency
 
 FFXC = xbox.controller_handle()
 
@@ -25,7 +26,7 @@ def engage():
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 4
-            elif pathing.set_movement(pathing.miihen_agency(checkpoint)):
+            elif pathing.set_movement(MiihenAgency.execute(checkpoint)):
                 checkpoint += 1
                 print("Checkpoint reached:", checkpoint)
         else:
@@ -37,7 +38,7 @@ def engage():
 def battle():
     memory.main.wait_frames(10)
     choco_index = memory.main.actor_index(actor_num=4200)
-    chocoCoords = memory.main.get_actor_coords(actor_number=choco_index)
+    choco_coords = memory.main.get_actor_coords(actor_number=choco_index)
     input("Ready 1")
     memory.main.choco_eater_fun(actor_index=choco_index)
     input("Ready 2")

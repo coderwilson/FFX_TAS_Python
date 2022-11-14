@@ -11,6 +11,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -68,7 +69,7 @@ def arrival():
                 memory.main.click_to_control()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.mrr_start(checkpoint)):
+            elif pathing.set_movement(MRRStart.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -116,10 +117,10 @@ def main_path():
                 checkpoint += 1
             elif checkpoint == 45:
                 if status[0] == 0 or status[1] == 0 or status[2] != 2:
-                    if pathing.set_movement(pathing.mrr_main(99)):
+                    if pathing.set_movement(MRRMain.execute(99)):
                         checkpoint -= 1
                 else:
-                    if pathing.set_movement(pathing.mrr_main(45)):
+                    if pathing.set_movement(MRRMain.execute(45)):
                         checkpoint += 1
 
             elif checkpoint == 46:
@@ -165,7 +166,7 @@ def main_path():
                 checkpoint += 1
             elif checkpoint < 71 and memory.main.get_map() == 79:
                 checkpoint = 71  # Into Battle Site zone (upper, cannon area)
-            elif pathing.set_movement(pathing.mrr_main(checkpoint)):
+            elif pathing.set_movement(MRRMain.execute(checkpoint)):
                 if checkpoint == 61:
                     if memory.main.next_crit(
                         character=3, char_luck=18, enemy_luck=15
@@ -228,7 +229,7 @@ def main_path():
     # Get close to save sphere
     checkpoint = 0
     while checkpoint < 4:
-        if pathing.set_movement(pathing.battle_site(checkpoint)):
+        if pathing.set_movement(MRRBattleSite.execute(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -271,7 +272,7 @@ def battle_site():
                 xbox.menu_down()
                 xbox.tap_b()
                 checkpoint = 100
-            elif pathing.set_movement(pathing.battle_site(checkpoint)):
+            elif pathing.set_movement(MRRBattleSite.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -300,7 +301,7 @@ def gui_and_aftermath():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
-            elif pathing.set_movement(pathing.battle_site_aftermath(checkpoint)):
+            elif pathing.set_movement(MRRBattleSiteAftermath.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

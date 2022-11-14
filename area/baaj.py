@@ -9,6 +9,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths import BaajHallway, BaajPuzzle, BaajRamp
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ def entrance(checkpoint: int = 0):
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.baaj_ramp(checkpoint)):
+            elif pathing.set_movement(BaajRamp.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -60,7 +61,7 @@ def entrance(checkpoint: int = 0):
                 memory.main.await_event()
                 FFXC.set_neutral()
             # General pathing
-            elif pathing.set_movement(pathing.baaj_hallway(checkpoint)):
+            elif pathing.set_movement(BaajHallway.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -102,7 +103,7 @@ def baaj_puzzle():
                 xbox.menu_b()
 
             # General pathing
-            elif pathing.set_movement(pathing.baaj_puzzle(checkpoint)):
+            elif pathing.set_movement(BaajPuzzle.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

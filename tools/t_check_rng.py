@@ -5,11 +5,11 @@ import memory.main
 
 memory.main.start()
 
-readVals = False
+read_vals = False
 
 print("------------------")
-if readVals:
-    memory.main.printManipInfo()
+if read_vals:
+    memory.main.print_manip_info()
 else:
     print("Here goes nothing!")
     print("------------------")

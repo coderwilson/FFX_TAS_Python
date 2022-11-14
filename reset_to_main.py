@@ -5,4 +5,4 @@ while not memory.main.start():
     pass
 
 
-reset.resetToMainMenu()
+reset.reset_to_main_menu()

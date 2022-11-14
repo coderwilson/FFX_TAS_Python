@@ -4,9 +4,9 @@ import battle.boss
 import battle.main
 import memory.main
 import menu
-import nemesis.arenaSelect
+import nemesis.arena_select
 import nemesis.menu
-import nemesis.targetPath
+import nemesis.nemesis_pathing
 import rng_track
 import save_sphere
 import screen
@@ -55,10 +55,10 @@ def air_ship_destination(dest_num=0, force_omega=False):
     if len(memory.main.all_equipment()) > 120:
         rin_equip_dump()
     while memory.main.get_coords()[0] < -257:
-        nemesis.targetPath.set_movement([-258, 345])
+        nemesis.nemesis_pathing.set_movement([-258, 345])
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
-            nemesis.targetPath.set_movement([-251, 340])
+            nemesis.nemesis_pathing.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
         xbox.menu_b()
@@ -85,7 +85,7 @@ def air_ship_destination(dest_num=0, force_omega=False):
 def unlock_omega():
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
-            nemesis.targetPath.set_movement([-251, 340])
+            nemesis.nemesis_pathing.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
         if memory.main.diag_progress_flag() == 4:
@@ -222,7 +222,7 @@ def return_to_airship():
     ss_details = get_save_sphere_details()
 
     if memory.main.get_map() == 307:  # Monster arena
-        while not nemesis.targetPath.set_movement([-4, -3]):
+        while not nemesis.nemesis_pathing.set_movement([-4, -3]):
             pass
 
     save_sphere.approach_save_sphere()
@@ -293,98 +293,98 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
 
 def advanced_complete_check():
     encounter_id = memory.main.get_encounter_id()
-    arenaArray = memory.main.arena_array()
+    arena_array = memory.main.arena_array()
     # Common monsters
     if False:
         pass
 
     # Inside Sin
     elif encounter_id == 374:  # Ahriman
-        print("For this battle, count:", arenaArray[37])
-        if arenaArray[37] == 10:
+        print("For this battle, count:", arena_array[37])
+        if arena_array[37] == 10:
             return True
     elif encounter_id in [375, 380]:  # Exoray (with a bonus Ahriman)
-        print("For this battle, count:", arenaArray[93])
-        if arenaArray[93] == 10 and arenaArray[37] == 10:
+        print("For this battle, count:", arena_array[93])
+        if arena_array[93] == 10 and arena_array[37] == 10:
             return True
     elif encounter_id in [376, 381]:  # Adamantoise
-        print("For this battle, count:", arenaArray[81])
-        if arenaArray[81] == 10:
+        print("For this battle, count:", arena_array[81])
+        if arena_array[81] == 10:
             return True
     elif encounter_id in [377, 382]:  # Both kinds of Gemini
-        print("For this battle, count:", arenaArray[77])
-        print("For this battle, count:", arenaArray[78])
-        if arenaArray[77] == 10 and arenaArray[78] == 10:
+        print("For this battle, count:", arena_array[77])
+        print("For this battle, count:", arena_array[78])
+        if arena_array[77] == 10 and arena_array[78] == 10:
             return True
     elif encounter_id in [378, 384]:  # Behemoth King
-        print("For this battle, count:", arenaArray[70])
-        if arenaArray[70] == 10:
+        print("For this battle, count:", arena_array[70])
+        if arena_array[70] == 10:
             return True
     elif encounter_id == 383:  # Demonolith
-        print("For this battle, count:", arenaArray[75])
-        if arenaArray[75] == 10:
+        print("For this battle, count:", arena_array[75])
+        if arena_array[75] == 10:
             return True
     elif encounter_id == 385:  # Great Malboro
-        print("For this battle, count:", arenaArray[56])
-        if arenaArray[56] == 10:
+        print("For this battle, count:", arena_array[56])
+        if arena_array[56] == 10:
             return True
     elif encounter_id == 386:  # Barbatos
-        print("For this battle, count:", arenaArray[90])
-        if arenaArray[90] == 10:
+        print("For this battle, count:", arena_array[90])
+        if arena_array[90] == 10:
             return True
     elif encounter_id == 387:  # Wraith
-        print("For this battle, count:", arenaArray[97])
-        if arenaArray[97] == 10:
+        print("For this battle, count:", arena_array[97])
+        if arena_array[97] == 10:
             return True
 
     # Omega dungeon
     elif encounter_id == 421:  # Master Coeurl and Floating Death
-        print("For this battle, count:", arenaArray[74])
-        print("For this battle, count:", arenaArray[102])
-        if arenaArray[74] == 10 and arenaArray[102] == 10:
+        print("For this battle, count:", arena_array[74])
+        print("For this battle, count:", arena_array[102])
+        if arena_array[74] == 10 and arena_array[102] == 10:
             return True
     elif encounter_id == 422:  # Halma and Spirit
-        print("For this battle, count:", arenaArray[96])
-        print("For this battle, count:", arenaArray[101])
-        if arenaArray[96] == 10 and arenaArray[101] == 10:
+        print("For this battle, count:", arena_array[96])
+        print("For this battle, count:", arena_array[101])
+        if arena_array[96] == 10 and arena_array[101] == 10:
             return True
     elif encounter_id == 423:  # Zaurus and Floating Death
-        print("For this battle, count:", arenaArray[100])
-        print("For this battle, count:", arenaArray[102])
-        if arenaArray[100] == 10 and arenaArray[102] == 10:
+        print("For this battle, count:", arena_array[100])
+        print("For this battle, count:", arena_array[102])
+        if arena_array[100] == 10 and arena_array[102] == 10:
             return True
     elif encounter_id == 424:  # Black Element and Spirit
-        print("For this battle, count:", arenaArray[67])
-        print("For this battle, count:", arenaArray[96])
-        if arenaArray[67] == 10 and arenaArray[96] == 10:
+        print("For this battle, count:", arena_array[67])
+        print("For this battle, count:", arena_array[96])
+        if arena_array[67] == 10 and arena_array[96] == 10:
             return True
     elif encounter_id == 425:  # Varuna
-        print("For this battle, count:", arenaArray[82])
-        if arenaArray[82] == 10:
+        print("For this battle, count:", arena_array[82])
+        if arena_array[82] == 10:
             return True
     elif encounter_id == 426:  # Master Tonberry
-        print("For this battle, count:", arenaArray[99])
-        if arenaArray[99] == 10:
+        print("For this battle, count:", arena_array[99])
+        if arena_array[99] == 10:
             return True
     elif encounter_id == 428:  # Machea (blade thing)
-        print("For this battle, count:", arenaArray[103])
-        if arenaArray[103] == 10:
+        print("For this battle, count:", arena_array[103])
+        if arena_array[103] == 10:
             return True
     elif encounter_id == 430:  # Demonolith x2
-        print("For this battle, count:", arenaArray[75])
-        if arenaArray[75] == 10:
+        print("For this battle, count:", arena_array[75])
+        if arena_array[75] == 10:
             return True
     elif encounter_id in [432, 433, 434, 435, 436]:  # Just Zaurus
-        print("For this battle, count:", arenaArray[100])
-        if arenaArray[100] == 10:
+        print("For this battle, count:", arena_array[100])
+        if arena_array[100] == 10:
             return True
     elif encounter_id == 437:  # Puroboros
-        print("For this battle, count:", arenaArray[95])
-        if arenaArray[95] == 10:
+        print("For this battle, count:", arena_array[95])
+        if arena_array[95] == 10:
             return True
     elif encounter_id == 438:  # Wraith
-        print("For this battle, count:", arenaArray[97])
-        if arenaArray[97] == 10:
+        print("For this battle, count:", arena_array[97])
+        if arena_array[97] == 10:
             return True
 
     # Other
@@ -406,23 +406,23 @@ def advanced_battle_logic():
     print("### Ambush flag (2 is bad):", memory.main.battle_type())
     while not memory.main.turn_ready():
         pass
-    autoLifeUsed = False
+    auto_life_used = False
     FFXC.set_neutral()
 
     if memory.main.battle_type() == 2:
-        print(">>>>Ambushed! Escaping!")
+        print(">>> Ambushed! Escaping!")
         battle.main.tidus_flee()
     elif advanced_complete_check():
-        print(">>>>Complete collecting this monster.")
+        print(">>> Complete collecting this monster.")
         battle.main.tidus_flee()
     else:
         if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
-            aeonComplete = False
+            aeon_complete = False
             while memory.main.battle_active():
                 if memory.main.turn_ready():
                     if screen.turn_rikku():
-                        if not aeonComplete:
+                        if not aeon_complete:
                             battle.main.buddy_swap_yuna()
                             battle.main.aeon_summon(4)
                         else:
@@ -434,8 +434,8 @@ def advanced_battle_logic():
                     else:
                         battle.main.defend()
         else:
-            print("---Regular battle:", memory.main.get_encounter_id())
-            sleepPowder = False
+            print("--- Regular battle:", memory.main.get_encounter_id())
+            sleep_powder = False
             while memory.main.battle_active():
                 encounter_id = memory.main.get_encounter_id()
                 if memory.main.turn_ready():
@@ -445,9 +445,12 @@ def advanced_battle_logic():
                         battle.main.aeon_summon(4)
                         battle.main.attack("none")
                     elif screen.turn_tidus():
-                        if memory.main.get_encounter_id() in [386] and not autoLifeUsed:
+                        if (
+                            memory.main.get_encounter_id() in [386]
+                            and not auto_life_used
+                        ):
                             auto_life()
-                            autoLifeUsed = True
+                            auto_life_used = True
                         elif (
                             encounter_id == 383
                             and memory.main.get_enemy_current_hp()[0] > 9999
@@ -547,7 +550,7 @@ def advanced_battle_logic():
                             )
                         elif encounter_id == 426:
                             # Master Tonberry
-                            if not sleepPowder:
+                            if not sleep_powder:
                                 battle.main.use_item(
                                     memory.main.get_use_items_slot(37), rikku_flee=True
                                 )
@@ -564,7 +567,7 @@ def advanced_battle_logic():
                             encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
                         ):
-                            if not sleepPowder:
+                            if not sleep_powder:
                                 battle.main.use_item(
                                     memory.main.get_use_items_slot(37), rikku_flee=True
                                 )
@@ -629,7 +632,7 @@ def arena_npc():
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(1)
             else:
-                nemesis.targetPath.set_movement([2, -15])
+                nemesis.nemesis_pathing.set_movement([2, -15])
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
@@ -654,12 +657,12 @@ def arena_return(checkpoint: int = 0):
         if memory.main.user_control():
             if checkpoint == 2:
                 while memory.main.user_control():
-                    nemesis.targetPath.set_movement([-641, -268])
+                    nemesis.nemesis_pathing.set_movement([-641, -268])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif nemesis.targetPath.set_movement(
-                nemesis.targetPath.arena_return(checkpoint)
+            elif nemesis.nemesis_pathing.set_movement(
+                nemesis.nemesis_pathing.arena_return(checkpoint)
             ):
                 checkpoint += 1
                 print("Checkpoint reached: ", checkpoint)
@@ -678,9 +681,9 @@ def transition():
         equipment_type=0,
         ability_array=[0x807A, 255, 255, 255],
         ability_index=0x8001,
-        slotcount=2,
-        navigateToEquipMenu=True,
-        fullMenuClose=True,
+        slot_count=2,
+        navigate_to_equip_menu=True,
+        full_menu_close=True,
     )
 
 
@@ -693,36 +696,36 @@ def kilika_shop():
     xbox.tap_a()
     xbox.tap_b()
     arena_npc()
-    # xbox.tapDown()
-    # xbox.tapDown()
+    # xbox.tap_down()
+    # xbox.tap_down()
     # xbox.tap_b()
     # memory.wait_frames(30)
     # xbox.tap_b() #Buy
     # memory.wait_frames(30)
-    # getEquipment(equip=False) #Tidus second catcher weapon
-    # xbox.menuA()
+    # get_equipment(equip=False) #Tidus second catcher weapon
+    # xbox.menu_a()
     # memory.wait_frames(30)
-    # xbox.menuA()
+    # xbox.menu_a()
     # memory.wait_frames(30)
     xbox.menu_a()
     xbox.tap_b()  # Exit
     memory.main.wait_frames(60)
-    while not nemesis.targetPath.set_movement([-6, -23]):
+    while not nemesis.nemesis_pathing.set_movement([-6, -23]):
         pass
-    while not nemesis.targetPath.set_movement([0, -3]):
+    while not nemesis.nemesis_pathing.set_movement([0, -3]):
         pass
     return_to_airship()
     memory.main.await_control()
     rin_equip_dump()
-    # menu.equip_weapon(character=0,ability=0x807A, fullMenuClose=False)
+    # menu.equip_weapon(character=0,ability=0x807A, full_menu_close=False)
     air_ship_destination(dest_num=2)
-    while not nemesis.targetPath.set_movement([-25, -246]):
+    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.set_movement([-47, -209]):
+    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.set_movement([-91, -199]):
+    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.set_movement([-108, -169]):
+    while not nemesis.nemesis_pathing.set_movement([-108, -169]):
         pass
     while memory.main.user_control():
         FFXC.set_movement(-1, 0)
@@ -733,7 +736,7 @@ def kilika_shop():
     memory.main.wait_frames(60)
     xbox.tap_b()  # Buy equipment
     memory.main.wait_frames(60)
-    # getEquipment(equip=False) #Weapon for Yuna
+    # get_equipment(equip=False) #Weapon for Yuna
     xbox.tap_down()
     xbox.tap_down()
     xbox.tap_down()
@@ -759,27 +762,27 @@ def kilika_shop():
         equipment_type=0,
         ability_array=[0x800B, 0x8000, 255, 255],
         ability_index=0x8001,
-        slotcount=4,
-        navigateToEquipMenu=True,
-        fullMenuClose=True,
+        slot_count=4,
+        navigate_to_equip_menu=True,
+        full_menu_close=True,
     )
     menu.add_ability(
         owner=0,
         equipment_type=1,
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x8056,
-        slotcount=4,
-        navigateToEquipMenu=True,
-        fullMenuClose=True,
+        slot_count=4,
+        navigate_to_equip_menu=True,
+        full_menu_close=True,
     )
 
-    while not nemesis.targetPath.set_movement([-91, -199]):
+    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.set_movement([-47, -209]):
+    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.set_movement([-25, -246]):
+    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.set_movement([29, -252]):
+    while not nemesis.nemesis_pathing.set_movement([29, -252]):
         pass
     return_to_airship()
 
@@ -834,11 +837,11 @@ def od_to_ap():  # Calm Lands purchases
         equipment_type=0,
         ability_array=[0x807A, 255, 255, 255],
         ability_index=0x8011,
-        slotcount=2,
-        navigateToEquipMenu=True,
-        exitOutOfCurrentWeapon=True,
-        closeMenu=True,
-        fullMenuClose=False,
+        slot_count=2,
+        navigate_to_equip_menu=True,
+        exit_out_of_current_weapon=True,
+        close_menu=True,
+        full_menu_close=False,
     )
     menu.equip_weapon(character=0, ability=0x8011)
     xbox.tap_up()
@@ -854,8 +857,8 @@ def od_to_ap():  # Calm Lands purchases
 
 def farm_feathers():
     arena_npc()
-    nemesis.arenaSelect.arena_menu_select(1)
-    nemesis.arenaSelect.start_fight(area_index=7, monster_index=5)
+    nemesis.arena_select.arena_menu_select(1)
+    nemesis.arena_select.start_fight(area_index=7, monster_index=5)
     memory.main.wait_frames(1)
     wait_counter = 0
     while memory.main.battle_active():
@@ -885,7 +888,7 @@ def farm_feathers():
     memory.main.wait_frames(150)
     FFXC.set_value("btn_b", 0)
     print("Now back in control.")
-    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.arena_select.arena_menu_select(4)
 
 
 def auto_phoenix():  # Calm Lands items
@@ -893,29 +896,29 @@ def auto_phoenix():  # Calm Lands items
     nemesis.menu.lulu_bribe()
     memory.main.full_party_format("initiative")
     arena_npc()
-    nemesis.arenaSelect.arena_menu_select(1)
-    nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+    nemesis.arena_select.arena_menu_select(1)
+    nemesis.arena_select.start_fight(area_index=7, monster_index=0)
     bribe_battle()
-    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.arena_select.arena_menu_select(4)
     memory.main.full_party_format("initiative")
     arena_npc()
-    nemesis.arenaSelect.arena_menu_select(1)
-    nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+    nemesis.arena_select.arena_menu_select(1)
+    nemesis.arena_select.start_fight(area_index=7, monster_index=0)
     bribe_battle()
-    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.arena_select.arena_menu_select(4)
     memory.main.full_party_format("initiative")
     arena_npc()
-    nemesis.arenaSelect.arena_menu_select(1)
-    nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+    nemesis.arena_select.arena_menu_select(1)
+    nemesis.arena_select.start_fight(area_index=7, monster_index=0)
     bribe_battle()
-    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.arena_select.arena_menu_select(4)
     memory.main.full_party_format("initiative")
     arena_npc()
     while memory.main.get_item_count_slot(memory.main.get_item_slot(7)) != 99:
         print("Trying to obtain mega-phoenix downs")
-        nemesis.arenaSelect.arena_menu_select(4)
+        nemesis.arena_select.arena_menu_select(4)
         arena_npc()
-    nemesis.arenaSelect.arena_menu_select(2)  # Equipment menu
+    nemesis.arena_select.arena_menu_select(2)  # Equipment menu
     memory.main.wait_frames(90)
     xbox.tap_right()
     xbox.menu_b()  # Sell
@@ -933,11 +936,11 @@ def auto_phoenix():  # Calm Lands items
         equipment_type=1,
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x800A,
-        slotcount=4,
-        navigateToEquipMenu=True,
-        exitOutOfCurrentWeapon=True,
-        closeMenu=True,
-        fullMenuClose=False,
+        slot_count=4,
+        navigate_to_equip_menu=True,
+        exit_out_of_current_weapon=True,
+        close_menu=True,
+        full_menu_close=False,
     )
 
     memory.main.wait_frames(30)
@@ -949,11 +952,11 @@ def auto_phoenix():  # Calm Lands items
             equipment_type=1,
             ability_array=[0x8072, 255, 255, 255],
             ability_index=0x800A,
-            slotcount=4,
-            navigateToEquipMenu=True,
-            exitOutOfCurrentWeapon=True,
-            closeMenu=True,
-            fullMenuClose=False,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            close_menu=True,
+            full_menu_close=False,
         )
         menu.equip_weapon(character=4, ability=0x8002)  # Initiative
         memory.main.close_menu()
@@ -963,30 +966,30 @@ def auto_phoenix():  # Calm Lands items
             equipment_type=1,
             ability_array=[0x8072, 255, 255, 255],
             ability_index=0x800A,
-            slotcount=4,
-            navigateToEquipMenu=True,
-            exitOutOfCurrentWeapon=True,
-            closeMenu=True,
-            fullMenuClose=True,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            close_menu=True,
+            full_menu_close=True,
         )
         memory.main.close_menu()
-        featherSlot = memory.main.get_item_slot(item_num=54)
-        if featherSlot == 255 or memory.main.get_item_count_slot(featherSlot) < 6:
+        feather_slot = memory.main.get_item_slot(item_num=54)
+        if feather_slot == 255 or memory.main.get_item_count_slot(feather_slot) < 6:
             while (
-                featherSlot == 255 or memory.main.get_item_count_slot(featherSlot) < 6
+                feather_slot == 255 or memory.main.get_item_count_slot(feather_slot) < 6
             ):
                 farm_feathers()
-                featherSlot = memory.main.get_item_slot(item_num=54)
+                feather_slot = memory.main.get_item_slot(item_num=54)
         menu.add_ability(
             owner=6,
             equipment_type=0,
             ability_array=[0x800B, 0x8000, 0x8001, 255],
             ability_index=0x8002,
-            slotcount=4,
-            navigateToEquipMenu=True,
-            exitOutOfCurrentWeapon=True,
-            closeMenu=True,
-            fullMenuClose=True,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            close_menu=True,
+            full_menu_close=True,
         )
 
     FFXC.set_movement(-1, 0)
@@ -1008,7 +1011,7 @@ def auto_phoenix():  # Calm Lands items
 def restock_downs():
     print("Restocking phoenix downs")
     arena_npc()
-    nemesis.arenaSelect.arena_menu_select(3)
+    nemesis.arena_select.arena_menu_select(3)
     memory.main.wait_frames(60)
     xbox.tap_b()
     memory.main.wait_frames(6)
@@ -1089,10 +1092,10 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         memory.main.get_item_slot(37) > 200
         or memory.main.get_item_count_slot(memory.main.get_item_slot(37)) < 41
     ):
-        nemesis.arenaSelect.arena_menu_select(1)
-        nemesis.arenaSelect.start_fight(area_index=7, monster_index=0)
+        nemesis.arena_select.arena_menu_select(1)
+        nemesis.arena_select.start_fight(area_index=7, monster_index=0)
         bribe_battle()
-        nemesis.arenaSelect.arena_menu_select(4)
+        nemesis.arena_select.arena_menu_select(4)
         memory.main.full_party_format("initiative")
         arena_npc()
         print(
@@ -1145,11 +1148,11 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         equipment_type=0,
         ability_array=[0x807A, 255, 255, 255],
         ability_index=0x800D,
-        slotcount=2,
-        navigateToEquipMenu=True,
-        exitOutOfCurrentWeapon=True,
-        closeMenu=True,
-        fullMenuClose=True,
+        slot_count=2,
+        navigate_to_equip_menu=True,
+        exit_out_of_current_weapon=True,
+        close_menu=True,
+        full_menu_close=True,
     )
     restock_downs()
     logger.debug(f"lv.4 slot: {memory.main.get_item_slot(84)}")
@@ -1168,7 +1171,6 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
     nemesis.arenaSelect.arena_menu_select(4)
-    
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)
@@ -1205,11 +1207,11 @@ def kilika_gil_farm(armor_buys: int):
                 equipment_type=1,
                 ability_array=[0x8072, 255, 255, 255],
                 ability_index=0x8075,
-                slotcount=4,
-                navigateToEquipMenu=True,
-                exitOutOfCurrentWeapon=True,
-                closeMenu=False,
-                fullMenuClose=False,
+                slot_count=4,
+                navigate_to_equip_menu=True,
+                exit_out_of_current_weapon=True,
+                close_menu=False,
+                full_menu_close=False,
             )
         else:
             menu.add_ability(
@@ -1217,11 +1219,11 @@ def kilika_gil_farm(armor_buys: int):
                 equipment_type=1,
                 ability_array=[0x8072, 255, 255, 255],
                 ability_index=0x8075,
-                slotcount=4,
-                navigateToEquipMenu=False,
-                exitOutOfCurrentWeapon=True,
-                closeMenu=False,
-                fullMenuClose=False,
+                slot_count=4,
+                navigate_to_equip_menu=False,
+                exit_out_of_current_weapon=True,
+                close_menu=False,
+                full_menu_close=False,
             )
     memory.main.close_menu()
     memory.main.wait_frames(9)
@@ -1245,13 +1247,13 @@ def kilika_final_shop():
     menu.auto_sort_equipment()
 
     air_ship_destination(dest_num=2)
-    while not nemesis.targetPath.set_movement([-25, -246]):
+    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.set_movement([-47, -209]):
+    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.set_movement([-91, -199]):
+    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.set_movement([-108, -169]):
+    while not nemesis.nemesis_pathing.set_movement([-108, -169]):
         pass
     while memory.main.user_control():
         FFXC.set_movement(-1, 0)
@@ -1265,9 +1267,9 @@ def kilika_final_shop():
     get_equipment(equip=True)  # Weapon for Tidus
     memory.main.wait_frames(6)
 
-    gilNeeded = 3500000 - memory.main.get_gil_value()
+    gil_needed = 3500000 - memory.main.get_gil_value()
     # Get minimum needed, plus one for safety. Max 99 total.
-    armor_buys = min(int(gilNeeded / 26150), 98) + 1
+    armor_buys = min(int(gil_needed / 26150), 98) + 1
     can_afford = int(memory.main.get_gil_value() / 2250)
 
     while armor_buys >= 1:
@@ -1283,13 +1285,13 @@ def kilika_final_shop():
             xbox.menu_b()
     memory.main.close_menu()
 
-    while not nemesis.targetPath.set_movement([-91, -199]):
+    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.targetPath.set_movement([-47, -209]):
+    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.targetPath.set_movement([-25, -246]):
+    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.targetPath.set_movement([29, -252]):
+    while not nemesis.nemesis_pathing.set_movement([29, -252]):
         pass
     menu.auto_sort_equipment()
     return_to_airship()
@@ -1299,74 +1301,74 @@ def final_weapon():
     arena_npc()
     while memory.main.get_item_count_slot(memory.main.get_item_slot(53)) < 99:
         print("Trying to obtain Dark Matter for BDL weapon")
-        nemesis.arenaSelect.arena_menu_select(4)
+        nemesis.arena_select.arena_menu_select(4)
         arena_npc()
-    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.arena_select.arena_menu_select(4)
 
     menu.add_ability(
         owner=0,
         equipment_type=0,
         ability_array=[0x800B, 0x8000, 255, 255],
         ability_index=0x800D,
-        slotcount=4,
-        navigateToEquipMenu=True,
-        exitOutOfCurrentWeapon=False,
-        closeMenu=False,
-        fullMenuClose=False,
+        slot_count=4,
+        navigate_to_equip_menu=True,
+        exit_out_of_current_weapon=False,
+        close_menu=False,
+        full_menu_close=False,
     )
     menu.add_ability(
         owner=0,
         equipment_type=0,
         ability_array=[0x800B, 0x8000, 0x800D, 255],
         ability_index=0x8019,
-        slotcount=4,
-        navigateToEquipMenu=False,
-        exitOutOfCurrentWeapon=True,
-        closeMenu=False,
-        fullMenuClose=False,
+        slot_count=4,
+        navigate_to_equip_menu=False,
+        exit_out_of_current_weapon=True,
+        close_menu=False,
+        full_menu_close=False,
     )
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,255,255,255], ability_index=29, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=False, closeMenu=False, fullMenuClose=False)
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,255,255], ability_index=33, slotcount=4, navigateToEquipMenu=True, exitOutOfCurrentWeapon=False, closeMenu=False, fullMenuClose=False)
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,0x800F,255], ability_index=35, slotcount=4, navigateToEquipMenu=False, exitOutOfCurrentWeapon=True, closeMenu=True, fullMenuClose=True)
+    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,255,255,255], ability_index=29, slot_count=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
+    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,255,255], ability_index=33, slot_count=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
+    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,0x800F,255], ability_index=35, slot_count=4, navigate_to_equip_menu=False, exit_out_of_current_weapon=True, close_menu=True, full_menu_close=True)
 
     menu.add_ability(
         owner=1,
         equipment_type=1,
         ability_array=[0x8072, 255, 255, 255],
         ability_index=0x800A,
-        slotcount=4,
-        navigateToEquipMenu=True,
-        exitOutOfCurrentWeapon=False,
-        closeMenu=False,
-        fullMenuClose=False,
+        slot_count=4,
+        navigate_to_equip_menu=True,
+        exit_out_of_current_weapon=False,
+        close_menu=False,
+        full_menu_close=False,
     )
     menu.add_ability(
         owner=1,
         equipment_type=1,
         ability_array=[0x8072, 0x800A, 255, 255],
         ability_index=0x801D,
-        slotcount=4,
-        navigateToEquipMenu=False,
-        exitOutOfCurrentWeapon=True,
-        closeMenu=True,
-        fullMenuClose=False,
+        slot_count=4,
+        navigate_to_equip_menu=False,
+        exit_out_of_current_weapon=True,
+        close_menu=True,
+        full_menu_close=False,
     )
     menu.equip_weapon(character=0, ability=0x8019)  # BDL (one MP)
     memory.main.full_party_format("kilikawoods1")
 
 
 def rin_equip_dump(buy_weapon=False, sell_nea=False):
-    while not nemesis.targetPath.set_movement([-242, 298]):
+    while not nemesis.nemesis_pathing.set_movement([-242, 298]):
         pass
-    while not nemesis.targetPath.set_movement([-243, 160]):
+    while not nemesis.nemesis_pathing.set_movement([-243, 160]):
         pass
     FFXC.set_movement(0, -1)
     while memory.main.user_control():
         pass
-    while not nemesis.targetPath.set_movement([39, 53]):
+    while not nemesis.nemesis_pathing.set_movement([39, 53]):
         pass
     while memory.main.user_control():
-        nemesis.targetPath.set_movement([28, 44])
+        nemesis.nemesis_pathing.set_movement([28, 44])
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_diag_progress(48)
@@ -1399,14 +1401,14 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False):
         memory.main.wait_frames(60)
     memory.main.close_menu()
     memory.main.click_to_control_dumb()
-    while not nemesis.targetPath.set_movement([53, 110]):
+    while not nemesis.nemesis_pathing.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)
     while memory.main.user_control():
         pass
-    while not nemesis.targetPath.set_movement([-241, 223]):
+    while not nemesis.nemesis_pathing.set_movement([-241, 223]):
         pass
-    while not nemesis.targetPath.set_movement([-246, 329]):
+    while not nemesis.nemesis_pathing.set_movement([-246, 329]):
         pass
 
 
@@ -1431,31 +1433,31 @@ def yojimbo_dialog():
     xbox.tap_up()
     xbox.tap_b()
     memory.main.wait_frames(12)  # Eff it, just pay the man!
-    # memory.clickToDiagProgress(5) #150,001
+    # memory.click_to_diag_progress(5) #150,001
     # memory.wait_frames(12)
-    # Xbox.tapDown()
-    # Xbox.tapDown()
-    # xbox.tapLeft()
-    # xbox.tapDown()
-    # xbox.tapDown()
+    # Xbox.tap_down()
+    # Xbox.tap_down()
+    # xbox.tap_left()
+    # xbox.tap_down()
+    # xbox.tap_down()
     # xbox.tap_b()
     # memory.wait_frames(12)
-    # memory.clickToDiagProgress(5) #138,001
+    # memory.click_to_diag_progress(5) #138,001
     # memory.wait_frames(12)
-    # xbox.tapUp()
-    # xbox.tapUp()
-    # xbox.tapLeft()
-    # xbox.tapUp()
-    # xbox.tapUp()
-    # xbox.tapUp()
-    # xbox.tapUp()
+    # xbox.tap_up()
+    # xbox.tap_up()
+    # xbox.tap_left()
+    # xbox.tap_up()
+    # xbox.tap_up()
+    # xbox.tap_up()
+    # xbox.tap_up()
     # xbox.tap_b()
     # memory.wait_frames(12)
-    # memory.clickToDiagProgress(5) #170,001
+    # memory.click_to_diag_progress(5) #170,001
     # memory.wait_frames(12)
-    # xbox.tapLeft()
-    # xbox.tapUp()
-    # xbox.tapUp()
+    # xbox.tap_left()
+    # xbox.tap_up()
+    # xbox.tap_up()
     # xbox.tap_b()
     print("Fayth accepts the contract.")
     xbox.name_aeon("Yojimbo")
@@ -1495,7 +1497,9 @@ def yojimbo():
             elif checkpoint == 41:
                 return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.yojimbo(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.yojimbo(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -1547,8 +1551,8 @@ def besaid_farm(cap_num: int = 1):
             elif checkpoint == 26:
                 return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.besaid_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.besaid_farm(checkpoint)
                 )
                 == True
             ):
@@ -1605,8 +1609,8 @@ def kilika_farm(cap_num: int = 1):
             elif checkpoint == 25:
                 return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.kilika_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.kilika_farm(checkpoint)
                 )
                 == True
             ):
@@ -1865,8 +1869,8 @@ def miihen_farm(cap_num: int = 1):
             #    checkpoint = 144
 
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.miihen_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.miihen_farm(checkpoint)
                 )
                 == True
             ):
@@ -1953,8 +1957,8 @@ def miihen_farm_old(cap_num: int = 1):
                 checkpoint += 1
 
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.miihen_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.miihen_farm(checkpoint)
                 )
                 == True
             ):
@@ -1989,15 +1993,19 @@ def miihen_farm_old(cap_num: int = 1):
 def mrrFarm_old(capNum: int = 1):
     # Unlike other sections, MRR is expected to zone in from the Mi'ihen area and not the airship.
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-    while not nemesis.targetPath.set_movement([-45, -733]):  # Close to magus sisters
+    while not nemesis.nemesis_pathing.set_movement(
+        [-45, -733]
+    ):  # Close to magus sisters
         pass
-    while not nemesis.targetPath.set_movement([-61, -692]):  # Past magus sisters
+    while not nemesis.nemesis_pathing.set_movement([-61, -692]):  # Past magus sisters
         pass
-    while not nemesis.targetPath.set_movement([-19, -528]):  # Through Clasko trigger
+    while not nemesis.nemesis_pathing.set_movement(
+        [-19, -528]
+    ):  # Through Clasko trigger
         pass
-    while not nemesis.targetPath.set_movement([-145, -460]):  # Past O'aka's spot
+    while not nemesis.nemesis_pathing.set_movement([-145, -460]):  # Past O'aka's spot
         pass
-    while not nemesis.targetPath.set_movement([-219, -408]):  # Past O'aka's spot
+    while not nemesis.nemesis_pathing.set_movement([-219, -408]):  # Past O'aka's spot
         pass
     while memory.main.get_map() != 92:
         FFXC.set_movement(1, 1)
@@ -2022,7 +2030,9 @@ def mrrFarm_old(capNum: int = 1):
             elif checkpoint == 4:
                 return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.mrr_farm(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.mrr_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -2144,8 +2154,8 @@ def djose_farm(cap_num: int = 10):
                 checkpoint = 21
 
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.djose_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.djose_farm(checkpoint)
                 )
                 == True
             ):
@@ -2295,7 +2305,9 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
 
             # General pathing
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.tp_farm(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.tp_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -2365,7 +2377,9 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
 
             # General pathing
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.tp_farm(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.tp_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -2466,7 +2480,9 @@ def mac_woods(cap_num: int = 10):
 
             # General pathing
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.mac_farm(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.mac_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -2526,7 +2542,9 @@ def mac_woods_old(cap_num: int = 10):
 
             # General pathing
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.mac_farm(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.mac_farm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -2666,8 +2684,8 @@ def bikanel(cap_num: int = 10):
 
             # General pathing
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.bikanel_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.bikanel_farm(checkpoint)
                 )
                 == True
             ):
@@ -2797,8 +2815,8 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 arena_return(checkpoint=1)
 
             elif (
-                nemesis.targetPath.set_movement(
-                    nemesis.targetPath.calm_farm(checkpoint)
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.calm_farm(checkpoint)
                 )
                 == True
             ):
@@ -2882,7 +2900,9 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
             ):
                 checkpoint -= 2
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.calm(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.calm(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -3134,7 +3154,9 @@ def gagazet(cap_num: int = 10):
                 else:
                     return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.gagazet(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.gagazet(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -3266,7 +3288,9 @@ def stolen_fayth_cave(cap_num: int = 10):
             elif checkpoint == 62:
                 return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.yojimbo(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.yojimbo(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -3353,20 +3377,22 @@ def inside_sin(cap_num: int = 10):
             elif (
                 checkpoint >= 65 and memory.main.get_tidus_mp() < 20
             ):  # Tidus low on MP
-                nemesis.targetPath.set_movement([550, 485])
+                nemesis.nemesis_pathing.set_movement([550, 485])
                 memory.main.await_event()
                 FFXC.set_neutral()
                 memory.main.wait_frames(3)
                 memory.main.await_control()
                 save_sphere.touch_and_go()
-                nemesis.targetPath.set_movement([-200, -525])
+                nemesis.nemesis_pathing.set_movement([-200, -525])
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 66
 
             # General Pathing
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.sin(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.sin(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1
@@ -3417,7 +3443,9 @@ def omega_ruins(cap_num: int = 10):
             elif checkpoint == 3:
                 return_to_airship()
             elif (
-                nemesis.targetPath.set_movement(nemesis.targetPath.omega(checkpoint))
+                nemesis.nemesis_pathing.set_movement(
+                    nemesis.nemesis_pathing.omega(checkpoint)
+                )
                 == True
             ):
                 checkpoint += 1

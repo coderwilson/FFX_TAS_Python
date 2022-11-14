@@ -11,6 +11,7 @@ import screen
 import vars
 import xbox
 import zz_airship_path
+from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -40,7 +41,7 @@ def pre_evrae():
                 memory.main.click_to_event_temple(4)
                 checkpoint += 1
 
-            elif pathing.set_movement(pathing.rescue_airship(checkpoint)):
+            elif pathing.set_movement(BevelleAirship.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -105,7 +106,7 @@ def guards():
                     xbox.skip_scene()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
-    logger.info("-------End of Bevelle guards")
+    logger.info("--- End of Bevelle guards")
 
     checkpoint = 0
     while checkpoint < 8:
@@ -114,7 +115,7 @@ def guards():
             if checkpoint < 2 and memory.main.get_map() == 182:
                 checkpoint = 2
             # General pathing
-            elif pathing.set_movement(pathing.bevelle_pre_trials(checkpoint)):
+            elif pathing.set_movement(BevellePreTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -407,7 +408,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.bevelle_trials(checkpoint)):
+            elif pathing.set_movement(BevelleTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -423,7 +424,7 @@ def trials_end():
     checkpoint = 53
     while memory.main.get_map() != 226:
         if memory.main.user_control():
-            if pathing.set_movement(pathing.bevelle_trials(checkpoint)):
+            if pathing.set_movement(BevelleTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         elif memory.main.diag_skip_possible():
@@ -442,6 +443,7 @@ def trials_end():
         xbox.await_save(index=29)
 
 
+# TODO: Switch to using pathing instead, if possible
 def via_purifico():
     memory.main.click_to_control()
     FFXC.set_movement(0, 1)
@@ -475,6 +477,7 @@ def via_purifico():
             xbox.tap_b()
 
 
+# TODO: Switch to using pathing instead, if possible
 def evrae_altana():
     memory.main.click_to_control()
     FFXC.set_movement(0, 1)
@@ -609,7 +612,7 @@ def seymour_natus():
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
-            elif pathing.set_movement(pathing.suteki_da_ne(checkpoint)):
+            elif pathing.set_movement(SutekiDaNe.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

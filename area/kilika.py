@@ -9,6 +9,7 @@ import pathing
 import save_sphere
 import vars
 import xbox
+from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -51,7 +52,7 @@ def arrival():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.kilika_1(checkpoint)):
+            elif pathing.set_movement(Kilika1.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -146,7 +147,7 @@ def forest_1():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.kilika_2(checkpoint)):
+            elif pathing.set_movement(Kilika2.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -266,7 +267,7 @@ def trials():
                 checkpoint += 1
 
             # General pathing
-            elif pathing.set_movement(pathing.kilika_trials(checkpoint)):
+            elif pathing.set_movement(KilikaTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -333,7 +334,7 @@ def forest_3():
                 checkpoint = 64
 
             # General pathing
-            elif pathing.set_movement(pathing.kilika_3(checkpoint)):
+            elif pathing.set_movement(Kilika3.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

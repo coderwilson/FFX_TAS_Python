@@ -105,7 +105,7 @@ class AllVars:
         self.original_results = [0] * 7
 
         # ----Path for save files, used for loading a specific save
-        self.savePath = (
+        self.save_path = (
             os.environ.get("userprofile")
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
@@ -243,7 +243,7 @@ class AllVars:
         logger.debug(f"print_first_hits(): {self.first_hits}")
 
     def game_save_path(self):
-        return self.savePath
+        return self.save_path
 
     def blitz_first_shot(self):
         return self.blitz_first_shot_val
@@ -357,11 +357,11 @@ class AllVars:
 
 
 def init_vars():
-    mainVars = AllVars()
+    main_vars = AllVars()
 
 
 def vars_handle():
-    return mainVars
+    return main_vars
 
 
-mainVars = AllVars()
+main_vars = AllVars()
