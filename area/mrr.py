@@ -229,7 +229,7 @@ def main_path():
     # Get close to save sphere
     checkpoint = 0
     while checkpoint < 4:
-        if pathing.set_movement(pathing.battle_site(checkpoint)):
+        if pathing.set_movement(MRRBattleSite.execute(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint reached: {checkpoint}")
 
