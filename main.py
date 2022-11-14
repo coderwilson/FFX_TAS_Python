@@ -882,7 +882,7 @@ def perform_TAS():
                         )
 
                 if game.step == 20:
-                    nemesis.arenaPrep.calm(
+                    nemesis.arena_prep.calm(
                         cap_num=10, airship_return=False, force_levels=0
                     ) # Formerly 26, testing zero
                     game.step = 21

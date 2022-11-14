@@ -2395,24 +2395,114 @@ def gagazet(checkpoint):
         x = 0
         y = 0
     if checkpoint == 44:
-        x = 0
-        y = 0
+        x = 8
+        y = -51
     if checkpoint == 45:
-        x = 0
-        y = 0
+        x = 19
+        y = 81
     if checkpoint == 46:
-        x = 0
-        y = 0
+        x = 45
+        y = 241
     if checkpoint == 47:
-        x = 0
-        y = 0
+        x = 63
+        y = 349
     if checkpoint == 48:
-        x = 0
-        y = 0
+        x = 9
+        y = 414
     if checkpoint == 49:
+        x = -34
+        y = 441
+    if checkpoint == 50:
+        x = -79
+        y = 452
+    if checkpoint == 51:
+        x = -137
+        y = 407
+    if checkpoint == 52:
+        x = -206
+        y = 325
+    if checkpoint == 53:
+        x = -247
+        y = 311
+    if checkpoint == 54:
+        x = -275
+        y = 317
+    if checkpoint == 55:
+        x = -320
+        y = 371
+    if checkpoint == 56:
+        x = -349
+        y = 441
+    if checkpoint == 57:
+        x = -389
+        y = 476
+    if checkpoint == 58:
+        x = -436
+        y = 438
+    if checkpoint == 59:
+        x = -456
+        y = 377
+    if checkpoint == 60:
+        x = -527
+        y = 279
+    if checkpoint == 61:
+        x = -578
+        y = 220
+    if checkpoint == 62:
+        x = -722
+        y = 202
+    if checkpoint == 63:
+        x = -916
+        y = 167
+    if checkpoint == 64:
+        x = -940
+        y = 188
+    if checkpoint == 65:
+        x = -925
+        y = 306
+    if checkpoint == 66:
+        x = -881
+        y = 376
+    if checkpoint == 67:
+        x = -865
+        y = 478
+    if checkpoint == 68:
+        x = -825
+        y = 540
+    if checkpoint == 69:
+        x = -737
+        y = 572
+    if checkpoint == 70:
+        x = -661
+        y = 541
+    if checkpoint == 71:
+        x = -623
+        y = 505
+    if checkpoint == 72:
+        x = -594
+        y = 358
+    if checkpoint == 73:
+        x = -564
+        y = 241
+    if checkpoint == 74:
+        x = -527
+        y = 208
+    if checkpoint == 75:
+        x = -499
+        y = 220
+    if checkpoint == 76:
+        x = -522
+        y = 243
+    if checkpoint == 77:
+        x = -574
+        y = 262
+    if checkpoint == 78: # Open chest
         x = 0
         y = 0
-    if checkpoint == 50:
+    if checkpoint == 79:
+        x = 0
+        y = 0
+    if checkpoint == 80:
         x = 0
         y = 0
     return [x, y]

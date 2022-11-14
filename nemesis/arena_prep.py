@@ -1059,14 +1059,19 @@ def one_mp_ready():
 
 def tonberry_levels_battle():
     screen.await_turn()
+    tidus_turn = False
     while memory.main.battle_active():
-        if screen.turn_tidus():
-            if memory.main.get_overdrive_battle(character=0):
-                battle.overdrive.tidus()
+        if memory.main.turn_ready():
+            if screen.turn_tidus():
+                if tidus_turn == True:
+                    battle.main.tidus_flee()
+                elif memory.main.get_overdrive_battle(character=0):
+                    battle.overdrive.tidus()
+                else:
+                    battle.main.attack()
+                tidus_turn = True
             else:
-                battle.main.attack()
-        else:
-            battle.main.escape_one()
+                battle.main.defend()
     
     print("Battle is complete.")
     while not memory.main.menu_open():
@@ -1079,11 +1084,12 @@ def tonberry_levels_battle():
 def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     menu.auto_sort_equipment()
     memory.main.full_party_format("initiative")
+    restock_downs()
+    nemesis.arena_select.arena_menu_select(4)
     # Set up for levelling if we are low
     if force_levels > game_vars.nem_checkpoint_ap():
         # Set overdrive mode
         menu.tidus_slayer(od_pos=0)
-    arena_npc()
     print(
         "###Sleeping powder count:",
         memory.main.get_item_count_slot(memory.main.get_item_slot(37)),
@@ -1092,12 +1098,12 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         memory.main.get_item_slot(37) > 200
         or memory.main.get_item_count_slot(memory.main.get_item_slot(37)) < 41
     ):
+        arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=7, monster_index=0)
         bribe_battle()
         nemesis.arena_select.arena_menu_select(4)
         memory.main.full_party_format("initiative")
-        arena_npc()
         print(
             "###Sleeping powder count:",
             memory.main.get_item_count_slot(memory.main.get_item_slot(37)),
@@ -1105,22 +1111,58 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     while not one_mp_ready():
         print("Trying to obtain Gambler's Soul and Purifying Salt items")
         arena_npc()
-        nemesis.arenaSelect.arena_menu_select(4)
+        nemesis.arena_select.arena_menu_select(4)
     
-    #Finish leveling before we make a 1mp weapon
+    # Lv.4 key sphere recovery logic
+    logger.debug(f"lv.4 slot: {memory.main.get_item_slot(84)}")
+    try:
+        logger.debug(f"lv.4 slot: {memory.main.get_item_count_slot(memory.main.get_item_slot(84))}")
+    except:
+        pass
+    if (
+        memory.main.get_item_slot(84) == 255 or
+        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+    ):
+        arena_npc()
+        while (
+            memory.main.get_item_slot(84) == 255 or
+            memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+        ):
+            logger.debug("Need Lv.4 key sphere for sphere grid")
+            nemesis.arena_select.arena_menu_select(1)
+            nemesis.arena_select.start_fight(area_index=8, monster_index=7)
+            bribe_battle(spare_change_value=245000)
+    else:
+        logger.debug("Good on Lv.4 key spheres for sphere grid")
+    logger.debug(f"lv.4 slot: {memory.main.get_item_slot(84)}")
+    try:
+        logger.debug(f"lv.4 slot: {memory.main.get_item_count_slot(memory.main.get_item_slot(84))}")
+    except:
+        pass
+    if (
+        memory.main.get_item_slot(84) == 255 or
+        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+    ):
+        logger.debug("Need Lv.4 key sphere for sphere grid")
+        nemesis.arena_select.arena_menu_select(1)
+        nemesis.arena_select.start_fight(area_index=8, monster_index=7)
+        bribe_battle(spare_change_value=196000)
+    else:
+        logger.debug("Good on Lv.4 key spheres for sphere grid")
+    
+    # Finish leveling before we make a 1mp weapon
     if force_levels > game_vars.nem_checkpoint_ap():
-        nemesis.arenaSelect.arena_menu_select(4)
         while force_levels > game_vars.nem_checkpoint_ap():
             arena_npc()
-            nemesis.arenaSelect.arena_menu_select(1)
-            nemesis.arenaSelect.start_fight(area_index=13, monster_index=9)
+            nemesis.arena_select.arena_menu_select(1)
+            nemesis.arena_select.start_fight(area_index=13, monster_index=9)
             tonberry_levels_battle()
-            nemesis.arenaSelect.arena_menu_select(4)
+            nemesis.arena_select.arena_menu_select(4)
             nemesis.menu.perform_next_grid()
         menu.tidus_slayer(od_pos=0)
     
     arena_npc()
-    nemesis.arenaSelect.arena_menu_select(2)
+    nemesis.arena_select.arena_menu_select(2)
     
     #Now ready to make item
     memory.main.wait_frames(60)
@@ -1154,23 +1196,7 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         close_menu=True,
         full_menu_close=True,
     )
-    restock_downs()
-    logger.debug(f"lv.4 slot: {memory.main.get_item_slot(84)}")
-    try:
-        logger.debug(f"lv.4 slot: {memory.main.get_item_count_slot(memory.main.get_item_slot(84))}")
-    except:
-        pass
-    if (
-        memory.main.get_item_slot(84) == 255 or
-        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
-    ):
-        logger.debug("Need Lv.4 key sphere for sphere grid")
-        nemesis.arenaSelect.arena_menu_select(1)
-        nemesis.arenaSelect.start_fight(area_index=8, monster_index=7)
-        bribe_battle(spare_change_value=196000)
-    else:
-        logger.debug("Good on Lv.4 key spheres for sphere grid")
-    nemesis.arenaSelect.arena_menu_select(4)
+    nemesis.arena_select.arena_menu_select(4)
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)
@@ -1327,9 +1353,6 @@ def final_weapon():
         close_menu=False,
         full_menu_close=False,
     )
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,255,255,255], ability_index=29, slot_count=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,255,255], ability_index=33, slot_count=4, navigate_to_equip_menu=True, exit_out_of_current_weapon=False, close_menu=False, full_menu_close=False)
-    # menu.add_ability(owner=0, equipment_type=0, ability_array=[0x8064,0x800D,0x800F,255], ability_index=35, slot_count=4, navigate_to_equip_menu=False, exit_out_of_current_weapon=True, close_menu=True, full_menu_close=True)
 
     menu.add_ability(
         owner=1,
@@ -3034,6 +3057,16 @@ def gagazet(cap_num: int = 10):
     rin_equip_dump()
     air_ship_destination(dest_num=13)
     prefArea = gagazet_next(end_goal=cap_num)
+    
+    # Check if we need the extra Lv.4 key sphere. False == needed.
+    if (
+        memory.main.get_item_slot(84) == 255 or
+        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+    ):
+        retrieved_sphere = False
+    else:
+        retrieved_sphere = True
+    
     if prefArea == 4:
         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
         neArmor = True
@@ -3044,6 +3077,7 @@ def gagazet(cap_num: int = 10):
 
     last_cp = 0
     checkpoint = 0
+    cp_forward = True
     while not memory.main.get_map() in [194, 374]:
         if last_cp != checkpoint:
             print("+++ Checkpoint reached: ", checkpoint)
@@ -3060,6 +3094,8 @@ def gagazet(cap_num: int = 10):
                 checkpoint += 1
             elif checkpoint == 34 and memory.main.get_map() == 244:
                 checkpoint += 1
+            elif not retrieved_sphere and checkpoint in [35,36,37] and prefArea != 1:
+                checkpoint = 44
             elif checkpoint == 37 and memory.main.get_map() == 259:
                 checkpoint += 1
             if checkpoint in [20, 21, 22, 29, 30] and memory.main.get_map() == 259:
@@ -3135,16 +3171,32 @@ def gagazet(cap_num: int = 10):
                 checkpoint = 12
 
             # NEA decisions
-            if neArmor == True and checkpoint in [7, 19, 23, 33]:
+            if neArmor and checkpoint in [7, 19, 23, 33]:
                 menu.remove_all_nea()
                 neArmor = False
-            elif neArmor == False and checkpoint == 15 and prefArea != 2:
+            elif not neArmor and checkpoint == 15 and prefArea != 2:
                 # No need to re-equip while coming back from swimming
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
-            elif neArmor == False and checkpoint in [4, 55]:
+            elif not neArmor and checkpoint in [4, 55]:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 neArmor = True
+            elif checkpoint == 44:
+                if not neArmor and cp_forward:
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                    neArmor = True
+                elif neArmor and not cp_forward:
+                    menu.remove_all_nea()
+                    neArmor = False
+                    checkpoint = 35 # back on track
+                    cp_forward = True # back on track
+            
+            # Opening chest
+            if checkpoint == 78:
+                memory.main.click_to_event_temple(1)
+                cp_forward = False
+                retrieved_sphere = True
+                checkpoint -= 1
 
             # End decisions
             if checkpoint == 43:
@@ -3159,7 +3211,10 @@ def gagazet(cap_num: int = 10):
                 )
                 == True
             ):
-                checkpoint += 1
+                if cp_forward:
+                    checkpoint += 1
+                else:
+                    checkpoint -= 1
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -3460,14 +3515,6 @@ def omega_ruins(cap_num: int = 10):
                 memory.main.click_to_control()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
-
-    # Keep this so we can add in the Omega kill later.
-    # if game_vars.neArmor() == 0:
-    #    menu.equip_armor(character=game_vars.neArmor(),ability=0x8056) #Auto-Haste
-    # elif game_vars.neArmor() in [4,6]:
-    #    menu.equip_armor(character=game_vars.neArmor(),ability=0x800A) #Auto-Phoenix
-    # else:
-    #    menu.equip_armor(character=game_vars.neArmor(),ability=99) #Unequip
 
 
 def get_equipment(equip=True):
