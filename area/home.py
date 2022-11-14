@@ -246,7 +246,7 @@ def desert():
     # Move to save sphere
     checkpoint = 0
     while checkpoint < 7:
-        if pathing.set_movement(pathing.home(checkpoint)):
+        if pathing.set_movement(BikanelHome.execute(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint reached: {checkpoint}")
 
