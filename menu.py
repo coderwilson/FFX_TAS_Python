@@ -364,7 +364,7 @@ def battle_site_grid():
         equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     else:
         equip_weapon(character=4, full_menu_close=False)
-    memory.main.full_party_format("battle_site")
+    memory.main.full_party_format("battlesite")
 
 
 def _navigate_to_position(position, battle_cursor):
