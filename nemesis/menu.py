@@ -269,7 +269,7 @@ def next_ap_needed(checkpoint):
     if checkpoint == 25:
         return 22
     if checkpoint == 26:
-        return 42
+        return 43
     return 100  # If no further grids are possible, continue indefinitely.
 
 
@@ -1147,6 +1147,7 @@ def nem_gridding_26():
     menu_grid.move_and_use()
     menu_grid.sel_sphere("lv4", "none")
     menu_grid.use_and_move()
+    grid_up()
     grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("ability", "none")

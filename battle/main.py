@@ -4685,7 +4685,7 @@ def get_digit(number, n):
 def calculate_spare_change_movement(gil_amount):
     if gil_amount > memory.main.get_gil_value():
         gil_amount = memory.main.get_gil_value()
-    gil_amount = min(gil_amount, 100000)
+    #gil_amount = min(gil_amount, 100000)
     position = {}
     gil_copy = gil_amount
     for index in range(0, 7):

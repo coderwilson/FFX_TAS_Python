@@ -590,6 +590,7 @@ def advanced_battle_logic():
 
 
 def bribe_battle(spare_change_value: int = 12000):
+    print("value (2): ", spare_change_value)
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_lulu():
@@ -606,6 +607,7 @@ def bribe_battle(spare_change_value: int = 12000):
                 while memory.main.other_battle_menu():
                     xbox.tap_b()
                 battle.main.calculate_spare_change_movement(spare_change_value)
+                #memory.main.wait_frames(180)
                 while memory.main.spare_change_open():
                     xbox.tap_b()
                 battle.main.tap_targeting()
@@ -1123,15 +1125,17 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         memory.main.get_item_slot(84) == 255 or
         memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
     ):
-        arena_npc()
         while (
             memory.main.get_item_slot(84) == 255 or
             memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
         ):
+            arena_npc()
             logger.debug("Need Lv.4 key sphere for sphere grid")
             nemesis.arena_select.arena_menu_select(1)
             nemesis.arena_select.start_fight(area_index=8, monster_index=7)
             bribe_battle(spare_change_value=245000)
+            nemesis.arena_select.arena_menu_select(4)
+            memory.main.full_party_format("initiative")
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
     logger.debug(f"lv.4 slot: {memory.main.get_item_slot(84)}")
@@ -1143,10 +1147,13 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         memory.main.get_item_slot(84) == 255 or
         memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
     ):
+        arena_npc()
         logger.debug("Need Lv.4 key sphere for sphere grid")
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=8, monster_index=7)
         bribe_battle(spare_change_value=196000)
+        nemesis.arena_select.arena_menu_select(4)
+        memory.main.full_party_format("initiative")
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
     
@@ -1196,7 +1203,7 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         close_menu=True,
         full_menu_close=True,
     )
-    nemesis.arena_select.arena_menu_select(4)
+    #nemesis.arena_select.arena_menu_select(4)
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)

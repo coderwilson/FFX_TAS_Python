@@ -15,100 +15,109 @@ class AllVars:
         config_data = config.open_config()
         # All relevant vars are stored in a dictionary
         config_vars = config_data.get("vars", {})
-
-        # === Important Values ===
-        # Set depending on hardware. True = less powerful hardware.
-        self.artificial_pauses = config_vars.get("artificial_pauses", False)
-        # Set automatically on new game. For testing (loading a save file) set for your environment.
-        self.csr_value = config_vars.get("csr_value", True)
-        # Set based on if you're doing any% (False) or Nemesis% (True)
-        self.nemesis_value = config_vars.get("nemesis_value", False)
-        # After game is finished, start again on next seed.
-        self.force_loop = config_vars.get("force_loop", False)
-        # If you are using Rossy's patch, set to True. Otherwise set to False
-        self.set_seed = config_vars.get("set_seed", False)
-        # True == Tidus OD on Evrae instead of Seymour. New strat.
-        self.kilika_skip = True
-        # Before YuYevon, True is slower but more swag.
-        self.perfect_aeon_kills = config_vars.get("perfect_aeon_kills", False)
-        # Try Djose skip? (not likely to succeed)
-        self.attempt_djose = config_vars.get("attempt_djose", False)
-        # use the original Soundtrack instead of arranged
-        self.legacy_soundtrack = config_vars.get("legacy_soundtrack", True)
-        self.do_not_skip_cutscenes = config_vars.get("do_not_skip_cutscenes", False)
-        self.battle_speedup = config_vars.get("battle_speedup", False)
-
-        # ----Accessibility for blind
-        self.skip_cutscene_flag = config_vars.get("skip_cutscene_flag", True)
-        self.skip_diag_flag = config_vars.get("skip_diag_flag", True)
-        self.play_TTS_flag = config_vars.get("play_TTS_flag", False)
-        self.rails_trials = config_vars.get("rails_trials", True)
-        self.rails_egg_hunt = config_vars.get("rails_egg_hunt", True)
-
-        # ----Blitzball
+        
+        # === Game mode set ===
+        # ----Set defaults, then override for specific run type.
+        self.perfect_aeon_kills = False
+        self.attempt_djose = False
+        self.skip_cutscene_flag = True
         self.force_blitz_win = False
-        # Loop on the same seed immediately after Blitzball.
-        self.blitz_loop = config_vars.get("blitz_loop", False)
-        # True = reset after blitz loss
-        self.blitz_loss_force_reset = config_vars.get("blitz_loss_force_reset", True)
-        # No default value required
+        self.blitz_loop = False
+        self.generate_saves = False
+        # ----Overrides
+        if config_vars.get("game_mode") == "test":
+            self.perfect_aeon_kills = True
+            self.force_blitz_win = True
+            self.generate_saves = True
+        elif config_vars.get("game_mode") == "story":
+            self.skip_cutscene_flag = False
+        elif config_vars.get("game_mode") == "swag":
+            self.perfect_aeon_kills = True
+        elif config_vars.get("game_mode") == "blitz_only":
+            self.blitz_loop = True
+        
+        
+        # === RNG settings ===
+        self.patched = config_vars.get("game_patched", False)
+        self.rng_mode_val = config_vars.get("rng_mode", False)
+        self.rng_seed = config_vars.get("rng_seed_num")
+        self.rng_preferred_seeds = [31,160]
+        
+        # === Other vars from user ===
+        self.nemesis_value = config_vars.get("nemesis_value", False)
+        self.force_loop = config_vars.get("force_loop", False)
+        self.legacy_soundtrack = config_vars.get("original_soundtrack", True)
+        
+        
+        # === Future functions / foundations ===
+        self.kilika_skip = True
+        self.rails_trials = True
+        self.rails_egg_hunt = True
+        self.battle_speedup = True
+        self.skip_diag_flag = True
+        self.play_TTS_flag = False
+
+
+        # === Vars used by the TAS, no pre-set values ===
+        # ----Cutscene remover, TAS will set this value on New Game
+        # ----If loading to a save file without CSR, may need to change this.
+        self.csr_value = True
+        
+        # ----Blitzball
+        self.blitz_loss_force_reset = True
         self.blitz_win_value = True
-        # Set to False, no need to change ever.
         self.blitz_overtime = False
         self.blitz_first_shot_val = False
-        # Used for RNG manip tracking
         self.oblitz_attack_val = "255"
 
         # ----Sphere grid
-        self.full_kilik_menu = False  # Default to False
+        self.full_kilik_menu = False
         self.early_tidus_grid_val = False
-        # Default False
-        self.early_haste_val = -1  # Default -1
-        # Default False
+        self.early_haste_val = -1
         self.wakka_late_menu_val = False
         self.end_game_version_val = 0
-        # new Save logic will record if this needs to be different.
 
         # ----Equipment
-        self.zombie_weapon_val = 255  # Default 255
-        self.l_strike_count = 0  # Default 0
+        self.zombie_weapon_val = 255
+        self.l_strike_count = 0
 
         # ----RNG Manip
         self.yellows = 0  # Not yet implemented. Part of thunderstrike weapon manip.
         self.confirmed_seed_num = 999
-        self.skip_zan_luck = False # TAS will determine if we need luck sphere for Yuna
+        self.skip_zan_luck = False
 
         # ----Other
-        self.new_game = config_vars.get("new_game", False)  # ?
-        self.self_destruct = False  # Used in Miihen only
-        self.ytk_farm = 0 # used by TAS.
-        self.rescue_count = config_vars.get("rescue_count", 0)  # Default to 0
-        # Default to False
-        self.flux_overkill_var = False # Affects following battles.
-        self.try_ne_val = 255  # Char with NEA. Set on drop, or on loading into game.
-        self.ne_armor_val = config_vars.get("ne_armor_val", 255)  # Default 255
+        self.new_game = False
+        self.self_destruct = False
+        self.ytk_farm = 0
+        self.rescue_count = 0
+        self.flux_overkill_var = False
+        self.try_ne_val = True # We can choose False later, no current value here.
+        self.ne_armor_val = 255
         self.ne_battles = 0  # Tracks number of forced manip battles outside cave.
-        # Decides in which zone we charge Rikku OD after reaching Zanarkand.
         self.nea_zone = 0
-        self.generate_saves = config_vars.get("generate_saves", 0)
+        self.first_hits = [0]*8
 
+        # === Nemesis stuff ===
         # ----Nemesis variables, unused in any%
         self.nem_ap_val = 1  # Nemesis route, determines Tidus level-up progress. Starts at 1
         self.yojimbo_index = 1  # Used in arena battles to track Zanmatou progress.
 
-        # TAS uses these to determine game state. No need for these in YAML
-        self.first_hits = [0]*8 # Confirms seed number, xref to csv file
-        # Nemesis Arena variables, sets to 1 after a boss is killed.
-        # Note, 0/1 are preferable to True/False for viewing in the console.
+        # ----Nemesis Arena variables, sets to 1 after a boss is killed.
+        # ----Note, 0/1 are preferable to True/False for viewing in the console.
         self.area_results = [0] * 13
         self.species_results = [0] * 14
         self.original_results = [0] * 7
 
+        # === Hardware / Other settings ===
         # ----Path for save files, used for loading a specific save
         self.save_path = (
             os.environ.get("userprofile")
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
+        # If your computer has bad specs, this will input commands to the controller
+        # at a lower rate of speed. Very rarely used.
+        self.artificial_pauses = False
 
     def create_saves(self):
         return self.generate_saves
@@ -133,10 +142,22 @@ class AllVars:
 
     def blitz_loss_reset(self):
         return self.blitz_loss_force_reset
-
-    def use_set_seed(self):
-        return self.set_seed
-
+    
+    def game_is_patched(self):
+        return self.patched
+    
+    def rng_mode(self):
+        return self.rng_mode_val
+    
+    def rng_seed_num(self):
+        return self.rng_seed
+    
+    def rng_seed_num_set(self, value):
+        self.rng_seed = value
+    
+    def rng_preferred_array(self):
+        return self.rng_preferred_seeds
+    
     def print_arena_status(self):
         logger.debug("###############################")
         logger.debug(f"Area: {self.area_results}")
@@ -174,12 +195,6 @@ class AllVars:
 
     def set_confirmed_seed(self, value):
         self.confirmed_seed_num = value
-
-    def set_new_game(self):
-        self.new_game = True
-
-    def new_game_check(self):
-        return self.new_game
 
     def set_oblitz_rng(self, value):
         self.oblitz_attack_val = str(value)
