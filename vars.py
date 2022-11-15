@@ -24,11 +24,13 @@ class AllVars:
         self.force_blitz_win = False
         self.blitz_loop = False
         self.generate_saves = False
+        self.battle_speedup = False
         # ----Overrides
         if config_vars.get("game_mode") == "test":
             self.perfect_aeon_kills = True
             self.force_blitz_win = True
             self.generate_saves = True
+            self.battle_speedup = True
         elif config_vars.get("game_mode") == "story":
             self.skip_cutscene_flag = False
         elif config_vars.get("game_mode") == "swag":
@@ -53,7 +55,6 @@ class AllVars:
         self.kilika_skip = True
         self.rails_trials = True
         self.rails_egg_hunt = True
-        self.battle_speedup = True
         self.skip_diag_flag = True
         self.play_TTS_flag = False
 
