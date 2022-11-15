@@ -198,6 +198,9 @@ class Player():
         
     def equipped_weapon(self) -> memory.main.Equipment:
         return [x for x in self.weapons() if x.is_equipped()][0]
+        
+    def main_menu_index(self) -> int:
+        return memory.main.get_character_index_in_main_menu(self.id)
                 
         
     
