@@ -98,7 +98,7 @@ def unlock_omega():
         xbox.tap_b()
 
     while memory.main.diag_progress_flag() == 0:
-        logger.debug(memory.main.get_coords())
+        logger.debug(f"{memory.main.get_coords()}")
         if memory.main.get_coords()[0] < 65:
             FFXC.set_value("d_pad", 8)
         elif memory.main.get_coords()[0] < 70:
@@ -152,7 +152,7 @@ def return_to_airship():
 
 
 def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
-    logger.debug("### Battle Start:", memory.main.get_encounter_id())
+    logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     if fayth_cave == True and memory.main.battle_type() == 2:
         screen.await_turn()
@@ -213,90 +213,90 @@ def advanced_complete_check():
 
     # Inside Sin
     elif encounter_id == 374:  # Ahriman
-        logger.debug("For this battle, count:", arena_array[37])
+        logger.debug(f"For this battle, count:{arena_array[37]}")
         if arena_array[37] == 10:
             return True
     elif encounter_id in [375, 380]:  # Exoray (with a bonus Ahriman)
-        logger.debug("For this battle, count:", arena_array[93])
+        logger.debug(f"For this battle, count:{arena_array[93]}")
         if arena_array[93] == 10 and arena_array[37] == 10:
             return True
     elif encounter_id in [376, 381]:  # Adamantoise
-        logger.debug("For this battle, count:", arena_array[81])
+        logger.debug(f"For this battle, count:{arena_array[81]}")
         if arena_array[81] == 10:
             return True
     elif encounter_id in [377, 382]:  # Both kinds of Gemini
-        logger.debug("For this battle, count:", arena_array[77])
-        logger.debug("For this battle, count:", arena_array[78])
+        logger.debug(f"For this battle, count:{arena_array[77]}")
+        logger.debug(f"For this battle, count:{arena_array[78]}")
         if arena_array[77] == 10 and arena_array[78] == 10:
             return True
     elif encounter_id in [378, 384]:  # Behemoth King
-        logger.debug("For this battle, count:", arena_array[70])
+        logger.debug(f"For this battle, count:{arena_array[70]}")
         if arena_array[70] == 10:
             return True
     elif encounter_id == 383:  # Demonolith
-        logger.debug("For this battle, count:", arena_array[75])
+        logger.debug(f"For this battle, count:{arena_array[75]}")
         if arena_array[75] == 10:
             return True
     elif encounter_id == 385:  # Great Malboro
-        logger.debug("For this battle, count:", arena_array[56])
+        logger.debug(f"For this battle, count:{arena_array[56]}")
         if arena_array[56] == 10:
             return True
     elif encounter_id == 386:  # Barbatos
-        logger.debug("For this battle, count:", arena_array[90])
+        logger.debug(f"For this battle, count:{arena_array[90]}")
         if arena_array[90] == 10:
             return True
     elif encounter_id == 387:  # Wraith
-        logger.debug("For this battle, count:", arena_array[97])
+        logger.debug(f"For this battle, count:{arena_array[97]}")
         if arena_array[97] == 10:
             return True
 
     # Omega dungeon
     elif encounter_id == 421:  # Master Coeurl and Floating Death
-        logger.debug("For this battle, count:", arena_array[74])
-        logger.debug("For this battle, count:", arena_array[102])
+        logger.debug(f"For this battle, count:{arena_array[74]}")
+        logger.debug(f"For this battle, count:{arena_array[102]}")
         if arena_array[74] == 10 and arena_array[102] == 10:
             return True
     elif encounter_id == 422:  # Halma and Spirit
-        logger.debug("For this battle, count:", arena_array[96])
-        logger.debug("For this battle, count:", arena_array[101])
+        logger.debug(f"For this battle, count:{arena_array[96]}")
+        logger.debug(f"For this battle, count:{arena_array[101]}")
         if arena_array[96] == 10 and arena_array[101] == 10:
             return True
     elif encounter_id == 423:  # Zaurus and Floating Death
-        logger.debug("For this battle, count:", arena_array[100])
-        logger.debug("For this battle, count:", arena_array[102])
+        logger.debug(f"For this battle, count:{arena_array[100]}")
+        logger.debug(f"For this battle, count:{arena_array[102]}")
         if arena_array[100] == 10 and arena_array[102] == 10:
             return True
     elif encounter_id == 424:  # Black Element and Spirit
-        logger.debug("For this battle, count:", arena_array[67])
-        logger.debug("For this battle, count:", arena_array[96])
+        logger.debug(f"For this battle, count:{arena_array[67]}")
+        logger.debug(f"For this battle, count:{arena_array[96]}")
         if arena_array[67] == 10 and arena_array[96] == 10:
             return True
     elif encounter_id == 425:  # Varuna
-        logger.debug("For this battle, count:", arena_array[82])
+        logger.debug(f"For this battle, count:{arena_array[82]}")
         if arena_array[82] == 10:
             return True
     elif encounter_id == 426:  # Master Tonberry
-        logger.debug("For this battle, count:", arena_array[99])
+        logger.debug(f"For this battle, count:{arena_array[99]}")
         if arena_array[99] == 10:
             return True
     elif encounter_id == 428:  # Machea (blade thing)
-        logger.debug("For this battle, count:", arena_array[103])
+        logger.debug(f"For this battle, count:{arena_array[103]}")
         if arena_array[103] == 10:
             return True
     elif encounter_id == 430:  # Demonolith x2
-        logger.debug("For this battle, count:", arena_array[75])
+        logger.debug(f"For this battle, count:{arena_array[75]}")
         if arena_array[75] == 10:
             return True
     elif encounter_id in [432, 433, 434, 435, 436]:  # Just Zaurus
-        logger.debug("For this battle, count:", arena_array[100])
+        logger.debug(f"For this battle, count:{arena_array[100]}")
         if arena_array[100] == 10:
             return True
     elif encounter_id == 437:  # Puroboros
-        logger.debug("For this battle, count:", arena_array[95])
+        logger.debug(f"For this battle, count:{arena_array[95]}")
         if arena_array[95] == 10:
             return True
     elif encounter_id == 438:  # Wraith
-        logger.debug("For this battle, count:", arena_array[97])
+        logger.debug(f"For this battle, count:{arena_array[97]}")
         if arena_array[97] == 10:
             return True
 
@@ -315,18 +315,18 @@ def advanced_complete_check():
 
 
 def advanced_battle_logic():
-    logger.debug("### Battle Start:", memory.main.get_encounter_id())
-    logger.debug("### Ambush flag (2 is bad):", memory.main.battle_type())
+    logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
+    logger.debug(f"Ambush flag (2 is bad):{memory.main.battle_type()}")
     while not memory.main.turn_ready():
         pass
     auto_life_used = False
     FFXC.set_neutral()
 
     if memory.main.battle_type() == 2:
-        logger.debug(">>> Ambushed! Escaping!")
+        logger.debug("Ambushed! Escaping!")
         battle.main.tidus_flee()
     elif advanced_complete_check():
-        logger.debug(">>> Complete collecting this monster.")
+        logger.debug("Complete collecting this monster.")
         battle.main.tidus_flee()
     else:
         if memory.main.get_encounter_id() == 449:
@@ -347,7 +347,7 @@ def advanced_battle_logic():
                     else:
                         battle.main.defend()
         else:
-            logger.debug("--- Regular battle:", memory.main.get_encounter_id())
+            logger.debug(f"Regular battle:{memory.main.get_encounter_id()}")
             sleep_powder = False
             while memory.main.battle_active():
                 encounter_id = memory.main.get_encounter_id()
@@ -503,7 +503,7 @@ def advanced_battle_logic():
 
 
 def bribe_battle(spare_change_value: int = 12000):
-    logger.debug("value (2): ", spare_change_value)
+    logger.debug(f"value (2): {spare_change_value}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_lulu():
@@ -579,7 +579,7 @@ def arena_return(checkpoint: int = 0):
                 nemesis.nemesis_pathing.arena_return(checkpoint)
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -765,20 +765,20 @@ def farm_feathers():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_rikku():
-                logger.debug("+++ Qactar steal command")
+                logger.debug("Qactar steal command")
                 battle.main.steal()
-                logger.debug("+++ Qactar steal command done")
+                logger.debug("Qactar steal command done")
             elif screen.turn_tidus():
-                logger.debug("+++ Qactar flee command")
+                logger.debug("Qactar flee command")
                 battle.main.tidus_flee()
-                logger.debug("+++ Qactar flee command done")
+                logger.debug("Qactar flee command done")
             else:
-                logger.debug("+++ Qactar defend command")
+                logger.debug("Qactar defend command")
                 battle.main.defend()
-                logger.debug("+++ Qactar defend command done")
+                logger.debug("Qactar defend command done")
         wait_counter += 1
         if wait_counter % 10 == 0:
-            logger.debug("Waiting for next turn: ", wait_counter)
+            logger.debug(f"Waiting for next turn: {wait_counter}")
     logger.debug("Battle is complete.")
 
     while not memory.main.menu_open():
@@ -845,7 +845,7 @@ def auto_phoenix():  # Calm Lands items
 
     memory.main.wait_frames(30)
     init_array = memory.main.check_ability(ability=0x8002)
-    logger.debug("Initiative weapons: ", init_array)
+    logger.debug(f"Initiative weapons: {init_array}")
     if init_array[4]:
         menu.add_ability(
             owner=6,
@@ -937,20 +937,19 @@ def restock_downs():
 
 
 def one_mp_ready():
-    logger.debug("Slot, Gambler:", memory.main.get_item_slot(41))
+    logger.debug(f"Slot, Gambler:{memory.main.get_item_slot(41)}")
     if memory.main.get_item_slot(41) > 200:
         return False
     logger.debug(
-        "Count, Gambler:",
-        memory.main.get_item_count_slot(memory.main.get_item_slot(41)),
+        f"Count, Gambler:{memory.main.get_item_count_slot(memory.main.get_item_slot(41))}"
     )
     if memory.main.get_item_count_slot(memory.main.get_item_slot(41)) < 99:
         return False
-    logger.debug("Slot, Salt:", memory.main.get_item_slot(63))
+    logger.debug(f"Slot, Salt:{memory.main.get_item_slot(63)}")
     if memory.main.get_item_slot(63) > 200:
         return False
     logger.debug(
-        "Count, Salt:", memory.main.get_item_count_slot(memory.main.get_item_slot(63))
+        f"Count, Salt:{memory.main.get_item_count_slot(memory.main.get_item_slot(63))}"
     )
     if memory.main.get_item_count_slot(memory.main.get_item_slot(63)) < 20:
         return False
@@ -990,8 +989,7 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         # Set overdrive mode
         menu.tidus_slayer(od_pos=0)
     logger.debug(
-        "###Sleeping powder count:",
-        memory.main.get_item_count_slot(memory.main.get_item_slot(37)),
+        f"###Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
     )
     while (
         memory.main.get_item_slot(37) > 200
@@ -1004,8 +1002,7 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         nemesis.arena_select.arena_menu_select(4)
         memory.main.full_party_format("initiative")
         logger.debug(
-            "###Sleeping powder count:",
-            memory.main.get_item_count_slot(memory.main.get_item_slot(37)),
+            f"###Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
         )
     while not one_mp_ready():
         logger.debug("Trying to obtain Gambler's Soul and Purifying Salt items")
@@ -1108,7 +1105,7 @@ def kilika_gil_farm(armor_buys: int):
     xbox.tap_down()
     xbox.tap_down()
     for x in range(armor_buys):
-        logger.debug("Buying armors, remaining - ", armor_buys - x)
+        logger.debug(f"Buying armors, remaining - {armor_buys - x}")
         memory.main.wait_frames(6)
         xbox.menu_b()  # Purchase
         memory.main.wait_frames(6)
@@ -1390,7 +1387,7 @@ def yojimbo():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1422,7 +1419,7 @@ def besaid_farm(cap_num: int = 1):
                 zone="besaid", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
             elif checkpoint == 1:
                 memory.main.click_to_event_temple(4)
@@ -1444,7 +1441,7 @@ def besaid_farm(cap_num: int = 1):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1478,7 +1475,7 @@ def kilika_farm(cap_num: int = 1):
                     zone="kilika", end_goal=cap_num, report=False
                 ):
                     checkpoint -= 2
-                    logger.debug("Checkpoint reached: ", checkpoint)
+                    logger.debug(f"Checkpoint reached: {checkpoint}")
                 else:
                     return_to_airship()
             elif checkpoint == 4:
@@ -1502,7 +1499,7 @@ def kilika_farm(cap_num: int = 1):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1618,7 +1615,7 @@ def miihen_farm(cap_num: int = 1):
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     ne_armor = True
     pref_area = miihen_next(end_goal=cap_num)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
@@ -1626,7 +1623,7 @@ def miihen_farm(cap_num: int = 1):
     while not memory.main.get_map() in [194, 374]:
         # Checkpoint notify
         if last_cp != checkpoint:
-            logger.debug("Checkpoint reached: ", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             if checkpoint == 92:
@@ -1660,7 +1657,7 @@ def miihen_farm(cap_num: int = 1):
                 if pref_area == 8:
                     save_sphere.touch_and_go()
                     pref_area = miihen_next(end_goal=cap_num)
-                    logger.debug("Next area: ", pref_area)
+                    logger.debug(f"Next area: {pref_area}")
                 else:
                     return_to_airship()
 
@@ -1668,7 +1665,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint == 28 and pref_area == 1 and ne_armor:
                 menu.remove_all_nea()
                 miihen_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 ne_armor = False
             elif checkpoint in [31, 80] and pref_area == 1:  # Farm in area 1
                 checkpoint = 29
@@ -1696,7 +1693,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint == 59 and pref_area in [4, 5] and ne_armor:
                 menu.remove_all_nea()
                 miihen_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 ne_armor = False
             elif checkpoint in [63, 64] and pref_area in [1, 2] and not ne_armor:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -1704,7 +1701,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint in [32, 42, 73] and pref_area in [1, 2, 3] and ne_armor:
                 menu.remove_all_nea()
                 miihen_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 ne_armor = False
             elif checkpoint == 151 and not ne_armor:
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -1721,7 +1718,7 @@ def miihen_farm(cap_num: int = 1):
                 if ne_armor:
                     menu.remove_all_nea()
                     miihen_next(end_goal=cap_num)
-                    logger.debug("Next area: ", pref_area)
+                    logger.debug(f"Next area: {pref_area}")
                     ne_armor = False
             elif checkpoint in [104, 146, 158]:
                 FFXC.set_neutral()
@@ -1738,14 +1735,14 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint > 99 and checkpoint >= 144 and pref_area == 6 and ne_armor:
                 menu.remove_all_nea()
                 miihen_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 ne_armor = False
             elif checkpoint == 150 and pref_area == 6:
                 checkpoint -= 2
                 if ne_armor:
                     menu.remove_all_nea()
                     miihen_next(end_goal=cap_num)
-                    logger.debug("Next area: ", pref_area)
+                    logger.debug(f"Next area: {pref_area}")
                     ne_armor = False
 
             elif checkpoint in [148, 149, 150] and pref_area == 5:
@@ -1772,7 +1769,7 @@ def miihen_farm(cap_num: int = 1):
                     else:
                         battle_farm_all()
                 pref_area = miihen_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 memory.main.full_party_format("initiative")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -1796,7 +1793,7 @@ def miihen_farm_old(cap_num: int = 1):
                 zone="miihen1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
             elif checkpoint == 2:
                 memory.main.click_to_event_temple(4)
@@ -1828,7 +1825,7 @@ def miihen_farm_old(cap_num: int = 1):
                 zone="miihen2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 50:
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
@@ -1840,7 +1837,7 @@ def miihen_farm_old(cap_num: int = 1):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1920,14 +1917,14 @@ def djose_farm(cap_num: int = 10):
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     ne_armor = True
     pref_area = djose_next(end_goal=cap_num)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
     last_cp = 0
     while not memory.main.get_map() in [194, 374]:
         if last_cp != checkpoint:
-            logger.debug("Checkpoint reached: ", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
@@ -1985,7 +1982,7 @@ def djose_farm(cap_num: int = 10):
                 if memory.main.get_hp()[0] < 1100:
                     battle.main.heal_up(3)
                 pref_area = djose_next(end_goal=cap_num)
-                logger.debug("Next area:", pref_area)
+                logger.debug(f"Next area: {pref_area}")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -2060,7 +2057,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
     menu.remove_all_nea()
     memory.main.close_menu()
     pref_area = plains_next(end_goal=cap_num)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
     ne_equip = False
 
     checkpoint = 0
@@ -2079,44 +2076,44 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                     checkpoint = 11
             elif checkpoint in [8, 12] and pref_area in [3, 4]:
                 checkpoint = 20
-                logger.debug("Back to agency", checkpoint)
+                logger.debug(f"Back to agency{checkpoint}")
             elif checkpoint in [6, 14, 15, 16] and pref_area == 1:
                 checkpoint = 4
-                logger.debug("Backtrack: ", checkpoint)
+                logger.debug(f"Backtrack: {checkpoint}")
             elif checkpoint == 11 and pref_area == 2:
                 checkpoint -= 2
-                logger.debug("Backtrack: ", checkpoint)
+                logger.debug(f"Backtrack: {checkpoint}")
             elif checkpoint in [4, 5] and pref_area == 2:
                 checkpoint = 6
-                logger.debug("Forward: ", checkpoint)
+                logger.debug(f"Forward: {checkpoint}")
             elif checkpoint in [9, 10] and pref_area == 1:
                 checkpoint = 11
-                logger.debug("Forward: ", checkpoint)
+                logger.debug(f"Forward: {checkpoint}")
             # From start, can go straight to south.
             elif checkpoint == 2 and pref_area == 2:
                 checkpoint = 7
-                logger.debug("Direct to South: ", checkpoint)
+                logger.debug(f"Direct to South: {checkpoint}")
 
             # Map changes:
             if checkpoint in [1, 6, 11] and memory.main.get_map() == 256:
                 checkpoint += 1
-                logger.debug("Map change: ", checkpoint)
+                logger.debug(f"Map change: {checkpoint}")
             if checkpoint in [3, 13] and memory.main.get_map() == 162:
                 checkpoint += 1
-                logger.debug("Map change: ", checkpoint)
+                logger.debug(f"Map change: {checkpoint}")
             if checkpoint == 8 and memory.main.get_map() == 140:
                 checkpoint += 1
-                logger.debug("Map change: ", checkpoint)
+                logger.debug(f"Map change: {checkpoint}")
             if checkpoint == 21 and memory.main.get_map() == 263:
                 checkpoint += 1
-                logger.debug("Map change: ", checkpoint)
+                logger.debug(f"Map change: {checkpoint}")
             if checkpoint == 23:
                 if pref_area == 3:
                     save_sphere.touch_and_go()
                     menu.remove_all_nea()
                     ne_equip = False
                     pref_area = plains_next(end_goal=cap_num)
-                    logger.debug("Next area: ", pref_area)
+                    logger.debug(f"Next area: {pref_area}")
                     checkpoint = 0
                 else:
                     return_to_airship()
@@ -2129,7 +2126,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2140,7 +2137,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 battle.main.heal_up(3)
                 memory.main.full_party_format("yuna")
                 pref_area = plains_next(end_goal=cap_num)
-                logger.debug("Next area:", pref_area)
+                logger.debug(f"Next area:{pref_area}")
                 memory.main.arena_farm_check(
                     zone="tPlains", end_goal=cap_num, report=True
                 )
@@ -2201,7 +2198,7 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2260,7 +2257,7 @@ def mac_woods(cap_num: int = 10):
     air_ship_destination(dest_num=9)
     menu.remove_all_nea()
     pref_area = woods_next(end_goal=cap_num)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
 
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
@@ -2288,7 +2285,7 @@ def mac_woods(cap_num: int = 10):
                 if pref_area == 3:
                     save_sphere.touch_and_go()
                     pref_area = woods_next(end_goal=cap_num)
-                    logger.debug("Next area: ", pref_area)
+                    logger.debug(f"Next area: {pref_area}")
                     if pref_area == 1:
                         checkpoint = 15
                     else:
@@ -2304,13 +2301,13 @@ def mac_woods(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle_farm_all(yuna_attack=False)
                 pref_area = woods_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -2375,7 +2372,7 @@ def bikanel(cap_num: int = 10):
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     ne_armor = True
     pref_area = bikanel_next(end_goal=cap_num)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
     memory.main.full_party_format("initiative")
 
     checkpoint = 0
@@ -2440,7 +2437,7 @@ def bikanel(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2452,7 +2449,7 @@ def bikanel(cap_num: int = 10):
                 if hp_check[0] < 800:
                     battle.main.heal_up(3)
                 pref_area = bikanel_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 memory.main.full_party_format("initiative")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -2537,7 +2534,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
     memory.main.full_party_format("yuna")
     ne_armor = False
     pref_area = calm_next(end_goal=cap_num, force_levels=force_levels)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
 
     ne_armor = False
 
@@ -2571,7 +2568,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             allCounts = memory.main.arena_array()
@@ -2606,7 +2603,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 memory.main.full_party_format("yuna")
                 battle.main.heal_up(3)
                 pref_area = calm_next(end_goal=cap_num, force_levels=force_levels)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
                 memory.main.arena_farm_check(zone="calm", end_goal=cap_num, report=True)
 
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
@@ -2656,7 +2653,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             allCounts = memory.main.arena_array()
@@ -2800,14 +2797,14 @@ def gagazet(cap_num: int = 10):
     else:
         menu.remove_all_nea()
         ne_armor = False
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
 
     last_cp = 0
     checkpoint = 0
     cp_forward = True
     while not memory.main.get_map() in [194, 374]:
         if last_cp != checkpoint:
-            logger.debug("+++ Checkpoint reached: ", checkpoint)
+            logger.debug(f"Checkpoint reached: {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
@@ -2846,7 +2843,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 22
                 xbox.tap_b()
                 memory.main.await_control()
-                logger.debug("Updated checkpoint: ", checkpoint)
+                logger.debug(f"Updated checkpoint: {checkpoint}")
             if checkpoint == 21:
                 while memory.main.user_control():
                     FFXC.set_movement(0, -1)
@@ -2948,7 +2945,7 @@ def gagazet(cap_num: int = 10):
                 else:
                     battle_farm_all()
                 pref_area = gagazet_next(end_goal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     logger.debug("Done with Swimmers, now ready for Path")
@@ -3019,7 +3016,7 @@ def stolen_fayth_cave(cap_num: int = 10):
         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     ne_armor = True
     pref_area = fayth_next(endGoal=cap_num)
-    logger.debug("Next area: ", pref_area)
+    logger.debug(f"Next area: {pref_area}")
 
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
@@ -3074,7 +3071,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -3097,7 +3094,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 if hp_check[0] < 795:
                     battle.main.heal_up(3)
                 pref_area = fayth_next(endGoal=cap_num)
-                logger.debug("Next area: ", pref_area)
+                logger.debug(f"Next area: {pref_area}")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -3133,7 +3130,7 @@ def inside_sin(cap_num: int = 10):
                 zone="sin1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
 
@@ -3149,7 +3146,7 @@ def inside_sin(cap_num: int = 10):
                 zone="sin2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 68 and memory.main.get_map() == 327:
                 checkpoint = 68
             elif checkpoint == 69:
@@ -3176,7 +3173,7 @@ def inside_sin(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -3215,7 +3212,7 @@ def omega_ruins(cap_num: int = 10):
                 zone="omega", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
             elif memory.main.get_tidus_mp() < 20:
                 save_sphere.touch_and_go()
             elif checkpoint == 3:
@@ -3227,7 +3224,7 @@ def omega_ruins(cap_num: int = 10):
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

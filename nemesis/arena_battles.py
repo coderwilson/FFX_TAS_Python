@@ -72,7 +72,7 @@ def airship_destination(dest_num=0):  # Default to Sin.
 def get_save_sphere_details():  # Should be obsolete
     map_val = memory.main.get_map()
     story_val = memory.main.get_story_progress()
-    logger.debug("Map:", map_val, "| Story:", story_val)
+    logger.debug(f"Map:{map_val}| Story:{story_val}")
     x = 0
     y = 0
     diag = 0
@@ -142,7 +142,7 @@ def get_save_sphere_details():  # Should be obsolete
         y = -1066
         diag = 23
 
-    logger.debug("Values: [", x, ",", y, "] - ", diag)
+    logger.debug(f"Values: [{x},{y}] - {diag}")
     return [x, y, diag]
 
 
@@ -174,7 +174,6 @@ def return_to_airship():
             if memory.main.save_menu_open():
                 xbox.tap_a()
             elif memory.main.diag_progress_flag() == ss_details[2]:
-                # logger.debug("Cursor test:", memory.save_menu_cursor())
                 if memory.main.save_menu_cursor() != 1:
                     xbox.menu_down()
                 else:
@@ -207,9 +206,9 @@ def yojimbo_battle():
     screen.await_turn()
     if 1 not in memory.main.get_active_battle_formation():
         battle.main.buddy_swap_yuna()
-    logger.debug("+Yuna Overdrive to summon Yojimbo")
+    logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
-    logger.debug("+Pay the man")
+    logger.debug("Pay the man")
     battle.overdrive.yojimbo()
     memory.main.wait_frames(90)
     while memory.main.battle_active():
@@ -263,7 +262,7 @@ def auto_life():
 
 
 def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False):
-    logger.debug("### Battle Start:", memory.main.get_encounter_id())
+    logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -292,7 +291,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
 def basic_attack(
     mega_phoenix=False, od_version: int = 0, use_od=False, yuna_autos=False
 ):
-    logger.debug("### Battle Start:", memory.main.get_encounter_id())
+    logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -556,7 +555,7 @@ def battles_1():
 
 
 def battles_2():
-    logger.debug("++Starting second section++")
+    logger.debug("Starting second section")
     nemesis.arena_select.arena_menu_select(4)
     touch_save()
     arena_npc()
@@ -624,11 +623,10 @@ def battles_2():
 
 
 def jug_farm_done():
-    logger.debug("||| Slot: ", memory.main.get_item_slot(87))
+    logger.debug(f"Slot: {memory.main.get_item_slot(87)}")
     if memory.main.get_item_slot(87) > 250:
         return False
     else:
-        logger.debug("Count: ", memory.main.get_item_count_slot(memory.main.get_item_slot(87)))
         if memory.main.get_item_count_slot(memory.main.get_item_slot(87)) < 6:
             return False
     return True
@@ -871,7 +869,7 @@ def shinryu_battle():
 
 
 def battles_5(completion_version: int):
-    logger.debug("Yojimbo battle number: ", completion_version)
+    logger.debug(f"Yojimbo battle number: {completion_version}")
     if completion_version >= 12 and completion_version != 99:
         return True  # These battles are complete at this point.
     yojimbo_success = False

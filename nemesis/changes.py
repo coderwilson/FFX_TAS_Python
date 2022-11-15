@@ -53,19 +53,18 @@ def next_race():
 
 def calm_lands():
     # Start chocobo races
-    # memory.set_game_speed(2)
     calm_lands_1()
 
     FFXC.set_neutral()
     memory.main.click_to_diag_progress(28)
     memory.main.wait_frames(9)
     xbox.tap_b()
-    # memory.set_game_speed(0)
     wobbly_complete = False
     while not wobbly_complete:
         wobbly_complete = choco_tame_1()
 
     logger.debug("Wobbly Chocobo complete")
+    # Shenef don't remove these please.
     # next_race()
     # dodger_complete = False
     # while not dodger_complete:
@@ -84,7 +83,7 @@ def calm_lands():
     # while not catcher_complete:
     #     catcher_complete = choco_tame_4()
 
-    logger.debug("Catcher Chocobo complete")
+    #logger.debug("Catcher Chocobo complete")
 
     to_remiem()
 
@@ -115,7 +114,7 @@ def calm_lands_1():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -140,9 +139,7 @@ def choco_tame_1():
     memory.main.click_to_diag_progress(43)
     while not memory.main.diag_progress_flag() in [44, 74]:
         angle = memory.main.get_actor_angle(0)
-        # logger.debug("Angle: ", ret_val)
         position = memory.main.get_actor_coords(0)
-        # logger.debug("Position: ", position)
         if position[0] < -110:  # Need to move right
             if angle > 1.4:
                 FFXC.set_value("d_pad", 8)
@@ -448,6 +445,7 @@ def remiem_races():
     logger.debug("Ready to start races")
     choco_race_1()
     logger.debug("Celestial Weapon obtained.")
+    # Shenef, don't remove these please. I want to play with them later.
     # choco_race_2()
     # logger.debug("Obtained")
     # choco_race_3()
@@ -471,7 +469,7 @@ def choco_race_1():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -510,7 +508,7 @@ def choco_race_2():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -560,7 +558,7 @@ def choco_race_3():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -604,7 +602,7 @@ def temple_to_arena():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
 
 def arena_purchase():
@@ -651,7 +649,7 @@ def arena_purchase():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

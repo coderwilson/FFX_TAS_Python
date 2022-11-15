@@ -50,7 +50,7 @@ def arena_cursor():
 
 
 def arena_menu_select(choice: int = 2):
-    logger.debug("Selecting menu option: ", choice)
+    logger.debug(f"Selecting menu option: {choice}")
     if game_vars.use_pause():
         memory.main.wait_frames(2)
     while not memory.main.blitz_cursor() == choice:
@@ -67,11 +67,10 @@ def arena_menu_select(choice: int = 2):
 
 
 def start_fight(area_index: int, monster_index: int = 0):
-    logger.debug("Starting fight: ", area_index, " | ", monster_index)
+    logger.debug(f"Starting fight: {area_index} | {monster_index}")
     arenaCursor = 0
     memory.main.wait_frames(90)
     while arenaCursor != area_index:
-        # logger.debug(arenaCursor())
         if arenaCursor % 2 == 0 and area_index % 2 == 1:
             xbox.tap_right()
             arenaCursor += 1

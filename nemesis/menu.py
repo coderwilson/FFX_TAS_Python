@@ -56,7 +56,7 @@ def await_use():
     complete = False
     while complete == False:
         menu_val = memory.main.s_grid_menu()
-        logger.debug("Menu value: ", menu_val)
+        logger.debug(f"Menu value: {menu_val}")
         if menu_val == 7:
             cursor_loc = memory.main.cursor_location()
             if cursor_loc[0] == 102 or cursor_loc[1] == 14:
@@ -138,21 +138,21 @@ def open_grid(character):
 
 def perform_next_grid(limit: int = 255):
     # Conditions to hard disregard further evaluations.
-    logger.debug("###   Next Version: ", game_vars.nem_checkpoint_ap())
-    logger.debug("### Current S.lvls: ", memory.main.get_tidus_slvl())
-    logger.debug("### Needed  S.lvls: ", next_ap_needed(game_vars.nem_checkpoint_ap()))
+    logger.debug(f"Next Version: {game_vars.nem_checkpoint_ap()}")
+    logger.debug(f"Current S.lvls: {memory.main.get_tidus_slvl()}")
+    logger.debug(f"Needed  S.lvls: {next_ap_needed(game_vars.nem_checkpoint_ap())}")
     if limit != 255:
-        logger.debug("###          Limit: ", limit)
+        logger.debug(f"Limit: {limit}")
     if game_vars.nem_checkpoint_ap() == 0:
-        logger.debug("###Something wrong: ", game_vars.nem_checkpoint_ap())
+        logger.debug(f"Something wrong: {game_vars.nem_checkpoint_ap()}")
         return False
     if game_vars.nem_checkpoint_ap() > limit:
-        logger.debug("### Limit exceeded: ", limit)
+        logger.debug(f"Limit exceeded: {limit}")
         return False
 
     # If the above checks are passed, check Tidus level and do sphere grid.
     if memory.main.get_tidus_slvl() >= next_ap_needed(game_vars.nem_checkpoint_ap()):
-        logger.debug("##### Attemping Nemesis Grid #", game_vars.nem_checkpoint_ap())
+        logger.debug(f"Attemping Nemesis Grid #{game_vars.nem_checkpoint_ap()}")
         if game_vars.nem_checkpoint_ap() == 1:
             nem_gridding_1()
         elif game_vars.nem_checkpoint_ap() == 2:
