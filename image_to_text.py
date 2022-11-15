@@ -43,25 +43,6 @@ class ImageToText(object):
     def __init__(self, filename, cols, scale=0.5, more_levels=False, color=False):
         self._convert_image(filename, cols, scale, more_levels, color)
 
-    def _get_average_L(self, image):
-        """
-        Given PIL Image, return average value of grayscale value
-        """
-        # Get image as numpy array
-        im = np.array(image)
-        # Get shape
-        w, h = im.shape
-        # Get average
-        return np.average(im.reshape(w * h))
-
-    def _get_average_RGB(self, image):
-        """
-        Given PIL Image, return average value of color
-        """
-        im = np.array(image)
-        avg_color_per_row = np.average(im, axis=0)
-        return np.average(avg_color_per_row, axis=0)
-
     def _rgb(self, col):
         """
         Get the console code for a given RGB color [R, G, B]. Colors are in the range 0-255
@@ -78,65 +59,43 @@ class ImageToText(object):
         """
         # Open image and convert to grayscale
         image_color = Image.open(filename)
-        image_bw = image_color.convert("L")
         # Store dimensions
         W, H = image_color.size[0], image_color.size[1]
         logger.debug(f"input image {filename} dims: {W} x {H}")
-        # Compute width of tile
-        w = W / cols
-        # Compute tile height based on aspect ratio and scale
-        h = w / scale
+        ratio = W / H
         # Compute number of rows
-        rows = int(H / h)
+        rows = int(ratio * cols * scale)
+
+        image_color = image_color.resize(size=[cols, rows])
+        image_bw = image_color.convert("L")
 
         logger.debug(f"cols: {cols}, rows: {rows}")
-        logger.debug(f"tile dims: {w} x {h}")
-
-        # Check if image size is too small
-        if cols > W or rows > H:
-            raise ValueError("Image {filename} is too small for specified cols!")
 
         # Ascii image is a list of character strings, one for each row
         self.ascii = []
         # Generate list of dimensions
-        for j in range(rows):
-            y1 = int(j * h)
-            y2 = int((j + 1) * h)
-            # Correct last tile
-            if j == rows - 1:
-                y2 = H
+        for y in range(rows):
             # Append an empty string (new row)
             self.ascii.append("")
 
-            for i in range(cols):
-                # Crop image to tile
-                x1 = int(i * w)
-                x2 = int((i + 1) * w)
-                # Correct last tile
-                if i == cols - 1:
-                    x2 = W
-                # Crop image to extract tile
-                bw_tile = image_bw.crop((x1, y1, x2, y2))
+            for x in range(cols):
+                coord = x, y
                 # Get average luminance
-                avg = int(self._get_average_L(bw_tile))
+                bw_pixel = int(image_bw.getpixel(coord))
 
                 # Apply color to the tile
                 if color:
-                    # Crop color image to extract tile
-                    col_tile = image_color.crop((x1, y1, x2, y2))
-                    # Get average [r,g,b] value of tile
-                    col_avg = self._get_average_RGB(col_tile)
                     # Apply color using hex code
-                    self.ascii[j] += self._rgb(col_avg)
+                    self.ascii[y] += self._rgb(image_color.getpixel(coord))
 
                 # Look up ascii char from LUT
                 if more_levels:
-                    gsval = self.gscale1[int((avg * 69) / 255)]
+                    gsval = self.gscale1[int((bw_pixel * 69) / 255)]
                 else:
-                    gsval = self.gscale2[int((avg * 9) / 255)]
+                    gsval = self.gscale2[int((bw_pixel * 9) / 255)]
 
                 # Append ascii char to string
-                self.ascii[j] += gsval
+                self.ascii[y] += gsval
         # Restore console coloring
         if color:
             self.ascii[rows - 1] += self.reset
