@@ -34,7 +34,7 @@ def area_array():
 
 def area_index_check(index_num: int = 15):
     # Not working properly
-    print(memory.main.arena_cursor())
+    logger.debug(memory.main.arena_cursor())
     if memory.main.arena_array[index_num] == memory.main.arena_cursor():
         return True
     return False
@@ -43,14 +43,14 @@ def area_index_check(index_num: int = 15):
 def arena_cursor():
     # Not working properly
     for x in range(16):
-        print(memory.main.arena_cursor())
+        logger.debug(memory.main.arena_cursor())
         if memory.main.arena_cursor() == area_array()[x]:
             return x
     return 255
 
 
 def arena_menu_select(choice: int = 2):
-    print("Selecting menu option: ", choice)
+    logger.debug("Selecting menu option: ", choice)
     if game_vars.use_pause():
         memory.main.wait_frames(2)
     while not memory.main.blitz_cursor() == choice:
@@ -67,11 +67,11 @@ def arena_menu_select(choice: int = 2):
 
 
 def start_fight(area_index: int, monster_index: int = 0):
-    print("Starting fight: ", area_index, " | ", monster_index)
+    logger.debug("Starting fight: ", area_index, " | ", monster_index)
     arenaCursor = 0
     memory.main.wait_frames(90)
     while arenaCursor != area_index:
-        # print(arenaCursor())
+        # logger.debug(arenaCursor())
         if arenaCursor % 2 == 0 and area_index % 2 == 1:
             xbox.tap_right()
             arenaCursor += 1

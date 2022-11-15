@@ -29,9 +29,9 @@ def grid_right():
 
 
 def await_move():
-    print("Sphere Grid: Waiting for Move command to be highlighted")
+    logger.debug("Sphere Grid: Waiting for Move command to be highlighted")
     while memory.main.s_grid_active() == False:
-        print("The Sphere Grid isn't even open! Awaiting manual recovery.")
+        logger.debug("The Sphere Grid isn't even open! Awaiting manual recovery.")
         memory.main.wait_frames(30 * 1)
     complete = False
     while complete == False:
@@ -45,18 +45,18 @@ def await_move():
             xbox.menu_b()
             complete = True
             memory.main.wait_frames(30 * 0.25)
-    print("Move command highlighted. Good to go.")
+    logger.debug("Move command highlighted. Good to go.")
 
 
 def await_use():
-    print("Sphere Grid: Waiting for Use command to be highlighted")
+    logger.debug("Sphere Grid: Waiting for Use command to be highlighted")
     while memory.main.s_grid_active() == False:
-        print("The Sphere Grid isn't even open! Awaiting manual recovery.")
+        logger.debug("The Sphere Grid isn't even open! Awaiting manual recovery.")
         memory.main.wait_frames(30 * 1)
     complete = False
     while complete == False:
         menu_val = memory.main.s_grid_menu()
-        print("Menu value: ", menu_val)
+        logger.debug("Menu value: ", menu_val)
         if menu_val == 7:
             cursor_loc = memory.main.cursor_location()
             if cursor_loc[0] == 102 or cursor_loc[1] == 14:
@@ -66,11 +66,11 @@ def await_use():
             memory.main.wait_frames(30 * 0.25)
         else:
             xbox.menu_b()
-    print("Use command highlighted. Good to go.")
+    logger.debug("Use command highlighted. Good to go.")
 
 
 def await_quit_sg():
-    print("Sphere Grid: attempting to quit")
+    logger.debug("Sphere Grid: attempting to quit")
     while memory.main.s_grid_active():
         menu_val = memory.main.s_grid_menu()
         if menu_val == 255:
@@ -79,7 +79,7 @@ def await_quit_sg():
             xbox.menu_b()
         else:
             xbox.menu_a()
-    print("Back to the main menu")
+    logger.debug("Back to the main menu")
 
 
 def open_grid(character):
@@ -89,19 +89,19 @@ def open_grid(character):
         FFXC = xbox.controller_handle()
         FFXC.set_neutral()
     while not memory.main.s_grid_active():
-        # print("Attempting to open Sphere Grid")
+        # logger.debug("Attempting to open Sphere Grid")
         if memory.main.user_control() and not memory.main.menu_open():
-            #   print("Menu is not open at all")
+            #   logger.debug("Menu is not open at all")
             xbox.tap_y()
         elif memory.main.menu_number() == 5:  # Cursor on main menu
-            #  print("Main menu cursor")
+            #  logger.debug("Main menu cursor")
             while memory.main.get_menu_cursor_pos() != 0:
                 memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 0, 11)
-            # print("Done with menu cursor")
+            # logger.debug("Done with menu cursor")
             while memory.main.menu_number() == 5:
                 xbox.tap_b()
         elif memory.main.menu_number() == 7:  # Cursor selecting party member
-            print("Selecting party member")
+            logger.debug("Selecting party member")
             target_pos = memory.main.get_character_index_in_main_menu(character)
             while memory.main.get_char_cursor_pos() != target_pos:
                 if (
@@ -138,21 +138,21 @@ def open_grid(character):
 
 def perform_next_grid(limit: int = 255):
     # Conditions to hard disregard further evaluations.
-    print("###   Next Version: ", game_vars.nem_checkpoint_ap())
-    print("### Current S.lvls: ", memory.main.get_tidus_slvl())
-    print("### Needed  S.lvls: ", next_ap_needed(game_vars.nem_checkpoint_ap()))
+    logger.debug("###   Next Version: ", game_vars.nem_checkpoint_ap())
+    logger.debug("### Current S.lvls: ", memory.main.get_tidus_slvl())
+    logger.debug("### Needed  S.lvls: ", next_ap_needed(game_vars.nem_checkpoint_ap()))
     if limit != 255:
-        print("###          Limit: ", limit)
+        logger.debug("###          Limit: ", limit)
     if game_vars.nem_checkpoint_ap() == 0:
-        print("###Something wrong: ", game_vars.nem_checkpoint_ap())
+        logger.debug("###Something wrong: ", game_vars.nem_checkpoint_ap())
         return False
     if game_vars.nem_checkpoint_ap() > limit:
-        print("### Limit exceeded: ", limit)
+        logger.debug("### Limit exceeded: ", limit)
         return False
 
     # If the above checks are passed, check Tidus level and do sphere grid.
     if memory.main.get_tidus_slvl() >= next_ap_needed(game_vars.nem_checkpoint_ap()):
-        print("##### Attemping Nemesis Grid #", game_vars.nem_checkpoint_ap())
+        logger.debug("##### Attemping Nemesis Grid #", game_vars.nem_checkpoint_ap())
         if game_vars.nem_checkpoint_ap() == 1:
             nem_gridding_1()
         elif game_vars.nem_checkpoint_ap() == 2:
@@ -206,15 +206,15 @@ def perform_next_grid(limit: int = 255):
         elif game_vars.nem_checkpoint_ap() == 26:
             nem_gridding_26()
         else:
-            print("----------------------------")
-            print("End of sphere grid, no further grid logic programmed.")
-            print("----------------------------")
+            logger.debug("----------------------------")
+            logger.debug("End of sphere grid, no further grid logic programmed.")
+            logger.debug("----------------------------")
             game_vars.set_nem_checkpoint_ap(
                 game_vars.nem_checkpoint_ap() - 1
             )  # Decrement
         game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)  # Increment
     # else:
-    # print("###Not enough Slvl:", memory.get_tidus_slvl() - next_ap_needed(game_vars.nem_checkpoint_ap()))
+    # logger.debug("###Not enough Slvl:", memory.get_tidus_slvl() - next_ap_needed(game_vars.nem_checkpoint_ap()))
 
 
 def next_ap_needed(checkpoint):

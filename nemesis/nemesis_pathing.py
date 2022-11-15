@@ -865,7 +865,7 @@ def calm_lands_1_old(checkpoint):
 
 
 def calm_lands_1(checkpoint):
-    # print("CKP:", checkpoint)
+    # logger.debug("CKP:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -905,7 +905,7 @@ def calm_lands_1(checkpoint):
 
 
 def calm_farm(checkpoint):
-    # print("CKP:", checkpoint)
+    # logger.debug("CKP:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -942,7 +942,7 @@ def calm_farm(checkpoint):
 
 
 def calm_lands_2(checkpoint):
-    # print("CKP2:", checkpoint)
+    # logger.debug("CKP2:", checkpoint)
     x = 999
     y = 999
     if checkpoint == 0:
@@ -1439,7 +1439,7 @@ def miihen_farm(checkpoint):
         x = -37
         y = -601
     if checkpoint == 104:  # First lift
-        print("First lift")
+        logger.debug("First lift")
     if checkpoint == 105:
         x = -48
         y = -571
@@ -1564,7 +1564,7 @@ def miihen_farm(checkpoint):
         x = 59
         y = 898
     if checkpoint == 146:  # Second lift
-        print("Up the second lift")
+        logger.debug("Up the second lift")
     if checkpoint == 147:
         x = -36
         y = -194
@@ -1599,7 +1599,7 @@ def miihen_farm(checkpoint):
         x = 29
         y = 227
     if checkpoint == 158:
-        print("Up the third lift")
+        logger.debug("Up the third lift")
     if checkpoint == 159:
         x = 59
         y = 244
@@ -1615,7 +1615,7 @@ def miihen_farm(checkpoint):
     if checkpoint == 163:  # Diagonal towards the save sphere
         x = 226
         y = 170
-    # print("Dest: [", x, ", ", y, "]")
+    # logger.debug("Dest: [", x, ", ", y, "]")
     return [x, y]
 
 

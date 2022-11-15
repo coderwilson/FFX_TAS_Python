@@ -27,7 +27,7 @@ def save_game(first_save=False):
         pass
     while not nemesis.nemesis_pathing.set_movement([-2, -2]):
         pass
-    print("Arena - Touch Save Sphere, and actually save")
+    logger.debug("Arena - Touch Save Sphere, and actually save")
     save_sphere.touch_and_save(save_num=199)
     while not nemesis.nemesis_pathing.set_movement([-6, -27]):
         pass
@@ -57,7 +57,7 @@ def airship_destination(dest_num=0):  # Default to Sin.
         xbox.menu_b()
     while memory.main.diag_progress_flag() != 4:
         xbox.menu_b()
-    print("Destination select on screen now.")
+    logger.debug("Destination select on screen now.")
     while memory.main.map_cursor() != dest_num:
         if dest_num < 8:
             xbox.tap_down()
@@ -72,7 +72,7 @@ def airship_destination(dest_num=0):  # Default to Sin.
 def get_save_sphere_details():  # Should be obsolete
     map_val = memory.main.get_map()
     story_val = memory.main.get_story_progress()
-    print("Map:", map_val, "| Story:", story_val)
+    logger.debug("Map:", map_val, "| Story:", story_val)
     x = 0
     y = 0
     diag = 0
@@ -142,12 +142,12 @@ def get_save_sphere_details():  # Should be obsolete
         y = -1066
         diag = 23
 
-    print("Values: [", x, ",", y, "] - ", diag)
+    logger.debug("Values: [", x, ",", y, "] - ", diag)
     return [x, y, diag]
 
 
 def return_to_airship():
-    print("Attempting Return to Airship")
+    logger.debug("Attempting Return to Airship")
 
     ss_details = get_save_sphere_details()
 
@@ -174,7 +174,7 @@ def return_to_airship():
             if memory.main.save_menu_open():
                 xbox.tap_a()
             elif memory.main.diag_progress_flag() == ss_details[2]:
-                # print("Cursor test:", memory.save_menu_cursor())
+                # logger.debug("Cursor test:", memory.save_menu_cursor())
                 if memory.main.save_menu_cursor() != 1:
                     xbox.menu_down()
                 else:
@@ -185,7 +185,7 @@ def return_to_airship():
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
             memory.main.wait_frames(4)
-    print("Return to Airship Complete.")
+    logger.debug("Return to Airship Complete.")
     memory.main.clear_save_menu_cursor()
     memory.main.clear_save_menu_cursor_2()
 
@@ -207,9 +207,9 @@ def yojimbo_battle():
     screen.await_turn()
     if 1 not in memory.main.get_active_battle_formation():
         battle.main.buddy_swap_yuna()
-    print("+Yuna Overdrive to summon Yojimbo")
+    logger.debug("+Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
-    print("+Pay the man")
+    logger.debug("+Pay the man")
     battle.overdrive.yojimbo()
     memory.main.wait_frames(90)
     while memory.main.battle_active():
@@ -224,7 +224,7 @@ def yojimbo_battle():
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    print("Battle is complete.")
+    logger.debug("Battle is complete.")
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(180)
     FFXC.set_neutral()
@@ -242,7 +242,7 @@ def auto_life():
                 battle.main.defend()
     while memory.main.battle_menu_cursor() != 22:
         if not screen.turn_tidus():
-            print("Attempting Haste, but it's not Tidus's turn")
+            logger.debug("Attempting Haste, but it's not Tidus's turn")
             xbox.tap_up()
             xbox.tap_up()
             return
@@ -263,7 +263,7 @@ def auto_life():
 
 
 def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False):
-    print("### Battle Start:", memory.main.get_encounter_id())
+    logger.debug("### Battle Start:", memory.main.get_encounter_id())
     FFXC.set_neutral()
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -292,7 +292,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
 def basic_attack(
     mega_phoenix=False, od_version: int = 0, use_od=False, yuna_autos=False
 ):
-    print("### Battle Start:", memory.main.get_encounter_id())
+    logger.debug("### Battle Start:", memory.main.get_encounter_id())
     FFXC.set_neutral()
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -328,13 +328,13 @@ def arena_npc():
     ):
         if memory.main.user_control():
             if memory.main.get_coords()[1] > -15:
-                print("Wrong position, moving away from sphere")
+                logger.debug("Wrong position, moving away from sphere")
                 while not nemesis.nemesis_pathing.set_movement([-6, -27]):
                     pass
                 while not nemesis.nemesis_pathing.set_movement([2, -25]):
                     pass
             else:
-                print("Engaging NPC")
+                logger.debug("Engaging NPC")
                 nemesis.nemesis_pathing.set_movement([5, -12])
                 xbox.tap_b()
         else:
@@ -349,15 +349,15 @@ def arena_npc():
                 and not memory.main.diag_progress_flag() == 74
             ):
                 xbox.tap_b()
-    print("Mark 1")
+    logger.debug("Mark 1")
     memory.main.wait_frames(3)  # This buffer can be improved later.
-    print("Mark 2")
+    logger.debug("Mark 2")
 
 
 def restock_downs():
-    print("Restocking phoenix downs")
+    logger.debug("Restocking phoenix downs")
     if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) >= 80:
-        print("Restock not needed. Disregard.")
+        logger.debug("Restock not needed. Disregard.")
         return
     arena_npc()
     nemesis.arena_select.arena_menu_select(3)
@@ -396,7 +396,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=0)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=0)
@@ -411,7 +411,7 @@ def battles_1():
     aeon_start()
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(4)
         memory.main.full_party_format("kilikawoods1")
@@ -434,7 +434,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=2)
     while not basic_quick_attacks(yuna_autos=True):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=2)
@@ -447,7 +447,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=3)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=3)
@@ -461,7 +461,7 @@ def battles_1():
     nemesis.arena_select.start_fight(area_index=13, monster_index=4)
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=4)
         auto_life()
@@ -474,7 +474,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=5)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=5)
@@ -489,7 +489,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=6)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=6)
@@ -502,7 +502,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=7)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=7)
@@ -515,7 +515,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=8)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=8)
@@ -530,7 +530,7 @@ def battles_1():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=9)
     while not basic_quick_attacks(yuna_autos=True):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=9)
@@ -544,7 +544,7 @@ def battles_1():
     nemesis.arena_select.start_fight(area_index=13, monster_index=10)
     auto_life()
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=10)
@@ -556,14 +556,14 @@ def battles_1():
 
 
 def battles_2():
-    print("++Starting second section++")
+    logger.debug("++Starting second section++")
     nemesis.arena_select.arena_menu_select(4)
     touch_save()
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=1)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(4)
         touch_save()
@@ -581,7 +581,7 @@ def battles_2():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=3)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=3)
@@ -596,7 +596,7 @@ def battles_2():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=5)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=5)
@@ -611,7 +611,7 @@ def battles_2():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=8)
     while not basic_quick_attacks():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=8)
@@ -624,11 +624,11 @@ def battles_2():
 
 
 def jug_farm_done():
-    print("||| Slot: ", memory.main.get_item_slot(87))
+    logger.debug("||| Slot: ", memory.main.get_item_slot(87))
     if memory.main.get_item_slot(87) > 250:
         return False
     else:
-        print("Count: ", memory.main.get_item_count_slot(memory.main.get_item_slot(87)))
+        logger.debug("Count: ", memory.main.get_item_count_slot(memory.main.get_item_slot(87)))
         if memory.main.get_item_count_slot(memory.main.get_item_slot(87)) < 6:
             return False
     return True
@@ -646,12 +646,12 @@ def juggernaut_farm():
         check_yojimbo_possible()
         nemesis.arena_select.arena_menu_select(4)
         touch_save()
-    print("Good to go on strength spheres")
+    logger.debug("Good to go on strength spheres")
     game_vars.arena_success(array_num=1, index=12)
-    print("Starting menu to finish strength.")
+    logger.debug("Starting menu to finish strength.")
     nemesis.arena_select.arena_menu_select(4)
     nemesis.menu.str_boost()
-    print("Touch save sphere, and then good to go.")
+    logger.debug("Touch save sphere, and then good to go.")
     touch_save()
 
 
@@ -661,7 +661,7 @@ def battles_3():
     nemesis.arena_select.start_fight(area_index=13, monster_index=11)
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=11)
@@ -679,7 +679,7 @@ def battles_3():
     aeon_start()
     auto_life()
     while not basic_attack(use_od=False):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(4)
         touch_save()
@@ -697,7 +697,7 @@ def battles_3():
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True, od_version=1):
         # Should use Slice & Dice
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=0)
@@ -712,7 +712,7 @@ def battles_3():
     nemesis.arena_select.start_fight(area_index=14, monster_index=9)
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True, od_version=1):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=9)
@@ -729,7 +729,7 @@ def battles_3():
     nemesis.arena_select.start_fight(area_index=14, monster_index=10)
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True, od_version=1):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=10)
@@ -748,7 +748,7 @@ def battles_4():
     nemesis.arena_select.start_fight(area_index=15, monster_index=0)
     auto_life()
     while not basic_quick_attacks(mega_phoenix=True, od_version=1):
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=15, monster_index=0)
@@ -765,7 +765,7 @@ def battles_4():
     nemesis.arena_select.start_fight(area_index=15, monster_index=6)
 
     while not shinryu_battle():
-        print("Battle not completed successfully.")
+        logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(4)
         touch_save()
@@ -871,7 +871,7 @@ def shinryu_battle():
 
 
 def battles_5(completion_version: int):
-    print("Yojimbo battle number: ", completion_version)
+    logger.debug("Yojimbo battle number: ", completion_version)
     if completion_version >= 12 and completion_version != 99:
         return True  # These battles are complete at this point.
     yojimbo_success = False

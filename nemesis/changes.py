@@ -65,26 +65,26 @@ def calm_lands():
     while not wobbly_complete:
         wobbly_complete = choco_tame_1()
 
-    print("Wobbly Chocobo complete")
+    logger.debug("Wobbly Chocobo complete")
     # next_race()
     # dodger_complete = False
     # while not dodger_complete:
     #     dodger_complete = choco_tame_2()
 
-    # print("Dodger Chocobo complete")
+    # logger.debug("Dodger Chocobo complete")
     # next_race()
 
     # hyper_complete = False
     # while not hyper_complete:
     #     hyper_complete = choco_tame_3()
 
-    # print("Hyper Chocobo complete")
+    # logger.debug("Hyper Chocobo complete")
 
     # catcher_complete = False
     # while not catcher_complete:
     #     catcher_complete = choco_tame_4()
 
-    print("Catcher Chocobo complete")
+    logger.debug("Catcher Chocobo complete")
 
     to_remiem()
 
@@ -115,7 +115,7 @@ def calm_lands_1():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -129,7 +129,7 @@ def calm_lands_1():
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    print("Now talk to NPC")
+    logger.debug("Now talk to NPC")
     # arena_npc()
     # arena_purchase()
     # memory.wait_frames(6)
@@ -140,9 +140,9 @@ def choco_tame_1():
     memory.main.click_to_diag_progress(43)
     while not memory.main.diag_progress_flag() in [44, 74]:
         angle = memory.main.get_actor_angle(0)
-        # print("Angle: ", ret_val)
+        # logger.debug("Angle: ", ret_val)
         position = memory.main.get_actor_coords(0)
-        # print("Position: ", position)
+        # logger.debug("Position: ", position)
         if position[0] < -110:  # Need to move right
             if angle > 1.4:
                 FFXC.set_value("d_pad", 8)
@@ -348,13 +348,13 @@ def choco_tame_3():
 
 
 def choco_tame_4():
-    print("START - CATCHER CHOCOBO")
+    logger.debug("START - CATCHER CHOCOBO")
     memory.main.click_to_diag_progress(43)
     checkpoint = 0
     while not memory.main.diag_progress_flag() in [44, 67]:
         angle = memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
-        print("User control")
+        logger.debug("User control")
         """
         if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
             checkpoint += 1
@@ -388,14 +388,14 @@ def choco_tame_4():
             else:
                 FFXC.set_value('d_pad', 0)
     """
-    print("Race complete.")
+    logger.debug("Race complete.")
     FFXC.set_neutral()
 
     while not memory.main.diag_progress_flag() in [67, 77]:
         # 67 is 0:00.0 run
         xbox.tap_b()
     if memory.main.diag_progress_flag() == 67:  # Success
-        print("Great run! Perfect score!")
+        logger.debug("Great run! Perfect score!")
         memory.main.click_to_diag_progress(77)
         memory.main.wait_frames(12)
         xbox.tap_down()
@@ -413,7 +413,7 @@ def to_remiem():
     while memory.main.user_control():
         nemesis.nemesis_pathing.set_movement([-1565, 434])
         xbox.tap_b()
-        print("Near chocobo lady")
+        logger.debug("Near chocobo lady")
     FFXC.set_neutral()
     memory.main.click_to_control_3()
 
@@ -424,11 +424,11 @@ def to_remiem():
                 checkpoint = 13
 
             elif checkpoint == 10:
-                print("Feather")
+                logger.debug("Feather")
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 27:
-                print("Orb thing")
+                logger.debug("Orb thing")
                 while memory.main.user_control():
                     nemesis.nemesis_pathing.set_movement([770, 631])
                     xbox.tap_b()
@@ -441,18 +441,18 @@ def to_remiem():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
 
 
 def remiem_races():
-    print("Ready to start races")
+    logger.debug("Ready to start races")
     choco_race_1()
-    print("Celestial Weapon obtained.")
+    logger.debug("Celestial Weapon obtained.")
     # choco_race_2()
-    # print("Obtained")
+    # logger.debug("Obtained")
     # choco_race_3()
-    # print("Something obtained")
-    print("Now heading back to the monster arena.")
+    # logger.debug("Something obtained")
+    logger.debug("Now heading back to the monster arena.")
 
 
 def choco_race_1():
@@ -471,7 +471,7 @@ def choco_race_1():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -510,7 +510,7 @@ def choco_race_2():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -560,7 +560,7 @@ def choco_race_3():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -590,7 +590,7 @@ def temple_to_arena():
                 checkpoint += 1
 
             elif checkpoint == 24:
-                print("Feather")
+                logger.debug("Feather")
                 while memory.main.user_control():
                     nemesis.nemesis_pathing.set_movement([1101, -940])
                     xbox.tap_b()
@@ -604,19 +604,19 @@ def temple_to_arena():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
 
 
 def arena_purchase():
     memory.main.click_to_control()
 
-    print("Straight forward to the guy")
+    logger.debug("Straight forward to the guy")
     FFXC.set_movement(0, 1)
     memory.main.click_to_event()
     FFXC.set_neutral()
-    print("Now for dialog")
+    logger.debug("Now for dialog")
     memory.main.click_to_diag_progress(65)
-    print("Select Sure")
+    logger.debug("Select Sure")
     memory.main.wait_frames(15)
     xbox.tap_down()
     xbox.tap_b()
@@ -651,7 +651,7 @@ def arena_purchase():
                 == True
             ):
                 checkpoint += 1
-                print("Checkpoint reached: ", checkpoint)
+                logger.debug("Checkpoint reached: ", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
