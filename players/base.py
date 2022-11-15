@@ -10,7 +10,7 @@ class Player():
     def __init__(self, name: str, id: int, battle_menu: List[int]):
         self.name = name
         self.id = id
-        self.struct_offset = id * 94
+        self.struct_offset = id * 0x94
         self.char_rng = 20 + id
         self.battle_menu = battle_menu
         
@@ -31,17 +31,20 @@ class Player():
         
 
     def _read_char_battle_offset_address(self, address, offset):
-        return memory.main.read_val(address + (90 * offset))
+        return memory.main.read_val(address + ((0x90 * offset)))
         
         
     def _read_char_battle_state_address(self, offset):
         pointer = memory.main.read_val(0x00D334CC, 4)
-        return memory.main.read_val(pointer + offset + (0xF90 * self.id), 1)
+        logger.manip(f"New Implementation Pointer: {pointer}")
+        logger.manip(f"New Implementation: Reading from {pointer + offset + ((0xF90 * self.id))}")
+        new_offset = (0xF90 * self.id) + offset
+        return memory.main.read_val(pointer + new_offset, 1)
 
         
     def _read_char_stat_offset_address(self, address):
         pointer = memory.main.read_val(0x003AB9B0, 4)
-        return memory.main.read_val(pointer + address + (0x94 * self.id), 1)
+        return memory.main.read_val(pointer + address + ((0x94 * self.id)), 1)
         
     def navigate_to_battle_menu(self, target):
         """Different characters have different menu orders."""
@@ -66,7 +69,7 @@ class Player():
     def affection(self) -> int:
         if self.id == 0:
             return 255
-        return memory.main.read_val(0x00D2CABC + (4 * self.id), 1)
+        return memory.main.read_val(0x00D2CABC + ((4 * self.id)), 1)
         
         
     def next_crits(self, enemy_luck: int, length: int = 20) -> List[int]:
@@ -86,7 +89,7 @@ class Player():
         
 
     def next_crit(self, enemy_luck) -> int:
-        return self.next_crits[0]
+        return self.next_crits()[0]
         
 
     def overdrive(self, *args, **kwargs):
@@ -98,7 +101,7 @@ class Player():
     
     def overdrive_percent(self, combat = False) -> int:
         if combat:
-            logging.manip(self._read_char_battle_state_address(0x5BC))
+            logging.manip(f"New Implementation: {self._read_char_battle_state_address(0x5BC)}")
             memory.main.get_overdrive_battle(0)
             return self._read_char_battle_state_address(0x5BC)
         else:
