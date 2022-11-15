@@ -37,8 +37,8 @@ class Player():
     def _read_char_battle_state_address(self, offset):
         pointer = memory.main.read_val(0x00D334CC, 4)
         logger.manip(f"New Implementation Pointer: {pointer}")
-        logger.manip(f"New Implementation: Reading from {pointer + offset + ((0xF90 * self.id))}")
         new_offset = (0xF90 * self.id) + offset
+        logger.manip(f"New Implementation: Reading from {pointer + new_offset}")
         return memory.main.read_val(pointer + new_offset, 1)
 
         
@@ -101,9 +101,10 @@ class Player():
     
     def overdrive_percent(self, combat = False) -> int:
         if combat:
-            logging.manip(f"New Implementation: {self._read_char_battle_state_address(0x5BC)}")
             memory.main.get_overdrive_battle(0)
-            return self._read_char_battle_state_address(0x5BC)
+            val = self._read_char_battle_state_address(0x5BC)
+            logging.manip(f"New Implementation Value: {val}")
+            return val
         else:
             pointer = memory.main.read_val(0x003AB9B0, 4)
             return memory.main.read_val(pointer + 0x39 + self.struct_offset, 1)
