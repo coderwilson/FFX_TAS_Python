@@ -860,9 +860,7 @@ def get_battle_formation():
 
     battle_form = [char4, char5, char6, char7, char8, char9, char10]
     logger.debug(f"Battle formation before: {battle_form}")
-    if 255 in battle_form:
-        while 255 in battle_form:
-            battle_form.remove(255)
+    battle_form = [x for x in battle_form if x != 255]
     battle_form.insert(0, char3)
     battle_form.insert(0, char2)
     battle_form.insert(0, char1)
