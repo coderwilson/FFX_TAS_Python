@@ -4199,7 +4199,7 @@ def escape_one():
 
 def buddy_swap(character):
     logger.debug("Swapping {Character} (in battle)")
-    position = character.formation_slot()
+    position = character.battle_slot()
 
     if position < 3:
         logger.debug(
@@ -4229,40 +4229,42 @@ def buddy_swap(character):
         screen.await_turn()
         return
 
+def buddy_swap_char(character):
+    return buddy_swap(character)
 
-def buddy_swap(Tidus):
+def buddy_swap_tidus():
     logger.debug("++ Swapping in Tidus")
-    buddy_swap_char(0)
+    buddy_swap_char(Tidus)
 
 
-def buddy_swap(Yuna):
+def buddy_swap_yuna():
     logger.debug("++ Swapping in Yuna")
-    buddy_swap_char(1)
+    buddy_swap_char(Yuna)
 
 
-def buddy_swap(Auron):
+def buddy_swap_auron():
     logger.debug("++ Swapping in Auron")
-    buddy_swap_char(2)
+    buddy_swap_char(Auron)
 
 
-def buddy_swap(Kimahri):
+def buddy_swap_kimahri():
     logger.debug("++ Swapping in Kimahri")
-    buddy_swap_char(3)
+    buddy_swap_char(Kimahri)
 
 
-def buddy_swap(Wakka):
+def buddy_swap_wakka():
     logger.debug("++ Swapping in Wakka")
-    buddy_swap_char(4)
+    buddy_swap_char(Wakka)
 
 
-def buddy_swap(Lulu):
+def buddy_swap_lulu():
     logger.debug("++ Swapping in Lulu")
-    buddy_swap_char(5)
+    buddy_swap_char(Lulu)
 
 
-def buddy_swap(Rikku):
+def buddy_swap_rikku():
     logger.debug("++ Swapping in Rikku")
-    buddy_swap_char(6)
+    buddy_swap_char(Rikku)
 
 
 def wrap_up():
@@ -4656,7 +4658,7 @@ def check_tidus_ok():
     return check_character_ok(0)
 
 
-def Rikku.is_status_ok():
+def check_rikku_ok():
     return check_character_ok(6)
 
 
@@ -4725,7 +4727,7 @@ def charge_rikku_od():
                         attack_by_num(6, direction="u")
                     elif Rikku.has_overdrive(combat=True):
                         flee_all()
-                    elif not Rikku.active()::
+                    elif not Rikku.active():
                         buddy_swap(Rikku)
                     else:
                         escape_one()

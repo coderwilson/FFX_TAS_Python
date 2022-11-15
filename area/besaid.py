@@ -9,6 +9,7 @@ import screen
 import vars
 import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
+from players import *
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -281,13 +282,13 @@ def leaving():
                         enemy_hp = memory.main.get_enemy_current_hp()
                         if (
                             not game_vars.early_tidus_grid()
-                            and battle_hp[0] < 120
+                            and Tidus.in_danger(120, combat=True)
                             and enemy_hp[0] > 119
                         ):
-                            if memory.main.rng_seed() == 31:
+                            if Tidus.next_crit(12) == 2:
                                 battle.main.attack("none")
                             else:
-                                battle.main.use_potion_character(0, "l")
+                                battle.main.use_potion_character(Tidus, "l")
                                 heal_count += 1
                         else:
                             battle.main.attack("none")
@@ -304,12 +305,12 @@ def leaving():
                 xbox.click_to_battle()
                 while not screen.turn_aeon():
                     if memory.main.turn_ready():
-                        if screen.turn_yuna():
+                        if Yuna.is_turn():
                             battle.main.aeon_summon(0)
                         elif screen.turn_aeon():
                             pass
-                        elif 1 not in memory.main.get_active_battle_formation():
-                            battle.main.buddy_swap_yuna()
+                        elif not Yuna.active():
+                            battle.main.buddy_swap(Yuna)
                         else:
                             battle.main.defend()
                 while memory.main.battle_active():

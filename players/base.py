@@ -21,6 +21,23 @@ class Player():
         else:
             return self.id == other.id
         
+    def __lt__(self, other):
+        if isinstance(other, int):
+            return self.id < other
+        else:
+            return self.id < other.id
+            
+    def __gt__(self, other):
+        return not self == other and not self < other
+            
+    def __le__(self, other):
+        return self < other or self == other
+            
+    def __ge__(self, other):
+        return self > other or self == other
+            
+    def __ne__(self, other):
+        return not self == other
         
     def __str__(self) -> str:
         return self.name
@@ -47,9 +64,13 @@ class Player():
     def navigate_to_battle_menu(self, target):
         """Different characters have different menu orders."""
         current_position = memory.main.battle_menu_cursor()
+        while current_position == 255:
+            current_position = memory.main.battle_menu_cursor()
         target_position = self.battle_menu.index(target)
         while current_position != target:
-            if self.battle_menu.index(current_position) > target_position:
+            if current_position == 255:
+                pass
+            elif self.battle_menu.index(current_position) > target_position:
                 xbox.tap_up()
             else:
                 xbox.tap_down()
@@ -83,11 +104,12 @@ class Player():
             if crit_roll < crit_chance:
                 results.append(index)
                 index += 1
+            cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
         return results
         
 
     def next_crit(self, enemy_luck) -> int:
-        return self.next_crits()[0]
+        return self.next_crits(enemy_luck, length=1)[0]
         
 
     def overdrive(self, *args, **kwargs):
