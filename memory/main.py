@@ -1167,7 +1167,7 @@ def get_overdrive_battle(character):
     base_pointer_address = process.read(base_pointer)
     offset = (0xF90 * character) + 0x5BC
     ret_val = process.read_bytes(base_pointer_address + offset, 1)
-    logger.debug(f"In-Battle Overdrive values: {ret_val}")
+    logger.manip(f"In-Battle Overdrive values: {ret_val}")
     return ret_val
 
 

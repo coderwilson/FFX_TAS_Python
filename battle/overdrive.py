@@ -93,10 +93,7 @@ def tidus(direction=None, version: int = 0, character=99):
         xbox.tap_left()
     while not memory.main.interior_battle_menu():
         xbox.tap_b()
-    if version == 1:
-        # TODO check for cursor position rather than waiting time. 6 worked for wilson but did not for ward.
-        memory.main.wait_frames(10)
-        xbox.menu_right()
+    battle.main._navigate_to_position(version, battle_cursor=memory.main.battle_cursor_3)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
     if character != 99 and memory.main.get_enemy_current_hp()[character - 20] != 0:
@@ -216,6 +213,5 @@ def yuna(aeon_num: int = 5):
         else:
             xbox.tap_up()
         memory.main.wait_frames(2)
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
+    while memory.main.interior_battle_menu():
+        xbox.tap_b()

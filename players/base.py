@@ -1,6 +1,9 @@
 import memory
 from typing import List
 import xbox
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Player():
@@ -12,7 +15,7 @@ class Player():
         self.battle_menu = battle_menu
         
 
-    def __eq__(self, other: int | Player):
+    def __eq__(self, other):
         if isinstance(other, int):
             return self.id == other
         else:
@@ -32,12 +35,12 @@ class Player():
         
         
     def _read_char_battle_state_address(self, offset):
-        pointer = memory.main.read_val(0x00D334CC, 8)
+        pointer = memory.main.read_val(0x00D334CC, 4)
         return memory.main.read_val(pointer + offset + (0xF90 * self.id), 1)
 
         
     def _read_char_stat_offset_address(self, address):
-        pointer = memory.main.read_val(0x003AB9B0, 8)
+        pointer = memory.main.read_val(0x003AB9B0, 4)
         return memory.main.read_val(pointer + address + (0x94 * self.id), 1)
         
     def navigate_to_battle_menu(self, target):
@@ -67,13 +70,13 @@ class Player():
         
         
     def next_crits(self, enemy_luck: int, length: int = 20) -> List[int]:
-         """Note that this says the number of increments, so the previous roll will be a hit, and this one will be the crit."""
-         results = []
-         cur_rng = memory.main.rng_from_index(self.char_rng)
-         cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
-         cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
-         index = 2
-         while len(results) < length:            
+        """Note that this says the number of increments, so the previous roll will be a hit, and this one will be the crit."""
+        results = []
+        cur_rng = memory.main.rng_from_index(self.char_rng)
+        cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
+        cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
+        index = 2
+        while len(results) < length:            
             crit_roll = memory.main.s32(cur_rng & 0x7FFFFFFF ) % 101
             crit_chance = self.luck() - enemy_luck
             if crit_roll < crit_chance:
@@ -86,18 +89,20 @@ class Player():
         return self.next_crits[0]
         
 
-    def overdrive(*args, **kwargs):
+    def overdrive(self, *args, **kwargs):
         raise NotImplementedError()
         
-    def overdrive_active():
+    def overdrive_active(self):
         raise NotImplementedError()
         
     
     def overdrive_percent(self, combat = False) -> int:
         if combat:
+            logging.manip(self._read_char_battle_state_address(0x5BC))
+            memory.main.get_overdrive_battle(0)
             return self._read_char_battle_state_address(0x5BC)
         else:
-            pointer = memory.main.read_val(0x003AB9B0, 8)
+            pointer = memory.main.read_val(0x003AB9B0, 4)
             return memory.main.read_val(pointer + 0x39 + self.struct_offset, 1)
         
         
@@ -105,13 +110,15 @@ class Player():
         return self.overdrive_percent(combat = combat) == 100
 
 
-    def is_turn() -> bool:
+    def is_turn(self) -> bool:
         return memory.main.get_battle_char_turn() == self.id
         
 
     def in_danger(self, danger_threshold, combat = False) -> bool:
         return self.hp(combat) <= danger_threshold
         
+    def is_dead(self) -> bool:
+        return memory.main.state_dead(self.id)
 
     def is_status_ok(self) -> bool:
         if not self.active():
@@ -125,6 +132,7 @@ class Player():
                 memory.main.state_berserk,
                 memory.main.state_sleep,
             ]
+        )
     
     
     def escaped(self) -> bool:

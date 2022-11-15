@@ -6,6 +6,7 @@ import memory.main
 import screen
 import vars
 import xbox
+from players import *
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -23,10 +24,10 @@ def ammes():
         if memory.main.turn_ready():
             if (
                 not tidus_od_flag
-                and screen.turn_tidus()
-                and memory.main.get_overdrive_battle(0) == 100
+                and Tidus.is_turn()
+                and Tidus.has_overdrive(combat=True)
             ):
-                battle.overdrive.tidus()
+                Tidus.overdrive()
                 tidus_od_flag = True
             else:
                 logger.info("Attacking Sinspawn Ammes")
@@ -74,28 +75,28 @@ def klikk():
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             battle_hp = memory.main.get_battle_hp()
-            if battle_hp[0] == 0:
+            if Tidus.is_dead():
                 battle.main.revive()
                 klikk_revives += 1
-            elif screen.turn_tidus():
-                if battle_hp[0] == 0 and memory.main.get_enemy_current_hp()[0] > 125:
-                    battle.main.use_potion_character(0, "l")
+            elif Tidus.is_turn():
+                if Rikku.is_dead() and memory.main.get_enemy_current_hp()[0] > 125:
+                    battle.main.use_potion_character(Tidus, "l")
                 else:
                     battle.main.attack("none")
                 klikk_attacks += 1
-            elif screen.turn_rikku():
+            elif Rikku.is_turn():
                 grenade_count = memory.main.get_item_count_slot(
                     memory.main.get_item_slot(35)
                 )
                 if (
-                    battle_hp[0] < 120
+                    Tidus.in_danger(120)
                     and not (
                         memory.main.get_next_turn() == 0
                         and memory.main.get_enemy_current_hp()[0] <= 181
                     )
                     and not memory.main.rng_seed() == 160
                 ):
-                    battle.main.use_potion_character(0, "l")
+                    battle.main.use_potion_character(Tidus, "l")
                     klikk_revives += 1
                 elif memory.main.get_enemy_current_hp()[0] < 58:
                     battle.main.attack("none")

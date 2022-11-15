@@ -12,6 +12,7 @@ import screen
 import vars
 import xbox
 from memory.main import s32
+from players import *
 
 game_vars = vars.vars_handle()
 
@@ -3602,14 +3603,12 @@ def _steal(direction=None):
         while not memory.main.main_battle_menu():
             pass
     while memory.main.battle_menu_cursor() != 20:
-        if not screen.turn_rikku() and not screen.turn_kimahri():
-            return
-        if memory.main.battle_menu_cursor() == 1:
-            xbox.tap_up()
-        elif memory.main.battle_menu_cursor() > 20:
-            xbox.tap_up()
+        if Rikku.is_turn():
+            Rikku.navigate_to_battle_menu(20)
+        elif Kimahri.is_turn():
+            Kimahri.navigate_to_battle_menu(20)
         else:
-            xbox.tap_down()
+            return
     while not memory.main.other_battle_menu():
         xbox.tap_b()
     _navigate_to_position(0)

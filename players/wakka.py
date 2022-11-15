@@ -1,0 +1,38 @@
+from players.base import Player
+import logging
+import memory
+import xbox
+
+logger = logging.getLogger(__name__)
+
+class WakkaImpl(Player):
+    
+    def __init__(self):
+        super().__init__("Wakka", 4, [0, 19, 1])
+        
+    def overdrive(self):
+        logger.info("Wakka overdrive activating")
+        while not memory.main.other_battle_menu():
+            xbox.tap_left()
+        while not memory.main.interior_battle_menu():
+            xbox.tap_b()
+        while memory.main.interior_battle_menu():
+            xbox.tap_b()
+
+        memory.main.wait_frames(1)
+        xbox.tap_b()
+
+        while not self.overdrive_active():
+            pass
+        memory.main.wait_frames(76)
+        logger.info("Hit Overdrive")
+        xbox.tap_b()  # First reel
+        memory.main.wait_frames(13)
+        xbox.tap_b()  # Second reel
+        memory.main.wait_frames(5)
+        xbox.tap_b()  # Third reel
+    
+    def overdrive_active(self):
+        return memory.main.read_val(0x00DA0BD0, 1) != 0
+        
+Wakka = WakkaImpl()
