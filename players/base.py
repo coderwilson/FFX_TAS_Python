@@ -36,15 +36,13 @@ class Player():
         
     def _read_char_battle_state_address(self, offset):
         pointer = memory.main.read_val(0x00D334CC, 4)
-        logger.manip(f"New Implementation Pointer: {pointer}")
         new_offset = (0xF90 * self.id) + offset
-        logger.manip(f"New Implementation: Reading from {pointer + new_offset}")
-        return memory.main.read_val(pointer + new_offset, 1)
+        return memory.main.read_val(pointer + new_offset, 1, find_base=False)
 
         
     def _read_char_stat_offset_address(self, address):
         pointer = memory.main.read_val(0x003AB9B0, 4)
-        return memory.main.read_val(pointer + address + ((0x94 * self.id)), 1)
+        return memory.main.read_val(pointer + self.struct_offset + address, 1, find_base=False)
         
     def navigate_to_battle_menu(self, target):
         """Different characters have different menu orders."""
@@ -101,9 +99,7 @@ class Player():
     
     def overdrive_percent(self, combat = False) -> int:
         if combat:
-            memory.main.get_overdrive_battle(0)
             val = self._read_char_battle_state_address(0x5BC)
-            logging.manip(f"New Implementation Value: {val}")
             return val
         else:
             pointer = memory.main.read_val(0x003AB9B0, 4)

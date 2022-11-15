@@ -3366,9 +3366,12 @@ def config_cursor():
     return ret_val
 
 
-def read_val(address, bytes=1):
-    global base_value
-    key = base_value + address
+def read_val(address, bytes=1, find_base=True):
+    if find_base:
+        global base_value
+        key = base_value + address
+    else:
+        key = address
     ret_val = process.read_bytes(key, bytes)
     return ret_val
 
