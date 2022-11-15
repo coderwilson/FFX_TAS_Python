@@ -81,7 +81,7 @@ class ImageToText(object):
         image_bw = image_color.convert("L")
         # Store dimensions
         W, H = image_color.size[0], image_color.size[1]
-        logger.info(f"input image {filename} dims: {W} x {H}")
+        logger.debug(f"input image {filename} dims: {W} x {H}")
         # Compute width of tile
         w = W / cols
         # Compute tile height based on aspect ratio and scale
@@ -89,8 +89,8 @@ class ImageToText(object):
         # Compute number of rows
         rows = int(H / h)
 
-        logger.info(f"cols: {cols}, rows: {rows}")
-        logger.info(f"tile dims: {w} x {h}")
+        logger.debug(f"cols: {cols}, rows: {rows}")
+        logger.debug(f"tile dims: {w} x {h}")
 
         # Check if image size is too small
         if cols > W or rows > H:
