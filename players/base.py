@@ -191,6 +191,13 @@ class Player():
     
     def equipped_armor(self) -> memory.main.Equipment:
         return [x for x in self.armors() if x.is_equipped()][0]
+        
+    def weapons(self) -> List[memory.main.Equipment]:
+        equipments = memory.main.all_equipment()
+        return [x for x in equipments if (x.owner() == self.id and x.equipment_type() == 0)]
+        
+    def equipped_weapon(self) -> memory.main.Equipment:
+        return [x for x in self.weapons() if x.is_equipped()][0]
                 
         
     
