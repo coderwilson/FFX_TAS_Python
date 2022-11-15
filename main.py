@@ -119,6 +119,14 @@ def load_game_state():
     game.start_time = logs.time_stamp()
 
 
+def maybe_create_save(save_num: int):
+    game_vars = vars.vars_handle()
+    if game_vars.create_saves():
+        save_sphere.touch_and_save(
+            save_num=save_num, game_state=game.state, step_count=game.step
+        )
+
+
 def perform_TAS():
     game_vars = vars.vars_handle()
 
@@ -174,10 +182,7 @@ def perform_TAS():
                     # Sin drops us near Baaj temple.
                     game.state = "Baaj"
                     game.step = 1
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=20, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=20)
 
             if game.state == "Baaj":
                 if game.step == 1:
@@ -192,10 +197,7 @@ def perform_TAS():
                 if game.step == 3:
                     area.baaj.klikk_fight()
                     game.step = 4
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=21, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=21)
 
                 if game.step == 4:
                     # Klikk fight done. Now to wait for the Al Bhed ship.
@@ -217,8 +219,7 @@ def perform_TAS():
                 if game.step == 1:
                     area.besaid.beach()
                     game.step = 2
-                    # if game_vars.create_saves():
-                    #    save_sphere.touch_and_save(save_num=22, game_state=game.state, #step_count=game.step)
+                    # maybe_create_save(save_num=22)
 
                 if game.step == 2:
                     area.besaid.trials()
@@ -233,10 +234,7 @@ def perform_TAS():
                 area.boats.ss_liki()
                 area.kilika.arrival()
                 game.state = "Kilika"
-                if game_vars.create_saves():
-                    save_sphere.touch_and_save(
-                        save_num=23, game_state=game.state, step_count=game.step
-                    )
+                maybe_create_save(save_num=23)
 
             if game.state == "Kilika":
                 if game.step == 1:
@@ -276,10 +274,7 @@ def perform_TAS():
                     logs.write_stats("Pre Blitz time:")
                     logs.write_stats(total_time)
                     game.step = 3
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=24, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=24)
 
                 if game.step == 3:
                     area.luca.blitz_start()
@@ -318,10 +313,7 @@ def perform_TAS():
                     area.luca.after_blitz()
                     game.step = 1
                     game.state = "Miihen"
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=25, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=25)
 
             # Just to make sure we set this variable somewhere.
             if game.state == "Miihen":
@@ -355,10 +347,7 @@ def perform_TAS():
                     if memory.main.game_over():
                         game.state = "game_over_error"
                     game.step = 2
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=27, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=27)
 
                 if game.step == 2:
                     area.mrr.battle_site()
@@ -370,10 +359,7 @@ def perform_TAS():
                     logs.write_stats(total_time)
                     game.state = "Djose"
                     game.step = 1
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=28, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=28)
 
             if game.state == "Djose":
                 if game.step == 1:
@@ -387,9 +373,7 @@ def perform_TAS():
                     if game_vars.create_saves():
                         while not pathing.set_movement([66, -227]):
                             pass
-                        save_sphere.touch_and_save(
-                            save_num=29, game_state=game.state, step_count=game.step
-                        )
+                        maybe_create_save(save_num=29)
 
                 if game.step == 3:
                     area.djose.leaving_djose()
@@ -401,10 +385,7 @@ def perform_TAS():
                     area.moonflow.arrival()
                     area.moonflow.south_bank()
                     game.step = 2
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=30, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=30)
 
                 if game.step == 2:
                     area.moonflow.north_bank()
@@ -413,9 +394,7 @@ def perform_TAS():
                     if game_vars.create_saves():
                         while memory.main.get_map() != 243:
                             FFXC.set_movement(1, 1)
-                        save_sphere.touch_and_save(
-                            save_num=31, game_state=game.state, step_count=game.step
-                        )
+                        maybe_create_save(save_num=31)
                         while memory.main.get_map() != 135:
                             FFXC.set_movement(1, -1)
                         FFXC.set_neutral()
@@ -427,8 +406,7 @@ def perform_TAS():
                     area.guadosalam.arrival()
                     area.guadosalam.after_speech()
                     game.step = 2
-                    # if game_vars.create_saves():
-                    #    save_sphere.touch_and_save(save_num=32, game_state=game.state, step_count=game.step)
+                    # maybe_create_save(save_num=32)
 
                 if game.step == 2:
                     area.guadosalam.guado_skip()
@@ -439,8 +417,7 @@ def perform_TAS():
                 if game.step == 1:
                     status = area.thunder_plains.south_pathing()
                     game.step = 2
-                    # if game_vars.create_saves():
-                    #    save_sphere.touch_and_save(save_num=33, game_state=game.state, step_count=game.step)
+                    # maybe_create_save(save_num=33)
 
                 if game.step == 2:
                     area.thunder_plains.agency()
@@ -450,19 +427,13 @@ def perform_TAS():
                     area.thunder_plains.north_pathing()
                     game.state = "Macalania"
                     game.step = 1
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=34, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=34)
 
             if game.state == "Macalania":
                 if game.step == 1:
                     area.mac_woods.arrival(False)
                     game.step = 2
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=35, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=35)
 
                 if game.step == 2:
                     area.mac_woods.lake_road()
@@ -473,10 +444,7 @@ def perform_TAS():
                     area.mac_woods.lake()
                     area.mac_temple.approach()
                     game.step = 4
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=36, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=36)
 
                 if game.step == 4:
                     area.mac_temple.arrival()
@@ -487,18 +455,12 @@ def perform_TAS():
                 if game.step == 5:
                     area.mac_temple.trials()
                     game.step = 6
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=37, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=37)
 
                 if game.step == 6:
                     area.mac_temple.escape()
                     game.step = 7
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=38, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=38)
 
                 if game.step == 7:
                     area.mac_temple.under_lake()
@@ -506,28 +468,20 @@ def perform_TAS():
                     game.state = "Home"
                     if game_vars.create_saves():
                         memory.main.click_to_control()
-                        save_sphere.touch_and_save(
-                            save_num=39, game_state=game.state, step_count=game.step
-                        )
+                        maybe_create_save(save_num=39)
 
             # Home section
             if game.state == "Home":
                 if game.step == 1:
                     area.home.desert()
                     game.step = 2
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=40, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=40)
 
                 if game.step == 2:
                     area.home.find_summoners()
                     game.step = 1
                     game.state = "rescue_yuna"
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=41, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=41)
 
             # Rescuing Yuna
             if game.state == "rescue_yuna":
@@ -545,18 +499,12 @@ def perform_TAS():
                 if game.step == 3:
                     area.rescue_yuna.via_purifico()
                     game.step = 4
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=42, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=42)
 
                 if game.step == 4:
                     area.rescue_yuna.evrae_altana()
                     game.step = 5
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=43, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=43)
 
                 if game.step == 5:
                     area.rescue_yuna.seymour_natus()
@@ -570,9 +518,7 @@ def perform_TAS():
                         memory.main.await_event()
                         FFXC.set_neutral()
                         memory.main.await_control()
-                        save_sphere.touch_and_save(
-                            save_num=44, game_state=game.state, step_count=game.step
-                        )
+                        maybe_create_save(save_num=44)
                         FFXC.set_movement(1, 1)
                         memory.main.await_event()
                         FFXC.set_neutral()
@@ -621,10 +567,7 @@ def perform_TAS():
                 if game.step == 4:
                     area.gagazet.flux()
                     game.step = 5
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=45, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=45)
 
                 if game.step == 5:
                     area.gagazet.dream()
@@ -635,10 +578,7 @@ def perform_TAS():
                     area.gagazet.wrap_up()
                     game.step = 1
                     game.state = "Zanarkand"
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=46, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=46)
 
             # Zanarkand section
             if game.state == "Zanarkand":
@@ -653,10 +593,7 @@ def perform_TAS():
                 if game.step == 3:
                     area.zanarkand.sanctuary_keeper()
                     game.step = 4
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=47, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=47)
 
                 if game.step == 4:
                     area.zanarkand.yunalesca()
@@ -666,18 +603,14 @@ def perform_TAS():
                     area.zanarkand.post_yunalesca()
                     game.step = 1
                     game.state = "Sin"
-                    #if game_vars.create_saves():
-                    #    save_sphere.touch_and_save(
-                    #        save_num=48, game_state=game.state, step_count=game.step
-                    #    )
+                    maybe_create_save(save_num=48)
 
             # Sin section
             if game.state == "Sin":
                 if game.step == 1:
                     area.sin.making_plans()
                     game.step = 2
-                    # if game_vars.create_saves():
-                    #    save_sphere.touch_and_save(save_num=49, game_state=game.state, step_count=game.step)
+                    # maybe_create_save(save_num=49)
 
                 if game.step == 2:
                     logger.debug("Test 1")
@@ -690,10 +623,7 @@ def perform_TAS():
                         game.step = 1
                     else:
                         game.step = 3
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=50, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=50)
 
                 if game.step == 3:
                     area.sin.inside_sin()
@@ -732,10 +662,7 @@ def perform_TAS():
                     while not nemesis.arena_prep.t_plains(cap_num=1):
                         pass
                     game.step = 2
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=51, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=51)
 
                 if game.step == 2:
                     while not nemesis.arena_prep.calm(cap_num=1, airship_return=False):
@@ -745,10 +672,7 @@ def perform_TAS():
                 if game.step == 3:
                     nemesis.arena_prep.kilika_shop()
                     game.step = 4
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=52, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=52)
 
                 if game.step == 4:
                     nemesis.arena_prep.besaid_farm(cap_num=1)
@@ -757,18 +681,12 @@ def perform_TAS():
                 if game.step == 5:
                     nemesis.arena_prep.kilika_farm(cap_num=1)
                     game.step = 6
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=53, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=53)
 
                 if game.step == 6:
                     nemesis.arena_prep.miihen_farm(cap_num=1)
                     game.step = 7
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=54, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=54)
 
                 if game.step == 7:
                     # report_gamestate()
@@ -786,18 +704,12 @@ def perform_TAS():
                 if game.step == 10:
                     nemesis.arena_prep.kilika_farm(cap_num=10)
                     game.step = 11
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=55, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=55)
 
                 if game.step == 11:
                     nemesis.arena_prep.miihen_farm(cap_num=10)
                     game.step = 12
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=56, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=56)
 
                 if game.step == 12:
                     # report_gamestate()
@@ -807,51 +719,33 @@ def perform_TAS():
                 if game.step == 13:
                     nemesis.arena_prep.djose_farm(cap_num=10)
                     game.step = 14
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=57, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=57)
 
                 if game.step == 14:
                     nemesis.arena_prep.t_plains(cap_num=10)
                     game.step = 15
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=58, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=58)
 
                 if game.step == 15:
                     nemesis.arena_prep.bikanel(cap_num=10)
                     game.step = 16
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=59, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=59)
 
                 if game.step == 16:
                     nemesis.arena_prep.arena_return()
                     nemesis.arena_prep.auto_phoenix()
                     game.step = 17
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=60, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=60)
 
                 if game.step == 17:
                     nemesis.arena_prep.mac_woods(cap_num=10)
                     game.step = 18
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=61, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=61)
 
                 if game.step == 18:
                     nemesis.arena_prep.stolen_fayth_cave()
                     game.step = 19
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=62, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=62)
 
                 if game.step == 19:
                     nemesis.arena_prep.gagazet()
@@ -860,10 +754,7 @@ def perform_TAS():
                     # nemesis.arena_prep.gagazet_3()
                     # game.state = "End"  # Testing only
                     game.step = 20
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=63, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=63)
 
                 if game.step == 20:
                     nemesis.arena_prep.calm(
@@ -874,35 +765,23 @@ def perform_TAS():
                 if game.step == 21:
                     nemesis.arena_prep.one_mp_weapon()
                     game.step = 22
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=64, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=64)
 
                 if game.step == 22:
                     nemesis.arena_prep.inside_sin(cap_num=10)
                     game.step = 23
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=65, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=65)
 
                 if game.step == 23:
                     nemesis.arena_prep.unlock_omega()
                     nemesis.arena_prep.omega_ruins()
                     game.step = 24
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=66, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=66)
 
                 if game.step == 24:
                     nemesis.arena_prep.kilika_final_shop()
                     game.step = 25
-                    if game_vars.create_saves():
-                        save_sphere.touch_and_save(
-                            save_num=67, game_state=game.state, step_count=game.step
-                        )
+                    maybe_create_save(save_num=67)
 
                 if game.step == 25:
                     nemesis.arena_prep.arena_return()
