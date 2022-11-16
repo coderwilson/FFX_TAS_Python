@@ -2,8 +2,13 @@ from dataclasses import dataclass, field
 
 from ..data.actions import Action
 from ..data.characters import CharacterState
-from ..data.constants import (HIT_CHANCE_TABLE, ICV_BASE, DamageType,
-                              ElementalAffinity, Stat)
+from ..data.constants import (
+    HIT_CHANCE_TABLE,
+    ICV_BASE,
+    DamageType,
+    ElementalAffinity,
+    Stat,
+)
 from ..data.monsters import Monster
 from .main import Event
 

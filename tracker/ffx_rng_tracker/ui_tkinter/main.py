@@ -9,8 +9,11 @@ from .actions_tracker import TkActionsTracker
 from .base_widgets import DamageValuesDialogue
 from .configs import ConfigsPage
 from .drops_tracker import TkDropsTracker
-from .encounters_tracker import (TkEncountersPlanner, TkEncountersTable,
-                                 TkEncountersTracker)
+from .encounters_tracker import (
+    TkEncountersPlanner,
+    TkEncountersTable,
+    TkEncountersTracker,
+)
 from .monster_data_viewer import TkMonsterDataViewer
 from .seed_info import TkSeedInfo
 from .seedfinder import TkSeedFinder
