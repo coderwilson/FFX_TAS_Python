@@ -14,8 +14,10 @@ logging.getLogger("PIL").setLevel(logging.INFO)
 
 config_data = config.open_config()
 # gamestate
-color_log = config_data.get("color_log", False)
-show_images = config_data.get("show_images", False)
+config_logging = config_data.get("logging", {})
+color_log = config_logging.get("color_log", False)
+show_images = config_logging.get("show_images", False)
+terminal_width = config_logging.get("terminal_width", 80)
 
 
 def timer_decorator(func):
@@ -106,6 +108,8 @@ class ImageToText(object):
             print(f"{row}")
 
 
-def maybe_show_image(filename, cols=80):
+def maybe_show_image(filename):
     if show_images:
-        ImageToText(filename=filename, cols=cols, color=color_log).print_image()
+        ImageToText(
+            filename=filename, cols=terminal_width, color=color_log
+        ).print_image()

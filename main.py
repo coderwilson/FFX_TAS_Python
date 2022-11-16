@@ -162,7 +162,7 @@ def perform_TAS():
                     memory.main.wait_frames(30 * 0.5)
                     logger.info("New Game 2 function initiated.")
 
-                    maybe_show_image(filename="images/laugh.jpg", cols=120)
+                    maybe_show_image(filename="images/laugh.jpg")
 
                     area.dream_zan.new_game_2()
                     game.start_time = logs.time_stamp()
