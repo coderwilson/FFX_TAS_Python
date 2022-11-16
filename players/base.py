@@ -46,6 +46,9 @@ class Player:
         else:
             return self.id == other.id
 
+    def __hash__(self):
+        return self.id
+
     def __lt__(self, other):
         if isinstance(other, int):
             return self.id < other
@@ -65,6 +68,9 @@ class Player:
         return not self == other
 
     def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
         return self.name
 
     def _read_char_offset_address(self, address):

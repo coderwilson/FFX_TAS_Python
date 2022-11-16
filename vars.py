@@ -29,7 +29,7 @@ class AllVars:
         if config_vars.get("game_mode") == "test":
             self.perfect_aeon_kills = True
             self.force_blitz_win = True
-            self.generate_saves = True
+            self.generate_saves = config_vars.get("generate_saves", False)
             self.battle_speedup = True
         elif config_vars.get("game_mode") == "story":
             self.skip_cutscene_flag = False
@@ -112,11 +112,13 @@ class AllVars:
         # ----Path for save files, used for loading a specific save
         self.save_path = (
             os.environ.get("userprofile")
+            if not config_vars.get("save_path", "")
+            else config_vars.get("save_path")
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
         # If your computer has bad specs, this will input commands to the controller
         # at a lower rate of speed. Very rarely used.
-        self.artificial_pauses = False
+        self.artificial_pauses = config_vars.get("artificial_pauses", False)
 
     def create_saves(self):
         return self.generate_saves

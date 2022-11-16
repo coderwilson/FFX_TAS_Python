@@ -7,6 +7,7 @@ import nemesis.nemesis_pathing
 import rng_track
 import vars
 import xbox
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -83,14 +84,14 @@ def calm_lands():
     # while not catcher_complete:
     #     catcher_complete = choco_tame_4()
 
-    #logger.debug("Catcher Chocobo complete")
+    # logger.debug("Catcher Chocobo complete")
 
     to_remiem()
 
 
 def calm_lands_1():
     # Enter the cutscene that starts Calm Lands
-    memory.main.full_party_format("yuna", full_menu_close=True)
+    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=True)
     while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
         if memory.main.user_control():
             FFXC.set_movement(0, 1)
@@ -122,7 +123,7 @@ def calm_lands_1():
                     battle.main.calm_lands_gems()
                 else:
                     battle.main.calm_lands_manip()
-                memory.main.full_party_format("rikku", full_menu_close=True)
+                memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
                 rng_track.print_manip_info()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
@@ -657,7 +658,7 @@ def arena_purchase():
                     battle.main.calm_lands_gems()
                 else:
                     battle.main.calm_lands_manip()
-                memory.main.full_party_format("yuna")
+                memory.main.update_formation(Tidus, Yuna, Auron)
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -674,4 +675,4 @@ def arena_purchase_with_chocobo():
     while not memory.main.get_map() == 279:
         nemesis.nemesis_pathing.set_movement([1700, 1200])
 
-    memory.main.full_party_format("kimahri")
+    memory.main.update_formation(Tidus, Kimahri, Auron)

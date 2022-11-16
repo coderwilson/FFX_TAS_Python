@@ -12,6 +12,7 @@ import screen
 import vars
 import xbox
 from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -35,7 +36,7 @@ def pre_evrae():
                 checkpoint += 1
             elif checkpoint == 13:
                 save_sphere.touch_and_go()
-                memory.main.full_party_format("evrae")
+                memory.main.update_formation(Tidus, Rikku, Kimahri)
                 checkpoint += 1
             elif checkpoint == 18:
                 memory.main.click_to_event_temple(4)
@@ -62,9 +63,9 @@ def guards():
     sleeping_powders = memory.main.get_item_slot(37) != 255
     if not sleeping_powders:
         if memory.main.get_lulu_slvl() < 35:
-            memory.main.full_party_format("guards_lulu", full_menu_close=False)
+            memory.main.update_formation(Tidus, Lulu, Rikku, full_menu_close=False)
         else:
-            memory.main.full_party_format("guards_no_lulu", full_menu_close=False)
+            memory.main.update_formation(Tidus, Kimahri, Rikku, full_menu_close=False)
     if (
         memory.main.get_item_slot(3) < 200
         and memory.main.get_hp() != memory.main.get_max_hp()
@@ -90,12 +91,12 @@ def guards():
                 battle.main.guards(guard_num, sleeping_powders)
                 if guard_num == 2:
                     memory.main.click_to_control()
-                    memory.main.full_party_format("guards_lulu")
+                    memory.main.update_formation(Tidus, Lulu, Rikku)
                 elif guard_num == 5:
                     pass
                 else:
                     memory.main.click_to_control()
-                    memory.main.full_party_format("guards_no_lulu")
+                    memory.main.update_formation(Tidus, Kimahri, Rikku)
                 guard_num += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -559,7 +560,7 @@ def seymour_natus():
         else:
             menu.seymour_natus_blitz_loss()
 
-    memory.main.full_party_format("highbridge")
+    memory.main.update_formation(Tidus, Yuna, Auron)
     save_sphere.touch_and_go()
     complete = 0
     while complete == 0:

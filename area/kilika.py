@@ -10,6 +10,7 @@ import save_sphere
 import vars
 import xbox
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -177,7 +178,7 @@ def forest_1():
                     )[0]
                     logger.debug(f"{next_battle}")
                     kilika_battles += 1
-                memory.main.full_party_format("kilika")
+                memory.main.update_formation(Tidus, Wakka, Yuna)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -314,7 +315,7 @@ def trials_end():
 def forest_3():
     logger.info("Kilika forest 3")
     # First, re-order the party
-    memory.main.full_party_format("kilika")
+    memory.main.update_formation(Tidus, Wakka, Yuna)
     kilika_battles = 0
     optimal_battles = 0
     checkpoint = 0
@@ -345,9 +346,9 @@ def forest_3():
                 if memory.main.get_encounter_id() in [32, 34, 37]:
                     optimal_battles += 1
                 if kilika_battles == 1 and memory.main.rng_seed() == 31:
-                    memory.main.full_party_format("kilikawoodsbackup")
+                    memory.main.update_formation(Kimahri, Yuna, Wakka)
                 else:
-                    memory.main.full_party_format("kilika")
+                    memory.main.update_formation(Tidus, Wakka, Yuna)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 

@@ -12,6 +12,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -496,7 +497,7 @@ def advanced_battle_logic():
                     else:
                         battle.main.escape_one()
     memory.main.click_to_control()
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     nemesis.menu.perform_next_grid()
     if memory.main.get_hp()[0] < 1100:
         battle.main.heal_up(3)
@@ -794,25 +795,25 @@ def farm_feathers():
 def auto_phoenix():  # Calm Lands items
     menu.auto_sort_equipment()
     nemesis.menu.lulu_bribe()
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=7, monster_index=0)
     bribe_battle()
     nemesis.arena_select.arena_menu_select(4)
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=7, monster_index=0)
     bribe_battle()
     nemesis.arena_select.arena_menu_select(4)
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=7, monster_index=0)
     bribe_battle()
     nemesis.arena_select.arena_menu_select(4)
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     arena_npc()
     while memory.main.get_item_count_slot(memory.main.get_item_slot(7)) != 99:
         logger.debug("Trying to obtain mega-phoenix downs")
@@ -897,7 +898,7 @@ def auto_phoenix():  # Calm Lands items
     FFXC.set_movement(0, 1)
     memory.main.wait_frames(15)
     FFXC.set_neutral()
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     return_to_airship()
 
     menu.equip_armor(character=4, ability=0x800A)  # Auto-Phoenix
@@ -983,7 +984,7 @@ def tonberry_levels_battle():
 
 def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
     menu.auto_sort_equipment()
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     restock_downs()
     nemesis.arena_select.arena_menu_select(4)
     # Set up for levelling if we are low
@@ -1002,7 +1003,7 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
         nemesis.arena_select.start_fight(area_index=7, monster_index=0)
         bribe_battle()
         nemesis.arena_select.arena_menu_select(4)
-        memory.main.full_party_format("initiative")
+        memory.main.update_formation(Tidus, Wakka, Rikku)
         logger.debug(
             f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
         )
@@ -1026,7 +1027,7 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
             nemesis.arena_select.start_fight(area_index=8, monster_index=7)
             bribe_battle(spare_change_value=245000)
             nemesis.arena_select.arena_menu_select(4)
-            memory.main.full_party_format("initiative")
+            memory.main.update_formation(Tidus, Wakka, Rikku)
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
     if (
@@ -1039,7 +1040,7 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
         nemesis.arena_select.start_fight(area_index=8, monster_index=7)
         bribe_battle(spare_change_value=196000)
         nemesis.arena_select.arena_menu_select(4)
-        memory.main.full_party_format("initiative")
+        memory.main.update_formation(Tidus, Wakka, Rikku)
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
 
@@ -1272,7 +1273,7 @@ def final_weapon():
         full_menu_close=False,
     )
     menu.equip_weapon(character=0, ability=0x8019)  # BDL (one MP)
-    memory.main.full_party_format("kilikawoods1")
+    memory.main.update_formation(Tidus, Yuna, Wakka)
 
 
 def rin_equip_dump(buy_weapon=False, sell_nea=False):
@@ -1620,7 +1621,7 @@ def miihen_farm(cap_num: int = 1):
     ne_armor = True
     pref_area = miihen_next(end_goal=cap_num)
     logger.debug(f"Next area: {pref_area}")
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
 
     checkpoint = 0
     last_cp = checkpoint
@@ -1774,7 +1775,7 @@ def miihen_farm(cap_num: int = 1):
                         battle_farm_all()
                 pref_area = miihen_next(end_goal=cap_num)
                 logger.debug(f"Next area: {pref_area}")
-                memory.main.full_party_format("initiative")
+                memory.main.update_formation(Tidus, Wakka, Rikku)
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -1915,12 +1916,12 @@ def djose_next(end_goal: int):
 def djose_farm(cap_num: int = 10):
 
     air_ship_destination(dest_num=5)
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     ne_armor = True
     pref_area = djose_next(end_goal=cap_num)
     logger.debug(f"Next area: {pref_area}")
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
 
     checkpoint = 0
     last_cp = 0
@@ -2053,7 +2054,7 @@ def plains_next(end_goal: int):
 def t_plains(cap_num: int = 1, auto_haste: bool = False):
 
     air_ship_destination(dest_num=8)
-    memory.main.full_party_format(front_line="yuna", full_menu_close=False)
+    memory.main.update_formation(front_line="yuna", full_menu_close=False)
     menu.remove_all_nea()
     memory.main.close_menu()
     pref_area = plains_next(end_goal=cap_num)
@@ -2135,7 +2136,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 else:
                     battle_farm_all()
                 battle.main.heal_up(3)
-                memory.main.full_party_format("yuna")
+                memory.main.update_formation(Tidus, Yuna, Auron)
                 pref_area = plains_next(end_goal=cap_num)
                 logger.debug(f"Next area:{pref_area}")
                 memory.main.arena_farm_check(
@@ -2369,7 +2370,7 @@ def bikanel(cap_num: int = 10):
     ne_armor = True
     pref_area = bikanel_next(end_goal=cap_num)
     logger.debug(f"Next area: {pref_area}")
-    memory.main.full_party_format("initiative")
+    memory.main.update_formation(Tidus, Wakka, Rikku)
 
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
@@ -2446,13 +2447,13 @@ def bikanel(cap_num: int = 10):
                     battle.main.heal_up(3)
                 pref_area = bikanel_next(end_goal=cap_num)
                 logger.debug(f"Next area: {pref_area}")
-                memory.main.full_party_format("initiative")
+                memory.main.update_formation(Tidus, Wakka, Rikku)
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     init_array = memory.main.check_ability(ability=0x8002)
     if init_array[4]:
         menu.equip_weapon(character=4, ability=0x8002)  # Initiative
-        memory.main.full_party_format("initiative")
+        memory.main.update_formation(Tidus, Wakka, Rikku)
 
 
 def calm_next(end_goal: int, force_levels: int):
@@ -2525,7 +2526,7 @@ def calm_next(end_goal: int, force_levels: int):
 def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0):
     air_ship_destination(dest_num=12)
     menu.remove_all_nea()
-    memory.main.full_party_format("yuna")
+    memory.main.update_formation(Tidus, Yuna, Auron)
     ne_armor = False
     pref_area = calm_next(end_goal=cap_num, force_levels=force_levels)
     logger.debug(f"Next area: {pref_area}")
@@ -2594,7 +2595,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                         battle_farm_all(yuna_attack=False)
                     else:
                         battle_farm_all()
-                memory.main.full_party_format("yuna")
+                memory.main.update_formation(Tidus, Yuna, Auron)
                 battle.main.heal_up(3)
                 pref_area = calm_next(end_goal=cap_num, force_levels=force_levels)
                 logger.debug(f"Next area: {pref_area}")
@@ -3013,7 +3014,7 @@ def stolen_fayth_cave(cap_num: int = 10):
         if memory.main.user_control():
             if pref_area == 4 and checkpoint in [25, 26, 27, 28, 29]:
                 checkpoint = 30
-                memory.main.full_party_format("initiative")
+                memory.main.update_formation(Tidus, Wakka, Rikku)
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 ne_armor = True
             elif pref_area in [1, 2, 3] and checkpoint in [25, 27] and ne_armor:
@@ -3103,13 +3104,13 @@ def inside_sin(cap_num: int = 10):
             # Events
             if memory.main.get_map() == 296:  # Seymour battle
                 logger.debug("We've reached the Seymour screen.")
-                memory.main.full_party_format("yuna")
+                memory.main.update_formation(Tidus, Yuna, Auron)
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 5)
                 FFXC.set_neutral()
                 battle.boss.omnis()
                 memory.main.click_to_control()
-                memory.main.full_party_format("initiative")
+                memory.main.update_formation(Tidus, Wakka, Rikku)
 
             # End of first area logic
             elif memory.main.arena_farm_check(

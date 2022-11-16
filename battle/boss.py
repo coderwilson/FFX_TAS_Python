@@ -87,13 +87,9 @@ def klikk():
                 grenade_count = memory.main.get_item_count_slot(
                     memory.main.get_item_slot(35)
                 )
-                if (
-                    Tidus.in_danger(120)
-                    and not (
-                        memory.main.get_next_turn() == 0
-                        and memory.main.get_enemy_current_hp()[0] <= 181
-                    )
-                    and not memory.main.rng_seed() == 160
+                if Tidus.in_danger(120, combat=True) and not (
+                    memory.main.get_next_turn() == 0
+                    and memory.main.get_enemy_current_hp()[0] <= 181
                 ):
                     battle.main.use_potion_character(Tidus, "l")
                     klikk_revives += 1

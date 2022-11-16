@@ -1308,12 +1308,12 @@ def mrr_battle(status):
             status[5] = 3
 
     if status[5] == 3:
-        memory.main.full_party_format("mrr1", full_menu_close=False)
+        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     elif status[5] == 2:  # Still levelling Yuna or Kimahri
-        memory.main.full_party_format("mrr2", full_menu_close=False)
+        memory.main.update_formation(Yuna, Wakka, Kimahri, full_menu_close=False)
         logger.debug("Yuna in front party, trying to get some more experience.")
     else:
-        memory.main.full_party_format("mrr1", full_menu_close=False)
+        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
 
     # Now checking health values
     if status[5] == 2:
@@ -1373,7 +1373,7 @@ def mrr_manip(kim_max_advance: int = 6):
     logger.debug(f"HP values: {hp_check}")
     if hp_check != [520, 475, 1030, 644, 818, 380]:
         heal_up(full_menu_close=False)
-    memory.main.full_party_format("mrr1")
+    memory.main.update_formation(Tidus, Wakka, Auron)
     _mrr_manip_kimahri_crit()
     return attempt_manip
 
@@ -1412,7 +1412,7 @@ def djose(stone_breath):
         heal_up(3)
     else:
         logger.debug("Djose: No need to heal.")
-    memory.main.full_party_format("djose")
+    memory.main.update_formation(Tidus, Wakka, Auron)
     return stone_breath
 
 
@@ -1573,7 +1573,7 @@ def thunder_plains(section):
         logger.debug("Dodge")
         game_vars.set_l_strike(memory.main.l_strike_count())
     logger.debug("Checking party format and resolving if needed.")
-    memory.main.full_party_format("postbunyip", full_menu_close=False)
+    memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     logger.debug("Party format is good. Now checking health values.")
     if (
         Tidus.in_danger(400)

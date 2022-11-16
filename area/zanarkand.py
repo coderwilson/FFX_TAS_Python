@@ -18,6 +18,7 @@ from paths import (
     ZanarkandTrials,
     ZanarkandYunalesca,
 )
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -77,7 +78,7 @@ def arrival():
     # Starts from the map just after the fireplace chat.
     re_equip_ne = False
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 1:
-        memory.main.full_party_format("rikku", full_menu_close=False)
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
 
@@ -132,7 +133,9 @@ def arrival():
                 if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
                     re_equip_ne = False
                     memory.main.click_to_control()
-                    memory.main.full_party_format("yuna", full_menu_close=False)
+                    memory.main.update_formation(
+                        Tidus, Yuna, Auron, full_menu_close=False
+                    )
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     memory.main.close_menu()
             elif memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -162,7 +165,7 @@ def arrival():
         luck_count = memory.main.get_item_count_slot(luck_slot)
 
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 2:
-        memory.main.full_party_format("rikku", full_menu_close=False)
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
 
@@ -218,7 +221,9 @@ def arrival():
                 if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
                     re_equip_ne = False
                     memory.main.click_to_control()
-                    memory.main.full_party_format("yuna", full_menu_close=False)
+                    memory.main.update_formation(
+                        Tidus, Yuna, Auron, full_menu_close=False
+                    )
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     memory.main.close_menu()
             elif memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -379,7 +384,7 @@ def sanctuary_keeper():
         menu.sk_friend()
     else:
         menu.sk_mixed()
-    memory.main.full_party_format("yuna")
+    memory.main.update_formation(Tidus, Yuna, Auron)
     memory.main.close_menu()
 
     while not pathing.set_movement([110, 20]):
