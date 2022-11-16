@@ -1,5 +1,6 @@
 import logging
 
+import airship_pathing
 import battle.boss
 import battle.main
 import memory.main
@@ -10,7 +11,6 @@ import save_sphere
 import screen
 import vars
 import xbox
-import zz_airship_path
 from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ def pre_evrae():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-    zz_airship_path.air_ship_path(1)
+    airship_pathing.air_ship_path(1)
 
 
 def guards():

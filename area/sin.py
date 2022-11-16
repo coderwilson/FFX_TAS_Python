@@ -1,14 +1,14 @@
 import logging
 
+import airship_pathing
 import battle.boss
 import battle.main
+import egg_hunt
 import memory.main
 import menu
 import pathing
 import vars
 import xbox
-import zz_airship_path
-import zz_egg_hunt_auto
 from paths import InsideSin
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ def making_plans():
             if pathing.set_movement(target[checkpoint]):
                 checkpoint += 1
 
-    zz_airship_path.air_ship_path(2)  # Talk to Yuna/Kimahri
+    airship_pathing.air_ship_path(2)  # Talk to Yuna/Kimahri
     FFXC.set_neutral()
 
 
@@ -108,7 +108,7 @@ def facing_sin():
         exit_cockpit()
     FFXC.set_neutral()
 
-    zz_airship_path.air_ship_path(3)
+    airship_pathing.air_ship_path(3)
     battle.main.sin_arms()
     memory.main.click_to_control()
     logger.info("To the deck, talk to Yuna")
@@ -117,7 +117,7 @@ def facing_sin():
     FFXC.set_neutral()
     memory.main.click_to_control()
 
-    zz_airship_path.air_ship_path(4)
+    airship_pathing.air_ship_path(4)
     FFXC.set_neutral()
     memory.main.click_to_control()
 
@@ -125,14 +125,14 @@ def facing_sin():
     if memory.main.get_map() in [255, 374]:
         exit_cockpit()
     FFXC.set_neutral()
-    zz_airship_path.air_ship_path(5)
+    airship_pathing.air_ship_path(5)
     battle.main.sin_face()
     logger.info("End of battle with Sin's face.")
 
 
 def inside_sin():
     logger.info("Moving to position next to save sphere")
-    while not pathing.set_movement([247,-237]):
+    while not pathing.set_movement([247, -237]):
         if memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.menu_open():
@@ -198,7 +198,7 @@ def egg_hunt():
     while not memory.main.user_control():
         FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 0.5)
-    zz_egg_hunt_auto.engage()
+    egg_hunt.engage()
     logger.info("Done with the egg hunt. Final prep for BFA.")
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
