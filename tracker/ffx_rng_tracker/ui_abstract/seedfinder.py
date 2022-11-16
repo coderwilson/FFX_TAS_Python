@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from itertools import product
 
 from ..configs import Configs
-from ..data.seeds import (DAMAGE_VALUES_NEEDED, FRAMES_FROM_BOOT,
-                          datetime_to_seed)
+from ..data.seeds import DAMAGE_VALUES_NEEDED, FRAMES_FROM_BOOT, datetime_to_seed
 from ..events.character_action import CharacterAction
 from .actions_tracker import ActionsTracker
 from .input_widget import InputWidget

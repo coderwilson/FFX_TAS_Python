@@ -1,8 +1,14 @@
 from dataclasses import dataclass, field
 
 from ..data.constants import ICV_BASE, ICV_VARIANCE, EncounterCondition, Stat
-from ..data.encounter_formations import (BOSSES, FORMATIONS, SIMULATIONS,
-                                         ZONES, Formation, Zone)
+from ..data.encounter_formations import (
+    BOSSES,
+    FORMATIONS,
+    SIMULATIONS,
+    ZONES,
+    Formation,
+    Zone,
+)
 from .main import Event
 
 
