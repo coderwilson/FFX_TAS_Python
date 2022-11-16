@@ -12,7 +12,7 @@ import screen
 import vars
 import xbox
 from memory.main import s32
-from players import *
+from players import Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku
 
 game_vars = vars.vars_handle()
 

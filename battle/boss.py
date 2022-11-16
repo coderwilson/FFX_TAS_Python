@@ -6,7 +6,7 @@ import memory.main
 import screen
 import vars
 import xbox
-from players import *
+from players import Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()

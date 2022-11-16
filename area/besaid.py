@@ -9,7 +9,7 @@ import screen
 import vars
 import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
-from players import *
+from players import Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()

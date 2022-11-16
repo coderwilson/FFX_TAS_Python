@@ -2,21 +2,44 @@ import memory
 from typing import List
 import xbox
 import logging
+from enum import Enum
 
 logger = logging.getLogger(__name__)
 
+class PlayerMagicNumbers(Enum):
+    CHAR_STRUCT_SIZE = 0x94
+    CHAR_STAT_POINTER = 0x003AB9B0
+    BATTLE_STRUCT_SIZE = 0x90
+    BATTLE_STATE_STRUCT_SIZE = 0xF90
+    BATTLE_STATE_STRUCT_POINTER = 0x00D334CC
+    CUR_HP = 0x00D32078
+    MAX_HP = 0x00D32080
+    BATTLE_CUR_HP = 0x00F3F7A4
+    BATTLE_MAX_HP = 0x00F3F7A8
+    LUCK = 0x34
+    ACCURACY = 0x36
+    BATTLE_OVERDRIVE = 0x5BC
+    OVERDRIVE = 0x39
+    AFFECTION_POINTER = 0x00D2CABC
+    SLVL = 0x00D32097
+    RNG_COMP = 0x7FFFFFFF
+    ESCAPED = 0xDC8
+    ACTIVE_BATTLE_SLOTS = 0x00F3F76C
+    BACKLINE_BATTLE_SLOTS = 0x00D2C8A3
+    ARMOR_ID = 1
+    WEAPON_ID = 0
 
 class Player():
     def __init__(self, name: str, id: int, battle_menu: List[int]):
         self.name = name
         self.id = id
-        self.struct_offset = id * 0x94
+        self.struct_offset = id * PlayerMagicNumbers.CHAR_STRUCT_SIZE
         self.char_rng = 20 + id
         self.battle_menu = battle_menu
         
 
     def __eq__(self, other):
-        if isinstance(other, int):
+        if isinstance(other, int): q
             return self.id == other
         else:
             return self.id == other.id
@@ -48,17 +71,17 @@ class Player():
         
 
     def _read_char_battle_offset_address(self, address, offset):
-        return memory.main.read_val(address + ((0x90 * offset)))
+        return memory.main.read_val(address + ((PlayerMagicNumbers.BATTLE_STRUCT_SIZE * offset)))
         
         
     def _read_char_battle_state_address(self, offset):
-        pointer = memory.main.read_val(0x00D334CC, 4)
-        new_offset = (0xF90 * self.id) + offset
+        pointer = memory.main.read_val(PlayerMagicNumbers.BATTLE_STATE_STRUCT_POINTER, 4)
+        new_offset = (PlayerMagicNumbers.BATTLE_STATE_STRUCT_SIZE * self.id) + offset
         return memory.main.read_val(pointer + new_offset, 1, find_base=False)
 
         
     def _read_char_stat_offset_address(self, address):
-        pointer = memory.main.read_val(0x003AB9B0, 4)
+        pointer = memory.main.read_val(PlayerMagicNumbers.CHAR_STAT_POINTER, 4)
         return memory.main.read_val(pointer + self.struct_offset + address, 1, find_base=False)
         
     def navigate_to_battle_menu(self, target):
@@ -78,17 +101,17 @@ class Player():
         
         
     def luck(self) -> int:
-        return self._read_char_stat_offset_address(0x34)
+        return self._read_char_stat_offset_address(PlayerMagicNumbers.LUCK)
 
         
     def accuracy(self) -> int:
-        return self._read_char_stat_offset_address(0x36)
+        return self._read_char_stat_offset_address(PlayerMagicNumbers.ACCURACY)
         
         
     def affection(self) -> int:
         if self.id == 0:
             return 255
-        return memory.main.read_val(0x00D2CABC + ((4 * self.id)), 1)
+        return memory.main.read_val(PlayerMagicNumbers.AFFECTION_POINTER + ((4 * self.id)), 1)
         
         
     def next_crits(self, enemy_luck: int, length: int = 20) -> List[int]:
@@ -99,7 +122,7 @@ class Player():
         cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
         index = 2
         while len(results) < length:            
-            crit_roll = memory.main.s32(cur_rng & 0x7FFFFFFF ) % 101
+            crit_roll = memory.main.s32(cur_rng & PlayerMagicNumbers.RNG_COMP ) % 101
             crit_chance = self.luck() - enemy_luck
             if crit_roll < crit_chance:
                 results.append(index)
@@ -121,11 +144,9 @@ class Player():
     
     def overdrive_percent(self, combat = False) -> int:
         if combat:
-            val = self._read_char_battle_state_address(0x5BC)
-            return val
+            return self._read_char_battle_state_address(PlayerMagicNumbers.BATTLE_OVERDRIVE)
         else:
-            pointer = memory.main.read_val(0x003AB9B0, 4)
-            return memory.main.read_val(pointer + 0x39 + self.struct_offset, 1)
+            return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
         
         
     def has_overdrive(self, combat = False) -> bool:
@@ -158,21 +179,21 @@ class Player():
     
     
     def escaped(self) -> bool:
-        return self._read_char_battle_state_address(0xDC8)
+        return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
         
     
     def hp(self, combat = False) -> int:
         if not combat:
-            return self._read_char_offset_address(0x00D32078)
+            return self._read_char_offset_address(PlayerMagicNumbers.CUR_HP)
         else:
-            return self._read_char_battle_offset_address(0x00F3F7A4, self.battle_slot())
+            return self._read_char_battle_offset_address(PlayerMagicNumbers.BATTLE_CUR_HP, self.battle_slot())
             
 
     def max_hp(self, combat = False) -> int:
         if not combat:
-            return self._read_char_offset_address(0x00D32080)
+            return self._read_char_offset_address(PlayerMagicNumbers.MAX_HP)
         else:
-            return self._read_char_battle_offset_address(0x00F3F7A8, self.battle_slot())
+            return self._read_char_battle_offset_address(PlayerMagicNumbers.BATTLE_MAX_HP, self.battle_slot())
             
 
     def active(self) -> bool:
@@ -181,12 +202,12 @@ class Player():
 
     def battle_slot(self) -> int:
         for i in range(0, 3):
-            if memory.main.read_val(0x00F3F76C + (2*i)) == self.id:
+            if memory.main.read_val(PlayerMagicNumbers.ACTIVE_BATTLE_SLOTS + (2*i)) == self.id:
                 return i
                 
         offset = 0
         for i in range(0, 7):
-            val = memory.main.read_val(0x00D2C8A3 + i)
+            val = memory.main.read_val(PlayerMagicNumbers.BACKLINE_BATTLE_SLOTS + i)
             if val == 255:
                 offset += 1
                 continue
@@ -203,12 +224,12 @@ class Player():
 
         
     def slvl(self) -> int:
-        return self._read_char_offset_address(0x00D32097)
+        return self._read_char_offset_address(PlayerMagicNumbers.SLVL)
     
     
     def armors(self) -> List[memory.main.Equipment]:
         equipments = memory.main.all_equipment()
-        return [x for x in equipments if (x.owner() == self.id and x.equipment_type() == 1)]
+        return [x for x in equipments if (x.owner() == self.id and x.equipment_type() == PlayerMagicNumbers.ARMOR_ID)]
 
     
     def equipped_armor(self) -> memory.main.Equipment:
@@ -216,7 +237,7 @@ class Player():
         
     def weapons(self) -> List[memory.main.Equipment]:
         equipments = memory.main.all_equipment()
-        return [x for x in equipments if (x.owner() == self.id and x.equipment_type() == 0)]
+        return [x for x in equipments if (x.owner() == self.id and x.equipment_type() == PlayerMagicNumbers.WEAPON_ID)]
         
     def equipped_weapon(self) -> memory.main.Equipment:
         return [x for x in self.weapons() if x.is_equipped()][0]
