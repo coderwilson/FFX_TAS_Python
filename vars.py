@@ -15,7 +15,7 @@ class AllVars:
         config_data = config.open_config()
         # All relevant vars are stored in a dictionary
         config_vars = config_data.get("vars", {})
-        
+
         # === Game mode set ===
         # ----Set defaults, then override for specific run type.
         self.perfect_aeon_kills = False
@@ -37,20 +37,18 @@ class AllVars:
             self.perfect_aeon_kills = True
         elif config_vars.get("game_mode") == "blitz_only":
             self.blitz_loop = True
-        
-        
+
         # === RNG settings ===
         self.patched = config_vars.get("game_patched", False)
         self.rng_mode_val = config_vars.get("rng_mode", False)
         self.rng_seed = config_vars.get("rng_seed_num")
-        self.rng_preferred_seeds = [31,160]
-        
+        self.rng_preferred_seeds = [31, 160]
+
         # === Other vars from user ===
         self.nemesis_value = config_vars.get("nemesis_value", False)
         self.force_loop = config_vars.get("force_loop", False)
         self.legacy_soundtrack = config_vars.get("original_soundtrack", True)
-        
-        
+
         # === Future functions / foundations ===
         self.kilika_skip = True
         self.rails_trials = True
@@ -58,12 +56,11 @@ class AllVars:
         self.skip_diag_flag = True
         self.play_TTS_flag = False
 
-
         # === Vars used by the TAS, no pre-set values ===
         # ----Cutscene remover, TAS will set this value on New Game
         # ----If loading to a save file without CSR, may need to change this.
         self.csr_value = True
-        
+
         # ----Blitzball
         self.blitz_loss_force_reset = True
         self.blitz_win_value = True
@@ -93,15 +90,16 @@ class AllVars:
         self.ytk_farm = 0
         self.rescue_count = 0
         self.flux_overkill_var = False
-        self.try_ne_val = True # We can choose False later, no current value here.
+        self.try_ne_val = True  # We can choose False later, no current value here.
         self.ne_armor_val = 255
         self.ne_battles = 0  # Tracks number of forced manip battles outside cave.
         self.nea_zone = 0
-        self.first_hits = [0]*8
+        self.first_hits = [0] * 8
 
         # === Nemesis stuff ===
         # ----Nemesis variables, unused in any%
-        self.nem_ap_val = 1  # Nemesis route, determines Tidus level-up progress. Starts at 1
+        # Nemesis route, determines Tidus level-up progress. Starts at 1
+        self.nem_ap_val = 1
         self.yojimbo_index = 1  # Used in arena battles to track Zanmatou progress.
 
         # ----Nemesis Arena variables, sets to 1 after a boss is killed.
@@ -143,28 +141,26 @@ class AllVars:
 
     def blitz_loss_reset(self):
         return self.blitz_loss_force_reset
-    
+
     def game_is_patched(self):
         return self.patched
-    
+
     def rng_mode(self):
         return self.rng_mode_val
-    
+
     def rng_seed_num(self):
         return self.rng_seed
-    
+
     def rng_seed_num_set(self, value):
         self.rng_seed = value
-    
+
     def rng_preferred_array(self):
         return self.rng_preferred_seeds
-    
+
     def print_arena_status(self):
-        logger.debug("###############################")
         logger.debug(f"Area: {self.area_results}")
         logger.debug(f"Species: {self.species_results}")
         logger.debug(f"Original: {self.original_results}")
-        logger.debug("###############################")
 
     def arena_success(self, array_num, index):
         logger.debug(f"arena_success(): {array_num} | {index}")

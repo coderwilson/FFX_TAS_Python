@@ -90,7 +90,7 @@ class LocProcess(Process):
                 "Name": self.name,
                 "ErrorCode": self.error_code,
             }
-            #ReadWriteMemoryError(error)
+            # ReadWriteMemoryError(error)
 
 
 class FFXMemory(ReadWriteMemory):
@@ -552,7 +552,7 @@ def extractor_height():
     global process
     global base_value
     height = get_actor_coords(3)[2]
-    logger.debug(f"^^Extractor Height: {height}")
+    logger.debug(f"Extractor Height: {height}")
     return height
 
 
@@ -2099,14 +2099,14 @@ def actor_index(actor_num: int = 41):
 
 
 def mrr_guy_coords():
-    logger.debug("+++ Searching for MRR guy")
+    logger.debug("Searching for MRR guy")
     mrr_guy = 255
     for x in range(get_actor_array_size()):
         actor_num = get_actor_id(x)
         # logger.debug(f"Actor {x}: {hex(actor_num)}")
         if actor_num == 0x2083:
             mrr_guy = x
-    logger.debug(f"+++MRR guy in position: {mrr_guy}")
+    logger.debug(f"MRR guy in position: {mrr_guy}")
     mrr_guy_pos = get_actor_coords(mrr_guy)
     return [mrr_guy_pos[0], mrr_guy_pos[1]]
 
@@ -2294,9 +2294,7 @@ def print_rng_36():
 
     coord = base_value + 0x00D35F68
     ret_val = process.read_bytes(coord, 1)
-    logger.debug("------------------------------")
     logger.debug(f"RNG36 value: {ret_val}")
-    logger.debug("------------------------------")
 
 
 def end():
@@ -2909,9 +2907,9 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            logger.debug(f"## Owner: {current_handle.owner()}")
-            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
-            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
+            logger.debug(f"Owner: {current_handle.owner()}")
+            logger.debug(f"Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:
@@ -3244,9 +3242,9 @@ def equipped_armor_has_ability(char_num: int, ability_num: int = 0x801D):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            logger.debug(f"## Owner: {current_handle.owner()}")
-            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
-            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
+            logger.debug(f"Owner: {current_handle.owner()}")
+            logger.debug(f"Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:
@@ -4201,11 +4199,9 @@ def next_chance_rng_01(version="white"):
         if (test_array[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battle_index:
             even_array.append(i)
 
-    # logger.debug("------------------------------")
     # logger.debug(f"Next event will appear on the odd array without manip. Area: {version}")
     # logger.debug(f"odd_array: {odd_array[0]}")
     # logger.debug(f"even_array: {even_array[0]}")
-    # logger.debug("------------------------------")
     return [odd_array, even_array]
 
 
@@ -4507,7 +4503,6 @@ def arena_farm_check(
             complete = False
     if report:
         ap_needed = menu.next_ap_needed(game_vars.nem_checkpoint_ap())
-        logger.debug("############")
         logger.debug(f"Next Sphere Grid checkpoint: {game_vars.nem_checkpoint_ap()}")
         logger.debug(f"Tidus S.levels: {get_tidus_slvl()} - need levels: {ap_needed}")
         logger.debug("Number of captures in this zone:")
@@ -4515,7 +4510,6 @@ def arena_farm_check(
         logger.debug(
             f"End goal is {end_goal} minimum before leaving this zone for each index."
         )
-        logger.debug("############")
     if return_array:
         return result_array
     else:

@@ -81,7 +81,7 @@ def select_best_of_two(coming_battles):
     ]
     for i in range(len(priority)):
         if priority[i] in coming_battles:
-            logger.debug(f"--------------Best charge, battle num: {priority[i]}")
+            logger.debug(f"Best charge, battle num: {priority[i]}")
             return priority[i]
     return 99
 
@@ -163,19 +163,19 @@ def forest_1():
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]
-                    logger.debug(f"################# Next Battle: {next_battle}")
+                    logger.debug(f"Next Battle: {next_battle}")
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
-                    logger.debug(f"---- This should be battle number: {kilika_battles}")
-                    logger.debug(f"---- Reminder (north-bound only): {next_three}")
+                    logger.debug(f"This should be battle number: {kilika_battles}")
+                    logger.debug(f"Reminder (north-bound only): {next_three}")
                     valefor_charge = battle.main.kilika_woods(
                         valefor_charge, best_of_two, next_battle
                     )
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]
-                    logger.debug(f"########################## {next_battle}")
+                    logger.debug(f"{next_battle}")
                     kilika_battles += 1
                 memory.main.full_party_format("kilika")
             elif memory.main.diag_skip_possible():

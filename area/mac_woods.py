@@ -232,9 +232,8 @@ def lake():
     menu.m_lake_grid()
     memory.main.await_control()
 
-    logger.debug("--- Affection array: ---")
+    logger.debug("Affection array:")
     logger.debug(memory.main.affection_array())
-    logger.debug("------------------------")
 
     checkpoint = 0
     while memory.main.get_encounter_id() != 194:
@@ -253,9 +252,8 @@ def lake():
 
 
 def after_crawler():
-    logger.debug("--- Affection array ---")
+    logger.debug("Affection array")
     logger.debug(memory.main.affection_array())
-    logger.debug("-----------------------")
     memory.main.click_to_control()
     while memory.main.get_map() != 153:
         pos = memory.main.get_coords()

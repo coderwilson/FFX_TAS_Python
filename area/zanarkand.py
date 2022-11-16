@@ -26,8 +26,8 @@ FFXC = xbox.controller_handle()
 
 
 def print_nea_zone(battles: int):
-    logger.debug(f"#### Charging Rikku zone: {game_vars.get_nea_zone()}")
-    logger.debug(f"#### This will take {battles} number of battles (99 = unknown)")
+    logger.debug(f"Charging Rikku zone: {game_vars.get_nea_zone()}")
+    logger.debug(f"This will take {battles} number of battles (99 = unknown)")
 
 
 def decide_nea(bonus_advance: int = 0):

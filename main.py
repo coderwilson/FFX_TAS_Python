@@ -759,7 +759,7 @@ def perform_TAS():
                 if game.step == 20:
                     nemesis.arena_prep.calm(
                         cap_num=10, airship_return=False, force_levels=19
-                    ) # Formerly 26, confirmed good upwards from 20.
+                    )  # Formerly 26, confirmed good upwards from 20.
                     game.step = 21
 
                 if game.step == 21:
@@ -836,10 +836,8 @@ def perform_TAS():
                     land_run=True, start_time=game.start_time
                 )
 
-            logger.debug("------------------------------")
             logger.debug("Looping")
             logger.debug(f"{game.state} | {game.step}")
-            logger.debug("------------------------------")
 
         except KeyboardInterrupt as e:
             logger.info("Keyboard Interrupt - Exiting.")

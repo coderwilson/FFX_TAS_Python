@@ -174,7 +174,7 @@ def main_path():
                         crit_manip = True
                         # Try to end on 1.
                         logger.debug(
-                            f"+++++++++++ We can manip: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                            f"We can manip: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
                         )
                         checkpoint = 59
                     else:

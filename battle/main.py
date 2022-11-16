@@ -295,16 +295,14 @@ def get_advances(tros=True, report=False):
     else:
         advances = 0
     game_vars.set_yellows(yellows[advances])
-    logger.debug("#############################################")
-    logger.debug(f"# Advances updated: {t_strike_results} | {yellows} | {advances} #")
-    logger.debug("#############################################")
+    logger.debug(f"Advances updated: {t_strike_results} | {yellows} | {advances}")
     return advances
 
 
 @battle.utils.speedup_decorator
 def piranhas():
     encounter_id = memory.main.get_encounter_id()
-    logger.debug("### Seed: {memory.main.rng_seed()}")
+    logger.debug("Seed: {memory.main.rng_seed()}")
     # 11 = two piranhas
     # 12 = three piranhas with one being a triple formation (takes two hits)
     # 13 = four piranhas
@@ -403,7 +401,6 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
             not valefor_charge and not skip_charge and best_charge == next_battle
         ):  # Still to charge Valefor
             if memory.main.turn_ready():
-                logger.debug("------------------------------")
                 logger.debug("Battle Turn")
                 logger.debug(f"Battle Number: {enc_id}")
                 logger.debug(f"Valefor charge state: {valefor_charge}")
@@ -532,7 +529,6 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     logger.debug(f"Not going to charge Valefor. Battle num: {enc_id}")
         else:
             if memory.main.turn_ready():
-                logger.debug("------------------------------")
                 logger.debug("Battle Turn")
                 logger.debug(f"Battle Number: {enc_id}")
                 logger.debug(f"Valefor charge state: {valefor_charge}")
@@ -636,6 +632,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
     return valefor_charge
 
 
+# move to battle.aeon
 def sonic_wings():
     logger.debug("Valefor attempting to use Sonic Wings - 1")
     while memory.main.battle_menu_cursor() != 204:
@@ -1013,7 +1010,7 @@ def mrr_battle(status):
         logger.info("--- Character is dead from the start of battle -> Escaping")
         flee_all()
     elif check_petrify():
-        logger.warning("--- Character petrified. Unhandled case -> Escaping")
+        logger.warning("Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif encounter_id == 102:  # Garuda, flee no matter what.
         flee_all()
@@ -1027,7 +1024,7 @@ def mrr_battle(status):
                     if memory.main.turn_ready():
                         if check_petrify():
                             logger.warning(
-                                "--- Character petrified. Unhandled case -> Escaping"
+                                "Character petrified. Unhandled case -> Escaping"
                             )
                             flee_all()
                         elif Tidus.is_turn():
@@ -1053,7 +1050,7 @@ def mrr_battle(status):
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
-                            "--- Character petrified. Unhandled case -> Escaping"
+                            "Character petrified. Unhandled case -> Escaping"
                         )
                         flee_all()
                     elif Tidus.is_turn():
@@ -1119,7 +1116,7 @@ def mrr_battle(status):
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
-                            "--- Character petrified. Unhandled case -> Escaping"
+                            "Character petrified. Unhandled case -> Escaping"
                         )
                         flee_all()
                     elif Tidus.is_turn():
@@ -1216,7 +1213,7 @@ def mrr_battle(status):
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
-                            "--- Character petrified. Unhandled case -> Escaping"
+                            "Character petrified. Unhandled case -> Escaping"
                         )
                         flee_all()
                     elif Tidus.is_turn():
@@ -1259,7 +1256,7 @@ def mrr_battle(status):
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
-                            "--- Character petrified. Unhandled case -> Escaping"
+                            "Character petrified. Unhandled case -> Escaping"
                         )
                         flee_all()
                     elif Tidus.is_turn():
@@ -1294,9 +1291,7 @@ def mrr_battle(status):
                         buddy_swap(Tidus)
     else:  # Everything is done.
         flee_all()
-    logger.debug("+++")
     logger.debug(f"Wakka late menu: {game_vars.wakka_late_menu()}")
-    logger.debug("+++")
     # OK the battle should be complete now. Let's do some wrap-up stuff.
     wrap_up()
 
@@ -1434,13 +1429,13 @@ def mix_tutorial():
 def thunder_plains(section):
     enc_id = memory.main.get_encounter_id()
     grenade_slot = memory.main.get_item_slot(35)
-    logger.debug(f"++Grenade Slot {grenade_slot}")
+    logger.debug(f"Grenade Slot {grenade_slot}")
     grenade_count = memory.main.get_item_count_slot(grenade_slot)
-    logger.debug(f"++Grenade count: {grenade_count}")
+    logger.debug(f"Grenade count: {grenade_count}")
     speed_count = memory.main.get_speed()
-    logger.debug(f"++Speed sphere count: {speed_count}")
+    logger.debug(f"Speed sphere count: {speed_count}")
     use_grenades = grenade_count > 3 and speed_count < 14
-    logger.debug(f"++Use Grenades decision: {use_grenades}")
+    logger.debug(f"Use Grenades decision: {use_grenades}")
     use_grenade_slot = memory.main.get_use_items_slot(35)
     lunar_slot = game_vars.get_blitz_win() or memory.main.get_item_slot(56) != 255
     light_slot = memory.main.get_item_slot(57) != 255
@@ -1452,7 +1447,7 @@ def thunder_plains(section):
 
     # Petrify check is not working. Requires review.
     if check_petrify():
-        logger.warning("--- Character petrified. Unhandled case -> Escaping")
+        logger.warning("Character petrified. Unhandled case -> Escaping")
         flee_all()
     elif enc_id in [152, 155, 162]:  # Any battle with Larvae
         if lunar_slot:
@@ -1595,7 +1590,7 @@ def thunder_plains(section):
 def m_woods():
     logger.debug("Logic depends on completion of specific goals. In Order:")
     encounter_id = memory.main.get_encounter_id()
-    logger.debug(f"------------- Battle Start - Battle Number: {encounter_id}")
+    logger.debug(f"Battle Start - Battle Number: {encounter_id}")
     need_arctic_wind, need_fish_scale = False, False
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
@@ -1652,14 +1647,14 @@ def m_woods():
                 else:
                     escape_one()
             elif memory.main.next_steal_rare(pre_advance=2):
-                logger.debug("## Looking ahead, manip for non-crit steal")
+                logger.debug("Looking ahead, manip for non-crit steal")
                 if not Rikku.active():
                     buddy_swap(Rikku)
                     _steal()
                 else:
                     flee_all()
             else:
-                logger.debug("## Looking ahead, no need to manip")
+                logger.debug("Looking ahead, no need to manip")
                 flee_all()
 
     logger.info("Battle complete, now to deal with the aftermath.")
@@ -2337,7 +2332,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     throw_power = False
     throw_speed = False
     steal_direction = "none"
-    logger.debug(f"---------------Starting desert battle: {encounter_id}")
+    logger.debug(f"Starting desert battle: {encounter_id}")
 
     # First, determine what the best case scenario is for each battle.
     if encounter_id == 199:
@@ -3424,18 +3419,18 @@ def oblitz_rng_wait():
     pos = 0
 
     if seed_num not in rng_values:
-        logger.debug(f"## No values for this RNG seed - {memory.main.rng_seed()}")
+        logger.debug(f"No values for this RNG seed - {memory.main.rng_seed()}")
         first_result = [coming_seeds[1], 10, True, 1]
         second_result = [coming_seeds[2], 20, True, 2]
     else:
-        logger.debug("## Scanning values for this RNG seed")
+        logger.debug("Scanning values for this RNG seed")
         if game_vars.loop_blitz():  # This will cause us to prefer results hunting
-            logger.debug("### Looping on blitz, we will try a new value.")
+            logger.debug("Looping on blitz, we will try a new value.")
             # Seed value, time to completion, Win/Loss, and position
             first_result = [coming_seeds[1], 9999, True, 0]
             second_result = [coming_seeds[2], 9999, True, 0]
         else:  # For full runs, take the best result.
-            logger.debug("### This is a full run. Selecting best known result.")
+            logger.debug("This is a full run. Selecting best known result.")
             first_result = [coming_seeds[1], 9999, False, 0]
             second_result = [coming_seeds[2], 9999, False, 0]
         for i in range(len(coming_seeds)):
@@ -4141,7 +4136,7 @@ def escape_one():
     next_action_escape = rng_track.next_action_escape(
         character=memory.main.get_current_turn()
     )
-    logger.debug(f"##### The next character will escape: {next_action_escape}")
+    logger.debug(f"The next character will escape: {next_action_escape}")
     if not next_action_escape and not memory.main.get_encounter_id() == 26:
         if memory.main.get_story_progress() < 154:
             logger.debug("Character cannot escape (Lagoon). Attacking instead.")
@@ -4240,51 +4235,51 @@ def buddy_swap_char(character):
 
 
 def buddy_swap_tidus():
-    logger.debug("++ Swapping in Tidus")
+    logger.debug("Swapping in Tidus")
     buddy_swap_char(Tidus)
 
 
 def buddy_swap_yuna():
-    logger.debug("++ Swapping in Yuna")
+    logger.debug("Swapping in Yuna")
     buddy_swap_char(Yuna)
 
 
 def buddy_swap_auron():
-    logger.debug("++ Swapping in Auron")
+    logger.debug("Swapping in Auron")
     buddy_swap_char(Auron)
 
 
 def buddy_swap_kimahri():
-    logger.debug("++ Swapping in Kimahri")
+    logger.debug("Swapping in Kimahri")
     buddy_swap_char(Kimahri)
 
 
 def buddy_swap_wakka():
-    logger.debug("++ Swapping in Wakka")
+    logger.debug("Swapping in Wakka")
     buddy_swap_char(Wakka)
 
 
 def buddy_swap_lulu():
-    logger.debug("++ Swapping in Lulu")
+    logger.debug("Swapping in Lulu")
     buddy_swap_char(Lulu)
 
 
 def buddy_swap_rikku():
-    logger.debug("++ Swapping in Rikku")
+    logger.debug("Swapping in Rikku")
     buddy_swap_char(Rikku)
 
 
 def wrap_up():
-    logger.debug("^^ Wrapping up battle.")
+    logger.debug("Wrapping up battle.")
     while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.turn_ready():
-            logger.debug("^^Still someone's turn. Could not wrap up battle.")
+            logger.debug("Still someone's turn. Could not wrap up battle.")
             return False
         else:
             pass
-    logger.debug("^^ Wrap up complete.")
+    logger.debug("Wrap up complete.")
     return True
 
 
@@ -4635,8 +4630,8 @@ def equip_in_battle(equip_type="weap", ability_num=0, character=Tidus, special="
             equip_num = i
         i += 1
     while memory.main.battle_cursor_3() != equip_num:
-        logger.debug(f"'''Battle cursor 3: {memory.main.battle_cursor_3()}")
-        logger.debug(f"'''equip_num: {equip_num}")
+        logger.debug(f"Battle cursor 3: {memory.main.battle_cursor_3()}")
+        logger.debug(f"equip_num: {equip_num}")
         if memory.main.battle_cursor_3() < equip_num:
             xbox.tap_down()
         else:
@@ -4682,7 +4677,7 @@ def get_digit(number, n):
 def calculate_spare_change_movement(gil_amount):
     if gil_amount > memory.main.get_gil_value():
         gil_amount = memory.main.get_gil_value()
-    #gil_amount = min(gil_amount, 100000)
+    # gil_amount = min(gil_amount, 100000)
     position = {}
     gil_copy = gil_amount
     for index in range(0, 7):
@@ -4710,7 +4705,7 @@ def calculate_spare_change_movement(gil_amount):
 
 
 def charge_rikku_od():
-    logger.debug(f"#####Battle Number: {memory.main.get_encounter_id()}")
+    logger.debug(f"Battle Number: {memory.main.get_encounter_id()}")
     if not Rikku.has_overdrive(combat=True) and memory.main.get_encounter_id() in [
         360,
         361,
@@ -4724,9 +4719,9 @@ def charge_rikku_od():
             not Tidus.escaped() and not Tidus.is_status_ok()
         ) or not Rikku.is_status_ok():
             logger.debug("Tidus or Rikku incapacitated, fleeing")
-            logger.debug(f"-- {not Tidus.escaped()}")
-            logger.debug(f"-- {not Tidus.is_status_ok()}")
-            logger.debug(f"-- {not Rikku.is_status_ok()}")
+            logger.debug(f"{not Tidus.escaped()}")
+            logger.debug(f"{not Tidus.is_status_ok()}")
+            logger.debug(f"{not Rikku.is_status_ok()}")
             flee_all()
         else:
             while not memory.main.battle_complete():
@@ -4770,7 +4765,7 @@ def check_gems():
 
 @battle.utils.speedup_decorator
 def calm_lands_manip():
-    logger.debug(f"++ Calm Lands Encounter id: {memory.main.get_encounter_id()}")
+    logger.debug(f"Calm Lands Encounter id: {memory.main.get_encounter_id()}")
     rng_10_next_chance_low = memory.main.next_chance_rng_10(12)
     low_array = [273, 275, 276, 281, 283, 284]
     rng_10_next_chance_mid = memory.main.next_chance_rng_10(60)
@@ -4778,11 +4773,11 @@ def calm_lands_manip():
     rng_10_next_chance_high = memory.main.next_chance_rng_10(128)
     high_array = [278, 286, 288]
     if check_gems() < 2:
-        logger.debug(f"+++ Gems: {check_gems()}")
-        logger.debug("+++ Calm Lands battle, need gems.")
+        logger.debug(f"Gems: {check_gems()}")
+        logger.debug("Calm Lands battle, need gems.")
         calm_lands_gems()
     else:
-        logger.debug("+++ Gems good. NEA manip logic.")
+        logger.debug("Gems good. NEA manip logic.")
         advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
         if advance_pre_x not in [0, 2] and advance_post_x not in [0, 2]:
             # Non-zero for both
@@ -4815,7 +4810,7 @@ def calm_lands_manip():
         elif advance_post_x == 0:  # Lined up for next drop NEA before defender X.
             logger.debug("The next equipment to drop will be NEA")
             if memory.main.get_coords()[0] > 1300:
-                logger.debug("--Near Gagazet, just get off RNG10 equipment drop.")
+                logger.debug("Near Gagazet, just get off RNG10 equipment drop.")
                 if memory.main.next_chance_rng_10() == 0:
                     advance_rng_10(1)
                     # Gets us off of a drop on defender X - probably. :D
@@ -4860,32 +4855,30 @@ def calm_steal():
 
 def advance_rng_10(num_advances: int):
     escape_success_count = 0
-    logger.debug("#################")
-    logger.debug("## RNG10 logic ##")
-    logger.debug(f"## {num_advances} ##")
-    logger.debug(f"## {screen.faint_check()} ##")
-    logger.debug("#################")
+    logger.debug("RNG10 logic")
+    logger.debug(f"{num_advances}")
+    logger.debug(f"{screen.faint_check()}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            logger.debug(f"+++ Registering advances: {num_advances}")
+            logger.debug(f"Registering advances: {num_advances}")
             if memory.main.battle_type() == 2:
-                logger.debug("+++ Registering ambush")
+                logger.debug("Registering ambush")
                 flee_all()
             elif memory.main.get_encounter_id() == 321:
-                logger.debug("+++ Registering evil jar guy, fleeing.")
+                logger.debug("Registering evil jar guy, fleeing.")
                 flee_all()
             elif memory.main.get_encounter_id() == 287:
-                logger.debug("+++ Registering Anaconadeur - I am French!!! - fleeing")
+                logger.debug("Registering Anaconadeur - I am French!!! - fleeing")
                 flee_all()
             elif num_advances >= 6:
                 if escape_success_count == 0:
                     if escape_one():
                         escape_success_count += 1
                 elif faint_check_with_escapes() == 2:
-                    logger.debug("+++ Registering two people down. Escaping.")
+                    logger.debug("Registering two people down. Escaping.")
                     flee_all()
                 elif Kimahri.is_turn() or Rikku.is_turn():
-                    logger.debug("+++ Registering turn, steal character")
+                    logger.debug("Registering turn, steal character")
                     # Most convenient since overdrive is needed for Flux.
                     if num_advances % 3 != 0:
                         calm_steal()
@@ -4916,7 +4909,7 @@ def advance_rng_10(num_advances: int):
                     if escape_one():
                         escape_success_count += 1
                 elif Kimahri.is_turn():
-                    logger.debug("+++ Registering turn, steal character")
+                    logger.debug("Registering turn, steal character")
                     # Most convenient since overdrive is needed for Flux.
                     if num_advances % 3 != 0:
                         calm_steal()
@@ -4935,9 +4928,9 @@ def advance_rng_10(num_advances: int):
                 else:
                     defend()
             elif num_advances in [1, 2]:
-                logger.debug(f"+++ Registering advances: {num_advances}")
+                logger.debug(f"Registering advances: {num_advances}")
                 if Kimahri.is_turn():
-                    logger.debug("+++ Registering turn, steal character")
+                    logger.debug("Registering turn, steal character")
                     calm_steal()
                     num_advances -= 1
                 elif 3 not in memory.main.get_active_battle_formation():
@@ -4949,15 +4942,13 @@ def advance_rng_10(num_advances: int):
                 else:
                     defend()  # should not occur.
             else:  # any other scenarios, ready to advance.
-                logger.debug("+++ Registering no advances needed, forcing flee.")
+                logger.debug("Registering no advances needed, forcing flee.")
                 flee_all()
     memory.main.click_to_control_3()
 
 
 def rng_12_attack(try_impulse=False):
-    logger.debug("#################")
-    logger.debug("## RNG12 logic (attack only) ##")
-    logger.debug("#################")
+    logger.debug("RNG12 logic (attack only)")
     if screen.turn_aeon():
         if memory.main.get_encounter_id() in [283, 309, 313]:
             attack_by_num(21, "u")  # Second target
@@ -4978,16 +4969,14 @@ def rng_12_attack(try_impulse=False):
 
 
 def advance_rng_12():
-    logger.debug("#################")
-    logger.debug("## RNG12 logic (decision logic) ##")
-    logger.debug("#################")
+    logger.debug("RNG12 logic (decision logic)")
     attack_count = False
     aeon_turn = False
     use_impulse = False
     double_drop = False
     while memory.main.battle_active():
         if memory.main.get_encounter_id() == 321:
-            logger.debug("+++ Registering evil jar guy")
+            logger.debug("Registering evil jar guy")
             logger.debug("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
@@ -5005,10 +4994,10 @@ def advance_rng_12():
                     aeon_summon(4)
             elif screen.turn_aeon():
                 num_enemies = len(memory.main.get_enemy_current_hp())
-                logger.debug(f"+++ {memory.main.get_enemy_current_hp()}")
-                logger.debug(f"+++ {num_enemies}")
+                logger.debug(f"{memory.main.get_enemy_current_hp()}")
+                logger.debug(f"{num_enemies}")
                 check_ahead = num_enemies * 3
-                logger.debug(f"+++ {check_ahead}")
+                logger.debug(f"{check_ahead}")
                 ahead_array = memory.main.next_chance_rng_10_full()
                 for h in range(check_ahead):
                     if h == 3:
@@ -5143,12 +5132,12 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
 
 
 def ghost_kill_tidus(silence_slot: int, self_haste: bool):
-    logger.debug(f"++Silence slot: {silence_slot}")
+    logger.debug(f"Silence slot: {silence_slot}")
     while memory.main.battle_active():
         # Try to get NEA on Tidus
         if memory.main.turn_ready():
             if 0 not in memory.main.get_active_battle_formation():
-                logger.debug("+++ Get Tidus back in")
+                logger.debug("Get Tidus back in")
                 buddy_swap(Tidus)
             elif Tidus.is_turn():
                 if not self_haste:
@@ -5161,7 +5150,7 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                 else:
                     attack("none")
             elif not Yuna.active():
-                logger.debug("+++ Get Yuna in for extra smacks")
+                logger.debug("Get Yuna in for extra smacks")
                 buddy_swap(Yuna)
             elif Yuna.is_turn() and memory.main.get_enemy_current_hp()[0] > 3000:
                 attack("none")
@@ -5172,11 +5161,11 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
 def ghost_kill_any(silence_slot: int, self_haste: bool):
     yuna_haste = False
     item_thrown = silence_slot >= 200
-    logger.debug(f"++ Silence slot: {silence_slot}")
+    logger.debug(f"Silence slot: {silence_slot}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if 0 not in memory.main.get_active_battle_formation():
-                logger.debug("+++ Get Tidus back in")
+                logger.debug("Get Tidus back in")
                 buddy_swap(Tidus)
             elif Tidus.is_turn():
                 if not self_haste:
@@ -5196,7 +5185,7 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                 else:
                     attack("none")
             elif not Yuna.active():
-                logger.debug("+++ Get Yuna in for extra smacks")
+                logger.debug("Get Yuna in for extra smacks")
                 buddy_swap(Yuna)
             elif Yuna.is_turn():
                 attack("none")

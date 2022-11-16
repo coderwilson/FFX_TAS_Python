@@ -24,9 +24,8 @@ FFXC = xbox.controller_handle()
 
 
 def approach(do_grid=True):
-    logger.debug("--- Affection array: ---")
+    logger.debug("Affection array:")
     logger.debug(memory.main.affection_array())
-    logger.debug("--------------------------")
     memory.main.click_to_control()
     logger.info("Approaching Macalania Temple")
 

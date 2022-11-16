@@ -28,7 +28,7 @@ def post_battle_logic(force_charge=False):
         else:
             memory.main.full_party_format("djose", full_menu_close=False)
     hp_check = memory.main.get_hp()
-    logger.debug(f"------------------ HP check: {hp_check}")
+    logger.debug(f"HP check: {hp_check}")
     if hp_check[0] < 520 or hp_check[1] < 220:
         battle.main.heal_up()
     else:
@@ -205,7 +205,7 @@ def arrival():
                 next_crit_kim = memory.main.next_crit(
                     character=3, char_luck=18, enemy_luck=15
                 )
-                logger.debug(f"#### Next Kimahri crit: {next_crit_kim}")
+                logger.debug(f"Next Kimahri crit: {next_crit_kim}")
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menu_open():

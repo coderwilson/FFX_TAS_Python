@@ -230,7 +230,7 @@ def luca_workers():
     grid_right()
 
     menu_grid.move_and_use()
-    logger.debug(f"+++ s_grid_nodes: {memory.main.s_grid_node_selected()}")
+    logger.debug(f"s_grid_nodes: {memory.main.s_grid_node_selected()}")
     if memory.main.s_grid_node_selected()[0] == 2:
         logger.info("No early haste")
         early_haste = 0

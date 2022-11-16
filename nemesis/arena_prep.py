@@ -520,7 +520,7 @@ def bribe_battle(spare_change_value: int = 12000):
                 while memory.main.other_battle_menu():
                     xbox.tap_b()
                 battle.main.calculate_spare_change_movement(spare_change_value)
-                
+
                 while memory.main.spare_change_open():
                     xbox.tap_b()
                 battle.main.tap_targeting()
@@ -955,6 +955,7 @@ def one_mp_ready():
         return False
     return True
 
+
 def tonberry_levels_battle():
     screen.await_turn()
     tidus_turn = False
@@ -970,7 +971,7 @@ def tonberry_levels_battle():
                 tidus_turn = True
             else:
                 battle.main.defend()
-    
+
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():
         pass
@@ -979,7 +980,8 @@ def tonberry_levels_battle():
     FFXC.set_value("btn_b", 0)
     logger.debug("Now back in control.")
 
-def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
+
+def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
     menu.auto_sort_equipment()
     memory.main.full_party_format("initiative")
     restock_downs()
@@ -989,7 +991,7 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         # Set overdrive mode
         menu.tidus_slayer(od_pos=0)
     logger.debug(
-        f"###Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+        f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
     )
     while (
         memory.main.get_item_slot(37) > 200
@@ -1002,21 +1004,21 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         nemesis.arena_select.arena_menu_select(4)
         memory.main.full_party_format("initiative")
         logger.debug(
-            f"###Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+            f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
         )
     while not one_mp_ready():
         logger.debug("Trying to obtain Gambler's Soul and Purifying Salt items")
         arena_npc()
         nemesis.arena_select.arena_menu_select(4)
-    
+
     # Lv.4 key sphere recovery logic
     if (
-        memory.main.get_item_slot(84) == 255 or
-        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+        memory.main.get_item_slot(84) == 255
+        or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
     ):
         while (
-            memory.main.get_item_slot(84) == 255 or
-            memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+            memory.main.get_item_slot(84) == 255
+            or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
         ):
             arena_npc()
             logger.debug("Need Lv.4 key sphere for sphere grid")
@@ -1028,8 +1030,8 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
     if (
-        memory.main.get_item_slot(84) == 255 or
-        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+        memory.main.get_item_slot(84) == 255
+        or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
     ):
         arena_npc()
         logger.debug("Need Lv.4 key sphere for sphere grid")
@@ -1040,12 +1042,12 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
         memory.main.full_party_format("initiative")
     else:
         logger.debug("Good on Lv.4 key spheres for sphere grid")
-    
+
     # Finish leveling before we make a 1mp weapon
     if force_levels > game_vars.nem_checkpoint_ap():
         while (
-            memory.main.get_item_slot(46) == 255 or
-            memory.main.get_item_count_slot(memory.main.get_item_slot(46)) < 40
+            memory.main.get_item_slot(46) == 255
+            or memory.main.get_item_count_slot(memory.main.get_item_slot(46)) < 40
         ):
             arena_npc()
             nemesis.arena_select.arena_menu_select(4)
@@ -1057,11 +1059,11 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
             nemesis.arena_select.arena_menu_select(4)
             nemesis.menu.perform_next_grid()
         menu.tidus_slayer(od_pos=0)
-    
+
     arena_npc()
     nemesis.arena_select.arena_menu_select(2)
-    
-    #Now ready to make item
+
+    # Now ready to make item
     memory.main.wait_frames(60)
     xbox.menu_b()  # Buy
     memory.main.wait_frames(10)
@@ -2787,16 +2789,16 @@ def gagazet(cap_num: int = 10):
     rin_equip_dump()
     air_ship_destination(dest_num=13)
     pref_area = gagazet_next(end_goal=cap_num)
-    
+
     # Check if we need the extra Lv.4 key sphere. False == needed.
     if (
-        memory.main.get_item_slot(84) == 255 or
-        memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+        memory.main.get_item_slot(84) == 255
+        or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
     ):
         retrieved_sphere = False
     else:
         retrieved_sphere = True
-    
+
     if pref_area == 4:
         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
         ne_armor = True
@@ -2824,7 +2826,7 @@ def gagazet(cap_num: int = 10):
                 checkpoint += 1
             elif checkpoint == 34 and memory.main.get_map() == 244:
                 checkpoint += 1
-            elif not retrieved_sphere and checkpoint in [35,36,37] and pref_area != 1:
+            elif not retrieved_sphere and checkpoint in [35, 36, 37] and pref_area != 1:
                 checkpoint = 44
             elif checkpoint == 37 and memory.main.get_map() == 259:
                 checkpoint += 1
@@ -2916,9 +2918,9 @@ def gagazet(cap_num: int = 10):
                 elif ne_armor and not cp_forward:
                     menu.remove_all_nea()
                     ne_armor = False
-                    checkpoint = 35 # back on track
-                    cp_forward = True # back on track
-            
+                    checkpoint = 35  # back on track
+                    cp_forward = True  # back on track
+
             # Opening chest
             if checkpoint == 78:
                 memory.main.click_to_event_temple(1)
