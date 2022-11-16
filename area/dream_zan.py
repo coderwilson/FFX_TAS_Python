@@ -2,7 +2,6 @@ import logging
 
 import battle.boss
 import battle.main
-import battle.overdrive
 import logs
 import memory.main
 import pathing
@@ -12,6 +11,7 @@ import tts
 import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 game_vars = vars.vars_handle()
 
@@ -207,7 +207,7 @@ def ammes_battle():
     logger.debug("Waiting for Auron's Turn")
     logger.debug("At Overdrive")
     # Auron overdrive tutorial
-    battle.overdrive.auron()
+    Auron.overdrive()
 
 
 def after_ammes():

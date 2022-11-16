@@ -860,9 +860,7 @@ def get_battle_formation():
 
     battle_form = [char4, char5, char6, char7, char8, char9, char10]
     logger.debug(f"Battle formation before: {battle_form}")
-    if 255 in battle_form:
-        while 255 in battle_form:
-            battle_form.remove(255)
+    battle_form = [x for x in battle_form if x != 255]
     battle_form.insert(0, char3)
     battle_form.insert(0, char2)
     battle_form.insert(0, char1)
@@ -1167,9 +1165,11 @@ def get_overdrive_battle(character):
 
     base_pointer = base_value + 0x00D334CC
     base_pointer_address = process.read(base_pointer)
+    logger.manip(f"Base Pointer: {base_pointer_address}")
     offset = (0xF90 * character) + 0x5BC
+    logger.manip(f"Original: Reading from {base_pointer_address + offset}")
     ret_val = process.read_bytes(base_pointer_address + offset, 1)
-    logger.debug(f"In-Battle Overdrive values: {ret_val}")
+    logger.manip(f"In-Battle Overdrive values: {ret_val}")
     return ret_val
 
 
@@ -1524,6 +1524,7 @@ def get_map():
     key = base_value + 0x00D2CA90
     progress = process.read_bytes(key, 2)
     return progress
+
 
 def touching_save_sphere():
     global base_value
@@ -2709,18 +2710,18 @@ def blitz_cursor():
     return cursor
 
 
-
-
 # ------------------------------
 # Function for logging
 
 
 def total_distance_travelled():
     return float_from_integer(read_val(0x00D2A9DC, 4))
-    
+
+
 def get_zone():
     return read_val(0x00D2CAA0, 2)
-    
+
+
 # ------------------------------
 # Equipment array
 
@@ -3366,9 +3367,12 @@ def config_cursor():
     return ret_val
 
 
-def read_val(address, bytes=1):
-    global base_value
-    key = base_value + address
+def read_val(address, bytes=1, find_base=True):
+    if find_base:
+        global base_value
+        key = base_value + address
+    else:
+        key = address
     ret_val = process.read_bytes(key, bytes)
     return ret_val
 
