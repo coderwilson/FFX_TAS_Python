@@ -274,7 +274,7 @@ def get_save_sphere_settings(actor_index: int):
                     results[map_num][diag_num][actor_num]["y"],
                     results[map_num][diag_num][actor_num]["diag"],
                 ]
-
+    print(ret_array)
     return ret_array
 
 

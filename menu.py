@@ -199,7 +199,7 @@ def woods_menuing():
     if full_menu:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
-        game_vars.complete_full_kilik_menu()
+        game_vars.complete_full_klikk_menu()
     menu_grid.use_and_quit()
     # Reorder the party
 
@@ -837,6 +837,8 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
         while memory.main.get_menu_cursor_pos() != 4:
             memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 4, 11)
         while memory.main.menu_number() == 5:
+            xbox.tap_b()
+        while not memory.main.menu_number() == 7:
             xbox.tap_b()
 
         target_pos = memory.main.get_character_index_in_main_menu(character)

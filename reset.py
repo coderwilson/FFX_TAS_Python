@@ -60,7 +60,7 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
             rng_seed = 0
     logs.reset_stats_log()
     logs.next_stats(rng_seed)  # Start next stats file
-    if game_vars.use_set_seed():
+    if game_vars.rng_mode() in ["set", "preferred"]:
         memory.main.set_rng_seed(rng_seed)
     logger.info(f"-------------This game will be using RNG seed: {rng_seed}")
     logs.next_stats(rng_seed)
