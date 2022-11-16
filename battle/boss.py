@@ -1310,9 +1310,7 @@ def evrae_altana():
         if memory.main.next_steal_rare():
             battle.main.evrae_altana_steal()
         else:
-            logger.debug("===================================")
             logger.debug("Next steal will crit, do not steal.")
-            logger.debug("===================================")
         thrown_item = False
         while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():

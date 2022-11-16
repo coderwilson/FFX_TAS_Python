@@ -88,7 +88,7 @@ def arrival():
 
 def log_mrr_kimahri_crit_chance():
     crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    logger.debug(f"======== Next Kimahri crit: {crit_chance}")
+    logger.debug(f"Next Kimahri crit: {crit_chance}")
 
 
 def main_path():

@@ -1814,7 +1814,7 @@ def full_party_format(front_line, *, full_menu_close=True):
             xbox.tap_b()
         start_pos = 0
         while Counter(order[:3]) != Counter(order_final[:3]):
-            logger.debug("==Full Party Format function, original")
+            logger.debug("Full Party Format function, original")
             # Select target in the wrong spot.
             logger.debug("Selecting start position")
             if order[start_pos] == order_final[start_pos]:
@@ -1939,7 +1939,7 @@ def party_format_cursor_2():
 
 
 def get_party_format_from_text(front_line):
-    logger.debug(f"||| FRONT LINE VARIABLE: {front_line}")
+    logger.debug(f"FRONT LINE VARIABLE: {front_line}")
     if front_line == "kimahri":
         order_final = [0, 3, 2, 6, 4, 5, 1]
     elif front_line == "rikku":

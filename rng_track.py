@@ -248,14 +248,12 @@ def ability_to_be_dropped(
         try:
             ptr += 1
             if test_mode:
-                logger.debug("==================================")
                 logger.debug(f"ptr: {ptr}")
                 logger.debug(f"Try: {test_array[ptr + advances]}")
             array_pos = ((test_array[ptr + advances] & 0x7FFFFFFF) % 7) + 1
             if test_mode:
                 logger.debug(f"AP: {array_pos}")
                 logger.debug(f"Res: {outcomes[array_pos]}")
-                logger.debug("==================================")
             if outcomes[array_pos] in filled_slots:
                 pass
             else:
@@ -1772,7 +1770,6 @@ def next_action_hit(character: int = 0, enemy: str = "anima"):
 
 
 def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: int = 0):
-    # logger.debug("=========================")
     # logger.debug(f"Checking hit chance - character: {character}")
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
@@ -1871,7 +1868,6 @@ def record_blitz_results_tyton(duration, test_mode=False):
 def record_blitz_results(duration, test_mode=False):
     filepath = os.path.join("json_ai_files", "oblitz_results.json")
     records = oblitz_history()
-    logger.debug("========================")
     if test_mode:
         new_val = {31: {9999: {"duration": duration, "victory": False}}}
         if str(31) in records.keys():
@@ -1935,7 +1931,6 @@ def record_blitz_results(duration, test_mode=False):
             records.update(new_val)
     logger.debug(new_val)
 
-    logger.debug("========================")
     logger.debug(records)
 
     with open(filepath, "w") as fp:

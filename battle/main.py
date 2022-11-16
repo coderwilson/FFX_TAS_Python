@@ -1334,8 +1334,8 @@ def mrr_battle(status):
 
 def _mrr_manip_kimahri_crit():
     next_crit_kim = Kimahri.next_crit(15)
-    logger.debug(f"||| Manip - Encounter id: {memory.main.get_encounter_id()}")
-    logger.debug(f"||| Next Kimahri Crit vs Gui: {next_crit_kim}")
+    logger.debug(f"Manip - Encounter id: {memory.main.get_encounter_id()}")
+    logger.debug(f"Next Kimahri Crit vs Gui: {next_crit_kim}")
     return next_crit_kim
 
 
@@ -1343,7 +1343,7 @@ def _mrr_manip_kimahri_crit():
 def mrr_manip(kim_max_advance: int = 6):
     screen.await_turn()
     next_crit_kim = Kimahri.next_crit(15)
-    logger.debug(f"======== Next Kimahri crit: {next_crit_kim}")
+    logger.debug(f"Next Kimahri crit: {next_crit_kim}")
     attempt_manip = False
     if next_crit_kim >= 3:
         kim_turn = True
@@ -2912,9 +2912,7 @@ def altana_heal():
 
 
 def evrae_altana_steal():
-    logger.debug("=================================")
     logger.debug("Steal logic, we will get two gems")
-    logger.debug("=================================")
     haste_count = False
     steal_count = False
     while memory.main.get_item_slot(34) == 255:
@@ -2927,9 +2925,7 @@ def evrae_altana_steal():
                 steal_count = True
             else:
                 defend()
-    logger.debug("====================================")
     logger.debug("End of steal logic. Back to regular.")
-    logger.debug("====================================")
     # memory.main.wait_frames(180)
 
 
@@ -3018,7 +3014,7 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
             else:
                 xbox.tap_left()
         while battle_cursor() != position:
-            logger.debug(f"Battle_cursor: {battle_cursor()}")
+            logger.debug(f"battle_cursor: {battle_cursor()}")
             if battle_cursor() > position:
                 xbox.tap_up()
             else:
@@ -3500,10 +3496,8 @@ def oblitz_rng_wait():
 
     next_rng = last_rng
     j = 0
-    logger.debug("====================================")
     logger.debug("Chosen results (RNG, duration, victory, waits):")
     logger.debug(best)
-    logger.debug("====================================")
     # Now wait for one of the two results to come up
     while next_rng != best[0] and j < 15:
         next_rng = memory.main.rng_from_index(index=2) & 0x7FFFFFFF
@@ -3513,7 +3507,6 @@ def oblitz_rng_wait():
             )
             j += 1
             last_rng = next_rng
-    logger.debug("====================================")
     logger.debug(f"Success. Attacking. {j} | {next_rng}")
     game_vars.set_oblitz_rng(value=next_rng)
     return next_rng

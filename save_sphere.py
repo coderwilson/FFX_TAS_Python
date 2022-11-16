@@ -286,7 +286,6 @@ def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
     map_num = str(memory.main.get_map())
     diag_num = str(memory.main.get_story_progress())
     actor_num = str(actor)
-    logger.debug("========================")
     new_val = {
         map_num: {diag_num: {actor_num: {"x": x_val, "y": y_val, "diag": diag_prog}}}
     }
