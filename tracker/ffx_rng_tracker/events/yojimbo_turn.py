@@ -3,8 +3,12 @@ from dataclasses import dataclass, field
 
 from ..configs import Configs
 from ..data.actions import YOJIMBO_ACTIONS, YojimboAction
-from ..data.constants import (COMPATIBILITY_MODIFIER, GIL_MOTIVATION_MODIFIER,
-                              OVERDRIVE_MOTIVATION, ZANMATO_LEVELS)
+from ..data.constants import (
+    COMPATIBILITY_MODIFIER,
+    GIL_MOTIVATION_MODIFIER,
+    OVERDRIVE_MOTIVATION,
+    ZANMATO_LEVELS,
+)
 from ..data.monsters import Monster
 from .main import Event
 

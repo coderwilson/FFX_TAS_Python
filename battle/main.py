@@ -12,7 +12,7 @@ import screen
 import vars
 import xbox
 from memory.main import s32
-from players import Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 game_vars = vars.vars_handle()
 
@@ -574,10 +574,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         # If Wakka crit, we can use that instead. Slightly faster.
                         else:
                             flee_all()
-                    elif (
-                        Wakka.is_turn()
-                        and memory.main.get_enemy_current_hp()[0] != 0
-                    ):
+                    elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
                         attack_by_num(num=20, direction="l")
                     else:
                         defend()
@@ -618,10 +615,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         flee_all()
                     elif yuna_went:
                         flee_all()
-                    elif (
-                        Wakka.is_turn()
-                        and memory.main.get_enemy_current_hp()[2] != 0
-                    ):
+                    elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[2] != 0:
                         attack_by_num(22, "l")
                         yuna_went = True
                     elif Yuna.is_turn():
@@ -1329,7 +1323,14 @@ def mrr_battle(status):
     # Now checking health values
     if status[5] == 2:
         heal_up(3, full_menu_close=False)
-    elif Tidus.in_danger(520) or Yuna.in_danger(475) or Auron.in_danger(1030) or Kimahri.in_danger(644) or Wakka.in_danger(818) or Lulu.in_danger(380):
+    elif (
+        Tidus.in_danger(520)
+        or Yuna.in_danger(475)
+        or Auron.in_danger(1030)
+        or Kimahri.in_danger(644)
+        or Wakka.in_danger(818)
+        or Lulu.in_danger(380)
+    ):
         heal_up(full_menu_close=False)
     # donezo. Back to the main path.
     logger.debug("Clean-up is now complete.")
@@ -1610,10 +1611,7 @@ def m_woods():
                     or need_fish_scale
                     and encounter_id in [171, 172, 175]
                 ):
-                    if (
-                        check_petrify_tidus()
-                        or not Rikku.active()
-                    ):
+                    if check_petrify_tidus() or not Rikku.active():
                         logger.info("Tidus or Rikku incapacitated, fleeing")
                         flee_all()
                     elif not Rikku.active():
@@ -2699,11 +2697,7 @@ def guards(group_num, sleeping_powders):
                     else:
                         _use_healing_item(item_id=16)
                     throw_distiller = False
-                elif (
-                    Rikku.active()
-                    and Rikku.in_danger(121)
-                    and not Rikku.is_dead()
-                ):
+                elif Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead():
                     if memory.main.get_item_slot(0) != 255:
                         use_potion_character(Rikku, "r")
                     elif memory.main.get_item_slot(1) != 255:
@@ -2782,11 +2776,7 @@ def guards(group_num, sleeping_powders):
                     else:
                         _use_healing_item(item_id=16)
                     throw_distiller = False
-                elif (
-                    Rikku.active()
-                    and Rikku.in_danger(121)
-                    and not Rikku.is_dead()
-                ):
+                elif Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead():
                     if memory.main.get_item_slot(0) != 255:
                         use_potion_character(6, "r")
                     elif memory.main.get_item_slot(1) != 255:
@@ -4228,6 +4218,7 @@ def buddy_swap(character):
         screen.await_turn()
         return
 
+
 def buddy_swap_char(character):
     # This is a temporary hotfix, to be removed once this function is deprecated.
     if isinstance(character, int):
@@ -4246,6 +4237,7 @@ def buddy_swap_char(character):
         elif character == 6:
             return buddy_swap(Rikku)
     return buddy_swap(character)
+
 
 def buddy_swap_tidus():
     logger.debug("++ Swapping in Tidus")
@@ -4449,7 +4441,9 @@ def bfa_nem():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if tidus_first_turn:
-                    equip_in_battle(equip_type="weap", ability_num=0x8019, character=Tidus)
+                    equip_in_battle(
+                        equip_type="weap", ability_num=0x8019, character=Tidus
+                    )
                     tidus_first_turn = True
                 else:
                     attack("none")
@@ -4460,9 +4454,8 @@ def bfa_nem():
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
-                    if (
-                        memory.main.get_encounter_id() == 401
-                        and Tidus.has_overdrive(combat=True)
+                    if memory.main.get_encounter_id() == 401 and Tidus.has_overdrive(
+                        combat=True
                     ):
                         Tidus.overdrive()
                     else:
@@ -5161,10 +5154,9 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                 if not self_haste:
                     tidus_haste("none")
                     self_haste = True
-                elif (
-                    memory.main.get_enemy_current_hp()[0] <= 2800
-                    and Tidus.has_overdrive(combat=True)
-                ):
+                elif memory.main.get_enemy_current_hp()[
+                    0
+                ] <= 2800 and Tidus.has_overdrive(combat=True):
                     Tidus.overdrive()
                 else:
                     attack("none")
@@ -5197,10 +5189,9 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                 ):
                     tidus_haste(direction="l", character=Yuna)
                     yuna_haste = True
-                elif (
-                    memory.main.get_enemy_current_hp()[0] <= 2800
-                    and Tidus.has_overdrive(combat=True)
-                ):
+                elif memory.main.get_enemy_current_hp()[
+                    0
+                ] <= 2800 and Tidus.has_overdrive(combat=True):
                     Tidus.overdrive()
                 else:
                     attack("none")

@@ -93,7 +93,9 @@ def tidus(direction=None, version: int = 0, character=99):
         xbox.tap_left()
     while not memory.main.interior_battle_menu():
         xbox.tap_b()
-    battle.main._navigate_to_position(version, battle_cursor=memory.main.battle_cursor_3)
+    battle.main._navigate_to_position(
+        version, battle_cursor=memory.main.battle_cursor_3
+    )
     while memory.main.interior_battle_menu():
         xbox.tap_b()
     if character != 99 and memory.main.get_enemy_current_hp()[character - 20] != 0:

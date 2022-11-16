@@ -1,20 +1,19 @@
-from players.base import Player
 import logging
+
+import battle
 import memory
 import xbox
-import battle
+from players.base import Player
 
 logger = logging.getLogger(__name__)
 
+
 class RikkuImp(Player):
-    
     def __init__(self):
         super().__init__("Rikku", 6, [0, 20, 1])
-        
-        
+
     def rikku_od_items(self, slot):
         _navigate_to_position(slot, battle_cursor=memory.main.rikku_od_cursor_1)
-
 
     def overdrive(battle):
         # First, determine which items we are using
@@ -95,17 +94,18 @@ class RikkuImp(Player):
 
         while not memory.main.interior_battle_menu():
             xbox.tap_b()
-            
+
         self.rikku_od_items(item1)
-        
+
         while not memory.main.rikku_overdrive_item_selected_number():
             xbox.tap_b()
-            
+
         self.rikku_od_items(item2)
-        
+
         while memory.main.interior_battle_menu():
             xbox.tap_b()
-            
+
         tap_targeting()
-        
+
+
 Rikku = RikkuImp()

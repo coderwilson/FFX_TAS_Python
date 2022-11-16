@@ -1525,6 +1525,7 @@ def get_map():
     progress = process.read_bytes(key, 2)
     return progress
 
+
 def touching_save_sphere():
     global base_value
 
@@ -2709,18 +2710,18 @@ def blitz_cursor():
     return cursor
 
 
-
-
 # ------------------------------
 # Function for logging
 
 
 def total_distance_travelled():
     return float_from_integer(read_val(0x00D2A9DC, 4))
-    
+
+
 def get_zone():
     return read_val(0x00D2CAA0, 2)
-    
+
+
 # ------------------------------
 # Equipment array
 

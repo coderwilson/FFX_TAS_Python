@@ -14,8 +14,12 @@ from .change_stat import ChangeStat
 from .character_action import CharacterAction
 from .comment import Comment
 from .death import Death
-from .encounter import (Encounter, MultizoneRandomEncounter, RandomEncounter,
-                        SimulatedEncounter)
+from .encounter import (
+    Encounter,
+    MultizoneRandomEncounter,
+    RandomEncounter,
+    SimulatedEncounter,
+)
 from .escape import Escape
 from .kill import Bribe, Kill
 from .main import Event
