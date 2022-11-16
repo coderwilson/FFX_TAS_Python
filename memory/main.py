@@ -3954,7 +3954,7 @@ def last_hit_check_change() -> int:
         if mem_val != game_vars.first_hits_value(x) and not change_found:
             change_found = True
             change_value = mem_val
-            logger.info(f"**Registered hit: {change_value}")
+            logger.info(f"Registered hit: {change_value}")
             # logs.write_stats(change_value)
             last_hit_init()
             logger.debug("Mark 1")

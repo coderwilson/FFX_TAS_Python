@@ -75,7 +75,7 @@ def arrival():
                     hunter_coords = memory.main.miihen_guy_coords()
                     if hunter_coords[1] < tidus_coords[1]:
                         checkpoint = 11
-                        logger.debug("**Late for Mi'ihen skip, forcing recovery.")
+                        logger.debug("Late for Mi'ihen skip, forcing recovery.")
                     elif checkpoint == 6:
                         FFXC.set_neutral()
                         memory.main.wait_frames(9)
