@@ -1327,7 +1327,6 @@ def mrr_battle(status):
         memory.main.full_party_format("mrr1", full_menu_close=False)
 
     # Now checking health values
-    logger.debug(f"HP values: {hp_check}")
     if status[5] == 2:
         heal_up(3, full_menu_close=False)
     elif Tidus.in_danger(520) or Yuna.in_danger(475) or Auron.in_danger(1030) or Kimahri.in_danger(644) or Wakka.in_danger(818) or Lulu.in_danger(380):
@@ -4198,7 +4197,7 @@ def escape_one():
 
 
 def buddy_swap(character):
-    logger.debug("Swapping {Character} (in battle)")
+    logger.debug(f"Swapping {character} (in battle)")
     position = character.battle_slot()
 
     if position < 3:
@@ -4230,6 +4229,22 @@ def buddy_swap(character):
         return
 
 def buddy_swap_char(character):
+    # This is a temporary hotfix, to be removed once this function is deprecated.
+    if isinstance(character, int):
+        if character == 0:
+            return buddy_swap(Tidus)
+        elif character == 1:
+            return buddy_swap(Yuna)
+        elif character == 2:
+            return buddy_swap(Auron)
+        elif character == 3:
+            return buddy_swap(Kimahri)
+        elif character == 4:
+            return buddy_swap(Wakka)
+        elif character == 5:
+            return buddy_swap(Lulu)
+        elif character == 6:
+            return buddy_swap(Rikku)
     return buddy_swap(character)
 
 def buddy_swap_tidus():
