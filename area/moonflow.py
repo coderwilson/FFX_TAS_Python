@@ -9,6 +9,7 @@ import screen
 import vars
 import xbox
 from paths import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -143,7 +144,7 @@ def north_bank():
                 memory.main.await_event()
                 FFXC.set_neutral()
                 battle.main.mix_tutorial()
-                memory.main.full_party_format("postbunyip")
+                memory.main.update_formation(Tidus, Wakka, Auron)
                 memory.main.close_menu()
                 checkpoint += 1
             elif memory.main.get_story_progress() >= 1085 and checkpoint < 4:

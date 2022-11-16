@@ -12,6 +12,7 @@ import screen
 import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -109,7 +110,7 @@ def main_path():
         if memory.main.user_control():
             if checkpoint == 1:
                 save_sphere.touch_and_go()
-                memory.main.full_party_format("mrr1")
+                memory.main.update_formation("mrr1")
                 checkpoint += 1
             elif checkpoint == 4:
                 logger.info("Up the first lift")

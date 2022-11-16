@@ -10,6 +10,7 @@ import xbox
 import zz_airship_path
 import zz_egg_hunt_auto
 from paths import InsideSin
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -132,7 +133,7 @@ def facing_sin():
 
 def inside_sin():
     logger.info("Moving to position next to save sphere")
-    while not pathing.set_movement([247,-237]):
+    while not pathing.set_movement([247, -237]):
         if memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.menu_open():
@@ -152,11 +153,11 @@ def inside_sin():
 
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
         re_equip_ne = True
-        memory.main.full_party_format("rikku", full_menu_close=False)
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
     else:
         re_equip_ne = False
-        memory.main.full_party_format("yuna", full_menu_close=False)
+        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
     memory.main.close_menu()
 
     checkpoint = 0
@@ -165,7 +166,7 @@ def inside_sin():
             # Events
             if memory.main.get_map() == 296:  # Seymour battle
                 logger.info("We've reached the Seymour screen.")
-                memory.main.full_party_format("yuna")
+                memory.main.update_formation(Tidus, Yuna, Auron)
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 5)
                 FFXC.set_neutral()
@@ -187,7 +188,9 @@ def inside_sin():
                 if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
                     re_equip_ne = False
                     memory.main.click_to_control()
-                    memory.main.full_party_format("yuna", full_menu_close=False)
+                    memory.main.update_formation(
+                        Tidus, Yuna, Auron, full_menu_close=False
+                    )
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             elif memory.main.menu_open():
                 xbox.tap_b()

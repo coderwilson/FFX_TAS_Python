@@ -4,6 +4,7 @@ import memory.main
 import menu_grid
 import vars
 import xbox
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 game_vars = vars.vars_handle()
 
@@ -203,7 +204,7 @@ def woods_menuing():
     menu_grid.use_and_quit()
     # Reorder the party
 
-    memory.main.full_party_format("kilikawoods1", full_menu_close=False)
+    memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
     equip_scout(full_menu_close=True)
 
 
@@ -364,7 +365,7 @@ def battle_site_grid():
         equip_weapon(character=4, ability=0x8026, full_menu_close=False)
     else:
         equip_weapon(character=4, full_menu_close=False)
-    memory.main.full_party_format("battlesite")
+    memory.main.update_formation(Yuna, Wakka, Tidus)
 
 
 def _navigate_to_position(position, battle_cursor):
@@ -726,7 +727,7 @@ def home_grid():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
 
-    memory.main.full_party_format("desert1")
+    memory.main.update_formation(Tidus, Auron, Rikku)
     memory.main.close_menu()
 
 

@@ -16,6 +16,7 @@ from paths import (
     MacalaniaTempleTrials,
     MacalaniaUnderTemple,
 )
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -262,11 +263,11 @@ def escape():
     logger.info("First, some menuing")
     menu_done = False
     if game_vars.nemesis():
-        memory.main.full_party_format("yuna", full_menu_close=False)
+        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
     else:
         menu.after_seymour()
         menu_done = True
-        memory.main.full_party_format("macalaniaescape", full_menu_close=False)
+        memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
     menu.equip_sonic_steel(full_menu_close=True)
 
     logger.info("Now to escape the Guado")
@@ -303,7 +304,7 @@ def escape():
                     battle.main.escape_with_xp()
                     menu.after_seymour()
                     menu_done = True
-                    memory.main.full_party_format("macalaniaescape")
+                    memory.main.update_formation(Tidus, Yuna, Rikku)
                 elif memory.main.get_encounter_id() == 195:
                     break
                 else:

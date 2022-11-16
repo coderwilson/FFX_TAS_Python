@@ -2,6 +2,7 @@ import memory.main
 import pathing
 import xbox
 from paths import MiihenAgency
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 FFXC = xbox.controller_handle()
 
@@ -13,7 +14,7 @@ def engage():
         if memory.main.user_control():
             p_down_slot = memory.main.get_item_slot(6)
             if memory.main.get_map() == 58:
-                memory.main.full_party_format("tidkimwak")
+                memory.main.update_formation(Tidus, Kimahri, Wakka)
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()

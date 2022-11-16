@@ -13,6 +13,7 @@ import vars
 import xbox
 import zz_airship_path
 from gamestate import game
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 
@@ -844,7 +845,7 @@ def load_rescue():
     FFXC.set_neutral()
     memory.main.wait_frames(30 * 1)
     memory.main.await_control()
-    memory.main.full_party_format("evrae")
+    memory.main.update_formation(Tidus, Rikku, Kimahri)
 
     zz_airship_path.air_ship_path(1)  # The run from cockpit to the deck
 
