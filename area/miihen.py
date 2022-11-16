@@ -10,6 +10,7 @@ import screen
 import vars
 import xbox
 from paths import Miihen1, MiihenAgency, MiihenLowroad
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -21,12 +22,12 @@ def post_battle_logic(force_charge=False):
     if memory.main.overdrive_state_2()[1] < 43 or (
         force_charge and memory.main.overdrive_state_2()[1] != 100
     ):
-        memory.main.full_party_format("kilikawoods1", full_menu_close=False)
+        memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
     else:
         if game_vars.self_destruct_get():
-            memory.main.full_party_format("miihen", full_menu_close=False)
+            memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
         else:
-            memory.main.full_party_format("djose", full_menu_close=False)
+            memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     hp_check = memory.main.get_hp()
     logger.debug(f"------------------ HP check: {hp_check}")
     if hp_check[0] < 520 or hp_check[1] < 220:
@@ -279,7 +280,7 @@ def mid_point():
         if memory.main.user_control():
             p_down_slot = memory.main.get_item_slot(6)
             if memory.main.get_map() == 58:
-                memory.main.full_party_format("tidkimwak")
+                memory.main.update_formation(Tidus, Kimahri, Wakka)
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()

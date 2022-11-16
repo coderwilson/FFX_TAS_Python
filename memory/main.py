@@ -90,7 +90,7 @@ class LocProcess(Process):
                 "Name": self.name,
                 "ErrorCode": self.error_code,
             }
-            #ReadWriteMemoryError(error)
+            # ReadWriteMemoryError(error)
 
 
 class FFXMemory(ReadWriteMemory):
@@ -1748,16 +1748,6 @@ def click_to_story_progress(destination):
     logger.debug(f"Story progress has reached destination. Value: {destination}")
 
 
-def desert_format(rikku_charge):
-    order = get_order_six()
-    if order == [0, 3, 2, 4, 6, 5]:
-        logger.debug("desert_format(): Formation is fine, moving on.")
-    elif not rikku_charge:
-        full_party_format("desert1")
-    else:
-        full_party_format("desert2")
-
-
 def party_size():
     battle_form = get_battle_formation()
     if 255 in battle_form:
@@ -1780,11 +1770,10 @@ def get_character_index_in_main_menu(character):
     return res
 
 
-def full_party_format(front_line, *, full_menu_close=True):
+def update_formation(first_char, second_char, third_char, *, full_menu_close=True):
     order = get_order_seven()
     party_members = len(order)
-    front_line = front_line.lower()
-    order_final = get_party_format_from_text(front_line)
+    order_final = [first_char, second_char, third_char]
     order_final.extend(x for x in order if x not in order_final)
     if Counter(order[:3]) == Counter(order_final[:3]):
         logger.debug("Good to go, no action taken.")
@@ -1936,81 +1925,6 @@ def party_format_cursor_2():
     coord = base_value + 0x01471520
     ret_val = process.read_bytes(coord, 1)
     return ret_val
-
-
-def get_party_format_from_text(front_line):
-    logger.debug(f"||| FRONT LINE VARIABLE: {front_line}")
-    if front_line == "kimahri":
-        order_final = [0, 3, 2, 6, 4, 5, 1]
-    elif front_line == "rikku":
-        order_final = [0, 6, 2, 3, 4, 5, 1]
-    elif front_line == "yuna":
-        order_final = [0, 1, 2, 6, 4, 5, 3]
-    elif front_line == "kilikawoods1":
-        order_final = [0, 1, 4, 3, 5, 2]
-    elif front_line == "kilikawoodsbackup":
-        order_final = [3, 1, 4, 0, 5]
-    elif front_line == "gauntlet":
-        order_final = [0, 1, 3, 2, 4, 5, 6]
-    elif front_line == "miihen":
-        order_final = [0, 4, 2, 3, 5, 1]
-    elif front_line == "macalaniaescape":
-        order_final = [0, 1, 6, 2, 4, 3, 5]
-    elif front_line == "desert1":
-        order_final = [0, 6, 2, 3, 4, 5]
-    elif front_line == "desert2":
-        order_final = [0, 3, 2, 6, 4, 5]
-    elif front_line == "desert3":
-        order_final = [0, 5, 2, 6, 4, 3]
-    elif front_line == "desert9":
-        order_final = [0, 4, 2, 3, 5]
-    elif front_line == "guards":
-        order_final = [0, 2, 3, 6, 4, 5]
-    elif front_line == "evrae":
-        order_final = [0, 6, 3, 2, 4, 5]
-    elif front_line == "djose":
-        order_final = [0, 4, 2, 3, 1, 5]
-    elif front_line == "spheri":
-        order_final = [0, 3, 1, 4, 2, 6, 5]
-    elif front_line == "crawler":
-        order_final = [0, 3, 5, 4, 2, 6, 1]
-    elif front_line == "besaid1":
-        order_final = [0, 1, 5, 3, 4]
-    elif front_line == "besaid2":
-        order_final = [0, 4, 5, 3, 5]
-    elif front_line == "kilika":
-        order_final = [0, 1, 4, 3, 5]
-    elif front_line == "mrr1":
-        order_final = [0, 4, 2, 3, 5, 1]
-    elif front_line == "mrr2":
-        order_final = [1, 4, 3, 5, 2, 0]
-    elif front_line == "battlesite":
-        order_final = [0, 1, 4, 5, 2, 3]
-    elif front_line == "postbunyip":
-        order_final = [0, 4, 2, 6, 1, 3, 5]
-    elif front_line == "mwoodsneedcharge":
-        order_final = [0, 6, 2, 4, 1, 3, 5]
-    elif front_line == "mwoodsgotcharge":
-        order_final = [0, 4, 2, 6, 1, 3, 5]
-    elif front_line == "mwoodsdone":
-        order_final = [0, 3, 2, 4, 1, 6, 5]
-    elif front_line == "besaid":
-        order_final = [5, 1, 0, 4]
-    elif front_line == "highbridge":
-        order_final = [0, 1, 2, 6, 4, 5]
-    elif front_line == "guards_no_lulu":
-        order_final = [0, 3, 6]
-    elif front_line == "guards_lulu":
-        order_final = [0, 5, 6]
-    elif front_line == "tidkimwak":
-        order_final = [0, 4, 3, 6, 1, 2, 5]
-    elif front_line == "nemlulu":
-        order_final = [0, 1, 5, 2, 3, 4, 6]
-    elif front_line == "initiative":
-        order_final = [0, 4, 6, 1, 2, 3, 5]
-    else:
-        order_final = [6, 5, 4, 3, 2, 1, 0]
-    return order_final
 
 
 def name_from_number(char_num):

@@ -24,7 +24,7 @@
             "False": {
                 "save_num": "20",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -42,7 +42,7 @@
             "False": {
                 "save_num": "21",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -62,7 +62,7 @@
             "False": {
                 "save_num": "23",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -82,7 +82,7 @@
             "False": {
                 "save_num": "24",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -102,7 +102,7 @@
             "False": {
                 "save_num": "25",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"

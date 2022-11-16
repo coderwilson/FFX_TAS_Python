@@ -17,6 +17,7 @@ from paths import (
     NEReturn,
     NEReturnGreen,
 )
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -25,7 +26,7 @@ FFXC = xbox.controller_handle()
 
 
 def loop_back_from_ronso(checkpoint=0):
-    memory.main.full_party_format("rikku")
+    memory.main.update_formation(Tidus, Rikku, Auron)
     battle.main.heal_up(full_menu_close=True)
     rng_track.print_manip_info()
     logger.info("Looping back to the Ronso")
@@ -43,7 +44,7 @@ def loop_back_from_ronso(checkpoint=0):
 
 
 def to_hidden_cave():
-    memory.main.full_party_format("rikku")
+    memory.main.update_formation(Tidus, Rikku, Auron)
     battle.main.heal_up(full_menu_close=True)
     rng_track.print_manip_info()
     last_report = False
@@ -100,7 +101,7 @@ def to_hidden_cave():
                     logger.error(f"RNG12: {memory.main.next_chance_rng_12()}")
                     battle.main.flee_all()
                 prep_battles += 1
-                memory.main.full_party_format("rikku")
+                memory.main.update_formation(Tidus, Rikku, Auron)
                 save_sphere.touch_and_go()
                 rng_track.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
@@ -131,7 +132,7 @@ def next_green() -> bool:
 
 def drop_hunt():
     logger.info("Now in the cave. Ready to try to get the NE armor.")
-    memory.main.full_party_format("rikku")
+    memory.main.update_formation(Tidus, Rikku, Auron)
 
     go_green = next_green()
 
@@ -160,7 +161,7 @@ def drop_hunt():
                 else:
                     battle.main.flee_all()
                 memory.main.click_to_control_3()
-                memory.main.full_party_format("rikku")
+                memory.main.update_formation(Tidus, Rikku, Auron)
                 battle.main.heal_up(full_menu_close=False)
                 memory.main.check_nea_armor()
                 if game_vars.ne_armor() == 255:
