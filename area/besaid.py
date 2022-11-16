@@ -318,12 +318,12 @@ def leaving():
                         battle.main.aeon_spell(1)
                 logger.info("Now to open the menu")
                 memory.main.click_to_control()
-                memory.main.full_party_format("Besaid")
+                memory.main.update_formation(Tidus, Yuna, Lulu)
                 checkpoint += 1
             elif checkpoint == 39 and screen.battle_screen():  # Dark Attack tutorial
                 battle.main.escape_all()
                 memory.main.click_to_control()
-                memory.main.full_party_format("Besaid2")
+                memory.main.update_formation(Tidus, Wakka, Lulu)
                 checkpoint += 1
             # One forced battle on the way out of Besaid
             elif checkpoint > 39 and screen.battle_screen():

@@ -8,6 +8,7 @@ import pathing
 import vars
 import xbox
 from paths import DjoseDance, DjoseExit, DjosePath, DjoseTrials
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -18,7 +19,7 @@ FFXC = xbox.controller_handle()
 def path():
     memory.main.click_to_control()
     memory.main.close_menu()
-    memory.main.full_party_format("djose")
+    memory.main.update_formation(Tidus, Wakka, Auron)
     memory.main.close_menu()
 
     count_battles = 0

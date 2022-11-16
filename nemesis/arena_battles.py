@@ -13,6 +13,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -413,7 +414,7 @@ def battles_1():
         logger.debug("Battle not completed successfully.")
         restock_downs()
         nemesis.arena_select.arena_menu_select(4)
-        memory.main.full_party_format("kilikawoods1")
+        memory.main.update_formation(Tidus, Yuna, Wakka)
         touch_save()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
@@ -424,7 +425,7 @@ def battles_1():
     game_vars.arena_success(array_num=0, index=1)
     restock_downs()
     nemesis.arena_select.arena_menu_select(4)
-    memory.main.full_party_format("kilikawoods1")
+    memory.main.update_formation(Tidus, Yuna, Wakka)
     menu.tidus_slayer(od_pos=0)
 
     check_yojimbo_possible()
@@ -820,7 +821,7 @@ def check_yojimbo_possible():
         # Save game in preparation for the Yojimbo attempt
         memory.main.wait_frames(20)
         nemesis.arena_select.arena_menu_select(4)
-        memory.main.full_party_format("kilikawoods1")
+        memory.main.update_formation(Tidus, Yuna, Wakka)
         if game_vars.yojimbo_get_index() == 1:
             save_game(first_save=True)
         else:
@@ -1011,7 +1012,7 @@ def nemesis_battle():
         xbox.menu_a()
         xbox.menu_a()
     nemesis.arena_select.arena_menu_select(4)
-    memory.main.full_party_format("kilikawoods1")
+    memory.main.update_formation(Tidus, Yuna, Wakka)
     save_game(first_save=False)
     while not battles_5(completion_version=99):
         quick_reset_logic()

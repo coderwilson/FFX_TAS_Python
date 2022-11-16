@@ -8,6 +8,7 @@ import screen
 import vars
 import xbox
 from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -20,7 +21,7 @@ def south_pathing():
 
     game_vars.set_l_strike(memory.main.l_strike_count())
 
-    memory.main.full_party_format("postbunyip")
+    memory.main.update_formation(Tidus, Wakka, Auron)
     memory.main.close_menu()
     count50 = 0
     checkpoint = 0

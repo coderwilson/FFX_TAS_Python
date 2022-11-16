@@ -22,6 +22,7 @@ from paths import (
     KelkRonso,
     SeymourFlux,
 )
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -46,7 +47,7 @@ def check_gems():
 def calm_lands():
     memory.main.await_control()
     # Start by getting away from the save sphere
-    memory.main.full_party_format("rikku", full_menu_close=True)
+    memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
     battle.main.heal_up(full_menu_close=True)
 
     rng_track.print_manip_info()
@@ -78,7 +79,7 @@ def calm_lands():
             if screen.battle_screen():
                 battle.main.calm_lands_manip()
                 memory.main.click_to_control_3()
-                memory.main.full_party_format("rikku", full_menu_close=True)
+                memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
                 rng_track.print_manip_info()
             elif memory.main.menu_open():
@@ -90,7 +91,7 @@ def calm_lands():
 def defender_x():
     memory.main.await_control()
     menu.prep_calm_lands()
-    memory.main.full_party_format("postbunyip")
+    memory.main.update_formation(Tidus, Wakka, Auron)
     while not pathing.set_movement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
@@ -153,9 +154,9 @@ def gagazet_gates():
         logs.write_stats("2")
     memory.main.await_control()
     if memory.main.overdrive_state()[6] == 100:
-        memory.main.full_party_format("kimahri", full_menu_close=False)
+        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
     else:
-        memory.main.full_party_format("rikku", full_menu_close=False)
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
     menu.after_ronso()
     memory.main.close_menu()  # just in case
 
@@ -179,9 +180,9 @@ def gagazet_gates():
                     battle.main.gagazet_path()
                     memory.main.click_to_control()
                     if memory.main.overdrive_state()[6] == 100:
-                        memory.main.full_party_format("kimahri")
+                        memory.main.update_formation(Tidus, Kimahri, Auron)
                     else:
-                        memory.main.full_party_format("rikku")
+                        memory.main.update_formation(Tidus, Rikku, Auron)
                 memory.main.click_to_control()
                 if (
                     memory.main.overdrive_state_2()[6] == 100
@@ -197,7 +198,7 @@ def flux():
     logger.info("Flux screen - ready for Seymour again.")
     FFXC.set_neutral()
     if game_vars.end_game_version() != 3:
-        memory.main.full_party_format("yuna")
+        memory.main.update_formation(Tidus, Yuna, Auron)
     checkpoint = 0
     while memory.main.get_map() != 309:
         if memory.main.user_control():
@@ -222,7 +223,7 @@ def flux():
                 memory.main.click_to_control_3()
                 if game_vars.end_game_version() != 3:
                     menu.after_flux()
-                memory.main.full_party_format("kimahri")
+                memory.main.update_formation(Tidus, Kimahri, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
             elif memory.main.menu_open():
@@ -380,7 +381,7 @@ def cave():
             elif checkpoint == 59:  # Just before sanctuary keeper
                 FFXC.set_neutral()
                 logger.info("Prepping for Sanctuary Keeper")
-                memory.main.full_party_format("yuna")
+                memory.main.update_formation(Tidus, Yuna, Auron)
                 checkpoint += 1
 
                 # Determine drops from Yunalesca

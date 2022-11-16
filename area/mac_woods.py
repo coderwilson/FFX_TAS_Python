@@ -12,6 +12,7 @@ import screen
 import vars
 import xbox
 from paths import MacalaniaLake, MacalaniaWoods
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ def calculate_possible_weaknesses() -> List[int]:
 def arrival(rikku_charged):
     logger.info("Arriving at Macalania Woods")
     memory.main.click_to_control()
-    memory.main.full_party_format("mwoodsneedcharge")
+    memory.main.update_formation(Tidus, Rikku, Auron)
     memory.main.close_menu()
 
     last_gil = 0  # for first chest
@@ -108,9 +109,9 @@ def arrival(rikku_charged):
                 ):
                     battle.main.heal_up(full_menu_close=False)
                 if rikku_charged:
-                    memory.main.full_party_format("mwoodsgotcharge")
+                    memory.main.update_formation(Tidus, Wakka, Auron)
                 else:
-                    memory.main.full_party_format("mwoodsneedcharge")
+                    memory.main.update_formation(Tidus, Rikku, Auron)
                 memory.main.close_menu()
                 if checkpoint == 61:
                     checkpoint = 60
@@ -140,7 +141,7 @@ def lake_road():
         xbox.tap_b()
     FFXC.set_neutral()
     menu.m_woods()  # Selling and buying, item sorting, etc
-    memory.main.full_party_format("spheri")
+    memory.main.update_formation(Tidus, Kimahri, Yuna)
     while not pathing.set_movement([101, -72]):
         pass
 
@@ -228,7 +229,7 @@ def lake():
     if memory.main.get_hp()[3] < 1000:  # Otherwise we under-level Tidus off of Crawler
         battle.main.heal_up(full_menu_close=False)
 
-    memory.main.full_party_format("crawler", full_menu_close=False)
+    memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
     menu.m_lake_grid()
     memory.main.await_control()
 
