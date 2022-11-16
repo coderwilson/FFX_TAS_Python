@@ -76,8 +76,9 @@ def initialize_logging():
 
     # Get the visible log level for the console logger from config.yaml
     config_data = config.open_config()
-    console_log_level = config_data.get("verbosity", "DEBUG")
-    color_log = config_data.get("color_log", False)
+    config_logging = config_data.get("logging", {})
+    console_log_level = config_logging.get("verbosity", "DEBUG")
+    color_log = config_logging.get("color_log", False)
 
     # Set up the console logger
     console = logging.StreamHandler()
