@@ -572,7 +572,7 @@
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
                 "nea_zone": "3",
-                "nem_ap_val": "11",
+                "nem_ap_val": "12",
                 "special_movement": "none"
             }
         },
@@ -582,7 +582,7 @@
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
                 "nea_zone": "3",
-                "nem_ap_val": "11",
+                "nem_ap_val": "12",
                 "special_movement": "none"
             }
         },
@@ -592,7 +592,7 @@
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
                 "nea_zone": "3",
-                "nem_ap_val": "14",
+                "nem_ap_val": "15",
                 "special_movement": "none"
             }
         },
@@ -602,7 +602,7 @@
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
                 "nea_zone": "3",
-                "nem_ap_val": "17",
+                "nem_ap_val": "18",
                 "special_movement": "none"
             }
         },
