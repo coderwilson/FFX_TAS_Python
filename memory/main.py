@@ -16,7 +16,6 @@ import logs
 import pathing
 import vars
 import xbox
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 
@@ -1747,16 +1746,6 @@ def click_to_story_progress(destination):
         counter += 1
         current_state = get_story_progress()
     logger.debug(f"Story progress has reached destination. Value: {destination}")
-
-
-def desert_format(rikku_charge):
-    order = get_order_six()
-    if order == [0, 3, 2, 4, 6, 5]:
-        logger.debug("desert_format(): Formation is fine, moving on.")
-    elif not rikku_charge:
-        update_formation(Tidus, Auron, Rikku)
-    else:
-        update_formation(Tidus, Kimahri, Auron)
 
 
 def party_size():

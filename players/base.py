@@ -46,6 +46,9 @@ class Player:
         else:
             return self.id == other.id
 
+    def __hash__(self):
+        return self.id
+
     def __lt__(self, other):
         if isinstance(other, int):
             return self.id < other
