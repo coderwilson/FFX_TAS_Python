@@ -1043,6 +1043,12 @@ def one_mp_weapon(force_levels:int=27):  # Break Damage Limit, or One MP cost
     
     # Finish leveling before we make a 1mp weapon
     if force_levels > game_vars.nem_checkpoint_ap():
+        while (
+            memory.main.get_item_slot(46) == 255 or
+            memory.main.get_item_count_slot(memory.main.get_item_slot(46)) < 40
+        ):
+            arena_npc()
+            nemesis.arena_select.arena_menu_select(4)
         while force_levels > game_vars.nem_checkpoint_ap():
             arena_npc()
             nemesis.arena_select.arena_menu_select(1)
