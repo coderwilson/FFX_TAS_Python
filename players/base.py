@@ -1,5 +1,5 @@
 import logging
-from enum import Enum
+from enum import IntEnum
 from typing import List
 
 import memory
@@ -8,7 +8,7 @@ import xbox
 logger = logging.getLogger(__name__)
 
 
-class PlayerMagicNumbers(Enum):
+class PlayerMagicNumbers(IntEnum):
     CHAR_STRUCT_SIZE = 0x94
     CHAR_STAT_POINTER = 0x003AB9B0
     BATTLE_STRUCT_SIZE = 0x90
