@@ -63,36 +63,21 @@ def configuration_setup():
     game.state = config_data.get("gamestate", "none")
     game.step = config_data.get("step_counter", 1)
 
-    ############################################################################################
-    # RNG - Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-    game.rng_seed_num = config_data.get(
-        "rng_seed_num", 160
-    )  # If you don't randomly select below, this will be the seed you run.
-    use_favored_seed = config_data.get("use_favored_seed", False)
-
-    rng_select_array = [31, 160]
-
-    # TAS PB is on seed 31
-    # 160 is WR for both categories, just has a bad start
-    # Need review on the others
-    ############################################################################################
-
     if game.state == "Luca" and game.step == 3:
         game_length = "Testing Blitzball only"
     elif game.state != "none":  # Loading a save file, no RNG manip here
-        game.rng_seed_num = 255
+        game_vars.rng_seed_num_set(255)
         game_length = "Loading mid point for testing."
-        # game_vars.set_csr(True)
-    elif game_vars.use_set_seed():
-        game_length = f"Full Run, set seed [{game.rng_seed_num}]"
-    elif use_favored_seed:
-        game.rng_seed_num = random.choice(rng_select_array)
-        game_length = "Full Run, favored seed"
+    elif game_vars.rng_mode() == "set":
+        game_length = f"Full Run, set seed: [{game_vars.rng_seed_num()}]"
+    elif game_vars.rng_mode() == "preferred":
+        game_vars.rng_seed_num_set(random.choice(game_vars.rng_preferred_array()))
+        game_length = f"Full Run, favored seed: {game_vars.rng_seed_num()}"
     # Full run starting from New Game, random seed
     else:
-        game.rng_seed_num = random.choice(range(256))
+        game_vars.rng_seed_num_set(random.choice(range(256)))
         # Current WR is on seed 160 for both any% and CSR%
-        game_length = "Full Run, random seed"
+        game_length = f"Full Run, random seed: {game_vars.rng_seed_num()}"
 
     logger.info(f"Game type will be: {game_length}")
     if game_vars.get_battle_speedup():
@@ -116,8 +101,8 @@ def memory_setup():
 def rng_seed_setup():
     game_vars = vars.vars_handle()
     # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
-    if game_vars.use_set_seed():
-        memory.main.set_rng_seed(game.rng_seed_num)
+    if game_vars.game_is_patched():
+        memory.main.set_rng_seed(game_vars.rng_seed_num())
 
     rng_seed = memory.main.rng_seed()
     logger.info(f"---RNG seed: {rng_seed}")
@@ -146,7 +131,7 @@ def perform_TAS():
     game_vars = vars.vars_handle()
 
     # Original seed for when looping
-    rng_seed_orig = game.rng_seed_num
+    rng_seed_orig = game_vars.rng_seed_num()
     blitz_loops = 0
     max_loops = 12  # TODO: Move into config.yaml?
 
@@ -158,7 +143,7 @@ def perform_TAS():
                 area.dream_zan.new_game(game.state)
                 load_game.load_save_num(37)  # TODO: Magic number
 
-            if game.rng_seed_num >= 256:
+            if game_vars.rng_seed_num() >= 256:
                 game.state = "End"
 
             # Start of the game, start of Dream Zanarkand section
@@ -166,7 +151,6 @@ def perform_TAS():
                 logger.info("New Game 1 function initiated.")
                 area.dream_zan.new_game(game.state)
                 logger.info("New Game 1 function complete.")
-                game_vars.set_new_game()
                 game_vars.set_csr(True)
                 logger.info("Variables initialized.")
                 game.state = "DreamZan"
@@ -641,7 +625,6 @@ def perform_TAS():
                         game.step = 3
                     maybe_create_save(save_num=50)
 
-            if game.state == "Sin":
                 if game.step == 3:
                     area.sin.inside_sin()
                     game.step = 4
@@ -775,8 +758,8 @@ def perform_TAS():
 
                 if game.step == 20:
                     nemesis.arena_prep.calm(
-                        cap_num=10, airship_return=False, force_levels=27
-                    )
+                        cap_num=10, airship_return=False, force_levels=19
+                    ) # Formerly 26, confirmed good upwards from 20.
                     game.step = 21
 
                 if game.step == 21:
@@ -846,7 +829,7 @@ def perform_TAS():
             if (
                 game.state == "End"
                 and game_vars.loop_seeds()
-                and game.rng_seed_num - rng_seed_orig < max_loops
+                and game_vars.rng_seed_num() - rng_seed_orig < max_loops
             ):
                 # End of seed logic.
                 game.state, game.step = reset.mid_run_reset(

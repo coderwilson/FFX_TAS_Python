@@ -90,7 +90,7 @@ class LocProcess(Process):
                 "Name": self.name,
                 "ErrorCode": self.error_code,
             }
-            ReadWriteMemoryError(error)
+            #ReadWriteMemoryError(error)
 
 
 class FFXMemory(ReadWriteMemory):
@@ -1692,7 +1692,7 @@ def auditory_dialog_playing():
 
 def auditory_dialog_playing():
     # This is usually a no-op unless do_not_skip_cutscenes is set.
-    if game_vars.do_not_skip_cutscenes:
+    if not game_vars.accessibility_vars()[0]:
         return false
     global base_value
 

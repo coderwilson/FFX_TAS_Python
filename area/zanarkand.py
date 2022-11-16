@@ -452,6 +452,7 @@ def yunalesca():
 
 def post_yunalesca(checkpoint=0):
     logger.info("Heading back outside.")
+    exit_save = False
     FFXC.set_neutral()
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)
@@ -467,7 +468,6 @@ def post_yunalesca(checkpoint=0):
                 checkpoint = 4
                 logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 7:
-                save_sphere.touch_and_go()
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint < 10 and memory.main.get_map() == 320:
@@ -478,8 +478,9 @@ def post_yunalesca(checkpoint=0):
                 # Hallway before puzzle rooms
                 checkpoint = 18
                 logger.debug(f"Checkpoint reached: {checkpoint}")
+                save_sphere.touch_and_go()
             elif checkpoint < 25 and memory.main.get_map() == 315:
-                # Hallway before puzzle rooms
+                # Leaving dome
                 checkpoint = 25
                 logger.debug(f"Checkpoint reached: {checkpoint}")
             elif checkpoint == 26:

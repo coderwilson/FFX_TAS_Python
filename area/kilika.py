@@ -135,7 +135,7 @@ def forest_1():
                     checkpoint += 1
             elif checkpoint == 86:
                 save_sphere.touch_and_go()
-                if not game_vars.did_full_kilik_menu():
+                if not game_vars.did_full_klikk_menu():
                     menu.geneaux()
                 checkpoint += 1
             elif checkpoint == 99:  # Lord O'holland

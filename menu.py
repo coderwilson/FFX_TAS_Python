@@ -199,7 +199,7 @@ def woods_menuing():
     if full_menu:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
-        game_vars.complete_full_kilik_menu()
+        game_vars.complete_full_klikk_menu()
     menu_grid.use_and_quit()
     # Reorder the party
 
