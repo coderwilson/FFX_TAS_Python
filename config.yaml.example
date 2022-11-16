@@ -31,6 +31,11 @@ vars:
   # Cosmetics / Other
   original_soundtrack     : False  # Sets to original or arranged soundtrack.
   force_loop              : False  # After game is finished, start again on next seed.
+  generate_saves          : False  # Whether or not to generate saves for this run.
+  
+  # System
+  save_path               : ""     # Overwrite the default Documents folder location.
+  artificial_pauses       : False  # If you have a bad computer or are noticing dropped inputs, set this to True. Otherwise, leave as False.
 
 logging:
   color_log               : False  # Colors the console output. May not work on some systems
