@@ -110,7 +110,7 @@ def main_path():
         if memory.main.user_control():
             if checkpoint == 1:
                 save_sphere.touch_and_go()
-                memory.main.update_formation("mrr1")
+                memory.main.update_format(Tidus, Wakka, Auron)
                 checkpoint += 1
             elif checkpoint == 4:
                 logger.info("Up the first lift")
