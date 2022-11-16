@@ -438,7 +438,7 @@ def to_remiem():
                 == True
             ):
                 checkpoint += 1
-                logger.debug("Checkpoint reached: ", checkpoint)
+                logger.debug(f"Checkpoint reached: {checkpoint}")
 
 
 def remiem_races():

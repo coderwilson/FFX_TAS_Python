@@ -89,15 +89,11 @@ def open_grid(character):
         FFXC = xbox.controller_handle()
         FFXC.set_neutral()
     while not memory.main.s_grid_active():
-        # logger.debug("Attempting to open Sphere Grid")
         if memory.main.user_control() and not memory.main.menu_open():
-            #   logger.debug("Menu is not open at all")
             xbox.tap_y()
         elif memory.main.menu_number() == 5:  # Cursor on main menu
-            #  logger.debug("Main menu cursor")
             while memory.main.get_menu_cursor_pos() != 0:
                 memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 0, 11)
-            # logger.debug("Done with menu cursor")
             while memory.main.menu_number() == 5:
                 xbox.tap_b()
         elif memory.main.menu_number() == 7:  # Cursor selecting party member
@@ -113,7 +109,6 @@ def open_grid(character):
                 elif memory.main.party_size() < 3:
                     xbox.menu_down()
                 else:
-                    # memory.menu_direction(memory.get_char_cursor_pos(), target_pos, memory.party_size())
                     # Not working. Use this instead.
                     memory.main.menu_direction(
                         memory.main.get_char_cursor_pos(), target_pos, 7
@@ -213,8 +208,6 @@ def perform_next_grid(limit: int = 255):
                 game_vars.nem_checkpoint_ap() - 1
             )  # Decrement
         game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)  # Increment
-    # else:
-    # logger.debug("###Not enough Slvl:", memory.get_tidus_slvl() - next_ap_needed(game_vars.nem_checkpoint_ap()))
 
 
 def next_ap_needed(checkpoint):

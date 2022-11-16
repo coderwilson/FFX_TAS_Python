@@ -152,7 +152,7 @@ def return_to_airship():
 
 
 def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
-    logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
+    logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     if fayth_cave == True and memory.main.battle_type() == 2:
         screen.await_turn()
@@ -315,7 +315,7 @@ def advanced_complete_check():
 
 
 def advanced_battle_logic():
-    logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
+    logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     logger.debug(f"Ambush flag (2 is bad):{memory.main.battle_type()}")
     while not memory.main.turn_ready():
         pass
@@ -2076,7 +2076,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                     checkpoint = 11
             elif checkpoint in [8, 12] and pref_area in [3, 4]:
                 checkpoint = 20
-                logger.debug(f"Back to agency{checkpoint}")
+                logger.debug(f"Back to agency {checkpoint}")
             elif checkpoint in [6, 14, 15, 16] and pref_area == 1:
                 checkpoint = 4
                 logger.debug(f"Backtrack: {checkpoint}")
