@@ -13,6 +13,7 @@ def reset_logging_time_reference():
 
 _MANIP_LEVEL = logging.DEBUG + 5
 
+
 # Python has a logging library that will do what we want.
 # Basic documentation here:     https://docs.python.org/3/howto/logging.html
 # Advanced documentation here:  https://docs.python.org/3/howto/logging-cookbook.html
@@ -127,14 +128,17 @@ def _add_log_level(level_name: str, level_num: int, method_name: Optional[str] =
     """
     Comprehensively adds a new logging level to the `logging` module and the
     currently configured logging class.
+
     `level_name` becomes an attribute of the `logging` module with the value
     `level_num`. `method_name` becomes a convenience method for both `logging`
     itself and the class returned by `logging.getLoggerClass()` (usually just
     `logging.Logger`). If `method_name` is not specified, `level_name.lower()` is
     used.
+
     To avoid accidental clobberings of existing attributes, this method will
     raise an `AttributeError` if the level name is already an attribute of the
     `logging` module or if the method name is already present
+
     Example
     -------
     >>> _add_log_level('TRACE', logging.DEBUG - 5)
@@ -143,6 +147,7 @@ def _add_log_level(level_name: str, level_num: int, method_name: Optional[str] =
     >>> logging.trace('so did this')
     >>> logging.TRACE
     5
+
     """
 
     method_name = method_name or level_name.lower()
