@@ -112,8 +112,8 @@ class AllVars:
         # ----Path for save files, used for loading a specific save
         self.save_path = (
             os.environ.get("userprofile")
-            if not config_vars.get("save_path", "")
-            else config_vars.get("save_path")
+            #if not config_vars.get("save_path", "")
+            #else config_vars.get("save_path")
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
         )
         # If your computer has bad specs, this will input commands to the controller

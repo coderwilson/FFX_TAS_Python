@@ -1693,7 +1693,7 @@ def auditory_dialog_playing():
 def auditory_dialog_playing():
     # This is usually a no-op unless do_not_skip_cutscenes is set.
     if not game_vars.accessibility_vars()[0]:
-        return false
+        return False
     global base_value
 
     key = base_value + 0x00F30038

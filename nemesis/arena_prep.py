@@ -152,6 +152,7 @@ def return_to_airship():
     memory.main.clear_save_menu_cursor_2()
 
 
+@battle.utils.speedup_decorator
 def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     FFXC.set_neutral()
@@ -315,6 +316,7 @@ def advanced_complete_check():
     return False
 
 
+@battle.utils.speedup_decorator
 def advanced_battle_logic():
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     logger.debug(f"Ambush flag (2 is bad):{memory.main.battle_type()}")
@@ -2054,7 +2056,7 @@ def plains_next(end_goal: int):
 def t_plains(cap_num: int = 1, auto_haste: bool = False):
 
     air_ship_destination(dest_num=8)
-    memory.main.update_formation(front_line="yuna", full_menu_close=False)
+    memory.main.update_formation(Tidus, Yuna, Auron)
     menu.remove_all_nea()
     memory.main.close_menu()
     pref_area = plains_next(end_goal=cap_num)
