@@ -3,6 +3,7 @@ import logging
 import area.gagazet
 import battle.main
 import memory.main
+import nemesis.menu
 import pathing
 import rng_track
 import vars

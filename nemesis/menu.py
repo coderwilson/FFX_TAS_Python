@@ -5,6 +5,7 @@ import menu
 import menu_grid
 import vars
 import xbox
+from menu import equip_armor
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
