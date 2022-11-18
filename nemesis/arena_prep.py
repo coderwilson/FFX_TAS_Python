@@ -6,7 +6,7 @@ import memory.main
 import menu
 import nemesis.arena_select
 import nemesis.menu
-import nemesis.nemesis_pathing
+import pathing
 import rng_track
 import save_sphere
 import screen
@@ -71,10 +71,10 @@ def air_ship_destination(dest_num=0, force_omega=False):
     if len(memory.main.all_equipment()) > 120:
         rin_equip_dump()
     while memory.main.get_coords()[0] < -257:
-        nemesis.nemesis_pathing.set_movement([-258, 345])
+        pathing.set_movement([-258, 345])
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
-            nemesis.nemesis_pathing.set_movement([-251, 340])
+            pathing.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
         xbox.menu_b()
@@ -101,7 +101,7 @@ def air_ship_destination(dest_num=0, force_omega=False):
 def unlock_omega():
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
-            nemesis.nemesis_pathing.set_movement([-251, 340])
+            pathing.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
         if memory.main.diag_progress_flag() == 4:
@@ -151,7 +151,7 @@ def return_to_airship():
     ss_details = get_save_sphere_details()
 
     if memory.main.get_map() == 307:  # Monster arena
-        while not nemesis.nemesis_pathing.set_movement([-4, -3]):
+        while not pathing.set_movement([-4, -3]):
             pass
 
     save_sphere.approach_save_sphere()
@@ -565,7 +565,7 @@ def arena_npc():
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(1)
             else:
-                nemesis.nemesis_pathing.set_movement([2, -15])
+                pathing.set_movement([2, -15])
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
@@ -589,11 +589,11 @@ def arena_return(checkpoint: int = 0):
         if memory.main.user_control():
             if checkpoint == 2:
                 while memory.main.user_control():
-                    nemesis.nemesis_pathing.set_movement([-641, -268])
+                    pathing.set_movement([-641, -268])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif nemesis.nemesis_pathing.set_movement(ArenaReturn.execute(checkpoint)):
+            elif pathing.set_movement(ArenaReturn.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -629,21 +629,21 @@ def kilika_shop():
     xbox.menu_a()
     xbox.tap_b()  # Exit
     memory.main.wait_frames(60)
-    while not nemesis.nemesis_pathing.set_movement([-6, -23]):
+    while not pathing.set_movement([-6, -23]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([0, -3]):
+    while not pathing.set_movement([0, -3]):
         pass
     return_to_airship()
     memory.main.await_control()
     rin_equip_dump()
     air_ship_destination(dest_num=2)
-    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
+    while not pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
+    while not pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
+    while not pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-108, -169]):
+    while not pathing.set_movement([-108, -169]):
         pass
     while memory.main.user_control():
         FFXC.set_movement(-1, 0)
@@ -693,13 +693,13 @@ def kilika_shop():
         full_menu_close=True,
     )
 
-    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
+    while not pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
+    while not pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
+    while not pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([29, -252]):
+    while not pathing.set_movement([29, -252]):
         pass
     return_to_airship()
 
@@ -1187,13 +1187,13 @@ def kilika_final_shop():
     menu.auto_sort_equipment()
 
     air_ship_destination(dest_num=2)
-    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
+    while not pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
+    while not pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
+    while not pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-108, -169]):
+    while not pathing.set_movement([-108, -169]):
         pass
     while memory.main.user_control():
         FFXC.set_movement(-1, 0)
@@ -1222,13 +1222,13 @@ def kilika_final_shop():
             xbox.menu_b()
     memory.main.close_menu()
 
-    while not nemesis.nemesis_pathing.set_movement([-91, -199]):
+    while not pathing.set_movement([-91, -199]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-47, -209]):
+    while not pathing.set_movement([-47, -209]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-25, -246]):
+    while not pathing.set_movement([-25, -246]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([29, -252]):
+    while not pathing.set_movement([29, -252]):
         pass
     menu.auto_sort_equipment()
     return_to_airship()
@@ -1292,17 +1292,17 @@ def final_weapon():
 
 
 def rin_equip_dump(buy_weapon=False, sell_nea=False):
-    while not nemesis.nemesis_pathing.set_movement([-242, 298]):
+    while not pathing.set_movement([-242, 298]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-243, 160]):
+    while not pathing.set_movement([-243, 160]):
         pass
     FFXC.set_movement(0, -1)
     while memory.main.user_control():
         pass
-    while not nemesis.nemesis_pathing.set_movement([39, 53]):
+    while not pathing.set_movement([39, 53]):
         pass
     while memory.main.user_control():
-        nemesis.nemesis_pathing.set_movement([28, 44])
+        pathing.set_movement([28, 44])
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_diag_progress(48)
@@ -1335,14 +1335,14 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False):
         memory.main.wait_frames(60)
     memory.main.close_menu()
     memory.main.click_to_control_dumb()
-    while not nemesis.nemesis_pathing.set_movement([53, 110]):
+    while not pathing.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)
     while memory.main.user_control():
         pass
-    while not nemesis.nemesis_pathing.set_movement([-241, 223]):
+    while not pathing.set_movement([-241, 223]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-246, 329]):
+    while not pathing.set_movement([-246, 329]):
         pass
 
 
@@ -1404,10 +1404,7 @@ def yojimbo():
                 checkpoint += 1
             elif checkpoint == 41:
                 return_to_airship()
-            elif (
-                nemesis.nemesis_pathing.set_movement(YojimboFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(YojimboFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -1456,10 +1453,7 @@ def besaid_farm(cap_num: int = 1):
                 checkpoint += 1
             elif checkpoint == 26:
                 return_to_airship()
-            elif (
-                nemesis.nemesis_pathing.set_movement(BesaidFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(BesaidFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -1512,10 +1506,7 @@ def kilika_farm(cap_num: int = 1):
                 checkpoint += 1
             elif checkpoint == 25:
                 return_to_airship()
-            elif (
-                nemesis.nemesis_pathing.set_movement(KilikaFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(KilikaFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -1766,10 +1757,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint in [148, 149, 150] and pref_area == 5:
                 checkpoint = 90
 
-            elif (
-                nemesis.nemesis_pathing.set_movement(MiihenFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) == True:
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -1846,10 +1834,7 @@ def miihen_farm_old(cap_num: int = 1):
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
-            elif (
-                nemesis.nemesis_pathing.set_movement(MiihenFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -1982,10 +1967,7 @@ def djose_farm(cap_num: int = 10):
             elif checkpoint == 47:
                 checkpoint = 21
 
-            elif (
-                nemesis.nemesis_pathing.set_movement(DjoseFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(DjoseFarm.execute(checkpoint)) == True:
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -2131,12 +2113,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                     return_to_airship()
 
             # General pathing
-            elif (
-                nemesis.nemesis_pathing.set_movement(
-                    ThunderPlainsFarm.execute(checkpoint)
-                )
-                == True
-            ):
+            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -2203,12 +2180,7 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
                 return_to_airship()
 
             # General pathing
-            elif (
-                nemesis.nemesis_pathing.set_movement(
-                    ThunderPlainsFarm.execute(checkpoint)
-                )
-                == True
-            ):
+            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -2306,10 +2278,7 @@ def mac_woods(cap_num: int = 10):
                     return_to_airship()
 
             # General pathing
-            elif (
-                nemesis.nemesis_pathing.set_movement(MacFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(MacFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -2440,10 +2409,7 @@ def bikanel(cap_num: int = 10):
                 return_to_airship()
 
             # General pathing
-            elif (
-                nemesis.nemesis_pathing.set_movement(BikanelFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(BikanelFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -2569,10 +2535,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
             elif checkpoint == 10:  # Ride the bird back to arena
                 arena_return(checkpoint=1)
 
-            elif (
-                nemesis.nemesis_pathing.set_movement(CalmFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(CalmFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -2652,12 +2615,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 zone="calm2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-            elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.calm(checkpoint)
-                )
-                == True
-            ):
+            elif pathing.set_movement(nemesis.nemesis_pathing.calm(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -2933,10 +2891,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 0
                 else:
                     return_to_airship()
-            elif (
-                nemesis.nemesis_pathing.set_movement(GagazetFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(GagazetFarm.execute(checkpoint)) == True:
                 if cp_forward:
                     checkpoint += 1
                 else:
@@ -3068,10 +3023,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 checkpoint += 1
             elif checkpoint == 62:
                 return_to_airship()
-            elif (
-                nemesis.nemesis_pathing.set_movement(YojimboFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(YojimboFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -3156,22 +3108,19 @@ def inside_sin(cap_num: int = 10):
             elif (
                 checkpoint >= 65 and memory.main.get_tidus_mp() < 20
             ):  # Tidus low on MP
-                nemesis.nemesis_pathing.set_movement([550, 485])
+                pathing.set_movement([550, 485])
                 memory.main.await_event()
                 FFXC.set_neutral()
                 memory.main.wait_frames(3)
                 memory.main.await_control()
                 save_sphere.touch_and_go()
-                nemesis.nemesis_pathing.set_movement([-200, -525])
+                pathing.set_movement([-200, -525])
                 memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint = 66
 
             # General Pathing
-            elif (
-                nemesis.nemesis_pathing.set_movement(SinFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(SinFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -3217,10 +3166,7 @@ def omega_ruins(cap_num: int = 10):
                 save_sphere.touch_and_go()
             elif checkpoint == 3:
                 return_to_airship()
-            elif (
-                nemesis.nemesis_pathing.set_movement(OmegaFarm.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(OmegaFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

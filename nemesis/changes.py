@@ -3,7 +3,7 @@ import logging
 import area.gagazet
 import battle.main
 import memory.main
-import nemesis.nemesis_pathing
+import pathing
 import rng_track
 import vars
 import xbox
@@ -31,7 +31,7 @@ def arena_npc():
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(1)
             else:
-                nemesis.nemesis_pathing.set_movement([2, -15])
+                pathing.set_movement([2, -15])
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
@@ -109,10 +109,7 @@ def calm_lands_1():
             # if checkpoint == 10:
             #     if area.gagazet.check_gems() < 2:
             #         checkpoint -= 2
-            if (
-                nemesis.nemesis_pathing.set_movement(CalmLands1.execute(checkpoint))
-                == True
-            ):
+            if pathing.set_movement(CalmLands1.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -408,7 +405,7 @@ def choco_tame_4():
 def to_remiem():
     memory.main.click_to_control()
     while memory.main.user_control():
-        nemesis.nemesis_pathing.set_movement([-1565, 434])
+        pathing.set_movement([-1565, 434])
         xbox.tap_b()
         logger.debug("Near chocobo lady")
     FFXC.set_neutral()
@@ -427,14 +424,11 @@ def to_remiem():
             elif checkpoint == 27:
                 logger.debug("Orb thing")
                 while memory.main.user_control():
-                    nemesis.nemesis_pathing.set_movement([770, 631])
+                    pathing.set_movement([770, 631])
                     xbox.tap_b()
                 memory.main.click_to_control_3()
                 checkpoint += 1
-            elif (
-                nemesis.nemesis_pathing.set_movement(ToRemiem.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(ToRemiem.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -453,14 +447,14 @@ def remiem_races():
 
 def choco_race_1():
     while memory.main.user_control():
-        nemesis.nemesis_pathing.set_movement([790, 60])
+        pathing.set_movement([790, 60])
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_control()
     checkpoint = 0
     while checkpoint != 37:
         if memory.main.user_control():
-            if nemesis.nemesis_pathing.set_movement(Race1.execute(checkpoint)) == True:
+            if pathing.set_movement(Race1.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -479,7 +473,7 @@ def choco_race_2():
     FFXC.set_neutral()
     memory.main.click_to_control()
     while memory.main.user_control():
-        nemesis.nemesis_pathing.set_movement([790, 60])
+        pathing.set_movement([790, 60])
         xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0
@@ -494,7 +488,7 @@ def choco_race_2():
             if checkpoint == 22:
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
-            if nemesis.nemesis_pathing.set_movement(Race2.execute(checkpoint)) == True:
+            if pathing.set_movement(Race2.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -513,7 +507,7 @@ def choco_race_3():
     FFXC.set_neutral()
     memory.main.click_to_control()
     while memory.main.user_control():
-        nemesis.nemesis_pathing.set_movement([790, 60])
+        pathing.set_movement([790, 60])
         xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0
@@ -539,7 +533,7 @@ def choco_race_3():
             #     memory.wait_frames(120)
             #     memory.click_to_control_3()
             #     break
-            if nemesis.nemesis_pathing.set_movement(Race3.execute(checkpoint)) == True:
+            if pathing.set_movement(Race3.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -564,7 +558,7 @@ def temple_to_arena():
 
             elif checkpoint == 20:
                 while memory.main.user_control():
-                    nemesis.nemesis_pathing.set_movement([1261, -1238])
+                    pathing.set_movement([1261, -1238])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
@@ -573,15 +567,12 @@ def temple_to_arena():
             elif checkpoint == 24:
                 logger.debug("Feather")
                 while memory.main.user_control():
-                    nemesis.nemesis_pathing.set_movement([1101, -940])
+                    pathing.set_movement([1101, -940])
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.await_control()
                 checkpoint += 1
-            elif (
-                nemesis.nemesis_pathing.set_movement(LeaveRemiem.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(LeaveRemiem.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
 
@@ -623,10 +614,7 @@ def arena_purchase():
         if memory.main.user_control():
             if checkpoint == 7 and area.gagazet.check_gems() < 2:
                 checkpoint -= 2
-            elif (
-                nemesis.nemesis_pathing.set_movement(CalmLands2.execute(checkpoint))
-                == True
-            ):
+            elif pathing.set_movement(CalmLands2.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -643,14 +631,14 @@ def arena_purchase():
 
 def arena_purchase_with_chocobo():
     while memory.main.user_control():  # Back onto chocobo
-        nemesis.nemesis_pathing.set_movement([1347, -69])
+        pathing.set_movement([1347, -69])
         xbox.tap_b()
 
-    while not nemesis.nemesis_pathing.set_movement([1488, 778]):
+    while not pathing.set_movement([1488, 778]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([1545, 1088]):
+    while not pathing.set_movement([1545, 1088]):
         pass
     while not memory.main.get_map() == 279:
-        nemesis.nemesis_pathing.set_movement([1700, 1200])
+        pathing.set_movement([1700, 1200])
 
     memory.main.update_formation(Tidus, Kimahri, Auron)
