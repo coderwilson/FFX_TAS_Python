@@ -8,6 +8,7 @@ import area.dream_zan
 import logs
 import memory.main
 import pathing
+import reset
 import screen
 import vars
 import xbox
