@@ -12,6 +12,21 @@ import save_sphere
 import screen
 import vars
 import xbox
+from paths.nem import (
+    ArenaReturn,
+    BesaidFarm,
+    BikanelFarm,
+    CalmFarm,
+    DjoseFarm,
+    GagazetFarm,
+    KilikaFarm,
+    MacFarm,
+    MiihenFarm,
+    OmegaFarm,
+    SinFarm,
+    ThunderPlainsFarm,
+    YojimboFarm,
+)
 from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
@@ -578,9 +593,7 @@ def arena_return(checkpoint: int = 0):
                     xbox.tap_b()
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif nemesis.nemesis_pathing.set_movement(
-                nemesis.nemesis_pathing.arena_return(checkpoint)
-            ):
+            elif nemesis.nemesis_pathing.set_movement(ArenaReturn.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
@@ -1392,9 +1405,7 @@ def yojimbo():
             elif checkpoint == 41:
                 return_to_airship()
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.yojimbo(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(YojimboFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -1446,9 +1457,7 @@ def besaid_farm(cap_num: int = 1):
             elif checkpoint == 26:
                 return_to_airship()
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.besaid_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(BesaidFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -1504,9 +1513,7 @@ def kilika_farm(cap_num: int = 1):
             elif checkpoint == 25:
                 return_to_airship()
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.kilika_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(KilikaFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -1760,9 +1767,7 @@ def miihen_farm(cap_num: int = 1):
                 checkpoint = 90
 
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.miihen_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(MiihenFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -1842,9 +1847,7 @@ def miihen_farm_old(cap_num: int = 1):
                 checkpoint += 1
 
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.miihen_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(MiihenFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -1980,9 +1983,7 @@ def djose_farm(cap_num: int = 10):
                 checkpoint = 21
 
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.djose_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(DjoseFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -2132,7 +2133,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
             # General pathing
             elif (
                 nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.tp_farm(checkpoint)
+                    ThunderPlainsFarm.execute(checkpoint)
                 )
                 == True
             ):
@@ -2204,7 +2205,7 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
             # General pathing
             elif (
                 nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.tp_farm(checkpoint)
+                    ThunderPlainsFarm.execute(checkpoint)
                 )
                 == True
             ):
@@ -2306,9 +2307,7 @@ def mac_woods(cap_num: int = 10):
 
             # General pathing
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.mac_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(MacFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -2442,9 +2441,7 @@ def bikanel(cap_num: int = 10):
 
             # General pathing
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.bikanel_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(BikanelFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -2573,9 +2570,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 arena_return(checkpoint=1)
 
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.calm_farm(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(CalmFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -2939,9 +2934,7 @@ def gagazet(cap_num: int = 10):
                 else:
                     return_to_airship()
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.gagazet(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(GagazetFarm.execute(checkpoint))
                 == True
             ):
                 if cp_forward:
@@ -2971,9 +2964,9 @@ def fayth_next(endGoal: int):
 
     logger.debug("=======================")
     logger.debug("Next battles:")
-    logger.debug("green: ", next2)
-    logger.debug("white: ", next1)
-    logger.debug("zone: ", farm_array)
+    logger.debug(f"green: {next2}")
+    logger.debug(f"white: {next1}")
+    logger.debug(f"zone: {farm_array}")
     logger.debug("=======================")
 
     if farm_array[8] < endGoal and "tonberry" in next2:
@@ -3076,9 +3069,7 @@ def stolen_fayth_cave(cap_num: int = 10):
             elif checkpoint == 62:
                 return_to_airship()
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.yojimbo(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(YojimboFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -3178,9 +3169,7 @@ def inside_sin(cap_num: int = 10):
 
             # General Pathing
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.sin(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(SinFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
@@ -3229,9 +3218,7 @@ def omega_ruins(cap_num: int = 10):
             elif checkpoint == 3:
                 return_to_airship()
             elif (
-                nemesis.nemesis_pathing.set_movement(
-                    nemesis.nemesis_pathing.omega(checkpoint)
-                )
+                nemesis.nemesis_pathing.set_movement(OmegaFarm.execute(checkpoint))
                 == True
             ):
                 checkpoint += 1
