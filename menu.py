@@ -1569,6 +1569,9 @@ def sell_all(nea=False):
         if full_array[memory.main.equip_sell_row()].has_ability(0x8001):
             # First Strike
             sell_item = False
+        if full_array[memory.main.equip_sell_row()].has_ability(0x800A):
+            # Auto-Phoenix
+            sell_item = False
         if full_array[memory.main.equip_sell_row()].abilities() == [
             0x8072,
             255,

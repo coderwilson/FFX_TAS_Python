@@ -7,7 +7,7 @@ step_counter            : 1      # valid step_counter values are dependent on ga
 vars:
   # Game modes:
   # "test" will speed up battles and cheat at Blitzball
-  # "normal" will run regular
+  # "normal" will run regular. "speed" also runs a regular any% run.
   # "story" Same as normal, will play cutscenes and dialog
   # "swag" Same as normal, some swag elements added in.
   # "blitz_only" will run through Blitz, record results, and reset. Same as normal mode.
