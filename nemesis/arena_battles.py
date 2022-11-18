@@ -202,6 +202,7 @@ def aeon_start():
                 battle.main.defend()
 
 
+@battle.utils.speedup_decorator
 def yojimbo_battle():
     # Incomplete
     screen.await_turn()
@@ -262,6 +263,7 @@ def auto_life():
     xbox.tap_b()
 
 
+@battle.utils.speedup_decorator
 def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False):
     logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
@@ -289,6 +291,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
     return memory.main.battle_arena_results()
 
 
+@battle.utils.speedup_decorator
 def basic_attack(
     mega_phoenix=False, od_version: int = 0, use_od=False, yuna_autos=False
 ):
