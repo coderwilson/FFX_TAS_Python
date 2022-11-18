@@ -3059,7 +3059,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
     if rikku_flee:
         _navigate_to_position(2)
     else:
-        print("Mark 2, selecting 'Use' command in position", 1)
+        logger.debug(f"Mark 2, selecting 'Use' command in position 1")
         _navigate_to_position(1)
     if game_vars.use_pause():
         memory.main.wait_frames(3)

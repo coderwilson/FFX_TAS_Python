@@ -195,7 +195,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
                     xbox.tap_up()
                 memory.main.wait_frames(1)
         xbox.tap_b()
-        print("====", save_num, "====")
+        logger.debug(f"==== {save_num} ====")
         memory.main.wait_frames(2)
         while memory.main.save_conf_cursor() != 1:
             xbox.tap_left()
@@ -224,7 +224,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
             if game_state == "tbd" or step_count == 999:
                 return
 
-            print("Registering save")
+            logger.debug(f"Registering save")
             filepath = os.path.join("json_ai_files", "save_load_details.json")
             with open(filepath, "r") as fp:
                 results = json.load(fp)
@@ -274,7 +274,7 @@ def get_save_sphere_settings(actor_index: int):
                     results[map_num][diag_num][actor_num]["y"],
                     results[map_num][diag_num][actor_num]["diag"],
                 ]
-    print(ret_array)
+    logger.debug(ret_array)
     return ret_array
 
 
