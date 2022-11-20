@@ -115,7 +115,7 @@ class AllVars:
         # ---- "C://users//user_name//etc"
         # ---- "" (blank means to use the default path)
         self.save_path = str(config_vars.get("save_path"))
-        logger.debug(f"============= {self.save_path}")
+        logger.debug(f"Base save path: |{self.save_path}|")
         if len(self.save_path) == 0:
             logger.debug("Dynamically using userprofile, default")
             self.save_path = os.environ.get("userprofile") \
@@ -125,7 +125,6 @@ class AllVars:
         else:
             logger.debug("Possibly a bad save path, unknown state.")
         logger.debug(f"Save files, base path: {self.save_path}")
-        logger.debug("=============")
         # If your computer has bad specs, this will input commands to the controller
         # at a lower rate of speed. Very rarely used.
         self.artificial_pauses = config_vars.get("artificial_pauses", False)
