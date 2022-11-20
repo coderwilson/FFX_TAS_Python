@@ -3125,9 +3125,9 @@ def inside_sin(cap_num: int = 10):
             # Events
             if memory.main.get_map() == 296:  # Seymour battle
                 logger.debug("We've reached the Seymour screen.")
-                memory.main.update_formation(Tidus, Yuna, Auron)
+                memory.main.update_formation(Tidus, Yuna, Lulu)
                 FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 5)
+                memory.main.await_event()
                 FFXC.set_neutral()
                 battle.boss.omnis()
                 memory.main.click_to_control()
