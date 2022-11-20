@@ -961,17 +961,17 @@ def one_mp_ready():
 
 def tonberry_levels_battle():
     screen.await_turn()
-    tidus_turn = False
+    tidus_AP_gained = False
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_tidus():
-                if tidus_turn == True:
+                if tidus_AP_gained == True:
                     battle.main.tidus_flee()
-                elif memory.main.get_overdrive_battle(character=0):
+                elif memory.main.get_overdrive_battle(character=0) == 100:
                     battle.overdrive.tidus()
                 else:
                     battle.main.attack()
-                tidus_turn = True
+                tidus_AP_gained = True
             else:
                 battle.main.defend()
 
@@ -3104,6 +3104,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 hp_check = memory.main.get_hp()
                 if hp_check[0] < 795:
                     battle.main.heal_up(3)
+                memory.main.update_formation(Tidus, Wakka, Rikku)
                 pref_area = fayth_next(endGoal=cap_num)
                 logger.debug(f"Next area: {pref_area}")
             elif memory.main.diag_skip_possible():
