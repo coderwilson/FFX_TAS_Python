@@ -435,7 +435,7 @@ def nem_gridding_6():
     menu_grid.sel_sphere("power", "right")
     # menu_grid.use_and_use_again()
     # menu_grid.sel_sphere('power','none')
-    if game_vars.end_game_version() in [1, 2]:
+    if game_vars.end_game_version() == 3:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("lv1", "none")
     # menu_grid.use_and_use_again()
