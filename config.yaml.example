@@ -35,7 +35,7 @@ vars:
   
   # System
   # ---- The following are valid options, depending on your file path.
-  # ---- "C://etc//etc//etc"	   # (overwrites the default path)
+  # ---- "C://etc//etc//etc//"	   # (overwrites the default path, must end with slashes)
   # ---- "" 					   # (Leave blank to use the default path)
   save_path               : ""     # Overwrite the default Documents folder location.
   artificial_pauses       : False  # If you have a bad computer or are noticing dropped inputs, set this to True. Otherwise, leave as False.
