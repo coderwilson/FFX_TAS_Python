@@ -111,12 +111,21 @@ class AllVars:
 
         # === Hardware / Other settings ===
         # ----Path for save files, used for loading a specific save
-        self.save_path = (
-            os.environ.get("userprofile")
-            #if not config_vars.get("save_path", "")
-            #else config_vars.get("save_path")
+        # ---- The following are valid options, depending on your file path.
+        # ---- "C://users//user_name//etc"
+        # ---- "" (blank means to use the default path)
+        self.save_path = str(config_vars.get("save_path"))
+        logger.debug(f"============= {self.save_path}")
+        if len(self.save_path) == 0:
+            logger.debug("Dynamically using userprofile, default")
+            self.save_path = os.environ.get("userprofile") \
             + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
-        )
+        elif config_vars.get("save_path").find(":"):
+            logger.debug("Full save path provided from config")
+        else:
+            logger.debug("Possibly a bad save path, unknown state.")
+        logger.debug(f"Save files, base path: {self.save_path}")
+        logger.debug("=============")
         # If your computer has bad specs, this will input commands to the controller
         # at a lower rate of speed. Very rarely used.
         self.artificial_pauses = config_vars.get("artificial_pauses", False)
