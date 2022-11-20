@@ -23,13 +23,11 @@ class AllVars:
         self.skip_cutscene_flag = True
         self.force_blitz_win = False
         self.blitz_loop = False
-        self.generate_saves = False
         self.battle_speedup = False
         # ----Overrides
         if config_vars.get("game_mode") == "test":
             self.perfect_aeon_kills = True
             self.force_blitz_win = True
-            self.generate_saves = config_vars.get("generate_saves", False)
             self.battle_speedup = True
         elif config_vars.get("game_mode") == "story":
             self.skip_cutscene_flag = False
@@ -48,6 +46,7 @@ class AllVars:
         self.nemesis_value = config_vars.get("nemesis_value", False)
         self.force_loop = config_vars.get("force_loop", False)
         self.legacy_soundtrack = config_vars.get("original_soundtrack", True)
+        self.generate_saves = config_vars.get("generate_saves", False)
 
         # === Future functions / foundations ===
         self.kilika_skip = True

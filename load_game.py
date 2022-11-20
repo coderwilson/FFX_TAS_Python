@@ -58,7 +58,6 @@ def load_into_game(gamestate: str, step_counter: str):
 
         # Init variables so we don't crash later
         save_num_conf = 0
-        nemesis_conf = "none"
         blitz_win = "none"
         end_ver = "none"
         nea_zone = "none"
@@ -69,25 +68,25 @@ def load_into_game(gamestate: str, step_counter: str):
         for key in results[gamestate][step_counter]:
             save_num = int(results[gamestate][step_counter][key]["save_num"])
 
-            nemesis = key
             if save_num > 200:
                 pass
+            elif key != str(game_vars.nemesis()):
+                pass
             else:
+                nemesis = key
                 logger.debug(f"Found save {save_num}")
                 save_num_conf = save_num
                 blitz_win = results[gamestate][step_counter][key]["blitz_win_value"]
                 end_ver = results[gamestate][step_counter][key]["end_game_version_val"]
                 logger.debug(f"Blitz Win {blitz_win}")
                 logger.debug(f"End game version {end_ver}")
-                if nemesis == str(game_vars.nemesis()):
-                    nemesis_conf = nemesis
-                    nea_zone = results[gamestate][step_counter][key]["nea_zone"]
-                    nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
-                    spec_move = results[gamestate][step_counter][key][
-                        "special_movement"
-                    ]
-                    logger.debug(f"NEA zone {nea_zone}")
-                    logger.debug(f"Nemesis checkpoint {nem_ap}")
+                nea_zone = results[gamestate][step_counter][key]["nea_zone"]
+                nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
+                spec_move = results[gamestate][step_counter][key][
+                    "special_movement"
+                ]
+                logger.debug(f"NEA zone {nea_zone}")
+                logger.debug(f"Nemesis checkpoint {nem_ap}")
 
         if save_num_conf == 0:
             logger.debug("Failure 2")
