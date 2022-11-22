@@ -27,29 +27,6 @@ def defend():
         xbox.tap_y()
 
 
-def tidus_flee():
-    if memory.main.battle_active():
-        logger.debug("Tidus Flee (or similar command pattern)")
-        while memory.main.battle_menu_cursor() != 20:
-            if memory.main.battle_menu_cursor() == 255:
-                xbox.tap_up()
-            elif memory.main.battle_menu_cursor() == 1:
-                xbox.tap_up()
-            elif memory.main.battle_menu_cursor() > 20:
-                xbox.tap_up()
-            else:
-                xbox.tap_down()
-            if memory.main.other_battle_menu():
-                xbox.tap_a()
-        logger.debug("Out")
-        while not memory.main.other_battle_menu():
-            xbox.tap_b()
-        battle.utils._navigate_to_position(0)
-        while memory.main.other_battle_menu():
-            xbox.tap_b()
-        battle.utils.tap_targeting()
-
-
 def yuna_cure_omnis():
     while memory.main.battle_menu_cursor() != 22:
         if not Yuna.is_turn():
@@ -1252,7 +1229,7 @@ def mrr_battle(status):
                         )
                         flee_all()
                     elif Tidus.is_turn():
-                        tidus_flee()
+                        Tidus.flee()()
                     elif screen.faint_check() >= 1:
                         buddy_swap(Tidus)
                     elif Kimahri.is_turn():
@@ -4063,7 +4040,7 @@ def flee_all():
                 tidus_position = memory.main.get_battle_char_slot(0)
                 logger.debug(f"Tidus Position: {tidus_position}")
                 if Tidus.is_turn():
-                    tidus_flee()
+                    Tidus.flee()()
                 elif tidus_position >= 3 and tidus_position != 255:
                     buddy_swap(Tidus)
                 elif (
@@ -4144,7 +4121,7 @@ def escape_one():
             if replacement == 255:
                 logger.debug("No character could be found.")
                 if memory.main.get_current_turn() == 0:
-                    tidus_flee()
+                    Tidus.flee()()
                     return False
                 elif memory.main.get_current_turn() == 1:
                     escape_action()

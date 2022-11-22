@@ -45,6 +45,10 @@ class TidusImpl(Player):
         self.navigate_to_battle_menu(20)
         while not memory.main.other_battle_menu():
             xbox.tap_b()
+        battle.utils._navigate_to_position(0)
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        battle.utils.tap_targeting()
 
 
 Tidus = TidusImpl()

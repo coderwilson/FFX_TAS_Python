@@ -328,10 +328,10 @@ def advanced_battle_logic():
 
     if memory.main.battle_type() == 2:
         logger.debug("Ambushed! Escaping!")
-        battle.main.tidus_flee()
+        Tidus.flee()
     elif advanced_complete_check():
         logger.debug("Complete collecting this monster.")
-        battle.main.tidus_flee()
+        Tidus.flee()
     else:
         if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
@@ -409,7 +409,7 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif encounter_id == 431:
-                            battle.main.tidus_flee()
+                            Tidus.flee()
                         else:
                             battle.main.use_skill(1)  # Quick hit
                     elif screen.turn_rikku():
@@ -479,7 +479,7 @@ def advanced_battle_logic():
                                 else:
                                     battle.main.defend()
                         elif encounter_id == 431:
-                            battle.main.tidus_flee()
+                            Tidus.flee()
                         elif (
                             encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
@@ -774,7 +774,7 @@ def farm_feathers():
                 logger.debug("Qactar steal command done")
             elif screen.turn_tidus():
                 logger.debug("Qactar flee command")
-                battle.main.tidus_flee()
+                Tidus.flee()
                 logger.debug("Qactar flee command done")
             else:
                 logger.debug("Qactar defend command")
@@ -967,7 +967,7 @@ def tonberry_levels_battle():
         if memory.main.turn_ready():
             if screen.turn_tidus():
                 if tidus_AP_gained == True:
-                    battle.main.tidus_flee()
+                    Tidus.flee()
                 elif memory.main.get_overdrive_battle(character=0) == 100:
                     battle.overdrive.tidus()
                 else:

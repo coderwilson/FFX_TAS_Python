@@ -287,7 +287,7 @@ def echuilles():
                 tidus_counter += 1
                 if tidus_counter <= 2:
                     logger.debug("Cheer")
-                    battle.main.tidus_flee()  # performs cheer command
+                    Tidus.flee()  # performs cheer command
                 elif (
                     memory.main.get_overdrive_battle(0) == 100
                     and memory.main.get_enemy_current_hp()[0] <= 750

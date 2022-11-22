@@ -217,7 +217,7 @@ def yojimbo_battle():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_tidus():
-                battle.main.tidus_flee()
+                Tidus.flee()
             elif screen.turn_aeon():
                 xbox.skip_dialog(2)
             else:
