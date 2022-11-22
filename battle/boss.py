@@ -326,7 +326,7 @@ def geneaux():
     if Tidus.is_turn():
         CurrentPlayer().attack()
     elif Yuna.is_turn():
-        battle.main.buddy_swap_kimahri()
+        battle.main.buddy_swap(Kimahri)
         CurrentPlayer().attack()
         while not Tidus.is_turn():
             CurrentPlayer().defend()
@@ -463,22 +463,22 @@ def chocobo_eater():
                 logger.debug("Attempting revive")
                 if Kimahri.is_turn():
                     if not Tidus.active():
-                        battle.main.buddy_swap_tidus()
+                        battle.main.buddy_swap(Tidus)
                     elif not Wakka.active():
                         battle.main.buddy_swap(Wakka)
                     else:
-                        battle.main.buddy_swap_auron()
+                        battle.main.buddy_swap(Auron)
                 battle.main.revive()
             # elif not Tidus.active():
             # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
-            #    buddy_swap_tidus()
+            #    buddy_swap(Tidus)
             elif (
                 swapped_yuna
                 and not Tidus.active()
                 and memory.main.state_dead(1)
                 and not choco_haste
             ):
-                battle.main.buddy_swap_tidus()
+                battle.main.buddy_swap(Tidus)
             elif (
                 1 in memory.main.get_active_battle_formation()
                 and not choco_haste
@@ -517,7 +517,7 @@ def gui():
         if memory.main.turn_ready():
             if Yuna.is_turn():
                 if not yuna_turn:
-                    battle.main.buddy_swap_auron()
+                    battle.main.buddy_swap(Auron)
                     yuna_turn = True
                 else:
                     battle.main.aeon_summon(0)
@@ -526,7 +526,7 @@ def gui():
                     xbox.weap_swap(0)
                     wakka_turn = True
                 else:
-                    battle.main.buddy_swap_kimahri()
+                    battle.main.buddy_swap(Kimahri)
                     logger.debug(
                         f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
                     )
@@ -548,7 +548,7 @@ def gui():
                     CurrentPlayer().defend()
                     tidus_turn = True
                 elif screen.faint_check() > 0:
-                    battle.main.buddy_swap_kimahri()
+                    battle.main.buddy_swap(Kimahri)
                 else:
                     battle.main.buddy_swap(Yuna)
             elif Auron.is_turn():
@@ -920,7 +920,7 @@ def crawler():
                     if yunaturns == 0:
                         CurrentPlayer().defend()
                     else:
-                        battle.main.buddy_swap_tidus()
+                        battle.main.buddy_swap(Tidus)
                     yunaturns += 1
                 else:
                     CurrentPlayer().defend()
@@ -1045,7 +1045,7 @@ def wendigo():
                     else:
                         logger.debug("No Light Curtain")
                         logger.debug("Swapping to Auron to Power Break")
-                        battle.main.buddy_swap_auron()  # Swap for Auron
+                        battle.main.buddy_swap(Auron)  # Swap for Auron
                         powerbreak = True
                         usepowerbreak = True
                 # elif memory.main.get_enemy_current_hp()[1] < stop_healing:
@@ -1084,7 +1084,7 @@ def wendigo():
                     )
                     == 0
                 ):
-                    battle.main.buddy_swap_kimahri()
+                    battle.main.buddy_swap(Kimahri)
             elif Lulu.is_turn():
                 if (
                     battle.main.wendigo_res_heal(
@@ -1102,7 +1102,7 @@ def wendigo():
                     and 2 not in memory.main.get_active_battle_formation()
                 ):
                     logger.debug("Swapping to Auron to Power Break")
-                    battle.main.buddy_swap_auron()
+                    battle.main.buddy_swap(Auron)
                 # if memory.main.get_enemy_current_hp()[1] < stop_healing and memory.main.get_battle_hp()[tidus_slot] != 0:
                 #    logger.debug("End of battle, no need to heal.")
                 #    CurrentPlayer().defend()
@@ -1347,7 +1347,7 @@ def seymour_natus():
                         else:
                             CurrentPlayer().attack()
                     elif Lulu.is_turn():
-                        battle.main.buddy_swap_tidus()
+                        battle.main.buddy_swap(Tidus)
                         screen.await_turn()
                         xbox.tap_up()
                         CurrentPlayer().attack()
@@ -1747,7 +1747,7 @@ def yu_yevon():
                     CurrentPlayer().defend()
             elif za_char == 2 and not zombie_attack:  # Auron logic:
                 if Yuna.is_turn():
-                    battle.main.buddy_swap_auron()
+                    battle.main.buddy_swap(Auron)
                 elif Auron.is_turn() and not weap_swap:
                     battle.main.equip_in_battle(
                         equip_type="weap", ability_num=0x8032, character=2

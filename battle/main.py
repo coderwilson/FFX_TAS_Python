@@ -4181,41 +4181,6 @@ def buddy_swap_char(character):
     return buddy_swap(character)
 
 
-def buddy_swap_tidus():
-    logger.debug("++ Swapping in Tidus")
-    buddy_swap_char(Tidus)
-
-
-def buddy_swap_yuna():
-    logger.debug("++ Swapping in Yuna")
-    buddy_swap_char(Yuna)
-
-
-def buddy_swap_auron():
-    logger.debug("++ Swapping in Auron")
-    buddy_swap_char(Auron)
-
-
-def buddy_swap_kimahri():
-    logger.debug("++ Swapping in Kimahri")
-    buddy_swap_char(Kimahri)
-
-
-def buddy_swap_wakka():
-    logger.debug("++ Swapping in Wakka")
-    buddy_swap_char(Wakka)
-
-
-def buddy_swap_lulu():
-    logger.debug("++ Swapping in Lulu")
-    buddy_swap_char(Lulu)
-
-
-def buddy_swap_rikku():
-    logger.debug("++ Swapping in Rikku")
-    buddy_swap_char(Rikku)
-
-
 def wrap_up():
     logger.debug("^^ Wrapping up battle.")
     while not memory.main.user_control():

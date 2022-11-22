@@ -193,7 +193,7 @@ def return_to_airship():
 
 def aeon_start():
     screen.await_turn()
-    battle.main.buddy_swap_yuna()
+    battle.main.buddy_swap(Yuna)
     battle.main.aeon_summon(4)
     while not Tidus.is_turn():
         if memory.main.turn_ready():
@@ -208,7 +208,7 @@ def yojimbo_battle():
     # Incomplete
     screen.await_turn()
     if not Yuna.active():
-        battle.main.buddy_swap_yuna()
+        battle.main.buddy_swap(Yuna)
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
     logger.debug("Pay the man")

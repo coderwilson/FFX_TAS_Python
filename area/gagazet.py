@@ -102,7 +102,7 @@ def defender_x():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
-                battle.main.buddy_swap_yuna()
+                battle.main.buddy_swap(Yuna)
             elif Yuna.is_turn():
                 battle.main.aeon_summon(4)
             else:

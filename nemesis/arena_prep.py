@@ -340,12 +340,12 @@ def advanced_battle_logic():
                 if memory.main.turn_ready():
                     if Rikku.is_turn():
                         if not aeon_complete:
-                            battle.main.buddy_swap_yuna()
+                            battle.main.buddy_swap(Yuna)
                             battle.main.aeon_summon(4)
                         else:
                             CurrentPlayer().defend()
                     elif Yuna.is_turn():
-                        battle.main.buddy_swap_rikku()
+                        battle.main.buddy_swap(Rikku)
                     elif Tidus.is_turn():
                         battle.main.use_skill(1)  # Quick hit
                     else:
@@ -358,7 +358,7 @@ def advanced_battle_logic():
                 if memory.main.turn_ready():
                     if encounter_id in [442]:
                         # Damned malboros in Omega
-                        battle.main.buddy_swap_yuna()
+                        battle.main.buddy_swap(Yuna)
                         battle.main.aeon_summon(4)
                         CurrentPlayer().attack()
                     elif Tidus.is_turn():
@@ -529,7 +529,7 @@ def bribe_battle(spare_change_value: int = 12000):
                     xbox.tap_b()
                 battle.utils.tap_targeting()
             else:
-                battle.main.buddy_swap_lulu()
+                battle.main.buddy_swap(Lulu)
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():
         pass
