@@ -446,7 +446,7 @@ def chocobo_eater():
                         choco_target = memory.main.get_active_battle_formation()[1]
             turns += 1
             if choco_target == memory.main.get_battle_char_turn():
-                if 1 not in memory.main.get_active_battle_formation():
+                if not Yuna.active():
                     battle.main.buddy_swap(Yuna)
                     Yuna.attack(target_id=Yuna)
                     choco_target = 255
@@ -462,19 +462,19 @@ def chocobo_eater():
             if screen.faint_check() >= 2:
                 logger.debug("Attempting revive")
                 if Kimahri.is_turn():
-                    if 0 not in memory.main.get_active_battle_formation():
+                    if not Tidus.active():
                         battle.main.buddy_swap_tidus()
-                    elif 4 not in memory.main.get_active_battle_formation():
+                    elif not Wakka.active():
                         battle.main.buddy_swap(Wakka)
                     else:
                         battle.main.buddy_swap_auron()
                 battle.main.revive()
-            # elif 0 not in memory.main.get_active_battle_formation():
+            # elif not Tidus.active():
             # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
             #    buddy_swap_tidus()
             elif (
                 swapped_yuna
-                and 0 not in memory.main.get_active_battle_formation()
+                and not Tidus.active()
                 and memory.main.state_dead(1)
                 and not choco_haste
             ):
@@ -771,13 +771,13 @@ def spherimorph():
                     CurrentPlayer().defend()
                     yuna_turn = True
                 elif not battle.main.spheri_spell_item_ready():
-                    if 5 not in memory.main.get_active_battle_formation():
+                    if not Lulu.active():
                         battle.main.buddy_swap(Lulu)
-                    elif 6 not in memory.main.get_active_battle_formation():
+                    elif not Rikku.active():
                         battle.main.buddy_swap(Rikku)
                     else:
                         CurrentPlayer().defend()
-                elif 6 not in memory.main.get_active_battle_formation():
+                elif not Rikku.active():
                     battle.main.buddy_swap(Rikku)
                 else:
                     CurrentPlayer().defend()
@@ -802,9 +802,9 @@ def spherimorph():
                     # else:
                     CurrentPlayer().defend()
                     kim_turn = True
-                elif 6 not in memory.main.get_active_battle_formation():
+                elif not Rikku.active():
                     battle.main.buddy_swap(Rikku)
-                elif 5 not in memory.main.get_active_battle_formation():
+                elif not Lulu.active():
                     battle.main.buddy_swap(Lulu)
                 else:
                     CurrentPlayer().defend()
@@ -827,7 +827,7 @@ def spherimorph():
                         spell_num = 3  # Water
                     elif memory.main.get_char_weakness(20) == 8:
                         spell_num = 2  # Thunder
-                elif 6 not in memory.main.get_active_battle_formation():
+                elif not Rikku.active():
                     battle.main.buddy_swap(Rikku)
                 else:
                     CurrentPlayer().defend()
@@ -839,7 +839,7 @@ def spherimorph():
                     grenade_slot_num = memory.main.get_use_items_slot(35)
                     battle.main.use_item(grenade_slot_num, "none")
                 elif not battle.main.spheri_spell_item_ready():
-                    if 5 not in memory.main.get_active_battle_formation():
+                    if not Lulu.active():
                         battle.main.buddy_swap(Lulu)
                     else:
                         CurrentPlayer().defend()
@@ -977,10 +977,10 @@ def wendigo():
                     yuna_ap = True
                 # If Yuna has had a turn swap for Lulu
                 else:
-                    if 5 not in memory.main.get_active_battle_formation():
+                    if not Lulu.active():
                         logger.debug("Swapping to Lulu")
                         battle.main.buddy_swap(Lulu)
-                    elif 6 not in memory.main.get_active_battle_formation():
+                    elif not Rikku.active():
                         battle.main.buddy_swap(Rikku)
                     else:
                         xbox.weap_swap(0)

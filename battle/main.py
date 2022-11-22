@@ -1323,7 +1323,7 @@ def mrr_manip(kim_max_advance: int = 6):
                 flee_all()
             elif kim_turn:
                 attempt_manip = True
-                if 3 not in memory.main.get_active_battle_formation():
+                if not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif Kimahri.is_turn():
                     next_crit_kim = mrr_target()
@@ -1668,7 +1668,7 @@ def negator_with_steal():
                     xbox.weap_swap(0)
                 elif kimahriturns == 2:
                     _steal()
-                elif 0 not in memory.main.get_active_battle_formation():
+                elif not Tidus.active():
                     buddy_swap(Tidus)
                 else:
                     CurrentPlayer().defend()
@@ -1810,9 +1810,9 @@ def seymour_guado_blitz_win():
                         buddy_swap(Auron)
                     elif not Rikku.active():
                         buddy_swap(Rikku)
-                    elif 4 not in memory.main.get_active_battle_formation():
+                    elif not Wakka.active():
                         buddy_swap(Wakka)
-                    elif 3 not in memory.main.get_active_battle_formation():
+                    elif not Kimahri.active():
                         buddy_swap(Kimahri)
                     else:
                         CurrentPlayer().defend()
@@ -2916,7 +2916,7 @@ def calm_lands_gems():
     else:
         while memory.main.battle_active():
             if memory.main.turn_ready():
-                if 3 not in memory.main.get_active_battle_formation():
+                if not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif steal_complete:
                     flee_all()
@@ -4841,7 +4841,7 @@ def advance_rng_10(num_advances: int):
                         CurrentPlayer().defend()
                 elif (
                     3 in memory.main.get_battle_formation()
-                    and 3 not in memory.main.get_active_battle_formation()
+                    and not Kimahri.active()
                     and num_advances % 3 != 0
                 ):
                     buddy_swap(Kimahri)
@@ -4869,7 +4869,7 @@ def advance_rng_10(num_advances: int):
                         CurrentPlayer().defend()
                 elif (
                     3 in memory.main.get_battle_formation()
-                    and 3 not in memory.main.get_active_battle_formation()
+                    and not Kimahri.active()
                     and num_advances % 3 != 0
                 ):
                     buddy_swap(Kimahri)
@@ -4884,11 +4884,11 @@ def advance_rng_10(num_advances: int):
                     logger.debug("+++ Registering turn, steal character")
                     calm_steal()
                     num_advances -= 1
-                elif 3 not in memory.main.get_active_battle_formation():
+                elif not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif Tidus.is_turn():
                     flee_all()
-                elif 0 not in memory.main.get_active_battle_formation():
+                elif not Tidus.active():
                     buddy_swap(Tidus)
                 else:
                     CurrentPlayer().defend()  # should not occur.
@@ -5045,7 +5045,7 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     buddy_swap(Rikku)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
-                elif 3 not in memory.main.get_active_battle_formation():
+                elif not Kimahri.active():
                     buddy_swap(Kimahri)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
@@ -5060,9 +5060,9 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     steal()
                 elif not Rikku.active():
                     buddy_swap(Rikku)
-                elif 3 not in memory.main.get_active_battle_formation():
+                elif not Kimahri.active():
                     buddy_swap(Kimahri)
-                elif 0 not in memory.main.get_active_battle_formation():
+                elif not Tidus.active():
                     buddy_swap(Tidus)
                 else:
                     CurrentPlayer().defend()
@@ -5071,9 +5071,9 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     steal()
                 elif not Rikku.active():
                     buddy_swap(Rikku)
-                elif 0 not in memory.main.get_active_battle_formation():
+                elif not Tidus.active():
                     buddy_swap(Tidus)
-                elif 3 not in memory.main.get_active_battle_formation():
+                elif not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif Tidus.is_turn() and not tidus_hasted:
                     tidus_hasted = True
@@ -5091,7 +5091,7 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
     while memory.main.battle_active():
         # Try to get NEA on Tidus
         if memory.main.turn_ready():
-            if 0 not in memory.main.get_active_battle_formation():
+            if not Tidus.active():
                 logger.debug("+++ Get Tidus back in")
                 buddy_swap(Tidus)
             elif Tidus.is_turn():
@@ -5119,7 +5119,7 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
     logger.debug(f"++ Silence slot: {silence_slot}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if 0 not in memory.main.get_active_battle_formation():
+            if not Tidus.active():
                 logger.debug("+++ Get Tidus back in")
                 buddy_swap(Tidus)
             elif Tidus.is_turn():

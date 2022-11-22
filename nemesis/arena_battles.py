@@ -207,7 +207,7 @@ def aeon_start():
 def yojimbo_battle():
     # Incomplete
     screen.await_turn()
-    if 1 not in memory.main.get_active_battle_formation():
+    if not Yuna.active():
         battle.main.buddy_swap_yuna()
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
