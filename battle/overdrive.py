@@ -203,7 +203,7 @@ def yojimbo(gil_value: int = 263000):
 
 def yuna(aeon_num: int = 5):
     logger.info(f"Summoning Aeon {aeon_num}. Awaiting Yunas turn")
-    while not screen.turn_yuna():
+    while not Yuna.is_turn():
         if memory.main.turn_ready():
             CurrentPlayer().defend()
     while not memory.main.other_battle_menu():

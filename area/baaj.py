@@ -115,7 +115,7 @@ def baaj_puzzle():
 def klikk_fight():
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
-    while not screen.turn_rikku():
+    while not Rikku.is_turn():
         xbox.tap_b()
 
     xbox.click_to_battle()

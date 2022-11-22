@@ -101,9 +101,9 @@ def defender_x():
     xbox.click_to_battle()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
+            if Tidus.is_turn():
                 battle.main.buddy_swap_yuna()
-            elif screen.turn_yuna():
+            elif Yuna.is_turn():
                 battle.main.aeon_summon(4)
             else:
                 CurrentPlayer().attack()

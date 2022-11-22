@@ -24,14 +24,14 @@ test_mode = False
 
 
 def auto_life():
-    while not (memory.main.turn_ready() and screen.turn_tidus()):
+    while not (memory.main.turn_ready() and Tidus.is_turn()):
         if memory.main.turn_ready():
             if screen.turn_aeon():
                 CurrentPlayer().attack()
-            elif not screen.turn_tidus():
+            elif not Tidus.is_turn():
                 CurrentPlayer().defend()
     while memory.main.battle_menu_cursor() != 22:
-        if screen.turn_tidus() == False:
+        if Tidus.is_turn() == False:
             logger.debug("Attempting Auto-life, but it's not Tidus's turn")
             xbox.tap_up()
             xbox.tap_up()
@@ -163,7 +163,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
     else:
         while memory.main.battle_active():
             if memory.main.turn_ready():
-                if screen.turn_tidus():
+                if Tidus.is_turn():
                     if memory.main.get_encounter_id() in [154, 156, 164]:
                         # Confusion is a dumb mechanic in this game.
                         battle.main.attack_by_num(22, "l")
@@ -175,7 +175,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                         battle.main.attack_by_num(23, "d")
                     else:
                         CurrentPlayer().attack()
-                elif screen.turn_yuna():
+                elif Yuna.is_turn():
                     if yuna_attack:
                         if memory.main.get_encounter_id() in [154, 156, 164]:
                             # Confusion is a dumb mechanic in this game.
@@ -190,7 +190,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                             CurrentPlayer().attack()
                     else:
                         battle.main.escape_one()
-                elif screen.turn_rikku() or screen.turn_wakka():
+                elif Rikku.is_turn() or Wakka.is_turn():
                     if memory.main.battle_type() == 2:
                         battle.main.escape_one()
                     elif not battle.main.check_tidus_ok():
@@ -338,15 +338,15 @@ def advanced_battle_logic():
             aeon_complete = False
             while memory.main.battle_active():
                 if memory.main.turn_ready():
-                    if screen.turn_rikku():
+                    if Rikku.is_turn():
                         if not aeon_complete:
                             battle.main.buddy_swap_yuna()
                             battle.main.aeon_summon(4)
                         else:
                             CurrentPlayer().defend()
-                    elif screen.turn_yuna():
+                    elif Yuna.is_turn():
                         battle.main.buddy_swap_rikku()
-                    elif screen.turn_tidus():
+                    elif Tidus.is_turn():
                         battle.main.use_skill(1)  # Quick hit
                     else:
                         CurrentPlayer().defend()
@@ -361,7 +361,7 @@ def advanced_battle_logic():
                         battle.main.buddy_swap_yuna()
                         battle.main.aeon_summon(4)
                         CurrentPlayer().attack()
-                    elif screen.turn_tidus():
+                    elif Tidus.is_turn():
                         if (
                             memory.main.get_encounter_id() in [386]
                             and not auto_life_used
@@ -412,7 +412,7 @@ def advanced_battle_logic():
                             Tidus.flee()
                         else:
                             battle.main.use_skill(1)  # Quick hit
-                    elif screen.turn_rikku():
+                    elif Rikku.is_turn():
                         if encounter_id in [377, 382]:
                             logger.debug(
                                 "Shining Gems for Gemini, better to save other items for other enemies."
@@ -510,7 +510,7 @@ def bribe_battle(spare_change_value: int = 12000):
     logger.debug(f"value (2): {spare_change_value}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_lulu():
+            if Lulu.is_turn():
                 while memory.main.battle_menu_cursor() != 20:
                     if memory.main.battle_menu_cursor() == 255:
                         xbox.tap_down()
@@ -768,11 +768,11 @@ def farm_feathers():
     wait_counter = 0
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_rikku():
+            if Rikku.is_turn():
                 logger.debug("Qactar steal command")
                 battle.main.steal()
                 logger.debug("Qactar steal command done")
-            elif screen.turn_tidus():
+            elif Tidus.is_turn():
                 logger.debug("Qactar flee command")
                 Tidus.flee()
                 logger.debug("Qactar flee command done")
@@ -965,7 +965,7 @@ def tonberry_levels_battle():
     tidus_AP_gained = False
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
+            if Tidus.is_turn():
                 if tidus_AP_gained == True:
                     Tidus.flee()
                 elif memory.main.get_overdrive_battle(character=0) == 100:
