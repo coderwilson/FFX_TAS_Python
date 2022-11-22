@@ -22,7 +22,7 @@ from paths import (
     KelkRonso,
     SeymourFlux,
 )
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -106,7 +106,7 @@ def defender_x():
             elif screen.turn_yuna():
                 battle.main.aeon_summon(4)
             else:
-                battle.main.attack("none")
+                CurrentPlayer().attack()
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
     rng_track.print_manip_info()

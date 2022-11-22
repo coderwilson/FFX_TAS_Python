@@ -11,7 +11,7 @@ import tts
 import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 game_vars = vars.vars_handle()
 
@@ -183,7 +183,7 @@ def ammes_battle():
     logger.info("Killing Sinspawn")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            battle.main.attack("none")
+            CurrentPlayer().attack()
             last_hit = memory.main.last_hit_check_change()
             while last_hit == 9999:
                 last_hit = memory.main.last_hit_check_change()

@@ -9,7 +9,7 @@ import screen
 import vars
 import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -237,7 +237,7 @@ def leaving():
                     FFXC.set_movement(1, 0)
                 FFXC.set_neutral()
                 xbox.click_to_battle()
-                battle.main.attack("none")
+                CurrentPlayer().attack()
                 xbox.click_to_battle()
                 battle.main.thunder("none")
                 memory.main.click_to_control()
@@ -286,12 +286,12 @@ def leaving():
                             and enemy_hp[0] > 119
                         ):
                             if Tidus.next_crit(12) == 2:
-                                battle.main.attack("none")
+                                CurrentPlayer().attack()
                             else:
                                 battle.main.use_potion_character(Tidus, "l")
                                 heal_count += 1
                         else:
-                            battle.main.attack("none")
+                            CurrentPlayer().attack()
                     elif memory.main.diag_skip_possible():
                         xbox.tap_b()
                 # logs.write_stats("Kimahri heal count:")

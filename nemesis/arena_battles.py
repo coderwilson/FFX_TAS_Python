@@ -14,7 +14,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -198,7 +198,7 @@ def aeon_start():
     while not screen.turn_tidus():
         if memory.main.turn_ready():
             if screen.turn_aeon():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
                 battle.main.defend()
 
@@ -239,7 +239,7 @@ def auto_life():
     while not (memory.main.turn_ready() and screen.turn_tidus()):
         if memory.main.turn_ready():
             if screen.turn_aeon():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             elif not screen.turn_tidus():
                 battle.main.defend()
     while memory.main.battle_menu_cursor() != 22:
@@ -278,7 +278,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                 else:
                     battle.main.use_skill(1)  # Quick hit
             elif screen.turn_aeon():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
                 battle.main.defend()
 
@@ -306,11 +306,11 @@ def basic_attack(
                 elif use_od and memory.main.get_overdrive_battle(0) == 100:
                     battle.overdrive.tidus(version=od_version)
                 else:
-                    battle.main.attack("none")
+                    CurrentPlayer().attack()
             elif screen.turn_yuna() and yuna_autos:
-                battle.attack("none")
+                battle.CurrentPlayer().attack()
             elif screen.turn_aeon():
-                battle.attack("none")
+                battle.CurrentPlayer().attack()
             else:
                 battle.main.defend()
 
@@ -859,7 +859,7 @@ def shinryu_battle():
                 elif rikku_drive_complete and not memory.main.state_auto_life():
                     auto_life()
                 else:
-                    battle.main.attack("none")
+                    CurrentPlayer().attack()
             else:
                 battle.main.defend()
 
@@ -978,7 +978,7 @@ def recharge_yuna():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_yuna():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
                 battle.main.escape_one()
 

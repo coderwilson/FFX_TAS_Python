@@ -44,7 +44,7 @@ def entrance(checkpoint: int = 0):
     while memory.main.get_story_progress() < 48:
         if screen.battle_screen():
             if memory.main.get_encounter_id() == 2:
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
                 battle.main.defend()
         elif memory.main.diag_skip_possible():

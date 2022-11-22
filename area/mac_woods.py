@@ -12,7 +12,7 @@ import screen
 import vars
 import xbox
 from paths import MacalaniaLake, MacalaniaWoods
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 

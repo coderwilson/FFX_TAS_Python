@@ -13,7 +13,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -27,7 +27,7 @@ def auto_life():
     while not (memory.main.turn_ready() and screen.turn_tidus()):
         if memory.main.turn_ready():
             if screen.turn_aeon():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             elif not screen.turn_tidus():
                 battle.main.defend()
     while memory.main.battle_menu_cursor() != 22:
@@ -174,7 +174,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                     elif memory.main.get_encounter_id() == 284:
                         battle.main.attack_by_num(23, "d")
                     else:
-                        battle.main.attack("none")
+                        CurrentPlayer().attack()
                 elif screen.turn_yuna():
                     if yuna_attack:
                         if memory.main.get_encounter_id() in [154, 156, 164]:
@@ -187,7 +187,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                         elif memory.main.get_encounter_id() == 284:
                             battle.main.attack_by_num(22, "d")
                         else:
-                            battle.main.attack("none")
+                            CurrentPlayer().attack()
                     else:
                         battle.main.escape_one()
                 elif screen.turn_rikku() or screen.turn_wakka():
@@ -360,7 +360,7 @@ def advanced_battle_logic():
                         # Damned malboros in Omega
                         battle.main.buddy_swap_yuna()
                         battle.main.aeon_summon(4)
-                        battle.main.attack("none")
+                        CurrentPlayer().attack()
                     elif screen.turn_tidus():
                         if (
                             memory.main.get_encounter_id() in [386]

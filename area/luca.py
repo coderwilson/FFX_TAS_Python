@@ -256,7 +256,7 @@ def after_blitz():
                     battle.main.after_blitz_1(game_vars.early_haste())
                 elif encounter_id == 2:
                     xbox.click_to_battle()
-                    battle.main.attack("none")  # Hardest boss in the game.
+                    CurrentPlayer().attack()  # Hardest boss in the game.
                     logger.info("Well that boss was difficult.")
                     memory.main.wait_frames(30 * 6)
                 elif encounter_id == 3:

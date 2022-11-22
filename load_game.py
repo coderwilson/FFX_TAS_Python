@@ -13,7 +13,7 @@ import vars
 import xbox
 import zz_airship_path
 from gamestate import game
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 
@@ -81,9 +81,7 @@ def load_into_game(gamestate: str, step_counter: str):
                 logger.debug(f"End game version {end_ver}")
                 nea_zone = results[gamestate][step_counter][key]["nea_zone"]
                 nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
-                spec_move = results[gamestate][step_counter][key][
-                    "special_movement"
-                ]
+                spec_move = results[gamestate][step_counter][key]["special_movement"]
                 logger.debug(f"NEA zone {nea_zone}")
                 logger.debug(f"Nemesis checkpoint {nem_ap}")
 

@@ -10,7 +10,7 @@ import xbox
 import zz_airship_path
 import zz_egg_hunt_auto
 from paths import InsideSin
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
