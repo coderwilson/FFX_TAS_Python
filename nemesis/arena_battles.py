@@ -2,6 +2,7 @@ import logging
 
 import battle.main
 import battle.overdrive
+import battle.utils
 import load_game
 import memory.main
 import menu
@@ -253,7 +254,7 @@ def auto_life():
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    battle.main._navigate_to_position(1)
+    battle.utils._navigate_to_position(1)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     xbox.tap_b()

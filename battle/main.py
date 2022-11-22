@@ -21,17 +21,6 @@ FFXC = xbox.controller_handle()
 logger = logging.getLogger(__name__)
 
 
-def tap_targeting():
-    logger.debug(
-        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
-    )
-    while (not memory.main.main_battle_menu()) and memory.main.battle_active():
-        xbox.tap_b()
-    logger.debug(
-        f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
-    )
-
-
 def defend():
     logger.debug("Defending")
     for _ in range(5):
@@ -55,10 +44,10 @@ def tidus_flee():
         logger.debug("Out")
         while not memory.main.other_battle_menu():
             xbox.tap_b()
-        _navigate_to_position(0)
+        battle.utils._navigate_to_position(0)
         while memory.main.other_battle_menu():
             xbox.tap_b()
-        tap_targeting()
+        battle.utils.tap_targeting()
 
 
 def yuna_cure_omnis():
@@ -72,7 +61,7 @@ def yuna_cure_omnis():
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(0)
+    battle.utils._navigate_to_position(0)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     while memory.main.battle_target_id() <= 20:
@@ -99,7 +88,7 @@ def tidus_haste(direction, character=255):
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(0)
+    battle.utils._navigate_to_position(0)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if character != 255:
@@ -136,7 +125,7 @@ def tidus_haste(direction, character=255):
         xbox.tap_up()
     elif direction == "down":
         xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def use_skill(position: int = 0, target: int = 20):
@@ -153,7 +142,7 @@ def use_skill(position: int = 0, target: int = 20):
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(position)
+    battle.utils._navigate_to_position(position)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if target != 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
@@ -169,7 +158,7 @@ def use_skill(position: int = 0, target: int = 20):
                 if memory.main.battle_target_id() < 20:
                     xbox.tap_up()
                     direction = "l"
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def use_special(position, target: int = 20, direction: int = "u"):
@@ -186,7 +175,7 @@ def use_special(position, target: int = 20, direction: int = "u"):
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(position)
+    battle.utils._navigate_to_position(position)
     while memory.main.other_battle_menu():
         xbox.tap_b()
 
@@ -202,7 +191,7 @@ def use_special(position, target: int = 20, direction: int = "u"):
                 if memory.main.battle_target_id() < 20:
                     xbox.tap_down()
                     direction = "r"
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def remedy(character: int, direction: str):
@@ -235,10 +224,10 @@ def revive(item_num=6, report_for_rng=False):
     while memory.main.main_battle_menu():
         xbox.tap_b()
     item_pos = memory.main.get_throw_items_slot(item_num)
-    _navigate_to_position(item_pos)
+    battle.utils._navigate_to_position(item_pos)
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def revive_target(item_num=6, target=0):
@@ -254,7 +243,7 @@ def revive_target(item_num=6, target=0):
     while memory.main.main_battle_menu():
         xbox.tap_b()
     item_pos = memory.main.get_throw_items_slot(item_num)
-    _navigate_to_position(item_pos)
+    battle.utils._navigate_to_position(item_pos)
     while memory.main.other_battle_menu():
         xbox.tap_b()
 
@@ -271,7 +260,7 @@ def revive_target(item_num=6, target=0):
                 if memory.main.battle_target_id() >= 20:
                     xbox.tap_down()
                     direction = "l"
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def revive_all():
@@ -917,7 +906,7 @@ def aeon_shield():
             xbox.tap_b()
         else:
             xbox.tap_up()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 # move to battle.aeon
@@ -936,7 +925,7 @@ def aeon_boost():
             xbox.tap_down()
         else:
             xbox.tap_up()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 # move to battle.aeon
@@ -953,7 +942,7 @@ def aeon_dismiss():
             xbox.tap_b()
         else:
             xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def mrr_target():
@@ -1812,11 +1801,11 @@ def seymour_guado_blitz_win():
                     while memory.main.other_battle_menu():
                         xbox.tap_b()
                     xbox.tap_left()
-                    tap_targeting()
+                    battle.utils.tap_targeting()
                 elif tidus_turns == 2:
                     defend()
                 elif tidus_turns == 3:
-                    attack(direction="none")
+                    attack()
                 elif tidus_turns == 4:
                     buddy_swap(Wakka)
                 elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
@@ -1830,7 +1819,7 @@ def seymour_guado_blitz_win():
                     tidushaste = True
                 elif animahits < 4:
                     old_hp = memory.main.get_enemy_current_hp()[3]
-                    attack(direction="none")
+                    attack()
                     new_hp = memory.main.get_enemy_current_hp()[3]
                     if new_hp < old_hp:
                         logger.debug("Hit Anima")
@@ -1839,7 +1828,7 @@ def seymour_guado_blitz_win():
                         logger.debug("Miss Anima")
                         animamiss += 1
                 else:
-                    attack(direction="none")
+                    attack()
                 tidus_turns += 1
                 logger.debug(f"Tidus turns: {tidus_turns}")
             elif Yuna.is_turn():
@@ -2037,7 +2026,7 @@ def seymour_guado_blitz_loss():
                         logger.debug("Wakka is dead")
             if Tidus.is_turn():
                 if memory.main.get_enemy_current_hp()[1] < 2999:
-                    attack(direction="none")
+                    attack()
                     logger.debug("Should be last attack of the fight.")
                 elif tidus_turns == 0:
                     logger.debug("Tidus Haste self")
@@ -2054,7 +2043,7 @@ def seymour_guado_blitz_loss():
                     while memory.main.other_battle_menu():
                         xbox.tap_b()
                     xbox.tap_left()
-                    tap_targeting()
+                    battle.utils.tap_targeting()
                 elif tidus_turns == 3:
                     logger.debug("Swap to Brotherhood")
                     equip_in_battle(special="brotherhood")
@@ -2074,7 +2063,7 @@ def seymour_guado_blitz_loss():
                     tidushaste = True
                 elif animahits < 4:
                     old_hp = memory.main.get_enemy_current_hp()[3]
-                    attack(direction="none")
+                    attack()
                     new_hp = memory.main.get_enemy_current_hp()[3]
                     if new_hp < old_hp:
                         logger.debug("Hit Anima")
@@ -2084,7 +2073,7 @@ def seymour_guado_blitz_loss():
                         animamiss += 1
                 else:
                     logger.debug("Plain Attacking")
-                    attack(direction="none")
+                    attack()
                 tidus_turns += 1
                 logger.debug(f"Tidus turns: {tidus_turns}")
             elif Yuna.is_turn():
@@ -2111,7 +2100,7 @@ def seymour_guado_blitz_loss():
                         remedy(character=Kimahri, direction="l")
                 else:
                     buddy_swap(Tidus)
-                    attack(direction="none")
+                    attack()
             elif Kimahri.is_turn():
                 if kimahriconfused:
                     tidusposition = memory.main.get_battle_char_slot(0)
@@ -2879,7 +2868,7 @@ def altana_heal():
             xbox.tap_b()
         item_pos = memory.main.get_throw_items_slot(itemnum)
         logger.debug(f"Position: {item_pos}")
-        _navigate_to_position(item_pos)
+        battle.utils._navigate_to_position(item_pos)
         while memory.main.other_battle_menu():
             xbox.tap_b()
         logger.debug(f"Direction: {direction}")
@@ -2908,7 +2897,7 @@ def altana_heal():
                     logger.debug("Wrong battle line targeted.")
                     xbox.tap_up()
                     direction = "r"
-        tap_targeting()
+        battle.utils.tap_targeting()
         return 1
 
     else:
@@ -3012,24 +3001,6 @@ def gagazet_cave(direction):
     flee_all()
 
 
-def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
-    while battle_cursor() == 255:
-        pass
-    if battle_cursor() != position:
-        logger.debug(f"Wrong position targeted {battle_cursor() % 2}, {position % 2}")
-        while battle_cursor() % 2 != position % 2:
-            if battle_cursor() < position:
-                xbox.tap_right()
-            else:
-                xbox.tap_left()
-        while battle_cursor() != position:
-            logger.debug(f"Battle_cursor: {battle_cursor()}")
-            if battle_cursor() > position:
-                xbox.tap_up()
-            else:
-                xbox.tap_down()
-
-
 def use_item(slot: int, direction="none", target=255, rikku_flee=False):
     logger.debug("Using items via the Use command")
     logger.debug(f"Item slot: {slot}")
@@ -3057,16 +3028,16 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
     else:
         logger.debug("Mark 2, selecting 'Use' command in position 1")
     if rikku_flee:
-        _navigate_to_position(2)
+        battle.utils._navigate_to_position(2)
     else:
         print("Mark 2, selecting 'Use' command in position", 1)
-        _navigate_to_position(1)
+        battle.utils._navigate_to_position(1)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     logger.debug("Mark 3, navigating to item slot")
-    _navigate_to_position(slot, memory.main.battle_cursor_3)
+    battle.utils._navigate_to_position(slot, memory.main.battle_cursor_3)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.interior_battle_menu():
@@ -3105,7 +3076,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
                     else:
                         xbox.tap_left()
 
-            tap_targeting()
+            battle.utils.tap_targeting()
         except Exception:
             xbox.tap_b()
             xbox.tap_b()
@@ -3115,7 +3086,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
             xbox.tap_b()
     elif direction == "none":
         logger.debug("No direction variation")
-        tap_targeting()
+        battle.utils.tap_targeting()
     else:
         logger.debug(f"Direction variation: {direction}")
         if direction == "left":
@@ -3126,7 +3097,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
             xbox.tap_up()
         elif direction == "down":
             xbox.tap_down()
-        tap_targeting()
+        battle.utils.tap_targeting()
 
 
 def use_item_tidus(slot: int, direction="none", target=255):
@@ -3152,13 +3123,13 @@ def use_item_tidus(slot: int, direction="none", target=255):
     if game_vars.use_pause():
         memory.main.wait_frames(3)
     logger.debug("Mark 2")
-    _navigate_to_position(2)
+    battle.utils._navigate_to_position(2)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if game_vars.use_pause():
         memory.main.wait_frames(3)
     logger.debug("Mark 3")
-    _navigate_to_position(slot, memory.main.battle_cursor_3)
+    battle.utils._navigate_to_position(slot, memory.main.battle_cursor_3)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
     while memory.main.interior_battle_menu():
@@ -3197,7 +3168,7 @@ def use_item_tidus(slot: int, direction="none", target=255):
                     else:
                         xbox.tap_left()
 
-            tap_targeting()
+            battle.utils.tap_targeting()
         except Exception:
             xbox.tap_b()
             xbox.tap_b()
@@ -3207,7 +3178,7 @@ def use_item_tidus(slot: int, direction="none", target=255):
             xbox.tap_b()
     elif direction == "none":
         logger.debug("No direction variation")
-        tap_targeting()
+        battle.utils.tap_targeting()
     else:
         logger.debug(f"Direction variation: {direction}")
         if direction == "left":
@@ -3218,7 +3189,7 @@ def use_item_tidus(slot: int, direction="none", target=255):
             xbox.tap_up()
         elif direction == "down":
             xbox.tap_down()
-        tap_targeting()
+        battle.utils.tap_targeting()
 
 
 def cheer():
@@ -3232,10 +3203,10 @@ def cheer():
             xbox.tap_up()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(1)
+    battle.utils._navigate_to_position(1)
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def seymour_spell(target_face=True):
@@ -3254,7 +3225,7 @@ def seymour_spell(target_face=True):
     while memory.main.main_battle_menu():
         xbox.tap_b()  # Black magic
     logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
-    _navigate_to_position(5)
+    battle.utils._navigate_to_position(5)
     while memory.main.other_battle_menu():
         xbox.tap_b()
 
@@ -3264,7 +3235,7 @@ def seymour_spell(target_face=True):
         while memory.main.battle_target_id() != num:
             xbox.tap_left()
 
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def _use_healing_item(num=None, direction="l", item_id=0):
@@ -3285,7 +3256,7 @@ def _use_healing_item(num=None, direction="l", item_id=0):
     logger.debug(
         f"get_throw_items_slot({item_id}): {memory.main.get_throw_items_slot(item_id)}"
     )
-    _navigate_to_position(memory.main.get_throw_items_slot(item_id))
+    battle.utils._navigate_to_position(memory.main.get_throw_items_slot(item_id))
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if num is not None:
@@ -3318,7 +3289,7 @@ def _use_healing_item(num=None, direction="l", item_id=0):
                     direction = "r"
                 else:
                     xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def use_potion_character(num, direction):
@@ -3386,7 +3357,7 @@ def attack_by_num(num, direction="u"):
                 if memory.main.battle_target_id() >= 20:
                     direction = "r"
                 xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def attack_self_tanker():
@@ -3411,7 +3382,7 @@ def attack_self_tanker():
             xbox.tap_down()
         else:
             xbox.tap_left()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def oblitz_rng_wait():
@@ -3545,7 +3516,7 @@ def attack_oblitz_end():
     # logs.write_stats(memory.s32(rng_wait_results))
 
 
-def attack(direction="none"):
+def attack():
     logger.debug("Attack")
     direction = direction.lower()
     if not memory.main.turn_ready():
@@ -3574,7 +3545,7 @@ def attack(direction="none"):
         xbox.tap_up()
     if direction == "down":
         xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def _steal(direction=None):
@@ -3590,7 +3561,7 @@ def _steal(direction=None):
             return
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(0)
+    battle.utils._navigate_to_position(0)
     logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Use the Steal
@@ -3604,7 +3575,7 @@ def _steal(direction=None):
     elif direction == "left":
         xbox.tap_left()
     logger.debug("Firing steal")
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def steal():
@@ -3708,7 +3679,7 @@ def cast_spell(direction, spell_id):
             xbox.tap_up()
     while memory.main.main_battle_menu():
         xbox.tap_b()  # Black magic
-    _navigate_to_position(spell_id)
+    battle.utils._navigate_to_position(spell_id)
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Cast the Spell
     direction = direction.lower()
@@ -3738,7 +3709,7 @@ def cast_spell(direction, spell_id):
     else:
         logger.error(f"UNSURE DIRECTION: {direction}")
         raise ValueError("Unsure direction")
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def thunder(direction="none"):
@@ -3777,7 +3748,7 @@ def thunder_target(target, direction):
         else:
             xbox.tap_b()
     logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
-    _navigate_to_position(1)
+    battle.utils._navigate_to_position(1)
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Thunder
     while memory.main.battle_target_id() != target:
@@ -3809,7 +3780,7 @@ def thunder_target(target, direction):
                 direction = "r"
             else:
                 xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 # move to battle.aeon
@@ -3865,7 +3836,7 @@ def aeon_spell_direction(position, direction):
     while memory.main.main_battle_menu():
         xbox.tap_b()  # Black magic
     logger.debug("In Black Magic")
-    _navigate_to_position(position)
+    battle.utils._navigate_to_position(position)
     logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Cast the Spell
@@ -3878,7 +3849,7 @@ def aeon_spell_direction(position, direction):
         xbox.tap_up()
     elif direction == "down":
         xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
     logger.debug("Aeon casting spell")
 
 
@@ -3984,7 +3955,7 @@ def lancet(direction):
             xbox.tap_down()
     while memory.main.main_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(0)
+    battle.utils._navigate_to_position(0)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if direction == "left":
@@ -3995,7 +3966,7 @@ def lancet(direction):
         xbox.tap_up()
     if direction == "down":
         xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def lancet_target(target, direction):
@@ -4052,7 +4023,7 @@ def lancet_target(target, direction):
                     xbox.tap_down()
             retry += 1
 
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def lancet_home(direction):
@@ -4068,7 +4039,7 @@ def lancet_home(direction):
             xbox.tap_down()
     while memory.main.main_battle_menu():
         xbox.tap_b()
-    _navigate_to_position(2)
+    battle.utils._navigate_to_position(2)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     if direction == "left":
@@ -4079,7 +4050,7 @@ def lancet_home(direction):
         xbox.tap_up()
     if direction == "down":
         xbox.tap_down()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def flee_all():
@@ -4134,7 +4105,7 @@ def escape_action():
             xbox.tap_b()
     if memory.main.battle_active():
         logger.debug("Selected Escaping")
-        tap_targeting()
+        battle.utils.tap_targeting()
 
 
 def escape_one():
@@ -4301,7 +4272,7 @@ def impulse(direction=None, target_far_line=False):
     if target_far_line:
         while not memory.main.battle_line_target():
             xbox.tap_left()
-    tap_targeting()
+    battle.utils.tap_targeting()
     xbox.tap_b()
     xbox.tap_b()
     xbox.tap_b()
@@ -4507,7 +4478,9 @@ def check_petrify_tidus():
 
 
 def rikku_od_items(slot):
-    _navigate_to_position(slot, battle_cursor=memory.main.rikku_od_cursor_1)
+    battle.utils._navigate_to_position(
+        slot, battle_cursor=memory.main.rikku_od_cursor_1
+    )
 
 
 def rikku_full_od(battle):
@@ -4595,7 +4568,7 @@ def rikku_full_od(battle):
     rikku_od_items(item2)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
-    tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def equip_in_battle(equip_type="weap", ability_num=0, character=Tidus, special="none"):

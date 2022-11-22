@@ -17,7 +17,7 @@ class TidusImpl(Player):
             xbox.tap_left()
         while not memory.main.interior_battle_menu():
             xbox.tap_b()
-        battle.main._navigate_to_position(
+        battle.utils._navigate_to_position(
             version, battle_cursor=memory.main.battle_cursor_3
         )
         while memory.main.interior_battle_menu():
@@ -39,6 +39,12 @@ class TidusImpl(Player):
 
     def overdrive_active(self):
         return memory.main.read_val(0x00F3D6F4, 1) == 4
+
+    def flee(self):
+        logger.debug("Fleeing with Tidus")
+        self.navigate_to_battle_menu(20)
+        while not memory.main.other_battle_menu():
+            xbox.tap_b()
 
 
 Tidus = TidusImpl()

@@ -18,12 +18,12 @@ class KimahriImpl(Player):
             xbox.tap_left()
         while memory.main.other_battle_menu():
             xbox.tap_b()
-        battle.main._navigate_to_position(
+        battle.utils._navigate_to_position(
             pos, battle_cursor=memory.main.battle_cursor_3
         )
         while memory.main.interior_battle_menu():
             xbox.tap_b()
-        battle.main.tap_targeting()
+        battle.utils.tap_targeting()
 
 
 Kimahri = KimahriImpl()

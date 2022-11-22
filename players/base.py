@@ -1,6 +1,8 @@
 import logging
 from enum import IntEnum
-from typing import List
+from typing import List, Optional
+
+import battles.utils
 
 import memory
 import xbox
@@ -93,6 +95,72 @@ class Player:
         return memory.main.read_val(
             pointer + self.struct_offset + address, 1, find_base=False
         )
+
+    def attack(target_id: Optional[int] = None, direction_hint: Optional[str] = "u"):
+        if target_id is None:
+            logger.debug("Attack")
+        else:
+            logger.debug(
+                f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
+            )
+        if not memory.main.turn_ready():
+            while not memory.main.turn_ready():
+                pass
+        attack_menu_id = [x for x in [0, 203, 210, 216] if x in self.battle_menu][0]
+        self.navigate_to_battle_menu(attack_menu_id)
+        if target_id is not None:
+            while memory.main.main_battle_menu():
+                xbox.tap_b()
+            if num < 20:
+                friendly_target = True
+            else:
+                friendly_target = False
+            if (
+                not friendly_target
+                and memory.main.get_enemy_current_hp()[num - 20] != 0
+            ):
+                while memory.main.battle_target_id() != num:
+                    if direction == "l":
+                        if memory.main.battle_target_id() < 20:
+                            direction = "u"
+                        xbox.tap_left()
+                    elif direction == "r":
+                        if memory.main.battle_target_id() < 20:
+                            direction = "d"
+                        xbox.tap_right()
+                    elif direction == "u":
+                        if memory.main.battle_target_id() < 20:
+                            direction = "l"
+                        xbox.tap_up()
+                    elif direction == "d":
+                        if memory.main.battle_target_id() < 20:
+                            direction = "r"
+                        xbox.tap_down()
+            elif friendly_target:
+                while memory.main.battle_target_id() != num:
+                    if direction == "l":
+                        if memory.main.battle_target_id() >= 20:
+                            direction = "u"
+                        xbox.tap_left()
+                    elif direction == "r":
+                        if memory.main.battle_target_id() >= 20:
+                            direction = "d"
+                        xbox.tap_right()
+                    elif direction == "u":
+                        if memory.main.battle_target_id() >= 20:
+                            direction = "l"
+                        xbox.tap_up()
+                    elif direction == "d":
+                        if memory.main.battle_target_id() >= 20:
+                            direction = "r"
+                        xbox.tap_down()
+        self.battle.utils.tap_targeting()
+
+    def defend():
+        logger.debug("Defending")
+        # There has got to be a better thing we can do with a memory value.
+        for _ in range(5):
+            xbox.tap_y()
 
     def navigate_to_battle_menu(self, target):
         """Different characters have different menu orders."""

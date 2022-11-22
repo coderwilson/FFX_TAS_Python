@@ -3,6 +3,7 @@ import threading
 
 import memory
 import vars
+import xbox
 
 logger = logging.getLogger(__name__)
 
@@ -38,3 +39,32 @@ def speedup_decorator(func):
             return func(*args, **kwargs)
 
     return wrapper
+
+
+def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
+    while battle_cursor() == 255:
+        pass
+    if battle_cursor() != position:
+        logger.debug(f"Wrong position targeted {battle_cursor() % 2}, {position % 2}")
+        while battle_cursor() % 2 != position % 2:
+            if battle_cursor() < position:
+                xbox.tap_right()
+            else:
+                xbox.tap_left()
+        while battle_cursor() != position:
+            logger.debug(f"Battle_cursor: {battle_cursor()}")
+            if battle_cursor() > position:
+                xbox.tap_up()
+            else:
+                xbox.tap_down()
+
+
+def tap_targeting():
+    logger.debug(
+        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+    )
+    while (not memory.main.main_battle_menu()) and memory.main.battle_active():
+        xbox.tap_b()
+    logger.debug(
+        f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+    )

@@ -1,6 +1,7 @@
 import logging
 
 import battle.main
+import battle.utils
 import memory.main
 import screen
 import xbox
@@ -18,7 +19,7 @@ def auron(style="dragon fang"):
     logger.info(f"Auron overdrive. Style: {style}")
     # Doing the actual overdrive
     if style == "dragon fang":
-        battle.main._navigate_to_position(0, battle_cursor=memory.main.battle_cursor_3)
+        battle.utils._navigate_to_position(0, battle_cursor=memory.main.battle_cursor_3)
         while not memory.main.auron_overdrive_active():
             xbox.tap_b()
         logger.debug("Starting")
@@ -48,7 +49,7 @@ def auron(style="dragon fang"):
             memory.main.wait_frames(1)
             FFXC.set_value("btn_b", 0)
     elif style == "shooting star":
-        battle.main._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
+        battle.utils._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
         while not memory.main.auron_overdrive_active():
             xbox.tap_b()
         for i in range(2):  # Do it twice in case there's a miss on the first one.
@@ -81,10 +82,10 @@ def kimahri(pos):
         xbox.tap_left()
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    battle.main._navigate_to_position(pos, battle_cursor=memory.main.battle_cursor_3)
+    battle.utils._navigate_to_position(pos, battle_cursor=memory.main.battle_cursor_3)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
-    battle.main.tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def tidus(direction=None, version: int = 0, character=99):
@@ -93,7 +94,7 @@ def tidus(direction=None, version: int = 0, character=99):
         xbox.tap_left()
     while not memory.main.interior_battle_menu():
         xbox.tap_b()
-    battle.main._navigate_to_position(
+    battle.utils._navigate_to_position(
         version, battle_cursor=memory.main.battle_cursor_3
     )
     while memory.main.interior_battle_menu():
@@ -138,7 +139,7 @@ def valefor(sin_fin=0, version=0):
     if sin_fin == 1:
         xbox.tap_down()
         xbox.tap_left()
-    battle.main.tap_targeting()
+    battle.utils.tap_targeting()
 
 
 def wakka():
