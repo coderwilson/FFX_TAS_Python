@@ -46,7 +46,7 @@ def entrance(checkpoint: int = 0):
             if memory.main.get_encounter_id() == 2:
                 CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.menu_b()
 

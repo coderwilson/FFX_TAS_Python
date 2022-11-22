@@ -312,7 +312,7 @@ def leaving():
                         elif not Yuna.active():
                             battle.main.buddy_swap(Yuna)
                         else:
-                            battle.main.defend()
+                            CurrentPlayer().defend()
                 while memory.main.battle_active():
                     if memory.main.turn_ready():
                         battle.main.aeon_spell(1)

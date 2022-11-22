@@ -205,7 +205,7 @@ def yuna(aeon_num: int = 5):
     logger.info(f"Summoning Aeon {aeon_num}. Awaiting Yunas turn")
     while not screen.turn_yuna():
         if memory.main.turn_ready():
-            battle.main.defend()
+            CurrentPlayer().defend()
     while not memory.main.other_battle_menu():
         xbox.tap_left()
     while not memory.main.interior_battle_menu():

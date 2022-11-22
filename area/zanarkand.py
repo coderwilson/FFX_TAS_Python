@@ -393,7 +393,7 @@ def sanctuary_keeper():
     memory.main.await_event()
     xbox.click_to_battle()
     if screen.turn_tidus():
-        battle.main.defend()
+        CurrentPlayer().defend()
         xbox.click_to_battle()
     battle.main.aeon_summon(4)  # This is the whole fight. Kinda sad.
     s_keeper_print_bahamut_crit_chance()

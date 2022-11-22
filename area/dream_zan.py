@@ -176,7 +176,7 @@ def ammes_battle():
     logger.info("Starting ammes")
     xbox.click_to_battle()
     memory.main.last_hit_init()
-    battle.main.defend()
+    CurrentPlayer().defend()
     # logs.write_stats("First Six Hits:")
     hits_array = []
 

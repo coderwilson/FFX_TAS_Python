@@ -200,7 +200,7 @@ def aeon_start():
             if screen.turn_aeon():
                 CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
 
 @battle.utils.speedup_decorator
@@ -221,7 +221,7 @@ def yojimbo_battle():
             elif screen.turn_aeon():
                 xbox.skip_dialog(2)
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -241,7 +241,7 @@ def auto_life():
             if screen.turn_aeon():
                 CurrentPlayer().attack()
             elif not screen.turn_tidus():
-                battle.main.defend()
+                CurrentPlayer().defend()
     while memory.main.battle_menu_cursor() != 22:
         if not screen.turn_tidus():
             logger.debug("Attempting Haste, but it's not Tidus's turn")
@@ -280,7 +280,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
             elif screen.turn_aeon():
                 CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -312,7 +312,7 @@ def basic_attack(
             elif screen.turn_aeon():
                 battle.CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -847,7 +847,7 @@ def shinryu_battle():
         if memory.main.turn_ready():
             if screen.turn_rikku():
                 if not rikku_first_turn:
-                    battle.main.defend()
+                    CurrentPlayer().defend()
                 elif rikku_drive_complete:
                     battle.main._use_healing_item(item_id=9)
                 else:
@@ -861,7 +861,7 @@ def shinryu_battle():
                 else:
                     CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
