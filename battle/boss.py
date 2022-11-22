@@ -448,7 +448,7 @@ def chocobo_eater():
             if choco_target == memory.main.get_battle_char_turn():
                 if 1 not in memory.main.get_active_battle_formation():
                     battle.main.buddy_swap(Yuna)
-                    battle.main.attack_by_num(1)
+                    Yuna.attack(target_id=Yuna)
                     choco_target = 255
                     swapped_yuna = True
             if memory.main.get_next_turn() == 20:

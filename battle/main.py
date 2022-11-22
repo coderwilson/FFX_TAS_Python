@@ -301,9 +301,9 @@ def besaid():
                 if Lulu.is_turn():
                     thunder_target(22, "l")
                 elif Wakka.is_turn():
-                    attack_by_num(20, direction="r")
+                    Wakka.attack(target_id=20, direction_hint="r")
                 elif Tidus.is_turn():
-                    attack_by_num(21, direction="r")
+                    Tidus.attack(target_id=21, direction_hint="r")
             else:
                 if Lulu.is_turn():
                     thunder_target(21, "l")
@@ -2439,7 +2439,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
                 if memory.main.get_battle_char_turn() == 6:
                     CurrentPlayer().attack()
                 elif Auron.is_turn() and not Auron.has_overdrive(combat=True):
-                    attack_by_num(2)
+                    Auron.attack(target_id=Auron)
                 elif Rikku.active():
                     escape_one()
                 else:
@@ -2447,7 +2447,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
         else:  # Charge Auron if needed, otherwise flee
             if not Auron.has_overdrive(combat=True) and not sandy_fight_complete:
                 if Auron.is_turn():
-                    attack_by_num(2)
+                    Auron.attack(target_id=Auron)
                 else:
                     escape_one()
             else:
@@ -4676,7 +4676,7 @@ def charge_rikku_od():
             while not memory.main.battle_complete():
                 if memory.main.turn_ready():
                     if Rikku.is_turn():
-                        attack_by_num(6, direction="u")
+                        Rikku.attack(target_id=Rikku, direction_hint="u")
                     elif Rikku.has_overdrive(combat=True):
                         flee_all()
                     elif not Rikku.active():
