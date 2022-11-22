@@ -326,5 +326,46 @@ class Player:
     def equipped_weapon(self) -> memory.main.Equipment:
         return [x for x in self.weapons() if x.is_equipped()][0]
 
+    def _swap_battle(self, weapon: bool, ability: Optional[List[int]] = None):
+        if weapon:
+            menu_index = 0
+            equip_func = self.weapons
+        else:
+            menu_index = 1
+            equip_func = self.armors
+        while memory.main.main_battle_menu():
+            xbox.tap_right()
+        battle.utils._navigate_to_single_column_index(
+            menu_index, memory.main.battle_cursor_2
+        )
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        if ability is not None:
+            for i, equip in enumerate(equip_func()):
+                if set(ability).issubset(set(equip.abilities())):
+                    equip_index = i
+                    break
+        else:
+            equip_index = 0
+        logger.debug(f"Equip is in index {equip_index}.")
+        battle.utils._navigate_to_single_column_index(
+            equip_index, memory.main.battle_cursor_3
+        )
+        while memory.main.interior_battle_menu():
+            xbox.tap_b()
+
+    def swap_battle_weapon(
+        self, ability: Optional[List[int]] = None, named_weapon: Optional[str] = None
+    ):
+        if named_equip is not None:
+            if named_equip == "baroque":
+                ability = [0x8063, 255, 255, 255]
+            elif named_equip == "brotherhood":
+                ability = [32867, 32868, 32810, 32768]
+        self._swap_battle(True, ability)
+
+    def swap_battle_armor(self, ability: Optional[List[int]] = None):
+        self._swap_battle(False, ability)
+
     def main_menu_index(self) -> int:
         return memory.main.get_character_index_in_main_menu(self.id)

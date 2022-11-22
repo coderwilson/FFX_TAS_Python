@@ -59,6 +59,14 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
                 xbox.tap_down()
 
 
+def _navigate_to_single_column_index(position, cursor):
+    while cursor() != position:
+        if cursor() < position:
+            xbox.tap_down()
+        else:
+            xbox.tap_up()
+
+
 def tap_targeting():
     logger.debug(
         f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
