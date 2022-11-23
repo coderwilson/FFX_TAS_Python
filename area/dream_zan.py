@@ -11,7 +11,26 @@ import tts
 import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
-from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import (
+    Anima,
+    Auron,
+    Bahamut,
+    Cindy,
+    CurrentPlayer,
+    Ifrit,
+    Ixion,
+    Kimahri,
+    Lulu,
+    Mindy,
+    Rikku,
+    Sandy,
+    Shiva,
+    Tidus,
+    Valefor,
+    Wakka,
+    Yojimbo,
+    Yuna,
+)
 
 game_vars = vars.vars_handle()
 

@@ -2,7 +2,26 @@ import memory.main
 import pathing
 import xbox
 from paths import MiihenAgency
-from players import Auron, CurrentPlayer, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import (
+    Anima,
+    Auron,
+    Bahamut,
+    Cindy,
+    CurrentPlayer,
+    Ifrit,
+    Ixion,
+    Kimahri,
+    Lulu,
+    Mindy,
+    Rikku,
+    Sandy,
+    Shiva,
+    Tidus,
+    Valefor,
+    Wakka,
+    Yojimbo,
+    Yuna,
+)
 
 FFXC = xbox.controller_handle()
 
