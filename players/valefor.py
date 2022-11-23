@@ -1,3 +1,5 @@
+import memory
+import xbox
 from players.aeon import Aeon
 
 
@@ -7,8 +9,10 @@ class ValeforImpl(Aeon):
 
     def overdrive(self, overdrive_num, sin_fin=False):
         while not memory.main.other_battle_menu():
-            xbox.tap_right()
-        self._navigate_to_single_column_index(target, memory.main.battle_cursor_2)
+            xbox.tap_left()
+        self._navigate_to_single_column_index(
+            overdrive_num, memory.main.battle_cursor_2
+        )
         while memory.main.other_battle_menu():
             xbox.tap_b()
         if sin_fin:

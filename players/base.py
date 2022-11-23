@@ -164,7 +164,7 @@ class Player:
         self._tap_targeting()
 
     # spell_id should become an enum at some point
-    def cast_spell(
+    def cast_black_magic_spell(
         self,
         spell_id: int,
         target_id: Optional[int] = None,
@@ -174,7 +174,7 @@ class Player:
             logger.debug(f"Casting {spell_id}")
         else:
             logger.debug(
-                f"Casting {spell_id} on a specific target with id {target_id}, direction hint is {direction_hint}"
+                f"Casting {spell_id} on a specific target with id {target_id}, direction is {direction}"
             )
         self.navigate_to_battle_menu(21)
         while memory.main.main_battle_menu():

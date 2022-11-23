@@ -346,14 +346,14 @@ def besaid():
                 buddy_swap(Wakka)
             elif memory.main.get_encounter_id() == 27:
                 if Lulu.is_turn():
-                    CurrentPlayer.cast_black_magic_spell(1, 22, "l")
+                    CurrentPlayer().cast_black_magic_spell(1, 22, "l")
                 elif Wakka.is_turn():
                     Wakka.attack(target_id=20, direction_hint="r")
                 elif Tidus.is_turn():
                     Tidus.attack(target_id=21, direction_hint="r")
             else:
                 if Lulu.is_turn():
-                    CurrentPlayer.cast_black_magic_spell(1, 21, "l")
+                    CurrentPlayer().cast_black_magic_spell(1, 21, "l")
                 else:
                     attack()
     memory.main.click_to_control_3()
@@ -375,7 +375,7 @@ def lancet_tutorial():
                 buddy_swap(Yuna)
                 CurrentPlayer().defend()
             elif Lulu.is_turn():
-                fire("none")
+                CurrentPlayer().cast_black_magic_spell(0)
             else:
                 CurrentPlayer().defend()
     memory.main.click_to_control()
@@ -451,9 +451,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         screen.await_turn()
                         CurrentPlayer().boost()
                         screen.await_turn()
-                        CurrentPlayer.cast_black_magic_spell(2)
+                        CurrentPlayer().cast_black_magic_spell(2)
                     elif screen.turn_aeon():
-                        CurrentPlayer.cast_black_magic_spell(2, direction="right")
+                        CurrentPlayer().cast_black_magic_spell(2, direction="right")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 33:
@@ -468,9 +468,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                                 CurrentPlayer().shield()
                         CurrentPlayer().boost()
                         screen.await_turn()
-                        CurrentPlayer.cast_black_magic_spell(1, direction="left")
+                        CurrentPlayer().cast_black_magic_spell(1, direction="left")
                     elif screen.turn_aeon():
-                        CurrentPlayer.cast_black_magic_spell(2)
+                        CurrentPlayer().cast_black_magic_spell(2)
                     else:
                         CurrentPlayer().defend()
 
@@ -487,9 +487,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                                 CurrentPlayer().shield()
                         CurrentPlayer().boost()
                         screen.await_turn()
-                        CurrentPlayer.cast_black_magic_spell(1, direction="right")
+                        CurrentPlayer().cast_black_magic_spell(1, direction="right")
                     elif screen.turn_aeon():
-                        CurrentPlayer.cast_black_magic_spell(2, direction="left")
+                        CurrentPlayer().cast_black_magic_spell(2, direction="left")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 35:
@@ -507,9 +507,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         screen.await_turn()
                         Valefor.unique()
                         screen.await_turn()
-                        CurrentPlayer.cast_black_magic_spell(0)
+                        CurrentPlayer().cast_black_magic_spell(0)
                     elif screen.turn_aeon():
-                        CurrentPlayer.cast_black_magic_spell(0)
+                        CurrentPlayer().cast_black_magic_spell(0)
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 37:
@@ -525,13 +525,13 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
                                 CurrentPlayer().shield()
-                        CurrentPlayer.cast_black_magic_spell(1, direction="right")
+                        CurrentPlayer().cast_black_magic_spell(1, direction="right")
                         screen.await_turn()
-                        CurrentPlayer.cast_black_magic_spell(1, direction="right")
+                        CurrentPlayer().cast_black_magic_spell(1, direction="right")
                     elif screen.turn_aeon():
                         while not memory.main.battle_complete():
                             if memory.main.turn_ready():
-                                CurrentPlayer.cast_black_magic_spell(0)
+                                CurrentPlayer().cast_black_magic_spell(0)
                     else:
                         CurrentPlayer().defend()
                 else:
@@ -627,7 +627,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         yuna_went = True
                     elif Yuna.is_turn():
                         buddy_swap(Lulu)
-                        CurrentPlayer.cast_black_magic_spell(
+                        CurrentPlayer().cast_black_magic_spell(
                             1, target_id=21, direction="l"
                         )
                     else:
@@ -660,7 +660,7 @@ def luca_workers():
                 else:
                     CurrentPlayer().defend()
             if Lulu.is_turn():
-                thunder("none")
+                CurrentPlayer().cast_black_magic_spell(1)
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Clicking to get through the battle faster
     memory.main.click_to_control()
@@ -683,7 +683,7 @@ def luca_workers_2(early_haste):
                     tidus_haste("left", character=Lulu)
                     hasted = True
                 elif Lulu.is_turn():
-                    thunder("none")
+                    CurrentPlayer().cast_black_magic_spell(1)
                 else:
                     CurrentPlayer().defend()
             elif memory.main.luca_workers_battle_id() in [44, 35]:
@@ -702,7 +702,7 @@ def luca_workers_2(early_haste):
                     thunder("right")
             else:
                 if Lulu.is_turn():
-                    thunder("none")
+                    CurrentPlayer().cast_black_magic_spell(1)
                 else:
                     CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
@@ -1052,7 +1052,7 @@ def mrr_battle(status):
                                 CurrentPlayer().attack()
                                 aeon_turn = 2
                             else:
-                                CurrentPlayer.cast_black_magic_spell(3)
+                                CurrentPlayer().cast_black_magic_spell(3)
         elif encounter_id == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
@@ -1077,12 +1077,12 @@ def mrr_battle(status):
                             CurrentPlayer().boost()
                             aeon_turn = 1
                         elif aeon_turn < 2:
-                            CurrentPlayer.cast_black_magic_spell(2)
+                            CurrentPlayer().cast_black_magic_spell(2)
                             screen.await_turn()
                             CurrentPlayer().boost()
                             aeon_turn = 2
                         else:
-                            CurrentPlayer.cast_black_magic_spell(3)
+                            CurrentPlayer().cast_black_magic_spell(3)
         elif encounter_id == 98:  # Raptor, Red Element, Gandarewa (camera side)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
@@ -1106,14 +1106,14 @@ def mrr_battle(status):
                                 CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
-                                CurrentPlayer.cast_black_magic_spell(
+                                CurrentPlayer().cast_black_magic_spell(
                                     2, direction="right"
                                 )
                                 screen.await_turn()
                                 CurrentPlayer().boost()
                                 aeon_turn = 2
                             else:
-                                CurrentPlayer.cast_black_magic_spell(
+                                CurrentPlayer().cast_black_magic_spell(
                                     3, direction="right"
                                 )
         # battle 99 is never used.
@@ -1147,12 +1147,12 @@ def mrr_battle(status):
                                 CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
-                                CurrentPlayer.cast_black_magic_spell(0)
+                                CurrentPlayer().cast_black_magic_spell(0)
                                 screen.await_turn()
                                 CurrentPlayer().boost()
                                 aeon_turn = 2
                             else:
-                                CurrentPlayer.cast_black_magic_spell(3)
+                                CurrentPlayer().cast_black_magic_spell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
         elif encounter_id == 101:
             while memory.main.battle_active():  # end of battle screen
@@ -1179,12 +1179,12 @@ def mrr_battle(status):
                             CurrentPlayer().boost()
                             aeon_turn = 1
                         elif aeon_turn < 2:
-                            CurrentPlayer.cast_black_magic_spell(0)
+                            CurrentPlayer().cast_black_magic_spell(0)
                             screen.await_turn()
                             CurrentPlayer().boost()
                             aeon_turn = 2
                         else:
-                            CurrentPlayer.cast_black_magic_spell(3)
+                            CurrentPlayer().cast_black_magic_spell(3)
         if valefor_charge_complete:
             status[5] = 2  # Phase 2, final phase to level up Kimahri and Yuna
             status[2] = 2  # Valefor is charged flag.
@@ -1206,7 +1206,7 @@ def mrr_battle(status):
                         )
                         flee_all()
                     elif Tidus.is_turn():
-                        Tidus.flee()()
+                        Tidus.flee()
                     elif screen.faint_check() >= 1:
                         buddy_swap(Tidus)
                     elif Kimahri.is_turn():
@@ -1759,7 +1759,7 @@ def seymour_guado_blitz_win():
                 elif tidus_turns == 2:
                     CurrentPlayer().defend()
                 elif tidus_turns == 3:
-                    attack()
+                    CurrentPlayer().attack()
                 elif tidus_turns == 4:
                     buddy_swap(Wakka)
                 elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
@@ -3470,7 +3470,7 @@ def attack_oblitz_end():
     # logs.write_stats(memory.s32(rng_wait_results))
 
 
-def attack():
+def attack(direction="none"):
     logger.debug("Attack")
     direction = direction.lower()
     if not memory.main.turn_ready():
@@ -3866,7 +3866,7 @@ def flee_all():
                 tidus_position = memory.main.get_battle_char_slot(0)
                 logger.debug(f"Tidus Position: {tidus_position}")
                 if Tidus.is_turn():
-                    Tidus.flee()()
+                    Tidus.flee()
                 elif tidus_position >= 3 and tidus_position != 255:
                     buddy_swap(Tidus)
                 elif (
@@ -3947,7 +3947,7 @@ def escape_one():
             if replacement == 255:
                 logger.debug("No character could be found.")
                 if memory.main.get_current_turn() == 0:
-                    Tidus.flee()()
+                    Tidus.flee()
                     return False
                 elif memory.main.get_current_turn() == 1:
                     escape_action()
