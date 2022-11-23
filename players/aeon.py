@@ -1,7 +1,6 @@
 import logging
 from typing import List
 
-import battle.utils
 import memory
 import xbox
 from players.base import Player

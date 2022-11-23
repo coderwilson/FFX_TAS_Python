@@ -1,7 +1,6 @@
 import logging
 
 from tqdm import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm
 
 import memory.main
 import vars

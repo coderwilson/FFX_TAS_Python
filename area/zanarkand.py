@@ -18,7 +18,7 @@ from paths import (
     ZanarkandTrials,
     ZanarkandYunalesca,
 )
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -457,7 +457,6 @@ def yunalesca():
 
 def post_yunalesca(checkpoint=0):
     logger.info("Heading back outside.")
-    exit_save = False
     FFXC.set_neutral()
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)

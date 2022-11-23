@@ -10,26 +10,7 @@ import screen
 import vars
 import xbox
 from paths import BaajHallway, BaajPuzzle, BaajRamp
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import CurrentPlayer, Rikku
 
 logger = logging.getLogger(__name__)
 

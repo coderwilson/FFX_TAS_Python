@@ -16,26 +16,7 @@ from paths import (
     MacalaniaTempleTrials,
     MacalaniaUnderTemple,
 )
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Auron, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

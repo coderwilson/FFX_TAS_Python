@@ -2,7 +2,6 @@ import memory
 from players.anima import Anima
 from players.auron import Auron
 from players.bahamut import Bahamut
-from players.base import Player
 from players.ifrit import Ifrit
 from players.ixion import Ixion
 from players.kimahri import Kimahri

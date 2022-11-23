@@ -17,26 +17,7 @@ from paths import (
     NEReturn,
     NEReturnGreen,
 )
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Auron, Rikku, Tidus
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

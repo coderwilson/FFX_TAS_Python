@@ -35,7 +35,6 @@ import battle.boss
 import battle.main
 import blitz
 import config
-import distance_logging
 import load_game
 import logs
 import memory.main
@@ -415,7 +414,7 @@ def perform_TAS():
 
             if game.state == "ThunderPlains":
                 if game.step == 1:
-                    status = area.thunder_plains.south_pathing()
+                    area.thunder_plains.south_pathing()
                     game.step = 2
                     # maybe_create_save(save_num=33)
 
@@ -759,7 +758,7 @@ def perform_TAS():
                 if game.step == 20:
                     nemesis.arena_prep.calm(
                         cap_num=10, airship_return=False, force_levels=19
-                    ) # Formerly 26, confirmed good upwards from 20.
+                    )  # Formerly 26, confirmed good upwards from 20.
                     game.step = 21
 
                 if game.step == 21:

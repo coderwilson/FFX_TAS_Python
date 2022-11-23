@@ -12,23 +12,15 @@ import vars
 import xbox
 from memory.main import s32
 from players import (
-    Anima,
     Auron,
     Bahamut,
-    Cindy,
     CurrentPlayer,
-    Ifrit,
-    Ixion,
     Kimahri,
     Lulu,
-    Mindy,
     Rikku,
-    Sandy,
-    Shiva,
     Tidus,
     Valefor,
     Wakka,
-    Yojimbo,
     Yuna,
 )
 
@@ -1029,7 +1021,7 @@ def mrr_battle(status):
                         logger.debug("No petrify issues.")
                         if Tidus.is_turn():
                             buddy_swap(Kimahri)
-                            next_crit_kim = mrr_target()
+                            mrr_target()
                         elif Wakka.is_turn():
                             wakka_turns += 1
                             if wakka_turns == 1:
@@ -1063,7 +1055,7 @@ def mrr_battle(status):
                         flee_all()
                     elif Tidus.is_turn():
                         buddy_swap(Kimahri)
-                        next_crit_kim = mrr_target()
+                        mrr_target()
                     elif Wakka.is_turn():
                         CurrentPlayer().defend()
                     elif Auron.is_turn():
@@ -1095,7 +1087,7 @@ def mrr_battle(status):
                         if Tidus.is_turn():
                             buddy_swap(Kimahri)
                         elif Kimahri.is_turn():
-                            next_crit_kim = mrr_target()
+                            mrr_target()
                         elif Wakka.is_turn():
                             CurrentPlayer().attack()
                         elif Auron.is_turn():
@@ -1164,7 +1156,7 @@ def mrr_battle(status):
                         flee_all()
                     elif Tidus.is_turn():
                         buddy_swap(Kimahri)
-                        next_crit_kim = mrr_target()
+                        mrr_target()
                     elif Wakka.is_turn():
                         CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif memory.main.get_enemy_current_hp()[2] != 0:
@@ -3197,7 +3189,6 @@ def _use_healing_item(num=None, direction="l", item_id=0):
     direction = direction.lower()
     while not memory.main.turn_ready():
         logger.debug("Battle menu isn't up.")
-        pass
     while not memory.main.main_battle_menu():
         pass
     while memory.main.battle_menu_cursor() != 1:
@@ -3375,7 +3366,7 @@ def attack_oblitz_end():
         else:
             xbox.menu_b()
     memory.main.wait_frames(1)
-    rng_wait_results = oblitz_rng_wait()
+    oblitz_rng_wait()
     xbox.tap_b()
     xbox.tap_b()
     # logs.write_stats("RNG02 on attack:")

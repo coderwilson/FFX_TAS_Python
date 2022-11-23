@@ -2,26 +2,7 @@ import memory.main
 import pathing
 import xbox
 from paths import MiihenAgency
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Kimahri, Tidus, Wakka
 
 FFXC = xbox.controller_handle()
 
@@ -31,7 +12,7 @@ def engage():
     input("Confirm that CSR is running!!!")
     while not memory.main.battle_active():
         if memory.main.user_control():
-            p_down_slot = memory.main.get_item_slot(6)
+            memory.main.get_item_slot(6)
             if memory.main.get_map() == 58:
                 memory.main.update_formation(Tidus, Kimahri, Wakka)
                 FFXC.set_movement(0, 1)

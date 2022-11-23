@@ -1,6 +1,5 @@
 import logging
 
-import battle
 import memory
 import xbox
 from players.base import Player

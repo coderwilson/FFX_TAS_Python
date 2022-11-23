@@ -8,23 +8,15 @@ import screen
 import vars
 import xbox
 from players import (
-    Anima,
     Auron,
     Bahamut,
-    Cindy,
     CurrentPlayer,
-    Ifrit,
-    Ixion,
     Kimahri,
     Lulu,
-    Mindy,
     Rikku,
-    Sandy,
-    Shiva,
     Tidus,
     Valefor,
     Wakka,
-    Yojimbo,
     Yuna,
 )
 
@@ -63,7 +55,6 @@ def kimahri():
     FFXC.set_neutral()
     while memory.main.battle_active():
         if screen.battle_screen():
-            battle_hp = memory.main.get_battle_hp()
             enemy_hp = memory.main.get_enemy_current_hp()
             if (
                 not game_vars.early_tidus_grid()
@@ -835,7 +826,6 @@ def spherimorph():
         if memory.main.turn_ready():
             if game_vars.use_pause():
                 memory.main.wait_frames(2)
-            turn_char = memory.main.get_battle_char_turn()
             party_hp = memory.main.get_battle_hp()
             if Tidus.is_turn():
                 if tidus_turns == 0:
@@ -969,7 +959,6 @@ def crawler():
         while memory.main.battle_active():  # AKA end of battle screen
             FFXC.set_neutral()
             if memory.main.turn_ready():
-                turn_char = memory.main.get_battle_char_turn()
                 if Tidus.is_turn():
                     if tidus_turns == 0:
                         logger.debug("Swapping Tidus for Rikku")
@@ -1225,7 +1214,6 @@ def evrae():
 
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            turn_char = memory.main.get_battle_char_turn()
             logger.debug(f"Tidus prep turns: {tidus_prep}")
             if Tidus.is_turn():
                 logger.debug("Registering Tidus' turn")

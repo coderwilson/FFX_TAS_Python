@@ -13,26 +13,7 @@ import vars
 import xbox
 import zz_airship_path
 from gamestate import game
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Kimahri, Rikku, Tidus
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +123,6 @@ def load_into_game_old(gamestate: str, step_counter: str):
         game.start_time = logs.time_stamp()
         logs.write_stats("Start time:")
         logs.write_stats(str(game.start_time))
-    import load_game
 
     # Need to update these to use load_game.load_save_num(number) for all.
 
@@ -182,7 +162,6 @@ def load_into_game_old(gamestate: str, step_counter: str):
         load_miihen_start_laugh()
     if gamestate == "Miihen" and step_counter == 2:  # Agency
         load_save_num(28)
-        return_array = [False, 0, 0, False]
     if gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
         load_save_num(38)
         memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.

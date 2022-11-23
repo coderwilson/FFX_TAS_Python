@@ -13,26 +13,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -153,7 +134,7 @@ def return_to_airship():
     if test_mode:
         memory.main.set_game_speed(set_val=0)
 
-    ss_details = get_save_sphere_details()
+    get_save_sphere_details()
 
     if memory.main.get_map() == 307:  # Monster arena
         while not nemesis.nemesis_pathing.set_movement([-4, -3]):

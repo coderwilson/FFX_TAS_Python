@@ -7,26 +7,7 @@ import nemesis.nemesis_pathing
 import rng_track
 import vars
 import xbox
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Auron, Kimahri, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -206,7 +187,7 @@ def choco_tame_2():
     memory.main.click_to_diag_progress(43)
     checkpoint = 0
     while not memory.main.diag_progress_flag() in [44, 74]:
-        angle = memory.main.get_actor_angle(0)
+        memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
 
         if (
@@ -367,10 +348,9 @@ def choco_tame_3():
 def choco_tame_4():
     logger.debug("START - CATCHER CHOCOBO")
     memory.main.click_to_diag_progress(43)
-    checkpoint = 0
     while not memory.main.diag_progress_flag() in [44, 67]:
-        angle = memory.main.get_actor_angle(0)
-        position = memory.main.get_actor_coords(0)
+        memory.main.get_actor_angle(0)
+        memory.main.get_actor_coords(0)
         logger.debug("User control")
         """
         if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls

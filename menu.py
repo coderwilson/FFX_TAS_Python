@@ -4,26 +4,7 @@ import memory.main
 import menu_grid
 import vars
 import xbox
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Auron, Rikku, Tidus, Wakka, Yuna
 
 game_vars = vars.vars_handle()
 

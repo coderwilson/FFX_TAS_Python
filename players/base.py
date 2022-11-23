@@ -2,7 +2,6 @@ import logging
 from enum import IntEnum
 from typing import List, Optional
 
-import battle.utils
 import memory
 import xbox
 

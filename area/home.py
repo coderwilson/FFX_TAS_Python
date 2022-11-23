@@ -9,26 +9,7 @@ import save_sphere
 import vars
 import xbox
 from paths import BikanelDesert, BikanelHome
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Auron, Kimahri, Rikku, Tidus, Wakka
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

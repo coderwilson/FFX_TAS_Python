@@ -10,26 +10,7 @@ import screen
 import vars
 import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
-from players import (
-    Anima,
-    Auron,
-    Bahamut,
-    Cindy,
-    CurrentPlayer,
-    Ifrit,
-    Ixion,
-    Kimahri,
-    Lulu,
-    Mindy,
-    Rikku,
-    Sandy,
-    Shiva,
-    Tidus,
-    Valefor,
-    Wakka,
-    Yojimbo,
-    Yuna,
-)
+from players import Lulu, Tidus, Wakka, Yuna
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
