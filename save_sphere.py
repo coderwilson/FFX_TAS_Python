@@ -157,7 +157,7 @@ def touch_and_go():
 
 
 def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int = 999):
-    if game_vars.nemesis():
+    if game_vars.nemesis() and save_num != 199:
         save_num += 80
     if save_num >= 200:
         logger.debug(f"Cannot save number {save_num} out of bounds error")
@@ -195,7 +195,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
                     xbox.tap_up()
                 memory.main.wait_frames(1)
         xbox.tap_b()
-        print("====", save_num, "====")
+        logger.debug(f"===={save_num}====")
         memory.main.wait_frames(2)
         while memory.main.save_conf_cursor() != 1:
             xbox.tap_left()
@@ -204,6 +204,8 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
         while not memory.main.user_control():
             xbox.tap_a()
 
+        logger.debug(f"==== Save num {save_num}====")
+        logger.debug(f"==== Save pos {save_pos}====")
         if save_num != 999 and save_pos == 999:
             save_files = load_game.get_saved_files()
             logger.debug(
@@ -216,6 +218,8 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
             logger.debug(file_dest)
 
             shutil.move(src=file_orig, dst=file_dest)
+        else:
+            logger.debug(f"File number {save_num} was found.")
 
         # Finally, register save in json.
         if save_num not in [199, 999]:
@@ -224,7 +228,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
             if game_state == "tbd" or step_count == 999:
                 return
 
-            print("Registering save")
+            logger.debug("Registering save")
             filepath = os.path.join("json_ai_files", "save_load_details.json")
             with open(filepath, "r") as fp:
                 results = json.load(fp)
@@ -274,7 +278,7 @@ def get_save_sphere_settings(actor_index: int):
                     results[map_num][diag_num][actor_num]["y"],
                     results[map_num][diag_num][actor_num]["diag"],
                 ]
-    print(ret_array)
+    logger.debug(ret_array)
     return ret_array
 
 

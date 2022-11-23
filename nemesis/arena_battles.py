@@ -391,9 +391,9 @@ def restock_downs():
 
 def battles_1():
     if not memory.main.equipped_armor_has_ability(char_num=1, ability_num=0x800A):
-        nemesis.menu.equip_armor(character=1, ability=0x800A, full_menu_close=False)
+        menu.equip_armor(character=1, ability=0x800A, full_menu_close=False)
     if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
-        nemesis.menu.equip_armor(character=4, ability=0x800A)
+        menu.equip_armor(character=4, ability=0x800A)
     memory.main.close_menu()
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
@@ -1030,7 +1030,7 @@ def return_to_sin():
         pass
     return_to_airship()
 
-    nemesis.menu.equip_weapon(character=0, ability=0x8001, full_menu_close=True)
+    menu.equip_weapon(character=0, ability=0x8001, full_menu_close=True)
     airship_destination(dest_num=0)
     memory.main.await_control()
     FFXC.set_movement(0, -1)
