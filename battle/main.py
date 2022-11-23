@@ -346,14 +346,14 @@ def besaid():
                 buddy_swap(Wakka)
             elif memory.main.get_encounter_id() == 27:
                 if Lulu.is_turn():
-                    thunder_target(22, "l")
+                    CurrentPlayer.cast_spell(1, 22, "l")
                 elif Wakka.is_turn():
                     Wakka.attack(target_id=20, direction_hint="r")
                 elif Tidus.is_turn():
                     Tidus.attack(target_id=21, direction_hint="r")
             else:
                 if Lulu.is_turn():
-                    thunder_target(21, "l")
+                    CurrentPlayer.cast_spell(1, 21, "l")
                 else:
                     attack()
     memory.main.click_to_control_3()
@@ -451,9 +451,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         screen.await_turn()
                         CurrentPlayer().boost()
                         screen.await_turn()
-                        aeon_spell(2)
+                        CurrentPlayer.cast_spell(2)
                     elif screen.turn_aeon():
-                        aeon_spell_direction(2, "right")
+                        CurrentPlayer.cast_spell(2, direction="right")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 33:
@@ -468,9 +468,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                                 CurrentPlayer().shield()
                         CurrentPlayer().boost()
                         screen.await_turn()
-                        aeon_spell_direction(1, "left")
+                        CurrentPlayer.cast_spell(1, direction="left")
                     elif screen.turn_aeon():
-                        aeon_spell(2)
+                        CurrentPlayer.cast_spell(2)
                     else:
                         CurrentPlayer().defend()
 
@@ -487,9 +487,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                                 CurrentPlayer().shield()
                         CurrentPlayer().boost()
                         screen.await_turn()
-                        aeon_spell_direction(1, "right")
+                        CurrentPlayer.cast_spell(1, direction="right")
                     elif screen.turn_aeon():
-                        aeon_spell_2(2, "left")
+                        CurrentPlayer.cast_spell(2, direction="left")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 35:
@@ -507,9 +507,9 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         screen.await_turn()
                         Valefor.unique()
                         screen.await_turn()
-                        aeon_spell(0)
+                        CurrentPlayer.cast_spell(0)
                     elif screen.turn_aeon():
-                        aeon_spell(0)
+                        CurrentPlayer.cast_spell(0)
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 37:
@@ -525,13 +525,13 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
                                 CurrentPlayer().shield()
-                        aeon_spell_direction(1, "right")
+                        CurrentPlayer.cast_spell(1, direction="right")
                         screen.await_turn()
-                        aeon_spell_direction(1, "right")
+                        CurrentPlayer.cast_spell(1, direction="right")
                     elif screen.turn_aeon():
                         while not memory.main.battle_complete():
                             if memory.main.turn_ready():
-                                aeon_spell(0)
+                                CurrentPlayer.cast_spell(0)
                     else:
                         CurrentPlayer().defend()
                 else:
@@ -627,7 +627,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         yuna_went = True
                     elif Yuna.is_turn():
                         buddy_swap(Lulu)
-                        thunder_target(target=21, direction="l")
+                        CurrentPlayer.cast_spell(1, target_id=21, direction="l")
                     else:
                         CurrentPlayer().defend()
     FFXC.set_neutral()
@@ -1050,7 +1050,7 @@ def mrr_battle(status):
                                 CurrentPlayer().attack()
                                 aeon_turn = 2
                             else:
-                                aeon_spell_2(3, "none")
+                                CurrentPlayer.cast_spell(3)
         elif encounter_id == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
@@ -1075,12 +1075,12 @@ def mrr_battle(status):
                             CurrentPlayer().boost()
                             aeon_turn = 1
                         elif aeon_turn < 2:
-                            aeon_spell(2)
+                            CurrentPlayer.cast_spell(2)
                             screen.await_turn()
                             CurrentPlayer().boost()
                             aeon_turn = 2
                         else:
-                            aeon_spell(3)
+                            CurrentPlayer.cast_spell(3)
         elif encounter_id == 98:  # Raptor, Red Element, Gandarewa (camera side)
             while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
@@ -1104,12 +1104,12 @@ def mrr_battle(status):
                                 CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
-                                aeon_spell_2(2, "right")
+                                CurrentPlayer.cast_spell(2, direction="right")
                                 screen.await_turn()
                                 CurrentPlayer().boost()
                                 aeon_turn = 2
                             else:
-                                aeon_spell_2(3, "right")
+                                CurrentPlayer.cast_spell(3, direction="right")
         # battle 99 is never used.
         elif encounter_id == 100:  # Raptor, Funguar, Red Element (camera front)
             while memory.main.battle_active():  # end of battle screen
@@ -1141,12 +1141,12 @@ def mrr_battle(status):
                                 CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
-                                aeon_spell(0)
+                                CurrentPlayer.cast_spell(0)
                                 screen.await_turn()
                                 CurrentPlayer().boost()
                                 aeon_turn = 2
                             else:
-                                aeon_spell(3)
+                                CurrentPlayer.cast_spell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
         elif encounter_id == 101:
             while memory.main.battle_active():  # end of battle screen
@@ -1173,12 +1173,12 @@ def mrr_battle(status):
                             CurrentPlayer().boost()
                             aeon_turn = 1
                         elif aeon_turn < 2:
-                            aeon_spell(0)
+                            CurrentPlayer.cast_spell(0)
                             screen.await_turn()
                             CurrentPlayer().boost()
                             aeon_turn = 2
                         else:
-                            aeon_spell(3)
+                            CurrentPlayer.cast_spell(3)
         if valefor_charge_complete:
             status[5] = 2  # Phase 2, final phase to level up Kimahri and Yuna
             status[2] = 2  # Valefor is charged flag.
@@ -3615,122 +3615,6 @@ def steal_and_attack_pre_tros():
     memory.main.click_to_control()
 
 
-def cast_spell(direction, spell_id):
-    if not Lulu.is_turn():
-        logger.debug("Lulu is not the current person. Deferring turn.")
-        return
-    while memory.main.battle_menu_cursor() != 21:
-        logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
-        if memory.main.battle_menu_cursor() == 0:
-            xbox.tap_down()
-        else:
-            xbox.tap_up()
-    while memory.main.main_battle_menu():
-        xbox.tap_b()  # Black magic
-    _navigate_to_position(spell_id)
-    while memory.main.other_battle_menu():
-        xbox.tap_b()  # Cast the Spell
-    direction = direction.lower()
-    if direction == "right":
-        xbox.tap_right()
-    elif direction == "left":
-        xbox.tap_left()
-    elif direction == "up":
-        xbox.tap_up()
-    elif direction == "down":
-        xbox.tap_down()
-    elif direction == "l2":
-        xbox.tap_left()
-        xbox.tap_left()
-    elif direction == "rd":
-        xbox.tap_right()
-        xbox.tap_down()
-    elif direction == "right2" or direction == "r2":
-        xbox.tap_right()
-        xbox.tap_right()
-        xbox.tap_down()
-    elif direction == "d2":
-        xbox.tap_down()
-        xbox.tap_down()
-    elif not direction or direction == "none":
-        pass
-    else:
-        logger.error(f"UNSURE DIRECTION: {direction}")
-        raise ValueError("Unsure direction")
-    tap_targeting()
-
-
-def thunder(direction="none"):
-    logger.debug("Black magic - Thunder")
-    cast_spell(direction, 1)
-
-
-def fire(direction="none"):
-    logger.debug("Black magic - Fire")
-    cast_spell(direction, 0)
-
-
-def water(direction="none"):
-    logger.debug("Black magic - Water")
-    cast_spell(direction, 2)
-
-
-def ice(direction="none"):
-    logger.debug("Black magic - Ice")
-    cast_spell(direction, 3)
-
-
-def thunder_target(target, direction):
-    logger.debug("Black magic - Thunder")
-    if not Lulu.is_turn():
-        logger.debug("Lulu is not the current person. Deferring turn.")
-        return
-    direction = direction.lower()
-    while memory.main.main_battle_menu():
-        if memory.main.battle_menu_cursor() != 21:
-            logger.debug(f"Battle menu cursor: {memory.main.battle_menu_cursor()}")
-            if memory.main.battle_menu_cursor() == 0:
-                xbox.tap_down()
-            else:
-                xbox.tap_up()
-        else:
-            xbox.tap_b()
-    logger.debug(f"Battle cursor 2: {memory.main.battle_cursor_2()}")
-    _navigate_to_position(1)
-    while memory.main.other_battle_menu():
-        xbox.tap_b()  # Thunder
-    while memory.main.battle_target_id() != target:
-        if direction == "l":
-            if memory.main.battle_target_id() < 20:
-                logger.debug("Wrong battle line targeted.")
-                xbox.tap_right()
-                direction = "u"
-            else:
-                xbox.tap_left()
-        elif direction == "r":
-            if memory.main.battle_target_id() < 20:
-                logger.debug("Wrong character targeted.")
-                xbox.tap_left()
-                direction = "d"
-            else:
-                xbox.tap_right()
-        elif direction == "u":
-            if memory.main.battle_target_id() < 20:
-                logger.debug("Wrong character targeted.")
-                xbox.tap_down()
-                direction = "l"
-            else:
-                xbox.tap_up()
-        elif direction == "d":
-            if memory.main.battle_target_id() < 20:
-                logger.debug("Wrong character targeted.")
-                xbox.tap_up()
-                direction = "r"
-            else:
-                xbox.tap_down()
-    tap_targeting()
-
-
 # move to battle.aeon
 def aeon_summon(position):
     logger.debug(f"Summoning Aeon {position}")
@@ -3764,41 +3648,6 @@ def aeon_summon(position):
         with tqdm(bar_format=fmt) as pbar:
             while not memory.main.turn_ready():
                 pbar.update()
-
-
-# move to battle.aeon
-def aeon_spell(position):
-    aeon_spell_direction(position, None)
-
-
-# move to battle.aeon
-def aeon_spell_2(position, direction):
-    aeon_spell_direction(position, direction)
-
-
-# move to battle.aeon
-def aeon_spell_direction(position, direction):
-    logger.debug(f"Aeon casting a spell. Special direction: {direction}")
-    while memory.main.battle_menu_cursor() != 21:
-        xbox.tap_down()
-    while memory.main.main_battle_menu():
-        xbox.tap_b()  # Black magic
-    logger.debug("In Black Magic")
-    _navigate_to_position(position)
-    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
-    while memory.main.other_battle_menu():
-        xbox.tap_b()  # Cast the Spell
-    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
-    if direction == "left":
-        xbox.tap_left()
-    elif direction == "right":
-        xbox.tap_right()
-    elif direction == "up":
-        xbox.tap_up()
-    elif direction == "down":
-        xbox.tap_down()
-    tap_targeting()
-    logger.debug("Aeon casting spell")
 
 
 def heal_up(chars=3, *, full_menu_close=True):

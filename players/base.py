@@ -106,37 +106,37 @@ class Player:
             and memory.main.get_enemy_current_hp()[target_id - 20] != 0
         ):
             while memory.main.battle_target_id() != target_id:
-                if direction == "l":
+                if direction == "l" or direction == "left":
                     if memory.main.battle_target_id() < 20:
                         direction = "u"
                     xbox.tap_left()
-                elif direction == "r":
+                elif direction == "r" or direction == "right":
                     if memory.main.battle_target_id() < 20:
                         direction = "d"
                     xbox.tap_right()
-                elif direction == "u":
+                elif direction == "u" or direction == "up":
                     if memory.main.battle_target_id() < 20:
                         direction = "l"
                     xbox.tap_up()
-                elif direction == "d":
+                elif direction == "d" or direction == "down":
                     if memory.main.battle_target_id() < 20:
                         direction = "r"
                     xbox.tap_down()
         elif friendly_target:
             while memory.main.battle_target_id() != target_id:
-                if direction == "l":
+                if direction == "l" or direction == "left":
                     if memory.main.battle_target_id() >= 20:
                         direction = "u"
                     xbox.tap_left()
-                elif direction == "r":
+                elif direction == "r" or direction == "right":
                     if memory.main.battle_target_id() >= 20:
                         direction = "d"
                     xbox.tap_right()
-                elif direction == "u":
+                elif direction == "u" or direction == "up":
                     if memory.main.battle_target_id() >= 20:
                         direction = "l"
                     xbox.tap_up()
-                elif direction == "d":
+                elif direction == "d" or direction == "down":
                     if memory.main.battle_target_id() >= 20:
                         direction = "r"
                     xbox.tap_down()
@@ -186,13 +186,13 @@ class Player:
             self._target_specific_id(target_id, direction)
         elif direction:
             direction = direction.lower()
-            if direction == "right":
+            if direction == "right" or direction == "r":
                 xbox.tap_right()
-            elif direction == "left":
+            elif direction == "left" or direction == "l":
                 xbox.tap_left()
-            elif direction == "up":
+            elif direction == "up" or direction == "u":
                 xbox.tap_up()
-            elif direction == "down":
+            elif direction == "down" or direction == "d":
                 xbox.tap_down()
             elif direction == "l2":
                 xbox.tap_left()
