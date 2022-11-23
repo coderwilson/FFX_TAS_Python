@@ -21,6 +21,9 @@ def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
     # if memory.main.rng_seed() == 31 and game_vars.skip_kilika_luck():
     #    game_vars.dont_skip_kilika_luck()
+    
+    logs.write_rng_track("Kilika start, RNG01")
+    logs.write_rng_track(memory.main.rng_01())
 
     logger.info("Arrived at Kilika docks.")
     memory.main.click_to_control()
