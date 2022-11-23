@@ -116,8 +116,10 @@ class AllVars:
         logger.debug(f"Base save path: |{self.save_path}|")
         if len(self.save_path) == 0:
             logger.debug("Dynamically using userprofile, default")
-            self.save_path = os.environ.get("userprofile") \
-            + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+            self.save_path = (
+                os.environ.get("userprofile")
+                + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+            )
         elif config_vars.get("save_path").find(":"):
             logger.debug("Full save path provided from config")
         else:
@@ -378,7 +380,7 @@ class AllVars:
 
 
 def init_vars():
-    main_vars = AllVars()
+    AllVars()
 
 
 def vars_handle():

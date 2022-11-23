@@ -1723,7 +1723,6 @@ def nea_track():
 
     total_advance_pre_x = 999
     total_advance_post_x = 999
-    enemy = "defender_x"
 
     # If already aligned for NEA, we want X to drop nothing.
     next_item, pre_advance_13 = item_to_be_dropped(enemy="ghost")

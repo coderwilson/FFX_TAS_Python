@@ -5,7 +5,6 @@ import area.dream_zan
 import battle.main
 import memory.main
 import reset
-import screen
 import xbox
 
 FFXC = xbox.FFXC

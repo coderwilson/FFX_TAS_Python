@@ -1,6 +1,5 @@
 import logging
 
-import battle
 import memory
 import xbox
 from players.base import Player
@@ -17,9 +16,7 @@ class TidusImpl(Player):
             xbox.tap_left()
         while not memory.main.interior_battle_menu():
             xbox.tap_b()
-        battle.main._navigate_to_position(
-            version, battle_cursor=memory.main.battle_cursor_3
-        )
+        self._navigate_to_position(version, battle_cursor=memory.main.battle_cursor_3)
         while memory.main.interior_battle_menu():
             xbox.tap_b()
         if character != 99 and memory.main.get_enemy_current_hp()[character - 20] != 0:
@@ -39,6 +36,16 @@ class TidusImpl(Player):
 
     def overdrive_active(self):
         return memory.main.read_val(0x00F3D6F4, 1) == 4
+
+    def flee(self):
+        logger.debug("Fleeing with Tidus")
+        self.navigate_to_battle_menu(20)
+        while not memory.main.other_battle_menu():
+            xbox.tap_b()
+        self._navigate_to_position(0)
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        self._tap_targeting()
 
 
 Tidus = TidusImpl()

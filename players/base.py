@@ -1,6 +1,6 @@
 import logging
 from enum import IntEnum
-from typing import List
+from typing import List, Optional
 
 import memory
 import xbox
@@ -94,7 +94,133 @@ class Player:
             pointer + self.struct_offset + address, 1, find_base=False
         )
 
-    def navigate_to_battle_menu(self, target):
+    def _target_specific_id(self, target_id: int, direction: str = "l"):
+        direction = direction or "l"
+        if target_id < 20:
+            friendly_target = True
+        else:
+            friendly_target = False
+        if (
+            not friendly_target
+            and memory.main.get_enemy_current_hp()[target_id - 20] != 0
+        ):
+            while memory.main.battle_target_id() != target_id:
+                if direction == "l" or direction == "left":
+                    if memory.main.battle_target_id() < 20:
+                        direction = "u"
+                    xbox.tap_left()
+                elif direction == "r" or direction == "right":
+                    if memory.main.battle_target_id() < 20:
+                        direction = "d"
+                    xbox.tap_right()
+                elif direction == "u" or direction == "up":
+                    if memory.main.battle_target_id() < 20:
+                        direction = "l"
+                    xbox.tap_up()
+                elif direction == "d" or direction == "down":
+                    if memory.main.battle_target_id() < 20:
+                        direction = "r"
+                    xbox.tap_down()
+        elif friendly_target:
+            while memory.main.battle_target_id() != target_id:
+                if direction == "l" or direction == "left":
+                    if memory.main.battle_target_id() >= 20:
+                        direction = "u"
+                    xbox.tap_left()
+                elif direction == "r" or direction == "right":
+                    if memory.main.battle_target_id() >= 20:
+                        direction = "d"
+                    xbox.tap_right()
+                elif direction == "u" or direction == "up":
+                    if memory.main.battle_target_id() >= 20:
+                        direction = "l"
+                    xbox.tap_up()
+                elif direction == "d" or direction == "down":
+                    if memory.main.battle_target_id() >= 20:
+                        direction = "r"
+                    xbox.tap_down()
+
+    def attack(
+        self, target_id: Optional[int] = None, direction_hint: Optional[str] = "u"
+    ):
+        if target_id is None:
+            logger.debug("Attack")
+        else:
+            logger.debug(
+                f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
+            )
+        if not memory.main.turn_ready():
+            while not memory.main.turn_ready():
+                pass
+        attack_menu_id = [x for x in [0, 203, 207, 210, 216] if x in self.battle_menu][
+            0
+        ]
+        self.navigate_to_battle_menu(attack_menu_id)
+        while memory.main.main_battle_menu():
+            xbox.tap_b()
+        if target_id is not None:
+            self._target_specific_id(target_id, direction_hint)
+        self._tap_targeting()
+
+    # spell_id should become an enum at some point
+    def cast_black_magic_spell(
+        self,
+        spell_id: int,
+        target_id: Optional[int] = None,
+        direction: Optional[str] = None,
+    ):
+        if target_id is None:
+            logger.debug(f"Casting {spell_id}")
+        else:
+            logger.debug(
+                f"Casting {spell_id} on a specific target with id {target_id}, direction is {direction}"
+            )
+        self.navigate_to_battle_menu(21)
+        while memory.main.main_battle_menu():
+            xbox.tap_b()
+        self._navigate_to_position(spell_id)
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        if target_id is not None:
+            self._target_specific_id(target_id, direction)
+        elif direction:
+            direction = direction.lower()
+            if direction == "right" or direction == "r":
+                xbox.tap_right()
+            elif direction == "left" or direction == "l":
+                xbox.tap_left()
+            elif direction == "up" or direction == "u":
+                xbox.tap_up()
+            elif direction == "down" or direction == "d":
+                xbox.tap_down()
+            elif direction == "l2":
+                xbox.tap_left()
+                xbox.tap_left()
+            elif direction == "rd":
+                xbox.tap_right()
+                xbox.tap_down()
+            elif direction == "right2" or direction == "r2":
+                xbox.tap_right()
+                xbox.tap_right()
+                xbox.tap_down()
+            elif direction == "d2":
+                xbox.tap_down()
+                xbox.tap_down()
+            else:
+                logger.error(f"UNSURE DIRECTION: {direction}")
+                raise ValueError("Unsure direction")
+        self._tap_targeting()
+
+    def skill(self):
+        raise NotImplementedError()
+
+    def defend(self):
+        logger.debug("Defending")
+        # There has got to be a better thing we can do with a memory value.
+        for _ in range(5):
+            xbox.tap_y()
+
+    def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
         current_position = memory.main.battle_menu_cursor()
         while current_position == 255:
@@ -115,12 +241,50 @@ class Player:
     def accuracy(self) -> int:
         return self._read_char_stat_offset_address(PlayerMagicNumbers.ACCURACY)
 
+    def _navigate_to_position(
+        self, position, battle_cursor=memory.main.battle_cursor_2
+    ):
+        while battle_cursor() == 255:
+            pass
+        if battle_cursor() != position:
+            logger.debug(
+                f"Wrong position targeted {battle_cursor() % 2}, {position % 2}"
+            )
+            while battle_cursor() % 2 != position % 2:
+                if battle_cursor() < position:
+                    xbox.tap_right()
+                else:
+                    xbox.tap_left()
+            while battle_cursor() != position:
+                logger.debug(f"Battle_cursor: {battle_cursor()}")
+                if battle_cursor() > position:
+                    xbox.tap_up()
+                else:
+                    xbox.tap_down()
+
+    def _tap_targeting(self):
+        logger.debug(
+            f"In Tap Targeting, Class Edition. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+        )
+        while (not memory.main.main_battle_menu()) and memory.main.battle_active():
+            xbox.tap_b()
+        logger.debug(
+            f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+        )
+
     def affection(self) -> int:
         if self.id == 0:
             return 255
         return memory.main.read_val(
             PlayerMagicNumbers.AFFECTION_POINTER + ((4 * self.id)), 1
         )
+
+    def _navigate_to_single_column_index(self, position, cursor):
+        while cursor() != position:
+            if cursor() < position:
+                xbox.tap_down()
+            else:
+                xbox.tap_up()
 
     def next_crits(self, enemy_luck: int, length: int = 20) -> List[int]:
         """Note that this says the number of increments, so the previous roll will be a hit, and this one will be the crit."""
@@ -257,6 +421,43 @@ class Player:
 
     def equipped_weapon(self) -> memory.main.Equipment:
         return [x for x in self.weapons() if x.is_equipped()][0]
+
+    def _swap_battle(self, weapon: bool, ability: Optional[List[int]] = None):
+        if weapon:
+            menu_index = 0
+            equip_func = self.weapons
+        else:
+            menu_index = 1
+            equip_func = self.armors
+        while memory.main.main_battle_menu():
+            xbox.tap_right()
+        self._navigate_to_single_column_index(menu_index, memory.main.battle_cursor_2)
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        if ability is not None:
+            for i, equip in enumerate(equip_func()):
+                if set(ability).issubset(set(equip.abilities())):
+                    equip_index = i
+                    break
+        else:
+            equip_index = 0
+        logger.debug(f"Equip is in index {equip_index}.")
+        self._navigate_to_single_column_index(equip_index, memory.main.battle_cursor_3)
+        while memory.main.interior_battle_menu():
+            xbox.tap_b()
+
+    def swap_battle_weapon(
+        self, ability: Optional[List[int]] = None, named_equip: Optional[str] = None
+    ):
+        if named_equip is not None:
+            if named_equip == "baroque":
+                ability = [0x8063, 255, 255, 255]
+            elif named_equip == "brotherhood":
+                ability = [32867, 32868, 32810, 32768]
+        self._swap_battle(True, ability)
+
+    def swap_battle_armor(self, ability: Optional[List[int]] = None):
+        self._swap_battle(False, ability)
 
     def main_menu_index(self) -> int:
         return memory.main.get_character_index_in_main_menu(self.id)

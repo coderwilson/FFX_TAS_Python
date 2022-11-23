@@ -18,7 +18,7 @@ from paths import (
     ZanarkandTrials,
     ZanarkandYunalesca,
 )
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -392,8 +392,8 @@ def sanctuary_keeper():
     FFXC.set_movement(-1, 1)
     memory.main.await_event()
     xbox.click_to_battle()
-    if screen.turn_tidus():
-        battle.main.defend()
+    if Tidus.is_turn():
+        CurrentPlayer().defend()
         xbox.click_to_battle()
     battle.main.aeon_summon(4)  # This is the whole fight. Kinda sad.
     s_keeper_print_bahamut_crit_chance()
@@ -457,7 +457,6 @@ def yunalesca():
 
 def post_yunalesca(checkpoint=0):
     logger.info("Heading back outside.")
-    exit_save = False
     FFXC.set_neutral()
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)

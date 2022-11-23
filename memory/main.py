@@ -983,7 +983,6 @@ def get_throw_items_order():
                 x += 1
         except Exception as y:
             logger.exception(y)
-            retry_this_value = True
             logger.debug("Retrying value")
     logger.debug(f"item_array: {item_array}")
     return item_array
@@ -1011,7 +1010,6 @@ def get_grid_items_order():
                 x += 1
         except Exception as y:
             logger.exception(y)
-            retry_this_value = True
             logger.debug("Retrying value")
     return item_array
 
