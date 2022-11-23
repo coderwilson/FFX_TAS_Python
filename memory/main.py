@@ -3783,6 +3783,14 @@ def mem_test_val_3():
 
 
 # ------------------------------
+# Yojimbo
+
+def yojimobo_compatability():
+    key = base_value + 0x00D30834
+    return process.read_bytes(key, 1)
+
+
+# ------------------------------
 
 
 def print_memory_log():

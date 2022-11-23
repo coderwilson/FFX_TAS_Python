@@ -13,6 +13,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from memory.yojimbo_rng import zan_amount
 from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
@@ -204,21 +205,27 @@ def aeon_start():
 
 @battle.utils.speedup_decorator
 def yojimbo_battle():
+    zan_amount() # Just to report
     # Incomplete
     screen.await_turn()
     if 1 not in memory.main.get_active_battle_formation():
         battle.main.buddy_swap_yuna()
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
-    logger.debug("Pay the man")
-    battle.overdrive.yojimbo()
+    needed_amount = min(round(zan_amount(),-1)+30, 263000)
+    logger.debug(f"Pay the man: {needed_amount}")
+    #battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
+    battle.overdrive.yojimbo() # Backup plan
+    
     memory.main.wait_frames(90)
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if screen.turn_tidus():
                 battle.main.tidus_flee()
             elif screen.turn_aeon():
-                xbox.skip_dialog(2)
+                # May still be able to get it?
+                zan_amount() # For printing purposes
+                battle.overdrive.yojimbo(gil_value=1)
             else:
                 battle.main.defend()
 
@@ -326,6 +333,7 @@ def basic_attack(
 def arena_npc():
     if memory.main.get_map() != 307:
         return
+    zan_amount() # Just for debug purposes
     while not (
         memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
     ):
@@ -352,9 +360,7 @@ def arena_npc():
                 and not memory.main.diag_progress_flag() == 74
             ):
                 xbox.tap_b()
-    logger.debug("Mark 1")
     memory.main.wait_frames(3)  # This buffer can be improved later.
-    logger.debug("Mark 2")
 
 
 def restock_downs():
@@ -793,19 +799,17 @@ def item_dump():
 
 def quick_reset_logic():
     reset.reset_to_main_menu()
-    # memory.main.wait_frames(90)
     while memory.main.get_map() != 23:
         FFXC.set_value("btn_start", 1)
         memory.main.wait_frames(2)
         FFXC.set_value("btn_start", 0)
         memory.main.wait_frames(2)
-    memory.main.wait_frames(60)
+    memory.main.wait_frames(30)
     xbox.menu_b()
     memory.main.wait_frames(60)
     load_game.load_save_num(199)
     FFXC.set_neutral()
     game_vars.print_arena_status()
-    # memory.main.wait_frames(30)
 
 
 def check_yojimbo_possible():
@@ -970,6 +974,7 @@ def battles_5(completion_version: int):
 
 
 def recharge_yuna():
+    logger.debug("Yuna is not charged. Recharging with tonberry.")
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=9)
@@ -980,7 +985,12 @@ def recharge_yuna():
                 battle.main.attack("none")
             else:
                 battle.main.escape_one()
-
+    
+    logger.debug("Battle is complete.")
+    FFXC.set_value("btn_b", 1)
+    memory.main.wait_frames(180)
+    FFXC.set_neutral()
+    memory.main.wait_frames(2)
 
 def nemesis_battle():
     if game_vars.yojimbo_get_index() < 12:
@@ -999,8 +1009,7 @@ def nemesis_battle():
         recharge_yuna()
     if memory.main.get_gil_value() < 300000:
         nemesis.arena_select.arena_menu_select(4)
-        nemesis.menu.auto_sort_equipment()
-        # nemesis.menu.auto_sort_items()
+        menu.auto_sort_equipment()
         arena_npc()
         nemesis.arena_select.arena_menu_select(2)
         memory.main.wait_frames(90)

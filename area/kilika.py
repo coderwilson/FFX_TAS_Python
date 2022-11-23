@@ -77,8 +77,7 @@ def select_best_of_two(coming_battles):
         ["dinonix", "yellow_element", "killer_bee"],
         ["yellow_element", "killer_bee"],
         ["ragora"],
-        ["dinonix", "yellow_element"],
-        ["ragora", "ragora"],
+        ["dinonix", "yellow_element"]
     ]
     for i in range(len(priority)):
         if priority[i] in coming_battles:
@@ -117,6 +116,7 @@ def forest_1():
                     checkpoint = 83
             if checkpoint == 83 and not valefor_charge:
                 checkpoint = 81
+                best_of_two = 99
             if checkpoint == 83 and memory.main.get_map() == 65:
                 checkpoint = 84
             if checkpoint == 37 and game_vars.skip_kilika_luck():
@@ -169,7 +169,7 @@ def forest_1():
                     battle.boss.geneaux()
                 else:
                     logger.debug(f"---- This should be battle number: {kilika_battles}")
-                    logger.debug(f"---- Reminder (north-bound only): {next_three}")
+                    logger.debug(f"---- Reminder (north-bound only): {best_of_two}")
                     valefor_charge = battle.main.kilika_woods(
                         valefor_charge, best_of_two, next_battle
                     )
