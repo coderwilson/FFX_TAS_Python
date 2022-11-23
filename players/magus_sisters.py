@@ -1,4 +1,4 @@
-from players.base import Aeon
+from players.aeon import Aeon
 
 
 class MagusSistersImpl(Aeon):
@@ -7,19 +7,19 @@ class MagusSistersImpl(Aeon):
 
     def do_as_you_will(self):
         self.navigate_to_battle_menu(36)
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
     def fight(self):
         self.navigate_to_battle_menu(38)
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
     def unique(self):
         self.navigate_to_battle_menu(self.battle_menu[2])
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
     def dismiss(self):
         self.navigate_to_battle_menu(86)
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
     def shield(self):
         raise NotImplementedError()

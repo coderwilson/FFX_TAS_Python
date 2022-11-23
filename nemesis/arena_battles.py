@@ -273,7 +273,7 @@ def auto_life():
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    battle.utils._navigate_to_position(1)
+    battle.main._navigate_to_position(1)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     xbox.tap_b()

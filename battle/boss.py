@@ -396,7 +396,7 @@ def oblitzerator(early_haste):
                         xbox.tap_down()
                     while memory.main.other_battle_menu():
                         xbox.tap_b()
-                    battle.utils.tap_targeting()
+                    battle.main.tap_targeting()
                 elif Lulu.is_turn():
                     battle.main.thunder("none")
                 else:
@@ -1674,7 +1674,7 @@ def bfa():
         xbox.tap_down()
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    battle.utils.tap_targeting()
+    battle.main.tap_targeting()
     battle.main.buddy_swap(Yuna)
     battle.main.aeon_summon(4)
 
@@ -1801,12 +1801,12 @@ def yu_yevon():
                     while memory.main.main_battle_menu():
                         xbox.tap_b()
                     item_pos = memory.main.get_throw_items_slot(item_num)
-                    battle.utils._navigate_to_position(item_pos)
+                    battle.main._navigate_to_position(item_pos)
                     while memory.main.other_battle_menu():
                         xbox.tap_b()
                     while not memory.main.enemy_targetted():
                         xbox.tap_up()
-                    battle.utils.tap_targeting()
+                    battle.main.tap_targeting()
                 logger.info("Phoenix Down on Yu Yevon. Good game.")
             elif Tidus.is_turn() and za_char == 255:
                 # Tidus to use Zombie Strike ability

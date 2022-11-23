@@ -13,9 +13,7 @@ class RikkuImp(Player):
         super().__init__("Rikku", 6, [0, 20, 1])
 
     def rikku_od_items(self, slot):
-        battle.utils._navigate_to_position(
-            slot, battle_cursor=memory.main.rikku_od_cursor_1
-        )
+        self._navigate_to_position(slot, battle_cursor=memory.main.rikku_od_cursor_1)
 
     def overdrive(battle):
         # First, determine which items we are using
@@ -107,7 +105,7 @@ class RikkuImp(Player):
         while memory.main.interior_battle_menu():
             xbox.tap_b()
 
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
 
 Rikku = RikkuImp()

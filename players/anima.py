@@ -1,4 +1,4 @@
-from players.base import Aeon
+from players.aeon import Aeon
 
 
 class AnimaImpl(Aeon):

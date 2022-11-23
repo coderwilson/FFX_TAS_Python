@@ -24,9 +24,7 @@ class AuronImpl(Player):
         logger.info(f"Auron overdrive. Style: {style}")
         # Doing the actual overdrive
         if style == "dragon fang":
-            battle.utils._navigate_to_position(
-                0, battle_cursor=memory.main.battle_cursor_3
-            )
+            self._navigate_to_position(0, battle_cursor=memory.main.battle_cursor_3)
             while not self.overdrive_active():
                 xbox.tap_b()
             logger.debug("Starting")
@@ -56,9 +54,7 @@ class AuronImpl(Player):
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_b", 0)
         elif style == "shooting star":
-            battle.utils._navigate_to_position(
-                1, battle_cursor=memory.main.battle_cursor_3
-            )
+            self._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
             while not self.overdrive_active():
                 xbox.tap_b()
             for i in range(2):  # Do it twice in case there's a miss on the first one.

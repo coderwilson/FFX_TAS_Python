@@ -17,9 +17,7 @@ class TidusImpl(Player):
             xbox.tap_left()
         while not memory.main.interior_battle_menu():
             xbox.tap_b()
-        battle.utils._navigate_to_position(
-            version, battle_cursor=memory.main.battle_cursor_3
-        )
+        self._navigate_to_position(version, battle_cursor=memory.main.battle_cursor_3)
         while memory.main.interior_battle_menu():
             xbox.tap_b()
         if character != 99 and memory.main.get_enemy_current_hp()[character - 20] != 0:
@@ -45,10 +43,10 @@ class TidusImpl(Player):
         self.navigate_to_battle_menu(20)
         while not memory.main.other_battle_menu():
             xbox.tap_b()
-        battle.utils._navigate_to_position(0)
+        self._navigate_to_position(0)
         while memory.main.other_battle_menu():
             xbox.tap_b()
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
 
 Tidus = TidusImpl()

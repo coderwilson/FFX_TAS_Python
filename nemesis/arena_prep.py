@@ -61,7 +61,7 @@ def auto_life():
             xbox.tap_down()
     while not memory.main.other_battle_menu():
         xbox.tap_b()
-    battle.utils._navigate_to_position(1)
+    battle.main._navigate_to_position(1)
     while memory.main.other_battle_menu():
         xbox.tap_b()
     xbox.tap_b()
@@ -539,14 +539,14 @@ def bribe_battle(spare_change_value: int = 12000):
                         xbox.tap_up()
                 while not memory.main.other_battle_menu():
                     xbox.tap_b()
-                battle.utils._navigate_to_position(0)
+                battle.main._navigate_to_position(0)
                 while memory.main.other_battle_menu():
                     xbox.tap_b()
                 battle.main.calculate_spare_change_movement(spare_change_value)
 
                 while memory.main.spare_change_open():
                     xbox.tap_b()
-                battle.utils.tap_targeting()
+                battle.main.tap_targeting()
             else:
                 battle.main.buddy_swap(Lulu)
     logger.debug("Battle is complete.")

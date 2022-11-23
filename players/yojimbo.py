@@ -1,4 +1,4 @@
-from players.base import Aeon
+from players.aeon import Aeon
 
 
 class YojimboImpl(Aeon):
@@ -7,7 +7,7 @@ class YojimboImpl(Aeon):
 
     def dismiss(self):
         self.navigate_to_battle_menu(87)
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
     def shield(self):
         raise NotImplementedError()

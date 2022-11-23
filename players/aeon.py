@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 import battle.utils
 import memory
@@ -16,10 +17,10 @@ class Aeon(Player):
     def _aeon_side_menu(self, target):
         while not memory.main.other_battle_menu():
             xbox.tap_right()
-        battle.utils._navigate_to_single_column_index(
-            target, memory.main.battle_cursor_2
-        )
-        battle.utils.tap_targeting()
+        self._navigate_to_single_column_index(target, memory.main.battle_cursor_2)
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        self._tap_targeting()
 
     def unique(self, direction=None, target_far_line=False):
         self.navigate_to_battle_menu(self.battle_menu[1])
@@ -31,7 +32,7 @@ class Aeon(Player):
         if target_far_line:
             while not memory.main.battle_line_target():
                 xbox.tap_left()
-        battle.utils.tap_targeting()
+        self._tap_targeting()
 
     def shield(self):
         self._aeon_side_menu(0)
@@ -45,7 +46,9 @@ class Aeon(Player):
     def overdrive(self, overdrive_num: int):
         while memory.main.main_battle_menu():
             xbox.tap_left()
-        battle.utils._navigate_to_single_column_index(
+        self._navigate_to_single_column_index(
             overdrive_num, memory.main.battle_cursor_2
         )
-        battle.utils.tap_targeting()
+        while memory.main.other_battle_menu():
+            xbox.tap_b()
+        self._tap_targeting()
