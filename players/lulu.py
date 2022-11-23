@@ -1,4 +1,3 @@
-import memory
 from players.base import Player
 
 

@@ -10,6 +10,7 @@ import screen
 import vars
 import xbox
 from paths import BaajHallway, BaajPuzzle, BaajRamp
+from players import CurrentPlayer, Rikku
 
 logger = logging.getLogger(__name__)
 
@@ -44,9 +45,9 @@ def entrance(checkpoint: int = 0):
     while memory.main.get_story_progress() < 48:
         if screen.battle_screen():
             if memory.main.get_encounter_id() == 2:
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.menu_b()
 
@@ -115,7 +116,7 @@ def baaj_puzzle():
 def klikk_fight():
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
-    while not screen.turn_rikku():
+    while not Rikku.is_turn():
         xbox.tap_b()
 
     xbox.click_to_battle()

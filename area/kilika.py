@@ -2,7 +2,6 @@ import logging
 
 import battle.boss
 import battle.main
-import logs
 import memory.main
 import menu
 import pathing
@@ -10,7 +9,7 @@ import save_sphere
 import vars
 import xbox
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Kimahri, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -92,7 +91,6 @@ def select_best_of_two(coming_battles):
 def forest_1():
     logger.info("Kilika forest 1")
     kilika_battles = 0
-    optimal_battles = 0
     next_three = []
     next_battle = []
     import rng_track

@@ -2,6 +2,7 @@ import logging
 
 import battle.boss
 import battle.main
+import battle.utils
 import memory.main
 import menu
 import nemesis.arena_select
@@ -12,7 +13,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -23,14 +24,14 @@ test_mode = False
 
 
 def auto_life():
-    while not (memory.main.turn_ready() and screen.turn_tidus()):
+    while not (memory.main.turn_ready() and Tidus.is_turn()):
         if memory.main.turn_ready():
             if screen.turn_aeon():
-                battle.main.attack("none")
-            elif not screen.turn_tidus():
-                battle.main.defend()
+                CurrentPlayer().attack()
+            elif not Tidus.is_turn():
+                CurrentPlayer().defend()
     while memory.main.battle_menu_cursor() != 22:
-        if screen.turn_tidus() == False:
+        if Tidus.is_turn() == False:
             logger.debug("Attempting Auto-life, but it's not Tidus's turn")
             xbox.tap_up()
             xbox.tap_up()
@@ -133,7 +134,7 @@ def return_to_airship():
     if test_mode:
         memory.main.set_game_speed(set_val=0)
 
-    ss_details = get_save_sphere_details()
+    get_save_sphere_details()
 
     if memory.main.get_map() == 307:  # Monster arena
         while not nemesis.nemesis_pathing.set_movement([-4, -3]):
@@ -162,34 +163,34 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
     else:
         while memory.main.battle_active():
             if memory.main.turn_ready():
-                if screen.turn_tidus():
+                if Tidus.is_turn():
                     if memory.main.get_encounter_id() in [154, 156, 164]:
                         # Confusion is a dumb mechanic in this game.
-                        battle.main.attack_by_num(22, "l")
+                        CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif memory.main.get_encounter_id() == 281:
-                        battle.main.attack_by_num(22, "r")
+                        CurrentPlayer().attack(target_id=22, direction_hint="r")
                     elif memory.main.get_encounter_id() == 283:
-                        battle.main.attack_by_num(21, "u")
+                        CurrentPlayer().attack(target_id=21, direction_hint="u")
                     elif memory.main.get_encounter_id() == 284:
-                        battle.main.attack_by_num(23, "d")
+                        CurrentPlayer().attack(target_id=23, direction_hint="d")
                     else:
-                        battle.main.attack("none")
-                elif screen.turn_yuna():
+                        CurrentPlayer().attack()
+                elif Yuna.is_turn():
                     if yuna_attack:
                         if memory.main.get_encounter_id() in [154, 156, 164]:
                             # Confusion is a dumb mechanic in this game.
-                            battle.main.attack_by_num(22, "l")
+                            CurrentPlayer().attack(target_id=22, direction_hint="l")
                         elif memory.main.get_encounter_id() == 281:
-                            battle.main.attack_by_num(21, "l")
+                            CurrentPlayer().attack(target_id=21, direction_hint="l")
                         elif memory.main.get_encounter_id() == 283:
-                            battle.main.attack_by_num(22, "d")
+                            CurrentPlayer().attack(target_id=22, direction_hint="d")
                         elif memory.main.get_encounter_id() == 284:
-                            battle.main.attack_by_num(22, "d")
+                            CurrentPlayer().attack(target_id=22, direction_hint="d")
                         else:
-                            battle.main.attack("none")
+                            CurrentPlayer().attack()
                     else:
                         battle.main.escape_one()
-                elif screen.turn_rikku() or screen.turn_wakka():
+                elif Rikku.is_turn() or Wakka.is_turn():
                     if memory.main.battle_type() == 2:
                         battle.main.escape_one()
                     elif not battle.main.check_tidus_ok():
@@ -197,7 +198,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                     elif memory.main.get_encounter_id() == 219:
                         battle.main.escape_one()
                     else:
-                        battle.main.defend()
+                        CurrentPlayer().defend()
                 else:
                     battle.main.escape_one()
     memory.main.click_to_control()
@@ -327,28 +328,28 @@ def advanced_battle_logic():
 
     if memory.main.battle_type() == 2:
         logger.debug("Ambushed! Escaping!")
-        battle.main.tidus_flee()
+        Tidus.flee()
     elif advanced_complete_check():
         logger.debug("Complete collecting this monster.")
-        battle.main.tidus_flee()
+        Tidus.flee()
     else:
         if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
             aeon_complete = False
             while memory.main.battle_active():
                 if memory.main.turn_ready():
-                    if screen.turn_rikku():
+                    if Rikku.is_turn():
                         if not aeon_complete:
-                            battle.main.buddy_swap_yuna()
+                            battle.main.buddy_swap(Yuna)
                             battle.main.aeon_summon(4)
                         else:
-                            battle.main.defend()
-                    elif screen.turn_yuna():
-                        battle.main.buddy_swap_rikku()
-                    elif screen.turn_tidus():
+                            CurrentPlayer().defend()
+                    elif Yuna.is_turn():
+                        battle.main.buddy_swap(Rikku)
+                    elif Tidus.is_turn():
                         battle.main.use_skill(1)  # Quick hit
                     else:
-                        battle.main.defend()
+                        CurrentPlayer().defend()
         else:
             logger.debug(f"Regular battle:{memory.main.get_encounter_id()}")
             sleep_powder = False
@@ -357,10 +358,10 @@ def advanced_battle_logic():
                 if memory.main.turn_ready():
                     if encounter_id in [442]:
                         # Damned malboros in Omega
-                        battle.main.buddy_swap_yuna()
+                        battle.main.buddy_swap(Yuna)
                         battle.main.aeon_summon(4)
-                        battle.main.attack("none")
-                    elif screen.turn_tidus():
+                        CurrentPlayer().attack()
+                    elif Tidus.is_turn():
                         if (
                             memory.main.get_encounter_id() in [386]
                             and not auto_life_used
@@ -408,10 +409,10 @@ def advanced_battle_logic():
                             else:
                                 battle.main.use_skill(1)
                         elif encounter_id == 431:
-                            battle.main.tidus_flee()
+                            Tidus.flee()
                         else:
                             battle.main.use_skill(1)  # Quick hit
-                    elif screen.turn_rikku():
+                    elif Rikku.is_turn():
                         if encounter_id in [377, 382]:
                             logger.debug(
                                 "Shining Gems for Gemini, better to save other items for other enemies."
@@ -422,7 +423,7 @@ def advanced_battle_logic():
                                     memory.main.get_use_items_slot(42), rikku_flee=True
                                 )
                             else:
-                                battle.main.defend()
+                                CurrentPlayer().defend()
                         elif encounter_id == 386:
                             # Armor bomber guys
                             if memory.main.get_use_items_slot(41) < 100:
@@ -430,7 +431,7 @@ def advanced_battle_logic():
                                     memory.main.get_use_items_slot(41), rikku_flee=True
                                 )
                             else:
-                                battle.main.defend()
+                                CurrentPlayer().defend()
                         elif encounter_id in [430]:
                             # Demonolith
                             if memory.main.get_use_items_slot(41) < 100:
@@ -438,7 +439,7 @@ def advanced_battle_logic():
                                     memory.main.get_use_items_slot(41), rikku_flee=True
                                 )
                             else:
-                                battle.main.defend()
+                                CurrentPlayer().defend()
                         elif encounter_id == 422:
                             # Provoke on Spirit
                             battle.main.use_special(
@@ -449,7 +450,7 @@ def advanced_battle_logic():
                                     memory.main.get_use_items_slot(41), rikku_flee=True
                                 )
                             else:
-                                battle.main.defend()
+                                CurrentPlayer().defend()
                         elif encounter_id == 424:
                             # Provoke on Spirit
                             battle.main.use_special(
@@ -476,9 +477,9 @@ def advanced_battle_logic():
                                         memory.main.get_use_items_slot(41)
                                     )
                                 else:
-                                    battle.main.defend()
+                                    CurrentPlayer().defend()
                         elif encounter_id == 431:
-                            battle.main.tidus_flee()
+                            Tidus.flee()
                         elif (
                             encounter_id == 437
                             and memory.main.get_enemy_current_hp()[0] > 9999
@@ -493,9 +494,9 @@ def advanced_battle_logic():
                                         memory.main.get_use_items_slot(41)
                                     )
                                 else:
-                                    battle.main.defend()
+                                    CurrentPlayer().defend()
                         else:
-                            battle.main.defend()
+                            CurrentPlayer().defend()
                     else:
                         battle.main.escape_one()
     memory.main.click_to_control()
@@ -509,7 +510,7 @@ def bribe_battle(spare_change_value: int = 12000):
     logger.debug(f"value (2): {spare_change_value}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_lulu():
+            if Lulu.is_turn():
                 while memory.main.battle_menu_cursor() != 20:
                     if memory.main.battle_menu_cursor() == 255:
                         xbox.tap_down()
@@ -528,7 +529,7 @@ def bribe_battle(spare_change_value: int = 12000):
                     xbox.tap_b()
                 battle.main.tap_targeting()
             else:
-                battle.main.buddy_swap_lulu()
+                battle.main.buddy_swap(Lulu)
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():
         pass
@@ -767,17 +768,17 @@ def farm_feathers():
     wait_counter = 0
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_rikku():
+            if Rikku.is_turn():
                 logger.debug("Qactar steal command")
                 battle.main.steal()
                 logger.debug("Qactar steal command done")
-            elif screen.turn_tidus():
+            elif Tidus.is_turn():
                 logger.debug("Qactar flee command")
-                battle.main.tidus_flee()
+                Tidus.flee()
                 logger.debug("Qactar flee command done")
             else:
                 logger.debug("Qactar defend command")
-                battle.main.defend()
+                CurrentPlayer().defend()
                 logger.debug("Qactar defend command done")
         wait_counter += 1
         if wait_counter % 10 == 0:
@@ -964,16 +965,16 @@ def tonberry_levels_battle():
     tidus_AP_gained = False
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
+            if Tidus.is_turn():
                 if tidus_AP_gained == True:
-                    battle.main.tidus_flee()
+                    Tidus.flee()
                 elif memory.main.get_overdrive_battle(character=0) == 100:
-                    battle.overdrive.tidus()
+                    Tidus.overdrive()
                 else:
                     battle.main.attack()
                 tidus_AP_gained = True
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():

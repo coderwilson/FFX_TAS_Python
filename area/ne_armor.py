@@ -17,7 +17,7 @@ from paths import (
     NEReturn,
     NEReturnGreen,
 )
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, Rikku, Tidus
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
