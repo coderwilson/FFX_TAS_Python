@@ -2000,7 +2000,7 @@ def seymour_guado_blitz_loss():
                     tap_targeting()
                 elif tidus_turns == 3:
                     logger.debug("Swap to Brotherhood")
-                    equip_in_battle(special="brotherhood")
+                    Tidus.swap_battle_weapon(named_equip="brotherhood")
                 elif tidus_turns == 4:
                     logger.debug("Tidus overdrive activating")
                     screen.await_turn()
@@ -2174,7 +2174,7 @@ def escape_with_xp():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
                     if not rikku_item:
-                        equip_in_battle(equip_type="armor", ability_num=0x8028)
+                        Tidus.swap_battle_armor(ability=[0x8028])
                         screen.await_turn()
                         buddy_swap(Rikku)
                     else:
@@ -4161,9 +4161,7 @@ def bfa_nem():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if tidus_first_turn:
-                    equip_in_battle(
-                        equip_type="weap", ability_num=0x8019, character=Tidus
-                    )
+                    Tidus.swap_battle_weapon(ability=[0x8019])
                     tidus_first_turn = True
                 else:
                     CurrentPlayer().attack()
@@ -4316,55 +4314,6 @@ def rikku_full_od(battle):
     while memory.main.interior_battle_menu():
         xbox.tap_b()
     tap_targeting()
-
-
-def equip_in_battle(equip_type="weap", ability_num=0, character=Tidus, special="none"):
-    equip_type = equip_type.lower()
-    while memory.main.main_battle_menu():
-        xbox.tap_right()
-    if equip_type == "weap":
-        equip_handles = memory.main.weapon_array_character(character)
-    else:
-        while memory.main.battle_cursor_2() != 1:
-            xbox.tap_down()
-        equip_handles = memory.main.armor_array_character(character)
-    while memory.main.other_battle_menu():
-        xbox.tap_b()
-
-    logger.debug("@@@@@")
-    logger.debug(f"Character: {character}")
-    logger.debug(f"Equipment type: {equip_type}")
-    logger.debug(f"Number of items: {len(equip_handles)}")
-    logger.debug(f"Special: {special}")
-    logger.debug("@@@@@")
-    equip_num = 255
-    i = 0
-    while len(equip_handles) > 0:
-        current_handle = equip_handles.pop(0)
-        logger.debug(current_handle.abilities())
-        if special == "baroque":
-            if current_handle.abilities() == [0x8063, 255, 255, 255]:
-                equip_num = i
-        elif special == "brotherhood":
-            if current_handle.abilities() == [32867, 32868, 32810, 32768]:
-                equip_num = i
-        elif ability_num == 0:
-            logger.debug("Equipping just the first available equipment.")
-            equip_num = 0
-        elif current_handle.has_ability(ability_num):  # First Strike for example
-            equip_num = i
-        i += 1
-    while memory.main.battle_cursor_3() != equip_num:
-        logger.debug(f"'''Battle cursor 3: {memory.main.battle_cursor_3()}")
-        logger.debug(f"'''equip_num: {equip_num}")
-        if memory.main.battle_cursor_3() < equip_num:
-            xbox.tap_down()
-        else:
-            xbox.tap_up()
-    while memory.main.interior_battle_menu():
-        xbox.tap_b()
-
-    logger.debug(f"Desired equipment is in slot {equip_num}")
 
 
 def check_character_ok(char_num):

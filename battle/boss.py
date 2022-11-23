@@ -777,7 +777,7 @@ def spherimorph():
             party_hp = memory.main.get_battle_hp()
             if Tidus.is_turn():
                 if tidus_turns == 0:
-                    battle.main.equip_in_battle(equip_type="armor", ability_num=0x8028)
+                    Tidus.swap_battle_armor(ability=[0x8028])
                 elif tidus_turns == 1:
                     CurrentPlayer().defend()
                 else:
@@ -1012,7 +1012,7 @@ def wendigo():
                     tidushaste = True
                 elif phase == 0:
                     logger.debug("Switch to Brotherhood")
-                    battle.main.equip_in_battle(special="brotherhood")
+                    Tidus.swap_battle_weapon(named_equip="brotherhood")
                     phase += 1
                 elif phase == 1:
                     logger.debug("Attack top Guado")
@@ -1192,9 +1192,7 @@ def evrae():
                         battle.main.cheer()
                     elif tidus_prep == 2 and rikku_turns == 0:
                         tidus_prep += 1
-                        battle.main.equip_in_battle(
-                            equip_type="armor", ability_num=0x8028
-                        )
+                        Tidus.swap_battle_armor(ability=[0x8028])
                     elif tidus_prep == 2 and tidus_attacks == 2:
                         tidus_prep += 1
                         battle.main.cheer()
@@ -1210,7 +1208,7 @@ def evrae():
                         battle.main.cheer()
                     elif tidus_prep == 3:
                         logger.debug("Equip Baroque Sword.")
-                        battle.main.equip_in_battle(special="baroque")
+                        Tidus.swap_battle_weapon(named_equip="baroque")
                         tidus_prep += 1
                     elif tidus_attacks == 4 and game_vars.skip_kilika_luck():
                         tidus_attacks += 1
@@ -1625,9 +1623,7 @@ def omnis():
                     battle.main.yuna_cure_omnis()
                     backup_cure = True
                 else:
-                    battle.main.equip_in_battle(
-                        equip_type="weap", ability_num=0x8001, character=1
-                    )
+                    Yuna.swap_battle_weapon(ability=[0x8001])
             else:
                 CurrentPlayer().defend()
 
@@ -1742,9 +1738,7 @@ def yu_yevon():
             logger.debug("-----------------------")
             if za_char == 1 and not zombie_attack:  # Yuna logic
                 if not weap_swap and Yuna.is_turn():
-                    battle.main.equip_in_battle(
-                        equip_type="weap", ability_num=0x8032, character=1
-                    )
+                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
                     weap_swap = True
                 elif Yuna.is_turn():
                     CurrentPlayer().attack()
@@ -1757,9 +1751,7 @@ def yu_yevon():
                 if Yuna.is_turn():
                     CurrentPlayer().defend()
                 elif Tidus.is_turn() and not weap_swap:
-                    battle.main.equip_in_battle(
-                        equip_type="weap", ability_num=0x8032, character=0
-                    )
+                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
                     weap_swap = True
                 elif Tidus.is_turn():
                     CurrentPlayer().attack()
@@ -1770,9 +1762,7 @@ def yu_yevon():
                 if Yuna.is_turn():
                     battle.main.buddy_swap(Auron)
                 elif Auron.is_turn() and not weap_swap:
-                    battle.main.equip_in_battle(
-                        equip_type="weap", ability_num=0x8032, character=2
-                    )
+                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
                     weap_swap = True
                 elif Auron.is_turn():
                     CurrentPlayer().attack()
