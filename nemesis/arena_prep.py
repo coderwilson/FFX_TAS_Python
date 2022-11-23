@@ -988,7 +988,7 @@ def tonberry_levels_battle():
                 if tidus_AP_gained == True:
                     Tidus.flee()
                 elif memory.main.get_overdrive_battle(character=0) == 100:
-                    battle.overdrive.tidus()
+                    Tidus.overdrive()
                 else:
                     battle.main.attack()
                 tidus_AP_gained = True

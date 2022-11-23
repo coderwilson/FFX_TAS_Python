@@ -280,7 +280,7 @@ def sin_fin():
                     battle.main.buddy_swap(Yuna)
                     battle.main.aeon_summon(0)
             elif screen.turn_aeon():
-                battle.overdrive.valefor(sin_fin=1)
+                Valefor.overdrive(overdrive_num=1, sin_fin=True)
                 logger.info("Valefor energy blast")
     logger.info("Sin's Fin fight complete")
     xbox.click_to_battle()
@@ -312,7 +312,7 @@ def echuilles():
                     and memory.main.get_enemy_current_hp()[0] <= 750
                 ):
                     logger.debug("Overdrive")
-                    battle.overdrive.tidus()
+                    Tidus.overdrive()
                 else:
                     logger.debug("Tidus attack")
                     CurrentPlayer().attack()
@@ -355,7 +355,7 @@ def geneaux():
     screen.await_turn()
     battle.main.aeon_summon(0)  # Summon Valefor
     screen.await_turn()
-    battle.overdrive.valefor()
+    Valefor.overdrive(overdrive_num=0)
 
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.diag_skip_possible():
@@ -551,7 +551,7 @@ def gui():
                     )
             elif Kimahri.is_turn():
                 dmg_before = memory.main.get_enemy_current_hp()[0]
-                battle.overdrive.kimahri(2)
+                Kimahri.overdrive(2)
                 screen.await_turn()
                 dmg_after = memory.main.get_enemy_current_hp()[0]
                 damage = dmg_before - dmg_after
@@ -579,7 +579,7 @@ def gui():
                 else:
                     CurrentPlayer().defend()
             elif screen.turn_aeon():
-                battle.overdrive.valefor()
+                Valefor.overdrive(overdrive_num=0)
                 aeon_turn = True
 
     screen.await_turn()
@@ -600,7 +600,7 @@ def gui():
                 battle.main.aeon_spell(1)
             elif memory.main.get_overdrive_battle(8) == 20:
                 logger.debug("--- Overdriving")
-                battle.overdrive.valefor()
+                Valefor.overdrive(overdrive_num=0)
                 went = True
             elif not turn1:
                 turn1 = True
@@ -663,7 +663,7 @@ def gui():
                     battle.main.aeon_summon(0)
             elif screen.turn_aeon():
                 logger.debug("Firing")
-                battle.overdrive.valefor()
+                Valefor.overdrive(overdrive_num=0)
             else:
                 logger.debug("Defend")
                 CurrentPlayer().defend()
@@ -734,9 +734,9 @@ def extractor():
             else:
                 if (
                     memory.main.get_enemy_current_hp()[0] < 1900
-                    and memory.main.get_overdrive_battle(4) == 100
+                    and Wakka.has_overdrive()
                 ):
-                    battle.overdrive.wakka()
+                    Wakka.overdrive()
                 else:
                     CurrentPlayer().attack()
         elif memory.main.diag_skip_possible():
@@ -1031,7 +1031,7 @@ def wendigo():
                     and memory.main.get_overdrive_battle(0) == 100
                     and not game_vars.skip_kilika_luck()
                 ):
-                    battle.overdrive.tidus("left", character=21)
+                    Tidus.overdrive(direction="left", character=21)
                 elif tidushealself:
                     if party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
                         logger.debug(
@@ -1177,7 +1177,7 @@ def evrae():
                         or memory.main.get_enemy_current_hp()[0] <= 9999
                     ):
                         tidus_attacks += 1
-                        battle.overdrive.tidus()
+                        Tidus.overdrive()
                     else:
                         tidus_attacks += 1
                         CurrentPlayer().attack()
@@ -1212,7 +1212,7 @@ def evrae():
                         tidus_prep += 1
                     elif tidus_attacks == 4 and game_vars.skip_kilika_luck():
                         tidus_attacks += 1
-                        battle.overdrive.tidus()
+                        Tidus.overdrive()
                     else:
                         tidus_attacks += 1
                         CurrentPlayer().attack()
@@ -1500,7 +1500,7 @@ def seymour_flux():
                     if game_vars.get_blitz_win():
                         CurrentPlayer().attack()
                     else:
-                        battle.main.impulse()
+                        Bahamut.unique()
                 elif screen.faint_check() >= 1:
                     battle.main.revive()
                 else:

@@ -158,6 +158,9 @@ class Player:
                         xbox.tap_down()
         battle.utils.tap_targeting()
 
+    def skill(self):
+        raise NotImplementedError()
+
     def defend():
         logger.debug("Defending")
         # There has got to be a better thing we can do with a memory value.

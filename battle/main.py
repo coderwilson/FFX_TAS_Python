@@ -3,7 +3,6 @@ import logging
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
-import battle.overdrive
 import battle.utils
 import logs
 import memory.main
@@ -477,7 +476,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                                 aeon_shield()
                         aeon_boost()
                         screen.await_turn()
-                        sonic_wings()
+                        Valefor.unique()
                         screen.await_turn()
                         aeon_spell(0)
                     elif screen.turn_aeon():
@@ -613,23 +612,6 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
         valefor_charge = True
     logger.debug(f"Returning Valefor Charge value: {valefor_charge}")
     return valefor_charge
-
-
-def sonic_wings():
-    logger.debug("Valefor attempting to use Sonic Wings - 1")
-    while memory.main.battle_menu_cursor() != 204:
-        if memory.main.battle_menu_cursor() == 203:
-            xbox.tap_down()
-        else:
-            xbox.tap_up()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    logger.debug("Valefor attempting to use Sonic Wings - 2")
 
 
 @battle.utils.speedup_decorator
@@ -1022,7 +1004,7 @@ def mrr_battle(status):
                             buddy_swap(Yuna)
                             aeon_summon(0)
                             screen.await_turn()
-                            battle.overdrive.valefor(version=1)
+                            Valefor.overdrive(overdrive_num=1)
                             status[2] = 1
                             status[5] = 1
             else:
@@ -1048,7 +1030,7 @@ def mrr_battle(status):
                         buddy_swap(Yuna)
                         aeon_summon(0)
                         screen.await_turn()
-                        battle.overdrive.valefor(version=1)
+                        Valefor.overdrive(overdrive_num=1)
                         status[2] = 1
                         status[5] = 1
     elif status[5] == 1:  # Next need to recharge Valefor
@@ -4214,25 +4196,6 @@ def wrap_up():
     return True
 
 
-def impulse(direction=None, target_far_line=False):
-    while memory.main.battle_menu_cursor() != 217:
-        if memory.main.battle_menu_cursor() == 216:
-            xbox.tap_down()
-        else:
-            xbox.tap_up()
-    while not memory.main.other_battle_menu():
-        xbox.tap_b()
-    if direction == "left":
-        xbox.tap_left()
-    if target_far_line:
-        while not memory.main.battle_line_target():
-            xbox.tap_left()
-    battle.utils.tap_targeting()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-
-
 @battle.utils.speedup_decorator
 def sin_arms():
     logger.info("Fight start: Sin's Arms")
@@ -4241,7 +4204,7 @@ def sin_arms():
     aeon_summon(4)
     while memory.main.battle_active():  # Arm1
         if memory.main.turn_ready():
-            impulse()
+            Bahamut.unique()
             xbox.tap_b()
             xbox.tap_b()
         else:
@@ -4258,7 +4221,7 @@ def sin_arms():
 
     while memory.main.battle_active():  # Arm2
         if memory.main.turn_ready():
-            impulse()
+            Bahamut.unique()
             xbox.tap_b()
             xbox.tap_b()
         else:
@@ -4279,7 +4242,7 @@ def sin_arms():
             if memory.main.turn_ready():
                 CurrentPlayer().attack()
     else:
-        impulse(target_far_line=True)
+        Bahamut.unique(target_far_line=True)
         xbox.tap_b()
         xbox.tap_b()
 
@@ -4304,7 +4267,7 @@ def sin_face():
                 aeon_summon(4)
             elif screen.turn_aeon():
                 if aeon_first_turn:
-                    impulse()
+                    Bahamut.unique()
                     aeon_first_turn = False
                 else:
                     CurrentPlayer().attack()
@@ -4948,14 +4911,14 @@ def advance_rng_12():
                         use_impulse = True
                 if not attack_count:
                     if memory.main.get_encounter_id() in [314]:
-                        impulse()
+                        Bahamut.unique()
                         attack_count = True
                     elif advances >= 2:
-                        impulse()
+                        Bahamut.unique()
                         attack_count = True
                     elif advances == 1:
                         if use_impulse and not double_drop:
-                            impulse()
+                            Bahamut.unique()
                             attack_count = True
                         else:
                             attack_count = True

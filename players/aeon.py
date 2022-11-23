@@ -21,8 +21,16 @@ class Aeon(Player):
         )
         battle.utils.tap_targeting()
 
-    def unique(self):
+    def unique(self, direction=None, target_far_line=False):
         self.navigate_to_battle_menu(self.battle_menu[1])
+        while not memory.main.other_battle_menu():
+            xbox.tap_b()
+        # This should be generealized
+        if direction == "left":
+            xbox.tap_left()
+        if target_far_line:
+            while not memory.main.battle_line_target():
+                xbox.tap_left()
         battle.utils.tap_targeting()
 
     def shield(self):
