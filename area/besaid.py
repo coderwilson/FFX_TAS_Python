@@ -1,5 +1,6 @@
 import logging
 
+import battle.boss
 import battle.main
 import logs
 import memory.main
@@ -9,7 +10,7 @@ import screen
 import vars
 import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Lulu, Tidus, Wakka, Yuna
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -226,21 +227,15 @@ def leaving():
                 logs.write_rng_track("Pre-tutorial array")
                 logs.write_rng_track(memory.main.rng_10_array(array_len=1))
                 logger.debug("Tutorial - Tidus and Wakka")
+                battle.boss.tidus_wakka_tutorial()
                 FFXC.set_movement(1, -1)
-                memory.main.click_to_event()
-                FFXC.set_neutral()
-                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 23:  # Second tutorial
                 logger.debug("Tutorial - Lulu magic")
                 while memory.main.user_control():
                     FFXC.set_movement(1, 0)
+                battle.boss.black_magic_tutorial()
                 FFXC.set_neutral()
-                xbox.click_to_battle()
-                battle.main.attack("none")
-                xbox.click_to_battle()
-                battle.main.thunder("none")
-                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 24:  # Hilltop
                 memory.main.click_to_event_temple(2)
@@ -274,54 +269,19 @@ def leaving():
                 xbox.skip_scene(fast_mode=True)
             # Kimahri fight
             elif checkpoint > 25 and checkpoint < 30 and screen.battle_screen():
-                FFXC.set_neutral()
-                heal_count = 0
-                while memory.main.battle_active():
-                    if screen.battle_screen():
-                        battle_hp = memory.main.get_battle_hp()
-                        enemy_hp = memory.main.get_enemy_current_hp()
-                        if (
-                            not game_vars.early_tidus_grid()
-                            and Tidus.in_danger(120, combat=True)
-                            and enemy_hp[0] > 119
-                        ):
-                            if Tidus.next_crit(12) == 2:
-                                battle.main.attack("none")
-                            else:
-                                battle.main.use_potion_character(Tidus, "l")
-                                heal_count += 1
-                        else:
-                            battle.main.attack("none")
-                    elif memory.main.diag_skip_possible():
-                        xbox.tap_b()
-                # logs.write_stats("Kimahri heal count:")
-                # logs.write_stats(heal_count)
-                memory.main.click_to_control()
+                battle.boss.kimahri()
             # Valefor summon tutorial
             elif (
                 checkpoint in [31, 32, 33, 34, 35, 36, 37, 38]
                 and screen.battle_screen()
             ):
-                xbox.click_to_battle()
-                while not screen.turn_aeon():
-                    if memory.main.turn_ready():
-                        if Yuna.is_turn():
-                            battle.main.aeon_summon(0)
-                        elif screen.turn_aeon():
-                            pass
-                        elif not Yuna.active():
-                            battle.main.buddy_swap(Yuna)
-                        else:
-                            battle.main.defend()
-                while memory.main.battle_active():
-                    if memory.main.turn_ready():
-                        battle.main.aeon_spell(1)
+                battle.boss.summon_tutorial()
                 logger.info("Now to open the menu")
                 memory.main.click_to_control()
                 memory.main.update_formation(Tidus, Yuna, Lulu)
                 checkpoint += 1
             elif checkpoint == 39 and screen.battle_screen():  # Dark Attack tutorial
-                battle.main.escape_all()
+                battle.boss.dark_attack_tutorial()
                 memory.main.click_to_control()
                 memory.main.update_formation(Tidus, Wakka, Lulu)
                 checkpoint += 1

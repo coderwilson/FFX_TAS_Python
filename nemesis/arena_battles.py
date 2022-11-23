@@ -2,6 +2,7 @@ import logging
 
 import battle.main
 import battle.overdrive
+import battle.utils
 import load_game
 import memory.main
 import menu
@@ -13,7 +14,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -192,22 +193,22 @@ def return_to_airship():
 
 def aeon_start():
     screen.await_turn()
-    battle.main.buddy_swap_yuna()
+    battle.main.buddy_swap(Yuna)
     battle.main.aeon_summon(4)
-    while not screen.turn_tidus():
+    while not Tidus.is_turn():
         if memory.main.turn_ready():
             if screen.turn_aeon():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
 
 @battle.utils.speedup_decorator
 def yojimbo_battle():
     # Incomplete
     screen.await_turn()
-    if 1 not in memory.main.get_active_battle_formation():
-        battle.main.buddy_swap_yuna()
+    if not Yuna.active():
+        battle.main.buddy_swap(Yuna)
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
     logger.debug("Pay the man")
@@ -215,12 +216,12 @@ def yojimbo_battle():
     memory.main.wait_frames(90)
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
-                battle.main.tidus_flee()
+            if Tidus.is_turn():
+                Tidus.flee()
             elif screen.turn_aeon():
                 xbox.skip_dialog(2)
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -235,14 +236,14 @@ def yojimbo_battle():
 
 
 def auto_life():
-    while not (memory.main.turn_ready() and screen.turn_tidus()):
+    while not (memory.main.turn_ready() and Tidus.is_turn()):
         if memory.main.turn_ready():
             if screen.turn_aeon():
-                battle.main.attack("none")
-            elif not screen.turn_tidus():
-                battle.main.defend()
+                CurrentPlayer().attack()
+            elif not Tidus.is_turn():
+                CurrentPlayer().defend()
     while memory.main.battle_menu_cursor() != 22:
-        if not screen.turn_tidus():
+        if not Tidus.is_turn():
             logger.debug("Attempting Haste, but it's not Tidus's turn")
             xbox.tap_up()
             xbox.tap_up()
@@ -269,7 +270,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
     FFXC.set_neutral()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
+            if Tidus.is_turn():
                 if mega_phoenix and screen.faint_check() >= 2:
                     battle.main.revive(item_num=7)
                 elif memory.main.get_overdrive_battle(0) == 100:
@@ -277,9 +278,9 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                 else:
                     battle.main.use_skill(1)  # Quick hit
             elif screen.turn_aeon():
-                battle.main.attack("none")
+                CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -299,19 +300,19 @@ def basic_attack(
     FFXC.set_neutral()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
+            if Tidus.is_turn():
                 if mega_phoenix and screen.faint_check() >= 2:
                     battle.main.revive(item_num=7)
                 elif use_od and memory.main.get_overdrive_battle(0) == 100:
                     battle.overdrive.tidus(version=od_version)
                 else:
-                    battle.main.attack("none")
-            elif screen.turn_yuna() and yuna_autos:
-                battle.attack("none")
+                    CurrentPlayer().attack()
+            elif Yuna.is_turn() and yuna_autos:
+                battle.CurrentPlayer().attack()
             elif screen.turn_aeon():
-                battle.attack("none")
+                battle.CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -423,7 +424,7 @@ def battles_1():
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=1)
         aeon_start()
-        if screen.turn_tidus():
+        if Tidus.is_turn():
             auto_life()
     game_vars.arena_success(array_num=0, index=1)
     restock_downs()
@@ -844,23 +845,23 @@ def shinryu_battle():
     screen.await_turn()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_rikku():
+            if Rikku.is_turn():
                 if not rikku_first_turn:
-                    battle.main.defend()
+                    CurrentPlayer().defend()
                 elif rikku_drive_complete:
                     battle.main._use_healing_item(item_id=9)
                 else:
                     battle.main.rikku_full_od("shinryu")
                     rikku_drive_complete = True
-            elif screen.turn_tidus():
+            elif Tidus.is_turn():
                 if memory.main.get_overdrive_battle(0) == 100:
                     battle.overdrive.tidus(version=1)
                 elif rikku_drive_complete and not memory.main.state_auto_life():
                     auto_life()
                 else:
-                    battle.main.attack("none")
+                    CurrentPlayer().attack()
             else:
-                battle.main.defend()
+                CurrentPlayer().defend()
 
     # After battle stuff
     while not memory.main.menu_open():
@@ -976,8 +977,8 @@ def recharge_yuna():
     screen.await_turn()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_yuna():
-                battle.main.attack("none")
+            if Yuna.is_turn():
+                CurrentPlayer().attack()
             else:
                 battle.main.escape_one()
 

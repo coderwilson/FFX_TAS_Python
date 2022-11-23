@@ -3,10 +3,9 @@ import logging
 import yaml
 
 try:
-    from yaml import CDumper as Dumper
     from yaml import CLoader as Loader
 except ImportError:
-    from yaml import Dumper, Loader
+    from yaml import Loader
 
 logger = logging.getLogger(__name__)
 

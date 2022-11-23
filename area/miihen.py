@@ -2,7 +2,6 @@ import logging
 
 import battle.boss
 import battle.main
-import logs
 import memory.main
 import pathing
 import save_sphere
@@ -10,7 +9,7 @@ import screen
 import vars
 import xbox
 from paths import Miihen1, MiihenAgency, MiihenLowroad
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, Kimahri, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -278,14 +277,11 @@ def mid_point():
     checkpoint = 0
     while memory.main.get_map() != 115:
         if memory.main.user_control():
-            p_down_slot = memory.main.get_item_slot(6)
             if memory.main.get_map() == 58:
                 memory.main.update_formation(Tidus, Kimahri, Wakka)
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-            # elif checkpoint == 2 and memory.main.get_item_count_slot(p_down_slot) >= 10:
-            #    checkpoint = 4
             elif checkpoint in [2, 3]:
                 checkpoint = 4
             elif checkpoint == 5:
