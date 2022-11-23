@@ -42,6 +42,7 @@ class KilikaFarm(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [23, -255],
         1: [-17, -247],
+        2: [-27, -207],
         3: [-34, -170],
         4: [0, 0],  # To next map
         5: [85, 90],

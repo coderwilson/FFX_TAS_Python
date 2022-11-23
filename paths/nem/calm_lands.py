@@ -25,8 +25,9 @@ class CalmFarm(AreaMovementBase):
         3: [-561, -99],  # Zone 1 position 2
         4: [-503, -60],  # Zone 2 position 1
         5: [-521, 10],  # Zone 2 position 2
-        6: [-548, 22],  # Zone 3 position 1
-        7: [-620, 26],  # Zone 3 position 2
+        # Zone 3 positions have been nudged slightly north-west after consistently getting a no-encounter loop
+        6: [-558, 37],  # Zone 3 position 1
+        7: [-630, 41],  # Zone 3 position 2
         8: [-521, 3],
         9: [-550, -97],
     }
