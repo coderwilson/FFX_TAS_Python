@@ -605,17 +605,17 @@ def gui():
             elif not turn1:
                 turn1 = True
                 logger.debug("--- Recharge unsuccessful. Attempting recovery.")
-                battle.main.aeon_shield()
+                CurrentPlayer().shield()
             elif last_turn == 8:  # Valefor takes two turns in a row
                 logger.debug("--- Two turns in a row")
-                battle.main.aeon_shield()
+                CurrentPlayer().shield()
             elif next_hp > last_hp - 40 and not next_hp == last_hp:
                 # Gravity spell was used
                 logger.debug("--- Gravity was used")
-                battle.main.aeon_shield()
+                CurrentPlayer().shield()
             else:
                 logger.debug("--- Attack was just used. Now boost.")
-                battle.main.aeon_boost()
+                CurrentPlayer().boost()
             last_hp = next_hp
         elif memory.main.turn_ready() and memory.main.get_battle_char_turn() == 1:
             logger.warning("Yuna turn, something went wrong.")

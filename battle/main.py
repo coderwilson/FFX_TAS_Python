@@ -417,10 +417,10 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         if not aeon_turn:
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
-                                aeon_shield()
-                        aeon_boost()
+                                CurrentPlayer().shield()
+                        CurrentPlayer().boost()
                         screen.await_turn()
-                        aeon_boost()
+                        CurrentPlayer().boost()
                         screen.await_turn()
                         aeon_spell(2)
                     elif screen.turn_aeon():
@@ -436,8 +436,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         if not aeon_turn:
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
-                                aeon_shield()
-                        aeon_boost()
+                                CurrentPlayer().shield()
+                        CurrentPlayer().boost()
                         screen.await_turn()
                         aeon_spell_direction(1, "left")
                     elif screen.turn_aeon():
@@ -455,8 +455,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         if not aeon_turn:
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
-                                aeon_shield()
-                        aeon_boost()
+                                CurrentPlayer().shield()
+                        CurrentPlayer().boost()
                         screen.await_turn()
                         aeon_spell_direction(1, "right")
                     elif screen.turn_aeon():
@@ -473,8 +473,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         if not aeon_turn:
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
-                                aeon_shield()
-                        aeon_boost()
+                                CurrentPlayer().shield()
+                        CurrentPlayer().boost()
                         screen.await_turn()
                         Valefor.unique()
                         screen.await_turn()
@@ -495,7 +495,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         if not aeon_turn:
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
-                                aeon_shield()
+                                CurrentPlayer().shield()
                         aeon_spell_direction(1, "right")
                         screen.await_turn()
                         aeon_spell_direction(1, "right")
@@ -864,59 +864,6 @@ def miihen_road(self_destruct=False):
     logger.debug(f"self_destruct flag: {game_vars.self_destruct_get()}")
 
 
-# move to battle.aeon
-def aeon_shield():
-    logger.info("Aeon Shield function")
-    screen.await_turn()
-    memory.main.wait_frames(6)
-    while not memory.main.other_battle_menu():
-        xbox.tap_right()
-    if game_vars.use_pause():
-        memory.main.wait_frames(2)
-    while memory.main.other_battle_menu():
-        if memory.main.battle_cursor_2() == 0:
-            xbox.tap_b()
-        else:
-            xbox.tap_up()
-    battle.utils.tap_targeting()
-
-
-# move to battle.aeon
-def aeon_boost():
-    logger.info("Aeon Boost function")
-    screen.await_turn()
-    memory.main.wait_frames(6)
-    while not memory.main.other_battle_menu():
-        xbox.tap_right()
-    if game_vars.use_pause():
-        memory.main.wait_frames(2)
-    while memory.main.other_battle_menu():
-        if memory.main.battle_cursor_2() == 1:
-            xbox.tap_b()
-        elif memory.main.battle_cursor_2() == 0:
-            xbox.tap_down()
-        else:
-            xbox.tap_up()
-    battle.utils.tap_targeting()
-
-
-# move to battle.aeon
-def aeon_dismiss():
-    logger.info("Aeon Dismiss function")
-    screen.await_turn()
-    memory.main.wait_frames(6)
-    while not memory.main.other_battle_menu():
-        xbox.tap_right()
-    if game_vars.use_pause():
-        memory.main.wait_frames(2)
-    while memory.main.other_battle_menu():
-        if memory.main.battle_cursor_2() == 2:
-            xbox.tap_b()
-        else:
-            xbox.tap_down()
-    battle.utils.tap_targeting()
-
-
 def mrr_target():
     enc_id = memory.main.get_encounter_id()
     if enc_id == 96:
@@ -1066,10 +1013,10 @@ def mrr_battle(status):
                             aeon_summon(0)
                         elif screen.turn_aeon():
                             if aeon_turn == 0 and memory.main.get_next_turn() < 19:
-                                aeon_boost()
+                                CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
-                                aeon_boost()
+                                CurrentPlayer().boost()
                                 screen.await_turn()
                                 CurrentPlayer().attack()
                                 aeon_turn = 2
@@ -1096,12 +1043,12 @@ def mrr_battle(status):
                     elif screen.turn_aeon():
                         if aeon_turn == 0 and memory.main.get_next_turn() < 19:
                             screen.await_turn()
-                            aeon_boost()
+                            CurrentPlayer().boost()
                             aeon_turn = 1
                         elif aeon_turn < 2:
                             aeon_spell(2)
                             screen.await_turn()
-                            aeon_boost()
+                            CurrentPlayer().boost()
                             aeon_turn = 2
                         else:
                             aeon_spell(3)
@@ -1125,12 +1072,12 @@ def mrr_battle(status):
                             aeon_summon(0)
                         elif screen.turn_aeon():
                             if aeon_turn == 0 and memory.main.get_next_turn() < 19:
-                                aeon_boost()
+                                CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
                                 aeon_spell_2(2, "right")
                                 screen.await_turn()
-                                aeon_boost()
+                                CurrentPlayer().boost()
                                 aeon_turn = 2
                             else:
                                 aeon_spell_2(3, "right")
@@ -1162,12 +1109,12 @@ def mrr_battle(status):
                         elif screen.turn_aeon():
                             if aeon_turn == 0 and memory.main.get_next_turn() < 19:
                                 screen.await_turn()
-                                aeon_boost()
+                                CurrentPlayer().boost()
                                 aeon_turn = 1
                             elif aeon_turn < 2:
                                 aeon_spell(0)
                                 screen.await_turn()
-                                aeon_boost()
+                                CurrentPlayer().boost()
                                 aeon_turn = 2
                             else:
                                 aeon_spell(3)
@@ -1194,12 +1141,12 @@ def mrr_battle(status):
                         aeon_summon(0)
                     elif screen.turn_aeon():
                         if aeon_turn == 0 and memory.main.get_next_turn() < 19:
-                            aeon_boost()
+                            CurrentPlayer().boost()
                             aeon_turn = 1
                         elif aeon_turn < 2:
                             aeon_spell(0)
                             screen.await_turn()
-                            aeon_boost()
+                            CurrentPlayer().boost()
                             aeon_turn = 2
                         else:
                             aeon_spell(3)
@@ -4924,9 +4871,9 @@ def advance_rng_12():
                             attack_count = True
                             rng_12_attack()
                     else:
-                        aeon_dismiss()
+                        CurrentPlayer().dismiss()
                 else:
-                    aeon_dismiss()
+                    CurrentPlayer().dismiss()
                 aeon_turn = True
             else:
                 if aeon_turn:
