@@ -334,7 +334,7 @@ def leaving():
                             CurrentPlayer().defend()
                 while memory.main.battle_active():
                     if memory.main.turn_ready():
-                        CurrentPlayer.cast_spell(1)
+                        CurrentPlayer.cast_black_magic_spell(1)
                 logger.info("Now to open the menu")
                 memory.main.click_to_control()
                 memory.main.update_formation(Tidus, Yuna, Lulu)

@@ -250,12 +250,12 @@ def sin_fin():
                 logger.debug("Tidus defend")
             elif Yuna.is_turn():
                 battle.main.buddy_swap(Lulu)  # Yuna out, Lulu in
-                CurrentPlayer.cast_spell(1, target_id=23, direction="r")
+                CurrentPlayer.cast_black_magic_spell(1, target_id=23, direction="r")
             elif Kimahri.is_turn():
                 battle.main.lancet_target(target=23, direction="r")
                 kim_turn = True
             elif Lulu.is_turn():
-                CurrentPlayer.cast_spell(1, target_id=23, direction="r")
+                CurrentPlayer.cast_black_magic_spell(1, target_id=23, direction="r")
             else:
                 CurrentPlayer().defend()
         if fin_turns >= 3 and kim_turn:
@@ -271,7 +271,7 @@ def sin_fin():
                 screen.await_turn()
                 battle.main.lancet_target(23, "r")
             elif Lulu.is_turn():
-                CurrentPlayer.cast_spell(1, 23, "r")
+                CurrentPlayer.cast_black_magic_spell(1, 23, "r")
             elif Tidus.is_turn():
                 if turn_counter < 4:
                     CurrentPlayer().defend()
@@ -362,7 +362,7 @@ def geneaux():
             xbox.tap_b()
         elif memory.main.turn_ready():
             logger.debug("Valefor casting Fire")
-            CurrentPlayer.cast_spell(0)
+            CurrentPlayer.cast_black_magic_spell(0)
         else:
             FFXC.set_neutral()
     logger.info("Battle with Sinspawn Geneaux Complete")
@@ -384,7 +384,7 @@ def oblitzerator(early_haste):
             if crane < 3:
                 if Lulu.is_turn():
                     crane += 1
-                    CurrentPlayer.cast_spell(1, target_id=21, direction="r")
+                    CurrentPlayer.cast_black_magic_spell(1, target_id=21, direction="r")
                 else:
                     CurrentPlayer().defend()
             elif crane == 3:
@@ -597,7 +597,7 @@ def gui():
             last_turn = next_turn
             next_turn = memory.main.get_next_turn()
             if went and kimahri_crit:
-                CurrentPlayer.cast_spell(1)
+                CurrentPlayer.cast_black_magic_spell(1)
             elif memory.main.get_overdrive_battle(8) == 20:
                 logger.debug("--- Overdriving")
                 Valefor.overdrive(overdrive_num=0)
@@ -830,13 +830,13 @@ def spherimorph():
             elif Lulu.is_turn():
                 if not battle.main.spheri_spell_item_ready():
                     if spell_num == 1:
-                        CurrentPlayer.cast_spell(3)
+                        CurrentPlayer.cast_black_magic_spell(3)
                     elif spell_num == 2:
-                        CurrentPlayer.cast_spell(2)
+                        CurrentPlayer.cast_black_magic_spell(2)
                     elif spell_num == 3:
-                        CurrentPlayer.cast_spell(1)
+                        CurrentPlayer.cast_black_magic_spell(1)
                     else:
-                        CurrentPlayer.cast_spell(0)
+                        CurrentPlayer.cast_black_magic_spell(0)
                     screen.await_turn()
                     if memory.main.get_char_weakness(20) == 1:
                         spell_num = 4  # Ice
