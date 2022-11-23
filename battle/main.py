@@ -588,11 +588,11 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                 elif enc_id == 32:
                     if Tidus.is_turn():
                         if turn_counter < 4:
-                            attack_by_num(20, "r")
+                            CurrentPlayer().attack(target_id=20, direction_hint="r")
                         else:
                             flee_all()
                     elif Wakka.is_turn():
-                        attack_by_num(21, "r")
+                        CurrentPlayer().attack(target_id=21, direction_hint="r")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 33:
@@ -602,7 +602,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         else:
                             flee_all()
                     elif Wakka.is_turn():
-                        attack_by_num(21, "r")
+                        CurrentPlayer().attack(target_id=21, direction_hint="r")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 34:
@@ -612,7 +612,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         else:
                             flee_all()
                     elif Wakka.is_turn():
-                        attack_by_num(22, "r")
+                        CurrentPlayer().attack(target_id=22, direction_hint="r")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 35 or enc_id == 36:
@@ -623,7 +623,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     elif yuna_went:
                         flee_all()
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[2] != 0:
-                        attack_by_num(22, "l")
+                        CurrentPlayer().attack(target_id=22, direction_hint="l")
                         yuna_went = True
                     elif Yuna.is_turn():
                         buddy_swap(Lulu)
@@ -730,7 +730,7 @@ def after_blitz_1(early_haste):
                 wakka_turns += 1
                 hp_values = memory.main.get_battle_hp()
                 if wakka_turns < 3:
-                    attack_by_num(22, "l")
+                    CurrentPlayer().attack(target_id=22, direction_hint="l")
                 elif hp_values[1] < 200:  # Tidus HP
                     use_potion_character(0, "u")
                 elif hp_values[0] < 100:  # Wakka HP
@@ -898,17 +898,17 @@ def miihen_road(self_destruct=False):
 def mrr_target():
     enc_id = memory.main.get_encounter_id()
     if enc_id == 96:
-        attack_by_num(22, "r")
+        CurrentPlayer().attack(target_id=22, direction_hint="r")
     elif enc_id == 97:
-        attack_by_num(20, "r")
+        CurrentPlayer().attack(target_id=20, direction_hint="r")
     elif enc_id == 98:
         lancet_target(target=21, direction="d")
     elif enc_id == 101:
         lancet_target(target=21, direction="l")
     elif enc_id in [100, 110]:
-        attack_by_num(22, "l")
+        CurrentPlayer().attack(target_id=22, direction_hint="l")
     elif enc_id in [102, 112, 113]:
-        attack_by_num(20, "l")
+        CurrentPlayer().attack(target_id=20, direction_hint="l")
     elif enc_id in [109, 111]:
         lancet_target(target=20, direction="l")
     else:
@@ -1033,12 +1033,12 @@ def mrr_battle(status):
                         elif Wakka.is_turn():
                             wakka_turns += 1
                             if wakka_turns == 1:
-                                attack_by_num(21, "l")
+                                CurrentPlayer().attack(target_id=21, direction_hint="l")
                             else:
                                 buddy_swap(Yuna)
                                 aeon_summon(0)
                         elif Auron.is_turn():
-                            attack_by_num(22, "r")
+                            CurrentPlayer().attack(target_id=22, direction_hint="r")
                         elif Kimahri.is_turn():
                             buddy_swap(Yuna)
                             aeon_summon(0)
@@ -1166,7 +1166,7 @@ def mrr_battle(status):
                         buddy_swap(Kimahri)
                         next_crit_kim = mrr_target()
                     elif Wakka.is_turn():
-                        attack_by_num(22, "l")
+                        CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif memory.main.get_enemy_current_hp()[2] != 0:
                         buddy_swap(Tidus)
                         flee_all()
@@ -1226,9 +1226,9 @@ def mrr_battle(status):
                     elif Wakka.is_turn():
                         if encounter_id in [96, 97, 101]:
                             if encounter_id == 101:
-                                attack_by_num(22, "l")
+                                CurrentPlayer().attack(target_id=22, direction_hint="l")
                             else:
-                                attack_by_num(21, "l")
+                                CurrentPlayer().attack(target_id=21, direction_hint="l")
                         elif encounter_id == 98 or encounter_id == 100:
                             CurrentPlayer().attack()
                         else:
@@ -2685,7 +2685,7 @@ def guards(group_num, sleeping_powders):
                         tidus_haste("left", character=6)
                         hasted = True
                     else:
-                        attack_by_num(22, "r")
+                        CurrentPlayer().attack(target_id=22, direction_hint="r")
                 elif Rikku.is_turn() or Kimahri.is_turn():
                     silence_slot = memory.main.get_item_slot(39)
                     if num_throws < 2:
@@ -2761,7 +2761,7 @@ def guards(group_num, sleeping_powders):
                         buddy_swap(Rikku)
                         tidus_went = True
                     else:
-                        attack_by_num(22, "l")
+                        CurrentPlayer().attack(target_id=22, direction_hint="l")
                 elif Rikku.is_turn() or Kimahri.is_turn():
                     silence_slot = memory.main.get_item_slot(39)
                     if num_throws < 2:
@@ -2883,9 +2883,9 @@ def evrae_altana_steal():
 
 def attack_highbridge():
     if memory.main.get_encounter_id() == 270:
-        attack_by_num(22, "r")
+        CurrentPlayer().attack(target_id=22, direction_hint="r")
     elif memory.main.get_encounter_id() == 271:
-        attack_by_num(21, "l")
+        CurrentPlayer().attack(target_id=21, direction_hint="l")
     else:
         CurrentPlayer().attack()
 
@@ -3249,94 +3249,6 @@ def _use_healing_item(num=None, direction="l", item_id=0):
 def use_potion_character(num, direction):
     logger.debug(f"Healing character, {num}")
     _use_healing_item(num=num, direction=direction, item_id=0)
-
-
-def attack_by_num(num, direction="u"):
-    if num < 20:
-        friendly_target = True
-    else:
-        friendly_target = False
-    logger.debug(f"Attacking specific character, {num}")
-    direction = direction.lower()
-    if not memory.main.turn_ready():
-        logger.debug("Battle menu isn't up.")
-        while not memory.main.turn_ready():
-            # Waiting for battle menu to come up.
-            pass
-        # Make sure we actually have control
-    if (
-        memory.main.battle_menu_cursor() != 0
-        and memory.main.battle_menu_cursor() != 216
-    ):
-        while not memory.main.battle_menu_cursor() in [0, 216]:
-            xbox.tap_up()
-            if screen.battle_complete():
-                return  # Safety
-    while memory.main.main_battle_menu():
-        xbox.tap_b()
-
-    if not friendly_target and memory.main.get_enemy_current_hp()[num - 20] != 0:
-        while memory.main.battle_target_id() != num:
-            if direction == "l":
-                if memory.main.battle_target_id() < 20:
-                    direction = "u"
-                xbox.tap_left()
-            elif direction == "r":
-                if memory.main.battle_target_id() < 20:
-                    direction = "d"
-                xbox.tap_right()
-            elif direction == "u":
-                if memory.main.battle_target_id() < 20:
-                    direction = "l"
-                xbox.tap_up()
-            elif direction == "d":
-                if memory.main.battle_target_id() < 20:
-                    direction = "r"
-                xbox.tap_down()
-    elif friendly_target:
-        while memory.main.battle_target_id() != num:
-            if direction == "l":
-                if memory.main.battle_target_id() >= 20:
-                    direction = "u"
-                xbox.tap_left()
-            elif direction == "r":
-                if memory.main.battle_target_id() >= 20:
-                    direction = "d"
-                xbox.tap_right()
-            elif direction == "u":
-                if memory.main.battle_target_id() >= 20:
-                    direction = "l"
-                xbox.tap_up()
-            elif direction == "d":
-                if memory.main.battle_target_id() >= 20:
-                    direction = "r"
-                xbox.tap_down()
-    tap_targeting()
-
-
-def attack_self_tanker():
-    logger.debug("Attacking specific character, Auron (self)")
-    if not memory.main.turn_ready():
-        logger.debug("Battle menu isn't up.")
-        while not memory.main.turn_ready():
-            # Waiting for battle menu to come up.
-            pass
-    if (
-        memory.main.battle_menu_cursor() != 0
-        and memory.main.battle_menu_cursor() != 216
-    ):
-        while not memory.main.battle_menu_cursor() in [0, 216]:
-            xbox.tap_up()
-            if screen.battle_complete():
-                return  # Safety
-    while memory.main.main_battle_menu():
-        xbox.tap_b()
-    while memory.main.battle_target_id() != 2:
-        if memory.main.battle_target_id() > 20:
-            xbox.tap_down()
-        else:
-            xbox.tap_left()
-    tap_targeting()
 
 
 def oblitz_rng_wait():
@@ -4629,17 +4541,19 @@ def rng_12_attack(try_impulse=False):
     logger.debug("#################")
     if screen.turn_aeon():
         if memory.main.get_encounter_id() in [283, 309, 313]:
-            attack_by_num(21, "u")  # Second target
+            CurrentPlayer().attack(target_id=21, direction_hint="u")  # Second target
         elif memory.main.get_encounter_id() in [284]:
-            attack_by_num(22, "u")  # Third target
+            CurrentPlayer().attack(target_id=22, direction_hint="u")  # Third target
         elif memory.main.get_encounter_id() in [275, 289]:
-            attack_by_num(21, "r")  # Second target, aim right (aeon only)
+            CurrentPlayer().attack(
+                target_id=21, direction_hint="r"
+            )  # Second target, aim right (aeon only)
         elif memory.main.get_encounter_id() in [303]:
-            attack_by_num(21, "l")  # Second target
+            CurrentPlayer().attack(target_id=21, direction_hint="l")  # Second target
         elif memory.main.get_encounter_id() in [304]:
-            attack_by_num(23, "u")  # fourth target
+            CurrentPlayer().attack(target_id=23, direction_hint="u")  # fourth target
         elif memory.main.get_encounter_id() in [314]:
-            attack_by_num(21, "r")
+            CurrentPlayer().attack(target_id=21, direction_hint="r")
         else:
             CurrentPlayer().attack()
     else:  # Non-aeon logic, fix this later.

@@ -59,6 +59,68 @@ def ammes():
 
 
 @battle.utils.speedup_decorator
+def kimahri():
+    FFXC.set_neutral()
+    while memory.main.battle_active():
+        if screen.battle_screen():
+            battle_hp = memory.main.get_battle_hp()
+            enemy_hp = memory.main.get_enemy_current_hp()
+            if (
+                not game_vars.early_tidus_grid()
+                and Tidus.in_danger(120, combat=True)
+                and enemy_hp[0] > 119
+            ):
+                if Tidus.next_crit(12) == 2:
+                    CurrentPlayer().attack()
+                else:
+                    battle.main.use_potion_character(Tidus, "l")
+            else:
+                CurrentPlayer().attack()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
+    memory.main.click_to_control()
+
+
+@battle.utils.speedup_decorator
+def tidus_wakka_tutorial():
+    memory.main.click_to_event()
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+
+
+@battle.utils.speedup_decorator
+def black_magic_tutorial():
+    xbox.click_to_battle()
+    CurrentPlayer().attack()
+    xbox.click_to_battle()
+    CurrentPlayer().cast_black_magic_spell(1)
+    memory.main.click_to_control()
+
+
+@battle.utils.speedup_decorator
+def summon_tutorial():
+    xbox.click_to_battle()
+    while not screen.turn_aeon():
+        if memory.main.turn_ready():
+            if Yuna.is_turn():
+                battle.main.aeon_summon(0)
+            elif screen.turn_aeon():
+                pass
+            elif not Yuna.active():
+                battle.main.buddy_swap(Yuna)
+            else:
+                CurrentPlayer().defend()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            CurrentPlayer().cast_black_magic_spell(1)
+
+
+@battle.utils.speedup_decorator
+def dark_attack_tutorial():
+    battle.main.escape_all()
+
+
+@battle.utils.speedup_decorator
 def tanker():
     logger.info("Fight start: Tanker")
     count_attacks = 0
@@ -71,16 +133,16 @@ def tanker():
             if Tidus.is_turn():
                 tidus_count += 1
                 if tidus_count < 4:
-                    CurrentPlayer().swap_battle_weapon()
+                    Tidus.swap_battle_weapon()
                 else:
-                    CurrentPlayer().attack()
+                    Tidus.attack()
                     count_attacks += 1
             elif Auron.is_turn():
                 auron_count += 1
                 if auron_count < 2:
-                    battle.main.attack_self_tanker()
+                    Auron.attack(Auron)
                 else:
-                    CurrentPlayer().attack()
+                    Auron.attack()
                     count_attacks += 1
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
@@ -1016,7 +1078,7 @@ def wendigo():
                     phase += 1
                 elif phase == 1:
                     logger.debug("Attack top Guado")
-                    battle.main.attack_by_num(22, "d")
+                    CurrentPlayer().attack(target_id=22, direction_hint="d")
                     phase += 1
                 elif (
                     memory.main.get_enemy_current_hp()[1] != 0
@@ -1047,14 +1109,14 @@ def wendigo():
                                 battle.main.revive()
                             else:
                                 logger.debug("No healing items so just go face")
-                                battle.main.attack_by_num(21, "l")
+                                CurrentPlayer().attack(target_id=21, direction_hint="l")
                     else:
                         logger.debug("No need to heal. Ver 1")
-                        battle.main.attack_by_num(21, "l")
+                        CurrentPlayer().attack(target_id=21, direction_hint="l")
                     tidushealself = False
                 else:
                     logger.debug("No need to heal. Ver 2")
-                    battle.main.attack_by_num(21, "l")
+                    CurrentPlayer().attack(target_id=21, direction_hint="l")
                 memory.main.wait_frames(30 * 0.2)
             elif Rikku.is_turn():
                 if phase == 2:
@@ -1391,7 +1453,7 @@ def seymour_natus():
                             battle.main.flee_all()
                             game_vars.add_rescue_count()
                         else:
-                            battle.main.attack_by_num(22, "r")
+                            CurrentPlayer().attack(target_id=22, direction_hint="r")
                     else:
                         CurrentPlayer().defend()
         elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
@@ -1417,7 +1479,7 @@ def seymour_natus():
                             battle.main.flee_all()
                             game_vars.add_rescue_count()
                         else:
-                            battle.main.attack_by_num(21, "l")
+                            CurrentPlayer().attack(target_id=21, direction_hint="l")
                     else:
                         CurrentPlayer().defend()
         if memory.main.menu_open() or memory.main.diag_skip_possible():

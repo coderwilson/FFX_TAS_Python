@@ -36,7 +36,7 @@ class CindyImpl(MagusSistersImpl):
 
 class SandyImpl(MagusSistersImpl):
     def __init__(self):
-        super().__init__("Cindy", 16, [])
+        super().__init__("Sandy", 16, [])
         self.battle_menu = self._menu_order(42)
 
 

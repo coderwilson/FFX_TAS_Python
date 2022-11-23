@@ -185,26 +185,26 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                 if Tidus.is_turn():
                     if memory.main.get_encounter_id() in [154, 156, 164]:
                         # Confusion is a dumb mechanic in this game.
-                        battle.main.attack_by_num(22, "l")
+                        CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif memory.main.get_encounter_id() == 281:
-                        battle.main.attack_by_num(22, "r")
+                        CurrentPlayer().attack(target_id=22, direction_hint="r")
                     elif memory.main.get_encounter_id() == 283:
-                        battle.main.attack_by_num(21, "u")
+                        CurrentPlayer().attack(target_id=21, direction_hint="u")
                     elif memory.main.get_encounter_id() == 284:
-                        battle.main.attack_by_num(23, "d")
+                        CurrentPlayer().attack(target_id=23, direction_hint="d")
                     else:
                         CurrentPlayer().attack()
                 elif Yuna.is_turn():
                     if yuna_attack:
                         if memory.main.get_encounter_id() in [154, 156, 164]:
                             # Confusion is a dumb mechanic in this game.
-                            battle.main.attack_by_num(22, "l")
+                            CurrentPlayer().attack(target_id=22, direction_hint="l")
                         elif memory.main.get_encounter_id() == 281:
-                            battle.main.attack_by_num(21, "l")
+                            CurrentPlayer().attack(target_id=21, direction_hint="l")
                         elif memory.main.get_encounter_id() == 283:
-                            battle.main.attack_by_num(22, "d")
+                            CurrentPlayer().attack(target_id=22, direction_hint="d")
                         elif memory.main.get_encounter_id() == 284:
-                            battle.main.attack_by_num(22, "d")
+                            CurrentPlayer().attack(target_id=22, direction_hint="d")
                         else:
                             CurrentPlayer().attack()
                     else:
