@@ -1665,7 +1665,7 @@ def negator_with_steal():
                 if kimahriturns == 0:
                     use_item(lightningmarbleslot)
                 elif kimahriturns == 1:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 elif kimahriturns == 2:
                     _steal()
                 elif not Tidus.active():
@@ -1696,7 +1696,7 @@ def negator_with_steal():
                 elif rikku_turns in [1, 2]:
                     use_item(lightningmarbleslot)
                 elif tidus_turns < 2:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 else:
                     logger.debug("Starting Rikkus overdrive")
                     rikku_full_od("crawler")
@@ -1804,7 +1804,7 @@ def seymour_guado_blitz_win():
                 logger.debug(f"Tidus turns: {tidus_turns}")
             elif Yuna.is_turn():
                 if yunaturns == 0:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 else:
                     if 2 not in memory.main.get_active_battle_formation():
                         buddy_swap(Auron)
@@ -1843,7 +1843,7 @@ def seymour_guado_blitz_win():
                     else:
                         CurrentPlayer().defend()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 else:
                     tidusposition = memory.main.get_battle_char_slot(0)
                     rikkuposition = memory.main.get_battle_char_slot(6)
@@ -1883,12 +1883,12 @@ def seymour_guado_blitz_win():
                 logger.debug("Auron turn, complete")
             elif Wakka.is_turn():
                 if wakka_turns == 0:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
                     if kimahridead and rikku_turns == 0:
                         buddy_swap(Rikku)
                     else:
-                        xbox.weap_swap(0)
+                        CurrentPlayer().swap_battle_weapon()
                 else:
                     tidusposition = memory.main.get_battle_char_slot(0)
                     rikkuposition = memory.main.get_battle_char_slot(6)
@@ -2049,7 +2049,7 @@ def seymour_guado_blitz_loss():
                 logger.debug(f"Tidus turns: {tidus_turns}")
             elif Yuna.is_turn():
                 if yunaturns == 0:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 else:
                     buddy_swap(Lulu)
                     screen.await_turn()
@@ -2058,7 +2058,7 @@ def seymour_guado_blitz_loss():
                         remedy(character=Kimahri, direction="l")
                         kimahriconfused = True
                     else:
-                        xbox.weap_swap(0)
+                        CurrentPlayer().swap_battle_weapon()
                 yunaturns += 1
                 logger.debug("Yuna turn, complete")
             elif Lulu.is_turn():
@@ -2114,12 +2114,12 @@ def seymour_guado_blitz_loss():
                 logger.debug("Kimahri turn, complete")
             elif Wakka.is_turn():
                 if wakka_turns == 0:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
                     if kimahridead and rikku_turns < 2:
                         buddy_swap(Rikku)
                     else:
-                        xbox.weap_swap(0)
+                        CurrentPlayer().swap_battle_weapon()
                 else:
                     tidusposition = memory.main.get_battle_char_slot(0)
                     rikkuposition = memory.main.get_battle_char_slot(6)

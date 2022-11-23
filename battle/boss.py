@@ -52,7 +52,7 @@ def tanker():
             if Tidus.is_turn():
                 tidus_count += 1
                 if tidus_count < 4:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 else:
                     CurrentPlayer().attack()
                     count_attacks += 1
@@ -523,7 +523,7 @@ def gui():
                     battle.main.aeon_summon(0)
             elif Wakka.is_turn():
                 if not wakka_turn:
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                     wakka_turn = True
                 else:
                     battle.main.buddy_swap(Kimahri)
@@ -973,7 +973,7 @@ def wendigo():
                         )
                         == 0
                     ):
-                        xbox.weap_swap(0)
+                        CurrentPlayer().swap_battle_weapon()
                     yuna_ap = True
                 # If Yuna has had a turn swap for Lulu
                 else:
@@ -983,7 +983,7 @@ def wendigo():
                     elif not Rikku.active():
                         battle.main.buddy_swap(Rikku)
                     else:
-                        xbox.weap_swap(0)
+                        CurrentPlayer().swap_battle_weapon()
             elif Tidus.is_turn():
                 if not tidushaste:
                     logger.debug("Tidus Haste self")
@@ -1094,7 +1094,7 @@ def wendigo():
                     )
                     == 0
                 ):
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
             else:
                 if (
                     usepowerbreak
@@ -1341,7 +1341,7 @@ def seymour_natus():
                         if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis():
                             battle.main.buddy_swap(Lulu)
                             screen.await_turn()
-                            xbox.weap_swap(0)
+                            CurrentPlayer().swap_battle_weapon()
                         elif aeon_summoned:
                             battle.main.tidus_haste("d", character=1)
                         else:
@@ -1729,7 +1729,7 @@ def yu_yevon():
                     CurrentPlayer().attack()
                     zombie_attack = True
                 elif weap_swap and not zombie_attack and Tidus.is_turn():
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 else:
                     CurrentPlayer().defend()
             elif za_char == 0 and not zombie_attack:  # Tidus logic:
@@ -1764,7 +1764,7 @@ def yu_yevon():
                     CurrentPlayer().defend()
                     weap_swap = True
                 elif Yuna.is_turn():
-                    xbox.weap_swap(0)
+                    CurrentPlayer().swap_battle_weapon()
                 elif Tidus.is_turn():
                     battle.main.tidus_haste("r", character=6)
                 elif Rikku.is_turn():

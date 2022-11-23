@@ -106,7 +106,9 @@ class Player:
         if not memory.main.turn_ready():
             while not memory.main.turn_ready():
                 pass
-        attack_menu_id = [x for x in [0, 203, 210, 216] if x in self.battle_menu][0]
+        attack_menu_id = [x for x in [0, 203, 207, 210, 216] if x in self.battle_menu][
+            0
+        ]
         self.navigate_to_battle_menu(attack_menu_id)
         if target_id is not None:
             while memory.main.main_battle_menu():
@@ -154,7 +156,7 @@ class Player:
                         if memory.main.battle_target_id() >= 20:
                             direction = "r"
                         xbox.tap_down()
-        self.battle.utils.tap_targeting()
+        battle.utils.tap_targeting()
 
     def defend():
         logger.debug("Defending")
@@ -162,7 +164,7 @@ class Player:
         for _ in range(5):
             xbox.tap_y()
 
-    def navigate_to_battle_menu(self, target):
+    def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
         current_position = memory.main.battle_menu_cursor()
         while current_position == 255:
