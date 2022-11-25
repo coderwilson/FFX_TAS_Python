@@ -1569,7 +1569,7 @@ def m_woods():
                             steal_right()
                         elif not Rikku.has_overdrive(combat=True):
                             logger.debug("Charging")
-                            CurrentPlayer().attack(Rikku, direction_hint="u")
+                            CurrentPlayer().attack(target_id=Rikku, direction_hint="u")
                         else:
                             logger.debug("Escaping")
                             flee_all()
