@@ -187,7 +187,7 @@ def jassu_pass_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = int(155 - shot_mod)
+        base_timing = int(156 - shot_mod)
     else:
         base_timing = int(265 - shot_mod)
 
@@ -201,7 +201,7 @@ def tidus_shot_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = int(169 - shot_mod)
+        base_timing = int(170 - shot_mod)
     else:
         base_timing = int(288 - shot_mod)
 

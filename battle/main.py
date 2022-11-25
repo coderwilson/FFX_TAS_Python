@@ -692,7 +692,7 @@ def luca_workers_2(early_haste):
                     else:
                         CurrentPlayer().attack()
                 elif Lulu.is_turn():
-                    CurrentPlayer().cast_black_magic_spell(1, direction="right")
+                    CurrentPlayer().cast_black_magic_spell(spell_id=1,target_id=21)
             else:
                 if Lulu.is_turn():
                     CurrentPlayer().cast_black_magic_spell(1)
