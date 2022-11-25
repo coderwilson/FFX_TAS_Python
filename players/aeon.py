@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-import memory
+import memory.main
 import xbox
 from players.base import Player
 

@@ -8,7 +8,7 @@ from collections import Counter
 from math import cos, sin
 from typing import List
 
-from ReadWriteMemory import Process, ReadWriteMemory
+from ReadWriteMemory import Process, ReadWriteMemory, ReadWriteMemoryError
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
@@ -2402,9 +2402,7 @@ class Icicle:
 
 
 def build_icicles():
-    ret_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for x in range(16):
-        ret_array[x] = Icicle(x)
+    ret_array: List[Icicle] = [Icicle(x) for x in range(16)]
     return ret_array
 
 

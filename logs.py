@@ -186,33 +186,39 @@ class MemChangeMonitor:
         else:
             self.report_on_child = True
             self.child_handle = MemChangeMonitor(
-                self.base_offset, True, self.ptr_offset, self.type_ref, 0
+                self.base_offset, True, self.ptr_offset, self.var_type, 0
             )
 
     def set_last_value(self):
         if self.is_pointer:
-            ptr_ref = memory.main.read_bytes(key, 4)
+            ptr_ref = memory.main.process.read_bytes(self.key, 4)
 
             if self.var_type == "byte":
-                self.last_value = memory.main.read_bytes(ptr_ref + self.ptr_offset, 1)
+                self.last_value = memory.main.process.read_bytes(
+                    ptr_ref + self.ptr_offset, 1
+                )
             elif self.var_type == "2byte":
-                self.last_value = memory.main.read_bytes(ptr_ref + self.ptr_offset, 2)
+                self.last_value = memory.main.process.read_bytes(
+                    ptr_ref + self.ptr_offset, 2
+                )
             elif self.var_type == "4byte":
-                self.last_value = memory.main.read_bytes(ptr_ref + self.ptr_offset, 4)
+                self.last_value = memory.main.process.read_bytes(
+                    ptr_ref + self.ptr_offset, 4
+                )
             elif self.var_type == "float":
                 self.last_value = memory.main.float_from_integer(
-                    memory.main.read_bytes(ptr_ref + self.ptr_offset, 4)
+                    memory.main.process.read_bytes(ptr_ref + self.ptr_offset, 4)
                 )
         else:
             if self.var_type == "byte":
-                self.last_value = memory.main.read_bytes(key, 1)
+                self.last_value = memory.main.process.read_bytes(self.key, 1)
             elif self.var_type == "2byte":
-                self.last_value = memory.main.read_bytes(key, 2)
+                self.last_value = memory.main.process.read_bytes(self.key, 2)
             elif self.var_type == "4byte":
-                self.last_value = memory.main.read_bytes(key, 4)
+                self.last_value = memory.main.process.read_bytes(self.key, 4)
             elif self.var_type == "float":
                 self.last_value = memory.main.float_from_integer(
-                    memory.main.read_bytes(key, 4)
+                    memory.main.process.read_bytes(self.key, 4)
                 )
 
     def report_if_change(self):
@@ -224,7 +230,7 @@ class MemChangeMonitor:
             write_mem_change("Base offset: " + str(self.base_offset))
             write_mem_change("Pointer value: " + str(self.is_pointer))
             if self.is_pointer:
-                write_mem_change("Pointer offset: " + str(self.pointer_offset))
+                write_mem_change("Pointer offset: " + str(self.ptr_offset))
             write_mem_change("Type of variable: " + str(self.var_type))
             write_mem_change("Previous value: " + self.last_value)
             write_mem_change("Updated value: " + self.get_new_value())
@@ -244,7 +250,7 @@ class MemChangeMonitor:
         write_mem_change("Base offset: " + str(self.base_offset))
         write_mem_change("Pointer value: " + str(self.is_pointer))
         if self.is_pointer:
-            write_mem_change("Pointer offset: " + str(self.pointer_offset))
+            write_mem_change("Pointer offset: " + str(self.ptr_offset))
         write_mem_change("Type of variable: " + str(self.var_type))
         write_mem_change("Previous value: " + self.last_value)
         write_mem_change("Updated value: " + self.get_new_value())
@@ -261,7 +267,7 @@ class MemChangeMonitor:
         write_mem_change("Base offset: " + str(self.base_offset))
         write_mem_change("Pointer value: " + str(self.is_pointer))
         if self.is_pointer:
-            write_mem_change("Pointer offset: " + str(self.pointer_offset))
+            write_mem_change("Pointer offset: " + str(self.ptr_offset))
         write_mem_change("Type of variable: " + str(self.var_type))
         write_mem_change("Previous value: " + self.last_value)
         write_mem_change("Updated value: " + self.get_new_value())
@@ -275,42 +281,42 @@ class MemChangeMonitor:
 
     def check_change(self):
         if self.is_pointer:
-            ptr_ref = memory.main.read_bytes(key, 4)
+            ptr_ref = memory.main.process.read_bytes(self.key, 4)
 
             if self.var_type == "byte":
-                if self.last_value != memory.main.read_bytes(
+                if self.last_value != memory.main.process.read_bytes(
                     ptr_ref + self.ptr_offset, 1
                 ):
                     return True
             elif self.var_type == "2byte":
-                if self.last_value != memory.main.read_bytes(
+                if self.last_value != memory.main.process.read_bytes(
                     ptr_ref + self.ptr_offset, 2
                 ):
                     return True
             elif self.var_type == "4byte":
-                if self.last_value != memory.main.read_bytes(
+                if self.last_value != memory.main.process.read_bytes(
                     ptr_ref + self.ptr_offset, 4
                 ):
                     return True
             elif self.var_type == "float":
                 if self.last_value != memory.main.float_from_integer(
-                    memory.main.read_bytes(ptr_ref + self.ptr_offset, 4)
+                    memory.main.process.read_bytes(ptr_ref + self.ptr_offset, 4)
                 ):
                     return True
             return False
         else:
             if self.var_type == "byte":
-                if self.last_value != memory.main.read_bytes(key, 1):
+                if self.last_value != memory.main.process.read_bytes(self.key, 1):
                     return True
             elif self.var_type == "2byte":
-                if self.last_value != memory.main.read_bytes(key, 2):
+                if self.last_value != memory.main.process.read_bytes(self.key, 2):
                     return True
             elif self.var_type == "4byte":
-                if self.last_value != memory.main.read_bytes(key, 4):
+                if self.last_value != memory.main.process.read_bytes(self.key, 4):
                     return True
             elif self.var_type == "float":
                 if self.last_value != memory.main.float_from_integer(
-                    memory.main.read_bytes(key, 4)
+                    memory.main.process.read_bytes(self.key, 4)
                 ):
                     return True
             return False
@@ -333,7 +339,7 @@ def mem_change_handle():
     first_ele = True
     mem_ref_list = mem_change_list()
 
-    while len(base_array) != 0:
+    while len(mem_ref_list) != 0:
         if first_ele:
             first_ele = False
             variables = mem_ref_list.pop()
