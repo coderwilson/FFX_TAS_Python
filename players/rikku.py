@@ -1,10 +1,35 @@
 import logging
 
-import memory
+import memory.main
+import vars
 import xbox
 from players.base import Player
 
+game_vars = vars.vars_handle()
+
 logger = logging.getLogger(__name__)
+
+
+def omnis_items():
+    item1 = 99
+    if memory.main.get_item_slot(32) < 200:
+        item1 = 32
+    elif memory.main.get_item_slot(30) < 200:
+        item1 = 30
+    elif memory.main.get_item_slot(27) < 200:
+        item1 = 27
+    else:
+        item1 = 24
+
+    if memory.main.get_item_slot(1) < 200:
+        item2 = 1
+    elif memory.main.get_item_slot(3) < 200:
+        item2 = 3
+    elif memory.main.get_item_slot(2) < 200:
+        item2 = 2
+    else:
+        item2 = 7
+    return [item1, item2]
 
 
 class RikkuImp(Player):
@@ -14,7 +39,8 @@ class RikkuImp(Player):
     def rikku_od_items(self, slot):
         self._navigate_to_position(slot, battle_cursor=memory.main.rikku_od_cursor_1)
 
-    def overdrive(battle):
+    # TODO: Replace rikku_full_od(battle) from battle.main
+    def overdrive(self, battle):
         # First, determine which items we are using
         if battle == "tutorial":
             item1 = memory.main.get_item_slot(73)

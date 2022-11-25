@@ -281,7 +281,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                 if mega_phoenix and screen.faint_check() >= 2:
                     battle.main.revive(item_num=7)
                 elif memory.main.get_overdrive_battle(0) == 100:
-                    battle.overdrive.tidus(version=od_version)
+                    Tidus.overdrive(version=od_version)
                 else:
                     battle.main.use_skill(1)  # Quick hit
             elif screen.turn_aeon():
@@ -311,13 +311,13 @@ def basic_attack(
                 if mega_phoenix and screen.faint_check() >= 2:
                     battle.main.revive(item_num=7)
                 elif use_od and memory.main.get_overdrive_battle(0) == 100:
-                    battle.overdrive.tidus(version=od_version)
+                    Tidus.overdrive(version=od_version)
                 else:
                     CurrentPlayer().attack()
             elif Yuna.is_turn() and yuna_autos:
-                battle.CurrentPlayer().attack()
+                CurrentPlayer().attack()
             elif screen.turn_aeon():
-                battle.CurrentPlayer().attack()
+                CurrentPlayer().attack()
             else:
                 CurrentPlayer().defend()
 
