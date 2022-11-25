@@ -69,7 +69,7 @@ def arena_menu_select(choice: int = 2):
 def start_fight(area_index: int, monster_index: int = 0):
     logger.debug(f"Starting fight: {area_index} | {monster_index}")
     arenaCursor = 0
-    memory.main.wait_frames(90)
+    memory.main.wait_frames(60)
     while arenaCursor != area_index:
         if arenaCursor % 2 == 0 and area_index % 2 == 1:
             xbox.tap_right()
