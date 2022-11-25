@@ -522,11 +522,14 @@ def perform_TAS():
                 if game.step == 1:
                     area.gagazet.calm_lands()
                     area.gagazet.defender_x()
+                    logger.debug(f"Determining next decision")
 
                     advance_pre_x, advance_post_x = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
+                        logger.info(f"Straight to NEA area: {advance_post_x}")
                         game.step = 2
                     else:
+                        logger.info(f"B&Y battle before NEA: {advance_post_x}")
                         game.step = 3
 
                 if game.step == 2:
@@ -643,11 +646,18 @@ def perform_TAS():
                     game.step += 1
 
                 if game.step == 12:
-                    logger.debug("MAAAAARK")
                     memory.main.await_control()
                     nemesis.changes.arena_purchase()
                     area.gagazet.defender_x()
-                    game.step = 2
+                    logger.debug(f"Determining next decision")
+
+                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    if advance_post_x in [0, 1]:
+                        logger.info(f"Straight to NEA area: {advance_post_x}")
+                        game.step = 2
+                    else:
+                        logger.info(f"B&Y battle before NEA: {advance_post_x}")
+                        game.step = 3
 
             # Nemesis farming section
             if game.state == "Nem_Farm":
