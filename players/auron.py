@@ -1,6 +1,6 @@
 import logging
 
-import memory
+import memory.main
 import xbox
 from players.base import Player
 

@@ -1,4 +1,4 @@
-import memory
+import memory.main
 import xbox
 from players.aeon import Aeon
 

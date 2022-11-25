@@ -23,6 +23,7 @@ from players import (
     Wakka,
     Yuna,
 )
+from players.rikku import omnis_items
 
 game_vars = vars.vars_handle()
 
@@ -569,12 +570,12 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                 elif enc_id == 31:
                     if Tidus.is_turn():
                         if turn_counter < 4:
-                            attack_by_num(num=20, direction="l")
+                            CurrentPlayer().attack(target_id=20, direction_hint="l")
                         # If Wakka crit, we can use that instead. Slightly faster.
                         else:
                             flee_all()
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
-                        attack_by_num(num=20, direction="l")
+                        CurrentPlayer().attack(target_id=20, direction_hint="l")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 32:
@@ -691,7 +692,7 @@ def luca_workers_2(early_haste):
                     else:
                         CurrentPlayer().attack()
                 elif Lulu.is_turn():
-                    thunder("right")
+                    CurrentPlayer().cast_black_magic_spell(1, direction="right")
             else:
                 if Lulu.is_turn():
                     CurrentPlayer().cast_black_magic_spell(1)
@@ -1568,7 +1569,7 @@ def m_woods():
                             steal_right()
                         elif not Rikku.has_overdrive(combat=True):
                             logger.debug("Charging")
-                            attack_by_num(Rikku, "u")
+                            CurrentPlayer().attack(target_id=Rikku, direction_hint="u")
                         else:
                             logger.debug("Escaping")
                             flee_all()
@@ -3855,7 +3856,9 @@ def escape_one():
                 elif memory.main.get_current_turn() == 1:
                     escape_action()
                 else:
-                    attack_by_num(num=memory.main.get_current_turn(), direction="u")
+                    CurrentPlayer().attack(
+                        target_id=memory.main.get_current_turn(), direction_hint="u"
+                    )
                     return False
     else:
         escape_action()
@@ -4025,28 +4028,6 @@ def yojimbo():
                 CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-
-
-def omnis_items():
-    item1 = 99
-    if memory.main.get_item_slot(32) < 200:
-        item1 = 32
-    elif memory.main.get_item_slot(30) < 200:
-        item1 = 30
-    elif memory.main.get_item_slot(27) < 200:
-        item1 = 27
-    else:
-        item1 = 24
-
-    if memory.main.get_item_slot(1) < 200:
-        item2 = 1
-    elif memory.main.get_item_slot(3) < 200:
-        item2 = 3
-    elif memory.main.get_item_slot(2) < 200:
-        item2 = 2
-    else:
-        item2 = 7
-    return [item1, item2]
 
 
 @battle.utils.speedup_decorator

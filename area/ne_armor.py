@@ -7,6 +7,7 @@ import menu
 import pathing
 import rng_track
 import save_sphere
+import tts
 import vars
 import xbox
 from paths import (
