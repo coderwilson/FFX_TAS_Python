@@ -10,7 +10,6 @@ import load_game
 import logs
 import memory.main
 import reset
-import screen
 import showcase.choco_eater
 import vars
 import xbox

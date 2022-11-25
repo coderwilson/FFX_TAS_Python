@@ -12,7 +12,7 @@ import vars
 import xbox
 import zz_airship_path
 from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

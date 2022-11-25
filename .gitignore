@@ -1,6 +1,6 @@
 __pycache__/
+logs/
 *.py[cod]
-*.txt
 none
 config.yaml
 Save Backups/
