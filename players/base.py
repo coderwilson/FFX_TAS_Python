@@ -2,7 +2,7 @@ import logging
 from enum import IntEnum
 from typing import List, Optional
 
-import memory
+import memory.main
 import xbox
 
 logger = logging.getLogger(__name__)

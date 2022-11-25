@@ -333,7 +333,7 @@ def sin_fin():
                     battle.main.buddy_swap(Yuna)
                     battle.main.aeon_summon(0)
             elif screen.turn_aeon():
-                Valefor.overdrive(overdrive_num=1, sin_fin=True)
+                Valefor.overdrive(overdrive_num=0, sin_fin=True)
                 logger.info("Valefor energy blast")
     logger.info("Sin's Fin fight complete")
     xbox.click_to_battle()

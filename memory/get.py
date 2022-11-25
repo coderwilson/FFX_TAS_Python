@@ -2,7 +2,7 @@ import ctypes
 import ctypes.wintypes
 import os.path
 
-from ReadWriteMemory import Process, ReadWriteMemory
+from ReadWriteMemory import Process, ReadWriteMemory, ReadWriteMemoryError
 
 import memory.main
 
