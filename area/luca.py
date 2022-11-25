@@ -10,6 +10,18 @@ import save_sphere
 import vars
 import xbox
 from paths import Luca1, Luca3, LucaPreBlitz
+from players import (
+    Auron,
+    Bahamut,
+    CurrentPlayer,
+    Kimahri,
+    Lulu,
+    Rikku,
+    Tidus,
+    Valefor,
+    Wakka,
+    Yuna,
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

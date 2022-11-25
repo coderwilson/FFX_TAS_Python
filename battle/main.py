@@ -569,12 +569,12 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                 elif enc_id == 31:
                     if Tidus.is_turn():
                         if turn_counter < 4:
-                            attack_by_num(num=20, direction="l")
+                            CurrentPlayer().attack(target_id=20, direction_hint="r")
                         # If Wakka crit, we can use that instead. Slightly faster.
                         else:
                             flee_all()
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
-                        attack_by_num(num=20, direction="l")
+                        CurrentPlayer().attack(target_id=20, direction_hint="r")
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 32:
@@ -691,7 +691,7 @@ def luca_workers_2(early_haste):
                     else:
                         CurrentPlayer().attack()
                 elif Lulu.is_turn():
-                    thunder("right")
+                    CurrentPlayer().cast_black_magic_spell(spell_id=1,target_id=21)
             else:
                 if Lulu.is_turn():
                     CurrentPlayer().cast_black_magic_spell(1)
@@ -1568,7 +1568,7 @@ def m_woods():
                             steal_right()
                         elif not Rikku.has_overdrive(combat=True):
                             logger.debug("Charging")
-                            attack_by_num(Rikku, "u")
+                            CurrentPlayer().attack(Rikku, direction_hint="u")
                         else:
                             logger.debug("Escaping")
                             flee_all()
@@ -3855,7 +3855,8 @@ def escape_one():
                 elif memory.main.get_current_turn() == 1:
                     escape_action()
                 else:
-                    attack_by_num(num=memory.main.get_current_turn(), direction="u")
+                    CurrentPlayer().attack(target_id=CurrentPlayer().id, direction_hint="r")
+                    #attack_by_num(num=memory.main.get_current_turn(), direction="u")
                     return False
     else:
         escape_action()
