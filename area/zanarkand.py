@@ -18,7 +18,7 @@ from paths import (
     ZanarkandTrials,
     ZanarkandYunalesca,
 )
-from players import Auron, Rikku, Tidus, Yuna
+from players import Auron, CurrentPlayer, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

@@ -1,6 +1,7 @@
 import logging
 import math
 import time
+from typing import List
 
 import blitz_pathing
 import logs
@@ -8,6 +9,7 @@ import memory.main
 import rng_track
 import vars
 import xbox
+from memory.main import BlitzActor
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -16,11 +18,11 @@ tidus_xp = False
 FFXC = xbox.controller_handle()
 
 report_state = False
-player_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+player_array: List[BlitzActor] = []
 
 # Initialize the player array
 for i in range(12):
-    player_array[i] = memory.main.BlitzActor(player_num=i)
+    player_array.append(memory.main.BlitzActor(player_num=i))
 
 global engage_defender
 engage_defender = False
@@ -185,7 +187,7 @@ def jassu_pass_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = int(155 - shot_mod)
+        base_timing = int(156 - shot_mod)
     else:
         base_timing = int(265 - shot_mod)
 
@@ -199,7 +201,7 @@ def tidus_shot_timing() -> int:
     shot_distance = distance(0, 11)
     shot_mod = int(shot_distance / 160)
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = int(169 - shot_mod)
+        base_timing = int(170 - shot_mod)
     else:
         base_timing = int(288 - shot_mod)
 

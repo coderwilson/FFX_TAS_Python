@@ -8,7 +8,7 @@ from collections import Counter
 from math import cos, sin
 from typing import List
 
-from ReadWriteMemory import Process, ReadWriteMemory
+from ReadWriteMemory import Process, ReadWriteMemory, ReadWriteMemoryError
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
@@ -215,14 +215,7 @@ def game_over():
 
 
 def battle_complete():
-    global base_value
-    key = base_value + 0x00D2C9F1
-    if process.read_bytes(key, 1) == 2:
-        return True
-    elif process.read_bytes(key, 1) == 3:
-        return True
-    else:
-        return False
+    return not battle_active()
 
 
 def battle_arena_results():
@@ -240,8 +233,8 @@ def game_over_reset():
 
 def battle_active():
     global base_value
-    key = base_value + 0x00D2C9F1
-    return process.read_bytes(key, 1) == 0
+    key = base_value + 0x00D2A8E0
+    return process.read_bytes(key, 1) == 1
 
 
 def get_current_turn():
@@ -2402,9 +2395,7 @@ class Icicle:
 
 
 def build_icicles():
-    ret_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for x in range(16):
-        ret_array[x] = Icicle(x)
+    ret_array: List[Icicle] = [Icicle(x) for x in range(16)]
     return ret_array
 
 
@@ -3777,6 +3768,14 @@ def mem_test_val_2():
 
 def mem_test_val_3():
     key = base_value + 0x00D35EE3
+    return process.read_bytes(key, 1)
+
+
+# ------------------------------
+# Yojimbo
+
+def yojimobo_compatability():
+    key = base_value + 0x00D30834
     return process.read_bytes(key, 1)
 
 

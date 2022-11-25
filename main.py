@@ -138,11 +138,6 @@ def perform_TAS():
     while game.state != "End":
 
         try:
-            # Blitzball testing logic
-            if game.state == "Luca" and game.step == 3:
-                area.dream_zan.new_game(game.state)
-                load_game.load_save_num(37)  # TODO: Magic number
-
             if game_vars.rng_seed_num() >= 256:
                 game.state = "End"
 

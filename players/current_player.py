@@ -1,4 +1,4 @@
-import memory
+import memory.main
 from players.anima import Anima
 from players.auron import Auron
 from players.bahamut import Bahamut
