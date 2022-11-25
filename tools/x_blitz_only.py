@@ -7,7 +7,6 @@ import blitz
 import load_game
 import memory.main
 import reset
-import screen
 import xbox
 
 FFXC = xbox.controller_handle()

@@ -22,7 +22,7 @@ from paths import (
     KelkRonso,
     SeymourFlux,
 )
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from players import Auron, CurrentPlayer, Kimahri, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -101,12 +101,12 @@ def defender_x():
     xbox.click_to_battle()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if screen.turn_tidus():
-                battle.main.buddy_swap_yuna()
-            elif screen.turn_yuna():
+            if Tidus.is_turn():
+                battle.main.buddy_swap(Yuna)
+            elif Yuna.is_turn():
                 battle.main.aeon_summon(4)
             else:
-                battle.main.attack("none")
+                CurrentPlayer().attack()
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
     rng_track.print_manip_info()

@@ -407,8 +407,8 @@ def find_safe_place():
     c_player = player_array[controlling_player()].get_coords()
     c_player_num = controlling_player()
     # graav coords
-    graav_pos = player_array[8].get_coords()
-    forward_pos = player_array[7].get_coords()
+    player_array[8].get_coords()
+    player_array[7].get_coords()
     target_coords = [-2, -595]
     safe_spot = 255
 
@@ -696,7 +696,7 @@ def letty_move():
 
 def letty_act():
     current_stage = game_stage()
-    graav_distance = distance(0, 2)
+    distance(0, 2)
 
     if current_stage == 20:
         if distance(0, 8) > 400:
@@ -745,7 +745,7 @@ def letty_act():
 def jassu_move():
     target_coords = [999, 999]
     current_stage = game_stage()
-    player_coords = player_array[controlling_player()].get_coords()
+    player_array[controlling_player()].get_coords()
     target_coords = [-585, -130]
     p10C = player_array[10].get_coords()
     graav_c = player_array[8].get_coords()
@@ -800,7 +800,7 @@ def jassu_move():
         move_forward = True
     elif current_stage == 3:
         rel_dist = int((tidus_c[1] - p10C[1]) + (tidus_c[0] - p10C[0]))
-        rel_dist_2 = int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
+        int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
         if rel_dist > 220:  # Tidus in position behind defender
             xbox.tap_x()
             move_forward = True
@@ -829,11 +829,10 @@ def jassu_move():
 
 def jassu_act():
     current_stage = game_stage()
-    player_coords = player_array[controlling_player()].get_coords()
+    player_array[controlling_player()].get_coords()
     p10C = player_array[10].get_coords()
     graav_c = player_array[8].get_coords()
     tidus_c = player_array[0].get_coords()
-    find_safety = False
     current_stage = game_stage()
     if report_state:
         logger.debug("Jassu Action")
@@ -869,7 +868,7 @@ def jassu_act():
         dribble_ball()
     elif current_stage == 3:
         rel_dist = int((tidus_c[1] - p10C[1]) + (tidus_c[0] - p10C[0]))
-        rel_dist_2 = int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
+        int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
         if rel_dist > 180:
             pass_ball(target=0)
         elif graav_distance < 150:

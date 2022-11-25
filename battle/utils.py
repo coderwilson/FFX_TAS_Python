@@ -2,6 +2,7 @@ import logging
 import threading
 
 import memory
+import memory.main
 import vars
 
 logger = logging.getLogger(__name__)
