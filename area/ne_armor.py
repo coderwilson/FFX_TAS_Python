@@ -7,6 +7,7 @@ import menu
 import pathing
 import rng_track
 import save_sphere
+import tts
 import vars
 import xbox
 from paths import (
@@ -117,9 +118,10 @@ def next_green() -> bool:
     logger.debug(f"Green: {next_green}")
     logger.debug(f"White: {next_white}")
     go_green = False
-    if next_green < next_white and memory.main.next_chance_rng_10() == 0:
+    if next_green < next_white:
         if next_green >= 2:
             go_green = True
+    logger.debug(f"## Going to Green: {go_green}")
     if game_vars.accessibility_vars()[2]:
         if go_green:
             tts.message("Green")
@@ -150,7 +152,7 @@ def drop_hunt():
             else:
                 if pathing.set_movement(NEForceEncountersWhite.execute(checkpoint)):
                     checkpoint += 1
-                    if checkpoint % 2 == 0 and not go_green:
+                    if checkpoint == 2:
                         checkpoint = 0
                     logger.debug(f"Checkpoint reached: {checkpoint}")
         else:

@@ -8,7 +8,7 @@ from collections import Counter
 from math import cos, sin
 from typing import List
 
-from ReadWriteMemory import Process, ReadWriteMemory
+from ReadWriteMemory import Process, ReadWriteMemory, ReadWriteMemoryError
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
@@ -215,14 +215,7 @@ def game_over():
 
 
 def battle_complete():
-    global base_value
-    key = base_value + 0x00D2C9F1
-    if process.read_bytes(key, 1) == 2:
-        return True
-    elif process.read_bytes(key, 1) == 3:
-        return True
-    else:
-        return False
+    return not battle_active()
 
 
 def battle_arena_results():
@@ -240,8 +233,8 @@ def game_over_reset():
 
 def battle_active():
     global base_value
-    key = base_value + 0x00D2C9F1
-    return process.read_bytes(key, 1) == 0
+    key = base_value + 0x00D2A8E0
+    return process.read_bytes(key, 1) == 1
 
 
 def get_current_turn():
@@ -1778,7 +1771,6 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
     else:
         logger.debug(f"Converting from formation: {order}")
         logger.debug(f"Into formation: {order_final}")
-        logger.debug("Manipulating final formation to minimize movements")
         replacement_dict = {}
         new_characters = [x for x in order_final[:3] if x not in order[:3]]
         for i in range(3):
@@ -1788,7 +1780,6 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                 replacement_dict[i] = new_characters.pop()
         for i in range(3):
             order_final[i] = replacement_dict[i]
-        logger.debug(f"New Final Order: {order_final}")
         while not menu_open():
             if not open_menu():
                 return
@@ -1801,9 +1792,7 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
             xbox.tap_b()
         start_pos = 0
         while Counter(order[:3]) != Counter(order_final[:3]):
-            logger.debug("Full Party Format function, original")
             # Select target in the wrong spot.
-            logger.debug("Selecting start position")
             if order[start_pos] == order_final[start_pos]:
                 while (
                     order[start_pos] == order_final[start_pos] and order != order_final
@@ -1811,20 +1800,16 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                     start_pos += 1
                     if start_pos == party_members:
                         start_pos = 0
-            char_name = name_from_number(order_final[start_pos])
-            logger.debug(f"Character {char_name} should be in position {start_pos}")
+            name_from_number(order_final[start_pos])
 
             # Set target, end position
-            logger.debug("Selecting destination position.")
             end_pos = 0
             if order_final[start_pos] != order[end_pos]:
                 while order_final[start_pos] != order[end_pos] and order != order_final:
                     end_pos += 1
 
-            char_name = name_from_number(order[end_pos])
-            logger.debug(f"Character {char_name} found in position {end_pos}")
+            name_from_number(order[end_pos])
 
-            logger.debug("Looking for character.")
             if start_pos < 3 and end_pos < 3:
                 start_pos += 1
                 if start_pos == party_members:
@@ -1832,7 +1817,6 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                 continue
 
             # Move cursor to start position
-            logger.debug("Moving to start position")
             if party_format_cursor_1() != start_pos:
                 # logger.debug("Cursor not in right spot")
                 while party_format_cursor_1() != start_pos:
@@ -1844,23 +1828,17 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                 xbox.menu_b()  # Click on Start location
 
             # Move cursor to end position
-            logger.debug("Moving to destination position.")
             while party_format_cursor_2() != end_pos:
                 menu_direction(party_format_cursor_2(), end_pos, party_members)
                 if game_vars.use_pause():
                     wait_frames(1)
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
-            logger.debug("Start and destination positions have been swapped.")
             start_pos += 1
             if start_pos == party_members:
                 start_pos = 0
 
-            logger.debug("Reporting results")
-            logger.debug(f"Converting from formation: {order}")
-            logger.debug(f"Into formation: {order_final}")
             order = get_order_seven()
-        logger.debug("Party format is good now.")
         if full_menu_close:
             close_menu()
         else:
@@ -2400,9 +2378,7 @@ class Icicle:
 
 
 def build_icicles():
-    ret_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for x in range(16):
-        ret_array[x] = Icicle(x)
+    ret_array: List[Icicle] = [Icicle(x) for x in range(16)]
     return ret_array
 
 
@@ -3775,6 +3751,15 @@ def mem_test_val_2():
 
 def mem_test_val_3():
     key = base_value + 0x00D35EE3
+    return process.read_bytes(key, 1)
+
+
+# ------------------------------
+# Yojimbo
+
+
+def yojimobo_compatability():
+    key = base_value + 0x00D30834
     return process.read_bytes(key, 1)
 
 

@@ -2,6 +2,7 @@ import logging
 
 import battle.boss
 import battle.main
+import logs
 import memory.main
 import menu
 import pathing
@@ -20,6 +21,9 @@ def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
     # if memory.main.rng_seed() == 31 and game_vars.skip_kilika_luck():
     #    game_vars.dont_skip_kilika_luck()
+
+    logs.write_rng_track("Kilika start, RNG01")
+    logs.write_rng_track(memory.main.rng_01())
 
     logger.info("Arrived at Kilika docks.")
     memory.main.click_to_control()
@@ -77,7 +81,6 @@ def select_best_of_two(coming_battles):
         ["yellow_element", "killer_bee"],
         ["ragora"],
         ["dinonix", "yellow_element"],
-        ["ragora", "ragora"],
     ]
     for i in range(len(priority)):
         if priority[i] in coming_battles:
@@ -89,7 +92,6 @@ def select_best_of_two(coming_battles):
 def forest_1():
     logger.info("Kilika forest 1")
     kilika_battles = 0
-    next_three = []
     next_battle = []
     import rng_track
 
@@ -115,6 +117,7 @@ def forest_1():
                     checkpoint = 83
             if checkpoint == 83 and not valefor_charge:
                 checkpoint = 81
+                best_of_two = 99
             if checkpoint == 83 and memory.main.get_map() == 65:
                 checkpoint = 84
             if checkpoint == 37 and game_vars.skip_kilika_luck():
@@ -167,7 +170,7 @@ def forest_1():
                     battle.boss.geneaux()
                 else:
                     logger.debug(f"This should be battle number: {kilika_battles}")
-                    logger.debug(f"Reminder (north-bound only): {next_three}")
+                    logger.debug(f"Reminder (north-bound only): {best_of_two}")
                     valefor_charge = battle.main.kilika_woods(
                         valefor_charge, best_of_two, next_battle
                     )

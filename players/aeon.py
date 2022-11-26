@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-import memory
+import memory.main
 import xbox
 from players.base import Player
 
@@ -31,6 +31,8 @@ class Aeon(Player):
         if target_far_line:
             while not memory.main.battle_line_target():
                 xbox.tap_left()
+        xbox.tap_b()
+        xbox.tap_b()
         self._tap_targeting()
 
     def shield(self):
