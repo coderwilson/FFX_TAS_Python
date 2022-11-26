@@ -2492,7 +2492,7 @@ def gagazet(checkpoint):
     if checkpoint == 77:
         x = -574
         y = 262
-    if checkpoint == 78: # Open chest
+    if checkpoint == 78:  # Open chest
         x = 0
         y = 0
     if checkpoint == 79:

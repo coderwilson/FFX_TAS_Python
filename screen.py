@@ -20,8 +20,8 @@ def faint_check():
     faints = 0
     char_hp = memory.main.get_battle_hp()
     front_party = memory.main.get_active_battle_formation()
-    logger.debug(f"faint_check() ## {front_party} ##")
-    logger.debug(f"faint_check() ## {char_hp} ##")
+    logger.debug(f"faint_check() {front_party}")
+    logger.debug(f"faint_check() {char_hp}")
     if turn_aeon():
         return 0
     if front_party[0] != 255 and char_hp[0] == 0:
@@ -30,7 +30,7 @@ def faint_check():
         faints += 1
     if front_party[2] != 255 and char_hp[2] == 0:
         faints += 1
-    logger.debug(f"faint_check() ## Fainted Characters: {faints} ##")
+    logger.debug(f"faint_check() Fainted Characters: {faints}")
     return faints
 
 

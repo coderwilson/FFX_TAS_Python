@@ -97,9 +97,8 @@ class AllVars:
 
         # === Nemesis stuff ===
         # ----Nemesis variables, unused in any%
-        self.nem_ap_val = (
-            1  # Nemesis route, determines Tidus level-up progress. Starts at 1
-        )
+        # Nemesis route, determines Tidus level-up progress. Starts at 1
+        self.nem_ap_val = 1
         self.yojimbo_index = 1  # Used in arena battles to track Zanmatou progress.
 
         # ----Nemesis Arena variables, sets to 1 after a boss is killed.
@@ -170,11 +169,9 @@ class AllVars:
         return self.rng_preferred_seeds
 
     def print_arena_status(self):
-        logger.debug("###############################")
         logger.debug(f"Area: {self.area_results}")
         logger.debug(f"Species: {self.species_results}")
         logger.debug(f"Original: {self.original_results}")
-        logger.debug("###############################")
 
     def arena_success(self, array_num, index):
         logger.debug(f"arena_success(): {array_num} | {index}")
