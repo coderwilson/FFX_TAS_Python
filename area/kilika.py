@@ -7,6 +7,7 @@ import menu
 import pathing
 import save_sphere
 import vars
+import logs
 import xbox
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
 from players import Kimahri, Tidus, Wakka, Yuna
