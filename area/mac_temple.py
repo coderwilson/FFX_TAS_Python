@@ -177,15 +177,25 @@ def seymour_fight():
     xbox.name_aeon("Shiva")
 
     memory.main.await_control()
-    FFXC.set_movement(-1, -1)
-    memory.main.wait_frames(30 * 0.4)
-    FFXC.set_movement(-1, 0)
-    memory.main.await_event()
+    targets = [
+        [6,-85],
+        [2,-128],
+        [2,-160]
+    ]
+    
+    checkpoint = 0
+    while memory.main.get_map() == 80:
+        if pathing.set_movement(targets[checkpoint]):
+            checkpoint += 1
+    
     FFXC.set_neutral()
 
 
 def trials():
+    logger.debug("Start of trials.")
     memory.main.await_control()
+    #FFXC.set_movement(0,1)
+    #memory.main.wait_frames(15)
 
     checkpoint = 0
     while memory.main.get_map() != 153:
