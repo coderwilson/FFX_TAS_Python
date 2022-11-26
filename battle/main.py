@@ -2250,8 +2250,12 @@ def zu():
         if memory.main.turn_ready():
             if memory.main.party_size() <= 2:
                 CurrentPlayer().defend()
+            elif Tidus.is_turn():
+                Tidus.flee()
+            elif not check_tidus_ok():
+                escape_one()
             else:
-                flee_all()
+                defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Skip Dialog
     memory.main.click_to_control()

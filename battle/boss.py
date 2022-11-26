@@ -698,26 +698,27 @@ def gui():
     ):
         logger.info("Gui2 - with extra Aeon overdrive")
         while memory.main.battle_active():
-            if screen.turn_seymour() and seymour_turn < 2:
-                battle.main.seymour_spell(target_face=False)
-                seymour_turn += 1
-            elif Yuna.is_turn() and seymour_turn >= 2:
-                logger.debug("Laser Time")
-                if memory.main.get_overdrive_battle(1) == 100:
-                    while not memory.main.other_battle_menu():
-                        xbox.tap_left()
-                    while not memory.main.interior_battle_menu():
-                        xbox.tap_b()
-                    while memory.main.interior_battle_menu():
-                        xbox.tap_b()
+            if memory.main.turn_ready():
+                if screen.turn_seymour() and seymour_turn < 2:
+                    battle.main.seymour_spell(target_face=False)
+                    seymour_turn += 1
+                elif Yuna.is_turn() and seymour_turn >= 2:
+                    logger.debug("Laser Time")
+                    if memory.main.get_overdrive_battle(1) == 100:
+                        while not memory.main.other_battle_menu():
+                            xbox.tap_left()
+                        while not memory.main.interior_battle_menu():
+                            xbox.tap_b()
+                        while memory.main.interior_battle_menu():
+                            xbox.tap_b()
+                    else:
+                        battle.main.aeon_summon(0)
+                elif screen.turn_aeon():
+                    logger.debug("Firing")
+                    Valefor.overdrive(overdrive_num=0)
                 else:
-                    battle.main.aeon_summon(0)
-            elif screen.turn_aeon():
-                logger.debug("Firing")
-                Valefor.overdrive(overdrive_num=0)
-            else:
-                logger.debug("Defend")
-                CurrentPlayer().defend()
+                    logger.debug("Defend")
+                    CurrentPlayer().defend()
     else:
         logger.info("Gui2 - standard")
         while memory.main.battle_active():

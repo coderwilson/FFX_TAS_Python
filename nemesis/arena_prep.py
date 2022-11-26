@@ -197,6 +197,9 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                         battle.main.escape_one()
                     elif memory.main.get_encounter_id() == 219:
                         battle.main.escape_one()
+                    elif memory.main.get_map() in [137,138]:
+                        #Bikanel is dangerous
+                        battle.main.escape_one()
                     else:
                         CurrentPlayer().defend()
                 else:
