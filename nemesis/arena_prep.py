@@ -2605,7 +2605,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 zone="calm2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-            elif pathing.set_movement(nemesis.nemesis_pathing.calm(checkpoint)) == True:
+            elif pathing.set_movement(CalmFarm.execute(checkpoint)) == True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint reached: {checkpoint}")
         else:
