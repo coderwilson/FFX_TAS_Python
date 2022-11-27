@@ -45,6 +45,12 @@ def set_movement(target) -> bool:
         return False
 
 
+def approach_actor(actor_id:int=999, actor_index:int=999, talk:bool=True):
+    # This function can be called with either the actor ID or the actor index.
+    # The actor ID is not the same as their usual character ID like 0-6 for the party,
+    # but rather the ID used for the actor information in the game files.
+    logger.debug("Unused, foundational piece. To be continued.")
+
 # TODO: Doesn't appear to be used, but left for historical purposes
 def seymour_natus():  # First checkpoint ever written. :D
     x = 15

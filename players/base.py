@@ -216,9 +216,9 @@ class Player:
 
     def defend(self):
         logger.debug("Defending")
-        # There has got to be a better thing we can do with a memory value.
-        for _ in range(2):
-            xbox.tap_y()
+        # Update matches memory.main.turn_ready.
+        # Updated 11/27/22, still to be validated.
+        xbox.tap_y()
 
     def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""

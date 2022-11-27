@@ -401,6 +401,24 @@
                 "nem_ap_val": "1",
                 "special_movement": "none"
             }
+        },
+        "3": {
+            "True": {
+                "save_num": "148",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            },
+            "False": {
+                "save_num": "68",
+                "blitz_win_value": "True",
+                "end_game_version_val": "1",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
         }
     },
     "Gagazet": {
