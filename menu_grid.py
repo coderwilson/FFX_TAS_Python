@@ -538,13 +538,11 @@ def sphere_num(s_type) -> int:
 def sel_sphere(s_type, shift):
     s_num = 255
     menu_pos = 0
-    logger.debug("------------------------------")
     logger.debug(s_type)
     s_num = sphere_num(s_type)
     logger.debug(s_num)
     menu_pos = memory.main.get_grid_items_slot(s_num)
     logger.debug(menu_pos)
-    logger.debug("------------------------------")
     if menu_pos == 255:
         logger.debug(f"Sphere {s_type} is not in inventory.")
         return

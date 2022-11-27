@@ -153,10 +153,10 @@ def start():
 
     global base_value
     try:
-        import zz_root_mem
+        import root_mem
 
         logger.info("Process Modules:")
-        base_value = zz_root_mem.list_process_modules(process.pid)
+        base_value = root_mem.list_process_modules(process.pid)
         logger.info("Process Modules complete")
         logger.info(f"Dynamically determined memory address: {hex(base_value)}")
         success = True
@@ -545,7 +545,7 @@ def extractor_height():
     global process
     global base_value
     height = get_actor_coords(3)[2]
-    logger.debug(f"^^Extractor Height: {height}")
+    logger.debug(f"Extractor Height: {height}")
     return height
 
 
@@ -1771,7 +1771,6 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
     else:
         logger.debug(f"Converting from formation: {order}")
         logger.debug(f"Into formation: {order_final}")
-        logger.debug("Manipulating final formation to minimize movements")
         replacement_dict = {}
         new_characters = [x for x in order_final[:3] if x not in order[:3]]
         for i in range(3):
@@ -1781,7 +1780,6 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                 replacement_dict[i] = new_characters.pop()
         for i in range(3):
             order_final[i] = replacement_dict[i]
-        logger.debug(f"New Final Order: {order_final}")
         while not menu_open():
             if not open_menu():
                 return
@@ -1794,9 +1792,7 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
             xbox.tap_b()
         start_pos = 0
         while Counter(order[:3]) != Counter(order_final[:3]):
-            logger.debug("==Full Party Format function, original")
             # Select target in the wrong spot.
-            logger.debug("Selecting start position")
             if order[start_pos] == order_final[start_pos]:
                 while (
                     order[start_pos] == order_final[start_pos] and order != order_final
@@ -1804,20 +1800,16 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                     start_pos += 1
                     if start_pos == party_members:
                         start_pos = 0
-            char_name = name_from_number(order_final[start_pos])
-            logger.debug(f"Character {char_name} should be in position {start_pos}")
+            name_from_number(order_final[start_pos])
 
             # Set target, end position
-            logger.debug("Selecting destination position.")
             end_pos = 0
             if order_final[start_pos] != order[end_pos]:
                 while order_final[start_pos] != order[end_pos] and order != order_final:
                     end_pos += 1
 
-            char_name = name_from_number(order[end_pos])
-            logger.debug(f"Character {char_name} found in position {end_pos}")
+            name_from_number(order[end_pos])
 
-            logger.debug("Looking for character.")
             if start_pos < 3 and end_pos < 3:
                 start_pos += 1
                 if start_pos == party_members:
@@ -1825,7 +1817,6 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                 continue
 
             # Move cursor to start position
-            logger.debug("Moving to start position")
             if party_format_cursor_1() != start_pos:
                 # logger.debug("Cursor not in right spot")
                 while party_format_cursor_1() != start_pos:
@@ -1837,23 +1828,17 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
                 xbox.menu_b()  # Click on Start location
 
             # Move cursor to end position
-            logger.debug("Moving to destination position.")
             while party_format_cursor_2() != end_pos:
                 menu_direction(party_format_cursor_2(), end_pos, party_members)
                 if game_vars.use_pause():
                     wait_frames(1)
             while menu_number() != 14:
                 xbox.menu_b()  # Click on End location, performs swap.
-            logger.debug("Start and destination positions have been swapped.")
             start_pos += 1
             if start_pos == party_members:
                 start_pos = 0
 
-            logger.debug("Reporting results")
-            logger.debug(f"Converting from formation: {order}")
-            logger.debug(f"Into formation: {order_final}")
             order = get_order_seven()
-        logger.debug("Party format is good now.")
         if full_menu_close:
             close_menu()
         else:
@@ -2004,14 +1989,14 @@ def actor_index(actor_num: int = 41):
 
 
 def mrr_guy_coords():
-    logger.debug("+++ Searching for MRR guy")
+    logger.debug("Searching for MRR guy")
     mrr_guy = 255
     for x in range(get_actor_array_size()):
         actor_num = get_actor_id(x)
         # logger.debug(f"Actor {x}: {hex(actor_num)}")
         if actor_num == 0x2083:
             mrr_guy = x
-    logger.debug(f"+++MRR guy in position: {mrr_guy}")
+    logger.debug(f"MRR guy in position: {mrr_guy}")
     mrr_guy_pos = get_actor_coords(mrr_guy)
     return [mrr_guy_pos[0], mrr_guy_pos[1]]
 
@@ -2199,9 +2184,7 @@ def print_rng_36():
 
     coord = base_value + 0x00D35F68
     ret_val = process.read_bytes(coord, 1)
-    logger.debug("------------------------------")
     logger.debug(f"RNG36 value: {ret_val}")
-    logger.debug("------------------------------")
 
 
 def end():
@@ -2812,9 +2795,9 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            logger.debug(f"## Owner: {current_handle.owner()}")
-            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
-            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
+            logger.debug(f"Owner: {current_handle.owner()}")
+            logger.debug(f"Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:
@@ -3147,9 +3130,9 @@ def equipped_armor_has_ability(char_num: int, ability_num: int = 0x801D):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            logger.debug(f"## Owner: {current_handle.owner()}")
-            logger.debug(f"## Equipped: {current_handle.is_equipped()}")
-            logger.debug(f"## Has Ability: {current_handle.has_ability(ability_num)}")
+            logger.debug(f"Owner: {current_handle.owner()}")
+            logger.debug(f"Equipped: {current_handle.is_equipped()}")
+            logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:
@@ -3774,6 +3757,7 @@ def mem_test_val_3():
 # ------------------------------
 # Yojimbo
 
+
 def yojimobo_compatability():
     key = base_value + 0x00D30834
     return process.read_bytes(key, 1)
@@ -3867,7 +3851,7 @@ def last_hit_check_change() -> int:
         if mem_val != game_vars.first_hits_value(x) and not change_found:
             change_found = True
             change_value = mem_val
-            logger.info(f"**Registered hit: {change_value}")
+            logger.info(f"Registered hit: {change_value}")
             # logs.write_stats(change_value)
             last_hit_init()
             logger.debug("Mark 1")
@@ -4112,11 +4096,9 @@ def next_chance_rng_01(version="white"):
         if (test_array[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battle_index:
             even_array.append(i)
 
-    # logger.debug("------------------------------")
     # logger.debug(f"Next event will appear on the odd array without manip. Area: {version}")
     # logger.debug(f"odd_array: {odd_array[0]}")
     # logger.debug(f"even_array: {even_array[0]}")
-    # logger.debug("------------------------------")
     return [odd_array, even_array]
 
 
@@ -4418,7 +4400,6 @@ def arena_farm_check(
             complete = False
     if report:
         ap_needed = menu.next_ap_needed(game_vars.nem_checkpoint_ap())
-        logger.debug("############")
         logger.debug(f"Next Sphere Grid checkpoint: {game_vars.nem_checkpoint_ap()}")
         logger.debug(f"Tidus S.levels: {get_tidus_slvl()} - need levels: {ap_needed}")
         logger.debug("Number of captures in this zone:")
@@ -4426,7 +4407,6 @@ def arena_farm_check(
         logger.debug(
             f"End goal is {end_goal} minimum before leaving this zone for each index."
         )
-        logger.debug("############")
     if return_array:
         return result_array
     else:

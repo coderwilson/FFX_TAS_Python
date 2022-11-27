@@ -976,9 +976,7 @@ def blitz_main(force_blitz_win):
         try:
             if last_phase != game_stage() and game_clock() > 0 and game_clock() < 301:
                 last_phase = game_stage()
-                logger.debug("------------------------------")
                 logger.debug(f"New phase reached: {last_phase}")
-                logger.debug("------------------------------")
             if goers_score_first() or halftime_dialog():
                 if last_menu != 3:
                     logger.debug("Dialog on-screen")

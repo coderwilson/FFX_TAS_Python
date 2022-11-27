@@ -152,16 +152,16 @@ def arrival():
     logs.write_stats(early_haste)
     game_vars.early_haste_set(early_haste)
 
-    logger.debug("##Checking for thunderstrike weapons for Tidus or Wakka")
+    logger.debug("Checking for thunderstrike weapons for Tidus or Wakka")
     thunder_strike = memory.main.check_thunder_strike()
     if thunder_strike == 0:
-        logger.debug("##Neither character got a thunderstrike weapon.")
+        logger.debug("Neither character got a thunderstrike weapon.")
     elif thunder_strike == 1:
-        logger.debug("##Tidus got a thunderstrike weapon.")
+        logger.debug("Tidus got a thunderstrike weapon.")
     elif thunder_strike == 2:
-        logger.debug("##Wakka got a thunderstrike weapon.")
+        logger.debug("Wakka got a thunderstrike weapon.")
     else:
-        logger.debug("##Both Tidus and Wakka somehow got a thunderstrike weapon.")
+        logger.debug("Both Tidus and Wakka somehow got a thunderstrike weapon.")
 
     logs.write_stats("Thunderstrike results:")
     logs.write_stats(thunder_strike)

@@ -2,6 +2,7 @@ import logging
 
 import battle.boss
 import battle.main
+import logs
 import memory.main
 import menu
 import pathing
@@ -20,7 +21,7 @@ def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
     # if memory.main.rng_seed() == 31 and game_vars.skip_kilika_luck():
     #    game_vars.dont_skip_kilika_luck()
-    
+
     logs.write_rng_track("Kilika start, RNG01")
     logs.write_rng_track(memory.main.rng_01())
 
@@ -79,11 +80,11 @@ def select_best_of_two(coming_battles):
         ["dinonix", "yellow_element", "killer_bee"],
         ["yellow_element", "killer_bee"],
         ["ragora"],
-        ["dinonix", "yellow_element"]
+        ["dinonix", "yellow_element"],
     ]
     for i in range(len(priority)):
         if priority[i] in coming_battles:
-            logger.debug(f"-- Best charge, battle num: {priority[i]}")
+            logger.debug(f"Best charge, battle num: {priority[i]}")
             return priority[i]
     return 99
 
@@ -91,7 +92,6 @@ def select_best_of_two(coming_battles):
 def forest_1():
     logger.info("Kilika forest 1")
     kilika_battles = 0
-    next_three = []
     next_battle = []
     import rng_track
 
@@ -165,19 +165,19 @@ def forest_1():
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]
-                    logger.debug(f"## Next Battle: {next_battle}")
+                    logger.debug(f"Next Battle: {next_battle}")
                 elif checkpoint > 86:
                     battle.boss.geneaux()
                 else:
-                    logger.debug(f"-- This should be battle number: {kilika_battles}")
-                    logger.debug(f"-- Reminder (north-bound only): {best_of_two}")
+                    logger.debug(f"This should be battle number: {kilika_battles}")
+                    logger.debug(f"Reminder (north-bound only): {best_of_two}")
                     valefor_charge = battle.main.kilika_woods(
                         valefor_charge, best_of_two, next_battle
                     )
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]
-                    logger.debug(f"## {next_battle}")
+                    logger.debug(f"{next_battle}")
                     kilika_battles += 1
                 memory.main.update_formation(Tidus, Wakka, Yuna)
             elif memory.main.diag_skip_possible():
