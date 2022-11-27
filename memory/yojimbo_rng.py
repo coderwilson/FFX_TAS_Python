@@ -49,7 +49,7 @@ def first_turn_compat_change() -> int:
         return 3
 
 
-def zan_amount(zan_level: int = 5) -> int:
+def zanmato_gil_needed(zan_level: int = 5) -> int:
     # This function assumes the following option was chosen during recruiting:
     # "To defeat the most powerful of enemies"
     # Any other option will affect the Zanmatou chances.
