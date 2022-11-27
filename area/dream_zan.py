@@ -190,16 +190,14 @@ def ammes_battle():
             logger.debug(f"Confirm - last hit: {last_hit}")
             hits_array.append(last_hit)
             logger.debug(f"{hits_array}")
-    logger.debug("#####################################")
-    logger.debug(f"### Unconfirmed seed check: {memory.main.rng_seed()}")
+    logger.debug(f"Unconfirmed seed check: {memory.main.rng_seed()}")
     correct_seed = rng_track.hits_to_seed(hits_array=hits_array)
     logs.write_stats("Corrected RNG seed:")
     logs.write_stats(correct_seed)
-    logger.debug(f"### Corrected RNG seed: {correct_seed}")
+    logger.debug(f"Corrected RNG seed: {correct_seed}")
     if correct_seed != "Err_seed_not_found":
         game_vars.set_confirmed_seed(correct_seed)
-    logger.debug(f"Confirming RNG seed: {memory.main.rng_seed()}")
-    logger.debug("#####################################")
+    logger.info(f"Confirmed RNG seed: {memory.main.rng_seed()}")
     logger.info("Done Killing Sinspawn")
     memory.main.wait_frames(6)  # Just for no overlap
     logger.debug("Clicking to battle.")
@@ -214,7 +212,7 @@ def after_ammes():
     memory.main.click_to_control()
     checkpoint = 0
     # memory.main.wait_frames(90)
-    # logger.debug("#### MARK ####")
+    # logger.debug("MARK")
     # memory.main.ammes_fix(actor_index=0)
     # memory.main.wait_frames(90)
 

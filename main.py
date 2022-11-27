@@ -840,10 +840,8 @@ def perform_TAS():
                     land_run=True, start_time=game.start_time
                 )
 
-            logger.debug("------------------------------")
             logger.debug("Looping")
             logger.debug(f"{game.state} | {game.step}")
-            logger.debug("------------------------------")
 
         except KeyboardInterrupt as e:
             logger.info("Keyboard Interrupt - Exiting.")

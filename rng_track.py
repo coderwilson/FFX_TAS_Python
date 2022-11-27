@@ -248,14 +248,12 @@ def ability_to_be_dropped(
         try:
             ptr += 1
             if test_mode:
-                logger.debug("==================================")
                 logger.debug(f"ptr: {ptr}")
                 logger.debug(f"Try: {test_array[ptr + advances]}")
             array_pos = ((test_array[ptr + advances] & 0x7FFFFFFF) % 7) + 1
             if test_mode:
                 logger.debug(f"AP: {array_pos}")
                 logger.debug(f"Res: {outcomes[array_pos]}")
-                logger.debug("==================================")
             if outcomes[array_pos] in filled_slots:
                 pass
             else:
@@ -1471,18 +1469,18 @@ def decide_skip_zan_luck() -> bool:
 
     attack_count = extra_xp
     if keeper_crit:
-        logger.debug("### Expecting crit on SK")
+        logger.debug("Expecting crit on SK")
         attack_count += 1
     else:
         attack_count += 2
 
     # Now to test the Yunalesca fight. Crits do not matter here, only hit chance.
     for i in range(3):
-        logger.debug(f"### Yunalesca attack num {i} | {attack_count}")
+        logger.debug(f"Yunalesca attack num {i} | {attack_count}")
         if not future_attack_hit(
             character=7, enemy="yunalesca", attack_index=attack_count
         ):
-            logger.debug(f"### Miss on Yunalesca, attack number {i}")
+            logger.debug(f"Miss on Yunalesca, attack number {i}")
             return False
         attack_count += 1
     if game_vars.nemesis():  # BFA miss does not factor in for Nemesis route.
@@ -1492,7 +1490,7 @@ def decide_skip_zan_luck() -> bool:
         character=7, char_luck=bahamut_luck, enemy_luck=15, attack_index=attack_count
     )
     if arm1Crit:
-        logger.debug("### Expecting crit on Arm 1")
+        logger.debug("Expecting crit on Arm 1")
         attack_count += 1
     else:
         attack_count += 2
@@ -1500,7 +1498,7 @@ def decide_skip_zan_luck() -> bool:
         character=7, char_luck=bahamut_luck, enemy_luck=15, attack_index=attack_count
     )
     if arm2Crit:
-        logger.debug("### Expecting crit on Arm 2")
+        logger.debug("Expecting crit on Arm 2")
         attack_count += 1
     else:
         attack_count += 2
@@ -1516,25 +1514,23 @@ def decide_skip_zan_luck() -> bool:
             attack_index=attack_count + 1,
         )
     if face_crit:
-        logger.debug("### Expecting crit on Face")
+        logger.debug("Expecting crit on Face")
         attack_count += 2
     else:
         attack_count += 3
     if not future_attack_hit(
         character=7, enemy="seymour_flux", attack_index=attack_count
     ):
-        logger.debug("### Miss on Omnis")
+        logger.debug("Miss on Omnis")
         return False
     attack_count += 1  # One attack on Seymour
     for i in range(3):
-        logger.debug(f"### BFA attack num {i} | {attack_count}")
+        logger.debug(f"BFA attack num {i} | {attack_count}")
         if not future_attack_hit(character=7, enemy="bfa", attack_index=attack_count):
-            logger.debug(f"### Miss on BFA, attack number {i}")
+            logger.debug(f"Miss on BFA, attack number {i}")
             return False
         attack_count += 1
-    logger.debug(
-        "### No misses registered. Should be good to skip Luck/Fortune chests."
-    )
+    logger.debug("No misses registered. Should be good to skip Luck/Fortune chests.")
     return True
 
 
@@ -1752,13 +1748,11 @@ def nea_track():
 
 def print_manip_info():
     pre_x, post_x = nea_track()
-    logger.debug("--------------------------")
     logger.debug("Upcoming RNGs:")
     logger.debug(f"Next, before X: {pre_x} | Next, after X: {post_x}")
     logger.debug(
         f"RNG10: {memory.main.next_chance_rng_10()} | Pre Defender X: {memory.main.next_chance_rng_10_calm()}"
     )
-    logger.debug("--------------------------")
 
 
 def next_action_escape(character: int = 0):
@@ -1775,7 +1769,6 @@ def next_action_hit(character: int = 0, enemy: str = "anima"):
 
 
 def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: int = 0):
-    # logger.debug("=========================")
     # logger.debug(f"Checking hit chance - character: {character}")
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
@@ -1874,7 +1867,6 @@ def record_blitz_results_tyton(duration, test_mode=False):
 def record_blitz_results(duration, test_mode=False):
     filepath = os.path.join("json_ai_files", "oblitz_results.json")
     records = oblitz_history()
-    logger.debug("========================")
     if test_mode:
         new_val = {31: {9999: {"duration": duration, "victory": False}}}
         if str(31) in records.keys():
@@ -1938,7 +1930,6 @@ def record_blitz_results(duration, test_mode=False):
             records.update(new_val)
     logger.debug(new_val)
 
-    logger.debug("========================")
     logger.debug(records)
 
     with open(filepath, "w") as fp:

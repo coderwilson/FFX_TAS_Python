@@ -202,9 +202,7 @@ def perform_next_grid(limit: int = 255):
         elif game_vars.nem_checkpoint_ap() == 26:
             nem_gridding_26()
         else:
-            logger.debug("----------------------------")
             logger.debug("End of sphere grid, no further grid logic programmed.")
-            logger.debug("----------------------------")
             game_vars.set_nem_checkpoint_ap(
                 game_vars.nem_checkpoint_ap() - 1
             )  # Decrement

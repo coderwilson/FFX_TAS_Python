@@ -212,6 +212,9 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                         battle.main.escape_one()
                     elif memory.main.get_encounter_id() == 219:
                         battle.main.escape_one()
+                    elif memory.main.get_map() in [137, 138]:
+                        # Bikanel is dangerous
+                        battle.main.escape_one()
                     else:
                         CurrentPlayer().defend()
                 else:
@@ -1008,7 +1011,7 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
         # Set overdrive mode
         menu.tidus_slayer(od_pos=0)
     logger.debug(
-        f"###Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+        f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
     )
     while (
         memory.main.get_item_slot(37) > 200
@@ -1021,7 +1024,7 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
         nemesis.arena_select.arena_menu_select(4)
         memory.main.update_formation(Tidus, Wakka, Rikku)
         logger.debug(
-            f"###Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+            f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
         )
     while not one_mp_ready():
         logger.debug("Trying to obtain Gambler's Soul and Purifying Salt items")
@@ -1540,12 +1543,10 @@ def miihen_next(end_goal: int):
     if memory.main.get_yuna_mp() < 30:
         return 8
     if memory.main.arena_farm_check(zone="miihen", end_goal=end_goal):
-        logger.debug("=======================")
         logger.debug("Next battles:")
         logger.debug(next4)
         logger.debug(next6)
         logger.debug(farm_array2)
-        logger.debug("=======================")
 
         if memory.main.arena_farm_check(zone="mrr", end_goal=end_goal):
             return 9  # Ready to move on
@@ -1560,7 +1561,6 @@ def miihen_next(end_goal: int):
         else:
             return 5
 
-    logger.debug("=======================")
     logger.debug("Next battles:")
     logger.debug(next1)
     logger.debug(next2)
@@ -1568,7 +1568,6 @@ def miihen_next(end_goal: int):
     logger.debug(next4)
     logger.debug(farm_array1)
     logger.debug(farm_array2)
-    logger.debug("=======================")
 
     if farm_array2[2] < end_goal and "garuda" in next4:
         return 4
@@ -1873,12 +1872,10 @@ def djose_next(end_goal: int):
         zone="djose", end_goal=end_goal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next battles:")
     logger.debug(next1)
     logger.debug(next2)
     logger.debug(farm_array)
-    logger.debug("=======================")
 
     if memory.main.get_yuna_mp() < 30:
         return 3
@@ -1993,12 +1990,10 @@ def plains_next(end_goal: int):
         zone="tplains", end_goal=end_goal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next battles:")
     logger.debug(next1)
     logger.debug(next2)
     logger.debug(farm_array)
-    logger.debug("=======================")
 
     if memory.main.get_yuna_mp() < 30:
         return 4
@@ -2210,13 +2205,11 @@ def woods_next(end_goal: int):
         zone="macwoods", end_goal=end_goal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next battles:")
     logger.debug(next1)
     logger.debug(next2)
     logger.debug(farm_array1)
     logger.debug(farm_array2)
-    logger.debug("=======================")
 
     if memory.main.get_yuna_mp() < 30:
         return 4
@@ -2300,12 +2293,10 @@ def bikanel_next(end_goal: int):
         zone="bikanel", end_goal=end_goal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next three battles:")
     logger.debug(next1)
     logger.debug(next2)
     logger.debug(next3)
-    logger.debug("=======================")
 
     if memory.main.get_yuna_mp() < 30:
         return 4
@@ -2444,12 +2435,10 @@ def calm_next(end_goal: int, force_levels: int):
         zone="calm", end_goal=end_goal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next three battles:")
     logger.debug(next1)
     logger.debug(next2)
     logger.debug(next3)
-    logger.debug("=======================")
 
     if memory.main.get_yuna_mp() < 30:
         return 4
@@ -2491,7 +2480,7 @@ def calm_next(end_goal: int, force_levels: int):
         if memory.main.get_yuna_mp() < 30:
             return 9
         if force_levels > game_vars.nem_checkpoint_ap():
-            logger.debug("== Area complete, but need more levels ==")
+            logger.debug("Area complete, but need more levels")
             # Need extra AP to reach Quick Attack
             # Overdrive > AP gives us the most per kill.
             if len(next3) > len(next2) and len(next3) > len(next1):
@@ -2678,14 +2667,12 @@ def gagazet_next(end_goal: int):
         zone="gagazet", end_goal=end_goal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next battles:")
     logger.debug(next1)
     logger.debug(next2)
     logger.debug(next3)
     logger.debug(next4)
     logger.debug(farm_array)
-    logger.debug("=======================")
 
     if memory.main.get_yuna_mp() < 30:
         return 8
@@ -2918,12 +2905,10 @@ def fayth_next(endGoal: int):
         zone="stolenfayth", end_goal=endGoal, return_array=True
     )
 
-    logger.debug("=======================")
     logger.debug("Next battles:")
     logger.debug(f"green: {next2}")
     logger.debug(f"white: {next1}")
     logger.debug(f"zone: {farm_array}")
-    logger.debug("=======================")
 
     if farm_array[8] < endGoal and "tonberry" in next2:
         return 2
