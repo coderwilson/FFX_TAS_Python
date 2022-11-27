@@ -8,7 +8,7 @@ import memory.main
 import menu
 import nemesis.arena_select
 import nemesis.menu
-import nemesis.nemesis_pathing
+import pathing
 import reset
 import save_sphere
 import screen
@@ -26,27 +26,27 @@ FFXC = xbox.controller_handle()
 
 
 def save_game(first_save=False):
-    while not nemesis.nemesis_pathing.set_movement([-6, -27]):
+    while not pathing.set_movement([-6, -27]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-2, -2]):
+    while not pathing.set_movement([-2, -2]):
         pass
     logger.debug("Arena - Touch Save Sphere, and actually save")
     save_sphere.touch_and_save(save_num=199)
-    while not nemesis.nemesis_pathing.set_movement([-6, -27]):
+    while not pathing.set_movement([-6, -27]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([2, -25]):
+    while not pathing.set_movement([2, -25]):
         pass
 
 
 def touch_save(real_save=False):
-    while not nemesis.nemesis_pathing.set_movement([-6, -27]):
+    while not pathing.set_movement([-6, -27]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-2, -2]):
+    while not pathing.set_movement([-2, -2]):
         pass
     save_sphere.touch_and_go()
-    while not nemesis.nemesis_pathing.set_movement([-6, -27]):
+    while not pathing.set_movement([-6, -27]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([2, -25]):
+    while not pathing.set_movement([2, -25]):
         pass
     arena_npc()
 
@@ -54,7 +54,7 @@ def touch_save(real_save=False):
 def airship_destination(dest_num=0):  # Default to Sin.
     while memory.main.get_map() != 382:
         if memory.main.user_control():
-            nemesis.nemesis_pathing.set_movement([-251, 340])
+            pathing.set_movement([-251, 340])
         else:
             FFXC.set_neutral()
         xbox.menu_b()
@@ -156,7 +156,7 @@ def return_to_airship():
 
     if memory.main.user_control():
         while memory.main.user_control():
-            nemesis.nemesis_pathing.set_movement([ss_details[0], ss_details[1]])
+            pathing.set_movement([ss_details[0], ss_details[1]])
             xbox.tap_b()
             memory.main.wait_frames(1)
     try:
@@ -168,9 +168,9 @@ def return_to_airship():
 
     while not memory.main.get_map() in [194, 374]:
         if memory.main.get_map() == 307 and memory.main.get_coords()[1] < -5:
-            while not nemesis.nemesis_pathing.set_movement([-4, -21]):
+            while not pathing.set_movement([-4, -21]):
                 pass
-            while not nemesis.nemesis_pathing.set_movement([-2, -2]):
+            while not pathing.set_movement([-2, -2]):
                 pass
         else:
             FFXC.set_neutral()
@@ -182,7 +182,7 @@ def return_to_airship():
                 else:
                     xbox.menu_b()
             elif memory.main.user_control():
-                nemesis.nemesis_pathing.set_movement([ss_details[0], ss_details[1]])
+                pathing.set_movement([ss_details[0], ss_details[1]])
                 xbox.menu_b()
             elif memory.main.diag_skip_possible():
                 xbox.menu_b()
@@ -341,13 +341,13 @@ def arena_npc():
         if memory.main.user_control():
             if memory.main.get_coords()[1] > -15:
                 logger.debug("Wrong position, moving away from sphere")
-                while not nemesis.nemesis_pathing.set_movement([-6, -27]):
+                while not pathing.set_movement([-6, -27]):
                     pass
-                while not nemesis.nemesis_pathing.set_movement([2, -25]):
+                while not pathing.set_movement([2, -25]):
                     pass
             else:
                 logger.debug("Engaging NPC")
-                nemesis.nemesis_pathing.set_movement([5, -12])
+                pathing.set_movement([5, -12])
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
@@ -1034,9 +1034,9 @@ def nemesis_battle():
 
 def return_to_sin():
     FFXC = xbox.controller_handle()
-    while not nemesis.nemesis_pathing.set_movement([-6, -27]):
+    while not pathing.set_movement([-6, -27]):
         pass
-    while not nemesis.nemesis_pathing.set_movement([-2, -2]):
+    while not pathing.set_movement([-2, -2]):
         pass
     return_to_airship()
 

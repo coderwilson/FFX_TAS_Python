@@ -5,6 +5,7 @@ import menu
 import menu_grid
 import vars
 import xbox
+from menu import equip_armor
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -383,10 +384,13 @@ def nem_gridding_5():
     open_grid(0)
     menu_grid.move_first()
     grid_right()
+    grid_up()
     grid_right()
     grid_right()
     grid_right()
     grid_right()
+    grid_right()
+    grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "left")
     # menu_grid.use_and_use_again()
