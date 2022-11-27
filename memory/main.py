@@ -275,7 +275,7 @@ def turn_ready():
     if process.read_bytes(key, 4) == 0:
         return False
     else:
-        #while not main_battle_menu():
+        # while not main_battle_menu():
         #    pass
         wait_frames(1)
         if game_vars.use_pause():

@@ -206,18 +206,18 @@ def aeon_start():
 
 @battle.utils.speedup_decorator
 def yojimbo_battle():
-    zan_amount() # Just to report
+    zan_amount()  # Just to report
     # Incomplete
     screen.await_turn()
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
-    needed_amount = min(round(zan_amount(),-1)+30, 263000)
+    needed_amount = min(round(zan_amount(), -1) + 30, 263000)
     logger.debug(f"Pay the man: {needed_amount}")
-    #battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
-    battle.overdrive.yojimbo() # Backup plan
-    
+    # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
+    battle.overdrive.yojimbo()  # Backup plan
+
     memory.main.wait_frames(90)
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -225,7 +225,7 @@ def yojimbo_battle():
                 Tidus.flee()
             elif screen.turn_aeon():
                 # May still be able to get it?
-                zan_amount() # For printing purposes
+                zan_amount()  # For printing purposes
                 battle.overdrive.yojimbo(gil_value=1)
             else:
                 CurrentPlayer().defend()
@@ -334,7 +334,7 @@ def basic_attack(
 def arena_npc():
     if memory.main.get_map() != 307:
         return
-    zan_amount() # Just for debug purposes
+    zan_amount()  # Just for debug purposes
     while not (
         memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
     ):
@@ -986,12 +986,13 @@ def recharge_yuna():
                 CurrentPlayer().attack()
             else:
                 battle.main.escape_one()
-    
+
     logger.debug("Battle is complete.")
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(180)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
+
 
 def nemesis_battle():
     if game_vars.yojimbo_get_index() < 12:
