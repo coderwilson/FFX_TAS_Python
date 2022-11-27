@@ -1,0 +1,6 @@
+{
+	"actor_id_here": {
+		"name": "example_name",
+		"desc": "example_object",
+		"_comment": "Experimental/foundational, please do not delete."
+}

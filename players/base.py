@@ -217,7 +217,7 @@ class Player:
     def defend(self):
         logger.debug("Defending")
         # There has got to be a better thing we can do with a memory value.
-        for _ in range(5):
+        for _ in range(2):
             xbox.tap_y()
 
     def navigate_to_battle_menu(self, target: int):
