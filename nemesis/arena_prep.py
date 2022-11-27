@@ -2975,9 +2975,9 @@ def fayth_next(endGoal: int):
 
     logger.debug("=======================")
     logger.debug("Next battles:")
-    logger.debug("green: ", next2)
-    logger.debug("white: ", next1)
-    logger.debug("zone: ", farm_array)
+    logger.debug(f"green: {next2}")
+    logger.debug(f"white: {next1}")
+    logger.debug(f"zone: {farm_array}")
     logger.debug("=======================")
 
     if farm_array[8] < endGoal and "tonberry" in next2:
