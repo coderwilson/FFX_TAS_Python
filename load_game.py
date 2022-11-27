@@ -9,6 +9,7 @@ import area.dream_zan
 import logs
 import memory.main
 import pathing
+import reset
 import screen
 import vars
 import xbox
@@ -63,7 +64,7 @@ def load_into_game(gamestate: str, step_counter: str):
         nem_ap = "none"
         spec_move = "none"
 
-        print(results[gamestate][step_counter].keys())
+        logger.debug(results[gamestate][step_counter].keys())
         for key in results[gamestate][step_counter]:
             save_num = int(results[gamestate][step_counter][key]["save_num"])
 
@@ -378,11 +379,11 @@ def load_save_num(number):
 
     # First get the autosave position
     test_string = "ffx_000"
-    print("Searching for string:", test_string)
+    logger.debug(f"Searching for string: {test_string}")
     save_pos = 255
     for x in range(len(save_files)):
         if save_files[x] == test_string:
-            print("Save file is in position:", x)
+            logger.debug(f"Save file is in position: {x}")
             save_pos = x
     save_zero = save_pos
     save_pos = 255

@@ -945,8 +945,8 @@ def get_use_items_order():
                 x += 1
         except Exception as y:
             logger.exception(y)
-    print("Items set up:")
-    print(item_array)
+    logger.debug("Items set up:")
+    logger.debug(item_array)
     return item_array
 
 
@@ -956,9 +956,9 @@ def get_use_items_slot(item_num):
     for x in range(len(items)):
         logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
         if items[x] == item_num:
-            print("============================")
-            print("FOUND ITEM: ", items[x], "|", item_num, "|", x)
-            print("============================")
+            logger.debug("============================")
+            logger.debug(f"FOUND ITEM: {items[x]} | {item_num} | {x}")
+            logger.debug("============================")
             return x
         x += 1
     return 255
