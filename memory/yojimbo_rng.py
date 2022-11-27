@@ -15,7 +15,7 @@ def resistance(z_level: int = 5):
 
 
 def compatibility():
-    return memory.main.yojimobo_compatibility()
+    return memory.main.yojimbo_compatibility()
 
 
 def first_turn_action_occurs() -> bool:
