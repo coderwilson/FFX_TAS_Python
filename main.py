@@ -631,7 +631,7 @@ def perform_TAS():
                     game.step = 4
 
                 if game.step == 4:
-                    area.sin.egg_hunt()
+                    area.sin.execute_egg_hunt()
                     if game_vars.nemesis():
                         battle.main.bfa_nem()
                     else:
