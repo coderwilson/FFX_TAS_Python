@@ -271,12 +271,12 @@ def battle_screen():
 
 def turn_ready():
     global base_value
-    key = base_value + 0x00F3F77B
-    if process.read_bytes(key, 1) == 0:
+    key = base_value + 0x01FCC08C
+    if process.read_bytes(key, 4) == 0:
         return False
     else:
-        while not main_battle_menu():
-            pass
+        #while not main_battle_menu():
+        #    pass
         wait_frames(1)
         if game_vars.use_pause():
             wait_frames(2)
@@ -3344,6 +3344,11 @@ def bt_bi_direction():
 
 def bt_tri_direction_main():
     key = base_value + 0x0092E1ED
+    return process.read_bytes(key, 1)
+
+
+def via_quad_direction():
+    key = base_value + 0x00D2CC84
     return process.read_bytes(key, 1)
 
 
