@@ -49,6 +49,7 @@ import screen
 import vars
 import xbox
 from gamestate import game
+from image_to_text import maybe_show_image
 
 FFXC = xbox.controller_handle()
 
@@ -154,6 +155,9 @@ def perform_TAS():
                 if game.step == 1:
                     memory.main.wait_frames(30 * 0.5)
                     logger.info("New Game 2 function initiated.")
+
+                    maybe_show_image(filename="images/laugh.jpg")
+
                     area.dream_zan.new_game_2()
                     game.start_time = logs.time_stamp()
                     logs.write_stats("Start time:")
@@ -840,10 +844,8 @@ def perform_TAS():
                     land_run=True, start_time=game.start_time
                 )
 
-            logger.debug("------------------------------")
             logger.debug("Looping")
             logger.debug(f"{game.state} | {game.step}")
-            logger.debug("------------------------------")
 
         except KeyboardInterrupt as e:
             logger.info("Keyboard Interrupt - Exiting.")

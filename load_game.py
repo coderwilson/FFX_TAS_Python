@@ -4,6 +4,7 @@ import logging
 import os
 from pathlib import Path
 
+import airship_pathing
 import area.dream_zan
 import logs
 import memory.main
@@ -11,7 +12,6 @@ import pathing
 import screen
 import vars
 import xbox
-import zz_airship_path
 from gamestate import game
 from players import Kimahri, Rikku, Tidus
 
@@ -842,7 +842,7 @@ def load_rescue():
     memory.main.await_control()
     memory.main.update_formation(Tidus, Rikku, Kimahri)
 
-    zz_airship_path.air_ship_path(1)  # The run from cockpit to the deck
+    airship_pathing.air_ship_path(1)  # The run from cockpit to the deck
 
 
 def load_bahamut():

@@ -41,6 +41,8 @@ vars:
   artificial_pauses       : False  # If you have a bad computer or are noticing dropped inputs, set this to True. Otherwise, leave as False.
 
 logging:
+  show_images             : False  # Show ASCII images
+  terminal_width          : 80     # Number of columns in terminal, used for show_images
   color_log               : False  # Colors the console output. May not work on some systems
   verbosity               : DEBUG  # Verbosity of log messages in the console.
                                    # These are the valid levels: DEBUG, MANIP, INFO, WARNING, ERROR, CRITICAL

@@ -244,10 +244,8 @@ def tros():
                     logger.debug("Rikku turn")
                     grenade_slot = memory.main.get_item_slot(35)
                     grenade_count = memory.main.get_item_count_slot(grenade_slot)
-                    logger.debug("------------------------------")
                     logger.debug(f"Current grenade count: {grenade_count}")
                     logger.debug(f"Grenades used: {Grenades}")
-                    logger.debug("------------------------------")
                     total_grenades = grenade_count + Grenades
                     if total_grenades < 6:
                         if tros_pos == 1:
@@ -502,21 +500,19 @@ def chocobo_eater():
                     and 1 not in memory.main.get_active_battle_formation()
                 ):
                     choco_index = memory.main.actor_index(actor_num=4200)
-                    logger.debug(f"#####  Chocobo index: {choco_index}")
+                    logger.debug(f"Chocobo index: {choco_index}")
                     choco_angle = memory.main.get_actor_angle(choco_index)
                     if choco_angle > 0.25:
-                        logger.debug(f"#####  Chocobo angle: {choco_angle}")
-                        logger.debug("#####  Selecting friendly target 2")
+                        logger.debug(f"Chocobo angle: {choco_angle}")
+                        logger.debug("Selecting friendly target 2")
                         choco_target = memory.main.get_active_battle_formation()[0]
                     elif choco_angle < -0.25:
-                        logger.debug(f"#####  Chocobo angle: {choco_angle}")
-                        logger.debug("#####  Selecting friendly target 0")
+                        logger.debug(f"Chocobo angle: {choco_angle}")
+                        logger.debug("Selecting friendly target 0")
                         choco_target = memory.main.get_active_battle_formation()[2]
                     else:
-                        logger.debug(
-                            f"#####  No Angle, using last hp's: {char_hp_last}"
-                        )
-                        logger.debug("#####  Selecting friendly target 1")
+                        logger.debug(f"No Angle, using last hp's: {char_hp_last}")
+                        logger.debug("Selecting friendly target 1")
                         choco_target = memory.main.get_active_battle_formation()[1]
             turns += 1
             if choco_target == memory.main.get_battle_char_turn():
@@ -530,7 +526,7 @@ def chocobo_eater():
                 char_hp_last = memory.main.get_battle_hp()
                 rng44Last = memory.main.rng_from_index(44)
             if choco_target != 255:
-                logger.debug(f"#####  Target for You're Next attack: {choco_target}")
+                logger.debug(f"Target for You're Next attack: {choco_target}")
 
             # Only if two people are down, very rare but for safety.
             if screen.faint_check() >= 2:
@@ -578,7 +574,7 @@ def gui():
     xbox.click_to_battle()
     logger.info("Engaging Gui")
     logger.debug(
-        f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+        f"Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
     )
     wakka_turn = False
     yuna_turn = False
@@ -602,7 +598,7 @@ def gui():
                 else:
                     battle.main.buddy_swap(Kimahri)
                     logger.debug(
-                        f"##### Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                        f"Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
                     )
             elif Kimahri.is_turn():
                 dmg_before = memory.main.get_enemy_current_hp()[0]
@@ -654,22 +650,22 @@ def gui():
             if went and kimahri_crit:
                 CurrentPlayer().cast_black_magic_spell(1)
             elif memory.main.get_overdrive_battle(8) == 20:
-                logger.debug("--- Overdriving")
+                logger.debug("Overdriving")
                 Valefor.overdrive(overdrive_num=0)
                 went = True
             elif not turn1:
                 turn1 = True
-                logger.debug("--- Recharge unsuccessful. Attempting recovery.")
+                logger.debug("Recharge unsuccessful. Attempting recovery.")
                 CurrentPlayer().shield()
             elif last_turn == 8:  # Valefor takes two turns in a row
-                logger.debug("--- Two turns in a row")
+                logger.debug("Two turns in a row")
                 CurrentPlayer().shield()
             elif next_hp > last_hp - 40 and not next_hp == last_hp:
                 # Gravity spell was used
-                logger.debug("--- Gravity was used")
+                logger.debug("Gravity was used")
                 CurrentPlayer().shield()
             else:
-                logger.debug("--- Attack was just used. Now boost.")
+                logger.debug("Attack was just used. Now boost.")
                 CurrentPlayer().boost()
             last_hp = next_hp
         elif memory.main.turn_ready() and memory.main.get_battle_char_turn() == 1:
@@ -1381,9 +1377,7 @@ def evrae_altana():
         if memory.main.next_steal_rare():
             battle.main.evrae_altana_steal()
         else:
-            logger.debug("===================================")
             logger.debug("Next steal will crit, do not steal.")
-            logger.debug("===================================")
         thrown_item = False
         while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():
@@ -1782,11 +1776,9 @@ def yu_yevon():
     weap_swap = False
     while memory.main.get_story_progress() < 3400:
         if memory.main.turn_ready():
-            logger.debug("-----------------------")
             logger.debug(f"za_char: {za_char}")
             logger.debug(f"zombie_attack: {zombie_attack}")
             logger.debug(f"weap_swap: {weap_swap}")
-            logger.debug("-----------------------")
             if za_char == 1 and not zombie_attack:  # Yuna logic
                 if not weap_swap and Yuna.is_turn():
                     CurrentPlayer().swap_battle_weapon(ability=[0x8032])

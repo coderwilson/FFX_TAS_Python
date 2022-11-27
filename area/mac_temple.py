@@ -25,9 +25,8 @@ FFXC = xbox.controller_handle()
 
 
 def approach(do_grid=True):
-    logger.debug("--- Affection array: ---")
+    logger.debug("Affection array:")
     logger.debug(memory.main.affection_array())
-    logger.debug("--------------------------")
     memory.main.click_to_control()
     logger.info("Approaching Macalania Temple")
 
@@ -177,25 +176,21 @@ def seymour_fight():
     xbox.name_aeon("Shiva")
 
     memory.main.await_control()
-    targets = [
-        [6,-85],
-        [2,-128],
-        [2,-160]
-    ]
-    
+    targets = [[6, -85], [2, -128], [2, -160]]
+
     checkpoint = 0
     while memory.main.get_map() == 80:
         if pathing.set_movement(targets[checkpoint]):
             checkpoint += 1
-    
+
     FFXC.set_neutral()
 
 
 def trials():
     logger.debug("Start of trials.")
     memory.main.await_control()
-    #FFXC.set_movement(0,1)
-    #memory.main.wait_frames(15)
+    # FFXC.set_movement(0,1)
+    # memory.main.wait_frames(15)
 
     checkpoint = 0
     while memory.main.get_map() != 153:
