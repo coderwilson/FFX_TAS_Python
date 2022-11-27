@@ -4,6 +4,18 @@ default_language_version:
 fail_fast: true
 
 repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+        name: isort (python)
+
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+
   - repo: https://github.com/pycqa/flake8
     rev: 5.0.4
 
@@ -30,15 +42,3 @@ repos:
             "--remove-duplicate-keys",
             "--remove-unused-variables",
           ]
-
-  - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
-        args: ["--profile", "black"]
-        name: isort (python)
-
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
-    hooks:
-      - id: black
