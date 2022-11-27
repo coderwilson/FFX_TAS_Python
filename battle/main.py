@@ -2255,7 +2255,7 @@ def zu():
             elif not check_tidus_ok():
                 escape_one()
             else:
-                defend()
+                CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Skip Dialog
     memory.main.click_to_control()
@@ -2970,7 +2970,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
     if rikku_flee:
         _navigate_to_position(2)
     else:
-        logger.debug(f"Mark 2, selecting 'Use' command in position 1")
+        logger.debug("Mark 2, selecting 'Use' command in position 1")
         _navigate_to_position(1)
     if game_vars.use_pause():
         memory.main.wait_frames(3)

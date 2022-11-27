@@ -526,7 +526,7 @@ def perform_TAS():
                 if game.step == 1:
                     area.gagazet.calm_lands()
                     area.gagazet.defender_x()
-                    logger.debug(f"Determining next decision")
+                    logger.debug("Determining next decision")
 
                     advance_pre_x, advance_post_x = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
@@ -653,7 +653,7 @@ def perform_TAS():
                     memory.main.await_control()
                     nemesis.changes.arena_purchase()
                     area.gagazet.defender_x()
-                    logger.debug(f"Determining next decision")
+                    logger.debug("Determining next decision")
 
                     advance_pre_x, advance_post_x = rng_track.nea_track()
                     if advance_post_x in [0, 1]:

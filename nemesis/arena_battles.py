@@ -159,11 +159,6 @@ def return_to_airship():
             pathing.set_movement([ss_details[0], ss_details[1]])
             xbox.tap_b()
             memory.main.wait_frames(1)
-    try:
-        FFXC.set_neutral()
-    except:
-        FFXC = xbox.controller_handle()
-        FFXC.set_neutral()
     FFXC.set_neutral()
 
     while not memory.main.get_map() in [194, 374]:
