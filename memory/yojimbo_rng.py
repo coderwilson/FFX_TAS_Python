@@ -14,15 +14,15 @@ def resistance(z_level: int = 5):
     return 0.8
 
 
-def compatability():
-    return memory.main.yojimobo_compatability()
+def compatibility():
+    return memory.main.yojimobo_compatibility()
 
 
 def first_turn_action_occurs() -> bool:
     upcoming_array = rng_array_from_index(index=17, array_len=10)
 
     first_action_rng = upcoming_array[1] & 255
-    if compatability() // 4 > first_action_rng:
+    if compatibility() // 4 > first_action_rng:
         return True
     logger.debug("++ Yojimbo no action before first turn.")
     return False
@@ -33,7 +33,7 @@ def first_turn_compat_change() -> int:
     if not first_turn_action_occurs():
         return 0
     motiv_rng = rng_array_from_index(index=17, array_len=2)[2] & 63
-    motiv = (compatability() // 4) + motiv_rng
+    motiv = (compatibility() // 4) + motiv_rng
 
     if motiv < 32:
         logger.debug("++ Yojimbo first turn, expect Daigoro")
@@ -54,7 +54,7 @@ def zanmato_gil_needed(zan_level: int = 5) -> int:
     # "To defeat the most powerful of enemies"
     # Any other option will affect the Zanmatou chances.
     # https://grayfox96.github.io/FFX-Info/rng/yojimbo-hd
-    compat_val = compatability()
+    compat_val = compatibility()
     if memory.main.battle_active() and screen.turn_aeon():
         logger.debug("-- A")
         rng_value = rng_array_from_index(index=17, array_len=1)[1] & 63
