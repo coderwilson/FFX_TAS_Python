@@ -196,7 +196,7 @@ def inside_sin():
                 xbox.tap_b()
 
 
-def egg_hunt():
+def execute_egg_hunt():
     # Done with pathing, now for egg hunt.
     while not memory.main.user_control():
         FFXC.set_movement(-1, -1)

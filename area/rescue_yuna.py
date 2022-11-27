@@ -447,28 +447,24 @@ def trials_end():
 # TODO: Switch to using pathing instead, if possible
 def via_purifico():
     memory.main.click_to_control()
-    
+
     # Old logic, retain until new stuff is well tested.
-    #FFXC.set_movement(0, 1)
-    #memory.main.wait_frames(30 * 3)
-    #FFXC.set_movement(1, 1)
-    #memory.main.wait_frames(30 * 0.15)
-    #FFXC.set_movement(0, 1)
-    #memory.main.wait_frames(30 * 5)
-    #FFXC.set_neutral()
-    
-    #if not game_vars.csr():
+    # FFXC.set_movement(0, 1)
+    # memory.main.wait_frames(30 * 3)
+    # FFXC.set_movement(1, 1)
+    # memory.main.wait_frames(30 * 0.15)
+    # FFXC.set_movement(0, 1)
+    # memory.main.wait_frames(30 * 5)
+    # FFXC.set_neutral()
+
+    # if not game_vars.csr():
     #    memory.main.wait_frames(30 * 5.7)  # Wait for the right direction
-    #FFXC.set_movement(0, 1)
-    #memory.main.wait_frames(30 * 2)
-    #FFXC.set_neutral()
-    
+    # FFXC.set_movement(0, 1)
+    # memory.main.wait_frames(30 * 2)
+    # FFXC.set_neutral()
+
     # New logic
-    path = [
-        [-1,142],
-        [-2,324],
-        [-2,503]
-    ]
+    path = [[-1, 142], [-2, 324], [-2, 503]]
     checkpoint = 0
     create_save = game_vars.create_saves()
     while checkpoint < len(path):
@@ -482,13 +478,13 @@ def via_purifico():
             checkpoint += 1
     FFXC.set_neutral()
     logger.debug("Ready to step on glyph")
-    
+
     while memory.main.via_quad_direction() != 1:
         pass
     logger.debug("Glyph is now lined up")
     while memory.main.user_control():
         pathing.set_movement([-2, 550])
-    
+
     # End logic replacement
     memory.main.click_to_control()
     menu.via_purifico()

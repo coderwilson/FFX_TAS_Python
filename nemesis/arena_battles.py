@@ -14,7 +14,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from memory.yojimbo_rng import zan_amount
+from memory.yojimbo_rng import zanmato_gil_needed
 from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
@@ -159,11 +159,6 @@ def return_to_airship():
             pathing.set_movement([ss_details[0], ss_details[1]])
             xbox.tap_b()
             memory.main.wait_frames(1)
-    try:
-        FFXC.set_neutral()
-    except:
-        FFXC = xbox.controller_handle()
-        FFXC.set_neutral()
     FFXC.set_neutral()
 
     while not memory.main.get_map() in [194, 374]:
@@ -206,18 +201,18 @@ def aeon_start():
 
 @battle.utils.speedup_decorator
 def yojimbo_battle():
-    zan_amount() # Just to report
+    zanmato_gil_needed()  # Just to report
     # Incomplete
     screen.await_turn()
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
-    needed_amount = min(round(zan_amount(),-1)+30, 263000)
+    needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
     logger.debug(f"Pay the man: {needed_amount}")
-    #battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
-    battle.overdrive.yojimbo() # Backup plan
-    
+    # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
+    battle.overdrive.yojimbo()  # Backup plan
+
     memory.main.wait_frames(90)
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -225,7 +220,7 @@ def yojimbo_battle():
                 Tidus.flee()
             elif screen.turn_aeon():
                 # May still be able to get it?
-                zan_amount() # For printing purposes
+                zanmato_gil_needed()  # For printing purposes
                 battle.overdrive.yojimbo(gil_value=1)
             else:
                 CurrentPlayer().defend()
@@ -334,7 +329,7 @@ def basic_attack(
 def arena_npc():
     if memory.main.get_map() != 307:
         return
-    zan_amount() # Just for debug purposes
+    zanmato_gil_needed()  # Just for debug purposes
     while not (
         memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
     ):
@@ -986,12 +981,13 @@ def recharge_yuna():
                 CurrentPlayer().attack()
             else:
                 battle.main.escape_one()
-    
+
     logger.debug("Battle is complete.")
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(180)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
+
 
 def nemesis_battle():
     if game_vars.yojimbo_get_index() < 12:
