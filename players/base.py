@@ -21,6 +21,7 @@ class PlayerMagicNumbers(IntEnum):
     LUCK = 0x34
     ACCURACY = 0x36
     BATTLE_OVERDRIVE = 0x5BC
+    DEFENDING = 0x617
     OVERDRIVE = 0x39
     AFFECTION_POINTER = 0x00D2CABC
     SLVL = 0x00D32097
@@ -218,7 +219,14 @@ class Player:
         logger.debug("Defending")
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
-        while memory.main.turn_ready():
+        
+        # Make sure we are not already in defend state_berserk
+        while self.is_defending():
+            pass
+        memory.main.wait_frames(1) # Buffer for safety
+        
+        #Now tap to defending status.
+        while not self.is_defending():
             xbox.tap_y()
 
     def navigate_to_battle_menu(self, target: int):
@@ -348,6 +356,10 @@ class Player:
 
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
+    
+    def is_defending(self) -> bool:
+        defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
+        return (defend_byte >> 3) == 1
 
     def hp(self, combat=False) -> int:
         if not combat:
