@@ -359,7 +359,9 @@ class Player:
     
     def is_defending(self) -> bool:
         defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
-        return (defend_byte >> 3) == 1
+        result = (defend_byte >> 3) & 1 == 1
+        logger.warning(f"Character is defending: {result}")
+        return result
 
     def hp(self, combat=False) -> int:
         if not combat:
