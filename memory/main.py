@@ -143,12 +143,9 @@ def start():
 
     # rwm = ReadWriteMemory()
     rwm = FFXMemory()
-    logger.info("#############")
     logger.info(type(rwm))
     process = rwm.get_process_by_name("FFX.exe")
-    logger.info("#############")
     logger.info(type(process))
-    logger.info("#############")
     process.open()
 
     global base_value
@@ -199,9 +196,7 @@ def rng_seed():
 def set_rng_seed(value):
     global base_value
     key = base_value + 0x003988A5
-    logger.info("+++++++++++++++++")
     logger.info(type(process))
-    logger.info("+++++++++++++++++")
     return process.write_bytes(key, value, 1)
 
 
@@ -399,7 +394,7 @@ def click_to_control_dumb():
     logger.debug("Awaiting control (clicking)")
     with logging_redirect_tqdm():
         fmt = "Awaiting control... elapsed {elapsed}"
-        with tqdm(bar_format=fmt) as pbar:
+        with tqdm(bar_format=fmt):
             while not user_control():
                 xbox.tap_b()
     logger.debug("User control restored.")
@@ -446,7 +441,7 @@ def click_to_control_special():
     logger.debug("Awaiting control (clicking)")
     with logging_redirect_tqdm():
         fmt = "Awaiting control... elapsed {elapsed}"
-        with tqdm(bar_format=fmt) as pbar:
+        with tqdm(bar_format=fmt):
             while not user_control():
                 FFXC.set_value("btn_b", 1)
                 FFXC.set_value("btn_y", 1)
@@ -1675,10 +1670,12 @@ def cutscene_skip_possible():
     return process.read_bytes(key, 1) == 1
 
 
-def auditory_dialog_playing():
-    global base_value
-    key = base_value + 0x00F2FED4
-    return process.read_bytes(key, 1) == 1
+# this function is redefined below so it will be overwritten,
+# commented out so it doesn't get lost, should be cleaned up if not needed | shenef 28/11/2022
+# def auditory_dialog_playing():
+#     global base_value
+#     key = base_value + 0x00F2FED4
+#     return process.read_bytes(key, 1) == 1
 
 
 def auditory_dialog_playing():

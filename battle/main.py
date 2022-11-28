@@ -4710,7 +4710,7 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
 
 def ghost_kill_any(silence_slot: int, self_haste: bool):
     yuna_haste = False
-    item_thrown = silence_slot >= 200
+    # item_thrown = silence_slot >= 200  # item_thrown is assigned to but never used
     logger.debug(f"Silence slot: {silence_slot}")
     while memory.main.battle_active():
         if memory.main.turn_ready():

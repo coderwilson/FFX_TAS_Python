@@ -53,4 +53,4 @@ def _get_equipment_shops(file_path: str) -> dict[str, tuple[Equipment]]:
     return shops
 
 
-EQUIPMENT_SHOPS = _get_equipment_shops("tracker\\data\equipment_shops.csv")
+EQUIPMENT_SHOPS = _get_equipment_shops("tracker\\data\\equipment_shops.csv")
