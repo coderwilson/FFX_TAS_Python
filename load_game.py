@@ -8,6 +8,7 @@ import airship_pathing
 import area.dream_zan
 import logs
 import memory.main
+import nemesis.arena_prep
 import pathing
 import reset
 import screen

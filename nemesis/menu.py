@@ -84,11 +84,7 @@ def await_quit_sg():
 
 
 def open_grid(character):
-    try:
-        FFXC.set_neutral()
-    except:
-        FFXC = xbox.controller_handle()
-        FFXC.set_neutral()
+    FFXC.set_neutral()
     while not memory.main.s_grid_active():
         if memory.main.user_control() and not memory.main.menu_open():
             xbox.tap_y()
@@ -116,16 +112,8 @@ def open_grid(character):
                     )
             while memory.main.menu_number() == 7:
                 xbox.menu_b()
-            try:
-                FFXC.set_neutral()
-            except:
-                FFXC = xbox.controller_handle()
-                FFXC.set_neutral()
-    try:
-        FFXC.set_neutral()
-    except:
-        FFXC = xbox.controller_handle()
-        FFXC.set_neutral()
+            FFXC.set_neutral()
+    FFXC.set_neutral()
 
 
 # ------------------------------------------------------------
