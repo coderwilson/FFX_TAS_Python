@@ -2409,8 +2409,8 @@ def reset_battle_end():
 def set_rng_by_index(value:int=0, index:int=1):
     global base_value
     global process
-    key = base_value + 0x00D35ED8 + (index * 4)
-    process.write_bytes(key, 0x7E9F20D2, 4)
+    key = base_value + 0x00D35ED8 + (index * 0x4)
+    process.write_bytes(key, value, 4)
 
 def set_rng_2():
     global base_value
