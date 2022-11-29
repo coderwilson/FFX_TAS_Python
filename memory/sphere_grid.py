@@ -138,10 +138,9 @@ class SphereNodeType(Enum):
 
 
 class SphereGridNode:
-    # _NODE_TYPE_OFFSET = 6  # 2 byte value, matches the SphereNodeType Enum
-    # _ACTIVATED_BY_OFFSET = 33  # 1 byte value
     _NODE_TYPE_OFFSET = 0  # 1 byte value, matches the SphereNodeType Enum
-    _ACTIVATED_BY_OFFSET = 1  # 1 byte value
+    _ACTIVATED_BY_OFFSET = 1  # 1 byte value, bitfield where each bit indicates that a character has grabbed the node
+    # The bitfield should match the character IDs, so bit[0] = Tidus, bit[1] = Yuna etc.
 
     def __init__(self, offset: int) -> None:
         self.offset = offset
@@ -152,8 +151,14 @@ class SphereGridNode:
         return SphereNodeType(node_type)
 
     def get_activated_by(self) -> int:
-        """This returns a one byte bitmask, where each bit indicates that a character has activated this node."""
+        """This returns a one byte bitfield, where each bit indicates that a character has activated this node."""
         return read_val(self.offset + self._ACTIVATED_BY_OFFSET, 1)
+
+    def is_activated_by(self, character_id: int) -> bool:
+        """This checks if a specific bit in the bitfield is set or not."""
+        activated_by = self.get_activated_by()
+        bitmask = 1 << character_id
+        return (activated_by & bitmask) != 0
 
     def __repr__(self) -> str:
         node_type = self.get_node_type()
@@ -161,24 +166,16 @@ class SphereGridNode:
 
 
 class SphereGrid:
-    # TODO: Verify
-    # MemoryLocationData SphereGrid = 0x00D2EC7C (taken from CSR Rando)
     _SPHERE_GRID_NODES_OFFSET = (
         0x00D2EC7C  # Base offset to sphere grid (taken from CSR)
     )
-    # _SPHERE_GRID_NODES_OFFSET = 0x012AE078  # Base offset to sphere grid (taken from Farplane)
-    # _SPHERE_GRID_NODE_SIZE = 40  # Size in bytes of a single node (taken from Farplane)
     _SPHERE_GRID_NODE_SIZE = 2  # Size in bytes of a single node (taken from CSR)
-    _NUM_NODES = 857  # TODO: How many nodes are there? Verify
-    # _FIRST_NODE_OFFSET = 0x818  # TODO: Used?
+    _NUM_NODES = 860  # Should be 860 for standard grid
 
-    # int memorySizeBytes = 1714;
-    # byte[] SphereGridBytes = process.ReadBytes(memoryWatchers.SphereGrid.Address, memorySizeBytes);
-
-    # TODO: Verify correct address
-    _CURRENT_NODE_OFFSET = 0x1130C  # Offset to the currently selected node
+    _CURRENT_NODE_OFFSET = 0x012BEB6C
 
     def __init__(self) -> None:
+        """Load up all sphere grid nodes and put them in self.nodes"""
         self.nodes = [
             SphereGridNode(self._get_node_offset(node_idx))
             for node_idx in range(self._NUM_NODES)
@@ -188,15 +185,18 @@ class SphereGrid:
         return self._SPHERE_GRID_NODES_OFFSET + self._SPHERE_GRID_NODE_SIZE * node_idx
 
     def _get_current_node_offset(self) -> int:
-        return self._SPHERE_GRID_NODES_OFFSET + self._CURRENT_NODE_OFFSET
+        return self._CURRENT_NODE_OFFSET
 
     def _get_current_node_idx(self) -> int:
+        """Get the index of the currently selected node in the sphere grid"""
         return read_val(self._get_current_node_offset(), 4)
 
     def get_current_node(self) -> SphereGridNode:
+        """Get the currently selected node"""
         return self.nodes[self._get_current_node_idx()]
 
     def get_node_at(self, index: int) -> SphereGridNode:
+        """Get a specific node given an index"""
         return self.nodes[index]
 
 
