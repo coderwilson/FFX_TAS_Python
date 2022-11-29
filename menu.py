@@ -791,9 +791,7 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
     memory.main.await_control()
 
     weapon_handles = memory.main.weapon_array_character(character)
-    logger.debug("@@@@@")
     logger.debug(len(weapon_handles))
-    logger.debug("@@@@@")
     weapon_num = 255
 
     abilityarray = []
@@ -883,9 +881,7 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     memory.main.await_control()
 
     armor_handles = memory.main.armor_array_character(character)
-    logger.debug("@@@@@")
     logger.debug(len(armor_handles))
-    logger.debug("@@@@@")
     if ability == 99:
         armor_num = len(armor_handles)
     elif len(armor_handles) != 0:
