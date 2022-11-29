@@ -389,7 +389,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
         skip_charge = True
     # Only occurs if no best charge possible in the first three battles.
     elif best_charge == 99:
-        best_charge = enc_id
+        best_charge = next_battle
 
     logger.info("Kilika battle")
     aeon_turn = False
