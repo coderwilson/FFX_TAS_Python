@@ -225,9 +225,15 @@ class Player:
             pass
         memory.main.wait_frames(1) # Buffer for safety
         
+        defend_turn = memory.main.get_battle_char_turn()
+        
         #Now tap to defending status.
         while not self.is_defending():
-            xbox.tap_y()
+            if defend_turn != memory.main.get_battle_char_turn():
+                break
+            else:
+                xbox.tap_y()
+        memory.main.wait_frames(1) # Buffer for safety
 
     def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
