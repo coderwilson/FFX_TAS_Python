@@ -402,9 +402,14 @@ def geneaux():
         battle.main.buddy_swap(Kimahri)
         CurrentPlayer().attack()
         while not Tidus.is_turn():
-            CurrentPlayer().defend()
+            if memory.main.turn_ready():
+                CurrentPlayer().defend()
         while Tidus.is_turn():
-            CurrentPlayer().defend()
+            if memory.main.turn_ready():
+                CurrentPlayer().defend()
+        memory.main.wait_frames(3)
+        while not memory.main.turn_ready():
+            pass
         battle.main.buddy_swap(Yuna)
     screen.await_turn()
     battle.main.aeon_summon(0)  # Summon Valefor
@@ -791,7 +796,7 @@ def extractor():
                     memory.main.get_enemy_current_hp()[0] < 1900
                     and Wakka.has_overdrive()
                 ):
-                    Wakka.overdrive()
+                    Wakka.overdrive(combat=True)
                 else:
                     CurrentPlayer().attack()
         elif memory.main.diag_skip_possible():
