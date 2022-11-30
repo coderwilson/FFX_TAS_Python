@@ -1670,14 +1670,6 @@ def cutscene_skip_possible():
     return process.read_bytes(key, 1) == 1
 
 
-# this function is redefined below so it will be overwritten,
-# commented out so it doesn't get lost, should be cleaned up if not needed | shenef 28/11/2022
-# def auditory_dialog_playing():
-#     global base_value
-#     key = base_value + 0x00F2FED4
-#     return process.read_bytes(key, 1) == 1
-
-
 def auditory_dialog_playing():
     # This is usually a no-op unless do_not_skip_cutscenes is set.
     if not game_vars.accessibility_vars()[0]:
@@ -2403,11 +2395,12 @@ def reset_battle_end():
     process.write_bytes(key, 1, 1)
 
 
-def set_rng_by_index(value:int=0, index:int=1):
+def set_rng_by_index(value: int = 0, index: int = 1):
     global base_value
     global process
     key = base_value + 0x00D35ED8 + (index * 0x4)
     process.write_bytes(key, value, 4)
+
 
 def set_rng_2():
     global base_value
