@@ -301,12 +301,15 @@ def sin_fin():
                 logger.debug("Tidus defend")
             elif Yuna.is_turn():
                 battle.main.buddy_swap(Lulu)  # Yuna out, Lulu in
-                CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
             elif Kimahri.is_turn():
                 battle.main.lancet_target(target=23, direction="r")
                 kim_turn = True
             elif Lulu.is_turn():
                 CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
+            elif not 5 in memory.main.get_active_battle_formation():
+                battle.main.buddy_swap(Lulu)
+            elif not 3 in memory.main.get_active_battle_formation():
+                battle.main.buddy_swap(Kimahri)
             else:
                 CurrentPlayer().defend()
         if fin_turns >= 3 and kim_turn:
