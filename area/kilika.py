@@ -92,8 +92,8 @@ def select_best_of_two(coming_battles):
 def forest_1():
     logger.info("Kilika forest 1")
     kilika_battles = 0
-    best_of_two = 99 # Used to find the best battle coming up.
-    advances = 2 # Used to find the best battle coming up.
+    best_of_two = 99  # Used to find the best battle coming up.
+    advances = 2  # Used to find the best battle coming up.
     next_battle = []
     import rng_track
 
