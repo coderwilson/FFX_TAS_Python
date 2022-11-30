@@ -61,7 +61,7 @@ def arrival(rikku_charged):
                     if last_gil == memory.main.get_gil_value() - 2000:
                         checkpoint += 1
                         logger.debug(
-                            f"Chest obtained. Updating checkpoint: {checkpoint}"
+                            f"Chest obtained. Updating Checkpoint {checkpoint}"
                         )
                     else:
                         last_gil = memory.main.get_gil_value()
@@ -91,7 +91,7 @@ def arrival(rikku_charged):
             # General pathing
             elif pathing.set_movement(MacalaniaWoods.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -240,7 +240,7 @@ def lake():
         if memory.main.user_control():
             if pathing.set_movement(MacalaniaLake.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.get_encounter_id() != 194:
@@ -273,7 +273,7 @@ def after_crawler():
     last_cp = 0
     while checkpoint != 100:
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
         pos = memory.main.get_coords()
         if checkpoint == 0:

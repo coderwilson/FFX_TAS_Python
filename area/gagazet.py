@@ -73,7 +73,7 @@ def calm_lands():
                         checkpoint -= 1
                         FFXC.set_movement(-1, -1)
                         memory.main.wait_frames(60)
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -118,7 +118,7 @@ def to_the_ronso():
         if memory.main.user_control():
             if pathing.set_movement(DefenderX.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -130,7 +130,7 @@ def to_the_ronso():
         if memory.main.user_control():
             if pathing.set_movement(KelkRonso.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.turn_ready():
@@ -166,7 +166,7 @@ def gagazet_gates():
         if memory.main.user_control():
             if pathing.set_movement(GagazetSnow.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.menu_open():
@@ -213,7 +213,7 @@ def flux():
                 FFXC.set_neutral()
             elif pathing.set_movement(SeymourFlux.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -259,7 +259,7 @@ def dream(checkpoint: int = 0):
                 checkpoint += 1
             elif pathing.set_movement(GagazetDreamSeq.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
             # Start the final dialog
             if checkpoint == 25:
@@ -281,7 +281,7 @@ def cave():
                 memory.main.wait_frames(6)
             elif pathing.set_movement(GagazetPostDream.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -391,7 +391,7 @@ def cave():
                 # logs.write_rng_track("Final results:"+str(zombie_results))
             elif pathing.set_movement(GagazetCave.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if checkpoint == 35:
@@ -467,7 +467,7 @@ def wrap_up():
                     pathing.set_movement([786, -819])
                     xbox.tap_b()
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 6:
                 if memory.main.get_map() == 312:
                     logger.info("Final path before making camp.")
@@ -477,7 +477,7 @@ def wrap_up():
                     FFXC.set_movement(1, 1)
             elif pathing.set_movement(GagazetPeak.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

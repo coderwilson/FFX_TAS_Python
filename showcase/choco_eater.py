@@ -29,7 +29,7 @@ def engage():
                 checkpoint = 4
             elif pathing.set_movement(MiihenAgency.execute(checkpoint)):
                 checkpoint += 1
-                print("Checkpoint reached:", checkpoint)
+                print("Checkpoint", checkpoint)
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

@@ -38,7 +38,7 @@ def ss_liki():
             # General pathing
             elif pathing.set_movement(BoatsLiki.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
         else:
             FFXC.set_neutral()
@@ -135,7 +135,7 @@ def ss_winno_2():
                 checkpoint += 1
             elif pathing.set_movement(BoatsWinno.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

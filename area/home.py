@@ -141,7 +141,7 @@ def desert():
                     xbox.tap_b()
                 else:
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 12 and not first_format:
                 first_format = True
                 memory.main.update_formation(Tidus, Wakka, Auron)
@@ -180,7 +180,7 @@ def desert():
             elif memory.main.user_control():
                 if pathing.set_movement(BikanelDesert.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -246,7 +246,7 @@ def desert():
     while checkpoint < 7:
         if pathing.set_movement(BikanelHome.execute(checkpoint)):
             checkpoint += 1
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
 
 
 def find_summoners():
@@ -324,7 +324,7 @@ def find_summoners():
                 checkpoint += 1
             elif pathing.set_movement(BikanelHome.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

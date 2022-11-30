@@ -129,7 +129,7 @@ def arrival():
 def after_speech(checkpoint=0):
     memory.main.click_to_control()  # Skips through the long cutscene
     logger.debug("Starting movement.")
-    logger.debug(f"Starting checkpoint: {checkpoint}")
+    logger.debug(f"Starting Checkpoint {checkpoint}")
 
     if checkpoint == 0:
         memory.main.click_to_event_temple(4)
@@ -160,7 +160,7 @@ def after_speech(checkpoint=0):
 
             elif pathing.set_movement(GuadoStoryline.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -303,7 +303,7 @@ def guado_skip():
             elif memory.main.user_control():
                 if pathing.set_movement(GuadoSkip.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

@@ -40,7 +40,7 @@ def approach(do_grid=True):
             # General pathing
             elif pathing.set_movement(MacalaniaTempleApproach.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -151,7 +151,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(MacalaniaTempleFoyer.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -227,7 +227,7 @@ def trials():
             elif checkpoint == 23:  # Grab glyph sphere
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
-                logger.debug(f"Checkpoint: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 29:  # Push pedestal - 3
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
@@ -258,7 +258,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(MacalaniaTempleTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
 
@@ -285,19 +285,19 @@ def escape():
             if checkpoint == 2:
                 save_sphere.touch_and_go()
                 checkpoint += 1
-                logger.debug(f"Touching save sphere. Update checkpoint: {checkpoint}")
+                logger.debug(f"Touching save sphere. Update Checkpoint {checkpoint}")
             elif checkpoint == 18 and force_battle:
                 FFXC.set_neutral()
 
             # Map changes
             elif checkpoint < 19 and memory.main.get_map() == 192:
                 checkpoint = 19
-                logger.debug(f"Map change. Update checkpoint: {checkpoint}")
+                logger.debug(f"Map change. Update Checkpoint {checkpoint}")
 
             # General pathing
             elif pathing.set_movement(MacalaniaTempleEscape.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -354,7 +354,7 @@ def under_lake():
             # General pathing
             elif pathing.set_movement(MacalaniaUnderTemple.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

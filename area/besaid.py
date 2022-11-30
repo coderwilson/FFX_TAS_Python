@@ -36,19 +36,19 @@ def beach():
     last_cp = 0
     while memory.main.get_map() != 122:
         if checkpoint != last_cp:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
 
         # map changes
         if checkpoint < 2 and memory.main.get_map() == 20:
             checkpoint = 2
-            logger.debug(f"Map change. Checkpoint: {checkpoint}")
+            logger.debug(f"Map change. Checkpoint {checkpoint}")
         elif checkpoint < 6 and memory.main.get_map() == 41:
             checkpoint = 6
-            logger.debug(f"Map change. Checkpoint: {checkpoint}")
+            logger.debug(f"Map change. Checkpoint {checkpoint}")
         elif checkpoint < 22 and memory.main.get_map() == 69:
             checkpoint = 22
-            logger.debug(f"Map change. Checkpoint: {checkpoint}")
+            logger.debug(f"Map change. Checkpoint {checkpoint}")
         elif checkpoint < 29 and memory.main.get_map() == 133:
             if not game_vars.csr():
                 # You do remember the prayer?
@@ -167,7 +167,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(BesaidTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -260,7 +260,7 @@ def leaving():
             # General pathing
             elif pathing.set_movement(Besaid2.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

@@ -599,7 +599,7 @@ def arena_return(checkpoint: int = 0):
                 checkpoint += 1
             elif pathing.set_movement(ArenaReturn.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -1410,7 +1410,7 @@ def yojimbo():
                 return_to_airship()
             elif pathing.set_movement(YojimboFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1442,7 +1442,7 @@ def besaid_farm(cap_num: int = 1):
                 zone="besaid", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
             elif checkpoint == 1:
                 memory.main.click_to_event_temple(4)
@@ -1459,7 +1459,7 @@ def besaid_farm(cap_num: int = 1):
                 return_to_airship()
             elif pathing.set_movement(BesaidFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1493,7 +1493,7 @@ def kilika_farm(cap_num: int = 1):
                     zone="kilika", end_goal=cap_num, report=False
                 ):
                     checkpoint -= 2
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
                 else:
                     return_to_airship()
             elif checkpoint == 4:
@@ -1512,7 +1512,7 @@ def kilika_farm(cap_num: int = 1):
                 return_to_airship()
             elif pathing.set_movement(KilikaFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1632,7 +1632,7 @@ def miihen_farm(cap_num: int = 1):
     while not memory.main.get_map() in [194, 374]:
         # Checkpoint notify
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             if checkpoint == 92:
@@ -1797,7 +1797,7 @@ def miihen_farm_old(cap_num: int = 1):
                 zone="miihen1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
             elif checkpoint == 2:
                 memory.main.click_to_event_temple(4)
@@ -1829,14 +1829,14 @@ def miihen_farm_old(cap_num: int = 1):
                 zone="miihen2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 50:
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
             elif pathing.set_movement(MiihenFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -1921,7 +1921,7 @@ def djose_farm(cap_num: int = 10):
     last_cp = 0
     while not memory.main.get_map() in [194, 374]:
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
@@ -2111,7 +2111,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
             # General pathing
             elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2178,7 +2178,7 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
             # General pathing
             elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2274,7 +2274,7 @@ def mac_woods(cap_num: int = 10):
             # General pathing
             elif pathing.set_movement(MacFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2403,7 +2403,7 @@ def bikanel(cap_num: int = 10):
             # General pathing
             elif pathing.set_movement(BikanelFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -2527,7 +2527,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
 
             elif pathing.set_movement(CalmFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             allCounts = memory.main.arena_array()
@@ -2607,7 +2607,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 checkpoint -= 2
             elif pathing.set_movement(CalmFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             allCounts = memory.main.arena_array()
@@ -2756,7 +2756,7 @@ def gagazet(cap_num: int = 10):
     cp_forward = True
     while not memory.main.get_map() in [194, 374]:
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             # Map changes
@@ -2795,7 +2795,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 22
                 xbox.tap_b()
                 memory.main.await_control()
-                logger.debug(f"Updated checkpoint: {checkpoint}")
+                logger.debug(f"Updated Checkpoint {checkpoint}")
             if checkpoint == 21:
                 while memory.main.user_control():
                     FFXC.set_movement(0, -1)
@@ -3011,7 +3011,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 return_to_airship()
             elif pathing.set_movement(YojimboFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -3071,7 +3071,7 @@ def inside_sin(cap_num: int = 10):
                 zone="sin1", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
 
@@ -3087,7 +3087,7 @@ def inside_sin(cap_num: int = 10):
                 zone="sin2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 68 and memory.main.get_map() == 327:
                 checkpoint = 68
             elif checkpoint == 69:
@@ -3109,7 +3109,7 @@ def inside_sin(cap_num: int = 10):
             # General Pathing
             elif pathing.set_movement(SinFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -3148,14 +3148,14 @@ def omega_ruins(cap_num: int = 10):
                 zone="omega", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif memory.main.get_tidus_mp() < 20:
                 save_sphere.touch_and_go()
             elif checkpoint == 3:
                 return_to_airship()
             elif pathing.set_movement(OmegaFarm.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

@@ -148,7 +148,7 @@ def listen_story():
             # General pathing
             elif pathing.set_movement(TidusHomeMovement.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -245,7 +245,7 @@ def after_ammes():
                 # General pathing
                 elif pathing.set_movement(AllStartsHere.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.turn_ready():
