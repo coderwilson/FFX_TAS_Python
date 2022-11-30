@@ -172,6 +172,9 @@ class SphereGrid:
     _SPHERE_GRID_NODE_SIZE = 2  # Size in bytes of a single node (taken from CSR)
     _NUM_NODES = 860  # Should be 860 for standard grid
 
+    _TIDUS_POS_OFFSET = 0x012BE93C
+    _PLAYER_POS_SPACING = 0x50
+
     _CURRENT_NODE_OFFSET = 0x012BEB6C
 
     def __init__(self) -> None:
@@ -187,13 +190,20 @@ class SphereGrid:
     def _get_current_node_offset(self) -> int:
         return self._CURRENT_NODE_OFFSET
 
-    def _get_current_node_idx(self) -> int:
+    def _get_player_node_offset(self, index: int) -> int:
+        return self._TIDUS_POS_OFFSET + index * self._PLAYER_POS_SPACING
+
+    def get_player_node_idx(self, index: int) -> int:
+        """Get the index of the node where a specific player is located"""
+        return read_val(self._get_player_node_offset(index), 4)
+
+    def get_current_node_idx(self) -> int:
         """Get the index of the currently selected node in the sphere grid"""
         return read_val(self._get_current_node_offset(), 4)
 
     def get_current_node(self) -> SphereGridNode:
         """Get the currently selected node"""
-        return self.nodes[self._get_current_node_idx()]
+        return self.nodes[self.get_current_node_idx()]
 
     def get_node_at(self, index: int) -> SphereGridNode:
         """Get a specific node given an index"""
