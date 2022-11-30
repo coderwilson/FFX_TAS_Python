@@ -219,21 +219,21 @@ class Player:
         logger.debug("Defending")
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
-        
+
         # Make sure we are not already in defend state_berserk
         while self.is_defending():
             pass
-        memory.main.wait_frames(1) # Buffer for safety
-        
+        memory.main.wait_frames(1)  # Buffer for safety
+
         defend_turn = memory.main.get_battle_char_turn()
-        
-        #Now tap to defending status.
+
+        # Now tap to defending status.
         while not self.is_defending():
             if defend_turn != memory.main.get_battle_char_turn():
                 break
             else:
                 xbox.tap_y()
-        memory.main.wait_frames(1) # Buffer for safety
+        memory.main.wait_frames(1)  # Buffer for safety
 
     def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
@@ -362,9 +362,11 @@ class Player:
 
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
-    
+
     def is_defending(self) -> bool:
-        defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
+        defend_byte = self._read_char_battle_state_address(
+            offset=PlayerMagicNumbers.DEFENDING
+        )
         return (defend_byte >> 3) == 1
 
     def hp(self, combat=False) -> int:
