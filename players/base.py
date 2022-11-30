@@ -144,8 +144,16 @@ class Player:
     def attack(
         self, target_id: Optional[int] = None, direction_hint: Optional[str] = "u"
     ):
+        skip_direction = False
         if target_id is None:
-            logger.debug("Attack")
+            logger.debug("Attack enemy, first targetted.")
+        elif target_id in range(7):
+            logger.debug(f"Attack player character {target_id}")
+        elif memory.main.get_enemy_current_hp()[target_id-20] == 0:
+            logger.debug(
+                f"Enemy {target_id} is not attack-able. Resorting to basic attack."
+            )
+            skip_direction = True
         else:
             logger.debug(
                 f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
@@ -159,7 +167,7 @@ class Player:
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
             xbox.tap_b()
-        if target_id is not None:
+        if target_id is not None and not skip_direction:
             self._target_specific_id(target_id, direction_hint)
         self._tap_targeting()
 
@@ -216,7 +224,10 @@ class Player:
         raise NotImplementedError()
 
     def defend(self):
-        logger.debug("Defending")
+        logger.debug(f"Defending, char {self}")
+        #if self.id >= 8:
+        #    logger.debug("No defend, this is not a PC")
+        #    return False
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
         
@@ -234,6 +245,7 @@ class Player:
             else:
                 xbox.tap_y()
         memory.main.wait_frames(1) # Buffer for safety
+        return True
 
     def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
@@ -365,7 +377,9 @@ class Player:
     
     def is_defending(self) -> bool:
         defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
-        return (defend_byte >> 3) == 1
+        result = (defend_byte >> 3) & 1 == 1
+        logger.warning(f"Character is defending: {result}")
+        return result
 
     def hp(self, combat=False) -> int:
         if not combat:

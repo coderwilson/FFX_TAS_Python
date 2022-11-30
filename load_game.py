@@ -34,6 +34,8 @@ def move_after_load(spec_move: str):
         load_miihen_start()
     elif spec_move == "MRR":
         load_mrr()
+    elif spec_move == "Kilika_rng_manip":
+        kilika_rng_manip()
 
 
 def load_into_game(gamestate: str, step_counter: str):
@@ -547,6 +549,28 @@ def load_baaj():
     FFXC.set_neutral()
     memory.main.wait_frames(30 * 0.04)
 
+def kilika_rng_manip():
+    # Kilika start, RNG01
+    # 1904657448
+    logger.warning("==== Hard setting value for testing")
+    rng_value = 1904657448
+    memory.main.set_rng_by_index(value=rng_value, index=1)
+    
+    #Basically, hunt until we don't find a good battle in 'advances'
+    advances = 5
+    import rng_track
+    import area.kilika
+    next_two = rng_track.coming_battles(
+        area="kilika_woods", battle_count=advances, extra_advances=1
+    )
+    while area.kilika.select_best_of_two(next_two) != 99:
+        rng_value += 1
+        memory.main.set_rng_by_index(value=rng_value, index=1)
+        next_two = rng_track.coming_battles(
+            area="kilika_woods", battle_count=advances, extra_advances=1
+        )
+    logger.warning(f"==== Chosen Value: {rng_value}")
+    
 
 def besaid_trials():
     # Exit Tent
