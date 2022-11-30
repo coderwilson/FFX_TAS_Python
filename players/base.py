@@ -216,10 +216,10 @@ class Player:
         raise NotImplementedError()
 
     def defend(self):
-        logger.debug("Defending")
-        if self.id >= 8:
-            logger.debug("No defend, this is not a PC")
-            return False
+        logger.debug(f"Defending, char {self.id}")
+        #if self.id >= 8:
+        #    logger.debug("No defend, this is not a PC")
+        #    return False
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
         
