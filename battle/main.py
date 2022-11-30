@@ -1615,7 +1615,6 @@ def spheri_spell_item_ready():
     return True
 
 
-@battle.utils.speedup_decorator
 def negator_with_steal():
     tidus_turns = 0
     rikku_turns = 0
