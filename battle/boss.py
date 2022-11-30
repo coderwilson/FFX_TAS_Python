@@ -786,7 +786,7 @@ def extractor():
                 elif (
                     memory.main.get_enemy_current_hp()[0] < 1400
                     and not screen.faint_check()
-                    and memory.main.get_overdrive_battle(4) == 100
+                    and Wakka.has_overdrive()
                 ):
                     CurrentPlayer().defend()
                 else:
@@ -796,7 +796,7 @@ def extractor():
                     memory.main.get_enemy_current_hp()[0] < 1900
                     and Wakka.has_overdrive()
                 ):
-                    Wakka.overdrive(combat=True)
+                    Wakka.overdrive()
                 else:
                     CurrentPlayer().attack()
         elif memory.main.diag_skip_possible():
