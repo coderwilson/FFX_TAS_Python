@@ -347,6 +347,11 @@ class Player:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
 
     def has_overdrive(self, combat=False) -> bool:
+        # Passed variable now does nothing, 11/30, clean up if the below logic works.
+        if memory.main.battle_active():
+            combat = True
+        else:
+            combat = False
         return self.overdrive_percent(combat=combat) == 100
 
     def is_turn(self) -> bool:
