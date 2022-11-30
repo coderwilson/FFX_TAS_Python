@@ -216,7 +216,10 @@ class Player:
         raise NotImplementedError()
 
     def defend(self):
-        logger.debug("Defending")
+        logger.debug(f"Defending, char {self}")
+        #if self.id >= 8:
+        #    logger.debug("No defend, this is not a PC")
+        #    return False
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
         
@@ -234,6 +237,7 @@ class Player:
             else:
                 xbox.tap_y()
         memory.main.wait_frames(1) # Buffer for safety
+        return True
 
     def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
