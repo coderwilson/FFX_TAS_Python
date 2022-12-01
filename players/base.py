@@ -351,13 +351,13 @@ class Player:
     
     def has_overdrive(self) -> bool:
         # Passed variable now does nothing, 11/30, clean up if the below logic works.
-        return self.overdrive_percent(combat=in_combat()) == 100
+        return self.overdrive_percent(combat=self.in_combat()) == 100
 
     def is_turn(self) -> bool:
         return memory.main.get_battle_char_turn() == self.id
 
     def in_danger(self, danger_threshold) -> bool:
-        return self.hp(in_combat()) <= danger_threshold
+        return self.hp(self.in_combat()) <= danger_threshold
 
     def is_dead(self) -> bool:
         return memory.main.state_dead(self.id)
