@@ -238,15 +238,12 @@ def battle_active():
 
 
 def get_current_turn():
-    global base_value
-    key = base_value + 0x00D2AA00
-    return process.read_bytes(key, 1)
+    get_upcoming_turn(turn_index = 0)
 
 
 def get_next_turn():
-    global base_value
-    key = base_value + 0x00D2AA04
-    return process.read_bytes(key, 1)
+    get_upcoming_turn(turn_index = 1)
+
 
 def get_upcoming_turn(turn_index:int):
     global base_value
