@@ -377,7 +377,7 @@ class Player:
     
     def is_defending(self) -> int:
         defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
-        result = (defend_byte >> 3) & 1 == 1
+        result = (defend_byte >> 3) & 1
         if self.id != memory.main.get_battle_char_turn():
             return 9
         return result
