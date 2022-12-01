@@ -375,7 +375,7 @@ class Player:
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
     
-    def is_defending(self) -> bool:
+    def is_defending(self) -> int:
         defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
         result = (defend_byte >> 3) & 1 == 1
         if self.id != memory.main.get_battle_char_turn():
