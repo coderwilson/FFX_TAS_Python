@@ -225,24 +225,19 @@ class Player:
 
     def defend(self):
         logger.debug(f"Defending, char {self}")
-        #if self.id >= 8:
-        #    logger.debug("No defend, this is not a PC")
-        #    return False
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
         
         # Make sure we are not already in defend state_berserk
-        while self.is_defending():
+        while self.is_defending() == 1:
             pass
         memory.main.wait_frames(1) # Buffer for safety
         
-        defend_turn = memory.main.get_battle_char_turn()
-        
+        result = 0
         #Now tap to defending status.
-        while not self.is_defending():
-            if defend_turn != memory.main.get_battle_char_turn():
-                break
-            else:
+        while result == 0:
+            result = self.is_defending()
+            if result == 0:
                 xbox.tap_y()
         memory.main.wait_frames(1) # Buffer for safety
         return True
@@ -380,10 +375,11 @@ class Player:
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
     
-    def is_defending(self) -> bool:
+    def is_defending(self) -> int:
         defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
-        result = (defend_byte >> 3) & 1 == 1
-        logger.warning(f"Character is defending: {result}")
+        result = (defend_byte >> 3) & 1
+        if self.id != memory.main.get_battle_char_turn():
+            return 9
         return result
 
     def hp(self, combat=False) -> int:
