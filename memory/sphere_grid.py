@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 
 from memory.main import read_val
+from players import Player
 
 logger = logging.getLogger(__name__)
 
@@ -154,10 +155,10 @@ class SphereGridNode:
         """This returns a one byte bitfield, where each bit indicates that a character has activated this node."""
         return read_val(self.offset + self._ACTIVATED_BY_OFFSET, 1)
 
-    def is_activated_by(self, character_id: int) -> bool:
+    def is_activated_by(self, player: Player) -> bool:
         """This checks if a specific bit in the bitfield is set or not."""
         activated_by = self.get_activated_by()
-        bitmask = 1 << character_id
+        bitmask = 1 << player.id
         return (activated_by & bitmask) != 0
 
     def __repr__(self) -> str:
@@ -193,9 +194,9 @@ class SphereGrid:
     def _get_player_node_offset(self, index: int) -> int:
         return self._TIDUS_POS_OFFSET + index * self._PLAYER_POS_SPACING
 
-    def get_player_node_idx(self, index: int) -> int:
+    def get_player_node_idx(self, player: Player) -> int:
         """Get the index of the node where a specific player is located"""
-        return read_val(self._get_player_node_offset(index), 4)
+        return read_val(self._get_player_node_offset(player.id), 4)
 
     def get_current_node_idx(self) -> int:
         """Get the index of the currently selected node in the sphere grid"""

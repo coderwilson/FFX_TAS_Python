@@ -30,7 +30,7 @@ if __name__ == "__main__":
             node = sphere_grid.get_current_node()
             # Print the node indices of all the players
             print(
-                f"Positions: [Tidus={sphere_grid.get_player_node_idx(Tidus.id)}] [Yuna={sphere_grid.get_player_node_idx(Yuna.id)}] [Auron={sphere_grid.get_player_node_idx(Auron.id)}] [Kimahri={sphere_grid.get_player_node_idx(Kimahri.id)}] [Wakka={sphere_grid.get_player_node_idx(Wakka.id)}] [Lulu={sphere_grid.get_player_node_idx(Lulu.id)}] [Rikku={sphere_grid.get_player_node_idx(Rikku.id)}]"
+                f"Positions: [Tidus={sphere_grid.get_player_node_idx(Tidus)}] [Yuna={sphere_grid.get_player_node_idx(Yuna)}] [Auron={sphere_grid.get_player_node_idx(Auron)}] [Kimahri={sphere_grid.get_player_node_idx(Kimahri)}] [Wakka={sphere_grid.get_player_node_idx(Wakka)}] [Lulu={sphere_grid.get_player_node_idx(Lulu)}] [Rikku={sphere_grid.get_player_node_idx(Rikku)}]"
             )
             # Print the currently selected node and a bitfield of what characters have activated it
             print(
@@ -38,7 +38,7 @@ if __name__ == "__main__":
             )
 
             # Example check for activation by Yuna
-            if node.is_activated_by(Yuna.id):
+            if node.is_activated_by(Yuna):
                 print(f"Node {node} is activated by Yuna")
 
             # Example comparison of current node to the enum list
