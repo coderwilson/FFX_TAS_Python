@@ -346,7 +346,7 @@ class Player:
         else:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
 
-    def has_overdrive(self, combat=False) -> bool:
+    def has_overdrive(self) -> bool:
         # Passed variable now does nothing, 11/30, clean up if the below logic works.
         if memory.main.battle_active():
             combat = True
@@ -357,7 +357,11 @@ class Player:
     def is_turn(self) -> bool:
         return memory.main.get_battle_char_turn() == self.id
 
-    def in_danger(self, danger_threshold, combat=False) -> bool:
+    def in_danger(self, danger_threshold) -> bool:
+        if memory.main.battle_active():
+            combat = True
+        else:
+            combat = False
         return self.hp(combat) <= danger_threshold
 
     def is_dead(self) -> bool:

@@ -37,7 +37,7 @@ def ammes():
             if (
                 not tidus_od_flag
                 and Tidus.is_turn()
-                and Tidus.has_overdrive(combat=True)
+                and Tidus.has_overdrive()
             ):
                 Tidus.overdrive()
                 tidus_od_flag = True
@@ -58,7 +58,7 @@ def kimahri():
             enemy_hp = memory.main.get_enemy_current_hp()
             if (
                 not game_vars.early_tidus_grid()
-                and Tidus.in_danger(120, combat=True)
+                and Tidus.in_danger(120)
                 and enemy_hp[0] > 119
             ):
                 if Tidus.next_crit(12) == 2:
@@ -160,7 +160,7 @@ def klikk():
                 grenade_count = memory.main.get_item_count_slot(
                     memory.main.get_item_slot(35)
                 )
-                if Tidus.in_danger(120, combat=True) and not (
+                if Tidus.in_danger(120) and not (
                     memory.main.get_next_turn() == 0
                     and memory.main.get_enemy_current_hp()[0] <= 181
                 ):
@@ -271,7 +271,7 @@ def tros():
                     logger.debug("Tidus turn")
                     if (
                         tros_pos == 1
-                        and Rikku.in_danger(200, combat=True)
+                        and Rikku.in_danger(200)
                         and memory.main.get_enemy_current_hp()[0] > 800
                     ):
                         battle.main.use_potion_character(Rikku, "l")
