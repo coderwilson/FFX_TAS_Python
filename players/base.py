@@ -225,24 +225,19 @@ class Player:
 
     def defend(self):
         logger.debug(f"Defending, char {self}")
-        #if self.id >= 8:
-        #    logger.debug("No defend, this is not a PC")
-        #    return False
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
         
         # Make sure we are not already in defend state_berserk
-        while self.is_defending():
+        while self.is_defending() == 1:
             pass
         memory.main.wait_frames(1) # Buffer for safety
         
-        defend_turn = memory.main.get_battle_char_turn()
-        
+        result = 0
         #Now tap to defending status.
-        while not self.is_defending():
-            if defend_turn != memory.main.get_battle_char_turn():
-                break
-            else:
+        while result == 0:
+            result = self.is_defending()
+            if result == 0:
                 xbox.tap_y()
         memory.main.wait_frames(1) # Buffer for safety
         return True
@@ -345,20 +340,19 @@ class Player:
             )
         else:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
-
-    def has_overdrive(self, combat=False) -> bool:
+    
+    def in_combat(self):
+        return memory.main.battle_active()
+    
+    def has_overdrive(self) -> bool:
         # Passed variable now does nothing, 11/30, clean up if the below logic works.
-        if memory.main.battle_active():
-            combat = True
-        else:
-            combat = False
-        return self.overdrive_percent(combat=combat) == 100
+        return self.overdrive_percent(combat=self.in_combat()) == 100
 
     def is_turn(self) -> bool:
         return memory.main.get_battle_char_turn() == self.id
 
-    def in_danger(self, danger_threshold, combat=False) -> bool:
-        return self.hp(combat) <= danger_threshold
+    def in_danger(self, danger_threshold) -> bool:
+        return self.hp(self.in_combat()) <= danger_threshold
 
     def is_dead(self) -> bool:
         return memory.main.state_dead(self.id)
@@ -380,10 +374,11 @@ class Player:
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
     
-    def is_defending(self) -> bool:
+    def is_defending(self) -> int:
         defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
-        result = (defend_byte >> 3) & 1 == 1
-        logger.warning(f"Character is defending: {result}")
+        result = (defend_byte >> 3) & 1
+        if self.id != memory.main.get_battle_char_turn():
+            return 9
         return result
 
     def hp(self, combat=False) -> int:
