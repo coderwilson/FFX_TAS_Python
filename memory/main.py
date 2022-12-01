@@ -248,6 +248,10 @@ def get_next_turn():
     key = base_value + 0x00D2AA04
     return process.read_bytes(key, 1)
 
+def get_upcoming_turn(turn_index:int):
+    global base_value
+    key = base_value + 0x00D2AA00 + (turn_index * 4)
+    return process.read_bytes(key, 1)
 
 def battle_menu_cursor():
     global base_value
