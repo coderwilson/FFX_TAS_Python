@@ -92,6 +92,8 @@ def select_best_of_two(coming_battles):
 def forest_1():
     logger.info("Kilika forest 1")
     kilika_battles = 0
+    best_of_two = 99 # Used to find the best battle coming up.
+    advances = 2 # Used to find the best battle coming up.
     next_battle = []
     import rng_track
 
@@ -117,7 +119,6 @@ def forest_1():
                     checkpoint = 83
             if checkpoint == 83 and not valefor_charge:
                 checkpoint = 81
-                best_of_two = 99
             if checkpoint == 83 and memory.main.get_map() == 65:
                 checkpoint = 84
             if checkpoint == 37 and game_vars.skip_kilika_luck():
@@ -158,10 +159,15 @@ def forest_1():
             if memory.main.battle_active():
                 if checkpoint < 9:
                     battle.main.lancet_tutorial()
-                    next_two = rng_track.coming_battles(
-                        area="kilika_woods", battle_count=2
-                    )
-                    best_of_two = select_best_of_two(next_two)
+                    while best_of_two == 99:
+                        next_two = rng_track.coming_battles(
+                            area="kilika_woods", battle_count=advances
+                        )
+                        best_of_two = select_best_of_two(next_two)
+                        advances += 1
+                        if advances > 150:
+                            logger.error("No valid battles in the next 150.")
+                            break
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1
                     )[0]

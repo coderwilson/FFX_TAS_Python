@@ -144,8 +144,16 @@ class Player:
     def attack(
         self, target_id: Optional[int] = None, direction_hint: Optional[str] = "u"
     ):
+        skip_direction = False
         if target_id is None:
-            logger.debug("Attack")
+            logger.debug("Attack enemy, first targetted.")
+        elif target_id in range(7):
+            logger.debug(f"Attack player character {target_id}")
+        elif memory.main.get_enemy_current_hp()[target_id-20] == 0:
+            logger.debug(
+                f"Enemy {target_id} is not attack-able. Resorting to basic attack."
+            )
+            skip_direction = True
         else:
             logger.debug(
                 f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
@@ -159,7 +167,7 @@ class Player:
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
             xbox.tap_b()
-        if target_id is not None:
+        if target_id is not None and not skip_direction:
             self._target_specific_id(target_id, direction_hint)
         self._tap_targeting()
 
@@ -334,6 +342,11 @@ class Player:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
 
     def has_overdrive(self, combat=False) -> bool:
+        # Passed variable now does nothing, 11/30, clean up if the below logic works.
+        if memory.main.battle_active():
+            combat = True
+        else:
+            combat = False
         return self.overdrive_percent(combat=combat) == 100
 
     def is_turn(self) -> bool:

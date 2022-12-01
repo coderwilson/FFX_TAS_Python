@@ -301,12 +301,15 @@ def sin_fin():
                 logger.debug("Tidus defend")
             elif Yuna.is_turn():
                 battle.main.buddy_swap(Lulu)  # Yuna out, Lulu in
-                CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
             elif Kimahri.is_turn():
                 battle.main.lancet_target(target=23, direction="r")
                 kim_turn = True
             elif Lulu.is_turn():
                 CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
+            elif not 5 in memory.main.get_active_battle_formation():
+                battle.main.buddy_swap(Lulu)
+            elif not 3 in memory.main.get_active_battle_formation():
+                battle.main.buddy_swap(Kimahri)
             else:
                 CurrentPlayer().defend()
         if fin_turns >= 3 and kim_turn:
@@ -399,9 +402,14 @@ def geneaux():
         battle.main.buddy_swap(Kimahri)
         CurrentPlayer().attack()
         while not Tidus.is_turn():
-            CurrentPlayer().defend()
+            if memory.main.turn_ready():
+                CurrentPlayer().defend()
         while Tidus.is_turn():
-            CurrentPlayer().defend()
+            if memory.main.turn_ready():
+                CurrentPlayer().defend()
+        memory.main.wait_frames(3)
+        while not memory.main.turn_ready():
+            pass
         battle.main.buddy_swap(Yuna)
     screen.await_turn()
     battle.main.aeon_summon(0)  # Summon Valefor
@@ -778,7 +786,7 @@ def extractor():
                 elif (
                     memory.main.get_enemy_current_hp()[0] < 1400
                     and not screen.faint_check()
-                    and memory.main.get_overdrive_battle(4) == 100
+                    and Wakka.has_overdrive()
                 ):
                     CurrentPlayer().defend()
                 else:

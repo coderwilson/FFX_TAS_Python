@@ -420,9 +420,11 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                 elif screen.faint_check():
                     revive()
                 elif Kimahri.is_turn() or Lulu.is_turn():
-                    if memory.main.get_battle_char_slot(4) >= 3:
+                    if not 1 in memory.main.get_active_battle_formation():
+                        buddy_swap(Yuna)
+                    elif not 4 in memory.main.get_active_battle_formation():
                         buddy_swap(Wakka)
-                    elif memory.main.get_battle_char_slot(0) >= 3:
+                    elif not 0 in memory.main.get_active_battle_formation():
                         buddy_swap(Tidus)
                     else:
                         buddy_swap(Yuna)
