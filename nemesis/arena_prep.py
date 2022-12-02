@@ -100,6 +100,7 @@ def air_ship_destination(dest_num=0, force_omega=False):
 
 
 def unlock_omega():
+    # Move away from save sphere. Prevents soft-lock (infinite saves)
     while memory.main.get_coords()[0] < -257:
         pathing.set_movement([-258, 345])
     while not memory.main.get_map() in [382, 999]:
