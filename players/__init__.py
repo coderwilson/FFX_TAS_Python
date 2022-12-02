@@ -1,6 +1,7 @@
 from players.anima import Anima
 from players.auron import Auron
 from players.bahamut import Bahamut
+from players.base import Player
 from players.current_player import CurrentPlayer
 from players.ifrit import Ifrit
 from players.ixion import Ixion
@@ -16,6 +17,7 @@ from players.yojimbo import Yojimbo
 from players.yuna import Yuna
 
 __all__ = [
+    "Player",
     "Tidus",
     "Lulu",
     "Wakka",

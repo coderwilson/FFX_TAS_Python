@@ -420,9 +420,11 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                 elif screen.faint_check():
                     revive()
                 elif Kimahri.is_turn() or Lulu.is_turn():
-                    if memory.main.get_battle_char_slot(4) >= 3:
+                    if not 1 in memory.main.get_active_battle_formation():
+                        buddy_swap(Yuna)
+                    elif not 4 in memory.main.get_active_battle_formation():
                         buddy_swap(Wakka)
-                    elif memory.main.get_battle_char_slot(0) >= 3:
+                    elif not 0 in memory.main.get_active_battle_formation():
                         buddy_swap(Tidus)
                     else:
                         buddy_swap(Yuna)
@@ -681,7 +683,7 @@ def luca_workers_2(early_haste):
                 elif Kimahri.is_turn():
                     if (
                         memory.main.get_enemy_current_hp().count(0) == 1
-                        and Kimahri.has_overdrive(combat=True)
+                        and Kimahri.has_overdrive()
                         and memory.main.get_enemy_current_hp()[0] > 80
                     ):
                         Kimahri.overdrive(1)
@@ -1422,13 +1424,13 @@ def thunder_plains(section):
                     if not light_slot:
                         steal()
                         light_slot = memory.main.get_item_slot(57) != 255
-                    elif not Rikku.has_overdrive(combat=True):
+                    elif not Rikku.has_overdrive():
                         CurrentPlayer().attack()
                     else:
                         flee_all()
                 else:
                     if (
-                        not Rikku.has_overdrive(combat=True)
+                        not Rikku.has_overdrive()
                         and not Rikku.is_status_ok()
                     ):
                         escape_one()
@@ -1451,14 +1453,14 @@ def thunder_plains(section):
                             elif not light_slot:
                                 steal()
                                 light_slot = memory.main.get_item_slot(57) != 255
-                            elif not Rikku.has_overdrive(combat=True):
+                            elif not Rikku.has_overdrive():
                                 CurrentPlayer().attack()
                             else:
                                 flee_all()
                         else:
                             if not Rikku.is_status_ok():
                                 flee_all()
-                            elif not Rikku.has_overdrive(combat=True):
+                            elif not Rikku.has_overdrive():
                                 escape_one()
                             elif light_slot and (not use_grenades or grenade_thrown):
                                 flee_all()
@@ -1533,7 +1535,7 @@ def m_woods():
                 need_arctic_wind = True
             if memory.main.get_use_items_slot(32) == 255:
                 need_fish_scale = True
-            rikku_charged = Rikku.has_overdrive(combat=True)
+            rikku_charged = Rikku.has_overdrive()
             logging.info(f"Rikku charge state: {rikku_charged}")
             if not rikku_charged:
                 if (
@@ -1561,13 +1563,13 @@ def m_woods():
                         elif encounter_id == 171 and need_fish_scale:
                             logger.debug("Marker 4")
                             steal_right()
-                        elif not Rikku.has_overdrive(combat=True):
+                        elif not Rikku.has_overdrive():
                             logger.debug("Charging")
                             CurrentPlayer().attack(target_id=Rikku, direction_hint="u")
                         else:
                             logger.debug("Escaping")
                             flee_all()
-                    elif not Rikku.has_overdrive(combat=True):
+                    elif not Rikku.has_overdrive():
                         escape_one()
                     else:
                         flee_all()
@@ -2255,7 +2257,7 @@ def zu():
             elif not check_tidus_ok():
                 escape_one()
             else:
-                defend()
+                CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Skip Dialog
     memory.main.click_to_control()
@@ -2412,14 +2414,14 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
             if memory.main.turn_ready():
                 if memory.main.get_battle_char_turn() == 6:
                     CurrentPlayer().attack()
-                elif Auron.is_turn() and not Auron.has_overdrive(combat=True):
+                elif Auron.is_turn() and not Auron.has_overdrive():
                     Auron.attack(target_id=Auron)
                 elif Rikku.active():
                     escape_one()
                 else:
                     flee_all()
         else:  # Charge Auron if needed, otherwise flee
-            if not Auron.has_overdrive(combat=True) and not sandy_fight_complete:
+            if not Auron.has_overdrive() and not sandy_fight_complete:
                 if Auron.is_turn():
                     Auron.attack(target_id=Auron)
                 else:
@@ -2970,7 +2972,7 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
     if rikku_flee:
         _navigate_to_position(2)
     else:
-        print("Mark 2, selecting 'Use' command in position", 1)
+        logger.debug("Mark 2, selecting 'Use' command in position 1")
         _navigate_to_position(1)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
@@ -4254,7 +4256,7 @@ def calculate_spare_change_movement(gil_amount):
 
 def charge_rikku_od():
     logger.debug(f"Battle Number: {memory.main.get_encounter_id()}")
-    if not Rikku.has_overdrive(combat=True) and memory.main.get_encounter_id() in [
+    if not Rikku.has_overdrive() and memory.main.get_encounter_id() in [
         360,
         361,
         376,
@@ -4276,7 +4278,7 @@ def charge_rikku_od():
                 if memory.main.turn_ready():
                     if Rikku.is_turn():
                         Rikku.attack(target_id=Rikku, direction_hint="u")
-                    elif Rikku.has_overdrive(combat=True):
+                    elif Rikku.has_overdrive():
                         flee_all()
                     elif not Rikku.active():
                         buddy_swap(Rikku)
@@ -4695,7 +4697,7 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                     self_haste = True
                 elif memory.main.get_enemy_current_hp()[
                     0
-                ] <= 2800 and Tidus.has_overdrive(combat=True):
+                ] <= 2800 and Tidus.has_overdrive():
                     Tidus.overdrive()
                 else:
                     CurrentPlayer().attack()
@@ -4730,7 +4732,7 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                     yuna_haste = True
                 elif memory.main.get_enemy_current_hp()[
                     0
-                ] <= 2800 and Tidus.has_overdrive(combat=True):
+                ] <= 2800 and Tidus.has_overdrive():
                     Tidus.overdrive()
                 else:
                     CurrentPlayer().attack()

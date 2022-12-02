@@ -21,6 +21,7 @@ class PlayerMagicNumbers(IntEnum):
     LUCK = 0x34
     ACCURACY = 0x36
     BATTLE_OVERDRIVE = 0x5BC
+    DEFENDING = 0x617
     OVERDRIVE = 0x39
     AFFECTION_POINTER = 0x00D2CABC
     SLVL = 0x00D32097
@@ -143,8 +144,16 @@ class Player:
     def attack(
         self, target_id: Optional[int] = None, direction_hint: Optional[str] = "u"
     ):
+        skip_direction = False
         if target_id is None:
-            logger.debug("Attack")
+            logger.debug("Attack enemy, first targetted.")
+        elif target_id in range(7):
+            logger.debug(f"Attack player character {target_id}")
+        elif memory.main.get_enemy_current_hp()[target_id-20] == 0:
+            logger.debug(
+                f"Enemy {target_id} is not attack-able. Resorting to basic attack."
+            )
+            skip_direction = True
         else:
             logger.debug(
                 f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
@@ -158,7 +167,7 @@ class Player:
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
             xbox.tap_b()
-        if target_id is not None:
+        if target_id is not None and not skip_direction:
             self._target_specific_id(target_id, direction_hint)
         self._tap_targeting()
 
@@ -215,10 +224,23 @@ class Player:
         raise NotImplementedError()
 
     def defend(self):
-        logger.debug("Defending")
-        # There has got to be a better thing we can do with a memory value.
-        for _ in range(2):
-            xbox.tap_y()
+        logger.debug(f"Defending, char {self}")
+        # Update matches memory.main.turn_ready.
+        # Updated 11/27/22, still to be validated.
+        
+        # Make sure we are not already in defend state_berserk
+        while self.is_defending() == 1:
+            pass
+        memory.main.wait_frames(1) # Buffer for safety
+        
+        result = 0
+        #Now tap to defending status.
+        while result == 0:
+            result = self.is_defending()
+            if result == 0:
+                xbox.tap_y()
+        memory.main.wait_frames(1) # Buffer for safety
+        return True
 
     def navigate_to_battle_menu(self, target: int):
         """Different characters have different menu orders."""
@@ -318,15 +340,19 @@ class Player:
             )
         else:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
-
-    def has_overdrive(self, combat=False) -> bool:
-        return self.overdrive_percent(combat=combat) == 100
+    
+    def in_combat(self):
+        return memory.main.battle_active()
+    
+    def has_overdrive(self) -> bool:
+        # Passed variable now does nothing, 11/30, clean up if the below logic works.
+        return self.overdrive_percent(combat=self.in_combat()) == 100
 
     def is_turn(self) -> bool:
         return memory.main.get_battle_char_turn() == self.id
 
-    def in_danger(self, danger_threshold, combat=False) -> bool:
-        return self.hp(combat) <= danger_threshold
+    def in_danger(self, danger_threshold) -> bool:
+        return self.hp(self.in_combat()) <= danger_threshold
 
     def is_dead(self) -> bool:
         return memory.main.state_dead(self.id)
@@ -347,6 +373,13 @@ class Player:
 
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
+    
+    def is_defending(self) -> int:
+        defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
+        result = (defend_byte >> 3) & 1
+        if self.id != memory.main.get_battle_char_turn():
+            return 9
+        return result
 
     def hp(self, combat=False) -> int:
         if not combat:

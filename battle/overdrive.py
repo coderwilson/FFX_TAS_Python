@@ -1,5 +1,6 @@
 import logging
 
+import battle.main
 import memory.main
 import screen
 import xbox

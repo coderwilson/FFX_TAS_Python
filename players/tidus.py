@@ -33,18 +33,18 @@ class TidusImpl(Player):
         memory.main.wait_frames(12)
         xbox.tap_b()  # First try pog
         logger.info("Hit Overdrive")
-        
-        #Backup attempts, used with low-quality computers only. No impact normally.
+
+        # Backup attempts, used with low-quality computers only. No impact normally.
         memory.main.wait_frames(8)
-        xbox.tap_b() #Extra attempt in case of miss
+        xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(9)
-        xbox.tap_b() #Extra attempt in case of miss
+        xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(10)
-        xbox.tap_b() #Extra attempt in case of miss
+        xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(11)
-        xbox.tap_b() #Extra attempt in case of miss
+        xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(12)
-        xbox.tap_b() #Extra attempt in case of miss
+        xbox.tap_b()  # Extra attempt in case of miss
 
     def overdrive_active(self):
         return memory.main.read_val(0x00F3D6F4, 1) == 4

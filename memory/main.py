@@ -238,16 +238,17 @@ def battle_active():
 
 
 def get_current_turn():
-    global base_value
-    key = base_value + 0x00D2AA00
-    return process.read_bytes(key, 1)
+    get_turn_by_index(turn_index = 0)
 
 
 def get_next_turn():
-    global base_value
-    key = base_value + 0x00D2AA04
-    return process.read_bytes(key, 1)
+    get_turn_by_index(turn_index = 1)
 
+
+def get_turn_by_index(turn_index:int):
+    global base_value
+    key = base_value + 0x00D2AA00 + (turn_index * 4)
+    return process.read_bytes(key, 1)
 
 def battle_menu_cursor():
     global base_value
@@ -271,12 +272,12 @@ def battle_screen():
 
 def turn_ready():
     global base_value
-    key = base_value + 0x00F3F77B
-    if process.read_bytes(key, 1) == 0:
+    key = base_value + 0x01FCC08C
+    if process.read_bytes(key, 4) == 0:
         return False
     else:
-        while not main_battle_menu():
-            pass
+        # while not main_battle_menu():
+        #    pass
         wait_frames(1)
         if game_vars.use_pause():
             wait_frames(2)
@@ -945,8 +946,8 @@ def get_use_items_order():
                 x += 1
         except Exception as y:
             logger.exception(y)
-    print("Items set up:")
-    print(item_array)
+    logger.debug("Items set up:")
+    logger.debug(item_array)
     return item_array
 
 
@@ -956,9 +957,9 @@ def get_use_items_slot(item_num):
     for x in range(len(items)):
         logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
         if items[x] == item_num:
-            print("============================")
-            print("FOUND ITEM: ", items[x], "|", item_num, "|", x)
-            print("============================")
+            logger.debug("============================")
+            logger.debug(f"FOUND ITEM: {items[x]} | {item_num} | {x}")
+            logger.debug("============================")
             return x
         x += 1
     return 255
@@ -2406,6 +2407,12 @@ def reset_battle_end():
     process.write_bytes(key, 1, 1)
 
 
+def set_rng_by_index(value:int=0, index:int=1):
+    global base_value
+    global process
+    key = base_value + 0x00D35ED8 + (index * 0x4)
+    process.write_bytes(key, value, 4)
+
 def set_rng_2():
     global base_value
     global process
@@ -3347,6 +3354,11 @@ def bt_tri_direction_main():
     return process.read_bytes(key, 1)
 
 
+def via_quad_direction():
+    key = base_value + 0x00D2CC84
+    return process.read_bytes(key, 1)
+
+
 # ------------------------------
 # Gagazet trials
 
@@ -3758,7 +3770,7 @@ def mem_test_val_3():
 # Yojimbo
 
 
-def yojimobo_compatability():
+def yojimbo_compatibility():
     key = base_value + 0x00D30834
     return process.read_bytes(key, 1)
 
