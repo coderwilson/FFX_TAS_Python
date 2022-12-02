@@ -1950,7 +1950,7 @@ def djose_farm(cap_num: int = 10):
             elif checkpoint in [21, 45] and pref_area == 1 and ne_armor:
                 menu.remove_all_nea()
                 ne_armor = False
-            elif checkpoint == 25 and ne_armor:
+            elif checkpoint == 25 and pref_area == 2 and ne_armor:
                 menu.remove_all_nea()
                 ne_armor = False
             elif checkpoint in [24, 28] and pref_area == 1:
