@@ -17,7 +17,7 @@ from players.yuna import Yuna
 
 
 def CurrentPlayer():
-    current_character = memory.main.get_battle_char_turn()
+    current_character = memory.main.get_current_turn()
     match current_character:
         case 0:
             return Tidus
