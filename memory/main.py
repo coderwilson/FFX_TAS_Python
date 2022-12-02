@@ -238,11 +238,11 @@ def battle_active():
 
 
 def get_current_turn():
-    get_turn_by_index(turn_index = 0)
+    return get_turn_by_index(turn_index = 0)
 
 
 def get_next_turn():
-    get_turn_by_index(turn_index = 1)
+    return get_turn_by_index(turn_index = 1)
 
 
 def get_turn_by_index(turn_index:int):

@@ -100,6 +100,9 @@ def air_ship_destination(dest_num=0, force_omega=False):
 
 
 def unlock_omega():
+    # Move away from save sphere. Prevents soft-lock (infinite saves)
+    while memory.main.get_coords()[0] < -257:
+        pathing.set_movement([-258, 345])
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
             pathing.set_movement([-251, 340])
@@ -1948,7 +1951,7 @@ def djose_farm(cap_num: int = 10):
             elif checkpoint in [21, 45] and pref_area == 1 and ne_armor:
                 menu.remove_all_nea()
                 ne_armor = False
-            elif checkpoint == 25 and ne_armor:
+            elif checkpoint == 25 and pref_area == 2 and ne_armor:
                 menu.remove_all_nea()
                 ne_armor = False
             elif checkpoint in [24, 28] and pref_area == 1:
