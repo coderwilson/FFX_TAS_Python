@@ -32,7 +32,7 @@ def arrival():
             if game_vars.csr() and checkpoint == 1:
                 logger.debug("CSR, skipping forward")
                 checkpoint = 4
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -72,7 +72,7 @@ def arrival():
                 checkpoint += 1
             elif pathing.set_movement(MRRStart.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -129,7 +129,7 @@ def main_path():
                 FFXC.set_neutral()
                 xbox.skip_dialog(1)
                 checkpoint += 1
-                logger.debug(f"Lift checkpoint: {checkpoint}")
+                logger.debug(f"Lift Checkpoint {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
                 if not memory.main.rng_seed() in [31]:
                     memory.main.click_to_event_temple(7)
@@ -184,7 +184,7 @@ def main_path():
                     checkpoint = 62
                 else:
                     checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -232,7 +232,7 @@ def main_path():
     while checkpoint < 4:
         if pathing.set_movement(MRRBattleSite.execute(checkpoint)):
             checkpoint += 1
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
 
 
 def battle_site():
@@ -275,7 +275,7 @@ def battle_site():
                 checkpoint = 100
             elif pathing.set_movement(MRRBattleSite.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -304,7 +304,7 @@ def gui_and_aftermath():
                 checkpoint += 1
             elif pathing.set_movement(MRRBattleSiteAftermath.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             memory.main.click_to_control_3()

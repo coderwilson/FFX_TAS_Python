@@ -44,7 +44,7 @@ def pre_evrae():
 
             elif pathing.set_movement(BevelleAirship.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -118,7 +118,7 @@ def guards():
             # General pathing
             elif pathing.set_movement(BevellePreTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -411,7 +411,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(BevelleTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -427,7 +427,7 @@ def trials_end():
         if memory.main.user_control():
             if pathing.set_movement(BevelleTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
         elif checkpoint == 58:
@@ -474,7 +474,7 @@ def via_purifico():
             )
             create_save = False
         if pathing.set_movement(path[checkpoint]):
-            logger.debug(f"checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             checkpoint += 1
     FFXC.set_neutral()
     logger.debug("Ready to step on glyph")
@@ -514,7 +514,7 @@ def evrae_altana():
     last_cp = 0
     while checkpoint < 100:
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
         if memory.main.get_story_progress() > 2220:
             logger.info("End of Evrae Altana section.")
@@ -640,7 +640,7 @@ def seymour_natus():
 
             elif pathing.set_movement(SutekiDaNe.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():

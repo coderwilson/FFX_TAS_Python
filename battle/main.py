@@ -389,7 +389,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
         skip_charge = True
     # Only occurs if no best charge possible in the first three battles.
     elif best_charge == 99:
-        best_charge = enc_id
+        best_charge = next_battle
 
     logger.info("Kilika battle")
     aeon_turn = False
@@ -1429,10 +1429,7 @@ def thunder_plains(section):
                     else:
                         flee_all()
                 else:
-                    if (
-                        not Rikku.has_overdrive()
-                        and not Rikku.is_status_ok()
-                    ):
+                    if not Rikku.has_overdrive() and not Rikku.is_status_ok():
                         escape_one()
                     else:
                         flee_all()
@@ -1615,7 +1612,6 @@ def spheri_spell_item_ready():
     return True
 
 
-@battle.utils.speedup_decorator
 def negator_with_steal():
     tidus_turns = 0
     rikku_turns = 0
@@ -4695,9 +4691,10 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                 if not self_haste:
                     tidus_haste("none")
                     self_haste = True
-                elif memory.main.get_enemy_current_hp()[
-                    0
-                ] <= 2800 and Tidus.has_overdrive():
+                elif (
+                    memory.main.get_enemy_current_hp()[0] <= 2800
+                    and Tidus.has_overdrive()
+                ):
                     Tidus.overdrive()
                 else:
                     CurrentPlayer().attack()
@@ -4712,7 +4709,7 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
 
 def ghost_kill_any(silence_slot: int, self_haste: bool):
     yuna_haste = False
-    item_thrown = silence_slot >= 200
+    # item_thrown = silence_slot >= 200  # item_thrown is assigned to but never used
     logger.debug(f"Silence slot: {silence_slot}")
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -4730,9 +4727,10 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                 ):
                     tidus_haste(direction="l", character=Yuna)
                     yuna_haste = True
-                elif memory.main.get_enemy_current_hp()[
-                    0
-                ] <= 2800 and Tidus.has_overdrive():
+                elif (
+                    memory.main.get_enemy_current_hp()[0] <= 2800
+                    and Tidus.has_overdrive()
+                ):
                     Tidus.overdrive()
                 else:
                     CurrentPlayer().attack()

@@ -63,7 +63,7 @@ def south_pathing():
             elif memory.main.user_control():
                 if pathing.set_movement(ThunderPlainsSouth.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() and not memory.main.battle_active():
@@ -258,7 +258,7 @@ def agency():
 
             elif pathing.set_movement(ThunderPlainsAgency.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -282,13 +282,13 @@ def north_pathing():
                 checkpoint = 16
             elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunar_slot:
                 checkpoint -= 2
-                logger.debug(f"No lunar curtain. Checkpoint: {checkpoint}")
+                logger.debug(f"No lunar curtain. Checkpoint {checkpoint}")
 
             # General pathing
             elif memory.main.user_control():
                 if pathing.set_movement(ThunderPlainsNorth.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() and not memory.main.battle_active():

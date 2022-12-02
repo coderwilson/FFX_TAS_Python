@@ -37,7 +37,7 @@ def loop_back_from_ronso(checkpoint=0):
                 checkpoint = 13
             elif pathing.set_movement(GagazetNELoopback.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible() or memory.main.menu_open():
@@ -80,7 +80,7 @@ def to_hidden_cave():
                 FFXC.set_movement(-1, 1)
             elif pathing.set_movement(NEApproach.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -148,13 +148,13 @@ def drop_hunt():
                     checkpoint -= 2
                 elif pathing.set_movement(NEForceEncountersGreen.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
             else:
                 if pathing.set_movement(NEForceEncountersWhite.execute(checkpoint)):
                     checkpoint += 1
                     if checkpoint == 2:
                         checkpoint = 0
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -201,7 +201,7 @@ def return_to_gagazet():
                     checkpoint = 0
                 elif pathing.set_movement(NEReturnGreen.execute(checkpoint)):
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 1 and memory.main.get_map() == 266:
                 checkpoint = 1
             elif checkpoint == 2 and unequip:
@@ -214,7 +214,7 @@ def return_to_gagazet():
                 checkpoint = 7
             elif pathing.set_movement(NEReturn.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

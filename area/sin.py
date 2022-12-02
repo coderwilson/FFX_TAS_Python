@@ -180,7 +180,7 @@ def inside_sin():
             # General Pathing
             elif pathing.set_movement(InsideSin.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.turn_ready():

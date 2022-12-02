@@ -34,11 +34,7 @@ def ammes():
 
     while battle_complete != 1:
         if memory.main.turn_ready():
-            if (
-                not tidus_od_flag
-                and Tidus.is_turn()
-                and Tidus.has_overdrive()
-            ):
+            if not tidus_od_flag and Tidus.is_turn() and Tidus.has_overdrive():
                 Tidus.overdrive()
                 tidus_od_flag = True
             else:
