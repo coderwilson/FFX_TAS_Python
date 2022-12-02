@@ -1113,9 +1113,9 @@ def get_menu_display_characters():
     characters = []
     for cur in range(7):
         char = read_val(base + cur)
-        logger.debug(f"get_menu_display_charaters(). Cur: {cur}, Char: {char}")
+        logger.debug(f"get_menu_display_characters(), Cur: {cur}, Char: {char}")
         characters.append(char)
-    logger.debug(f"get_menu_display_charaters(), characters: {characters}")
+    logger.debug(f"get_menu_display_characters(), characters: {characters}")
     return characters
 
 
