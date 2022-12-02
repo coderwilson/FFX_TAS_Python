@@ -396,9 +396,10 @@ def click_to_control_dumb():
     logger.debug("Awaiting control (clicking)")
     with logging_redirect_tqdm():
         fmt = "Awaiting control... elapsed {elapsed}"
-        with tqdm(bar_format=fmt):
+        with tqdm(bar_format=fmt) as pbar:
             while not user_control():
                 xbox.tap_b()
+                pbar.update()
     logger.debug("User control restored.")
     return True
 
@@ -443,7 +444,7 @@ def click_to_control_special():
     logger.debug("Awaiting control (clicking)")
     with logging_redirect_tqdm():
         fmt = "Awaiting control... elapsed {elapsed}"
-        with tqdm(bar_format=fmt):
+        with tqdm(bar_format=fmt) as pbar:
             while not user_control():
                 FFXC.set_value("btn_b", 1)
                 FFXC.set_value("btn_y", 1)
@@ -451,6 +452,7 @@ def click_to_control_special():
                 FFXC.set_value("btn_b", 0)
                 FFXC.set_value("btn_y", 0)
                 wait_frames(30 * 0.035)
+                pbar.update()
     wait_frames(30 * 0.05)
     logger.debug("User control restored.")
     return True
