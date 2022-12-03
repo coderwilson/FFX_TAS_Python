@@ -24,7 +24,7 @@ def open_config():
                 logger.error(f"Error: Failed to parse config file {CONFIG_FILE_PATH}")
                 logger.exception(E)
                 return {}
-    except Exception as E:
+    except Exception:
         logger.info(
             f"Didn't find config file {CONFIG_FILE_PATH}, using default values for run."
         )

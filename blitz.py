@@ -329,7 +329,7 @@ def get_char_radius(player_index: int = 10):
             (player_coords[0] * player_coords[0])
             + (player_coords[1] * player_coords[1])
         )
-    except Exception as E:
+    except Exception:
         logger.error("Math error, using default value.")
         logger.error(f"Coords: {player_coords[0] ** 2}")
         result = 999

@@ -14,7 +14,7 @@ import save_sphere
 import screen
 import vars
 import xbox
-from memory.yojimbo_rng import zanmato_gil_needed
+#from memory.yojimbo_rng import zanmato_gil_needed
 from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
@@ -201,14 +201,15 @@ def aeon_start():
 
 @battle.utils.speedup_decorator
 def yojimbo_battle():
-    zanmato_gil_needed()  # Just to report
+    #zanmato_gil_needed()  # Just to report
     # Incomplete
     screen.await_turn()
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
     logger.debug("Yuna Overdrive to summon Yojimbo")
     battle.overdrive.yuna()
-    needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
+    #needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
+    needed_amount = 263000
     logger.debug(f"Pay the man: {needed_amount}")
     # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
     battle.overdrive.yojimbo()  # Backup plan
@@ -220,7 +221,7 @@ def yojimbo_battle():
                 Tidus.flee()
             elif screen.turn_aeon():
                 # May still be able to get it?
-                zanmato_gil_needed()  # For printing purposes
+                #zanmato_gil_needed()  # For printing purposes
                 battle.overdrive.yojimbo(gil_value=1)
             else:
                 CurrentPlayer().defend()
@@ -329,7 +330,7 @@ def basic_attack(
 def arena_npc():
     if memory.main.get_map() != 307:
         return
-    zanmato_gil_needed()  # Just for debug purposes
+    #zanmato_gil_needed()  # Just for debug purposes
     while not (
         memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
     ):

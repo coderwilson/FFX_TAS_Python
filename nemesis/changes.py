@@ -112,7 +112,7 @@ def calm_lands_1():
             #         checkpoint -= 2
             if pathing.set_movement(CalmLands1.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -430,7 +430,7 @@ def to_remiem():
                 checkpoint += 1
             elif pathing.set_movement(ToRemiem.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
 
 def remiem_races():
@@ -456,7 +456,7 @@ def choco_race_1():
         if memory.main.user_control():
             if pathing.set_movement(Race1.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -490,7 +490,7 @@ def choco_race_2():
                 checkpoint += 1
             if pathing.set_movement(Race2.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -535,7 +535,7 @@ def choco_race_3():
             #     break
             if pathing.set_movement(Race3.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
@@ -574,7 +574,7 @@ def temple_to_arena():
                 checkpoint += 1
             elif pathing.set_movement(LeaveRemiem.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
 
 def arena_purchase():
@@ -616,7 +616,7 @@ def arena_purchase():
                 checkpoint -= 2
             elif pathing.set_movement(CalmLands2.execute(checkpoint)) == True:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

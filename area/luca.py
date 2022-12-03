@@ -140,7 +140,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(Luca1.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -246,7 +246,7 @@ def after_blitz():
             # General pathing
             elif pathing.set_movement(Luca3.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
         else:
             FFXC.set_neutral()

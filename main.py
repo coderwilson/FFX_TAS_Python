@@ -105,7 +105,7 @@ def rng_seed_setup():
         memory.main.set_rng_seed(game_vars.rng_seed_num())
 
     rng_seed = memory.main.rng_seed()
-    logger.info(f"---RNG seed: {rng_seed}")
+    logger.info(f"RNG Seed: {rng_seed}")
     if game.state == "none":
         # record the RNG seed on full runs.
         logs.next_stats(rng_seed)
@@ -317,7 +317,7 @@ def perform_TAS():
             if game.state == "Miihen":
                 if game.step == 1:
                     return_array = area.miihen.arrival()
-                    self_destruct = area.miihen.arrival_2(
+                    area.miihen.arrival_2(
                         return_array[0], return_array[1], return_array[2]
                     )
                     game.step = 2

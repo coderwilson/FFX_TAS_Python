@@ -35,13 +35,15 @@ class ImageToText(object):
     # gray scale level values from:
     # http://paulbourke.net/dataformats/asciiart/
     # 70 levels of gray
-    gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+    gscale1 = (
+        r"""$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'. """
+    )
     # 10 levels of gray
     gscale2 = "@%#*+=-:. "
 
     reset = "\x1b[0m"
 
-    def __init__(self, filename, cols, scale=0.5, more_levels=False, color=False):
+    def __init__(self, filename, cols, scale=0.5, more_levels=True, color=False):
         self._convert_image(filename, cols, scale, more_levels, color)
 
     def _rgb(self, col):
