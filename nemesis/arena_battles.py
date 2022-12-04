@@ -15,7 +15,7 @@ import screen
 import vars
 import xbox
 #from memory.yojimbo_rng import zanmato_gil_needed
-from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna
+from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna, Yojimbo
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -207,7 +207,7 @@ def yojimbo_battle():
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
     logger.debug("Yuna Overdrive to summon Yojimbo")
-    battle.overdrive.yuna()
+    Yuna.overdrive(aeon_num=5)
     #needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
     needed_amount = 263000
     logger.debug(f"Pay the man: {needed_amount}")
@@ -215,11 +215,11 @@ def yojimbo_battle():
     battle.overdrive.yojimbo()  # Backup plan
 
     memory.main.wait_frames(90)
-    while memory.main.battle_active():
+    while not memory.main.menu_open():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 Tidus.flee()
-            elif screen.turn_aeon():
+            elif Yojimbo.is_turn():
                 # May still be able to get it?
                 #zanmato_gil_needed()  # For printing purposes
                 battle.overdrive.yojimbo(gil_value=1)
