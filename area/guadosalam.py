@@ -5,8 +5,8 @@ import memory.main
 import pathing
 import vars
 import xbox
-from paths import GuadoStart, GuadoSkip, GuadoStoryline
-from players import Auron, Rikku, Yuna, Wakka, Lulu
+from paths import GuadoSkip, GuadoStart, GuadoStoryline
+from players import Auron, Lulu, Rikku, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -16,23 +16,23 @@ FFXC = xbox.controller_handle()
 
 def arrival():
     logger.info("Starting Guadosalam section")
-    checkpoint=0
+    checkpoint = 0
     memory.main.click_to_control()
-    while memory.main.get_map() != 141: #Up to the dining hall scenes
+    while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():
             if checkpoint == 4:
                 # Into the first door
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 6:
                 # Back out the door
-                FFXC.set_movement(0,-1)
+                FFXC.set_movement(0, -1)
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 8:
                 # Into the dining hall
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
             elif pathing.set_movement(GuadoStart.execute(checkpoint)):
@@ -41,7 +41,7 @@ def arrival():
         else:
             FFXC.set_neutral()
             xbox.tap_b()
-    
+
     # Checkpoint carries over.
     # We skip the first movement checkpoint, replaced by the approach feature.
     checkpoint += 1
