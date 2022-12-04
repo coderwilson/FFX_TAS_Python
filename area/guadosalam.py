@@ -83,6 +83,7 @@ def arrival():
             elif memory.main.cutscene_skip_possible():
                 memory.main.wait_frames(9)
                 xbox.skip_stored_scene()
+                memory.main.click_to_control()
 
     # Adjusted CSR branch logic, end
     logger.debug("Ready for next movement.")
