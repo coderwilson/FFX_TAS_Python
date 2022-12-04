@@ -15,7 +15,7 @@ from paths.gagazet import (
     KelkRonso,
     SeymourFlux,
 )
-from paths.guadosalam import GuadoStart, GuadoSkip, GuadoStoryline
+from paths.guadosalam import GuadoSkip, GuadoStoryline
 from paths.home import BikanelDesert, BikanelHome
 from paths.kilika import Kilika1, Kilika2, Kilika3, KilikaTrials
 from paths.luca import Luca1, Luca3, LucaPreBlitz

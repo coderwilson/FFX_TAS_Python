@@ -5,7 +5,7 @@ import memory.main
 import pathing
 import vars
 import xbox
-from paths import GuadoStart, GuadoSkip, GuadoStoryline
+from paths import GuadoSkip, GuadoStart, GuadoStoryline
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -16,21 +16,21 @@ FFXC = xbox.controller_handle()
 def arrival(checkpoint=0):
     logger.info("Starting Guadosalam section")
     memory.main.click_to_control()
-    while memory.main.get_map() != 141: #Up to the dining hall scenes
+    while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():
             if checkpoint == 4:
                 # Into the first door
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 6:
                 # Back out the door
-                FFXC.set_movement(0,-1)
+                FFXC.set_movement(0, -1)
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 8:
                 # Into the dining hall
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
             elif pathing.set_movement(GuadoStart.execute(checkpoint)):
@@ -39,7 +39,7 @@ def arrival(checkpoint=0):
         else:
             FFXC.set_neutral()
             xbox.tap_b()
-    
+
     # Checkpoint carries over.
     logger.info("Now in the room with all the food")
     while not memory.main.get_map() == 163:
@@ -66,7 +66,7 @@ def arrival(checkpoint=0):
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
-            #elif memory.main.cutscene_skip_possible():
+            # elif memory.main.cutscene_skip_possible():
             #    xbox.skip_scene()
             # Not sure why, but the scene is not skipping.
 

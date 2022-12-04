@@ -1,28 +1,29 @@
 from paths.base import AreaMovementBase
 
+
 class GuadoStart(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [-4, -5],
         1: [-21, 40],
         2: [-21, 83],
         3: [-7, 178],
-        4: [0, 0], # Into the door
+        4: [0, 0],  # Into the door
         5: [-1, -111],
-        6: [0,0], # Back out the door.
+        6: [0, 0],  # Back out the door.
         7: [20, 24],
-        8: [0,0], # Into the dining hall
+        8: [0, 0],  # Into the dining hall
         9: [8, -102],
-        10: [0, 0], # Talk to Auron
+        10: [0, 0],  # Talk to Auron
         11: [-33, -69],
-        12: [0,0], # Talk to Wakka
-        13: [-19, -60], 
-        14: [0, 0], # Talk to Lulu
+        12: [0, 0],  # Talk to Wakka
+        13: [-19, -60],
+        14: [0, 0],  # Talk to Lulu
         15: [21, -52],
         16: [20, -29],
         17: [16, -28],
-        18: [0,0], # Talk to Rikku
+        18: [0, 0],  # Talk to Rikku
         19: [32, -28],
-        20: [0, 0], # Talk to Yuna
+        20: [0, 0],  # Talk to Yuna
         21: [0, 0],
         22: [-44, 0],
         23: [0, 0],
@@ -44,6 +45,7 @@ class GuadoStart(AreaMovementBase):
         39: [0, 0],
         40: [0, 0],
     }
+
 
 class GuadoStoryline(AreaMovementBase):
     checkpoint_coordiantes = {
