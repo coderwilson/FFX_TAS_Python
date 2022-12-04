@@ -6,6 +6,7 @@ import pathing
 import vars
 import xbox
 from paths import GuadoStart, GuadoSkip, GuadoStoryline
+from players import Auron, Rikku, Yuna, Wakka, Lulu
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -13,8 +14,9 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 
-def arrival(checkpoint=0):
+def arrival():
     logger.info("Starting Guadosalam section")
+    checkpoint=0
     memory.main.click_to_control()
     while memory.main.get_map() != 141: #Up to the dining hall scenes
         if memory.main.user_control():
@@ -41,23 +43,35 @@ def arrival(checkpoint=0):
             xbox.tap_b()
     
     # Checkpoint carries over.
+    # We skip the first movement checkpoint, replaced by the approach feature.
+    checkpoint += 1
     logger.info("Now in the room with all the food")
     while not memory.main.get_map() == 163:
         if memory.main.user_control():
             if checkpoint == 10:
-                pathing.approach_actor(actor_id=3)
+                if game_vars.csr():
+                    pathing.approach_party_member(Wakka)
+                else:
+                    pathing.approach_party_member(Auron)
+                checkpoint += 1
+            elif checkpoint == 11:
+                if game_vars.csr():
+                    pathing.approach_party_member(Lulu)
+                else:
+                    pathing.approach_party_member(Wakka)
                 checkpoint += 1
             elif checkpoint == 12:
-                pathing.approach_actor(actor_id=5)
-                checkpoint += 1
-            elif checkpoint == 14:
-                pathing.approach_actor(actor_id=6)
-                checkpoint += 1
+                if game_vars.csr():
+                    pathing.approach_party_member(Auron)
+                    checkpoint = 15
+                else:
+                    pathing.approach_party_member(Lulu)
+                    checkpoint += 1
             elif checkpoint == 18:
-                pathing.approach_actor(actor_id=7)
+                pathing.approach_party_member(Rikku)
                 checkpoint += 1
             elif checkpoint == 20:
-                pathing.approach_actor(actor_id=2)
+                pathing.approach_party_member(Yuna)
                 checkpoint += 1
             elif pathing.set_movement(GuadoStart.execute(checkpoint)):
                 checkpoint += 1
