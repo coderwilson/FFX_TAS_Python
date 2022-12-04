@@ -1,5 +1,5 @@
 import logging
-from math import copysign
+from math import copysign, sqrt
 
 import memory.main
 import xbox
@@ -45,11 +45,45 @@ def set_movement(target) -> bool:
         return False
 
 
-def approach_actor(actor_id: int = 999, actor_index: int = 999, talk: bool = True):
+def distance(actor_index: int):
+    # Assume index is passed in.
+    actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
+    player_coords = memory.main.get_coords()
+    distance = sqrt(
+        ((player_coords[0] - actor_coords[0]) ** 2)
+        + ((player_coords[1] - actor_coords[1]) ** 2)
+    )
+    return int(distance)
+
+
+def approach_actor_by_index(actor_index: int, talk: bool = True):
+    return _approach_actor(actor_index=actor_index, talk=talk)
+
+
+def approach_actor_by_id(actor_id: int, talk: bool = True):
+    index = memory.main.actor_index(actor_num=actor_id)
+    return _approach_actor(actor_index=index, talk=talk)
+
+
+def approach_party_member(target_char, talk: bool = True):
+    index = target_char.actor_id
+    return approach_actor_by_id(actor_id=index, talk=talk)
+
+
+def _approach_actor(actor_index: int = 999, talk: bool = True):
     # This function can be called with either the actor ID or the actor index.
     # The actor ID is not the same as their usual character ID like 0-6 for the party,
     # but rather the ID used for the actor information in the game files.
-    logger.debug("Unused, foundational piece. To be continued.")
+    logger.debug(f"Actor index {actor_index}")
+
+    actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
+    target_coords = [actor_coords[0], actor_coords[1]]
+
+    while memory.main.user_control():
+        set_movement(target_coords)
+        if talk and distance(actor_index) < 15:
+            xbox.tap_b()
+    return True
 
 
 # TODO: Doesn't appear to be used, but left for historical purposes
