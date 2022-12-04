@@ -12,38 +12,18 @@ class GuadoStart(AreaMovementBase):
         6: [0, 0],  # Back out the door.
         7: [20, 24],
         8: [0, 0],  # Into the dining hall
-        9: [8, -102],
-        10: [0, 0],  # Talk to Auron
-        11: [-33, -69],
-        12: [0, 0],  # Talk to Wakka
-        13: [-19, -60],
-        14: [0, 0],  # Talk to Lulu
-        15: [21, -52],
+        9: [8, -102],  # Skipped
+        10: [0, 0],  # Talk to Auron or Wakka depending on CSR
+        11: [0, 0],  # Talk to Wakka or Lulu depending on CSR
+        12: [0, 0],  # Talk to Lulu or Auron depending on CSR
+        13: [-9, -71],  # non-CSR only, walk around Lulu towards Rikku
+        14: [14, -60],  # non-CSR only, walk around Lulu towards Rikku
+        15: [21, -52],  # Two branches rejoin (csr vs non-csr)
         16: [20, -29],
         17: [16, -28],
         18: [0, 0],  # Talk to Rikku
         19: [32, -28],
         20: [0, 0],  # Talk to Yuna
-        21: [0, 0],
-        22: [-44, 0],
-        23: [0, 0],
-        24: [-26, -65],
-        25: [0, 0],
-        26: [64, 41],
-        27: [31, 30],
-        28: [-12, 9],
-        29: [-54, -9],
-        30: [-85, 0],
-        31: [-66, 84],
-        32: [-33, 115],
-        33: [0, 0],
-        34: [0, 0],
-        35: [0, 0],
-        36: [0, 0],
-        37: [0, 0],
-        38: [0, 0],
-        39: [0, 0],
-        40: [0, 0],
     }
 
 
@@ -82,14 +62,6 @@ class GuadoStoryline(AreaMovementBase):
         30: [-85, 0],
         31: [-66, 84],
         32: [-33, 115],
-        33: [0, 0],
-        34: [0, 0],
-        35: [0, 0],
-        36: [0, 0],
-        37: [0, 0],
-        38: [0, 0],
-        39: [0, 0],
-        40: [0, 0],
     }
 
 

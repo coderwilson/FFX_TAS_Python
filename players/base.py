@@ -40,7 +40,10 @@ class Player:
         self.struct_offset = id * PlayerMagicNumbers.CHAR_STRUCT_SIZE
         self.char_rng = 20 + id
         self.battle_menu = battle_menu
-
+    
+    def actor_id(self):
+        return self.id + 1
+    
     def __eq__(self, other):
         if isinstance(other, int):
             return self.id == other

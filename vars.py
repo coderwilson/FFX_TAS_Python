@@ -58,7 +58,7 @@ class AllVars:
         # === Vars used by the TAS, no pre-set values ===
         # ----Cutscene remover, TAS will set this value on New Game
         # ----If loading to a save file without CSR, may need to change this.
-        self.csr_value = True
+        self.csr_value = False
 
         # ----Blitzball
         self.blitz_loss_force_reset = True
