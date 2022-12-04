@@ -201,7 +201,7 @@ def aeon_start():
 
 @battle.utils.speedup_decorator
 def yojimbo_battle():
-    #zanmato_gil_needed()  # Just to report
+    # zanmato_gil_needed()  # Just to report
     # Incomplete
     screen.await_turn()
     if not Yuna.active():
@@ -221,7 +221,7 @@ def yojimbo_battle():
                 Tidus.flee()
             elif Yojimbo.is_turn():
                 # May still be able to get it?
-                #zanmato_gil_needed()  # For printing purposes
+                # zanmato_gil_needed()  # For printing purposes
                 battle.overdrive.yojimbo(gil_value=1)
             else:
                 CurrentPlayer().defend()
@@ -330,7 +330,7 @@ def basic_attack(
 def arena_npc():
     if memory.main.get_map() != 307:
         return
-    #zanmato_gil_needed()  # Just for debug purposes
+    # zanmato_gil_needed()  # Just for debug purposes
     while not (
         memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
     ):

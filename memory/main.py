@@ -1927,16 +1927,16 @@ def get_actor_id(actor_num):
     return process.read_bytes(base_pointer_address + offset_x, 2)
 
 
-def get_actor_coords(actor_number):
+def get_actor_coords(actor_index):
     global process
     global base_value
     ret_val = [0, 0, 0]
     try:
         base_pointer = base_value + 0x01FC44E4
         base_pointer_address = process.read(base_pointer)
-        offset_x = (0x880 * actor_number) + 0x0C
-        offset_y = (0x880 * actor_number) + 0x14
-        offset_z = (0x880 * actor_number) + 0x10
+        offset_x = (0x880 * actor_index) + 0x0C
+        offset_y = (0x880 * actor_index) + 0x14
+        offset_z = (0x880 * actor_index) + 0x10
 
         key_x = base_pointer_address + offset_x
         ret_val[0] = float_from_integer(process.read(key_x))

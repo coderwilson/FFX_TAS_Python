@@ -41,6 +41,10 @@ class Player:
         self.char_rng = 20 + id
         self.battle_menu = battle_menu
 
+    @property
+    def actor_id(self):
+        return self.id + 1
+
     def __eq__(self, other):
         if isinstance(other, int):
             return self.id == other
