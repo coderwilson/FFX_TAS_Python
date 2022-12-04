@@ -1,4 +1,5 @@
 import logging
+from math import sqrt
 from math import copysign
 
 import memory.main
@@ -45,12 +46,38 @@ def set_movement(target) -> bool:
         return False
 
 
-def approach_actor(actor_id: int = 999, actor_index: int = 999, talk: bool = True):
+def distance(actor_index:int):
+    # Assume index is passed in.
+    actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
+    player_coords = memory.main.get_coords()
+    distance = sqrt(
+        ((player_coords[0] - actor_coords[0])**2) +
+        ((player_coords[1] - actor_coords[1])**2)
+    )
+    return int(distance)
+
+def approach_actor(actor_id:int=999, actor_index:int=999, talk:bool=True):
     # This function can be called with either the actor ID or the actor index.
     # The actor ID is not the same as their usual character ID like 0-6 for the party,
     # but rather the ID used for the actor information in the game files.
     logger.debug("Unused, foundational piece. To be continued.")
-
+    if actor_id == 999 and actor_index == 999:
+        logger.error("Error - you must pass either an ID or an index for this actor.")
+        return False
+    elif actor_index == 999:
+        actor_index = memory.main.actor_index(actor_num=actor_id)
+        logger.debug(f"Actor index {actor_index}")
+    else:
+        logger.debug(f"Actor index {actor_index}")
+    
+    actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
+    target_coords = [actor_coords[0], actor_coords[1]]
+    
+    while memory.main.user_control():
+        set_movement(target_coords)
+        if talk and distance(actor_index) < 15:
+            xbox.tap_b()
+    return True
 
 # TODO: Doesn't appear to be used, but left for historical purposes
 def seymour_natus():  # First checkpoint ever written. :D
