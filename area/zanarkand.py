@@ -124,7 +124,7 @@ def arrival():
                         xbox.tap_b()
             elif pathing.set_movement(ZanarkandOutdoors.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
 
@@ -198,7 +198,7 @@ def arrival():
                 else:
                     if memory.main.get_item_count_slot(luck_slot) > luck_count:
                         checkpoint += 1
-                        logger.debug(f"Updating checkpoint: {checkpoint}")
+                        logger.debug(f"Updating Checkpoint {checkpoint}")
                         memory.main.click_to_control()
                     else:
                         FFXC.set_movement(1, 1)
@@ -213,7 +213,7 @@ def arrival():
                 checkpoint = 21
             elif pathing.set_movement(ZanarkandDome.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -259,7 +259,7 @@ def trials_0(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
     return checkpoint
 
 
@@ -290,7 +290,7 @@ def trials_1(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
     return checkpoint
 
 
@@ -314,7 +314,7 @@ def trials_2(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
     return checkpoint
 
 
@@ -338,7 +338,7 @@ def trials_3(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
     return checkpoint
 
 
@@ -363,7 +363,7 @@ def trials_4(checkpoint):
                 checkpoint += 1
             elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
     FFXC.set_neutral()
     return checkpoint
 
@@ -431,10 +431,10 @@ def yunalesca():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif pathing.set_movement(ZanarkandYunalesca.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             FFXC.set_value("btn_b", 1)
@@ -466,32 +466,32 @@ def post_yunalesca(checkpoint=0):
             if checkpoint < 2 and memory.main.get_map() == 319:
                 # Back to room before Yunalesca
                 checkpoint = 2
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 4 and memory.main.get_map() == 318:
                 # Exit to room with the inert Aeon
                 checkpoint = 4
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 7:
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 10 and memory.main.get_map() == 320:
                 # Back to larger of the puzzle rooms
                 checkpoint = 10
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 18 and memory.main.get_map() == 316:
                 # Hallway before puzzle rooms
                 checkpoint = 18
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
                 save_sphere.touch_and_go()
             elif checkpoint < 25 and memory.main.get_map() == 315:
                 # Leaving dome
                 checkpoint = 25
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 26:
                 FFXC.set_neutral()
             elif pathing.set_movement(YunalescaToAirship.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():

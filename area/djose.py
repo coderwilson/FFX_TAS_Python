@@ -29,7 +29,7 @@ def path():
 
     while memory.main.get_map() != 81:  # All the way into the temple
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
 
         if memory.main.user_control():
@@ -297,7 +297,7 @@ def trials():
                     FFXC.set_neutral()
                     memory.main.wait_frames(30 * 0.2)
                     checkpoint += 1
-                    logger.debug(f"Checkpoint reached: {checkpoint}")
+                    logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 88:
                 logger.info("Pedestal 1")
                 memory.main.click_to_event_temple(6)
@@ -334,7 +334,7 @@ def trials():
                 checkpoint += 1
             elif pathing.set_movement(DjoseTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
     FFXC.set_neutral()
     if not game_vars.csr():
@@ -352,7 +352,7 @@ def trials():
         while memory.main.user_control():
             if pathing.set_movement(DjoseDance.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
             if checkpoint == 8:
                 checkpoint = 0
@@ -376,7 +376,7 @@ def leaving_djose():
     last_cp = 0
     while memory.main.get_map() != 75:
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint reached: {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
         if memory.main.user_control():
             if checkpoint == 1:

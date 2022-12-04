@@ -41,9 +41,10 @@ class DeltaTimeFormatter(logging.Formatter):
     def format(self, record):
         # Create a timestamp we can use to parse, using the millisecond timestamp since start of program / 1000
         duration = datetime.datetime.utcfromtimestamp(record.relativeCreated / 1000)
-        # Create the delta property, with the format 'HH:MM:SS.sss'
-        # Latter part may be removed if we are not interested in milliseconds, or replaced with %f if we want microseconds.
-        record.delta = f"{duration.strftime('%H:%M:%S')}.{int(duration.strftime('%f')) // 1000:03d}"
+        # Create the delta property, with the format 'HH:MM:SS'
+        record.delta = duration.strftime("%H:%M:%S")
+        # Create the delta_ms property, with the format 'HH:MM:SS.sss'
+        record.delta_ms = f"{duration.strftime('%H:%M:%S')}.{int(duration.strftime('%f')) // 1000:03d}"
         record.color = self.COLOR.get(record.levelno)
         record.color_reset = self.reset
         return super().format(record)
@@ -56,12 +57,15 @@ def initialize_logging():
 
     # Defines the format of the colored logs
     color_log_fmt = (
-        "%(color)s[%(delta)s] %(name)-16s %(levelname)-8s %(message)s%(color_reset)s"
+        "%(color)s[%(delta)s] %(name)-14s %(levelname)-5s %(message)s%(color_reset)s"
     )
     color_log_formatter = DeltaTimeFormatter(fmt=color_log_fmt)
     # Same format, but without the coloring
-    bw_log_fmt = "[%(delta)s] %(name)-16s %(levelname)-8s %(message)s"
+    bw_log_fmt = "[%(delta)s] %(name)-14s %(levelname)-5s %(message)s"
     bw_log_formatter = DeltaTimeFormatter(fmt=bw_log_fmt)
+    # Log file specific format
+    file_log_fmt = "[%(delta_ms)s] %(name)-16s %(levelname)-8s %(message)s"
+    file_log_formatter = DeltaTimeFormatter(fmt=file_log_fmt)
     # Get current time in order to create log file name
     time_now = datetime.datetime.now()
     time_str = f"{time_now.year}{time_now.month:02d}{time_now.day:02d}_{time_now.hour:02d}_{time_now.minute:02d}_{time_now.second:02d}"
@@ -72,8 +76,8 @@ def initialize_logging():
         filemode="w",  # Log everything in the file
         level=logging.DEBUG,
     )
-    # Apply non-colored formatter to file output
-    logging.getLogger("").root.handlers[0].setFormatter(bw_log_formatter)
+    # Apply non-colored, file-specific formatter to file output
+    logging.getLogger("").root.handlers[0].setFormatter(file_log_formatter)
 
     # Get the visible log level for the console logger from config.yaml
     config_data = config.open_config()

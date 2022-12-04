@@ -143,12 +143,9 @@ def start():
 
     # rwm = ReadWriteMemory()
     rwm = FFXMemory()
-    logger.info("#############")
     logger.info(type(rwm))
     process = rwm.get_process_by_name("FFX.exe")
-    logger.info("#############")
     logger.info(type(process))
-    logger.info("#############")
     process.open()
 
     global base_value
@@ -199,9 +196,7 @@ def rng_seed():
 def set_rng_seed(value):
     global base_value
     key = base_value + 0x003988A5
-    logger.info("+++++++++++++++++")
     logger.info(type(process))
-    logger.info("+++++++++++++++++")
     return process.write_bytes(key, value, 1)
 
 
@@ -238,17 +233,18 @@ def battle_active():
 
 
 def get_current_turn():
-    return get_turn_by_index(turn_index = 0)
+    return get_turn_by_index(turn_index=0)
 
 
 def get_next_turn():
-    return get_turn_by_index(turn_index = 1)
+    return get_turn_by_index(turn_index=1)
 
 
-def get_turn_by_index(turn_index:int):
+def get_turn_by_index(turn_index: int):
     global base_value
     key = base_value + 0x00D2AA00 + (turn_index * 4)
     return process.read_bytes(key, 1)
+
 
 def battle_menu_cursor():
     global base_value
@@ -403,6 +399,7 @@ def click_to_control_dumb():
         with tqdm(bar_format=fmt) as pbar:
             while not user_control():
                 xbox.tap_b()
+                pbar.update()
     logger.debug("User control restored.")
     return True
 
@@ -455,6 +452,7 @@ def click_to_control_special():
                 FFXC.set_value("btn_b", 0)
                 FFXC.set_value("btn_y", 0)
                 wait_frames(30 * 0.035)
+                pbar.update()
     wait_frames(30 * 0.05)
     logger.debug("User control restored.")
     return True
@@ -1117,9 +1115,9 @@ def get_menu_display_characters():
     characters = []
     for cur in range(7):
         char = read_val(base + cur)
-        logger.debug(f"get_menu_display_charaters(). Cur: {cur}, Char: {char}")
+        logger.debug(f"get_menu_display_characters(), Cur: {cur}, Char: {char}")
         characters.append(char)
-    logger.debug(f"get_menu_display_charaters(), characters: {characters}")
+    logger.debug(f"get_menu_display_characters(), characters: {characters}")
     return characters
 
 
@@ -1673,12 +1671,6 @@ def cutscene_skip_possible():
         return False
     global base_value
     key = base_value + 0x00D2A008
-    return process.read_bytes(key, 1) == 1
-
-
-def auditory_dialog_playing():
-    global base_value
-    key = base_value + 0x00F2FED4
     return process.read_bytes(key, 1) == 1
 
 
@@ -2407,11 +2399,12 @@ def reset_battle_end():
     process.write_bytes(key, 1, 1)
 
 
-def set_rng_by_index(value:int=0, index:int=1):
+def set_rng_by_index(value: int = 0, index: int = 1):
     global base_value
     global process
     key = base_value + 0x00D35ED8 + (index * 0x4)
     process.write_bytes(key, value, 4)
+
 
 def set_rng_2():
     global base_value

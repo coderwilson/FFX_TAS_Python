@@ -58,7 +58,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(Kilika1.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
         else:
             FFXC.set_neutral()
@@ -92,8 +92,8 @@ def select_best_of_two(coming_battles):
 def forest_1():
     logger.info("Kilika forest 1")
     kilika_battles = 0
-    best_of_two = 99 # Used to find the best battle coming up.
-    advances = 2 # Used to find the best battle coming up.
+    best_of_two = 99  # Used to find the best battle coming up.
+    advances = 2  # Used to find the best battle coming up.
     next_battle = []
     import rng_track
 
@@ -152,7 +152,7 @@ def forest_1():
             # General pathing
             elif pathing.set_movement(Kilika2.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
 
         else:
             FFXC.set_neutral()
@@ -277,7 +277,7 @@ def trials():
             # General pathing
             elif pathing.set_movement(KilikaTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -344,7 +344,7 @@ def forest_3():
             # General pathing
             elif pathing.set_movement(Kilika3.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

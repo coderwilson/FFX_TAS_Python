@@ -57,7 +57,7 @@ def arrival():
             # General pathing
             elif pathing.set_movement(Moonflow1.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -100,7 +100,7 @@ def south_bank(checkpoint: int = 0):
 
             elif pathing.set_movement(MoonflowBankSouth.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
@@ -149,7 +149,7 @@ def north_bank():
                 checkpoint += 1
             elif memory.main.get_story_progress() >= 1085 and checkpoint < 4:
                 checkpoint = 4
-                logger.debug(f"Rikku scene, updating checkpoint: {checkpoint}")
+                logger.debug(f"Rikku scene, updating Checkpoint {checkpoint}")
 
             # Map changes
             elif checkpoint < 2 and memory.main.get_map() == 109:
@@ -160,7 +160,7 @@ def north_bank():
             # General pathing
             elif pathing.set_movement(MoonflowBankNorth.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():

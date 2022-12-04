@@ -549,17 +549,19 @@ def load_baaj():
     FFXC.set_neutral()
     memory.main.wait_frames(30 * 0.04)
 
+
 def kilika_rng_manip():
     # Kilika start, RNG01
     # 1904657448
     logger.warning("==== Hard setting value for testing")
     rng_value = 1904657448
     memory.main.set_rng_by_index(value=rng_value, index=1)
-    
-    #Basically, hunt until we don't find a good battle in 'advances'
+
+    # Basically, hunt until we don't find a good battle in 'advances'
     advances = 5
-    import rng_track
     import area.kilika
+    import rng_track
+
     next_two = rng_track.coming_battles(
         area="kilika_woods", battle_count=advances, extra_advances=1
     )
@@ -570,7 +572,7 @@ def kilika_rng_manip():
             area="kilika_woods", battle_count=advances, extra_advances=1
         )
     logger.warning(f"==== Chosen Value: {rng_value}")
-    
+
 
 def besaid_trials():
     # Exit Tent

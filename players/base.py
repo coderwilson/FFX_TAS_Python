@@ -149,7 +149,7 @@ class Player:
             logger.debug("Attack enemy, first targetted.")
         elif target_id in range(7):
             logger.debug(f"Attack player character {target_id}")
-        elif memory.main.get_enemy_current_hp()[target_id-20] == 0:
+        elif memory.main.get_enemy_current_hp()[target_id - 20] == 0:
             logger.debug(
                 f"Enemy {target_id} is not attack-able. Resorting to basic attack."
             )
@@ -227,19 +227,19 @@ class Player:
         logger.debug(f"Defending, char {self}")
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
-        
+
         # Make sure we are not already in defend state_berserk
         while self.is_defending() == 1:
             pass
-        memory.main.wait_frames(1) # Buffer for safety
-        
+        memory.main.wait_frames(1)  # Buffer for safety
+
         result = 0
-        #Now tap to defending status.
+        # Now tap to defending status.
         while result == 0:
             result = self.is_defending()
             if result == 0:
                 xbox.tap_y()
-        memory.main.wait_frames(1) # Buffer for safety
+        memory.main.wait_frames(1)  # Buffer for safety
         return True
 
     def navigate_to_battle_menu(self, target: int):
@@ -340,10 +340,10 @@ class Player:
             )
         else:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
-    
+
     def in_combat(self):
         return memory.main.battle_active()
-    
+
     def has_overdrive(self) -> bool:
         # Passed variable now does nothing, 11/30, clean up if the below logic works.
         return self.overdrive_percent(combat=self.in_combat()) == 100
@@ -373,9 +373,11 @@ class Player:
 
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)
-    
+
     def is_defending(self) -> int:
-        defend_byte = self._read_char_battle_state_address(offset=PlayerMagicNumbers.DEFENDING)
+        defend_byte = self._read_char_battle_state_address(
+            offset=PlayerMagicNumbers.DEFENDING
+        )
         result = (defend_byte >> 3) & 1
         if self.id != memory.main.get_battle_char_turn():
             return 9

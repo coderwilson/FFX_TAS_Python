@@ -199,7 +199,7 @@ def air_ship_path(version):
             # General Pathing
             elif pathing.set_movement(Airship.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint reached: {checkpoint}")
+                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

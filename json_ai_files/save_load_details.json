@@ -65,7 +65,7 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "Kilika_rng_manip"
+                "special_movement": "none"
             }
         }
     },
@@ -110,16 +110,6 @@
         }
     },
     "MRR": {
-        "1": {
-            "True": {
-                "save_num": "106",
-                "blitz_win_value": "True",
-                "end_game_version_val": "0",
-                "nea_zone": "0",
-                "nem_ap_val": "1",
-                "special_movement": "MRR"
-            }
-        },
         "2": {
             "True": {
                 "save_num": "107",
@@ -132,7 +122,7 @@
             "False": {
                 "save_num": "27",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -152,7 +142,7 @@
             "False": {
                 "save_num": "28",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -170,7 +160,7 @@
             "False": {
                 "save_num": "29",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -190,7 +180,7 @@
             "False": {
                 "save_num": "30",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -210,7 +200,7 @@
             "False": {
                 "save_num": "31",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -230,7 +220,7 @@
             "False": {
                 "save_num": "34",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -248,7 +238,7 @@
             "False": {
                 "save_num": "35",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -266,7 +256,7 @@
             "False": {
                 "save_num": "36",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -284,7 +274,7 @@
             "False": {
                 "save_num": "37",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -302,7 +292,7 @@
             "False": {
                 "save_num": "38",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -322,7 +312,7 @@
             "False": {
                 "save_num": "39",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -340,7 +330,7 @@
             "False": {
                 "save_num": "40",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -348,9 +338,9 @@
         }
     },
     "rescue_yuna": {
-        "1": {
+        "3": {
             "True": {
-                "save_num": "121",
+                "save_num": "148",
                 "blitz_win_value": "True",
                 "end_game_version_val": "0",
                 "nea_zone": "0",
@@ -358,9 +348,9 @@
                 "special_movement": "none"
             },
             "False": {
-                "save_num": "41",
+                "save_num": "68",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -378,7 +368,7 @@
             "False": {
                 "save_num": "42",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -396,25 +386,17 @@
             "False": {
                 "save_num": "43",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
             }
         },
-        "3": {
-            "True": {
-                "save_num": "148",
+        "1": {
+            "False": {
+                "save_num": "41",
                 "blitz_win_value": "True",
                 "end_game_version_val": "0",
-                "nea_zone": "0",
-                "nem_ap_val": "1",
-                "special_movement": "none"
-            },
-            "False": {
-                "save_num": "68",
-                "blitz_win_value": "True",
-                "end_game_version_val": "1",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -436,7 +418,7 @@
             "False": {
                 "save_num": "44",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -448,7 +430,7 @@
             "True": {
                 "save_num": "127",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -457,7 +439,7 @@
                 "save_num": "47",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
-                "nea_zone": "3",
+                "nea_zone": "1",
                 "nem_ap_val": "1",
                 "special_movement": "none"
             }
@@ -468,7 +450,7 @@
             "True": {
                 "save_num": "128",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -477,7 +459,7 @@
                 "save_num": "48",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
-                "nea_zone": "3",
+                "nea_zone": "1",
                 "nem_ap_val": "1",
                 "special_movement": "none"
             }
@@ -487,7 +469,7 @@
                 "save_num": "50",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
-                "nea_zone": "3",
+                "nea_zone": "1",
                 "nem_ap_val": "1",
                 "special_movement": "none"
             }
@@ -498,7 +480,7 @@
             "True": {
                 "save_num": "130",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
                 "special_movement": "none"
@@ -508,7 +490,7 @@
             "True": {
                 "save_num": "131",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "2",
                 "special_movement": "none"
@@ -518,7 +500,7 @@
             "True": {
                 "save_num": "132",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "3",
                 "special_movement": "none"
@@ -528,7 +510,7 @@
             "True": {
                 "save_num": "133",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "3",
                 "special_movement": "none"
@@ -538,7 +520,7 @@
             "True": {
                 "save_num": "134",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "3",
                 "special_movement": "none"
@@ -548,7 +530,7 @@
             "True": {
                 "save_num": "135",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "4",
                 "special_movement": "none"
@@ -558,9 +540,9 @@
             "True": {
                 "save_num": "136",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
-                "nem_ap_val": "8",
+                "nem_ap_val": "7",
                 "special_movement": "none"
             }
         },
@@ -568,7 +550,7 @@
             "True": {
                 "save_num": "137",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "9",
                 "special_movement": "none"
@@ -578,9 +560,9 @@
             "True": {
                 "save_num": "138",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
-                "nem_ap_val": "10",
+                "nem_ap_val": "9",
                 "special_movement": "none"
             }
         },
@@ -588,9 +570,9 @@
             "True": {
                 "save_num": "139",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
-                "nem_ap_val": "12",
+                "nem_ap_val": "11",
                 "special_movement": "none"
             }
         },
@@ -598,9 +580,9 @@
             "True": {
                 "save_num": "140",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
-                "nem_ap_val": "12",
+                "nem_ap_val": "11",
                 "special_movement": "none"
             }
         },
@@ -608,9 +590,9 @@
             "True": {
                 "save_num": "141",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
-                "nem_ap_val": "15",
+                "nem_ap_val": "13",
                 "special_movement": "none"
             }
         },
@@ -618,9 +600,9 @@
             "True": {
                 "save_num": "142",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
-                "nem_ap_val": "18",
+                "nem_ap_val": "17",
                 "special_movement": "none"
             }
         },
@@ -628,7 +610,7 @@
             "True": {
                 "save_num": "143",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "20",
                 "special_movement": "none"
@@ -638,7 +620,7 @@
             "True": {
                 "save_num": "144",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
                 "special_movement": "none"
@@ -648,7 +630,7 @@
             "True": {
                 "save_num": "145",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
                 "special_movement": "none"
@@ -658,7 +640,7 @@
             "True": {
                 "save_num": "146",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
                 "special_movement": "none"
@@ -668,7 +650,7 @@
             "True": {
                 "save_num": "147",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
+                "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
                 "special_movement": "none"
