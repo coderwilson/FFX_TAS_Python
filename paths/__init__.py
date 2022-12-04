@@ -90,6 +90,7 @@ __all__ = [
     "Moonflow1",
     "MoonflowBankSouth",
     "MoonflowBankNorth",
+    "GuadoStart",
     "GuadoStoryline",
     "GuadoSkip",
     "ThunderPlainsSouth",
