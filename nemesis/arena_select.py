@@ -61,7 +61,8 @@ def arena_menu_select(choice: int = 2):
         else:
             xbox.menu_down()
         memory.main.wait_frames(1)
-    xbox.tap_b()
+        if game_vars.use_pause():
+            memory.main.wait_frames(2)
     xbox.tap_b()
     memory.main.wait_frames(15)
 
