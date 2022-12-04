@@ -64,7 +64,7 @@ def approach_actor_by_id(actor_id:int, talk:bool=True):
     return _approach_actor(actor_index=index, talk=talk)
 
 def approach_party_member(target_char, talk:bool=True):
-    index = target_char.actor_id()
+    index = target_char.actor_id
     return approach_actor_by_id(actor_id=index, talk=talk)
 
 def _approach_actor(actor_index:int=999, talk:bool=True):
