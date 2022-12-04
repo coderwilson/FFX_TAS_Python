@@ -80,9 +80,9 @@ def arrival():
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
-            # elif memory.main.cutscene_skip_possible():
-            #    xbox.skip_scene()
-            # Not sure why, but the scene is not skipping.
+            elif memory.main.cutscene_skip_possible():
+                memory.main.wait_frames(9)
+                xbox.skip_stored_scene()
 
     # Adjusted CSR branch logic, end
     logger.debug("Ready for next movement.")
