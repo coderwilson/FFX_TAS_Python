@@ -5,7 +5,8 @@ import memory.main
 import pathing
 import vars
 import xbox
-from paths import GuadoSkip, GuadoStoryline
+from paths import GuadoSkip, GuadoStart, GuadoStoryline
+from players import Auron, Lulu, Rikku, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -15,113 +16,75 @@ FFXC = xbox.controller_handle()
 
 def arrival():
     logger.info("Starting Guadosalam section")
+    checkpoint = 0
     memory.main.click_to_control()
-
-    FFXC.set_movement(-1, 1)
-    memory.main.wait_frames(30 * 0.5)
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 3.5)
-    FFXC.set_movement(1, 1)
-    memory.main.wait_frames(30 * 0.2)
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 0.6)
-    FFXC.set_neutral()
-
-    memory.main.click_to_control_3()
-    FFXC.set_movement(0, -1)
-    memory.main.wait_frames(30 * 1)
-    FFXC.set_neutral()
-
-    memory.main.click_to_control_3()
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 2)
-    FFXC.set_neutral()  # Enter the room where we meet Seymour
-
-    logger.debug(f"Test Var (CSR) - {game_vars.csr}")
-    # Adjusted branch CSR logic, start
-    memory.main.click_to_control_3()
-    if game_vars.csr():
-        while not pathing.set_movement([-13, -67]):
-            pass
-        logger.debug("Lulu conversation")
-        while memory.main.user_control():  # Lulu conversation
-            pathing.set_movement([-11, -55])
+    while memory.main.get_map() != 141:  # Up to the dining hall scenes
+        if memory.main.user_control():
+            if checkpoint == 4:
+                # Into the first door
+                FFXC.set_movement(0, 1)
+                memory.main.await_event()
+                checkpoint += 1
+            elif checkpoint == 6:
+                # Back out the door
+                FFXC.set_movement(0, -1)
+                memory.main.await_event()
+                checkpoint += 1
+            elif checkpoint == 8:
+                # Into the dining hall
+                FFXC.set_movement(0, 1)
+                memory.main.await_event()
+                checkpoint += 1
+            elif pathing.set_movement(GuadoStart.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
             xbox.tap_b()
-        FFXC.set_neutral()
-        memory.main.click_to_control_3()
 
-        while not pathing.set_movement([-39, -77]):
-            pass
-        logger.debug("Wakka conversation")
-        while memory.main.user_control():  # Start conversation with Wakka
-            pathing.set_movement([-49, -61])
-            xbox.tap_b()
-        FFXC.set_neutral()
-        memory.main.click_to_control_3()
+    # Checkpoint carries over.
+    # We skip the first movement checkpoint, replaced by the approach feature.
+    checkpoint += 1
+    logger.info("Now in the room with all the food")
+    while not memory.main.get_map() == 163:
+        if memory.main.user_control():
+            if checkpoint == 10:
+                if game_vars.csr():
+                    pathing.approach_party_member(Wakka)
+                else:
+                    pathing.approach_party_member(Auron)
+                checkpoint += 1
+            elif checkpoint == 11:
+                if game_vars.csr():
+                    pathing.approach_party_member(Lulu)
+                else:
+                    pathing.approach_party_member(Wakka)
+                checkpoint += 1
+            elif checkpoint == 12:
+                if game_vars.csr():
+                    pathing.approach_party_member(Auron)
+                    checkpoint = 15
+                else:
+                    pathing.approach_party_member(Lulu)
+                    checkpoint += 1
+            elif checkpoint == 18:
+                pathing.approach_party_member(Rikku)
+                checkpoint += 1
+            elif checkpoint == 20:
+                pathing.approach_party_member(Yuna)
+                checkpoint += 1
+            elif pathing.set_movement(GuadoStart.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+            elif memory.main.cutscene_skip_possible():
+                memory.main.wait_frames(9)
+                xbox.skip_stored_scene()
+                memory.main.click_to_control()
 
-        while not pathing.set_movement([4, -114]):
-            pass
-        logger.debug("Talk to Auron")
-        while memory.main.user_control():  # Talk to Auron
-            pathing.set_movement([18, -119])
-            xbox.tap_b()
-        FFXC.set_neutral()
-        memory.main.click_to_control_3()
-
-    else:
-        while not pathing.set_movement([4, -114]):
-            pass
-        logger.debug("Talk to Auron")
-        while memory.main.user_control():  # Talk to Auron (first for affection)
-            pathing.set_movement([18, -119])
-            xbox.tap_b()
-        FFXC.set_neutral()
-        memory.main.click_to_control_3()
-
-        while not pathing.set_movement([-39, -77]):
-            pass
-        logger.debug("Wakka conversation")
-        while memory.main.user_control():  # Start conversation with Wakka
-            pathing.set_movement([-49, -61])
-            xbox.tap_b()
-        FFXC.set_neutral()
-        memory.main.click_to_control_3()
-
-        while not pathing.set_movement([-13, -67]):
-            pass
-        logger.debug("Lulu conversation")
-        while memory.main.user_control():  # Lulu conversation
-            pathing.set_movement([-11, -55])
-            xbox.tap_b()
-        FFXC.set_neutral()
-        memory.main.click_to_control_3()
-
-    # Line up for Rikku/Yuna
-    while not pathing.set_movement([15, -52]):
-        pass
-
-    while not pathing.set_movement([22, -25]):
-        pass
-    logger.debug("Rikku conversation")
-    while memory.main.user_control():  # Start conversation with Rikku
-        pathing.set_movement([8, -26])
-        xbox.tap_b()
-    FFXC.set_neutral()
-    memory.main.click_to_control_3()
-
-    while not pathing.set_movement([27, -37]):
-        pass
-    logger.debug("Yuna conversation")
-    while memory.main.user_control():  # Yunas turn
-        pathing.set_movement([39, -33])
-        xbox.tap_b()
-    FFXC.set_neutral()
-    memory.main.click_to_control_3()
-
-    if not game_vars.csr():
-        while not memory.main.cutscene_skip_possible():
-            xbox.tap_b()
-        xbox.skip_stored_scene(3)
     # Adjusted CSR branch logic, end
     logger.debug("Ready for next movement.")
 

@@ -127,8 +127,8 @@ def klikk_fight():
 
 def distance(n1, n2):
     try:
-        player1 = memory.main.get_actor_coords(actor_number=n1)
-        player2 = memory.main.get_actor_coords(actor_number=n2)
+        player1 = memory.main.get_actor_coords(actor_index=n1)
+        player2 = memory.main.get_actor_coords(actor_index=n2)
         return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
     except Exception as x:
         logger.error(f"Exception: {x}")
@@ -139,9 +139,9 @@ def ab_boat_1():
     logger.info("Start of Al Bhed boat section.")
     logger.debug("Control restored.")
     logger.info("On the boat!")
-    while memory.main.get_actor_coords(actor_number=0)[0] > -50:
+    while memory.main.get_actor_coords(actor_index=0)[0] > -50:
         rikku_num = memory.main.actor_index(actor_num=41)
-        target = memory.main.get_actor_coords(actor_number=rikku_num)
+        target = memory.main.get_actor_coords(actor_index=rikku_num)
         pathing.set_movement(target)
         if distance(0, rikku_num) < 10:
             xbox.tap_b()

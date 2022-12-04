@@ -1,6 +1,32 @@
 from paths.base import AreaMovementBase
 
 
+class GuadoStart(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [-4, -5],
+        1: [-21, 40],
+        2: [-21, 83],
+        3: [-7, 178],
+        4: [0, 0],  # Into the door
+        5: [-1, -111],
+        6: [0, 0],  # Back out the door.
+        7: [20, 24],
+        8: [0, 0],  # Into the dining hall
+        9: [8, -102],  # Skipped
+        10: [0, 0],  # Talk to Auron or Wakka depending on CSR
+        11: [0, 0],  # Talk to Wakka or Lulu depending on CSR
+        12: [0, 0],  # Talk to Lulu or Auron depending on CSR
+        13: [-9, -71],  # non-CSR only, walk around Lulu towards Rikku
+        14: [14, -60],  # non-CSR only, walk around Lulu towards Rikku
+        15: [21, -52],  # Two branches rejoin (csr vs non-csr)
+        16: [20, -29],
+        17: [16, -28],
+        18: [0, 0],  # Talk to Rikku
+        19: [32, -28],
+        20: [0, 0],  # Talk to Yuna
+    }
+
+
 class GuadoStoryline(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [-8, 109],
@@ -36,14 +62,6 @@ class GuadoStoryline(AreaMovementBase):
         30: [-85, 0],
         31: [-66, 84],
         32: [-33, 115],
-        33: [0, 0],
-        34: [0, 0],
-        35: [0, 0],
-        36: [0, 0],
-        37: [0, 0],
-        38: [0, 0],
-        39: [0, 0],
-        40: [0, 0],
     }
 
 
