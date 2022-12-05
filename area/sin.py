@@ -133,12 +133,12 @@ def facing_sin():
 
 def inside_sin():
     logger.info("Moving to position next to save sphere")
-    while not pathing.set_movement([247, -237]):
-        if memory.main.diag_skip_possible():
-            xbox.tap_b()
-        elif memory.main.menu_open():
-            xbox.tap_b()
-    logger.info("Moving to next map")
+    #while not pathing.set_movement([247, -237]):
+    #    if memory.main.diag_skip_possible():
+    #        xbox.tap_b()
+    #    elif memory.main.menu_open():
+    #        xbox.tap_b()
+    #logger.info("Moving to next map")
     while memory.main.get_map() != 203:
         # Skip dialog and run to the sea of sorrows map
         if memory.main.cutscene_skip_possible():

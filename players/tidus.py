@@ -3,6 +3,8 @@ import logging
 import memory.main
 import xbox
 from players.base import Player
+import vars
+game_vars = vars.vars_handle()
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +32,10 @@ class TidusImpl(Player):
                 xbox.tap_left()
         while not self.overdrive_active():
             xbox.tap_b()
-        memory.main.wait_frames(12)
+        if game_vars.use_pause():
+            memory.main.wait_frames(10)
+        else:
+            memory.main.wait_frames(12)
         xbox.tap_b()  # First try pog
         logger.info("Hit Overdrive")
 

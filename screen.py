@@ -48,7 +48,7 @@ def await_turn():
     # Now let's do this.
     fmt = "Waiting for player turn... elapsed {elapsed}"
     with tqdm(bar_format=fmt) as pbar:
-        while not battle_screen() or memory.main.user_control():
+        while not (battle_screen() or memory.main.user_control()):
             pbar.update()
             if not memory.main.battle_active():
                 pass
