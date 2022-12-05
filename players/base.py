@@ -228,7 +228,7 @@ class Player:
         raise NotImplementedError()
 
     def defend(self):
-        logger.debug(f"Defending, char {self}")
+        logger.debug(f"Defending with {self}")
         # Update matches memory.main.turn_ready.
         # Updated 11/27/22, still to be validated.
 
