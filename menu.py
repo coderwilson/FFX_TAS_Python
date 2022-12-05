@@ -1542,6 +1542,7 @@ def tidus_slayer(od_pos: int = 2):
         xbox.menu_up()
     xbox.menu_b()
     memory.main.close_menu()
+    #memory.main.wait_frames(90)  # Testing
 
 
 def sell_all(nea=False):

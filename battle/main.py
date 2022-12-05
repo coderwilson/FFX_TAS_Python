@@ -3909,14 +3909,11 @@ def buddy_swap_char(character):
 
 def wrap_up():
     logger.debug("Wrapping up battle.")
-    while not memory.main.user_control():
+    while memory.main.battle_active():
+        pass
+    while memory.main.battle_wrap_up_active():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
-        elif memory.main.turn_ready():
-            logger.debug("Still someone's turn. Could not wrap up battle.")
-            return False
-        else:
-            pass
     logger.debug("Wrap up complete.")
     return True
 
