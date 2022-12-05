@@ -207,15 +207,20 @@ def yojimbo_battle():
     screen.await_turn()
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
-    logger.debug("Yuna Overdrive to summon Yojimbo")
-    battle.overdrive.yuna()
-    # needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
-    needed_amount = 263000
-    logger.debug(f"Pay the man: {needed_amount}")
-    # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
-    battle.overdrive.yojimbo()  # Backup plan
-
-    memory.main.wait_frames(90)
+    if not Yuna.is_turn():
+        while memory.main.battle_active() and not Yuna.is_turn():
+            if memory.main.turn_ready():
+                CurrentPlayer().defend()
+    if memory.main.battle_active():
+        logger.debug("Yuna Overdrive to summon Yojimbo")
+        Yuna.overdrive(aeon_num=5)
+        # needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
+        needed_amount = 263000
+        logger.debug(f"Pay the man: {needed_amount}")
+        # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
+        battle.overdrive.yojimbo()  # Backup plan
+        memory.main.wait_frames(90)
+        
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
@@ -232,7 +237,7 @@ def yojimbo_battle():
         xbox.tap_b()
     logger.debug("Battle is complete.")
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(180)
+    memory.main.wait_frames(200)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
 
@@ -290,7 +295,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
     while not memory.main.menu_open():
         xbox.tap_b()
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(150)
+    memory.main.wait_frames(200)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
     return memory.main.battle_arena_results()
@@ -322,7 +327,7 @@ def basic_attack(
     while not memory.main.menu_open():
         xbox.tap_b()
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(150)
+    memory.main.wait_frames(200)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
     return memory.main.battle_arena_results()
@@ -788,7 +793,7 @@ def item_dump():
     memory.main.wait_frames(90)
     xbox.menu_right()
     xbox.menu_b()
-    nemesis.menu.sell_all(NEA=True)
+    menu.sell_all(nea=True)
     xbox.menu_a()
     xbox.menu_a()
     xbox.menu_a()
@@ -856,7 +861,7 @@ def shinryu_battle():
                     rikku_drive_complete = True
             elif Tidus.is_turn():
                 if memory.main.get_overdrive_battle(0) == 100:
-                    battle.overdrive.tidus(version=1)
+                    Tidus.overdrive(version=1)
                 elif rikku_drive_complete and not memory.main.state_auto_life():
                     auto_life()
                 else:
@@ -1014,7 +1019,7 @@ def nemesis_battle():
         memory.main.wait_frames(90)
         xbox.menu_right()
         xbox.menu_b()
-        nemesis.menu.sell_all()
+        menu.sell_all()
         xbox.menu_a()
         xbox.menu_a()
         xbox.menu_a()
@@ -1043,5 +1048,3 @@ def return_to_sin():
     memory.main.await_control()
     FFXC.set_movement(0, -1)
     memory.main.wait_frames(2)
-    memory.main.await_event()
-    FFXC.set_neutral()

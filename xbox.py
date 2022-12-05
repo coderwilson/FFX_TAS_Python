@@ -137,20 +137,20 @@ def skip_scene(fast_mode: bool = False):
 def skip_scene_spec():
     logger.debug("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value("btn_start", 1)  # Generate button to skip
-    memory.main.wait_frames(30 * 0.07)
+    memory.main.wait_frames(2)
     FFXC.set_value("btn_start", 0)
-    memory.main.wait_frames(30 * 0.105)
+    memory.main.wait_frames(3)
     FFXC.set_value("btn_x", 1)  # Perform the skip
-    memory.main.wait_frames(30 * 0.035)
+    memory.main.wait_frames(1)
     FFXC.set_value("btn_x", 0)
     # Before despawn, regenerate the button for use in a future scene.
     FFXC.set_value("btn_start", 1)
-    memory.main.wait_frames(30 * 0.035)
+    memory.main.wait_frames(1)
     FFXC.set_value("btn_start", 0)
-    memory.main.wait_frames(30 * 0.2)
+    memory.main.wait_frames(4)
 
 
-def skip_stored_scene(skip_timer):
+def skip_stored_scene(skip_timer:int=3):
     logger.debug("Mashing skip button")
     current_time = time.time()
     logger.debug(f"Current Time: {current_time}")

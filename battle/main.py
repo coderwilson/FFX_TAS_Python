@@ -3909,14 +3909,11 @@ def buddy_swap_char(character):
 
 def wrap_up():
     logger.debug("Wrapping up battle.")
-    while not memory.main.user_control():
+    while memory.main.battle_active():
+        pass
+    while memory.main.battle_wrap_up_active():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
-        elif memory.main.turn_ready():
-            logger.debug("Still someone's turn. Could not wrap up battle.")
-            return False
-        else:
-            pass
     logger.debug("Wrap up complete.")
     return True
 
@@ -4044,9 +4041,7 @@ def bfa_nem():
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
-                    if memory.main.get_encounter_id() == 401 and Tidus.has_overdrive(
-                        combat=True
-                    ):
+                    if memory.main.get_encounter_id() == 401 and Tidus.has_overdrive():
                         Tidus.overdrive()
                     else:
                         CurrentPlayer().attack()
