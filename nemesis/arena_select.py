@@ -53,18 +53,21 @@ def arena_menu_select(choice: int = 2):
     logger.debug(f"Selecting menu option: {choice}")
     if game_vars.use_pause():
         memory.main.wait_frames(2)
-    while not memory.main.blitz_cursor() == choice:
-        if choice == 4:
-            xbox.menu_a()
-        elif choice == 3:
-            xbox.menu_up()
-        else:
-            xbox.menu_down()
-        memory.main.wait_frames(1)
-        if game_vars.use_pause():
-            memory.main.wait_frames(2)
-    xbox.tap_b()
-    memory.main.wait_frames(15)
+    if choice == 4 and memory.main.user_control():
+        logger.debug("No menu up, no need to select option 4")
+    else:
+        while not memory.main.blitz_cursor() == choice:
+            if choice == 4:
+                xbox.menu_a()
+            elif choice == 3:
+                xbox.menu_up()
+            else:
+                xbox.menu_down()
+            memory.main.wait_frames(1)
+            if game_vars.use_pause():
+                memory.main.wait_frames(2)
+        xbox.tap_b()
+        memory.main.wait_frames(15)
 
 
 def start_fight(area_index: int, monster_index: int = 0):

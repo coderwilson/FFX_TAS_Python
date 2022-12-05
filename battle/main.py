@@ -4041,9 +4041,7 @@ def bfa_nem():
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
-                    if memory.main.get_encounter_id() == 401 and Tidus.has_overdrive(
-                        combat=True
-                    ):
+                    if memory.main.get_encounter_id() == 401 and Tidus.has_overdrive():
                         Tidus.overdrive()
                     else:
                         CurrentPlayer().attack()

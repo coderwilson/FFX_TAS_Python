@@ -793,7 +793,7 @@ def item_dump():
     memory.main.wait_frames(90)
     xbox.menu_right()
     xbox.menu_b()
-    menu.sell_all(NEA=True)
+    menu.sell_all(nea=True)
     xbox.menu_a()
     xbox.menu_a()
     xbox.menu_a()
