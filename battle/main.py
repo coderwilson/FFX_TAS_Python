@@ -3908,10 +3908,12 @@ def buddy_swap_char(character):
 
 
 def wrap_up():
+    # When memory.main.battle_wrap_up_active() is working, we want
+    # to pivot to that method instead.
     logger.debug("Wrapping up battle.")
-    while memory.main.battle_active():
+    while not (memory.main.menu_open() or memory.main.user_control()):
         pass
-    while memory.main.battle_wrap_up_active():
+    while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
     logger.debug("Wrap up complete.")
