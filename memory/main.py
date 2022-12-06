@@ -230,12 +230,13 @@ def battle_active():
     global base_value
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
-    if value in [0,31,32]:
+    if value == 0:
         return False
     return True
     
     
 def battle_wrap_up_active():
+    # Not working yet, this memory value does not trigger after-battle screens
     global base_value
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
