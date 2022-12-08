@@ -13,6 +13,8 @@ import save_sphere
 import screen
 import vars
 import xbox
+from area.dream_zan import new_game()
+from load_game import load_save_num()
 from paths.nem import (
     ArenaReturn,
     BesaidFarm,
@@ -172,7 +174,7 @@ def return_to_airship():
 
 
 @battle.utils.speedup_decorator
-def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
+def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -> bool:
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     if fayth_cave == True and memory.main.battle_type() == 2:
@@ -222,10 +224,18 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                         CurrentPlayer().defend()
                 else:
                     battle.main.escape_one()
-    memory.main.click_to_control()
-    if memory.main.get_hp()[0] < 1100:
-        battle.main.heal_up(3)
-    nemesis.menu.perform_next_grid(limit=ap_cp_limit)
+    if memory.main.game_over():
+        while memory.main.get_map() != 23:
+            xbox.tap_b()
+        new_game(gamestate="Nem_Farm")
+        load_save_num(0)
+        return False
+    else:
+        memory.main.click_to_control()
+        if memory.main.get_hp()[0] < 1100:
+            battle.main.heal_up(3)
+        nemesis.menu.perform_next_grid(limit=ap_cp_limit)
+        return True
 
 
 def advanced_complete_check():
@@ -339,7 +349,7 @@ def advanced_complete_check():
 
 
 @battle.utils.speedup_decorator
-def advanced_battle_logic():
+def advanced_battle_logic() -> bool:
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     logger.debug(f"Ambush flag (2 is bad):{memory.main.battle_type()}")
     while not memory.main.turn_ready():
@@ -520,11 +530,19 @@ def advanced_battle_logic():
                             CurrentPlayer().defend()
                     else:
                         battle.main.escape_one()
-    memory.main.click_to_control()
-    memory.main.update_formation(Tidus, Wakka, Rikku)
-    nemesis.menu.perform_next_grid()
-    if memory.main.get_hp()[0] < 1100:
-        battle.main.heal_up(3)
+    if memory.main.game_over():
+        while memory.main.get_map() != 23:
+            xbox.tap_b()
+        new_game(gamestate="Nem_Farm")
+        load_save_num(0)
+        return False
+    else:
+        memory.main.click_to_control()
+        memory.main.update_formation(Tidus, Wakka, Rikku)
+        nemesis.menu.perform_next_grid()
+        if memory.main.get_hp()[0] < 1100:
+            battle.main.heal_up(3)
+        return True
 
 
 def bribe_battle(spare_change_value: int = 12000):
@@ -2957,6 +2975,7 @@ def fayth_next(endGoal: int):
 
 
 def stolen_fayth_cave(cap_num: int = 10):
+    fayth_grid_start = game_vars.nem_checkpoint_ap()
     air_ship_destination(dest_num=13)
     if not memory.main.equipped_weapon_has_ability(
         char_num=game_vars.ne_armor(), ability_num=0x801D
@@ -3030,7 +3049,13 @@ def stolen_fayth_cave(cap_num: int = 10):
                     # No need to die extra times on tonberries.
                     battle.main.flee_all()
                 else:
-                    battle_farm_all(fayth_cave=True)
+                    battle_result = battle_farm_all(fayth_cave=True)
+                    if not battle_result:
+                        logger.warning(
+                            "Game Over occurred. Resetting this area."
+                        )
+                        checkpoint = 0
+                        game_vars.set_nem_checkpoint_ap(fayth_grid_start)
 
                 memory.main.click_to_control()
                 hp_check = memory.main.get_hp()
