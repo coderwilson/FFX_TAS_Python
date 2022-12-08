@@ -1759,13 +1759,14 @@ def seymour_guado_blitz_win():
                 elif animahits < 4:
                     old_hp = memory.main.get_enemy_current_hp()[3]
                     attack()
-                    new_hp = memory.main.get_enemy_current_hp()[3]
-                    if new_hp < old_hp:
-                        logger.debug("Hit Anima")
-                        animahits += 1
-                    else:
-                        logger.debug("Miss Anima")
-                        animamiss += 1
+                    if memory.main.battle_active():
+                        new_hp = memory.main.get_enemy_current_hp()[3]
+                        if new_hp < old_hp:
+                            logger.debug("Hit Anima")
+                            animahits += 1
+                        else:
+                            logger.debug("Miss Anima")
+                            animamiss += 1
                 else:
                     attack()
                 tidus_turns += 1
@@ -1931,7 +1932,7 @@ def seymour_guado_blitz_win():
             logger.debug("Diag skip")
     logger.info("Battle summary screen")
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(30 * 2.8)
+    memory.main.wait_frames(180)
     FFXC.set_value("btn_b", 0)
 
 
@@ -2003,13 +2004,14 @@ def seymour_guado_blitz_loss():
                 elif animahits < 4:
                     old_hp = memory.main.get_enemy_current_hp()[3]
                     attack()
-                    new_hp = memory.main.get_enemy_current_hp()[3]
-                    if new_hp < old_hp:
-                        logger.debug("Hit Anima")
-                        animahits += 1
-                    else:
-                        logger.debug("Miss Anima")
-                        animamiss += 1
+                    if memory.main.battle_active():
+                        new_hp = memory.main.get_enemy_current_hp()[3]
+                        if new_hp < old_hp:
+                            logger.debug("Hit Anima")
+                            animahits += 1
+                        else:
+                            logger.debug("Miss Anima")
+                            animamiss += 1
                 else:
                     logger.debug("Plain Attacking")
                     attack()
@@ -2137,7 +2139,7 @@ def seymour_guado_blitz_loss():
             logger.debug("Diag skip")
     logger.info("Battle summary screen")
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(30 * 2.8)
+    memory.main.wait_frames(180)
     FFXC.set_value("btn_b", 0)
 
 
@@ -3908,10 +3910,12 @@ def buddy_swap_char(character):
 
 
 def wrap_up():
+    # When memory.main.battle_wrap_up_active() is working, we want
+    # to pivot to that method instead.
     logger.debug("Wrapping up battle.")
-    while memory.main.battle_active():
+    while not (memory.main.menu_open() or memory.main.user_control()):
         pass
-    while memory.main.battle_wrap_up_active():
+    while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
     logger.debug("Wrap up complete.")
