@@ -1,9 +1,10 @@
 import logging
 
 import memory.main
+import vars
 import xbox
 from players.base import Player
-import vars
+
 game_vars = vars.vars_handle()
 
 logger = logging.getLogger(__name__)

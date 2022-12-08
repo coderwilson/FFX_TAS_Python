@@ -230,16 +230,16 @@ def battle_active():
     global base_value
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
-    if value in [0,31,32]:
+    if value in [0, 31, 32]:
         return False
     return True
-    
-    
+
+
 def battle_wrap_up_active():
     global base_value
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
-    if value in [31,32]:
+    if value in [31, 32]:
         return True
     return False
 

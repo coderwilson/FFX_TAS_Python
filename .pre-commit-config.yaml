@@ -21,7 +21,7 @@ repos:
     hooks:
       - id: flake8
         args:
-          ["--ignore=E402, E501, W503, E712, E713, E722"]
+          ["--ignore=E402, E501, W503"]
           # E402 = module level import not at top of file
           # E501 = line too long
           # W503 = line break occurred before a binary operator

@@ -302,9 +302,9 @@ def sin_fin():
                 kim_turn = True
             elif Lulu.is_turn():
                 CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
-            elif not 5 in memory.main.get_active_battle_formation():
+            elif 5 not in memory.main.get_active_battle_formation():
                 battle.main.buddy_swap(Lulu)
-            elif not 3 in memory.main.get_active_battle_formation():
+            elif 3 not in memory.main.get_active_battle_formation():
                 battle.main.buddy_swap(Kimahri)
             else:
                 CurrentPlayer().defend()

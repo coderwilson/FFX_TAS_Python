@@ -220,7 +220,7 @@ def yojimbo_battle():
         # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
         battle.overdrive.yojimbo()  # Backup plan
         memory.main.wait_frames(90)
-        
+
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
