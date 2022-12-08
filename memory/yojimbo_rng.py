@@ -52,7 +52,7 @@ def first_turn_compat_change() -> int:
 def zanmato_gil_needed(zan_level: int = 5) -> int:
     # This function assumes the following option was chosen during recruiting:
     # "To defeat the most powerful of enemies"
-    # Any other option will affect the Zanmatou chances.
+    # Any other option will affect the Zanmato chances.
     # https://grayfox96.github.io/FFX-Info/rng/yojimbo-hd
     compat_val = compatibility()
     if memory.main.battle_active() and screen.turn_aeon():

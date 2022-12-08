@@ -99,7 +99,7 @@ class AllVars:
         # ----Nemesis variables, unused in any%
         # Nemesis route, determines Tidus level-up progress. Starts at 1
         self.nem_ap_val = 1
-        self.yojimbo_index = 1  # Used in arena battles to track Zanmatou progress.
+        self.yojimbo_index = 1  # Used in arena battles to track Zanmato progress.
 
         # ----Nemesis Arena variables, sets to 1 after a boss is killed.
         # ----Note, 0/1 are preferable to True/False for viewing in the console.
