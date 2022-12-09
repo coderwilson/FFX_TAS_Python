@@ -226,8 +226,10 @@ def game_over_reset():
     process.write_bytes(key, 0, 1)
 
 
-def battle_active():
+def battle_active() -> bool:
     global base_value
+    if game_over():
+        return False
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
     if value in [0,31,32]:
@@ -3040,7 +3042,6 @@ def customize_menu_array():
     for x in range(60):
         offset = 0x1197730 + (x * 4)
         ret_array.append(process.read_bytes(base_value + offset, 2))
-    logger.debug(f"Customize menu: {ret_array}")
     return ret_array
 
 

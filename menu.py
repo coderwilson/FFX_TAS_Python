@@ -1370,24 +1370,15 @@ def after_ronso():
 
 def find_equipment_index(*, owner, equipment_type, ability_array=[], slot_count):
     equip_array = memory.main.all_equipment()
-    logger.debug(
-        f"Find equipment index, owner: {owner} type: {equipment_type} arr: {ability_array} slot_count: {slot_count}"
-    )
     if not ability_array:
         ability_array = [255, 255, 255, 255]
-    # auron baroque sword - [0x800B, 0x8063, 255, 255]
-    logger.debug(f"Looking for: {ability_array}")
     for current_index, current_handle in enumerate(equip_array):
-        logger.debug(
-            f"Slot: {current_index} | Owner: {current_handle.owner()} | Abilities: {current_handle.abilities()} | Slots: {current_handle.slot_count()}"
-        )
         if (
             current_handle.owner() == owner
             and current_handle.equipment_type() == equipment_type
             and current_handle.abilities() == ability_array
             and current_handle.slot_count() == slot_count
         ):
-            logger.debug(f"Equipment found in slot: {current_index}")
             return current_index
 
 
