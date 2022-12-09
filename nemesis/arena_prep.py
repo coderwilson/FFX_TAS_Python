@@ -13,6 +13,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from area.dream_zan import new_game
 from paths.nem import (
     ArenaReturn,
     BesaidFarm,
@@ -75,7 +76,7 @@ def air_ship_destination(dest_num=0, force_omega=False):
         pathing.set_movement([-258, 345])
     while not memory.main.get_map() in [382, 999]:
         if memory.main.user_control():
-            pathing.set_movement([-251, 340])
+            pathing.approach_actor_by_id(actor_id=8449)
         else:
             FFXC.set_neutral()
         xbox.menu_b()
@@ -172,7 +173,7 @@ def return_to_airship():
 
 
 @battle.utils.speedup_decorator
-def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
+def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -> bool:
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     if fayth_cave and memory.main.battle_type() == 2:
@@ -222,10 +223,19 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True):
                         CurrentPlayer().defend()
                 else:
                     battle.main.escape_one()
-    memory.main.click_to_control()
-    if memory.main.get_hp()[0] < 1100:
-        battle.main.heal_up(3)
-    nemesis.menu.perform_next_grid(limit=ap_cp_limit)
+    if memory.main.game_over():
+        while memory.main.get_map() != 23:
+            xbox.tap_b()
+        new_game(gamestate="Nem_Farm")
+        load_game.load_save_num(0)
+        return False
+    else:
+        memory.main.click_to_control()
+        if memory.main.get_hp()[0] < 1100 and memory.main.get_map() != 310:
+            # Low health, but not swimming
+            battle.main.heal_up(3)
+        nemesis.menu.perform_next_grid(limit=ap_cp_limit)
+        return True
 
 
 def advanced_complete_check():
@@ -339,7 +349,7 @@ def advanced_complete_check():
 
 
 @battle.utils.speedup_decorator
-def advanced_battle_logic():
+def advanced_battle_logic() -> bool:
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     logger.debug(f"Ambush flag (2 is bad):{memory.main.battle_type()}")
     while not memory.main.turn_ready():
@@ -520,11 +530,19 @@ def advanced_battle_logic():
                             CurrentPlayer().defend()
                     else:
                         battle.main.escape_one()
-    memory.main.click_to_control()
-    memory.main.update_formation(Tidus, Wakka, Rikku)
-    nemesis.menu.perform_next_grid()
-    if memory.main.get_hp()[0] < 1100:
-        battle.main.heal_up(3)
+    if memory.main.game_over():
+        while memory.main.get_map() != 23:
+            xbox.tap_b()
+        new_game(gamestate="Nem_Farm")
+        load_game.load_save_num(0)
+        return False
+    else:
+        memory.main.click_to_control()
+        memory.main.update_formation(Tidus, Wakka, Rikku)
+        nemesis.menu.perform_next_grid()
+        if memory.main.get_hp()[0] < 1100:
+            battle.main.heal_up(3)
+        return True
 
 
 def bribe_battle(spare_change_value: int = 12000):
@@ -572,8 +590,7 @@ def arena_npc():
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(1)
             else:
-                pathing.set_movement([2, -15])
-                xbox.tap_b()
+                pathing.approach_actor_by_id(actor_id=8241)
         else:
             FFXC.set_neutral()
             if memory.main.diag_progress_flag() == 59:
@@ -1148,6 +1165,8 @@ def kilika_gil_farm(armor_buys: int):
     memory.main.close_menu()
 
     for y in range(armor_buys):
+        remaining = armor_buys - y
+        logger.info(f"Adding ability, remaining {remaining} items")
         if y == 0:  # First one
             menu.add_ability(
                 owner=0,
@@ -1190,7 +1209,7 @@ def kilika_gil_farm(armor_buys: int):
 
 def kilika_final_shop():
     memory.main.await_control()
-    rin_equip_dump(sell_nea=True)
+    rin_equip_dump(sell_nea=True, stock_downs=True)
     menu.auto_sort_equipment()
 
     air_ship_destination(dest_num=2)
@@ -1298,7 +1317,7 @@ def final_weapon():
     memory.main.update_formation(Tidus, Yuna, Wakka)
 
 
-def rin_equip_dump(buy_weapon=False, sell_nea=False):
+def rin_equip_dump(buy_weapon=False, sell_nea=False, stock_downs=False):
     while not pathing.set_movement([-242, 298]):
         pass
     while not pathing.set_movement([-243, 160]):
@@ -1308,9 +1327,7 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False):
         pass
     while not pathing.set_movement([39, 53]):
         pass
-    while memory.main.user_control():
-        pathing.set_movement([28, 44])
-        xbox.tap_b()
+    pathing.approach_actor_by_id(actor_id=8426)
     FFXC.set_neutral()
     memory.main.click_to_diag_progress(48)
     memory.main.wait_frames(10)
@@ -1342,6 +1359,33 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False):
         memory.main.wait_frames(60)
     memory.main.close_menu()
     memory.main.click_to_control_dumb()
+    if stock_downs:
+        # Stock with 99 downs.
+        pathing.approach_actor_by_id(actor_id=8426)
+        FFXC.set_neutral()
+        memory.main.click_to_diag_progress(48)
+        while not memory.main.airship_shop_dialogue_row() == 0:
+            pass
+        while not memory.main.airship_shop_dialogue_row() == 1:
+            xbox.tap_down()
+        memory.main.wait_frames(3)
+        xbox.tap_b()
+        memory.main.wait_frames(120)
+        xbox.tap_b()
+        while memory.main.equip_buy_row() != 4:
+            if memory.main.equip_buy_row() > 4:
+                xbox.tap_up()
+            else:
+                xbox.tap_down()
+        memory.main.wait_frames(2)
+        xbox.tap_b()
+        memory.main.wait_frames(2)
+        for i in range(9):
+            xbox.tap_up()
+        xbox.tap_b()
+        memory.main.close_menu()
+        memory.main.click_to_control_dumb()
+    
     while not pathing.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)
@@ -2957,6 +3001,8 @@ def fayth_next(endGoal: int):
 
 
 def stolen_fayth_cave(cap_num: int = 10):
+    fayth_grid_start = game_vars.nem_checkpoint_ap()
+    rin_equip_dump(stock_downs=True)
     air_ship_destination(dest_num=13)
     if not memory.main.equipped_weapon_has_ability(
         char_num=game_vars.ne_armor(), ability_num=0x801D
@@ -3030,7 +3076,13 @@ def stolen_fayth_cave(cap_num: int = 10):
                     # No need to die extra times on tonberries.
                     battle.main.flee_all()
                 else:
-                    battle_farm_all(fayth_cave=True)
+                    battle_result = battle_farm_all(fayth_cave=True)
+                    if not battle_result:
+                        logger.warning(
+                            "Game Over occurred. Resetting this area."
+                        )
+                        checkpoint = 0
+                        game_vars.set_nem_checkpoint_ap(fayth_grid_start)
 
                 memory.main.click_to_control()
                 hp_check = memory.main.get_hp()
@@ -3044,6 +3096,7 @@ def stolen_fayth_cave(cap_num: int = 10):
 
 
 def inside_sin(cap_num: int = 10):
+    rin_equip_dump(stock_downs=True)
     air_ship_destination(dest_num=0)
     menu.remove_all_nea()
 
@@ -3132,6 +3185,7 @@ def inside_sin(cap_num: int = 10):
 
 
 def omega_ruins(cap_num: int = 10):
+    rin_equip_dump(stock_downs=True)
     nemesis.menu.rikku_provoke()
     menu.remove_all_nea()
 

@@ -15,9 +15,8 @@ import save_sphere
 import screen
 import vars
 import xbox
-
-# from memory.yojimbo_rng import zanmato_gil_needed
-from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna
+#from memory.yojimbo_rng import zanmato_gil_needed
+from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna, Yojimbo
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -226,7 +225,7 @@ def yojimbo_battle():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 Tidus.flee()
-            elif screen.turn_aeon():
+            elif Yojimbo.is_turn():
                 # May still be able to get it?
                 # zanmato_gil_needed()  # For printing purposes
                 battle.overdrive.yojimbo(gil_value=1)
@@ -335,23 +334,18 @@ def basic_attack(
 
 
 def arena_npc():
+    memory.main.await_control()
     if memory.main.get_map() != 307:
         return
-    # zanmato_gil_needed()  # Just for debug purposes
     while not (
         memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
     ):
         if memory.main.user_control():
-            if memory.main.get_coords()[1] > -15:
-                logger.debug("Wrong position, moving away from sphere")
-                while not pathing.set_movement([-6, -27]):
-                    pass
-                while not pathing.set_movement([2, -25]):
-                    pass
+            if memory.main.get_coords()[1] > -12:
+                FFXC.set_movement(0, -1)
+                memory.main.wait_frames(1)
             else:
-                logger.debug("Engaging NPC")
-                pathing.set_movement([5, -12])
-                xbox.tap_b()
+                pathing.approach_actor_by_id(actor_id=8241)
         else:
             FFXC.set_neutral()
             if memory.main.diag_progress_flag() == 59:
@@ -359,12 +353,11 @@ def arena_npc():
                 xbox.menu_a()
                 xbox.menu_a()
                 xbox.tap_b()
-            elif (
-                memory.main.diag_skip_possible()
-                and not memory.main.diag_progress_flag() == 74
-            ):
+            elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+    logger.debug("Mark 1")
     memory.main.wait_frames(3)  # This buffer can be improved later.
+    logger.debug("Mark 2")
 
 
 def restock_downs():
