@@ -110,7 +110,7 @@ def calm_lands_1():
             # if checkpoint == 10:
             #     if area.gagazet.check_gems() < 2:
             #         checkpoint -= 2
-            if pathing.set_movement(CalmLands1.execute(checkpoint)) == True:
+            if pathing.set_movement(CalmLands1.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -428,7 +428,7 @@ def to_remiem():
                     xbox.tap_b()
                 memory.main.click_to_control_3()
                 checkpoint += 1
-            elif pathing.set_movement(ToRemiem.execute(checkpoint)) == True:
+            elif pathing.set_movement(ToRemiem.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
 
@@ -454,7 +454,7 @@ def choco_race_1():
     checkpoint = 0
     while checkpoint != 37:
         if memory.main.user_control():
-            if pathing.set_movement(Race1.execute(checkpoint)) == True:
+            if pathing.set_movement(Race1.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -488,7 +488,7 @@ def choco_race_2():
             if checkpoint == 22:
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
-            if pathing.set_movement(Race2.execute(checkpoint)) == True:
+            if pathing.set_movement(Race2.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -533,7 +533,7 @@ def choco_race_3():
             #     memory.wait_frames(120)
             #     memory.click_to_control_3()
             #     break
-            if pathing.set_movement(Race3.execute(checkpoint)) == True:
+            if pathing.set_movement(Race3.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -572,7 +572,7 @@ def temple_to_arena():
                 FFXC.set_neutral()
                 memory.main.await_control()
                 checkpoint += 1
-            elif pathing.set_movement(LeaveRemiem.execute(checkpoint)) == True:
+            elif pathing.set_movement(LeaveRemiem.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
 
@@ -614,7 +614,7 @@ def arena_purchase():
         if memory.main.user_control():
             if checkpoint == 7 and area.gagazet.check_gems() < 2:
                 checkpoint -= 2
-            elif pathing.set_movement(CalmLands2.execute(checkpoint)) == True:
+            elif pathing.set_movement(CalmLands2.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:

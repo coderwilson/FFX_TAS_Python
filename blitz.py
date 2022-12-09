@@ -355,7 +355,8 @@ def radius_movement(radius: int = 580, direction="forward"):
             target_coords[0] = math.sqrt((radius**2) - (target_coords[1] ** 2))
             if player_coords[0] < -1:
                 target_coords[0] *= -1
-        except:
+        except Exception as e:
+            logger.warning(e)
             player_coords = player_array[controlling_player()].get_coords()
             target_coords = [-400, -400]
             char_radius = get_char_radius(controlling_player())
@@ -382,7 +383,8 @@ def radius_movement(radius: int = 580, direction="forward"):
                 target_coords[1] = math.sqrt((radius**2) - (target_coords[0] ** 2))
                 if player_coords[1] < -1:
                     target_coords[1] *= -1
-            except:
+            except Exception as e:
+                logger.warning(e)
                 if direction == "forward":
                     target_coords[0] = player_coords[0] - 10
                     target_coords[1] = player_coords[1] + 10
@@ -825,8 +827,8 @@ def jassu_move():
         elif not move_forward:
             try:
                 blitz_pathing.set_movement(target_coords)
-            except:
-                pass
+            except Exception as e:
+                logger.warning(e)
 
 
 def jassu_act():

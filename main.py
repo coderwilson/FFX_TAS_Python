@@ -552,8 +552,8 @@ def perform_TAS():
                             logger.info(f"NEA Manip duration: {str(manip_time)}")
                             logs.write_stats("NEA Manip duration:")
                             logs.write_stats(manip_time)
-                        except:
-                            pass
+                        except Exception as e:
+                            logger.warning(e)
                     game.step = 3
 
                 if game.step == 3:
