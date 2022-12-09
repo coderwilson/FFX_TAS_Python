@@ -1,5 +1,6 @@
 import logging
 
+import area.dream_zan
 import battle.main
 import battle.overdrive
 import battle.utils
@@ -219,7 +220,7 @@ def yojimbo_battle():
         # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
         battle.overdrive.yojimbo()  # Backup plan
         memory.main.wait_frames(90)
-        
+
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
@@ -795,14 +796,7 @@ def item_dump():
 
 def quick_reset_logic():
     reset.reset_to_main_menu()
-    while memory.main.get_map() != 23:
-        FFXC.set_value("btn_start", 1)
-        memory.main.wait_frames(2)
-        FFXC.set_value("btn_start", 0)
-        memory.main.wait_frames(2)
-    memory.main.wait_frames(30)
-    xbox.menu_b()
-    memory.main.wait_frames(60)
+    area.dream_zan.new_game("Yojimbo")
     load_game.load_save_num(199)
     FFXC.set_neutral()
     game_vars.print_arena_status()

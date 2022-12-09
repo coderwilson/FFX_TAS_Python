@@ -31,11 +31,11 @@ def grid_right():
 
 def await_move():
     logger.debug("Sphere Grid: Waiting for Move command to be highlighted")
-    while memory.main.s_grid_active() == False:
+    while not memory.main.s_grid_active():
         logger.debug("The Sphere Grid isn't even open! Awaiting manual recovery.")
         memory.main.wait_frames(30 * 1)
     complete = False
-    while complete == False:
+    while not complete:
         menu_val = memory.main.s_grid_menu()
         if menu_val == 11 or menu_val == 255:
             xbox.menu_b()
@@ -51,11 +51,11 @@ def await_move():
 
 def await_use():
     logger.debug("Sphere Grid: Waiting for Use command to be highlighted")
-    while memory.main.s_grid_active() == False:
+    while not memory.main.s_grid_active():
         logger.debug("The Sphere Grid isn't even open! Awaiting manual recovery.")
         memory.main.wait_frames(30 * 1)
     complete = False
-    while complete == False:
+    while not complete:
         menu_val = memory.main.s_grid_menu()
         logger.debug(f"Menu value: {menu_val}")
         if menu_val == 7:

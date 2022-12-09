@@ -47,7 +47,7 @@ def auto_life():
             elif not Tidus.is_turn():
                 CurrentPlayer().defend()
     while memory.main.battle_menu_cursor() != 22:
-        if Tidus.is_turn() == False:
+        if not Tidus.is_turn():
             logger.debug("Attempting Auto-life, but it's not Tidus's turn")
             xbox.tap_up()
             xbox.tap_up()
@@ -176,7 +176,7 @@ def return_to_airship():
 def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -> bool:
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     FFXC.set_neutral()
-    if fayth_cave == True and memory.main.battle_type() == 2:
+    if fayth_cave and memory.main.battle_type() == 2:
         screen.await_turn()
         battle.main.flee_all()
     else:
@@ -1002,7 +1002,7 @@ def tonberry_levels_battle():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
-                if tidus_AP_gained == True:
+                if tidus_AP_gained is True:
                     Tidus.flee()
                 elif memory.main.get_overdrive_battle(character=0) == 100:
                     Tidus.overdrive()
@@ -1455,7 +1455,7 @@ def yojimbo():
                 checkpoint += 1
             elif checkpoint == 41:
                 return_to_airship()
-            elif pathing.set_movement(YojimboFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(YojimboFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -1504,7 +1504,7 @@ def besaid_farm(cap_num: int = 1):
                 checkpoint += 1
             elif checkpoint == 26:
                 return_to_airship()
-            elif pathing.set_movement(BesaidFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(BesaidFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -1557,7 +1557,7 @@ def kilika_farm(cap_num: int = 1):
                 checkpoint += 1
             elif checkpoint == 25:
                 return_to_airship()
-            elif pathing.set_movement(KilikaFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(KilikaFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -1804,7 +1804,7 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint in [148, 149, 150] and pref_area == 5:
                 checkpoint = 90
 
-            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -1881,7 +1881,7 @@ def miihen_farm_old(cap_num: int = 1):
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
 
-            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2012,7 +2012,7 @@ def djose_farm(cap_num: int = 10):
             elif checkpoint == 47:
                 checkpoint = 21
 
-            elif pathing.set_movement(DjoseFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(DjoseFarm.execute(checkpoint)) is True:
                 checkpoint += 1
         else:
             FFXC.set_neutral()
@@ -2156,7 +2156,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                     return_to_airship()
 
             # General pathing
-            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2223,7 +2223,7 @@ def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
                 return_to_airship()
 
             # General pathing
-            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2319,7 +2319,7 @@ def mac_woods(cap_num: int = 10):
                     return_to_airship()
 
             # General pathing
-            elif pathing.set_movement(MacFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(MacFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2448,7 +2448,7 @@ def bikanel(cap_num: int = 10):
                 return_to_airship()
 
             # General pathing
-            elif pathing.set_movement(BikanelFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(BikanelFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2572,7 +2572,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
             elif checkpoint == 10:  # Ride the bird back to arena
                 arena_return(checkpoint=1)
 
-            elif pathing.set_movement(CalmFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(CalmFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2652,7 +2652,7 @@ def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
                 zone="calm2", end_goal=cap_num, report=False
             ):
                 checkpoint -= 2
-            elif pathing.set_movement(CalmFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(CalmFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -2867,7 +2867,7 @@ def gagazet(cap_num: int = 10):
             # Branches, decisions
             if checkpoint in [0, 1] and pref_area == 1:  # Straight to mountain path
                 checkpoint = 30
-            elif checkpoint == 40 and not pref_area in [8, 9]:
+            elif checkpoint == 40 and pref_area not in [8, 9]:
                 checkpoint = 1
             elif pref_area == 1 and checkpoint == 37:
                 checkpoint -= 2
@@ -2926,7 +2926,7 @@ def gagazet(cap_num: int = 10):
                     checkpoint = 0
                 else:
                     return_to_airship()
-            elif pathing.set_movement(GagazetFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(GagazetFarm.execute(checkpoint)) is True:
                 if cp_forward:
                     checkpoint += 1
                 else:
@@ -3058,7 +3058,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 checkpoint += 1
             elif checkpoint == 62:
                 return_to_airship()
-            elif pathing.set_movement(YojimboFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(YojimboFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -3163,7 +3163,7 @@ def inside_sin(cap_num: int = 10):
                 checkpoint = 66
 
             # General Pathing
-            elif pathing.set_movement(SinFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(SinFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -3210,7 +3210,7 @@ def omega_ruins(cap_num: int = 10):
                 save_sphere.touch_and_go()
             elif checkpoint == 3:
                 return_to_airship()
-            elif pathing.set_movement(OmegaFarm.execute(checkpoint)) == True:
+            elif pathing.set_movement(OmegaFarm.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -3232,7 +3232,7 @@ def get_equipment(equip=True):
     xbox.tap_up()
     xbox.tap_b()
     memory.main.wait_frames(5)
-    if equip == True:
+    if equip is True:
         xbox.tap_up()
     xbox.tap_b()  # Equip weapon for Rikku
     memory.main.wait_frames(5)

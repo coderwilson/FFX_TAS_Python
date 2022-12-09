@@ -150,7 +150,7 @@ def skip_scene_spec():
     memory.main.wait_frames(4)
 
 
-def skip_stored_scene(skip_timer:int=3):
+def skip_stored_scene(skip_timer: int = 3):
     logger.debug("Mashing skip button")
     current_time = time.time()
     logger.debug(f"Current Time: {current_time}")
