@@ -176,9 +176,6 @@ def return_to_airship():
 def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -> bool:
     logger.debug(f"Battle Start: {memory.main.get_encounter_id()}")
     FFXC.set_neutral()
-    while memory.main.battle_active():
-        if memory.main.turn_ready():
-            CurrentPlayer().defend()
     if fayth_cave == True and memory.main.battle_type() == 2:
         screen.await_turn()
         battle.main.flee_all()
