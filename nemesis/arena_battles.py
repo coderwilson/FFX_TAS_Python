@@ -15,8 +15,9 @@ import save_sphere
 import screen
 import vars
 import xbox
-#from memory.yojimbo_rng import zanmato_gil_needed
-from players import CurrentPlayer, Rikku, Tidus, Wakka, Yuna, Yojimbo
+
+# from memory.yojimbo_rng import zanmato_gil_needed
+from players import CurrentPlayer, Rikku, Tidus, Wakka, Yojimbo, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
