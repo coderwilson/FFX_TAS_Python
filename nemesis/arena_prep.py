@@ -180,7 +180,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
         screen.await_turn()
         battle.main.flee_all()
     else:
-        while not memory.main.battle_complete()():
+        while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
                     if memory.main.get_encounter_id() in [154, 156, 164]:
@@ -367,7 +367,7 @@ def advanced_battle_logic() -> bool:
         if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
             aeon_complete = False
-            while not memory.main.battle_complete()():
+            while not memory.main.battle_complete():
                 if memory.main.turn_ready():
                     if Rikku.is_turn():
                         if not aeon_complete:
@@ -384,7 +384,7 @@ def advanced_battle_logic() -> bool:
         else:
             logger.debug(f"Regular battle:{memory.main.get_encounter_id()}")
             sleep_powder = False
-            while not memory.main.battle_complete()():
+            while not memory.main.battle_complete():
                 encounter_id = memory.main.get_encounter_id()
                 if memory.main.turn_ready():
                     if encounter_id in [442]:
@@ -547,7 +547,7 @@ def advanced_battle_logic() -> bool:
 
 def bribe_battle(spare_change_value: int = 12000):
     logger.debug(f"value (2): {spare_change_value}")
-    while not memory.main.battle_complete()():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Lulu.is_turn():
                 while memory.main.battle_menu_cursor() != 20:
@@ -802,7 +802,7 @@ def farm_feathers():
     nemesis.arena_select.start_fight(area_index=7, monster_index=5)
     memory.main.wait_frames(1)
     wait_counter = 0
-    while not memory.main.battle_complete()():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Rikku.is_turn():
                 logger.debug("Qactar steal command")
@@ -999,7 +999,7 @@ def one_mp_ready():
 def tonberry_levels_battle():
     screen.await_turn()
     tidus_AP_gained = False
-    while not memory.main.battle_complete()():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if tidus_AP_gained is True:
