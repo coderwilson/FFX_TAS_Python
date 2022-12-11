@@ -182,7 +182,7 @@ def arrival():
             FFXC.set_neutral()
             if memory.main.turn_ready():
                 if checkpoint < 4:  # Tutorial battle with Auron
-                    while memory.main.battle_active():
+                    while not memory.main.battle_complete()():
                         if memory.main.turn_ready():
                             Tidus.attack()
                     FFXC.set_movement(0, 1)

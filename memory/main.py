@@ -210,7 +210,7 @@ def game_over():
 
 
 def battle_complete():
-    return not battle_active()
+    return battle_wrap_up_active()
 
 
 def battle_arena_results():

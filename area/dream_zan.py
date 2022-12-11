@@ -181,7 +181,7 @@ def ammes_battle():
     hits_array = []
 
     logger.info("Killing Sinspawn")
-    while memory.main.battle_active():
+    while not memory.main.battle_complete()():
         if memory.main.turn_ready():
             CurrentPlayer().attack()
             last_hit = memory.main.last_hit_check_change()
