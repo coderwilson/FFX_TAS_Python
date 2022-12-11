@@ -623,6 +623,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         )
                     else:
                         CurrentPlayer().defend()
+    logger.debug("Kilika Woods complete")
     FFXC.set_neutral()
     wrap_up()  # Rewards screen
     hp_check = memory.main.get_hp()

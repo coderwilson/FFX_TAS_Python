@@ -314,7 +314,7 @@ def sin_fin():
     logger.info("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
     turn_counter = 0
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             turn_counter += 1
             if Kimahri.is_turn():
