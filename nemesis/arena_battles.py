@@ -234,11 +234,13 @@ def yojimbo_battle():
                 CurrentPlayer().defend()
 
     # After battle stuff
+    logger.debug("Yojimbo Battle is complete.")
     battle.main.wrap_up()
-    logger.debug("Battle is complete.")
+    logger.debug("Yojimbo wrap-up is complete.")
     memory.main.wait_frames(2)
     while not memory.main.diag_skip_possible():
         pass
+    logger.debug("Yojimbo - menu restored")
     memory.main.wait_frames(1)
 
     return memory.main.battle_arena_results()
