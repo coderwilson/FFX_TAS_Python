@@ -210,6 +210,8 @@ def game_over():
 
 
 def battle_complete():
+    if game_over():
+        return True
     return battle_wrap_up_active()
 
 
