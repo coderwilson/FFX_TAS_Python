@@ -3899,7 +3899,10 @@ def wrap_up():
     # When memory.main.battle_wrap_up_active() is working, we want
     # to pivot to that method instead.
     if memory.main.battle_active():
-        return False
+        while memory.main.battle_value() != 0:
+            if memory.main.turn_ready():
+                return False
+        
     logger.debug("Wrapping up battle.")
     while not memory.main.battle_wrap_up_active():
         if memory.main.user_control():

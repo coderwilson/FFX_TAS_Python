@@ -226,6 +226,12 @@ def game_over_reset():
     process.write_bytes(key, 0, 1)
 
 
+def battle_value():
+    # Used for wrap_up function only
+    key = base_value + 0x00D2A8E0
+    return process.read_bytes(key, 1)
+
+
 def battle_active() -> bool:
     global base_value
     if game_over():
