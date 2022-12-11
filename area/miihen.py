@@ -183,7 +183,8 @@ def arrival():
             if memory.main.turn_ready():
                 if checkpoint < 4:  # Tutorial battle with Auron
                     while memory.main.battle_active():
-                        xbox.tap_b()
+                        if memory.main.turn_ready():
+                            Tidus.attack()
                     FFXC.set_movement(0, 1)
                     while not memory.main.user_control():
                         xbox.tap_b()

@@ -207,10 +207,11 @@ def yojimbo_battle():
     screen.await_turn()
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
-    if not Yuna.is_turn():
+    elif not Yuna.is_turn():
         while memory.main.battle_active() and not Yuna.is_turn():
             if memory.main.turn_ready():
                 CurrentPlayer().defend()
+                memory.main.wait_frames(15)
     if memory.main.battle_active():
         logger.debug("Yuna Overdrive to summon Yojimbo")
         Yuna.overdrive(aeon_num=5)
@@ -233,13 +234,12 @@ def yojimbo_battle():
                 CurrentPlayer().defend()
 
     # After battle stuff
-    while not memory.main.menu_open():
-        xbox.tap_b()
+    battle.main.wrap_up()
     logger.debug("Battle is complete.")
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(200)
-    FFXC.set_neutral()
     memory.main.wait_frames(2)
+    while not memory.main.diag_skip_possible():
+        pass
+    memory.main.wait_frames(1)
 
     return memory.main.battle_arena_results()
 
@@ -292,12 +292,12 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                 CurrentPlayer().defend()
 
     # After battle stuff
-    while not memory.main.menu_open():
-        xbox.tap_b()
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(200)
-    FFXC.set_neutral()
+    battle.main.wrap_up()
+    logger.debug("Battle is complete.")
     memory.main.wait_frames(2)
+    while not memory.main.diag_skip_possible():
+        pass
+    memory.main.wait_frames(1)
     return memory.main.battle_arena_results()
 
 
@@ -324,17 +324,19 @@ def basic_attack(
                 CurrentPlayer().defend()
 
     # After battle stuff
-    while not memory.main.menu_open():
-        xbox.tap_b()
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(200)
-    FFXC.set_neutral()
+    battle.main.wrap_up()
+    logger.debug("Battle is complete.")
     memory.main.wait_frames(2)
+    while not memory.main.diag_skip_possible():
+        pass
+    memory.main.wait_frames(1)
     return memory.main.battle_arena_results()
 
 
 def arena_npc():
-    memory.main.await_control()
+    while not memory.main.user_control():
+        if memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible():
+            return
     if memory.main.get_map() != 307:
         return
     while not (
@@ -1019,7 +1021,6 @@ def nemesis_battle():
     save_game(first_save=False)
     while not battles_5(completion_version=99):
         quick_reset_logic()
-    # nemesis.nemesis.arena_select.arena_menu_select(4)
 
 
 def return_to_sin():

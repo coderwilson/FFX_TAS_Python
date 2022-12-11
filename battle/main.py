@@ -318,7 +318,7 @@ def piranhas():
                 CurrentPlayer().attack()
             else:
                 escape_all()
-    memory.main.click_to_control()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -347,7 +347,7 @@ def besaid():
                     CurrentPlayer().cast_black_magic_spell(1, 21, "l")
                 else:
                     attack()
-    memory.main.click_to_control_3()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -369,7 +369,7 @@ def lancet_tutorial():
                 CurrentPlayer().cast_black_magic_spell(0)
             else:
                 CurrentPlayer().defend()
-    memory.main.click_to_control()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -624,7 +624,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     else:
                         CurrentPlayer().defend()
     FFXC.set_neutral()
-    memory.main.click_to_control()  # Rewards screen
+    wrap_up()  # Rewards screen
     hp_check = memory.main.get_hp()
     if hp_check[0] < 250 or hp_check[1] < 250 or hp_check[4] < 250:
         heal_up(3)
@@ -654,7 +654,7 @@ def luca_workers():
                 CurrentPlayer().cast_black_magic_spell(1)
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Clicking to get through the battle faster
-    memory.main.click_to_control()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -698,7 +698,7 @@ def luca_workers_2(early_haste):
                     CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Clicking to get through the battle faster
-    memory.main.click_to_control()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -877,11 +877,7 @@ def miihen_road(self_destruct=False):
                 flee_all()
 
     FFXC.set_movement(0, 1)
-    while not memory.main.user_control():
-        FFXC.set_value("btn_b", 1)
-        memory.main.wait_frames(2)
-        FFXC.set_value("btn_b", 0)
-        memory.main.wait_frames(3)
+    wrap_up()
 
     logger.debug(f"self_destruct flag: {game_vars.self_destruct_get()}")
 
@@ -1338,10 +1334,7 @@ def djose(stone_breath):
                 else:
                     logger.info("Djose: Cannot learn Stone Breath here.")
                     flee_all()
-
-    logger.debug("Mark 2")
-    memory.main.click_to_control()
-    logger.debug("Mark 3")
+    wrap_up()
     party_hp = memory.main.get_hp()
     logger.debug(f"Party hp: {party_hp}")
     if party_hp[0] < 300 or party_hp[4] < 300:
@@ -1501,7 +1494,7 @@ def thunder_plains(section):
         flee_all()
 
     logger.info("Battle is ended - Thunder Plains")
-    memory.main.click_to_control()
+    wrap_up()
     memory.main.wait_frames(2)  # Allow lightning to attemt a strike
     if memory.main.dodge_lightning(game_vars.get_l_strike()):
         logger.debug("Dodge")
@@ -1592,8 +1585,7 @@ def m_woods():
                 flee_all()
 
     logger.info("Battle complete, now to deal with the aftermath.")
-    memory.main.click_to_control_3()
-    logger.debug("M.woods, back in control")
+    wrap_up()
 
 
 def spheri_spell_item_ready():
@@ -1930,10 +1922,7 @@ def seymour_guado_blitz_win():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
-    logger.info("Battle summary screen")
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(180)
-    FFXC.set_value("btn_b", 0)
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -2137,10 +2126,7 @@ def seymour_guado_blitz_loss():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
-    logger.info("Battle summary screen")
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(180)
-    FFXC.set_value("btn_b", 0)
+    wrap_up()
 
 
 def seymour_guado():
@@ -2176,7 +2162,7 @@ def escape_with_xp():
                     CurrentPlayer().attack()
                 else:
                     buddy_swap(Tidus)
-    memory.main.click_to_control()
+    wrap_up()
 
 
 def fullheal(target: int, direction: str):
@@ -2500,7 +2486,7 @@ def sandragora(version):
             screen.await_turn()
         logger.debug("Setting up Auron overdrive")
         Auron.overdrive(style="shooting star")
-        memory.main.click_to_control()
+        wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -2904,7 +2890,7 @@ def calm_lands_gems():
                     steal_complete = True
                 else:
                     CurrentPlayer().defend()
-    memory.main.click_to_control()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -2932,7 +2918,7 @@ def cave_charge_rikku():
                 CurrentPlayer().attack()
             else:
                 escape_one()
-    memory.main.click_to_control()
+    wrap_up()
 
 
 def gagazet_cave(direction):
@@ -3771,7 +3757,7 @@ def flee_all():
                     escape_one()
                 else:
                     CurrentPlayer().defend()
-    memory.main.click_to_control_3()
+    wrap_up()
     logger.info("Flee complete")
 
 
@@ -3912,13 +3898,22 @@ def buddy_swap_char(character):
 def wrap_up():
     # When memory.main.battle_wrap_up_active() is working, we want
     # to pivot to that method instead.
+    if memory.main.battle_active():
+        return False
     logger.debug("Wrapping up battle.")
-    while not (memory.main.menu_open() or memory.main.user_control()):
-        pass
-    while not memory.main.user_control():
-        if memory.main.menu_open() or memory.main.diag_skip_possible():
-            xbox.tap_b()
+    while not memory.main.battle_wrap_up_active():
+        if memory.main.user_control():
+            return False
+        elif memory.main.menu_open():
+            return False
+        elif memory.main.diag_skip_possible():
+            return False
+    memory.main.wait_frames(1)
+    while memory.main.battle_wrap_up_active():
+        FFXC.set_value('btn_b', 1)
+    FFXC.set_value('btn_b', 0)
     logger.debug("Wrap up complete.")
+    memory.main.wait_frames(1)
     return True
 
 

@@ -230,7 +230,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
         load_game.load_save_num(0)
         return False
     else:
-        memory.main.click_to_control()
+        battle.main.wrap_up()
         if memory.main.get_hp()[0] < 1100 and memory.main.get_map() != 310:
             # Low health, but not swimming
             battle.main.heal_up(3)
@@ -537,7 +537,7 @@ def advanced_battle_logic() -> bool:
         load_game.load_save_num(0)
         return False
     else:
-        memory.main.click_to_control()
+        battle.main.wrap_up()
         memory.main.update_formation(Tidus, Wakka, Rikku)
         nemesis.menu.perform_next_grid()
         if memory.main.get_hp()[0] < 1100:

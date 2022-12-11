@@ -97,8 +97,8 @@
             "victory": true
         },
         "1192479822": {
-            "duration": 741,
-            "victory": true
+            "duration": 823,
+            "victory": false
         },
         "296124991": {
             "duration": 455,
@@ -122,6 +122,14 @@
         },
         "681247051": {
             "duration": 469,
+            "victory": true
+        },
+        "1709935847": {
+            "duration": 523,
+            "victory": true
+        },
+        "941946707": {
+            "duration": 477,
             "victory": true
         }
     },
