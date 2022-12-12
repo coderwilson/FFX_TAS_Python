@@ -183,13 +183,15 @@ def ammes_battle():
     logger.info("Killing Sinspawn")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            CurrentPlayer().attack()
+            CurrentPlayer().attack(record_results=True)
             last_hit = memory.main.last_hit_check_change()
             while last_hit == 9999:
                 last_hit = memory.main.last_hit_check_change()
             logger.debug(f"Confirm - last hit: {last_hit}")
             hits_array.append(last_hit)
             logger.debug(f"{hits_array}")
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
     logger.debug(f"Unconfirmed seed check: {memory.main.rng_seed()}")
     correct_seed = rng_track.hits_to_seed(hits_array=hits_array)
     logs.write_stats("Corrected RNG seed:")

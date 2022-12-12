@@ -146,7 +146,10 @@ class Player:
                     xbox.tap_down()
 
     def attack(
-        self, target_id: Optional[int] = None, direction_hint: Optional[str] = "u"
+        self,
+        target_id: Optional[int] = None,
+        direction_hint: Optional[str] = "u",
+        record_results:bool=False
     ):
         skip_direction = False
         if target_id is None:
@@ -173,7 +176,12 @@ class Player:
             xbox.tap_b()
         if target_id is not None and not skip_direction:
             self._target_specific_id(target_id, direction_hint)
-        self._tap_targeting()
+        if record_results:
+            xbox.tap_b()
+            xbox.tap_b()
+            xbox.tap_b()
+        else:
+            self._tap_targeting()
 
     # spell_id should become an enum at some point
     def cast_black_magic_spell(
