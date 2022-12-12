@@ -740,7 +740,7 @@ def after_blitz_3(early_haste):
     tidus_turn = 0
     while not memory.main.turn_ready():
         pass
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         while not memory.main.turn_ready():
             pass
         hp_values = memory.main.get_battle_hp()
@@ -770,20 +770,18 @@ def after_blitz_3(early_haste):
                 use_potion_character(0, "u")
             else:
                 CurrentPlayer().defend()
-    wrap_up()
     logger.info("Battle complete (Garuda)")
+    if not game_vars.csr():
+        xbox.await_save(index=1)
     # Get to control
-    while not memory.main.user_control():
+    while not memory.main.battle_complete(): # story before battle summary screen
         if memory.main.cutscene_skip_possible():
-            while not memory.main.diag_progress_flag() == 1:
-                if memory.main.cutscene_skip_possible():
-                    xbox.skip_scene()
-            if game_vars.csr():
-                memory.main.wait_frames(60)
-            else:
-                xbox.await_save(index=1)
+            memory.main.wait_frames(3)
+            xbox.skip_scene()
+            memory.main.wait_frames(15)
         elif memory.main.diag_skip_possible() or memory.main.menu_open():
             xbox.tap_b()
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
