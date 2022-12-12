@@ -770,9 +770,7 @@ def after_blitz_3(early_haste):
                 use_potion_character(0, "u")
             else:
                 CurrentPlayer().defend()
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(30 * 4)
-    FFXC.set_value("btn_b", 0)
+    wrap_up()
     logger.info("Battle complete (Garuda)")
     # Get to control
     while not memory.main.user_control():
