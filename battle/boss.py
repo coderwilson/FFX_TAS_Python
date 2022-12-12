@@ -115,7 +115,7 @@ def tanker():
     auron_count = 0
     xbox.click_to_battle()
 
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 tidus_count += 1
@@ -473,7 +473,6 @@ def oblitzerator(early_haste):
     # logs.write_stats(memory.s32(memory.rng02()))
 
 
-@battle.utils.speedup_decorator
 def chocobo_eater():
     logger.info("Fight start: Chocobo Eater")
     rng44Last = memory.main.rng_from_index(44)
@@ -490,7 +489,7 @@ def chocobo_eater():
             # Eater did not take an attack, but did take first turn. Should register as true.
             choco_next = True
     swapped_yuna = False
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if choco_next:
                 choco_next = False
@@ -570,6 +569,8 @@ def chocobo_eater():
     # logs.write_stats("Chocobo eater turns:")
     # logs.write_stats(str(turns))
     logger.info("Chocobo Eater battle complete.")
+    memory.main.click_to_control()
+    logger.debug("Back in control.")
 
 
 @battle.utils.speedup_decorator
@@ -1400,7 +1401,7 @@ def evrae_altana():
 @battle.utils.speedup_decorator
 def seymour_natus():
     aeon_summoned = False
-    while not memory.main.user_control():
+    while not memory.main.battle_complete():
         if memory.main.get_encounter_id() == 272:  # Seymour Natus
             logger.info("Seymour Natus engaged")
             while not memory.main.battle_complete():
@@ -1471,6 +1472,7 @@ def seymour_natus():
                         CurrentPlayer().defend()
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
+    battle.main.wrap_up()
     return 0
 
 
@@ -1695,7 +1697,6 @@ def omnis():
     memory.main.click_to_control()
 
 
-@battle.utils.speedup_decorator
 def bfa():
     if memory.main.get_gil_value() < 150000:
         swag_mode = True
@@ -1726,8 +1727,9 @@ def bfa():
     battle.main.aeon_summon(4)
 
     # Bahamut finishes the battle.
-    while not memory.main.battle_complete():
-        xbox.tap_b()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            CurrentPlayer().attack()
 
     # Skip the cutscene
     logger.info("BFA down. Ready for Aeons")
@@ -1762,15 +1764,17 @@ def bfa():
                 battle.main.calculate_spare_change_movement(use_gil)
                 while memory.main.spare_change_open():
                     xbox.tap_b()
-                while not memory.main.main_battle_menu():
-                    xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
             else:
                 CurrentPlayer().defend()
         elif not memory.main.battle_active():
             xbox.tap_b()
+    logger.debug("End of aeons")
 
 
-@battle.utils.speedup_decorator
 def yu_yevon():
     logger.info("Ready for Yu Yevon.")
     screen.await_turn()  # No need for skipping dialog

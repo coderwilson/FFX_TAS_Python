@@ -108,7 +108,7 @@ def listen_story():
 
     logger.info(f"### CSR check: {game_vars.csr()}")
     checkpoint = 0
-    while memory.main.get_encounter_id() != 414:  # Sinspawn Ammes
+    while memory.main.get_encounter_id() != 414:  # First Sinspawn
         if memory.main.user_control():
             # Events
             if checkpoint == 5:
@@ -175,13 +175,14 @@ def listen_story():
 def ammes_battle():
     logger.info("Starting ammes")
     xbox.click_to_battle()
+    logger.debug("Auron Overdrive turn start")
     memory.main.last_hit_init()
     CurrentPlayer().defend()
     # logs.write_stats("First Six Hits:")
     hits_array = []
 
     logger.info("Killing Sinspawn")
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             CurrentPlayer().attack()
             last_hit = memory.main.last_hit_check_change()

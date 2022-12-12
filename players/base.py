@@ -164,13 +164,16 @@ class Player:
             )
         if not memory.main.turn_ready():
             while not memory.main.turn_ready():
-                pass
+                if memory.main.battle_complete():
+                    return
         attack_menu_id = [x for x in [0, 203, 207, 210, 216] if x in self.battle_menu][
             0
         ]
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
             xbox.tap_b()
+            if memory.main.battle_complete():
+                return
         if target_id is not None and not skip_direction:
             self._target_specific_id(target_id, direction_hint)
         self._tap_targeting()
