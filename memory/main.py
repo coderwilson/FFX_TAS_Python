@@ -210,7 +210,7 @@ def game_over():
 
 
 def battle_complete():
-    return not battle_active()
+    return battle_wrap_up_active()
 
 
 def battle_arena_results():
@@ -224,6 +224,12 @@ def game_over_reset():
     global base_value
     key = base_value + 0x00D2C9F1
     process.write_bytes(key, 0, 1)
+
+
+def battle_value():
+    # Used for wrap_up function only
+    key = base_value + 0x00D2A8E0
+    return process.read_bytes(key, 1)
 
 
 def battle_active() -> bool:
@@ -240,9 +246,9 @@ def battle_active() -> bool:
 def battle_wrap_up_active():
     # Not working yet, this memory value does not trigger after-battle screens
     global base_value
-    key = base_value + 0x00D2A8E0
-    value = process.read_bytes(key, 1)
-    if value in [31, 32]:
+    key = base_value + 0x014408AC
+    value = process.read_bytes(key, 4) & 0x20000
+    if value >= 1:
         return True
     return False
 

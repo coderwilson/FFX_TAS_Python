@@ -207,10 +207,11 @@ def yojimbo_battle():
     screen.await_turn()
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
-    if not Yuna.is_turn():
-        while memory.main.battle_active() and not Yuna.is_turn():
+    elif not Yuna.is_turn():
+        while not memory.main.battle_complete() and not Yuna.is_turn():
             if memory.main.turn_ready():
                 CurrentPlayer().defend()
+                memory.main.wait_frames(15)
     if memory.main.battle_active():
         logger.debug("Yuna Overdrive to summon Yojimbo")
         Yuna.overdrive(aeon_num=5)
@@ -221,7 +222,7 @@ def yojimbo_battle():
         battle.overdrive.yojimbo()  # Backup plan
         memory.main.wait_frames(90)
 
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 Tidus.flee()
@@ -233,13 +234,14 @@ def yojimbo_battle():
                 CurrentPlayer().defend()
 
     # After battle stuff
-    while not memory.main.menu_open():
-        xbox.tap_b()
-    logger.debug("Battle is complete.")
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(200)
-    FFXC.set_neutral()
+    logger.debug("Yojimbo Battle is complete.")
+    battle.main.wrap_up()
+    logger.debug("Yojimbo wrap-up is complete.")
     memory.main.wait_frames(2)
+    while not memory.main.diag_skip_possible():
+        pass
+    logger.debug("Yojimbo - menu restored")
+    memory.main.wait_frames(1)
 
     return memory.main.battle_arena_results()
 
@@ -277,7 +279,7 @@ def auto_life():
 def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False):
     logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if mega_phoenix and screen.faint_check() >= 2:
@@ -292,12 +294,12 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                 CurrentPlayer().defend()
 
     # After battle stuff
-    while not memory.main.menu_open():
-        xbox.tap_b()
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(200)
-    FFXC.set_neutral()
+    battle.main.wrap_up()
+    logger.debug("Battle is complete.")
     memory.main.wait_frames(2)
+    while not memory.main.diag_skip_possible():
+        pass
+    memory.main.wait_frames(1)
     return memory.main.battle_arena_results()
 
 
@@ -307,7 +309,7 @@ def basic_attack(
 ):
     logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if mega_phoenix and screen.faint_check() >= 2:
@@ -324,17 +326,19 @@ def basic_attack(
                 CurrentPlayer().defend()
 
     # After battle stuff
-    while not memory.main.menu_open():
-        xbox.tap_b()
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(200)
-    FFXC.set_neutral()
+    battle.main.wrap_up()
+    logger.debug("Battle is complete.")
     memory.main.wait_frames(2)
+    while not memory.main.diag_skip_possible():
+        pass
+    memory.main.wait_frames(1)
     return memory.main.battle_arena_results()
 
 
 def arena_npc():
-    memory.main.await_control()
+    while not memory.main.user_control():
+        if memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible():
+            return
     if memory.main.get_map() != 307:
         return
     while not (
@@ -836,7 +840,7 @@ def shinryu_battle():
     rikku_first_turn = False
     rikku_drive_complete = False
     screen.await_turn()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Rikku.is_turn():
                 if not rikku_first_turn:
@@ -969,7 +973,7 @@ def recharge_yuna():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=9)
     screen.await_turn()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Yuna.is_turn():
                 CurrentPlayer().attack()
@@ -1019,7 +1023,6 @@ def nemesis_battle():
     save_game(first_save=False)
     while not battles_5(completion_version=99):
         quick_reset_logic()
-    # nemesis.nemesis.arena_select.arena_menu_select(4)
 
 
 def return_to_sin():

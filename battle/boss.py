@@ -49,7 +49,7 @@ def ammes():
 @battle.utils.speedup_decorator
 def kimahri():
     FFXC.set_neutral()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if screen.battle_screen():
             enemy_hp = memory.main.get_enemy_current_hp()
             if (
@@ -97,7 +97,7 @@ def summon_tutorial():
                 battle.main.buddy_swap(Yuna)
             else:
                 CurrentPlayer().defend()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             CurrentPlayer().cast_black_magic_spell(1)
 
@@ -115,7 +115,7 @@ def tanker():
     auron_count = 0
     xbox.click_to_battle()
 
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 tidus_count += 1
@@ -207,7 +207,7 @@ def tros():
     while not memory.main.turn_ready():
         pass
 
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.turn_ready():
@@ -314,7 +314,7 @@ def sin_fin():
     logger.info("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
     turn_counter = 0
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             turn_counter += 1
             if Kimahri.is_turn():
@@ -348,7 +348,7 @@ def echuilles():
     tidus_counter = 0
     while not memory.main.turn_ready():
         pass
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             if screen.faint_check() > 0:
                 battle.main.revive()
@@ -473,7 +473,6 @@ def oblitzerator(early_haste):
     # logs.write_stats(memory.s32(memory.rng02()))
 
 
-@battle.utils.speedup_decorator
 def chocobo_eater():
     logger.info("Fight start: Chocobo Eater")
     rng44Last = memory.main.rng_from_index(44)
@@ -570,6 +569,8 @@ def chocobo_eater():
     # logs.write_stats("Chocobo eater turns:")
     # logs.write_stats(str(turns))
     logger.info("Chocobo Eater battle complete.")
+    memory.main.click_to_control()
+    logger.debug("Back in control.")
 
 
 @battle.utils.speedup_decorator
@@ -646,7 +647,7 @@ def gui():
     went = False
     while not memory.main.turn_ready():
         pass
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready() and memory.main.get_battle_char_turn() == 8:
             next_hp = memory.main.get_battle_hp()[0]
             last_turn = next_turn
@@ -701,7 +702,7 @@ def gui():
         or memory.main.get_overdrive_battle(1) == 100
     ):
         logger.info("Gui2 - with extra Aeon overdrive")
-        while memory.main.battle_active():
+        while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 if screen.turn_seymour() and seymour_turn < 2:
                     battle.main.seymour_spell(target_face=False)
@@ -725,7 +726,7 @@ def gui():
                     CurrentPlayer().defend()
     else:
         logger.info("Gui2 - standard")
-        while memory.main.battle_active():
+        while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 if screen.turn_seymour():
                     battle.main.seymour_spell(target_face=True)
@@ -823,7 +824,7 @@ def spherimorph():
     kim_turn = False
     while not memory.main.turn_ready():
         pass
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             if game_vars.use_pause():
                 memory.main.wait_frames(2)
@@ -957,7 +958,7 @@ def crawler():
 
         while not memory.main.turn_ready():
             pass
-        while memory.main.battle_active():  # AKA end of battle screen
+        while not memory.main.battle_complete():  # AKA end of battle screen
             FFXC.set_neutral()
             if memory.main.turn_ready():
                 if Tidus.is_turn():
@@ -1021,7 +1022,7 @@ def wendigo():
 
     while not memory.main.turn_ready():
         pass
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             party_hp = memory.main.get_battle_hp()
             tidus_slot = memory.main.get_battle_char_slot(0)
@@ -1213,7 +1214,7 @@ def evrae():
     # This gets us past the tutorial and all the dialog.
     xbox.click_to_battle()
 
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             logger.debug(f"Tidus prep turns: {tidus_prep}")
             if Tidus.is_turn():
@@ -1354,7 +1355,7 @@ def isaaru():
         game_vars.add_rescue_count()
 
     logger.info("Starting battle: Isaaru")
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             if Yuna.is_turn():
                 if memory.main.get_encounter_id() in [257, 260]:
@@ -1383,7 +1384,7 @@ def evrae_altana():
         else:
             logger.debug("Next steal will crit, do not steal.")
         thrown_item = False
-        while memory.main.battle_active():  # AKA end of battle screen
+        while not memory.main.battle_complete():  # AKA end of battle screen
             if memory.main.turn_ready():
                 if memory.main.get_item_slot(18) != 255 and not thrown_item:
                     battle.main._use_healing_item(item_id=18)
@@ -1400,7 +1401,7 @@ def evrae_altana():
 @battle.utils.speedup_decorator
 def seymour_natus():
     aeon_summoned = False
-    while not memory.main.user_control():
+    while not memory.main.battle_complete():
         if memory.main.get_encounter_id() == 272:  # Seymour Natus
             logger.info("Seymour Natus engaged")
             while not memory.main.battle_complete():
@@ -1431,7 +1432,7 @@ def seymour_natus():
                         CurrentPlayer().defend()
             return 1
         elif memory.main.get_encounter_id() == 270:  # YAT-63 x2
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
@@ -1444,7 +1445,7 @@ def seymour_natus():
                     else:
                         CurrentPlayer().defend()
         elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
@@ -1457,7 +1458,7 @@ def seymour_natus():
                     else:
                         CurrentPlayer().defend()
         elif memory.main.get_encounter_id() == 271:  # one YAT-63, two YAT-99
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
@@ -1471,6 +1472,7 @@ def seymour_natus():
                         CurrentPlayer().defend()
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
+    battle.main.wrap_up()
     return 0
 
 
@@ -1695,7 +1697,6 @@ def omnis():
     memory.main.click_to_control()
 
 
-@battle.utils.speedup_decorator
 def bfa():
     if memory.main.get_gil_value() < 150000:
         swag_mode = True
@@ -1727,7 +1728,8 @@ def bfa():
 
     # Bahamut finishes the battle.
     while memory.main.battle_active():
-        xbox.tap_b()
+        if memory.main.turn_ready():
+            CurrentPlayer().attack()
 
     # Skip the cutscene
     logger.info("BFA down. Ready for Aeons")
@@ -1762,15 +1764,17 @@ def bfa():
                 battle.main.calculate_spare_change_movement(use_gil)
                 while memory.main.spare_change_open():
                     xbox.tap_b()
-                while not memory.main.main_battle_menu():
-                    xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
             else:
                 CurrentPlayer().defend()
         elif not memory.main.battle_active():
             xbox.tap_b()
+    logger.debug("End of aeons")
 
 
-@battle.utils.speedup_decorator
 def yu_yevon():
     logger.info("Ready for Yu Yevon.")
     screen.await_turn()  # No need for skipping dialog

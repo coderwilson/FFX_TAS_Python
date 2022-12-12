@@ -90,12 +90,10 @@ def guards():
             if memory.main.battle_active():
                 battle.main.guards(guard_num, sleeping_powders)
                 if guard_num == 2:
-                    memory.main.click_to_control()
                     memory.main.update_formation(Tidus, Lulu, Rikku)
                 elif guard_num == 5:
                     pass
                 else:
-                    memory.main.click_to_control()
                     memory.main.update_formation(Tidus, Kimahri, Rikku)
                 guard_num += 1
             elif memory.main.menu_open():
@@ -597,6 +595,7 @@ def seymour_natus():
                 logger.info("Battle Start")
                 if memory.main.battle_type() == 2:
                     battle.main.flee_all()
+                    battle.main.wrap_up()
                 else:
                     complete = battle.boss.seymour_natus()
 

@@ -99,7 +99,7 @@ def defender_x():
     FFXC.set_neutral()
 
     xbox.click_to_battle()
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 battle.main.buddy_swap(Yuna)

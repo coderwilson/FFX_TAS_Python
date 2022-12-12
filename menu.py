@@ -1544,7 +1544,7 @@ def sell_all(nea=False):
     memory.main.wait_frames(9)
     while memory.main.equip_sell_row() + 1 < len(full_array):
         xbox.menu_down()
-        memory.main.wait_frames(9)
+        memory.main.wait_frames(11)
         if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
             # Currently equipped
             sell_item = False
@@ -1586,6 +1586,8 @@ def sell_all(nea=False):
             xbox.tap_up()
             xbox.menu_b()
             memory.main.wait_frames(1)
+            if game_vars.use_pause():
+                memory.main.wait_frames(2)
         else:
             sell_item = True
 
