@@ -1,5 +1,8 @@
 import logging
 
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 import battle.main
 import memory.main
 import menu
@@ -25,53 +28,59 @@ def south_pathing():
     memory.main.close_menu()
     count50 = 0
     checkpoint = 0
-    while memory.main.get_map() != 256:
-        if memory.main.user_control():
-            # Lightning dodging
-            if memory.main.dodge_lightning(game_vars.get_l_strike()):
-                game_vars.set_l_strike(memory.main.l_strike_count())
-                if checkpoint == 34:
-                    count50 += 1
-                    logger.debug(f"Dodge: {count50}")
-            elif checkpoint == 2 and game_vars.nemesis():
-                checkpoint = 20
-            elif checkpoint == 2 and not game_vars.get_blitz_win():
-                checkpoint = 20
-            elif checkpoint == 21:
-                # memory.touch_save_sphere()
-                checkpoint += 1
-            elif checkpoint == 25:
-                while memory.main.user_control():
-                    pathing.set_movement([-175, -487])
-                    xbox.tap_x()
-                checkpoint += 1
-            elif checkpoint == 33:
-                while memory.main.user_control():
-                    pathing.set_movement([205, 160])
-                    xbox.tap_x()
-                checkpoint += 1
-                logger.info("Now ready to dodge some lightning.")
-            elif checkpoint == 34:
-                if count50 == 50:
-                    checkpoint += 1
-                else:  # Dodging fifty bolts.
-                    FFXC.set_neutral()
-            elif checkpoint == 39:  # Back to the normal path
-                checkpoint = 10
 
-            # General pathing
-            elif memory.main.user_control():
-                if pathing.set_movement(ThunderPlainsSouth.execute(checkpoint)):
-                    checkpoint += 1
-                    logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            if memory.main.diag_skip_possible() and not memory.main.battle_active():
-                xbox.menu_b()
-            elif screen.battle_screen():
-                battle.main.thunder_plains(1)
-            elif memory.main.menu_open():
-                xbox.tap_b()
+    with logging_redirect_tqdm():
+        with tqdm(total=50) as pbar:
+            while memory.main.get_map() != 256:
+                if memory.main.user_control():
+                    # Lightning dodging
+                    if memory.main.dodge_lightning(game_vars.get_l_strike()):
+                        game_vars.set_l_strike(memory.main.l_strike_count())
+                        if checkpoint == 34:
+                            count50 += 1
+                            pbar.update(1)
+                    elif checkpoint == 2 and game_vars.nemesis():
+                        checkpoint = 20
+                    elif checkpoint == 2 and not game_vars.get_blitz_win():
+                        checkpoint = 20
+                    elif checkpoint == 21:
+                        # memory.touch_save_sphere()
+                        checkpoint += 1
+                    elif checkpoint == 25:
+                        while memory.main.user_control():
+                            pathing.set_movement([-175, -487])
+                            xbox.tap_x()
+                        checkpoint += 1
+                    elif checkpoint == 33:
+                        while memory.main.user_control():
+                            pathing.set_movement([205, 160])
+                            xbox.tap_x()
+                        checkpoint += 1
+                        logger.info("Now ready to dodge some lightning.")
+                    elif checkpoint == 34:
+                        if count50 == 50:
+                            checkpoint += 1
+                        else:  # Dodging fifty bolts.
+                            FFXC.set_neutral()
+                    elif checkpoint == 39:  # Back to the normal path
+                        checkpoint = 10
+
+                    # General pathing
+                    elif memory.main.user_control():
+                        if pathing.set_movement(ThunderPlainsSouth.execute(checkpoint)):
+                            checkpoint += 1
+                            logger.debug(f"Checkpoint {checkpoint}")
+                else:
+                    FFXC.set_neutral()
+                    if (
+                        memory.main.diag_skip_possible()
+                        and not memory.main.battle_active()
+                    ):
+                        xbox.menu_b()
+                    elif screen.battle_screen():
+                        battle.main.thunder_plains(1)
+                    elif memory.main.menu_open():
+                        xbox.tap_b()
 
     memory.main.await_control()
     while not pathing.set_movement([-73, 14]):
