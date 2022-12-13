@@ -31,6 +31,7 @@ from paths.nem import (
     YojimboFarm,
 )
 from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna
+import load_game
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
