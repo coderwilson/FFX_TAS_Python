@@ -2587,6 +2587,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 ):
                     if min(allCounts[13], allCounts[19]) >= cap_num:
                         battle.main.flee_all()
+                        battle.main.wrap_up()
                     else:
                         battle_farm_all()
                 elif (
@@ -2595,6 +2596,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 ):
                     if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
                         battle.main.flee_all()
+                        battle.main.wrap_up()
                     else:
                         battle_farm_all()
                 elif (
@@ -2603,6 +2605,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                     and game_vars.nem_checkpoint_ap() < 8
                 ):
                     battle.main.flee_all()
+                    battle.main.wrap_up()
                 else:
                     if cap_num == 10:
                         battle_farm_all(yuna_attack=False)
