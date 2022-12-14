@@ -149,7 +149,7 @@ class Player:
         self,
         target_id: Optional[int] = None,
         direction_hint: Optional[str] = "u",
-        record_results:bool=False
+        record_results: bool = False,
     ):
         skip_direction = False
         if target_id is None:

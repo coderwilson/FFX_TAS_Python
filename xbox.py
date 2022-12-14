@@ -443,7 +443,7 @@ def clear_save_popup(click_to_diag_num=0):
         counter += 1
         if counter % 100 == 0:
             logger.debug(f"Waiting for Save dialog: {counter / 100}")
-        
+
         if memory.main.user_control():
             return
         elif (

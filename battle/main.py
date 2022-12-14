@@ -774,7 +774,7 @@ def after_blitz_3(early_haste):
     if not game_vars.csr():
         xbox.await_save(index=1)
     # Get to control
-    while not memory.main.battle_complete(): # story before battle summary screen
+    while not memory.main.battle_complete():  # story before battle summary screen
         if memory.main.cutscene_skip_possible():
             memory.main.wait_frames(3)
             xbox.skip_scene()
@@ -2615,7 +2615,9 @@ def guards(group_num, sleeping_powders):
                         else:
                             _use_healing_item(item_id=16)
                         throw_distiller = False
-                    elif Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead():
+                    elif (
+                        Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
+                    ):
                         if memory.main.get_item_slot(0) != 255:
                             use_potion_character(Rikku, "r")
                         elif memory.main.get_item_slot(1) != 255:
@@ -2695,7 +2697,9 @@ def guards(group_num, sleeping_powders):
                         else:
                             _use_healing_item(item_id=16)
                         throw_distiller = False
-                    elif Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead():
+                    elif (
+                        Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
+                    ):
                         if memory.main.get_item_slot(0) != 255:
                             use_potion_character(6, "r")
                         elif memory.main.get_item_slot(1) != 255:
@@ -2754,7 +2758,8 @@ def guards(group_num, sleeping_powders):
                             elif memory.main.get_use_items_slot(27) != 255:
                                 use_item(memory.main.get_use_items_slot(27))
                             elif (
-                                memory.main.get_use_items_slot(39) != 255 and num_throws < 2
+                                memory.main.get_use_items_slot(39) != 255
+                                and num_throws < 2
                             ):
                                 use_item(memory.main.get_use_items_slot(39))
                             else:
@@ -3902,7 +3907,7 @@ def wrap_up():
         while memory.main.battle_value() != 0:
             if memory.main.turn_ready():
                 return False
-        
+
     logger.debug("Wrapping up battle.")
     while not memory.main.battle_wrap_up_active():
         if memory.main.user_control():
@@ -3913,8 +3918,8 @@ def wrap_up():
             return False
     memory.main.wait_frames(1)
     while memory.main.battle_wrap_up_active():
-        FFXC.set_value('btn_b', 1)
-    FFXC.set_value('btn_b', 0)
+        FFXC.set_value("btn_b", 1)
+    FFXC.set_value("btn_b", 0)
     logger.debug("Wrap up complete.")
     memory.main.wait_frames(1)
     return True
