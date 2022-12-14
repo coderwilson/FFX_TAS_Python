@@ -4039,7 +4039,7 @@ def bfa_nem():
             else:
                 CurrentPlayer().defend()
 
-    while memory.main.get_story_progress() < 3400:  # End of game
+    while memory.main.get_story_progress() < 3380:  # End of game
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
