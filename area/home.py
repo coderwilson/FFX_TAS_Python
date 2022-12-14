@@ -238,6 +238,8 @@ def desert():
                 logger.debug(f"Need more Speed spheres: {need_speed}")
                 logger.debug(f"Need more Power spheres: {need_power}")
                 logger.debug(f"Additional items needed before Home: {items_needed}")
+                if checkpoint == 60:
+                    checkpoint = 58
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
