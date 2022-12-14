@@ -4057,7 +4057,7 @@ def bfa_nem():
             memory.main.wait_frames(2)
             if memory.main.cutscene_skip_possible():
                 xbox.skip_scene()
-        elif memory.main.diag_skip_possible():
+        else:
             xbox.tap_b()
 
 
