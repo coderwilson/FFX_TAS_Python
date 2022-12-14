@@ -3,6 +3,7 @@ import logging
 import battle.boss
 import battle.main
 import battle.utils
+import load_game
 import memory.main
 import menu
 import nemesis.arena_select
@@ -1386,7 +1387,7 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False, stock_downs=False):
         xbox.tap_b()
         memory.main.close_menu()
         memory.main.click_to_control_dumb()
-    
+
     while not pathing.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)
@@ -3079,9 +3080,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                 else:
                     battle_result = battle_farm_all(fayth_cave=True)
                     if not battle_result:
-                        logger.warning(
-                            "Game Over occurred. Resetting this area."
-                        )
+                        logger.warning("Game Over occurred. Resetting this area.")
                         checkpoint = 0
                         game_vars.set_nem_checkpoint_ap(fayth_grid_start)
 

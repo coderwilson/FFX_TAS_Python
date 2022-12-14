@@ -1,49 +1,42 @@
 # Gamestate and step counter determine starting point of the run.
 # "none" and 1 to start from the New Game command.
-# To use a load-game state, see json_ai_files/save_load_details.json for valid states.
-gamestate               : "none" # valid values listed above
-step_counter            : 1      # valid step_counter values are dependent on gamestate
+gamestate             : "none"  # See json_ai_files/save_load_details.json for valid states.
+step_counter          : 1       # Valid step_counter values depend on gamestate.
 
 vars:
-  # Game modes:
-  # "test" will speed up battles and cheat at Blitzball
-  # "normal" will run regular. "speed" also runs a regular any% run.
-  # "story" Same as normal, will play cutscenes and dialog
-  # "swag" Same as normal, some swag elements added in.
-  # "blitz_only" will run through Blitz, record results, and reset. Same as normal mode.
-  game_mode               : "test"
-  # True for Nemesis run, False for regular Any% (with or without CSR)
-  nemesis_value           : False
+  # Game modes
+  game_mode           : "test"  # "test" will speed up battles and cheat at Blitzball
+                                # "normal" and "speed" do a regular run
+                                # "story" is normal but plays cutscenes and dialog
+                                # "swag" is normal but with some swag elements added in
+                                # "blitz_only" will run through Blitz, record results, and reset. Same as normal mode
+  nemesis_value       : False   # True for Nemesis run, False for regular Any% (with or without CSR).
 
-  # RNG choice
-  # Set game_patched to True if you have patched your .exe
-  # with the 'rng_mod_patch.py' in tools folder. Otherwise set to False
-  game_patched            : True
-  # If above is True, select the rng_mode you prefer below. Otherwise this does nothing.
-  # rng_mode = "set" will run the desired set seed.
-  # rng_mode = "preferred" will run a seed out of the preferred list.
-  # rng_mode = "random" will run any of the 256 possible seeds, chosen randomly.
-  rng_mode                : "set"
-  # Select the seed you desire for "set" mode.
-  rng_seed_num            : 31
-
+  # RNG modes
+  # Set game_patched to True if you have patched your FFX.exe using
+  # "rng_mod_patch.py" in /tools. Otherwise set to False.
+  game_patched        : True    # If True, select the rng_mode you prefer below.
+  rng_mode            : "set"   # "set" runs the desired set seed
+                                # "random" runs any of the 256 possible seeds, chosen randomly
+                                # "preferred" runs a seed out of the preferred list (vars.py -> rng_preferred_seeds)
+  rng_seed_num        : 31      # Set your desired seed for "set" mode.
 
   # Cosmetics / Other
-  original_soundtrack     : False  # Sets to original or arranged soundtrack.
-  force_loop              : False  # After game is finished, start again on next seed.
-  generate_saves          : False  # Whether or not to generate saves for this run.
+  original_soundtrack : False   # Selects the original or arranged soundtrack.
+  force_loop          : False   # After finishing a run, automatically start a new one.
+  generate_saves      : False   # True creates saves on most save spheres.
   
   # System
-  # ---- The following are valid options, depending on your file path.
-  # ---- "C://etc//etc//etc//"	   # (overwrites the default path, must end with slashes)
-  # ---- "" 					   # (Leave blank to use the default path)
-  save_path               : ""     # Overwrite the default Documents folder location.
-  artificial_pauses       : False  # If you have a bad computer or are noticing dropped inputs, set this to True. Otherwise, leave as False.
+  save_path           : ""      # Overwrite the default savefile folder location in case it's non-standard.
+                                # Leave blank ("") to use the default path.
+                                # Example path: "C://Users//username//OneDrive//Dokumente//SQUARE ENIX//FINAL FANTASY X&X-2 HD Remaster//FINAL FANTASY X//""
+                                # Note the double forward slashes and make sure they are also at the end of the path.
+  artificial_pauses   : False   # If you have a bad computer or are noticing dropped inputs, set this to True. Otherwise, leave as False.
 
 logging:
-  show_images             : False  # Show ASCII images
-  terminal_width          : 80     # Number of columns in terminal, used for show_images
-  color_log               : False  # Colors the console output. May not work on some systems
-  verbosity               : DEBUG  # Verbosity of log messages in the console.
-                                   # These are the valid levels: DEBUG, MANIP, INFO, WARNING, ERROR, CRITICAL
-                                   # Full log will always be available in a file.
+  show_images         : False   # Display in-console ASCII images.
+  terminal_width      : 60      # Number of columns in terminal, used for show_images.
+  color_log           : False   # Colors the console output. May not work on some systems.
+  verbosity           : DEBUG   # Verbosity of log messages in the console.
+                                # These are the valid levels: DEBUG, MANIP, INFO, WARNING, ERROR, CRITICAL
+                                # Full log will always be available in a file.
