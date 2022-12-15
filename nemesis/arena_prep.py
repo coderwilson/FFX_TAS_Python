@@ -1329,6 +1329,7 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False, stock_downs=False):
         pass
     while not pathing.set_movement([39, 53]):
         pass
+    menu.auto_sort_equipment()
     pathing.approach_actor_by_id(actor_id=8426)
     FFXC.set_neutral()
     memory.main.click_to_diag_progress(48)
@@ -1388,6 +1389,7 @@ def rin_equip_dump(buy_weapon=False, sell_nea=False, stock_downs=False):
         memory.main.close_menu()
         memory.main.click_to_control_dumb()
 
+    menu.auto_sort_equipment()
     while not pathing.set_movement([53, 110]):
         pass
     FFXC.set_movement(-1, -1)
