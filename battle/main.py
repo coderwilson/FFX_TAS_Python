@@ -4033,7 +4033,7 @@ def bfa_nem():
 
     xbox.click_to_battle()
 
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if tidus_first_turn:
@@ -4044,14 +4044,11 @@ def bfa_nem():
             else:
                 CurrentPlayer().defend()
 
-    while memory.main.get_story_progress() < 3380:  # End of game
+    while memory.main.get_story_progress() < 3400:  # End of game
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
-                    if memory.main.get_encounter_id() == 401 and Tidus.has_overdrive():
-                        Tidus.overdrive()
-                    else:
-                        CurrentPlayer().attack()
+                    CurrentPlayer().attack(record_results=True)
                 elif Yuna.is_turn():
                     buddy_swap(Wakka)
                 elif Auron.is_turn():
