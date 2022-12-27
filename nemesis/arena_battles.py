@@ -199,6 +199,8 @@ def aeon_start():
                 CurrentPlayer().attack()
             else:
                 CurrentPlayer().defend()
+        elif memory.main.battle_complete():
+            return False
 
 
 @battle.utils.speedup_decorator
@@ -254,6 +256,8 @@ def auto_life():
                 CurrentPlayer().attack()
             elif not Tidus.is_turn():
                 CurrentPlayer().defend()
+        elif memory.main.battle_complete():
+            return False
     while memory.main.battle_menu_cursor() != 22:
         if not Tidus.is_turn():
             logger.debug("Attempting Haste, but it's not Tidus's turn")
