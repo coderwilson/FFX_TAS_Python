@@ -26,7 +26,6 @@ game_vars = vars.vars_handle()
 logger = logging.getLogger(__name__)
 
 
-@battle.utils.speedup_decorator
 def ammes():
     battle_complete = 0
     count_attacks = 0
