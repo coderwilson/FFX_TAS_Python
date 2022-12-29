@@ -1,5 +1,8 @@
 import logging
 
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 import memory.main
 import menu_grid
 import vars
@@ -1542,54 +1545,61 @@ def sell_all(nea=False):
     sell_item = True
     xbox.menu_up()
     memory.main.wait_frames(9)
-    while memory.main.equip_sell_row() + 1 < len(full_array):
-        xbox.menu_down()
-        memory.main.wait_frames(11)
-        if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
-            # Currently equipped
-            sell_item = False
-        if full_array[memory.main.equip_sell_row()].is_equipped() == 0:
-            # Currently equipped
-            sell_item = False
-        if full_array[memory.main.equip_sell_row()].has_ability(0x8056):
-            # Auto-haste
-            sell_item = False
-        if full_array[memory.main.equip_sell_row()].has_ability(0x8001):
-            # First Strike
-            sell_item = False
-        if full_array[memory.main.equip_sell_row()].has_ability(0x800A):
-            # Auto-Phoenix
-            sell_item = False
-        if full_array[memory.main.equip_sell_row()].abilities() == [
-            0x8072,
-            255,
-            255,
-            255,
-        ]:
-            # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
-            if full_array[memory.main.equip_sell_row()].owner() in [1, 2, 4, 6]:
-                sell_item = False
-        if not nea and full_array[memory.main.equip_sell_row()].has_ability(0x801D):
-            # No-Encounters
-            sell_item = False
-        if full_array[memory.main.equip_sell_row()].abilities() == [
-            0x8063,
-            0x8064,
-            0x802A,
-            0x8000,
-        ]:
-            # Brotherhood
-            sell_item = False
 
-        if sell_item:
-            xbox.menu_b()
-            xbox.tap_up()
-            xbox.menu_b()
-            memory.main.wait_frames(1)
-            if game_vars.use_pause():
-                memory.main.wait_frames(2)
-        else:
-            sell_item = True
+    with logging_redirect_tqdm():
+        with tqdm(total=len(full_array)) as pbar:
+            while memory.main.equip_sell_row() + 1 < len(full_array):
+                xbox.menu_down()
+                memory.main.wait_frames(11)
+                if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
+                    # Currently equipped
+                    sell_item = False
+                if full_array[memory.main.equip_sell_row()].is_equipped() == 0:
+                    # Currently equipped
+                    sell_item = False
+                if full_array[memory.main.equip_sell_row()].has_ability(0x8056):
+                    # Auto-haste
+                    sell_item = False
+                if full_array[memory.main.equip_sell_row()].has_ability(0x8001):
+                    # First Strike
+                    sell_item = False
+                if full_array[memory.main.equip_sell_row()].has_ability(0x800A):
+                    # Auto-Phoenix
+                    sell_item = False
+                if full_array[memory.main.equip_sell_row()].abilities() == [
+                    0x8072,
+                    255,
+                    255,
+                    255,
+                ]:
+                    # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
+                    if full_array[memory.main.equip_sell_row()].owner() in [1, 2, 4, 6]:
+                        sell_item = False
+                if not nea and full_array[memory.main.equip_sell_row()].has_ability(
+                    0x801D
+                ):
+                    # No-Encounters
+                    sell_item = False
+                if full_array[memory.main.equip_sell_row()].abilities() == [
+                    0x8063,
+                    0x8064,
+                    0x802A,
+                    0x8000,
+                ]:
+                    # Brotherhood
+                    sell_item = False
+
+                if sell_item:
+                    xbox.menu_b()
+                    xbox.tap_up()
+                    xbox.menu_b()
+                    memory.main.wait_frames(1)
+                    if game_vars.use_pause():
+                        memory.main.wait_frames(2)
+                else:
+                    sell_item = True
+
+                pbar.update(1)
 
 
 def after_flux():
