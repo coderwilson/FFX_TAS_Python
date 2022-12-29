@@ -32,9 +32,9 @@ def check_spheres():
             or (
                 memory.main.get_speed() < 9
                 and memory.main.get_power()
-                >= (23 + math.ceil((9 - memory.main.get_speed()) / 2))
+                >= (24 + math.ceil((9 - memory.main.get_speed()) / 2))
             )
-            or (memory.main.get_speed() >= 9 and memory.main.get_power() >= 23)
+            or (memory.main.get_speed() >= 9 and memory.main.get_power() >= 24)
         ):
             need_power = False
         else:
