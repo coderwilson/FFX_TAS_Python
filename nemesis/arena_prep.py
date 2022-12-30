@@ -1,5 +1,8 @@
 import logging
 
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+
 import battle.boss
 import battle.main
 import battle.utils
@@ -31,7 +34,6 @@ from paths.nem import (
     YojimboFarm,
 )
 from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna
-import load_game
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -1154,45 +1156,55 @@ def kilika_gil_farm(armor_buys: int):
     xbox.tap_down()
     xbox.tap_down()
     xbox.tap_down()
-    for x in range(armor_buys):
-        logger.debug(f"Buying armors, remaining - {armor_buys - x}")
-        memory.main.wait_frames(6)
-        xbox.menu_b()  # Purchase
-        memory.main.wait_frames(6)
-        xbox.menu_up()
-        xbox.menu_b()  # Confirm
-        memory.main.wait_frames(6)
-        xbox.menu_b()  # Do not equip
+    logger.info(f"Buying {armor_buys} armors...")
+    with logging_redirect_tqdm():
+        with tqdm(total=armor_buys) as pbar:
+            for _ in range(armor_buys):
+                memory.main.wait_frames(6)
+                xbox.menu_b()  # Purchase
+                memory.main.wait_frames(6)
+                xbox.menu_up()
+                xbox.menu_b()  # Confirm
+                memory.main.wait_frames(6)
+                xbox.menu_b()  # Do not equip
+                pbar.update(1)
+    logger.info("Done buying armors.")
+
     memory.main.wait_frames(6)
     memory.main.close_menu()
 
-    for y in range(armor_buys):
-        remaining = armor_buys - y
-        logger.info(f"Adding ability, remaining {remaining} items")
-        if y == 0:  # First one
-            menu.add_ability(
-                owner=0,
-                equipment_type=1,
-                ability_array=[0x8072, 255, 255, 255],
-                ability_index=0x8075,
-                slot_count=4,
-                navigate_to_equip_menu=True,
-                exit_out_of_current_weapon=True,
-                close_menu=False,
-                full_menu_close=False,
-            )
-        else:
-            menu.add_ability(
-                owner=0,
-                equipment_type=1,
-                ability_array=[0x8072, 255, 255, 255],
-                ability_index=0x8075,
-                slot_count=4,
-                navigate_to_equip_menu=False,
-                exit_out_of_current_weapon=True,
-                close_menu=False,
-                full_menu_close=False,
-            )
+    logger.info(f"Adding ability on {armor_buys} items...")
+    with logging_redirect_tqdm():
+        with tqdm(total=armor_buys) as pbar:
+            for y in range(armor_buys):
+                if y == 0:  # First one
+                    menu.add_ability(
+                        owner=0,
+                        equipment_type=1,
+                        ability_array=[0x8072, 255, 255, 255],
+                        ability_index=0x8075,
+                        slot_count=4,
+                        navigate_to_equip_menu=True,
+                        exit_out_of_current_weapon=True,
+                        close_menu=False,
+                        full_menu_close=False,
+                    )
+                else:
+                    menu.add_ability(
+                        owner=0,
+                        equipment_type=1,
+                        ability_array=[0x8072, 255, 255, 255],
+                        ability_index=0x8075,
+                        slot_count=4,
+                        navigate_to_equip_menu=False,
+                        exit_out_of_current_weapon=True,
+                        close_menu=False,
+                        full_menu_close=False,
+                    )
+                pbar.update(1)
+
+    logger.info("Done adding abilities on items.")
+
     memory.main.close_menu()
     memory.main.wait_frames(9)
     while memory.main.user_control():
