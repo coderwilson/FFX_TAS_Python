@@ -1537,7 +1537,7 @@ def seymour_flux():
                     else:
                         CurrentPlayer().defend()
                 else:
-                    elif Yuna.is_turn():
+                    if Yuna.is_turn():
                         battle.main.aeon_summon(4)
                         bahamut_summoned = True
                     elif Tidus.is_turn():
@@ -1592,8 +1592,9 @@ def seymour_flux():
                 elif Auron.is_turn():
                     logger.debug("Auron's turn. Swap for Rikku and overdrive.")
                     battle.main.buddy_swap(Rikku)
-                    logger.debug("Rikku overdrive")
-                    battle.main.rikku_full_od("Flux")
+                    if memory.main.get_overdrive_battle(6) == 100:
+                        logger.debug("Rikku overdrive")
+                        battle.main.rikku_full_od("Flux")
                 else:
                     logger.debug("Non-critical turn. Defending.")
                     CurrentPlayer().defend()
