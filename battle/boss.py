@@ -1526,14 +1526,24 @@ def seymour_flux():
     yuna_xp = memory.main.get_slvl_yuna()
     xbox.click_to_battle()
     if bahamut_crit == 2:
+        bahamut_summoned = False
         while not memory.main.battle_complete():
             if memory.main.turn_ready():
                 if screen.turn_aeon():
                     CurrentPlayer().attack()
-                elif Yuna.is_turn():
-                    battle.main.aeon_summon(4)
+                elif bahamut_summoned:
+                    if Yuna.is_turn() or Tidus.is_turn():
+                        CurrentPlayer().attack()
+                    else:
+                        CurrentPlayer().defend()
                 else:
-                    CurrentPlayer().defend()
+                    elif Yuna.is_turn():
+                        battle.main.aeon_summon(4)
+                        bahamut_summoned = True
+                    elif Tidus.is_turn():
+                        CurrentPlayer().attack()
+                    else:
+                        CurrentPlayer().defend()
     elif game_vars.end_game_version() == 3:
         bahamut_summoned = False
         while not memory.main.battle_complete():  # AKA end of battle screen
